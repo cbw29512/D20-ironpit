@@ -46,6 +46,9 @@ class BattleEvent(BaseModel):
         "saving_throw",
         "ability_check",
         "recharge",
+        "object_created",
+        "object_damage",
+        "object_destroyed",
         "dash",
         "attack",
         "healing",
@@ -57,6 +60,8 @@ class BattleEvent(BaseModel):
     actor_name: str
     target_id: str | None = None
     target_name: str | None = None
+    object_id: str | None = None
+    object_name: str | None = None
     attack_roll: DiceRoll | None = None
     saving_throw: DiceRoll | None = None
     ability_check: DiceRoll | None = None
