@@ -1,0 +1,70 @@
+import pytest
+
+from app.combat.dice import FixedDiceProvider
+from app.combat.initiative import roll_initiative_order
+from app.domain.encounters import EncounterParticipantRequest, EncounterRequest, distance_between
+from app.services.encounters import EncounterValidationError, build_encounter_state
+
+
+def _party_vs_boss_request() -> EncounterRequest:
+    return EncounterRequest(participants=[
+        EncounterParticipantRequest(
+            instance_id="aldric-1",
+            combatant_id="aldric-vane-l1",
+            side_id="party",
+            starting_position_ft=0,
+        ),
+        EncounterParticipantRequest(
+            instance_id="aldric-2",
+            combatant_id="aldric-vane-l1",
+            side_id="party",
+            starting_position_ft=5,
+        ),
+        EncounterParticipantRequest(
+            instance_id="ogre-1",
+            combatant_id="srd-ogre",
+            side_id="monsters",
+            starting_position_ft=40,
+        ),
+    ])
+
+
+def test_encounter_allows_duplicate_templates_with_unique_instances() -> None:
+    encounter = build_encounter_state(_party_vs_boss_request())
+
+    assert [item.combatant.instance_id for item in encounter.participants] == [
+        "aldric-1", "aldric-2", "ogre-1"
+    ]
+    assert encounter.participants[0].combatant.template.id == "aldric-vane-l1"
+    assert encounter.participants[1].combatant.template.id == "aldric-vane-l1"
+    assert distance_between(encounter.participants[0], encounter.participants[2]) == 40
+    assert len(encounter.enemies_of(encounter.participants[0])) == 1
+
+
+def test_encounter_rejects_duplicate_runtime_instance_ids() -> None:
+    request = _party_vs_boss_request()
+    request.participants[1].instance_id = "aldric-1"
+
+    with pytest.raises(EncounterValidationError, match="unique"):
+        build_encounter_state(request)
+
+
+def test_encounter_requires_opposing_sides() -> None:
+    request = _party_vs_boss_request()
+    request.participants[2].side_id = "party"
+
+    with pytest.raises(EncounterValidationError, match="two opposing sides"):
+        build_encounter_state(request)
+
+
+def test_initiative_orders_arbitrary_roster_and_keeps_instance_ids() -> None:
+    encounter = build_encounter_state(_party_vs_boss_request())
+    states = [item.combatant for item in encounter.participants]
+
+    events, order, sequence = roll_initiative_order(
+        7, states, FixedDiceProvider([10, 14, 12])
+    )
+
+    assert [event.actor_id for event in events] == ["aldric-1", "aldric-2", "ogre-1"]
+    assert [state.instance_id for state in order] == ["aldric-2", "ogre-1", "aldric-1"]
+    assert sequence == 10
