@@ -62,7 +62,6 @@ def attempt_escape_grapple(
                 ConditionType.GRAPPLED,
                 source_id=grapple.source_id,
             )
-            state.movement_remaining_ft = 0 if has_zero_speed(state) else state.template.speed_ft
             events.append(BattleEvent(
                 sequence=sequence + 1,
                 round_number=round_number,
