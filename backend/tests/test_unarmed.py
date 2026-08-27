@@ -2,8 +2,9 @@ import pytest
 
 from app.combat.conditions import has_condition
 from app.combat.dice import FixedDiceProvider
+from app.combat.shove import resolve_unarmed_shove
 from app.combat.state import build_combatant_state
-from app.combat.unarmed import resolve_unarmed_grapple, resolve_unarmed_shove
+from app.combat.unarmed import resolve_unarmed_grapple
 from app.content.demo import build_demo_fighter, build_goblin_warrior
 from app.content.srd_monsters import build_ogre
 from app.domain.models import Ability, BattlefieldState, ConditionType
@@ -35,7 +36,6 @@ def test_unarmed_grapple_uses_target_choice_and_exact_dc() -> None:
 def test_unarmed_grapple_success_does_not_apply_condition() -> None:
     fighter = _free_hand_fighter()
     goblin = build_combatant_state(build_goblin_warrior())
-
     events = resolve_unarmed_grapple(
         1, 1, fighter, goblin, 5, FixedDiceProvider([11])
     )
@@ -56,7 +56,6 @@ def test_unarmed_grapple_requires_free_hand() -> None:
 def test_unarmed_shove_can_knock_target_prone() -> None:
     fighter = build_combatant_state(build_demo_fighter())
     goblin = build_combatant_state(build_goblin_warrior())
-
     events = resolve_unarmed_shove(
         1, 1, fighter, goblin, BattlefieldState(distance_ft=5), FixedDiceProvider([5])
     )
@@ -71,7 +70,6 @@ def test_unarmed_shove_can_push_target_five_feet() -> None:
     fighter = build_combatant_state(build_demo_fighter())
     goblin = build_combatant_state(build_goblin_warrior())
     battlefield = BattlefieldState(distance_ft=5)
-
     events = resolve_unarmed_shove(
         1, 1, fighter, goblin, battlefield, FixedDiceProvider([5]), outcome="push"
     )
