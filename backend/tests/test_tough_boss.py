@@ -4,29 +4,31 @@ from app.combat.dice import FixedDiceProvider
 from app.combat.state import build_combatant_state
 from app.content.gladiators import build_vera_ash
 from app.content.srd_monsters import build_tough_boss
-from app.domain.models import RollMode
+from app.domain.models import BattlefieldState, RollMode
 
 
 def test_tough_boss_core_stat_block_and_multiattack() -> None:
     boss = build_combatant_state(build_tough_boss())
     fighter = build_combatant_state(build_vera_ash())
+    battlefield = BattlefieldState(distance_ft=5)
 
     events = resolve_attack_action(
         1,
         1,
         boss,
         fighter,
-        boss.template.weapon_attack,
-        5,
-        FixedDiceProvider([14, 4, 5, 14, 4, 5]),
+        battlefield,
+        FixedDiceProvider([14, 4, 5, 15, 4, 5]),
     )
+    attacks = [event for event in events if event.event_type == "attack"]
 
     assert boss.template.challenge_rating == "4"
     assert boss.template.armor_class == 16
     assert boss.template.max_hp == 82
     assert boss.template.attacks_per_action == 2
-    assert len(events) == 2
-    assert [event.damage_applied for event in events] == [12, 12]
+    assert [event.weapon_id for event in attacks] == ["warhammer", "heavy-crossbow"]
+    assert [event.damage_applied for event in attacks] == [12, 11]
+    assert battlefield.distance_ft == 15
 
 
 def test_tough_boss_crossbow_uses_monster_damage_override() -> None:
