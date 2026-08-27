@@ -98,4 +98,5 @@ class CombatantState(BaseModel):
 
 
 class BattlefieldState(BaseModel):
+    starting_distance_ft: int = Field(default=5, ge=0)
     distance_ft: int = Field(default=5, ge=0)
