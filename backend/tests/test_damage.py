@@ -129,3 +129,27 @@ def test_damage_immunity_and_resistance_vulnerability_order() -> None:
 
     skeleton.template.damage_resistances = [DamageType.BLUDGEONING]
     assert calculate_applied_damage(skeleton, [bludgeoning]) == 4
+
+
+def test_same_type_components_are_combined_before_resistance() -> None:
+    skeleton = build_combatant_state(build_skeleton())
+    skeleton.template.damage_vulnerabilities = []
+    skeleton.template.damage_resistances = [DamageType.BLUDGEONING]
+    components = [
+        DamageRollComponent(
+            source="Base",
+            notation="1d4+0",
+            rolls=[3],
+            damage_type=DamageType.BLUDGEONING,
+            total=3,
+        ),
+        DamageRollComponent(
+            source="Rider",
+            notation="1d4+0",
+            rolls=[3],
+            damage_type=DamageType.BLUDGEONING,
+            total=3,
+        ),
+    ]
+
+    assert calculate_applied_damage(skeleton, components) == 3
