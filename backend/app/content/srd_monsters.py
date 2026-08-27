@@ -14,7 +14,7 @@ from app.content.srd_boss_attacks import (
     build_tough_boss_crossbow_attack,
     build_tough_boss_warhammer_attack,
 )
-from app.domain.models import CombatantTemplate, DamageType, VisualLoadout
+from app.domain.models import CombatantTemplate, DamageType, SizeCategory, VisualLoadout
 
 logger = logging.getLogger(__name__)
 
@@ -27,6 +27,7 @@ def build_skeleton() -> CombatantTemplate:
             archetype="Skeleton",
             challenge_rating="1/4",
             kind="monster",
+            size=SizeCategory.MEDIUM,
             armor_class=14,
             max_hp=13,
             speed_ft=30,
@@ -55,6 +56,7 @@ def build_ogre() -> CombatantTemplate:
             archetype="Ogre",
             challenge_rating="2",
             kind="monster",
+            size=SizeCategory.LARGE,
             armor_class=11,
             max_hp=68,
             speed_ft=40,
@@ -81,6 +83,7 @@ def build_knight() -> CombatantTemplate:
             archetype="Knight",
             challenge_rating="3",
             kind="monster",
+            size=SizeCategory.MEDIUM,
             armor_class=18,
             max_hp=52,
             speed_ft=30,
@@ -108,6 +111,7 @@ def build_tough_boss() -> CombatantTemplate:
             archetype="Tough Boss",
             challenge_rating="4",
             kind="monster",
+            size=SizeCategory.MEDIUM,
             armor_class=16,
             max_hp=82,
             speed_ft=30,
