@@ -6,6 +6,14 @@
     catch (error) { console.error("Animation delay failed", error); return Promise.resolve(); }
   }
 
+  function projectileGlyph(projectile) {
+    try {
+      if (projectile === "arrow") return "➤";
+      if (projectile === "javelin") return "➟";
+      return "•";
+    } catch (error) { console.error("Projectile glyph lookup failed", error); return "•"; }
+  }
+
   window.createIronPitAnimations = function createIronPitAnimations(arenaState, setHp, setDistance) {
     try {
       const projectile = document.querySelector("#projectile");
@@ -18,7 +26,7 @@
       async function animateProjectile(event) {
         try {
           const actor = slotForActor(event.actor_id);
-          projectile.textContent = event.projectile === "arrow" ? "➤" : "•";
+          projectile.textContent = projectileGlyph(event.projectile);
           projectile.className = `projectile ${actor === "fighter" ? "fly-right" : "fly-left"}`;
           if (event.critical) projectile.classList.add("projectile-critical");
           await sleep(520);
