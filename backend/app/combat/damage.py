@@ -37,24 +37,20 @@ def calculate_applied_damage(
     defender: CombatantState,
     components: list[DamageRollComponent],
 ) -> int:
+    """Apply Immunity, then SRD Resistance-before-Vulnerability ordering per damage instance."""
     try:
         total = 0
         template = defender.template
         for component in components:
             damage_type = component.damage_type
             if damage_type in template.damage_immunities:
-                applied = 0
-            else:
-                resistant = damage_type in template.damage_resistances
-                vulnerable = damage_type in template.damage_vulnerabilities
-                if resistant and vulnerable:
-                    applied = component.total
-                elif resistant:
-                    applied = component.total // 2
-                elif vulnerable:
-                    applied = component.total * 2
-                else:
-                    applied = component.total
+                continue
+
+            applied = component.total
+            if damage_type in template.damage_resistances:
+                applied //= 2
+            if damage_type in template.damage_vulnerabilities:
+                applied *= 2
             total += max(0, applied)
         return total
     except Exception as exc:
