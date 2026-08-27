@@ -7,6 +7,7 @@ from app.combat.damage import resolve_weapon_damage
 from app.combat.dice import DiceProvider
 from app.combat.fighter import use_second_wind
 from app.combat.policy import should_use_second_wind
+from app.combat.range import resolve_attack_roll_mode
 from app.combat.rolls import roll_d20
 from app.combat.state import begin_turn, build_combatant_state
 from app.domain.models import (
@@ -15,7 +16,6 @@ from app.domain.models import (
     BattleResult,
     CombatantState,
     CombatantTemplate,
-    RollMode,
 )
 
 logger = logging.getLogger(__name__)
@@ -27,11 +27,13 @@ def _resolve_attack(
     round_number: int,
     attacker: CombatantState,
     defender: CombatantState,
+    distance_ft: int,
     dice: DiceProvider,
-    mode: RollMode = RollMode.NORMAL,
 ) -> BattleEvent:
     try:
-        attack_roll = roll_d20(dice, attacker.template.weapon.attack_bonus, mode)
+        weapon = attacker.template.weapon
+        mode = resolve_attack_roll_mode(weapon, distance_ft)
+        attack_roll = roll_d20(dice, weapon.attack_bonus, mode)
         natural = attack_roll.selected_roll or 0
         critical = natural == 20
         hit = natural != 1 and (critical or attack_roll.total >= defender.template.armor_class)
@@ -56,8 +58,8 @@ def _resolve_attack(
             attack_roll=attack_roll, damage_roll=damage_roll,
             damage_components=damage_components, hit=hit, critical=critical,
             hp_before=hp_before, hp_after=defender.current_hp,
-            animation=attacker.template.weapon.animation,
-            description=f"{attacker.template.name}: {outcome} with {attacker.template.weapon.name}.",
+            animation=weapon.animation,
+            description=f"{attacker.template.name}: {outcome} with {weapon.name}.",
         )
     except Exception as exc:
         logger.exception("Attack failed: %s -> %s.", attacker.template.name, defender.template.name)
@@ -102,7 +104,9 @@ def run_duel(
                 if attacker is fighter and should_use_second_wind(fighter):
                     events.append(use_second_wind(sequence, round_number, fighter, dice))
                     sequence += 1
-                event = _resolve_attack(sequence, round_number, attacker, defender, dice)
+                event = _resolve_attack(
+                    sequence, round_number, attacker, defender, battlefield.distance_ft, dice
+                )
                 events.append(event)
                 sequence += 1
                 if not defender.is_alive:
