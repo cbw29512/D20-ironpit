@@ -3,7 +3,15 @@ from __future__ import annotations
 import logging
 
 from app.content.equipment import build_longsword
-from app.domain.models import Ability, CombatantTemplate, ResourceDefinition, Skill, VisualLoadout, WeaponAttack
+from app.domain.models import (
+    Ability,
+    CombatantTemplate,
+    CreatureType,
+    ResourceDefinition,
+    Skill,
+    VisualLoadout,
+    WeaponAttack,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -50,6 +58,7 @@ def _build_longsword_fighter(
             archetype="Fighter",
             level=level,
             kind="character",
+            creature_type=CreatureType.HUMANOID,
             armor_class=19,
             max_hp=max_hp,
             speed_ft=30,
