@@ -25,6 +25,7 @@ from app.domain.encounters import (
     distance_between,
 )
 from app.domain.events import BattleEvent, BattleResult, DamageRollComponent, DiceRoll, RollMode
+from app.domain.multiattack import MultiattackDefinition
 from app.domain.save_actions import SaveAction, SaveFailureEffect
 
 __all__ = [
@@ -50,6 +51,7 @@ __all__ = [
     "EncounterParticipantState",
     "EncounterRequest",
     "EncounterState",
+    "MultiattackDefinition",
     "ResourceDefinition",
     "ResourceState",
     "RollMode",
