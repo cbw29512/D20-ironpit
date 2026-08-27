@@ -4,6 +4,7 @@ import logging
 
 from app.domain.models import (
     AttackEffect,
+    ConditionalDamage,
     ConditionType,
     DamageType,
     SizeCategory,
@@ -92,3 +93,31 @@ def build_lion_rend_attack() -> WeaponAttack:
     except Exception as exc:
         logger.exception("Failed to build Lion Rend attack.")
         raise RuntimeError("Lion Rend attack could not be created.") from exc
+
+
+def build_giant_spider_bite_attack() -> WeaponAttack:
+    try:
+        return WeaponAttack(
+            id="giant-spider-bite",
+            weapon=Weapon(
+                id="giant-spider-bite",
+                name="Bite",
+                attack_kind=WeaponAttackKind.MELEE,
+                dice_count=1,
+                dice_size=8,
+                damage_type=DamageType.PIERCING,
+                animation="bite",
+                reach_ft=5,
+            ),
+            attack_bonus=5,
+            damage_bonus=3,
+            conditional_damage=[ConditionalDamage(
+                trigger="always",
+                dice_count=2,
+                dice_size=6,
+                damage_type=DamageType.POISON,
+            )],
+        )
+    except Exception as exc:
+        logger.exception("Failed to build Giant Spider Bite attack.")
+        raise RuntimeError("Giant Spider Bite attack could not be created.") from exc
