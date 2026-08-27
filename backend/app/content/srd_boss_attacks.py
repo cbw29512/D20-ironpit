@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.content.srd_equipment import build_heavy_crossbow, build_warhammer
-from app.domain.models import DamageDiceOverride, WeaponAttack
+from app.domain.models import AttackEffect, DamageDiceOverride, SizeCategory, WeaponAttack
 
 logger = logging.getLogger(__name__)
 
@@ -16,6 +16,14 @@ def build_tough_boss_warhammer_attack() -> WeaponAttack:
             attack_bonus=5,
             damage_bonus=3,
             damage_dice=DamageDiceOverride(dice_count=2, dice_size=8),
+            on_hit_effects=[
+                AttackEffect(
+                    id="tough-boss-warhammer-push",
+                    effect_type="push",
+                    distance_ft=10,
+                    max_target_size=SizeCategory.LARGE,
+                )
+            ],
         )
     except Exception as exc:
         logger.exception("Failed to build Tough Boss warhammer attack.")
