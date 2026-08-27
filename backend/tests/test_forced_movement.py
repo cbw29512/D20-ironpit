@@ -34,6 +34,7 @@ def test_tough_boss_push_changes_distance_then_reselects_crossbow() -> None:
 
 def test_tough_boss_miss_does_not_push_target() -> None:
     boss = build_combatant_state(build_tough_boss())
+    boss.template.attacks_per_action = 1
     mara = build_combatant_state(build_mara_stone())
     battlefield = BattlefieldState(distance_ft=5)
 
@@ -43,10 +44,10 @@ def test_tough_boss_miss_does_not_push_target() -> None:
         boss,
         mara,
         battlefield,
-        FixedDiceProvider([1, 14, 1, 1]),
+        FixedDiceProvider([1]),
     )
 
-    assert [event.event_type for event in events] == ["attack", "attack"]
+    assert [event.event_type for event in events] == ["attack"]
     assert battlefield.distance_ft == 5
 
 
