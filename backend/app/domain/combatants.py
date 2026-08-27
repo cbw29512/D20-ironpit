@@ -98,6 +98,7 @@ class CombatantTemplate(BaseModel):
     ability_modifiers: dict[Ability, int] = Field(default_factory=dict)
     saving_throw_modifiers: dict[Ability, int] = Field(default_factory=dict)
     skill_modifiers: dict[Skill, int] = Field(default_factory=dict)
+    free_hands: int = Field(default=0, ge=0, le=2)
     attacks_per_action: int = Field(default=1, ge=1, le=10)
     damage_vulnerabilities: list[DamageType] = Field(default_factory=list)
     damage_resistances: list[DamageType] = Field(default_factory=list)
