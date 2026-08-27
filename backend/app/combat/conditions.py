@@ -16,6 +16,7 @@ _SUPPORTED = {
     ConditionType.GRAPPLED,
     ConditionType.POISONED,
     ConditionType.FRIGHTENED,
+    ConditionType.PARALYZED,
 }
 
 
@@ -64,57 +65,9 @@ def remove_condition(state: CombatantState, condition: ConditionType) -> bool:
     return len(state.conditions) != before
 
 
-def _visible_fear(state: CombatantState, visible_source_ids: set[str] | None) -> bool:
-    frightened = condition_state(state, ConditionType.FRIGHTENED)
-    return bool(
-        frightened
-        and frightened.source_id
-        and visible_source_ids
-        and frightened.source_id in visible_source_ids
-    )
-
-
-def ability_check_condition_sources(
-    state: CombatantState,
-    visible_source_ids: set[str] | None = None,
-) -> tuple[int, int]:
-    disadvantage = int(has_condition(state, ConditionType.POISONED))
-    disadvantage += int(_visible_fear(state, visible_source_ids))
-    return 0, disadvantage
-
-
 def can_willingly_approach(state: CombatantState, target_id: str) -> bool:
     frightened = condition_state(state, ConditionType.FRIGHTENED)
     return frightened is None or frightened.source_id != target_id
-
-
-def attack_condition_sources(
-    attacker: CombatantState,
-    defender: CombatantState,
-    distance_ft: int,
-    visible_source_ids: set[str] | None = None,
-) -> tuple[int, int]:
-    try:
-        advantage = 0
-        disadvantage = 0
-        if has_condition(attacker, ConditionType.PRONE):
-            disadvantage += 1
-        if has_condition(attacker, ConditionType.POISONED):
-            disadvantage += 1
-        if _visible_fear(attacker, visible_source_ids):
-            disadvantage += 1
-        grapple = condition_state(attacker, ConditionType.GRAPPLED)
-        if grapple is not None and defender.instance_id != grapple.source_id:
-            disadvantage += 1
-        if has_condition(defender, ConditionType.PRONE):
-            if distance_ft <= 5:
-                advantage += 1
-            else:
-                disadvantage += 1
-        return advantage, disadvantage
-    except Exception as exc:
-        logger.exception("Failed to resolve condition attack modifiers.")
-        raise RuntimeError("Condition attack modifiers could not be resolved.") from exc
 
 
 def stand_from_prone(
