@@ -2,10 +2,21 @@ from __future__ import annotations
 
 import logging
 
-from app.domain.models import BattleEvent, CombatantState, ConditionState, ConditionType
+from app.domain.models import (
+    BattleEvent,
+    CombatantState,
+    ConditionExpiry,
+    ConditionState,
+    ConditionType,
+)
 
 logger = logging.getLogger(__name__)
-_SUPPORTED = {ConditionType.PRONE, ConditionType.GRAPPLED, ConditionType.POISONED}
+_SUPPORTED = {
+    ConditionType.PRONE,
+    ConditionType.GRAPPLED,
+    ConditionType.POISONED,
+    ConditionType.FRIGHTENED,
+}
 
 
 def condition_state(state: CombatantState, condition: ConditionType) -> ConditionState | None:
@@ -21,6 +32,7 @@ def apply_condition(
     condition: ConditionType,
     source: CombatantState | None = None,
     escape_dc: int | None = None,
+    expires_on: ConditionExpiry | None = None,
 ) -> bool:
     try:
         if condition not in _SUPPORTED:
@@ -29,11 +41,14 @@ def apply_condition(
             return False
         if condition is ConditionType.GRAPPLED and (source is None or escape_dc is None):
             raise ValueError("Grappled requires a source and escape DC.")
+        if condition is ConditionType.FRIGHTENED and source is None:
+            raise ValueError("Frightened requires a fear source.")
         state.conditions.append(ConditionState(
             condition=condition,
             source_id=source.instance_id if source else None,
             source_name=source.template.name if source else None,
             escape_dc=escape_dc,
+            expires_on=expires_on,
         ))
         return True
     except ValueError:
@@ -49,14 +64,35 @@ def remove_condition(state: CombatantState, condition: ConditionType) -> bool:
     return len(state.conditions) != before
 
 
-def ability_check_condition_sources(state: CombatantState) -> tuple[int, int]:
-    return (0, 1 if has_condition(state, ConditionType.POISONED) else 0)
+def _visible_fear(state: CombatantState, visible_source_ids: set[str] | None) -> bool:
+    frightened = condition_state(state, ConditionType.FRIGHTENED)
+    return bool(
+        frightened
+        and frightened.source_id
+        and visible_source_ids
+        and frightened.source_id in visible_source_ids
+    )
+
+
+def ability_check_condition_sources(
+    state: CombatantState,
+    visible_source_ids: set[str] | None = None,
+) -> tuple[int, int]:
+    disadvantage = int(has_condition(state, ConditionType.POISONED))
+    disadvantage += int(_visible_fear(state, visible_source_ids))
+    return 0, disadvantage
+
+
+def can_willingly_approach(state: CombatantState, target_id: str) -> bool:
+    frightened = condition_state(state, ConditionType.FRIGHTENED)
+    return frightened is None or frightened.source_id != target_id
 
 
 def attack_condition_sources(
     attacker: CombatantState,
     defender: CombatantState,
     distance_ft: int,
+    visible_source_ids: set[str] | None = None,
 ) -> tuple[int, int]:
     try:
         advantage = 0
@@ -64,6 +100,8 @@ def attack_condition_sources(
         if has_condition(attacker, ConditionType.PRONE):
             disadvantage += 1
         if has_condition(attacker, ConditionType.POISONED):
+            disadvantage += 1
+        if _visible_fear(attacker, visible_source_ids):
             disadvantage += 1
         grapple = condition_state(attacker, ConditionType.GRAPPLED)
         if grapple is not None and defender.instance_id != grapple.source_id:
