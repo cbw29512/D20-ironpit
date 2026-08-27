@@ -1,8 +1,10 @@
 from app.combat.dice import FixedDiceProvider
 from app.combat.general_actions import take_disengage
+from app.combat.movement import move_away_from_target
 from app.combat.reactions import resolve_opportunity_attack
 from app.combat.state import begin_turn, build_combatant_state
 from app.content.demo import build_demo_fighter, build_goblin_warrior
+from app.domain.models import BattlefieldState
 
 
 def _states():
@@ -88,6 +90,53 @@ def test_staying_in_reach_or_being_unseen_does_not_provoke() -> None:
         FixedDiceProvider([20, 8, 8]),
         mover_visible=False,
     ) is None
+    assert fighter.reaction_available is True
+
+
+def test_voluntary_departure_resolves_reaction_before_movement() -> None:
+    fighter, goblin = _states()
+    battlefield = BattlefieldState(distance_ft=5)
+    begin_turn(goblin)
+
+    events = move_away_from_target(
+        1, 1, goblin, fighter, battlefield, 5, FixedDiceProvider([10, 5])
+    )
+
+    assert [event.event_type for event in events] == ["opportunity_attack", "movement"]
+    assert events[0].distance_before_ft is None
+    assert events[1].distance_before_ft == 5
+    assert events[1].distance_after_ft == 10
+    assert battlefield.distance_ft == 10
+    assert fighter.reaction_available is False
+
+
+def test_lethal_opportunity_attack_stops_departure_before_it_happens() -> None:
+    fighter, goblin = _states()
+    battlefield = BattlefieldState(distance_ft=5)
+    begin_turn(goblin)
+
+    events = move_away_from_target(
+        1, 1, goblin, fighter, battlefield, 5, FixedDiceProvider([20, 8, 8])
+    )
+
+    assert [event.event_type for event in events] == ["opportunity_attack"]
+    assert goblin.is_alive is False
+    assert battlefield.distance_ft == 5
+    assert goblin.movement_spent_ft == 0
+
+
+def test_disengaged_departure_moves_without_reaction() -> None:
+    fighter, goblin = _states()
+    battlefield = BattlefieldState(distance_ft=5)
+    begin_turn(goblin)
+    take_disengage(1, 1, goblin)
+
+    events = move_away_from_target(
+        2, 1, goblin, fighter, battlefield, 5, FixedDiceProvider([20, 8, 8])
+    )
+
+    assert [event.event_type for event in events] == ["movement"]
+    assert battlefield.distance_ft == 10
     assert fighter.reaction_available is True
 
 
