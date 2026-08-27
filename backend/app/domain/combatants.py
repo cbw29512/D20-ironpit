@@ -10,6 +10,7 @@ from app.domain.conditions import ConditionState, ConditionType
 from app.domain.creatures import CreatureType
 from app.domain.effects import AttackEffect, SizeCategory
 from app.domain.multiattack import MultiattackDefinition
+from app.domain.recharge import RechargeState
 from app.domain.save_actions import SaveAction
 
 
@@ -120,7 +121,6 @@ class CombatantTemplate(BaseModel):
     resources: list[ResourceDefinition] = Field(default_factory=list)
     source: str
 
-
 class DemoRoster(BaseModel):
     fighter: CombatantTemplate
     monster: CombatantTemplate
@@ -139,8 +139,8 @@ class CombatantState(BaseModel):
     action_surge_used_this_turn: bool = False
     movement_remaining_ft: int = Field(default=0, ge=0)
     resources: list[ResourceState] = Field(default_factory=list)
+    recharges: list[RechargeState] = Field(default_factory=list)
     conditions: list[ConditionState] = Field(default_factory=list)
-
 
 class BattlefieldState(BaseModel):
     starting_distance_ft: int = Field(default=5, ge=0)
