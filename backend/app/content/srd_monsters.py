@@ -76,6 +76,15 @@ def build_ogre() -> CombatantTemplate:
             max_hp=68,
             speed_ft=40,
             initiative_bonus=-1,
+            proficiency_bonus=2,
+            ability_modifiers={
+                Ability.STRENGTH: 4,
+                Ability.DEXTERITY: -1,
+                Ability.CONSTITUTION: 3,
+                Ability.INTELLIGENCE: -3,
+                Ability.WISDOM: -2,
+                Ability.CHARISMA: -2,
+            },
             weapon_attack=build_ogre_greatclub_attack(),
             alternate_weapon_attacks=[build_ogre_javelin_attack()],
             visual=VisualLoadout(
