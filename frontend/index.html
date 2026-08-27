@@ -15,6 +15,7 @@
     </header>
 
     <section class="arena" aria-label="Battle arena">
+      <span id="projectile" class="projectile" aria-hidden="true">➤</span>
       <article class="combatant">
         <h2 id="fighter-name">Aldric Vane</h2>
         <p id="fighter-meta">Fighter 1 · Longsword + Shield · Chain Mail</p>
@@ -29,7 +30,7 @@
         </svg>
       </article>
 
-      <div class="versus">⚔</div>
+      <div class="versus"><span>⚔</span><small id="distance">5 ft</small></div>
 
       <article class="combatant">
         <h2 id="goblin-name">Goblin Warrior</h2>
@@ -47,7 +48,10 @@
     </section>
 
     <section class="controls">
-      <button id="fight-button" type="button">Enter the Pit</button>
+      <div class="button-row">
+        <button id="fight-button" type="button">Enter the Pit · 5 ft</button>
+        <button id="ranged-button" type="button">Start at 90 ft</button>
+      </div>
       <p id="status" aria-live="polite">Loading roster...</p>
     </section>
 
