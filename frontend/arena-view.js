@@ -1,11 +1,6 @@
 (() => {
   "use strict";
 
-  function sleep(ms) {
-    try { return new Promise((resolve) => setTimeout(resolve, ms)); }
-    catch (error) { console.error("Sleep helper failed", error); return Promise.resolve(); }
-  }
-
   function titleCase(value) {
     try { return String(value || "").replaceAll("-", " ").replace(/\b\w/g, (char) => char.toUpperCase()); }
     catch (error) { console.error("Title formatting failed", error); return String(value || ""); }
@@ -15,7 +10,10 @@
     try {
       const rank = template.level ? `${template.archetype} ${template.level}` : `CR ${template.challenge_rating}`;
       const offHand = template.visual.off_hand ? ` + ${titleCase(template.visual.off_hand)}` : "";
-      return `${rank} · ${template.weapon.name}${offHand} · ${titleCase(template.visual.armor)}`;
+      const alternates = template.alternate_weapons?.length
+        ? ` · Alt: ${template.alternate_weapons.map((weapon) => weapon.name).join(", ")}`
+        : "";
+      return `${rank} · ${template.weapon.name}${offHand} · ${titleCase(template.visual.armor)}${alternates}`;
     } catch (error) { console.error("Template description failed", error); return "Combatant"; }
   }
 
@@ -23,6 +21,12 @@
     try {
       const status = document.querySelector("#status");
       const log = document.querySelector("#battle-log");
+      const distance = document.querySelector("#distance");
+
+      function setDistance(value) {
+        try { distance.textContent = `${Math.max(0, Number(value) || 0)} ft`; }
+        catch (error) { console.error("Distance render failed", error); }
+      }
 
       function setHp(slot, current) {
         try {
@@ -52,44 +56,17 @@
         } catch (error) { console.error("Roster hydration failed", error); throw error; }
       }
 
-      function resetArena(message = "Rolling initiative...") {
+      function resetArena(message = "Rolling initiative...", startingDistance = 5) {
         try {
           log.innerHTML = "";
           for (const slot of ["fighter", "goblin"]) {
             document.querySelector(`#${slot}`).className.baseVal = `stick${slot === "goblin" ? " goblin" : ""}`;
             setHp(slot, arenaState[slot].maxHp);
           }
+          document.querySelector("#projectile").className = "projectile";
+          setDistance(startingDistance);
           status.textContent = message;
         } catch (error) { console.error("Arena reset failed", error); }
-      }
-
-      async function animateAttack(event) {
-        try {
-          const actor = event.actor_id === arenaState.fighter.id ? "fighter" : "goblin";
-          const target = actor === "fighter" ? "goblin" : "fighter";
-          const actorNode = document.querySelector(`#${actor}`);
-          const targetNode = document.querySelector(`#${target}`);
-          actorNode.classList.add("swing");
-          if (event.critical) actorNode.classList.add("critical");
-          await sleep(260);
-          if (event.hit) targetNode.classList.add("hit");
-          if (event.hp_after !== null) setHp(target, event.hp_after);
-          await sleep(420);
-          actorNode.classList.remove("swing", "critical");
-          targetNode.classList.remove("hit");
-        } catch (error) { console.error("Attack animation failed", error); }
-      }
-
-      async function animateHealing(event) {
-        try {
-          const slot = event.actor_id === arenaState.fighter.id ? "fighter" : "goblin";
-          const node = document.querySelector(`#${slot}`);
-          node.classList.add("healing");
-          await sleep(220);
-          if (event.hp_after !== null) setHp(slot, event.hp_after);
-          await sleep(420);
-          node.classList.remove("healing");
-        } catch (error) { console.error("Healing animation failed", error); }
       }
 
       function formatD20(roll) {
@@ -99,6 +76,8 @@
           return `${dice} + ${roll.modifier} = ${roll.total}`;
         } catch (error) { console.error("D20 formatting failed", error); return "roll unavailable"; }
       }
+
+      const animations = window.createIronPitAnimations(arenaState, setHp, setDistance);
 
       async function replay(events) {
         try {
@@ -111,14 +90,17 @@
             item.textContent = detail;
             log.appendChild(item);
             item.scrollIntoView({ block: "nearest" });
-            if (event.event_type === "attack") await animateAttack(event);
-            else if (event.event_type === "healing") await animateHealing(event);
-            else await sleep(300);
+            await animations.play(event);
           }
         } catch (error) { console.error("Battle replay failed", error); throw error; }
       }
 
-      return { hydrateRoster, resetArena, replay, setStatus: (message) => { status.textContent = message; } };
+      return {
+        hydrateRoster,
+        resetArena,
+        replay,
+        setStatus: (message) => { status.textContent = message; },
+      };
     } catch (error) {
       console.error("Arena view initialization failed", error);
       throw error;
