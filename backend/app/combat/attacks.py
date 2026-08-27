@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.conditions import attack_condition_sources
+from app.combat.condition_modifiers import attack_condition_sources, is_auto_critical_hit
 from app.combat.damage import calculate_applied_damage, resolve_weapon_damage
 from app.combat.dice import DiceProvider
 from app.combat.range import resolve_attack_roll_mode
@@ -36,8 +36,13 @@ def resolve_attack(
         )
         attack_roll = roll_d20(dice, attack.attack_bonus, mode)
         natural = attack_roll.selected_roll or 0
-        critical = natural == 20
-        hit = natural != 1 and (critical or attack_roll.total >= defender.template.armor_class)
+        natural_critical = natural == 20
+        hit = natural != 1 and (
+            natural_critical or attack_roll.total >= defender.template.armor_class
+        )
+        critical = hit and (
+            natural_critical or is_auto_critical_hit(defender, distance_ft)
+        )
         hp_before = defender.current_hp
         damage_roll = None
         damage_components = []
