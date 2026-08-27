@@ -70,7 +70,7 @@ def _knight_entry() -> CatalogEntry:
             RulesCoverageItem(
                 feature_id="multiattack-selection",
                 coverage=RulesCoverage.ARENA_ASSUMPTION,
-                note="The arena repeats one selected legal profile; the SRD allows either weapon in any combination.",
+                note="Each strike reselects the primary legal profile, then its legal alternate.",
             ),
             RulesCoverageItem(feature_id="parry", coverage=RulesCoverage.UNSUPPORTED),
             RulesCoverageItem(feature_id="frightened-immunity", coverage=RulesCoverage.UNSUPPORTED),
@@ -85,10 +85,11 @@ def _tough_boss_entry() -> CatalogEntry:
         rules_coverage=[
             RulesCoverageItem(feature_id="warhammer", coverage=RulesCoverage.FULLY_IMPLEMENTED),
             RulesCoverageItem(feature_id="heavy-crossbow", coverage=RulesCoverage.FULLY_IMPLEMENTED),
+            RulesCoverageItem(feature_id="warhammer-push", coverage=RulesCoverage.FULLY_IMPLEMENTED),
             RulesCoverageItem(
                 feature_id="multiattack-selection",
                 coverage=RulesCoverage.ARENA_ASSUMPTION,
-                note="The arena repeats one selected legal profile; the SRD allows either weapon in any combination.",
+                note="Each strike reselects the primary legal profile, then its legal alternate.",
             ),
             RulesCoverageItem(
                 feature_id="pack-tactics",
@@ -96,9 +97,9 @@ def _tough_boss_entry() -> CatalogEntry:
                 note="The current duel has no allied creature that could trigger Pack Tactics.",
             ),
             RulesCoverageItem(
-                feature_id="warhammer-push",
-                coverage=RulesCoverage.UNSUPPORTED,
-                note="Forced movement from the Warhammer hit is not yet modeled.",
+                feature_id="size-choice",
+                coverage=RulesCoverage.ARENA_ASSUMPTION,
+                note="The SRD allows Medium or Small; the arena instantiates this entry as Medium.",
             ),
         ],
     )
