@@ -8,7 +8,7 @@ from app.content.attacks import (
     build_goblin_shortbow_attack,
 )
 from app.content.equipment import build_fighter_visual_loadout, build_goblin_visual_loadout
-from app.domain.models import CombatantTemplate, ResourceDefinition, SizeCategory
+from app.domain.models import Ability, CombatantTemplate, ResourceDefinition, SizeCategory, Skill
 
 logger = logging.getLogger(__name__)
 
@@ -26,11 +26,20 @@ def build_demo_fighter() -> CombatantTemplate:
             max_hp=12,
             speed_ft=30,
             initiative_bonus=1,
+            proficiency_bonus=2,
+            ability_modifiers={
+                Ability.STRENGTH: 3,
+                Ability.DEXTERITY: 1,
+                Ability.CONSTITUTION: 2,
+                Ability.INTELLIGENCE: 0,
+                Ability.WISDOM: 0,
+                Ability.CHARISMA: 0,
+            },
+            saving_throw_modifiers={Ability.STRENGTH: 5, Ability.CONSTITUTION: 4},
+            skill_modifiers={Skill.ATHLETICS: 5, Skill.ACROBATICS: 1},
             weapon_attack=build_fighter_longsword_attack(),
             visual=build_fighter_visual_loadout(),
-            resources=[
-                ResourceDefinition(id="second-wind", name="Second Wind", max_uses=2),
-            ],
+            resources=[ResourceDefinition(id="second-wind", name="Second Wind", max_uses=2)],
             source="Original pregen using SRD 5.2.1 rules",
         )
     except Exception as exc:
@@ -51,6 +60,15 @@ def build_goblin_warrior() -> CombatantTemplate:
             max_hp=10,
             speed_ft=30,
             initiative_bonus=2,
+            proficiency_bonus=2,
+            ability_modifiers={
+                Ability.STRENGTH: -1,
+                Ability.DEXTERITY: 2,
+                Ability.CONSTITUTION: 0,
+                Ability.INTELLIGENCE: 0,
+                Ability.WISDOM: -1,
+                Ability.CHARISMA: -1,
+            },
             weapon_attack=build_goblin_scimitar_attack(),
             alternate_weapon_attacks=[build_goblin_shortbow_attack()],
             visual=build_goblin_visual_loadout(),
