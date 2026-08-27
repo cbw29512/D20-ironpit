@@ -10,12 +10,14 @@ from app.combat.policy import should_use_second_wind
 from app.combat.range import resolve_attack_roll_mode
 from app.combat.rolls import roll_d20
 from app.combat.state import begin_turn, build_combatant_state
+from app.combat.turns import prepare_attack
 from app.domain.models import (
     BattleEvent,
     BattlefieldState,
     BattleResult,
     CombatantState,
     CombatantTemplate,
+    Weapon,
 )
 
 logger = logging.getLogger(__name__)
@@ -27,13 +29,16 @@ def _resolve_attack(
     round_number: int,
     attacker: CombatantState,
     defender: CombatantState,
+    weapon: Weapon,
     distance_ft: int,
     dice: DiceProvider,
 ) -> BattleEvent:
     try:
-        weapon = attacker.template.weapon
+        if not attacker.action_available:
+            raise ValueError("Action is not available for an attack.")
         mode = resolve_attack_roll_mode(weapon, distance_ft)
         attack_roll = roll_d20(dice, weapon.attack_bonus, mode)
+        attacker.action_available = False
         natural = attack_roll.selected_roll or 0
         critical = natural == 20
         hit = natural != 1 and (critical or attack_roll.total >= defender.template.armor_class)
@@ -42,10 +47,7 @@ def _resolve_attack(
         damage_components = []
         if hit:
             damage_roll, damage_components = resolve_weapon_damage(
-                attacker=attacker,
-                dice=dice,
-                critical=critical,
-                attack_mode=mode,
+                attacker, weapon, dice, critical, mode
             )
             defender.current_hp = max(0, defender.current_hp - damage_roll.total)
             defender.is_alive = defender.current_hp > 0
@@ -58,6 +60,7 @@ def _resolve_attack(
             attack_roll=attack_roll, damage_roll=damage_roll,
             damage_components=damage_components, hit=hit, critical=critical,
             hp_before=hp_before, hp_after=defender.current_hp,
+            weapon_id=weapon.id, projectile=weapon.projectile,
             animation=weapon.animation,
             description=f"{attacker.template.name}: {outcome} with {weapon.name}.",
         )
@@ -70,11 +73,12 @@ def run_duel(
     fighter_template: CombatantTemplate,
     monster_template: CombatantTemplate,
     dice: DiceProvider,
+    starting_distance_ft: int = 5,
 ) -> BattleResult:
     try:
         fighter = build_combatant_state(fighter_template)
         monster = build_combatant_state(monster_template)
-        battlefield = BattlefieldState(distance_ft=5)
+        battlefield = BattlefieldState(distance_ft=starting_distance_ft)
         events: list[BattleEvent] = []
         sequence = 1
 
@@ -104,8 +108,17 @@ def run_duel(
                 if attacker is fighter and should_use_second_wind(fighter):
                     events.append(use_second_wind(sequence, round_number, fighter, dice))
                     sequence += 1
+
+                weapon, prep_events, sequence = prepare_attack(
+                    sequence, round_number, attacker, battlefield
+                )
+                events.extend(prep_events)
+                if weapon is None:
+                    continue
+
                 event = _resolve_attack(
-                    sequence, round_number, attacker, defender, battlefield.distance_ft, dice
+                    sequence, round_number, attacker, defender,
+                    weapon, battlefield.distance_ft, dice,
                 )
                 events.append(event)
                 sequence += 1
