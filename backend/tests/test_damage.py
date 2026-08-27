@@ -10,7 +10,7 @@ def test_goblin_normal_hit_does_not_get_advantage_bonus_damage() -> None:
 
     total, components = resolve_weapon_damage(
         goblin,
-        goblin.template.weapon,
+        goblin.template.weapon_attack,
         FixedDiceProvider([4]),
         critical=False,
         attack_mode=RollMode.NORMAL,
@@ -26,7 +26,7 @@ def test_goblin_advantage_hit_adds_one_d4_damage() -> None:
 
     total, components = resolve_weapon_damage(
         goblin,
-        goblin.template.weapon,
+        goblin.template.weapon_attack,
         FixedDiceProvider([4, 3]),
         critical=False,
         attack_mode=RollMode.ADVANTAGE,
@@ -42,7 +42,7 @@ def test_goblin_advantage_critical_doubles_base_and_bonus_damage_dice() -> None:
 
     total, components = resolve_weapon_damage(
         goblin,
-        goblin.template.weapon,
+        goblin.template.weapon_attack,
         FixedDiceProvider([4, 5, 2, 3]),
         critical=True,
         attack_mode=RollMode.ADVANTAGE,
@@ -57,7 +57,7 @@ def test_longsword_has_no_goblin_advantage_bonus_damage() -> None:
 
     total, components = resolve_weapon_damage(
         fighter,
-        fighter.template.weapon,
+        fighter.template.weapon_attack,
         FixedDiceProvider([7]),
         critical=False,
         attack_mode=RollMode.ADVANTAGE,
