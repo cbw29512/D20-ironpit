@@ -12,6 +12,7 @@ def build_combatant_state(template: CombatantTemplate) -> CombatantState:
         return CombatantState(
             template=template,
             current_hp=template.max_hp,
+            movement_remaining_ft=0,
             resources=[
                 ResourceState(
                     id=resource.id,
@@ -29,7 +30,9 @@ def build_combatant_state(template: CombatantTemplate) -> CombatantState:
 
 def begin_turn(state: CombatantState) -> None:
     try:
+        state.action_available = True
         state.bonus_action_available = True
+        state.movement_remaining_ft = state.template.speed_ft
     except Exception as exc:
         logger.exception("Failed to begin turn for %s.", state.template.name)
         raise RuntimeError("Turn state could not be initialized.") from exc
