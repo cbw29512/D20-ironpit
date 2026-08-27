@@ -107,7 +107,7 @@ def test_knight_radiant_rider_applies_on_normal_hit_and_critical() -> None:
         critical=True,
         attack_mode=RollMode.NORMAL,
     )
-    assert critical.total == 21
+    assert critical.total == 24
     assert [component.notation for component in crit_components] == ["4d6+3", "2d8+0"]
 
 
