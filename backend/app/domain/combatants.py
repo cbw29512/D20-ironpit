@@ -5,6 +5,8 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
+from app.domain.effects import AttackEffect, SizeCategory
+
 
 class DamageType(StrEnum):
     SLASHING = "slashing"
@@ -55,6 +57,7 @@ class WeaponAttack(BaseModel):
     damage_bonus: int
     damage_dice: DamageDiceOverride | None = None
     conditional_damage: list[ConditionalDamage] = Field(default_factory=list)
+    on_hit_effects: list[AttackEffect] = Field(default_factory=list)
 
 
 class VisualLoadout(BaseModel):
@@ -84,6 +87,7 @@ class CombatantTemplate(BaseModel):
     level: int | None = Field(default=None, ge=1, le=20)
     challenge_rating: str | None = None
     kind: Literal["character", "monster"]
+    size: SizeCategory = SizeCategory.MEDIUM
     armor_class: int = Field(ge=1)
     max_hp: int = Field(ge=1)
     speed_ft: int = Field(ge=0)
