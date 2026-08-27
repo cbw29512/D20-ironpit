@@ -3,7 +3,7 @@ from app.combat.damage import calculate_applied_damage, resolve_weapon_damage
 from app.combat.dice import FixedDiceProvider
 from app.combat.state import build_combatant_state
 from app.content.demo import build_demo_fighter, build_goblin_warrior
-from app.content.srd_monsters import build_ogre, build_skeleton
+from app.content.srd_monsters import build_knight, build_ogre, build_skeleton
 from app.domain.models import DamageRollComponent, DamageType, RollMode
 
 
@@ -84,6 +84,31 @@ def test_ogre_attack_profile_overrides_intrinsic_greatclub_dice() -> None:
     assert total.total == 13
     assert components[0].notation == "2d8+4"
     assert ogre.template.weapon_attack.weapon.dice_count == 1
+
+
+def test_knight_radiant_rider_applies_on_normal_hit_and_critical() -> None:
+    knight = build_combatant_state(build_knight())
+
+    total, components = resolve_weapon_damage(
+        knight,
+        knight.template.weapon_attack,
+        FixedDiceProvider([4, 5, 6]),
+        critical=False,
+        attack_mode=RollMode.NORMAL,
+    )
+    assert total.total == 18
+    assert [component.notation for component in components] == ["2d6+3", "1d8+0"]
+    assert components[1].damage_type is DamageType.RADIANT
+
+    critical, crit_components = resolve_weapon_damage(
+        knight,
+        knight.template.weapon_attack,
+        FixedDiceProvider([1, 2, 3, 4, 5, 6]),
+        critical=True,
+        attack_mode=RollMode.NORMAL,
+    )
+    assert critical.total == 21
+    assert [component.notation for component in crit_components] == ["4d6+3", "2d8+0"]
 
 
 def test_skeleton_bludgeoning_vulnerability_changes_applied_not_raw_damage() -> None:
