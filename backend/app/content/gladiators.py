@@ -8,6 +8,19 @@ from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoado
 logger = logging.getLogger(__name__)
 
 
+def _fighter_resources(level: int, second_wind_uses: int) -> list[ResourceDefinition]:
+    resources = [ResourceDefinition(id="second-wind", name="Second Wind", max_uses=second_wind_uses)]
+    if level >= 2:
+        resources.append(
+            ResourceDefinition(
+                id="action-surge",
+                name="Action Surge",
+                max_uses=2 if level >= 17 else 1,
+            )
+        )
+    return resources
+
+
 def _build_longsword_fighter(
     fighter_id: str,
     name: str,
@@ -44,7 +57,7 @@ def _build_longsword_fighter(
                 off_hand="shield",
                 body_style="humanoid",
             ),
-            resources=[ResourceDefinition(id="second-wind", name="Second Wind", max_uses=second_wind_uses)],
+            resources=_fighter_resources(level, second_wind_uses),
             source=f"Original Level {level} Fighter pregen using SRD 5.2.1 progression",
         )
     except Exception as exc:
@@ -53,18 +66,12 @@ def _build_longsword_fighter(
 
 
 def build_mara_stone() -> CombatantTemplate:
-    return _build_longsword_fighter(
-        "mara-stone-l5", "Mara Stone", 5, 44, 7, 4, 2, 3
-    )
+    return _build_longsword_fighter("mara-stone-l5", "Mara Stone", 5, 44, 7, 4, 2, 3)
 
 
 def build_darius_flint() -> CombatantTemplate:
-    return _build_longsword_fighter(
-        "darius-flint-l11", "Darius Flint", 11, 92, 9, 5, 3, 4
-    )
+    return _build_longsword_fighter("darius-flint-l11", "Darius Flint", 11, 92, 9, 5, 3, 4)
 
 
 def build_vera_ash() -> CombatantTemplate:
-    return _build_longsword_fighter(
-        "vera-ash-l20", "Vera Ash", 20, 164, 11, 5, 4, 4
-    )
+    return _build_longsword_fighter("vera-ash-l20", "Vera Ash", 20, 164, 11, 5, 4, 4)
