@@ -15,7 +15,7 @@ from app.domain.combatants import (
     WeaponAttack,
     WeaponAttackKind,
 )
-from app.domain.conditions import ConditionState, ConditionType
+from app.domain.conditions import ConditionExpiry, ConditionState, ConditionType
 from app.domain.effects import AttackEffect, SizeCategory
 from app.domain.encounters import (
     EncounterParticipantRequest,
@@ -36,6 +36,7 @@ __all__ = [
     "CatalogEntry",
     "CombatantState",
     "CombatantTemplate",
+    "ConditionExpiry",
     "ConditionState",
     "ConditionType",
     "ConditionalDamage",
