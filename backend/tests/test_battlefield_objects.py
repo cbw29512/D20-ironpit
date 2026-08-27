@@ -10,6 +10,7 @@ from app.domain.models import (
     BattlefieldState,
     ConditionType,
     DamageType,
+    RollMode,
     SaveAction,
     SaveFailureEffect,
 )
@@ -97,9 +98,17 @@ def test_destroying_one_of_two_objects_keeps_other_condition_source() -> None:
     battlefield = BattlefieldState(distance_ft=30)
     action = actor.template.save_actions[0]
 
-    resolve_save_action(1, 1, actor, target, 30, action, FixedDiceProvider([5]), battlefield=battlefield)
+    resolve_save_action(
+        1, 1, actor, target, 30, action,
+        FixedDiceProvider([5]), battlefield=battlefield,
+    )
     actor.action_available = True
-    resolve_save_action(4, 2, actor, target, 30, action, FixedDiceProvider([5]), battlefield=battlefield)
+    second_web_events = resolve_save_action(
+        4, 2, actor, target, 30, action,
+        FixedDiceProvider([5, 5]), battlefield=battlefield,
+    )
+    assert second_web_events[0].saving_throw is not None
+    assert second_web_events[0].saving_throw.mode is RollMode.DISADVANTAGE
     assert len([item for item in target.conditions if item.condition is ConditionType.RESTRAINED]) == 2
 
     first, second = battlefield.objects
