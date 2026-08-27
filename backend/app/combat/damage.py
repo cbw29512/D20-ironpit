@@ -33,6 +33,35 @@ def _roll_component(
         raise RuntimeError("Damage component could not be resolved.") from exc
 
 
+def calculate_applied_damage(
+    defender: CombatantState,
+    components: list[DamageRollComponent],
+) -> int:
+    try:
+        total = 0
+        template = defender.template
+        for component in components:
+            damage_type = component.damage_type
+            if damage_type in template.damage_immunities:
+                applied = 0
+            else:
+                resistant = damage_type in template.damage_resistances
+                vulnerable = damage_type in template.damage_vulnerabilities
+                if resistant and vulnerable:
+                    applied = component.total
+                elif resistant:
+                    applied = component.total // 2
+                elif vulnerable:
+                    applied = component.total * 2
+                else:
+                    applied = component.total
+            total += max(0, applied)
+        return total
+    except Exception as exc:
+        logger.exception("Damage defense resolution failed for %s.", defender.template.name)
+        raise RuntimeError("Applied damage could not be resolved.") from exc
+
+
 def resolve_weapon_damage(
     attacker: CombatantState,
     attack: WeaponAttack,
