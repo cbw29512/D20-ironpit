@@ -128,6 +128,24 @@ def test_escape_grapple_failure_keeps_condition() -> None:
     assert has_condition(fighter, ConditionType.GRAPPLED)
 
 
+def test_overlapping_grapples_end_one_source_at_a_time() -> None:
+    crab_one = build_combatant_state(build_giant_crab(), "crab-1")
+    crab_two = build_combatant_state(build_giant_crab(), "crab-2")
+    fighter = build_combatant_state(build_demo_fighter(), "fighter-1")
+    apply_condition(fighter, ConditionType.GRAPPLED, crab_one, escape_dc=11)
+    apply_condition(fighter, ConditionType.GRAPPLED, crab_two, escape_dc=11)
+    begin_turn(fighter)
+
+    events = attempt_escape_grapple(1, 2, fighter, FixedDiceProvider([9]))
+    grapples = [item for item in fighter.conditions if item.condition is ConditionType.GRAPPLED]
+
+    assert events[0].target_id == "crab-1"
+    assert len(grapples) == 1
+    assert grapples[0].source_id == "crab-2"
+    assert fighter.movement_remaining_ft == 0
+    assert has_condition(fighter, ConditionType.GRAPPLED)
+
+
 def test_unimplemented_condition_still_fails_closed() -> None:
     fighter = build_combatant_state(build_demo_fighter())
     with pytest.raises(ValueError, match="not fully implemented"):
