@@ -19,6 +19,7 @@ class DamageType(StrEnum):
     BLUDGEONING = "bludgeoning"
     POISON = "poison"
     RADIANT = "radiant"
+    NECROTIC = "necrotic"
 
 
 class WeaponAttackKind(StrEnum):
@@ -134,6 +135,7 @@ class CombatantState(BaseModel):
     is_alive: bool = True
     action_available: bool = True
     bonus_action_available: bool = True
+    reaction_available: bool = True
     action_surge_used_this_turn: bool = False
     movement_remaining_ft: int = Field(default=0, ge=0)
     resources: list[ResourceState] = Field(default_factory=list)
