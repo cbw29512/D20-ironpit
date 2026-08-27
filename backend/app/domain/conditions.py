@@ -28,5 +28,7 @@ class ConditionState(BaseModel):
     condition: ConditionType
     source_id: str | None = None
     source_name: str | None = None
+    effect_id: str | None = None
+    linked_object_id: str | None = None
     escape_dc: int | None = None
     expires_on: ConditionExpiry | None = None
