@@ -32,13 +32,15 @@ def resolve_save_action(
     distance_ft: int,
     action: SaveAction,
     dice: DiceProvider,
+    spend_action_cost: bool = True,
 ) -> list[BattleEvent]:
     try:
         if distance_ft > action.range_ft:
             raise ValueError(f"{action.name} target is out of range.")
         if action.target_limit != 1:
             raise ValueError("This resolver currently supports one target only.")
-        _spend_action_cost(actor, action)
+        if spend_action_cost:
+            _spend_action_cost(actor, action)
         roll, success = resolve_saving_throw(target, action.save_ability, action.dc, dice)
         events = [BattleEvent(
             sequence=sequence,
