@@ -1,6 +1,6 @@
-from app.combat.attack_actions import resolve_attack_action
 from app.combat.damage import resolve_weapon_damage
 from app.combat.dice import FixedDiceProvider
+from app.combat.multiattack import resolve_multiattack_action
 from app.combat.state import build_combatant_state
 from app.content.gladiators import build_vera_ash
 from app.content.srd_monsters import build_tough_boss
@@ -12,7 +12,7 @@ def test_tough_boss_core_stat_block_and_multiattack() -> None:
     fighter = build_combatant_state(build_vera_ash())
     battlefield = BattlefieldState(distance_ft=5)
 
-    events = resolve_attack_action(
+    events = resolve_multiattack_action(
         1,
         1,
         boss,
@@ -25,7 +25,9 @@ def test_tough_boss_core_stat_block_and_multiattack() -> None:
     assert boss.template.challenge_rating == "4"
     assert boss.template.armor_class == 16
     assert boss.template.max_hp == 82
-    assert boss.template.attacks_per_action == 2
+    assert boss.template.attacks_per_action == 1
+    assert boss.template.multiattack is not None
+    assert boss.template.multiattack.attack_count == 2
     assert [event.weapon_id for event in attacks] == ["warhammer", "heavy-crossbow"]
     assert [event.damage_applied for event in attacks] == [12, 11]
     assert battlefield.distance_ft == 15
