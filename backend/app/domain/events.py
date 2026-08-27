@@ -6,6 +6,7 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 from app.domain.combatants import BattlefieldState, CombatantState, DamageType
+from app.domain.conditions import ConditionType
 
 
 class RollMode(StrEnum):
@@ -39,6 +40,7 @@ class BattleEvent(BaseModel):
         "initiative",
         "movement",
         "forced_movement",
+        "condition",
         "dash",
         "attack",
         "healing",
@@ -65,6 +67,8 @@ class BattleEvent(BaseModel):
     weapon_id: str | None = None
     projectile: str | None = None
     feature_id: str | None = None
+    condition: ConditionType | None = None
+    condition_active: bool | None = None
     resource_remaining: int | None = None
     animation: str
     description: str
