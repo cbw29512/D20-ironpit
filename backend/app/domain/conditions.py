@@ -12,6 +12,9 @@ class ConditionType(StrEnum):
     FRIGHTENED = "frightened"
     RESTRAINED = "restrained"
     PARALYZED = "paralyzed"
+    CHARMED = "charmed"
+    EXHAUSTION = "exhaustion"
+    INCAPACITATED = "incapacitated"
 
 
 class ConditionExpiry(StrEnum):
