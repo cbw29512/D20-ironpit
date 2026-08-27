@@ -6,8 +6,9 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 from app.domain.abilities import Ability, Skill
-from app.domain.combatants import BattlefieldState, CombatantState, DamageType
+from app.domain.combatants import BattlefieldState, CombatantState
 from app.domain.conditions import ConditionType
+from app.domain.damage_types import DamageType
 
 
 class RollMode(StrEnum):
