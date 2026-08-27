@@ -2,8 +2,9 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.conditions import ability_check_condition_sources
 from app.combat.dice import DiceProvider
-from app.combat.rolls import roll_d20
+from app.combat.rolls import resolve_roll_mode, roll_d20
 from app.domain.abilities import Ability, SKILL_ABILITY, Skill
 from app.domain.models import CombatantState, DiceRoll
 
@@ -57,7 +58,9 @@ def resolve_ability_check(
     try:
         if dc < 1:
             raise ValueError("Ability check DC must be positive.")
-        roll = roll_d20(dice, skill_modifier(state, skill))
+        advantage, disadvantage = ability_check_condition_sources(state)
+        mode = resolve_roll_mode(advantage, disadvantage)
+        roll = roll_d20(dice, skill_modifier(state, skill), mode)
         return roll, roll.total >= dc
     except ValueError:
         raise
