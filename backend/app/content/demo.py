@@ -8,7 +8,7 @@ from app.content.equipment import (
     LONGSWORD,
     SCIMITAR,
 )
-from app.domain.models import CombatantTemplate
+from app.domain.models import CombatantTemplate, ResourceDefinition
 
 logger = logging.getLogger(__name__)
 
@@ -26,6 +26,9 @@ def build_demo_fighter() -> CombatantTemplate:
             initiative_bonus=1,
             weapon=LONGSWORD.model_copy(deep=True),
             visual=FIGHTER_CHAIN_MAIL_LOADOUT.model_copy(deep=True),
+            resources=[
+                ResourceDefinition(id="second-wind", name="Second Wind", max_uses=2),
+            ],
             source="Original pregen using SRD 5.2.1 rules",
         )
     except Exception as exc:
