@@ -2,7 +2,10 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.conditions import ability_check_condition_sources
+from app.combat.condition_modifiers import (
+    ability_check_condition_sources,
+    saving_throw_condition_sources,
+)
 from app.combat.dice import DiceProvider
 from app.combat.rolls import resolve_roll_mode, roll_d20
 from app.domain.abilities import Ability, SKILL_ABILITY, Skill
@@ -36,11 +39,15 @@ def resolve_saving_throw(
     ability: Ability,
     dc: int,
     dice: DiceProvider,
-) -> tuple[DiceRoll, bool]:
+) -> tuple[DiceRoll | None, bool]:
     try:
         if dc < 1:
             raise ValueError("Saving throw DC must be positive.")
-        roll = roll_d20(dice, saving_throw_modifier(state, ability))
+        advantage, disadvantage, auto_fail = saving_throw_condition_sources(state, ability)
+        if auto_fail:
+            return None, False
+        mode = resolve_roll_mode(advantage, disadvantage)
+        roll = roll_d20(dice, saving_throw_modifier(state, ability), mode)
         return roll, roll.total >= dc
     except ValueError:
         raise
