@@ -20,11 +20,14 @@ def resolve_attack(
     attack: WeaponAttack,
     distance_ft: int,
     dice: DiceProvider,
+    visible_source_ids: set[str] | None = None,
 ) -> BattleEvent:
     """Resolve one attack inside an already-authorized Attack action."""
     try:
         weapon = attack.weapon
-        advantage, disadvantage = attack_condition_sources(attacker, defender, distance_ft)
+        advantage, disadvantage = attack_condition_sources(
+            attacker, defender, distance_ft, visible_source_ids
+        )
         mode = resolve_attack_roll_mode(
             weapon,
             distance_ft,
