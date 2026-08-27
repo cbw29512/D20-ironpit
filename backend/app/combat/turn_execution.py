@@ -8,6 +8,10 @@ from app.combat.condition_timing import expire_turn_conditions
 from app.combat.dice import DiceProvider
 from app.combat.fighter import use_action_surge, use_second_wind
 from app.combat.multiattack import resolve_multiattack_action
+from app.combat.object_attack_actions import (
+    resolve_object_priority_attack_action,
+    select_linked_object,
+)
 from app.combat.policy import should_use_action_surge, should_use_second_wind
 from app.combat.recharge import roll_recharges
 from app.combat.save_actions import resolve_save_action
@@ -32,6 +36,19 @@ def _perform_offensive_action(
             sequence, round_number, attacker, defender, battlefield
         )
         events = list(prep_events)
+
+        if select_linked_object(attacker, battlefield) is not None and attacker.action_available:
+            action_events = resolve_object_priority_attack_action(
+                sequence,
+                round_number,
+                attacker,
+                defender,
+                battlefield,
+                dice,
+                visible_source_ids,
+            )
+            events.extend(action_events)
+            return events, sequence + len(action_events)
 
         save_action = select_standalone_save_action(
             attacker, defender, battlefield.distance_ft
