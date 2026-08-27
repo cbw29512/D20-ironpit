@@ -23,6 +23,22 @@ def should_use_second_wind(state: CombatantState) -> bool:
         raise RuntimeError("Second Wind policy could not be evaluated.") from exc
 
 
+def should_use_action_surge(state: CombatantState) -> bool:
+    """Arena tactic: spend Action Surge after the normal action if a use remains."""
+    try:
+        resource = next((item for item in state.resources if item.id == "action-surge"), None)
+        return bool(
+            resource
+            and resource.current_uses > 0
+            and not state.action_available
+            and not state.action_surge_used_this_turn
+            and state.is_alive
+        )
+    except Exception as exc:
+        logger.exception("Failed to evaluate Action Surge policy for %s.", state.template.name)
+        raise RuntimeError("Action Surge policy could not be evaluated.") from exc
+
+
 def select_weapon_attack(state: CombatantState, distance_ft: int) -> WeaponAttack | None:
     """Prefer the primary attack profile, then the first legal alternate profile."""
     try:
