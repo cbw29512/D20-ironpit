@@ -1,5 +1,7 @@
 # Iron Pit D20 — Locked MVP
 
+The non-negotiable rules contract is defined in [`RULES_CONSTITUTION.md`](RULES_CONSTITUTION.md). Catalog growth and tactical policy must not bypass that contract.
+
 ## Definition of Done
 
 The MVP is complete when a user can open the deployed Netlify site, start a server-resolved duel between **Aldric Vane (Level 1 Fighter)** and the **SRD 5.2.1 Goblin Warrior**, watch the battle replay through stick-figure animation events, and see a winner that matches the FastAPI battle result.
@@ -28,9 +30,9 @@ The locked acceptance test remains the **5-foot melee duel**. A separate **90-fo
 - Gladiator and monster selection controls driven by catalog data.
 - Original Fighter pregens at Levels 1, 5, 11, and 20.
 - Fixed Fighter HP progression uses a transparent Constitution +2 assumption for the higher-level pregens.
-- SRD monsters currently span Goblin Warrior/Skeleton (CR 1/4), Ogre (CR 2), Knight (CR 3), and Tough Boss (CR 4).
+- SRD monsters currently include Goblin Warrior, Skeleton, and Wolf (CR 1/4), Ogre (CR 2), Knight (CR 3), and Tough Boss (CR 4).
 - Attack actions support a configurable number of attacks while preserving one Action expenditure.
-- Multiattack re-evaluates legal attack profiles after every strike using the live battlefield distance.
+- Multiattack re-evaluates legal attack profiles after every strike using live battlefield state.
 - Fighter attack-count progression supports 2 attacks at Level 5, 3 at Level 11, and 4 at Level 20.
 - Fighter Action Surge is a typed resource: one use before Level 17, two uses at Level 17+, and at most once per turn.
 - Action Surge restores an additional non-Magic action slot; the arena uses it after the normal action while the opponent survives.
@@ -40,6 +42,9 @@ The locked acceptance test remains the **5-foot melee duel**. A separate **90-fo
 - Typed on-hit attack effects are separate from weapon Mastery metadata.
 - Combatants carry explicit size categories for size-gated effects.
 - Tough Boss Warhammer pushes a Large-or-smaller target 10 feet on a hit.
+- Typed condition state and condition-immunity schema fail closed for mechanics not yet fully implemented.
+- Prone is fully implemented for attack rolls and standing movement cost.
+- Wolf Bite applies Prone to a Medium-or-smaller target on a hit.
 - Radiant damage and the Knight's always-on Radiant attack rider.
 - Typed damage Vulnerability, Resistance, and Immunity with raw roll and applied damage kept separate.
 - SRD Resistance-before-Vulnerability ordering and same-type damage grouping.
@@ -51,21 +56,22 @@ The locked acceptance test remains the **5-foot melee duel**. A separate **90-fo
 - Ranged attacks within 5 feet of an active enemy have Disadvantage.
 - Goblin attacks made with Advantage add the SRD conditional d4 damage.
 - Critical hits double base and other attack damage dice, including unconditional riders.
-- Speed, remaining movement, Action availability, movement events, forced-movement events, and Dash.
-- Arena weapon selection prefers the primary weapon, then a legal alternate.
+- Speed, remaining movement, Action availability, movement events, forced-movement events, condition events, and Dash.
+- Arena weapon selection currently prefers the primary weapon, then a legal alternate.
 - Optional 90-foot ranged duel endpoint and UI control.
 
 ## Required presentation behavior
 
 - Fighter uses a longsword and shield visual loadout.
 - Monster labels, HP, CR, weapon, armor, off-hand, and body style hydrate from catalog/API data.
-- Goblinoid, skeleton, giant, and humanoid body styles are supported.
+- Goblinoid, skeleton, giant, humanoid, and beast body-style classes are supported.
 - Monster weapon shapes include Scimitar, Shortsword, Greatclub, Greatsword, Warhammer, Shortbow, Heavy Crossbow, and Javelin.
 - Attack replay temporarily renders the weapon actually used by the event rather than only the default loadout.
 - Projectile attacks animate arrows, crossbow bolts, or thrown javelins in the attack direction.
 - Generic feature events allow Action Surge and later rules features to appear in the audit/replay stream.
 - Movement events update the displayed distance and animate an advance.
 - Forced-movement events update distance and animate the target being pushed away from the attacker.
+- Prone condition events visibly put the target down; standing clears the visual state.
 - Hits visibly react and update HP.
 - Critical hits receive a distinct animation state.
 - Damage defenses preserve the raw roll in the log and show adjusted damage when different.
@@ -85,17 +91,18 @@ The locked acceptance test remains the **5-foot melee duel**. A separate **90-fo
 
 ## Published arena assumptions / tactics
 
-- Initiative ties currently use initiative bonus as the arena tiebreaker.
+- SRD Initiative ties are decided by the GM; the arena's deterministic GM policy currently prefers initiative bonus as the tiebreaker.
 - Fighters use Second Wind at or below half maximum HP when a use and Bonus Action remain.
 - Fighters with Action Surge spend it after their normal action if the opponent survives; this is tactical policy, not a restriction on the SRD feature.
-- A combatant prefers its primary weapon; if it is out of range, it selects the first legal alternate weapon before each strike.
+- A Prone combatant stands before attacking when it has enough movement; this is arena policy layered on the exact standing cost.
+- A combatant currently prefers its primary weapon; if it is out of range, it selects the first legal alternate weapon before each strike.
 - If no weapon can attack, the combatant advances toward primary-weapon range and Dashes if one normal move is insufficient.
 - The Goblin does not yet kite away from the Fighter.
 - Ogre Javelin inventory depletion is not yet tracked; its SRD stat block lists three Javelins.
 - Knight and Tough Boss Multiattack may legally mix their listed weapons; arena policy reselects primary-then-alternate based on legality after each strike.
 - Forced movement is modeled on a one-dimensional battlefield, so “straight away” increases combatant separation; obstacles, walls, and collision geometry are not yet modeled.
 - Tough Boss is instantiated as Medium; its SRD stat block permits Medium or Small.
-- Tough Boss Pack Tactics cannot trigger in the current 1v1 arena.
+- Tough Boss and Wolf Pack Tactics cannot trigger in the current 1v1 arena.
 - Higher-level Fighter pregens use fixed published progression values for attacks, proficiency, HP, and Second Wind; unsupported class features are disclosed in catalog coverage.
 
 ## Explicitly deferred
@@ -108,9 +115,9 @@ The locked acceptance test remains the **5-foot melee duel**. A separate **90-fo
 - Terrain-aware forced movement, collisions, and arena boundaries.
 - Opportunity attacks and Disengage.
 - Goblin Nimble Escape/Hide behavior.
-- Exhaustion, Poisoned, Frightened, and other general condition-state handling.
+- Grappled, Poisoned, Frightened, Restrained, Paralyzed, and their source-specific save/escape/end rules.
 - Cover and terrain.
-- Spells and spell effects.
+- Spell slots, Concentration, spell attacks, saving-throw spells, healing spells, and ongoing spell effects.
 - Conditions such as Petrified.
 - Breath weapons.
 - Finite weapon/ammunition inventory.
