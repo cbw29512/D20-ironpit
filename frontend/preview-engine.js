@@ -99,8 +99,9 @@
       events.push({ event_type: "initiative", description: `${fighter.template.name} rolls initiative ${fighterInit.total}.` });
       events.push({ event_type: "initiative", description: `${goblin.template.name} rolls initiative ${goblinInit.total}.` });
       const order = fighterInit.total > goblinInit.total || (fighterInit.total === goblinInit.total && fighter.template.initiative_bonus >= goblin.template.initiative_bonus) ? ["fighter", "goblin"] : ["goblin", "fighter"];
-      let round = 0;
-      for (round = 1; round <= 50 && fighter.hp > 0 && goblin.hp > 0; round += 1) {
+      let resolvedRound = 0;
+      for (let round = 1; round <= 50 && fighter.hp > 0 && goblin.hp > 0; round += 1) {
+        resolvedRound = round;
         for (const actor of order) {
           if (fighter.hp <= 0 || goblin.hp <= 0) break;
           if (actor === "fighter") fighterTurn(state, fighter, goblin, events);
@@ -109,7 +110,7 @@
       }
       const winner = fighter.hp > 0 ? fighter.template.name : goblin.hp > 0 ? goblin.template.name : null;
       events.push({ event_type: winner ? "victory" : "draw", description: winner ? `${winner} wins the duel.` : "The duel ends in a draw." });
-      return { fighter: { template: fighter.template }, monster: { template: goblin.template }, battlefield: { starting_distance_ft: startingDistance }, events, winner_name: winner, rounds: Math.min(round, 50) };
+      return { fighter: { template: fighter.template }, monster: { template: goblin.template }, battlefield: { starting_distance_ft: startingDistance }, events, winner_name: winner, rounds: resolvedRound };
     } catch (error) { console.error("Secure preview battle generation failed", error); throw error; }
   }
 
