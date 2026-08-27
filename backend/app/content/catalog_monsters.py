@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import Callable
 
 from app.content.demo import build_goblin_warrior
-from app.content.srd_monsters import build_ogre, build_skeleton
+from app.content.srd_monsters import build_knight, build_ogre, build_skeleton
 from app.domain.catalog import CatalogEntry, RulesCoverage, RulesCoverageItem
 
 
@@ -59,8 +59,28 @@ def _ogre_entry() -> CatalogEntry:
     )
 
 
+def _knight_entry() -> CatalogEntry:
+    return CatalogEntry(
+        combatant=build_knight(),
+        tags=["monster", "knight", "humanoid", "melee", "ranged", "cr-3"],
+        rules_coverage=[
+            RulesCoverageItem(feature_id="greatsword", coverage=RulesCoverage.FULLY_IMPLEMENTED),
+            RulesCoverageItem(feature_id="heavy-crossbow", coverage=RulesCoverage.FULLY_IMPLEMENTED),
+            RulesCoverageItem(feature_id="radiant-rider", coverage=RulesCoverage.FULLY_IMPLEMENTED),
+            RulesCoverageItem(
+                feature_id="multiattack-selection",
+                coverage=RulesCoverage.ARENA_ASSUMPTION,
+                note="The arena repeats one selected legal profile; the SRD allows either weapon in any combination.",
+            ),
+            RulesCoverageItem(feature_id="parry", coverage=RulesCoverage.UNSUPPORTED),
+            RulesCoverageItem(feature_id="frightened-immunity", coverage=RulesCoverage.UNSUPPORTED),
+        ],
+    )
+
+
 MONSTER_BUILDERS: dict[str, Callable[[], CatalogEntry]] = {
     "srd-goblin-warrior": _goblin_entry,
     "srd-skeleton": _skeleton_entry,
     "srd-ogre": _ogre_entry,
+    "srd-knight": _knight_entry,
 }
