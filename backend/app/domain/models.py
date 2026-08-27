@@ -1,3 +1,4 @@
+from app.domain.abilities import Ability, Skill
 from app.domain.catalog import BattleRequest, CatalogEntry, RulesCoverage, RulesCoverageItem
 from app.domain.combatants import (
     BattlefieldState,
@@ -26,6 +27,7 @@ from app.domain.encounters import (
 from app.domain.events import BattleEvent, BattleResult, DamageRollComponent, DiceRoll, RollMode
 
 __all__ = [
+    "Ability",
     "AttackEffect",
     "BattleEvent",
     "BattlefieldState",
@@ -52,6 +54,7 @@ __all__ = [
     "RulesCoverage",
     "RulesCoverageItem",
     "SizeCategory",
+    "Skill",
     "VisualLoadout",
     "Weapon",
     "WeaponAttack",
