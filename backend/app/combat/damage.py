@@ -37,16 +37,19 @@ def calculate_applied_damage(
     defender: CombatantState,
     components: list[DamageRollComponent],
 ) -> int:
-    """Apply Immunity, then SRD Resistance-before-Vulnerability ordering per damage instance."""
+    """Group damage by type, then apply Immunity and SRD Resistance/Vulnerability order."""
     try:
+        totals_by_type: dict[DamageType, int] = {}
+        for component in components:
+            totals_by_type[component.damage_type] = totals_by_type.get(component.damage_type, 0) + component.total
+
         total = 0
         template = defender.template
-        for component in components:
-            damage_type = component.damage_type
+        for damage_type, raw_damage in totals_by_type.items():
             if damage_type in template.damage_immunities:
                 continue
 
-            applied = component.total
+            applied = raw_damage
             if damage_type in template.damage_resistances:
                 applied //= 2
             if damage_type in template.damage_vulnerabilities:
