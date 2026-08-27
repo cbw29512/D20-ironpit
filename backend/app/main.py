@@ -60,7 +60,22 @@ def create_demo_battle() -> BattleResult:
             build_demo_fighter(),
             build_goblin_warrior(),
             SecureDiceProvider(),
+            starting_distance_ft=5,
         )
     except Exception as exc:
         logger.exception("Demo battle API failed.")
         raise HTTPException(status_code=500, detail="Battle could not be completed.") from exc
+
+
+@app.post("/api/battles/demo-ranged", response_model=BattleResult)
+def create_ranged_demo_battle() -> BattleResult:
+    try:
+        return run_duel(
+            build_demo_fighter(),
+            build_goblin_warrior(),
+            SecureDiceProvider(),
+            starting_distance_ft=90,
+        )
+    except Exception as exc:
+        logger.exception("Ranged demo battle API failed.")
+        raise HTTPException(status_code=500, detail="Ranged battle could not be completed.") from exc
