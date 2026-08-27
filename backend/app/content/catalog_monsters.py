@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections.abc import Callable
 
 from app.content.demo import build_goblin_warrior
+from app.content.srd_beasts import build_wolf
 from app.content.srd_monsters import build_knight, build_ogre, build_skeleton, build_tough_boss
 from app.domain.catalog import CatalogEntry, RulesCoverage, RulesCoverageItem
 
@@ -37,6 +38,22 @@ def _skeleton_entry() -> CatalogEntry:
                 feature_id="condition-immunities",
                 coverage=RulesCoverage.UNSUPPORTED,
                 note="Exhaustion and Poisoned are not yet modeled as arena conditions.",
+            ),
+        ],
+    )
+
+
+def _wolf_entry() -> CatalogEntry:
+    return CatalogEntry(
+        combatant=build_wolf(),
+        tags=["monster", "wolf", "beast", "melee", "prone", "cr-1-4"],
+        rules_coverage=[
+            RulesCoverageItem(feature_id="bite", coverage=RulesCoverage.FULLY_IMPLEMENTED),
+            RulesCoverageItem(feature_id="bite-prone", coverage=RulesCoverage.FULLY_IMPLEMENTED),
+            RulesCoverageItem(
+                feature_id="pack-tactics",
+                coverage=RulesCoverage.UNSUPPORTED,
+                note="The current 1v1 arena has no wolf ally that could trigger Pack Tactics.",
             ),
         ],
     )
@@ -108,6 +125,7 @@ def _tough_boss_entry() -> CatalogEntry:
 MONSTER_BUILDERS: dict[str, Callable[[], CatalogEntry]] = {
     "srd-goblin-warrior": _goblin_entry,
     "srd-skeleton": _skeleton_entry,
+    "srd-wolf": _wolf_entry,
     "srd-ogre": _ogre_entry,
     "srd-knight": _knight_entry,
     "srd-tough-boss": _tough_boss_entry,
