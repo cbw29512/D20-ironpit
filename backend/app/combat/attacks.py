@@ -6,7 +6,7 @@ from app.combat.damage import resolve_weapon_damage
 from app.combat.dice import DiceProvider
 from app.combat.range import resolve_attack_roll_mode
 from app.combat.rolls import roll_d20
-from app.domain.models import BattleEvent, CombatantState, Weapon
+from app.domain.models import BattleEvent, CombatantState, WeaponAttack
 
 logger = logging.getLogger(__name__)
 
@@ -16,7 +16,7 @@ def resolve_attack(
     round_number: int,
     attacker: CombatantState,
     defender: CombatantState,
-    weapon: Weapon,
+    attack: WeaponAttack,
     distance_ft: int,
     dice: DiceProvider,
 ) -> BattleEvent:
@@ -24,8 +24,9 @@ def resolve_attack(
         if not attacker.action_available:
             raise ValueError("Action is not available for an attack.")
 
+        weapon = attack.weapon
         mode = resolve_attack_roll_mode(weapon, distance_ft)
-        attack_roll = roll_d20(dice, weapon.attack_bonus, mode)
+        attack_roll = roll_d20(dice, attack.attack_bonus, mode)
         attacker.action_available = False
         natural = attack_roll.selected_roll or 0
         critical = natural == 20
@@ -37,7 +38,7 @@ def resolve_attack(
         if hit:
             damage_roll, damage_components = resolve_weapon_damage(
                 attacker,
-                weapon,
+                attack,
                 dice,
                 critical,
                 mode,
