@@ -14,9 +14,20 @@ header h1 { margin:.15rem 0; font-size:clamp(2.4rem,7vw,5rem); letter-spacing:.0
 .stick { width:min(230px,100%); stroke:#eee; stroke-width:7; stroke-linecap:round; fill:none; overflow:visible; }
 .stick circle:first-child { fill:#151515; }
 .stick .shield { fill:#252525; stroke-width:5; }
-.goblin { stroke:#c8d6b0; }
-.goblin .ear { stroke-width:5; }
+.stick .ear { display:none; }
+.goblinoid { stroke:#c8d6b0; }
+.goblinoid .ear { display:block; stroke-width:5; }
+.skeleton { stroke:#e5e1d5; stroke-width:5; }
+.skeleton circle:first-child { fill:#202020; }
+.giant { stroke:#d8bd91; stroke-width:9; width:min(255px,100%); }
+.giant circle:first-child { fill:#211b15; }
+.no-shield .shield { display:none; }
 .weapon { transform-box:fill-box; transform-origin:left center; }
+.weapon-shape { display:none; }
+#goblin[data-weapon="scimitar"] .scimitar-shape { display:block; }
+#goblin[data-weapon="shortsword"] .shortsword-shape { display:block; }
+#goblin[data-weapon="greatclub"] .greatclub-shape { display:block; }
+.greatclub-shape line:last-child { stroke-width:15; }
 .swing .weapon { animation:swing .36s ease-in-out; }
 .hit { animation:hit .35s ease-in-out; }
 .healing { animation:healing .65s ease-in-out; }
