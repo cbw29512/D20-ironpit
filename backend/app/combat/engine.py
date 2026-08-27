@@ -9,7 +9,14 @@ from app.combat.fighter import use_second_wind
 from app.combat.policy import should_use_second_wind
 from app.combat.rolls import roll_d20
 from app.combat.state import begin_turn, build_combatant_state
-from app.domain.models import BattleEvent, BattleResult, CombatantState, CombatantTemplate, RollMode
+from app.domain.models import (
+    BattleEvent,
+    BattlefieldState,
+    BattleResult,
+    CombatantState,
+    CombatantTemplate,
+    RollMode,
+)
 
 logger = logging.getLogger(__name__)
 MAX_ROUNDS = 100
@@ -43,20 +50,12 @@ def _resolve_attack(
 
         outcome = "CRITICAL HIT" if critical else ("HIT" if hit else "MISS")
         return BattleEvent(
-            sequence=sequence,
-            round_number=round_number,
-            event_type="attack",
-            actor_id=attacker.template.id,
-            actor_name=attacker.template.name,
-            target_id=defender.template.id,
-            target_name=defender.template.name,
-            attack_roll=attack_roll,
-            damage_roll=damage_roll,
-            damage_components=damage_components,
-            hit=hit,
-            critical=critical,
-            hp_before=hp_before,
-            hp_after=defender.current_hp,
+            sequence=sequence, round_number=round_number, event_type="attack",
+            actor_id=attacker.template.id, actor_name=attacker.template.name,
+            target_id=defender.template.id, target_name=defender.template.name,
+            attack_roll=attack_roll, damage_roll=damage_roll,
+            damage_components=damage_components, hit=hit, critical=critical,
+            hp_before=hp_before, hp_after=defender.current_hp,
             animation=attacker.template.weapon.animation,
             description=f"{attacker.template.name}: {outcome} with {attacker.template.weapon.name}.",
         )
@@ -73,6 +72,7 @@ def run_duel(
     try:
         fighter = build_combatant_state(fighter_template)
         monster = build_combatant_state(monster_template)
+        battlefield = BattlefieldState(distance_ft=5)
         events: list[BattleEvent] = []
         sequence = 1
 
@@ -115,7 +115,7 @@ def run_duel(
                     return BattleResult(
                         battle_id=str(uuid.uuid4()), winner_id=attacker.template.id,
                         winner_name=attacker.template.name, rounds=round_number,
-                        fighter=fighter, monster=monster, events=events,
+                        fighter=fighter, monster=monster, battlefield=battlefield, events=events,
                     )
 
         events.append(BattleEvent(
@@ -125,7 +125,8 @@ def run_duel(
         ))
         return BattleResult(
             battle_id=str(uuid.uuid4()), winner_id=None, winner_name=None,
-            rounds=MAX_ROUNDS, fighter=fighter, monster=monster, events=events,
+            rounds=MAX_ROUNDS, fighter=fighter, monster=monster,
+            battlefield=battlefield, events=events,
         )
     except Exception as exc:
         logger.exception("Duel execution failed.")
