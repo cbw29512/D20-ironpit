@@ -10,10 +10,10 @@
     try {
       const rank = template.level ? `${template.archetype} ${template.level}` : `CR ${template.challenge_rating}`;
       const offHand = template.visual.off_hand ? ` + ${titleCase(template.visual.off_hand)}` : "";
-      const alternates = template.alternate_weapons?.length
-        ? ` · Alt: ${template.alternate_weapons.map((weapon) => weapon.name).join(", ")}`
+      const alternates = template.alternate_weapon_attacks?.length
+        ? ` · Alt: ${template.alternate_weapon_attacks.map((attack) => attack.weapon.name).join(", ")}`
         : "";
-      return `${rank} · ${template.weapon.name}${offHand} · ${titleCase(template.visual.armor)}${alternates}`;
+      return `${rank} · ${template.weapon_attack.weapon.name}${offHand} · ${titleCase(template.visual.armor)}${alternates}`;
     } catch (error) { console.error("Template description failed", error); return "Combatant"; }
   }
 
