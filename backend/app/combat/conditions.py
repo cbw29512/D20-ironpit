@@ -17,6 +17,7 @@ _SUPPORTED = {
     ConditionType.POISONED,
     ConditionType.FRIGHTENED,
     ConditionType.PARALYZED,
+    ConditionType.RESTRAINED,
 }
 
 
