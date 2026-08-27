@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from typing import Literal
 
 from app.combat.condition_modifiers import attack_condition_sources, is_auto_critical_hit
 from app.combat.damage import calculate_applied_damage, resolve_weapon_damage
@@ -21,8 +22,9 @@ def resolve_attack(
     distance_ft: int,
     dice: DiceProvider,
     visible_source_ids: set[str] | None = None,
+    event_type: Literal["attack", "opportunity_attack"] = "attack",
 ) -> BattleEvent:
-    """Resolve one attack inside an already-authorized Attack action."""
+    """Resolve one attack inside an already-authorized attack or Reaction."""
     try:
         weapon = attack.weapon
         advantage, disadvantage = attack_condition_sources(
@@ -61,10 +63,11 @@ def resolve_attack(
             defender.is_alive = defender.current_hp > 0
 
         outcome = "CRITICAL HIT" if critical else ("HIT" if hit else "MISS")
+        label = "Opportunity Attack" if event_type == "opportunity_attack" else weapon.name
         return BattleEvent(
             sequence=sequence,
             round_number=round_number,
-            event_type="attack",
+            event_type=event_type,
             actor_id=attacker.instance_id,
             actor_name=attacker.template.name,
             target_id=defender.instance_id,
@@ -80,7 +83,7 @@ def resolve_attack(
             weapon_id=weapon.id,
             projectile=weapon.projectile,
             animation=weapon.animation,
-            description=f"{attacker.template.name}: {outcome} with {weapon.name}.",
+            description=f"{attacker.template.name}: {outcome} with {label} ({weapon.name}).",
         )
     except Exception as exc:
         logger.exception("Attack failed: %s -> %s.", attacker.template.name, defender.template.name)
