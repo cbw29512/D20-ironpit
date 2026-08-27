@@ -16,6 +16,13 @@ from app.domain.combatants import (
 )
 from app.domain.conditions import ConditionState, ConditionType
 from app.domain.effects import AttackEffect, SizeCategory
+from app.domain.encounters import (
+    EncounterParticipantRequest,
+    EncounterParticipantState,
+    EncounterRequest,
+    EncounterState,
+    distance_between,
+)
 from app.domain.events import BattleEvent, BattleResult, DamageRollComponent, DiceRoll, RollMode
 
 __all__ = [
@@ -35,6 +42,10 @@ __all__ = [
     "DamageType",
     "DemoRoster",
     "DiceRoll",
+    "EncounterParticipantRequest",
+    "EncounterParticipantState",
+    "EncounterRequest",
+    "EncounterState",
     "ResourceDefinition",
     "ResourceState",
     "RollMode",
@@ -45,4 +56,5 @@ __all__ = [
     "Weapon",
     "WeaponAttack",
     "WeaponAttackKind",
+    "distance_between",
 ]
