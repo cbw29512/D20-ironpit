@@ -24,7 +24,7 @@ def apply_condition(
             return False
         state.conditions.append(ConditionState(
             condition=condition,
-            source_id=source.template.id if source else None,
+            source_id=source.instance_id if source else None,
             source_name=source.template.name if source else None,
         ))
         return True
@@ -79,7 +79,7 @@ def stand_from_prone(
             sequence=sequence,
             round_number=round_number,
             event_type="condition",
-            actor_id=state.template.id,
+            actor_id=state.instance_id,
             actor_name=state.template.name,
             condition=ConditionType.PRONE,
             condition_active=False,
