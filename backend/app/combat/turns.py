@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.conditions import stand_from_prone
 from app.combat.movement import move_toward_target, take_dash
 from app.combat.policy import preferred_approach_distance, select_weapon_attack
 from app.domain.models import BattleEvent, BattlefieldState, CombatantState, WeaponAttack
@@ -18,6 +19,11 @@ def prepare_attack(
     """Apply arena movement policy until a legal attack is available or the Action is spent."""
     try:
         events: list[BattleEvent] = []
+        standing = stand_from_prone(sequence, round_number, attacker)
+        if standing is not None:
+            events.append(standing)
+            sequence += 1
+
         attack = select_weapon_attack(attacker, battlefield.distance_ft)
         if attack is not None and attacker.action_available:
             return attack, events, sequence
