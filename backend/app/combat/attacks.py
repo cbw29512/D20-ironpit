@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.conditions import attack_condition_sources
 from app.combat.damage import calculate_applied_damage, resolve_weapon_damage
 from app.combat.dice import DiceProvider
 from app.combat.range import resolve_attack_roll_mode
@@ -23,7 +24,13 @@ def resolve_attack(
     """Resolve one attack inside an already-authorized Attack action."""
     try:
         weapon = attack.weapon
-        mode = resolve_attack_roll_mode(weapon, distance_ft)
+        advantage, disadvantage = attack_condition_sources(attacker, defender, distance_ft)
+        mode = resolve_attack_roll_mode(
+            weapon,
+            distance_ft,
+            advantage_sources=advantage,
+            other_disadvantage_sources=disadvantage,
+        )
         attack_roll = roll_d20(dice, attack.attack_bonus, mode)
         natural = attack_roll.selected_roll or 0
         critical = natural == 20
