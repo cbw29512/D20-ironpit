@@ -64,10 +64,8 @@
       }
 
       function hydrateRoster(roster) {
-        try {
-          renderTemplate("fighter", roster.fighter);
-          renderTemplate("goblin", roster.monster);
-        } catch (error) { console.error("Roster hydration failed", error); throw error; }
+        try { renderTemplate("fighter", roster.fighter); renderTemplate("goblin", roster.monster); }
+        catch (error) { console.error("Roster hydration failed", error); throw error; }
       }
 
       function resetArena(message = "Rolling initiative...", startingDistance = 5) {
@@ -91,6 +89,13 @@
         } catch (error) { console.error("D20 formatting failed", error); return "roll unavailable"; }
       }
 
+      function formatTest(event, roll) {
+        try {
+          const result = event.test_success ? "SUCCESS" : "FAILURE";
+          return ` [${formatD20(roll)} vs DC ${event.test_dc}: ${result}]`;
+        } catch (error) { console.error("Test formatting failed", error); return ""; }
+      }
+
       const animations = window.createIronPitAnimations(arenaState, setHp, setDistance);
 
       async function replay(events) {
@@ -99,11 +104,11 @@
             const item = document.createElement("li");
             let detail = event.description;
             if (event.attack_roll) detail += ` [${formatD20(event.attack_roll)}]`;
+            if (event.saving_throw) detail += formatTest(event, event.saving_throw);
+            if (event.ability_check) detail += formatTest(event, event.ability_check);
             if (event.damage_roll) {
               detail += ` Damage ${event.damage_roll.total}.`;
-              if (event.damage_applied !== null && event.damage_applied !== undefined && event.damage_applied !== event.damage_roll.total) {
-                detail += ` Applied ${event.damage_applied}.`;
-              }
+              if (event.damage_applied !== null && event.damage_applied !== undefined && event.damage_applied !== event.damage_roll.total) detail += ` Applied ${event.damage_applied}.`;
             }
             if (event.healing_roll) detail += ` Healing roll ${event.healing_roll.total}.`;
             item.textContent = detail;
