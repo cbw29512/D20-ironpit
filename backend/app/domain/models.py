@@ -1,3 +1,4 @@
+from app.domain.catalog import BattleRequest, CatalogEntry, RulesCoverage, RulesCoverageItem
 from app.domain.combatants import (
     BattlefieldState,
     CombatantState,
@@ -17,7 +18,9 @@ from app.domain.events import BattleEvent, BattleResult, DamageRollComponent, Di
 __all__ = [
     "BattleEvent",
     "BattlefieldState",
+    "BattleRequest",
     "BattleResult",
+    "CatalogEntry",
     "CombatantState",
     "CombatantTemplate",
     "ConditionalDamage",
@@ -28,6 +31,8 @@ __all__ = [
     "ResourceDefinition",
     "ResourceState",
     "RollMode",
+    "RulesCoverage",
+    "RulesCoverageItem",
     "VisualLoadout",
     "Weapon",
     "WeaponAttack",
