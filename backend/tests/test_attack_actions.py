@@ -1,5 +1,6 @@
 from app.combat.attack_actions import resolve_attack_action
 from app.combat.dice import FixedDiceProvider
+from app.combat.multiattack import resolve_multiattack_action
 from app.combat.state import build_combatant_state
 from app.content.demo import build_goblin_warrior
 from app.content.gladiators import build_mara_stone
@@ -44,11 +45,11 @@ def test_extra_attack_stops_when_first_attack_drops_target() -> None:
     assert goblin.current_hp == 0
 
 
-def test_knight_multiattack_emits_two_complete_attack_events() -> None:
+def test_knight_multiattack_is_not_fighter_extra_attack() -> None:
     knight = build_combatant_state(build_knight())
     mara = build_combatant_state(build_mara_stone())
 
-    events = resolve_attack_action(
+    events = resolve_multiattack_action(
         20,
         4,
         knight,
@@ -57,6 +58,8 @@ def test_knight_multiattack_emits_two_complete_attack_events() -> None:
         FixedDiceProvider([14, 3, 3, 4, 14, 3, 3, 4]),
     )
 
+    assert knight.template.attacks_per_action == 1
+    assert knight.template.multiattack is not None
     assert len(events) == 2
     assert [event.damage_applied for event in events] == [13, 13]
     assert mara.current_hp == 18
