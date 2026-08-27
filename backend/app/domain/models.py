@@ -77,6 +77,7 @@ class CombatantTemplate(BaseModel):
     kind: Literal["character", "monster"]
     armor_class: int = Field(ge=1)
     max_hp: int = Field(ge=1)
+    speed_ft: int = Field(ge=0)
     initiative_bonus: int
     weapon: Weapon
     alternate_weapons: list[Weapon] = Field(default_factory=list)
@@ -96,7 +97,9 @@ class CombatantState(BaseModel):
     initiative_roll: int | None = None
     initiative_total: int | None = None
     is_alive: bool = True
+    action_available: bool = True
     bonus_action_available: bool = True
+    movement_remaining_ft: int = Field(default=0, ge=0)
     resources: list[ResourceState] = Field(default_factory=list)
 
 
@@ -125,7 +128,7 @@ class DamageRollComponent(BaseModel):
 class BattleEvent(BaseModel):
     sequence: int
     round_number: int
-    event_type: Literal["initiative", "attack", "healing", "victory", "draw"]
+    event_type: Literal["initiative", "movement", "dash", "attack", "healing", "victory", "draw"]
     actor_id: str
     actor_name: str
     target_id: str | None = None
@@ -138,6 +141,11 @@ class BattleEvent(BaseModel):
     critical: bool = False
     hp_before: int | None = None
     hp_after: int | None = None
+    distance_before_ft: int | None = None
+    distance_after_ft: int | None = None
+    movement_ft: int | None = None
+    weapon_id: str | None = None
+    projectile: str | None = None
     feature_id: str | None = None
     resource_remaining: int | None = None
     animation: str
