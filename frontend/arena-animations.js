@@ -8,7 +8,7 @@
 
   function projectileGlyph(projectile) {
     try {
-      if (projectile === "arrow") return "➤";
+      if (projectile === "arrow" || projectile === "bolt") return "➤";
       if (projectile === "javelin") return "➟";
       return "•";
     } catch (error) { console.error("Projectile glyph lookup failed", error); return "•"; }
@@ -40,6 +40,8 @@
           const target = actor === "fighter" ? "goblin" : "fighter";
           const actorNode = document.querySelector(`#${actor}`);
           const targetNode = document.querySelector(`#${target}`);
+          const previousWeapon = actorNode.dataset.weapon;
+          if (event.weapon_id) actorNode.dataset.weapon = event.weapon_id;
 
           if (event.animation === "projectile") await animateProjectile(event);
           else {
@@ -53,6 +55,7 @@
           await sleep(380);
           actorNode.classList.remove("swing", "critical");
           targetNode.classList.remove("hit");
+          actorNode.dataset.weapon = previousWeapon || "none";
         } catch (error) { console.error("Attack animation failed", error); }
       }
 
