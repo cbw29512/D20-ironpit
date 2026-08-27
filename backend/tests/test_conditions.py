@@ -131,4 +131,4 @@ def test_escape_grapple_failure_keeps_condition() -> None:
 def test_unimplemented_condition_still_fails_closed() -> None:
     fighter = build_combatant_state(build_demo_fighter())
     with pytest.raises(ValueError, match="not fully implemented"):
-        apply_condition(fighter, ConditionType.RESTRAINED)
+        apply_condition(fighter, ConditionType.CHARMED)
