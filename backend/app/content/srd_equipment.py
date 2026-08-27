@@ -100,3 +100,21 @@ def build_heavy_crossbow() -> Weapon:
     except Exception as exc:
         logger.exception("Failed to build heavy crossbow content record.")
         raise RuntimeError("Heavy Crossbow content could not be created.") from exc
+
+
+def build_warhammer() -> Weapon:
+    try:
+        return Weapon(
+            id="warhammer",
+            name="Warhammer",
+            attack_kind=WeaponAttackKind.MELEE,
+            dice_count=1,
+            dice_size=8,
+            damage_type=DamageType.BLUDGEONING,
+            animation="smash",
+            reach_ft=5,
+            mastery_property="push",
+        )
+    except Exception as exc:
+        logger.exception("Failed to build warhammer content record.")
+        raise RuntimeError("Warhammer content could not be created.") from exc
