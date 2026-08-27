@@ -23,6 +23,7 @@ def test_catalog_lists_current_battle_ready_combatants() -> None:
         "srd-goblin-warrior",
         "srd-skeleton",
         "srd-ogre",
+        "srd-knight",
     ]
     assert all(entry.battle_ready for entry in [*characters, *monsters])
 
@@ -33,12 +34,14 @@ def test_catalog_exposes_rules_coverage_without_hiding_gaps() -> None:
     goblin = get_catalog_entry("srd-goblin-warrior")
     skeleton = get_catalog_entry("srd-skeleton")
     ogre = get_catalog_entry("srd-ogre")
+    knight = get_catalog_entry("srd-knight")
 
     fighter_coverage = {item.feature_id: item.coverage for item in fighter.rules_coverage}
     mara_coverage = {item.feature_id: item.coverage for item in mara.rules_coverage}
     goblin_coverage = {item.feature_id: item.coverage for item in goblin.rules_coverage}
     skeleton_coverage = {item.feature_id: item.coverage for item in skeleton.rules_coverage}
     ogre_coverage = {item.feature_id: item.coverage for item in ogre.rules_coverage}
+    knight_coverage = {item.feature_id: item.coverage for item in knight.rules_coverage}
 
     assert fighter_coverage["second-wind"] is RulesCoverage.FULLY_IMPLEMENTED
     assert fighter_coverage["weapon-mastery"] is RulesCoverage.UNSUPPORTED
@@ -49,6 +52,8 @@ def test_catalog_exposes_rules_coverage_without_hiding_gaps() -> None:
     assert skeleton_coverage["condition-immunities"] is RulesCoverage.UNSUPPORTED
     assert ogre_coverage["thrown-weapon-range"] is RulesCoverage.FULLY_IMPLEMENTED
     assert ogre_coverage["javelin-inventory"] is RulesCoverage.ARENA_ASSUMPTION
+    assert knight_coverage["radiant-rider"] is RulesCoverage.FULLY_IMPLEMENTED
+    assert knight_coverage["parry"] is RulesCoverage.UNSUPPORTED
 
 
 def test_catalog_lookup_rejects_unknown_combatant() -> None:
