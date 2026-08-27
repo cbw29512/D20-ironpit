@@ -27,6 +27,7 @@ from app.domain.encounters import (
     distance_between,
 )
 from app.domain.events import BattleEvent, BattleResult, DamageRollComponent, DiceRoll, RollMode
+from app.domain.granted_actions import GrantedAction
 from app.domain.multiattack import MultiattackDefinition
 from app.domain.recharge import RechargeDefinition, RechargeState
 from app.domain.save_actions import SaveAction, SaveFailureEffect
@@ -57,6 +58,7 @@ __all__ = [
     "EncounterParticipantState",
     "EncounterRequest",
     "EncounterState",
+    "GrantedAction",
     "MultiattackDefinition",
     "RechargeDefinition",
     "RechargeState",
