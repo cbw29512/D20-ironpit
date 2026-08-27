@@ -18,6 +18,11 @@ class RollMode(StrEnum):
     DISADVANTAGE = "disadvantage"
 
 
+class WeaponAttackKind(StrEnum):
+    MELEE = "melee"
+    RANGED = "ranged"
+
+
 class ConditionalDamage(BaseModel):
     trigger: Literal["attack_advantage"]
     dice_count: int = Field(ge=1, le=20)
@@ -27,13 +32,19 @@ class ConditionalDamage(BaseModel):
 
 
 class Weapon(BaseModel):
+    id: str
     name: str
+    attack_kind: WeaponAttackKind
     attack_bonus: int
     dice_count: int = Field(ge=1, le=20)
     dice_size: int = Field(ge=2, le=100)
     damage_bonus: int
     damage_type: DamageType
     animation: str
+    reach_ft: int = Field(default=5, ge=0)
+    normal_range_ft: int | None = Field(default=None, ge=1)
+    long_range_ft: int | None = Field(default=None, ge=1)
+    projectile: str | None = None
     conditional_damage: list[ConditionalDamage] = Field(default_factory=list)
 
 
@@ -68,6 +79,7 @@ class CombatantTemplate(BaseModel):
     max_hp: int = Field(ge=1)
     initiative_bonus: int
     weapon: Weapon
+    alternate_weapons: list[Weapon] = Field(default_factory=list)
     visual: VisualLoadout
     resources: list[ResourceDefinition] = Field(default_factory=list)
     source: str
@@ -86,6 +98,10 @@ class CombatantState(BaseModel):
     is_alive: bool = True
     bonus_action_available: bool = True
     resources: list[ResourceState] = Field(default_factory=list)
+
+
+class BattlefieldState(BaseModel):
+    distance_ft: int = Field(default=5, ge=0)
 
 
 class DiceRoll(BaseModel):
@@ -135,5 +151,6 @@ class BattleResult(BaseModel):
     rounds: int
     fighter: CombatantState
     monster: CombatantState
+    battlefield: BattlefieldState
     events: list[BattleEvent]
     ruleset: str = "SRD 5.2.1 subset"
