@@ -83,12 +83,20 @@
     } catch (error) { console.error("Attack animation failed", error); }
   }
 
+  function formatD20(roll) {
+    try {
+      const selected = roll.selected_roll ?? roll.rolls[0];
+      const dice = roll.rolls.length > 1 ? `${roll.rolls.join(", ")} -> ${selected} ${roll.mode}` : `${selected}`;
+      return `${dice} + ${roll.modifier} = ${roll.total}`;
+    } catch (error) { console.error("D20 formatting failed", error); return "roll unavailable"; }
+  }
+
   async function replay(events) {
     try {
       for (const event of events) {
         const item = document.createElement("li");
         let detail = event.description;
-        if (event.attack_roll) detail += ` [${event.attack_roll.rolls.join(", ")} + ${event.attack_roll.modifier} = ${event.attack_roll.total}]`;
+        if (event.attack_roll) detail += ` [${formatD20(event.attack_roll)}]`;
         if (event.damage_roll) detail += ` Damage ${event.damage_roll.total}.`;
         item.textContent = detail;
         log.appendChild(item);
