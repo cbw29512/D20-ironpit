@@ -18,14 +18,14 @@
     try {
       const projectile = document.querySelector("#projectile");
 
-      function slotForActor(actorId) {
-        try { return actorId === arenaState.fighter.id ? "fighter" : "goblin"; }
-        catch (error) { console.error("Actor slot lookup failed", error); return "goblin"; }
+      function slotForId(combatantId) {
+        try { return combatantId === arenaState.fighter.id ? "fighter" : "goblin"; }
+        catch (error) { console.error("Combatant slot lookup failed", error); return "goblin"; }
       }
 
       async function animateProjectile(event) {
         try {
-          const actor = slotForActor(event.actor_id);
+          const actor = slotForId(event.actor_id);
           projectile.textContent = projectileGlyph(event.projectile);
           projectile.className = `projectile ${actor === "fighter" ? "fly-right" : "fly-left"}`;
           if (event.critical) projectile.classList.add("projectile-critical");
@@ -36,7 +36,7 @@
 
       async function animateAttack(event) {
         try {
-          const actor = slotForActor(event.actor_id);
+          const actor = slotForId(event.actor_id);
           const target = actor === "fighter" ? "goblin" : "fighter";
           const actorNode = document.querySelector(`#${actor}`);
           const targetNode = document.querySelector(`#${target}`);
@@ -61,7 +61,7 @@
 
       async function animateHealing(event) {
         try {
-          const slot = slotForActor(event.actor_id);
+          const slot = slotForId(event.actor_id);
           const node = document.querySelector(`#${slot}`);
           node.classList.add("healing");
           await sleep(220);
@@ -73,7 +73,7 @@
 
       async function animateMovement(event) {
         try {
-          const slot = slotForActor(event.actor_id);
+          const slot = slotForId(event.actor_id);
           const node = document.querySelector(`#${slot}`);
           if (event.distance_before_ft !== null) setDistance(event.distance_before_ft);
           node.classList.add("advance");
@@ -84,11 +84,25 @@
         } catch (error) { console.error("Movement animation failed", error); }
       }
 
+      async function animateForcedMovement(event) {
+        try {
+          const slot = slotForId(event.target_id);
+          const node = document.querySelector(`#${slot}`);
+          if (event.distance_before_ft !== null) setDistance(event.distance_before_ft);
+          node.classList.add("pushed");
+          await sleep(280);
+          if (event.distance_after_ft !== null) setDistance(event.distance_after_ft);
+          await sleep(220);
+          node.classList.remove("pushed");
+        } catch (error) { console.error("Forced movement animation failed", error); }
+      }
+
       async function play(event) {
         try {
           if (event.event_type === "attack") return await animateAttack(event);
           if (event.event_type === "healing") return await animateHealing(event);
           if (event.event_type === "movement") return await animateMovement(event);
+          if (event.event_type === "forced_movement") return await animateForcedMovement(event);
           await sleep(event.event_type === "dash" ? 220 : 300);
         } catch (error) { console.error("Battle event animation failed", error); }
       }
