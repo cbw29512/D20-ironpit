@@ -4,6 +4,7 @@ from app.combat.state import build_combatant_state
 from app.content.demo import build_goblin_warrior
 from app.content.gladiators import build_mara_stone
 from app.content.srd_monsters import build_knight
+from app.domain.models import BattlefieldState
 
 
 def test_extra_attack_resolves_two_attacks_for_one_action() -> None:
@@ -15,8 +16,7 @@ def test_extra_attack_resolves_two_attacks_for_one_action() -> None:
         1,
         mara,
         goblin,
-        mara.template.weapon_attack,
-        5,
+        BattlefieldState(distance_ft=5),
         FixedDiceProvider([10, 4, 12, 5]),
     )
 
@@ -35,8 +35,7 @@ def test_extra_attack_stops_when_first_attack_drops_target() -> None:
         2,
         mara,
         goblin,
-        mara.template.weapon_attack,
-        5,
+        BattlefieldState(distance_ft=5),
         FixedDiceProvider([20, 8, 8]),
     )
 
@@ -54,8 +53,7 @@ def test_knight_multiattack_emits_two_complete_attack_events() -> None:
         4,
         knight,
         mara,
-        knight.template.weapon_attack,
-        5,
+        BattlefieldState(distance_ft=5),
         FixedDiceProvider([14, 3, 3, 4, 14, 3, 3, 4]),
     )
 
