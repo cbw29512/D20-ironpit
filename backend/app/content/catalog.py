@@ -4,6 +4,7 @@ import logging
 from collections.abc import Callable
 
 from app.content.demo import build_demo_fighter, build_goblin_warrior
+from app.content.gladiators import build_mara_stone
 from app.content.srd_monsters import build_ogre, build_skeleton
 from app.domain.catalog import CatalogEntry, RulesCoverage, RulesCoverageItem
 
@@ -17,7 +18,7 @@ class CatalogEntryNotFoundError(LookupError):
 def _fighter_entry() -> CatalogEntry:
     return CatalogEntry(
         combatant=build_demo_fighter(),
-        tags=["character", "fighter", "melee", "shield", "second-wind"],
+        tags=["character", "fighter", "melee", "shield", "second-wind", "level-1"],
         rules_coverage=[
             RulesCoverageItem(feature_id="core-melee", coverage=RulesCoverage.FULLY_IMPLEMENTED),
             RulesCoverageItem(feature_id="second-wind", coverage=RulesCoverage.FULLY_IMPLEMENTED),
@@ -31,6 +32,30 @@ def _fighter_entry() -> CatalogEntry:
                 coverage=RulesCoverage.UNSUPPORTED,
                 note="Weapon Mastery effects are not yet resolved by the combat engine.",
             ),
+        ],
+    )
+
+
+def _mara_entry() -> CatalogEntry:
+    return CatalogEntry(
+        combatant=build_mara_stone(),
+        tags=["character", "fighter", "melee", "shield", "second-wind", "level-5"],
+        rules_coverage=[
+            RulesCoverageItem(feature_id="extra-attack", coverage=RulesCoverage.FULLY_IMPLEMENTED),
+            RulesCoverageItem(feature_id="second-wind", coverage=RulesCoverage.FULLY_IMPLEMENTED),
+            RulesCoverageItem(
+                feature_id="defense-fighting-style",
+                coverage=RulesCoverage.FULLY_IMPLEMENTED,
+                note="Defense is baked into this fixed pregen's AC 19.",
+            ),
+            RulesCoverageItem(
+                feature_id="fighter-subclass",
+                coverage=RulesCoverage.UNSUPPORTED,
+                note="Subclass features are not yet modeled for this development pregen.",
+            ),
+            RulesCoverageItem(feature_id="action-surge", coverage=RulesCoverage.UNSUPPORTED),
+            RulesCoverageItem(feature_id="tactical-shift", coverage=RulesCoverage.UNSUPPORTED),
+            RulesCoverageItem(feature_id="weapon-mastery", coverage=RulesCoverage.UNSUPPORTED),
         ],
     )
 
@@ -89,6 +114,7 @@ def _ogre_entry() -> CatalogEntry:
 
 _BUILDERS: dict[str, Callable[[], CatalogEntry]] = {
     "aldric-vane-l1": _fighter_entry,
+    "mara-stone-l5": _mara_entry,
     "srd-goblin-warrior": _goblin_entry,
     "srd-skeleton": _skeleton_entry,
     "srd-ogre": _ogre_entry,
