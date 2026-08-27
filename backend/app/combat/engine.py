@@ -3,31 +3,16 @@ from __future__ import annotations
 import logging
 import uuid
 
+from app.combat.damage import resolve_weapon_damage
 from app.combat.dice import DiceProvider
 from app.combat.fighter import use_second_wind
 from app.combat.policy import should_use_second_wind
 from app.combat.rolls import roll_d20
 from app.combat.state import begin_turn, build_combatant_state
-from app.domain.models import BattleEvent, BattleResult, CombatantState, CombatantTemplate, DiceRoll, RollMode
+from app.domain.models import BattleEvent, BattleResult, CombatantState, CombatantTemplate, RollMode
 
 logger = logging.getLogger(__name__)
 MAX_ROUNDS = 100
-
-
-def _roll_damage(attacker: CombatantState, dice: DiceProvider, critical: bool) -> DiceRoll:
-    try:
-        weapon = attacker.template.weapon
-        count = weapon.dice_count * (2 if critical else 1)
-        rolls = [dice.roll(weapon.dice_size) for _ in range(count)]
-        return DiceRoll(
-            notation=f"{count}d{weapon.dice_size}+{weapon.damage_bonus}",
-            rolls=rolls,
-            modifier=weapon.damage_bonus,
-            total=sum(rolls) + weapon.damage_bonus,
-        )
-    except Exception as exc:
-        logger.exception("Damage resolution failed for %s.", attacker.template.name)
-        raise RuntimeError("Damage resolution failed.") from exc
 
 
 def _resolve_attack(
@@ -44,10 +29,18 @@ def _resolve_attack(
         critical = natural == 20
         hit = natural != 1 and (critical or attack_roll.total >= defender.template.armor_class)
         hp_before = defender.current_hp
-        damage = _roll_damage(attacker, dice, critical) if hit else None
-        if damage:
-            defender.current_hp = max(0, defender.current_hp - damage.total)
+        damage_roll = None
+        damage_components = []
+        if hit:
+            damage_roll, damage_components = resolve_weapon_damage(
+                attacker=attacker,
+                dice=dice,
+                critical=critical,
+                attack_mode=mode,
+            )
+            defender.current_hp = max(0, defender.current_hp - damage_roll.total)
             defender.is_alive = defender.current_hp > 0
+
         outcome = "CRITICAL HIT" if critical else ("HIT" if hit else "MISS")
         return BattleEvent(
             sequence=sequence,
@@ -58,7 +51,8 @@ def _resolve_attack(
             target_id=defender.template.id,
             target_name=defender.template.name,
             attack_roll=attack_roll,
-            damage_roll=damage,
+            damage_roll=damage_roll,
+            damage_components=damage_components,
             hit=hit,
             critical=critical,
             hp_before=hp_before,
