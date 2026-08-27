@@ -4,6 +4,8 @@
   const meleeButton = document.querySelector("#fight-button");
   const rangedButton = document.querySelector("#ranged-button");
   const buttons = [meleeButton, rangedButton];
+  const apiBase = String(window.IRON_PIT_API_BASE || "").trim().replace(/\/$/, "");
+  const preview = window.IRON_PIT_PREVIEW;
   const arenaState = {
     fighter: { id: "aldric-vane-l1", maxHp: 12 },
     goblin: { id: "srd-goblin-warrior", maxHp: 10 },
@@ -16,25 +18,44 @@
 
   async function loadRoster(view) {
     try {
-      const base = window.IRON_PIT_API_BASE || "http://localhost:8000";
-      const response = await fetch(`${base}/api/roster/demo`);
+      if (!apiBase) {
+        if (!preview) throw new Error("Static preview data is unavailable.");
+        view.hydrateRoster(preview.roster);
+        view.resetArena("Netlify preview ready — choose a starting distance.", 5);
+        return;
+      }
+
+      const response = await fetch(`${apiBase}/api/roster/demo`);
       if (!response.ok) throw new Error(`Roster API returned ${response.status}`);
       view.hydrateRoster(await response.json());
       view.resetArena("Ready — choose a starting distance.", 5);
     } catch (error) {
       console.error("Roster load failed", error);
-      view.resetArena("Roster API unavailable. A battle request will retry the API.", 5);
+      view.resetArena("Arena data could not be loaded.", 5);
+    }
+  }
+
+  async function requestBattle(endpoint) {
+    try {
+      if (!apiBase) {
+        if (!preview) throw new Error("Static preview data is unavailable.");
+        return endpoint.includes("ranged") ? preview.ranged : preview.melee;
+      }
+
+      const response = await fetch(`${apiBase}${endpoint}`, { method: "POST" });
+      if (!response.ok) throw new Error(`Battle API returned ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.error("Battle request failed", error);
+      throw error;
     }
   }
 
   async function startFight(view, endpoint, fallbackDistance) {
     try {
       setButtonsDisabled(true);
-      view.resetArena("Requesting battle...", fallbackDistance);
-      const base = window.IRON_PIT_API_BASE || "http://localhost:8000";
-      const response = await fetch(`${base}${endpoint}`, { method: "POST" });
-      if (!response.ok) throw new Error(`Battle API returned ${response.status}`);
-      const battle = await response.json();
+      view.resetArena(apiBase ? "Requesting battle..." : "Loading preview battle...", fallbackDistance);
+      const battle = await requestBattle(endpoint);
       view.hydrateRoster({ fighter: battle.fighter.template, monster: battle.monster.template });
       view.resetArena("Rolling initiative...", battle.battlefield.starting_distance_ft);
       await view.replay(battle.events);
@@ -45,7 +66,7 @@
       );
     } catch (error) {
       console.error("Fight failed", error);
-      view.setStatus("Battle failed. Check the FastAPI deployment and CORS settings.");
+      view.setStatus(apiBase ? "Battle failed. Check the FastAPI deployment." : "Preview battle failed.");
     } finally {
       setButtonsDisabled(false);
     }
