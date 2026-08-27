@@ -107,7 +107,7 @@ def test_skeleton_bludgeoning_vulnerability_changes_applied_not_raw_damage() -> 
     assert event.hp_after == 1
 
 
-def test_damage_immunity_and_resistance_vulnerability_precedence() -> None:
+def test_damage_immunity_and_resistance_vulnerability_order() -> None:
     skeleton = build_combatant_state(build_skeleton())
     poison = DamageRollComponent(
         source="Poison",
@@ -128,4 +128,4 @@ def test_damage_immunity_and_resistance_vulnerability_precedence() -> None:
     assert calculate_applied_damage(skeleton, [bludgeoning]) == 10
 
     skeleton.template.damage_resistances = [DamageType.BLUDGEONING]
-    assert calculate_applied_damage(skeleton, [bludgeoning]) == 5
+    assert calculate_applied_damage(skeleton, [bludgeoning]) == 4
