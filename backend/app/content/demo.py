@@ -3,10 +3,10 @@ from __future__ import annotations
 import logging
 
 from app.content.equipment import (
-    FIGHTER_CHAIN_MAIL_LOADOUT,
-    GOBLIN_LEATHER_LOADOUT,
-    LONGSWORD,
-    SCIMITAR,
+    build_fighter_visual_loadout,
+    build_goblin_visual_loadout,
+    build_longsword,
+    build_scimitar,
 )
 from app.domain.models import CombatantTemplate, ResourceDefinition
 
@@ -24,8 +24,8 @@ def build_demo_fighter() -> CombatantTemplate:
             armor_class=18,
             max_hp=12,
             initiative_bonus=1,
-            weapon=LONGSWORD.model_copy(deep=True),
-            visual=FIGHTER_CHAIN_MAIL_LOADOUT.model_copy(deep=True),
+            weapon=build_longsword(),
+            visual=build_fighter_visual_loadout(),
             resources=[
                 ResourceDefinition(id="second-wind", name="Second Wind", max_uses=2),
             ],
@@ -47,8 +47,8 @@ def build_goblin_warrior() -> CombatantTemplate:
             armor_class=15,
             max_hp=10,
             initiative_bonus=2,
-            weapon=SCIMITAR.model_copy(deep=True),
-            visual=GOBLIN_LEATHER_LOADOUT.model_copy(deep=True),
+            weapon=build_scimitar(),
+            visual=build_goblin_visual_loadout(),
             source="SRD 5.2.1 Goblin Warrior",
         )
     except Exception as exc:
