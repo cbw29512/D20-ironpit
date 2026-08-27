@@ -11,6 +11,7 @@ class DamageType(StrEnum):
     PIERCING = "piercing"
     BLUDGEONING = "bludgeoning"
     POISON = "poison"
+    RADIANT = "radiant"
 
 
 class WeaponAttackKind(StrEnum):
@@ -20,7 +21,7 @@ class WeaponAttackKind(StrEnum):
 
 
 class ConditionalDamage(BaseModel):
-    trigger: Literal["attack_advantage"]
+    trigger: Literal["always", "attack_advantage"]
     dice_count: int = Field(ge=1, le=20)
     dice_size: int = Field(ge=2, le=100)
     damage_bonus: int = 0
