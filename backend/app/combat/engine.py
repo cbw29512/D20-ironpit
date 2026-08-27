@@ -3,17 +3,50 @@ from __future__ import annotations
 import logging
 import uuid
 
-from app.combat.attack_actions import resolve_attack_action
 from app.combat.dice import DiceProvider
-from app.combat.fighter import use_second_wind
-from app.combat.policy import should_use_second_wind
 from app.combat.rolls import roll_d20
-from app.combat.state import begin_turn, build_combatant_state
-from app.combat.turns import prepare_attack
+from app.combat.state import build_combatant_state
+from app.combat.turn_execution import execute_turn
 from app.domain.models import BattleEvent, BattlefieldState, BattleResult, CombatantTemplate
 
 logger = logging.getLogger(__name__)
 MAX_ROUNDS = 100
+
+
+def _initiative_event(sequence: int, state, dice: DiceProvider) -> BattleEvent:
+    initiative = roll_d20(dice, state.template.initiative_bonus)
+    state.initiative_roll = initiative.selected_roll
+    state.initiative_total = initiative.total
+    return BattleEvent(
+        sequence=sequence,
+        round_number=0,
+        event_type="initiative",
+        actor_id=state.template.id,
+        actor_name=state.template.name,
+        attack_roll=initiative,
+        animation="initiative",
+        description=f"{state.template.name} rolls initiative {state.initiative_total}.",
+    )
+
+
+def _result(
+    fighter,
+    monster,
+    battlefield,
+    events,
+    rounds: int,
+    winner=None,
+) -> BattleResult:
+    return BattleResult(
+        battle_id=str(uuid.uuid4()),
+        winner_id=winner.template.id if winner else None,
+        winner_name=winner.template.name if winner else None,
+        rounds=rounds,
+        fighter=fighter,
+        monster=monster,
+        battlefield=battlefield,
+        events=events,
+    )
 
 
 def run_duel(
@@ -33,19 +66,7 @@ def run_duel(
         sequence = 1
 
         for state in (fighter, monster):
-            initiative = roll_d20(dice, state.template.initiative_bonus)
-            state.initiative_roll = initiative.selected_roll
-            state.initiative_total = initiative.total
-            events.append(BattleEvent(
-                sequence=sequence,
-                round_number=0,
-                event_type="initiative",
-                actor_id=state.template.id,
-                actor_name=state.template.name,
-                attack_roll=initiative,
-                animation="initiative",
-                description=f"{state.template.name} rolls initiative {state.initiative_total}.",
-            ))
+            events.append(_initiative_event(sequence, state, dice))
             sequence += 1
 
         order = sorted(
@@ -60,32 +81,16 @@ def run_duel(
                 if not attacker.is_alive or not defender.is_alive:
                     continue
 
-                begin_turn(attacker)
-                if attacker is fighter and should_use_second_wind(fighter):
-                    events.append(use_second_wind(sequence, round_number, fighter, dice))
-                    sequence += 1
-
-                weapon, prep_events, sequence = prepare_attack(
-                    sequence,
-                    round_number,
-                    attacker,
-                    battlefield,
-                )
-                events.extend(prep_events)
-                if weapon is None:
-                    continue
-
-                attack_events = resolve_attack_action(
+                turn_events, sequence = execute_turn(
                     sequence,
                     round_number,
                     attacker,
                     defender,
-                    weapon,
-                    battlefield.distance_ft,
+                    battlefield,
                     dice,
+                    fighter_features=attacker is fighter,
                 )
-                events.extend(attack_events)
-                sequence += len(attack_events)
+                events.extend(turn_events)
 
                 if not defender.is_alive:
                     events.append(BattleEvent(
@@ -99,15 +104,8 @@ def run_duel(
                         animation="victory",
                         description=f"{attacker.template.name} wins the duel.",
                     ))
-                    return BattleResult(
-                        battle_id=str(uuid.uuid4()),
-                        winner_id=attacker.template.id,
-                        winner_name=attacker.template.name,
-                        rounds=round_number,
-                        fighter=fighter,
-                        monster=monster,
-                        battlefield=battlefield,
-                        events=events,
+                    return _result(
+                        fighter, monster, battlefield, events, round_number, winner=attacker
                     )
 
         events.append(BattleEvent(
@@ -119,16 +117,7 @@ def run_duel(
             animation="draw",
             description=f"The duel reached the {MAX_ROUNDS}-round safety limit.",
         ))
-        return BattleResult(
-            battle_id=str(uuid.uuid4()),
-            winner_id=None,
-            winner_name=None,
-            rounds=MAX_ROUNDS,
-            fighter=fighter,
-            monster=monster,
-            battlefield=battlefield,
-            events=events,
-        )
+        return _result(fighter, monster, battlefield, events, MAX_ROUNDS)
     except Exception as exc:
         logger.exception("Duel execution failed.")
         raise RuntimeError("Duel execution failed.") from exc
