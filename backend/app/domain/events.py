@@ -45,6 +45,7 @@ class BattleEvent(BaseModel):
     attack_roll: DiceRoll | None = None
     damage_roll: DiceRoll | None = None
     damage_components: list[DamageRollComponent] = Field(default_factory=list)
+    damage_applied: int | None = None
     healing_roll: DiceRoll | None = None
     hit: bool | None = None
     critical: bool = False
