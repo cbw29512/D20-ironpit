@@ -10,10 +10,13 @@ from app.domain.models import BattlefieldState
 
 def test_fighter_moves_up_to_speed_toward_melee_reach() -> None:
     fighter = build_combatant_state(build_demo_fighter())
+    goblin = build_combatant_state(build_goblin_warrior())
     battlefield = BattlefieldState(distance_ft=90)
     begin_turn(fighter)
 
-    event = move_toward_target(1, 1, fighter, battlefield, desired_distance_ft=5)
+    event = move_toward_target(
+        1, 1, fighter, goblin.instance_id, battlefield, desired_distance_ft=5
+    )
 
     assert event is not None
     assert event.movement_ft == 30
@@ -38,10 +41,11 @@ def test_dash_spends_action_and_adds_speed_to_movement() -> None:
 
 def test_prepare_attack_dashes_when_target_is_too_far_for_one_move() -> None:
     fighter = build_combatant_state(build_demo_fighter())
+    goblin = build_combatant_state(build_goblin_warrior())
     battlefield = BattlefieldState(distance_ft=90)
     begin_turn(fighter)
 
-    attack, events, next_sequence = prepare_attack(1, 1, fighter, battlefield)
+    attack, events, next_sequence = prepare_attack(1, 1, fighter, goblin, battlefield)
 
     assert attack is None
     assert [event.event_type for event in events] == ["movement", "dash", "movement"]
@@ -52,10 +56,11 @@ def test_prepare_attack_dashes_when_target_is_too_far_for_one_move() -> None:
 
 def test_prepare_attack_can_move_then_attack_without_dashing() -> None:
     fighter = build_combatant_state(build_demo_fighter())
+    goblin = build_combatant_state(build_goblin_warrior())
     battlefield = BattlefieldState(distance_ft=30)
     begin_turn(fighter)
 
-    attack, events, _ = prepare_attack(1, 2, fighter, battlefield)
+    attack, events, _ = prepare_attack(1, 2, fighter, goblin, battlefield)
 
     assert attack is not None
     assert attack.weapon.id == "longsword"
