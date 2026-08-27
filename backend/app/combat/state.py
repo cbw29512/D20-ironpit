@@ -7,10 +7,14 @@ from app.domain.models import CombatantState, CombatantTemplate, ResourceState
 logger = logging.getLogger(__name__)
 
 
-def build_combatant_state(template: CombatantTemplate) -> CombatantState:
+def build_combatant_state(
+    template: CombatantTemplate,
+    instance_id: str | None = None,
+) -> CombatantState:
     try:
         return CombatantState(
             template=template,
+            instance_id=instance_id or template.id,
             current_hp=template.max_hp,
             movement_remaining_ft=0,
             resources=[
