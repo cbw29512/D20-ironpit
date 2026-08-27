@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.conditions import condition_states, has_condition
+from app.combat.movement_state import movement_locked
 from app.domain.models import Ability, CombatantState, ConditionType
 
 
@@ -22,10 +23,7 @@ def is_incapacitated(state: CombatantState) -> bool:
 
 
 def has_zero_speed(state: CombatantState) -> bool:
-    return any(
-        has_condition(state, condition)
-        for condition in (ConditionType.GRAPPLED, ConditionType.PARALYZED, ConditionType.RESTRAINED)
-    )
+    return movement_locked(state)
 
 
 def ability_check_condition_sources(
