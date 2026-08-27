@@ -8,6 +8,7 @@ from app.combat.dice import DiceProvider
 from app.combat.fighter import use_action_surge, use_second_wind
 from app.combat.multiattack import resolve_multiattack_action
 from app.combat.policy import should_use_action_surge, should_use_second_wind
+from app.combat.recharge import roll_recharges
 from app.combat.state import begin_turn
 from app.combat.turns import prepare_attack
 from app.domain.models import BattleEvent, BattlefieldState, CombatantState
@@ -69,6 +70,9 @@ def execute_turn(
         visible_sources = visible_source_ids or {defender.instance_id}
         events = expire_turn_conditions(sequence, round_number, attacker, roster, "start")
         sequence += len(events)
+        recharge_events = roll_recharges(sequence, round_number, attacker, dice)
+        events.extend(recharge_events)
+        sequence += len(recharge_events)
         begin_turn(attacker)
 
         if fighter_features and should_use_second_wind(attacker):
