@@ -44,7 +44,8 @@ def test_catalog_exposes_rules_coverage_without_hiding_gaps() -> None:
     assert fighter_coverage["second-wind"] is RulesCoverage.FULLY_IMPLEMENTED
     assert fighter_coverage["weapon-mastery"] is RulesCoverage.UNSUPPORTED
     assert mara_coverage["extra-attack"] is RulesCoverage.FULLY_IMPLEMENTED
-    assert mara_coverage["action-surge"] is RulesCoverage.UNSUPPORTED
+    assert mara_coverage["action-surge"] is RulesCoverage.FULLY_IMPLEMENTED
+    assert mara_coverage["action-surge-policy"] is RulesCoverage.ARENA_ASSUMPTION
     assert knight_coverage["radiant-rider"] is RulesCoverage.FULLY_IMPLEMENTED
     assert knight_coverage["parry"] is RulesCoverage.UNSUPPORTED
     assert ogre_coverage["thrown-weapon-range"] is RulesCoverage.FULLY_IMPLEMENTED
