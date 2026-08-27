@@ -16,9 +16,14 @@ def _goblin_entry() -> CatalogEntry:
             RulesCoverageItem(feature_id="shortbow", coverage=RulesCoverage.FULLY_IMPLEMENTED),
             RulesCoverageItem(feature_id="advantage-extra-damage", coverage=RulesCoverage.FULLY_IMPLEMENTED),
             RulesCoverageItem(
-                feature_id="nimble-escape",
+                feature_id="nimble-escape-disengage",
+                coverage=RulesCoverage.FULLY_IMPLEMENTED,
+                note="Nimble Escape grants Disengage as a Bonus Action without changing arena movement policy.",
+            ),
+            RulesCoverageItem(
+                feature_id="nimble-escape-hide",
                 coverage=RulesCoverage.UNSUPPORTED,
-                note="Current arena policy does not yet use Disengage or Hide.",
+                note="Hide waits for the Stealth and visibility system.",
             ),
         ],
     )
@@ -74,7 +79,7 @@ def _knight_entry() -> CatalogEntry:
                 note="Each strike reselects the primary legal profile, then its legal alternate.",
             ),
             RulesCoverageItem(feature_id="parry", coverage=RulesCoverage.UNSUPPORTED),
-            RulesCoverageItem(feature_id="frightened-immunity", coverage=RulesCoverage.UNSUPPORTED),
+            RulesCoverageItem(feature_id="frightened-immunity", coverage=RulesCoverage.FULLY_IMPLEMENTED),
         ],
     )
 
