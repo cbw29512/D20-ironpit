@@ -5,6 +5,7 @@ import logging
 from app.combat.attacks import resolve_attack
 from app.combat.dice import DiceProvider
 from app.combat.policy import attack_uses_melee
+from app.combat.unarmed_damage import resolve_unarmed_damage_attack
 from app.domain.models import BattleEvent, CombatantState, WeaponAttack
 
 logger = logging.getLogger(__name__)
@@ -41,7 +42,7 @@ def resolve_opportunity_attack(
     movement_uses_mover_economy: bool = True,
     teleport: bool = False,
 ) -> BattleEvent | None:
-    """Resolve a weapon Opportunity Attack immediately before the mover leaves reach."""
+    """Resolve an Opportunity Attack immediately before the mover leaves reach."""
     try:
         if not reactor.is_alive or not mover.is_alive:
             return None
@@ -55,10 +56,22 @@ def resolve_opportunity_attack(
             distance_before_ft,
             distance_after_ft,
         )
-        if attack is None:
+        leaves_unarmed_reach = distance_before_ft <= 5 < distance_after_ft
+        if attack is None and not leaves_unarmed_reach:
             return None
 
         reactor.reaction_available = False
+        if attack is None:
+            return resolve_unarmed_damage_attack(
+                sequence,
+                round_number,
+                reactor,
+                mover,
+                distance_before_ft,
+                dice,
+                visible_source_ids={mover.instance_id},
+                event_type="opportunity_attack",
+            )
         return resolve_attack(
             sequence,
             round_number,
