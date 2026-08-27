@@ -14,6 +14,7 @@ from app.domain.combatants import (
     WeaponAttack,
     WeaponAttackKind,
 )
+from app.domain.conditions import ConditionState, ConditionType
 from app.domain.effects import AttackEffect, SizeCategory
 from app.domain.events import BattleEvent, BattleResult, DamageRollComponent, DiceRoll, RollMode
 
@@ -26,6 +27,8 @@ __all__ = [
     "CatalogEntry",
     "CombatantState",
     "CombatantTemplate",
+    "ConditionState",
+    "ConditionType",
     "ConditionalDamage",
     "DamageDiceOverride",
     "DamageRollComponent",
