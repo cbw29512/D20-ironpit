@@ -10,10 +10,11 @@
     try {
       const rank = template.level ? `${template.archetype} ${template.level}` : `CR ${template.challenge_rating}`;
       const offHand = template.visual.off_hand ? ` + ${titleCase(template.visual.off_hand)}` : "";
+      const armor = template.visual.armor && template.visual.armor !== "none" ? ` · ${titleCase(template.visual.armor)}` : "";
       const alternates = template.alternate_weapon_attacks?.length
         ? ` · Alt: ${template.alternate_weapon_attacks.map((attack) => attack.weapon.name).join(", ")}`
         : "";
-      return `${rank} · ${template.weapon_attack.weapon.name}${offHand} · ${titleCase(template.visual.armor)}${alternates}`;
+      return `${rank} · ${template.weapon_attack.weapon.name}${offHand}${armor}${alternates}`;
     } catch (error) { console.error("Template description failed", error); return "Combatant"; }
   }
 
@@ -22,6 +23,14 @@
       const status = document.querySelector("#status");
       const log = document.querySelector("#battle-log");
       const distance = document.querySelector("#distance");
+
+      function classForSlot(slot) {
+        try {
+          const bodyStyle = arenaState[slot].bodyStyle || (slot === "fighter" ? "humanoid" : "goblinoid");
+          const shieldClass = arenaState[slot].hasShield === false ? " no-shield" : "";
+          return `stick ${bodyStyle}${shieldClass}`;
+        } catch (error) { console.error("Body style lookup failed", error); return "stick humanoid"; }
+      }
 
       function setDistance(value) {
         try { distance.textContent = `${Math.max(0, Number(value) || 0)} ft`; }
@@ -42,9 +51,13 @@
         try {
           arenaState[slot].id = template.id;
           arenaState[slot].maxHp = template.max_hp;
+          arenaState[slot].bodyStyle = template.visual.body_style || "humanoid";
+          arenaState[slot].hasShield = template.visual.off_hand === "shield";
+          const node = document.querySelector(`#${slot}`);
+          node.className.baseVal = classForSlot(slot);
           document.querySelector(`#${slot}-name`).textContent = template.name;
           document.querySelector(`#${slot}-meta`).textContent = describeTemplate(template);
-          document.querySelector(`#${slot}`).setAttribute("aria-label", `${template.name}, ${describeTemplate(template)}`);
+          node.setAttribute("aria-label", `${template.name}, ${describeTemplate(template)}`);
           setHp(slot, template.max_hp);
         } catch (error) { console.error(`Failed to render ${slot} template`, error); }
       }
@@ -60,7 +73,7 @@
         try {
           log.innerHTML = "";
           for (const slot of ["fighter", "goblin"]) {
-            document.querySelector(`#${slot}`).className.baseVal = `stick${slot === "goblin" ? " goblin" : ""}`;
+            document.querySelector(`#${slot}`).className.baseVal = classForSlot(slot);
             setHp(slot, arenaState[slot].maxHp);
           }
           document.querySelector("#projectile").className = "projectile";
@@ -85,7 +98,12 @@
             const item = document.createElement("li");
             let detail = event.description;
             if (event.attack_roll) detail += ` [${formatD20(event.attack_roll)}]`;
-            if (event.damage_roll) detail += ` Damage ${event.damage_roll.total}.`;
+            if (event.damage_roll) {
+              detail += ` Damage ${event.damage_roll.total}.`;
+              if (event.damage_applied !== null && event.damage_applied !== undefined && event.damage_applied !== event.damage_roll.total) {
+                detail += ` Applied ${event.damage_applied}.`;
+              }
+            }
             if (event.healing_roll) detail += ` Healing roll ${event.healing_roll.total}.`;
             item.textContent = detail;
             log.appendChild(item);
@@ -95,12 +113,7 @@
         } catch (error) { console.error("Battle replay failed", error); throw error; }
       }
 
-      return {
-        hydrateRoster,
-        resetArena,
-        replay,
-        setStatus: (message) => { status.textContent = message; },
-      };
+      return { hydrateRoster, resetArena, replay, setStatus: (message) => { status.textContent = message; } };
     } catch (error) {
       console.error("Arena view initialization failed", error);
       throw error;
