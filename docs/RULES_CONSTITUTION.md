@@ -39,6 +39,17 @@ This document is the non-negotiable contract for combat behavior in Iron Pit.
 - Turns proceed from highest Initiative to lowest and keep that order each round.
 - SRD ties are a GM decision. Iron Pit uses Initiative bonus as the first deterministic arena tiebreaker and runtime instance ID as the final stable tiebreaker.
 
+## Reaction movement rules
+
+- A creature can make an Opportunity Attack when a creature it can see leaves its reach and its Reaction is available.
+- The Opportunity Attack resolves immediately before the creature leaves that reach.
+- The Reaction makes one melee attack with a legal weapon/natural attack or the damage option of an Unarmed Strike.
+- Taking the Disengage action prevents the creature's movement from provoking Opportunity Attacks for the rest of that turn.
+- Teleportation does not provoke an Opportunity Attack.
+- Movement that does not use the moved creature's movement, Action, Bonus Action, or Reaction does not provoke; forced knockback therefore never creates an Opportunity Attack by itself.
+- Spending a Reaction on an Opportunity Attack makes that Reaction unavailable until the rules restore it.
+- If the Opportunity Attack reduces the mover to 0 HP before departure, that attempted movement does not complete.
+
 ## Tactical policy contract
 
 Tactical policy is intentionally replaceable and is not RAW. The baseline arena policy should be simple, deterministic, and visible in coverage reports.
