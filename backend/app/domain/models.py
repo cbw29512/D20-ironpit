@@ -14,9 +14,11 @@ from app.domain.combatants import (
     WeaponAttack,
     WeaponAttackKind,
 )
+from app.domain.effects import AttackEffect, SizeCategory
 from app.domain.events import BattleEvent, BattleResult, DamageRollComponent, DiceRoll, RollMode
 
 __all__ = [
+    "AttackEffect",
     "BattleEvent",
     "BattlefieldState",
     "BattleRequest",
@@ -35,6 +37,7 @@ __all__ = [
     "RollMode",
     "RulesCoverage",
     "RulesCoverageItem",
+    "SizeCategory",
     "VisualLoadout",
     "Weapon",
     "WeaponAttack",
