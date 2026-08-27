@@ -61,6 +61,12 @@ def calculate_applied_damage(
         raise RuntimeError("Applied damage could not be resolved.") from exc
 
 
+def _rider_applies(trigger: str, attack_mode: RollMode) -> bool:
+    return trigger == "always" or (
+        trigger == "attack_advantage" and attack_mode is RollMode.ADVANTAGE
+    )
+
+
 def resolve_weapon_damage(
     attacker: CombatantState,
     attack: WeaponAttack,
@@ -85,19 +91,21 @@ def resolve_weapon_damage(
             )
         ]
 
-        for conditional in attack.conditional_damage:
-            if conditional.trigger == "attack_advantage" and attack_mode is RollMode.ADVANTAGE:
-                components.append(
-                    _roll_component(
-                        dice=dice,
-                        source="Advantage bonus damage",
-                        dice_count=conditional.dice_count,
-                        dice_size=conditional.dice_size,
-                        modifier=conditional.damage_bonus,
-                        damage_type=conditional.damage_type,
-                        critical=critical,
-                    )
+        for rider in attack.conditional_damage:
+            if not _rider_applies(rider.trigger, attack_mode):
+                continue
+            source = "Advantage bonus damage" if rider.trigger == "attack_advantage" else "Bonus damage"
+            components.append(
+                _roll_component(
+                    dice=dice,
+                    source=source,
+                    dice_count=rider.dice_count,
+                    dice_size=rider.dice_size,
+                    modifier=rider.damage_bonus,
+                    damage_type=rider.damage_type,
+                    critical=critical,
                 )
+            )
 
         aggregate_rolls = [roll for component in components for roll in component.rolls]
         aggregate_total = sum(component.total for component in components)
