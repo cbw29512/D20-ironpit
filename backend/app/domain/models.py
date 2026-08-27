@@ -16,6 +16,7 @@ from app.domain.combatants import (
     WeaponAttackKind,
 )
 from app.domain.conditions import ConditionExpiry, ConditionState, ConditionType
+from app.domain.creatures import CreatureType
 from app.domain.effects import AttackEffect, SizeCategory
 from app.domain.encounters import (
     EncounterParticipantRequest,
@@ -42,6 +43,7 @@ __all__ = [
     "ConditionState",
     "ConditionType",
     "ConditionalDamage",
+    "CreatureType",
     "DamageDiceOverride",
     "DamageRollComponent",
     "DamageType",
