@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.dice import DiceProvider
-from app.domain.models import CombatantState, DamageRollComponent, DamageType, DiceRoll, RollMode, Weapon
+from app.domain.models import CombatantState, DamageRollComponent, DamageType, DiceRoll, RollMode, WeaponAttack
 
 logger = logging.getLogger(__name__)
 
@@ -35,26 +35,27 @@ def _roll_component(
 
 def resolve_weapon_damage(
     attacker: CombatantState,
-    weapon: Weapon,
+    attack: WeaponAttack,
     dice: DiceProvider,
     critical: bool,
     attack_mode: RollMode,
 ) -> tuple[DiceRoll, list[DamageRollComponent]]:
-    """Resolve base and conditional damage for the weapon selected for this attack."""
+    """Resolve intrinsic weapon dice plus combatant-specific modifiers and riders."""
     try:
+        weapon = attack.weapon
         components = [
             _roll_component(
                 dice=dice,
                 source=weapon.name,
                 dice_count=weapon.dice_count,
                 dice_size=weapon.dice_size,
-                modifier=weapon.damage_bonus,
+                modifier=attack.damage_bonus,
                 damage_type=weapon.damage_type,
                 critical=critical,
             )
         ]
 
-        for conditional in weapon.conditional_damage:
+        for conditional in attack.conditional_damage:
             if conditional.trigger == "attack_advantage" and attack_mode is RollMode.ADVANTAGE:
                 components.append(
                     _roll_component(
