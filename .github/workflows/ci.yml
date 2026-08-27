@@ -18,3 +18,11 @@ jobs:
       - name: Test
         working-directory: backend
         run: pytest -q
+      - name: Validate Netlify frontend config generation
+        env:
+          IRON_PIT_API_BASE: https://example.com
+        run: |
+          python scripts/write_frontend_config.py
+          grep -q 'https://example.com' frontend/config.js
+      - name: Build API Docker image
+        run: docker build -t iron-pit-d20-api ./backend
