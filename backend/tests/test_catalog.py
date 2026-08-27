@@ -11,27 +11,37 @@ from app.domain.models import BattleRequest, RulesCoverage
 from app.services.catalog_battles import CatalogBattleValidationError, run_catalog_battle
 
 
-def test_catalog_lists_current_mvp_combatants() -> None:
+def test_catalog_lists_current_battle_ready_combatants() -> None:
     characters = list_character_catalog()
     monsters = list_monster_catalog()
 
     assert [entry.combatant.id for entry in characters] == ["aldric-vane-l1"]
-    assert [entry.combatant.id for entry in monsters] == ["srd-goblin-warrior"]
-    assert characters[0].battle_ready is True
-    assert monsters[0].battle_ready is True
+    assert [entry.combatant.id for entry in monsters] == [
+        "srd-goblin-warrior",
+        "srd-skeleton",
+        "srd-ogre",
+    ]
+    assert all(entry.battle_ready for entry in [*characters, *monsters])
 
 
 def test_catalog_exposes_rules_coverage_without_hiding_gaps() -> None:
     fighter = get_catalog_entry("aldric-vane-l1")
     goblin = get_catalog_entry("srd-goblin-warrior")
+    skeleton = get_catalog_entry("srd-skeleton")
+    ogre = get_catalog_entry("srd-ogre")
 
     fighter_coverage = {item.feature_id: item.coverage for item in fighter.rules_coverage}
     goblin_coverage = {item.feature_id: item.coverage for item in goblin.rules_coverage}
+    skeleton_coverage = {item.feature_id: item.coverage for item in skeleton.rules_coverage}
+    ogre_coverage = {item.feature_id: item.coverage for item in ogre.rules_coverage}
 
     assert fighter_coverage["second-wind"] is RulesCoverage.FULLY_IMPLEMENTED
     assert fighter_coverage["weapon-mastery"] is RulesCoverage.UNSUPPORTED
-    assert goblin_coverage["shortbow"] is RulesCoverage.FULLY_IMPLEMENTED
     assert goblin_coverage["nimble-escape"] is RulesCoverage.UNSUPPORTED
+    assert skeleton_coverage["bludgeoning-vulnerability"] is RulesCoverage.FULLY_IMPLEMENTED
+    assert skeleton_coverage["condition-immunities"] is RulesCoverage.UNSUPPORTED
+    assert ogre_coverage["thrown-weapon-range"] is RulesCoverage.FULLY_IMPLEMENTED
+    assert ogre_coverage["javelin-inventory"] is RulesCoverage.ARENA_ASSUMPTION
 
 
 def test_catalog_lookup_rejects_unknown_combatant() -> None:
