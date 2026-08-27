@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.action_policy import select_standalone_save_action
 from app.combat.attack_actions import resolve_attack_action
 from app.combat.condition_timing import expire_turn_conditions
 from app.combat.dice import DiceProvider
@@ -9,6 +10,7 @@ from app.combat.fighter import use_action_surge, use_second_wind
 from app.combat.multiattack import resolve_multiattack_action
 from app.combat.policy import should_use_action_surge, should_use_second_wind
 from app.combat.recharge import roll_recharges
+from app.combat.save_actions import resolve_save_action
 from app.combat.state import begin_turn
 from app.combat.turns import prepare_attack
 from app.domain.models import BattleEvent, BattlefieldState, CombatantState
@@ -26,6 +28,22 @@ def _perform_offensive_action(
     visible_source_ids: set[str],
 ) -> tuple[list[BattleEvent], int]:
     try:
+        save_action = select_standalone_save_action(
+            attacker, defender, battlefield.distance_ft
+        )
+        if save_action is not None:
+            events = resolve_save_action(
+                sequence,
+                round_number,
+                attacker,
+                defender,
+                battlefield.distance_ft,
+                save_action,
+                dice,
+                battlefield=battlefield,
+            )
+            return events, sequence + len(events)
+
         attack, prep_events, sequence = prepare_attack(
             sequence, round_number, attacker, defender, battlefield
         )
