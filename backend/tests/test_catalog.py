@@ -25,6 +25,7 @@ def test_catalog_lists_current_battle_ready_combatants() -> None:
         "srd-wolf",
         "srd-giant-crab",
         "srd-lion",
+        "srd-giant-spider",
         "srd-ghoul",
         "srd-goblin-warrior",
         "srd-skeleton",
@@ -41,6 +42,7 @@ def test_catalog_exposes_rules_coverage_without_hiding_gaps() -> None:
     wolf = get_catalog_entry("srd-wolf")
     crab = get_catalog_entry("srd-giant-crab")
     lion = get_catalog_entry("srd-lion")
+    spider = get_catalog_entry("srd-giant-spider")
     ghoul = get_catalog_entry("srd-ghoul")
     knight = get_catalog_entry("srd-knight")
     ogre = get_catalog_entry("srd-ogre")
@@ -51,6 +53,7 @@ def test_catalog_exposes_rules_coverage_without_hiding_gaps() -> None:
     wolf_coverage = {item.feature_id: item.coverage for item in wolf.rules_coverage}
     crab_coverage = {item.feature_id: item.coverage for item in crab.rules_coverage}
     lion_coverage = {item.feature_id: item.coverage for item in lion.rules_coverage}
+    spider_coverage = {item.feature_id: item.coverage for item in spider.rules_coverage}
     ghoul_coverage = {item.feature_id: item.coverage for item in ghoul.rules_coverage}
     knight_coverage = {item.feature_id: item.coverage for item in knight.rules_coverage}
     ogre_coverage = {item.feature_id: item.coverage for item in ogre.rules_coverage}
@@ -68,6 +71,10 @@ def test_catalog_exposes_rules_coverage_without_hiding_gaps() -> None:
     assert lion_coverage["roar"] is RulesCoverage.FULLY_IMPLEMENTED
     assert lion_coverage["multiattack"] is RulesCoverage.FULLY_IMPLEMENTED
     assert lion_coverage["pack-tactics"] is RulesCoverage.UNSUPPORTED
+    assert spider_coverage["web"] is RulesCoverage.FULLY_IMPLEMENTED
+    assert spider_coverage["web-recharge"] is RulesCoverage.FULLY_IMPLEMENTED
+    assert spider_coverage["web-object"] is RulesCoverage.FULLY_IMPLEMENTED
+    assert spider_coverage["spider-climb"] is RulesCoverage.UNSUPPORTED
     assert ghoul_coverage["claw-paralysis-save"] is RulesCoverage.FULLY_IMPLEMENTED
     assert ghoul_coverage["claw-action-policy"] is RulesCoverage.ARENA_ASSUMPTION
     assert knight_coverage["radiant-rider"] is RulesCoverage.FULLY_IMPLEMENTED
