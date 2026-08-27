@@ -40,15 +40,17 @@ def resolve_weapon_damage(
     critical: bool,
     attack_mode: RollMode,
 ) -> tuple[DiceRoll, list[DamageRollComponent]]:
-    """Resolve intrinsic weapon dice plus combatant-specific modifiers and riders."""
+    """Resolve an attack profile without mutating intrinsic equipment dice."""
     try:
         weapon = attack.weapon
+        base_dice_count = attack.damage_dice.dice_count if attack.damage_dice else weapon.dice_count
+        base_dice_size = attack.damage_dice.dice_size if attack.damage_dice else weapon.dice_size
         components = [
             _roll_component(
                 dice=dice,
                 source=weapon.name,
-                dice_count=weapon.dice_count,
-                dice_size=weapon.dice_size,
+                dice_count=base_dice_count,
+                dice_size=base_dice_size,
                 modifier=attack.damage_bonus,
                 damage_type=weapon.damage_type,
                 critical=critical,
