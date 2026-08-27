@@ -42,7 +42,7 @@ def test_default_demo_remains_five_foot_melee() -> None:
     first_attack = next(event for event in battle.events if event.event_type == "attack")
 
     assert battle.battlefield.distance_ft == 5
-    assert battle.monster.template.weapon.attack_kind is WeaponAttackKind.MELEE
-    assert battle.monster.template.alternate_weapons[0].attack_kind is WeaponAttackKind.RANGED
+    assert battle.monster.template.weapon_attack.weapon.attack_kind is WeaponAttackKind.MELEE
+    assert battle.monster.template.alternate_weapon_attacks[0].weapon.attack_kind is WeaponAttackKind.RANGED
     assert first_attack.attack_roll is not None
     assert first_attack.attack_roll.mode is RollMode.NORMAL
