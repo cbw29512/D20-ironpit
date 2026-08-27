@@ -9,7 +9,15 @@ from app.content.srd_attacks import (
     build_skeleton_shortsword_attack,
 )
 from app.content.srd_humanoids import build_knight, build_tough_boss
-from app.domain.models import Ability, CombatantTemplate, ConditionType, DamageType, SizeCategory, VisualLoadout
+from app.domain.models import (
+    Ability,
+    CombatantTemplate,
+    ConditionType,
+    CreatureType,
+    DamageType,
+    SizeCategory,
+    VisualLoadout,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -22,6 +30,7 @@ def build_skeleton() -> CombatantTemplate:
             archetype="Skeleton",
             challenge_rating="1/4",
             kind="monster",
+            creature_type=CreatureType.UNDEAD,
             size=SizeCategory.MEDIUM,
             armor_class=14,
             max_hp=13,
@@ -61,6 +70,7 @@ def build_ogre() -> CombatantTemplate:
             archetype="Ogre",
             challenge_rating="2",
             kind="monster",
+            creature_type=CreatureType.GIANT,
             size=SizeCategory.LARGE,
             armor_class=11,
             max_hp=68,
