@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.dice import DiceProvider
-from app.domain.models import CombatantState, DamageRollComponent, DiceRoll, RollMode
+from app.domain.models import CombatantState, DamageRollComponent, DamageType, DiceRoll, RollMode
 
 logger = logging.getLogger(__name__)
 
@@ -14,7 +14,7 @@ def _roll_component(
     dice_count: int,
     dice_size: int,
     modifier: int,
-    damage_type,
+    damage_type: DamageType,
     critical: bool,
 ) -> DamageRollComponent:
     try:
