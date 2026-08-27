@@ -13,11 +13,12 @@ CONFIG_PATH = ROOT_DIR / "frontend" / "config.js"
 
 
 def get_api_base() -> str:
-    """Return a validated public API base URL for the static frontend build."""
+    """Return a validated public API base URL, or blank for static preview mode."""
     try:
         api_base = os.getenv("IRON_PIT_API_BASE", "").strip().rstrip("/")
         if not api_base:
-            raise ValueError("IRON_PIT_API_BASE is required for a Netlify build.")
+            logger.warning("IRON_PIT_API_BASE is unset; building Netlify static preview mode.")
+            return ""
         if not api_base.startswith(("http://", "https://")):
             raise ValueError("IRON_PIT_API_BASE must begin with http:// or https://.")
         return api_base
@@ -27,15 +28,15 @@ def get_api_base() -> str:
 
 
 def write_config(api_base: str) -> None:
-    """Write a browser-safe JavaScript assignment using JSON string encoding."""
+    """Write browser-safe deployment configuration using JSON string encoding."""
     try:
         CONFIG_PATH.write_text(
             f"window.IRON_PIT_API_BASE = {json.dumps(api_base)};\n",
             encoding="utf-8",
         )
-        logger.info("Wrote frontend API configuration to %s", CONFIG_PATH)
+        logger.info("Wrote frontend configuration to %s", CONFIG_PATH)
     except Exception:
-        logger.exception("Failed to write frontend API configuration.")
+        logger.exception("Failed to write frontend configuration.")
         raise
 
 
