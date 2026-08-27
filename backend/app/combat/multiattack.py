@@ -74,6 +74,7 @@ def resolve_multiattack_action(
                 attack,
                 battlefield,
                 attack_event,
+                dice,
             ))
         return events
     except ValueError:
