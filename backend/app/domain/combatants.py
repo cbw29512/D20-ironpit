@@ -40,11 +40,17 @@ class Weapon(BaseModel):
     mastery_property: str | None = None
 
 
+class DamageDiceOverride(BaseModel):
+    dice_count: int = Field(ge=1, le=20)
+    dice_size: int = Field(ge=2, le=100)
+
+
 class WeaponAttack(BaseModel):
     id: str
     weapon: Weapon
     attack_bonus: int
     damage_bonus: int
+    damage_dice: DamageDiceOverride | None = None
     conditional_damage: list[ConditionalDamage] = Field(default_factory=list)
 
 
