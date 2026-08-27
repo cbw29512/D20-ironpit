@@ -12,6 +12,7 @@ from app.domain.models import (
     Ability,
     CombatantTemplate,
     CreatureType,
+    GrantedAction,
     ResourceDefinition,
     SizeCategory,
     Skill,
@@ -81,6 +82,11 @@ def build_goblin_warrior() -> CombatantTemplate:
             },
             weapon_attack=build_goblin_scimitar_attack(),
             alternate_weapon_attacks=[build_goblin_shortbow_attack()],
+            granted_actions=[GrantedAction(
+                id="nimble-escape-disengage",
+                action_id="disengage",
+                action_cost="bonus_action",
+            )],
             visual=build_goblin_visual_loadout(),
             source="SRD 5.2.1 Goblin Warrior",
         )
