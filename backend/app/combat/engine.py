@@ -78,7 +78,10 @@ def run_duel(
     try:
         fighter = build_combatant_state(fighter_template)
         monster = build_combatant_state(monster_template)
-        battlefield = BattlefieldState(distance_ft=starting_distance_ft)
+        battlefield = BattlefieldState(
+            starting_distance_ft=starting_distance_ft,
+            distance_ft=starting_distance_ft,
+        )
         events: list[BattleEvent] = []
         sequence = 1
 
