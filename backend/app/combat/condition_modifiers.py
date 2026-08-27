@@ -1,16 +1,16 @@
 from __future__ import annotations
 
-from app.combat.conditions import condition_state, has_condition
+from app.combat.conditions import condition_states, has_condition
 from app.domain.models import Ability, CombatantState, ConditionType
 
 
 def _visible_fear(state: CombatantState, visible_source_ids: set[str] | None) -> bool:
-    frightened = condition_state(state, ConditionType.FRIGHTENED)
-    return bool(
-        frightened
-        and frightened.source_id
-        and visible_source_ids
-        and frightened.source_id in visible_source_ids
+    if not visible_source_ids:
+        return False
+    return any(
+        item.source_id in visible_source_ids
+        for item in condition_states(state, ConditionType.FRIGHTENED)
+        if item.source_id is not None
     )
 
 
@@ -62,8 +62,8 @@ def attack_condition_sources(
     disadvantage += int(has_condition(attacker, ConditionType.POISONED))
     disadvantage += int(_visible_fear(attacker, visible_source_ids))
 
-    grapple = condition_state(attacker, ConditionType.GRAPPLED)
-    if grapple is not None and defender.instance_id != grapple.source_id:
+    grapples = condition_states(attacker, ConditionType.GRAPPLED)
+    if any(item.source_id != defender.instance_id for item in grapples):
         disadvantage += 1
     if has_condition(defender, ConditionType.PRONE):
         if distance_ft <= 5:
