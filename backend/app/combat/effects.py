@@ -76,7 +76,12 @@ def _resolve_effect(
             description=f"{attacker.template.name} pushes {defender.template.name} {effect.distance_ft} ft.",
         )
     if effect.effect_type == "condition":
-        if effect.condition is None or not apply_condition(defender, effect.condition, attacker):
+        if effect.condition is None or not apply_condition(
+            defender,
+            effect.condition,
+            attacker,
+            escape_dc=effect.escape_dc,
+        ):
             return None
         return BattleEvent(
             sequence=sequence,
