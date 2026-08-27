@@ -2,13 +2,12 @@ from __future__ import annotations
 
 import logging
 
-from app.content.equipment import (
-    build_fighter_visual_loadout,
-    build_goblin_visual_loadout,
-    build_longsword,
-    build_scimitar,
-    build_shortbow,
+from app.content.attacks import (
+    build_fighter_longsword_attack,
+    build_goblin_scimitar_attack,
+    build_goblin_shortbow_attack,
 )
+from app.content.equipment import build_fighter_visual_loadout, build_goblin_visual_loadout
 from app.domain.models import CombatantTemplate, ResourceDefinition
 
 logger = logging.getLogger(__name__)
@@ -26,7 +25,7 @@ def build_demo_fighter() -> CombatantTemplate:
             max_hp=12,
             speed_ft=30,
             initiative_bonus=1,
-            weapon=build_longsword(),
+            weapon_attack=build_fighter_longsword_attack(),
             visual=build_fighter_visual_loadout(),
             resources=[
                 ResourceDefinition(id="second-wind", name="Second Wind", max_uses=2),
@@ -50,8 +49,8 @@ def build_goblin_warrior() -> CombatantTemplate:
             max_hp=10,
             speed_ft=30,
             initiative_bonus=2,
-            weapon=build_scimitar(),
-            alternate_weapons=[build_shortbow()],
+            weapon_attack=build_goblin_scimitar_attack(),
+            alternate_weapon_attacks=[build_goblin_shortbow_attack()],
             visual=build_goblin_visual_loadout(),
             source="SRD 5.2.1 Goblin Warrior",
         )
