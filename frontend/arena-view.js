@@ -80,6 +80,18 @@
         } catch (error) { console.error("Attack animation failed", error); }
       }
 
+      async function animateHealing(event) {
+        try {
+          const slot = event.actor_id === arenaState.fighter.id ? "fighter" : "goblin";
+          const node = document.querySelector(`#${slot}`);
+          node.classList.add("healing");
+          await sleep(220);
+          if (event.hp_after !== null) setHp(slot, event.hp_after);
+          await sleep(420);
+          node.classList.remove("healing");
+        } catch (error) { console.error("Healing animation failed", error); }
+      }
+
       function formatD20(roll) {
         try {
           const selected = roll.selected_roll ?? roll.rolls[0];
@@ -95,10 +107,12 @@
             let detail = event.description;
             if (event.attack_roll) detail += ` [${formatD20(event.attack_roll)}]`;
             if (event.damage_roll) detail += ` Damage ${event.damage_roll.total}.`;
+            if (event.healing_roll) detail += ` Healing roll ${event.healing_roll.total}.`;
             item.textContent = detail;
             log.appendChild(item);
             item.scrollIntoView({ block: "nearest" });
             if (event.event_type === "attack") await animateAttack(event);
+            else if (event.event_type === "healing") await animateHealing(event);
             else await sleep(300);
           }
         } catch (error) { console.error("Battle replay failed", error); throw error; }
