@@ -53,6 +53,7 @@ def resolve_attack_action(
                 attack,
                 battlefield,
                 attack_event,
+                dice,
             ))
         return events
     except Exception as exc:
