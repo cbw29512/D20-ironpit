@@ -32,6 +32,7 @@ def begin_turn(state: CombatantState) -> None:
     try:
         state.action_available = True
         state.bonus_action_available = True
+        state.action_surge_used_this_turn = False
         state.movement_remaining_ft = state.template.speed_ft
     except Exception as exc:
         logger.exception("Failed to begin turn for %s.", state.template.name)
