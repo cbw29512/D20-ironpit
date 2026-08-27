@@ -21,12 +21,16 @@ _SUPPORTED = {
 }
 
 
+def condition_states(state: CombatantState, condition: ConditionType) -> list[ConditionState]:
+    return [item for item in state.conditions if item.condition is condition]
+
+
 def condition_state(state: CombatantState, condition: ConditionType) -> ConditionState | None:
-    return next((item for item in state.conditions if item.condition is condition), None)
+    return next(iter(condition_states(state, condition)), None)
 
 
 def has_condition(state: CombatantState, condition: ConditionType) -> bool:
-    return condition_state(state, condition) is not None
+    return bool(condition_states(state, condition))
 
 
 def apply_condition(
@@ -35,20 +39,37 @@ def apply_condition(
     source: CombatantState | None = None,
     escape_dc: int | None = None,
     expires_on: ConditionExpiry | None = None,
+    effect_id: str | None = None,
+    linked_object_id: str | None = None,
 ) -> bool:
     try:
         if condition not in _SUPPORTED:
             raise ValueError(f"Condition is not fully implemented: {condition}")
-        if condition in state.template.condition_immunities or has_condition(state, condition):
+        if condition in state.template.condition_immunities:
             return False
         if condition is ConditionType.GRAPPLED and (source is None or escape_dc is None):
             raise ValueError("Grappled requires a source and escape DC.")
         if condition is ConditionType.FRIGHTENED and source is None:
             raise ValueError("Frightened requires a fear source.")
+
+        source_id = source.instance_id if source else None
+        existing = next((
+            item for item in condition_states(state, condition)
+            if item.source_id == source_id
+            and item.effect_id == effect_id
+            and item.linked_object_id == linked_object_id
+            and item.escape_dc == escape_dc
+        ), None)
+        if existing is not None:
+            existing.expires_on = expires_on
+            return False
+
         state.conditions.append(ConditionState(
             condition=condition,
-            source_id=source.instance_id if source else None,
+            source_id=source_id,
             source_name=source.template.name if source else None,
+            effect_id=effect_id,
+            linked_object_id=linked_object_id,
             escape_dc=escape_dc,
             expires_on=expires_on,
         ))
@@ -66,9 +87,29 @@ def remove_condition(state: CombatantState, condition: ConditionType) -> bool:
     return len(state.conditions) != before
 
 
+def remove_condition_instance(
+    state: CombatantState,
+    condition: ConditionType,
+    linked_object_id: str | None = None,
+    source_id: str | None = None,
+) -> bool:
+    before = len(state.conditions)
+    state.conditions = [
+        item for item in state.conditions
+        if not (
+            item.condition is condition
+            and (linked_object_id is None or item.linked_object_id == linked_object_id)
+            and (source_id is None or item.source_id == source_id)
+        )
+    ]
+    return len(state.conditions) != before
+
+
 def can_willingly_approach(state: CombatantState, target_id: str) -> bool:
-    frightened = condition_state(state, ConditionType.FRIGHTENED)
-    return frightened is None or frightened.source_id != target_id
+    return not any(
+        item.source_id == target_id
+        for item in condition_states(state, ConditionType.FRIGHTENED)
+    )
 
 
 def stand_from_prone(
