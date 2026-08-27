@@ -33,10 +33,11 @@ def _skeleton_entry() -> CatalogEntry:
             RulesCoverageItem(feature_id="shortbow", coverage=RulesCoverage.FULLY_IMPLEMENTED),
             RulesCoverageItem(feature_id="bludgeoning-vulnerability", coverage=RulesCoverage.FULLY_IMPLEMENTED),
             RulesCoverageItem(feature_id="poison-damage-immunity", coverage=RulesCoverage.FULLY_IMPLEMENTED),
+            RulesCoverageItem(feature_id="poisoned-immunity", coverage=RulesCoverage.FULLY_IMPLEMENTED),
             RulesCoverageItem(
-                feature_id="condition-immunities",
+                feature_id="exhaustion-immunity",
                 coverage=RulesCoverage.UNSUPPORTED,
-                note="Exhaustion and Poisoned are not yet modeled as arena conditions.",
+                note="Exhaustion is not yet modeled as arena state.",
             ),
         ],
     )
