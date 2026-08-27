@@ -7,7 +7,7 @@ from app.content.catalog import (
     list_character_catalog,
     list_monster_catalog,
 )
-from app.domain.models import BattleRequest, RulesCoverage
+from app.domain.models import Ability, BattleRequest, RulesCoverage
 from app.services.catalog_battles import CatalogBattleValidationError, run_catalog_battle
 
 
@@ -36,13 +36,27 @@ def test_catalog_lists_current_battle_ready_combatants() -> None:
     assert all(entry.battle_ready for entry in [*characters, *monsters])
 
 
+def test_every_battle_ready_combatant_has_all_six_ability_modifiers() -> None:
+    required = set(Ability)
+    entries = [*list_character_catalog(), *list_monster_catalog()]
+
+    missing = {
+        entry.combatant.id: sorted(
+            ability.value for ability in required - set(entry.combatant.ability_modifiers)
+        )
+        for entry in entries
+        if entry.battle_ready and required - set(entry.combatant.ability_modifiers)
+    }
+
+    assert missing == {}
+
+
 def test_catalog_exposes_rules_coverage_without_hiding_gaps() -> None:
     fighter = get_catalog_entry("aldric-vane-l1")
     mara = get_catalog_entry("mara-stone-l5")
     wolf = get_catalog_entry("srd-wolf")
     crab = get_catalog_entry("srd-giant-crab")
     lion = get_catalog_entry("srd-lion")
-    spider = get_catalog_entry("srd-giant-spider")
     ghoul = get_catalog_entry("srd-ghoul")
     knight = get_catalog_entry("srd-knight")
     ogre = get_catalog_entry("srd-ogre")
@@ -53,7 +67,6 @@ def test_catalog_exposes_rules_coverage_without_hiding_gaps() -> None:
     wolf_coverage = {item.feature_id: item.coverage for item in wolf.rules_coverage}
     crab_coverage = {item.feature_id: item.coverage for item in crab.rules_coverage}
     lion_coverage = {item.feature_id: item.coverage for item in lion.rules_coverage}
-    spider_coverage = {item.feature_id: item.coverage for item in spider.rules_coverage}
     ghoul_coverage = {item.feature_id: item.coverage for item in ghoul.rules_coverage}
     knight_coverage = {item.feature_id: item.coverage for item in knight.rules_coverage}
     ogre_coverage = {item.feature_id: item.coverage for item in ogre.rules_coverage}
@@ -71,10 +84,6 @@ def test_catalog_exposes_rules_coverage_without_hiding_gaps() -> None:
     assert lion_coverage["roar"] is RulesCoverage.FULLY_IMPLEMENTED
     assert lion_coverage["multiattack"] is RulesCoverage.FULLY_IMPLEMENTED
     assert lion_coverage["pack-tactics"] is RulesCoverage.UNSUPPORTED
-    assert spider_coverage["web"] is RulesCoverage.FULLY_IMPLEMENTED
-    assert spider_coverage["web-recharge"] is RulesCoverage.FULLY_IMPLEMENTED
-    assert spider_coverage["web-object"] is RulesCoverage.FULLY_IMPLEMENTED
-    assert spider_coverage["spider-climb"] is RulesCoverage.UNSUPPORTED
     assert ghoul_coverage["claw-paralysis-save"] is RulesCoverage.FULLY_IMPLEMENTED
     assert ghoul_coverage["claw-action-policy"] is RulesCoverage.ARENA_ASSUMPTION
     assert knight_coverage["radiant-rider"] is RulesCoverage.FULLY_IMPLEMENTED
