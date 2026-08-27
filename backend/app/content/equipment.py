@@ -2,13 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from app.domain.models import (
-    ConditionalDamage,
-    DamageType,
-    VisualLoadout,
-    Weapon,
-    WeaponAttackKind,
-)
+from app.domain.models import DamageType, VisualLoadout, Weapon, WeaponAttackKind
 
 logger = logging.getLogger(__name__)
 
@@ -19,10 +13,8 @@ def build_longsword() -> Weapon:
             id="longsword",
             name="Longsword",
             attack_kind=WeaponAttackKind.MELEE,
-            attack_bonus=5,
             dice_count=1,
             dice_size=8,
-            damage_bonus=3,
             damage_type=DamageType.SLASHING,
             animation="slash",
             reach_ft=5,
@@ -32,35 +24,17 @@ def build_longsword() -> Weapon:
         raise RuntimeError("Longsword content could not be created.") from exc
 
 
-def _goblin_advantage_damage(damage_type: DamageType) -> list[ConditionalDamage]:
-    try:
-        return [
-            ConditionalDamage(
-                trigger="attack_advantage",
-                dice_count=1,
-                dice_size=4,
-                damage_type=damage_type,
-            )
-        ]
-    except Exception as exc:
-        logger.exception("Failed to build Goblin advantage damage.")
-        raise RuntimeError("Goblin conditional damage could not be created.") from exc
-
-
 def build_scimitar() -> Weapon:
     try:
         return Weapon(
             id="scimitar",
             name="Scimitar",
             attack_kind=WeaponAttackKind.MELEE,
-            attack_bonus=4,
             dice_count=1,
             dice_size=6,
-            damage_bonus=2,
             damage_type=DamageType.SLASHING,
             animation="slash",
             reach_ft=5,
-            conditional_damage=_goblin_advantage_damage(DamageType.SLASHING),
         )
     except Exception as exc:
         logger.exception("Failed to build scimitar content record.")
@@ -73,16 +47,13 @@ def build_shortbow() -> Weapon:
             id="shortbow",
             name="Shortbow",
             attack_kind=WeaponAttackKind.RANGED,
-            attack_bonus=4,
             dice_count=1,
             dice_size=6,
-            damage_bonus=2,
             damage_type=DamageType.PIERCING,
             animation="projectile",
             normal_range_ft=80,
             long_range_ft=320,
             projectile="arrow",
-            conditional_damage=_goblin_advantage_damage(DamageType.PIERCING),
         )
     except Exception as exc:
         logger.exception("Failed to build shortbow content record.")
