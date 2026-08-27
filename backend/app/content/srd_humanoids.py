@@ -8,7 +8,9 @@ from app.content.srd_boss_attacks import (
     build_tough_boss_warhammer_attack,
 )
 from app.domain.models import (
+    Ability,
     CombatantTemplate,
+    ConditionType,
     CreatureType,
     MultiattackDefinition,
     SizeCategory,
@@ -32,6 +34,20 @@ def build_knight() -> CombatantTemplate:
             max_hp=52,
             speed_ft=30,
             initiative_bonus=0,
+            proficiency_bonus=2,
+            ability_modifiers={
+                Ability.STRENGTH: 3,
+                Ability.DEXTERITY: 0,
+                Ability.CONSTITUTION: 2,
+                Ability.INTELLIGENCE: 0,
+                Ability.WISDOM: 0,
+                Ability.CHARISMA: 2,
+            },
+            saving_throw_modifiers={
+                Ability.CONSTITUTION: 4,
+                Ability.WISDOM: 2,
+            },
+            condition_immunities=[ConditionType.FRIGHTENED],
             weapon_attack=build_knight_greatsword_attack(),
             alternate_weapon_attacks=[build_knight_crossbow_attack()],
             multiattack=MultiattackDefinition(
