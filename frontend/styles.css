@@ -31,6 +31,10 @@ header h1 { margin:.15rem 0; font-size:clamp(2.4rem,7vw,5rem); letter-spacing:.0
 .hp { height:12px; margin:12px auto 7px; width:min(240px,90%); background:#3a1d1d; border-radius:999px; overflow:hidden; }
 .hp span { display:block; width:100%; height:100%; background:#72b56b; transition:width .3s ease; }
 .controls { text-align:center; margin:22px 0; }
+.matchup-row { display:flex; justify-content:center; align-items:end; gap:12px; flex-wrap:wrap; margin-bottom:16px; }
+.matchup-row label { display:grid; gap:6px; text-align:left; color:#d7b06a; font-weight:800; font-size:.78rem; letter-spacing:.06em; text-transform:uppercase; }
+.matchup-row select { min-width:230px; max-width:90vw; padding:11px 36px 11px 12px; border:1px solid #4a4235; border-radius:10px; background:#181818; color:#f5f5f5; font:inherit; text-transform:none; letter-spacing:0; }
+.matchup-versus { align-self:center; color:#888; font-weight:800; text-transform:uppercase; }
 .button-row { display:flex; justify-content:center; gap:12px; flex-wrap:wrap; }
 button { font:inherit; font-weight:800; border:0; border-radius:999px; padding:13px 24px; cursor:pointer; background:#d7b06a; color:#15120d; }
 button:disabled { opacity:.55; cursor:wait; }
@@ -45,5 +49,5 @@ button:disabled { opacity:.55; cursor:wait; }
 @keyframes advance-left { 0%,100%{transform:translateX(0)} 50%{transform:translateX(-18px)} }
 @keyframes projectile-left { 0%{left:72%;opacity:1;transform:rotate(180deg)} 90%{opacity:1} 100%{left:28%;opacity:0;transform:rotate(180deg)} }
 @keyframes projectile-right { 0%{left:28%;opacity:1;transform:rotate(0)} 90%{opacity:1} 100%{left:72%;opacity:0;transform:rotate(0)} }
-@media (max-width:680px){ .arena{grid-template-columns:1fr;}.versus{transform:rotate(90deg);} .projectile{top:50%;} }
+@media (max-width:680px){ .arena{grid-template-columns:1fr;}.versus{transform:rotate(90deg);} .projectile{top:50%;} .matchup-row{align-items:stretch}.matchup-versus{align-self:center} }
 @media (prefers-reduced-motion:reduce){ *{animation-duration:.01ms!important;transition-duration:.01ms!important;} }
