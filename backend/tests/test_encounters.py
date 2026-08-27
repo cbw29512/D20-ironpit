@@ -67,8 +67,17 @@ def test_initiative_orders_arbitrary_roster_and_keeps_instance_ids() -> None:
     )
 
     assert [event.actor_id for event in events] == ["aldric-1", "aldric-2", "ogre-1"]
-    assert [state.instance_id for state in order] == ["aldric-2", "ogre-1", "aldric-1"]
+    assert [state.instance_id for state in order] == ["aldric-2", "aldric-1", "ogre-1"]
     assert sequence == 10
+
+
+def test_exact_initiative_tie_uses_stable_instance_id_policy() -> None:
+    encounter = build_encounter_state(_party_vs_boss_request())
+    states = [item.combatant for item in encounter.participants[:2]]
+
+    _, order, _ = roll_initiative_order(1, states, FixedDiceProvider([10, 10]))
+
+    assert [state.instance_id for state in order] == ["aldric-1", "aldric-2"]
 
 
 def test_target_policy_selects_nearest_living_enemy() -> None:
