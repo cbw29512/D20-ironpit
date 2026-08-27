@@ -8,7 +8,14 @@ from app.content.attacks import (
     build_goblin_shortbow_attack,
 )
 from app.content.equipment import build_fighter_visual_loadout, build_goblin_visual_loadout
-from app.domain.models import Ability, CombatantTemplate, ResourceDefinition, SizeCategory, Skill
+from app.domain.models import (
+    Ability,
+    CombatantTemplate,
+    CreatureType,
+    ResourceDefinition,
+    SizeCategory,
+    Skill,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -21,6 +28,7 @@ def build_demo_fighter() -> CombatantTemplate:
             archetype="Fighter",
             level=1,
             kind="character",
+            creature_type=CreatureType.HUMANOID,
             size=SizeCategory.MEDIUM,
             armor_class=18,
             max_hp=12,
@@ -55,6 +63,8 @@ def build_goblin_warrior() -> CombatantTemplate:
             archetype="Goblin Warrior",
             challenge_rating="1/4",
             kind="monster",
+            creature_type=CreatureType.FEY,
+            creature_tags=["goblinoid"],
             size=SizeCategory.SMALL,
             armor_class=15,
             max_hp=10,
