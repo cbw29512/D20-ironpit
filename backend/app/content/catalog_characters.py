@@ -3,8 +3,9 @@ from __future__ import annotations
 from collections.abc import Callable
 
 from app.content.demo import build_demo_fighter
-from app.content.gladiators import build_mara_stone
+from app.content.gladiators import build_darius_flint, build_mara_stone, build_vera_ash
 from app.domain.catalog import CatalogEntry, RulesCoverage, RulesCoverageItem
+from app.domain.models import CombatantTemplate
 
 
 def _aldric_entry() -> CatalogEntry:
@@ -19,40 +20,46 @@ def _aldric_entry() -> CatalogEntry:
                 coverage=RulesCoverage.ARENA_ASSUMPTION,
                 note="Level 1 Fighting Style choice is not yet applied to combat math.",
             ),
-            RulesCoverageItem(
-                feature_id="weapon-mastery",
-                coverage=RulesCoverage.UNSUPPORTED,
-                note="Weapon Mastery effects are not yet resolved by the combat engine.",
-            ),
+            RulesCoverageItem(feature_id="weapon-mastery", coverage=RulesCoverage.UNSUPPORTED),
         ],
     )
 
 
-def _mara_entry() -> CatalogEntry:
+def _advanced_fighter_entry(
+    builder: Callable[[], CombatantTemplate],
+    level: int,
+) -> CatalogEntry:
+    combatant = builder()
     return CatalogEntry(
-        combatant=build_mara_stone(),
-        tags=["character", "fighter", "melee", "shield", "second-wind", "level-5"],
+        combatant=combatant,
+        tags=["character", "fighter", "melee", "shield", "second-wind", f"level-{level}"],
         rules_coverage=[
-            RulesCoverageItem(feature_id="extra-attack", coverage=RulesCoverage.FULLY_IMPLEMENTED),
+            RulesCoverageItem(
+                feature_id="extra-attack",
+                coverage=RulesCoverage.FULLY_IMPLEMENTED,
+                note=f"Attack action resolves {combatant.attacks_per_action} attacks.",
+            ),
             RulesCoverageItem(feature_id="second-wind", coverage=RulesCoverage.FULLY_IMPLEMENTED),
             RulesCoverageItem(
                 feature_id="defense-fighting-style",
                 coverage=RulesCoverage.FULLY_IMPLEMENTED,
                 note="Defense is baked into this fixed pregen's AC 19.",
             ),
-            RulesCoverageItem(
-                feature_id="fighter-subclass",
-                coverage=RulesCoverage.UNSUPPORTED,
-                note="Subclass features are not yet modeled for this development pregen.",
-            ),
+            RulesCoverageItem(feature_id="fighter-subclass", coverage=RulesCoverage.UNSUPPORTED),
             RulesCoverageItem(feature_id="action-surge", coverage=RulesCoverage.UNSUPPORTED),
-            RulesCoverageItem(feature_id="tactical-shift", coverage=RulesCoverage.UNSUPPORTED),
             RulesCoverageItem(feature_id="weapon-mastery", coverage=RulesCoverage.UNSUPPORTED),
+            RulesCoverageItem(
+                feature_id="other-level-features",
+                coverage=RulesCoverage.UNSUPPORTED,
+                note="Other Fighter features gained by this level are not yet resolved by the arena.",
+            ),
         ],
     )
 
 
 CHARACTER_BUILDERS: dict[str, Callable[[], CatalogEntry]] = {
     "aldric-vane-l1": _aldric_entry,
-    "mara-stone-l5": _mara_entry,
+    "mara-stone-l5": lambda: _advanced_fighter_entry(build_mara_stone, 5),
+    "darius-flint-l11": lambda: _advanced_fighter_entry(build_darius_flint, 11),
+    "vera-ash-l20": lambda: _advanced_fighter_entry(build_vera_ash, 20),
 }
