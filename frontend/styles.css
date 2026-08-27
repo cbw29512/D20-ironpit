@@ -21,6 +21,7 @@ header h1 { margin:.15rem 0; font-size:clamp(2.4rem,7vw,5rem); letter-spacing:.0
 .skeleton circle:first-child { fill:#202020; }
 .giant { stroke:#d8bd91; stroke-width:9; width:min(255px,100%); }
 .giant circle:first-child { fill:#211b15; }
+.beast { stroke:#d1c2a3; }
 .no-shield .shield { display:none; }
 .weapon { transform-box:fill-box; transform-origin:left center; }
 .weapon-shape { display:none; }
@@ -44,6 +45,7 @@ header h1 { margin:.15rem 0; font-size:clamp(2.4rem,7vw,5rem); letter-spacing:.0
 #goblin.advance { animation:advance-left .5s ease-in-out; }
 #fighter.pushed { animation:pushed-left .5s ease-in-out; }
 #goblin.pushed { animation:pushed-right .5s ease-in-out; }
+.prone { transform:rotate(82deg) translateY(14px); transform-origin:center bottom; }
 .dead { opacity:.35; transform:rotate(7deg); transform-origin:center bottom; }
 .critical { filter:drop-shadow(0 0 14px #ffd66b); }
 .projectile { position:absolute; top:56%; left:50%; z-index:4; opacity:0; font-size:2rem; line-height:1; pointer-events:none; }
