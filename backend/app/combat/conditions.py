@@ -5,27 +5,35 @@ import logging
 from app.domain.models import BattleEvent, CombatantState, ConditionState, ConditionType
 
 logger = logging.getLogger(__name__)
-_SUPPORTED = {ConditionType.PRONE}
+_SUPPORTED = {ConditionType.PRONE, ConditionType.GRAPPLED}
+
+
+def condition_state(state: CombatantState, condition: ConditionType) -> ConditionState | None:
+    return next((item for item in state.conditions if item.condition is condition), None)
 
 
 def has_condition(state: CombatantState, condition: ConditionType) -> bool:
-    return any(item.condition is condition for item in state.conditions)
+    return condition_state(state, condition) is not None
 
 
 def apply_condition(
     state: CombatantState,
     condition: ConditionType,
     source: CombatantState | None = None,
+    escape_dc: int | None = None,
 ) -> bool:
     try:
         if condition not in _SUPPORTED:
             raise ValueError(f"Condition is not fully implemented: {condition}")
         if condition in state.template.condition_immunities or has_condition(state, condition):
             return False
+        if condition is ConditionType.GRAPPLED and (source is None or escape_dc is None):
+            raise ValueError("Grappled requires a source and escape DC.")
         state.conditions.append(ConditionState(
             condition=condition,
             source_id=source.instance_id if source else None,
             source_name=source.template.name if source else None,
+            escape_dc=escape_dc,
         ))
         return True
     except ValueError:
@@ -50,6 +58,9 @@ def attack_condition_sources(
         advantage = 0
         disadvantage = 0
         if has_condition(attacker, ConditionType.PRONE):
+            disadvantage += 1
+        grapple = condition_state(attacker, ConditionType.GRAPPLED)
+        if grapple is not None and defender.instance_id != grapple.source_id:
             disadvantage += 1
         if has_condition(defender, ConditionType.PRONE):
             if distance_ft <= 5:
