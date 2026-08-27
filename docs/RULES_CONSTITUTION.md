@@ -53,6 +53,21 @@ Tactical policy is intentionally replaceable and is not RAW. The baseline arena 
 - Casters must still obey the SRD rule that only one spell slot can be expended to cast a spell on a turn.
 - Concentration is exclusive: starting another Concentration effect ends the prior one when the rules require it.
 
+### Closing-combat baseline
+
+The default arena does **not** use voluntary ranged kiting. For combatants with a melee-capable attack profile, the baseline policy is to close and engage.
+
+1. Resolve start-of-turn rules, including condition expiry, recharge rolls, and action availability.
+2. Spend legal normal movement toward the preferred melee reach before the final offensive action is chosen.
+3. Re-check all legal abilities and attacks from the new live distance after that movement.
+4. If melee reach is restored, prefer a legal melee use over a ranged weapon use.
+5. If the creature is still outside melee after normal movement, it may use a legal ranged attack or legal ability from that distance.
+6. If no useful Action is legal and the creature may approach, Dash toward melee rather than preserving range.
+7. The policy never willingly increases distance merely to keep a ranged attack available.
+8. Forced movement or knockback may reopen the range band. On the creature's next legal movement opportunity, the same closing sequence runs again: close, re-check melee, then use range only if melee is still unavailable.
+9. A verified rule overrides this arena policy. Frightened approach restrictions, Speed 0, forced movement, explicit flee behavior, terrain restrictions, or another exact effect can prevent or require movement.
+10. A creature with no melee-capable profile never invents a melee attack and is not required to retreat to maintain range.
+
 ## Build-up strategy
 
 Iron Pit expands from the bottom of the rules tree upward:
