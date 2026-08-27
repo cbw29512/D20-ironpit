@@ -1,3 +1,4 @@
+from app.content.attacks import build_goblin_shortbow_attack
 from app.content.demo import build_demo_fighter, build_goblin_warrior
 from app.content.equipment import (
     build_fighter_visual_loadout,
@@ -14,9 +15,9 @@ def test_reusable_weapon_records_match_mvp_combatants() -> None:
         fighter = build_demo_fighter()
         goblin = build_goblin_warrior()
 
-        assert fighter.weapon == build_longsword()
-        assert goblin.weapon == build_scimitar()
-        assert goblin.alternate_weapons == [build_shortbow()]
+        assert fighter.weapon_attack.weapon == build_longsword()
+        assert goblin.weapon_attack.weapon == build_scimitar()
+        assert [attack.weapon for attack in goblin.alternate_weapon_attacks] == [build_shortbow()]
     except Exception as exc:
         raise AssertionError("Reusable weapon records should build valid MVP combatants.") from exc
 
@@ -24,13 +25,14 @@ def test_reusable_weapon_records_match_mvp_combatants() -> None:
 def test_shortbow_preserves_srd_range_and_damage_metadata() -> None:
     try:
         shortbow = build_shortbow()
+        shortbow_attack = build_goblin_shortbow_attack()
 
         assert shortbow.attack_kind is WeaponAttackKind.RANGED
         assert shortbow.normal_range_ft == 80
         assert shortbow.long_range_ft == 320
         assert shortbow.damage_type is DamageType.PIERCING
         assert shortbow.projectile == "arrow"
-        assert shortbow.conditional_damage[0].dice_size == 4
+        assert shortbow_attack.conditional_damage[0].dice_size == 4
     except Exception as exc:
         raise AssertionError("Shortbow content should preserve SRD combat metadata.") from exc
 
