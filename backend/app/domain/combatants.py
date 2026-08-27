@@ -29,16 +29,22 @@ class Weapon(BaseModel):
     id: str
     name: str
     attack_kind: WeaponAttackKind
-    attack_bonus: int
     dice_count: int = Field(ge=1, le=20)
     dice_size: int = Field(ge=2, le=100)
-    damage_bonus: int
     damage_type: DamageType
     animation: str
     reach_ft: int = Field(default=5, ge=0)
     normal_range_ft: int | None = Field(default=None, ge=1)
     long_range_ft: int | None = Field(default=None, ge=1)
     projectile: str | None = None
+    mastery_property: str | None = None
+
+
+class WeaponAttack(BaseModel):
+    id: str
+    weapon: Weapon
+    attack_bonus: int
+    damage_bonus: int
     conditional_damage: list[ConditionalDamage] = Field(default_factory=list)
 
 
@@ -73,8 +79,10 @@ class CombatantTemplate(BaseModel):
     max_hp: int = Field(ge=1)
     speed_ft: int = Field(ge=0)
     initiative_bonus: int
-    weapon: Weapon
-    alternate_weapons: list[Weapon] = Field(default_factory=list)
+    weapon_attack: WeaponAttack
+    alternate_weapon_attacks: list[WeaponAttack] = Field(default_factory=list)
+    fighting_style: str | None = None
+    weapon_masteries: list[str] = Field(default_factory=list)
     visual: VisualLoadout
     resources: list[ResourceDefinition] = Field(default_factory=list)
     source: str
