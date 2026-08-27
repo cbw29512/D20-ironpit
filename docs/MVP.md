@@ -23,19 +23,23 @@ The locked acceptance test remains the **5-foot melee duel**. A separate **90-fo
 
 ## Implemented development extensions
 
-- Data-driven combatant catalog with stable character and monster IDs.
-- Character and monster catalog entries are split into separate modules behind a small registry facade.
+- Data-driven combatant catalog with stable template IDs and separate runtime instance IDs.
+- General encounter-state schema supports data-driven sides, per-instance positions, duplicate templates, and arbitrary-roster Initiative.
+- Character, beast, and other monster catalog entries are split into focused modules behind one registry facade.
 - Catalog rules coverage: `fully_implemented`, `arena_assumption`, or `unsupported`.
 - Generic ID-driven `POST /api/battles` endpoint plus character and monster catalog endpoints.
 - Gladiator and monster selection controls driven by catalog data.
 - Original Fighter pregens at Levels 1, 5, 11, and 20.
 - Fixed Fighter HP progression uses a transparent Constitution +2 assumption for the higher-level pregens.
-- SRD monsters currently include Goblin Warrior, Skeleton, and Wolf (CR 1/4), Ogre (CR 2), Knight (CR 3), and Tough Boss (CR 4).
+- SRD monsters currently include Giant Crab (CR 1/8), Goblin Warrior/Skeleton/Wolf (CR 1/4), Ogre (CR 2), Knight (CR 3), and Tough Boss (CR 4).
 - Attack actions support a configurable number of attacks while preserving one Action expenditure.
 - Multiattack re-evaluates legal attack profiles after every strike using live battlefield state.
 - Fighter attack-count progression supports 2 attacks at Level 5, 3 at Level 11, and 4 at Level 20.
 - Fighter Action Surge is a typed resource: one use before Level 17, two uses at Level 17+, and at most once per turn.
 - Action Surge restores an additional non-Magic action slot; the arena uses it after the normal action while the opponent survives.
+- Generic Strength/Dexterity/etc. ability modifiers, saving-throw modifiers, and Athletics/Acrobatics check modifiers.
+- Saving throws and ability checks have first-class BattleEvents carrying roll, modifier, DC, ability/skill, and success/failure.
+- Saving throws use total-vs-DC semantics and do not inherit attack-roll natural-1/natural-20 behavior.
 - Typed melee, ranged, and thrown weapon metadata.
 - Attack-profile damage dice overrides keep intrinsic equipment dice combatant-neutral.
 - Typed unconditional and Advantage-triggered damage riders.
@@ -43,8 +47,14 @@ The locked acceptance test remains the **5-foot melee duel**. A separate **90-fo
 - Combatants carry explicit size categories for size-gated effects.
 - Tough Boss Warhammer pushes a Large-or-smaller target 10 feet on a hit.
 - Typed condition state and condition-immunity schema fail closed for mechanics not yet fully implemented.
-- Prone is fully implemented for attack rolls and standing movement cost.
+- Prone is fully implemented for attack-roll consequences and standing movement cost.
 - Wolf Bite applies Prone to a Medium-or-smaller target on a hit.
+- Grappled core state stores the grappler runtime ID and escape DC, sets Speed to 0, and applies its attack-target Disadvantage rule.
+- Grapple escape spends an Action and uses the better legal Athletics/Acrobatics option against the stored escape DC as current arena policy.
+- Giant Crab Claw applies its Medium-or-smaller Grapple with escape DC 11.
+- SRD Unarmed Strike Grapple foundation enforces 5-ft range, one-size-larger limit, free-hand requirement, target-selected Strength/Dexterity save, and `8 + Strength modifier + PB` DC.
+- SRD Unarmed Strike Shove foundation enforces the same size/range/save structure and resolves either Prone or a 5-ft push on a failed save.
+- Unarmed Grapple/Shove resolvers represent one attack option; they remain separate from tactical policy so simple Fighters are not forced to use control moves.
 - Radiant damage and the Knight's always-on Radiant attack rider.
 - Typed damage Vulnerability, Resistance, and Immunity with raw roll and applied damage kept separate.
 - SRD Resistance-before-Vulnerability ordering and same-type damage grouping.
@@ -69,6 +79,7 @@ The locked acceptance test remains the **5-foot melee duel**. A separate **90-fo
 - Attack replay temporarily renders the weapon actually used by the event rather than only the default loadout.
 - Projectile attacks animate arrows, crossbow bolts, or thrown javelins in the attack direction.
 - Generic feature events allow Action Surge and later rules features to appear in the audit/replay stream.
+- Saving-throw and ability-check events show the d20 result, modifier, DC, and success/failure in the battle log.
 - Movement events update the displayed distance and animate an advance.
 - Forced-movement events update distance and animate the target being pushed away from the attacker.
 - Prone condition events visibly put the target down; standing clears the visual state.
@@ -91,10 +102,12 @@ The locked acceptance test remains the **5-foot melee duel**. A separate **90-fo
 
 ## Published arena assumptions / tactics
 
-- SRD Initiative ties are decided by the GM; the arena's deterministic GM policy currently prefers initiative bonus as the tiebreaker.
+- SRD Initiative ties are decided by the GM; the arena's deterministic GM policy currently prefers Initiative bonus, then runtime instance ID.
 - Fighters use Second Wind at or below half maximum HP when a use and Bonus Action remain.
 - Fighters with Action Surge spend it after their normal action if the opponent survives; this is tactical policy, not a restriction on the SRD feature.
 - A Prone combatant stands before attacking when it has enough movement; this is arena policy layered on the exact standing cost.
+- When a rule lets a target choose Strength or Dexterity for a save, the baseline arena policy chooses the better legal modifier.
+- A Grappled combatant's escape policy chooses the better of Athletics or Acrobatics when it chooses to spend its Action escaping.
 - A combatant currently prefers its primary weapon; if it is out of range, it selects the first legal alternate weapon before each strike.
 - If no weapon can attack, the combatant advances toward primary-weapon range and Dashes if one normal move is insufficient.
 - The Goblin does not yet kite away from the Fighter.
@@ -115,11 +128,13 @@ The locked acceptance test remains the **5-foot melee duel**. A separate **90-fo
 - Terrain-aware forced movement, collisions, and arena boundaries.
 - Opportunity attacks and Disengage.
 - Goblin Nimble Escape/Hide behavior.
-- Grappled, Poisoned, Frightened, Restrained, Paralyzed, and their source-specific save/escape/end rules.
+- Grappled drag/carry movement, automatic end from grappler Incapacitation/out-of-range state, and multi-target limb occupancy.
+- Poisoned, Frightened, Restrained, Paralyzed, and their source-specific save/end rules.
 - Cover and terrain.
 - Spell slots, Concentration, spell attacks, saving-throw spells, healing spells, and ongoing spell effects.
 - Conditions such as Petrified.
 - Breath weapons.
 - Finite weapon/ammunition inventory.
+- Activating the full many-combatant encounter execution loop; its state/identity/initiative/targeting primitives are already present.
 
 These remain expansions after the deployed Fighter-vs-Goblin vertical slice is verified.
