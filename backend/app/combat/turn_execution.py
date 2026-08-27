@@ -6,6 +6,7 @@ from app.combat.attack_actions import resolve_attack_action
 from app.combat.condition_timing import expire_turn_conditions
 from app.combat.dice import DiceProvider
 from app.combat.fighter import use_action_surge, use_second_wind
+from app.combat.multiattack import resolve_multiattack_action
 from app.combat.policy import should_use_action_surge, should_use_second_wind
 from app.combat.state import begin_turn
 from app.combat.turns import prepare_attack
@@ -14,7 +15,7 @@ from app.domain.models import BattleEvent, BattlefieldState, CombatantState
 logger = logging.getLogger(__name__)
 
 
-def _perform_attack_action(
+def _perform_offensive_action(
     sequence: int,
     round_number: int,
     attacker: CombatantState,
@@ -31,7 +32,12 @@ def _perform_attack_action(
         if attack is None:
             return events, sequence
 
-        attack_events = resolve_attack_action(
+        resolver = (
+            resolve_multiattack_action
+            if attacker.template.multiattack is not None
+            else resolve_attack_action
+        )
+        action_events = resolver(
             sequence,
             round_number,
             attacker,
@@ -40,11 +46,11 @@ def _perform_attack_action(
             dice,
             visible_source_ids,
         )
-        events.extend(attack_events)
-        return events, sequence + len(attack_events)
+        events.extend(action_events)
+        return events, sequence + len(action_events)
     except Exception as exc:
-        logger.exception("Attack-action turn execution failed for %s.", attacker.template.name)
-        raise RuntimeError("Attack action could not be executed.") from exc
+        logger.exception("Offensive turn execution failed for %s.", attacker.template.name)
+        raise RuntimeError("Offensive action could not be executed.") from exc
 
 
 def execute_turn(
@@ -69,7 +75,7 @@ def execute_turn(
             events.append(use_second_wind(sequence, round_number, attacker, dice))
             sequence += 1
 
-        action_events, sequence = _perform_attack_action(
+        action_events, sequence = _perform_offensive_action(
             sequence, round_number, attacker, defender, battlefield, dice, visible_sources
         )
         events.extend(action_events)
@@ -77,7 +83,7 @@ def execute_turn(
         if fighter_features and defender.is_alive and should_use_action_surge(attacker):
             events.append(use_action_surge(sequence, round_number, attacker))
             sequence += 1
-            surge_events, sequence = _perform_attack_action(
+            surge_events, sequence = _perform_offensive_action(
                 sequence, round_number, attacker, defender, battlefield, dice, visible_sources
             )
             events.extend(surge_events)
