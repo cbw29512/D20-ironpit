@@ -22,19 +22,29 @@ This document is the non-negotiable contract for combat behavior in Iron Pit.
 9. **Effects can change later choices in the same turn.** Forced movement, conditions, resource use, death, range changes, and other state changes require subsequent attacks/actions to re-check legality against live state.
 10. **Unsupported rules fail closed.** Content that requires an unimplemented mechanic is marked unsupported or prevented from being battle-ready; the engine must not silently approximate it.
 
+## Scaling architecture invariants
+
+- **Keep combatants simple; make encounters general.** Character and monster templates describe verified capabilities, not bespoke encounter scripts.
+- A template ID identifies reusable content; a runtime `instance_id` identifies one creature in one encounter. Multiple instances may use the same template.
+- Encounter sides are data, not hard-coded `fighter` and `monster` roles. The long-term engine supports 1-v-1, 1-v-many, and many-v-many with the same combatant rules.
+- Position belongs to encounter state, not the reusable combatant template. Target distance is derived from live positions.
+- Initiative is rolled across the complete encounter roster.
+- Target selection is a replaceable tactical policy. It must never create an illegal target or change what an ability does.
+- Complexity is added only when a verified feature requires it. Low-level characters and low-CR creatures should remain mechanically small even though the encounter engine can scale.
+
 ## Initiative and turn order
 
 - Every combatant rolls Initiative when combat starts.
 - Turns proceed from highest Initiative to lowest and keep that order each round.
-- SRD ties are a GM decision. Iron Pit may use a deterministic GM tie policy for reproducible simulations, and that policy must remain documented as an arena assumption.
+- SRD ties are a GM decision. Iron Pit uses Initiative bonus as the first deterministic arena tiebreaker and runtime instance ID as the final stable tiebreaker.
 
 ## Tactical policy contract
 
 Tactical policy is intentionally replaceable and is not RAW. The baseline arena policy should be simple, deterministic, and visible in coverage reports.
 
-- Choose only legal actions.
-- Prefer the legal damaging option ranked highest by the configured damage policy.
-- Re-evaluate after every attack/effect because range, conditions, HP, and resources may have changed.
+- Choose only legal actions and legal targets.
+- Prefer a simple legal damaging option rather than adding speculative tactical intelligence early.
+- Re-evaluate after every attack/effect because range, conditions, HP, resources, targets, and positions may have changed.
 - Use movement only within the creature's legal movement options and condition restrictions.
 - Healing, defensive abilities, control effects, and spell-slot usage are policy decisions layered on top of exact rules legality.
 - Casters must still obey the SRD rule that only one spell slot can be expended to cast a spell on a turn.
@@ -48,7 +58,8 @@ Iron Pit expands from the bottom of the rules tree upward:
 2. Core conditions and saves: Prone, Grappled, Poisoned, Frightened, Restrained, Paralyzed, and related escape/repeat-save behavior.
 3. Reactions, Opportunity Attacks, Disengage, Hide, and richer movement.
 4. Low-level spellcasting, spell slots, spell attacks, save spells, Concentration, ongoing effects, and healing.
-5. Higher-level class features, multi-round control, summons, areas, and complex monsters.
+5. Encounter scaling: multiple characters against stronger monsters using shared instance, side, position, initiative, and targeting primitives.
+6. Higher-level class features, multi-round control, summons, areas, and complex monsters.
 
 Every new mechanic requires: verified source data, typed state/schema, rules resolution, BattleEvent audit output, deterministic unit tests, catalog coverage, and replay support when visible.
 
