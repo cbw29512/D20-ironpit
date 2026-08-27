@@ -19,12 +19,11 @@
   async function loadRoster(view) {
     try {
       if (!apiBase) {
-        if (!preview) throw new Error("Static preview data is unavailable.");
+        if (!preview?.roster) throw new Error("Secure preview roster is unavailable.");
         view.hydrateRoster(preview.roster);
-        view.resetArena("Netlify preview ready — choose a starting distance.", 5);
+        view.resetArena("Secure random preview ready — choose a starting distance.", 5);
         return;
       }
-
       const response = await fetch(`${apiBase}/api/roster/demo`);
       if (!response.ok) throw new Error(`Roster API returned ${response.status}`);
       view.hydrateRoster(await response.json());
@@ -38,10 +37,9 @@
   async function requestBattle(endpoint) {
     try {
       if (!apiBase) {
-        if (!preview) throw new Error("Static preview data is unavailable.");
-        return endpoint.includes("ranged") ? preview.ranged : preview.melee;
+        if (!preview?.buildBattle) throw new Error("Secure preview engine is unavailable.");
+        return preview.buildBattle(endpoint.includes("ranged") ? 90 : 5);
       }
-
       const response = await fetch(`${apiBase}${endpoint}`, { method: "POST" });
       if (!response.ok) throw new Error(`Battle API returned ${response.status}`);
       return await response.json();
@@ -54,19 +52,15 @@
   async function startFight(view, endpoint, fallbackDistance) {
     try {
       setButtonsDisabled(true);
-      view.resetArena(apiBase ? "Requesting battle..." : "Loading preview battle...", fallbackDistance);
+      view.resetArena(apiBase ? "Requesting battle..." : "Rolling secure random battle...", fallbackDistance);
       const battle = await requestBattle(endpoint);
       view.hydrateRoster({ fighter: battle.fighter.template, monster: battle.monster.template });
       view.resetArena("Rolling initiative...", battle.battlefield.starting_distance_ft);
       await view.replay(battle.events);
-      view.setStatus(
-        battle.winner_name
-          ? `${battle.winner_name} wins in round ${battle.rounds}!`
-          : "The duel is a draw."
-      );
+      view.setStatus(battle.winner_name ? `${battle.winner_name} wins in round ${battle.rounds}!` : "The duel is a draw.");
     } catch (error) {
       console.error("Fight failed", error);
-      view.setStatus(apiBase ? "Battle failed. Check the FastAPI deployment." : "Preview battle failed.");
+      view.setStatus(apiBase ? "Battle failed. Check the FastAPI deployment." : "Secure preview battle failed.");
     } finally {
       setButtonsDisabled(false);
     }
