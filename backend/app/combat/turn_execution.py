@@ -34,8 +34,7 @@ def _perform_attack_action(
             round_number,
             attacker,
             defender,
-            attack,
-            battlefield.distance_ft,
+            battlefield,
             dice,
         )
         events.extend(attack_events)
