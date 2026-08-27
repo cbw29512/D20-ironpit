@@ -70,3 +70,25 @@ def build_giant_crab_claw_attack() -> WeaponAttack:
     except Exception as exc:
         logger.exception("Failed to build Giant Crab Claw attack.")
         raise RuntimeError("Giant Crab Claw attack could not be created.") from exc
+
+
+def build_lion_rend_attack() -> WeaponAttack:
+    try:
+        return WeaponAttack(
+            id="lion-rend",
+            weapon=Weapon(
+                id="rend",
+                name="Rend",
+                attack_kind=WeaponAttackKind.MELEE,
+                dice_count=1,
+                dice_size=8,
+                damage_type=DamageType.SLASHING,
+                animation="claw",
+                reach_ft=5,
+            ),
+            attack_bonus=5,
+            damage_bonus=3,
+        )
+    except Exception as exc:
+        logger.exception("Failed to build Lion Rend attack.")
+        raise RuntimeError("Lion Rend attack could not be created.") from exc
