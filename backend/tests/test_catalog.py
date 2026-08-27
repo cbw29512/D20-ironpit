@@ -22,9 +22,10 @@ def test_catalog_lists_current_battle_ready_combatants() -> None:
         "vera-ash-l20",
     ]
     assert [entry.combatant.id for entry in monsters] == [
+        "srd-wolf",
+        "srd-giant-crab",
         "srd-goblin-warrior",
         "srd-skeleton",
-        "srd-wolf",
         "srd-ogre",
         "srd-knight",
         "srd-tough-boss",
@@ -36,6 +37,7 @@ def test_catalog_exposes_rules_coverage_without_hiding_gaps() -> None:
     fighter = get_catalog_entry("aldric-vane-l1")
     mara = get_catalog_entry("mara-stone-l5")
     wolf = get_catalog_entry("srd-wolf")
+    crab = get_catalog_entry("srd-giant-crab")
     knight = get_catalog_entry("srd-knight")
     ogre = get_catalog_entry("srd-ogre")
     tough_boss = get_catalog_entry("srd-tough-boss")
@@ -43,6 +45,7 @@ def test_catalog_exposes_rules_coverage_without_hiding_gaps() -> None:
     fighter_coverage = {item.feature_id: item.coverage for item in fighter.rules_coverage}
     mara_coverage = {item.feature_id: item.coverage for item in mara.rules_coverage}
     wolf_coverage = {item.feature_id: item.coverage for item in wolf.rules_coverage}
+    crab_coverage = {item.feature_id: item.coverage for item in crab.rules_coverage}
     knight_coverage = {item.feature_id: item.coverage for item in knight.rules_coverage}
     ogre_coverage = {item.feature_id: item.coverage for item in ogre.rules_coverage}
     tough_coverage = {item.feature_id: item.coverage for item in tough_boss.rules_coverage}
@@ -54,6 +57,8 @@ def test_catalog_exposes_rules_coverage_without_hiding_gaps() -> None:
     assert mara_coverage["action-surge-policy"] is RulesCoverage.ARENA_ASSUMPTION
     assert wolf_coverage["bite-prone"] is RulesCoverage.FULLY_IMPLEMENTED
     assert wolf_coverage["pack-tactics"] is RulesCoverage.UNSUPPORTED
+    assert crab_coverage["claw-grapple"] is RulesCoverage.FULLY_IMPLEMENTED
+    assert crab_coverage["grapple-drag-carry"] is RulesCoverage.UNSUPPORTED
     assert knight_coverage["radiant-rider"] is RulesCoverage.FULLY_IMPLEMENTED
     assert knight_coverage["parry"] is RulesCoverage.UNSUPPORTED
     assert ogre_coverage["thrown-weapon-range"] is RulesCoverage.FULLY_IMPLEMENTED
