@@ -7,6 +7,7 @@ from app.content.equipment import (
     build_goblin_visual_loadout,
     build_longsword,
     build_scimitar,
+    build_shortbow,
 )
 from app.domain.models import CombatantTemplate, ResourceDefinition
 
@@ -48,6 +49,7 @@ def build_goblin_warrior() -> CombatantTemplate:
             max_hp=10,
             initiative_bonus=2,
             weapon=build_scimitar(),
+            alternate_weapons=[build_shortbow()],
             visual=build_goblin_visual_loadout(),
             source="SRD 5.2.1 Goblin Warrior",
         )
