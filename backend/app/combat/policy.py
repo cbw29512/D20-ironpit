@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.range import resolve_attack_roll_mode
-from app.domain.models import CombatantState, Weapon, WeaponAttackKind
+from app.domain.models import CombatantState, WeaponAttack, WeaponAttackKind
 
 logger = logging.getLogger(__name__)
 
@@ -23,25 +23,26 @@ def should_use_second_wind(state: CombatantState) -> bool:
         raise RuntimeError("Second Wind policy could not be evaluated.") from exc
 
 
-def select_attack_weapon(state: CombatantState, distance_ft: int) -> Weapon | None:
-    """Arena tactic: prefer the primary weapon, otherwise use the first legal alternate weapon."""
+def select_weapon_attack(state: CombatantState, distance_ft: int) -> WeaponAttack | None:
+    """Prefer the primary attack profile, then the first legal alternate profile."""
     try:
-        for weapon in [state.template.weapon, *state.template.alternate_weapons]:
+        profiles = [state.template.weapon_attack, *state.template.alternate_weapon_attacks]
+        for attack in profiles:
             try:
-                resolve_attack_roll_mode(weapon, distance_ft)
-                return weapon
+                resolve_attack_roll_mode(attack.weapon, distance_ft)
+                return attack
             except ValueError:
                 continue
         return None
     except Exception as exc:
-        logger.exception("Failed to select weapon for %s.", state.template.name)
-        raise RuntimeError("Weapon selection policy could not be evaluated.") from exc
+        logger.exception("Failed to select attack profile for %s.", state.template.name)
+        raise RuntimeError("Attack selection policy could not be evaluated.") from exc
 
 
 def preferred_approach_distance(state: CombatantState) -> int:
-    """Arena tactic: close to primary melee reach or primary normal ranged distance."""
+    """Close to the primary attack's melee reach or normal ranged distance."""
     try:
-        weapon = state.template.weapon
+        weapon = state.template.weapon_attack.weapon
         if weapon.attack_kind is WeaponAttackKind.MELEE:
             return weapon.reach_ft
         if weapon.normal_range_ft is None:
