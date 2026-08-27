@@ -62,3 +62,41 @@ def build_javelin() -> Weapon:
     except Exception as exc:
         logger.exception("Failed to build javelin content record.")
         raise RuntimeError("Javelin content could not be created.") from exc
+
+
+def build_greatsword() -> Weapon:
+    try:
+        return Weapon(
+            id="greatsword",
+            name="Greatsword",
+            attack_kind=WeaponAttackKind.MELEE,
+            dice_count=2,
+            dice_size=6,
+            damage_type=DamageType.SLASHING,
+            animation="slash",
+            reach_ft=5,
+            mastery_property="graze",
+        )
+    except Exception as exc:
+        logger.exception("Failed to build greatsword content record.")
+        raise RuntimeError("Greatsword content could not be created.") from exc
+
+
+def build_heavy_crossbow() -> Weapon:
+    try:
+        return Weapon(
+            id="heavy-crossbow",
+            name="Heavy Crossbow",
+            attack_kind=WeaponAttackKind.RANGED,
+            dice_count=1,
+            dice_size=10,
+            damage_type=DamageType.PIERCING,
+            animation="projectile",
+            normal_range_ft=100,
+            long_range_ft=400,
+            projectile="bolt",
+            mastery_property="push",
+        )
+    except Exception as exc:
+        logger.exception("Failed to build heavy crossbow content record.")
+        raise RuntimeError("Heavy Crossbow content could not be created.") from exc
