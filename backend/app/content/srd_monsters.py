@@ -3,17 +3,12 @@ from __future__ import annotations
 import logging
 
 from app.content.srd_attacks import (
-    build_knight_crossbow_attack,
-    build_knight_greatsword_attack,
     build_ogre_greatclub_attack,
     build_ogre_javelin_attack,
     build_skeleton_shortbow_attack,
     build_skeleton_shortsword_attack,
 )
-from app.content.srd_boss_attacks import (
-    build_tough_boss_crossbow_attack,
-    build_tough_boss_warhammer_attack,
-)
+from app.content.srd_humanoids import build_knight, build_tough_boss
 from app.domain.models import Ability, CombatantTemplate, ConditionType, DamageType, SizeCategory, VisualLoadout
 
 logger = logging.getLogger(__name__)
@@ -85,57 +80,4 @@ def build_ogre() -> CombatantTemplate:
         raise RuntimeError("Ogre could not be created.") from exc
 
 
-def build_knight() -> CombatantTemplate:
-    try:
-        return CombatantTemplate(
-            id="srd-knight",
-            name="Knight",
-            archetype="Knight",
-            challenge_rating="3",
-            kind="monster",
-            size=SizeCategory.MEDIUM,
-            armor_class=18,
-            max_hp=52,
-            speed_ft=30,
-            initiative_bonus=0,
-            attacks_per_action=2,
-            weapon_attack=build_knight_greatsword_attack(),
-            alternate_weapon_attacks=[build_knight_crossbow_attack()],
-            visual=VisualLoadout(
-                armor="plate-armor",
-                main_hand="greatsword",
-                body_style="humanoid",
-            ),
-            source="SRD 5.2.1 Knight",
-        )
-    except Exception as exc:
-        logger.exception("Failed to build SRD Knight.")
-        raise RuntimeError("Knight could not be created.") from exc
-
-
-def build_tough_boss() -> CombatantTemplate:
-    try:
-        return CombatantTemplate(
-            id="srd-tough-boss",
-            name="Tough Boss",
-            archetype="Tough Boss",
-            challenge_rating="4",
-            kind="monster",
-            size=SizeCategory.MEDIUM,
-            armor_class=16,
-            max_hp=82,
-            speed_ft=30,
-            initiative_bonus=2,
-            attacks_per_action=2,
-            weapon_attack=build_tough_boss_warhammer_attack(),
-            alternate_weapon_attacks=[build_tough_boss_crossbow_attack()],
-            visual=VisualLoadout(
-                armor="chain-mail",
-                main_hand="warhammer",
-                body_style="humanoid",
-            ),
-            source="SRD 5.2.1 Tough Boss",
-        )
-    except Exception as exc:
-        logger.exception("Failed to build SRD Tough Boss.")
-        raise RuntimeError("Tough Boss could not be created.") from exc
+__all__ = ["build_knight", "build_ogre", "build_skeleton", "build_tough_boss"]
