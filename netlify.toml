@@ -1,3 +1,4 @@
 [build]
   command = "python3 scripts/write_frontend_config.py"
   publish = "frontend"
+  ignore = "node ./scripts/netlify-production-only.mjs"
