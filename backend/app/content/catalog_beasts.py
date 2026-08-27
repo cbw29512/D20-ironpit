@@ -86,6 +86,11 @@ def _giant_spider_entry() -> CatalogEntry:
             RulesCoverageItem(feature_id="web-recharge", coverage=RulesCoverage.FULLY_IMPLEMENTED),
             RulesCoverageItem(feature_id="web-object", coverage=RulesCoverage.FULLY_IMPLEMENTED),
             RulesCoverageItem(
+                feature_id="web-action-policy",
+                coverage=RulesCoverage.ARENA_ASSUMPTION,
+                note="Arena uses Web on an unrestrained legal target when Web is available.",
+            ),
+            RulesCoverageItem(
                 feature_id="spider-climb",
                 coverage=RulesCoverage.UNSUPPORTED,
                 note="Wall and ceiling terrain are not yet modeled.",
