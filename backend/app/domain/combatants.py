@@ -5,6 +5,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
+from app.domain.abilities import Ability, Skill
 from app.domain.conditions import ConditionState, ConditionType
 from app.domain.effects import AttackEffect, SizeCategory
 
@@ -93,6 +94,10 @@ class CombatantTemplate(BaseModel):
     max_hp: int = Field(ge=1)
     speed_ft: int = Field(ge=0)
     initiative_bonus: int
+    proficiency_bonus: int = Field(default=2, ge=2, le=6)
+    ability_modifiers: dict[Ability, int] = Field(default_factory=dict)
+    saving_throw_modifiers: dict[Ability, int] = Field(default_factory=dict)
+    skill_modifiers: dict[Skill, int] = Field(default_factory=dict)
     attacks_per_action: int = Field(default=1, ge=1, le=10)
     damage_vulnerabilities: list[DamageType] = Field(default_factory=list)
     damage_resistances: list[DamageType] = Field(default_factory=list)
