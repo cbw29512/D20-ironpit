@@ -11,6 +11,7 @@ from app.domain.conditions import ConditionState, ConditionType
 from app.domain.creatures import CreatureType
 from app.domain.damage_types import DamageType
 from app.domain.effects import AttackEffect, SizeCategory
+from app.domain.granted_actions import GrantedAction
 from app.domain.multiattack import MultiattackDefinition
 from app.domain.recharge import RechargeState
 from app.domain.save_actions import SaveAction
@@ -107,6 +108,7 @@ class CombatantTemplate(BaseModel):
     weapon_attack: WeaponAttack
     alternate_weapon_attacks: list[WeaponAttack] = Field(default_factory=list)
     save_actions: list[SaveAction] = Field(default_factory=list)
+    granted_actions: list[GrantedAction] = Field(default_factory=list)
     multiattack: MultiattackDefinition | None = None
     fighting_style: str | None = None
     weapon_masteries: list[str] = Field(default_factory=list)
