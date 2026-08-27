@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.damage import resolve_weapon_damage
+from app.combat.damage import calculate_applied_damage, resolve_weapon_damage
 from app.combat.dice import DiceProvider
 from app.combat.range import resolve_attack_roll_mode
 from app.combat.rolls import roll_d20
@@ -34,6 +34,7 @@ def resolve_attack(
         hp_before = defender.current_hp
         damage_roll = None
         damage_components = []
+        damage_applied = None
 
         if hit:
             damage_roll, damage_components = resolve_weapon_damage(
@@ -43,7 +44,8 @@ def resolve_attack(
                 critical,
                 mode,
             )
-            defender.current_hp = max(0, defender.current_hp - damage_roll.total)
+            damage_applied = calculate_applied_damage(defender, damage_components)
+            defender.current_hp = max(0, defender.current_hp - damage_applied)
             defender.is_alive = defender.current_hp > 0
 
         outcome = "CRITICAL HIT" if critical else ("HIT" if hit else "MISS")
@@ -58,6 +60,7 @@ def resolve_attack(
             attack_roll=attack_roll,
             damage_roll=damage_roll,
             damage_components=damage_components,
+            damage_applied=damage_applied,
             hit=hit,
             critical=critical,
             hp_before=hp_before,
