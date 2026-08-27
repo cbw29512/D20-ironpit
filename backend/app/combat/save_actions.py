@@ -2,11 +2,12 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.battlefield_objects import create_battlefield_object
 from app.combat.conditions import apply_condition
 from app.combat.d20_tests import resolve_saving_throw
 from app.combat.dice import DiceProvider
 from app.combat.recharge import require_recharge_available, spend_recharge
-from app.domain.models import BattleEvent, CombatantState, SaveAction
+from app.domain.models import BattleEvent, BattlefieldState, CombatantState, SaveAction
 
 logger = logging.getLogger(__name__)
 
@@ -34,6 +35,7 @@ def resolve_save_action(
     action: SaveAction,
     dice: DiceProvider,
     spend_action_cost: bool = True,
+    battlefield: BattlefieldState | None = None,
 ) -> list[BattleEvent]:
     try:
         if distance_ft > action.range_ft:
@@ -73,13 +75,47 @@ def resolve_save_action(
         for effect in action.failure_effects:
             if effect.effect_type != "condition":
                 raise ValueError(f"Unsupported save failure effect: {effect.effect_type}")
+            object_id = None
+            if effect.object_definition is not None:
+                if battlefield is None:
+                    raise ValueError("Persistent save effect requires battlefield state.")
+                object_id = (
+                    f"{action.id}:{actor.instance_id}:{target.instance_id}:"
+                    f"{sequence + len(events)}"
+                )
             if not apply_condition(
                 target,
                 effect.condition,
                 actor,
                 expires_on=effect.expires_on,
+                effect_id=action.id,
+                linked_object_id=object_id,
             ):
                 continue
+            if effect.object_definition is not None and battlefield is not None and object_id is not None:
+                obj = create_battlefield_object(
+                    battlefield,
+                    effect.object_definition,
+                    object_id,
+                    actor,
+                    target,
+                    effect.condition,
+                )
+                events.append(BattleEvent(
+                    sequence=sequence + len(events),
+                    round_number=round_number,
+                    event_type="object_created",
+                    actor_id=actor.instance_id,
+                    actor_name=actor.template.name,
+                    target_id=target.instance_id,
+                    target_name=target.template.name,
+                    object_id=obj.instance_id,
+                    object_name=obj.definition.name,
+                    hp_after=obj.current_hp,
+                    feature_id=action.id,
+                    animation="object-created",
+                    description=f"{obj.definition.name} is created around {target.template.name}.",
+                ))
             events.append(BattleEvent(
                 sequence=sequence + len(events),
                 round_number=round_number,
@@ -88,6 +124,7 @@ def resolve_save_action(
                 actor_name=actor.template.name,
                 target_id=target.instance_id,
                 target_name=target.template.name,
+                object_id=object_id,
                 condition=effect.condition,
                 condition_active=True,
                 feature_id=action.id,
