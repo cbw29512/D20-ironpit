@@ -4,6 +4,7 @@ import logging
 
 from app.combat.condition_modifiers import has_zero_speed, is_incapacitated
 from app.domain.models import CombatantState, CombatantTemplate, ResourceState
+from app.domain.recharge import RechargeState
 
 logger = logging.getLogger(__name__)
 
@@ -26,6 +27,16 @@ def build_combatant_state(
                     max_uses=resource.max_uses,
                 )
                 for resource in template.resources
+            ],
+            recharges=[
+                RechargeState(
+                    feature_id=action.id,
+                    die_size=action.recharge.die_size,
+                    min_roll=action.recharge.min_roll,
+                    max_roll=action.recharge.max_roll,
+                )
+                for action in template.save_actions
+                if action.recharge is not None
             ],
         )
     except Exception as exc:
