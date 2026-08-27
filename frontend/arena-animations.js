@@ -97,12 +97,22 @@
         } catch (error) { console.error("Forced movement animation failed", error); }
       }
 
+      async function animateCondition(event) {
+        try {
+          const slot = slotForId(event.target_id || event.actor_id);
+          const node = document.querySelector(`#${slot}`);
+          if (event.condition === "prone") node.classList.toggle("prone", event.condition_active === true);
+          await sleep(320);
+        } catch (error) { console.error("Condition animation failed", error); }
+      }
+
       async function play(event) {
         try {
           if (event.event_type === "attack") return await animateAttack(event);
           if (event.event_type === "healing") return await animateHealing(event);
           if (event.event_type === "movement") return await animateMovement(event);
           if (event.event_type === "forced_movement") return await animateForcedMovement(event);
+          if (event.event_type === "condition") return await animateCondition(event);
           await sleep(event.event_type === "dash" ? 220 : 300);
         } catch (error) { console.error("Battle event animation failed", error); }
       }
