@@ -87,6 +87,7 @@ class CombatantTemplate(BaseModel):
     max_hp: int = Field(ge=1)
     speed_ft: int = Field(ge=0)
     initiative_bonus: int
+    attacks_per_action: int = Field(default=1, ge=1, le=10)
     damage_vulnerabilities: list[DamageType] = Field(default_factory=list)
     damage_resistances: list[DamageType] = Field(default_factory=list)
     damage_immunities: list[DamageType] = Field(default_factory=list)
