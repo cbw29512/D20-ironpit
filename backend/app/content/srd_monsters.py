@@ -3,6 +3,8 @@ from __future__ import annotations
 import logging
 
 from app.content.srd_attacks import (
+    build_knight_crossbow_attack,
+    build_knight_greatsword_attack,
     build_ogre_greatclub_attack,
     build_ogre_javelin_attack,
     build_skeleton_shortbow_attack,
@@ -65,3 +67,30 @@ def build_ogre() -> CombatantTemplate:
     except Exception as exc:
         logger.exception("Failed to build SRD Ogre.")
         raise RuntimeError("Ogre could not be created.") from exc
+
+
+def build_knight() -> CombatantTemplate:
+    try:
+        return CombatantTemplate(
+            id="srd-knight",
+            name="Knight",
+            archetype="Knight",
+            challenge_rating="3",
+            kind="monster",
+            armor_class=18,
+            max_hp=52,
+            speed_ft=30,
+            initiative_bonus=0,
+            attacks_per_action=2,
+            weapon_attack=build_knight_greatsword_attack(),
+            alternate_weapon_attacks=[build_knight_crossbow_attack()],
+            visual=VisualLoadout(
+                armor="plate-armor",
+                main_hand="greatsword",
+                body_style="humanoid",
+            ),
+            source="SRD 5.2.1 Knight",
+        )
+    except Exception as exc:
+        logger.exception("Failed to build SRD Knight.")
+        raise RuntimeError("Knight could not be created.") from exc
