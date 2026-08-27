@@ -35,6 +35,19 @@ class VisualLoadout(BaseModel):
     body_style: str = "humanoid"
 
 
+class ResourceDefinition(BaseModel):
+    id: str
+    name: str
+    max_uses: int = Field(ge=0)
+
+
+class ResourceState(BaseModel):
+    id: str
+    name: str
+    current_uses: int = Field(ge=0)
+    max_uses: int = Field(ge=0)
+
+
 class CombatantTemplate(BaseModel):
     id: str
     name: str
@@ -47,6 +60,7 @@ class CombatantTemplate(BaseModel):
     initiative_bonus: int
     weapon: Weapon
     visual: VisualLoadout
+    resources: list[ResourceDefinition] = Field(default_factory=list)
     source: str
 
 
@@ -61,6 +75,8 @@ class CombatantState(BaseModel):
     initiative_roll: int | None = None
     initiative_total: int | None = None
     is_alive: bool = True
+    bonus_action_available: bool = True
+    resources: list[ResourceState] = Field(default_factory=list)
 
 
 class DiceRoll(BaseModel):
@@ -75,17 +91,20 @@ class DiceRoll(BaseModel):
 class BattleEvent(BaseModel):
     sequence: int
     round_number: int
-    event_type: Literal["initiative", "attack", "victory", "draw"]
+    event_type: Literal["initiative", "attack", "healing", "victory", "draw"]
     actor_id: str
     actor_name: str
     target_id: str | None = None
     target_name: str | None = None
     attack_roll: DiceRoll | None = None
     damage_roll: DiceRoll | None = None
+    healing_roll: DiceRoll | None = None
     hit: bool | None = None
     critical: bool = False
     hp_before: int | None = None
     hp_after: int | None = None
+    feature_id: str | None = None
+    resource_remaining: int | None = None
     animation: str
     description: str
 
