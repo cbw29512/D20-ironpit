@@ -6,6 +6,7 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 from app.domain.abilities import Ability, Skill
+from app.domain.battlefield_objects import BattlefieldObjectState
 from app.domain.conditions import ConditionState, ConditionType
 from app.domain.creatures import CreatureType
 from app.domain.damage_types import DamageType
@@ -137,3 +138,4 @@ class CombatantState(BaseModel):
 class BattlefieldState(BaseModel):
     starting_distance_ft: int = Field(default=5, ge=0)
     distance_ft: int = Field(default=5, ge=0)
+    objects: list[BattlefieldObjectState] = Field(default_factory=list)
