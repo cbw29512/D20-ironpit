@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.conditions import condition_state, remove_condition
+from app.combat.condition_modifiers import has_zero_speed
+from app.combat.conditions import condition_state, remove_condition_instance
 from app.combat.d20_tests import resolve_ability_check, skill_modifier
 from app.combat.dice import DiceProvider
 from app.domain.abilities import SKILL_ABILITY, Skill
@@ -56,8 +57,12 @@ def attempt_escape_grapple(
             ),
         )]
         if success:
-            remove_condition(state, ConditionType.GRAPPLED)
-            state.movement_remaining_ft = state.template.speed_ft
+            remove_condition_instance(
+                state,
+                ConditionType.GRAPPLED,
+                source_id=grapple.source_id,
+            )
+            state.movement_remaining_ft = 0 if has_zero_speed(state) else state.template.speed_ft
             events.append(BattleEvent(
                 sequence=sequence + 1,
                 round_number=round_number,
@@ -67,10 +72,10 @@ def attempt_escape_grapple(
                 target_id=state.instance_id,
                 target_name=state.template.name,
                 condition=ConditionType.GRAPPLED,
-                condition_active=False,
+                condition_active=has_zero_speed(state),
                 feature_id="escape-grapple",
                 animation="escape-grapple-success",
-                description=f"{state.template.name} ends the Grappled condition.",
+                description=f"{state.template.name} escapes one Grapple source.",
             ))
         return events
     except ValueError:
