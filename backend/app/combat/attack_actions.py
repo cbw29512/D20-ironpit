@@ -18,6 +18,7 @@ def resolve_attack_action(
     defender: CombatantState,
     battlefield: BattlefieldState,
     dice: DiceProvider,
+    visible_source_ids: set[str] | None = None,
 ) -> list[BattleEvent]:
     """Spend one Attack action, rechecking legal attack profiles after every strike."""
     try:
@@ -41,6 +42,7 @@ def resolve_attack_action(
                 attack,
                 battlefield.distance_ft,
                 dice,
+                visible_source_ids,
             )
             events.append(attack_event)
             events.extend(resolve_on_hit_effects(
