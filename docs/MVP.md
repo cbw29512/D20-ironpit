@@ -28,12 +28,12 @@ The locked acceptance test remains the **5-foot melee duel**. A separate **90-fo
 - Gladiator and monster selection controls driven by catalog data.
 - Original Fighter pregens at Levels 1, 5, 11, and 20.
 - Fixed Fighter HP progression uses a transparent Constitution +2 assumption for the higher-level pregens.
-- SRD Goblin Warrior, Skeleton (CR 1/4), Ogre (CR 2), and Knight (CR 3) catalog entries.
+- SRD monsters currently span Goblin Warrior/Skeleton (CR 1/4), Ogre (CR 2), Knight (CR 3), and Tough Boss (CR 4).
 - Attack actions support a configurable number of attacks while preserving one Action expenditure.
 - Fighter attack-count progression supports 2 attacks at Level 5, 3 at Level 11, and 4 at Level 20.
 - Fighter Action Surge is a typed resource: one use before Level 17, two uses at Level 17+, and at most once per turn.
 - Action Surge restores an additional non-Magic action slot; the arena uses it after the normal action while the opponent survives.
-- Knight Multiattack uses the same action-safe event sequencing.
+- Knight and Tough Boss Multiattack use the same action-safe event sequencing.
 - Typed melee, ranged, and thrown weapon metadata.
 - Attack-profile damage dice overrides keep intrinsic equipment dice combatant-neutral.
 - Typed unconditional and Advantage-triggered damage riders.
@@ -43,6 +43,7 @@ The locked acceptance test remains the **5-foot melee duel**. A separate **90-fo
 - Goblin Shortbow: 80/320 ft., Piercing damage, projectile metadata.
 - Ogre Javelin melee/thrown handling at 30/120 ft.
 - Knight Greatsword and Heavy Crossbow attack profiles, including two attacks per action.
+- Tough Boss Warhammer and Heavy Crossbow attack profiles, including two attacks per action.
 - Ranged/thrown attacks beyond normal range have Disadvantage; attacks beyond long range are illegal.
 - Ranged attacks within 5 feet of an active enemy have Disadvantage.
 - Goblin attacks made with Advantage add the SRD conditional d4 damage.
@@ -56,7 +57,7 @@ The locked acceptance test remains the **5-foot melee duel**. A separate **90-fo
 - Fighter uses a longsword and shield visual loadout.
 - Monster labels, HP, CR, weapon, armor, off-hand, and body style hydrate from catalog/API data.
 - Goblinoid, skeleton, giant, and humanoid body styles are supported.
-- Monster weapon shapes include Scimitar, Shortsword, Greatclub, Greatsword, Shortbow, Heavy Crossbow, and Javelin.
+- Monster weapon shapes include Scimitar, Shortsword, Greatclub, Greatsword, Warhammer, Shortbow, Heavy Crossbow, and Javelin.
 - Attack replay temporarily renders the weapon actually used by the event rather than only the default loadout.
 - Projectile attacks animate arrows, crossbow bolts, or thrown javelins in the attack direction.
 - Generic feature events allow Action Surge and later rules features to appear in the audit/replay stream.
@@ -87,7 +88,8 @@ The locked acceptance test remains the **5-foot melee duel**. A separate **90-fo
 - If no weapon can attack, the combatant advances toward primary-weapon range and Dashes if one normal move is insufficient.
 - The Goblin does not yet kite away from the Fighter.
 - Ogre Javelin inventory depletion is not yet tracked; its SRD stat block lists three Javelins.
-- Knight Multiattack currently repeats one selected legal attack profile; the SRD stat block allows Greatsword or Heavy Crossbow in any combination.
+- Knight and Tough Boss Multiattack currently repeat one selected legal attack profile; their SRD stat blocks allow their two listed weapons in any combination.
+- Tough Boss Pack Tactics cannot trigger in the current 1v1 arena and Warhammer forced movement is not yet modeled.
 - Higher-level Fighter pregens use fixed published progression values for attacks, proficiency, HP, and Second Wind; unsupported class features are disclosed in catalog coverage.
 
 ## Explicitly deferred
@@ -97,6 +99,7 @@ The locked acceptance test remains the **5-foot melee duel**. A separate **90-fo
 - Broad class coverage beyond current Fighter pregens.
 - Fighter Tactical Shift, subclass features, Weapon Mastery effects, Indomitable, Tactical Master, Studied Attacks, and Epic Boon behavior.
 - Knight Parry and Frightened condition immunity.
+- Forced movement from Tough Boss Warhammer and similar effects.
 - Opportunity attacks and Disengage.
 - Goblin Nimble Escape/Hide behavior.
 - Exhaustion, Poisoned, Frightened, and other general condition-state handling.
