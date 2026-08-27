@@ -39,28 +39,42 @@ def should_use_action_surge(state: CombatantState) -> bool:
         raise RuntimeError("Action Surge policy could not be evaluated.") from exc
 
 
+def attack_uses_melee(attack: WeaponAttack, distance_ft: int) -> bool:
+    weapon = attack.weapon
+    return weapon.attack_kind is WeaponAttackKind.MELEE or (
+        weapon.attack_kind is WeaponAttackKind.THROWN and distance_ft <= weapon.reach_ft
+    )
+
+
+def _legal_attack(attack: WeaponAttack, distance_ft: int) -> bool:
+    try:
+        resolve_attack_roll_mode(attack.weapon, distance_ft)
+        return True
+    except ValueError:
+        return False
+
+
 def select_weapon_attack(state: CombatantState, distance_ft: int) -> WeaponAttack | None:
-    """Prefer the primary attack profile, then the first legal alternate profile."""
+    """Prefer a legal melee use once engaged; otherwise use the first legal profile."""
     try:
         profiles = [state.template.weapon_attack, *state.template.alternate_weapon_attacks]
-        for attack in profiles:
-            try:
-                resolve_attack_roll_mode(attack.weapon, distance_ft)
-                return attack
-            except ValueError:
-                continue
-        return None
+        legal = [attack for attack in profiles if _legal_attack(attack, distance_ft)]
+        melee = [attack for attack in legal if attack_uses_melee(attack, distance_ft)]
+        return (melee or legal or [None])[0]
     except Exception as exc:
         logger.exception("Failed to select attack profile for %s.", state.template.name)
         raise RuntimeError("Attack selection policy could not be evaluated.") from exc
 
 
 def preferred_approach_distance(state: CombatantState) -> int:
-    """Close to the primary attack's melee reach or normal ranged distance."""
+    """Close toward the first melee-capable profile; pure ranged combatants close to normal range."""
     try:
+        profiles = [state.template.weapon_attack, *state.template.alternate_weapon_attacks]
+        for attack in profiles:
+            if attack.weapon.attack_kind in {WeaponAttackKind.MELEE, WeaponAttackKind.THROWN}:
+                return attack.weapon.reach_ft
+
         weapon = state.template.weapon_attack.weapon
-        if weapon.attack_kind is WeaponAttackKind.MELEE:
-            return weapon.reach_ft
         if weapon.normal_range_ft is None:
             raise ValueError("Primary ranged weapon has no normal range.")
         return weapon.normal_range_ft
