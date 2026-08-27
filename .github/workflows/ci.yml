@@ -23,9 +23,15 @@ jobs:
       - name: Validate frontend JavaScript syntax
         run: |
           node --check frontend/app.js
+          node --check frontend/preview-data.js
           node --check frontend/arena-view.js
           node --check frontend/arena-animations.js
-      - name: Validate Netlify frontend config generation
+      - name: Validate Netlify static preview config
+        run: |
+          unset IRON_PIT_API_BASE
+          python scripts/write_frontend_config.py
+          grep -q 'IRON_PIT_API_BASE = ""' frontend/config.js
+      - name: Validate Netlify live API config
         env:
           IRON_PIT_API_BASE: https://example.com
         run: |
