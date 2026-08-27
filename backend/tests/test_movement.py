@@ -1,6 +1,7 @@
 import pytest
 
 from app.combat.movement import move_toward_target, take_dash
+from app.combat.movement_state import spend_movement
 from app.combat.policy import select_weapon_attack
 from app.combat.state import begin_turn, build_combatant_state
 from app.combat.turns import prepare_attack
@@ -28,7 +29,7 @@ def test_dash_spends_action_and_adds_speed_to_movement() -> None:
     fighter = build_combatant_state(build_demo_fighter())
     battlefield = BattlefieldState(distance_ft=60)
     begin_turn(fighter)
-    fighter.movement_remaining_ft = 0
+    spend_movement(fighter, 30)
 
     event = take_dash(1, 1, fighter, battlefield)
 
