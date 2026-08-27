@@ -26,10 +26,14 @@ The locked acceptance test remains the **5-foot melee duel**. A separate **90-fo
 - Catalog rules coverage: `fully_implemented`, `arena_assumption`, or `unsupported`.
 - Generic ID-driven `POST /api/battles` endpoint plus character and monster catalog endpoints.
 - Gladiator and monster selection controls driven by catalog data.
-- Original Fighter pregens: Aldric Vane (Level 1) and Mara Stone (Level 5).
+- Original Fighter pregens at Levels 1, 5, 11, and 20.
+- Fixed Fighter HP progression uses a transparent Constitution +2 assumption for the higher-level pregens.
 - SRD Goblin Warrior, Skeleton (CR 1/4), Ogre (CR 2), and Knight (CR 3) catalog entries.
 - Attack actions support a configurable number of attacks while preserving one Action expenditure.
-- Fighter Extra Attack is implemented for the Level 5 pregen; Knight Multiattack uses the same action-safe event sequencing.
+- Fighter attack-count progression supports 2 attacks at Level 5, 3 at Level 11, and 4 at Level 20.
+- Fighter Action Surge is a typed resource: one use before Level 17, two uses at Level 17+, and at most once per turn.
+- Action Surge restores an additional non-Magic action slot; the arena uses it after the normal action while the opponent survives.
+- Knight Multiattack uses the same action-safe event sequencing.
 - Typed melee, ranged, and thrown weapon metadata.
 - Attack-profile damage dice overrides keep intrinsic equipment dice combatant-neutral.
 - Typed unconditional and Advantage-triggered damage riders.
@@ -55,6 +59,7 @@ The locked acceptance test remains the **5-foot melee duel**. A separate **90-fo
 - Monster weapon shapes include Scimitar, Shortsword, Greatclub, Greatsword, Shortbow, Heavy Crossbow, and Javelin.
 - Attack replay temporarily renders the weapon actually used by the event rather than only the default loadout.
 - Projectile attacks animate arrows, crossbow bolts, or thrown javelins in the attack direction.
+- Generic feature events allow Action Surge and later rules features to appear in the audit/replay stream.
 - Movement events update the displayed distance and animate an advance.
 - Hits visibly react and update HP.
 - Critical hits receive a distinct animation state.
@@ -77,19 +82,20 @@ The locked acceptance test remains the **5-foot melee duel**. A separate **90-fo
 
 - Initiative ties currently use initiative bonus as the arena tiebreaker.
 - Fighters use Second Wind at or below half maximum HP when a use and Bonus Action remain.
+- Fighters with Action Surge spend it after their normal action if the opponent survives; this is tactical policy, not a restriction on the SRD feature.
 - A combatant prefers its primary weapon; if it is out of range, it selects the first legal alternate weapon.
 - If no weapon can attack, the combatant advances toward primary-weapon range and Dashes if one normal move is insufficient.
 - The Goblin does not yet kite away from the Fighter.
 - Ogre Javelin inventory depletion is not yet tracked; its SRD stat block lists three Javelins.
 - Knight Multiattack currently repeats one selected legal attack profile; the SRD stat block allows Greatsword or Heavy Crossbow in any combination.
-- Mara Stone is a fixed original development pregen; Defense is baked into AC 19 while subclass, Action Surge, Tactical Shift, and Weapon Mastery effects remain unsupported.
+- Higher-level Fighter pregens use fixed published progression values for attacks, proficiency, HP, and Second Wind; unsupported class features are disclosed in catalog coverage.
 
 ## Explicitly deferred
 
 - User accounts and Supabase persistence.
 - Betting, cash-value predictions, crypto, or NFTs.
 - Broad class coverage beyond current Fighter pregens.
-- Fighter Action Surge, Tactical Shift, subclass features, and Weapon Mastery effects.
+- Fighter Tactical Shift, subclass features, Weapon Mastery effects, Indomitable, Tactical Master, Studied Attacks, and Epic Boon behavior.
 - Knight Parry and Frightened condition immunity.
 - Opportunity attacks and Disengage.
 - Goblin Nimble Escape/Hide behavior.
