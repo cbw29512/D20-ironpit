@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.conditions import can_willingly_approach
 from app.domain.models import BattleEvent, BattlefieldState, CombatantState
 
 logger = logging.getLogger(__name__)
@@ -11,14 +12,17 @@ def move_toward_target(
     sequence: int,
     round_number: int,
     mover: CombatantState,
+    target_id: str,
     battlefield: BattlefieldState,
     desired_distance_ft: int,
 ) -> BattleEvent | None:
-    """Spend available movement to close distance without moving past the desired distance."""
+    """Spend movement to close distance while enforcing willingness restrictions."""
     try:
         if desired_distance_ft < 0:
             raise ValueError("Desired distance cannot be negative.")
         needed = max(0, battlefield.distance_ft - desired_distance_ft)
+        if needed > 0 and not can_willingly_approach(mover, target_id):
+            raise ValueError("Frightened creature cannot willingly approach its fear source.")
         moved = min(needed, mover.movement_remaining_ft)
         if moved <= 0:
             return None
@@ -32,6 +36,7 @@ def move_toward_target(
             event_type="movement",
             actor_id=mover.instance_id,
             actor_name=mover.template.name,
+            target_id=target_id,
             distance_before_ft=before,
             distance_after_ft=battlefield.distance_ft,
             movement_ft=moved,
