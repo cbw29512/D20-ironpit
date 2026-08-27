@@ -1,5 +1,6 @@
 from app.combat.attack_actions import resolve_attack_action
 from app.combat.dice import FixedDiceProvider
+from app.combat.multiattack import resolve_multiattack_action
 from app.combat.state import build_combatant_state
 from app.content.gladiators import build_mara_stone
 from app.content.srd_monsters import build_ogre, build_tough_boss
@@ -11,7 +12,7 @@ def test_tough_boss_push_changes_distance_then_reselects_crossbow() -> None:
     mara = build_combatant_state(build_mara_stone())
     battlefield = BattlefieldState(distance_ft=5)
 
-    events = resolve_attack_action(
+    events = resolve_multiattack_action(
         1,
         1,
         boss,
@@ -34,7 +35,6 @@ def test_tough_boss_push_changes_distance_then_reselects_crossbow() -> None:
 
 def test_tough_boss_miss_does_not_push_target() -> None:
     boss = build_combatant_state(build_tough_boss())
-    boss.template.attacks_per_action = 1
     mara = build_combatant_state(build_mara_stone())
     battlefield = BattlefieldState(distance_ft=5)
 
@@ -53,7 +53,6 @@ def test_tough_boss_miss_does_not_push_target() -> None:
 
 def test_tough_boss_does_not_push_huge_target() -> None:
     boss = build_combatant_state(build_tough_boss())
-    boss.template.attacks_per_action = 1
     mara = build_combatant_state(build_mara_stone())
     mara.template.size = SizeCategory.HUGE
     battlefield = BattlefieldState(distance_ft=5)
@@ -73,7 +72,6 @@ def test_tough_boss_does_not_push_huge_target() -> None:
 
 def test_weapon_mastery_metadata_does_not_create_monster_push() -> None:
     ogre = build_combatant_state(build_ogre())
-    ogre.template.attacks_per_action = 1
     mara = build_combatant_state(build_mara_stone())
     battlefield = BattlefieldState(distance_ft=5)
 
