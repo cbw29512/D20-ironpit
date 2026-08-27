@@ -1,5 +1,6 @@
 import pytest
 
+from app.combat.attacks import resolve_attack
 from app.combat.dice import FixedDiceProvider
 from app.combat.initiative import roll_initiative_order
 from app.combat.targeting import select_nearest_enemy
@@ -90,3 +91,24 @@ def test_target_policy_selects_nearest_living_enemy() -> None:
     assert target.combatant.instance_id == "aldric-2"
     target.combatant.is_alive = False
     assert select_nearest_enemy(encounter, actor).combatant.instance_id == "aldric-1"
+
+
+def test_attack_events_identify_runtime_instances_not_templates() -> None:
+    encounter = build_encounter_state(_party_vs_boss_request())
+    attacker = encounter.participants[0].combatant
+    defender = encounter.participants[2].combatant
+
+    event = resolve_attack(
+        1,
+        1,
+        attacker,
+        defender,
+        attacker.template.weapon_attack,
+        5,
+        FixedDiceProvider([15, 1]),
+    )
+
+    assert event.actor_id == "aldric-1"
+    assert event.target_id == "ogre-1"
+    assert attacker.template.id == "aldric-vane-l1"
+    assert defender.template.id == "srd-ogre"
