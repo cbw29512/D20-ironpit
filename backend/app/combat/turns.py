@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.conditions import stand_from_prone
+from app.combat.conditions import can_willingly_approach, stand_from_prone
 from app.combat.movement import move_toward_target, take_dash
 from app.combat.policy import preferred_approach_distance, select_weapon_attack
 from app.domain.models import BattleEvent, BattlefieldState, CombatantState, WeaponAttack
@@ -14,6 +14,7 @@ def prepare_attack(
     sequence: int,
     round_number: int,
     attacker: CombatantState,
+    defender: CombatantState,
     battlefield: BattlefieldState,
 ) -> tuple[WeaponAttack | None, list[BattleEvent], int]:
     """Apply arena movement policy until a legal attack is available or the Action is spent."""
@@ -29,8 +30,11 @@ def prepare_attack(
             return attack, events, sequence
 
         desired = preferred_approach_distance(attacker)
+        if not can_willingly_approach(attacker, defender.instance_id):
+            return None, events, sequence
+
         movement = move_toward_target(
-            sequence, round_number, attacker, battlefield, desired
+            sequence, round_number, attacker, defender.instance_id, battlefield, desired
         )
         if movement is not None:
             events.append(movement)
@@ -44,7 +48,7 @@ def prepare_attack(
             events.append(take_dash(sequence, round_number, attacker, battlefield))
             sequence += 1
             movement = move_toward_target(
-                sequence, round_number, attacker, battlefield, desired
+                sequence, round_number, attacker, defender.instance_id, battlefield, desired
             )
             if movement is not None:
                 events.append(movement)
