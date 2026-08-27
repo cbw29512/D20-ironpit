@@ -14,23 +14,33 @@ The MVP is complete when a user can open the deployed Netlify site, start a serv
 - Damage and HP tracking.
 - Combat ends at 0 HP.
 - Immutable-style ordered battle event output for replay/audit.
+- Advantage/disadvantage roll support that preserves both d20s and the selected result.
+- Level-1 Fighter Second Wind: 2 uses, Bonus Action, 1d10 + Fighter level healing, capped at max HP.
 
 ## Required presentation behavior
 
 - Fighter uses a longsword and shield visual loadout.
 - Goblin uses a scimitar and shield visual loadout.
+- Combatant labels, HP, level/CR, weapon, armor, and off-hand data hydrate from the API.
 - Attack events produce stick-figure weapon swings.
 - Hits visibly react and update HP.
 - Critical hits receive a distinct animation state.
+- Second Wind produces a healing pulse and HP recovery.
 - Death produces a defeated visual state.
 
 ## Required platform behavior
 
 - Source is hosted publicly on GitHub.
-- GitHub Actions tests the backend and deployment artifacts.
+- GitHub Actions tests the backend, Netlify configuration generation, and Docker image build.
 - Frontend deploys to Netlify.
 - FastAPI deploys as a Docker service.
 - No secrets are committed.
+
+## Published arena assumptions / tactics
+
+- Initiative ties currently use initiative bonus as the arena tiebreaker.
+- The demo Fighter's tactical policy uses Second Wind at or below half maximum HP when a use and Bonus Action remain.
+- Advantage/disadvantage is implemented at the roll layer, but the current melee demo does not yet create a source of either state.
 
 ## Explicitly deferred
 
@@ -43,8 +53,7 @@ The MVP is complete when a user can open the deployed Netlify site, start a serv
 - Spells and spell effects.
 - Conditions such as petrified.
 - Breath weapons.
-- Advantage/disadvantage.
-- Fighter Second Wind and Weapon Mastery.
+- Fighter Weapon Mastery.
 - Goblin Nimble Escape and conditional bonus damage.
 
 These are expansions after the deployed Fighter-vs-Goblin vertical slice is verified.
