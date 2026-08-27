@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.content.srd_beast_attacks import build_wolf_bite_attack
-from app.domain.models import CombatantTemplate, SizeCategory, VisualLoadout
+from app.domain.models import Ability, CombatantTemplate, SizeCategory, VisualLoadout
 
 logger = logging.getLogger(__name__)
 
@@ -21,6 +21,15 @@ def build_wolf() -> CombatantTemplate:
             max_hp=11,
             speed_ft=40,
             initiative_bonus=2,
+            proficiency_bonus=2,
+            ability_modifiers={
+                Ability.STRENGTH: 2,
+                Ability.DEXTERITY: 2,
+                Ability.CONSTITUTION: 1,
+                Ability.INTELLIGENCE: -4,
+                Ability.WISDOM: 1,
+                Ability.CHARISMA: -2,
+            },
             weapon_attack=build_wolf_bite_attack(),
             visual=VisualLoadout(
                 armor="none",
