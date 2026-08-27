@@ -15,13 +15,16 @@ def resolve_attack_roll_mode(
     other_disadvantage_sources: int = 0,
     close_enemy_active: bool = True,
 ) -> RollMode:
-    """Validate weapon range and combine range-related Advantage/Disadvantage sources."""
+    """Validate melee, ranged, or thrown use and combine roll-mode sources."""
     try:
         if distance_ft < 0:
             raise ValueError("Distance cannot be negative.")
 
         disadvantage_sources = other_disadvantage_sources
-        if weapon.attack_kind is WeaponAttackKind.MELEE:
+        uses_melee_reach = weapon.attack_kind is WeaponAttackKind.MELEE or (
+            weapon.attack_kind is WeaponAttackKind.THROWN and distance_ft <= weapon.reach_ft
+        )
+        if uses_melee_reach:
             if distance_ft > weapon.reach_ft:
                 raise ValueError(f"{weapon.name} target is outside melee reach.")
         else:
