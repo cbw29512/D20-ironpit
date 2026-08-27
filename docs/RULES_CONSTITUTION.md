@@ -17,10 +17,11 @@ This document is the non-negotiable contract for combat behavior in Iron Pit.
 4. **Range and targeting are enforced before resolution.** Reach, normal/long range, line-of-effect requirements that are modeled, target type/size, and required conditions are checked before an option can resolve.
 5. **Every d20 consequence is auditable.** Initiative, attack rolls, ability checks, saving throws, Advantage/Disadvantage sources, selected dice, DCs, and resulting effects belong in the BattleEvent stream.
 6. **A failed or successful save must do exactly what the source says.** Damage, half damage, conditions, duration, repeat saves, escape checks, and end conditions are not optional flavor.
-7. **Conditions are mechanical state.** A condition is not a label. Its movement, attack, save, targeting, and action consequences must be implemented before catalog coverage can call that condition fully supported.
-8. **Damage rolls are never rewritten after the fact.** Raw damage remains auditable; resistance, vulnerability, immunity, temporary HP, and similar rules alter the applied result separately.
-9. **Effects can change later choices in the same turn.** Forced movement, conditions, resource use, death, range changes, and other state changes require subsequent attacks/actions to re-check legality against live state.
-10. **Unsupported rules fail closed.** Content that requires an unimplemented mechanic is marked unsupported or prevented from being battle-ready; the engine must not silently approximate it.
+7. **Saving throws are not attack rolls.** Natural 1 or 20 behavior is never borrowed from attack rules unless a verified rule explicitly says so. When a rule lets the target choose between saves, the tactical layer may choose only from those legal abilities.
+8. **Conditions are mechanical state.** A condition is not a label. Its movement, attack, save, targeting, and action consequences must be implemented before catalog coverage can call that condition fully supported.
+9. **Damage rolls are never rewritten after the fact.** Raw damage remains auditable; resistance, vulnerability, immunity, temporary HP, and similar rules alter the applied result separately.
+10. **Effects can change later choices in the same turn.** Forced movement, conditions, resource use, death, range changes, and other state changes require subsequent attacks/actions to re-check legality against live state.
+11. **Unsupported rules fail closed.** Content that requires an unimplemented mechanic is marked unsupported or prevented from being battle-ready; the engine must not silently approximate it.
 
 ## Scaling architecture invariants
 
@@ -46,6 +47,8 @@ Tactical policy is intentionally replaceable and is not RAW. The baseline arena 
 - Prefer a simple legal damaging option rather than adding speculative tactical intelligence early.
 - Re-evaluate after every attack/effect because range, conditions, HP, resources, targets, and positions may have changed.
 - Use movement only within the creature's legal movement options and condition restrictions.
+- Legal Grapple/Shove options exist independently of whether the baseline policy chooses them. Control mechanics must not be forced into every creature's tactics merely because the engine supports them.
+- When a target legally chooses between Strength and Dexterity for a save, the baseline arena policy chooses its better legal modifier; this is a tactical choice, not a change to the save rule.
 - Healing, defensive abilities, control effects, and spell-slot usage are policy decisions layered on top of exact rules legality.
 - Casters must still obey the SRD rule that only one spell slot can be expended to cast a spell on a turn.
 - Concentration is exclusive: starting another Concentration effect ends the prior one when the rules require it.
