@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.conditions import can_willingly_approach
+from app.combat.movement_state import add_movement_allowance, current_speed_ft, spend_movement
 from app.domain.models import BattleEvent, BattlefieldState, CombatantState
 
 logger = logging.getLogger(__name__)
@@ -29,7 +30,7 @@ def move_toward_target(
 
         before = battlefield.distance_ft
         battlefield.distance_ft -= moved
-        mover.movement_remaining_ft -= moved
+        spend_movement(mover, moved)
         return BattleEvent(
             sequence=sequence,
             round_number=round_number,
@@ -56,12 +57,13 @@ def take_dash(
     mover: CombatantState,
     battlefield: BattlefieldState,
 ) -> BattleEvent:
-    """Spend the Action to gain extra movement equal to current Speed for this turn."""
+    """Spend the Action to gain extra movement equal to the creature's current Speed."""
     try:
         if not mover.action_available:
             raise ValueError("Action is not available for Dash.")
         mover.action_available = False
-        mover.movement_remaining_ft += mover.template.speed_ft
+        bonus = current_speed_ft(mover)
+        add_movement_allowance(mover, bonus)
         return BattleEvent(
             sequence=sequence,
             round_number=round_number,
@@ -70,7 +72,7 @@ def take_dash(
             actor_name=mover.template.name,
             distance_before_ft=battlefield.distance_ft,
             distance_after_ft=battlefield.distance_ft,
-            movement_ft=mover.template.speed_ft,
+            movement_ft=bonus,
             animation="dash",
             description=f"{mover.template.name} takes the Dash action.",
         )
