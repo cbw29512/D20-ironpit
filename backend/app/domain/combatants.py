@@ -5,6 +5,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
+from app.domain.conditions import ConditionState, ConditionType
 from app.domain.effects import AttackEffect, SizeCategory
 
 
@@ -96,6 +97,7 @@ class CombatantTemplate(BaseModel):
     damage_vulnerabilities: list[DamageType] = Field(default_factory=list)
     damage_resistances: list[DamageType] = Field(default_factory=list)
     damage_immunities: list[DamageType] = Field(default_factory=list)
+    condition_immunities: list[ConditionType] = Field(default_factory=list)
     weapon_attack: WeaponAttack
     alternate_weapon_attacks: list[WeaponAttack] = Field(default_factory=list)
     fighting_style: str | None = None
@@ -121,6 +123,7 @@ class CombatantState(BaseModel):
     action_surge_used_this_turn: bool = False
     movement_remaining_ft: int = Field(default=0, ge=0)
     resources: list[ResourceState] = Field(default_factory=list)
+    conditions: list[ConditionState] = Field(default_factory=list)
 
 
 class BattlefieldState(BaseModel):
