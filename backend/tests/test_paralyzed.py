@@ -68,13 +68,17 @@ def test_ranged_hit_beyond_five_feet_is_not_auto_critical() -> None:
     shortbow = goblin.template.alternate_weapon_attacks[0]
 
     event = resolve_attack(
-        1, 1, goblin, fighter, shortbow, 10, FixedDiceProvider([6, 14, 3])
+        1, 1, goblin, fighter, shortbow, 10, FixedDiceProvider([6, 14, 3, 2])
     )
 
     assert event.attack_roll is not None
     assert event.attack_roll.mode is RollMode.ADVANTAGE
     assert event.hit is True
     assert event.critical is False
+    assert [component.notation for component in event.damage_components] == [
+        "1d6+2",
+        "1d4+0",
+    ]
 
 
 def test_paralyzed_creature_rolls_initiative_with_disadvantage() -> None:
