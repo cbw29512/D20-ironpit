@@ -25,6 +25,7 @@ from app.domain.encounters import (
     distance_between,
 )
 from app.domain.events import BattleEvent, BattleResult, DamageRollComponent, DiceRoll, RollMode
+from app.domain.save_actions import SaveAction, SaveFailureEffect
 
 __all__ = [
     "Ability",
@@ -54,6 +55,8 @@ __all__ = [
     "RollMode",
     "RulesCoverage",
     "RulesCoverageItem",
+    "SaveAction",
+    "SaveFailureEffect",
     "SizeCategory",
     "Skill",
     "VisualLoadout",
