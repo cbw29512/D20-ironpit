@@ -15,7 +15,10 @@ def _visible_fear(state: CombatantState, visible_source_ids: set[str] | None) ->
 
 
 def is_incapacitated(state: CombatantState) -> bool:
-    return has_condition(state, ConditionType.PARALYZED)
+    return any(
+        has_condition(state, condition)
+        for condition in (ConditionType.INCAPACITATED, ConditionType.PARALYZED)
+    )
 
 
 def has_zero_speed(state: CombatantState) -> bool:
