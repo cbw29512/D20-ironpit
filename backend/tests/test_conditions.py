@@ -1,9 +1,10 @@
 import pytest
 
 from app.combat.attack_actions import resolve_attack_action
-from app.combat.conditions import apply_condition, has_condition, stand_from_prone
+from app.combat.conditions import apply_condition, has_condition
 from app.combat.dice import FixedDiceProvider
 from app.combat.grapple import attempt_escape_grapple
+from app.combat.prone import stand_from_prone
 from app.combat.state import begin_turn, build_combatant_state
 from app.content.demo import build_demo_fighter, build_goblin_warrior
 from app.content.srd_beasts import build_giant_crab, build_wolf
