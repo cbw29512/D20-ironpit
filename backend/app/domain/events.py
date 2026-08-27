@@ -5,6 +5,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
+from app.domain.abilities import Ability, Skill
 from app.domain.combatants import BattlefieldState, CombatantState, DamageType
 from app.domain.conditions import ConditionType
 
@@ -41,6 +42,8 @@ class BattleEvent(BaseModel):
         "movement",
         "forced_movement",
         "condition",
+        "saving_throw",
+        "ability_check",
         "dash",
         "attack",
         "healing",
@@ -53,6 +56,12 @@ class BattleEvent(BaseModel):
     target_id: str | None = None
     target_name: str | None = None
     attack_roll: DiceRoll | None = None
+    saving_throw: DiceRoll | None = None
+    ability_check: DiceRoll | None = None
+    test_dc: int | None = None
+    test_ability: Ability | None = None
+    test_skill: Skill | None = None
+    test_success: bool | None = None
     damage_roll: DiceRoll | None = None
     damage_components: list[DamageRollComponent] = Field(default_factory=list)
     damage_applied: int | None = None
