@@ -12,7 +12,7 @@ from app.combat.policy import should_use_action_surge, should_use_second_wind
 from app.combat.recharge import roll_recharges
 from app.combat.save_actions import resolve_save_action
 from app.combat.state import begin_turn
-from app.combat.turns import prepare_attack
+from app.combat.turns import prepare_attack, prepare_position
 from app.domain.models import BattleEvent, BattlefieldState, CombatantState
 
 logger = logging.getLogger(__name__)
@@ -28,11 +28,16 @@ def _perform_offensive_action(
     visible_source_ids: set[str],
 ) -> tuple[list[BattleEvent], int]:
     try:
+        prep_events, sequence = prepare_position(
+            sequence, round_number, attacker, defender, battlefield
+        )
+        events = list(prep_events)
+
         save_action = select_standalone_save_action(
             attacker, defender, battlefield.distance_ft
         )
         if save_action is not None:
-            events = resolve_save_action(
+            action_events = resolve_save_action(
                 sequence,
                 round_number,
                 attacker,
@@ -42,12 +47,13 @@ def _perform_offensive_action(
                 dice,
                 battlefield=battlefield,
             )
-            return events, sequence + len(events)
+            events.extend(action_events)
+            return events, sequence + len(action_events)
 
-        attack, prep_events, sequence = prepare_attack(
+        attack, attack_prep_events, sequence = prepare_attack(
             sequence, round_number, attacker, defender, battlefield
         )
-        events = list(prep_events)
+        events.extend(attack_prep_events)
         if attack is None:
             return events, sequence
 
