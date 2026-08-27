@@ -4,29 +4,13 @@ import logging
 import uuid
 
 from app.combat.dice import DiceProvider
-from app.combat.rolls import roll_d20
+from app.combat.initiative import roll_initiative_order
 from app.combat.state import build_combatant_state
 from app.combat.turn_execution import execute_turn
 from app.domain.models import BattleEvent, BattlefieldState, BattleResult, CombatantTemplate
 
 logger = logging.getLogger(__name__)
 MAX_ROUNDS = 100
-
-
-def _initiative_event(sequence: int, state, dice: DiceProvider) -> BattleEvent:
-    initiative = roll_d20(dice, state.template.initiative_bonus)
-    state.initiative_roll = initiative.selected_roll
-    state.initiative_total = initiative.total
-    return BattleEvent(
-        sequence=sequence,
-        round_number=0,
-        event_type="initiative",
-        actor_id=state.template.id,
-        actor_name=state.template.name,
-        attack_roll=initiative,
-        animation="initiative",
-        description=f"{state.template.name} rolls initiative {state.initiative_total}.",
-    )
 
 
 def _result(
@@ -39,7 +23,7 @@ def _result(
 ) -> BattleResult:
     return BattleResult(
         battle_id=str(uuid.uuid4()),
-        winner_id=winner.template.id if winner else None,
+        winner_id=winner.instance_id if winner else None,
         winner_name=winner.template.name if winner else None,
         rounds=rounds,
         fighter=fighter,
@@ -62,18 +46,7 @@ def run_duel(
             starting_distance_ft=starting_distance_ft,
             distance_ft=starting_distance_ft,
         )
-        events: list[BattleEvent] = []
-        sequence = 1
-
-        for state in (fighter, monster):
-            events.append(_initiative_event(sequence, state, dice))
-            sequence += 1
-
-        order = sorted(
-            (fighter, monster),
-            key=lambda state: (state.initiative_total or 0, state.template.initiative_bonus),
-            reverse=True,
-        )
+        events, order, sequence = roll_initiative_order(1, [fighter, monster], dice)
 
         for round_number in range(1, MAX_ROUNDS + 1):
             for attacker in order:
@@ -97,9 +70,9 @@ def run_duel(
                         sequence=sequence,
                         round_number=round_number,
                         event_type="victory",
-                        actor_id=attacker.template.id,
+                        actor_id=attacker.instance_id,
                         actor_name=attacker.template.name,
-                        target_id=defender.template.id,
+                        target_id=defender.instance_id,
                         target_name=defender.template.name,
                         animation="victory",
                         description=f"{attacker.template.name} wins the duel.",
