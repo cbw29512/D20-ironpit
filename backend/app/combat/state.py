@@ -52,6 +52,7 @@ def begin_turn(state: CombatantState) -> None:
         state.bonus_action_available = not incapacitated
         state.reaction_available = not incapacitated
         state.action_surge_used_this_turn = False
+        state.disengaged_this_turn = False
         begin_movement_budget(state)
     except Exception as exc:
         logger.exception("Failed to begin turn for %s.", state.template.name)
