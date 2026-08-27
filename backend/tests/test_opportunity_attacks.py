@@ -34,7 +34,7 @@ def test_disengage_suppresses_opportunity_attack_for_rest_of_turn() -> None:
     disengage = take_disengage(1, 1, goblin, battlefield)
 
     events = move_away_from_target(
-        2, 1, goblin, fighter, battlefield, 10, FixedDiceProvider([])
+        2, 1, goblin, fighter, battlefield, 10, FixedDiceProvider([1])
     )
 
     assert disengage.feature_id == "disengage"
@@ -56,7 +56,7 @@ def test_unseen_mover_does_not_provoke_opportunity_attack() -> None:
         fighter,
         battlefield,
         10,
-        FixedDiceProvider([]),
+        FixedDiceProvider([1]),
         reactor_can_see_mover=False,
     )
 
