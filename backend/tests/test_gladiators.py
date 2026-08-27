@@ -3,6 +3,7 @@ from app.combat.dice import FixedDiceProvider
 from app.combat.state import build_combatant_state
 from app.content.gladiators import build_darius_flint, build_vera_ash
 from app.content.srd_monsters import build_ogre
+from app.domain.models import BattlefieldState
 
 
 def test_level_eleven_fighter_progression_values() -> None:
@@ -25,8 +26,7 @@ def test_level_twenty_fighter_progression_values_and_four_attacks() -> None:
         1,
         fighter,
         ogre,
-        fighter.template.weapon_attack,
-        5,
+        BattlefieldState(distance_ft=5),
         FixedDiceProvider([2, 1, 2, 1, 2, 1, 2, 1]),
     )
 
