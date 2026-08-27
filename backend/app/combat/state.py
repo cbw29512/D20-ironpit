@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.condition_modifiers import has_zero_speed, is_incapacitated
+from app.combat.condition_modifiers import is_incapacitated
+from app.combat.movement_state import begin_movement_budget
 from app.domain.models import CombatantState, CombatantTemplate, ResourceState
 from app.domain.recharge import RechargeState
 
@@ -51,7 +52,7 @@ def begin_turn(state: CombatantState) -> None:
         state.bonus_action_available = not incapacitated
         state.reaction_available = not incapacitated
         state.action_surge_used_this_turn = False
-        state.movement_remaining_ft = 0 if has_zero_speed(state) else state.template.speed_ft
+        begin_movement_budget(state)
     except Exception as exc:
         logger.exception("Failed to begin turn for %s.", state.template.name)
         raise RuntimeError("Turn state could not be initialized.") from exc
