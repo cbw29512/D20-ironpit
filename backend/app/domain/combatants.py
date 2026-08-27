@@ -10,6 +10,7 @@ class DamageType(StrEnum):
     SLASHING = "slashing"
     PIERCING = "piercing"
     BLUDGEONING = "bludgeoning"
+    POISON = "poison"
 
 
 class WeaponAttackKind(StrEnum):
