@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from app.domain.models import CombatantState, CombatantTemplate, ResourceState
+from app.domain.models import CombatantState, CombatantTemplate, ConditionType, ResourceState
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +37,8 @@ def begin_turn(state: CombatantState) -> None:
         state.action_available = True
         state.bonus_action_available = True
         state.action_surge_used_this_turn = False
-        state.movement_remaining_ft = state.template.speed_ft
+        grappled = any(item.condition is ConditionType.GRAPPLED for item in state.conditions)
+        state.movement_remaining_ft = 0 if grappled else state.template.speed_ft
     except Exception as exc:
         logger.exception("Failed to begin turn for %s.", state.template.name)
         raise RuntimeError("Turn state could not be initialized.") from exc
