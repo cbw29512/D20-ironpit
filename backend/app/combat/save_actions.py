@@ -5,6 +5,7 @@ import logging
 from app.combat.conditions import apply_condition
 from app.combat.d20_tests import resolve_saving_throw
 from app.combat.dice import DiceProvider
+from app.combat.recharge import require_recharge_available, spend_recharge
 from app.domain.models import BattleEvent, CombatantState, SaveAction
 
 logger = logging.getLogger(__name__)
@@ -39,8 +40,13 @@ def resolve_save_action(
             raise ValueError(f"{action.name} target is out of range.")
         if action.target_limit != 1:
             raise ValueError("This resolver currently supports one target only.")
+        if action.recharge is not None:
+            require_recharge_available(actor, action.id)
         if spend_action_cost:
             _spend_action_cost(actor, action)
+        if action.recharge is not None:
+            spend_recharge(actor, action.id)
+
         roll, success = resolve_saving_throw(target, action.save_ability, action.dc, dice)
         events = [BattleEvent(
             sequence=sequence,
