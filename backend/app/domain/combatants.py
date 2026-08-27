@@ -15,6 +15,7 @@ class DamageType(StrEnum):
 class WeaponAttackKind(StrEnum):
     MELEE = "melee"
     RANGED = "ranged"
+    THROWN = "thrown"
 
 
 class ConditionalDamage(BaseModel):
