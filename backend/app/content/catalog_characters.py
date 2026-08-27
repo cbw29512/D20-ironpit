@@ -40,13 +40,18 @@ def _advanced_fighter_entry(
                 note=f"Attack action resolves {combatant.attacks_per_action} attacks.",
             ),
             RulesCoverageItem(feature_id="second-wind", coverage=RulesCoverage.FULLY_IMPLEMENTED),
+            RulesCoverageItem(feature_id="action-surge", coverage=RulesCoverage.FULLY_IMPLEMENTED),
+            RulesCoverageItem(
+                feature_id="action-surge-policy",
+                coverage=RulesCoverage.ARENA_ASSUMPTION,
+                note="Arena spends Action Surge after the normal action while the opponent survives.",
+            ),
             RulesCoverageItem(
                 feature_id="defense-fighting-style",
                 coverage=RulesCoverage.FULLY_IMPLEMENTED,
                 note="Defense is baked into this fixed pregen's AC 19.",
             ),
             RulesCoverageItem(feature_id="fighter-subclass", coverage=RulesCoverage.UNSUPPORTED),
-            RulesCoverageItem(feature_id="action-surge", coverage=RulesCoverage.UNSUPPORTED),
             RulesCoverageItem(feature_id="weapon-mastery", coverage=RulesCoverage.UNSUPPORTED),
             RulesCoverageItem(
                 feature_id="other-level-features",
