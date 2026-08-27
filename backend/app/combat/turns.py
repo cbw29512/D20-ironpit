@@ -2,9 +2,10 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.conditions import can_willingly_approach, stand_from_prone
+from app.combat.conditions import can_willingly_approach
 from app.combat.movement import move_toward_target, take_dash
 from app.combat.policy import preferred_approach_distance, select_weapon_attack
+from app.combat.prone import stand_from_prone
 from app.domain.models import BattleEvent, BattlefieldState, CombatantState, WeaponAttack
 
 logger = logging.getLogger(__name__)
