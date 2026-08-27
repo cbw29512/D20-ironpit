@@ -2,9 +2,10 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.condition_modifiers import is_incapacitated
 from app.combat.dice import DiceProvider
 from app.combat.rolls import roll_d20
-from app.domain.models import BattleEvent, CombatantState
+from app.domain.models import BattleEvent, CombatantState, RollMode
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +18,8 @@ def roll_initiative_order(
     try:
         events: list[BattleEvent] = []
         for state in states:
-            initiative = roll_d20(dice, state.template.initiative_bonus)
+            mode = RollMode.DISADVANTAGE if is_incapacitated(state) else RollMode.NORMAL
+            initiative = roll_d20(dice, state.template.initiative_bonus, mode)
             state.initiative_roll = initiative.selected_roll
             state.initiative_total = initiative.total
             events.append(BattleEvent(
