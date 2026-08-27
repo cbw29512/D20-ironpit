@@ -55,6 +55,7 @@
           arenaState[slot].hasShield = template.visual.off_hand === "shield";
           const node = document.querySelector(`#${slot}`);
           node.className.baseVal = classForSlot(slot);
+          node.dataset.weapon = template.visual.main_hand || "none";
           document.querySelector(`#${slot}-name`).textContent = template.name;
           document.querySelector(`#${slot}-meta`).textContent = describeTemplate(template);
           node.setAttribute("aria-label", `${template.name}, ${describeTemplate(template)}`);
