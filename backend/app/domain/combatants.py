@@ -8,6 +8,7 @@ from pydantic import BaseModel, Field
 from app.domain.abilities import Ability, Skill
 from app.domain.conditions import ConditionState, ConditionType
 from app.domain.effects import AttackEffect, SizeCategory
+from app.domain.save_actions import SaveAction
 
 
 class DamageType(StrEnum):
@@ -106,6 +107,7 @@ class CombatantTemplate(BaseModel):
     condition_immunities: list[ConditionType] = Field(default_factory=list)
     weapon_attack: WeaponAttack
     alternate_weapon_attacks: list[WeaponAttack] = Field(default_factory=list)
+    save_actions: list[SaveAction] = Field(default_factory=list)
     fighting_style: str | None = None
     weapon_masteries: list[str] = Field(default_factory=list)
     visual: VisualLoadout
