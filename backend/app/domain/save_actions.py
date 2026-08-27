@@ -2,9 +2,10 @@ from __future__ import annotations
 
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from app.domain.abilities import Ability
+from app.domain.battlefield_objects import BattlefieldObjectDefinition
 from app.domain.conditions import ConditionExpiry, ConditionType
 from app.domain.recharge import RechargeDefinition
 
@@ -13,6 +14,13 @@ class SaveFailureEffect(BaseModel):
     effect_type: Literal["condition"] = "condition"
     condition: ConditionType
     expires_on: ConditionExpiry | None = None
+    object_definition: BattlefieldObjectDefinition | None = None
+
+    @model_validator(mode="after")
+    def validate_termination(self) -> "SaveFailureEffect":
+        if self.expires_on is not None and self.object_definition is not None:
+            raise ValueError("Condition effect cannot use both turn expiry and object destruction.")
+        return self
 
 
 class SaveAction(BaseModel):
