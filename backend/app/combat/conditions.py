@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.movement_state import movement_locked, refresh_movement_budget, spend_movement
 from app.domain.models import (
     BattleEvent,
     CombatantState,
@@ -73,6 +74,7 @@ def apply_condition(
             escape_dc=escape_dc,
             expires_on=expires_on,
         ))
+        refresh_movement_budget(state)
         return True
     except ValueError:
         raise
@@ -84,7 +86,10 @@ def apply_condition(
 def remove_condition(state: CombatantState, condition: ConditionType) -> bool:
     before = len(state.conditions)
     state.conditions = [item for item in state.conditions if item.condition is not condition]
-    return len(state.conditions) != before
+    changed = len(state.conditions) != before
+    if changed:
+        refresh_movement_budget(state)
+    return changed
 
 
 def remove_condition_instance(
@@ -102,7 +107,10 @@ def remove_condition_instance(
             and (source_id is None or item.source_id == source_id)
         )
     ]
-    return len(state.conditions) != before
+    changed = len(state.conditions) != before
+    if changed:
+        refresh_movement_budget(state)
+    return changed
 
 
 def can_willingly_approach(state: CombatantState, target_id: str) -> bool:
@@ -120,10 +128,12 @@ def stand_from_prone(
     try:
         if not has_condition(state, ConditionType.PRONE) or state.template.speed_ft == 0:
             return None
+        if movement_locked(state):
+            return None
         movement_cost = state.template.speed_ft // 2
         if state.movement_remaining_ft < movement_cost:
             return None
-        state.movement_remaining_ft -= movement_cost
+        spend_movement(state, movement_cost)
         remove_condition(state, ConditionType.PRONE)
         return BattleEvent(
             sequence=sequence,
