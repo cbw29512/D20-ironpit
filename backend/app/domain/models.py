@@ -32,7 +32,9 @@ class VisualLoadout(BaseModel):
 class CombatantTemplate(BaseModel):
     id: str
     name: str
+    archetype: str
     level: int | None = Field(default=None, ge=1, le=20)
+    challenge_rating: str | None = None
     kind: Literal["character", "monster"]
     armor_class: int = Field(ge=1)
     max_hp: int = Field(ge=1)
@@ -40,6 +42,11 @@ class CombatantTemplate(BaseModel):
     weapon: Weapon
     visual: VisualLoadout
     source: str
+
+
+class DemoRoster(BaseModel):
+    fighter: CombatantTemplate
+    monster: CombatantTemplate
 
 
 class CombatantState(BaseModel):
