@@ -44,6 +44,7 @@ class BattleEvent(BaseModel):
         "condition",
         "saving_throw",
         "ability_check",
+        "recharge",
         "dash",
         "attack",
         "healing",
@@ -58,6 +59,7 @@ class BattleEvent(BaseModel):
     attack_roll: DiceRoll | None = None
     saving_throw: DiceRoll | None = None
     ability_check: DiceRoll | None = None
+    recharge_roll: DiceRoll | None = None
     test_dc: int | None = None
     test_ability: Ability | None = None
     test_skill: Skill | None = None
