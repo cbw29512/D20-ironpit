@@ -95,7 +95,7 @@ def test_giant_spider_web_recharges_only_on_five_or_six() -> None:
     assert recharge.available is True
 
 
-def test_spider_turn_prefers_web_on_unrestrained_target() -> None:
+def test_spider_turn_closes_then_webs_unrestrained_target() -> None:
     spider = build_combatant_state(build_giant_spider(), "spider-1")
     fighter = build_combatant_state(build_demo_fighter(), "fighter-1")
     battlefield = BattlefieldState(distance_ft=30)
@@ -105,10 +105,27 @@ def test_spider_turn_prefers_web_on_unrestrained_target() -> None:
     )
 
     assert [event.event_type for event in events] == [
-        "saving_throw", "object_created", "condition"
+        "movement", "saving_throw", "object_created", "condition"
     ]
     assert has_condition(fighter, ConditionType.RESTRAINED)
-    assert battlefield.distance_ft == 30
+    assert battlefield.distance_ft == 5
+
+
+def test_spider_rechecks_web_range_after_normal_closing_movement() -> None:
+    spider = build_combatant_state(build_giant_spider(), "spider-1")
+    fighter = build_combatant_state(build_demo_fighter(), "fighter-1")
+    battlefield = BattlefieldState(distance_ft=70)
+
+    events, _ = execute_turn(
+        1, 1, spider, fighter, battlefield, FixedDiceProvider([5])
+    )
+
+    assert events[0].event_type == "movement"
+    assert events[0].distance_before_ft == 70
+    assert events[0].distance_after_ft == 40
+    assert any(event.feature_id == "giant-spider-web" for event in events)
+    assert has_condition(fighter, ConditionType.RESTRAINED)
+    assert battlefield.distance_ft == 40
 
 
 def test_spider_turn_bites_target_already_restrained() -> None:
