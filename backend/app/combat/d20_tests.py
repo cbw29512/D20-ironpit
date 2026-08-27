@@ -54,11 +54,12 @@ def resolve_ability_check(
     skill: Skill,
     dc: int,
     dice: DiceProvider,
+    visible_source_ids: set[str] | None = None,
 ) -> tuple[DiceRoll, bool]:
     try:
         if dc < 1:
             raise ValueError("Ability check DC must be positive.")
-        advantage, disadvantage = ability_check_condition_sources(state)
+        advantage, disadvantage = ability_check_condition_sources(state, visible_source_ids)
         mode = resolve_roll_mode(advantage, disadvantage)
         roll = roll_d20(dice, skill_modifier(state, skill), mode)
         return roll, roll.total >= dc
