@@ -47,6 +47,7 @@ class BattleEvent(BaseModel):
         "ability_check",
         "recharge",
         "object_created",
+        "object_attack",
         "object_damage",
         "object_destroyed",
         "dash",
