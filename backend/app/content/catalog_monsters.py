@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import Callable
 
 from app.content.demo import build_goblin_warrior
-from app.content.srd_monsters import build_knight, build_ogre, build_skeleton
+from app.content.srd_monsters import build_knight, build_ogre, build_skeleton, build_tough_boss
 from app.domain.catalog import CatalogEntry, RulesCoverage, RulesCoverageItem
 
 
@@ -78,9 +78,36 @@ def _knight_entry() -> CatalogEntry:
     )
 
 
+def _tough_boss_entry() -> CatalogEntry:
+    return CatalogEntry(
+        combatant=build_tough_boss(),
+        tags=["monster", "tough", "boss", "humanoid", "melee", "ranged", "cr-4"],
+        rules_coverage=[
+            RulesCoverageItem(feature_id="warhammer", coverage=RulesCoverage.FULLY_IMPLEMENTED),
+            RulesCoverageItem(feature_id="heavy-crossbow", coverage=RulesCoverage.FULLY_IMPLEMENTED),
+            RulesCoverageItem(
+                feature_id="multiattack-selection",
+                coverage=RulesCoverage.ARENA_ASSUMPTION,
+                note="The arena repeats one selected legal profile; the SRD allows either weapon in any combination.",
+            ),
+            RulesCoverageItem(
+                feature_id="pack-tactics",
+                coverage=RulesCoverage.UNSUPPORTED,
+                note="The current duel has no allied creature that could trigger Pack Tactics.",
+            ),
+            RulesCoverageItem(
+                feature_id="warhammer-push",
+                coverage=RulesCoverage.UNSUPPORTED,
+                note="Forced movement from the Warhammer hit is not yet modeled.",
+            ),
+        ],
+    )
+
+
 MONSTER_BUILDERS: dict[str, Callable[[], CatalogEntry]] = {
     "srd-goblin-warrior": _goblin_entry,
     "srd-skeleton": _skeleton_entry,
     "srd-ogre": _ogre_entry,
     "srd-knight": _knight_entry,
+    "srd-tough-boss": _tough_boss_entry,
 }
