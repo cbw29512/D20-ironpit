@@ -8,19 +8,11 @@ from pydantic import BaseModel, Field
 from app.domain.abilities import Ability, Skill
 from app.domain.conditions import ConditionState, ConditionType
 from app.domain.creatures import CreatureType
+from app.domain.damage_types import DamageType
 from app.domain.effects import AttackEffect, SizeCategory
 from app.domain.multiattack import MultiattackDefinition
 from app.domain.recharge import RechargeState
 from app.domain.save_actions import SaveAction
-
-
-class DamageType(StrEnum):
-    SLASHING = "slashing"
-    PIERCING = "piercing"
-    BLUDGEONING = "bludgeoning"
-    POISON = "poison"
-    RADIANT = "radiant"
-    NECROTIC = "necrotic"
 
 
 class WeaponAttackKind(StrEnum):
