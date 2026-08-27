@@ -8,6 +8,7 @@ from pydantic import BaseModel, Field
 from app.domain.abilities import Ability, Skill
 from app.domain.conditions import ConditionState, ConditionType
 from app.domain.effects import AttackEffect, SizeCategory
+from app.domain.multiattack import MultiattackDefinition
 from app.domain.save_actions import SaveAction
 
 
@@ -108,6 +109,7 @@ class CombatantTemplate(BaseModel):
     weapon_attack: WeaponAttack
     alternate_weapon_attacks: list[WeaponAttack] = Field(default_factory=list)
     save_actions: list[SaveAction] = Field(default_factory=list)
+    multiattack: MultiattackDefinition | None = None
     fighting_style: str | None = None
     weapon_masteries: list[str] = Field(default_factory=list)
     visual: VisualLoadout
