@@ -2,7 +2,13 @@ from __future__ import annotations
 
 import logging
 
-from app.domain.models import CombatantTemplate, DamageType, VisualLoadout, Weapon
+from app.content.equipment import (
+    build_fighter_visual_loadout,
+    build_goblin_visual_loadout,
+    build_longsword,
+    build_scimitar,
+)
+from app.domain.models import CombatantTemplate
 
 logger = logging.getLogger(__name__)
 
@@ -17,20 +23,8 @@ def build_demo_fighter() -> CombatantTemplate:
             armor_class=18,
             max_hp=12,
             initiative_bonus=1,
-            weapon=Weapon(
-                name="Longsword",
-                attack_bonus=5,
-                dice_count=1,
-                dice_size=8,
-                damage_bonus=3,
-                damage_type=DamageType.SLASHING,
-                animation="slash",
-            ),
-            visual=VisualLoadout(
-                armor="chain-mail",
-                main_hand="longsword",
-                off_hand="shield",
-            ),
+            weapon=build_longsword(),
+            visual=build_fighter_visual_loadout(),
             source="Original pregen using SRD 5.2.1 rules",
         )
     except Exception as exc:
@@ -47,21 +41,8 @@ def build_goblin_warrior() -> CombatantTemplate:
             armor_class=15,
             max_hp=10,
             initiative_bonus=2,
-            weapon=Weapon(
-                name="Scimitar",
-                attack_bonus=4,
-                dice_count=1,
-                dice_size=6,
-                damage_bonus=2,
-                damage_type=DamageType.SLASHING,
-                animation="slash",
-            ),
-            visual=VisualLoadout(
-                armor="leather",
-                main_hand="scimitar",
-                off_hand="shield",
-                body_style="goblinoid",
-            ),
+            weapon=build_scimitar(),
+            visual=build_goblin_visual_loadout(),
             source="SRD 5.2.1 Goblin Warrior",
         )
     except Exception as exc:
