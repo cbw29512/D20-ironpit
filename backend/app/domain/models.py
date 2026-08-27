@@ -9,6 +9,7 @@ from app.domain.combatants import (
     ResourceState,
     VisualLoadout,
     Weapon,
+    WeaponAttack,
     WeaponAttackKind,
 )
 from app.domain.events import BattleEvent, BattleResult, DamageRollComponent, DiceRoll, RollMode
@@ -29,5 +30,6 @@ __all__ = [
     "RollMode",
     "VisualLoadout",
     "Weapon",
+    "WeaponAttack",
     "WeaponAttackKind",
 ]
