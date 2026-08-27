@@ -130,6 +130,8 @@ class CombatantState(BaseModel):
     bonus_action_available: bool = True
     reaction_available: bool = True
     action_surge_used_this_turn: bool = False
+    movement_allowance_ft: int = Field(default=0, ge=0)
+    movement_spent_ft: int = Field(default=0, ge=0)
     movement_remaining_ft: int = Field(default=0, ge=0)
     resources: list[ResourceState] = Field(default_factory=list)
     recharges: list[RechargeState] = Field(default_factory=list)
