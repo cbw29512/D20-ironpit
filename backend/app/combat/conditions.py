@@ -5,7 +5,7 @@ import logging
 from app.domain.models import BattleEvent, CombatantState, ConditionState, ConditionType
 
 logger = logging.getLogger(__name__)
-_SUPPORTED = {ConditionType.PRONE, ConditionType.GRAPPLED}
+_SUPPORTED = {ConditionType.PRONE, ConditionType.GRAPPLED, ConditionType.POISONED}
 
 
 def condition_state(state: CombatantState, condition: ConditionType) -> ConditionState | None:
@@ -49,6 +49,10 @@ def remove_condition(state: CombatantState, condition: ConditionType) -> bool:
     return len(state.conditions) != before
 
 
+def ability_check_condition_sources(state: CombatantState) -> tuple[int, int]:
+    return (0, 1 if has_condition(state, ConditionType.POISONED) else 0)
+
+
 def attack_condition_sources(
     attacker: CombatantState,
     defender: CombatantState,
@@ -58,6 +62,8 @@ def attack_condition_sources(
         advantage = 0
         disadvantage = 0
         if has_condition(attacker, ConditionType.PRONE):
+            disadvantage += 1
+        if has_condition(attacker, ConditionType.POISONED):
             disadvantage += 1
         grapple = condition_state(attacker, ConditionType.GRAPPLED)
         if grapple is not None and defender.instance_id != grapple.source_id:
