@@ -1,7 +1,7 @@
 import pytest
 
 from app.combat.movement import move_toward_target, take_dash
-from app.combat.policy import select_attack_weapon
+from app.combat.policy import select_weapon_attack
 from app.combat.state import begin_turn, build_combatant_state
 from app.combat.turns import prepare_attack
 from app.content.demo import build_demo_fighter, build_goblin_warrior
@@ -41,9 +41,9 @@ def test_prepare_attack_dashes_when_target_is_too_far_for_one_move() -> None:
     battlefield = BattlefieldState(distance_ft=90)
     begin_turn(fighter)
 
-    weapon, events, next_sequence = prepare_attack(1, 1, fighter, battlefield)
+    attack, events, next_sequence = prepare_attack(1, 1, fighter, battlefield)
 
-    assert weapon is None
+    assert attack is None
     assert [event.event_type for event in events] == ["movement", "dash", "movement"]
     assert battlefield.distance_ft == 30
     assert fighter.action_available is False
@@ -55,10 +55,10 @@ def test_prepare_attack_can_move_then_attack_without_dashing() -> None:
     battlefield = BattlefieldState(distance_ft=30)
     begin_turn(fighter)
 
-    weapon, events, _ = prepare_attack(1, 2, fighter, battlefield)
+    attack, events, _ = prepare_attack(1, 2, fighter, battlefield)
 
-    assert weapon is not None
-    assert weapon.id == "longsword"
+    assert attack is not None
+    assert attack.weapon.id == "longsword"
     assert [event.event_type for event in events] == ["movement"]
     assert battlefield.distance_ft == 5
     assert fighter.action_available is True
@@ -67,7 +67,7 @@ def test_prepare_attack_can_move_then_attack_without_dashing() -> None:
 def test_goblin_selects_shortbow_when_scimitar_is_out_of_reach() -> None:
     goblin = build_combatant_state(build_goblin_warrior())
 
-    weapon = select_attack_weapon(goblin, distance_ft=90)
+    attack = select_weapon_attack(goblin, distance_ft=90)
 
-    assert weapon is not None
-    assert weapon.id == "shortbow"
+    assert attack is not None
+    assert attack.weapon.id == "shortbow"
