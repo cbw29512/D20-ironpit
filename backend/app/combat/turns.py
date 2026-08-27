@@ -3,8 +3,8 @@ from __future__ import annotations
 import logging
 
 from app.combat.movement import move_toward_target, take_dash
-from app.combat.policy import preferred_approach_distance, select_attack_weapon
-from app.domain.models import BattleEvent, BattlefieldState, CombatantState, Weapon
+from app.combat.policy import preferred_approach_distance, select_weapon_attack
+from app.domain.models import BattleEvent, BattlefieldState, CombatantState, WeaponAttack
 
 logger = logging.getLogger(__name__)
 
@@ -14,13 +14,13 @@ def prepare_attack(
     round_number: int,
     attacker: CombatantState,
     battlefield: BattlefieldState,
-) -> tuple[Weapon | None, list[BattleEvent], int]:
+) -> tuple[WeaponAttack | None, list[BattleEvent], int]:
     """Apply arena movement policy until a legal attack is available or the Action is spent."""
     try:
         events: list[BattleEvent] = []
-        weapon = select_attack_weapon(attacker, battlefield.distance_ft)
-        if weapon is not None and attacker.action_available:
-            return weapon, events, sequence
+        attack = select_weapon_attack(attacker, battlefield.distance_ft)
+        if attack is not None and attacker.action_available:
+            return attack, events, sequence
 
         desired = preferred_approach_distance(attacker)
         movement = move_toward_target(
@@ -30,9 +30,9 @@ def prepare_attack(
             events.append(movement)
             sequence += 1
 
-        weapon = select_attack_weapon(attacker, battlefield.distance_ft)
-        if weapon is not None and attacker.action_available:
-            return weapon, events, sequence
+        attack = select_weapon_attack(attacker, battlefield.distance_ft)
+        if attack is not None and attacker.action_available:
+            return attack, events, sequence
 
         if attacker.action_available:
             events.append(take_dash(sequence, round_number, attacker, battlefield))
