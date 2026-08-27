@@ -32,6 +32,28 @@ def test_leaving_visible_reach_triggers_one_weapon_opportunity_attack() -> None:
     assert second is None
 
 
+def test_ranged_only_profile_falls_back_to_unarmed_opportunity_attack() -> None:
+    fighter_template = build_demo_fighter()
+    shortbow = build_goblin_warrior().alternate_weapon_attacks[0]
+    fighter_template = fighter_template.model_copy(update={
+        "weapon_attack": shortbow,
+        "alternate_weapon_attacks": [],
+    })
+    fighter = build_combatant_state(fighter_template, "fighter-1")
+    goblin = build_combatant_state(build_goblin_warrior(), "goblin-1")
+
+    event = resolve_opportunity_attack(
+        1, 1, fighter, goblin, 5, 10, FixedDiceProvider([10])
+    )
+
+    assert event is not None
+    assert event.event_type == "opportunity_attack"
+    assert event.feature_id == "unarmed-strike"
+    assert event.weapon_id is None
+    assert event.damage_applied == 4
+    assert fighter.reaction_available is False
+
+
 def test_disengage_consumes_action_and_suppresses_opportunity_attack() -> None:
     fighter, goblin = _states()
     event = take_disengage(1, 1, goblin)
