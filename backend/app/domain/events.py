@@ -36,7 +36,15 @@ class BattleEvent(BaseModel):
     sequence: int
     round_number: int
     event_type: Literal[
-        "initiative", "movement", "dash", "attack", "healing", "feature", "victory", "draw"
+        "initiative",
+        "movement",
+        "forced_movement",
+        "dash",
+        "attack",
+        "healing",
+        "feature",
+        "victory",
+        "draw",
     ]
     actor_id: str
     actor_name: str
