@@ -54,7 +54,8 @@ def test_catalog_exposes_rules_coverage_without_hiding_gaps() -> None:
     assert ogre_coverage["thrown-weapon-range"] is RulesCoverage.FULLY_IMPLEMENTED
     assert ogre_coverage["javelin-inventory"] is RulesCoverage.ARENA_ASSUMPTION
     assert tough_coverage["warhammer"] is RulesCoverage.FULLY_IMPLEMENTED
-    assert tough_coverage["warhammer-push"] is RulesCoverage.UNSUPPORTED
+    assert tough_coverage["warhammer-push"] is RulesCoverage.FULLY_IMPLEMENTED
+    assert tough_coverage["size-choice"] is RulesCoverage.ARENA_ASSUMPTION
 
 
 def test_catalog_lookup_rejects_unknown_combatant() -> None:
