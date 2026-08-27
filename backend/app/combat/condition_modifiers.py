@@ -51,20 +51,35 @@ def saving_throw_condition_sources(
     return 0, disadvantage, auto_fail
 
 
+def attacker_condition_sources(
+    attacker: CombatantState,
+    target_id: str | None,
+    visible_source_ids: set[str] | None = None,
+) -> tuple[int, int]:
+    """Return attack modifiers caused only by the attacker's current conditions."""
+    advantage = 0
+    disadvantage = int(has_condition(attacker, ConditionType.PRONE))
+    disadvantage += int(has_condition(attacker, ConditionType.POISONED))
+    disadvantage += int(_visible_fear(attacker, visible_source_ids))
+    disadvantage += int(has_condition(attacker, ConditionType.RESTRAINED))
+
+    grapples = condition_states(attacker, ConditionType.GRAPPLED)
+    if any(item.source_id != target_id for item in grapples):
+        disadvantage += 1
+    return advantage, disadvantage
+
+
 def attack_condition_sources(
     attacker: CombatantState,
     defender: CombatantState,
     distance_ft: int,
     visible_source_ids: set[str] | None = None,
 ) -> tuple[int, int]:
-    advantage = int(has_condition(defender, ConditionType.PARALYZED))
-    disadvantage = int(has_condition(attacker, ConditionType.PRONE))
-    disadvantage += int(has_condition(attacker, ConditionType.POISONED))
-    disadvantage += int(_visible_fear(attacker, visible_source_ids))
+    advantage, disadvantage = attacker_condition_sources(
+        attacker, defender.instance_id, visible_source_ids
+    )
+    advantage += int(has_condition(defender, ConditionType.PARALYZED))
 
-    grapples = condition_states(attacker, ConditionType.GRAPPLED)
-    if any(item.source_id != defender.instance_id for item in grapples):
-        disadvantage += 1
     if has_condition(defender, ConditionType.PRONE):
         if distance_ft <= 5:
             advantage += 1
@@ -72,8 +87,6 @@ def attack_condition_sources(
             disadvantage += 1
     if has_condition(defender, ConditionType.RESTRAINED):
         advantage += 1
-    if has_condition(attacker, ConditionType.RESTRAINED):
-        disadvantage += 1
     return advantage, disadvantage
 
 
