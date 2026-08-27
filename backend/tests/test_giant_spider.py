@@ -1,9 +1,10 @@
 from app.combat.attacks import resolve_attack
-from app.combat.conditions import has_condition
+from app.combat.conditions import apply_condition, has_condition
 from app.combat.dice import FixedDiceProvider
 from app.combat.recharge import get_recharge_state, roll_recharges
 from app.combat.save_actions import resolve_save_action
 from app.combat.state import build_combatant_state
+from app.combat.turn_execution import execute_turn
 from app.content.demo import build_demo_fighter
 from app.content.srd_spiders import build_giant_spider
 from app.domain.models import BattlefieldState, ConditionType, DamageType
@@ -92,3 +93,55 @@ def test_giant_spider_web_recharges_only_on_five_or_six() -> None:
     restored = roll_recharges(2, 3, spider, FixedDiceProvider([6]))
     assert restored[0].test_success is True
     assert recharge.available is True
+
+
+def test_spider_turn_prefers_web_on_unrestrained_target() -> None:
+    spider = build_combatant_state(build_giant_spider(), "spider-1")
+    fighter = build_combatant_state(build_demo_fighter(), "fighter-1")
+    battlefield = BattlefieldState(distance_ft=30)
+
+    events, _ = execute_turn(
+        1, 1, spider, fighter, battlefield, FixedDiceProvider([5])
+    )
+
+    assert [event.event_type for event in events] == [
+        "saving_throw", "object_created", "condition"
+    ]
+    assert has_condition(fighter, ConditionType.RESTRAINED)
+    assert battlefield.distance_ft == 30
+
+
+def test_spider_turn_bites_target_already_restrained() -> None:
+    spider = build_combatant_state(build_giant_spider(), "spider-1")
+    fighter = build_combatant_state(build_demo_fighter(), "fighter-1")
+    apply_condition(fighter, ConditionType.RESTRAINED, spider)
+    battlefield = BattlefieldState(distance_ft=5)
+
+    events, _ = execute_turn(
+        1, 2, spider, fighter, battlefield,
+        FixedDiceProvider([5, 15, 4, 3, 5]),
+    )
+
+    attack = next(event for event in events if event.event_type == "attack")
+    assert attack.weapon_id == "giant-spider-bite"
+    assert not any(event.feature_id == "giant-spider-web" for event in events)
+
+
+def test_spider_turn_cannot_use_web_before_recharge() -> None:
+    spider = build_combatant_state(build_giant_spider(), "spider-1")
+    fighter = build_combatant_state(build_demo_fighter(), "fighter-1")
+    recharge = get_recharge_state(spider, "giant-spider-web")
+    assert recharge is not None
+    recharge.available = False
+    battlefield = BattlefieldState(distance_ft=30)
+
+    events, _ = execute_turn(
+        1, 2, spider, fighter, battlefield,
+        FixedDiceProvider([4, 15, 4, 3, 5]),
+    )
+
+    assert events[0].event_type == "recharge"
+    assert events[0].test_success is False
+    assert any(event.event_type == "movement" for event in events)
+    assert next(event for event in events if event.event_type == "attack").weapon_id == "giant-spider-bite"
+    assert not any(event.feature_id == "giant-spider-web" for event in events[1:])
