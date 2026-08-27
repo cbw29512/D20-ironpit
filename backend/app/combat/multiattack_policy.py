@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.conditions import has_condition
+from app.combat.policy import attack_uses_melee
 from app.combat.range import resolve_attack_roll_mode
 from app.domain.models import CombatantState, MultiattackDefinition, SaveAction, WeaponAttack
 
@@ -16,15 +17,17 @@ def select_multiattack_weapon(
 ) -> WeaponAttack | None:
     try:
         profiles = [state.template.weapon_attack, *state.template.alternate_weapon_attacks]
+        legal: list[WeaponAttack] = []
         for attack in profiles:
             if attack.id not in routine.allowed_attack_ids:
                 continue
             try:
                 resolve_attack_roll_mode(attack.weapon, distance_ft)
-                return attack
+                legal.append(attack)
             except ValueError:
                 continue
-        return None
+        melee = [attack for attack in legal if attack_uses_melee(attack, distance_ft)]
+        return (melee or legal or [None])[0]
     except Exception as exc:
         logger.exception("Multiattack weapon selection failed for %s.", state.template.name)
         raise RuntimeError("Multiattack weapon policy could not be evaluated.") from exc
