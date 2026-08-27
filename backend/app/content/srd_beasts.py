@@ -8,7 +8,14 @@ from app.content.srd_beast_attacks import (
     build_lion_rend_attack,
     build_wolf_bite_attack,
 )
-from app.domain.models import Ability, CombatantTemplate, MultiattackDefinition, SizeCategory, VisualLoadout
+from app.domain.models import (
+    Ability,
+    CombatantTemplate,
+    CreatureType,
+    MultiattackDefinition,
+    SizeCategory,
+    VisualLoadout,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -21,6 +28,7 @@ def build_wolf() -> CombatantTemplate:
             archetype="Wolf",
             challenge_rating="1/4",
             kind="monster",
+            creature_type=CreatureType.BEAST,
             size=SizeCategory.MEDIUM,
             armor_class=12,
             max_hp=11,
@@ -52,6 +60,7 @@ def build_giant_crab() -> CombatantTemplate:
             archetype="Giant Crab",
             challenge_rating="1/8",
             kind="monster",
+            creature_type=CreatureType.BEAST,
             size=SizeCategory.MEDIUM,
             armor_class=15,
             max_hp=13,
@@ -83,6 +92,7 @@ def build_lion() -> CombatantTemplate:
             archetype="Lion",
             challenge_rating="1",
             kind="monster",
+            creature_type=CreatureType.BEAST,
             size=SizeCategory.LARGE,
             armor_class=12,
             max_hp=22,
