@@ -11,13 +11,15 @@
     <header>
       <p class="eyebrow">SRD 5.2.1 COMBAT PROTOTYPE</p>
       <h1>The Iron Pit</h1>
-      <p>Level 1 Fighter vs. Goblin Warrior</p>
+      <p>Rules-first character vs. monster combat</p>
     </header>
 
     <section class="arena" aria-label="Battle arena">
       <article class="combatant">
-        <h2>Aldric Vane</h2><p>Fighter 1 · Longsword + Shield</p>
-        <div class="hp"><span id="fighter-hp-bar"></span></div><strong id="fighter-hp">12 / 12 HP</strong>
+        <h2 id="fighter-name">Aldric Vane</h2>
+        <p id="fighter-meta">Fighter 1 · Longsword + Shield · Chain Mail</p>
+        <div class="hp"><span id="fighter-hp-bar"></span></div>
+        <strong id="fighter-hp">12 / 12 HP</strong>
         <svg id="fighter" class="stick" viewBox="0 0 180 220" role="img" aria-label="Stick fighter with sword and shield">
           <circle cx="90" cy="42" r="22"/><line x1="90" y1="64" x2="90" y2="132"/>
           <line x1="90" y1="82" x2="52" y2="112"/><line x1="90" y1="82" x2="128" y2="108"/>
@@ -30,8 +32,10 @@
       <div class="versus">⚔</div>
 
       <article class="combatant">
-        <h2>Goblin Warrior</h2><p>CR 1/4 · Scimitar + Shield</p>
-        <div class="hp"><span id="goblin-hp-bar"></span></div><strong id="goblin-hp">10 / 10 HP</strong>
+        <h2 id="goblin-name">Goblin Warrior</h2>
+        <p id="goblin-meta">CR 1/4 · Scimitar + Shield · Leather</p>
+        <div class="hp"><span id="goblin-hp-bar"></span></div>
+        <strong id="goblin-hp">10 / 10 HP</strong>
         <svg id="goblin" class="stick goblin" viewBox="0 0 180 220" role="img" aria-label="Stick goblin with scimitar and shield">
           <circle cx="90" cy="58" r="19"/><path class="ear" d="M72 55 L48 45 L70 68 M108 55 L132 45 L110 68"/>
           <line x1="90" y1="77" x2="90" y2="136"/><line x1="90" y1="92" x2="52" y2="116"/><line x1="90" y1="92" x2="128" y2="112"/>
@@ -44,7 +48,7 @@
 
     <section class="controls">
       <button id="fight-button" type="button">Enter the Pit</button>
-      <p id="status" aria-live="polite">Ready.</p>
+      <p id="status" aria-live="polite">Loading roster...</p>
     </section>
 
     <section class="log-panel">
