@@ -3,10 +3,12 @@ from __future__ import annotations
 import logging
 
 from app.combat.attacks import resolve_attack
+from app.combat.dice import DiceProvider
 from app.combat.effects import resolve_on_hit_effects
 from app.combat.multiattack_policy import select_multiattack_weapon
 from app.combat.object_attacks import resolve_object_attack
 from app.combat.policy import select_weapon_attack
+from app.combat.turns import prepare_position
 from app.domain.models import (
     BattleEvent,
     BattlefieldObjectState,
@@ -64,7 +66,7 @@ def resolve_object_priority_attack_action(
     attacker: CombatantState,
     defender: CombatantState,
     battlefield: BattlefieldState,
-    dice,
+    dice: DiceProvider,
     visible_source_ids: set[str] | None = None,
 ) -> list[BattleEvent]:
     """Spend an attack-based Action breaking linked objects before attacking the enemy."""
@@ -98,6 +100,14 @@ def resolve_object_priority_attack_action(
 
             if not defender.is_alive:
                 break
+            position_events, _ = prepare_position(
+                sequence + len(events),
+                round_number,
+                attacker,
+                defender,
+                battlefield,
+            )
+            events.extend(position_events)
             attack = _select_attack(attacker, battlefield.distance_ft)
             if attack is None:
                 break
