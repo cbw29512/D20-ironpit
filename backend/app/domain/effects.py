@@ -22,6 +22,7 @@ class AttackEffect(BaseModel):
     effect_type: Literal["push", "condition"]
     distance_ft: int | None = Field(default=None, ge=1, le=100)
     condition: ConditionType | None = None
+    escape_dc: int | None = Field(default=None, ge=1, le=40)
     max_target_size: SizeCategory | None = None
 
     @model_validator(mode="after")
@@ -30,4 +31,6 @@ class AttackEffect(BaseModel):
             raise ValueError("Push effects require distance_ft.")
         if self.effect_type == "condition" and self.condition is None:
             raise ValueError("Condition effects require a condition.")
+        if self.condition is ConditionType.GRAPPLED and self.escape_dc is None:
+            raise ValueError("Grappled effects require escape_dc.")
         return self
