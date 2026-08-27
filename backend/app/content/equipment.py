@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from app.domain.models import DamageType, VisualLoadout, Weapon
+from app.domain.models import ConditionalDamage, DamageType, VisualLoadout, Weapon
 
 logger = logging.getLogger(__name__)
 
@@ -35,6 +35,14 @@ def build_scimitar() -> Weapon:
             damage_bonus=2,
             damage_type=DamageType.SLASHING,
             animation="slash",
+            conditional_damage=[
+                ConditionalDamage(
+                    trigger="attack_advantage",
+                    dice_count=1,
+                    dice_size=4,
+                    damage_type=DamageType.SLASHING,
+                )
+            ],
         )
     except Exception as exc:
         logger.exception("Failed to build scimitar content record.")
