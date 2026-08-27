@@ -12,6 +12,12 @@ class DamageType(StrEnum):
     BLUDGEONING = "bludgeoning"
 
 
+class RollMode(StrEnum):
+    NORMAL = "normal"
+    ADVANTAGE = "advantage"
+    DISADVANTAGE = "disadvantage"
+
+
 class Weapon(BaseModel):
     name: str
     attack_bonus: int
@@ -61,6 +67,8 @@ class DiceRoll(BaseModel):
     notation: str
     rolls: list[int]
     modifier: int = 0
+    selected_roll: int | None = None
+    mode: RollMode = RollMode.NORMAL
     total: int
 
 
