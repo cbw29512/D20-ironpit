@@ -3,10 +3,10 @@ from __future__ import annotations
 import logging
 
 from app.content.equipment import (
-    build_fighter_visual_loadout,
-    build_goblin_visual_loadout,
-    build_longsword,
-    build_scimitar,
+    FIGHTER_CHAIN_MAIL_LOADOUT,
+    GOBLIN_LEATHER_LOADOUT,
+    LONGSWORD,
+    SCIMITAR,
 )
 from app.domain.models import CombatantTemplate
 
@@ -18,13 +18,14 @@ def build_demo_fighter() -> CombatantTemplate:
         return CombatantTemplate(
             id="aldric-vane-l1",
             name="Aldric Vane",
+            archetype="Fighter",
             level=1,
             kind="character",
             armor_class=18,
             max_hp=12,
             initiative_bonus=1,
-            weapon=build_longsword(),
-            visual=build_fighter_visual_loadout(),
+            weapon=LONGSWORD.model_copy(deep=True),
+            visual=FIGHTER_CHAIN_MAIL_LOADOUT.model_copy(deep=True),
             source="Original pregen using SRD 5.2.1 rules",
         )
     except Exception as exc:
@@ -37,12 +38,14 @@ def build_goblin_warrior() -> CombatantTemplate:
         return CombatantTemplate(
             id="srd-goblin-warrior",
             name="Goblin Warrior",
+            archetype="Goblin Warrior",
+            challenge_rating="1/4",
             kind="monster",
             armor_class=15,
             max_hp=10,
             initiative_bonus=2,
-            weapon=build_scimitar(),
-            visual=build_goblin_visual_loadout(),
+            weapon=SCIMITAR.model_copy(deep=True),
+            visual=GOBLIN_LEATHER_LOADOUT.model_copy(deep=True),
             source="SRD 5.2.1 Goblin Warrior",
         )
     except Exception as exc:
