@@ -14,7 +14,7 @@ from app.content.srd_boss_attacks import (
     build_tough_boss_crossbow_attack,
     build_tough_boss_warhammer_attack,
 )
-from app.domain.models import CombatantTemplate, DamageType, SizeCategory, VisualLoadout
+from app.domain.models import Ability, CombatantTemplate, ConditionType, DamageType, SizeCategory, VisualLoadout
 
 logger = logging.getLogger(__name__)
 
@@ -32,8 +32,18 @@ def build_skeleton() -> CombatantTemplate:
             max_hp=13,
             speed_ft=30,
             initiative_bonus=3,
+            proficiency_bonus=2,
+            ability_modifiers={
+                Ability.STRENGTH: 0,
+                Ability.DEXTERITY: 3,
+                Ability.CONSTITUTION: 2,
+                Ability.INTELLIGENCE: -2,
+                Ability.WISDOM: -1,
+                Ability.CHARISMA: -3,
+            },
             damage_vulnerabilities=[DamageType.BLUDGEONING],
             damage_immunities=[DamageType.POISON],
+            condition_immunities=[ConditionType.POISONED],
             weapon_attack=build_skeleton_shortsword_attack(),
             alternate_weapon_attacks=[build_skeleton_shortbow_attack()],
             visual=VisualLoadout(
