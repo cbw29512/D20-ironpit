@@ -82,6 +82,20 @@ def build_tough_boss() -> CombatantTemplate:
             max_hp=82,
             speed_ft=30,
             initiative_bonus=2,
+            proficiency_bonus=2,
+            ability_modifiers={
+                Ability.STRENGTH: 3,
+                Ability.DEXTERITY: 2,
+                Ability.CONSTITUTION: 3,
+                Ability.INTELLIGENCE: 0,
+                Ability.WISDOM: 0,
+                Ability.CHARISMA: 0,
+            },
+            saving_throw_modifiers={
+                Ability.STRENGTH: 5,
+                Ability.CONSTITUTION: 5,
+                Ability.CHARISMA: 2,
+            },
             weapon_attack=build_tough_boss_warhammer_attack(),
             alternate_weapon_attacks=[build_tough_boss_crossbow_attack()],
             multiattack=MultiattackDefinition(
