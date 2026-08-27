@@ -114,6 +114,7 @@ class DemoRoster(BaseModel):
 
 class CombatantState(BaseModel):
     template: CombatantTemplate
+    instance_id: str = Field(min_length=1)
     current_hp: int
     initiative_roll: int | None = None
     initiative_total: int | None = None
