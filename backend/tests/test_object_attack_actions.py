@@ -5,6 +5,7 @@ from app.combat.state import build_combatant_state
 from app.combat.turn_execution import execute_turn
 from app.content.demo import build_demo_fighter
 from app.content.gladiators import build_mara_stone
+from app.content.srd_humanoids import build_knight
 from app.content.srd_spiders import build_giant_spider
 from app.domain.models import BattlefieldState, ConditionType, RollMode
 
@@ -67,3 +68,26 @@ def test_extra_attack_redirects_to_enemy_after_web_breaks() -> None:
     assert creature_attack.weapon_id == "longsword"
     assert spider.current_hp < hp_before
     assert not has_condition(fighter, ConditionType.RESTRAINED)
+
+
+def test_monster_multiattack_retargets_enemy_after_breaking_web() -> None:
+    spider, knight, battlefield = _web_target(build_knight())
+    hp_before = spider.current_hp
+
+    events, _ = execute_turn(
+        4,
+        1,
+        knight,
+        spider,
+        battlefield,
+        FixedDiceProvider([15, 12, 1, 1, 1, 15, 1, 1, 1]),
+    )
+
+    object_attack = next(event for event in events if event.event_type == "object_attack")
+    creature_attack = next(event for event in events if event.event_type == "attack")
+    assert object_attack.attack_roll is not None
+    assert object_attack.attack_roll.mode is RollMode.DISADVANTAGE
+    assert battlefield.objects[0].is_destroyed is True
+    assert not has_condition(knight, ConditionType.RESTRAINED)
+    assert creature_attack.target_id == spider.instance_id
+    assert spider.current_hp < hp_before
