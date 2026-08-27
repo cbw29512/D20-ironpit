@@ -3,14 +3,19 @@ from __future__ import annotations
 import logging
 from collections.abc import Callable
 
+from app.content.catalog_beasts import BEAST_BUILDERS
 from app.content.catalog_characters import CHARACTER_BUILDERS
 from app.content.catalog_monsters import MONSTER_BUILDERS
 from app.domain.catalog import CatalogEntry
 
 logger = logging.getLogger(__name__)
+_ALL_MONSTER_BUILDERS: dict[str, Callable[[], CatalogEntry]] = {
+    **BEAST_BUILDERS,
+    **MONSTER_BUILDERS,
+}
 _BUILDERS: dict[str, Callable[[], CatalogEntry]] = {
     **CHARACTER_BUILDERS,
-    **MONSTER_BUILDERS,
+    **_ALL_MONSTER_BUILDERS,
 }
 
 
@@ -45,4 +50,4 @@ def list_character_catalog() -> list[CatalogEntry]:
 
 
 def list_monster_catalog() -> list[CatalogEntry]:
-    return _list_catalog(MONSTER_BUILDERS)
+    return _list_catalog(_ALL_MONSTER_BUILDERS)
