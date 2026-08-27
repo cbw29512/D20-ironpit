@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
-from app.content.srd_beasts import build_giant_crab, build_wolf
+from app.content.srd_beasts import build_giant_crab, build_lion, build_wolf
 from app.domain.catalog import CatalogEntry, RulesCoverage, RulesCoverageItem
 
 
@@ -48,7 +48,35 @@ def _giant_crab_entry() -> CatalogEntry:
     )
 
 
+def _lion_entry() -> CatalogEntry:
+    return CatalogEntry(
+        combatant=build_lion(),
+        tags=["monster", "lion", "beast", "melee", "frightened", "cr-1"],
+        rules_coverage=[
+            RulesCoverageItem(feature_id="rend", coverage=RulesCoverage.FULLY_IMPLEMENTED),
+            RulesCoverageItem(feature_id="roar", coverage=RulesCoverage.FULLY_IMPLEMENTED),
+            RulesCoverageItem(feature_id="multiattack", coverage=RulesCoverage.FULLY_IMPLEMENTED),
+            RulesCoverageItem(
+                feature_id="roar-replacement-policy",
+                coverage=RulesCoverage.ARENA_ASSUMPTION,
+                note="Arena uses Roar when it can apply a new legal Frightened condition.",
+            ),
+            RulesCoverageItem(
+                feature_id="pack-tactics",
+                coverage=RulesCoverage.UNSUPPORTED,
+                note="Allied-position checks are deferred until multi-combatant turns activate.",
+            ),
+            RulesCoverageItem(
+                feature_id="running-leap",
+                coverage=RulesCoverage.UNSUPPORTED,
+                note="Jump and obstacle geometry are not yet modeled.",
+            ),
+        ],
+    )
+
+
 BEAST_BUILDERS: dict[str, Callable[[], CatalogEntry]] = {
     "srd-wolf": _wolf_entry,
     "srd-giant-crab": _giant_crab_entry,
+    "srd-lion": _lion_entry,
 }
