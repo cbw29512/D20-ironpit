@@ -18,6 +18,14 @@ class RollMode(StrEnum):
     DISADVANTAGE = "disadvantage"
 
 
+class ConditionalDamage(BaseModel):
+    trigger: Literal["attack_advantage"]
+    dice_count: int = Field(ge=1, le=20)
+    dice_size: int = Field(ge=2, le=100)
+    damage_bonus: int = 0
+    damage_type: DamageType
+
+
 class Weapon(BaseModel):
     name: str
     attack_bonus: int
@@ -26,6 +34,7 @@ class Weapon(BaseModel):
     damage_bonus: int
     damage_type: DamageType
     animation: str
+    conditional_damage: list[ConditionalDamage] = Field(default_factory=list)
 
 
 class VisualLoadout(BaseModel):
@@ -88,6 +97,15 @@ class DiceRoll(BaseModel):
     total: int
 
 
+class DamageRollComponent(BaseModel):
+    source: str
+    notation: str
+    rolls: list[int]
+    modifier: int = 0
+    damage_type: DamageType
+    total: int
+
+
 class BattleEvent(BaseModel):
     sequence: int
     round_number: int
@@ -98,6 +116,7 @@ class BattleEvent(BaseModel):
     target_name: str | None = None
     attack_roll: DiceRoll | None = None
     damage_roll: DiceRoll | None = None
+    damage_components: list[DamageRollComponent] = Field(default_factory=list)
     healing_roll: DiceRoll | None = None
     hit: bool | None = None
     critical: bool = False
