@@ -2,6 +2,7 @@ import pytest
 
 from app.combat.dice import FixedDiceProvider
 from app.combat.initiative import roll_initiative_order
+from app.combat.targeting import select_nearest_enemy
 from app.domain.encounters import EncounterParticipantRequest, EncounterRequest, distance_between
 from app.services.encounters import EncounterValidationError, build_encounter_state
 
@@ -68,3 +69,15 @@ def test_initiative_orders_arbitrary_roster_and_keeps_instance_ids() -> None:
     assert [event.actor_id for event in events] == ["aldric-1", "aldric-2", "ogre-1"]
     assert [state.instance_id for state in order] == ["aldric-2", "ogre-1", "aldric-1"]
     assert sequence == 10
+
+
+def test_target_policy_selects_nearest_living_enemy() -> None:
+    encounter = build_encounter_state(_party_vs_boss_request())
+    actor = encounter.participants[2]
+
+    target = select_nearest_enemy(encounter, actor)
+
+    assert target is not None
+    assert target.combatant.instance_id == "aldric-2"
+    target.combatant.is_alive = False
+    assert select_nearest_enemy(encounter, actor).combatant.instance_id == "aldric-1"
