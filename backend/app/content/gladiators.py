@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.content.equipment import build_longsword
-from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
+from app.domain.models import Ability, CombatantTemplate, ResourceDefinition, Skill, VisualLoadout, WeaponAttack
 
 logger = logging.getLogger(__name__)
 
@@ -11,14 +11,24 @@ logger = logging.getLogger(__name__)
 def _fighter_resources(level: int, second_wind_uses: int) -> list[ResourceDefinition]:
     resources = [ResourceDefinition(id="second-wind", name="Second Wind", max_uses=second_wind_uses)]
     if level >= 2:
-        resources.append(
-            ResourceDefinition(
-                id="action-surge",
-                name="Action Surge",
-                max_uses=2 if level >= 17 else 1,
-            )
-        )
+        resources.append(ResourceDefinition(
+            id="action-surge",
+            name="Action Surge",
+            max_uses=2 if level >= 17 else 1,
+        ))
     return resources
+
+
+def _proficiency_bonus(level: int) -> int:
+    if level >= 17:
+        return 6
+    if level >= 13:
+        return 5
+    if level >= 9:
+        return 4
+    if level >= 5:
+        return 3
+    return 2
 
 
 def _build_longsword_fighter(
@@ -27,11 +37,13 @@ def _build_longsword_fighter(
     level: int,
     max_hp: int,
     attack_bonus: int,
-    damage_bonus: int,
+    strength_mod: int,
     attacks_per_action: int,
     second_wind_uses: int,
 ) -> CombatantTemplate:
     try:
+        pb = _proficiency_bonus(level)
+        dexterity_mod = 2
         return CombatantTemplate(
             id=fighter_id,
             name=name,
@@ -41,13 +53,30 @@ def _build_longsword_fighter(
             armor_class=19,
             max_hp=max_hp,
             speed_ft=30,
-            initiative_bonus=2,
+            initiative_bonus=dexterity_mod,
+            proficiency_bonus=pb,
+            ability_modifiers={
+                Ability.STRENGTH: strength_mod,
+                Ability.DEXTERITY: dexterity_mod,
+                Ability.CONSTITUTION: 2,
+                Ability.INTELLIGENCE: 0,
+                Ability.WISDOM: 0,
+                Ability.CHARISMA: 0,
+            },
+            saving_throw_modifiers={
+                Ability.STRENGTH: strength_mod + pb,
+                Ability.CONSTITUTION: 2 + pb,
+            },
+            skill_modifiers={
+                Skill.ATHLETICS: strength_mod + pb,
+                Skill.ACROBATICS: dexterity_mod,
+            },
             attacks_per_action=attacks_per_action,
             weapon_attack=WeaponAttack(
                 id=f"{fighter_id}-longsword",
                 weapon=build_longsword(),
                 attack_bonus=attack_bonus,
-                damage_bonus=damage_bonus,
+                damage_bonus=strength_mod,
             ),
             fighting_style="Defense",
             weapon_masteries=["longsword"],
