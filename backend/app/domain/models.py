@@ -6,7 +6,6 @@ from app.domain.combatants import (
     CombatantTemplate,
     ConditionalDamage,
     DamageDiceOverride,
-    DamageType,
     DemoRoster,
     ResourceDefinition,
     ResourceState,
@@ -17,6 +16,7 @@ from app.domain.combatants import (
 )
 from app.domain.conditions import ConditionExpiry, ConditionState, ConditionType
 from app.domain.creatures import CreatureType
+from app.domain.damage_types import DamageType
 from app.domain.effects import AttackEffect, SizeCategory
 from app.domain.encounters import (
     EncounterParticipantRequest,
