@@ -58,8 +58,8 @@ def test_test_catalog_exposes_two_pregens_and_three_monsters() -> None:
     ]
 
 
-def test_selectable_routes_are_mounted() -> None:
-    paths = {route.path for route in app.routes if hasattr(route, "path")}
+def test_selectable_routes_are_in_public_api_contract() -> None:
+    paths = set(app.openapi()["paths"])
     assert "/api/test/roster" in paths
     assert "/api/test/battle/{character_id}/{monster_id}/{mode}" in paths
     assert "/api/test/ambush/{monster_id}" in paths
