@@ -21,7 +21,7 @@
         <p id="fighter-meta">Fighter 1 · Longsword + Shield · Chain Mail</p>
         <div class="hp"><span id="fighter-hp-bar"></span></div>
         <strong id="fighter-hp">12 / 12 HP</strong>
-        <div class="effects" aria-live="polite"><span id="fighter-effects" class="effect-chip" hidden></span></div>
+        <div class="effects" aria-live="polite" hidden><div id="fighter-effects" class="effect-list"></div></div>
         <svg id="fighter" class="stick" viewBox="0 0 180 220" role="img" aria-label="Player combatant">
           <circle cx="90" cy="42" r="22"/><line x1="90" y1="64" x2="90" y2="132"/>
           <line x1="90" y1="82" x2="52" y2="112"/><line x1="90" y1="82" x2="128" y2="108"/>
@@ -38,7 +38,7 @@
         <p id="goblin-meta">CR 1/4 · Scimitar + Shield · Leather</p>
         <div class="hp"><span id="goblin-hp-bar"></span></div>
         <strong id="goblin-hp">10 / 10 HP</strong>
-        <div class="effects" aria-live="polite"><span id="goblin-effects" class="effect-chip" hidden></span></div>
+        <div class="effects" aria-live="polite" hidden><div id="goblin-effects" class="effect-list"></div></div>
         <svg id="goblin" class="stick goblin" viewBox="0 0 180 220" role="img" aria-label="Stick goblin with scimitar and shield">
           <circle cx="90" cy="58" r="19"/><path class="ear" d="M72 55 L48 45 L70 68 M108 55 L132 45 L110 68"/>
           <line x1="90" y1="77" x2="90" y2="136"/><line x1="90" y1="92" x2="52" y2="116"/><line x1="90" y1="92" x2="128" y2="112"/>
@@ -78,6 +78,7 @@
   <script src="preview-engine.js"></script>
   <script src="preview-rogue.js"></script>
   <script src="arena-animations.js"></script>
+  <script src="effects-view.js"></script>
   <script src="arena-view.js"></script>
   <script src="rules-view.js"></script>
   <script src="app.js"></script>
