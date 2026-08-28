@@ -6,6 +6,7 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 from app.domain.conditions import ConditionKind
+from app.domain.resources import ResourceDefinition, ResourceState
 from app.domain.visibility import ActorVisibilityState
 
 
@@ -81,19 +82,6 @@ class VisualLoadout(BaseModel):
     main_hand: str
     off_hand: str | None = None
     body_style: str = "humanoid"
-
-
-class ResourceDefinition(BaseModel):
-    id: str
-    name: str
-    max_uses: int = Field(ge=0)
-
-
-class ResourceState(BaseModel):
-    id: str
-    name: str
-    current_uses: int = Field(ge=0)
-    max_uses: int = Field(ge=0)
 
 
 class CombatantTemplate(BaseModel):

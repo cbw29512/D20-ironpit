@@ -7,8 +7,6 @@ from app.domain.combatants import (
     ConditionalDamage,
     DamageType,
     DemoRoster,
-    ResourceDefinition,
-    ResourceState,
     VisualLoadout,
     Weapon,
     WeaponAttack,
@@ -18,6 +16,7 @@ from app.domain.combatants import (
 from app.domain.conditions import ConditionKind
 from app.domain.encounters import EncounterSetup, PrecombatActorPlan
 from app.domain.events import BattleEvent, BattleResult, DamageRollComponent, DiceRoll, RollMode
+from app.domain.resources import ResourceDefinition, ResourceState
 from app.domain.visibility import ActorVisibilityState, CoverLevel
 
 __all__ = [
