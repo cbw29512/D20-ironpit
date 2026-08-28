@@ -45,6 +45,37 @@ def move_toward_target(
         raise RuntimeError("Movement could not be resolved.") from exc
 
 
+def move_away_from_target(
+    sequence: int,
+    round_number: int,
+    mover: CombatantState,
+    battlefield: BattlefieldState,
+) -> BattleEvent | None:
+    """Spend the mover's remaining movement to increase distance in the open arena."""
+    try:
+        moved = mover.movement_remaining_ft
+        if moved <= 0:
+            return None
+        before = battlefield.distance_ft
+        battlefield.distance_ft += moved
+        mover.movement_remaining_ft = 0
+        return BattleEvent(
+            sequence=sequence,
+            round_number=round_number,
+            event_type="movement",
+            actor_id=mover.template.id,
+            actor_name=mover.template.name,
+            distance_before_ft=before,
+            distance_after_ft=battlefield.distance_ft,
+            movement_ft=moved,
+            animation="retreat",
+            description=f"{mover.template.name} retreats {moved} feet.",
+        )
+    except Exception as exc:
+        logger.exception("Retreat movement failed for %s.", mover.template.name)
+        raise RuntimeError("Retreat movement could not be resolved.") from exc
+
+
 def take_dash(
     sequence: int,
     round_number: int,

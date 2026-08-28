@@ -3,6 +3,7 @@
 
   const dice = window.IRON_PIT_DICE;
   const effects = window.IRON_PIT_EFFECTS;
+  const tactics = window.IRON_PIT_TACTICS;
   const preview = window.IRON_PIT_PREVIEW;
   const weapons = {
     longsword: { id: "longsword", name: "Longsword", attackBonus: 5, count: 1, size: 8, damageBonus: 3, animation: "melee", masteryProperty: "sap" },
@@ -98,6 +99,7 @@
   function goblinTurn(state, goblin, fighter, events) {
     try {
       effects.expireAtSourceTurn([fighter, goblin], goblin.template.id);
+      tactics.prepareNimbleRetreat(state, goblin, events);
       const weapon = state.distance <= 5 ? weapons.scimitar : weapons.shortbow;
       const rangeMode = state.distance > 80 ? "disadvantage" : "normal";
       events.push(attack(goblin, fighter, weapon, rangeMode));
@@ -106,7 +108,7 @@
 
   function buildBattle(startingDistance) {
     try {
-      if (!dice || !effects || !preview?.roster) throw new Error("Preview dependencies are unavailable.");
+      if (!dice || !effects || !tactics || !preview?.roster) throw new Error("Preview dependencies are unavailable.");
       const fighter = { template: preview.roster.fighter, hp: preview.roster.fighter.max_hp, attackRollEffects: [] };
       const goblin = { template: preview.roster.monster, hp: preview.roster.monster.max_hp, attackRollEffects: [] };
       const state = { distance: startingDistance, secondWindUses: 2 };

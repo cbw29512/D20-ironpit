@@ -15,6 +15,7 @@
       weapon_attack: { weapon: { id: "longsword", name: "Longsword", mastery_property: "sap" } },
       alternate_weapon_attacks: [],
       weapon_masteries: ["longsword"],
+      bonus_action_features: [],
       visual: { armor: "chain-mail", off_hand: "shield" },
     };
 
@@ -31,6 +32,7 @@
       weapon_attack: { weapon: { id: "scimitar", name: "Scimitar", mastery_property: "nick" } },
       alternate_weapon_attacks: [{ weapon: { id: "shortbow", name: "Shortbow", mastery_property: "vex" } }],
       weapon_masteries: [],
+      bonus_action_features: ["nimble-escape"],
       visual: { armor: "leather", off_hand: "shield" },
     };
 

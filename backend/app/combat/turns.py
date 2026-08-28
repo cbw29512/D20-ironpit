@@ -2,11 +2,42 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.movement import move_toward_target, take_dash
-from app.combat.policy import preferred_approach_distance, select_weapon_attack
+from app.combat.bonus_actions import use_nimble_escape_disengage
+from app.combat.movement import move_away_from_target, move_toward_target, take_dash
+from app.combat.policy import (
+    preferred_approach_distance,
+    select_weapon_attack,
+    should_use_nimble_escape_disengage,
+)
 from app.domain.models import BattleEvent, BattlefieldState, CombatantState, WeaponAttack
 
 logger = logging.getLogger(__name__)
+
+
+def prepare_skirmish_retreat(
+    sequence: int,
+    round_number: int,
+    attacker: CombatantState,
+    battlefield: BattlefieldState,
+) -> tuple[list[BattleEvent], int]:
+    """Use a supported Bonus Action retreat tactic before normal attack preparation."""
+    try:
+        events: list[BattleEvent] = []
+        if not should_use_nimble_escape_disengage(attacker, battlefield.distance_ft):
+            return events, sequence
+
+        events.append(
+            use_nimble_escape_disengage(sequence, round_number, attacker, battlefield)
+        )
+        sequence += 1
+        movement = move_away_from_target(sequence, round_number, attacker, battlefield)
+        if movement is not None:
+            events.append(movement)
+            sequence += 1
+        return events, sequence
+    except Exception as exc:
+        logger.exception("Skirmish retreat failed for %s.", attacker.template.name)
+        raise RuntimeError("Skirmish retreat could not be completed.") from exc
 
 
 def prepare_attack(

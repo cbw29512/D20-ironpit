@@ -23,6 +23,25 @@ def should_use_second_wind(state: CombatantState) -> bool:
         raise RuntimeError("Second Wind policy could not be evaluated.") from exc
 
 
+def should_use_nimble_escape_disengage(state: CombatantState, distance_ft: int) -> bool:
+    """Retreat from melee when Nimble Escape and a ranged attack are available."""
+    try:
+        has_ranged_attack = any(
+            attack.weapon.attack_kind is WeaponAttackKind.RANGED
+            for attack in state.template.alternate_weapon_attacks
+        )
+        return bool(
+            "nimble-escape" in state.template.bonus_action_features
+            and state.bonus_action_available
+            and state.movement_remaining_ft > 0
+            and distance_ft <= 5
+            and has_ranged_attack
+        )
+    except Exception as exc:
+        logger.exception("Failed to evaluate Nimble Escape policy for %s.", state.template.name)
+        raise RuntimeError("Nimble Escape policy could not be evaluated.") from exc
+
+
 def select_weapon_attack(state: CombatantState, distance_ft: int) -> WeaponAttack | None:
     """Prefer the primary attack profile, then the first legal alternate profile."""
     try:

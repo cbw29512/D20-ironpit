@@ -96,6 +96,7 @@ class CombatantTemplate(BaseModel):
     alternate_weapon_attacks: list[WeaponAttack] = Field(default_factory=list)
     fighting_style: str | None = None
     weapon_masteries: list[str] = Field(default_factory=list)
+    bonus_action_features: list[str] = Field(default_factory=list)
     visual: VisualLoadout
     resources: list[ResourceDefinition] = Field(default_factory=list)
     source: str
@@ -115,6 +116,7 @@ class CombatantState(BaseModel):
     action_available: bool = True
     bonus_action_available: bool = True
     movement_remaining_ft: int = Field(default=0, ge=0)
+    disengaged: bool = False
     resources: list[ResourceState] = Field(default_factory=list)
     attack_roll_effects: list[AttackRollEffect] = Field(default_factory=list)
 

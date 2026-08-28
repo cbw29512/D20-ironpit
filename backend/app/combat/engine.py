@@ -11,9 +11,10 @@ from app.combat.rolls import roll_d20
 from app.combat.state import (
     begin_turn,
     build_combatant_state,
+    end_turn,
     expire_attack_roll_effects_at_turn_start,
 )
-from app.combat.turns import prepare_attack
+from app.combat.turns import prepare_attack, prepare_skirmish_retreat
 from app.domain.models import BattleEvent, BattlefieldState, BattleResult, CombatantTemplate
 
 logger = logging.getLogger(__name__)
@@ -70,6 +71,10 @@ def run_duel(
                     events.append(use_second_wind(sequence, round_number, fighter, dice))
                     sequence += 1
 
+                retreat_events, sequence = prepare_skirmish_retreat(
+                    sequence, round_number, attacker, battlefield
+                )
+                events.extend(retreat_events)
                 weapon, prep_events, sequence = prepare_attack(
                     sequence,
                     round_number,
@@ -78,6 +83,7 @@ def run_duel(
                 )
                 events.extend(prep_events)
                 if weapon is None:
+                    end_turn(attacker)
                     continue
 
                 event = resolve_attack(
@@ -91,6 +97,7 @@ def run_duel(
                 )
                 events.append(event)
                 sequence += 1
+                end_turn(attacker)
 
                 if not defender.is_alive:
                     events.append(BattleEvent(
