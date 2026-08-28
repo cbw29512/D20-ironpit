@@ -9,11 +9,13 @@
   function describeTemplate(template) {
     try {
       const rank = template.level ? `${template.archetype} ${template.level}` : `CR ${template.challenge_rating}`;
-      const offHand = template.visual.off_hand ? ` + ${titleCase(template.visual.off_hand)}` : "";
-      const alternates = template.alternate_weapon_attacks?.length
-        ? ` · Alt: ${template.alternate_weapon_attacks.map((attack) => attack.weapon.name).join(", ")}`
+      const primary = template.weapon_attack?.weapon || template.attacks?.[0]?.weapon;
+      const alternateProfiles = template.alternate_weapon_attacks || template.attacks?.slice(1) || [];
+      const offHand = template.visual?.off_hand ? ` + ${titleCase(template.visual.off_hand)}` : "";
+      const alternates = alternateProfiles.length
+        ? ` · Alt: ${alternateProfiles.map((attack) => attack.weapon.name).join(", ")}`
         : "";
-      return `${rank} · ${template.weapon_attack.weapon.name}${offHand} · ${titleCase(template.visual.armor)}${alternates}`;
+      return `${rank} · ${primary?.name || "Attack"}${offHand} · ${titleCase(template.visual?.armor)}${alternates}`;
     } catch (error) { console.error("Template description failed", error); return "Combatant"; }
   }
 
