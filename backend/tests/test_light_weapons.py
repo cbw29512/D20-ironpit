@@ -7,7 +7,13 @@ from app.content.equipment import build_scimitar, build_shortsword
 from app.domain.models import WeaponAttack, WeaponProperty
 
 
-def build_dual_wielder(*, nick: bool = False, style: str | None = None):
+def build_dual_wielder(
+    *,
+    nick: bool = False,
+    style: str | None = None,
+    ability_modifier: int = 3,
+    extra_damage_bonus: int = 0,
+):
     template = build_demo_fighter().model_copy(deep=True)
     template.id = "dual-wielder"
     template.name = "Dual Wielder"
@@ -15,14 +21,15 @@ def build_dual_wielder(*, nick: bool = False, style: str | None = None):
         id="main-shortsword",
         weapon=build_shortsword(),
         attack_bonus=5,
-        ability_damage_modifier=3,
+        ability_damage_modifier=ability_modifier,
     )
     template.alternate_weapon_attacks = [
         WeaponAttack(
             id="offhand-scimitar",
             weapon=build_scimitar(),
             attack_bonus=5,
-            ability_damage_modifier=3,
+            ability_damage_modifier=ability_modifier,
+            damage_bonus=extra_damage_bonus,
         )
     ]
     template.weapon_masteries = ["scimitar"] if nick else []
@@ -48,12 +55,7 @@ def test_light_extra_attack_spends_bonus_action_and_drops_positive_modifier() ->
     begin_turn(attacker)
 
     events, _ = resolve_attack_action(
-        1,
-        1,
-        attacker,
-        defender,
-        attacker.template.weapon_attack,
-        5,
+        1, 1, attacker, defender, attacker.template.weapon_attack, 5,
         FixedDiceProvider([15, 2, 15, 4]),
     )
 
@@ -67,18 +69,58 @@ def test_light_extra_attack_spends_bonus_action_and_drops_positive_modifier() ->
     assert attacker.light_extra_attack_used is True
 
 
+def test_light_extra_attack_keeps_negative_ability_modifier() -> None:
+    attacker = build_dual_wielder(ability_modifier=-2)
+    defender = build_combatant_state(build_goblin_warrior())
+    begin_turn(attacker)
+
+    events, _ = resolve_attack_action(
+        1, 1, attacker, defender, attacker.template.weapon_attack, 5,
+        FixedDiceProvider([15, 6, 15, 4]),
+    )
+
+    assert events[1].damage_roll is not None
+    assert events[1].damage_roll.modifier == -2
+    assert events[1].damage_roll.total == 2
+
+
+def test_light_extra_attack_preserves_non_ability_damage_bonus() -> None:
+    attacker = build_dual_wielder(extra_damage_bonus=2)
+    defender = build_combatant_state(build_goblin_warrior())
+    begin_turn(attacker)
+
+    events, _ = resolve_attack_action(
+        1, 1, attacker, defender, attacker.template.weapon_attack, 5,
+        FixedDiceProvider([15, 1, 15, 4]),
+    )
+
+    assert events[1].damage_roll is not None
+    assert events[1].damage_roll.modifier == 2
+    assert events[1].damage_roll.total == 6
+
+
+def test_standard_light_extra_attack_requires_available_bonus_action() -> None:
+    attacker = build_dual_wielder()
+    defender = build_combatant_state(build_goblin_warrior())
+    begin_turn(attacker)
+    attacker.bonus_action_available = False
+
+    events, _ = resolve_attack_action(
+        1, 1, attacker, defender, attacker.template.weapon_attack, 5,
+        FixedDiceProvider([15, 2]),
+    )
+
+    assert len(events) == 1
+    assert attacker.light_extra_attack_used is False
+
+
 def test_nick_moves_light_extra_attack_into_action_without_spending_bonus_action() -> None:
     attacker = build_dual_wielder(nick=True)
     defender = build_combatant_state(build_goblin_warrior())
     begin_turn(attacker)
 
     events, _ = resolve_attack_action(
-        1,
-        1,
-        attacker,
-        defender,
-        attacker.template.weapon_attack,
-        5,
+        1, 1, attacker, defender, attacker.template.weapon_attack, 5,
         FixedDiceProvider([15, 1, 15, 4]),
     )
 
@@ -91,18 +133,29 @@ def test_nick_moves_light_extra_attack_into_action_without_spending_bonus_action
     assert attacker.light_extra_attack_used is True
 
 
+def test_nick_light_extra_attack_works_after_bonus_action_is_spent() -> None:
+    attacker = build_dual_wielder(nick=True)
+    defender = build_combatant_state(build_goblin_warrior())
+    begin_turn(attacker)
+    attacker.bonus_action_available = False
+
+    events, _ = resolve_attack_action(
+        1, 1, attacker, defender, attacker.template.weapon_attack, 5,
+        FixedDiceProvider([15, 1, 15, 4]),
+    )
+
+    assert len(events) == 2
+    assert events[1].feature_id == "nick"
+    assert attacker.bonus_action_available is False
+
+
 def test_two_weapon_fighting_restores_ability_modifier_to_light_extra_damage() -> None:
     attacker = build_dual_wielder(style="two-weapon-fighting")
     defender = build_combatant_state(build_goblin_warrior())
     begin_turn(attacker)
 
     events, _ = resolve_attack_action(
-        1,
-        1,
-        attacker,
-        defender,
-        attacker.template.weapon_attack,
-        5,
+        1, 1, attacker, defender, attacker.template.weapon_attack, 5,
         FixedDiceProvider([15, 1, 15, 4]),
     )
 
@@ -138,12 +191,7 @@ def test_light_extra_attack_requires_a_different_configured_light_weapon() -> No
     begin_turn(attacker)
 
     events, _ = resolve_attack_action(
-        1,
-        1,
-        attacker,
-        defender,
-        attacker.template.weapon_attack,
-        5,
+        1, 1, attacker, defender, attacker.template.weapon_attack, 5,
         FixedDiceProvider([15, 2]),
     )
 
@@ -158,12 +206,7 @@ def test_nick_is_mastery_gated() -> None:
     begin_turn(attacker)
 
     events, _ = resolve_attack_action(
-        1,
-        1,
-        attacker,
-        defender,
-        attacker.template.weapon_attack,
-        5,
+        1, 1, attacker, defender, attacker.template.weapon_attack, 5,
         FixedDiceProvider([15, 1, 15, 4]),
     )
 
