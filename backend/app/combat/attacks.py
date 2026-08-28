@@ -3,6 +3,11 @@ from __future__ import annotations
 import logging
 
 from app.combat.attack_rolls import resolve_attack_mode_and_cover
+from app.combat.card_effects import (
+    attack_effect_change,
+    hidden_effect_change,
+    mastery_effect_change,
+)
 from app.combat.conditions import is_automatic_critical_hit, is_incapacitated
 from app.combat.damage import resolve_weapon_damage
 from app.combat.dice import DiceProvider
@@ -39,8 +44,13 @@ def resolve_attack(
             attacker, defender, weapon, distance_ft, battlefield
         )
         attack_roll = roll_d20(dice, attack.attack_bonus, mode)
-        break_hidden(attacker)
-        consume_attack_roll_effects(attacker, target_id)
+        was_hidden = break_hidden(attacker)
+        consumed = consume_attack_roll_effects(attacker, target_id)
+        effect_changes = [
+            attack_effect_change(attacker, effect, "remove") for effect in consumed
+        ]
+        if was_hidden:
+            effect_changes.append(hidden_effect_change(attacker, "remove"))
         if spend_action:
             attacker.action_available = False
         natural = attack_roll.selected_roll or 0
@@ -56,11 +66,7 @@ def resolve_attack(
 
         if hit:
             damage_roll, damage_components = resolve_weapon_damage(
-                attacker,
-                attack,
-                dice,
-                critical,
-                mode,
+                attacker, attack, dice, critical, mode,
                 include_positive_ability_damage_modifier,
             )
             sneak_component = resolve_sneak_attack_component(
@@ -77,11 +83,11 @@ def resolve_attack(
             defender.is_alive = defender.current_hp > 0
             if defender.is_alive:
                 feature_id = apply_weapon_mastery_on_hit(
-                    attacker,
-                    defender,
-                    weapon,
-                    damage_dealt=damage_roll.total > 0,
+                    attacker, defender, weapon, damage_dealt=damage_roll.total > 0
                 )
+                change = mastery_effect_change(feature_id, attacker, defender)
+                if change is not None:
+                    effect_changes.append(change)
 
         outcome = "CRITICAL HIT" if critical else ("HIT" if hit else "MISS")
         description = f"{attacker.template.name}: {outcome} with {weapon.name}."
@@ -105,6 +111,7 @@ def resolve_attack(
             attack_roll=attack_roll,
             damage_roll=damage_roll,
             damage_components=damage_components,
+            effect_changes=effect_changes,
             hit=hit,
             critical=critical,
             hp_before=hp_before,
