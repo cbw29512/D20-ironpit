@@ -15,9 +15,12 @@ from app.domain.combatants import (
     WeaponAttackKind,
     WeaponProperty,
 )
+from app.domain.conditions import ConditionKind
 from app.domain.events import BattleEvent, BattleResult, DamageRollComponent, DiceRoll, RollMode
+from app.domain.visibility import ActorVisibilityState, CoverLevel
 
 __all__ = [
+    "ActorVisibilityState",
     "AttackRollEffect",
     "AttackRollEffectKind",
     "BattleEvent",
@@ -25,7 +28,9 @@ __all__ = [
     "BattleResult",
     "CombatantState",
     "CombatantTemplate",
+    "ConditionKind",
     "ConditionalDamage",
+    "CoverLevel",
     "DamageRollComponent",
     "DamageType",
     "DemoRoster",

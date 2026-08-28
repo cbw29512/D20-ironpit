@@ -5,7 +5,7 @@ from collections.abc import Iterable
 
 from app.combat.dice import DiceProvider
 from app.combat.rolls import roll_d20
-from app.domain.models import BattleEvent, CombatantState
+from app.domain.models import BattleEvent, CombatantState, ConditionKind, RollMode
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +19,12 @@ def roll_initiative_order(
         combatants = list(states)
         events: list[BattleEvent] = []
         for state in combatants:
-            initiative = roll_d20(dice, state.template.initiative_bonus)
+            mode = (
+                RollMode.ADVANTAGE
+                if ConditionKind.INVISIBLE in state.conditions
+                else RollMode.NORMAL
+            )
+            initiative = roll_d20(dice, state.template.initiative_bonus, mode)
             state.initiative_roll = initiative.selected_roll
             state.initiative_total = initiative.total
             events.append(BattleEvent(

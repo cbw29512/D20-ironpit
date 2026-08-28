@@ -5,6 +5,9 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
+from app.domain.conditions import ConditionKind
+from app.domain.visibility import ActorVisibilityState
+
 
 class DamageType(StrEnum):
     SLASHING = "slashing"
@@ -109,6 +112,8 @@ class CombatantTemplate(BaseModel):
     fighting_style: str | None = None
     weapon_masteries: list[str] = Field(default_factory=list)
     bonus_action_features: list[str] = Field(default_factory=list)
+    skill_bonuses: dict[str, int] = Field(default_factory=dict)
+    passive_perception: int = Field(default=10, ge=0)
     visual: VisualLoadout
     resources: list[ResourceDefinition] = Field(default_factory=list)
     source: str
@@ -131,6 +136,9 @@ class CombatantState(BaseModel):
     movement_remaining_ft: int = Field(default=0, ge=0)
     disengaged: bool = False
     light_extra_attack_used: bool = False
+    hidden: bool = False
+    hidden_dc: int | None = Field(default=None, ge=0)
+    conditions: set[ConditionKind] = Field(default_factory=set)
     resources: list[ResourceState] = Field(default_factory=list)
     attack_roll_effects: list[AttackRollEffect] = Field(default_factory=list)
 
@@ -138,3 +146,4 @@ class CombatantState(BaseModel):
 class BattlefieldState(BaseModel):
     starting_distance_ft: int = Field(default=5, ge=0)
     distance_ft: int = Field(default=5, ge=0)
+    visibility_by_actor: dict[str, ActorVisibilityState] = Field(default_factory=dict)

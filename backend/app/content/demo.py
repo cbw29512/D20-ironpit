@@ -53,6 +53,8 @@ def build_goblin_warrior() -> CombatantTemplate:
             weapon_attack=build_goblin_scimitar_attack(),
             alternate_weapon_attacks=[build_goblin_shortbow_attack()],
             bonus_action_features=["nimble-escape"],
+            skill_bonuses={"stealth": 6},
+            passive_perception=9,
             visual=build_goblin_visual_loadout(),
             source="SRD 5.2.1 Goblin Warrior",
         )

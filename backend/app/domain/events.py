@@ -36,13 +36,15 @@ class BattleEvent(BaseModel):
     sequence: int
     round_number: int
     event_type: Literal[
-        "initiative", "movement", "dash", "disengage", "attack", "healing", "victory", "draw"
+        "initiative", "movement", "dash", "disengage", "hide", "search",
+        "attack", "healing", "victory", "draw"
     ]
     actor_id: str
     actor_name: str
     target_id: str | None = None
     target_name: str | None = None
     attack_roll: DiceRoll | None = None
+    check_roll: DiceRoll | None = None
     damage_roll: DiceRoll | None = None
     damage_components: list[DamageRollComponent] = Field(default_factory=list)
     healing_roll: DiceRoll | None = None
