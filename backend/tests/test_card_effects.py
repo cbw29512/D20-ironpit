@@ -2,7 +2,7 @@ from app.combat.attacks import resolve_attack
 from app.combat.dice import FixedDiceProvider
 from app.combat.dodge import take_dodge_action
 from app.combat.lifecycle import begin_actor_turn
-from app.combat.state import build_combatant_state
+from app.combat.state import begin_turn, build_combatant_state, end_turn
 from app.content.demo import build_demo_fighter, build_goblin_warrior
 
 
@@ -38,7 +38,9 @@ def test_vex_is_a_buff_on_attacker_card_and_removes_on_matching_attack() -> None
     fighter = build_combatant_state(build_demo_fighter())
     goblin = build_combatant_state(build_goblin_warrior())
     handaxe = fighter.template.alternate_weapon_attacks[0]
+    combatants = (fighter, goblin)
 
+    begin_turn(fighter, combatants)
     applied = resolve_attack(
         1, 1, fighter, goblin, handaxe, 20, FixedDiceProvider([15, 4])
     )
@@ -50,8 +52,10 @@ def test_vex_is_a_buff_on_attacker_card_and_removes_on_matching_attack() -> None
         for change in applied.effect_changes
     )
 
+    end_turn(fighter, combatants)
+    begin_turn(fighter, combatants)
     consumed = resolve_attack(
-        2, 1, fighter, goblin, handaxe, 20, FixedDiceProvider([1, 2])
+        2, 2, fighter, goblin, handaxe, 20, FixedDiceProvider([1, 2])
     )
     vex_changes = [
         change for change in consumed.effect_changes if change.effect_id.startswith("vex:")
