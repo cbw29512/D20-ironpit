@@ -28,6 +28,8 @@ def test_rules_coverage_ids_sources_and_key_statuses_are_explicit() -> None:
     assert entries["search-hidden"].status is RuleCoverageStatus.IMPLEMENTED
     assert entries["hide"].status is RuleCoverageStatus.PARTIAL
     assert entries["invisible"].status is RuleCoverageStatus.PARTIAL
+    assert entries["incapacitated"].status is RuleCoverageStatus.PARTIAL
+    assert entries["conditions"].status is RuleCoverageStatus.PARTIAL
     assert entries["cover"].status is RuleCoverageStatus.PARTIAL
     assert entries["initiative-ties"].status is RuleCoverageStatus.ARENA_ASSUMPTION
 
@@ -40,4 +42,5 @@ def test_rules_coverage_endpoint_returns_same_contract() -> None:
     assert any(entry.id == "precombat-hide" for entry in report.entries)
     assert any(entry.id == "rogue-ambush" for entry in report.entries)
     assert any(entry.id == "sneak-attack" for entry in report.entries)
+    assert any(entry.id == "incapacitated" for entry in report.entries)
     assert any(entry.id == "death-saves" for entry in report.entries)
