@@ -20,6 +20,8 @@ jobs:
       - name: Test
         working-directory: backend
         run: pytest -q
+      - name: Validate rules coverage sync
+        run: python scripts/check_rules_sync.py
       - name: Validate frontend JavaScript syntax
         run: |
           node --check frontend/app.js
@@ -30,6 +32,7 @@ jobs:
           node --check frontend/preview-engine.js
           node --check frontend/arena-view.js
           node --check frontend/arena-animations.js
+          node --check frontend/rules-view.js
       - name: Validate preview combat effects
         run: node scripts/check_preview_effects.js
       - name: Validate preview combat tactics

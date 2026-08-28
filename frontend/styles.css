@@ -40,7 +40,17 @@ header h1 { margin:.15rem 0; font-size:clamp(2.4rem,7vw,5rem); letter-spacing:.0
 button { font:inherit; font-weight:800; border:0; border-radius:999px; padding:13px 24px; cursor:pointer; background:#d7b06a; color:#15120d; }
 button:disabled { opacity:.55; cursor:wait; }
 #status { color:#d5d5d5; }
-.log-panel { background:#171717; border-radius:14px; padding:18px 22px; }
+.log-panel,.rules-panel { background:#171717; border-radius:14px; padding:18px 22px; }
+.rules-panel { margin-top:16px; border:1px solid #302b22; }
+.rules-panel summary { cursor:pointer; color:#f1d69e; font-weight:800; line-height:1.5; }
+#rules-list { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:10px; list-style:none; padding:14px 0 0; margin:0; }
+#rules-list li { display:grid; gap:4px; padding:10px 12px; border:1px solid #333; border-radius:10px; background:#141414; }
+#rules-list li strong { font-size:.82rem; text-transform:capitalize; }
+#rules-list li span { color:#aaa; font-size:.78rem; line-height:1.4; }
+#rules-list li[data-status="implemented"] strong { color:#a9d8a4; }
+#rules-list li[data-status="partial"] strong { color:#f1d69e; }
+#rules-list li[data-status="unsupported"] strong { color:#d8a4a4; }
+#rules-list li[data-status="arena_assumption"] strong { color:#b7b1d8; }
 #battle-log { max-height:320px; overflow:auto; line-height:1.55; padding-left:1.5rem; }
 #battle-log li { margin:.35rem 0; }
 #battle-log li.feature-event { color:#f1d69e; font-weight:700; }
@@ -53,5 +63,5 @@ button:disabled { opacity:.55; cursor:wait; }
 @keyframes retreat-right { 0%,100%{transform:translateX(0)} 50%{transform:translateX(18px)} }
 @keyframes projectile-left { 0%{left:72%;opacity:1;transform:rotate(180deg)} 90%{opacity:1} 100%{left:28%;opacity:0;transform:rotate(180deg)} }
 @keyframes projectile-right { 0%{left:28%;opacity:1;transform:rotate(0)} 90%{opacity:1} 100%{left:72%;opacity:0;transform:rotate(0)} }
-@media (max-width:680px){ .arena{grid-template-columns:1fr;}.versus{transform:rotate(90deg);} .projectile{top:50%;} }
+@media (max-width:680px){ .arena{grid-template-columns:1fr;}.versus{transform:rotate(90deg);} .projectile{top:50%;} #rules-list{grid-template-columns:1fr;} }
 @media (prefers-reduced-motion:reduce){ *{animation-duration:.01ms!important;transition-duration:.01ms!important;} }

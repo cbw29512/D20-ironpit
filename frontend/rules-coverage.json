@@ -1,0 +1,29 @@
+{
+  "ruleset": "SRD 5.2.1 subset",
+  "entries": [
+    {"id":"initiative","name":"Initiative","status":"implemented","notes":"d20 plus Initiative modifier; rolls are recorded."},
+    {"id":"attack-rolls","name":"Weapon attack rolls","status":"implemented","notes":"AC checks, natural 1 misses, and natural 20 hits are implemented."},
+    {"id":"critical-hits","name":"Weapon critical hits","status":"implemented","notes":"A natural 20 doubles weapon and eligible conditional damage dice."},
+    {"id":"advantage","name":"Advantage and Disadvantage","status":"implemented","notes":"Multiple sources collapse using the normal cancellation rule."},
+    {"id":"range","name":"Weapon range","status":"implemented","notes":"Melee reach, normal range, long range, and close-ranged Disadvantage are implemented."},
+    {"id":"movement","name":"Movement","status":"implemented","notes":"Speed, closing distance, retreat movement, and remaining movement are tracked."},
+    {"id":"dash","name":"Dash","status":"implemented","notes":"Dash spends the Action and grants extra movement equal to Speed."},
+    {"id":"hp-defeat","name":"Hit Points and defeat","status":"implemented","notes":"Damage, healing, 0 HP defeat, and winner events are implemented for arena duels."},
+    {"id":"second-wind","name":"Fighter Second Wind","status":"implemented","notes":"Uses, Bonus Action cost, healing, and max-HP cap are implemented."},
+    {"id":"sap","name":"Longsword Sap","status":"implemented","notes":"Next-attack Disadvantage and start-of-source-turn expiry are implemented."},
+    {"id":"vex","name":"Vex mastery","status":"implemented","notes":"Target-specific next-attack Advantage through the end of the wielder's next turn is implemented for mastered weapons."},
+    {"id":"goblin-advantage-damage","name":"Goblin Advantage damage","status":"implemented","notes":"The Goblin Warrior's conditional d4 damage applies only when its attack has Advantage."},
+    {"id":"opportunity-attacks","name":"Opportunity Attacks","status":"implemented","notes":"Leaving melee reach can spend a Reaction for one melee attack before movement resolves."},
+    {"id":"disengage","name":"Disengage","status":"implemented","notes":"Disengage suppresses Opportunity Attacks for retreat movement during the current turn."},
+    {"id":"reactions","name":"Reactions","status":"partial","notes":"Reaction availability and Opportunity Attacks are implemented; other Reaction features are not."},
+    {"id":"nimble-escape","name":"Goblin Nimble Escape","status":"partial","notes":"Bonus Action Disengage and retreat are implemented; Hide is not yet implemented."},
+    {"id":"nick","name":"Nick mastery","status":"unsupported","notes":"Requires a canonical Light-property extra-attack model before implementation."},
+    {"id":"hide","name":"Hide","status":"unsupported","notes":"Requires concealment, visibility, and Stealth state."},
+    {"id":"conditions","name":"Conditions","status":"unsupported","notes":"General condition rules are not implemented."},
+    {"id":"cover","name":"Cover","status":"unsupported","notes":"Battlefield cover and line-of-effect rules are not implemented."},
+    {"id":"spells","name":"Spells","status":"unsupported","notes":"Spellcasting is outside the current duel slice."},
+    {"id":"death-saves","name":"Death Saving Throws","status":"unsupported","notes":"The arena currently treats 0 HP as defeat."},
+    {"id":"initiative-ties","name":"Initiative ties","status":"arena_assumption","notes":"The arena currently uses Initiative bonus as its deterministic tie-breaker."},
+    {"id":"arena-geometry","name":"Arena geometry","status":"arena_assumption","notes":"Current combat uses one-dimensional distance in an open arena and assumes opponents are visible."}
+  ]
+}
