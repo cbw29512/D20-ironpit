@@ -28,29 +28,39 @@ try {
   assert(roster.monsters["srd-bandit"].armor_class === 12, "Bandit AC must remain 12.");
   assert(roster.monsters["srd-guard"].armor_class === 16, "Guard AC must remain 16.");
   assert(roster.monsters["srd-guard"].attacks[1].weapon.longRange === 60, "Guard thrown Spear must retain range 20/60.");
+  assert(roster.monsters["srd-goblin-warrior"].openingMode === "ranged", "Goblin should choose a ranged opening.");
+  assert(roster.monsters["srd-bandit"].openingMode === "ranged", "Bandit should choose a ranged opening.");
+  assert(roster.monsters["srd-guard"].openingMode === "melee", "Guard should choose a melee opening.");
 
   const ids = Object.keys(roster.monsters);
   for (const monsterId of ids) {
     const melee = global.IRON_PIT_TEST_ENGINE.buildTestBattle("aldric-vane-l1", monsterId, "melee");
     const ranged = global.IRON_PIT_TEST_ENGINE.buildTestBattle("mara-vale-l1", monsterId, "ranged");
-    assert(melee.monster.template.id === monsterId, `Melee selection failed for ${monsterId}.`);
-    assert(ranged.monster.template.id === monsterId, `Ranged selection failed for ${monsterId}.`);
-    assert(melee.events.some((event) => event.event_type === "attack"), `Melee battle produced no attacks for ${monsterId}.`);
-    assert(ranged.events.some((event) => event.event_type === "attack"), `Ranged battle produced no attacks for ${monsterId}.`);
+    assert(melee.monster.template.id === monsterId, `Melee QA selection failed for ${monsterId}.`);
+    assert(ranged.monster.template.id === monsterId, `Ranged QA selection failed for ${monsterId}.`);
+    assert(melee.events.some((event) => event.event_type === "attack"), `Melee QA battle produced no attacks for ${monsterId}.`);
+    assert(ranged.events.some((event) => event.event_type === "attack"), `Ranged QA battle produced no attacks for ${monsterId}.`);
   }
+
+  const goblinAuto = global.IRON_PIT_TEST_ENGINE.buildAutomaticBattle("aldric-vane-l1", "srd-goblin-warrior");
+  const banditAuto = global.IRON_PIT_TEST_ENGINE.buildAutomaticBattle("mara-vale-l1", "srd-bandit");
+  const guardAuto = global.IRON_PIT_TEST_ENGINE.buildAutomaticBattle("aldric-vane-l1", "srd-guard");
+  assert(goblinAuto.battlefield.starting_distance_ft === 20, "Goblin automatic fight should open at range.");
+  assert(banditAuto.battlefield.starting_distance_ft === 20, "Bandit automatic fight should open at range.");
+  assert(guardAuto.battlefield.starting_distance_ft === 5, "Guard automatic fight should open in melee.");
 
   const guardRanged = global.IRON_PIT_TEST_ENGINE.buildTestBattle("aldric-vane-l1", "srd-guard", "ranged");
   assert(
     guardRanged.events.some((event) => event.actor_id === "srd-guard" && event.weapon_id === "spear" && event.animation === "projectile"),
-    "Guard should throw its Spear in controlled ranged mode.",
+    "Guard should still throw its Spear in controlled ranged QA mode.",
   );
 
   for (const monsterId of ids) {
     const ambush = global.IRON_PIT_TEST_AMBUSH.buildTestAmbush(monsterId);
-    assert(ambush.monster.template.id === monsterId, `Ambush selection failed for ${monsterId}.`);
+    assert(ambush.monster.template.id === monsterId, `Ambush QA selection failed for ${monsterId}.`);
     assert(
       ambush.events.some((event) => event.event_type === "hide" && event.effect_changes?.some((change) => change.effect_id === "hidden")),
-      `Successful Mara Hide should appear on the combat card against ${monsterId}.`,
+      `Successful Mara Hide should remain covered against ${monsterId}.`,
     );
   }
 
