@@ -93,6 +93,11 @@ class DemoRoster(BaseModel):
     monster: CombatantTemplate
 
 
+class ArenaRoster(BaseModel):
+    characters: list[CombatantTemplate]
+    monsters: list[CombatantTemplate]
+
+
 class CombatantState(BaseModel):
     template: CombatantTemplate
     current_hp: int
