@@ -9,6 +9,9 @@ header h1 { margin:.15rem 0; font-size:clamp(2.4rem,7vw,5rem); letter-spacing:.0
 .combatant { text-align:center; min-width:0; }
 .combatant h2 { margin:0; }
 .combatant p { color:#bbb; min-height:2.5rem; }
+.effects { min-height:1.7rem; margin:.2rem auto .45rem; }
+.effects[hidden] { display:block; visibility:hidden; }
+.effect-chip { display:inline-flex; align-items:center; justify-content:center; border:1px solid #d7b06a; border-radius:999px; padding:.22rem .62rem; color:#f1d69e; background:#2a2319; font-size:.72rem; font-weight:800; letter-spacing:.04em; }
 .versus { display:grid; place-items:center; gap:4px; font-size:2rem; }
 .versus small { font-size:.8rem; color:#bbb; white-space:nowrap; }
 .stick { width:min(230px,100%); stroke:#eee; stroke-width:7; stroke-linecap:round; fill:none; overflow:visible; }
@@ -20,6 +23,7 @@ header h1 { margin:.15rem 0; font-size:clamp(2.4rem,7vw,5rem); letter-spacing:.0
 .swing .weapon { animation:swing .36s ease-in-out; }
 .hit { animation:hit .35s ease-in-out; }
 .healing { animation:healing .65s ease-in-out; }
+.sapped { animation:sap-pulse 1.2s ease-in-out infinite; }
 #fighter.advance { animation:advance-right .5s ease-in-out; }
 #goblin.advance { animation:advance-left .5s ease-in-out; }
 .dead { opacity:.35; transform:rotate(7deg); transform-origin:center bottom; }
@@ -38,9 +42,11 @@ button:disabled { opacity:.55; cursor:wait; }
 .log-panel { background:#171717; border-radius:14px; padding:18px 22px; }
 #battle-log { max-height:320px; overflow:auto; line-height:1.55; padding-left:1.5rem; }
 #battle-log li { margin:.35rem 0; }
+#battle-log li.feature-event { color:#f1d69e; font-weight:700; }
 @keyframes swing { 0%{transform:rotate(0)} 50%{transform:rotate(52deg)} 100%{transform:rotate(0)} }
 @keyframes hit { 0%,100%{transform:translateX(0)} 50%{transform:translateX(10px)} }
 @keyframes healing { 0%,100%{filter:none} 50%{filter:drop-shadow(0 0 16px #72b56b)} }
+@keyframes sap-pulse { 0%,100%{filter:none} 50%{filter:drop-shadow(0 0 12px #d7b06a)} }
 @keyframes advance-right { 0%,100%{transform:translateX(0)} 50%{transform:translateX(18px)} }
 @keyframes advance-left { 0%,100%{transform:translateX(0)} 50%{transform:translateX(-18px)} }
 @keyframes projectile-left { 0%{left:72%;opacity:1;transform:rotate(180deg)} 90%{opacity:1} 100%{left:28%;opacity:0;transform:rotate(180deg)} }

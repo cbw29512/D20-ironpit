@@ -2,18 +2,19 @@
   "use strict";
 
   const dice = window.IRON_PIT_DICE;
+  const effects = window.IRON_PIT_EFFECTS;
   const preview = window.IRON_PIT_PREVIEW;
   const weapons = {
-    longsword: { name: "Longsword", attackBonus: 5, count: 1, size: 8, damageBonus: 3, animation: "melee" },
-    scimitar: { name: "Scimitar", attackBonus: 4, count: 1, size: 6, damageBonus: 2, animation: "melee" },
-    shortbow: { name: "Shortbow", attackBonus: 4, count: 1, size: 6, damageBonus: 2, animation: "projectile", projectile: "arrow" },
+    longsword: { id: "longsword", name: "Longsword", attackBonus: 5, count: 1, size: 8, damageBonus: 3, animation: "melee", masteryProperty: "sap" },
+    scimitar: { id: "scimitar", name: "Scimitar", attackBonus: 4, count: 1, size: 6, damageBonus: 2, animation: "melee", masteryProperty: "nick" },
+    shortbow: { id: "shortbow", name: "Shortbow", attackBonus: 4, count: 1, size: 6, damageBonus: 2, animation: "projectile", projectile: "arrow", masteryProperty: "vex" },
   };
 
   function d20(modifier, mode = "normal") {
     try {
       const rolls = mode === "normal" ? [dice.roll(20)] : dice.rollMany(2, 20);
       const selected = mode === "advantage" ? Math.max(...rolls) : mode === "disadvantage" ? Math.min(...rolls) : rolls[0];
-      return { notation: "1d20", rolls, selected_roll: selected, modifier, total: selected + modifier, mode };
+      return { notation: mode === "normal" ? "1d20" : "2d20", rolls, selected_roll: selected, modifier, total: selected + modifier, mode };
     } catch (error) { console.error("Preview d20 resolution failed", error); throw error; }
   }
 
@@ -25,20 +26,33 @@
     } catch (error) { console.error("Preview damage resolution failed", error); throw error; }
   }
 
-  function attack(state, actor, target, weapon, mode = "normal") {
+  function canUseMastery(actor, weapon) {
+    try { return actor.template.weapon_masteries?.includes(weapon.id) && weapon.masteryProperty === "sap"; }
+    catch (error) { console.error("Preview mastery eligibility failed", error); return false; }
+  }
+
+  function attack(actor, target, weapon, baseMode = "normal") {
     try {
+      const mode = effects.resolveRollMode(baseMode, actor.attackRollEffects);
       const roll = d20(weapon.attackBonus, mode);
+      effects.consumeAttackEffects(actor);
       const natural = roll.selected_roll;
       const critical = natural === 20;
       const hit = natural !== 1 && (critical || roll.total >= target.template.armor_class);
       const damageRoll = hit ? damage(weapon, critical) : null;
       if (hit) target.hp = Math.max(0, target.hp - damageRoll.total);
+      let featureId = null;
+      if (hit && target.hp > 0 && canUseMastery(actor, weapon)) {
+        effects.applySap(target, actor.template.id);
+        featureId = "sap";
+      }
       const modeText = mode === "normal" ? "" : ` at ${mode[0].toUpperCase()}${mode.slice(1)}`;
+      const sapText = featureId === "sap" ? " Sap hinders the target's next attack roll." : "";
       return {
         event_type: "attack", actor_id: actor.template.id, target_id: target.template.id,
-        description: `${actor.template.name}: ${critical ? "CRITICAL HIT" : hit ? "HIT" : "MISS"} with ${weapon.name}${modeText}.`,
+        description: `${actor.template.name}: ${critical ? "CRITICAL HIT" : hit ? "HIT" : "MISS"} with ${weapon.name}${modeText}.${sapText}`,
         attack_roll: roll, damage_roll: damageRoll, hit, critical, hp_after: target.hp,
-        animation: weapon.animation, projectile: weapon.projectile || null,
+        animation: weapon.animation, projectile: weapon.projectile || null, feature_id: featureId,
       };
     } catch (error) { console.error("Preview attack failed", error); throw error; }
   }
@@ -61,6 +75,7 @@
 
   function fighterTurn(state, fighter, goblin, events) {
     try {
+      effects.expireAtSourceTurn([fighter, goblin], fighter.template.id);
       secondWind(state, fighter, events);
       if (state.distance > 5) {
         const move = Math.min(30, state.distance - 5);
@@ -76,22 +91,24 @@
           return;
         }
       }
-      events.push(attack(state, fighter, goblin, weapons.longsword));
+      events.push(attack(fighter, goblin, weapons.longsword));
     } catch (error) { console.error("Preview Fighter turn failed", error); throw error; }
   }
 
   function goblinTurn(state, goblin, fighter, events) {
     try {
-      if (state.distance <= 5) events.push(attack(state, goblin, fighter, weapons.scimitar));
-      else events.push(attack(state, goblin, fighter, weapons.shortbow, state.distance > 80 ? "disadvantage" : "normal"));
+      effects.expireAtSourceTurn([fighter, goblin], goblin.template.id);
+      const weapon = state.distance <= 5 ? weapons.scimitar : weapons.shortbow;
+      const rangeMode = state.distance > 80 ? "disadvantage" : "normal";
+      events.push(attack(goblin, fighter, weapon, rangeMode));
     } catch (error) { console.error("Preview Goblin turn failed", error); throw error; }
   }
 
   function buildBattle(startingDistance) {
     try {
-      if (!dice || !preview?.roster) throw new Error("Preview dependencies are unavailable.");
-      const fighter = { template: preview.roster.fighter, hp: preview.roster.fighter.max_hp };
-      const goblin = { template: preview.roster.monster, hp: preview.roster.monster.max_hp };
+      if (!dice || !effects || !preview?.roster) throw new Error("Preview dependencies are unavailable.");
+      const fighter = { template: preview.roster.fighter, hp: preview.roster.fighter.max_hp, attackRollEffects: [] };
+      const goblin = { template: preview.roster.monster, hp: preview.roster.monster.max_hp, attackRollEffects: [] };
       const state = { distance: startingDistance, secondWindUses: 2 };
       const events = [];
       const fighterInit = d20(fighter.template.initiative_bonus);

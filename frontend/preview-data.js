@@ -12,8 +12,9 @@
       max_hp: 12,
       speed_ft: 30,
       initiative_bonus: 1,
-      weapon_attack: { weapon: { name: "Longsword" } },
+      weapon_attack: { weapon: { id: "longsword", name: "Longsword", mastery_property: "sap" } },
       alternate_weapon_attacks: [],
+      weapon_masteries: ["longsword"],
       visual: { armor: "chain-mail", off_hand: "shield" },
     };
 
@@ -27,8 +28,9 @@
       max_hp: 10,
       speed_ft: 30,
       initiative_bonus: 2,
-      weapon_attack: { weapon: { name: "Scimitar" } },
-      alternate_weapon_attacks: [{ weapon: { name: "Shortbow" } }],
+      weapon_attack: { weapon: { id: "scimitar", name: "Scimitar", mastery_property: "nick" } },
+      alternate_weapon_attacks: [{ weapon: { id: "shortbow", name: "Shortbow", mastery_property: "vex" } }],
+      weapon_masteries: [],
       visual: { armor: "leather", off_hand: "shield" },
     };
 
