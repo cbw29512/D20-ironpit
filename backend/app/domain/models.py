@@ -16,7 +16,14 @@ from app.domain.combatants import (
 )
 from app.domain.conditions import ConditionKind
 from app.domain.encounters import DuelMode, EncounterSetup, PrecombatActorPlan
-from app.domain.events import BattleEvent, BattleResult, DamageRollComponent, DiceRoll, RollMode
+from app.domain.events import (
+    BattleEvent,
+    BattleResult,
+    CombatCardEffectChange,
+    DamageRollComponent,
+    DiceRoll,
+    RollMode,
+)
 from app.domain.resources import ResourceDefinition, ResourceState
 from app.domain.saves import SavingThrowResult
 from app.domain.visibility import ActorVisibilityState, CoverLevel
@@ -29,6 +36,7 @@ __all__ = [
     "BattleEvent",
     "BattlefieldState",
     "BattleResult",
+    "CombatCardEffectChange",
     "CombatantState",
     "CombatantTemplate",
     "ConditionKind",
