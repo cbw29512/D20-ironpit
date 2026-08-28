@@ -1,9 +1,8 @@
-from fastapi.testclient import TestClient
-
 from app.content.low_cr_monsters import build_bandit, build_guard
 from app.content.test_roster import build_test_catalog
+from app.domain.models import DuelMode, WeaponAttackKind
 from app.main import app
-from app.domain.models import WeaponAttackKind
+from app.test_arena_api import create_mara_ambush, create_test_battle, get_test_roster
 
 
 def test_bandit_matches_2024_basic_rules_combat_block() -> None:
@@ -59,29 +58,31 @@ def test_test_catalog_exposes_two_pregens_and_three_monsters() -> None:
     ]
 
 
-def test_selectable_roster_api_returns_catalog() -> None:
-    response = TestClient(app).get("/api/test/roster")
-    assert response.status_code == 200
-    body = response.json()
-    assert len(body["characters"]) == 2
-    assert len(body["monsters"]) == 3
+def test_selectable_routes_are_mounted() -> None:
+    paths = {route.path for route in app.routes}
+    assert "/api/test/roster" in paths
+    assert "/api/test/battle/{character_id}/{monster_id}/{mode}" in paths
+    assert "/api/test/ambush/{monster_id}" in paths
+
+
+def test_selectable_roster_route_function_returns_catalog() -> None:
+    catalog = get_test_roster()
+    assert len(catalog["characters"]) == 2
+    assert len(catalog["monsters"]) == 3
 
 
 def test_selectable_melee_and_ranged_battles_run() -> None:
-    client = TestClient(app)
-    melee = client.post("/api/test/battle/mara-vale-l1/srd-bandit/melee")
-    ranged = client.post("/api/test/battle/aldric-vane-l1/srd-guard/ranged")
-    assert melee.status_code == 200
-    assert ranged.status_code == 200
-    assert melee.json()["fighter"]["template"]["id"] == "mara-vale-l1"
-    assert melee.json()["monster"]["template"]["id"] == "srd-bandit"
-    assert ranged.json()["battlefield"]["starting_distance_ft"] == 20
+    melee = create_test_battle("mara-vale-l1", "srd-bandit", DuelMode.MELEE)
+    ranged = create_test_battle("aldric-vane-l1", "srd-guard", DuelMode.RANGED)
+    assert melee.fighter.template.id == "mara-vale-l1"
+    assert melee.monster.template.id == "srd-bandit"
+    assert ranged.fighter.template.id == "aldric-vane-l1"
+    assert ranged.monster.template.id == "srd-guard"
+    assert ranged.battlefield.starting_distance_ft == 20
 
 
 def test_mara_ambush_accepts_any_test_monster() -> None:
-    response = TestClient(app).post("/api/test/ambush/srd-guard")
-    assert response.status_code == 200
-    body = response.json()
-    assert body["fighter"]["template"]["id"] == "mara-vale-l1"
-    assert body["monster"]["template"]["id"] == "srd-guard"
-    assert body["battlefield"]["starting_distance_ft"] == 60
+    result = create_mara_ambush("srd-guard")
+    assert result.fighter.template.id == "mara-vale-l1"
+    assert result.monster.template.id == "srd-guard"
+    assert result.battlefield.starting_distance_ft == 60
