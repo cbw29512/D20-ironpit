@@ -2,9 +2,7 @@ from __future__ import annotations
 
 from enum import StrEnum
 from typing import Literal
-
 from pydantic import BaseModel, Field
-
 from app.domain.abilities import AbilityKind
 from app.domain.conditions import ConditionKind
 from app.domain.damage import DamageType
@@ -69,6 +67,7 @@ class WeaponAttack(BaseModel):
     id: str
     weapon: Weapon
     attack_bonus: int
+    ability: AbilityKind | None = None
     ability_damage_modifier: int = 0
     damage_bonus: int = 0
     conditional_damage: list[ConditionalDamage] = Field(default_factory=list)
