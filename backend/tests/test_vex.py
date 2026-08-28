@@ -111,7 +111,7 @@ def test_goblin_shortbow_does_not_gain_vex_without_mastery() -> None:
     fighter = build_combatant_state(build_demo_fighter())
     shortbow = goblin.template.alternate_weapon_attacks[0]
 
-    event = resolve_attack(1, 1, goblin, fighter, shortbow, 35, FixedDiceProvider([14, 3]))
+    event = resolve_attack(1, 1, goblin, fighter, shortbow, 35, FixedDiceProvider([15, 3]))
 
     assert event.hit is True
     assert event.feature_id is None
