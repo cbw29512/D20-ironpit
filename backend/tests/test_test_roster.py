@@ -54,11 +54,12 @@ def test_guard_matches_2024_basic_rules_combat_block() -> None:
     assert thrown.ability_damage_modifier == 1
 
 
-def test_public_catalog_exposes_two_pregens_and_simple_monsters() -> None:
+def test_public_catalog_exposes_three_pregens_and_simple_monsters() -> None:
     catalog = build_test_catalog()
     assert [item.id for item in catalog["characters"]] == [
         "aldric-vane-l1",
         "mara-vale-l1",
+        "kara-stonefury-l1",
     ]
     assert [item.id for item in catalog["monsters"]] == [
         "srd-bandit",
@@ -83,15 +84,18 @@ def test_selectable_routes_are_in_public_api_contract() -> None:
 
 def test_selectable_roster_route_function_returns_catalog() -> None:
     catalog = get_test_roster()
-    assert len(catalog["characters"]) == 2
+    assert len(catalog["characters"]) == 3
     assert len(catalog["monsters"]) == 2
 
 
 def test_one_button_fight_uses_monster_starting_distance() -> None:
     ranged = create_test_fight("aldric-vane-l1", "srd-bandit")
     melee = create_test_fight("mara-vale-l1", "srd-guard")
+    barbarian = create_test_fight("kara-stonefury-l1", "srd-guard")
     assert ranged.battlefield.starting_distance_ft == 20
     assert melee.battlefield.starting_distance_ft == 5
+    assert barbarian.fighter.template.id == "kara-stonefury-l1"
+    assert any(event.feature_id == "rage" for event in barbarian.events)
 
 
 def test_selectable_melee_and_ranged_battles_remain_qa_hooks() -> None:
