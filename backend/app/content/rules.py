@@ -14,7 +14,9 @@ A = RuleCoverageStatus.ARENA_ASSUMPTION
 def build_rules_coverage() -> RulesCoverageReport:
     try:
         entries = [
-            RuleCoverageEntry(id="initiative", name="Initiative", status=I, notes="d20 plus Initiative modifier; rolls are recorded."),
+            RuleCoverageEntry(id="initiative", name="Initiative", status=I, notes="d20 plus Initiative modifier; Invisible Advantage and Surprise Disadvantage use canonical cancellation."),
+            RuleCoverageEntry(id="surprise", name="Surprise", status=I, notes="Scenario-declared unaware targets roll Initiative with Disadvantage when combat starts from a successful hidden ambush."),
+            RuleCoverageEntry(id="precombat-hide", name="Pre-combat Hide", status=I, notes="Eligible actors can attempt Hide before Initiative without spending their first combat Action or Bonus Action."),
             RuleCoverageEntry(id="attack-rolls", name="Weapon attack rolls", status=I, notes="AC checks, natural 1 misses, and natural 20 hits are implemented."),
             RuleCoverageEntry(id="critical-hits", name="Weapon critical hits", status=I, notes="A natural 20 doubles weapon and eligible conditional damage dice."),
             RuleCoverageEntry(id="advantage", name="Advantage and Disadvantage", status=I, notes="Multiple sources collapse using the normal cancellation rule."),
@@ -32,14 +34,16 @@ def build_rules_coverage() -> RulesCoverageReport:
             RuleCoverageEntry(id="opportunity-attacks", name="Opportunity Attacks", status=I, notes="Leaving melee reach can spend a Reaction for one melee attack before movement resolves."),
             RuleCoverageEntry(id="disengage", name="Disengage", status=I, notes="Disengage suppresses Opportunity Attacks for retreat movement during the current turn."),
             RuleCoverageEntry(id="reactions", name="Reactions", status=P, notes="Reaction availability and Opportunity Attacks are implemented; other Reaction features are not."),
-            RuleCoverageEntry(id="nimble-escape", name="Goblin Nimble Escape", status=P, notes="Bonus Action Disengage and retreat are implemented; Hide is not yet implemented."),
-            RuleCoverageEntry(id="hide", name="Hide", status=U, notes="Requires concealment, visibility, and Stealth state."),
-            RuleCoverageEntry(id="conditions", name="Conditions", status=U, notes="General condition rules are not implemented."),
-            RuleCoverageEntry(id="cover", name="Cover", status=U, notes="Battlefield cover and line-of-effect rules are not implemented."),
+            RuleCoverageEntry(id="nimble-escape", name="Goblin Nimble Escape", status=P, notes="Bonus Action Disengage and Hide are both wired; the Hide option inherits the partial Hide/Invisible rule boundary."),
+            RuleCoverageEntry(id="hide", name="Hide", status=P, notes="DC 15 Stealth, concealment/line-of-sight eligibility, stored discovery DC, Search discovery, attack-roll reveal, and pre-combat Hide are implemented; loud-noise and Verbal-spell reveal triggers await those systems."),
+            RuleCoverageEntry(id="search-hidden", name="Search for hidden creatures", status=I, notes="Wisdom (Perception) can use the Search action against a hidden creature's recorded Hide DC."),
+            RuleCoverageEntry(id="invisible", name="Invisible condition", status=P, notes="Initiative Advantage and attack Advantage/Disadvantage are implemented for hidden creatures; seen-target effect restrictions await broader spell/effect targeting."),
+            RuleCoverageEntry(id="conditions", name="Conditions", status=P, notes="The Invisible subset is implemented; a general condition framework is not yet complete."),
+            RuleCoverageEntry(id="cover", name="Cover", status=P, notes="Cover categories are represented for Hide eligibility; AC, Dexterity-save bonuses, and line-of-effect are not yet implemented."),
             RuleCoverageEntry(id="spells", name="Spells", status=U, notes="Spellcasting is outside the current duel slice."),
             RuleCoverageEntry(id="death-saves", name="Death Saving Throws", status=U, notes="The arena currently treats 0 HP as defeat."),
             RuleCoverageEntry(id="initiative-ties", name="Initiative ties", status=A, notes="The arena currently uses Initiative bonus as its deterministic tie-breaker."),
-            RuleCoverageEntry(id="arena-geometry", name="Arena geometry", status=A, notes="Current combat uses one-dimensional distance in an open arena and assumes opponents are visible."),
+            RuleCoverageEntry(id="arena-geometry", name="Arena geometry", status=A, notes="Combat uses one-dimensional distance; open-arena visibility is the default, with explicit per-actor concealment overrides for Hide scenarios."),
         ]
         return RulesCoverageReport(entries=entries)
     except Exception as exc:

@@ -13,11 +13,33 @@
 
 ## Implemented rules
 
-The current engine supports initiative, melee and ranged attacks, AC, natural 1/20 behavior, critical weapon dice, HP, healing, 0-HP arena defeat, movement, retreat movement, Dash, weapon ranges, close-ranged Disadvantage, Advantage/Disadvantage cancellation, Fighter Second Wind, Goblin conditional Advantage damage, Opportunity Attacks, Disengage, Longsword Sap, reusable Vex, the Light weapon extra attack, Two-Weapon Fighting, and Nick.
+The current engine supports initiative, Surprise, pre-combat Hide, melee and ranged attacks, AC, natural 1/20 behavior, critical weapon dice, HP, healing, 0-HP arena defeat, movement, retreat movement, Dash, weapon ranges, close-ranged Disadvantage, Advantage/Disadvantage cancellation, Fighter Second Wind, Goblin conditional Advantage damage, Opportunity Attacks, Disengage, Longsword Sap, reusable Vex, the Light weapon extra attack, Two-Weapon Fighting, and Nick.
+
+### Pre-combat stealth and Surprise
+
+Combatants are no longer forced to materialize in an open arena and immediately roll Initiative. A scenario can declare that an actor attempts **Hide before combat** when the battlefield actually provides Heavy Obscurement, Three-Quarters Cover, or Total Cover and removes enemy line of sight.
+
+A successful pre-combat Hide:
+
+- uses the normal DC 15 Dexterity (Stealth) Hide rule,
+- grants the supported Invisible condition state,
+- does not spend the character's first combat Action or Bonus Action,
+- grants Advantage on Initiative while Invisible,
+- can impose Surprise Disadvantage on explicitly unaware ambush targets,
+- grants Advantage on the hidden creature's first attack roll,
+- ends after that attack roll under the currently supported Hide-ending triggers.
+
+If the Hide check fails, the attempted ambush does **not** automatically produce Surprise. Advantage and Disadvantage on Initiative use the same canonical cancellation rule as other d20 rolls.
+
+The Hide/Invisible implementation remains deliberately **partial**: attack-roll reveal and Search discovery are implemented, but loud-noise and Verbal-spell reveal triggers await sound/spell systems, and Invisible's broader seen-target restrictions await generalized spell/effect targeting.
+
+### Light weapons and Nick
 
 The **Light** rule uses a canonical Attack-action path: an Attack-action attack with a Light weapon can enable one extra attack with a different configured Light weapon. The normal extra attack spends the Bonus Action, is limited to once per turn, and omits a positive ability modifier from damage while retaining a negative modifier and any separate damage bonus. **Two-Weapon Fighting** restores the ability modifier. **Nick** moves that same Light extra attack into the Attack action for a mastered Nick weapon and does not create another Light extra attack.
 
-The Goblin Warrior uses the **Disengage option** of Nimble Escape as a Bonus Action when trapped in melee, retreats, and can switch to its Shortbow. Opportunity Attack handling verifies that Disengage actually prevents the reaction before movement. The Hide option remains unsupported because the arena does not yet model visibility, concealment, or Stealth.
+### Goblin tactics
+
+The Goblin Warrior can use either option of **Nimble Escape** as a Bonus Action. In melee it prioritizes Disengage, retreats without provoking an Opportunity Attack, and can switch to its Shortbow. At range, when valid concealment exists, it can Hide and attack with the resulting Advantage. The open arena does not fabricate concealment, so Hide is unavailable there unless the scenario supplies it.
 
 Weapon mastery data currently records:
 
@@ -26,7 +48,7 @@ Weapon mastery data currently records:
 - Shortsword — Vex
 - Shortbow — Vex
 
-A weapon having mastery metadata does **not** grant mastery to its wielder. Aldric currently masters Longsword. The SRD Goblin Warrior does not receive player weapon mastery features, so the current demo does not gain Nick merely because its Scimitar record carries Nick. Light/Nick are reusable engine capabilities for combatants whose configured weapons and mastery choices actually qualify.
+A weapon having mastery metadata does **not** grant mastery to its wielder. Aldric currently masters Longsword. The SRD Goblin Warrior does not receive player weapon mastery features merely from carrying a weapon with a mastery property.
 
 ## Rules coverage API
 
@@ -39,9 +61,9 @@ A weapon having mastery metadata does **not** grant mastery to its wielder. Aldr
 
 The API contract is the source of truth for scope. `frontend/rules-coverage.json` must match it exactly, and CI fails if the static and FastAPI contracts drift apart. The arena renders this coverage report for direct inspection.
 
-Current deliberate gaps include the Hide option of Nimble Escape, general conditions, cover/line-of-effect, spells, death saving throws, and Reaction features other than Opportunity Attacks.
+Current deliberate gaps include the complete general condition framework, full Cover AC/Dexterity-save and line-of-effect behavior, spells, death saving throws, and Reaction features other than Opportunity Attacks.
 
-The arena currently uses Initiative bonus as a deterministic tie-breaker and models combat as one-dimensional distance in an open arena with visible opponents. Both are reported explicitly as arena assumptions.
+The arena currently uses Initiative bonus as a deterministic tie-breaker and models combat as one-dimensional distance. Open-arena visibility is the default, with explicit per-actor concealment overrides for terrain-aware scenarios.
 
 ## Run locally
 
@@ -107,8 +129,8 @@ If `IRON_PIT_API_BASE` is blank, the site intentionally runs the secure browser 
 
 ## Next rules milestones
 
-1. Add visibility, concealment, and Stealth state, then implement the Hide action and finish Goblin Nimble Escape.
-2. Add cover and line-of-effect on top of the battlefield visibility model.
-3. Add a reusable condition framework before condition-producing attacks, spells, or features.
-4. Expand Reaction support beyond Opportunity Attacks only when a concrete rule requires it.
+1. Add a level-1 Rogue combatant and canonical once-per-turn Sneak Attack, using pre-combat Hide/Surprise to prove the solo ambush path.
+2. Add Rogue Cunning Action at level 2 on the existing Dash/Disengage/Hide action paths.
+3. Add full Cover AC/Dexterity-save bonuses and line-of-effect on top of the battlefield visibility model.
+4. Expand the reusable condition framework only as concrete attacks, spells, or features require it.
 5. Run a final deployed Render + Netlify end-to-end release gate before promoting the combat milestone to `main`.
