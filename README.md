@@ -8,15 +8,17 @@ A rules-first fantasy duel prototype: **Aldric Vane, Level 1 Fighter vs. the SRD
 - OS-backed secure random dice (`secrets`) determine rolls.
 - Natural 1 misses; natural 20 hits and doubles weapon damage dice.
 - Fighter and monster HP, initiative, attack rolls, damage, victory, and battle events are recorded.
-- Static Netlify-ready frontend replays the server event log as stick-figure sword attacks.
+- Static Netlify-ready frontend replays the server event log as stick-figure combat.
 - GitHub Actions tests the backend and deployment artifacts.
 - Docker packages the API.
 
 ## Rules coverage in this first slice
 
-Implemented: initiative modifiers, melee attack vs. AC, natural 1/20 attack behavior, critical weapon dice, HP, 0 HP defeat.
+Implemented: initiative modifiers; melee and ranged weapon attacks; normal/long range validation; ranged attacks while an enemy is within 5 feet; movement and Dash; natural 1/20 attack behavior; critical weapon dice; HP and 0 HP defeat; reusable weapon/attack records; Fighter Second Wind; Advantage/Disadvantage roll resolution; Goblin conditional bonus damage when an attack actually has Advantage; and Longsword Sap with its next-attack and start-of-next-turn timing.
 
-Not implemented yet: Fighter Second Wind, Weapon Mastery (including Longsword Sap), Goblin Nimble Escape, advantage/disadvantage bonus damage, movement/range, reactions, conditions, spells, death saves, cover, opportunity attacks.
+Weapon mastery data is recorded for Longsword (Sap), Scimitar (Nick), and Shortbow (Vex). **Only Sap is executed by the combat engine today**; Nick and Vex remain data-only until their own rules and regression tests land.
+
+Not implemented yet: Goblin Nimble Escape, Nick, Vex, general Hide/Disengage behavior, reactions, conditions, spells, death saves, cover, opportunity attacks, and a broader rules-coverage report.
 
 Initiative ties currently use initiative bonus as an arena tiebreaker. This is an explicit arena assumption and will be surfaced in the future rules-coverage report.
 
@@ -92,8 +94,8 @@ The build intentionally fails if `IRON_PIT_API_BASE` is missing or is not an `ht
 
 ## Next milestone
 
-1. Verify the deployed Fighter-vs-Goblin battle end-to-end.
-2. Add weapon/armor data as reusable content records.
-3. Implement advantage/disadvantage and Goblin Warrior's conditional bonus damage.
-4. Implement Fighter Second Wind and Longsword Sap.
-5. Add ranged projectile event + shortbow animation.
+1. Implement Goblin Nimble Escape and reusable Disengage/Hide action-state rules.
+2. Implement Vex on top of the generic temporary attack-roll effect system.
+3. Implement Nick only after the engine has a canonical Light-property/extra-attack action model.
+4. Surface rule-feature events such as Sap clearly in the frontend replay and battle log.
+5. Add an explicit machine-readable rules-coverage report so implemented, assumed, and unsupported mechanics are never ambiguous.
