@@ -9,9 +9,12 @@ header h1 { margin:.15rem 0; font-size:clamp(2.4rem,7vw,5rem); letter-spacing:.0
 .combatant { text-align:center; min-width:0; }
 .combatant h2 { margin:0; }
 .combatant p { color:#bbb; min-height:2.5rem; }
-.effects { min-height:1.7rem; margin:.2rem auto .45rem; }
+.effects { min-height:1.85rem; margin:.35rem auto .5rem; }
 .effects[hidden] { display:block; visibility:hidden; }
-.effect-chip { display:inline-flex; align-items:center; justify-content:center; border:1px solid #d7b06a; border-radius:999px; padding:.22rem .62rem; color:#f1d69e; background:#2a2319; font-size:.72rem; font-weight:800; letter-spacing:.04em; }
+.effect-list { display:flex; justify-content:center; align-items:center; gap:.35rem; flex-wrap:wrap; }
+.effect-chip { display:inline-flex; align-items:center; justify-content:center; border:1px solid currentColor; border-radius:999px; padding:.22rem .62rem; font-size:.7rem; font-weight:900; letter-spacing:.04em; }
+.effect-chip[data-kind="buff"] { color:#b8e6b2; background:#162417; }
+.effect-chip[data-kind="debuff"] { color:#f0b1aa; background:#2a1716; }
 .versus { display:grid; place-items:center; gap:4px; font-size:2rem; }
 .versus small { font-size:.8rem; color:#bbb; white-space:nowrap; }
 .stick { width:min(230px,100%); stroke:#eee; stroke-width:7; stroke-linecap:round; fill:none; overflow:visible; }
