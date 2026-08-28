@@ -17,6 +17,10 @@
     } catch (error) { console.error("Rogue preview d20 failed", error); throw error; }
   }
 
+  function cardChange(actorId, effectId, operation, kind = "buff", label = effectId) {
+    return { actor_id: actorId, effect_id: effectId, operation, kind, label };
+  }
+
   function rollDamage(weapon, critical, sneakAttack = false) {
     try {
       const weaponRolls = dice.rollMany(critical ? 2 : 1, 6);
@@ -33,8 +37,14 @@
 
   function attack(actor, target, weapon, mode, allowSneak) {
     try {
+      const effectChanges = [];
+      const wasHidden = actor.hidden;
+      const hadVex = actor.vex;
       const roll = d20(weapon.attackBonus, mode);
       actor.hidden = false;
+      actor.vex = false;
+      if (wasHidden) effectChanges.push(cardChange(actor.template.id, "hidden", "remove", "buff", "Hidden"));
+      if (hadVex) effectChanges.push(cardChange(actor.template.id, `vex:${actor.template.id}:${target.template.id}`, "remove", "buff", "Vex"));
       const critical = roll.selected_roll === 20;
       const hit = roll.selected_roll !== 1 && (critical || roll.total >= target.template.armor_class);
       const sneakAttack = Boolean(hit && allowSneak && mode === "advantage" && !actor.sneakUsed);
@@ -42,13 +52,17 @@
       const damage = hit ? rollDamage(weapon, critical, sneakAttack) : null;
       if (damage) target.hp = Math.max(0, target.hp - damage.total);
       const vex = hit && target.hp > 0 && actor.template.weapon_masteries?.includes(weapon.id);
-      if (vex) actor.vex = true;
+      if (vex) {
+        actor.vex = true;
+        effectChanges.push(cardChange(actor.template.id, `vex:${actor.template.id}:${target.template.id}`, "apply", "buff", "Vex"));
+      }
       return {
         event_type: "attack", actor_id: actor.template.id, target_id: target.template.id,
         description: `${actor.template.name}: ${critical ? "CRITICAL HIT" : hit ? "HIT" : "MISS"} with ${weapon.name}.${sneakAttack ? " Sneak Attack adds precision damage." : ""}${vex ? " Vex grants Advantage on the next attack against this target." : ""}`,
         attack_roll: roll, damage_roll: damage ? { notation: damage.notation, rolls: damage.rolls, modifier: damage.modifier, total: damage.total } : null,
         damage_components: damage?.components || [], hit, critical, hp_after: target.hp,
-        weapon_id: weapon.id, projectile: weapon.projectile, animation: weapon.projectile ? "projectile" : "thrust", feature_id: vex ? "vex" : null,
+        weapon_id: weapon.id, projectile: weapon.projectile, animation: weapon.projectile ? "projectile" : "thrust",
+        feature_id: vex ? "vex" : null, effect_changes: effectChanges,
       };
     } catch (error) { console.error("Rogue preview attack failed", error); throw error; }
   }
@@ -61,7 +75,8 @@
       const events = [];
       const hideRoll = d20(rogue.template.skill_bonuses.stealth);
       rogue.hidden = hideRoll.total >= 15;
-      events.push({ event_type: "hide", actor_id: rogue.template.id, feature_id: "precombat-hide", animation: "hide", description: rogue.hidden ? `${rogue.template.name} hides before combat with Stealth ${hideRoll.total}.` : `${rogue.template.name} fails to hide before combat with Stealth ${hideRoll.total}.` });
+      const hideChanges = rogue.hidden ? [cardChange(rogue.template.id, "hidden", "apply", "buff", "Hidden")] : [];
+      events.push({ event_type: "hide", actor_id: rogue.template.id, feature_id: "precombat-hide", animation: "hide", effect_changes: hideChanges, description: rogue.hidden ? `${rogue.template.name} hides before combat with Stealth ${hideRoll.total}.` : `${rogue.template.name} fails to hide before combat with Stealth ${hideRoll.total}.` });
 
       const rogueInit = d20(rogue.template.initiative_bonus, rogue.hidden ? "advantage" : "normal");
       const goblinInit = d20(goblin.template.initiative_bonus, rogue.hidden ? "disadvantage" : "normal");
@@ -78,7 +93,6 @@
           rogue.sneakUsed = false;
           if (actor === rogue) {
             const mode = rogue.hidden || rogue.vex ? "advantage" : "normal";
-            rogue.vex = false;
             events.push({ round_number: round, ...attack(rogue, goblin, rogueWeapons.shortbow, mode, true) });
           } else {
             const mode = rogue.hidden ? "disadvantage" : "normal";
