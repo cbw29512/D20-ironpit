@@ -6,14 +6,19 @@ from app.combat.masteries import (
     resolve_attack_roll_effect_sources,
 )
 from app.combat.state import begin_turn, build_combatant_state, end_turn
-from app.content.attacks import build_goblin_shortbow_attack
 from app.content.demo import build_demo_fighter, build_goblin_warrior
-from app.domain.models import AttackRollEffectKind, RollMode
+from app.content.equipment import build_shortbow
+from app.domain.models import AttackRollEffectKind, RollMode, WeaponAttack
 
 
 def build_shortbow_master():
     template = build_demo_fighter()
-    template.weapon_attack = build_goblin_shortbow_attack()
+    template.weapon_attack = WeaponAttack(
+        id="test-fighter-shortbow",
+        weapon=build_shortbow(),
+        attack_bonus=5,
+        damage_bonus=3,
+    )
     template.alternate_weapon_attacks = []
     template.weapon_masteries = ["shortbow"]
     return build_combatant_state(template)
