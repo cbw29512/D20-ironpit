@@ -7,6 +7,10 @@ from app.content.monster_equipment import (
     build_axe_beak_beak,
     build_club,
     build_giant_lizard_bite,
+    build_giant_rat_bite,
+    build_giant_weasel_bite,
+    build_guard_spear_melee,
+    build_guard_spear_thrown,
     build_light_crossbow,
 )
 from app.domain.models import WeaponAttack
@@ -45,3 +49,19 @@ def build_axe_beak_attack() -> WeaponAttack:
 
 def build_giant_lizard_attack() -> WeaponAttack:
     return _attack("giant-lizard-bite", build_giant_lizard_bite(), 4, 2)
+
+
+def build_guard_spear_melee_attack() -> WeaponAttack:
+    return _attack("guard-spear-melee", build_guard_spear_melee(), 3, 1)
+
+
+def build_guard_spear_thrown_attack() -> WeaponAttack:
+    return _attack("guard-spear-thrown", build_guard_spear_thrown(), 3, 1)
+
+
+def build_giant_rat_attack() -> WeaponAttack:
+    return _attack("giant-rat-bite", build_giant_rat_bite(), 5, 3)
+
+
+def build_giant_weasel_attack() -> WeaponAttack:
+    return _attack("giant-weasel-bite", build_giant_weasel_bite(), 5, 3)
