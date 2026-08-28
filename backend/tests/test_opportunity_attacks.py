@@ -2,7 +2,7 @@ from app.combat.dice import FixedDiceProvider
 from app.combat.reactions import retreat_with_opportunity_check
 from app.combat.state import begin_turn, build_combatant_state
 from app.content.demo import build_demo_fighter, build_goblin_warrior
-from app.domain.models import BattlefieldState
+from app.domain.models import ActorVisibilityState, BattlefieldState, ConditionKind
 
 
 def test_leaving_reach_triggers_opportunity_attack_before_movement() -> None:
@@ -13,12 +13,7 @@ def test_leaving_reach_triggers_opportunity_attack_before_movement() -> None:
     begin_turn(goblin)
 
     events, next_sequence = retreat_with_opportunity_check(
-        1,
-        1,
-        goblin,
-        fighter,
-        battlefield,
-        FixedDiceProvider([14, 4]),
+        1, 1, goblin, fighter, battlefield, FixedDiceProvider([14, 4])
     )
 
     assert [event.event_type for event in events] == ["attack", "movement"]
@@ -42,16 +37,49 @@ def test_disengage_prevents_opportunity_attack() -> None:
     goblin.disengaged = True
 
     events, next_sequence = retreat_with_opportunity_check(
-        1,
-        1,
-        goblin,
-        fighter,
-        battlefield,
-        FixedDiceProvider([20]),
+        1, 1, goblin, fighter, battlefield, FixedDiceProvider([20])
     )
 
     assert [event.event_type for event in events] == ["movement"]
     assert battlefield.distance_ft == 35
+    assert fighter.reaction_available is True
+    assert next_sequence == 2
+
+
+def test_unseen_mover_does_not_provoke_opportunity_attack() -> None:
+    fighter = build_combatant_state(build_demo_fighter())
+    goblin = build_combatant_state(build_goblin_warrior())
+    battlefield = BattlefieldState(distance_ft=5)
+    begin_turn(fighter)
+    begin_turn(goblin)
+    goblin.conditions.add(ConditionKind.INVISIBLE)
+
+    events, next_sequence = retreat_with_opportunity_check(
+        1, 1, goblin, fighter, battlefield, FixedDiceProvider([20])
+    )
+
+    assert [event.event_type for event in events] == ["movement"]
+    assert fighter.reaction_available is True
+    assert next_sequence == 2
+
+
+def test_broken_line_of_sight_prevents_opportunity_attack() -> None:
+    fighter = build_combatant_state(build_demo_fighter())
+    goblin = build_combatant_state(build_goblin_warrior())
+    battlefield = BattlefieldState(
+        distance_ft=5,
+        visibility_by_actor={
+            goblin.template.id: ActorVisibilityState(enemy_line_of_sight=False)
+        },
+    )
+    begin_turn(fighter)
+    begin_turn(goblin)
+
+    events, next_sequence = retreat_with_opportunity_check(
+        1, 1, goblin, fighter, battlefield, FixedDiceProvider([20])
+    )
+
+    assert [event.event_type for event in events] == ["movement"]
     assert fighter.reaction_available is True
     assert next_sequence == 2
 
@@ -64,12 +92,7 @@ def test_opportunity_attack_can_defeat_mover_before_it_leaves_reach() -> None:
     begin_turn(goblin)
 
     events, next_sequence = retreat_with_opportunity_check(
-        1,
-        1,
-        goblin,
-        fighter,
-        battlefield,
-        FixedDiceProvider([20, 5, 5]),
+        1, 1, goblin, fighter, battlefield, FixedDiceProvider([20, 5, 5])
     )
 
     assert len(events) == 1

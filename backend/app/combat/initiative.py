@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 from collections.abc import Iterable
 
+from app.combat.conditions import is_incapacitated
 from app.combat.dice import DiceProvider
 from app.combat.rolls import resolve_roll_mode, roll_d20
 from app.domain.models import BattleEvent, CombatantState, ConditionKind
@@ -23,7 +24,10 @@ def roll_initiative_order(
         for state in combatants:
             invisible = ConditionKind.INVISIBLE in state.conditions
             is_surprised = state.template.id in surprised
-            mode = resolve_roll_mode(int(invisible), int(is_surprised))
+            incapacitated = is_incapacitated(state)
+            mode = resolve_roll_mode(
+                int(invisible), int(is_surprised) + int(incapacitated)
+            )
             initiative = roll_d20(dice, state.template.initiative_bonus, mode)
             state.initiative_roll = initiative.selected_roll
             state.initiative_total = initiative.total
@@ -33,6 +37,8 @@ def roll_initiative_order(
                 reasons.append("Invisible grants Advantage")
             if is_surprised:
                 reasons.append("Surprise imposes Disadvantage")
+            if incapacitated:
+                reasons.append("Incapacitated imposes Disadvantage")
             detail = f" ({'; '.join(reasons)})" if reasons else ""
             events.append(BattleEvent(
                 sequence=sequence,

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.conditions import require_activity
 from app.combat.dice import DiceProvider
 from app.domain.models import BattleEvent, CombatantState, DiceRoll
 
@@ -16,6 +17,7 @@ def use_second_wind(
 ) -> BattleEvent:
     """Apply the SRD 5.2.1 Second Wind healing/resource rules to a Fighter state."""
     try:
+        require_activity(fighter, "Bonus Action")
         resource = next((item for item in fighter.resources if item.id == "second-wind"), None)
         if resource is None or resource.current_uses <= 0:
             raise ValueError("Second Wind has no remaining uses.")

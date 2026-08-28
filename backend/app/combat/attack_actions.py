@@ -5,7 +5,7 @@ import logging
 from app.combat.attacks import resolve_attack
 from app.combat.dice import DiceProvider
 from app.combat.light_weapons import resolve_light_extra_attack
-from app.domain.models import BattleEvent, CombatantState, WeaponAttack
+from app.domain.models import BattleEvent, BattlefieldState, CombatantState, WeaponAttack
 
 logger = logging.getLogger(__name__)
 
@@ -18,6 +18,7 @@ def resolve_attack_action(
     attack: WeaponAttack,
     distance_ft: int,
     dice: DiceProvider,
+    battlefield: BattlefieldState | None = None,
 ) -> tuple[list[BattleEvent], int]:
     """Resolve one Attack action plus any legal Light-property extra attack."""
     try:
@@ -30,6 +31,7 @@ def resolve_attack_action(
                 attack,
                 distance_ft,
                 dice,
+                battlefield=battlefield,
             )
         ]
         sequence += 1
@@ -44,6 +46,7 @@ def resolve_attack_action(
             attack,
             distance_ft,
             dice,
+            battlefield=battlefield,
         )
         if light_extra is not None:
             events.append(light_extra)

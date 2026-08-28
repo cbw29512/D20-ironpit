@@ -5,15 +5,11 @@ import uuid
 
 from app.combat.attack_actions import resolve_attack_action
 from app.combat.battle_start import resolve_battle_start
+from app.combat.conditions import is_incapacitated
 from app.combat.dice import DiceProvider
-from app.combat.fighter import use_second_wind
-from app.combat.policy import should_use_second_wind
-from app.combat.state import (
-    begin_turn,
-    build_combatant_state,
-    end_turn,
-    expire_attack_roll_effects_at_turn_start,
-)
+from app.combat.lifecycle import begin_actor_turn, end_actor_turn
+from app.combat.state import build_combatant_state
+from app.combat.turn_features import apply_automatic_turn_features
 from app.combat.turns import prepare_attack, prepare_nimble_hide, prepare_skirmish_retreat
 from app.domain.models import (
     ActorVisibilityState,
@@ -21,6 +17,7 @@ from app.domain.models import (
     BattlefieldState,
     BattleResult,
     CombatantTemplate,
+    DuelMode,
     EncounterSetup,
 )
 
@@ -35,6 +32,7 @@ def run_duel(
     starting_distance_ft: int = 5,
     visibility_by_actor: dict[str, ActorVisibilityState] | None = None,
     encounter_setup: EncounterSetup | None = None,
+    duel_mode: DuelMode = DuelMode.OPEN,
 ) -> BattleResult:
     try:
         fighter = build_combatant_state(fighter_template)
@@ -55,31 +53,38 @@ def run_duel(
                 if not attacker.is_alive or not defender.is_alive:
                     continue
 
-                expire_attack_roll_effects_at_turn_start(attacker, combatants)
-                begin_turn(attacker)
-                if attacker is fighter and should_use_second_wind(fighter):
-                    events.append(use_second_wind(sequence, round_number, fighter, dice))
-                    sequence += 1
+                turn_events, sequence = begin_actor_turn(
+                    sequence, round_number, attacker, combatants
+                )
+                events.extend(turn_events)
+                if is_incapacitated(attacker):
+                    turn_events, sequence = end_actor_turn(
+                        sequence, round_number, attacker, combatants
+                    )
+                    events.extend(turn_events)
+                    continue
+                feature_events, sequence = apply_automatic_turn_features(
+                    sequence, round_number, attacker, dice
+                )
+                events.extend(feature_events)
 
                 retreat_events, sequence = prepare_skirmish_retreat(
-                    sequence,
-                    round_number,
-                    attacker,
-                    defender,
-                    battlefield,
-                    dice,
+                    sequence, round_number, attacker, defender, battlefield, dice, duel_mode
                 )
                 events.extend(retreat_events)
                 hide_events, sequence = prepare_nimble_hide(
-                    sequence, round_number, attacker, battlefield, dice
+                    sequence, round_number, attacker, battlefield, dice, duel_mode
                 )
                 events.extend(hide_events)
                 weapon, prep_events, sequence = prepare_attack(
-                    sequence, round_number, attacker, battlefield
+                    sequence, round_number, attacker, battlefield, duel_mode
                 )
                 events.extend(prep_events)
                 if weapon is None:
-                    end_turn(attacker, combatants)
+                    turn_events, sequence = end_actor_turn(
+                        sequence, round_number, attacker, combatants
+                    )
+                    events.extend(turn_events)
                     continue
 
                 attack_events, sequence = resolve_attack_action(
@@ -90,9 +95,13 @@ def run_duel(
                     weapon,
                     battlefield.distance_ft,
                     dice,
+                    battlefield=battlefield,
                 )
                 events.extend(attack_events)
-                end_turn(attacker, combatants)
+                turn_events, sequence = end_actor_turn(
+                    sequence, round_number, attacker, combatants
+                )
+                events.extend(turn_events)
 
                 if not defender.is_alive:
                     events.append(BattleEvent(

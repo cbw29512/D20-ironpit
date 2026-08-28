@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.card_effects import hidden_effect_change
+from app.combat.conditions import is_incapacitated
 from app.combat.dice import DiceProvider
 from app.combat.rolls import roll_d20
 from app.domain.models import (
@@ -44,12 +46,14 @@ def can_hide(actor: CombatantState, battlefield: BattlefieldState) -> bool:
         raise RuntimeError("Hide eligibility could not be resolved.") from exc
 
 
-def break_hidden(state: CombatantState) -> None:
+def break_hidden(state: CombatantState) -> bool:
     try:
-        if state.hidden:
-            state.hidden = False
-            state.hidden_dc = None
-            state.conditions.discard(ConditionKind.INVISIBLE)
+        if not state.hidden:
+            return False
+        state.hidden = False
+        state.hidden_dc = None
+        state.conditions.discard(ConditionKind.INVISIBLE)
+        return True
     except Exception as exc:
         logger.exception("Failed to reveal %s.", state.template.name)
         raise RuntimeError("Hidden state could not be ended.") from exc
@@ -79,6 +83,8 @@ def take_hide_action(
     feature_id: str = HIDE_FEATURE,
 ) -> BattleEvent:
     try:
+        if is_incapacitated(actor):
+            raise ValueError("Incapacitated creatures cannot take the Hide action.")
         if actor.hidden:
             raise ValueError("Combatant is already hidden.")
         if spend_action and not actor.action_available:
@@ -96,6 +102,7 @@ def take_hide_action(
             actor.conditions.add(ConditionKind.INVISIBLE)
 
         result = "succeeds" if success else "fails"
+        changes = [hidden_effect_change(actor, "apply")] if success else []
         return BattleEvent(
             sequence=sequence,
             round_number=round_number,
@@ -104,6 +111,7 @@ def take_hide_action(
             actor_name=actor.template.name,
             check_roll=check,
             feature_id=feature_id,
+            effect_changes=changes,
             animation="hide",
             description=f"{actor.template.name} {result} on the Hide action.",
         )

@@ -1,3 +1,4 @@
+from app.domain.abilities import AbilityKind
 from app.domain.combatants import (
     AttackRollEffect,
     AttackRollEffectKind,
@@ -5,10 +6,7 @@ from app.domain.combatants import (
     CombatantState,
     CombatantTemplate,
     ConditionalDamage,
-    DamageType,
     DemoRoster,
-    ResourceDefinition,
-    ResourceState,
     VisualLoadout,
     Weapon,
     WeaponAttack,
@@ -16,17 +14,29 @@ from app.domain.combatants import (
     WeaponProperty,
 )
 from app.domain.conditions import ConditionKind
-from app.domain.encounters import EncounterSetup, PrecombatActorPlan
-from app.domain.events import BattleEvent, BattleResult, DamageRollComponent, DiceRoll, RollMode
+from app.domain.damage import DamageType
+from app.domain.encounters import DuelMode, EncounterSetup, PrecombatActorPlan
+from app.domain.events import (
+    BattleEvent,
+    BattleResult,
+    CombatCardEffectChange,
+    DamageRollComponent,
+    DiceRoll,
+    RollMode,
+)
+from app.domain.resources import ResourceDefinition, ResourceState
+from app.domain.saves import SavingThrowResult
 from app.domain.visibility import ActorVisibilityState, CoverLevel
 
 __all__ = [
+    "AbilityKind",
     "ActorVisibilityState",
     "AttackRollEffect",
     "AttackRollEffectKind",
     "BattleEvent",
     "BattlefieldState",
     "BattleResult",
+    "CombatCardEffectChange",
     "CombatantState",
     "CombatantTemplate",
     "ConditionKind",
@@ -36,11 +46,13 @@ __all__ = [
     "DamageType",
     "DemoRoster",
     "DiceRoll",
+    "DuelMode",
     "EncounterSetup",
     "PrecombatActorPlan",
     "ResourceDefinition",
     "ResourceState",
     "RollMode",
+    "SavingThrowResult",
     "VisualLoadout",
     "Weapon",
     "WeaponAttack",

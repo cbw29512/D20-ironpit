@@ -37,16 +37,17 @@ def resolve_attack_roll_effect_sources(
 def consume_attack_roll_effects(
     state: CombatantState,
     target_actor_id: str | None = None,
-) -> None:
+) -> list[AttackRollEffect]:
     try:
-        state.attack_roll_effects = [
+        consumed = [
             effect
             for effect in state.attack_roll_effects
-            if not (
-                effect.consume_on_attack
-                and _applies_to_target(effect, target_actor_id)
-            )
+            if effect.consume_on_attack and _applies_to_target(effect, target_actor_id)
         ]
+        state.attack_roll_effects = [
+            effect for effect in state.attack_roll_effects if effect not in consumed
+        ]
+        return consumed
     except Exception as exc:
         logger.exception("Failed to consume attack-roll effects for %s.", state.template.name)
         raise RuntimeError("Attack-roll effects could not be consumed.") from exc
@@ -72,6 +73,7 @@ def _apply_vex(attacker: CombatantState, defender: CombatantState) -> str:
         effect for effect in attacker.attack_roll_effects
         if not (effect.id == VEX_MASTERY and effect.target_actor_id == defender.template.id)
     ]
+    turns_remaining = 2 if attacker.turn_active else 1
     attacker.attack_roll_effects.append(
         AttackRollEffect(
             id=VEX_MASTERY,
@@ -79,7 +81,7 @@ def _apply_vex(attacker: CombatantState, defender: CombatantState) -> str:
             target_actor_id=defender.template.id,
             kind=AttackRollEffectKind.ADVANTAGE,
             expires_at_start_of_source_turn=False,
-            source_turns_remaining=2,
+            source_turns_remaining=turns_remaining,
         )
     )
     return VEX_MASTERY

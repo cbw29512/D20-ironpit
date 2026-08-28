@@ -1,19 +1,48 @@
 (() => {
   "use strict";
 
-  const meleeButton = document.querySelector("#fight-button");
-  const rangedButton = document.querySelector("#ranged-button");
-  const buttons = [meleeButton, rangedButton];
+  const fightButton = document.querySelector("#fight-button");
+  const characterSelect = document.querySelector("#character-select");
+  const monsterSelect = document.querySelector("#monster-select");
   const apiBase = String(window.IRON_PIT_API_BASE || "").trim().replace(/\/$/, "");
-  const preview = window.IRON_PIT_PREVIEW;
+  const previewRoster = window.IRON_PIT_TEST_ROSTER;
+  const previewEngine = window.IRON_PIT_TEST_ENGINE;
   const arenaState = {
     fighter: { id: "aldric-vane-l1", maxHp: 12 },
-    goblin: { id: "srd-goblin-warrior", maxHp: 10 },
+    goblin: { id: "srd-bandit", maxHp: 11 },
   };
+  let catalog = { characters: [], monsters: [] };
 
-  function setButtonsDisabled(disabled) {
-    try { for (const button of buttons) button.disabled = disabled; }
-    catch (error) { console.error("Button state update failed", error); }
+  function selectedCharacter() { return catalog.characters.find((item) => item.id === characterSelect.value); }
+  function selectedMonster() { return catalog.monsters.find((item) => item.id === monsterSelect.value); }
+
+  function setControlsDisabled(disabled) {
+    try {
+      fightButton.disabled = disabled;
+      characterSelect.disabled = disabled;
+      monsterSelect.disabled = disabled;
+    } catch (error) { console.error("Control state update failed", error); }
+  }
+
+  function populateSelect(select, items, labeler) {
+    select.innerHTML = "";
+    for (const item of items) {
+      const option = document.createElement("option");
+      option.value = item.id;
+      option.textContent = labeler(item);
+      select.appendChild(option);
+    }
+  }
+
+  function hydrateSelection(view, message = "Ready — press Fight.") {
+    try {
+      const fighter = selectedCharacter();
+      const monster = selectedMonster();
+      if (!fighter || !monster) throw new Error("Selected matchup is unavailable.");
+      view.hydrateRoster({ fighter, monster });
+      view.resetArena(message, monster.openingDistance ?? 5);
+      setControlsDisabled(false);
+    } catch (error) { console.error("Matchup hydration failed", error); view.setStatus("Matchup could not be loaded."); }
   }
 
   async function loadRulesCoverage(rulesView) {
@@ -28,44 +57,44 @@
     }
   }
 
-  async function loadRoster(view) {
+  async function loadCatalog(view) {
     try {
-      if (!apiBase) {
-        if (!preview?.roster) throw new Error("Secure preview roster is unavailable.");
-        view.hydrateRoster(preview.roster);
-        view.resetArena("Secure random preview ready — choose a starting distance.", 5);
-        return;
+      if (apiBase) {
+        const response = await fetch(`${apiBase}/api/test/roster`);
+        if (!response.ok) throw new Error(`Test roster returned ${response.status}`);
+        catalog = await response.json();
+      } else {
+        if (!previewRoster) throw new Error("Secure preview test roster is unavailable.");
+        catalog = { characters: Object.values(previewRoster.characters), monsters: Object.values(previewRoster.monsters) };
       }
-      const response = await fetch(`${apiBase}/api/roster/demo`);
-      if (!response.ok) throw new Error(`Roster API returned ${response.status}`);
-      view.hydrateRoster(await response.json());
-      view.resetArena("Ready — choose a starting distance.", 5);
+      populateSelect(characterSelect, catalog.characters, (item) => `${item.name} · ${item.archetype} ${item.level}`);
+      populateSelect(monsterSelect, catalog.monsters, (item) => `${item.name} · CR ${item.challenge_rating}`);
+      characterSelect.value = "aldric-vane-l1";
+      monsterSelect.value = "srd-bandit";
+      hydrateSelection(view, "Choose a matchup, then press Fight.");
     } catch (error) {
-      console.error("Roster load failed", error);
-      view.resetArena("Arena data could not be loaded.", 5);
+      console.error("Test roster load failed", error);
+      view.resetArena("Test roster could not be loaded.", 5);
     }
   }
 
-  async function requestBattle(endpoint) {
+  async function requestBattle() {
+    const characterId = characterSelect.value;
+    const monsterId = monsterSelect.value;
     try {
-      if (!apiBase) {
-        if (!preview?.buildBattle) throw new Error("Secure preview engine is unavailable.");
-        return preview.buildBattle(endpoint.includes("ranged") ? 90 : 5);
-      }
+      if (!apiBase) return previewEngine.buildAutomaticBattle(characterId, monsterId);
+      const endpoint = `/api/test/fight/${encodeURIComponent(characterId)}/${encodeURIComponent(monsterId)}`;
       const response = await fetch(`${apiBase}${endpoint}`, { method: "POST" });
       if (!response.ok) throw new Error(`Battle API returned ${response.status}`);
       return await response.json();
-    } catch (error) {
-      console.error("Battle request failed", error);
-      throw error;
-    }
+    } catch (error) { console.error("Battle request failed", error); throw error; }
   }
 
-  async function startFight(view, endpoint, fallbackDistance) {
+  async function startFight(view) {
     try {
-      setButtonsDisabled(true);
-      view.resetArena(apiBase ? "Requesting battle..." : "Rolling secure random battle...", fallbackDistance);
-      const battle = await requestBattle(endpoint);
+      setControlsDisabled(true);
+      view.resetArena(apiBase ? "Requesting fight..." : "The duel begins...", selectedMonster()?.openingDistance ?? 5);
+      const battle = await requestBattle();
       view.hydrateRoster({ fighter: battle.fighter.template, monster: battle.monster.template });
       view.resetArena("Rolling initiative...", battle.battlefield.starting_distance_ft);
       await view.replay(battle.events);
@@ -73,17 +102,17 @@
     } catch (error) {
       console.error("Fight failed", error);
       view.setStatus(apiBase ? "Battle failed. Check the FastAPI deployment." : "Secure preview battle failed.");
-    } finally {
-      setButtonsDisabled(false);
-    }
+    } finally { setControlsDisabled(false); }
   }
 
   try {
     const view = window.createIronPitArenaView(arenaState);
     const rulesView = window.createIronPitRulesView();
-    meleeButton.addEventListener("click", () => startFight(view, "/api/battles/demo", 5));
-    rangedButton.addEventListener("click", () => startFight(view, "/api/battles/demo-ranged", 90));
-    loadRoster(view);
+    characterSelect.addEventListener("change", () => hydrateSelection(view));
+    monsterSelect.addEventListener("change", () => hydrateSelection(view));
+    fightButton.addEventListener("click", () => startFight(view));
+    setControlsDisabled(true);
+    loadCatalog(view);
     loadRulesCoverage(rulesView);
   } catch (error) {
     console.error("App initialization failed", error);

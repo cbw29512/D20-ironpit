@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.conditions import require_activity
 from app.combat.dice import DiceProvider
+from app.combat.disengage import take_disengage_action
 from app.combat.stealth import take_hide_action
 from app.domain.models import BattleEvent, BattlefieldState, CombatantState
 
@@ -14,6 +16,7 @@ def _validate_nimble_escape(actor: CombatantState) -> None:
     try:
         if NIMBLE_ESCAPE not in actor.template.bonus_action_features:
             raise ValueError("Combatant does not have Nimble Escape.")
+        require_activity(actor, "Bonus Action")
         if not actor.bonus_action_available:
             raise ValueError("Bonus Action is not available.")
     except ValueError:
@@ -31,20 +34,19 @@ def use_nimble_escape_disengage(
 ) -> BattleEvent:
     try:
         _validate_nimble_escape(actor)
-        actor.bonus_action_available = False
-        actor.disengaged = True
-        return BattleEvent(
-            sequence=sequence,
-            round_number=round_number,
-            event_type="disengage",
-            actor_id=actor.template.id,
-            actor_name=actor.template.name,
-            distance_before_ft=battlefield.distance_ft,
-            distance_after_ft=battlefield.distance_ft,
+        event = take_disengage_action(
+            sequence,
+            round_number,
+            actor,
+            battlefield,
+            spend_action=False,
             feature_id=NIMBLE_ESCAPE,
-            animation="disengage",
-            description=f"{actor.template.name} uses Nimble Escape to take the Disengage action.",
         )
+        actor.bonus_action_available = False
+        event.description = (
+            f"{actor.template.name} uses Nimble Escape to take the Disengage action."
+        )
+        return event
     except ValueError:
         raise
     except Exception as exc:

@@ -27,6 +27,7 @@ def build_shortbow_master():
 def test_vex_applies_after_mastered_weapon_deals_damage() -> None:
     archer = build_shortbow_master()
     target = build_combatant_state(build_goblin_warrior())
+    begin_turn(archer)
 
     event = resolve_attack(
         1, 1, archer, target, archer.template.weapon_attack, 30, FixedDiceProvider([14, 3])
@@ -44,6 +45,7 @@ def test_vex_applies_after_mastered_weapon_deals_damage() -> None:
 def test_vex_grants_next_attack_advantage_then_is_consumed() -> None:
     archer = build_shortbow_master()
     target = build_combatant_state(build_goblin_warrior())
+    begin_turn(archer)
     resolve_attack(
         1, 1, archer, target, archer.template.weapon_attack, 30, FixedDiceProvider([14, 3])
     )
@@ -92,6 +94,7 @@ def test_vex_is_specific_to_the_creature_that_was_hit() -> None:
 def test_unused_vex_expires_at_end_of_next_turn() -> None:
     archer = build_shortbow_master()
     target = build_combatant_state(build_goblin_warrior())
+    begin_turn(archer)
     apply_weapon_mastery_on_hit(
         archer,
         target,
@@ -106,12 +109,36 @@ def test_unused_vex_expires_at_end_of_next_turn() -> None:
     assert archer.attack_roll_effects == []
 
 
+def test_reaction_applied_vex_expires_at_end_of_immediate_next_turn() -> None:
+    archer = build_shortbow_master()
+    target = build_combatant_state(build_goblin_warrior())
+
+    event = resolve_attack(
+        1,
+        1,
+        archer,
+        target,
+        archer.template.weapon_attack,
+        30,
+        FixedDiceProvider([14, 3]),
+        spend_action=False,
+    )
+
+    assert event.hit is True
+    assert archer.turn_active is False
+    assert archer.attack_roll_effects[0].source_turns_remaining == 1
+    begin_turn(archer)
+    assert len(archer.attack_roll_effects) == 1
+    end_turn(archer, (archer, target))
+    assert archer.attack_roll_effects == []
+
+
 def test_goblin_shortbow_does_not_gain_vex_without_mastery() -> None:
     goblin = build_combatant_state(build_goblin_warrior())
     fighter = build_combatant_state(build_demo_fighter())
     shortbow = goblin.template.alternate_weapon_attacks[0]
 
-    event = resolve_attack(1, 1, goblin, fighter, shortbow, 35, FixedDiceProvider([14, 3]))
+    event = resolve_attack(1, 1, goblin, fighter, shortbow, 35, FixedDiceProvider([15, 3]))
 
     assert event.hit is True
     assert event.feature_id is None

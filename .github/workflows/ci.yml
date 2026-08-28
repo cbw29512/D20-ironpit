@@ -26,17 +26,37 @@ jobs:
         run: |
           node --check frontend/app.js
           node --check frontend/preview-data.js
+          node --check frontend/preview-test-data.js
           node --check frontend/preview-dice.js
           node --check frontend/preview-effects.js
+          node --check frontend/preview-barbarian.js
+          node --check frontend/preview-damage.js
           node --check frontend/preview-tactics.js
           node --check frontend/preview-engine.js
-          node --check frontend/arena-view.js
+          node --check frontend/preview-rogue.js
+          node --check frontend/preview-test-engine.js
+          node --check frontend/preview-test-ambush.js
           node --check frontend/arena-animations.js
+          node --check frontend/effects-view.js
+          node --check frontend/figure-view.js
+          node --check frontend/arena-view.js
           node --check frontend/rules-view.js
       - name: Validate preview combat effects
         run: node scripts/check_preview_effects.js
+      - name: Validate combat-card effects
+        run: node scripts/check_card_effects.js
       - name: Validate preview combat tactics
         run: node scripts/check_preview_tactics.js
+      - name: Validate controlled arena modes
+        run: node scripts/check_preview_modes.js
+      - name: Validate Rogue ambush preview
+        run: node scripts/check_preview_rogue.js
+      - name: Validate Barbarian Rage preview
+        run: node scripts/check_preview_barbarian.js
+      - name: Validate selectable test roster
+        run: node scripts/check_test_roster.js
+      - name: Validate simple stable arena UX
+        run: node scripts/check_arena_ux.js
       - name: Validate Netlify static preview config
         run: |
           unset IRON_PIT_API_BASE

@@ -17,6 +17,7 @@ class RuleCoverageEntry(BaseModel):
     name: str
     status: RuleCoverageStatus
     notes: str
+    sources: list[str] = Field(min_length=1)
 
 
 class RulesCoverageReport(BaseModel):

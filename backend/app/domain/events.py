@@ -5,7 +5,8 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-from app.domain.combatants import BattlefieldState, CombatantState, DamageType
+from app.domain.combatants import BattlefieldState, CombatantState
+from app.domain.damage import DamageType
 
 
 class RollMode(StrEnum):
@@ -32,12 +33,21 @@ class DamageRollComponent(BaseModel):
     total: int
 
 
+class CombatCardEffectChange(BaseModel):
+    actor_id: str
+    effect_id: str
+    operation: Literal["apply", "remove"]
+    kind: Literal["buff", "debuff"] | None = None
+    label: str | None = None
+    detail: str | None = None
+
+
 class BattleEvent(BaseModel):
     sequence: int
     round_number: int
     event_type: Literal[
-        "initiative", "movement", "dash", "disengage", "hide", "search",
-        "attack", "healing", "victory", "draw"
+        "initiative", "movement", "dash", "disengage", "dodge", "hide", "search",
+        "status", "attack", "healing", "victory", "draw"
     ]
     actor_id: str
     actor_name: str
@@ -47,6 +57,8 @@ class BattleEvent(BaseModel):
     check_roll: DiceRoll | None = None
     damage_roll: DiceRoll | None = None
     damage_components: list[DamageRollComponent] = Field(default_factory=list)
+    damage_applied: int | None = Field(default=None, ge=0)
+    effect_changes: list[CombatCardEffectChange] = Field(default_factory=list)
     healing_roll: DiceRoll | None = None
     hit: bool | None = None
     critical: bool = False
@@ -60,6 +72,7 @@ class BattleEvent(BaseModel):
     feature_id: str | None = None
     reaction_id: str | None = None
     resource_remaining: int | None = None
+    log_visible: bool = True
     animation: str
     description: str
 

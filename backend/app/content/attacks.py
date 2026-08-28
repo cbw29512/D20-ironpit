@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.content.equipment import build_longsword, build_scimitar, build_shortbow
+from app.content.thrown_weapons import build_handaxe_throw
 from app.domain.models import ConditionalDamage, DamageType, WeaponAttack
 
 logger = logging.getLogger(__name__)
@@ -34,6 +35,20 @@ def build_fighter_longsword_attack() -> WeaponAttack:
     except Exception as exc:
         logger.exception("Failed to build Fighter longsword attack profile.")
         raise RuntimeError("Fighter longsword attack could not be created.") from exc
+
+
+def build_fighter_handaxe_throw() -> WeaponAttack:
+    try:
+        return WeaponAttack(
+            id="aldric-handaxe-throw",
+            weapon=build_handaxe_throw(),
+            attack_bonus=5,
+            ability_damage_modifier=3,
+            open_tactic_eligible=False,
+        )
+    except Exception as exc:
+        logger.exception("Failed to build Fighter thrown handaxe attack profile.")
+        raise RuntimeError("Fighter thrown handaxe attack could not be created.") from exc
 
 
 def build_goblin_scimitar_attack() -> WeaponAttack:
