@@ -2,17 +2,13 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.attack_damage import resolve_attack_damage
 from app.combat.attack_rolls import resolve_attack_mode_and_cover
-from app.combat.card_effects import (
-    attack_effect_change,
-    hidden_effect_change,
-    mastery_effect_change,
-)
+from app.combat.barbarian import extend_rage_by_attack
+from app.combat.card_effects import attack_effect_change, hidden_effect_change, mastery_effect_change
 from app.combat.conditions import is_automatic_critical_hit, is_incapacitated
-from app.combat.damage import resolve_weapon_damage
 from app.combat.dice import DiceProvider
 from app.combat.masteries import apply_weapon_mastery_on_hit, consume_attack_roll_effects
-from app.combat.rogue import resolve_sneak_attack_component
 from app.combat.rolls import roll_d20
 from app.combat.stealth import break_hidden
 from app.domain.models import BattleEvent, BattlefieldState, CombatantState, WeaponAttack
@@ -44,11 +40,10 @@ def resolve_attack(
             attacker, defender, weapon, distance_ft, battlefield
         )
         attack_roll = roll_d20(dice, attack.attack_bonus, mode)
+        extend_rage_by_attack(attacker)
         was_hidden = break_hidden(attacker)
         consumed = consume_attack_roll_effects(attacker, target_id)
-        effect_changes = [
-            attack_effect_change(attacker, effect, "remove") for effect in consumed
-        ]
+        effect_changes = [attack_effect_change(attacker, effect, "remove") for effect in consumed]
         if was_hidden:
             effect_changes.append(hidden_effect_change(attacker, "remove"))
         if spend_action:
@@ -61,29 +56,34 @@ def resolve_attack(
         hp_before = defender.current_hp
         damage_roll = None
         damage_components = []
+        damage_applied = None
         feature_id = None
         sneak_attack_applied = False
+        mitigation_note = ""
 
         if hit:
-            damage_roll, damage_components = resolve_weapon_damage(
-                attacker, attack, dice, critical, mode,
+            damage = resolve_attack_damage(
+                attacker,
+                defender,
+                attack,
+                dice,
+                critical,
+                mode,
                 include_positive_ability_damage_modifier,
             )
-            sneak_component = resolve_sneak_attack_component(
-                attacker, attack, dice, critical, mode
-            )
-            if sneak_component is not None:
-                damage_components.append(sneak_component)
-                damage_roll.notation += f" + {sneak_component.notation}"
-                damage_roll.rolls.extend(sneak_component.rolls)
-                damage_roll.total += sneak_component.total
-                sneak_attack_applied = True
-
-            defender.current_hp = max(0, defender.current_hp - damage_roll.total)
-            defender.is_alive = defender.current_hp > 0
+            damage_roll = damage.roll
+            damage_components = damage.components
+            damage_applied = damage.applied
+            sneak_attack_applied = damage.sneak_attack_applied
+            if damage.immune:
+                mitigation_note = f" Immunity reduces applied damage to {damage.applied}."
+            elif damage.resisted:
+                mitigation_note = f" Resistance reduces applied damage to {damage.applied}."
+            elif damage.vulnerable:
+                mitigation_note = f" Vulnerability increases applied damage to {damage.applied}."
             if defender.is_alive:
                 feature_id = apply_weapon_mastery_on_hit(
-                    attacker, defender, weapon, damage_dealt=damage_roll.total > 0
+                    attacker, defender, weapon, damage_dealt=damage.applied > 0
                 )
                 change = mastery_effect_change(feature_id, attacker, defender)
                 if change is not None:
@@ -95,6 +95,7 @@ def resolve_attack(
             description += f" Cover adds +{cover_bonus} AC."
         if sneak_attack_applied:
             description += " Sneak Attack adds precision damage."
+        description += mitigation_note
         if feature_id == "sap":
             description += " Sap hinders the target's next attack roll."
         elif feature_id == "vex":
@@ -111,6 +112,7 @@ def resolve_attack(
             attack_roll=attack_roll,
             damage_roll=damage_roll,
             damage_components=damage_components,
+            damage_applied=damage_applied,
             effect_changes=effect_changes,
             hit=hit,
             critical=critical,
@@ -123,7 +125,5 @@ def resolve_attack(
             description=description,
         )
     except Exception as exc:
-        logger.exception(
-            "Attack failed: %s -> %s.", attacker.template.name, defender.template.name
-        )
+        logger.exception("Attack failed: %s -> %s.", attacker.template.name, defender.template.name)
         raise RuntimeError("Attack resolution failed.") from exc
