@@ -16,18 +16,15 @@
     const weaponRolls = dice.rollMany(weapon.count * (critical ? 2 : 1), weapon.size);
     components.push({ source: weapon.name, rolls: weaponRolls, total: weaponRolls.reduce((a, b) => a + b, 0) + weapon.damageBonus });
     if (sneakAttack) {
-      const sneakRolls = dice.rollMany(actor.template.sneakAttackDice * (critical ? 2 : 1), 6);
-      components.push({ source: "Sneak Attack", rolls: sneakRolls, total: sneakRolls.reduce((a, b) => a + b, 0) });
+      const rolls = dice.rollMany(actor.template.sneakAttackDice * (critical ? 2 : 1), 6);
+      components.push({ source: "Sneak Attack", rolls, total: rolls.reduce((a, b) => a + b, 0) });
     }
     if (mode === "advantage" && weapon.conditionalAdvantageDie) {
-      const extra = dice.rollMany(critical ? 2 : 1, weapon.conditionalAdvantageDie);
-      components.push({ source: "Advantage damage", rolls: extra, total: extra.reduce((a, b) => a + b, 0) });
+      const rolls = dice.rollMany(critical ? 2 : 1, weapon.conditionalAdvantageDie);
+      components.push({ source: "Advantage damage", rolls, total: rolls.reduce((a, b) => a + b, 0) });
     }
     const rolls = components.flatMap((component) => component.rolls);
-    return {
-      notation: components.map((component) => component.source).join(" + "), rolls,
-      modifier: weapon.damageBonus, total: components.reduce((sum, component) => sum + component.total, 0), components,
-    };
+    return { notation: components.map((c) => c.source).join(" + "), rolls, modifier: weapon.damageBonus, total: components.reduce((sum, c) => sum + c.total, 0), components };
   }
 
   function attack(actor, target, profile, baseMode = "normal") {
@@ -42,20 +39,11 @@
     if (sneakAttack) actor.sneakUsed = true;
     const damageRoll = hit ? damage(actor, weapon, critical, mode, sneakAttack) : null;
     if (damageRoll) target.hp = Math.max(0, target.hp - damageRoll.total);
-    const mastery = hit && target.hp > 0
-      ? effects.applyWeaponMastery(actor, target, weapon, damageRoll.total)
-      : { featureId: null, changes: [] };
+    const mastery = hit && target.hp > 0 ? effects.applyWeaponMastery(actor, target, weapon, damageRoll.total) : { featureId: null, changes: [] };
     effectChanges.push(...mastery.changes);
     const modeText = mode === "normal" ? "" : ` at ${mode[0].toUpperCase()}${mode.slice(1)}`;
     const featureText = mastery.featureId === "sap" ? " Sap hinders the next attack." : mastery.featureId === "vex" ? " Vex marks the target." : "";
-    return {
-      event_type: "attack", actor_id: actor.template.id, target_id: target.template.id,
-      description: `${actor.template.name}: ${critical ? "CRITICAL HIT" : hit ? "HIT" : "MISS"} with ${weapon.name}${modeText}.${sneakAttack ? " Sneak Attack adds precision damage." : ""}${featureText}`,
-      attack_roll: roll, damage_roll: damageRoll, damage_components: damageRoll?.components || [],
-      hit, critical, hp_after: target.hp, animation: weapon.kind === "ranged" ? "projectile" : "slash",
-      projectile: weapon.projectile, weapon_id: weapon.id, feature_id: mastery.featureId,
-      effect_changes: effectChanges,
-    };
+    return { event_type: "attack", actor_id: actor.template.id, target_id: target.template.id, description: `${actor.template.name}: ${critical ? "CRITICAL HIT" : hit ? "HIT" : "MISS"} with ${weapon.name}${modeText}.${sneakAttack ? " Sneak Attack adds precision damage." : ""}${featureText}`, attack_roll: roll, damage_roll: damageRoll, damage_components: damageRoll?.components || [], hit, critical, hp_after: target.hp, animation: weapon.kind === "ranged" ? "projectile" : "slash", projectile: weapon.projectile, weapon_id: weapon.id, feature_id: mastery.featureId, effect_changes: effectChanges };
   }
 
   function statusEvent(changes) {
@@ -69,12 +57,12 @@
     return ranged || null;
   }
 
-  function moveToward(state, actor, target, events) {
+  function moveToward(state, actor, target, events, maxFeet = actor.template.speed_ft) {
     if (state.distance <= 5) return;
-    const moved = Math.min(actor.template.speed_ft, state.distance - 5);
+    const moved = Math.min(maxFeet, actor.template.speed_ft, state.distance - 5);
     const before = state.distance;
     state.distance -= moved;
-    events.push({ event_type: "movement", actor_id: actor.template.id, description: `${actor.template.name} moves ${moved} ft toward ${target.template.name}.`, movement_ft: moved, distance_before_ft: before, distance_after_ft: state.distance, animation: "advance" });
+    events.push({ event_type: "movement", actor_id: actor.template.id, description: `${actor.template.name} closes ${moved} ft toward ${target.template.name}.`, movement_ft: moved, distance_before_ft: before, distance_after_ft: state.distance, animation: "advance" });
   }
 
   function secondWind(state, actor, events) {
@@ -91,13 +79,10 @@
     const start = statusEvent(effects.expireAtSourceTurn([actor, target], actor.template.id));
     if (start) events.push(start);
     secondWind(state, actor, events);
+    if (mode === "close" && state.distance > 5) moveToward(state, actor, target, events, 10);
     let profile = chooseAttack(actor.template, mode, state.distance);
     if (!profile) {
       moveToward(state, actor, target, events);
-      if (state.distance > 5) {
-        events.push({ event_type: "dash", actor_id: actor.template.id, description: `${actor.template.name} uses Dash.` });
-        moveToward(state, actor, target, events);
-      }
       profile = chooseAttack(actor.template, "melee", state.distance);
     }
     if (profile) events.push(attack(actor, target, profile));
@@ -105,11 +90,12 @@
     if (end) events.push(end);
   }
 
-  function buildTestBattle(characterId, monsterId, mode = "melee") {
+  function buildTestBattle(characterId, monsterId, mode = "melee", startingDistance = null) {
     if (!catalog?.characters?.[characterId] || !catalog?.monsters?.[monsterId]) throw new Error("Selected test combatant is unavailable.");
     const character = { template: catalog.characters[characterId], hp: catalog.characters[characterId].max_hp, attackRollEffects: [], sneakUsed: false };
     const monster = { template: catalog.monsters[monsterId], hp: catalog.monsters[monsterId].max_hp, attackRollEffects: [], sneakUsed: false };
-    const state = { distance: mode === "melee" ? 5 : 20, secondWindUses: 2 };
+    const initialDistance = startingDistance ?? (mode === "melee" ? 5 : 20);
+    const state = { distance: initialDistance, secondWindUses: 2 };
     const events = [];
     const characterInit = d20(character.template.initiative_bonus);
     const monsterInit = d20(monster.template.initiative_bonus);
@@ -126,16 +112,14 @@
     }
     const winner = character.hp > 0 ? character.template.name : monster.hp > 0 ? monster.template.name : null;
     events.push({ event_type: winner ? "victory" : "draw", actor_id: winner ? (winner === character.template.name ? character.template.id : monster.template.id) : "arena", description: winner ? `${winner} wins the duel.` : "The duel ends in a draw.", animation: winner ? "victory" : "draw" });
-    return { fighter: { template: character.template }, monster: { template: monster.template }, battlefield: { starting_distance_ft: mode === "melee" ? 5 : 20 }, events, winner_name: winner, rounds };
+    return { fighter: { template: character.template }, monster: { template: monster.template }, battlefield: { starting_distance_ft: initialDistance }, events, winner_name: winner, rounds };
   }
 
   function buildAutomaticBattle(characterId, monsterId) {
     const monster = catalog?.monsters?.[monsterId];
     if (!monster) throw new Error("Selected monster is unavailable.");
-    return buildTestBattle(characterId, monsterId, monster.openingMode || "melee");
+    return buildTestBattle(characterId, monsterId, "close", monster.openingDistance || 5);
   }
 
-  window.IRON_PIT_TEST_ENGINE = {
-    attack, buildAutomaticBattle, buildTestBattle, d20, statusEvent, takeTurn,
-  };
+  window.IRON_PIT_TEST_ENGINE = { attack, buildAutomaticBattle, buildTestBattle, d20, statusEvent, takeTurn };
 })();
