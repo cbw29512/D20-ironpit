@@ -129,5 +129,11 @@
     return { fighter: { template: character.template }, monster: { template: monster.template }, battlefield: { starting_distance_ft: mode === "melee" ? 5 : 20 }, events, winner_name: winner, rounds };
   }
 
-  window.IRON_PIT_TEST_ENGINE = { attack, buildTestBattle, d20, statusEvent, takeTurn };
+  function buildAutomaticBattle(characterId, monsterId) {
+    const monster = catalog?.monsters?.[monsterId];
+    if (!monster) throw new Error("Selected monster is unavailable.");
+    return buildTestBattle(characterId, monsterId, monster.openingMode || "melee");
+  }
+
+  window.IRON_PIT_TEST_ENGINE = { buildAutomaticBattle, buildTestBattle };
 })();
