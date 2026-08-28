@@ -34,6 +34,7 @@
       }
 
       const effectView = window.createIronPitEffectView(slotForId);
+      const figureView = window.createIronPitFigureView();
 
       function setDistance(value) {
         try { distance.textContent = `${Math.max(0, Number(value) || 0)} ft`; }
@@ -46,7 +47,7 @@
           const safe = Math.max(0, Math.min(current, max));
           document.querySelector(`#${slot}-hp`).textContent = `${safe} / ${max} HP`;
           document.querySelector(`#${slot}-hp-bar`).style.width = `${(safe / max) * 100}%`;
-          if (safe === 0) document.querySelector(`#${slot}`).classList.add("dead");
+          document.querySelector(`#${slot}`).classList.toggle("dead", safe === 0);
         } catch (error) { console.error("HP render failed", error); }
       }
 
@@ -56,7 +57,7 @@
           arenaState[slot].maxHp = template.max_hp;
           document.querySelector(`#${slot}-name`).textContent = template.name;
           document.querySelector(`#${slot}-meta`).textContent = describeTemplate(template);
-          document.querySelector(`#${slot}`).setAttribute("aria-label", `${template.name}, ${describeTemplate(template)}`);
+          figureView.render(slot, template);
           setHp(slot, template.max_hp);
         } catch (error) { console.error(`Failed to render ${slot} template`, error); }
       }
@@ -71,8 +72,9 @@
       function resetArena(message = "Rolling initiative...", startingDistance = 5) {
         try {
           log.innerHTML = "";
+          log.scrollTop = 0;
           for (const slot of ["fighter", "goblin"]) {
-            document.querySelector(`#${slot}`).className.baseVal = `stick${slot === "goblin" ? " goblin" : ""}`;
+            document.querySelector(`#${slot}`).classList.remove("dead", "swing", "critical", "hit", "healing");
             setHp(slot, arenaState[slot].maxHp);
           }
           effectView.resetAll();
@@ -104,7 +106,7 @@
               if (event.feature_id) item.classList.add("feature-event");
               item.textContent = detail;
               log.appendChild(item);
-              item.scrollIntoView({ block: "nearest" });
+              log.scrollTop = log.scrollHeight;
             }
             await animations.play(event);
             effectView.applyChanges(event.effect_changes || []);
