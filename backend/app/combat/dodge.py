@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.card_effects import dodge_effect_change
 from app.combat.conditions import effective_speed_ft, is_incapacitated, require_activity
 from app.combat.sight import can_see_combatant
 from app.domain.models import AbilityKind, BattleEvent, BattlefieldState, CombatantState
@@ -63,6 +64,7 @@ def take_dodge_action(
             actor_id=actor.template.id,
             actor_name=actor.template.name,
             feature_id=DODGE,
+            effect_changes=[dodge_effect_change(actor, "apply")],
             animation="dodge",
             description=f"{actor.template.name} takes the Dodge action.",
         )
