@@ -76,6 +76,7 @@ def begin_turn(state: CombatantState) -> None:
         state.reaction_available = True
         state.movement_remaining_ft = state.template.speed_ft
         state.disengaged = False
+        state.light_extra_attack_used = False
     except Exception as exc:
         logger.exception("Failed to begin turn for %s.", state.template.name)
         raise RuntimeError("Turn state could not be initialized.") from exc

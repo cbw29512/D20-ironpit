@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 import uuid
 
-from app.combat.attacks import resolve_attack
+from app.combat.attack_actions import resolve_attack_action
 from app.combat.dice import DiceProvider
 from app.combat.fighter import use_second_wind
 from app.combat.initiative import roll_initiative_order
@@ -66,7 +66,7 @@ def run_duel(
                     end_turn(attacker, combatants)
                     continue
 
-                event = resolve_attack(
+                attack_events, sequence = resolve_attack_action(
                     sequence,
                     round_number,
                     attacker,
@@ -75,8 +75,7 @@ def run_duel(
                     battlefield.distance_ft,
                     dice,
                 )
-                events.append(event)
-                sequence += 1
+                events.extend(attack_events)
                 end_turn(attacker, combatants)
 
                 if not defender.is_alive:

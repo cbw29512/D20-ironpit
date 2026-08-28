@@ -25,6 +25,7 @@ def resolve_attack(
     distance_ft: int,
     dice: DiceProvider,
     spend_action: bool = True,
+    include_positive_ability_damage_modifier: bool = True,
 ) -> BattleEvent:
     try:
         if spend_action and not attacker.action_available:
@@ -47,7 +48,9 @@ def resolve_attack(
             attacker.action_available = False
         natural = attack_roll.selected_roll or 0
         critical = natural == 20
-        hit = natural != 1 and (critical or attack_roll.total >= defender.template.armor_class)
+        hit = natural != 1 and (
+            critical or attack_roll.total >= defender.template.armor_class
+        )
         hp_before = defender.current_hp
         damage_roll = None
         damage_components = []
@@ -60,6 +63,7 @@ def resolve_attack(
                 dice,
                 critical,
                 mode,
+                include_positive_ability_damage_modifier,
             )
             defender.current_hp = max(0, defender.current_hp - damage_roll.total)
             defender.is_alive = defender.current_hp > 0
@@ -100,5 +104,7 @@ def resolve_attack(
             description=description,
         )
     except Exception as exc:
-        logger.exception("Attack failed: %s -> %s.", attacker.template.name, defender.template.name)
+        logger.exception(
+            "Attack failed: %s -> %s.", attacker.template.name, defender.template.name
+        )
         raise RuntimeError("Attack resolution failed.") from exc
