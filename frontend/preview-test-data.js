@@ -38,22 +38,10 @@
   };
 
   const monsters = {
-    "srd-goblin-warrior": {
-      id: "srd-goblin-warrior", name: "Goblin Warrior", archetype: "Goblin Warrior", level: null,
-      challenge_rating: "1/4", armor_class: 15, max_hp: 10, speed_ft: 30, initiative_bonus: 2,
-      openingMode: "ranged",
-      attacks: [
-        attack("goblin-scimitar", weapon("scimitar", "Scimitar", "melee", 1, 6, 2, { conditionalAdvantageDie: 4 })),
-        attack("goblin-shortbow", weapon("shortbow", "Shortbow", "ranged", 1, 6, 2, { normalRange: 80, longRange: 320, projectile: "arrow", conditionalAdvantageDie: 4 })),
-      ],
-      attackBonus: 4, weapon_masteries: [], features: ["nimble-escape"],
-      skill_bonuses: { stealth: 6 }, passive_perception: 9,
-      visual: { armor: "leather", off_hand: "shield", body_style: "goblin" },
-    },
     "srd-bandit": {
       id: "srd-bandit", name: "Bandit", archetype: "Bandit", level: null,
       challenge_rating: "1/8", armor_class: 12, max_hp: 11, speed_ft: 30, initiative_bonus: 1,
-      openingMode: "ranged",
+      openingDistance: 20,
       attacks: [
         attack("bandit-scimitar", weapon("scimitar", "Scimitar", "melee", 1, 6, 1)),
         attack("bandit-light-crossbow", weapon("light-crossbow", "Light Crossbow", "ranged", 1, 8, 1, { normalRange: 80, longRange: 320, projectile: "bolt" })),
@@ -64,7 +52,7 @@
     "srd-guard": {
       id: "srd-guard", name: "Guard", archetype: "Guard", level: null,
       challenge_rating: "1/8", armor_class: 16, max_hp: 11, speed_ft: 30, initiative_bonus: 1,
-      openingMode: "melee",
+      openingDistance: 5,
       attacks: [
         attack("guard-spear-melee", weapon("spear", "Spear", "melee", 1, 6, 1)),
         attack("guard-spear-thrown", weapon("spear", "Spear", "ranged", 1, 6, 1, { normalRange: 20, longRange: 60, projectile: "spear" })),
