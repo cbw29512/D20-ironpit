@@ -2,17 +2,13 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.barbarian import rage_strength_save_advantage
 from app.combat.conditions import automatically_fails_save, condition_save_disadvantage
 from app.combat.cover import resolve_dex_save_cover_bonus
 from app.combat.dice import DiceProvider
 from app.combat.dodge import dodge_save_advantage
 from app.combat.rolls import resolve_roll_mode, roll_d20
-from app.domain.models import (
-    AbilityKind,
-    BattlefieldState,
-    CombatantState,
-    SavingThrowResult,
-)
+from app.domain.models import AbilityKind, BattlefieldState, CombatantState, SavingThrowResult
 
 logger = logging.getLogger(__name__)
 
@@ -69,9 +65,10 @@ def resolve_saving_throw(
             cover_bonus = resolve_dex_save_cover_bonus(state, battlefield)
         modifier = saving_throw_bonus(state, ability) + circumstantial_modifier + cover_bonus
         dodge_advantage = dodge_save_advantage(state, ability)
+        rage_advantage = rage_strength_save_advantage(state, ability)
         condition_disadvantage = condition_save_disadvantage(state, ability)
         mode = resolve_roll_mode(
-            advantage_sources + dodge_advantage,
+            advantage_sources + dodge_advantage + rage_advantage,
             disadvantage_sources + condition_disadvantage,
         )
         roll = roll_d20(dice, modifier, mode)
