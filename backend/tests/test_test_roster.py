@@ -1,8 +1,13 @@
 from app.content.low_cr_monsters import build_bandit, build_guard
-from app.content.test_roster import build_test_catalog
+from app.content.test_roster import build_test_catalog, get_monster_opening_mode
 from app.domain.models import DuelMode, WeaponAttackKind
 from app.main import app
-from app.test_arena_api import create_mara_ambush, create_test_battle, get_test_roster
+from app.test_arena_api import (
+    create_mara_ambush,
+    create_test_battle,
+    create_test_fight,
+    get_test_roster,
+)
 
 
 def test_bandit_matches_2024_basic_rules_combat_block() -> None:
@@ -58,9 +63,16 @@ def test_test_catalog_exposes_two_pregens_and_three_monsters() -> None:
     ]
 
 
+def test_monsters_choose_their_opening_modes() -> None:
+    assert get_monster_opening_mode("srd-goblin-warrior") is DuelMode.RANGED
+    assert get_monster_opening_mode("srd-bandit") is DuelMode.RANGED
+    assert get_monster_opening_mode("srd-guard") is DuelMode.MELEE
+
+
 def test_selectable_routes_are_in_public_api_contract() -> None:
     paths = set(app.openapi()["paths"])
     assert "/api/test/roster" in paths
+    assert "/api/test/fight/{character_id}/{monster_id}" in paths
     assert "/api/test/battle/{character_id}/{monster_id}/{mode}" in paths
     assert "/api/test/ambush/{monster_id}" in paths
 
@@ -71,7 +83,14 @@ def test_selectable_roster_route_function_returns_catalog() -> None:
     assert len(catalog["monsters"]) == 3
 
 
-def test_selectable_melee_and_ranged_battles_run() -> None:
+def test_one_button_fight_uses_monster_opening_policy() -> None:
+    ranged = create_test_fight("aldric-vane-l1", "srd-bandit")
+    melee = create_test_fight("mara-vale-l1", "srd-guard")
+    assert ranged.battlefield.starting_distance_ft == 20
+    assert melee.battlefield.starting_distance_ft == 5
+
+
+def test_selectable_melee_and_ranged_battles_remain_qa_hooks() -> None:
     melee = create_test_battle("mara-vale-l1", "srd-bandit", DuelMode.MELEE)
     ranged = create_test_battle("aldric-vane-l1", "srd-guard", DuelMode.RANGED)
     assert melee.fighter.template.id == "mara-vale-l1"
@@ -81,7 +100,7 @@ def test_selectable_melee_and_ranged_battles_run() -> None:
     assert ranged.battlefield.starting_distance_ft == 20
 
 
-def test_mara_ambush_accepts_any_test_monster() -> None:
+def test_mara_ambush_remains_internal_qa_hook() -> None:
     result = create_mara_ambush("srd-guard")
     assert result.fighter.template.id == "mara-vale-l1"
     assert result.monster.template.id == "srd-guard"
