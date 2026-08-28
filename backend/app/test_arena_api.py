@@ -12,6 +12,7 @@ from app.content.test_roster import (
     build_test_character,
     build_test_monster,
     get_monster_opening_mode,
+    get_monster_starting_distance,
 )
 from app.domain.models import BattleResult, CombatantTemplate, DuelMode
 
@@ -28,14 +29,22 @@ def get_test_roster() -> dict[str, list[CombatantTemplate]]:
         raise HTTPException(status_code=500, detail="Test roster could not be loaded.") from exc
 
 
-def _run_selected(character_id: str, monster_id: str, mode: DuelMode) -> BattleResult:
+def _run_selected(
+    character_id: str,
+    monster_id: str,
+    mode: DuelMode,
+    starting_distance_ft: int | None = None,
+) -> BattleResult:
     character = build_test_character(character_id)
     monster = build_test_monster(monster_id)
+    distance = starting_distance_ft if starting_distance_ft is not None else (
+        5 if mode is DuelMode.MELEE else 20
+    )
     return run_duel(
         character,
         monster,
         SecureDiceProvider(),
-        starting_distance_ft=5 if mode is DuelMode.MELEE else 20,
+        starting_distance_ft=distance,
         duel_mode=mode,
     )
 
@@ -43,7 +52,12 @@ def _run_selected(character_id: str, monster_id: str, mode: DuelMode) -> BattleR
 @router.post("/fight/{character_id}/{monster_id}", response_model=BattleResult)
 def create_test_fight(character_id: str, monster_id: str) -> BattleResult:
     try:
-        return _run_selected(character_id, monster_id, get_monster_opening_mode(monster_id))
+        return _run_selected(
+            character_id,
+            monster_id,
+            get_monster_opening_mode(monster_id),
+            get_monster_starting_distance(monster_id),
+        )
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     except Exception as exc:
@@ -55,7 +69,7 @@ def create_test_fight(character_id: str, monster_id: str) -> BattleResult:
 def create_test_battle(character_id: str, monster_id: str, mode: DuelMode) -> BattleResult:
     try:
         if mode is DuelMode.OPEN:
-            raise ValueError("Test arena requires melee or ranged mode.")
+            raise ValueError("Test arena requires a controlled mode.")
         return _run_selected(character_id, monster_id, mode)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
