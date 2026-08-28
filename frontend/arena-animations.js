@@ -76,6 +76,7 @@
 
       async function play(event) {
         try {
+          if (event.event_type === "status") return;
           if (event.event_type === "attack") return await animateAttack(event);
           if (event.event_type === "healing") return await animateHealing(event);
           if (event.event_type === "movement") return await animateMovement(event);
