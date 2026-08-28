@@ -23,11 +23,12 @@ try {
   assert(app.includes("/api/test/fight/"), "Live API path must use the one-button fight endpoint.");
   assert(!arenaView.includes("scrollIntoView"), "Battle log must not scroll the whole page.");
   assert(arenaView.includes("log.scrollTop = log.scrollHeight"), "Battle log must scroll internally.");
-  for (const key of ["fighter", "rogue", "goblin", "bandit", "guard"]) {
-    assert(figures.includes(`${key}:`), `Representative ${key} figure must remain available.`);
-  }
-  for (const cue of ["sword", "bow", "scimitar", "spear"]) {
-    assert(figures.includes(cue), `Figure renderer must retain a recognizable ${cue} cue.`);
+
+  const classes = ["barbarian", "bard", "cleric", "druid", "fighter", "monk", "paladin", "ranger", "rogue", "sorcerer", "warlock", "wizard"];
+  for (const key of classes) assert(figures.includes(`${key}:`), `Classic ${key} figure must remain available.`);
+  for (const key of ["goblin", "bandit", "guard"]) assert(figures.includes(`${key}:`), `Simple ${key} figure must remain available.`);
+  for (const cue of ["greataxe", "instrument", "holy-mark", "bow", "shortblade", "magic-orb", "eldritch", "hat", "spear"]) {
+    assert(figures.includes(cue), `Figure renderer must retain its ${cue} identity cue.`);
   }
 
   console.log("Arena UX checks passed.");
