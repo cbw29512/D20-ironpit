@@ -16,6 +16,7 @@ from app.domain.combatants import (
     WeaponProperty,
 )
 from app.domain.conditions import ConditionKind
+from app.domain.encounters import EncounterSetup, PrecombatActorPlan
 from app.domain.events import BattleEvent, BattleResult, DamageRollComponent, DiceRoll, RollMode
 from app.domain.visibility import ActorVisibilityState, CoverLevel
 
@@ -35,6 +36,8 @@ __all__ = [
     "DamageType",
     "DemoRoster",
     "DiceRoll",
+    "EncounterSetup",
+    "PrecombatActorPlan",
     "ResourceDefinition",
     "ResourceState",
     "RollMode",

@@ -4,9 +4,9 @@ import logging
 import uuid
 
 from app.combat.attack_actions import resolve_attack_action
+from app.combat.battle_start import resolve_battle_start
 from app.combat.dice import DiceProvider
 from app.combat.fighter import use_second_wind
-from app.combat.initiative import roll_initiative_order
 from app.combat.policy import should_use_second_wind
 from app.combat.state import (
     begin_turn,
@@ -21,6 +21,7 @@ from app.domain.models import (
     BattlefieldState,
     BattleResult,
     CombatantTemplate,
+    EncounterSetup,
 )
 
 logger = logging.getLogger(__name__)
@@ -33,6 +34,7 @@ def run_duel(
     dice: DiceProvider,
     starting_distance_ft: int = 5,
     visibility_by_actor: dict[str, ActorVisibilityState] | None = None,
+    encounter_setup: EncounterSetup | None = None,
 ) -> BattleResult:
     try:
         fighter = build_combatant_state(fighter_template)
@@ -43,7 +45,9 @@ def run_duel(
             distance_ft=starting_distance_ft,
             visibility_by_actor=visibility_by_actor or {},
         )
-        events, order, sequence = roll_initiative_order(combatants, dice)
+        events, order, sequence = resolve_battle_start(
+            combatants, battlefield, dice, encounter_setup
+        )
 
         for round_number in range(1, MAX_ROUNDS + 1):
             for attacker in order:
