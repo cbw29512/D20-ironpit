@@ -29,6 +29,8 @@ jobs:
           node --check frontend/preview-test-data.js
           node --check frontend/preview-dice.js
           node --check frontend/preview-effects.js
+          node --check frontend/preview-barbarian.js
+          node --check frontend/preview-damage.js
           node --check frontend/preview-tactics.js
           node --check frontend/preview-engine.js
           node --check frontend/preview-rogue.js
@@ -49,6 +51,8 @@ jobs:
         run: node scripts/check_preview_modes.js
       - name: Validate Rogue ambush preview
         run: node scripts/check_preview_rogue.js
+      - name: Validate Barbarian Rage preview
+        run: node scripts/check_preview_barbarian.js
       - name: Validate selectable test roster
         run: node scripts/check_test_roster.js
       - name: Validate simple stable arena UX
