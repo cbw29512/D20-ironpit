@@ -26,8 +26,10 @@ class AttackRollEffect(BaseModel):
     id: str
     source_actor_id: str
     kind: AttackRollEffectKind
+    target_actor_id: str | None = None
     consume_on_attack: bool = True
     expires_at_start_of_source_turn: bool = True
+    source_turns_remaining: int | None = Field(default=None, ge=1)
 
 
 class ConditionalDamage(BaseModel):

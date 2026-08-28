@@ -58,6 +58,7 @@ def run_duel(
             key=lambda state: (state.initiative_total or 0, state.template.initiative_bonus),
             reverse=True,
         )
+        combatants = (fighter, monster)
 
         for round_number in range(1, MAX_ROUNDS + 1):
             for attacker in order:
@@ -65,7 +66,7 @@ def run_duel(
                 if not attacker.is_alive or not defender.is_alive:
                     continue
 
-                expire_attack_roll_effects_at_turn_start(attacker, (fighter, monster))
+                expire_attack_roll_effects_at_turn_start(attacker, combatants)
                 begin_turn(attacker)
                 if attacker is fighter and should_use_second_wind(fighter):
                     events.append(use_second_wind(sequence, round_number, fighter, dice))
@@ -83,7 +84,7 @@ def run_duel(
                 )
                 events.extend(prep_events)
                 if weapon is None:
-                    end_turn(attacker)
+                    end_turn(attacker, combatants)
                     continue
 
                 event = resolve_attack(
@@ -97,7 +98,7 @@ def run_duel(
                 )
                 events.append(event)
                 sequence += 1
-                end_turn(attacker)
+                end_turn(attacker, combatants)
 
                 if not defender.is_alive:
                     events.append(BattleEvent(

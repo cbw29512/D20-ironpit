@@ -27,31 +27,26 @@
     } catch (error) { console.error("Preview damage resolution failed", error); throw error; }
   }
 
-  function canUseMastery(actor, weapon) {
-    try { return actor.template.weapon_masteries?.includes(weapon.id) && weapon.masteryProperty === "sap"; }
-    catch (error) { console.error("Preview mastery eligibility failed", error); return false; }
-  }
-
   function attack(actor, target, weapon, baseMode = "normal") {
     try {
-      const mode = effects.resolveRollMode(baseMode, actor.attackRollEffects);
+      const mode = effects.resolveRollMode(baseMode, actor.attackRollEffects, target.template.id);
       const roll = d20(weapon.attackBonus, mode);
-      effects.consumeAttackEffects(actor);
+      effects.consumeAttackEffects(actor, target.template.id);
       const natural = roll.selected_roll;
       const critical = natural === 20;
       const hit = natural !== 1 && (critical || roll.total >= target.template.armor_class);
       const damageRoll = hit ? damage(weapon, critical) : null;
       if (hit) target.hp = Math.max(0, target.hp - damageRoll.total);
-      let featureId = null;
-      if (hit && target.hp > 0 && canUseMastery(actor, weapon)) {
-        effects.applySap(target, actor.template.id);
-        featureId = "sap";
-      }
+      const featureId = hit && target.hp > 0
+        ? effects.applyWeaponMastery(actor, target, weapon, damageRoll.total)
+        : null;
       const modeText = mode === "normal" ? "" : ` at ${mode[0].toUpperCase()}${mode.slice(1)}`;
-      const sapText = featureId === "sap" ? " Sap hinders the target's next attack roll." : "";
+      const featureText = featureId === "sap"
+        ? " Sap hinders the target's next attack roll."
+        : featureId === "vex" ? " Vex grants Advantage on the next attack against this target." : "";
       return {
         event_type: "attack", actor_id: actor.template.id, target_id: target.template.id,
-        description: `${actor.template.name}: ${critical ? "CRITICAL HIT" : hit ? "HIT" : "MISS"} with ${weapon.name}${modeText}.${sapText}`,
+        description: `${actor.template.name}: ${critical ? "CRITICAL HIT" : hit ? "HIT" : "MISS"} with ${weapon.name}${modeText}.${featureText}`,
         attack_roll: roll, damage_roll: damageRoll, hit, critical, hp_after: target.hp,
         animation: weapon.animation, projectile: weapon.projectile || null, feature_id: featureId,
       };
@@ -65,11 +60,7 @@
         const total = die + 1;
         fighter.hp = Math.min(fighter.template.max_hp, fighter.hp + total);
         state.secondWindUses -= 1;
-        events.push({
-          event_type: "healing", actor_id: fighter.template.id,
-          description: `${fighter.template.name} uses Second Wind and heals ${total} HP.`,
-          healing_roll: { notation: "1d10+1", rolls: [die], modifier: 1, total }, hp_after: fighter.hp,
-        });
+        events.push({ event_type: "healing", actor_id: fighter.template.id, description: `${fighter.template.name} uses Second Wind and heals ${total} HP.`, healing_roll: { notation: "1d10+1", rolls: [die], modifier: 1, total }, hp_after: fighter.hp });
       }
     } catch (error) { console.error("Preview Second Wind failed", error); throw error; }
   }
@@ -89,10 +80,12 @@
           const dashBefore = state.distance;
           state.distance -= dashMove;
           events.push({ event_type: "movement", actor_id: fighter.template.id, description: `${fighter.template.name} moves another ${dashMove} ft.`, movement_ft: dashMove, distance_before_ft: dashBefore, distance_after_ft: state.distance });
+          effects.endSourceTurn([fighter, goblin], fighter.template.id);
           return;
         }
       }
       events.push(attack(fighter, goblin, weapons.longsword));
+      effects.endSourceTurn([fighter, goblin], fighter.template.id);
     } catch (error) { console.error("Preview Fighter turn failed", error); throw error; }
   }
 
@@ -103,6 +96,7 @@
       const weapon = state.distance <= 5 ? weapons.scimitar : weapons.shortbow;
       const rangeMode = state.distance > 80 ? "disadvantage" : "normal";
       events.push(attack(goblin, fighter, weapon, rangeMode));
+      effects.endSourceTurn([fighter, goblin], goblin.template.id);
     } catch (error) { console.error("Preview Goblin turn failed", error); throw error; }
   }
 
