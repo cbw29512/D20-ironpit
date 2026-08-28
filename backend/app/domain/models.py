@@ -6,7 +6,6 @@ from app.domain.combatants import (
     CombatantState,
     CombatantTemplate,
     ConditionalDamage,
-    DamageType,
     DemoRoster,
     VisualLoadout,
     Weapon,
@@ -15,6 +14,7 @@ from app.domain.combatants import (
     WeaponProperty,
 )
 from app.domain.conditions import ConditionKind
+from app.domain.damage import DamageType
 from app.domain.encounters import DuelMode, EncounterSetup, PrecombatActorPlan
 from app.domain.events import (
     BattleEvent,
