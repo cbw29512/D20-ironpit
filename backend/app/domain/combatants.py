@@ -18,6 +18,7 @@ class WeaponAttackKind(StrEnum):
 class WeaponProperty(StrEnum):
     AMMUNITION = "ammunition"
     FINESSE = "finesse"
+    HEAVY = "heavy"
     LIGHT = "light"
     THROWN = "thrown"
     TWO_HANDED = "two-handed"
