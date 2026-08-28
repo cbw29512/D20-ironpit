@@ -1,4 +1,5 @@
 from app.domain.combatants import (
+    ArenaRoster,
     BattlefieldState,
     CombatantState,
     CombatantTemplate,
@@ -15,6 +16,7 @@ from app.domain.combatants import (
 from app.domain.events import BattleEvent, BattleResult, DamageRollComponent, DiceRoll, RollMode
 
 __all__ = [
+    "ArenaRoster",
     "BattleEvent",
     "BattlefieldState",
     "BattleResult",
