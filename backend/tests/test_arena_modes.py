@@ -40,3 +40,18 @@ def test_ranged_mode_switches_to_melee_after_engagement() -> None:
 
     assert select_weapon_attack(fighter, 5, DuelMode.RANGED).weapon.id == "longsword"
     assert select_weapon_attack(goblin, 5, DuelMode.RANGED).weapon.id == "scimitar"
+
+
+def test_open_mode_preserves_fighter_primary_melee_tactic() -> None:
+    fighter = build_combatant_state(build_demo_fighter())
+
+    assert select_weapon_attack(fighter, 20, DuelMode.OPEN) is None
+    assert preferred_approach_distance(fighter, DuelMode.OPEN) == 5
+
+
+def test_open_mode_keeps_goblin_shortbow_skirmish_option() -> None:
+    goblin = build_combatant_state(build_goblin_warrior())
+
+    attack = select_weapon_attack(goblin, 35, DuelMode.OPEN)
+    assert attack is not None
+    assert attack.weapon.id == "shortbow"

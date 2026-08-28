@@ -44,6 +44,7 @@ def build_fighter_handaxe_throw() -> WeaponAttack:
             weapon=build_handaxe_throw(),
             attack_bonus=5,
             ability_damage_modifier=3,
+            open_tactic_eligible=False,
         )
     except Exception as exc:
         logger.exception("Failed to build Fighter thrown handaxe attack profile.")

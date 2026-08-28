@@ -68,10 +68,16 @@ def should_use_nimble_escape_hide(
         raise RuntimeError("Nimble Escape Hide policy could not be evaluated.") from exc
 
 
-def _legal_attacks(state: CombatantState, distance_ft: int) -> list[WeaponAttack]:
+def _legal_attacks(
+    state: CombatantState,
+    distance_ft: int,
+    include_mode_only: bool = False,
+) -> list[WeaponAttack]:
     profiles = [state.template.weapon_attack, *state.template.alternate_weapon_attacks]
     legal: list[WeaponAttack] = []
     for attack in profiles:
+        if not include_mode_only and not attack.open_tactic_eligible:
+            continue
         try:
             resolve_attack_roll_mode(attack.weapon, distance_ft)
             legal.append(attack)
@@ -87,7 +93,11 @@ def select_weapon_attack(
 ) -> WeaponAttack | None:
     """Pick a legal attack matching the controlled arena mode when possible."""
     try:
-        legal = _legal_attacks(state, distance_ft)
+        legal = _legal_attacks(
+            state,
+            distance_ft,
+            include_mode_only=duel_mode is not DuelMode.OPEN,
+        )
         if not legal or duel_mode is DuelMode.OPEN:
             return legal[0] if legal else None
         preferred_kind = (

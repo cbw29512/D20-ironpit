@@ -77,6 +77,7 @@ class WeaponAttack(BaseModel):
     ability_damage_modifier: int = 0
     damage_bonus: int = 0
     conditional_damage: list[ConditionalDamage] = Field(default_factory=list)
+    open_tactic_eligible: bool = True
 
 
 class VisualLoadout(BaseModel):
