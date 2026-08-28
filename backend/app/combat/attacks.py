@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.conditions import is_incapacitated
 from app.combat.damage import resolve_weapon_damage
 from app.combat.dice import DiceProvider
 from app.combat.masteries import (
@@ -32,6 +33,8 @@ def resolve_attack(
     battlefield: BattlefieldState | None = None,
 ) -> BattleEvent:
     try:
+        if is_incapacitated(attacker):
+            raise ValueError("Incapacitated creatures cannot make attacks.")
         if spend_action and not attacker.action_available:
             raise ValueError("Action is not available for an attack.")
 
@@ -43,7 +46,10 @@ def resolve_attack(
         sight_advantage, sight_disadvantage = resolve_visibility_attack_sources(
             attacker, defender, battlefield
         )
-        close_enemy_active = can_see_combatant(defender, attacker, battlefield)
+        close_enemy_active = (
+            can_see_combatant(defender, attacker, battlefield)
+            and not is_incapacitated(defender)
+        )
         mode = resolve_attack_roll_mode(
             weapon,
             distance_ft,

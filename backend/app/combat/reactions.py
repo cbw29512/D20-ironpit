@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.attacks import resolve_attack
+from app.combat.conditions import is_incapacitated
 from app.combat.dice import DiceProvider
 from app.combat.movement import move_away_from_target
 from app.combat.sight import can_see_combatant
@@ -42,7 +43,12 @@ def resolve_opportunity_attack(
     battlefield: BattlefieldState | None = None,
 ) -> BattleEvent | None:
     try:
-        if mover.disengaged or not reactor.reaction_available or not reactor.is_alive:
+        if (
+            mover.disengaged
+            or not reactor.reaction_available
+            or not reactor.is_alive
+            or is_incapacitated(reactor)
+        ):
             return None
         if not can_see_combatant(reactor, mover, battlefield):
             return None

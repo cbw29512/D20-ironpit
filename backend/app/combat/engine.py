@@ -5,6 +5,7 @@ import uuid
 
 from app.combat.attack_actions import resolve_attack_action
 from app.combat.battle_start import resolve_battle_start
+from app.combat.conditions import is_incapacitated
 from app.combat.dice import DiceProvider
 from app.combat.fighter import use_second_wind
 from app.combat.policy import should_use_second_wind
@@ -57,6 +58,9 @@ def run_duel(
 
                 expire_attack_roll_effects_at_turn_start(attacker, combatants)
                 begin_turn(attacker, combatants)
+                if is_incapacitated(attacker):
+                    end_turn(attacker, combatants)
+                    continue
                 if attacker is fighter and should_use_second_wind(fighter):
                     events.append(use_second_wind(sequence, round_number, fighter, dice))
                     sequence += 1

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.conditions import require_activity
 from app.domain.models import BattleEvent, BattlefieldState, CombatantState
 
 logger = logging.getLogger(__name__)
@@ -84,6 +85,7 @@ def take_dash(
 ) -> BattleEvent:
     """Spend the Action to gain extra movement equal to current Speed for this turn."""
     try:
+        require_activity(mover, "Action")
         if not mover.action_available:
             raise ValueError("Action is not available for Dash.")
         mover.action_available = False

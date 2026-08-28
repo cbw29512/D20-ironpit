@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.conditions import require_activity
 from app.combat.dice import DiceProvider
 from app.combat.stealth import take_hide_action
 from app.domain.models import BattleEvent, BattlefieldState, CombatantState
@@ -14,6 +15,7 @@ def _validate_nimble_escape(actor: CombatantState) -> None:
     try:
         if NIMBLE_ESCAPE not in actor.template.bonus_action_features:
             raise ValueError("Combatant does not have Nimble Escape.")
+        require_activity(actor, "Bonus Action")
         if not actor.bonus_action_available:
             raise ValueError("Bonus Action is not available.")
     except ValueError:

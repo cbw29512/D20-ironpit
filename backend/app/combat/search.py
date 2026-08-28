@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.conditions import require_activity
 from app.combat.dice import DiceProvider
 from app.combat.rolls import roll_d20
 from app.combat.stealth import break_hidden
@@ -19,6 +20,7 @@ def take_search_action(
     dice: DiceProvider,
 ) -> BattleEvent:
     try:
+        require_activity(observer, "Action")
         if not observer.action_available:
             raise ValueError("Action is not available for Search.")
         if not target.hidden or target.hidden_dc is None:

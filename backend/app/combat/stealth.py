@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.conditions import is_incapacitated
 from app.combat.dice import DiceProvider
 from app.combat.rolls import roll_d20
 from app.domain.models import (
@@ -79,6 +80,8 @@ def take_hide_action(
     feature_id: str = HIDE_FEATURE,
 ) -> BattleEvent:
     try:
+        if is_incapacitated(actor):
+            raise ValueError("Incapacitated creatures cannot take the Hide action.")
         if actor.hidden:
             raise ValueError("Combatant is already hidden.")
         if spend_action and not actor.action_available:
