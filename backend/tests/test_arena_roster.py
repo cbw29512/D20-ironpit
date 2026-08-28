@@ -14,6 +14,7 @@ def test_arena_roster_exposes_certified_batch() -> None:
         "aldric-vane-l1",
         "brom-ironmark-l1",
         "selene-asharrow-l1",
+        "mara-quickstep-l1",
     ]
     assert [item.id for item in roster.monsters] == [
         "srd-goblin-warrior",
@@ -52,6 +53,20 @@ def test_selene_asharrow_matches_archery_fighter_loadout() -> None:
     assert attack.weapon.name == "Longbow"
     assert attack.weapon.attack_kind is WeaponAttackKind.RANGED
     assert (attack.weapon.dice_size, attack.weapon.normal_range_ft, attack.weapon.long_range_ft) == (8, 150, 600)
+
+
+def test_mara_quickstep_matches_level_one_rogue_loadout() -> None:
+    mara = _by_id(get_arena_roster().characters, "mara-quickstep-l1")
+
+    assert (mara.level, mara.armor_class, mara.max_hp) == (1, 14, 10)
+    assert mara.archetype == "Rogue"
+    assert mara.initiative_bonus == 3
+    assert len(mara.weapon_masteries) == 2
+    assert mara.weapon_attack.weapon.name == "Shortsword"
+    assert mara.alternate_weapon_attacks[0].weapon.name == "Shortbow"
+    assert (mara.weapon_attack.attack_bonus, mara.weapon_attack.damage_bonus) == (5, 3)
+    assert mara.weapon_attack.conditional_damage[0].dice_size == 6
+    assert mara.weapon_attack.conditional_damage[0].trigger == "attack_advantage"
 
 
 def test_srd_bandit_profile() -> None:
