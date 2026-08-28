@@ -56,7 +56,7 @@ docker compose up --build
 The repository contains `render.yaml` for a free prototype web service using `backend/Dockerfile`.
 
 1. In Render, choose **New > Blueprint**.
-2. Connect `cbw29512/github-D20`.
+2. Connect `cbw29512/D20-ironpit`.
 3. Use the default `render.yaml` Blueprint path and deploy it.
 4. Copy the resulting public `https://...onrender.com` API URL.
 5. Confirm `GET /health` returns `{"status":"ok"}`.
@@ -67,7 +67,7 @@ The free Render instance can spin down after inactivity, so the first battle aft
 
 `netlify.toml` publishes `frontend/` and generates `frontend/config.js` during the Netlify build.
 
-1. In Netlify, import the existing GitHub repository `cbw29512/github-D20`.
+1. In Netlify, import the existing GitHub repository `cbw29512/D20-ironpit`.
 2. Keep `main` as the production branch; Netlify reads `netlify.toml` automatically.
 3. Add a site environment variable named `IRON_PIT_API_BASE` with the Render API URL from step 1.
 4. Trigger the production deploy.
