@@ -129,5 +129,5 @@
     return { fighter: { template: character.template }, monster: { template: monster.template }, battlefield: { starting_distance_ft: mode === "melee" ? 5 : 20 }, events, winner_name: winner, rounds };
   }
 
-  window.IRON_PIT_TEST_ENGINE = { buildTestBattle };
+  window.IRON_PIT_TEST_ENGINE = { attack, buildTestBattle, d20, statusEvent, takeTurn };
 })();
