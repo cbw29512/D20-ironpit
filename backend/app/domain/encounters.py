@@ -9,6 +9,7 @@ class DuelMode(StrEnum):
     OPEN = "open"
     MELEE = "melee"
     RANGED = "ranged"
+    CLOSE = "close"
 
 
 class PrecombatActorPlan(BaseModel):
