@@ -37,16 +37,17 @@ def resolve_attack_roll_effect_sources(
 def consume_attack_roll_effects(
     state: CombatantState,
     target_actor_id: str | None = None,
-) -> None:
+) -> list[AttackRollEffect]:
     try:
-        state.attack_roll_effects = [
+        consumed = [
             effect
             for effect in state.attack_roll_effects
-            if not (
-                effect.consume_on_attack
-                and _applies_to_target(effect, target_actor_id)
-            )
+            if effect.consume_on_attack and _applies_to_target(effect, target_actor_id)
         ]
+        state.attack_roll_effects = [
+            effect for effect in state.attack_roll_effects if effect not in consumed
+        ]
+        return consumed
     except Exception as exc:
         logger.exception("Failed to consume attack-roll effects for %s.", state.template.name)
         raise RuntimeError("Attack-roll effects could not be consumed.") from exc
