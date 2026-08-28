@@ -23,7 +23,7 @@ The Hide/Invisible implementation remains deliberately partial: attack-roll reve
 
 ### Rogue ambush demo
 
-**Mara Vale** is an original level-1 Rogue built from SRD 5.2.1 rules rather than an official stat block. The demo uses leather armor, a Shortsword, a Shortbow, two weapon masteries, Stealth Expertise (+7), and 1d6 Sneak Attack.
+**Mara Vale** is an original level-1 Rogue combat slice built from SRD 5.2.1 combat rules rather than an official stat block. The demo uses leather armor, a Shortsword, a Shortbow, two weapon masteries, Stealth Expertise (+7), and 1d6 Sneak Attack.
 
 The Rogue ambush scenario starts 60 feet away with valid concealment and an unaware Goblin Warrior. Mara still has to pass the normal Hide check. On success, the battle sequence is rules-driven: pre-combat Hide → Initiative Advantage / Surprise Disadvantage → hidden Shortbow attack with Advantage → eligible Sneak Attack → reveal after the attack roll.
 
@@ -88,7 +88,7 @@ The API uses `render.yaml` and `backend/Dockerfile`. The frontend uses `netlify.
 
 ## Next rules milestones
 
-1. Surface the Rogue Ambush scenario in both live API and secure static preview UI.
+1. Complete the full SRD 5.2.1 audit of every rule currently claimed by the coverage API and attach explicit source sections to those claims.
 2. Add the ally-position route of Sneak Attack when multi-creature battlefield context exists.
 3. Add Rogue Cunning Action at level 2 using the existing Dash/Disengage/Hide paths.
 4. Add full Cover AC/Dexterity-save bonuses and line-of-effect.
