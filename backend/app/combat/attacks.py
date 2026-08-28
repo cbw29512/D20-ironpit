@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.conditions import is_incapacitated
+from app.combat.cover import resolve_attack_cover_bonus
 from app.combat.damage import resolve_weapon_damage
 from app.combat.dice import DiceProvider
 from app.combat.masteries import (
@@ -40,6 +41,7 @@ def resolve_attack(
 
         weapon = attack.weapon
         target_id = defender.template.id
+        cover_bonus = resolve_attack_cover_bonus(defender, battlefield)
         advantage_sources, disadvantage_sources = resolve_attack_roll_effect_sources(
             attacker, target_id
         )
@@ -64,9 +66,8 @@ def resolve_attack(
             attacker.action_available = False
         natural = attack_roll.selected_roll or 0
         critical = natural == 20
-        hit = natural != 1 and (
-            critical or attack_roll.total >= defender.template.armor_class
-        )
+        effective_ac = defender.template.armor_class + cover_bonus
+        hit = natural != 1 and (critical or attack_roll.total >= effective_ac)
         hp_before = defender.current_hp
         damage_roll = None
         damage_components = []
@@ -104,6 +105,8 @@ def resolve_attack(
 
         outcome = "CRITICAL HIT" if critical else ("HIT" if hit else "MISS")
         description = f"{attacker.template.name}: {outcome} with {weapon.name}."
+        if cover_bonus:
+            description += f" Cover adds +{cover_bonus} AC."
         if sneak_attack_applied:
             description += " Sneak Attack adds precision damage."
         if feature_id == "sap":
