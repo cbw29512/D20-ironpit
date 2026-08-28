@@ -11,6 +11,7 @@ from app.content.test_roster import (
     build_test_catalog,
     build_test_character,
     build_test_monster,
+    get_monster_opening_mode,
 )
 from app.domain.models import BattleResult, CombatantTemplate, DuelMode
 
@@ -27,20 +28,35 @@ def get_test_roster() -> dict[str, list[CombatantTemplate]]:
         raise HTTPException(status_code=500, detail="Test roster could not be loaded.") from exc
 
 
+def _run_selected(character_id: str, monster_id: str, mode: DuelMode) -> BattleResult:
+    character = build_test_character(character_id)
+    monster = build_test_monster(monster_id)
+    return run_duel(
+        character,
+        monster,
+        SecureDiceProvider(),
+        starting_distance_ft=5 if mode is DuelMode.MELEE else 20,
+        duel_mode=mode,
+    )
+
+
+@router.post("/fight/{character_id}/{monster_id}", response_model=BattleResult)
+def create_test_fight(character_id: str, monster_id: str) -> BattleResult:
+    try:
+        return _run_selected(character_id, monster_id, get_monster_opening_mode(monster_id))
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except Exception as exc:
+        logger.exception("Automatic test fight API failed.")
+        raise HTTPException(status_code=500, detail="Test fight could not be completed.") from exc
+
+
 @router.post("/battle/{character_id}/{monster_id}/{mode}", response_model=BattleResult)
 def create_test_battle(character_id: str, monster_id: str, mode: DuelMode) -> BattleResult:
     try:
         if mode is DuelMode.OPEN:
             raise ValueError("Test arena requires melee or ranged mode.")
-        character = build_test_character(character_id)
-        monster = build_test_monster(monster_id)
-        return run_duel(
-            character,
-            monster,
-            SecureDiceProvider(),
-            starting_distance_ft=5 if mode is DuelMode.MELEE else 20,
-            duel_mode=mode,
-        )
+        return _run_selected(character_id, monster_id, mode)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     except Exception as exc:
