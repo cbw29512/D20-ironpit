@@ -5,6 +5,15 @@ from app.combat.state import build_combatant_state
 from app.content.demo import build_demo_fighter
 
 
+def test_level_one_fighter_has_required_style_and_three_masteries() -> None:
+    fighter = build_demo_fighter()
+
+    assert fighter.fighting_style == "defense"
+    assert fighter.armor_class == 19
+    assert len(fighter.weapon_masteries) == 3
+    assert set(fighter.weapon_masteries) == {"longsword", "javelin", "handaxe"}
+
+
 def test_second_wind_heals_and_spends_one_bonus_action_use() -> None:
     fighter = build_combatant_state(build_demo_fighter())
     fighter.current_hp = 4
