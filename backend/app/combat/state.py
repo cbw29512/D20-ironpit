@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 from collections.abc import Iterable
 
+from app.combat.conditions import effective_speed_ft
 from app.domain.models import CombatantState, CombatantTemplate, ResourceState
 
 logger = logging.getLogger(__name__)
@@ -88,7 +89,7 @@ def begin_turn(
         state.action_available = True
         state.bonus_action_available = True
         state.reaction_available = True
-        state.movement_remaining_ft = state.template.speed_ft
+        state.movement_remaining_ft = effective_speed_ft(state)
         state.disengaged = False
         state.light_extra_attack_used = False
     except Exception as exc:

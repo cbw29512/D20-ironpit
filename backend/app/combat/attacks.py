@@ -2,7 +2,11 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.conditions import is_incapacitated
+from app.combat.conditions import (
+    is_automatic_critical_hit,
+    is_incapacitated,
+    resolve_condition_attack_sources,
+)
 from app.combat.cover import resolve_attack_cover_bonus
 from app.combat.damage import resolve_weapon_damage
 from app.combat.dice import DiceProvider
@@ -48,6 +52,7 @@ def resolve_attack(
         sight_advantage, sight_disadvantage = resolve_visibility_attack_sources(
             attacker, defender, battlefield
         )
+        condition_advantage, condition_disadvantage = resolve_condition_attack_sources(defender)
         close_enemy_active = (
             can_see_combatant(defender, attacker, battlefield)
             and not is_incapacitated(defender)
@@ -55,8 +60,10 @@ def resolve_attack(
         mode = resolve_attack_roll_mode(
             weapon,
             distance_ft,
-            advantage_sources=advantage_sources + sight_advantage,
-            other_disadvantage_sources=disadvantage_sources + sight_disadvantage,
+            advantage_sources=advantage_sources + sight_advantage + condition_advantage,
+            other_disadvantage_sources=(
+                disadvantage_sources + sight_disadvantage + condition_disadvantage
+            ),
             close_enemy_active=close_enemy_active,
         )
         attack_roll = roll_d20(dice, attack.attack_bonus, mode)
@@ -68,6 +75,7 @@ def resolve_attack(
         critical = natural == 20
         effective_ac = defender.template.armor_class + cover_bonus
         hit = natural != 1 and (critical or attack_roll.total >= effective_ac)
+        critical = critical or (hit and is_automatic_critical_hit(defender, distance_ft))
         hp_before = defender.current_hp
         damage_roll = None
         damage_components = []

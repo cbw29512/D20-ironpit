@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.conditions import require_activity
+from app.combat.conditions import effective_speed_ft, require_activity
 from app.domain.models import BattleEvent, BattlefieldState, CombatantState
 
 logger = logging.getLogger(__name__)
@@ -19,6 +19,8 @@ def move_toward_target(
     try:
         if desired_distance_ft < 0:
             raise ValueError("Desired distance cannot be negative.")
+        if effective_speed_ft(mover) <= 0:
+            return None
         needed = max(0, battlefield.distance_ft - desired_distance_ft)
         moved = min(needed, mover.movement_remaining_ft)
         if moved <= 0:
@@ -54,6 +56,8 @@ def move_away_from_target(
 ) -> BattleEvent | None:
     """Spend the mover's remaining movement to increase distance in the open arena."""
     try:
+        if effective_speed_ft(mover) <= 0:
+            return None
         moved = mover.movement_remaining_ft
         if moved <= 0:
             return None
@@ -89,7 +93,8 @@ def take_dash(
         if not mover.action_available:
             raise ValueError("Action is not available for Dash.")
         mover.action_available = False
-        mover.movement_remaining_ft += mover.template.speed_ft
+        extra_movement = effective_speed_ft(mover)
+        mover.movement_remaining_ft += extra_movement
         return BattleEvent(
             sequence=sequence,
             round_number=round_number,
@@ -98,7 +103,7 @@ def take_dash(
             actor_name=mover.template.name,
             distance_before_ft=battlefield.distance_ft,
             distance_after_ft=battlefield.distance_ft,
-            movement_ft=mover.template.speed_ft,
+            movement_ft=extra_movement,
             animation="dash",
             description=f"{mover.template.name} takes the Dash action.",
         )

@@ -12,5 +12,6 @@ class SavingThrowResult(BaseModel):
     roll: DiceRoll | None = None
     success: bool
     chosen_failure: bool = False
+    automatic_failure: bool = False
     circumstantial_modifier: int = 0
     cover_bonus: int = 0
