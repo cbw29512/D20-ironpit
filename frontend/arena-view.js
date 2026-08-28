@@ -101,7 +101,7 @@
               const item = document.createElement("li");
               let detail = event.description;
               if (event.attack_roll) detail += ` [${formatD20(event.attack_roll)}]`;
-              if (event.damage_roll) detail += ` Damage ${event.damage_roll.total}.`;
+              if (event.damage_roll) detail += ` Damage ${event.damage_applied ?? event.damage_roll.total}.`;
               if (event.healing_roll) detail += ` Healing roll ${event.healing_roll.total}.`;
               if (event.feature_id) item.classList.add("feature-event");
               item.textContent = detail;
@@ -114,12 +114,7 @@
         } catch (error) { console.error("Battle replay failed", error); throw error; }
       }
 
-      return {
-        hydrateRoster,
-        resetArena,
-        replay,
-        setStatus: (message) => { status.textContent = message; },
-      };
+      return { hydrateRoster, resetArena, replay, setStatus: (message) => { status.textContent = message; } };
     } catch (error) {
       console.error("Arena view initialization failed", error);
       throw error;
