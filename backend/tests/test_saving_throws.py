@@ -12,6 +12,11 @@ from app.domain.models import (
 )
 
 
+class NoRollDiceProvider:
+    def roll(self, sides: int) -> int:
+        raise AssertionError(f"Voluntary failure must not roll d{sides}.")
+
+
 def test_class_save_proficiencies_are_derived_from_template_data() -> None:
     fighter = build_combatant_state(build_demo_fighter())
     rogue = build_combatant_state(build_demo_rogue())
@@ -85,7 +90,7 @@ def test_creature_can_choose_to_fail_save_without_rolling() -> None:
         goblin,
         AbilityKind.DEXTERITY,
         10,
-        FixedDiceProvider([]),
+        NoRollDiceProvider(),
         choose_failure=True,
     )
 
