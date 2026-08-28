@@ -72,6 +72,7 @@ def _apply_vex(attacker: CombatantState, defender: CombatantState) -> str:
         effect for effect in attacker.attack_roll_effects
         if not (effect.id == VEX_MASTERY and effect.target_actor_id == defender.template.id)
     ]
+    turns_remaining = 2 if attacker.turn_active else 1
     attacker.attack_roll_effects.append(
         AttackRollEffect(
             id=VEX_MASTERY,
@@ -79,7 +80,7 @@ def _apply_vex(attacker: CombatantState, defender: CombatantState) -> str:
             target_actor_id=defender.template.id,
             kind=AttackRollEffectKind.ADVANTAGE,
             expires_at_start_of_source_turn=False,
-            source_turns_remaining=2,
+            source_turns_remaining=turns_remaining,
         )
     )
     return VEX_MASTERY

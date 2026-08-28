@@ -119,6 +119,7 @@ class CombatantState(BaseModel):
     initiative_roll: int | None = None
     initiative_total: int | None = None
     is_alive: bool = True
+    turn_active: bool = False
     action_available: bool = True
     bonus_action_available: bool = True
     reaction_available: bool = True

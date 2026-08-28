@@ -27,6 +27,7 @@ def build_shortbow_master():
 def test_vex_applies_after_mastered_weapon_deals_damage() -> None:
     archer = build_shortbow_master()
     target = build_combatant_state(build_goblin_warrior())
+    begin_turn(archer)
 
     event = resolve_attack(
         1, 1, archer, target, archer.template.weapon_attack, 30, FixedDiceProvider([14, 3])
@@ -44,6 +45,7 @@ def test_vex_applies_after_mastered_weapon_deals_damage() -> None:
 def test_vex_grants_next_attack_advantage_then_is_consumed() -> None:
     archer = build_shortbow_master()
     target = build_combatant_state(build_goblin_warrior())
+    begin_turn(archer)
     resolve_attack(
         1, 1, archer, target, archer.template.weapon_attack, 30, FixedDiceProvider([14, 3])
     )
@@ -92,6 +94,7 @@ def test_vex_is_specific_to_the_creature_that_was_hit() -> None:
 def test_unused_vex_expires_at_end_of_next_turn() -> None:
     archer = build_shortbow_master()
     target = build_combatant_state(build_goblin_warrior())
+    begin_turn(archer)
     apply_weapon_mastery_on_hit(
         archer,
         target,
@@ -102,6 +105,30 @@ def test_unused_vex_expires_at_end_of_next_turn() -> None:
     end_turn(archer, (archer, target))
     assert archer.attack_roll_effects[0].source_turns_remaining == 1
     begin_turn(archer)
+    end_turn(archer, (archer, target))
+    assert archer.attack_roll_effects == []
+
+
+def test_reaction_applied_vex_expires_at_end_of_immediate_next_turn() -> None:
+    archer = build_shortbow_master()
+    target = build_combatant_state(build_goblin_warrior())
+
+    event = resolve_attack(
+        1,
+        1,
+        archer,
+        target,
+        archer.template.weapon_attack,
+        30,
+        FixedDiceProvider([14, 3]),
+        spend_action=False,
+    )
+
+    assert event.hit is True
+    assert archer.turn_active is False
+    assert archer.attack_roll_effects[0].source_turns_remaining == 1
+    begin_turn(archer)
+    assert len(archer.attack_roll_effects) == 1
     end_turn(archer, (archer, target))
     assert archer.attack_roll_effects == []
 

@@ -84,6 +84,7 @@ def begin_turn(
 ) -> None:
     try:
         _begin_once_per_turn_window(combatants or (state,))
+        state.turn_active = True
         state.action_available = True
         state.bonus_action_available = True
         state.reaction_available = True
@@ -101,6 +102,7 @@ def end_turn(
 ) -> None:
     try:
         expire_attack_roll_effects_at_turn_end(state, combatants or (state,))
+        state.turn_active = False
         state.disengaged = False
     except Exception as exc:
         logger.exception("Failed to end turn for %s.", state.template.name)
