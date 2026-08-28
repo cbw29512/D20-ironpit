@@ -9,7 +9,7 @@
   const previewEngine = window.IRON_PIT_TEST_ENGINE;
   const arenaState = {
     fighter: { id: "aldric-vane-l1", maxHp: 12 },
-    goblin: { id: "srd-goblin-warrior", maxHp: 10 },
+    goblin: { id: "srd-bandit", maxHp: 11 },
   };
   let catalog = { characters: [], monsters: [] };
 
@@ -40,7 +40,7 @@
       const monster = selectedMonster();
       if (!fighter || !monster) throw new Error("Selected matchup is unavailable.");
       view.hydrateRoster({ fighter, monster });
-      view.resetArena(message, 5);
+      view.resetArena(message, monster.openingDistance ?? 5);
       setControlsDisabled(false);
     } catch (error) { console.error("Matchup hydration failed", error); view.setStatus("Matchup could not be loaded."); }
   }
@@ -70,7 +70,7 @@
       populateSelect(characterSelect, catalog.characters, (item) => `${item.name} · ${item.archetype} ${item.level}`);
       populateSelect(monsterSelect, catalog.monsters, (item) => `${item.name} · CR ${item.challenge_rating}`);
       characterSelect.value = "aldric-vane-l1";
-      monsterSelect.value = "srd-goblin-warrior";
+      monsterSelect.value = "srd-bandit";
       hydrateSelection(view, "Choose a matchup, then press Fight.");
     } catch (error) {
       console.error("Test roster load failed", error);
@@ -93,7 +93,7 @@
   async function startFight(view) {
     try {
       setControlsDisabled(true);
-      view.resetArena(apiBase ? "Requesting fight..." : "The monster chooses its opening approach...", 5);
+      view.resetArena(apiBase ? "Requesting fight..." : "The duel begins...", selectedMonster()?.openingDistance ?? 5);
       const battle = await requestBattle();
       view.hydrateRoster({ fighter: battle.fighter.template, monster: battle.monster.template });
       view.resetArena("Rolling initiative...", battle.battlefield.starting_distance_ft);
