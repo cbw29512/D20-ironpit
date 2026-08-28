@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass
 
-from app.combat.barbarian import rage_damage_component
+from app.combat.barbarian_modifiers import rage_damage_component
 from app.combat.damage import resolve_weapon_damage
 from app.combat.damage_taken import resolve_damage_taken
 from app.combat.dice import DiceProvider
