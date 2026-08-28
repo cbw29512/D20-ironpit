@@ -9,14 +9,16 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.combat.dice import SecureDiceProvider
 from app.combat.engine import run_duel
 from app.content.demo import build_demo_fighter, build_goblin_warrior
+from app.content.rogue import build_demo_rogue
 from app.content.rules import build_rules_coverage
+from app.content.scenarios import build_rogue_ambush_setup
 from app.domain.models import BattleResult, DemoRoster
 from app.domain.rules import RulesCoverageReport
 
 logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO"))
 logger = logging.getLogger(__name__)
 
-app = FastAPI(title="Iron Pit API", version="0.2.0")
+app = FastAPI(title="Iron Pit API", version="0.3.0")
 origins = [
     item.strip()
     for item in os.getenv(
@@ -90,3 +92,22 @@ def create_ranged_demo_battle() -> BattleResult:
     except Exception as exc:
         logger.exception("Ranged demo battle API failed.")
         raise HTTPException(status_code=500, detail="Ranged battle could not be completed.") from exc
+
+
+@app.post("/api/battles/demo-rogue-ambush", response_model=BattleResult)
+def create_rogue_ambush_battle() -> BattleResult:
+    try:
+        rogue = build_demo_rogue()
+        goblin = build_goblin_warrior()
+        visibility, encounter_setup = build_rogue_ambush_setup(rogue, goblin)
+        return run_duel(
+            rogue,
+            goblin,
+            SecureDiceProvider(),
+            starting_distance_ft=60,
+            visibility_by_actor=visibility,
+            encounter_setup=encounter_setup,
+        )
+    except Exception as exc:
+        logger.exception("Rogue ambush demo battle API failed.")
+        raise HTTPException(status_code=500, detail="Rogue ambush battle could not be completed.") from exc

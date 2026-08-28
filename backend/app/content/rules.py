@@ -17,6 +17,8 @@ def build_rules_coverage() -> RulesCoverageReport:
             RuleCoverageEntry(id="initiative", name="Initiative", status=I, notes="d20 plus Initiative modifier; Invisible Advantage and Surprise Disadvantage use canonical cancellation."),
             RuleCoverageEntry(id="surprise", name="Surprise", status=I, notes="Scenario-declared unaware targets roll Initiative with Disadvantage when combat starts from a successful hidden ambush."),
             RuleCoverageEntry(id="precombat-hide", name="Pre-combat Hide", status=I, notes="Eligible actors can attempt Hide before Initiative without spending their first combat Action or Bonus Action."),
+            RuleCoverageEntry(id="rogue-ambush", name="Rogue ambush demo", status=I, notes="The demo scenario supplies valid concealment and an unaware target; Hide success still determines whether Surprise and the hidden opening are earned."),
+            RuleCoverageEntry(id="sneak-attack", name="Rogue Sneak Attack", status=P, notes="Advantage route, Finesse/Ranged weapon gating, once-per-turn timing across reaction turns, critical dice, and weapon damage type are implemented; the ally-within-5-feet route awaits ally-position context."),
             RuleCoverageEntry(id="attack-rolls", name="Weapon attack rolls", status=I, notes="AC checks, natural 1 misses, and natural 20 hits are implemented."),
             RuleCoverageEntry(id="critical-hits", name="Weapon critical hits", status=I, notes="A natural 20 doubles weapon and eligible conditional damage dice."),
             RuleCoverageEntry(id="advantage", name="Advantage and Disadvantage", status=I, notes="Multiple sources collapse using the normal cancellation rule."),

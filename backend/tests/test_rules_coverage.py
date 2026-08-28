@@ -10,6 +10,8 @@ def test_rules_coverage_ids_are_unique_and_key_statuses_are_explicit() -> None:
     assert len(entries) == len(report.entries)
     assert entries["surprise"].status is RuleCoverageStatus.IMPLEMENTED
     assert entries["precombat-hide"].status is RuleCoverageStatus.IMPLEMENTED
+    assert entries["rogue-ambush"].status is RuleCoverageStatus.IMPLEMENTED
+    assert entries["sneak-attack"].status is RuleCoverageStatus.PARTIAL
     assert entries["light-weapons"].status is RuleCoverageStatus.IMPLEMENTED
     assert entries["two-weapon-fighting"].status is RuleCoverageStatus.IMPLEMENTED
     assert entries["nick"].status is RuleCoverageStatus.IMPLEMENTED
@@ -32,5 +34,6 @@ def test_rules_coverage_endpoint_returns_same_contract() -> None:
     assert report.ruleset == "SRD 5.2.1 subset"
     assert any(entry.id == "surprise" for entry in report.entries)
     assert any(entry.id == "precombat-hide" for entry in report.entries)
-    assert any(entry.id == "nick" for entry in report.entries)
+    assert any(entry.id == "rogue-ambush" for entry in report.entries)
+    assert any(entry.id == "sneak-attack" for entry in report.entries)
     assert any(entry.id == "death-saves" for entry in report.entries)

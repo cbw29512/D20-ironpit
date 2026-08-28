@@ -4,6 +4,8 @@
     {"id":"initiative","name":"Initiative","status":"implemented","notes":"d20 plus Initiative modifier; Invisible Advantage and Surprise Disadvantage use canonical cancellation."},
     {"id":"surprise","name":"Surprise","status":"implemented","notes":"Scenario-declared unaware targets roll Initiative with Disadvantage when combat starts from a successful hidden ambush."},
     {"id":"precombat-hide","name":"Pre-combat Hide","status":"implemented","notes":"Eligible actors can attempt Hide before Initiative without spending their first combat Action or Bonus Action."},
+    {"id":"rogue-ambush","name":"Rogue ambush demo","status":"implemented","notes":"The demo scenario supplies valid concealment and an unaware target; Hide success still determines whether Surprise and the hidden opening are earned."},
+    {"id":"sneak-attack","name":"Rogue Sneak Attack","status":"partial","notes":"Advantage route, Finesse/Ranged weapon gating, once-per-turn timing across reaction turns, critical dice, and weapon damage type are implemented; the ally-within-5-feet route awaits ally-position context."},
     {"id":"attack-rolls","name":"Weapon attack rolls","status":"implemented","notes":"AC checks, natural 1 misses, and natural 20 hits are implemented."},
     {"id":"critical-hits","name":"Weapon critical hits","status":"implemented","notes":"A natural 20 doubles weapon and eligible conditional damage dice."},
     {"id":"advantage","name":"Advantage and Disadvantage","status":"implemented","notes":"Multiple sources collapse using the normal cancellation rule."},
