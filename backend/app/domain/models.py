@@ -1,4 +1,6 @@
 from app.domain.combatants import (
+    AttackRollEffect,
+    AttackRollEffectKind,
     BattlefieldState,
     CombatantState,
     CombatantTemplate,
@@ -15,6 +17,8 @@ from app.domain.combatants import (
 from app.domain.events import BattleEvent, BattleResult, DamageRollComponent, DiceRoll, RollMode
 
 __all__ = [
+    "AttackRollEffect",
+    "AttackRollEffectKind",
     "BattleEvent",
     "BattlefieldState",
     "BattleResult",

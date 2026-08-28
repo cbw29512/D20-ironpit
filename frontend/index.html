@@ -21,6 +21,7 @@
         <p id="fighter-meta">Fighter 1 · Longsword + Shield · Chain Mail</p>
         <div class="hp"><span id="fighter-hp-bar"></span></div>
         <strong id="fighter-hp">12 / 12 HP</strong>
+        <div class="effects" aria-live="polite"><span id="fighter-effects" class="effect-chip" hidden></span></div>
         <svg id="fighter" class="stick" viewBox="0 0 180 220" role="img" aria-label="Stick fighter with sword and shield">
           <circle cx="90" cy="42" r="22"/><line x1="90" y1="64" x2="90" y2="132"/>
           <line x1="90" y1="82" x2="52" y2="112"/><line x1="90" y1="82" x2="128" y2="108"/>
@@ -37,6 +38,7 @@
         <p id="goblin-meta">CR 1/4 · Scimitar + Shield · Leather</p>
         <div class="hp"><span id="goblin-hp-bar"></span></div>
         <strong id="goblin-hp">10 / 10 HP</strong>
+        <div class="effects" aria-live="polite"><span id="goblin-effects" class="effect-chip" hidden></span></div>
         <svg id="goblin" class="stick goblin" viewBox="0 0 180 220" role="img" aria-label="Stick goblin with scimitar and shield">
           <circle cx="90" cy="58" r="19"/><path class="ear" d="M72 55 L48 45 L70 68 M108 55 L132 45 L110 68"/>
           <line x1="90" y1="77" x2="90" y2="136"/><line x1="90" y1="92" x2="52" y2="116"/><line x1="90" y1="92" x2="128" y2="112"/>
@@ -59,13 +61,23 @@
       <h2>Battle Log</h2>
       <ol id="battle-log"></ol>
     </section>
+
+    <section class="rules-panel" aria-label="Rules coverage">
+      <details>
+        <summary id="rules-summary">Loading rules coverage...</summary>
+        <ul id="rules-list"></ul>
+      </details>
+    </section>
   </main>
   <script src="config.js"></script>
   <script src="preview-data.js"></script>
   <script src="preview-dice.js"></script>
+  <script src="preview-effects.js"></script>
+  <script src="preview-tactics.js"></script>
   <script src="preview-engine.js"></script>
   <script src="arena-animations.js"></script>
   <script src="arena-view.js"></script>
+  <script src="rules-view.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

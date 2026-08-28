@@ -18,6 +18,7 @@ def build_longsword() -> Weapon:
             damage_type=DamageType.SLASHING,
             animation="slash",
             reach_ft=5,
+            mastery_property="sap",
         )
     except Exception as exc:
         logger.exception("Failed to build longsword content record.")
@@ -35,6 +36,7 @@ def build_scimitar() -> Weapon:
             damage_type=DamageType.SLASHING,
             animation="slash",
             reach_ft=5,
+            mastery_property="nick",
         )
     except Exception as exc:
         logger.exception("Failed to build scimitar content record.")
@@ -54,6 +56,7 @@ def build_shortbow() -> Weapon:
             normal_range_ft=80,
             long_range_ft=320,
             projectile="arrow",
+            mastery_property="vex",
         )
     except Exception as exc:
         logger.exception("Failed to build shortbow content record.")

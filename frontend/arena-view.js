@@ -23,6 +23,25 @@
       const log = document.querySelector("#battle-log");
       const distance = document.querySelector("#distance");
 
+      function slotForId(actorId) {
+        try {
+          if (actorId === arenaState.fighter.id) return "fighter";
+          if (actorId === arenaState.goblin.id) return "goblin";
+          return null;
+        } catch (error) { console.error("Arena slot lookup failed", error); return null; }
+      }
+
+      function setEffect(slot, effectId = "", label = "") {
+        try {
+          const chip = document.querySelector(`#${slot}-effects`);
+          const node = document.querySelector(`#${slot}`);
+          chip.dataset.effect = effectId;
+          chip.textContent = label;
+          chip.hidden = !effectId;
+          node.classList.toggle("sapped", effectId === "sap");
+        } catch (error) { console.error("Effect render failed", error); }
+      }
+
       function setDistance(value) {
         try { distance.textContent = `${Math.max(0, Number(value) || 0)} ft`; }
         catch (error) { console.error("Distance render failed", error); }
@@ -62,6 +81,7 @@
           for (const slot of ["fighter", "goblin"]) {
             document.querySelector(`#${slot}`).className.baseVal = `stick${slot === "goblin" ? " goblin" : ""}`;
             setHp(slot, arenaState[slot].maxHp);
+            setEffect(slot);
           }
           document.querySelector("#projectile").className = "projectile";
           setDistance(startingDistance);
@@ -82,15 +102,25 @@
       async function replay(events) {
         try {
           for (const event of events) {
+            const actorSlot = slotForId(event.actor_id);
+            const targetSlot = slotForId(event.target_id);
+            const consumedSap = event.event_type === "attack"
+              && actorSlot
+              && document.querySelector(`#${actorSlot}-effects`).dataset.effect === "sap";
             const item = document.createElement("li");
             let detail = event.description;
             if (event.attack_roll) detail += ` [${formatD20(event.attack_roll)}]`;
             if (event.damage_roll) detail += ` Damage ${event.damage_roll.total}.`;
             if (event.healing_roll) detail += ` Healing roll ${event.healing_roll.total}.`;
+            if (event.feature_id) item.classList.add("feature-event");
             item.textContent = detail;
             log.appendChild(item);
             item.scrollIntoView({ block: "nearest" });
             await animations.play(event);
+            if (consumedSap) setEffect(actorSlot);
+            if (event.feature_id === "sap" && targetSlot && Number(event.hp_after) > 0) {
+              setEffect(targetSlot, "sap", "SAP · next attack Disadvantage");
+            }
           }
         } catch (error) { console.error("Battle replay failed", error); throw error; }
       }

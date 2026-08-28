@@ -1,24 +1,42 @@
-# The Iron Pit — MVP
+# The Iron Pit — rules-first combat MVP
 
-A rules-first fantasy duel prototype: **Aldric Vane, Level 1 Fighter vs. the SRD 5.2.1 Goblin Warrior**.
+**The Iron Pit** is a server-resolved SRD 5.2.1 duel prototype: Aldric Vane, a level-1 Fighter, against the SRD Goblin Warrior.
 
-## Locked MVP
+## Current production boundary
 
-- Python/FastAPI combat engine runs server-side.
-- OS-backed secure random dice (`secrets`) determine rolls.
-- Natural 1 misses; natural 20 hits and doubles weapon damage dice.
-- Fighter and monster HP, initiative, attack rolls, damage, victory, and battle events are recorded.
-- Static Netlify-ready frontend replays the server event log as stick-figure sword attacks.
-- GitHub Actions tests the backend and deployment artifacts.
-- Docker packages the API.
+- Python/FastAPI resolves live battles server-side.
+- Production dice use the operating-system CSPRNG through Python `secrets`.
+- The Netlify-ready frontend replays structured battle events.
+- Static preview mode uses browser Web Crypto and mirrors supported demo rules.
+- GitHub Actions gates Python tests, source-size limits, frontend syntax, preview behavior, Netlify configuration, and the Docker build.
+- Production source modules are limited to 150 lines to keep the combat engine modular.
 
-## Rules coverage in this first slice
+## Implemented rules
 
-Implemented: initiative modifiers, melee attack vs. AC, natural 1/20 attack behavior, critical weapon dice, HP, 0 HP defeat.
+The current engine supports initiative, melee and ranged attacks, AC, natural 1/20 behavior, critical weapon dice, HP, healing, 0-HP arena defeat, movement, retreat movement, Dash, weapon ranges, close-ranged Disadvantage, Advantage/Disadvantage cancellation, Fighter Second Wind, Goblin conditional Advantage damage, Longsword Sap, and the reusable Vex mastery effect.
 
-Not implemented yet: Fighter Second Wind, Weapon Mastery (including Longsword Sap), Goblin Nimble Escape, advantage/disadvantage bonus damage, movement/range, reactions, conditions, spells, death saves, cover, opportunity attacks.
+The Goblin Warrior also uses the **Disengage option** of Nimble Escape as a Bonus Action when trapped in melee, retreats, and can switch to its Shortbow. The Hide option of Nimble Escape is not implemented yet because the arena does not yet model visibility, concealment, or Stealth.
 
-Initiative ties currently use initiative bonus as an arena tiebreaker. This is an explicit arena assumption and will be surfaced in the future rules-coverage report.
+Weapon mastery data currently records:
+
+- Longsword — Sap
+- Scimitar — Nick
+- Shortbow — Vex
+
+A weapon having mastery metadata does **not** grant mastery to its wielder. Aldric currently masters Longsword. The SRD Goblin Warrior does not receive player weapon mastery features. Vex is implemented as reusable engine capability for a combatant that actually has Shortbow mastery; Nick remains unsupported until the engine has a canonical Light-property extra-attack model.
+
+## Rules coverage API
+
+`GET /api/rules/coverage` returns a machine-readable SRD 5.2.1 subset report. Every tracked rule is classified as:
+
+- `implemented`
+- `partial`
+- `unsupported`
+- `arena_assumption`
+
+This endpoint is the source of truth for scope. It explicitly records incomplete areas such as Hide, Opportunity Attacks, conditions, cover, spells, death saves, and Nick instead of silently approximating them.
+
+The arena currently uses Initiative bonus as a deterministic tie-breaker and models combat as one-dimensional distance in an open arena. Both are reported as arena assumptions.
 
 ## Run locally
 
@@ -41,7 +59,7 @@ In a second terminal:
 python -m http.server 8080 --directory frontend
 ```
 
-Open `http://localhost:8080` and click **Enter the Pit**.
+Open `http://localhost:8080` and choose a starting distance.
 
 ### Docker API
 
@@ -51,49 +69,41 @@ docker compose up --build
 
 ## Deployment
 
-### 1. Deploy the FastAPI backend on Render
+### Render API
 
-The repository contains `render.yaml` for a free prototype web service using `backend/Dockerfile`.
+The repository contains `render.yaml` using `backend/Dockerfile`.
 
-1. In Render, choose **New > Blueprint**.
-2. Connect `cbw29512/github-D20`.
-3. Use the default `render.yaml` Blueprint path and deploy it.
-4. Copy the resulting public `https://...onrender.com` API URL.
-5. Confirm `GET /health` returns `{"status":"ok"}`.
+1. Create a Render Blueprint from `cbw29512/github-D20`.
+2. Deploy the default `render.yaml` Blueprint.
+3. Copy the public API URL.
+4. Confirm `GET /health` returns `{"status":"ok"}`.
+5. Confirm `GET /api/rules/coverage` returns the current rules contract.
 
-The free Render instance can spin down after inactivity, so the first battle after an idle period may take longer while the service wakes up. This is acceptable for the MVP and should be upgraded before production traffic.
+The free Render tier can spin down after inactivity. That is acceptable for the prototype but should be upgraded before meaningful production traffic.
 
-### 2. Deploy the frontend on Netlify
+### Netlify frontend
 
-`netlify.toml` publishes `frontend/` and generates `frontend/config.js` during the Netlify build.
+`netlify.toml` publishes `frontend/` and generates browser configuration during the build.
 
-1. In Netlify, import the existing GitHub repository `cbw29512/github-D20`.
-2. Keep `main` as the production branch; Netlify reads `netlify.toml` automatically.
-3. Add a site environment variable named `IRON_PIT_API_BASE` with the Render API URL from step 1.
-4. Trigger the production deploy.
-5. Open the Netlify site and click **Enter the Pit**.
+1. Import the GitHub repository in Netlify.
+2. Keep `main` as the production branch.
+3. Set `IRON_PIT_API_BASE` to the deployed Render API URL for live-server mode.
+4. Deploy and run both the 5-foot and 90-foot fights.
 
-The build intentionally fails if `IRON_PIT_API_BASE` is missing or is not an `http://` or `https://` URL. This prevents a deployment that silently points users at localhost.
+If `IRON_PIT_API_BASE` is blank, the site intentionally runs the secure browser preview rather than silently pointing to localhost.
 
-### 3. Security boundary for the MVP
+## Security boundary
 
-- No secrets are stored in the repository.
-- `.env` files are ignored; `.env.example` documents expected values.
-- The current demo battle endpoint is public and unauthenticated.
-- Render currently allows all CORS origins for this public MVP endpoint.
-- Before Supabase login, saved accounts, rankings, or payments are added, CORS and API authorization must be tightened.
+- No application secrets are stored in the repository.
+- `.env` files are ignored; `.env.example` documents browser/API configuration.
+- The demo battle endpoint is public and unauthenticated.
+- Authentication, saved accounts, rankings, and payments are deliberately outside this combat-engine slice.
+- CORS and API authorization must be tightened before account-backed features are introduced.
 
-## Architecture direction
+## Next rules milestones
 
-- **GitHub:** source of truth + CI.
-- **Netlify:** static web frontend.
-- **Render:** Dockerized FastAPI combat API for the prototype.
-- **Supabase:** Auth/Postgres after the combat slice is stable.
-
-## Next milestone
-
-1. Verify the deployed Fighter-vs-Goblin battle end-to-end.
-2. Add weapon/armor data as reusable content records.
-3. Implement advantage/disadvantage and Goblin Warrior's conditional bonus damage.
-4. Implement Fighter Second Wind and Longsword Sap.
-5. Add ranged projectile event + shortbow animation.
+1. Add canonical reactions and Opportunity Attacks so Disengage prevention is fully exercised.
+2. Add visibility/concealment and Hide before enabling the Hide option of Nimble Escape.
+3. Add a proper Light-property extra-attack model before implementing Nick.
+4. Surface the machine-readable rules coverage report in the arena UI.
+5. Run a final deployed Render + Netlify end-to-end release gate before merging the combat milestone to `main`.

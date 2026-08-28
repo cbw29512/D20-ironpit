@@ -64,12 +64,13 @@
         try {
           const slot = slotForActor(event.actor_id);
           const node = document.querySelector(`#${slot}`);
+          const movementClass = event.animation === "retreat" ? "retreat" : "advance";
           if (event.distance_before_ft !== null) setDistance(event.distance_before_ft);
-          node.classList.add("advance");
+          node.classList.add(movementClass);
           await sleep(280);
           if (event.distance_after_ft !== null) setDistance(event.distance_after_ft);
           await sleep(220);
-          node.classList.remove("advance");
+          node.classList.remove(movementClass);
         } catch (error) { console.error("Movement animation failed", error); }
       }
 
@@ -78,7 +79,7 @@
           if (event.event_type === "attack") return await animateAttack(event);
           if (event.event_type === "healing") return await animateHealing(event);
           if (event.event_type === "movement") return await animateMovement(event);
-          await sleep(event.event_type === "dash" ? 220 : 300);
+          await sleep(["dash", "disengage"].includes(event.event_type) ? 220 : 300);
         } catch (error) { console.error("Battle event animation failed", error); }
       }
 

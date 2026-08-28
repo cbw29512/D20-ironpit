@@ -9,12 +9,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.combat.dice import SecureDiceProvider
 from app.combat.engine import run_duel
 from app.content.demo import build_demo_fighter, build_goblin_warrior
+from app.content.rules import build_rules_coverage
 from app.domain.models import BattleResult, DemoRoster
+from app.domain.rules import RulesCoverageReport
 
 logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO"))
 logger = logging.getLogger(__name__)
 
-app = FastAPI(title="Iron Pit API", version="0.1.0")
+app = FastAPI(title="Iron Pit API", version="0.2.0")
 origins = [
     item.strip()
     for item in os.getenv(
@@ -39,6 +41,15 @@ def health() -> dict[str, str]:
     except Exception as exc:
         logger.exception("Health endpoint failed.")
         raise HTTPException(status_code=500, detail="Health check failed.") from exc
+
+
+@app.get("/api/rules/coverage", response_model=RulesCoverageReport)
+def get_rules_coverage() -> RulesCoverageReport:
+    try:
+        return build_rules_coverage()
+    except Exception as exc:
+        logger.exception("Rules coverage API failed.")
+        raise HTTPException(status_code=500, detail="Rules coverage could not be loaded.") from exc
 
 
 @app.get("/api/roster/demo", response_model=DemoRoster)

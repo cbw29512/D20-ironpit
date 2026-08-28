@@ -16,6 +16,18 @@
     catch (error) { console.error("Button state update failed", error); }
   }
 
+  async function loadRulesCoverage(rulesView) {
+    try {
+      const endpoint = apiBase ? `${apiBase}/api/rules/coverage` : "rules-coverage.json";
+      const response = await fetch(endpoint);
+      if (!response.ok) throw new Error(`Rules coverage returned ${response.status}`);
+      rulesView.render(await response.json());
+    } catch (error) {
+      console.error("Rules coverage load failed", error);
+      rulesView.setError("Rules coverage could not be loaded.");
+    }
+  }
+
   async function loadRoster(view) {
     try {
       if (!apiBase) {
@@ -68,9 +80,11 @@
 
   try {
     const view = window.createIronPitArenaView(arenaState);
+    const rulesView = window.createIronPitRulesView();
     meleeButton.addEventListener("click", () => startFight(view, "/api/battles/demo", 5));
     rangedButton.addEventListener("click", () => startFight(view, "/api/battles/demo-ranged", 90));
     loadRoster(view);
+    loadRulesCoverage(rulesView);
   } catch (error) {
     console.error("App initialization failed", error);
     document.querySelector("#status").textContent = "Arena initialization failed.";
