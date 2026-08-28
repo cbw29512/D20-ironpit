@@ -14,11 +14,12 @@ from app.content.rules import build_rules_coverage
 from app.content.scenarios import build_rogue_ambush_setup
 from app.domain.models import BattleResult, DemoRoster, DuelMode
 from app.domain.rules import RulesCoverageReport
+from app.test_arena_api import router as test_arena_router
 
 logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO"))
 logger = logging.getLogger(__name__)
 
-app = FastAPI(title="Iron Pit API", version="0.3.0")
+app = FastAPI(title="Iron Pit API", version="0.4.0")
 origins = [
     item.strip()
     for item in os.getenv(
@@ -34,6 +35,7 @@ app.add_middleware(
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
+app.include_router(test_arena_router)
 
 
 @app.get("/health")
