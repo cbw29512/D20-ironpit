@@ -4,15 +4,11 @@ import logging
 
 from app.combat.conditions import is_incapacitated, resolve_condition_attack_sources
 from app.combat.cover import resolve_attack_cover_bonus
+from app.combat.dodge import dodge_attack_disadvantage
 from app.combat.masteries import resolve_attack_roll_effect_sources
 from app.combat.range import resolve_attack_roll_mode
 from app.combat.sight import can_see_combatant, resolve_visibility_attack_sources
-from app.domain.models import (
-    BattlefieldState,
-    CombatantState,
-    RollMode,
-    Weapon,
-)
+from app.domain.models import BattlefieldState, CombatantState, RollMode, Weapon
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +29,7 @@ def resolve_attack_mode_and_cover(
             attacker, defender, battlefield
         )
         condition_advantage, condition_disadvantage = resolve_condition_attack_sources(defender)
+        dodge_disadvantage = dodge_attack_disadvantage(attacker, defender, battlefield)
         close_enemy_active = (
             can_see_combatant(defender, attacker, battlefield)
             and not is_incapacitated(defender)
@@ -42,7 +39,10 @@ def resolve_attack_mode_and_cover(
             distance_ft,
             advantage_sources=advantage_sources + sight_advantage + condition_advantage,
             other_disadvantage_sources=(
-                disadvantage_sources + sight_disadvantage + condition_disadvantage
+                disadvantage_sources
+                + sight_disadvantage
+                + condition_disadvantage
+                + dodge_disadvantage
             ),
             close_enemy_active=close_enemy_active,
         )

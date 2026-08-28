@@ -5,6 +5,7 @@ import logging
 from app.combat.conditions import automatically_fails_save
 from app.combat.cover import resolve_dex_save_cover_bonus
 from app.combat.dice import DiceProvider
+from app.combat.dodge import dodge_save_advantage
 from app.combat.rolls import resolve_roll_mode, roll_d20
 from app.domain.models import (
     AbilityKind,
@@ -67,7 +68,8 @@ def resolve_saving_throw(
         if ability is AbilityKind.DEXTERITY:
             cover_bonus = resolve_dex_save_cover_bonus(state, battlefield)
         modifier = saving_throw_bonus(state, ability) + circumstantial_modifier + cover_bonus
-        mode = resolve_roll_mode(advantage_sources, disadvantage_sources)
+        dodge_advantage = dodge_save_advantage(state, ability)
+        mode = resolve_roll_mode(advantage_sources + dodge_advantage, disadvantage_sources)
         roll = roll_d20(dice, modifier, mode)
         return SavingThrowResult(
             ability=ability,

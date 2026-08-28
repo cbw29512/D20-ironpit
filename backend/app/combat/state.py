@@ -91,6 +91,7 @@ def begin_turn(
         state.reaction_available = True
         state.movement_remaining_ft = effective_speed_ft(state)
         state.disengaged = False
+        state.dodging = False
         state.light_extra_attack_used = False
     except Exception as exc:
         logger.exception("Failed to begin turn for %s.", state.template.name)

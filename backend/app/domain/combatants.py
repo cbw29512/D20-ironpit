@@ -131,6 +131,7 @@ class CombatantState(BaseModel):
     reaction_available: bool = True
     movement_remaining_ft: int = Field(default=0, ge=0)
     disengaged: bool = False
+    dodging: bool = False
     light_extra_attack_used: bool = False
     hidden: bool = False
     hidden_dc: int | None = Field(default=None, ge=0)
