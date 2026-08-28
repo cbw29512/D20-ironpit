@@ -1,5 +1,9 @@
 from app.content.low_cr_monsters import build_bandit, build_guard
-from app.content.test_roster import build_test_catalog, get_monster_opening_mode
+from app.content.test_roster import (
+    build_test_catalog,
+    get_monster_opening_mode,
+    get_monster_starting_distance,
+)
 from app.domain.models import DuelMode, WeaponAttackKind
 from app.main import app
 from app.test_arena_api import (
@@ -50,23 +54,23 @@ def test_guard_matches_2024_basic_rules_combat_block() -> None:
     assert thrown.ability_damage_modifier == 1
 
 
-def test_test_catalog_exposes_two_pregens_and_three_monsters() -> None:
+def test_public_catalog_exposes_two_pregens_and_simple_monsters() -> None:
     catalog = build_test_catalog()
     assert [item.id for item in catalog["characters"]] == [
         "aldric-vane-l1",
         "mara-vale-l1",
     ]
     assert [item.id for item in catalog["monsters"]] == [
-        "srd-goblin-warrior",
         "srd-bandit",
         "srd-guard",
     ]
 
 
-def test_monsters_choose_their_opening_modes() -> None:
-    assert get_monster_opening_mode("srd-goblin-warrior") is DuelMode.RANGED
-    assert get_monster_opening_mode("srd-bandit") is DuelMode.RANGED
-    assert get_monster_opening_mode("srd-guard") is DuelMode.MELEE
+def test_public_monsters_choose_close_to_melee_mode() -> None:
+    assert get_monster_opening_mode("srd-bandit") is DuelMode.CLOSE
+    assert get_monster_opening_mode("srd-guard") is DuelMode.CLOSE
+    assert get_monster_starting_distance("srd-bandit") == 20
+    assert get_monster_starting_distance("srd-guard") == 5
 
 
 def test_selectable_routes_are_in_public_api_contract() -> None:
@@ -80,10 +84,10 @@ def test_selectable_routes_are_in_public_api_contract() -> None:
 def test_selectable_roster_route_function_returns_catalog() -> None:
     catalog = get_test_roster()
     assert len(catalog["characters"]) == 2
-    assert len(catalog["monsters"]) == 3
+    assert len(catalog["monsters"]) == 2
 
 
-def test_one_button_fight_uses_monster_opening_policy() -> None:
+def test_one_button_fight_uses_monster_starting_distance() -> None:
     ranged = create_test_fight("aldric-vane-l1", "srd-bandit")
     melee = create_test_fight("mara-vale-l1", "srd-guard")
     assert ranged.battlefield.starting_distance_ft == 20
@@ -100,8 +104,8 @@ def test_selectable_melee_and_ranged_battles_remain_qa_hooks() -> None:
     assert ranged.battlefield.starting_distance_ft == 20
 
 
-def test_mara_ambush_remains_internal_qa_hook() -> None:
-    result = create_mara_ambush("srd-guard")
+def test_goblin_ambush_remains_internal_raw_qa_hook() -> None:
+    result = create_mara_ambush("srd-goblin-warrior")
     assert result.fighter.template.id == "mara-vale-l1"
-    assert result.monster.template.id == "srd-guard"
+    assert result.monster.template.id == "srd-goblin-warrior"
     assert result.battlefield.starting_distance_ft == 60
