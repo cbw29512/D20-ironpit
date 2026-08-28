@@ -31,11 +31,14 @@ jobs:
           node --check frontend/preview-tactics.js
           node --check frontend/preview-engine.js
           node --check frontend/preview-rogue.js
-          node --check frontend/arena-view.js
           node --check frontend/arena-animations.js
+          node --check frontend/effects-view.js
+          node --check frontend/arena-view.js
           node --check frontend/rules-view.js
       - name: Validate preview combat effects
         run: node scripts/check_preview_effects.js
+      - name: Validate combat-card effects
+        run: node scripts/check_card_effects.js
       - name: Validate preview combat tactics
         run: node scripts/check_preview_tactics.js
       - name: Validate controlled arena modes
