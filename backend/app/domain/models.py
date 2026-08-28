@@ -1,3 +1,4 @@
+from app.domain.abilities import AbilityKind
 from app.domain.combatants import (
     AttackRollEffect,
     AttackRollEffectKind,
@@ -17,9 +18,11 @@ from app.domain.conditions import ConditionKind
 from app.domain.encounters import EncounterSetup, PrecombatActorPlan
 from app.domain.events import BattleEvent, BattleResult, DamageRollComponent, DiceRoll, RollMode
 from app.domain.resources import ResourceDefinition, ResourceState
+from app.domain.saves import SavingThrowResult
 from app.domain.visibility import ActorVisibilityState, CoverLevel
 
 __all__ = [
+    "AbilityKind",
     "ActorVisibilityState",
     "AttackRollEffect",
     "AttackRollEffectKind",
@@ -40,6 +43,7 @@ __all__ = [
     "ResourceDefinition",
     "ResourceState",
     "RollMode",
+    "SavingThrowResult",
     "VisualLoadout",
     "Weapon",
     "WeaponAttack",

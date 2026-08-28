@@ -5,6 +5,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
+from app.domain.abilities import AbilityKind
 from app.domain.conditions import ConditionKind
 from app.domain.resources import ResourceDefinition, ResourceState
 from app.domain.visibility import ActorVisibilityState
@@ -95,6 +96,9 @@ class CombatantTemplate(BaseModel):
     max_hp: int = Field(ge=1)
     speed_ft: int = Field(ge=0)
     initiative_bonus: int
+    proficiency_bonus: int = Field(default=2, ge=0)
+    ability_modifiers: dict[AbilityKind, int] = Field(default_factory=dict)
+    saving_throw_proficiencies: set[AbilityKind] = Field(default_factory=set)
     weapon_attack: WeaponAttack
     alternate_weapon_attacks: list[WeaponAttack] = Field(default_factory=list)
     fighting_style: str | None = None
