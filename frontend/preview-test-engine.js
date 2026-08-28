@@ -135,5 +135,7 @@
     return buildTestBattle(characterId, monsterId, monster.openingMode || "melee");
   }
 
-  window.IRON_PIT_TEST_ENGINE = { buildAutomaticBattle, buildTestBattle };
+  window.IRON_PIT_TEST_ENGINE = {
+    attack, buildAutomaticBattle, buildTestBattle, d20, statusEvent, takeTurn,
+  };
 })();
