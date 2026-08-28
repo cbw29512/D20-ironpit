@@ -2,23 +2,13 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.conditions import (
-    is_automatic_critical_hit,
-    is_incapacitated,
-    resolve_condition_attack_sources,
-)
-from app.combat.cover import resolve_attack_cover_bonus
+from app.combat.attack_rolls import resolve_attack_mode_and_cover
+from app.combat.conditions import is_automatic_critical_hit, is_incapacitated
 from app.combat.damage import resolve_weapon_damage
 from app.combat.dice import DiceProvider
-from app.combat.masteries import (
-    apply_weapon_mastery_on_hit,
-    consume_attack_roll_effects,
-    resolve_attack_roll_effect_sources,
-)
-from app.combat.range import resolve_attack_roll_mode
+from app.combat.masteries import apply_weapon_mastery_on_hit, consume_attack_roll_effects
 from app.combat.rogue import resolve_sneak_attack_component
 from app.combat.rolls import roll_d20
-from app.combat.sight import can_see_combatant, resolve_visibility_attack_sources
 from app.combat.stealth import break_hidden
 from app.domain.models import BattleEvent, BattlefieldState, CombatantState, WeaponAttack
 
@@ -45,26 +35,8 @@ def resolve_attack(
 
         weapon = attack.weapon
         target_id = defender.template.id
-        cover_bonus = resolve_attack_cover_bonus(defender, battlefield)
-        advantage_sources, disadvantage_sources = resolve_attack_roll_effect_sources(
-            attacker, target_id
-        )
-        sight_advantage, sight_disadvantage = resolve_visibility_attack_sources(
-            attacker, defender, battlefield
-        )
-        condition_advantage, condition_disadvantage = resolve_condition_attack_sources(defender)
-        close_enemy_active = (
-            can_see_combatant(defender, attacker, battlefield)
-            and not is_incapacitated(defender)
-        )
-        mode = resolve_attack_roll_mode(
-            weapon,
-            distance_ft,
-            advantage_sources=advantage_sources + sight_advantage + condition_advantage,
-            other_disadvantage_sources=(
-                disadvantage_sources + sight_disadvantage + condition_disadvantage
-            ),
-            close_enemy_active=close_enemy_active,
+        mode, cover_bonus = resolve_attack_mode_and_cover(
+            attacker, defender, weapon, distance_ft, battlefield
         )
         attack_roll = roll_d20(dice, attack.attack_bonus, mode)
         break_hidden(attacker)
