@@ -5,7 +5,8 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-from app.domain.combatants import BattlefieldState, CombatantState, DamageType
+from app.domain.combatants import BattlefieldState, CombatantState
+from app.domain.damage import DamageType
 
 
 class RollMode(StrEnum):
@@ -56,6 +57,7 @@ class BattleEvent(BaseModel):
     check_roll: DiceRoll | None = None
     damage_roll: DiceRoll | None = None
     damage_components: list[DamageRollComponent] = Field(default_factory=list)
+    damage_applied: int | None = Field(default=None, ge=0)
     effect_changes: list[CombatCardEffectChange] = Field(default_factory=list)
     healing_roll: DiceRoll | None = None
     hit: bool | None = None
