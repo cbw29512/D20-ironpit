@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.barbarian import rage_strength_save_advantage
+from app.combat.barbarian_modifiers import rage_strength_save_advantage
 from app.combat.conditions import automatically_fails_save, condition_save_disadvantage
 from app.combat.cover import resolve_dex_save_cover_bonus
 from app.combat.dice import DiceProvider
