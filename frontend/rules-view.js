@@ -18,7 +18,9 @@
             heading.textContent = `${entry.name} · ${entry.status.replaceAll("_", " ")}`;
             const notes = document.createElement("span");
             notes.textContent = entry.notes;
-            item.append(heading, notes);
+            const sources = document.createElement("small");
+            sources.textContent = `Source: ${(entry.sources || []).join(" · ")}`;
+            item.append(heading, notes, sources);
             list.appendChild(item);
           }
           summary.textContent = `${report.ruleset} · ${counts.implemented} implemented · ${counts.partial} partial · ${counts.unsupported} unsupported · ${counts.arena_assumption} assumptions`;
