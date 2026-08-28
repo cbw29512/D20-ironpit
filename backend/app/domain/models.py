@@ -13,6 +13,7 @@ from app.domain.combatants import (
     Weapon,
     WeaponAttack,
     WeaponAttackKind,
+    WeaponProperty,
 )
 from app.domain.events import BattleEvent, BattleResult, DamageRollComponent, DiceRoll, RollMode
 
@@ -36,4 +37,5 @@ __all__ = [
     "Weapon",
     "WeaponAttack",
     "WeaponAttackKind",
+    "WeaponProperty",
 ]

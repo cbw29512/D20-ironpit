@@ -17,6 +17,14 @@ class WeaponAttackKind(StrEnum):
     RANGED = "ranged"
 
 
+class WeaponProperty(StrEnum):
+    AMMUNITION = "ammunition"
+    FINESSE = "finesse"
+    LIGHT = "light"
+    TWO_HANDED = "two-handed"
+    VERSATILE = "versatile"
+
+
 class AttackRollEffectKind(StrEnum):
     ADVANTAGE = "advantage"
     DISADVANTAGE = "disadvantage"
@@ -52,6 +60,7 @@ class Weapon(BaseModel):
     normal_range_ft: int | None = Field(default=None, ge=1)
     long_range_ft: int | None = Field(default=None, ge=1)
     projectile: str | None = None
+    properties: list[WeaponProperty] = Field(default_factory=list)
     mastery_property: str | None = None
 
 
@@ -59,7 +68,8 @@ class WeaponAttack(BaseModel):
     id: str
     weapon: Weapon
     attack_bonus: int
-    damage_bonus: int
+    ability_damage_modifier: int = 0
+    damage_bonus: int = 0
     conditional_damage: list[ConditionalDamage] = Field(default_factory=list)
 
 
@@ -120,6 +130,7 @@ class CombatantState(BaseModel):
     reaction_available: bool = True
     movement_remaining_ft: int = Field(default=0, ge=0)
     disengaged: bool = False
+    light_extra_attack_used: bool = False
     resources: list[ResourceState] = Field(default_factory=list)
     attack_roll_effects: list[AttackRollEffect] = Field(default_factory=list)
 

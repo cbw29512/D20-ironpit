@@ -3,7 +3,14 @@ from __future__ import annotations
 import logging
 
 from app.combat.dice import DiceProvider
-from app.domain.models import CombatantState, DamageRollComponent, DamageType, DiceRoll, RollMode, WeaponAttack
+from app.domain.models import (
+    CombatantState,
+    DamageRollComponent,
+    DamageType,
+    DiceRoll,
+    RollMode,
+    WeaponAttack,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +29,7 @@ def _roll_component(
         rolls = [dice.roll(dice_size) for _ in range(count)]
         return DamageRollComponent(
             source=source,
-            notation=f"{count}d{dice_size}+{modifier}",
+            notation=f"{count}d{dice_size}{modifier:+d}",
             rolls=rolls,
             modifier=modifier,
             damage_type=damage_type,
@@ -33,14 +40,28 @@ def _roll_component(
         raise RuntimeError("Damage component could not be resolved.") from exc
 
 
+def _weapon_damage_modifier(
+    attack: WeaponAttack,
+    include_positive_ability_modifier: bool,
+) -> int:
+    try:
+        ability = attack.ability_damage_modifier
+        if not include_positive_ability_modifier and ability > 0:
+            ability = 0
+        return attack.damage_bonus + ability
+    except Exception as exc:
+        logger.exception("Failed to resolve weapon damage modifier for %s.", attack.id)
+        raise RuntimeError("Weapon damage modifier could not be resolved.") from exc
+
+
 def resolve_weapon_damage(
     attacker: CombatantState,
     attack: WeaponAttack,
     dice: DiceProvider,
     critical: bool,
     attack_mode: RollMode,
+    include_positive_ability_modifier: bool = True,
 ) -> tuple[DiceRoll, list[DamageRollComponent]]:
-    """Resolve intrinsic weapon dice plus combatant-specific modifiers and riders."""
     try:
         weapon = attack.weapon
         components = [
@@ -49,14 +70,19 @@ def resolve_weapon_damage(
                 source=weapon.name,
                 dice_count=weapon.dice_count,
                 dice_size=weapon.dice_size,
-                modifier=attack.damage_bonus,
+                modifier=_weapon_damage_modifier(
+                    attack, include_positive_ability_modifier
+                ),
                 damage_type=weapon.damage_type,
                 critical=critical,
             )
         ]
 
         for conditional in attack.conditional_damage:
-            if conditional.trigger == "attack_advantage" and attack_mode is RollMode.ADVANTAGE:
+            if (
+                conditional.trigger == "attack_advantage"
+                and attack_mode is RollMode.ADVANTAGE
+            ):
                 components.append(
                     _roll_component(
                         dice=dice,

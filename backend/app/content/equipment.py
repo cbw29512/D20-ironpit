@@ -2,7 +2,13 @@ from __future__ import annotations
 
 import logging
 
-from app.domain.models import DamageType, VisualLoadout, Weapon, WeaponAttackKind
+from app.domain.models import (
+    DamageType,
+    VisualLoadout,
+    Weapon,
+    WeaponAttackKind,
+    WeaponProperty,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -18,6 +24,7 @@ def build_longsword() -> Weapon:
             damage_type=DamageType.SLASHING,
             animation="slash",
             reach_ft=5,
+            properties=[WeaponProperty.VERSATILE],
             mastery_property="sap",
         )
     except Exception as exc:
@@ -36,11 +43,31 @@ def build_scimitar() -> Weapon:
             damage_type=DamageType.SLASHING,
             animation="slash",
             reach_ft=5,
+            properties=[WeaponProperty.FINESSE, WeaponProperty.LIGHT],
             mastery_property="nick",
         )
     except Exception as exc:
         logger.exception("Failed to build scimitar content record.")
         raise RuntimeError("Scimitar content could not be created.") from exc
+
+
+def build_shortsword() -> Weapon:
+    try:
+        return Weapon(
+            id="shortsword",
+            name="Shortsword",
+            attack_kind=WeaponAttackKind.MELEE,
+            dice_count=1,
+            dice_size=6,
+            damage_type=DamageType.PIERCING,
+            animation="thrust",
+            reach_ft=5,
+            properties=[WeaponProperty.FINESSE, WeaponProperty.LIGHT],
+            mastery_property="vex",
+        )
+    except Exception as exc:
+        logger.exception("Failed to build shortsword content record.")
+        raise RuntimeError("Shortsword content could not be created.") from exc
 
 
 def build_shortbow() -> Weapon:
@@ -56,6 +83,7 @@ def build_shortbow() -> Weapon:
             normal_range_ft=80,
             long_range_ft=320,
             projectile="arrow",
+            properties=[WeaponProperty.AMMUNITION, WeaponProperty.TWO_HANDED],
             mastery_property="vex",
         )
     except Exception as exc:

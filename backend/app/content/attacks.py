@@ -29,7 +29,7 @@ def build_fighter_longsword_attack() -> WeaponAttack:
             id="aldric-longsword",
             weapon=build_longsword(),
             attack_bonus=5,
-            damage_bonus=3,
+            ability_damage_modifier=3,
         )
     except Exception as exc:
         logger.exception("Failed to build Fighter longsword attack profile.")
@@ -42,7 +42,7 @@ def build_goblin_scimitar_attack() -> WeaponAttack:
             id="goblin-scimitar",
             weapon=build_scimitar(),
             attack_bonus=4,
-            damage_bonus=2,
+            ability_damage_modifier=2,
             conditional_damage=_goblin_advantage_damage(DamageType.SLASHING),
         )
     except Exception as exc:
@@ -56,7 +56,7 @@ def build_goblin_shortbow_attack() -> WeaponAttack:
             id="goblin-shortbow",
             weapon=build_shortbow(),
             attack_bonus=4,
-            damage_bonus=2,
+            ability_damage_modifier=2,
             conditional_damage=_goblin_advantage_damage(DamageType.PIERCING),
         )
     except Exception as exc:
