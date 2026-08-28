@@ -8,22 +8,25 @@
 - Production dice use the operating-system CSPRNG through Python `secrets`.
 - The Netlify-ready frontend replays structured battle events.
 - Static preview mode uses browser Web Crypto and mirrors supported demo rules.
-- GitHub Actions gates Python tests, source-size limits, frontend syntax, preview behavior, Netlify configuration, and the Docker build.
-- Production source modules are limited to 150 lines to keep the combat engine modular.
+- GitHub Actions gates Python tests, source-size limits, rules-contract synchronization, frontend syntax, preview behavior, Netlify configuration, and the Docker build.
+- Production Python and JavaScript modules are limited to 150 lines to keep the combat engine modular.
 
 ## Implemented rules
 
-The current engine supports initiative, melee and ranged attacks, AC, natural 1/20 behavior, critical weapon dice, HP, healing, 0-HP arena defeat, movement, retreat movement, Dash, weapon ranges, close-ranged Disadvantage, Advantage/Disadvantage cancellation, Fighter Second Wind, Goblin conditional Advantage damage, Longsword Sap, and the reusable Vex mastery effect.
+The current engine supports initiative, melee and ranged attacks, AC, natural 1/20 behavior, critical weapon dice, HP, healing, 0-HP arena defeat, movement, retreat movement, Dash, weapon ranges, close-ranged Disadvantage, Advantage/Disadvantage cancellation, Fighter Second Wind, Goblin conditional Advantage damage, Opportunity Attacks, Disengage, Longsword Sap, reusable Vex, the Light weapon extra attack, Two-Weapon Fighting, and Nick.
 
-The Goblin Warrior also uses the **Disengage option** of Nimble Escape as a Bonus Action when trapped in melee, retreats, and can switch to its Shortbow. The Hide option of Nimble Escape is not implemented yet because the arena does not yet model visibility, concealment, or Stealth.
+The **Light** rule uses a canonical Attack-action path: an Attack-action attack with a Light weapon can enable one extra attack with a different configured Light weapon. The normal extra attack spends the Bonus Action, is limited to once per turn, and omits a positive ability modifier from damage while retaining a negative modifier and any separate damage bonus. **Two-Weapon Fighting** restores the ability modifier. **Nick** moves that same Light extra attack into the Attack action for a mastered Nick weapon and does not create another Light extra attack.
+
+The Goblin Warrior uses the **Disengage option** of Nimble Escape as a Bonus Action when trapped in melee, retreats, and can switch to its Shortbow. Opportunity Attack handling verifies that Disengage actually prevents the reaction before movement. The Hide option remains unsupported because the arena does not yet model visibility, concealment, or Stealth.
 
 Weapon mastery data currently records:
 
 - Longsword — Sap
 - Scimitar — Nick
+- Shortsword — Vex
 - Shortbow — Vex
 
-A weapon having mastery metadata does **not** grant mastery to its wielder. Aldric currently masters Longsword. The SRD Goblin Warrior does not receive player weapon mastery features. Vex is implemented as reusable engine capability for a combatant that actually has Shortbow mastery; Nick remains unsupported until the engine has a canonical Light-property extra-attack model.
+A weapon having mastery metadata does **not** grant mastery to its wielder. Aldric currently masters Longsword. The SRD Goblin Warrior does not receive player weapon mastery features, so the current demo does not gain Nick merely because its Scimitar record carries Nick. Light/Nick are reusable engine capabilities for combatants whose configured weapons and mastery choices actually qualify.
 
 ## Rules coverage API
 
@@ -34,9 +37,11 @@ A weapon having mastery metadata does **not** grant mastery to its wielder. Aldr
 - `unsupported`
 - `arena_assumption`
 
-This endpoint is the source of truth for scope. It explicitly records incomplete areas such as Hide, Opportunity Attacks, conditions, cover, spells, death saves, and Nick instead of silently approximating them.
+The API contract is the source of truth for scope. `frontend/rules-coverage.json` must match it exactly, and CI fails if the static and FastAPI contracts drift apart. The arena renders this coverage report for direct inspection.
 
-The arena currently uses Initiative bonus as a deterministic tie-breaker and models combat as one-dimensional distance in an open arena. Both are reported as arena assumptions.
+Current deliberate gaps include the Hide option of Nimble Escape, general conditions, cover/line-of-effect, spells, death saving throws, and Reaction features other than Opportunity Attacks.
+
+The arena currently uses Initiative bonus as a deterministic tie-breaker and models combat as one-dimensional distance in an open arena with visible opponents. Both are reported explicitly as arena assumptions.
 
 ## Run locally
 
@@ -102,8 +107,8 @@ If `IRON_PIT_API_BASE` is blank, the site intentionally runs the secure browser 
 
 ## Next rules milestones
 
-1. Add canonical reactions and Opportunity Attacks so Disengage prevention is fully exercised.
-2. Add visibility/concealment and Hide before enabling the Hide option of Nimble Escape.
-3. Add a proper Light-property extra-attack model before implementing Nick.
-4. Surface the machine-readable rules coverage report in the arena UI.
-5. Run a final deployed Render + Netlify end-to-end release gate before merging the combat milestone to `main`.
+1. Add visibility, concealment, and Stealth state, then implement the Hide action and finish Goblin Nimble Escape.
+2. Add cover and line-of-effect on top of the battlefield visibility model.
+3. Add a reusable condition framework before condition-producing attacks, spells, or features.
+4. Expand Reaction support beyond Opportunity Attacks only when a concrete rule requires it.
+5. Run a final deployed Render + Netlify end-to-end release gate before promoting the combat milestone to `main`.
