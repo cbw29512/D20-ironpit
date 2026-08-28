@@ -1,16 +1,12 @@
 (() => {
   "use strict";
 
-  const meleeButton = document.querySelector("#fight-button");
-  const rangedButton = document.querySelector("#ranged-button");
-  const ambushButton = document.querySelector("#rogue-button");
+  const fightButton = document.querySelector("#fight-button");
   const characterSelect = document.querySelector("#character-select");
   const monsterSelect = document.querySelector("#monster-select");
-  const buttons = [meleeButton, rangedButton, ambushButton];
   const apiBase = String(window.IRON_PIT_API_BASE || "").trim().replace(/\/$/, "");
   const previewRoster = window.IRON_PIT_TEST_ROSTER;
   const previewEngine = window.IRON_PIT_TEST_ENGINE;
-  const previewAmbush = window.IRON_PIT_TEST_AMBUSH;
   const arenaState = {
     fighter: { id: "aldric-vane-l1", maxHp: 12 },
     goblin: { id: "srd-goblin-warrior", maxHp: 10 },
@@ -20,15 +16,11 @@
   function selectedCharacter() { return catalog.characters.find((item) => item.id === characterSelect.value); }
   function selectedMonster() { return catalog.monsters.find((item) => item.id === monsterSelect.value); }
 
-  function syncControls(disabled = false) {
+  function setControlsDisabled(disabled) {
     try {
-      const maraSelected = characterSelect.value === "mara-vale-l1";
-      meleeButton.disabled = disabled;
-      rangedButton.disabled = disabled;
-      ambushButton.disabled = disabled || !maraSelected;
+      fightButton.disabled = disabled;
       characterSelect.disabled = disabled;
       monsterSelect.disabled = disabled;
-      ambushButton.title = maraSelected ? "Mara attempts a RAW pre-combat Hide." : "Select Mara Vale to test the Rogue ambush.";
     } catch (error) { console.error("Control state update failed", error); }
   }
 
@@ -42,14 +34,14 @@
     }
   }
 
-  function hydrateSelection(view, message = "Ready — choose a battle mode.") {
+  function hydrateSelection(view, message = "Ready — press Fight.") {
     try {
       const fighter = selectedCharacter();
       const monster = selectedMonster();
       if (!fighter || !monster) throw new Error("Selected matchup is unavailable.");
       view.hydrateRoster({ fighter, monster });
       view.resetArena(message, 5);
-      syncControls(false);
+      setControlsDisabled(false);
     } catch (error) { console.error("Matchup hydration failed", error); view.setStatus("Matchup could not be loaded."); }
   }
 
@@ -73,44 +65,36 @@
         catalog = await response.json();
       } else {
         if (!previewRoster) throw new Error("Secure preview test roster is unavailable.");
-        catalog = {
-          characters: Object.values(previewRoster.characters),
-          monsters: Object.values(previewRoster.monsters),
-        };
+        catalog = { characters: Object.values(previewRoster.characters), monsters: Object.values(previewRoster.monsters) };
       }
       populateSelect(characterSelect, catalog.characters, (item) => `${item.name} · ${item.archetype} ${item.level}`);
       populateSelect(monsterSelect, catalog.monsters, (item) => `${item.name} · CR ${item.challenge_rating}`);
       characterSelect.value = "aldric-vane-l1";
       monsterSelect.value = "srd-goblin-warrior";
-      hydrateSelection(view, "Secure random test roster ready — choose a matchup.");
+      hydrateSelection(view, "Choose a matchup, then press Fight.");
     } catch (error) {
       console.error("Test roster load failed", error);
       view.resetArena("Test roster could not be loaded.", 5);
     }
   }
 
-  async function requestBattle(mode) {
+  async function requestBattle() {
     const characterId = characterSelect.value;
     const monsterId = monsterSelect.value;
     try {
-      if (!apiBase) {
-        if (mode === "ambush") return previewAmbush.buildTestAmbush(monsterId);
-        return previewEngine.buildTestBattle(characterId, monsterId, mode);
-      }
-      const endpoint = mode === "ambush"
-        ? `/api/test/ambush/${encodeURIComponent(monsterId)}`
-        : `/api/test/battle/${encodeURIComponent(characterId)}/${encodeURIComponent(monsterId)}/${mode}`;
+      if (!apiBase) return previewEngine.buildAutomaticBattle(characterId, monsterId);
+      const endpoint = `/api/test/fight/${encodeURIComponent(characterId)}/${encodeURIComponent(monsterId)}`;
       const response = await fetch(`${apiBase}${endpoint}`, { method: "POST" });
       if (!response.ok) throw new Error(`Battle API returned ${response.status}`);
       return await response.json();
     } catch (error) { console.error("Battle request failed", error); throw error; }
   }
 
-  async function startFight(view, mode, fallbackDistance) {
+  async function startFight(view) {
     try {
-      syncControls(true);
-      view.resetArena(apiBase ? "Requesting battle..." : "Rolling secure random battle...", fallbackDistance);
-      const battle = await requestBattle(mode);
+      setControlsDisabled(true);
+      view.resetArena(apiBase ? "Requesting fight..." : "The monster chooses its opening approach...", 5);
+      const battle = await requestBattle();
       view.hydrateRoster({ fighter: battle.fighter.template, monster: battle.monster.template });
       view.resetArena("Rolling initiative...", battle.battlefield.starting_distance_ft);
       await view.replay(battle.events);
@@ -118,7 +102,7 @@
     } catch (error) {
       console.error("Fight failed", error);
       view.setStatus(apiBase ? "Battle failed. Check the FastAPI deployment." : "Secure preview battle failed.");
-    } finally { syncControls(false); }
+    } finally { setControlsDisabled(false); }
   }
 
   try {
@@ -126,10 +110,8 @@
     const rulesView = window.createIronPitRulesView();
     characterSelect.addEventListener("change", () => hydrateSelection(view));
     monsterSelect.addEventListener("change", () => hydrateSelection(view));
-    meleeButton.addEventListener("click", () => startFight(view, "melee", 5));
-    rangedButton.addEventListener("click", () => startFight(view, "ranged", 20));
-    ambushButton.addEventListener("click", () => startFight(view, "ambush", 60));
-    syncControls(true);
+    fightButton.addEventListener("click", () => startFight(view));
+    setControlsDisabled(true);
     loadCatalog(view);
     loadRulesCoverage(rulesView);
   } catch (error) {
