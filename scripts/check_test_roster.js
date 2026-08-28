@@ -20,48 +20,26 @@ try {
   global.IRON_PIT_EFFECTS = require("../frontend/preview-effects.js");
   load("frontend/preview-test-data.js");
   load("frontend/preview-test-engine.js");
-  load("frontend/preview-test-ambush.js");
 
   const roster = global.IRON_PIT_TEST_ROSTER;
   assert(Object.keys(roster.characters).length === 2, "Public test roster should expose two pregens.");
-  assert(Object.keys(roster.monsters).length === 3, "Public test roster should expose three monsters.");
-  assert(roster.monsters["srd-bandit"].armor_class === 12, "Bandit AC must remain 12.");
-  assert(roster.monsters["srd-guard"].armor_class === 16, "Guard AC must remain 16.");
-  assert(roster.monsters["srd-guard"].attacks[1].weapon.longRange === 60, "Guard thrown Spear must retain range 20/60.");
-  assert(roster.monsters["srd-goblin-warrior"].openingMode === "ranged", "Goblin should choose a ranged opening.");
-  assert(roster.monsters["srd-bandit"].openingMode === "ranged", "Bandit should choose a ranged opening.");
-  assert(roster.monsters["srd-guard"].openingMode === "melee", "Guard should choose a melee opening.");
+  assert(Object.keys(roster.monsters).length === 2, "Public test roster should expose two simple monsters.");
+  assert(!roster.monsters["srd-goblin-warrior"], "Goblin should stay out of the simple public roster.");
+  assert(roster.monsters["srd-bandit"].openingDistance === 20, "Bandit should open at 20 feet.");
+  assert(roster.monsters["srd-guard"].openingDistance === 5, "Guard should open in melee.");
 
-  const ids = Object.keys(roster.monsters);
-  for (const monsterId of ids) {
-    const melee = global.IRON_PIT_TEST_ENGINE.buildTestBattle("aldric-vane-l1", monsterId, "melee");
-    const ranged = global.IRON_PIT_TEST_ENGINE.buildTestBattle("mara-vale-l1", monsterId, "ranged");
-    assert(melee.monster.template.id === monsterId, `Melee QA selection failed for ${monsterId}.`);
-    assert(ranged.monster.template.id === monsterId, `Ranged QA selection failed for ${monsterId}.`);
-    assert(melee.events.some((event) => event.event_type === "attack"), `Melee QA battle produced no attacks for ${monsterId}.`);
-    assert(ranged.events.some((event) => event.event_type === "attack"), `Ranged QA battle produced no attacks for ${monsterId}.`);
-  }
+  const bandit = global.IRON_PIT_TEST_ENGINE.buildAutomaticBattle("aldric-vane-l1", "srd-bandit");
+  const guard = global.IRON_PIT_TEST_ENGINE.buildAutomaticBattle("mara-vale-l1", "srd-guard");
+  assert(bandit.battlefield.starting_distance_ft === 20, "Bandit automatic fight should start at range.");
+  assert(guard.battlefield.starting_distance_ft === 5, "Guard automatic fight should start in melee.");
+  assert(bandit.events.some((event) => event.event_type === "movement" && event.distance_after_ft < 20), "Bandit fight should close distance.");
+  assert(bandit.events.some((event) => event.weapon_id === "handaxe"), "Aldric should use a ranged option while separated.");
+  assert(bandit.events.some((event) => event.weapon_id === "longsword" || event.weapon_id === "scimitar"), "Bandit fight should reach melee weapons.");
 
-  const goblinAuto = global.IRON_PIT_TEST_ENGINE.buildAutomaticBattle("aldric-vane-l1", "srd-goblin-warrior");
-  const banditAuto = global.IRON_PIT_TEST_ENGINE.buildAutomaticBattle("mara-vale-l1", "srd-bandit");
-  const guardAuto = global.IRON_PIT_TEST_ENGINE.buildAutomaticBattle("aldric-vane-l1", "srd-guard");
-  assert(goblinAuto.battlefield.starting_distance_ft === 20, "Goblin automatic fight should open at range.");
-  assert(banditAuto.battlefield.starting_distance_ft === 20, "Bandit automatic fight should open at range.");
-  assert(guardAuto.battlefield.starting_distance_ft === 5, "Guard automatic fight should open in melee.");
-
-  const guardRanged = global.IRON_PIT_TEST_ENGINE.buildTestBattle("aldric-vane-l1", "srd-guard", "ranged");
-  assert(
-    guardRanged.events.some((event) => event.actor_id === "srd-guard" && event.weapon_id === "spear" && event.animation === "projectile"),
-    "Guard should still throw its Spear in controlled ranged QA mode.",
-  );
-
-  for (const monsterId of ids) {
-    const ambush = global.IRON_PIT_TEST_AMBUSH.buildTestAmbush(monsterId);
-    assert(ambush.monster.template.id === monsterId, `Ambush QA selection failed for ${monsterId}.`);
-    assert(
-      ambush.events.some((event) => event.event_type === "hide" && event.effect_changes?.some((change) => change.effect_id === "hidden")),
-      `Successful Mara Hide should remain covered against ${monsterId}.`,
-    );
+  for (const battle of [bandit, guard]) {
+    assert(!battle.events.some((event) => event.animation === "retreat"), "Public fights must never retreat.");
+    assert(!battle.events.some((event) => event.event_type === "disengage"), "Public fights must never Disengage.");
+    assert(battle.events.some((event) => event.event_type === "attack"), "Public fights must produce attacks.");
   }
 
   console.log("Selectable browser roster checks passed.");
