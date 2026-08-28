@@ -14,8 +14,14 @@ from app.combat.state import (
     end_turn,
     expire_attack_roll_effects_at_turn_start,
 )
-from app.combat.turns import prepare_attack, prepare_skirmish_retreat
-from app.domain.models import BattleEvent, BattlefieldState, BattleResult, CombatantTemplate
+from app.combat.turns import prepare_attack, prepare_nimble_hide, prepare_skirmish_retreat
+from app.domain.models import (
+    ActorVisibilityState,
+    BattleEvent,
+    BattlefieldState,
+    BattleResult,
+    CombatantTemplate,
+)
 
 logger = logging.getLogger(__name__)
 MAX_ROUNDS = 100
@@ -26,6 +32,7 @@ def run_duel(
     monster_template: CombatantTemplate,
     dice: DiceProvider,
     starting_distance_ft: int = 5,
+    visibility_by_actor: dict[str, ActorVisibilityState] | None = None,
 ) -> BattleResult:
     try:
         fighter = build_combatant_state(fighter_template)
@@ -34,6 +41,7 @@ def run_duel(
         battlefield = BattlefieldState(
             starting_distance_ft=starting_distance_ft,
             distance_ft=starting_distance_ft,
+            visibility_by_actor=visibility_by_actor or {},
         )
         events, order, sequence = roll_initiative_order(combatants, dice)
 
@@ -58,6 +66,10 @@ def run_duel(
                     dice,
                 )
                 events.extend(retreat_events)
+                hide_events, sequence = prepare_nimble_hide(
+                    sequence, round_number, attacker, battlefield, dice
+                )
+                events.extend(hide_events)
                 weapon, prep_events, sequence = prepare_attack(
                     sequence, round_number, attacker, battlefield
                 )

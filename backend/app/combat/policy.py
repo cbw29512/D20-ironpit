@@ -3,7 +3,8 @@ from __future__ import annotations
 import logging
 
 from app.combat.range import resolve_attack_roll_mode
-from app.domain.models import CombatantState, WeaponAttack, WeaponAttackKind
+from app.combat.stealth import can_hide
+from app.domain.models import BattlefieldState, CombatantState, WeaponAttack, WeaponAttackKind
 
 logger = logging.getLogger(__name__)
 
@@ -40,6 +41,25 @@ def should_use_nimble_escape_disengage(state: CombatantState, distance_ft: int) 
     except Exception as exc:
         logger.exception("Failed to evaluate Nimble Escape policy for %s.", state.template.name)
         raise RuntimeError("Nimble Escape policy could not be evaluated.") from exc
+
+
+def should_use_nimble_escape_hide(
+    state: CombatantState,
+    battlefield: BattlefieldState,
+) -> bool:
+    """Hide before attacking when terrain permits and a current attack is legal."""
+    try:
+        return bool(
+            "nimble-escape" in state.template.bonus_action_features
+            and state.bonus_action_available
+            and not state.hidden
+            and battlefield.distance_ft > 5
+            and can_hide(state, battlefield)
+            and select_weapon_attack(state, battlefield.distance_ft) is not None
+        )
+    except Exception as exc:
+        logger.exception("Failed to evaluate Nimble Escape Hide policy for %s.", state.template.name)
+        raise RuntimeError("Nimble Escape Hide policy could not be evaluated.") from exc
 
 
 def select_weapon_attack(state: CombatantState, distance_ft: int) -> WeaponAttack | None:

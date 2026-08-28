@@ -2,13 +2,17 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.bonus_actions import use_nimble_escape_disengage
+from app.combat.bonus_actions import (
+    use_nimble_escape_disengage,
+    use_nimble_escape_hide,
+)
 from app.combat.dice import DiceProvider
 from app.combat.movement import move_toward_target, take_dash
 from app.combat.policy import (
     preferred_approach_distance,
     select_weapon_attack,
     should_use_nimble_escape_disengage,
+    should_use_nimble_escape_hide,
 )
 from app.combat.reactions import retreat_with_opportunity_check
 from app.domain.models import BattleEvent, BattlefieldState, CombatantState, WeaponAttack
@@ -41,6 +45,25 @@ def prepare_skirmish_retreat(
     except Exception as exc:
         logger.exception("Skirmish retreat failed for %s.", attacker.template.name)
         raise RuntimeError("Skirmish retreat could not be completed.") from exc
+
+
+def prepare_nimble_hide(
+    sequence: int,
+    round_number: int,
+    attacker: CombatantState,
+    battlefield: BattlefieldState,
+    dice: DiceProvider,
+) -> tuple[list[BattleEvent], int]:
+    try:
+        if not should_use_nimble_escape_hide(attacker, battlefield):
+            return [], sequence
+        event = use_nimble_escape_hide(
+            sequence, round_number, attacker, battlefield, dice
+        )
+        return [event], sequence + 1
+    except Exception as exc:
+        logger.exception("Nimble Hide preparation failed for %s.", attacker.template.name)
+        raise RuntimeError("Nimble Hide preparation could not be completed.") from exc
 
 
 def prepare_attack(
