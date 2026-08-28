@@ -112,6 +112,7 @@ class CombatantTemplate(BaseModel):
     fighting_style: str | None = None
     weapon_masteries: list[str] = Field(default_factory=list)
     bonus_action_features: list[str] = Field(default_factory=list)
+    sneak_attack_dice_count: int = Field(default=0, ge=0, le=10)
     skill_bonuses: dict[str, int] = Field(default_factory=dict)
     passive_perception: int = Field(default=10, ge=0)
     visual: VisualLoadout
@@ -139,6 +140,7 @@ class CombatantState(BaseModel):
     hidden: bool = False
     hidden_dc: int | None = Field(default=None, ge=0)
     conditions: set[ConditionKind] = Field(default_factory=set)
+    once_per_turn_features_used: set[str] = Field(default_factory=set)
     resources: list[ResourceState] = Field(default_factory=list)
     attack_roll_effects: list[AttackRollEffect] = Field(default_factory=list)
 

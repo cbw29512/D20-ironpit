@@ -10,6 +10,7 @@ from app.combat.masteries import (
     resolve_attack_roll_effect_sources,
 )
 from app.combat.range import resolve_attack_roll_mode
+from app.combat.rogue import resolve_sneak_attack_component
 from app.combat.rolls import roll_d20
 from app.combat.stealth import break_hidden, resolve_invisible_attack_sources
 from app.domain.models import BattleEvent, CombatantState, WeaponAttack
@@ -60,6 +61,7 @@ def resolve_attack(
         damage_roll = None
         damage_components = []
         feature_id = None
+        sneak_attack_applied = False
 
         if hit:
             damage_roll, damage_components = resolve_weapon_damage(
@@ -70,6 +72,16 @@ def resolve_attack(
                 mode,
                 include_positive_ability_damage_modifier,
             )
+            sneak_component = resolve_sneak_attack_component(
+                attacker, attack, dice, critical, mode
+            )
+            if sneak_component is not None:
+                damage_components.append(sneak_component)
+                damage_roll.notation += f" + {sneak_component.notation}"
+                damage_roll.rolls.extend(sneak_component.rolls)
+                damage_roll.total += sneak_component.total
+                sneak_attack_applied = True
+
             defender.current_hp = max(0, defender.current_hp - damage_roll.total)
             defender.is_alive = defender.current_hp > 0
             if defender.is_alive:
@@ -82,6 +94,8 @@ def resolve_attack(
 
         outcome = "CRITICAL HIT" if critical else ("HIT" if hit else "MISS")
         description = f"{attacker.template.name}: {outcome} with {weapon.name}."
+        if sneak_attack_applied:
+            description += " Sneak Attack adds precision damage."
         if feature_id == "sap":
             description += " Sap hinders the target's next attack roll."
         elif feature_id == "vex":

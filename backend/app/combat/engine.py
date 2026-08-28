@@ -56,7 +56,7 @@ def run_duel(
                     continue
 
                 expire_attack_roll_effects_at_turn_start(attacker, combatants)
-                begin_turn(attacker)
+                begin_turn(attacker, combatants)
                 if attacker is fighter and should_use_second_wind(fighter):
                     events.append(use_second_wind(sequence, round_number, fighter, dice))
                     sequence += 1

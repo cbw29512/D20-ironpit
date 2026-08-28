@@ -69,8 +69,21 @@ def expire_attack_roll_effects_at_turn_end(
         raise RuntimeError("Turn-end effects could not be expired.") from exc
 
 
-def begin_turn(state: CombatantState) -> None:
+def _begin_once_per_turn_window(combatants: Iterable[CombatantState]) -> None:
     try:
+        for combatant in combatants:
+            combatant.once_per_turn_features_used.clear()
+    except Exception as exc:
+        logger.exception("Failed to reset once-per-turn feature state.")
+        raise RuntimeError("Once-per-turn feature state could not be reset.") from exc
+
+
+def begin_turn(
+    state: CombatantState,
+    combatants: Iterable[CombatantState] | None = None,
+) -> None:
+    try:
+        _begin_once_per_turn_window(combatants or (state,))
         state.action_available = True
         state.bonus_action_available = True
         state.reaction_available = True
