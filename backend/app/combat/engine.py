@@ -22,6 +22,7 @@ from app.domain.models import (
     BattlefieldState,
     BattleResult,
     CombatantTemplate,
+    DuelMode,
     EncounterSetup,
 )
 
@@ -36,6 +37,7 @@ def run_duel(
     starting_distance_ft: int = 5,
     visibility_by_actor: dict[str, ActorVisibilityState] | None = None,
     encounter_setup: EncounterSetup | None = None,
+    duel_mode: DuelMode = DuelMode.OPEN,
 ) -> BattleResult:
     try:
         fighter = build_combatant_state(fighter_template)
@@ -72,14 +74,15 @@ def run_duel(
                     defender,
                     battlefield,
                     dice,
+                    duel_mode,
                 )
                 events.extend(retreat_events)
                 hide_events, sequence = prepare_nimble_hide(
-                    sequence, round_number, attacker, battlefield, dice
+                    sequence, round_number, attacker, battlefield, dice, duel_mode
                 )
                 events.extend(hide_events)
                 weapon, prep_events, sequence = prepare_attack(
-                    sequence, round_number, attacker, battlefield
+                    sequence, round_number, attacker, battlefield, duel_mode
                 )
                 events.extend(prep_events)
                 if weapon is None:

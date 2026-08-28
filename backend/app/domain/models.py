@@ -15,7 +15,7 @@ from app.domain.combatants import (
     WeaponProperty,
 )
 from app.domain.conditions import ConditionKind
-from app.domain.encounters import EncounterSetup, PrecombatActorPlan
+from app.domain.encounters import DuelMode, EncounterSetup, PrecombatActorPlan
 from app.domain.events import BattleEvent, BattleResult, DamageRollComponent, DiceRoll, RollMode
 from app.domain.resources import ResourceDefinition, ResourceState
 from app.domain.saves import SavingThrowResult
@@ -38,6 +38,7 @@ __all__ = [
     "DamageType",
     "DemoRoster",
     "DiceRoll",
+    "DuelMode",
     "EncounterSetup",
     "PrecombatActorPlan",
     "ResourceDefinition",

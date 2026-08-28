@@ -4,7 +4,13 @@ import logging
 
 from app.combat.range import resolve_attack_roll_mode
 from app.combat.stealth import can_hide
-from app.domain.models import BattlefieldState, CombatantState, WeaponAttack, WeaponAttackKind
+from app.domain.models import (
+    BattlefieldState,
+    CombatantState,
+    DuelMode,
+    WeaponAttack,
+    WeaponAttackKind,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -62,25 +68,65 @@ def should_use_nimble_escape_hide(
         raise RuntimeError("Nimble Escape Hide policy could not be evaluated.") from exc
 
 
-def select_weapon_attack(state: CombatantState, distance_ft: int) -> WeaponAttack | None:
-    """Prefer the primary attack profile, then the first legal alternate profile."""
+def _legal_attacks(state: CombatantState, distance_ft: int) -> list[WeaponAttack]:
+    profiles = [state.template.weapon_attack, *state.template.alternate_weapon_attacks]
+    legal: list[WeaponAttack] = []
+    for attack in profiles:
+        try:
+            resolve_attack_roll_mode(attack.weapon, distance_ft)
+            legal.append(attack)
+        except ValueError:
+            continue
+    return legal
+
+
+def select_weapon_attack(
+    state: CombatantState,
+    distance_ft: int,
+    duel_mode: DuelMode = DuelMode.OPEN,
+) -> WeaponAttack | None:
+    """Pick a legal attack matching the controlled arena mode when possible."""
     try:
-        profiles = [state.template.weapon_attack, *state.template.alternate_weapon_attacks]
-        for attack in profiles:
-            try:
-                resolve_attack_roll_mode(attack.weapon, distance_ft)
-                return attack
-            except ValueError:
-                continue
-        return None
+        legal = _legal_attacks(state, distance_ft)
+        if not legal or duel_mode is DuelMode.OPEN:
+            return legal[0] if legal else None
+        preferred_kind = (
+            WeaponAttackKind.MELEE
+            if duel_mode is DuelMode.MELEE or distance_ft <= 5
+            else WeaponAttackKind.RANGED
+        )
+        return next(
+            (attack for attack in legal if attack.weapon.attack_kind is preferred_kind),
+            legal[0],
+        )
     except Exception as exc:
         logger.exception("Failed to select attack profile for %s.", state.template.name)
         raise RuntimeError("Attack selection policy could not be evaluated.") from exc
 
 
-def preferred_approach_distance(state: CombatantState) -> int:
-    """Close to the primary attack's melee reach or normal ranged distance."""
+def preferred_approach_distance(
+    state: CombatantState,
+    duel_mode: DuelMode = DuelMode.OPEN,
+) -> int:
+    """Choose the distance needed for the combat style being tested."""
     try:
+        profiles = [state.template.weapon_attack, *state.template.alternate_weapon_attacks]
+        if duel_mode is DuelMode.RANGED:
+            ranged = next(
+                (attack.weapon for attack in profiles if attack.weapon.attack_kind is WeaponAttackKind.RANGED),
+                None,
+            )
+            if ranged is not None:
+                if ranged.normal_range_ft is None:
+                    raise ValueError("Ranged weapon has no normal range.")
+                return ranged.normal_range_ft
+        if duel_mode is DuelMode.MELEE:
+            melee = next(
+                (attack.weapon for attack in profiles if attack.weapon.attack_kind is WeaponAttackKind.MELEE),
+                None,
+            )
+            return melee.reach_ft if melee is not None else 5
+
         weapon = state.template.weapon_attack.weapon
         if weapon.attack_kind is WeaponAttackKind.MELEE:
             return weapon.reach_ft

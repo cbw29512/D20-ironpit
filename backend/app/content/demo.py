@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.content.attacks import (
+    build_fighter_handaxe_throw,
     build_fighter_longsword_attack,
     build_goblin_scimitar_attack,
     build_goblin_shortbow_attack,
@@ -39,6 +40,7 @@ def build_demo_fighter() -> CombatantTemplate:
                 AbilityKind.CONSTITUTION,
             },
             weapon_attack=build_fighter_longsword_attack(),
+            alternate_weapon_attacks=[build_fighter_handaxe_throw()],
             fighting_style="defense",
             weapon_masteries=["longsword", "javelin", "handaxe"],
             visual=build_fighter_visual_loadout(),

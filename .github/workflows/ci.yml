@@ -38,6 +38,8 @@ jobs:
         run: node scripts/check_preview_effects.js
       - name: Validate preview combat tactics
         run: node scripts/check_preview_tactics.js
+      - name: Validate controlled arena modes
+        run: node scripts/check_preview_modes.js
       - name: Validate Rogue ambush preview
         run: node scripts/check_preview_rogue.js
       - name: Validate Netlify static preview config

@@ -15,7 +15,7 @@ from app.combat.policy import (
     should_use_nimble_escape_hide,
 )
 from app.combat.reactions import retreat_with_opportunity_check
-from app.domain.models import BattleEvent, BattlefieldState, CombatantState, WeaponAttack
+from app.domain.models import BattleEvent, BattlefieldState, CombatantState, DuelMode, WeaponAttack
 
 logger = logging.getLogger(__name__)
 
@@ -27,9 +27,12 @@ def prepare_skirmish_retreat(
     defender: CombatantState,
     battlefield: BattlefieldState,
     dice: DiceProvider,
+    duel_mode: DuelMode = DuelMode.OPEN,
 ) -> tuple[list[BattleEvent], int]:
     try:
         events: list[BattleEvent] = []
+        if duel_mode is not DuelMode.OPEN:
+            return events, sequence
         if not should_use_nimble_escape_disengage(attacker, battlefield.distance_ft):
             return events, sequence
 
@@ -53,8 +56,11 @@ def prepare_nimble_hide(
     attacker: CombatantState,
     battlefield: BattlefieldState,
     dice: DiceProvider,
+    duel_mode: DuelMode = DuelMode.OPEN,
 ) -> tuple[list[BattleEvent], int]:
     try:
+        if duel_mode is not DuelMode.OPEN:
+            return [], sequence
         if not should_use_nimble_escape_hide(attacker, battlefield):
             return [], sequence
         event = use_nimble_escape_hide(
@@ -71,14 +77,15 @@ def prepare_attack(
     round_number: int,
     attacker: CombatantState,
     battlefield: BattlefieldState,
+    duel_mode: DuelMode = DuelMode.OPEN,
 ) -> tuple[WeaponAttack | None, list[BattleEvent], int]:
     try:
         events: list[BattleEvent] = []
-        attack = select_weapon_attack(attacker, battlefield.distance_ft)
+        attack = select_weapon_attack(attacker, battlefield.distance_ft, duel_mode)
         if attack is not None and attacker.action_available:
             return attack, events, sequence
 
-        desired = preferred_approach_distance(attacker)
+        desired = preferred_approach_distance(attacker, duel_mode)
         movement = move_toward_target(
             sequence, round_number, attacker, battlefield, desired
         )
@@ -86,7 +93,7 @@ def prepare_attack(
             events.append(movement)
             sequence += 1
 
-        attack = select_weapon_attack(attacker, battlefield.distance_ft)
+        attack = select_weapon_attack(attacker, battlefield.distance_ft, duel_mode)
         if attack is not None and attacker.action_available:
             return attack, events, sequence
 

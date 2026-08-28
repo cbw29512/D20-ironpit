@@ -12,7 +12,7 @@ from app.content.demo import build_demo_fighter, build_goblin_warrior
 from app.content.rogue import build_demo_rogue
 from app.content.rules import build_rules_coverage
 from app.content.scenarios import build_rogue_ambush_setup
-from app.domain.models import BattleResult, DemoRoster
+from app.domain.models import BattleResult, DemoRoster, DuelMode
 from app.domain.rules import RulesCoverageReport
 
 logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO"))
@@ -74,6 +74,7 @@ def create_demo_battle() -> BattleResult:
             build_goblin_warrior(),
             SecureDiceProvider(),
             starting_distance_ft=5,
+            duel_mode=DuelMode.MELEE,
         )
     except Exception as exc:
         logger.exception("Demo battle API failed.")
@@ -87,7 +88,8 @@ def create_ranged_demo_battle() -> BattleResult:
             build_demo_fighter(),
             build_goblin_warrior(),
             SecureDiceProvider(),
-            starting_distance_ft=90,
+            starting_distance_ft=20,
+            duel_mode=DuelMode.RANGED,
         )
     except Exception as exc:
         logger.exception("Ranged demo battle API failed.")

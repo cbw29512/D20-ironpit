@@ -26,6 +26,7 @@ class WeaponProperty(StrEnum):
     AMMUNITION = "ammunition"
     FINESSE = "finesse"
     LIGHT = "light"
+    THROWN = "thrown"
     TWO_HANDED = "two-handed"
     VERSATILE = "versatile"
 

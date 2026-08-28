@@ -1,6 +1,14 @@
 from __future__ import annotations
 
+from enum import StrEnum
+
 from pydantic import BaseModel, Field
+
+
+class DuelMode(StrEnum):
+    OPEN = "open"
+    MELEE = "melee"
+    RANGED = "ranged"
 
 
 class PrecombatActorPlan(BaseModel):

@@ -55,7 +55,8 @@
           return preview.buildRogueAmbush();
         }
         if (!preview?.buildBattle) throw new Error("Secure preview engine is unavailable.");
-        return preview.buildBattle(endpoint.includes("ranged") ? 90 : 5);
+        const ranged = endpoint.includes("ranged");
+        return preview.buildBattle(ranged ? 20 : 5, ranged ? "ranged" : "melee");
       }
       const response = await fetch(`${apiBase}${endpoint}`, { method: "POST" });
       if (!response.ok) throw new Error(`Battle API returned ${response.status}`);
@@ -87,7 +88,7 @@
     const view = window.createIronPitArenaView(arenaState);
     const rulesView = window.createIronPitRulesView();
     meleeButton.addEventListener("click", () => startFight(view, "/api/battles/demo", 5));
-    rangedButton.addEventListener("click", () => startFight(view, "/api/battles/demo-ranged", 90));
+    rangedButton.addEventListener("click", () => startFight(view, "/api/battles/demo-ranged", 20));
     rogueButton.addEventListener("click", () => startFight(view, "/api/battles/demo-rogue-ambush", 60));
     loadRoster(view);
     loadRulesCoverage(rulesView);

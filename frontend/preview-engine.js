@@ -3,12 +3,12 @@
 
   const dice = window.IRON_PIT_DICE;
   const effects = window.IRON_PIT_EFFECTS;
-  const tactics = window.IRON_PIT_TACTICS;
   const preview = window.IRON_PIT_PREVIEW;
   const weapons = {
     longsword: { id: "longsword", name: "Longsword", attackBonus: 5, count: 1, size: 8, damageBonus: 3, animation: "melee", masteryProperty: "sap" },
+    handaxe: { id: "handaxe", name: "Handaxe", attackBonus: 5, count: 1, size: 6, damageBonus: 3, animation: "projectile", projectile: "axe", masteryProperty: "vex", normalRange: 20, longRange: 60 },
     scimitar: { id: "scimitar", name: "Scimitar", attackBonus: 4, count: 1, size: 6, damageBonus: 2, animation: "melee", masteryProperty: "nick" },
-    shortbow: { id: "shortbow", name: "Shortbow", attackBonus: 4, count: 1, size: 6, damageBonus: 2, animation: "projectile", projectile: "arrow", masteryProperty: "vex" },
+    shortbow: { id: "shortbow", name: "Shortbow", attackBonus: 4, count: 1, size: 6, damageBonus: 2, animation: "projectile", projectile: "arrow", masteryProperty: "vex", normalRange: 80, longRange: 320 },
   };
 
   function d20(modifier, mode = "normal") {
@@ -37,18 +37,14 @@
       const hit = natural !== 1 && (critical || roll.total >= target.template.armor_class);
       const damageRoll = hit ? damage(weapon, critical) : null;
       if (hit) target.hp = Math.max(0, target.hp - damageRoll.total);
-      const featureId = hit && target.hp > 0
-        ? effects.applyWeaponMastery(actor, target, weapon, damageRoll.total)
-        : null;
+      const featureId = hit && target.hp > 0 ? effects.applyWeaponMastery(actor, target, weapon, damageRoll.total) : null;
       const modeText = mode === "normal" ? "" : ` at ${mode[0].toUpperCase()}${mode.slice(1)}`;
-      const featureText = featureId === "sap"
-        ? " Sap hinders the target's next attack roll."
-        : featureId === "vex" ? " Vex grants Advantage on the next attack against this target." : "";
+      const featureText = featureId === "sap" ? " Sap hinders the target's next attack roll." : featureId === "vex" ? " Vex grants Advantage on the next attack against this target." : "";
       return {
         event_type: "attack", actor_id: actor.template.id, target_id: target.template.id,
         description: `${actor.template.name}: ${critical ? "CRITICAL HIT" : hit ? "HIT" : "MISS"} with ${weapon.name}${modeText}.${featureText}`,
         attack_roll: roll, damage_roll: damageRoll, hit, critical, hp_after: target.hp,
-        animation: weapon.animation, projectile: weapon.projectile || null, feature_id: featureId,
+        animation: weapon.animation, projectile: weapon.projectile || null, feature_id: featureId, weapon_id: weapon.id,
       };
     } catch (error) { console.error("Preview attack failed", error); throw error; }
   }
@@ -65,44 +61,58 @@
     } catch (error) { console.error("Preview Second Wind failed", error); throw error; }
   }
 
-  function fighterTurn(state, fighter, goblin, events) {
+  function moveToward(state, actor, target, desired, events) {
+    try {
+      if (state.distance <= desired) return false;
+      const moved = Math.min(actor.template.speed_ft, state.distance - desired);
+      const before = state.distance;
+      state.distance -= moved;
+      events.push({ event_type: "movement", actor_id: actor.template.id, description: `${actor.template.name} moves ${moved} ft toward ${target.template.name}.`, movement_ft: moved, distance_before_ft: before, distance_after_ft: state.distance });
+      return true;
+    } catch (error) { console.error("Preview movement failed", error); throw error; }
+  }
+
+  function fighterTurn(state, fighter, goblin, events, mode) {
     try {
       effects.expireAtSourceTurn([fighter, goblin], fighter.template.id);
       secondWind(state, fighter, events);
-      if (state.distance > 5) {
-        const move = Math.min(30, state.distance - 5);
-        const before = state.distance;
-        state.distance -= move;
-        events.push({ event_type: "movement", actor_id: fighter.template.id, description: `${fighter.template.name} moves ${move} ft toward ${goblin.template.name}.`, movement_ft: move, distance_before_ft: before, distance_after_ft: state.distance });
-        if (state.distance > 5) {
-          events.push({ event_type: "dash", actor_id: fighter.template.id, description: `${fighter.template.name} uses Dash.` });
-          const dashMove = Math.min(30, state.distance - 5);
-          const dashBefore = state.distance;
-          state.distance -= dashMove;
-          events.push({ event_type: "movement", actor_id: fighter.template.id, description: `${fighter.template.name} moves another ${dashMove} ft.`, movement_ft: dashMove, distance_before_ft: dashBefore, distance_after_ft: state.distance });
-          effects.endSourceTurn([fighter, goblin], fighter.template.id);
-          return;
+      if (mode === "ranged" && state.distance > 5) {
+        if (state.distance > weapons.handaxe.longRange) {
+          moveToward(state, fighter, goblin, weapons.handaxe.normalRange, events);
+          if (state.distance > weapons.handaxe.longRange) {
+            events.push({ event_type: "dash", actor_id: fighter.template.id, description: `${fighter.template.name} uses Dash.` });
+            moveToward(state, fighter, goblin, weapons.handaxe.normalRange, events);
+            effects.endSourceTurn([fighter, goblin], fighter.template.id);
+            return;
+          }
         }
+        const rangeMode = state.distance > weapons.handaxe.normalRange ? "disadvantage" : "normal";
+        events.push(attack(fighter, goblin, weapons.handaxe, rangeMode));
+      } else {
+        moveToward(state, fighter, goblin, 5, events);
+        events.push(attack(fighter, goblin, weapons.longsword));
       }
-      events.push(attack(fighter, goblin, weapons.longsword));
       effects.endSourceTurn([fighter, goblin], fighter.template.id);
     } catch (error) { console.error("Preview Fighter turn failed", error); throw error; }
   }
 
-  function goblinTurn(state, goblin, fighter, events) {
+  function goblinTurn(state, goblin, fighter, events, mode) {
     try {
       effects.expireAtSourceTurn([fighter, goblin], goblin.template.id);
-      tactics.prepareNimbleRetreat(state, goblin, events);
-      const weapon = state.distance <= 5 ? weapons.scimitar : weapons.shortbow;
-      const rangeMode = state.distance > 80 ? "disadvantage" : "normal";
-      events.push(attack(goblin, fighter, weapon, rangeMode));
+      if (mode === "ranged" && state.distance > 5) {
+        const rangeMode = state.distance > weapons.shortbow.normalRange ? "disadvantage" : "normal";
+        events.push(attack(goblin, fighter, weapons.shortbow, rangeMode));
+      } else {
+        moveToward(state, goblin, fighter, 5, events);
+        events.push(attack(goblin, fighter, weapons.scimitar));
+      }
       effects.endSourceTurn([fighter, goblin], goblin.template.id);
     } catch (error) { console.error("Preview Goblin turn failed", error); throw error; }
   }
 
-  function buildBattle(startingDistance) {
+  function buildBattle(startingDistance, mode = startingDistance <= 5 ? "melee" : "ranged") {
     try {
-      if (!dice || !effects || !tactics || !preview?.roster) throw new Error("Preview dependencies are unavailable.");
+      if (!dice || !effects || !preview?.roster) throw new Error("Preview dependencies are unavailable.");
       const fighter = { template: preview.roster.fighter, hp: preview.roster.fighter.max_hp, attackRollEffects: [] };
       const goblin = { template: preview.roster.monster, hp: preview.roster.monster.max_hp, attackRollEffects: [] };
       const state = { distance: startingDistance, secondWindUses: 2 };
@@ -117,8 +127,8 @@
         resolvedRound = round;
         for (const actor of order) {
           if (fighter.hp <= 0 || goblin.hp <= 0) break;
-          if (actor === "fighter") fighterTurn(state, fighter, goblin, events);
-          else goblinTurn(state, goblin, fighter, events);
+          if (actor === "fighter") fighterTurn(state, fighter, goblin, events, mode);
+          else goblinTurn(state, goblin, fighter, events, mode);
         }
       }
       const winner = fighter.hp > 0 ? fighter.template.name : goblin.hp > 0 ? goblin.template.name : null;
