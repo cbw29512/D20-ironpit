@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 from collections.abc import Callable
 
+from app.content.barbarian import build_demo_barbarian
 from app.content.demo import build_demo_fighter, build_goblin_warrior
 from app.content.low_cr_monsters import build_bandit, build_guard
 from app.content.rogue import build_demo_rogue
@@ -14,6 +15,7 @@ Builder = Callable[[], CombatantTemplate]
 CHARACTER_BUILDERS: dict[str, Builder] = {
     "aldric-vane-l1": build_demo_fighter,
     "mara-vale-l1": build_demo_rogue,
+    "kara-stonefury-l1": build_demo_barbarian,
 }
 MONSTER_BUILDERS: dict[str, Builder] = {
     "srd-goblin-warrior": build_goblin_warrior,
