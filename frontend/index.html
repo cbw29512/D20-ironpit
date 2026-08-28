@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>The Iron Pit — MVP</title>
+  <title>The Iron Pit — Rules Test Arena</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -13,6 +13,18 @@
       <h1>The Iron Pit</h1>
       <p>Rules-first character vs. monster combat</p>
     </header>
+
+    <section class="matchup" aria-label="Choose combatants">
+      <label>
+        <span>PREGEN</span>
+        <select id="character-select" aria-label="Choose pregen character"></select>
+      </label>
+      <span class="matchup-versus">VS</span>
+      <label>
+        <span>MONSTER</span>
+        <select id="monster-select" aria-label="Choose monster"></select>
+      </label>
+    </section>
 
     <section class="arena" aria-label="Battle arena">
       <span id="projectile" class="projectile" aria-hidden="true">➤</span>
@@ -39,7 +51,7 @@
         <div class="hp"><span id="goblin-hp-bar"></span></div>
         <strong id="goblin-hp">10 / 10 HP</strong>
         <div class="effects" aria-live="polite" hidden><div id="goblin-effects" class="effect-list"></div></div>
-        <svg id="goblin" class="stick goblin" viewBox="0 0 180 220" role="img" aria-label="Stick goblin with scimitar and shield">
+        <svg id="goblin" class="stick goblin" viewBox="0 0 180 220" role="img" aria-label="Opponent combatant">
           <circle cx="90" cy="58" r="19"/><path class="ear" d="M72 55 L48 45 L70 68 M108 55 L132 45 L110 68"/>
           <line x1="90" y1="77" x2="90" y2="136"/><line x1="90" y1="92" x2="52" y2="116"/><line x1="90" y1="92" x2="128" y2="112"/>
           <line x1="90" y1="136" x2="61" y2="184"/><line x1="90" y1="136" x2="120" y2="184"/>
@@ -53,8 +65,9 @@
       <div class="button-row">
         <button id="fight-button" type="button">Melee Fight · 5 ft</button>
         <button id="ranged-button" type="button">Ranged Fight · 20 ft</button>
-        <button id="rogue-button" type="button">Rogue Ambush · 60 ft</button>
+        <button id="rogue-button" type="button">Mara Ambush · 60 ft</button>
       </div>
+      <p class="mode-note">Melee starts engaged. Ranged uses ranged attacks while separated; melee-only combatants close and then fight in melee.</p>
       <p id="status" aria-live="polite">Loading arena...</p>
     </section>
 
@@ -72,11 +85,14 @@
   </main>
   <script src="config.js"></script>
   <script src="preview-data.js"></script>
+  <script src="preview-test-data.js"></script>
   <script src="preview-dice.js"></script>
   <script src="preview-effects.js"></script>
   <script src="preview-tactics.js"></script>
   <script src="preview-engine.js"></script>
   <script src="preview-rogue.js"></script>
+  <script src="preview-test-engine.js"></script>
+  <script src="preview-test-ambush.js"></script>
   <script src="arena-animations.js"></script>
   <script src="effects-view.js"></script>
   <script src="arena-view.js"></script>
