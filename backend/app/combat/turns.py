@@ -3,12 +3,14 @@ from __future__ import annotations
 import logging
 
 from app.combat.bonus_actions import use_nimble_escape_disengage
-from app.combat.movement import move_away_from_target, move_toward_target, take_dash
+from app.combat.dice import DiceProvider
+from app.combat.movement import move_toward_target, take_dash
 from app.combat.policy import (
     preferred_approach_distance,
     select_weapon_attack,
     should_use_nimble_escape_disengage,
 )
+from app.combat.reactions import retreat_with_opportunity_check
 from app.domain.models import BattleEvent, BattlefieldState, CombatantState, WeaponAttack
 
 logger = logging.getLogger(__name__)
@@ -18,9 +20,10 @@ def prepare_skirmish_retreat(
     sequence: int,
     round_number: int,
     attacker: CombatantState,
+    defender: CombatantState,
     battlefield: BattlefieldState,
+    dice: DiceProvider,
 ) -> tuple[list[BattleEvent], int]:
-    """Use a supported Bonus Action retreat tactic before normal attack preparation."""
     try:
         events: list[BattleEvent] = []
         if not should_use_nimble_escape_disengage(attacker, battlefield.distance_ft):
@@ -30,10 +33,10 @@ def prepare_skirmish_retreat(
             use_nimble_escape_disengage(sequence, round_number, attacker, battlefield)
         )
         sequence += 1
-        movement = move_away_from_target(sequence, round_number, attacker, battlefield)
-        if movement is not None:
-            events.append(movement)
-            sequence += 1
+        retreat_events, sequence = retreat_with_opportunity_check(
+            sequence, round_number, attacker, defender, battlefield, dice
+        )
+        events.extend(retreat_events)
         return events, sequence
     except Exception as exc:
         logger.exception("Skirmish retreat failed for %s.", attacker.template.name)
@@ -46,7 +49,6 @@ def prepare_attack(
     attacker: CombatantState,
     battlefield: BattlefieldState,
 ) -> tuple[WeaponAttack | None, list[BattleEvent], int]:
-    """Apply arena movement policy until a legal attack is available or the Action is spent."""
     try:
         events: list[BattleEvent] = []
         attack = select_weapon_attack(attacker, battlefield.distance_ft)

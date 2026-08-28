@@ -56,6 +56,7 @@ class BattleEvent(BaseModel):
     weapon_id: str | None = None
     projectile: str | None = None
     feature_id: str | None = None
+    reaction_id: str | None = None
     resource_remaining: int | None = None
     animation: str
     description: str

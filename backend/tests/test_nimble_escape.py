@@ -27,17 +27,26 @@ def test_nimble_escape_takes_disengage_as_bonus_action() -> None:
     assert goblin.disengaged is False
 
 
-def test_nimble_escape_retreats_out_of_melee_range() -> None:
+def test_nimble_escape_retreat_suppresses_opportunity_attack() -> None:
     goblin = build_combatant_state(build_goblin_warrior())
+    fighter = build_combatant_state(build_demo_fighter())
     battlefield = BattlefieldState(distance_ft=5)
     begin_turn(goblin)
 
-    events, next_sequence = prepare_skirmish_retreat(1, 1, goblin, battlefield)
+    events, next_sequence = prepare_skirmish_retreat(
+        1,
+        1,
+        goblin,
+        fighter,
+        battlefield,
+        FixedDiceProvider([20]),
+    )
 
     assert [event.event_type for event in events] == ["disengage", "movement"]
     assert events[1].animation == "retreat"
     assert battlefield.distance_ft == 35
     assert goblin.movement_remaining_ft == 0
+    assert fighter.reaction_available is True
     assert next_sequence == 3
 
 

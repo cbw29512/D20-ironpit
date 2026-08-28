@@ -6,8 +6,8 @@ import uuid
 from app.combat.attacks import resolve_attack
 from app.combat.dice import DiceProvider
 from app.combat.fighter import use_second_wind
+from app.combat.initiative import roll_initiative_order
 from app.combat.policy import should_use_second_wind
-from app.combat.rolls import roll_d20
 from app.combat.state import (
     begin_turn,
     build_combatant_state,
@@ -30,35 +30,12 @@ def run_duel(
     try:
         fighter = build_combatant_state(fighter_template)
         monster = build_combatant_state(monster_template)
+        combatants = (fighter, monster)
         battlefield = BattlefieldState(
             starting_distance_ft=starting_distance_ft,
             distance_ft=starting_distance_ft,
         )
-        events: list[BattleEvent] = []
-        sequence = 1
-
-        for state in (fighter, monster):
-            initiative = roll_d20(dice, state.template.initiative_bonus)
-            state.initiative_roll = initiative.selected_roll
-            state.initiative_total = initiative.total
-            events.append(BattleEvent(
-                sequence=sequence,
-                round_number=0,
-                event_type="initiative",
-                actor_id=state.template.id,
-                actor_name=state.template.name,
-                attack_roll=initiative,
-                animation="initiative",
-                description=f"{state.template.name} rolls initiative {state.initiative_total}.",
-            ))
-            sequence += 1
-
-        order = sorted(
-            (fighter, monster),
-            key=lambda state: (state.initiative_total or 0, state.template.initiative_bonus),
-            reverse=True,
-        )
-        combatants = (fighter, monster)
+        events, order, sequence = roll_initiative_order(combatants, dice)
 
         for round_number in range(1, MAX_ROUNDS + 1):
             for attacker in order:
@@ -73,14 +50,16 @@ def run_duel(
                     sequence += 1
 
                 retreat_events, sequence = prepare_skirmish_retreat(
-                    sequence, round_number, attacker, battlefield
-                )
-                events.extend(retreat_events)
-                weapon, prep_events, sequence = prepare_attack(
                     sequence,
                     round_number,
                     attacker,
+                    defender,
                     battlefield,
+                    dice,
+                )
+                events.extend(retreat_events)
+                weapon, prep_events, sequence = prepare_attack(
+                    sequence, round_number, attacker, battlefield
                 )
                 events.extend(prep_events)
                 if weapon is None:

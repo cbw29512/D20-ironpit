@@ -73,6 +73,7 @@ def begin_turn(state: CombatantState) -> None:
     try:
         state.action_available = True
         state.bonus_action_available = True
+        state.reaction_available = True
         state.movement_remaining_ft = state.template.speed_ft
         state.disengaged = False
     except Exception as exc:

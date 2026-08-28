@@ -10,6 +10,9 @@ def test_rules_coverage_ids_are_unique_and_key_statuses_are_explicit() -> None:
     assert len(entries) == len(report.entries)
     assert entries["sap"].status is RuleCoverageStatus.IMPLEMENTED
     assert entries["vex"].status is RuleCoverageStatus.IMPLEMENTED
+    assert entries["opportunity-attacks"].status is RuleCoverageStatus.IMPLEMENTED
+    assert entries["disengage"].status is RuleCoverageStatus.IMPLEMENTED
+    assert entries["reactions"].status is RuleCoverageStatus.PARTIAL
     assert entries["nimble-escape"].status is RuleCoverageStatus.PARTIAL
     assert entries["nick"].status is RuleCoverageStatus.UNSUPPORTED
     assert entries["initiative-ties"].status is RuleCoverageStatus.ARENA_ASSUMPTION

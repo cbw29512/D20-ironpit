@@ -24,9 +24,10 @@ def resolve_attack(
     attack: WeaponAttack,
     distance_ft: int,
     dice: DiceProvider,
+    spend_action: bool = True,
 ) -> BattleEvent:
     try:
-        if not attacker.action_available:
+        if spend_action and not attacker.action_available:
             raise ValueError("Action is not available for an attack.")
 
         weapon = attack.weapon
@@ -42,7 +43,8 @@ def resolve_attack(
         )
         attack_roll = roll_d20(dice, attack.attack_bonus, mode)
         consume_attack_roll_effects(attacker, target_id)
-        attacker.action_available = False
+        if spend_action:
+            attacker.action_available = False
         natural = attack_roll.selected_roll or 0
         critical = natural == 20
         hit = natural != 1 and (critical or attack_roll.total >= defender.template.armor_class)
