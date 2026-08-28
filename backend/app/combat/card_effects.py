@@ -43,10 +43,7 @@ def attack_effect_change(
         raise RuntimeError("Combat-card effect could not be built.") from exc
 
 
-def dodge_effect_change(
-    actor: CombatantState,
-    operation: str,
-) -> CombatCardEffectChange:
+def dodge_effect_change(actor: CombatantState, operation: str) -> CombatCardEffectChange:
     return CombatCardEffectChange(
         actor_id=actor.template.id,
         effect_id="dodge",
@@ -57,10 +54,18 @@ def dodge_effect_change(
     )
 
 
-def hidden_effect_change(
-    actor: CombatantState,
-    operation: str,
-) -> CombatCardEffectChange:
+def rage_effect_change(actor: CombatantState, operation: str) -> CombatCardEffectChange:
+    return CombatCardEffectChange(
+        actor_id=actor.template.id,
+        effect_id="rage",
+        operation=operation,
+        kind="buff",
+        label="Rage",
+        detail="B/P/S resistance, Strength save Advantage, and Strength attack damage bonus.",
+    )
+
+
+def hidden_effect_change(actor: CombatantState, operation: str) -> CombatCardEffectChange:
     return CombatCardEffectChange(
         actor_id=actor.template.id,
         effect_id="hidden",
@@ -98,17 +103,13 @@ def mastery_effect_change(
 ) -> CombatCardEffectChange | None:
     try:
         if feature_id == "sap":
-            effect = next(
-                (item for item in defender.attack_roll_effects if item.id == "sap"),
-                None,
-            )
+            effect = next((item for item in defender.attack_roll_effects if item.id == "sap"), None)
             return attack_effect_change(defender, effect, "apply") if effect else None
         if feature_id == "vex":
             effect = next(
                 (
                     item for item in attacker.attack_roll_effects
-                    if item.id == "vex"
-                    and item.target_actor_id == defender.template.id
+                    if item.id == "vex" and item.target_actor_id == defender.template.id
                 ),
                 None,
             )
