@@ -72,6 +72,23 @@ def prepare_nimble_hide(
         raise RuntimeError("Nimble Hide preparation could not be completed.") from exc
 
 
+def _close_simple_arena(
+    sequence: int,
+    round_number: int,
+    attacker: CombatantState,
+    battlefield: BattlefieldState,
+) -> tuple[list[BattleEvent], int]:
+    if battlefield.distance_ft <= 5:
+        return [], sequence
+    desired = max(5, battlefield.distance_ft - 10)
+    movement = move_toward_target(
+        sequence, round_number, attacker, battlefield, desired
+    )
+    if movement is None:
+        return [], sequence
+    return [movement], sequence + 1
+
+
 def prepare_attack(
     sequence: int,
     round_number: int,
@@ -81,6 +98,12 @@ def prepare_attack(
 ) -> tuple[WeaponAttack | None, list[BattleEvent], int]:
     try:
         events: list[BattleEvent] = []
+        if duel_mode is DuelMode.CLOSE:
+            close_events, sequence = _close_simple_arena(
+                sequence, round_number, attacker, battlefield
+            )
+            events.extend(close_events)
+
         attack = select_weapon_attack(attacker, battlefield.distance_ft, duel_mode)
         if attack is not None and attacker.action_available:
             return attack, events, sequence
