@@ -10,6 +10,10 @@ INCAPACITATING_CONDITIONS = {
     ConditionKind.INCAPACITATED,
     ConditionKind.PARALYZED,
 }
+ZERO_SPEED_CONDITIONS = {
+    ConditionKind.PARALYZED,
+    ConditionKind.RESTRAINED,
+}
 
 
 def has_condition(state: CombatantState, condition: ConditionKind) -> bool:
@@ -28,7 +32,7 @@ def is_incapacitated(state: CombatantState) -> bool:
 
 def effective_speed_ft(state: CombatantState) -> int:
     try:
-        return 0 if has_condition(state, ConditionKind.PARALYZED) else state.template.speed_ft
+        return 0 if state.conditions & ZERO_SPEED_CONDITIONS else state.template.speed_ft
     except Exception as exc:
         logger.exception("Failed to resolve effective Speed for %s.", state.template.name)
         raise RuntimeError("Effective Speed could not be resolved.") from exc
@@ -57,12 +61,30 @@ def automatically_fails_save(state: CombatantState, ability: AbilityKind) -> boo
         raise RuntimeError("Automatic save failure could not be resolved.") from exc
 
 
-def resolve_condition_attack_sources(defender: CombatantState) -> tuple[int, int]:
+def condition_save_disadvantage(state: CombatantState, ability: AbilityKind) -> int:
     try:
-        advantage = int(has_condition(defender, ConditionKind.PARALYZED))
-        return advantage, 0
+        return int(
+            ability is AbilityKind.DEXTERITY
+            and has_condition(state, ConditionKind.RESTRAINED)
+        )
     except Exception as exc:
-        logger.exception("Failed to resolve condition attack effects for %s.", defender.template.name)
+        logger.exception("Failed to resolve condition save effect for %s.", state.template.name)
+        raise RuntimeError("Condition save effect could not be resolved.") from exc
+
+
+def resolve_condition_attack_sources(
+    attacker: CombatantState,
+    defender: CombatantState,
+) -> tuple[int, int]:
+    try:
+        advantage = int(
+            has_condition(defender, ConditionKind.PARALYZED)
+            or has_condition(defender, ConditionKind.RESTRAINED)
+        )
+        disadvantage = int(has_condition(attacker, ConditionKind.RESTRAINED))
+        return advantage, disadvantage
+    except Exception as exc:
+        logger.exception("Failed to resolve condition attack effects.")
         raise RuntimeError("Condition attack effects could not be resolved.") from exc
 
 

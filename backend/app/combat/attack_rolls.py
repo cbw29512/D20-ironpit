@@ -28,7 +28,9 @@ def resolve_attack_mode_and_cover(
         sight_advantage, sight_disadvantage = resolve_visibility_attack_sources(
             attacker, defender, battlefield
         )
-        condition_advantage, condition_disadvantage = resolve_condition_attack_sources(defender)
+        condition_advantage, condition_disadvantage = resolve_condition_attack_sources(
+            attacker, defender
+        )
         dodge_disadvantage = dodge_attack_disadvantage(attacker, defender, battlefield)
         close_enemy_active = (
             can_see_combatant(defender, attacker, battlefield)

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.conditions import automatically_fails_save
+from app.combat.conditions import automatically_fails_save, condition_save_disadvantage
 from app.combat.cover import resolve_dex_save_cover_bonus
 from app.combat.dice import DiceProvider
 from app.combat.dodge import dodge_save_advantage
@@ -69,7 +69,11 @@ def resolve_saving_throw(
             cover_bonus = resolve_dex_save_cover_bonus(state, battlefield)
         modifier = saving_throw_bonus(state, ability) + circumstantial_modifier + cover_bonus
         dodge_advantage = dodge_save_advantage(state, ability)
-        mode = resolve_roll_mode(advantage_sources + dodge_advantage, disadvantage_sources)
+        condition_disadvantage = condition_save_disadvantage(state, ability)
+        mode = resolve_roll_mode(
+            advantage_sources + dodge_advantage,
+            disadvantage_sources + condition_disadvantage,
+        )
         roll = roll_d20(dice, modifier, mode)
         return SavingThrowResult(
             ability=ability,
