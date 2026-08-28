@@ -162,7 +162,8 @@ def test_nimble_hide_then_shortbow_attack_has_advantage_and_reveals() -> None:
         fighter,
         attack,
         battlefield.distance_ft,
-        FixedDiceProvider([14, 10, 3, 2]),
+        FixedDiceProvider([15, 10, 3, 2]),
+        battlefield=battlefield,
     )
 
     assert [event.event_type for event in hide_events] == ["hide"]
@@ -182,7 +183,7 @@ def test_full_open_duel_goblin_disengages_retreats_and_fires_shortbow() -> None:
     battle = run_duel(
         build_demo_fighter(),
         build_goblin_warrior(),
-        FixedDiceProvider([5, 18, 14, 3, 14, 3, 18, 7, 14, 2]),
+        FixedDiceProvider([5, 18, 1, 20, 5, 5]),
     )
     first_round = [event for event in battle.events if event.round_number == 1]
     first_goblin_attack = next(
@@ -198,4 +199,5 @@ def test_full_open_duel_goblin_disengages_retreats_and_fires_shortbow() -> None:
     assert first_goblin_attack.weapon_id == "shortbow"
     assert first_goblin_attack.attack_roll is not None
     assert first_goblin_attack.attack_roll.mode is RollMode.NORMAL
+    assert first_goblin_attack.hit is False
     assert battle.winner_id == "aldric-vane-l1"
