@@ -20,10 +20,11 @@ MONSTER_BUILDERS: dict[str, Builder] = {
     "srd-bandit": build_bandit,
     "srd-guard": build_guard,
 }
-MONSTER_OPENING_MODES: dict[str, DuelMode] = {
-    "srd-goblin-warrior": DuelMode.RANGED,
-    "srd-bandit": DuelMode.RANGED,
-    "srd-guard": DuelMode.MELEE,
+PUBLIC_MONSTER_IDS = ("srd-bandit", "srd-guard")
+MONSTER_STARTING_DISTANCES: dict[str, int] = {
+    "srd-goblin-warrior": 20,
+    "srd-bandit": 20,
+    "srd-guard": 5,
 }
 
 
@@ -31,7 +32,7 @@ def build_test_catalog() -> dict[str, list[CombatantTemplate]]:
     try:
         return {
             "characters": [builder() for builder in CHARACTER_BUILDERS.values()],
-            "monsters": [builder() for builder in MONSTER_BUILDERS.values()],
+            "monsters": [MONSTER_BUILDERS[item_id]() for item_id in PUBLIC_MONSTER_IDS],
         }
     except Exception as exc:
         logger.exception("Failed to build test roster catalog.")
@@ -65,13 +66,13 @@ def build_test_monster(monster_id: str) -> CombatantTemplate:
 
 
 def get_monster_opening_mode(monster_id: str) -> DuelMode:
+    if monster_id not in MONSTER_BUILDERS:
+        raise ValueError(f"Unknown monster: {monster_id}")
+    return DuelMode.CLOSE
+
+
+def get_monster_starting_distance(monster_id: str) -> int:
     try:
-        mode = MONSTER_OPENING_MODES.get(monster_id)
-        if mode is None:
-            raise ValueError(f"No arena opening policy for monster: {monster_id}")
-        return mode
-    except ValueError:
-        raise
-    except Exception as exc:
-        logger.exception("Failed to resolve arena opening mode for %s.", monster_id)
-        raise RuntimeError("Monster opening mode could not be resolved.") from exc
+        return MONSTER_STARTING_DISTANCES[monster_id]
+    except KeyError as exc:
+        raise ValueError(f"No arena opening distance for monster: {monster_id}") from exc
