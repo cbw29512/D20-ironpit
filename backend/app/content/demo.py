@@ -26,6 +26,7 @@ def build_demo_fighter() -> CombatantTemplate:
             speed_ft=30,
             initiative_bonus=1,
             weapon_attack=build_fighter_longsword_attack(),
+            weapon_masteries=["longsword"],
             visual=build_fighter_visual_loadout(),
             resources=[
                 ResourceDefinition(id="second-wind", name="Second Wind", max_uses=2),

@@ -17,6 +17,19 @@ class WeaponAttackKind(StrEnum):
     RANGED = "ranged"
 
 
+class AttackRollEffectKind(StrEnum):
+    ADVANTAGE = "advantage"
+    DISADVANTAGE = "disadvantage"
+
+
+class AttackRollEffect(BaseModel):
+    id: str
+    source_actor_id: str
+    kind: AttackRollEffectKind
+    consume_on_attack: bool = True
+    expires_at_start_of_source_turn: bool = True
+
+
 class ConditionalDamage(BaseModel):
     trigger: Literal["attack_advantage"]
     dice_count: int = Field(ge=1, le=20)
@@ -103,6 +116,7 @@ class CombatantState(BaseModel):
     bonus_action_available: bool = True
     movement_remaining_ft: int = Field(default=0, ge=0)
     resources: list[ResourceState] = Field(default_factory=list)
+    attack_roll_effects: list[AttackRollEffect] = Field(default_factory=list)
 
 
 class BattlefieldState(BaseModel):

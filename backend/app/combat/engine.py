@@ -8,7 +8,11 @@ from app.combat.dice import DiceProvider
 from app.combat.fighter import use_second_wind
 from app.combat.policy import should_use_second_wind
 from app.combat.rolls import roll_d20
-from app.combat.state import begin_turn, build_combatant_state
+from app.combat.state import (
+    begin_turn,
+    build_combatant_state,
+    expire_attack_roll_effects_at_turn_start,
+)
 from app.combat.turns import prepare_attack
 from app.domain.models import BattleEvent, BattlefieldState, BattleResult, CombatantTemplate
 
@@ -60,6 +64,7 @@ def run_duel(
                 if not attacker.is_alive or not defender.is_alive:
                     continue
 
+                expire_attack_roll_effects_at_turn_start(attacker, (fighter, monster))
                 begin_turn(attacker)
                 if attacker is fighter and should_use_second_wind(fighter):
                     events.append(use_second_wind(sequence, round_number, fighter, dice))
