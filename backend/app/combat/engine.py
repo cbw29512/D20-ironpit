@@ -90,6 +90,7 @@ def run_duel(
                     weapon,
                     battlefield.distance_ft,
                     dice,
+                    battlefield=battlefield,
                 )
                 events.extend(attack_events)
                 end_turn(attacker, combatants)

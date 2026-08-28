@@ -7,6 +7,7 @@ from app.combat.dice import DiceProvider
 from app.combat.range import resolve_attack_roll_mode
 from app.domain.models import (
     BattleEvent,
+    BattlefieldState,
     CombatantState,
     WeaponAttack,
     WeaponProperty,
@@ -67,6 +68,7 @@ def resolve_light_extra_attack(
     triggering_attack: WeaponAttack,
     distance_ft: int,
     dice: DiceProvider,
+    battlefield: BattlefieldState | None = None,
 ) -> BattleEvent | None:
     """Resolve the one-per-turn extra attack granted by the Light property."""
     try:
@@ -95,6 +97,7 @@ def resolve_light_extra_attack(
             dice,
             spend_action=False,
             include_positive_ability_damage_modifier=include_positive_ability,
+            battlefield=battlefield,
         )
         attacker.light_extra_attack_used = True
         if uses_nick:

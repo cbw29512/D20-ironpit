@@ -12,8 +12,9 @@ from app.combat.masteries import (
 from app.combat.range import resolve_attack_roll_mode
 from app.combat.rogue import resolve_sneak_attack_component
 from app.combat.rolls import roll_d20
-from app.combat.stealth import break_hidden, resolve_invisible_attack_sources
-from app.domain.models import BattleEvent, CombatantState, WeaponAttack
+from app.combat.sight import can_see_combatant, resolve_visibility_attack_sources
+from app.combat.stealth import break_hidden
+from app.domain.models import BattleEvent, BattlefieldState, CombatantState, WeaponAttack
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +29,7 @@ def resolve_attack(
     dice: DiceProvider,
     spend_action: bool = True,
     include_positive_ability_damage_modifier: bool = True,
+    battlefield: BattlefieldState | None = None,
 ) -> BattleEvent:
     try:
         if spend_action and not attacker.action_available:
@@ -38,14 +40,16 @@ def resolve_attack(
         advantage_sources, disadvantage_sources = resolve_attack_roll_effect_sources(
             attacker, target_id
         )
-        invisible_advantage, invisible_disadvantage = resolve_invisible_attack_sources(
-            attacker, defender
+        sight_advantage, sight_disadvantage = resolve_visibility_attack_sources(
+            attacker, defender, battlefield
         )
+        close_enemy_active = can_see_combatant(defender, attacker, battlefield)
         mode = resolve_attack_roll_mode(
             weapon,
             distance_ft,
-            advantage_sources=advantage_sources + invisible_advantage,
-            other_disadvantage_sources=disadvantage_sources + invisible_disadvantage,
+            advantage_sources=advantage_sources + sight_advantage,
+            other_disadvantage_sources=disadvantage_sources + sight_disadvantage,
+            close_enemy_active=close_enemy_active,
         )
         attack_roll = roll_d20(dice, attack.attack_bonus, mode)
         break_hidden(attacker)

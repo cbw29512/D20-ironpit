@@ -5,6 +5,7 @@ import logging
 from app.combat.attacks import resolve_attack
 from app.combat.dice import DiceProvider
 from app.combat.movement import move_away_from_target
+from app.combat.sight import can_see_combatant
 from app.domain.models import BattleEvent, BattlefieldState, CombatantState, WeaponAttackKind
 
 logger = logging.getLogger(__name__)
@@ -38,9 +39,12 @@ def resolve_opportunity_attack(
     distance_before_ft: int,
     distance_after_ft: int,
     dice: DiceProvider,
+    battlefield: BattlefieldState | None = None,
 ) -> BattleEvent | None:
     try:
         if mover.disengaged or not reactor.reaction_available or not reactor.is_alive:
+            return None
+        if not can_see_combatant(reactor, mover, battlefield):
             return None
         attack = _select_melee_reaction_attack(reactor, distance_before_ft)
         if attack is None or distance_after_ft <= attack.weapon.reach_ft:
@@ -56,6 +60,7 @@ def resolve_opportunity_attack(
             distance_before_ft,
             dice,
             spend_action=False,
+            battlefield=battlefield,
         )
         event.reaction_id = OPPORTUNITY_ATTACK
         event.description = f"Opportunity Attack — {event.description}"
@@ -80,7 +85,14 @@ def retreat_with_opportunity_check(
             return events, sequence
         before = battlefield.distance_ft
         reaction = resolve_opportunity_attack(
-            sequence, round_number, reactor, mover, before, before + moved, dice
+            sequence,
+            round_number,
+            reactor,
+            mover,
+            before,
+            before + moved,
+            dice,
+            battlefield=battlefield,
         )
         if reaction is not None:
             events.append(reaction)
