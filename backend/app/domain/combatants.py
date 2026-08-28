@@ -7,14 +7,9 @@ from pydantic import BaseModel, Field
 
 from app.domain.abilities import AbilityKind
 from app.domain.conditions import ConditionKind
+from app.domain.damage import DamageType
 from app.domain.resources import ResourceDefinition, ResourceState
 from app.domain.visibility import ActorVisibilityState
-
-
-class DamageType(StrEnum):
-    SLASHING = "slashing"
-    PIERCING = "piercing"
-    BLUDGEONING = "bludgeoning"
 
 
 class WeaponAttackKind(StrEnum):
@@ -111,6 +106,10 @@ class CombatantTemplate(BaseModel):
     passive_perception: int = Field(default=10, ge=0)
     visual: VisualLoadout
     resources: list[ResourceDefinition] = Field(default_factory=list)
+    damage_resistances: set[DamageType] = Field(default_factory=set)
+    damage_immunities: set[DamageType] = Field(default_factory=set)
+    damage_vulnerabilities: set[DamageType] = Field(default_factory=set)
+    wearing_heavy_armor: bool = False
     source: str
 
 
@@ -139,6 +138,10 @@ class CombatantState(BaseModel):
     once_per_turn_features_used: set[str] = Field(default_factory=set)
     resources: list[ResourceState] = Field(default_factory=list)
     attack_roll_effects: list[AttackRollEffect] = Field(default_factory=list)
+    temporary_damage_resistances: set[DamageType] = Field(default_factory=set)
+    raging: bool = False
+    rage_extension_required: bool = False
+    rage_extended_this_turn: bool = False
 
 
 class BattlefieldState(BaseModel):
