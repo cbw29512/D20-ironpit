@@ -25,6 +25,7 @@ def test_rules_coverage_ids_sources_and_key_statuses_are_explicit() -> None:
     assert entries["vex"].status is RuleCoverageStatus.IMPLEMENTED
     assert entries["opportunity-attacks"].status is RuleCoverageStatus.PARTIAL
     assert entries["disengage"].status is RuleCoverageStatus.IMPLEMENTED
+    assert entries["dodge"].status is RuleCoverageStatus.IMPLEMENTED
     assert entries["search-hidden"].status is RuleCoverageStatus.IMPLEMENTED
     assert entries["hide"].status is RuleCoverageStatus.PARTIAL
     assert entries["invisible"].status is RuleCoverageStatus.PARTIAL
@@ -46,5 +47,6 @@ def test_rules_coverage_endpoint_returns_same_contract() -> None:
     assert any(entry.id == "sneak-attack" for entry in report.entries)
     assert any(entry.id == "incapacitated" for entry in report.entries)
     assert any(entry.id == "paralyzed" for entry in report.entries)
+    assert any(entry.id == "dodge" for entry in report.entries)
     assert any(entry.id == "saving-throws" for entry in report.entries)
     assert any(entry.id == "death-saves" for entry in report.entries)
