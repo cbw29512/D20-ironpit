@@ -3,12 +3,9 @@ from __future__ import annotations
 import logging
 from collections.abc import Iterable
 
-from app.combat.card_effects import attack_effect_change, dodge_effect_change
-from app.combat.state import (
-    begin_turn,
-    end_turn,
-    expire_attack_roll_effects_at_turn_start,
-)
+from app.combat.barbarian import begin_rage_turn, end_rage_if_unextended
+from app.combat.card_effects import attack_effect_change, dodge_effect_change, rage_effect_change
+from app.combat.state import begin_turn, end_turn, expire_attack_roll_effects_at_turn_start
 from app.domain.models import BattleEvent, CombatCardEffectChange, CombatantState
 
 logger = logging.getLogger(__name__)
@@ -44,12 +41,11 @@ def begin_actor_turn(
     try:
         roster = tuple(combatants)
         expired = expire_attack_roll_effects_at_turn_start(actor, roster)
-        changes = [
-            attack_effect_change(holder, effect, "remove")
-            for holder, effect in expired
-        ]
+        changes = [attack_effect_change(holder, effect, "remove") for holder, effect in expired]
         if begin_turn(actor, roster):
             changes.append(dodge_effect_change(actor, "remove"))
+        if begin_rage_turn(actor):
+            changes.append(rage_effect_change(actor, "remove"))
         event = _status_event(sequence, round_number, actor, changes)
         return ([event], sequence + 1) if event else ([], sequence)
     except Exception as exc:
@@ -65,10 +61,9 @@ def end_actor_turn(
 ) -> tuple[list[BattleEvent], int]:
     try:
         expired = end_turn(actor, tuple(combatants))
-        changes = [
-            attack_effect_change(holder, effect, "remove")
-            for holder, effect in expired
-        ]
+        changes = [attack_effect_change(holder, effect, "remove") for holder, effect in expired]
+        if end_rage_if_unextended(actor):
+            changes.append(rage_effect_change(actor, "remove"))
         event = _status_event(sequence, round_number, actor, changes)
         return ([event], sequence + 1) if event else ([], sequence)
     except Exception as exc:
