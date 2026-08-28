@@ -3,7 +3,8 @@
 
   const meleeButton = document.querySelector("#fight-button");
   const rangedButton = document.querySelector("#ranged-button");
-  const buttons = [meleeButton, rangedButton];
+  const rogueButton = document.querySelector("#rogue-button");
+  const buttons = [meleeButton, rangedButton, rogueButton];
   const apiBase = String(window.IRON_PIT_API_BASE || "").trim().replace(/\/$/, "");
   const preview = window.IRON_PIT_PREVIEW;
   const arenaState = {
@@ -33,13 +34,13 @@
       if (!apiBase) {
         if (!preview?.roster) throw new Error("Secure preview roster is unavailable.");
         view.hydrateRoster(preview.roster);
-        view.resetArena("Secure random preview ready — choose a starting distance.", 5);
+        view.resetArena("Secure random preview ready — choose a battle.", 5);
         return;
       }
       const response = await fetch(`${apiBase}/api/roster/demo`);
       if (!response.ok) throw new Error(`Roster API returned ${response.status}`);
       view.hydrateRoster(await response.json());
-      view.resetArena("Ready — choose a starting distance.", 5);
+      view.resetArena("Ready — choose a battle.", 5);
     } catch (error) {
       console.error("Roster load failed", error);
       view.resetArena("Arena data could not be loaded.", 5);
@@ -49,6 +50,10 @@
   async function requestBattle(endpoint) {
     try {
       if (!apiBase) {
+        if (endpoint.includes("rogue")) {
+          if (!preview?.buildRogueAmbush) throw new Error("Rogue secure preview is unavailable.");
+          return preview.buildRogueAmbush();
+        }
         if (!preview?.buildBattle) throw new Error("Secure preview engine is unavailable.");
         return preview.buildBattle(endpoint.includes("ranged") ? 90 : 5);
       }
@@ -83,6 +88,7 @@
     const rulesView = window.createIronPitRulesView();
     meleeButton.addEventListener("click", () => startFight(view, "/api/battles/demo", 5));
     rangedButton.addEventListener("click", () => startFight(view, "/api/battles/demo-ranged", 90));
+    rogueButton.addEventListener("click", () => startFight(view, "/api/battles/demo-rogue-ambush", 60));
     loadRoster(view);
     loadRulesCoverage(rulesView);
   } catch (error) {

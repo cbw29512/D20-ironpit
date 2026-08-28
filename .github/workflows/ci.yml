@@ -30,6 +30,7 @@ jobs:
           node --check frontend/preview-effects.js
           node --check frontend/preview-tactics.js
           node --check frontend/preview-engine.js
+          node --check frontend/preview-rogue.js
           node --check frontend/arena-view.js
           node --check frontend/arena-animations.js
           node --check frontend/rules-view.js
@@ -37,6 +38,8 @@ jobs:
         run: node scripts/check_preview_effects.js
       - name: Validate preview combat tactics
         run: node scripts/check_preview_tactics.js
+      - name: Validate Rogue ambush preview
+        run: node scripts/check_preview_rogue.js
       - name: Validate Netlify static preview config
         run: |
           unset IRON_PIT_API_BASE
