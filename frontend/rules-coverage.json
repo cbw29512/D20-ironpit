@@ -1,7 +1,9 @@
 {
   "ruleset": "SRD 5.2.1 subset",
   "entries": [
-    {"id":"initiative","name":"Initiative","status":"implemented","notes":"d20 plus Initiative modifier; rolls are recorded."},
+    {"id":"initiative","name":"Initiative","status":"implemented","notes":"d20 plus Initiative modifier; Invisible Advantage and Surprise Disadvantage use canonical cancellation."},
+    {"id":"surprise","name":"Surprise","status":"implemented","notes":"Scenario-declared unaware targets roll Initiative with Disadvantage when combat starts from a successful hidden ambush."},
+    {"id":"precombat-hide","name":"Pre-combat Hide","status":"implemented","notes":"Eligible actors can attempt Hide before Initiative without spending their first combat Action or Bonus Action."},
     {"id":"attack-rolls","name":"Weapon attack rolls","status":"implemented","notes":"AC checks, natural 1 misses, and natural 20 hits are implemented."},
     {"id":"critical-hits","name":"Weapon critical hits","status":"implemented","notes":"A natural 20 doubles weapon and eligible conditional damage dice."},
     {"id":"advantage","name":"Advantage and Disadvantage","status":"implemented","notes":"Multiple sources collapse using the normal cancellation rule."},
@@ -19,13 +21,15 @@
     {"id":"opportunity-attacks","name":"Opportunity Attacks","status":"implemented","notes":"Leaving melee reach can spend a Reaction for one melee attack before movement resolves."},
     {"id":"disengage","name":"Disengage","status":"implemented","notes":"Disengage suppresses Opportunity Attacks for retreat movement during the current turn."},
     {"id":"reactions","name":"Reactions","status":"partial","notes":"Reaction availability and Opportunity Attacks are implemented; other Reaction features are not."},
-    {"id":"nimble-escape","name":"Goblin Nimble Escape","status":"partial","notes":"Bonus Action Disengage and retreat are implemented; Hide is not yet implemented."},
-    {"id":"hide","name":"Hide","status":"unsupported","notes":"Requires concealment, visibility, and Stealth state."},
-    {"id":"conditions","name":"Conditions","status":"unsupported","notes":"General condition rules are not implemented."},
-    {"id":"cover","name":"Cover","status":"unsupported","notes":"Battlefield cover and line-of-effect rules are not implemented."},
+    {"id":"nimble-escape","name":"Goblin Nimble Escape","status":"partial","notes":"Bonus Action Disengage and Hide are both wired; the Hide option inherits the partial Hide/Invisible rule boundary."},
+    {"id":"hide","name":"Hide","status":"partial","notes":"DC 15 Stealth, concealment/line-of-sight eligibility, stored discovery DC, Search discovery, attack-roll reveal, and pre-combat Hide are implemented; loud-noise and Verbal-spell reveal triggers await those systems."},
+    {"id":"search-hidden","name":"Search for hidden creatures","status":"implemented","notes":"Wisdom (Perception) can use the Search action against a hidden creature's recorded Hide DC."},
+    {"id":"invisible","name":"Invisible condition","status":"partial","notes":"Initiative Advantage and attack Advantage/Disadvantage are implemented for hidden creatures; seen-target effect restrictions await broader spell/effect targeting."},
+    {"id":"conditions","name":"Conditions","status":"partial","notes":"The Invisible subset is implemented; a general condition framework is not yet complete."},
+    {"id":"cover","name":"Cover","status":"partial","notes":"Cover categories are represented for Hide eligibility; AC, Dexterity-save bonuses, and line-of-effect are not yet implemented."},
     {"id":"spells","name":"Spells","status":"unsupported","notes":"Spellcasting is outside the current duel slice."},
     {"id":"death-saves","name":"Death Saving Throws","status":"unsupported","notes":"The arena currently treats 0 HP as defeat."},
     {"id":"initiative-ties","name":"Initiative ties","status":"arena_assumption","notes":"The arena currently uses Initiative bonus as its deterministic tie-breaker."},
-    {"id":"arena-geometry","name":"Arena geometry","status":"arena_assumption","notes":"Current combat uses one-dimensional distance in an open arena and assumes opponents are visible."}
+    {"id":"arena-geometry","name":"Arena geometry","status":"arena_assumption","notes":"Combat uses one-dimensional distance; open-arena visibility is the default, with explicit per-actor concealment overrides for Hide scenarios."}
   ]
 }

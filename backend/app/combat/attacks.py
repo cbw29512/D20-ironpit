@@ -11,6 +11,7 @@ from app.combat.masteries import (
 )
 from app.combat.range import resolve_attack_roll_mode
 from app.combat.rolls import roll_d20
+from app.combat.stealth import break_hidden, resolve_invisible_attack_sources
 from app.domain.models import BattleEvent, CombatantState, WeaponAttack
 
 logger = logging.getLogger(__name__)
@@ -36,13 +37,17 @@ def resolve_attack(
         advantage_sources, disadvantage_sources = resolve_attack_roll_effect_sources(
             attacker, target_id
         )
+        invisible_advantage, invisible_disadvantage = resolve_invisible_attack_sources(
+            attacker, defender
+        )
         mode = resolve_attack_roll_mode(
             weapon,
             distance_ft,
-            advantage_sources=advantage_sources,
-            other_disadvantage_sources=disadvantage_sources,
+            advantage_sources=advantage_sources + invisible_advantage,
+            other_disadvantage_sources=disadvantage_sources + invisible_disadvantage,
         )
         attack_roll = roll_d20(dice, attack.attack_bonus, mode)
+        break_hidden(attacker)
         consume_attack_roll_effects(attacker, target_id)
         if spend_action:
             attacker.action_available = False

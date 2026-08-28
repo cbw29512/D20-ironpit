@@ -4,9 +4,9 @@ import logging
 import uuid
 
 from app.combat.attack_actions import resolve_attack_action
+from app.combat.battle_start import resolve_battle_start
 from app.combat.dice import DiceProvider
 from app.combat.fighter import use_second_wind
-from app.combat.initiative import roll_initiative_order
 from app.combat.policy import should_use_second_wind
 from app.combat.state import (
     begin_turn,
@@ -14,8 +14,15 @@ from app.combat.state import (
     end_turn,
     expire_attack_roll_effects_at_turn_start,
 )
-from app.combat.turns import prepare_attack, prepare_skirmish_retreat
-from app.domain.models import BattleEvent, BattlefieldState, BattleResult, CombatantTemplate
+from app.combat.turns import prepare_attack, prepare_nimble_hide, prepare_skirmish_retreat
+from app.domain.models import (
+    ActorVisibilityState,
+    BattleEvent,
+    BattlefieldState,
+    BattleResult,
+    CombatantTemplate,
+    EncounterSetup,
+)
 
 logger = logging.getLogger(__name__)
 MAX_ROUNDS = 100
@@ -26,6 +33,8 @@ def run_duel(
     monster_template: CombatantTemplate,
     dice: DiceProvider,
     starting_distance_ft: int = 5,
+    visibility_by_actor: dict[str, ActorVisibilityState] | None = None,
+    encounter_setup: EncounterSetup | None = None,
 ) -> BattleResult:
     try:
         fighter = build_combatant_state(fighter_template)
@@ -34,8 +43,11 @@ def run_duel(
         battlefield = BattlefieldState(
             starting_distance_ft=starting_distance_ft,
             distance_ft=starting_distance_ft,
+            visibility_by_actor=visibility_by_actor or {},
         )
-        events, order, sequence = roll_initiative_order(combatants, dice)
+        events, order, sequence = resolve_battle_start(
+            combatants, battlefield, dice, encounter_setup
+        )
 
         for round_number in range(1, MAX_ROUNDS + 1):
             for attacker in order:
@@ -58,6 +70,10 @@ def run_duel(
                     dice,
                 )
                 events.extend(retreat_events)
+                hide_events, sequence = prepare_nimble_hide(
+                    sequence, round_number, attacker, battlefield, dice
+                )
+                events.extend(hide_events)
                 weapon, prep_events, sequence = prepare_attack(
                     sequence, round_number, attacker, battlefield
                 )
