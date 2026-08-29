@@ -42,6 +42,7 @@ class BattleEvent(BaseModel):
         "dash",
         "attack",
         "healing",
+        "feature",
         "death_save",
         "victory",
         "draw",
