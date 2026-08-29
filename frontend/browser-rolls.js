@@ -36,6 +36,10 @@
     };
   }
 
+  function fixedCandidate(attack) {
+    return { notation: String(attack.fixedDamage), rolls: [], modifier: 0, total: attack.fixedDamage };
+  }
+
   function bonusComponent(spec, critical) {
     const count = spec.diceCount * (critical ? 2 : 1);
     const rolls = dice().rollMany(count, spec.diceSize);
@@ -50,13 +54,18 @@
   }
 
   function weaponDamage(attacker, attack, critical, mode, turnKey, bonusDamage = null) {
-    const rageBonus = window.IRON_PIT_BROWSER_RAGE?.damageBonus(attacker, attack) || 0;
-    const effective = { ...attack, damageBonus: attack.damageBonus + rageBonus };
-    let rolled = candidate(effective, critical);
-    if (attacker.template.traits?.includes("savage-attacker") && attacker.feature_last_turn_keys["savage-attacker"] !== turnKey) {
-      const second = candidate(effective, critical);
-      attacker.feature_last_turn_keys["savage-attacker"] = turnKey;
-      if (second.total > rolled.total) rolled = second;
+    let rolled;
+    if (attack.fixedDamage != null) {
+      rolled = fixedCandidate(attack);
+    } else {
+      const rageBonus = window.IRON_PIT_BROWSER_RAGE?.damageBonus(attacker, attack) || 0;
+      const effective = { ...attack, damageBonus: attack.damageBonus + rageBonus };
+      rolled = candidate(effective, critical);
+      if (attacker.template.traits?.includes("savage-attacker") && attacker.feature_last_turn_keys["savage-attacker"] !== turnKey) {
+        const second = candidate(effective, critical);
+        attacker.feature_last_turn_keys["savage-attacker"] = turnKey;
+        if (second.total > rolled.total) rolled = second;
+      }
     }
     const components = [{ source: attack.name, damage_type: attack.damageType, ...rolled }];
     if (mode === "advantage" && attack.conditionalAdvantage) {
