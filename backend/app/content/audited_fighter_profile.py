@@ -15,6 +15,7 @@ def _feature(
     *,
     combat_relevant: bool,
     automated: bool,
+    runtime_attack_weapon_id: str | None = None,
     notes: str | None = None,
 ) -> FeatureAudit:
     return FeatureAudit(
@@ -24,6 +25,7 @@ def _feature(
         category=category,
         combat_relevant=combat_relevant,
         automated=automated,
+        runtime_attack_weapon_id=runtime_attack_weapon_id,
         notes=notes,
     )
 
@@ -93,9 +95,9 @@ def build_karnok_stoneward_profile() -> CharacterBuildProfile:
                 "weapon-mastery",
                 "Weapon Mastery",
                 "class",
-                combat_relevant=True,
-                automated=True,
-                notes="Masteries are Flail, Javelin, and Spear; the automated primary Greatsword has no active mastery.",
+                combat_relevant=False,
+                automated=False,
+                notes="Legal masteries are Flail, Javelin, and Spear. The standard arena loadout deliberately uses Greatsword and Shortbow, so no selected mastery is invoked.",
             ),
             _feature("adrenaline-rush", "Adrenaline Rush", "species", combat_relevant=True, automated=True),
             _feature("relentless-endurance", "Relentless Endurance", "species", combat_relevant=True, automated=True),
@@ -109,13 +111,29 @@ def build_karnok_stoneward_profile() -> CharacterBuildProfile:
             ),
             _feature("savage-attacker", "Savage Attacker", "feat", combat_relevant=True, automated=True),
             _feature("chain-mail", "Chain Mail", "equipment", combat_relevant=True, automated=True),
-            _feature("greatsword", "Greatsword", "equipment", combat_relevant=True, automated=True),
+            _feature(
+                "greatsword",
+                "Greatsword",
+                "equipment",
+                combat_relevant=True,
+                automated=True,
+                runtime_attack_weapon_id="greatsword",
+            ),
+            _feature(
+                "shortbow",
+                "Shortbow",
+                "equipment",
+                combat_relevant=True,
+                automated=True,
+                runtime_attack_weapon_id="shortbow",
+                notes="Used for the one opening ranged attack before closing to melee.",
+            ),
         ],
         source_references=[
             "Basic Rules 2024: Creating a Character — Standard Array",
             "Basic Rules 2024: Fighter — Core Traits and Level 1 Features",
             "Basic Rules 2024: Character Origins — Soldier and Orc",
             "Basic Rules 2024: Feats — Savage Attacker and Defense",
-            "Basic Rules 2024: Equipment — Chain Mail and Greatsword",
+            "Basic Rules 2024: Equipment — Chain Mail, Greatsword, and Shortbow",
         ],
     )
