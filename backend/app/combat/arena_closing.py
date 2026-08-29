@@ -4,10 +4,10 @@ from app.combat.action_economy import is_available, spend
 from app.combat.attacks import resolve_attack
 from app.combat.charge import resolve_charge_closing
 from app.combat.dice import DiceProvider
-from app.combat.encounter_movement import move_toward_combatant
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.policy import weapon_attack_profiles
-from app.domain.encounters import EncounterCombatant
+from app.combat.reaction_movement import move_toward_with_reactions
+from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, WeaponAttackKind
 
 DODGE_EFFECT_ID = "dodge"
@@ -28,13 +28,9 @@ def _take_dodge(sequence: int, round_number: int, attacker: EncounterCombatant) 
     if DODGE_EFFECT_ID not in attacker.state.active_effect_ids:
         attacker.state.active_effect_ids.append(DODGE_EFFECT_ID)
     return BattleEvent(
-        sequence=sequence,
-        round_number=round_number,
-        event_type="feature",
-        actor_id=attacker.combatant_id,
-        actor_name=attacker.state.template.name,
-        feature_id=DODGE_EFFECT_ID,
-        animation="dodge",
+        sequence=sequence, round_number=round_number, event_type="feature",
+        actor_id=attacker.combatant_id, actor_name=attacker.state.template.name,
+        feature_id=DODGE_EFFECT_ID, animation="dodge",
         description=f"{attacker.state.template.name} Dodges while closing to melee.",
     )
 
@@ -45,19 +41,17 @@ def resolve_simple_closing(
     attacker: EncounterCombatant,
     target: EncounterCombatant,
     dice: DiceProvider,
+    setup: EncounterSetup | None = None,
 ) -> tuple[list[BattleEvent], int, bool]:
-    """Resolve the flat-pit approach: use legal ranged offense while closing, never hold range."""
+    """Use legal ranged offense while closing; movement itself opens RAW Reaction windows."""
     if combatant_distance(attacker, target) <= MELEE_BRAWL_DISTANCE_FT:
         return [], sequence, False
 
     charge_events, charge_sequence, charged = resolve_charge_closing(
-        sequence, round_number, attacker, target, dice,
+        sequence, round_number, attacker, target, dice, setup,
     )
     if charged:
         return charge_events, charge_sequence, True
-
-    # Multiattack/Extra Attack keeps its full printed action economy. The caller
-    # resolves that action first and then spends any remaining movement closing.
     if attacker.state.template.attack_action is not None:
         return [], sequence, False
 
@@ -74,10 +68,8 @@ def resolve_simple_closing(
         events.append(_take_dodge(sequence, round_number, attacker))
         sequence += 1
 
-    movement = move_toward_combatant(
-        sequence, round_number, attacker, target, MELEE_BRAWL_DISTANCE_FT,
+    movement_events, sequence, _ = move_toward_with_reactions(
+        sequence, round_number, attacker, target, setup, MELEE_BRAWL_DISTANCE_FT, dice,
     )
-    if movement is not None:
-        events.append(movement)
-        sequence += 1
+    events.extend(movement_events)
     return events, sequence, True
