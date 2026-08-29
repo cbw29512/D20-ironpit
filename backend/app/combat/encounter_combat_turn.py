@@ -8,6 +8,7 @@ from app.combat.dice import DiceProvider
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.encounter_turns import prepare_encounter_attack
 from app.combat.fighter import use_second_wind
+from app.combat.orc import use_adrenaline_rush
 from app.combat.policy import should_use_second_wind
 from app.combat.state import begin_turn
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -37,6 +38,13 @@ def resolve_combat_turn(
         events.append(use_second_wind(
             sequence, round_number, attacker.state, dice, attacker.combatant_id
         ))
+        sequence += 1
+
+    adrenaline_event = use_adrenaline_rush(
+        sequence, round_number, attacker.state, attacker.combatant_id
+    )
+    if adrenaline_event is not None:
+        events.append(adrenaline_event)
         sequence += 1
 
     if attacker.state.template.attack_action is not None:
