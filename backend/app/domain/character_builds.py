@@ -1,0 +1,66 @@
+from __future__ import annotations
+
+from typing import Literal
+
+from pydantic import BaseModel, Field
+
+AbilityName = Literal["str", "dex", "con", "int", "wis", "cha"]
+EquipmentOption = Literal["package", "gold"]
+
+
+class AbilityScores(BaseModel):
+    str: int = Field(ge=1, le=30)
+    dex: int = Field(ge=1, le=30)
+    con: int = Field(ge=1, le=30)
+    int: int = Field(ge=1, le=30)
+    wis: int = Field(ge=1, le=30)
+    cha: int = Field(ge=1, le=30)
+
+    def score(self, ability: AbilityName) -> int:
+        return int(getattr(self, ability))
+
+    def modifier(self, ability: AbilityName) -> int:
+        return (self.score(ability) - 10) // 2
+
+
+class AbilityIncrease(BaseModel):
+    ability: AbilityName
+    amount: int = Field(ge=1, le=2)
+
+
+class FeatureAudit(BaseModel):
+    feature_id: str
+    feature_name: str
+    source_reference: str
+    category: Literal["class", "species", "background", "feat", "equipment"]
+    combat_relevant: bool
+    automated: bool
+    notes: str | None = None
+
+
+class CharacterBuildProfile(BaseModel):
+    id: str
+    template_id: str
+    character_name: str
+    class_id: str
+    class_name: str
+    level: int = Field(ge=1, le=20)
+    species_id: str
+    species_name: str
+    background_id: str
+    background_name: str
+    origin_feat_id: str
+    origin_feat_name: str
+    base_ability_scores: AbilityScores
+    background_allowed_abilities: list[AbilityName] = Field(min_length=3, max_length=3)
+    background_increases: list[AbilityIncrease] = Field(min_length=2, max_length=3)
+    final_ability_scores: AbilityScores
+    class_equipment_option: EquipmentOption
+    class_equipment: list[str] = Field(min_length=1)
+    background_equipment_option: EquipmentOption
+    background_equipment: list[str] = Field(min_length=1)
+    skill_proficiencies: list[str] = Field(default_factory=list)
+    weapon_masteries: list[str] = Field(default_factory=list)
+    fighting_style: str | None = None
+    feature_audits: list[FeatureAudit] = Field(min_length=1)
+    source_references: list[str] = Field(min_length=1)
