@@ -2,6 +2,7 @@
   "use strict";
 
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
+  const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY;
 
   function sync(state) {
     const grappled = state.grapple_sources.length > 0;
@@ -15,10 +16,12 @@
   }
 
   function apply(state, sourceId, escapeDc, rangeFt, restrains = false) {
+    if (I().immune(state, "grappled")) return [];
     state.grapple_sources = state.grapple_sources.filter((source) => source.source_id !== sourceId);
-    state.grapple_sources.push({ source_id: sourceId, escape_dc: escapeDc, range_ft: rangeFt, restrains });
+    const effectiveRestrains = restrains && !I().immune(state, "restrained");
+    state.grapple_sources.push({ source_id: sourceId, escape_dc: escapeDc, range_ft: rangeFt, restrains: effectiveRestrains });
     sync(state);
-    return restrains ? ["grappled", "restrained"] : ["grappled"];
+    return effectiveRestrains ? ["grappled", "restrained"] : ["grappled"];
   }
 
   function release(state, sourceId) {
