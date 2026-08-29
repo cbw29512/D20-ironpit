@@ -51,6 +51,7 @@ def resolve_attack(
         hp_before = defender.current_hp
         damage_roll = None
         damage_components = []
+        damage_outcome = None
 
         if hit:
             active_turn_key = turn_key or f"{round_number}:{actor_event_id or attacker.template.id}"
@@ -66,10 +67,13 @@ def resolve_attack(
                 defender,
                 rolled_components,
             )
-            apply_damage(defender, applied_total, critical=critical)
+            damage_outcome = apply_damage(defender, applied_total, critical=critical)
             end_rage_if_incapacitated(defender)
 
         outcome = "CRITICAL HIT" if critical else ("HIT" if hit else "MISS")
+        description = f"{attacker.template.name}: {outcome} with {weapon.name}."
+        if damage_outcome == "relentless_endurance":
+            description += f" {defender.template.name} uses Relentless Endurance and remains at 1 HP."
         return BattleEvent(
             sequence=sequence,
             round_number=round_number,
@@ -93,7 +97,7 @@ def resolve_attack(
             projectile=weapon.projectile,
             feature_id=feature_id,
             animation=weapon.animation,
-            description=f"{attacker.template.name}: {outcome} with {weapon.name}.",
+            description=description,
         )
     except Exception as exc:
         logger.exception("Attack failed: %s -> %s.", attacker.template.name, defender.template.name)
