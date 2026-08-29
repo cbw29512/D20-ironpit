@@ -3,6 +3,7 @@
 
   const el = (id) => document.getElementById(id);
   const P = () => window.IRON_PIT_ENCOUNTER_PICKER;
+  const ready = (item) => item.coverage_status === "raw_ready" && item.runnable_template_id;
 
   function option(value, text, selected = false, disabled = false) {
     const node = document.createElement("option");
@@ -33,39 +34,40 @@
       const levelField = labeledSelect("Level");
       P().LEVELS.forEach((level) => levelField.select.append(option(level, level, level === Number(slot.level))));
       levelField.select.onchange = () => onHeroChange(index, { level: Number(levelField.select.value) });
-      const buildField = labeledSelect("Build / Card", "build-field");
+      const buildField = labeledSelect("Pregen / Build", "build-field");
       const builds = P().heroBuilds(state.catalog.heroes, slot.class_id, slot.level);
       builds.forEach((hero) => {
-        const ready = hero.coverage_status === "raw_ready" && hero.runnable_template_id;
-        buildField.select.append(option(hero.id, `${hero.build_name}${ready ? " · RAW ready" : " · not certified yet"}`, hero.id === slot.card_id));
+        const label = ready(hero)
+          ? `${hero.name} — ${hero.build_name} · RAW ready`
+          : `${hero.build_name} · not certified yet`;
+        buildField.select.append(option(hero.id, label, hero.id === slot.card_id));
       });
       buildField.select.onchange = () => onHeroChange(index, { card_id: buildField.select.value });
       const chosen = P().cardForSlot(state.catalog.heroes, slot);
-      const status = document.createElement("small");
-      const ready = chosen?.coverage_status === "raw_ready" && chosen?.runnable_template_id;
-      status.className = `slot-status ${ready ? "ready" : "blocked"}`;
-      status.textContent = ready ? `RAW ready · ${chosen.name}` : "This class/level build is not RAW-certified yet.";
+      const status = document.createElement("small"), isReady = ready(chosen || {});
+      status.className = `slot-status ${isReady ? "ready" : "blocked"}`;
+      status.textContent = isReady ? `Selected card · ${chosen.name}` : "This class/level pregen is not RAW-certified yet.";
       row.append(heading, classField.label, levelField.label, buildField.label, status); root.append(row);
     });
   }
 
   function renderMonsterFilters(state, onCrChange, onMonsterChange) {
-    const cr = el("monster-cr-filter"); cr.replaceChildren(option("all", "All CRs", state.monsterCr === "all"));
-    P().challengeRatings(state.catalog.monsters).forEach((value) => cr.append(option(value, `CR ${value}`, value === state.monsterCr)));
+    const runnable = state.catalog.monsters.filter(ready);
+    const cr = el("monster-cr-filter"); cr.replaceChildren(option("all", "All certified CRs", state.monsterCr === "all"));
+    P().challengeRatings(runnable).forEach((value) => cr.append(option(value, `CR ${value}`, value === state.monsterCr)));
     cr.onchange = () => onCrChange(cr.value);
     const picker = el("monster-picker"); picker.replaceChildren();
-    const monsters = P().sortedMonsters(state.catalog.monsters, state.monsterCr);
-    const readyIds = [];
-    monsters.forEach((monster) => {
-      const ready = monster.coverage_status === "raw_ready" && monster.runnable_template_id;
-      if (ready) readyIds.push(monster.id);
-      picker.append(option(monster.id, `CR ${monster.challenge_rating} · ${monster.name}${ready ? "" : " · not ready"}`, false, !ready));
-    });
-    const selected = readyIds.includes(state.monsterChoice) ? state.monsterChoice : readyIds[0] || null;
+    const monsters = P().sortedMonsters(runnable, state.monsterCr);
+    const ids = monsters.map((monster) => monster.id);
+    monsters.forEach((monster) => picker.append(option(
+      monster.id, `CR ${monster.challenge_rating} · ${monster.name}`, monster.id === state.monsterChoice,
+    )));
+    const selected = ids.includes(state.monsterChoice) ? state.monsterChoice : ids[0] || null;
     if (selected) picker.value = selected;
-    else picker.append(option("", "No RAW-certified monsters at this CR", true, true));
+    else picker.append(option("", "No certified monsters at this CR", true, true));
     picker.onchange = () => onMonsterChange(picker.value);
     el("add-monster").disabled = state.monsters.length >= 8 || selected === null;
+    el("monster-picker-note").textContent = `${runnable.length} RAW-certified monster cards available.`;
     return selected;
   }
 
