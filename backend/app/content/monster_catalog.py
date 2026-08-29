@@ -15,6 +15,7 @@ _CORRECTIONS_PATH = _DATA_DIR / "srd_5_2_1_monster_corrections.json"
 _READY_BY_NAME = {
     "Awakened Shrub": "srd-awakened-shrub",
     "Axe Beak": "srd-axe-beak",
+    "Baboon": "srd-baboon",
     "Badger": "srd-badger",
     "Bandit": "srd-bandit",
     "Bat": "srd-bat",
