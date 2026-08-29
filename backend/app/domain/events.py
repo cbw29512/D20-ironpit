@@ -30,6 +30,7 @@ class DamageRollComponent(BaseModel):
     modifier: int = 0
     damage_type: DamageType
     total: int
+    applied_total: int | None = Field(default=None, ge=0)
 
 
 class BattleEvent(BaseModel):
