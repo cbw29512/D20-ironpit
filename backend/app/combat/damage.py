@@ -36,6 +36,17 @@ def roll_damage_component(
         raise RuntimeError("Damage component could not be resolved.") from exc
 
 
+def fixed_damage_component(source: str, amount: int, damage_type: DamageType) -> DamageRollComponent:
+    return DamageRollComponent(
+        source=source,
+        notation=str(amount),
+        rolls=[],
+        modifier=0,
+        damage_type=damage_type,
+        total=amount,
+    )
+
+
 def aggregate_damage_components(components: list[DamageRollComponent]) -> DiceRoll:
     return DiceRoll(
         notation=" + ".join(component.notation for component in components),
@@ -54,23 +65,26 @@ def resolve_weapon_damage(
     turn_key: str | None = None,
     bonus_damage: BonusDamageSpec | None = None,
 ) -> tuple[DiceRoll, list[DamageRollComponent]]:
-    """Resolve weapon dice plus certified combatant and hit-specific riders."""
+    """Resolve weapon dice or fixed damage plus certified hit-specific riders."""
     try:
         weapon = attack.weapon
-        weapon_modifier = attack.damage_bonus + rage_damage_bonus(attacker, attack)
-        components = [
-            roll_weapon_component(
-                attacker,
-                dice,
-                source=weapon.name,
-                dice_count=weapon.dice_count,
-                dice_size=weapon.dice_size,
-                modifier=weapon_modifier,
-                damage_type=weapon.damage_type,
-                critical=critical,
-                turn_key=turn_key,
-            )
-        ]
+        if attack.fixed_damage is not None:
+            components = [fixed_damage_component(weapon.name, attack.fixed_damage, weapon.damage_type)]
+        else:
+            weapon_modifier = attack.damage_bonus + rage_damage_bonus(attacker, attack)
+            components = [
+                roll_weapon_component(
+                    attacker,
+                    dice,
+                    source=weapon.name,
+                    dice_count=weapon.dice_count,
+                    dice_size=weapon.dice_size,
+                    modifier=weapon_modifier,
+                    damage_type=weapon.damage_type,
+                    critical=critical,
+                    turn_key=turn_key,
+                )
+            ]
 
         for conditional in attack.conditional_damage:
             if conditional.trigger == "attack_advantage" and attack_mode is RollMode.ADVANTAGE:
