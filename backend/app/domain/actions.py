@@ -11,7 +11,11 @@ DamageTypeName = Literal[
     "acid", "bludgeoning", "cold", "fire", "force", "lightning", "necrotic",
     "piercing", "poison", "psychic", "radiant", "slashing", "thunder",
 ]
-ConditionName = Literal["poisoned"]
+ConditionName = Literal[
+    "blinded", "charmed", "deafened", "exhaustion", "frightened", "grappled",
+    "incapacitated", "invisible", "paralyzed", "petrified", "poisoned", "prone",
+    "restrained", "stunned", "unconscious",
+]
 
 
 class GrappleSource(BaseModel):
