@@ -1,4 +1,4 @@
-from app.combat.ally_context import pack_tactics_active
+from app.combat.ally_context import has_adjacent_active_ally, pack_tactics_active
 from app.combat.attacks import resolve_attack
 from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_setup import build_encounter_setup
@@ -6,11 +6,11 @@ from app.combat.encounter_targeting import combatant_distance
 from app.domain.models import CombatTrait, EncounterSelection, RollMode
 
 
-def _rat_pack_setup():
+def _rat_pack_setup(starting_distance_ft: int = 5):
     return build_encounter_setup(EncounterSelection(
         hero_ids=["aldric-vane-l1"],
         monster_ids=["srd-giant-rat", "srd-giant-rat"],
-        starting_distance_ft=5,
+        starting_distance_ft=starting_distance_ft,
     ))
 
 
@@ -19,19 +19,38 @@ def test_giant_rat_is_marked_with_pack_tactics() -> None:
     assert CombatTrait.PACK_TACTICS in setup.monsters[0].state.template.combat_traits
 
 
-def test_pack_tactics_requires_active_ally_within_five_feet_of_target() -> None:
+def test_any_active_ally_counts_as_adjacent_regardless_of_position() -> None:
     setup = _rat_pack_setup()
     attacker, ally = setup.monsters
     target = setup.heroes[0]
 
+    ally.position_ft = 90
+    assert has_adjacent_active_ally(attacker, setup) is True
     assert pack_tactics_active(attacker, target, setup) is True
 
-    ally.position_ft = 15
-    assert pack_tactics_active(attacker, target, setup) is False
 
-    ally.position_ft = 5
+def test_downed_or_unconscious_ally_does_not_count_as_adjacent() -> None:
+    setup = _rat_pack_setup()
+    attacker, ally = setup.monsters
+    target = setup.heroes[0]
+
     ally.state.current_hp = 0
     ally.state.is_unconscious = True
+
+    assert has_adjacent_active_ally(attacker, setup) is False
+    assert pack_tactics_active(attacker, target, setup) is False
+
+
+def test_single_combatant_side_has_no_adjacent_ally() -> None:
+    setup = build_encounter_setup(EncounterSelection(
+        hero_ids=["aldric-vane-l1"],
+        monster_ids=["srd-giant-rat"],
+        starting_distance_ft=5,
+    ))
+    attacker = setup.monsters[0]
+    target = setup.heroes[0]
+
+    assert has_adjacent_active_ally(attacker, setup) is False
     assert pack_tactics_active(attacker, target, setup) is False
 
 
