@@ -1,0 +1,117 @@
+(() => {
+  "use strict";
+
+  const S = () => window.IRON_PIT_BROWSER_STATE;
+  const R = () => window.IRON_PIT_BROWSER_ROLLS;
+  const T = () => window.IRON_PIT_BROWSER_TURN;
+  const heroes = () => window.IRON_PIT_BROWSER_HEROES;
+  const monsters = () => window.IRON_PIT_BROWSER_MONSTERS;
+
+  function cloneTemplate(template) { return structuredClone(template); }
+
+  function buildSetup(selection) {
+    const heroMembers = selection.hero_ids.map((id, index) => {
+      if (!heroes()[id]) throw new Error(`Unknown certified hero: ${id}`);
+      return { combatant_id: `hero-${index + 1}:${id}`, side: "heroes", position_ft: 0, state: S().buildState(cloneTemplate(heroes()[id])) };
+    });
+    const monsterMembers = selection.monster_ids.map((id, index) => {
+      if (!monsters()[id]) throw new Error(`Unknown certified monster: ${id}`);
+      return { combatant_id: `monster-${index + 1}:${id}`, side: "monsters", position_ft: selection.starting_distance_ft, state: S().buildState(cloneTemplate(monsters()[id])) };
+    });
+    return {
+      heroes: heroMembers,
+      monsters: monsterMembers,
+      hero_total_levels: heroMembers.reduce((sum, item) => sum + item.state.template.level, 0),
+      monster_total_cr: totalCr(monsterMembers.map((item) => item.state.template.challenge_rating)),
+      starting_distance_ft: selection.starting_distance_ft,
+    };
+  }
+
+  function crNumber(value) {
+    const text = String(value || "0");
+    if (!text.includes("/")) return Number(text) || 0;
+    const [a, b] = text.split("/").map(Number); return a / b;
+  }
+
+  function totalCr(values) {
+    const quarters = Math.round(values.reduce((sum, value) => sum + crNumber(value), 0) * 4);
+    if (quarters % 4 === 0) return String(quarters / 4);
+    const divisor = quarters % 2 === 0 ? 2 : 4;
+    return `${quarters / (4 / divisor)}/${divisor}`;
+  }
+
+  function initiative(setup) {
+    const groups = setup.heroes.map((member, index) => ({ side: "heroes", template_id: member.state.template.id, members: [member], index }));
+    const byTemplate = new Map();
+    setup.monsters.forEach((member, index) => {
+      const key = member.state.template.id;
+      if (!byTemplate.has(key)) byTemplate.set(key, { side: "monsters", template_id: key, members: [], index: setup.heroes.length + index });
+      byTemplate.get(key).members.push(member);
+    });
+    groups.push(...byTemplate.values());
+    for (const group of groups) {
+      const roll = R().d20(group.members[0].state.template.initiative_bonus);
+      group.natural_roll = roll.selected_roll;
+      group.initiative_bonus = group.members[0].state.template.initiative_bonus;
+      group.initiative_count = roll.total;
+      group.tie_break_roll = null;
+    }
+    const tiedCounts = new Map();
+    groups.forEach((group) => { const list = tiedCounts.get(group.initiative_count) || []; list.push(group); tiedCounts.set(group.initiative_count, list); });
+    for (const tied of tiedCounts.values()) {
+      if (new Set(tied.map((item) => item.side)).size < 2) continue;
+      const arena = window.IRON_PIT_DICE.roll(20);
+      tied.forEach((group) => { group.tie_break_roll = group.side === "heroes" ? arena : 21 - arena; });
+    }
+    groups.sort((a, b) => b.initiative_count - a.initiative_count || (b.tie_break_roll || 0) - (a.tie_break_roll || 0) || a.index - b.index);
+    return {
+      groups: groups.map((group) => ({ side: group.side, template_id: group.template_id, combatant_ids: group.members.map((m) => m.combatant_id), natural_roll: group.natural_roll, initiative_bonus: group.initiative_bonus, initiative_count: group.initiative_count, tie_break_roll: group.tie_break_roll })),
+      turn_order: groups.flatMap((group) => group.members.map((member) => member.combatant_id)),
+    };
+  }
+
+  function outcome(setup) {
+    const defeated = (side) => side.every((member) => member.state.current_hp <= 0 || !member.state.is_alive);
+    const heroesDown = defeated(setup.heroes), monstersDown = defeated(setup.monsters);
+    if (heroesDown && monstersDown) return "draw";
+    if (monstersDown) return "heroes_win";
+    if (heroesDown) return "monsters_win";
+    return "active";
+  }
+
+  function initiativeEvents(init, setup) {
+    const all = [...setup.heroes, ...setup.monsters];
+    const names = new Map(all.map((member) => [member.combatant_id, member.state.template.name]));
+    let sequence = 1;
+    return init.groups.map((group) => ({ sequence: sequence++, round_number: 1, event_type: "initiative", actor_id: group.combatant_ids[0], actor_name: names.get(group.combatant_ids[0]), animation: "initiative", description: `${names.get(group.combatant_ids[0])}${group.combatant_ids.length > 1 ? ` group (${group.combatant_ids.length})` : ""} rolls initiative ${group.initiative_count}.` }));
+  }
+
+  function runEncounter(selection) {
+    if (!selection.hero_ids?.length || !selection.monster_ids?.length || selection.hero_ids.length > 8 || selection.monster_ids.length > 8) throw new Error("Iron Pit requires 1-8 cards per side.");
+    const setup = buildSetup({ ...selection, starting_distance_ft: Number(selection.starting_distance_ft ?? 30) });
+    const init = initiative(setup);
+    const byId = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));
+    const events = initiativeEvents(init, setup); let sequence = events.length + 1; let resolvedRound = 0;
+    for (let round = 1; round <= 100; round += 1) {
+      resolvedRound = round;
+      for (const id of init.turn_order) {
+        const current = outcome(setup); if (current !== "active") return finish(setup, init, events, current, round, sequence);
+        const member = byId.get(id);
+        if (member.state.template.kind === "character" && member.state.current_hp === 0 && !member.state.is_dead && !member.state.is_stable) {
+          events.push(T().deathSave(sequence++, round, member));
+        }
+        if (member.state.current_hp <= 0 || member.state.is_dead) continue;
+        const turn = T().resolveTurn(sequence, round, member, setup); events.push(...turn.events); sequence = turn.sequence;
+      }
+      const current = outcome(setup); if (current !== "active") return finish(setup, init, events, current, round, sequence);
+    }
+    return finish(setup, init, events, "draw", resolvedRound, sequence);
+  }
+
+  function finish(setup, init, events, result, round, sequence) {
+    events.push({ sequence, round_number: round, event_type: result === "draw" ? "draw" : "victory", actor_id: "arena", actor_name: "Iron Pit", animation: "victory", description: result === "heroes_win" ? "Heroes win the fight." : result === "monsters_win" ? "Monsters win the fight." : "The fight ends in a draw." });
+    return { battle_id: crypto.randomUUID?.() || `battle-${Date.now()}`, outcome: result, rounds: round, setup, initiative: init, events, ruleset: "SRD 5.2.1 browser combat subset" };
+  }
+
+  window.IRON_PIT_BROWSER_ENGINE = { runEncounter };
+})();
