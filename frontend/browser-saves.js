@@ -6,6 +6,10 @@
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const D = () => window.IRON_PIT_DICE;
+  const E = () => window.IRON_PIT_ACTION_ECONOMY || {
+    available: (state, cost) => cost === "action" && state.action_available,
+    spend: (state) => { state.action_available = false; },
+  };
 
   function saveMode(state, ability) {
     const advantage = ability === "strength" && state.active_effect_ids.includes("rage") ? 1 : 0;
@@ -28,10 +32,10 @@
 
   function resolveAction(sequence, round, actor, target, action, distance, options = {}) {
     const spendAction = options.spendAction !== false;
-    if (spendAction && !actor.state.action_available) throw new Error("Action is unavailable for saving throw action.");
+    if (spendAction && !E().available(actor.state, "action")) throw new Error("Action is unavailable for saving throw action.");
     if (!legalAction(action, target, distance)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
     const save = resolveSavingThrow(target.state, action.saveAbility, action.dc);
-    if (spendAction) actor.state.action_available = false;
+    if (spendAction) E().spend(actor.state, "action");
     const hpBefore = target.state.current_hp;
     let damageRoll = null;
     let damageComponents = [];
