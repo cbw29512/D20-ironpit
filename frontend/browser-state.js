@@ -52,7 +52,11 @@
     const enemies = opponents(member, setup);
     let candidates = enemies.filter(active);
     if (!candidates.length) candidates = enemies.filter(downedCharacter);
-    return candidates.length ? candidates.reduce((best, item) => distance(member, item) < distance(member, best) ? item : best) : null;
+    if (!candidates.length) return null;
+    const grapplerIds = new Set(member.state.grapple_sources.map((source) => source.source_id));
+    const grapplers = candidates.filter((candidate) => grapplerIds.has(candidate.combatant_id));
+    const choices = grapplers.length ? grapplers : candidates;
+    return choices.reduce((best, item) => distance(member, item) < distance(member, best) ? item : best);
   }
 
   function hasActiveAlly(member, setup) {
