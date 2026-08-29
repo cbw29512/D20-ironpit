@@ -29,6 +29,10 @@ def _attack(
     )
 
 
+def build_baboon_bite() -> WeaponAttack:
+    return _attack("baboon-bite", "Bite", 1, 1, 4, -1, DamageType.PIERCING)
+
+
 def build_camel_bite() -> WeaponAttack:
     return _attack("camel-bite", "Bite", 4, 1, 4, 2, DamageType.BLUDGEONING)
 
