@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>The Iron Pit — Party vs. Monsters</title>
+  <title>The Iron Pit — Stick-Figure D&amp;D Deathmatch</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -11,7 +11,7 @@
     <header class="hero">
       <p class="eyebrow">D&amp;D 2024 · SRD 5.2.1</p>
       <h1>THE IRON PIT</h1>
-      <p>Pick your cards. Build the fight. Hit <strong>FIGHT</strong>.</p>
+      <p>Pick your cards. They close. They fight. <strong>One side dies.</strong></p>
     </header>
 
     <section class="matchup" aria-label="Encounter builder">
@@ -31,10 +31,8 @@
         <span class="versus">VS</span>
         <label for="distance">Starting distance</label>
         <select id="distance">
-          <option value="5">5 ft · Melee</option>
-          <option value="30" selected>30 ft</option>
-          <option value="60">60 ft</option>
-          <option value="90">90 ft · Ranged</option>
+          <option value="5">5 ft · Already engaged</option>
+          <option value="30" selected>30 ft · Standard Pit</option>
         </select>
         <button id="fight-button" class="fight-button" type="button">⚔ FIGHT</button>
         <p id="status" aria-live="polite">Loading browser combat engine…</p>
@@ -53,6 +51,18 @@
       </article>
     </section>
 
+    <section id="pit-arena" class="pit-arena" aria-label="Animated battle pit" hidden>
+      <div class="result-heading">
+        <div><span class="side-label">LIVE DEATHMATCH</span><h2>Stick-Figure Battle Pit</h2></div>
+        <strong id="pit-round"></strong>
+      </div>
+      <div class="pit-stage">
+        <div id="pit-heroes" class="pit-team pit-heroes" aria-label="Heroes"></div>
+        <div class="pit-center"><span id="pit-callout">ROLL INITIATIVE</span><b>⚔</b></div>
+        <div id="pit-monsters" class="pit-team pit-monsters" aria-label="Monsters"></div>
+      </div>
+    </section>
+
     <section id="result-panel" class="result-panel" hidden>
       <div class="result-heading">
         <div><span class="side-label">BATTLE RESULT</span><h2 id="result-title">Fight complete</h2></div>
@@ -60,7 +70,7 @@
       </div>
       <div class="result-grid">
         <div><h3>Initiative</h3><ol id="initiative-list"></ol></div>
-        <div><h3>Final Survivors</h3><div id="survivors"></div></div>
+        <div><h3>Final Combatants</h3><div id="survivors"></div></div>
       </div>
     </section>
 
@@ -85,7 +95,7 @@
   <script src="browser-engine.js"></script>
   <script src="browser-catalog.js"></script>
   <script src="encounter-view.js"></script>
-  <script src="combat-effects.js"></script>
+  <script src="battle-replay.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
