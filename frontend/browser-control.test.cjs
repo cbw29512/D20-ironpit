@@ -119,6 +119,18 @@ assert.equal(Object.keys(monsters).length, 58, "control batch must bring browser
 {
   const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
   const snake = member("monster-1:snake", "monsters", monsters["srd-constrictor-snake"]);
+  hero.state.template.damage_resistances = ["fire"];
+  const action = { ...snake.state.template.saving_throw_actions[0], damageDiceCount: 2, damageDiceSize: 6, damageType: "fire", successDamage: "half" };
+  window.IRON_PIT_DICE = queuedDice([10, 5, 6]);
+  const passed = V.resolveAction(1, 1, snake, hero, action, 5);
+  assert.equal(passed.save_succeeded, true); assert.equal(passed.damage_roll.total, 2);
+  assert.equal(passed.damage_components[0].total, 5); assert.equal(passed.damage_components[0].applied_total, 2);
+  assert.equal(hero.state.current_hp, 10);
+}
+
+{
+  const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
+  const snake = member("monster-1:snake", "monsters", monsters["srd-constrictor-snake"]);
   hero.state.current_hp = 1; hero.state.resources["relentless-endurance"] = 0;
   const action = snake.state.template.saving_throw_actions[0];
   window.IRON_PIT_DICE = queuedDice([1, 1, 1, 1]);
