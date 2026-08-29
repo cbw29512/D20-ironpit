@@ -4,7 +4,7 @@ from app.combat.barbarian import end_rage_if_incapacitated
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
 from app.combat.grapple import apply_grapple
-from app.combat.saving_throw_rolls import resolve_saving_throw, saving_throw_mode
+from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.zero_hp import apply_damage
 from app.domain.models import (
     BattleEvent,
@@ -58,14 +58,17 @@ def resolve_save_action(
     action: SavingThrowAction,
     distance_ft: int,
     dice: DiceProvider,
+    *,
+    spend_action: bool = True,
 ) -> BattleEvent:
-    if not actor.state.action_available:
+    if spend_action and not actor.state.action_available:
         raise ValueError("Action is not available for a saving throw action.")
     if not legal_save_action(action, target, distance_ft):
         raise ValueError(f"{action.name} has no legal target at {distance_ft} feet.")
 
     save_roll, succeeded = resolve_saving_throw(target.state, action.save_ability, action.dc, dice)
-    actor.state.action_available = False
+    if spend_action:
+        actor.state.action_available = False
     hp_before = target.state.current_hp
     rolled_components = _damage_components(action, dice, succeeded)
     applied_total, damage_components = apply_damage_defenses(target.state, rolled_components)
