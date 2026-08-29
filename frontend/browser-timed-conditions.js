@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY;
+  const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
 
   function apply(state, effectId, sourceId, expiresAtStartOfSourceTurn = true) {
     if (I().immune(state, effectId)) return null;
