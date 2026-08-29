@@ -1,6 +1,6 @@
 [build]
-  command = "python3 scripts/write_frontend_config.py"
+  command = "python3 scripts/prepare_static_site.py"
   publish = "frontend"
   # Netlify ignore commands return 0 to skip a build and 1 to continue.
-  # Only the production deploy context is allowed to consume Netlify build credits.
+  # Only the production deploy context may run a Netlify build.
   ignore = 'test "$CONTEXT" != "production"'
