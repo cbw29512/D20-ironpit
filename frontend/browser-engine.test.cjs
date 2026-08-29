@@ -4,10 +4,8 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
 const vm = require("node:vm");
-const { webcrypto } = require("node:crypto");
 
 global.window = globalThis;
-global.crypto = global.crypto || webcrypto;
 
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
