@@ -4,6 +4,7 @@ import logging
 
 from app.combat.barbarian import rage_damage_bonus
 from app.combat.dice import DiceProvider
+from app.combat.savage_attacker import roll_weapon_component
 from app.domain.models import CombatantState, DamageRollComponent, DamageType, DiceRoll, RollMode, WeaponAttack
 
 logger = logging.getLogger(__name__)
@@ -40,20 +41,23 @@ def resolve_weapon_damage(
     dice: DiceProvider,
     critical: bool,
     attack_mode: RollMode,
+    turn_key: str | None = None,
 ) -> tuple[DiceRoll, list[DamageRollComponent]]:
     """Resolve intrinsic weapon dice plus combatant-specific modifiers and riders."""
     try:
         weapon = attack.weapon
         weapon_modifier = attack.damage_bonus + rage_damage_bonus(attacker, attack)
         components = [
-            _roll_component(
-                dice=dice,
+            roll_weapon_component(
+                attacker,
+                dice,
                 source=weapon.name,
                 dice_count=weapon.dice_count,
                 dice_size=weapon.dice_size,
                 modifier=weapon_modifier,
                 damage_type=weapon.damage_type,
                 critical=critical,
+                turn_key=turn_key,
             )
         ]
 
