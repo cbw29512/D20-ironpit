@@ -7,6 +7,7 @@ from app.content.demo import build_demo_fighter, build_goblin_warrior
 from app.content.monsters import build_axe_beak, build_bandit, build_commoner, build_giant_lizard
 from app.content.monsters_bears import build_black_bear, build_brown_bear
 from app.content.monsters_low_cr import build_giant_rat, build_giant_weasel, build_guard
+from app.content.monsters_simple_beasts import build_camel, build_deer, build_draft_horse, build_giant_badger
 from app.content.monsters_wolves import build_dire_wolf, build_wolf
 from app.content.pregens import build_brom_ironmark, build_mara_quickstep, build_selene_asharrow
 from app.domain.models import ArenaRoster
@@ -37,6 +38,10 @@ def build_arena_roster() -> ArenaRoster:
                 build_dire_wolf(),
                 build_black_bear(),
                 build_brown_bear(),
+                build_camel(),
+                build_deer(),
+                build_draft_horse(),
+                build_giant_badger(),
             ],
         )
     except Exception as exc:
