@@ -61,6 +61,18 @@
       attack("brown-bear-bite", "Bite", "melee", 5, 1, 8, 3, "piercing", { animation: "bite" }),
       attack("brown-bear-claw", "Claw", "melee", 5, 1, 4, 3, "slashing", { animation: "heavy-slash", proneMaxSize: "large" }),
     ], { attack_action: { id: "brown-bear-multiattack", slots: [["brown-bear-bite"], ["brown-bear-claw"]] } }),
+    monster("srd-camel", "Camel", "1/8", "large", 10, 17, 50, -1, [
+      attack("camel-bite", "Bite", "melee", 4, 1, 4, 2, "bludgeoning", { animation: "bite" }),
+    ]),
+    monster("srd-deer", "Deer", "0", "medium", 13, 4, 50, 3, [
+      attack("deer-ram", "Ram", "melee", 2, 1, 4, 0, "bludgeoning", { animation: "heavy-strike" }),
+    ]),
+    monster("srd-draft-horse", "Draft Horse", "1/4", "large", 10, 15, 40, 0, [
+      attack("draft-horse-hooves", "Hooves", "melee", 6, 1, 4, 4, "bludgeoning", { animation: "heavy-strike" }),
+    ]),
+    monster("srd-giant-badger", "Giant Badger", "1/4", "medium", 13, 15, 30, 0, [
+      attack("giant-badger-bite", "Bite", "melee", 3, 2, 4, 1, "piercing", { animation: "bite" }),
+    ], { damage_resistances: ["poison"] }),
   ];
 
   window.IRON_PIT_BROWSER_MONSTERS = Object.fromEntries(monsters.map((item) => [item.id, item]));
