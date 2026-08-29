@@ -1,5 +1,7 @@
 import pytest
 
+from app.content.audited_fighter import build_karnok_stoneward
+from app.content.audited_fighter_profile import build_karnok_stoneward_profile
 from app.content.build_audit import assert_character_build_raw_ready, audit_character_build
 from app.content.pregens import build_brom_ironmark
 from app.domain.character_builds import (
@@ -10,7 +12,13 @@ from app.domain.character_builds import (
 )
 
 
-def _audit(feature_id: str, category: str, *, automated: bool = True) -> FeatureAudit:
+def _audit(
+    feature_id: str,
+    category: str,
+    *,
+    automated: bool = True,
+    runtime_attack_weapon_id: str | None = None,
+) -> FeatureAudit:
     return FeatureAudit(
         feature_id=feature_id,
         feature_name=feature_id.replace("-", " ").title(),
@@ -18,6 +26,7 @@ def _audit(feature_id: str, category: str, *, automated: bool = True) -> Feature
         category=category,
         combat_relevant=True,
         automated=automated,
+        runtime_attack_weapon_id=runtime_attack_weapon_id,
     )
 
 
@@ -141,3 +150,32 @@ def test_feature_audit_requires_class_species_feat_and_equipment_coverage() -> N
     assert "missing-feat-feature-audit" in issues
     assert "missing-equipment-feature-audit" in issues
     assert "origin-feat-missing-from-feature-audit" in issues
+
+
+def test_declared_combat_weapon_must_exist_in_runtime_attack_profiles() -> None:
+    template = build_brom_ironmark()
+    profile = _profile()
+    profile.feature_audits.append(
+        _audit(
+            "shortbow",
+            "equipment",
+            runtime_attack_weapon_id="shortbow",
+        )
+    )
+
+    issues = audit_character_build(profile, template)
+
+    assert "runtime-weapon-not-automated:shortbow" in issues
+
+
+def test_karnok_full_profile_passes_and_exposes_arena_weapons() -> None:
+    template = build_karnok_stoneward()
+    profile = build_karnok_stoneward_profile()
+
+    assert audit_character_build(profile, template) == []
+    assert_character_build_raw_ready(profile, template)
+    runtime_weapon_ids = {
+        template.weapon_attack.weapon.id,
+        *(attack.weapon.id for attack in template.alternate_weapon_attacks),
+    }
+    assert runtime_weapon_ids == {"greatsword", "shortbow"}
