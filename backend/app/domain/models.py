@@ -13,7 +13,15 @@ from app.domain.combatants import (
     WeaponAttack,
     WeaponAttackKind,
 )
-from app.domain.encounters import EncounterCombatant, EncounterSelection, EncounterSetup
+from app.domain.encounters import (
+    EncounterCombatant,
+    EncounterInitiative,
+    EncounterOutcome,
+    EncounterSelection,
+    EncounterSetup,
+    EncounterSide,
+    InitiativeGroup,
+)
 from app.domain.events import BattleEvent, BattleResult, DamageRollComponent, DiceRoll, RollMode
 
 __all__ = [
@@ -29,8 +37,12 @@ __all__ = [
     "DemoRoster",
     "DiceRoll",
     "EncounterCombatant",
+    "EncounterInitiative",
+    "EncounterOutcome",
     "EncounterSelection",
     "EncounterSetup",
+    "EncounterSide",
+    "InitiativeGroup",
     "ResourceDefinition",
     "ResourceState",
     "RollMode",
