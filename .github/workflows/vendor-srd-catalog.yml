@@ -45,7 +45,7 @@ jobs:
 
       - name: Commit generated catalog
         run: |
-          if git diff --quiet -- backend/app/content/data/srd_5_2_1_monsters.json; then
+          if [ -z "$(git status --porcelain -- backend/app/content/data/srd_5_2_1_monsters.json)" ]; then
             echo 'Catalog is already current.'
             exit 0
           fi
