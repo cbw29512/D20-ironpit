@@ -6,29 +6,28 @@ Iron Pit is a rules-first browser combat game built against the D&D 2024 / SRD 5
 
 ## Locked product goal
 
-1. Choose a party size of 1–6 characters.
-2. For each character slot, choose one of the 12 core classes, a level from 1–20, and an available build/card.
-3. Add RAW-ready monster cards from a catalog sorted numerically by Challenge Rating.
-4. Start in the standard flat Pit, normally 30 feet apart.
-5. Combatants use legal ranged/thrown attacks while closing when available.
-6. They continue closing and do not kite, retreat, flee, or disengage to preserve range.
-7. Once engaged, legal melee attacks are preferred. Ranged-only combatants can still attack in melee with the normal rules penalties.
-8. The fight continues until one side is dead, not merely reduced to 0 HP.
-9. The browser replays the event stream as a stick-figure battle while preserving the detailed combat log for rules auditing.
+1. The landing page is the battlefield: six hero card slots on the left and six monster card slots on the right.
+2. Click an empty hero slot to choose one of the 12 core classes, a level from 1–20, and an available certified pregen/build.
+3. Click an empty monster slot to choose a RAW-ready monster from a catalog sorted numerically by Challenge Rating.
+4. Every occupied slot is an individual combatant with its own HP, conditions, initiative identity, death state, and stick-figure silhouette.
+5. Press the large **FIGHT** button in the center to roll initiative and run the automated battle.
+6. Initiative appears at the top of each occupied card. The active card shakes during its events, critical hits shake/flash the screen red, and a natural-1 attack briefly blacks out the attacker card.
+7. Combatants use legal ranged/thrown attacks while closing when available, continue closing instead of kiting, and prefer legal melee attacks once engaged.
+8. Player characters at 0 HP remain in the battle under 2024 RAW: they become Unconscious, make Death Saving Throws, and can return above 0 HP through legal healing or a natural 20. Monsters follow their printed zero-HP behavior.
+9. The fight ends only when one side is actually defeated under the supported RAW rules, not merely because every character has touched 0 HP once.
+10. The detailed event log remains available beneath the battlefield for rules auditing.
 
 See `docs/ARENA_POLICY.md` for the exact arena assumptions.
 
-## Encounter builder
+## Battlefield card picker
 
-The character side uses dropdown menus instead of a single long card picker:
+The battlefield always presents six fixed slots per side.
 
-- **How many characters?** 1–6.
-- **Class:** all 12 core classes.
-- **Level:** 1–20.
-- **Build / Card:** the three planned build tracks for that class/level.
-- Uncertified class/level/build combinations remain visible but are marked unavailable for fighting; the app never substitutes an approximate build.
-
-The monster side is ordered by numeric CR, not alphabetically. A CR filter narrows the 330-monster catalog, and **Add Monster** places the chosen RAW-ready creature into the encounter rotation. Multiple copies can be added up to the Pit encounter limit.
+- **Hero slot:** click the slot, then choose Class → Level → Pregen / Build. All 12 classes and levels 1–20 are represented in the catalog; uncertified combinations remain unavailable for automated combat rather than being approximated.
+- **Monster slot:** click the slot, then choose Challenge Rating → Monster. Only RAW-certified runnable monsters are selectable, sorted by numeric CR.
+- Duplicate monsters are separate combatants. Three Goblins occupy three cards, keep three independent HP totals, and are defeated independently.
+- Clicking an occupied slot allows that card to be changed or removed before the fight.
+- The battlefield contract is **1–6 cards per side**.
 
 ## Current content model
 
@@ -83,10 +82,12 @@ GitHub Actions must pass on the exact head before a roster count or UI build is 
 - static browser packaging and the 330-monster data artifact;
 - JavaScript syntax;
 - deterministic browser combat regressions;
-- numeric monster-CR sorting and the character dropdown model;
-- the melee-deathmatch contract;
-- the animated Pit wiring;
+- numeric monster-CR sorting and the character catalog model;
+- six-slot battlefield wiring and DOM references;
+- initiative/card-turn/critical/fumble presentation hooks;
+- the strict melee-deathmatch and zero-HP contract;
 - backend-free production execution;
+- the clean GitHub Pages root entry;
 - the production-only Netlify credit guard.
 
 ## Next product priorities
