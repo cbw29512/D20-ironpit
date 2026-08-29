@@ -2,7 +2,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from app.domain.models import CombatantState, DamageType, WeaponAttack
+from app.combat.attacks import resolve_attack
+from app.combat.dice import DiceProvider
+from app.combat.encounter_movement import move_toward_combatant
+from app.combat.encounter_targeting import combatant_distance
+from app.domain.encounters import EncounterCombatant
+from app.domain.models import BattleEvent, CombatantState, DamageType, WeaponAttack
 from app.domain.size import CreatureSize, size_at_most
 from app.domain.traits import CombatTrait
 
@@ -18,15 +23,9 @@ class ChargeProfile:
 
 
 _PROFILES = {
-    "boar-gore": ChargeProfile(
-        "boar-gore", 20, 1, 6, DamageType.PIERCING, CreatureSize.MEDIUM,
-    ),
-    "elk-ram": ChargeProfile(
-        "elk-ram", 20, 1, 6, DamageType.BLUDGEONING, CreatureSize.LARGE,
-    ),
-    "giant-boar-gore": ChargeProfile(
-        "giant-boar-gore", 20, 2, 6, DamageType.PIERCING, CreatureSize.LARGE,
-    ),
+    "boar-gore": ChargeProfile("boar-gore", 20, 1, 6, DamageType.PIERCING, CreatureSize.MEDIUM),
+    "elk-ram": ChargeProfile("elk-ram", 20, 1, 6, DamageType.BLUDGEONING, CreatureSize.LARGE),
+    "giant-boar-gore": ChargeProfile("giant-boar-gore", 20, 2, 6, DamageType.PIERCING, CreatureSize.LARGE),
 }
 
 
@@ -36,7 +35,6 @@ def charge_profile(
     attack: WeaponAttack,
     movement_ft: int,
 ) -> ChargeProfile | None:
-    """Return a charge rider only when the complete 2024 trigger is satisfied."""
     if CombatTrait.CHARGE not in attacker.template.combat_traits:
         return None
     profile = _PROFILES.get(attack.id)
@@ -62,3 +60,41 @@ def charge_can_close(
         and movement_needed <= attacker.movement_remaining_ft
         and size_at_most(defender.template.size, profile.max_target_size)
     )
+
+
+def resolve_charge_closing(
+    sequence: int,
+    round_number: int,
+    attacker: EncounterCombatant,
+    target: EncounterCombatant,
+    dice: DiceProvider,
+) -> tuple[list[BattleEvent], int, bool]:
+    attack = attacker.state.template.weapon_attack
+    distance = combatant_distance(attacker, target)
+    if not charge_can_close(attacker.state, target.state, attack, distance):
+        return [], sequence, False
+
+    movement = move_toward_combatant(
+        sequence, round_number, attacker, target, attack.weapon.reach_ft,
+    )
+    if movement is None or movement.movement_ft is None:
+        return [], sequence, False
+    profile = charge_profile(attacker.state, target.state, attack, movement.movement_ft)
+    if profile is None:
+        return [], sequence, False
+
+    charged_attack = attack.model_copy(update={"knocks_prone_max_size": profile.max_target_size})
+    event = resolve_attack(
+        sequence + 1,
+        round_number,
+        attacker.state,
+        target.state,
+        charged_attack,
+        combatant_distance(attacker, target),
+        dice,
+        actor_event_id=attacker.combatant_id,
+        target_event_id=target.combatant_id,
+        feature_id="charge",
+        bonus_damage=("Charge", profile.dice_count, profile.dice_size, profile.damage_type),
+    )
+    return [movement, event], sequence + 2, True
