@@ -3,16 +3,19 @@ from __future__ import annotations
 import logging
 from collections import defaultdict
 
+from app.combat.condition_rules import is_incapacitated
 from app.combat.dice import DiceProvider
 from app.combat.rolls import roll_d20
 from app.domain.encounters import EncounterCombatant, EncounterInitiative, EncounterSetup, InitiativeGroup
+from app.domain.models import RollMode
 
 logger = logging.getLogger(__name__)
 
 
 def _roll_group(members: list[EncounterCombatant], dice: DiceProvider) -> InitiativeGroup:
     template = members[0].state.template
-    roll = roll_d20(dice, template.initiative_bonus)
+    mode = RollMode.DISADVANTAGE if is_incapacitated(members[0].state) else RollMode.NORMAL
+    roll = roll_d20(dice, template.initiative_bonus, mode)
     for member in members:
         member.state.initiative_roll = roll.selected_roll
         member.state.initiative_total = roll.total
@@ -28,14 +31,14 @@ def _roll_group(members: list[EncounterCombatant], dice: DiceProvider) -> Initia
 
 def _base_groups(setup: EncounterSetup, dice: DiceProvider) -> list[InitiativeGroup]:
     groups = [_roll_group([hero], dice) for hero in setup.heroes]
-    monster_groups: dict[str, list[EncounterCombatant]] = defaultdict(list)
-    monster_order: list[str] = []
+    monster_groups: dict[tuple[str, bool], list[EncounterCombatant]] = defaultdict(list)
+    monster_order: list[tuple[str, bool]] = []
     for monster in setup.monsters:
-        template_id = monster.state.template.id
-        if template_id not in monster_groups:
-            monster_order.append(template_id)
-        monster_groups[template_id].append(monster)
-    groups.extend(_roll_group(monster_groups[template_id], dice) for template_id in monster_order)
+        key = (monster.state.template.id, is_incapacitated(monster.state))
+        if key not in monster_groups:
+            monster_order.append(key)
+        monster_groups[key].append(monster)
+    groups.extend(_roll_group(monster_groups[key], dice) for key in monster_order)
     return groups
 
 
@@ -54,7 +57,7 @@ def _resolve_cross_side_ties(groups: list[InitiativeGroup], dice: DiceProvider) 
 
 
 def roll_encounter_initiative(setup: EncounterSetup, dice: DiceProvider) -> EncounterInitiative:
-    """Apply SRD 5.2.1 initiative, grouping identical monsters under one GM roll."""
+    """Apply SRD 5.2.1 initiative, grouping identical monsters with equivalent condition state."""
     try:
         groups = _base_groups(setup, dice)
         _resolve_cross_side_ties(groups, dice)
