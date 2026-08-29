@@ -1,0 +1,57 @@
+name: Publish GitHub Pages
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: iron-pit-github-pages
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && 'main' || github.event.workflow_run.head_sha }}
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Generate production API config
+        env:
+          IRON_PIT_API_BASE: https://iron-pit-d20-api.onrender.com
+        run: python scripts/write_frontend_config.py
+
+      - name: Assemble Pages artifact
+        run: |
+          rm -rf /tmp/iron-pit-pages
+          mkdir -p /tmp/iron-pit-pages
+          cp -a frontend /tmp/iron-pit-pages/frontend
+          touch /tmp/iron-pit-pages/.nojekyll
+          printf '%s\n' '<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=frontend/"><title>The Iron Pit</title><a href="frontend/">Open The Iron Pit</a>' > /tmp/iron-pit-pages/index.html
+
+      - name: Publish certified main to gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd /tmp/iron-pit-pages
+          git init
+          git checkout -b gh-pages
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add --all
+          git commit -m "deploy: publish certified main ${GITHUB_SHA}"
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push --force origin gh-pages
