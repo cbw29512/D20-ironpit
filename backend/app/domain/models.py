@@ -1,3 +1,4 @@
+from app.domain.actions import AttackActionDefinition, AttackActionSlot
 from app.domain.combatants import (
     ArenaRoster,
     BattlefieldState,
@@ -27,6 +28,8 @@ from app.domain.events import BattleEvent, BattleResult, DamageRollComponent, Di
 
 __all__ = [
     "ArenaRoster",
+    "AttackActionDefinition",
+    "AttackActionSlot",
     "BattleEvent",
     "BattlefieldState",
     "BattleResult",

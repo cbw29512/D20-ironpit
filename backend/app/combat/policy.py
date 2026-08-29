@@ -23,11 +23,21 @@ def should_use_second_wind(state: CombatantState) -> bool:
         raise RuntimeError("Second Wind policy could not be evaluated.") from exc
 
 
-def select_weapon_attack(state: CombatantState, distance_ft: int) -> WeaponAttack | None:
-    """Prefer the primary attack profile, then the first legal alternate profile."""
+def weapon_attack_profiles(state: CombatantState) -> list[WeaponAttack]:
+    return [state.template.weapon_attack, *state.template.alternate_weapon_attacks]
+
+
+def select_allowed_weapon_attack(
+    state: CombatantState,
+    distance_ft: int,
+    allowed_ids: list[str],
+) -> WeaponAttack | None:
+    """Choose the first listed attack that is both allowed for this slot and legal at range."""
     try:
-        profiles = [state.template.weapon_attack, *state.template.alternate_weapon_attacks]
-        for attack in profiles:
+        allowed = set(allowed_ids)
+        for attack in weapon_attack_profiles(state):
+            if attack.id not in allowed:
+                continue
             try:
                 resolve_attack_roll_mode(attack.weapon, distance_ft)
                 return attack
@@ -35,19 +45,35 @@ def select_weapon_attack(state: CombatantState, distance_ft: int) -> WeaponAttac
                 continue
         return None
     except Exception as exc:
-        logger.exception("Failed to select attack profile for %s.", state.template.name)
-        raise RuntimeError("Attack selection policy could not be evaluated.") from exc
+        logger.exception("Failed to select allowed attack for %s.", state.template.name)
+        raise RuntimeError("Allowed attack selection could not be evaluated.") from exc
+
+
+def select_weapon_attack(state: CombatantState, distance_ft: int) -> WeaponAttack | None:
+    """Prefer the primary attack profile, then the first legal alternate profile."""
+    return select_allowed_weapon_attack(
+        state,
+        distance_ft,
+        [attack.id for attack in weapon_attack_profiles(state)],
+    )
+
+
+def preferred_distance_for_attacks(state: CombatantState, allowed_ids: list[str]) -> int:
+    """Use the first allowed profile's melee reach or normal ranged distance as approach range."""
+    try:
+        allowed = set(allowed_ids)
+        attack = next(profile for profile in weapon_attack_profiles(state) if profile.id in allowed)
+        weapon = attack.weapon
+        if weapon.attack_kind is WeaponAttackKind.MELEE:
+            return weapon.reach_ft
+        if weapon.normal_range_ft is None:
+            raise ValueError("Allowed ranged weapon has no normal range.")
+        return weapon.normal_range_ft
+    except Exception as exc:
+        logger.exception("Failed to choose allowed approach distance for %s.", state.template.name)
+        raise RuntimeError("Allowed approach policy could not be evaluated.") from exc
 
 
 def preferred_approach_distance(state: CombatantState) -> int:
     """Close to the primary attack's melee reach or normal ranged distance."""
-    try:
-        weapon = state.template.weapon_attack.weapon
-        if weapon.attack_kind is WeaponAttackKind.MELEE:
-            return weapon.reach_ft
-        if weapon.normal_range_ft is None:
-            raise ValueError("Primary ranged weapon has no normal range.")
-        return weapon.normal_range_ft
-    except Exception as exc:
-        logger.exception("Failed to choose approach distance for %s.", state.template.name)
-        raise RuntimeError("Approach policy could not be evaluated.") from exc
+    return preferred_distance_for_attacks(state, [state.template.weapon_attack.id])
