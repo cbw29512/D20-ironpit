@@ -60,6 +60,7 @@ assert.equal(Object.keys(monsters).length, 58, "control batch must bring browser
   const other = member("hero-2:rokhan", "heroes", heroes["rokhan-stonefury-l1"]);
   const crab = member("monster-1:crab", "monsters", monsters["srd-giant-crab"]);
   G.apply(held.state, crab.combatant_id, 11, 5, false);
+  held.state.current_hp = 0; held.state.is_unconscious = true;
   assert.equal(S.nearestTarget(crab, { heroes: [held, other], monsters: [crab] }), held);
   crab.state.is_dead = true; crab.state.is_alive = false;
   G.cleanup({ heroes: [held, other], monsters: [crab] });
@@ -107,11 +108,23 @@ assert.equal(Object.keys(monsters).length, 58, "control batch must bring browser
   const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
   const snake = member("monster-1:snake", "monsters", monsters["srd-constrictor-snake"]);
   const action = snake.state.template.saving_throw_actions[0];
-  window.IRON_PIT_DICE = queuedDice([10, 1, 1, 1]);
+  window.IRON_PIT_DICE = queuedDice([10]);
   const passed = V.resolveAction(1, 1, snake, hero, action, 5);
-  assert.equal(passed.save_succeeded, true); assert.equal(passed.damage_roll.total, 0);
+  assert.equal(passed.save_succeeded, true); assert.equal(passed.damage_roll, null);
+  assert.deepEqual(passed.damage_components, []);
   assert.equal(hero.state.current_hp, hero.state.template.max_hp);
   assert.equal(hero.state.grapple_sources.length, 0);
+}
+
+{
+  const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
+  const snake = member("monster-1:snake", "monsters", monsters["srd-constrictor-snake"]);
+  hero.state.current_hp = 1; hero.state.resources["relentless-endurance"] = 0;
+  const action = snake.state.template.saving_throw_actions[0];
+  window.IRON_PIT_DICE = queuedDice([1, 1, 1, 1]);
+  const failed = V.resolveAction(1, 1, snake, hero, action, 5);
+  assert.equal(hero.state.current_hp, 0); assert.equal(hero.state.is_unconscious, true);
+  assert.deepEqual(failed.applied_condition_ids, ["grappled"]);
 }
 
 console.log("Browser saving throw and control-condition regressions passed.");
