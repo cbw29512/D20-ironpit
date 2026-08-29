@@ -8,8 +8,9 @@ services:
     dockerfilePath: ./Dockerfile
     dockerContext: .
     healthCheckPath: /health
+    autoDeployTrigger: checksPass
     envVars:
       - key: ALLOWED_ORIGINS
-        value: "*"
+        value: "https://cbw29512.github.io,https://ironpit.netlify.app"
       - key: LOG_LEVEL
         value: INFO
