@@ -27,12 +27,13 @@ def test_crocodile_bite_applies_grapple_restrained_and_ends_dodge() -> None:
 
     event = resolve_attack(
         1, 1, crocodile.state, hero.state, crocodile.state.template.weapon_attack, 5,
-        FixedDiceProvider([15, 1]),
+        FixedDiceProvider([15, 15, 1]),
         actor_event_id=crocodile.combatant_id,
         target_event_id=hero.combatant_id,
     )
 
     assert event.hit is True
+    assert event.attack_roll.mode is RollMode.DISADVANTAGE
     assert event.applied_condition_ids == ["grappled", "restrained"]
     assert set(hero.state.active_effect_ids) >= {"grappled", "restrained"}
     assert "dodge" not in hero.state.active_effect_ids
