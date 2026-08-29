@@ -96,9 +96,7 @@ def test_mixed_multiattack_uses_ranged_option_until_engaged() -> None:
 
     attacks = [event for event in events if event.event_type == "attack"]
     assert len(attacks) == 2
-    assert [event.weapon_id for event in attacks] == [
-        "bandit-light-crossbow", "bandit-light-crossbow",
-    ]
+    assert [event.weapon_id for event in attacks] == ["light-crossbow", "light-crossbow"]
     assert not any(event.event_type == "movement" for event in events)
 
 
@@ -108,7 +106,7 @@ def test_mixed_multiattack_switches_to_melee_when_engaged() -> None:
 
     attacks = [event for event in events if event.event_type == "attack"]
     assert len(attacks) == 2
-    assert [event.weapon_id for event in attacks] == ["bandit-scimitar", "bandit-scimitar"]
+    assert [event.weapon_id for event in attacks] == ["scimitar", "scimitar"]
 
 
 def test_attack_action_fails_closed_on_unknown_attack_id() -> None:
