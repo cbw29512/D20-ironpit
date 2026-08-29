@@ -31,6 +31,25 @@ def _extra_attack_setup():
     return setup, attacker
 
 
+def _mixed_attack_setup(distance_ft: int):
+    setup = build_encounter_setup(EncounterSelection(
+        hero_ids=["aldric-vane-l1"],
+        monster_ids=["srd-bandit"],
+        starting_distance_ft=distance_ft,
+    ))
+    attacker = setup.monsters[0]
+    attacker.state.template.attack_action = AttackActionDefinition(
+        id="mixed-multiattack",
+        name="Mixed Multiattack",
+        slots=[
+            AttackActionSlot(attack_ids=["bandit-scimitar", "bandit-light-crossbow"]),
+            AttackActionSlot(attack_ids=["bandit-scimitar", "bandit-light-crossbow"]),
+        ],
+    )
+    begin_turn(attacker.state)
+    return setup, attacker
+
+
 def test_one_attack_action_pays_for_two_strikes_and_retargets() -> None:
     setup, attacker = _extra_attack_setup()
     events, _ = resolve_attack_action(1, 1, attacker, setup, MaxDiceProvider())
@@ -69,6 +88,27 @@ def test_unreachable_first_attack_dashes_instead_of_half_using_attack_action() -
     assert any(event.event_type == "dash" for event in events)
     assert not any(event.event_type == "attack" for event in events)
     assert attacker.state.action_available is False
+
+
+def test_mixed_multiattack_uses_ranged_option_until_engaged() -> None:
+    setup, attacker = _mixed_attack_setup(30)
+    events, _ = resolve_attack_action(1, 1, attacker, setup, FixedDiceProvider([10, 4, 10, 4]))
+
+    attacks = [event for event in events if event.event_type == "attack"]
+    assert len(attacks) == 2
+    assert [event.weapon_id for event in attacks] == [
+        "bandit-light-crossbow", "bandit-light-crossbow",
+    ]
+    assert not any(event.event_type == "movement" for event in events)
+
+
+def test_mixed_multiattack_switches_to_melee_when_engaged() -> None:
+    setup, attacker = _mixed_attack_setup(5)
+    events, _ = resolve_attack_action(1, 1, attacker, setup, FixedDiceProvider([10, 4, 10, 4]))
+
+    attacks = [event for event in events if event.event_type == "attack"]
+    assert len(attacks) == 2
+    assert [event.weapon_id for event in attacks] == ["bandit-scimitar", "bandit-scimitar"]
 
 
 def test_attack_action_fails_closed_on_unknown_attack_id() -> None:
