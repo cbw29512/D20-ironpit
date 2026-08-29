@@ -11,6 +11,7 @@ DamageTypeName = Literal[
     "acid", "bludgeoning", "cold", "fire", "force", "lightning", "necrotic",
     "piercing", "poison", "psychic", "radiant", "slashing", "thunder",
 ]
+ConditionName = Literal["poisoned"]
 
 
 class GrappleSource(BaseModel):
@@ -24,6 +25,8 @@ class HitControlEffect(BaseModel):
     max_target_size: CreatureSize | None = None
     grapple_escape_dc: int | None = Field(default=None, ge=1, le=40)
     restrains_while_grappled: bool = False
+    condition_id: ConditionName | None = None
+    expires_at_start_of_source_turn: bool = False
 
 
 class SavingThrowAction(BaseModel):
