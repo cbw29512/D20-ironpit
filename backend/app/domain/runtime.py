@@ -17,6 +17,9 @@ class TimedEffect(BaseModel):
     effect_id: str
     source_id: str
     expires_at_start_of_source_turn: bool = True
+    expires_round: int | None = Field(default=None, ge=1)
+    concentration: bool = False
+    value: int | None = None
 
 
 class DemoRoster(BaseModel):

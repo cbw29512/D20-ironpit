@@ -15,12 +15,7 @@ from app.domain.traits import CombatTrait
 
 @dataclass(frozen=True)
 class ChargeProfile:
-    attack_id: str
-    minimum_move_ft: int
-    dice_count: int
-    dice_size: int
-    damage_type: DamageType
-    max_target_size: CreatureSize
+    attack_id: str; minimum_move_ft: int; dice_count: int; dice_size: int; damage_type: DamageType; max_target_size: CreatureSize
 
 
 _PROFILES = {
@@ -33,58 +28,34 @@ _PROFILES = {
 }
 
 
-def charge_profile(
-    attacker: CombatantState, defender: CombatantState, attack: WeaponAttack, movement_ft: int,
-) -> ChargeProfile | None:
-    if CombatTrait.CHARGE not in attacker.template.combat_traits:
-        return None
+def charge_profile(attacker: CombatantState, defender: CombatantState, attack: WeaponAttack, movement_ft: int) -> ChargeProfile | None:
+    if CombatTrait.CHARGE not in attacker.template.combat_traits: return None
     profile = _PROFILES.get(attack.id)
-    if profile is None or movement_ft < profile.minimum_move_ft:
-        return None
+    if profile is None or movement_ft < profile.minimum_move_ft: return None
     return profile if size_at_most(defender.template.size, profile.max_target_size) else None
 
 
-def charge_can_close(
-    attacker: CombatantState, defender: CombatantState, attack: WeaponAttack, distance_ft: int,
-) -> bool:
+def charge_can_close(attacker: CombatantState, defender: CombatantState, attack: WeaponAttack, distance_ft: int) -> bool:
     profile = _PROFILES.get(attack.id)
-    if not is_available(attacker, "action") or CombatTrait.CHARGE not in attacker.template.combat_traits or profile is None:
-        return False
+    if not is_available(attacker, "action") or CombatTrait.CHARGE not in attacker.template.combat_traits or profile is None: return False
     needed = max(0, distance_ft - attack.weapon.reach_ft)
-    return (
-        needed >= profile.minimum_move_ft
-        and needed <= attacker.movement_remaining_ft
-        and size_at_most(defender.template.size, profile.max_target_size)
-    )
+    return needed >= profile.minimum_move_ft and needed <= attacker.movement_remaining_ft and size_at_most(defender.template.size, profile.max_target_size)
 
 
 def resolve_charge_closing(
-    sequence: int,
-    round_number: int,
-    attacker: EncounterCombatant,
-    target: EncounterCombatant,
-    dice: DiceProvider,
-    setup: EncounterSetup | None = None,
+    sequence: int, round_number: int, attacker: EncounterCombatant, target: EncounterCombatant,
+    dice: DiceProvider, setup: EncounterSetup | None = None,
 ) -> tuple[list[BattleEvent], int, bool]:
     attack = attacker.state.template.weapon_attack
-    if not charge_can_close(attacker.state, target.state, attack, combatant_distance(attacker, target)):
-        return [], sequence, False
-
-    move_events, sequence, movement = move_toward_with_reactions(
-        sequence, round_number, attacker, target, setup, attack.weapon.reach_ft, dice,
-    )
-    if movement is None:
-        return move_events, sequence, bool(move_events)
+    if not charge_can_close(attacker.state, target.state, attack, combatant_distance(attacker, target)): return [], sequence, False
+    move_events, sequence, movement = move_toward_with_reactions(sequence, round_number, attacker, target, setup, attack.weapon.reach_ft, dice)
+    if movement is None: return move_events, sequence, bool(move_events)
     profile = charge_profile(attacker.state, target.state, attack, movement.movement_ft or 0)
-    if profile is None:
-        return move_events, sequence, bool(move_events)
-
-    charged_attack = attack.model_copy(update={"knocks_prone_max_size": profile.max_target_size})
+    if profile is None: return move_events, sequence, bool(move_events)
+    charged = attack.model_copy(update={"knocks_prone_max_size": profile.max_target_size})
     event = resolve_attack(
-        sequence, round_number, attacker.state, target.state, charged_attack,
-        combatant_distance(attacker, target), dice,
-        actor_event_id=attacker.combatant_id, target_event_id=target.combatant_id,
-        feature_id="charge",
-        bonus_damage=("Charge", profile.dice_count, profile.dice_size, profile.damage_type),
+        sequence, round_number, attacker.state, target.state, charged, combatant_distance(attacker, target), dice,
+        actor_event_id=attacker.combatant_id, target_event_id=target.combatant_id, feature_id="charge",
+        bonus_damage=("Charge", profile.dice_count, profile.dice_size, profile.damage_type), encounter_setup=setup,
     )
     return [*move_events, event], sequence + 1, True

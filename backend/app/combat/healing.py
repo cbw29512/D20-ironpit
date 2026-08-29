@@ -3,6 +3,7 @@ from __future__ import annotations
 from app.combat.action_economy import is_available, spend
 from app.combat.bloodied import is_bloodied
 from app.combat.dice import DiceProvider
+from app.combat.support_effects import end_sanctuary
 from app.combat.zero_hp import restore_hit_points
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, DiceRoll, HealingAction
@@ -32,25 +33,15 @@ def _target_allowed(healer: EncounterCombatant, target: EncounterCombatant, acti
 
 
 def _self_heal_worthwhile(member: EncounterCombatant, action: HealingAction) -> bool:
-    state = member.state
-    if not is_bloodied(state):
+    if not is_bloodied(member.state):
         return False
     if action.action_cost == "bonus_action":
         return True
-    if action.action_cost == "action":
-        return state.current_hp * 4 <= state.template.max_hp
-    return False
+    return action.action_cost == "action" and member.state.current_hp * 4 <= member.state.template.max_hp
 
 
-def choose_healing_target(
-    healer: EncounterCombatant,
-    setup: EncounterSetup,
-    action: HealingAction,
-) -> EncounterCombatant | None:
-    """For one action, prefer a living 0-HP ally, then a Bloodied ally, then self."""
-    if action.action_cost == "reaction" or not is_available(healer.state, action.action_cost):
-        return None
-    if not _resource_available(healer, action):
+def choose_healing_target(healer: EncounterCombatant, setup: EncounterSetup, action: HealingAction) -> EncounterCombatant | None:
+    if action.action_cost == "reaction" or not is_available(healer.state, action.action_cost) or not _resource_available(healer, action):
         return None
     allies = setup.heroes if healer.side == "heroes" else setup.monsters
     legal = [target for target in allies if _target_allowed(healer, target, action)]
@@ -62,49 +53,29 @@ def choose_healing_target(
     if bloodied:
         return min(bloodied, key=lambda target: target.state.current_hp / target.state.template.max_hp)
     self_target = next((target for target in legal if target.combatant_id == healer.combatant_id), None)
-    if self_target is not None and _self_heal_worthwhile(healer, action):
-        return self_target
-    return None
+    return self_target if self_target is not None and _self_heal_worthwhile(healer, action) else None
 
 
-def _choice_priority(
-    healer: EncounterCombatant,
-    action: HealingAction,
-    target: EncounterCombatant,
-) -> tuple[int, int, float]:
+def _choice_priority(healer: EncounterCombatant, action: HealingAction, target: EncounterCombatant) -> tuple[int, int, float]:
     ally = target.combatant_id != healer.combatant_id
     urgency = 0 if ally and target.state.current_hp == 0 else 1 if ally else 2
-    cost = 0 if action.action_cost == "bonus_action" else 1
-    ratio = target.state.current_hp / target.state.template.max_hp
-    return urgency, cost, ratio
+    return urgency, 0 if action.action_cost == "bonus_action" else 1, target.state.current_hp / target.state.template.max_hp
 
 
-def choose_healing_action(
-    healer: EncounterCombatant,
-    setup: EncounterSetup,
-) -> tuple[HealingAction, EncounterCombatant] | None:
-    """Choose the most urgent legal heal; ally rescue always outranks self-healing."""
-    choices: list[tuple[HealingAction, EncounterCombatant]] = []
-    for action in healer.state.template.healing_actions:
-        target = choose_healing_target(healer, setup, action)
-        if target is not None:
-            choices.append((action, target))
-    if not choices:
-        return None
-    return min(choices, key=lambda choice: _choice_priority(healer, choice[0], choice[1]))
+def choose_healing_action(healer: EncounterCombatant, setup: EncounterSetup) -> tuple[HealingAction, EncounterCombatant] | None:
+    choices = [(action, target) for action in healer.state.template.healing_actions if (target := choose_healing_target(healer, setup, action)) is not None]
+    return min(choices, key=lambda choice: _choice_priority(healer, choice[0], choice[1])) if choices else None
 
 
 def resolve_healing(
-    sequence: int,
-    round_number: int,
-    healer: EncounterCombatant,
-    target: EncounterCombatant,
-    action: HealingAction,
-    dice: DiceProvider,
+    sequence: int, round_number: int, healer: EncounterCombatant, target: EncounterCombatant,
+    action: HealingAction, dice: DiceProvider,
 ) -> BattleEvent:
     if not _target_allowed(healer, target, action) or not _resource_available(healer, action):
         raise ValueError("Healing action is not legal for this target.")
     spend(healer.state, action.action_cost)
+    if action.is_spell:
+        end_sanctuary(healer.state)
     rolls = [dice.roll(action.dice_size) for _ in range(action.dice_count)]
     total = sum(rolls) + action.healing_bonus
     hp_before = target.state.current_hp
@@ -116,27 +87,14 @@ def resolve_healing(
         remaining = resource.current_uses
     notation = f"{action.dice_count}d{action.dice_size}+{action.healing_bonus}" if action.dice_count else str(action.healing_bonus)
     return BattleEvent(
-        sequence=sequence,
-        round_number=round_number,
-        event_type="healing",
-        actor_id=healer.combatant_id,
-        actor_name=healer.state.template.name,
-        target_id=target.combatant_id,
-        target_name=target.state.template.name,
-        healing_roll=DiceRoll(
-            notation=notation,
-            rolls=rolls,
-            modifier=action.healing_bonus,
-            total=total,
-        ),
-        hp_before=hp_before,
-        hp_after=target.state.current_hp,
+        sequence=sequence, round_number=round_number, event_type="healing",
+        actor_id=healer.combatant_id, actor_name=healer.state.template.name,
+        target_id=target.combatant_id, target_name=target.state.template.name,
+        healing_roll=DiceRoll(notation=notation, rolls=rolls, modifier=action.healing_bonus, total=total),
+        hp_before=hp_before, hp_after=target.state.current_hp,
         death_save_successes=target.state.death_save_successes,
         death_save_failures=target.state.death_save_failures,
-        is_stable=target.state.is_stable,
-        is_dead=target.state.is_dead,
-        feature_id=action.id,
-        resource_remaining=remaining,
-        animation=action.animation,
+        is_stable=target.state.is_stable, is_dead=target.state.is_dead,
+        feature_id=action.id, resource_remaining=remaining, animation=action.animation,
         description=f"{healer.state.template.name} uses {action.name} on {target.state.template.name} and restores {healed} HP.",
     )

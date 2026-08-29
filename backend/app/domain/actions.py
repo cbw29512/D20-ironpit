@@ -48,6 +48,7 @@ class HealingAction(BaseModel):
     healing_bonus: int = Field(default=0, ge=0)
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
+    is_spell: bool = False
     animation: str = "healing"
 
 

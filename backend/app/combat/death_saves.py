@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.dice import DiceProvider
+from app.combat.support_effects import bless_bonus
 from app.combat.zero_hp import restore_hit_points, reset_death_saves
 from app.domain.models import BattleEvent, CombatantState, DiceRoll
 
@@ -23,35 +24,33 @@ def resolve_death_save(
     state: CombatantState,
     dice: DiceProvider,
 ) -> BattleEvent:
-    """Resolve one SRD 5.2.1 Death Saving Throw at the start of a character turn."""
+    """Resolve one SRD 5.2.1 Death Saving Throw, including Bless when active."""
     try:
         if state.template.kind != "character":
             raise ValueError("Only player characters make Death Saving Throws by default.")
         if state.current_hp != 0 or state.is_dead or state.is_stable:
             raise ValueError("This character does not currently make a Death Saving Throw.")
-
         natural = dice.roll(20)
+        blessing = bless_bonus(state, dice)
         roll = DiceRoll(
-            notation="1d20",
-            rolls=[natural],
+            notation="1d20+1d4" if blessing else "1d20",
+            rolls=[natural, blessing] if blessing else [natural],
             selected_roll=natural,
-            total=natural,
+            total=natural + blessing,
         )
         hp_before = state.current_hp
         result = "failure"
-
         if natural == 20:
             restore_hit_points(state, 1)
             result = "natural 20; regains 1 HP"
         elif natural == 1:
             state.death_save_failures = min(3, state.death_save_failures + 2)
             result = "natural 1; two failures"
-        elif natural >= 10:
+        elif roll.total >= 10:
             state.death_save_successes = min(3, state.death_save_successes + 1)
             result = "success"
         else:
             state.death_save_failures = min(3, state.death_save_failures + 1)
-
         if state.death_save_failures >= 3:
             _mark_dead(state)
             result = "third failure; dies"
@@ -60,23 +59,14 @@ def resolve_death_save(
             state.is_unconscious = True
             reset_death_saves(state)
             result = "third success; becomes Stable"
-
         return BattleEvent(
-            sequence=sequence,
-            round_number=round_number,
-            event_type="death_save",
-            actor_id=combatant_id,
-            actor_name=state.template.name,
-            target_id=combatant_id,
-            target_name=state.template.name,
-            death_save_roll=roll,
-            hp_before=hp_before,
-            hp_after=state.current_hp,
+            sequence=sequence, round_number=round_number, event_type="death_save",
+            actor_id=combatant_id, actor_name=state.template.name,
+            target_id=combatant_id, target_name=state.template.name,
+            death_save_roll=roll, hp_before=hp_before, hp_after=state.current_hp,
             death_save_successes=state.death_save_successes,
             death_save_failures=state.death_save_failures,
-            is_stable=state.is_stable,
-            is_dead=state.is_dead,
-            animation="death-save",
+            is_stable=state.is_stable, is_dead=state.is_dead, animation="death-save",
             description=f"{state.template.name} makes a Death Save: {result}.",
         )
     except ValueError:

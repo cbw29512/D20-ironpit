@@ -38,16 +38,8 @@ class BattleEvent(BaseModel):
     sequence: int
     round_number: int
     event_type: Literal[
-        "initiative",
-        "movement",
-        "dash",
-        "attack",
-        "saving_throw",
-        "healing",
-        "feature",
-        "death_save",
-        "victory",
-        "draw",
+        "initiative", "movement", "dash", "attack", "saving_throw", "healing",
+        "feature", "death_save", "victory", "draw",
     ]
     actor_id: str
     actor_name: str
@@ -58,6 +50,9 @@ class BattleEvent(BaseModel):
     save_ability: str | None = None
     save_dc: int | None = Field(default=None, ge=1)
     save_succeeded: bool | None = None
+    concentration_roll: DiceRoll | None = None
+    concentration_dc: int | None = Field(default=None, ge=1)
+    concentration_succeeded: bool | None = None
     ability_check_roll: DiceRoll | None = None
     check_ability: str | None = None
     check_dc: int | None = Field(default=None, ge=1)

@@ -14,6 +14,7 @@ from app.content.monsters_fixed_damage import build_fixed_damage_monsters
 from app.content.monsters_low_cr import build_giant_rat, build_giant_weasel, build_guard
 from app.content.monsters_mixed_multiattack import build_giant_constrictor_snake
 from app.content.monsters_poison import build_poison_monsters
+from app.content.monsters_priest import build_priest_acolyte
 from app.content.monsters_simple_beasts import build_baboon, build_camel, build_deer, build_draft_horse, build_giant_badger
 from app.content.monsters_venom import build_venom_monsters
 from app.content.monsters_wolves import build_dire_wolf, build_wolf
@@ -26,22 +27,13 @@ logger = logging.getLogger(__name__)
 def build_arena_roster() -> ArenaRoster:
     try:
         return ArenaRoster(
-            characters=[
-                *build_certified_hero_templates(),
-                build_demo_fighter(),
-                build_brom_ironmark(),
-                build_selene_asharrow(),
-                build_mara_quickstep(),
-            ],
+            characters=[*build_certified_hero_templates(), build_demo_fighter(), build_brom_ironmark(), build_selene_asharrow(), build_mara_quickstep()],
             monsters=[
-                build_goblin_warrior(), build_bandit(), build_commoner(), build_guard(),
-                build_giant_rat(), build_giant_weasel(), build_axe_beak(), build_giant_lizard(),
-                build_wolf(), build_dire_wolf(), build_black_bear(), build_brown_bear(),
-                build_baboon(), build_camel(), build_deer(), build_draft_horse(), build_giant_badger(),
-                build_boar(), build_elk(), build_giant_boar(),
-                *build_fixed_damage_monsters(), *build_beast_batch_two(), *build_monster_batch_three(),
-                *build_control_monsters(), *build_poison_monsters(), *build_venom_monsters(),
-                build_giant_constrictor_snake(),
+                build_goblin_warrior(), build_bandit(), build_commoner(), build_guard(), build_giant_rat(), build_giant_weasel(),
+                build_axe_beak(), build_giant_lizard(), build_wolf(), build_dire_wolf(), build_black_bear(), build_brown_bear(),
+                build_baboon(), build_camel(), build_deer(), build_draft_horse(), build_giant_badger(), build_boar(), build_elk(), build_giant_boar(),
+                *build_fixed_damage_monsters(), *build_beast_batch_two(), *build_monster_batch_three(), *build_control_monsters(),
+                *build_poison_monsters(), *build_venom_monsters(), build_giant_constrictor_snake(), build_priest_acolyte(),
             ],
         )
     except Exception as exc:
