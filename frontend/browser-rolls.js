@@ -28,7 +28,12 @@
   function candidate(attack, critical) {
     const count = attack.diceCount * (critical ? 2 : 1);
     const rolls = dice().rollMany(count, attack.diceSize);
-    return { rolls, modifier: attack.damageBonus, total: rolls.reduce((sum, roll) => sum + roll, 0) + attack.damageBonus };
+    return {
+      notation: `${count}d${attack.diceSize}+${attack.damageBonus}`,
+      rolls,
+      modifier: attack.damageBonus,
+      total: rolls.reduce((sum, roll) => sum + roll, 0) + attack.damageBonus,
+    };
   }
 
   function weaponDamage(attacker, attack, critical, mode, turnKey) {
@@ -40,13 +45,22 @@
     }
     const components = [{ source: attack.name, damage_type: attack.damageType, ...rolled }];
     if (mode === "advantage" && attack.conditionalAdvantage) {
-      const [count, sides] = attack.conditionalAdvantage;
-      const rolls = dice().rollMany(count * (critical ? 2 : 1), sides);
-      components.push({ source: "Advantage bonus damage", damage_type: attack.damageType, rolls, modifier: 0, total: rolls.reduce((a, b) => a + b, 0) });
+      const [baseCount, sides] = attack.conditionalAdvantage;
+      const count = baseCount * (critical ? 2 : 1);
+      const rolls = dice().rollMany(count, sides);
+      components.push({
+        source: "Advantage bonus damage", damage_type: attack.damageType,
+        notation: `${count}d${sides}+0`, rolls, modifier: 0, total: rolls.reduce((a, b) => a + b, 0),
+      });
     }
     const total = components.reduce((sum, item) => sum + item.total, 0);
     return {
-      roll: { notation: components.map((c) => `${c.rolls.length}d${c.rolls.length ? (c.rolls[0] ? attack.diceSize : attack.diceSize) : attack.diceSize}`).join(" + "), rolls: components.flatMap((c) => c.rolls), modifier: components.reduce((s, c) => s + c.modifier, 0), total },
+      roll: {
+        notation: components.map((item) => item.notation).join(" + "),
+        rolls: components.flatMap((item) => item.rolls),
+        modifier: components.reduce((sum, item) => sum + item.modifier, 0),
+        total,
+      },
       components,
     };
   }
