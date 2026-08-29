@@ -3,69 +3,73 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>The Iron Pit — MVP</title>
+  <title>The Iron Pit — Party vs. Monsters</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <main class="shell">
-    <header>
-      <p class="eyebrow">SRD 5.2.1 COMBAT PROTOTYPE</p>
-      <h1>The Iron Pit</h1>
-      <p>Rules-first character vs. monster combat</p>
+    <header class="hero">
+      <p class="eyebrow">D&amp;D 2024 · SRD 5.2.1</p>
+      <h1>THE IRON PIT</h1>
+      <p>Pick your cards. Build the fight. Hit <strong>FIGHT</strong>.</p>
     </header>
 
-    <section class="arena" aria-label="Battle arena">
-      <span id="projectile" class="projectile" aria-hidden="true">➤</span>
-      <article class="combatant">
-        <h2 id="fighter-name">Aldric Vane</h2>
-        <p id="fighter-meta">Fighter 1 · Longsword + Shield · Chain Mail</p>
-        <div class="hp"><span id="fighter-hp-bar"></span></div>
-        <strong id="fighter-hp">12 / 12 HP</strong>
-        <svg id="fighter" class="stick" viewBox="0 0 180 220" role="img" aria-label="Stick fighter with sword and shield">
-          <circle cx="90" cy="42" r="22"/><line x1="90" y1="64" x2="90" y2="132"/>
-          <line x1="90" y1="82" x2="52" y2="112"/><line x1="90" y1="82" x2="128" y2="108"/>
-          <line x1="90" y1="132" x2="60" y2="188"/><line x1="90" y1="132" x2="122" y2="188"/>
-          <g class="weapon"><line x1="128" y1="108" x2="156" y2="64"/><line x1="148" y1="66" x2="166" y2="78"/></g>
-          <circle class="shield" cx="47" cy="113" r="22"/>
-        </svg>
+    <section class="matchup" aria-label="Encounter builder">
+      <article class="side heroes-side">
+        <div class="side-heading">
+          <div><span class="side-label">HERO CARDS</span><h2>Your Party</h2></div>
+          <strong id="hero-summary">0 cards · Total Levels 0</strong>
+        </div>
+        <div class="picker-row">
+          <select id="hero-picker" aria-label="Choose a hero"></select>
+          <button id="add-hero" type="button">+ Add Hero</button>
+        </div>
+        <div id="hero-cards" class="card-stack" aria-live="polite"></div>
       </article>
 
-      <div class="versus"><span>⚔</span><small id="distance">5 ft</small></div>
+      <div class="fight-column">
+        <span class="versus">VS</span>
+        <label for="distance">Starting distance</label>
+        <select id="distance">
+          <option value="5">5 ft · Melee</option>
+          <option value="30" selected>30 ft</option>
+          <option value="60">60 ft</option>
+          <option value="90">90 ft · Ranged</option>
+        </select>
+        <button id="fight-button" class="fight-button" type="button">⚔ FIGHT</button>
+        <p id="status" aria-live="polite">Loading RAW roster…</p>
+      </div>
 
-      <article class="combatant">
-        <h2 id="goblin-name">Goblin Warrior</h2>
-        <p id="goblin-meta">CR 1/4 · Scimitar + Shield · Leather</p>
-        <div class="hp"><span id="goblin-hp-bar"></span></div>
-        <strong id="goblin-hp">10 / 10 HP</strong>
-        <svg id="goblin" class="stick goblin" viewBox="0 0 180 220" role="img" aria-label="Stick goblin with scimitar and shield">
-          <circle cx="90" cy="58" r="19"/><path class="ear" d="M72 55 L48 45 L70 68 M108 55 L132 45 L110 68"/>
-          <line x1="90" y1="77" x2="90" y2="136"/><line x1="90" y1="92" x2="52" y2="116"/><line x1="90" y1="92" x2="128" y2="112"/>
-          <line x1="90" y1="136" x2="61" y2="184"/><line x1="90" y1="136" x2="120" y2="184"/>
-          <g class="weapon"><path d="M128 112 Q153 88 160 62"/><line x1="151" y1="70" x2="165" y2="78"/></g>
-          <circle class="shield" cx="48" cy="117" r="19"/>
-        </svg>
+      <article class="side monsters-side">
+        <div class="side-heading">
+          <div><span class="side-label">MONSTER CARDS</span><h2>The Encounter</h2></div>
+          <strong id="monster-summary">0 cards · Total CR 0</strong>
+        </div>
+        <div class="picker-row">
+          <select id="monster-picker" aria-label="Choose a monster"></select>
+          <button id="add-monster" type="button">+ Add Monster</button>
+        </div>
+        <div id="monster-cards" class="card-stack" aria-live="polite"></div>
       </article>
     </section>
 
-    <section class="controls">
-      <div class="button-row">
-        <button id="fight-button" type="button">Enter the Pit · 5 ft</button>
-        <button id="ranged-button" type="button">Start at 90 ft</button>
+    <section id="result-panel" class="result-panel" hidden>
+      <div class="result-heading">
+        <div><span class="side-label">BATTLE RESULT</span><h2 id="result-title">Fight complete</h2></div>
+        <strong id="round-count"></strong>
       </div>
-      <p id="status" aria-live="polite">Loading arena...</p>
+      <div class="result-grid">
+        <div><h3>Initiative</h3><ol id="initiative-list"></ol></div>
+        <div><h3>Final Survivors</h3><div id="survivors"></div></div>
+      </div>
     </section>
 
     <section class="log-panel">
-      <h2>Battle Log</h2>
-      <ol id="battle-log"></ol>
+      <div class="result-heading"><div><span class="side-label">DM DETAILS</span><h2>Battle Log</h2></div><span class="rules-note">RAW subset · unsupported mechanics fail closed</span></div>
+      <ol id="battle-log"><li>Choose at least one card on each side.</li></ol>
     </section>
   </main>
   <script src="config.js"></script>
-  <script src="preview-data.js"></script>
-  <script src="preview-dice.js"></script>
-  <script src="preview-engine.js"></script>
-  <script src="arena-animations.js"></script>
-  <script src="arena-view.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
