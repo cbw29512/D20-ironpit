@@ -9,6 +9,7 @@
     let disadvantage = 0;
     if (attacker.active_effect_ids.includes("prone")) disadvantage += 1;
     if (defender.active_effect_ids.includes("dodge")) disadvantage += 1;
+    if (defender.is_unconscious) advantage += 1;
     if (defender.active_effect_ids.includes("prone")) distance <= 5 ? advantage += 1 : disadvantage += 1;
     return { advantage, disadvantage };
   }
@@ -35,6 +36,7 @@
     state.current_hp = 1;
     state.is_alive = true;
     state.is_unconscious = false;
+    state.is_stable = false;
     return true;
   }
 
@@ -59,10 +61,14 @@
       const remaining = Math.max(0, amount - before);
       if (remaining >= state.template.max_hp) { markDead(state); return "dead"; }
       if (useRelentless(state, remaining)) return "relentless_endurance";
+      state.is_alive = true;
       state.is_unconscious = true;
+      state.is_stable = false;
       return "unconscious";
     }
     if (state.template.kind === "monster" || amount >= state.template.max_hp) { markDead(state); return "dead"; }
+    state.is_stable = false;
+    state.death_save_successes = 0;
     state.death_save_failures = Math.min(3, state.death_save_failures + (critical ? 2 : 1));
     state.is_unconscious = true;
     if (state.death_save_failures >= 3) { markDead(state); return "dead"; }
@@ -77,8 +83,9 @@
     window.IRON_PIT_BROWSER_RAGE?.extendFromAttack(attacker.state, round);
     if (extra.spendAction !== false) attacker.state.action_available = false;
     const natural = attackRoll.selected_roll;
-    const critical = natural === 20;
-    const hit = natural !== 1 && (critical || attackRoll.total >= target.state.template.armor_class);
+    const naturalCritical = natural === 20;
+    const hit = natural !== 1 && (naturalCritical || attackRoll.total >= target.state.template.armor_class);
+    const critical = Boolean(hit && (naturalCritical || (target.state.is_unconscious && distance <= 5)));
     const hpBefore = target.state.current_hp;
     let damageRoll = null;
     let damageComponents = [];
@@ -106,6 +113,8 @@
       actor_name: attacker.state.template.name, target_id: target.combatant_id, target_name: target.state.template.name,
       attack_roll: attackRoll, damage_roll: damageRoll, damage_components: damageComponents,
       applied_condition_ids: applied, hit, critical, hp_before: hpBefore, hp_after: target.state.current_hp,
+      death_save_successes: target.state.death_save_successes, death_save_failures: target.state.death_save_failures,
+      is_stable: target.state.is_stable, is_dead: target.state.is_dead,
       weapon_id: attack.id, projectile: attack.projectile || null, feature_id: extra.featureId || null,
       animation: attack.animation || (attack.kind === "ranged" ? "projectile" : "slash"), description,
     };
