@@ -13,6 +13,7 @@ AbilityName = Literal[
     "charisma",
 ]
 EquipmentOption = Literal["package", "gold"]
+MagicItemRarity = Literal["common", "uncommon", "rare", "very_rare", "legendary"]
 
 
 class AbilityScores(BaseModel):
@@ -46,6 +47,17 @@ class FeatureAudit(BaseModel):
     notes: str | None = None
 
 
+class MagicItemAudit(BaseModel):
+    item_id: str
+    item_name: str
+    rarity: MagicItemRarity
+    source_reference: str
+    combat_relevant: bool
+    automated: bool
+    attunement_required: bool = False
+    notes: str | None = None
+
+
 class CharacterBuildProfile(BaseModel):
     id: str
     template_id: str
@@ -71,4 +83,5 @@ class CharacterBuildProfile(BaseModel):
     weapon_masteries: list[str] = Field(default_factory=list)
     fighting_style: str | None = None
     feature_audits: list[FeatureAudit] = Field(min_length=1)
+    magic_item_audits: list[MagicItemAudit] = Field(default_factory=list)
     source_references: list[str] = Field(min_length=1)
