@@ -4,6 +4,7 @@
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const M = () => window.IRON_PIT_BROWSER_MULTIATTACK;
+  const G = () => window.IRON_PIT_BROWSER_RAGE;
   const D = () => window.IRON_PIT_DICE;
 
   const attacks = (member) => member.state.template.attacks || [];
@@ -89,25 +90,32 @@
       is_stable: state.is_stable, is_dead: state.is_dead, animation: "death-save", description: `${state.template.name} makes a Death Save: ${result}.` };
   }
 
+  function finalize(events, sequence, round, member) {
+    const rage = G()?.finalize(sequence, round, member);
+    if (rage?.event) events.push(rage.event);
+    return { events, sequence: rage?.sequence ?? sequence };
+  }
+
   function resolveTurn(sequence, round, member, setup) {
     const events = [];
     S().beginTurn(member.state);
+    const rage = G()?.enter(sequence, round, member); if (rage) { events.push(rage); sequence += 1; }
     const wind = secondWind(sequence, round, member); if (wind) { events.push(wind); sequence += 1; }
     const rush = adrenaline(sequence, round, member); if (rush) { events.push(rush); sequence += 1; }
-    const target = S().nearestTarget(member, setup); if (!target) return { events, sequence };
+    const target = S().nearestTarget(member, setup); if (!target) return finalize(events, sequence, round, member);
     const closing = closeTurn(sequence, round, member, target); events.push(...closing.events); sequence = closing.sequence;
-    if (closing.handled) return { events, sequence };
+    if (closing.handled) return finalize(events, sequence, round, member);
     if (member.state.template.attack_action) {
       const multi = M().resolveAttackAction(sequence, round, member, setup);
       events.push(...multi.events);
-      return { events, sequence: multi.sequence };
+      return finalize(events, multi.sequence, round, member);
     }
     const attack = legalAttack(member, S().distance(member, target));
     if (attack && member.state.action_available) {
       const pack = S().packTactics(member, setup);
       events.push(A().resolveAttack(sequence++, round, member, target, attack, S().distance(member, target), { advantage: pack ? 1 : 0, featureId: pack ? "pack-tactics" : null }));
     }
-    return { events, sequence };
+    return finalize(events, sequence, round, member);
   }
 
   window.IRON_PIT_BROWSER_TURN = { deathSave, resolveTurn };
