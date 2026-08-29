@@ -7,6 +7,10 @@
   const M = () => window.IRON_PIT_BROWSER_MULTIATTACK;
   const G = () => window.IRON_PIT_BROWSER_RAGE;
   const Y = () => window.IRON_PIT_BROWSER_HEALING;
+  const E = () => window.IRON_PIT_ACTION_ECONOMY || {
+    available: (state, cost) => cost === "action" ? state.action_available : state.bonus_action_available,
+    spend: (state, cost) => { if (cost === "action") state.action_available = false; else state.bonus_action_available = false; },
+  };
   const NO_CONTROL = { cleanup: () => {}, shouldEscape: () => false, speedIsZero: () => false };
   const H = () => window.IRON_PIT_BROWSER_GRAPPLE || NO_CONTROL;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
@@ -23,12 +27,11 @@
   }
 
   function secondWind(sequence, round, member) {
-    const state = member.state;
-    const uses = state.resources["second-wind"] || 0;
-    if (!uses || !state.bonus_action_available || state.current_hp <= 0 || state.current_hp > Math.floor(state.template.max_hp / 2)) return null;
+    const state = member.state, uses = state.resources["second-wind"] || 0;
+    if (!uses || !E().available(state, "bonus_action") || state.current_hp <= 0 || state.current_hp > Math.floor(state.template.max_hp / 2)) return null;
     const die = D().roll(10), total = die + state.template.level, before = state.current_hp;
     state.current_hp = Math.min(state.template.max_hp, state.current_hp + total);
-    state.resources["second-wind"] -= 1; state.bonus_action_available = false;
+    state.resources["second-wind"] -= 1; E().spend(state, "bonus_action");
     return { sequence, round_number: round, event_type: "healing", actor_id: member.combatant_id, actor_name: state.template.name,
       target_id: member.combatant_id, target_name: state.template.name, hp_before: before, hp_after: state.current_hp,
       healing_roll: { notation: `1d10+${state.template.level}`, rolls: [die], modifier: state.template.level, total },
@@ -38,9 +41,9 @@
 
   function adrenaline(sequence, round, member) {
     const state = member.state;
-    if (!state.template.traits?.includes("adrenaline-rush") || !state.bonus_action_available || !(state.resources["adrenaline-rush"] > 0)) return null;
+    if (!state.template.traits?.includes("adrenaline-rush") || !E().available(state, "bonus_action") || !(state.resources["adrenaline-rush"] > 0)) return null;
     const movement = H().speedIsZero(state) ? 0 : state.template.speed_ft;
-    state.resources["adrenaline-rush"] -= 1; state.bonus_action_available = false; state.movement_remaining_ft += movement;
+    state.resources["adrenaline-rush"] -= 1; E().spend(state, "bonus_action"); state.movement_remaining_ft += movement;
     const pb = 2 + Math.floor((state.template.level - 1) / 4); state.temporary_hp = Math.max(state.temporary_hp, pb);
     return { sequence, round_number: round, event_type: "feature", actor_id: member.combatant_id, actor_name: state.template.name,
       feature_id: "adrenaline-rush", resource_remaining: state.resources["adrenaline-rush"], movement_ft: movement,
@@ -60,12 +63,12 @@
     if (charged?.handled) return charged;
     if (member.state.template.attack_action) return { events: [], sequence, handled: false };
 
-    const events = [];
+    const events = [], canAct = E().available(member.state, "action");
     const ranged = attacks(member).find((item) => item.kind === "ranged" && S().distance(member, target) <= item.long);
-    if (ranged && member.state.action_available) {
+    if (ranged && canAct) {
       events.push(A().resolveAttack(sequence++, round, member, target, ranged, S().distance(member, target)));
-    } else if (member.state.action_available) {
-      member.state.action_available = false;
+    } else if (canAct) {
+      E().spend(member.state, "action");
       if (!member.state.active_effect_ids.includes("dodge")) member.state.active_effect_ids.push("dodge");
       events.push({ sequence: sequence++, round_number: round, event_type: "feature", actor_id: member.combatant_id,
         actor_name: member.state.template.name, feature_id: "dodge", animation: "dodge",
@@ -104,7 +107,7 @@
 
   function resolveTurn(sequence, round, member, setup) {
     const events = []; H().cleanup(setup); S().beginTurn(member.state);
-    const healing = Y()?.chooseAction(member, setup); if (healing) { events.push(Y().resolve(sequence++, round, member, healing.target, healing.action)); }
+    const healing = Y()?.chooseAction(member, setup); if (healing) events.push(Y().resolve(sequence++, round, member, healing.target, healing.action));
     const rage = G()?.enter(sequence, round, member); if (rage) { events.push(rage); sequence += 1; }
     const wind = secondWind(sequence, round, member); if (wind) { events.push(wind); sequence += 1; }
     if (H().shouldEscape(member.state)) { events.push(H().escape(sequence++, round, member)); return finalize(events, sequence, round, member); }
@@ -119,9 +122,9 @@
       return finalize(events, approach.sequence, round, member);
     }
     const saveAction = member.state.template.saving_throw_actions?.find((action) => V().legalAction(action, target, distance));
-    if (saveAction && member.state.action_available) { events.push(V().resolveAction(sequence++, round, member, target, saveAction, distance)); return finalize(events, sequence, round, member); }
+    if (saveAction && E().available(member.state, "action")) { events.push(V().resolveAction(sequence++, round, member, target, saveAction, distance)); return finalize(events, sequence, round, member); }
     const attack = legalAttack(member, distance);
-    if (attack && member.state.action_available) {
+    if (attack && E().available(member.state, "action")) {
       const pack = S().packTactics(member, setup);
       events.push(A().resolveAttack(sequence++, round, member, target, attack, distance, { advantage: pack ? 1 : 0, featureId: pack ? "pack-tactics" : null }));
     }
