@@ -55,8 +55,9 @@
     if (athletics == null && acrobatics == null) throw new Error(`${state.template.name} lacks certified grapple escape bonuses.`);
     const useAthletics = athletics != null && (acrobatics == null || athletics >= acrobatics);
     const bonus = useAthletics ? athletics : acrobatics;
-    const mode = useAthletics && state.active_effect_ids.includes("rage") ? "advantage" : "normal";
-    const roll = R().d20(bonus, mode);
+    const advantage = useAthletics && state.active_effect_ids.includes("rage") ? 1 : 0;
+    const disadvantage = state.active_effect_ids.includes("poisoned") ? 1 : 0;
+    const roll = R().d20(bonus, R().modeFromSources(advantage, disadvantage));
     const success = roll.total >= source.escape_dc;
     state.action_available = false;
     if (success) {
