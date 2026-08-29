@@ -1,6 +1,7 @@
 import pytest
 
 from app.combat.action_economy import is_available, spend
+from app.combat.charge import resolve_charge_closing
 from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.healing import choose_healing_action, choose_healing_target, resolve_healing
@@ -44,14 +45,8 @@ def test_bonus_action_heal_rescues_downed_ally_before_self_and_preserves_action(
     apply_damage(ally.state, ally.state.current_hp)
     ally.state.death_save_failures = 2
     action = HealingAction(
-        id="test-heal",
-        name="Test Heal",
-        action_cost="bonus_action",
-        range_ft=60,
-        target_mode="self_or_ally",
-        dice_count=1,
-        dice_size=4,
-        healing_bonus=3,
+        id="test-heal", name="Test Heal", action_cost="bonus_action", range_ft=60,
+        target_mode="self_or_ally", dice_count=1, dice_size=4, healing_bonus=3,
     )
     healer.state.template.healing_actions = [action]
 
@@ -77,12 +72,8 @@ def test_bloodied_ally_is_healed_before_more_injured_self() -> None:
     healer.state.current_hp = 1
     ally.state.current_hp = ally.state.template.max_hp // 2
     action = HealingAction(
-        id="ally-heal",
-        name="Ally Heal",
-        action_cost="action",
-        range_ft=5,
-        target_mode="self_or_ally",
-        healing_bonus=5,
+        id="ally-heal", name="Ally Heal", action_cost="action", range_ft=5,
+        target_mode="self_or_ally", healing_bonus=5,
     )
     assert choose_healing_target(healer, setup, action).combatant_id == ally.combatant_id
 
@@ -106,12 +97,28 @@ def test_reaction_heal_is_not_used_proactively_on_the_healers_turn() -> None:
     healer, ally = setup.heroes
     ally.state.current_hp = 1
     reaction_heal = HealingAction(
-        id="reaction-heal",
-        name="Reaction Heal",
-        action_cost="reaction",
-        range_ft=60,
-        target_mode="ally",
-        healing_bonus=5,
+        id="reaction-heal", name="Reaction Heal", action_cost="reaction", range_ft=60,
+        target_mode="ally", healing_bonus=5,
     )
     healer.state.template.healing_actions = [reaction_heal]
     assert choose_healing_action(healer, setup) is None
+
+
+def test_action_heal_prevents_charge_attack_and_partial_charge_movement() -> None:
+    setup = build_encounter_setup(EncounterSelection(
+        hero_ids=["aldric-vane-l1"], monster_ids=["srd-giant-goat"], starting_distance_ft=30,
+    ))
+    healer, target = setup.monsters[0], setup.heroes[0]
+    begin_turn(healer.state)
+    healer.state.current_hp = 1
+    heal = HealingAction(
+        id="self-heal", name="Self Heal", action_cost="action", target_mode="self", healing_bonus=5,
+    )
+    resolve_healing(1, 1, healer, healer, heal, FixedDiceProvider([]))
+    before = healer.position_ft
+
+    events, _, handled = resolve_charge_closing(2, 1, healer, target, FixedDiceProvider([]))
+    assert handled is False
+    assert events == []
+    assert healer.position_ft == before
+    assert healer.state.action_available is False
