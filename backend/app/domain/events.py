@@ -41,6 +41,7 @@ class BattleEvent(BaseModel):
         "movement",
         "dash",
         "attack",
+        "saving_throw",
         "healing",
         "feature",
         "death_save",
@@ -52,6 +53,10 @@ class BattleEvent(BaseModel):
     target_id: str | None = None
     target_name: str | None = None
     attack_roll: DiceRoll | None = None
+    saving_throw_roll: DiceRoll | None = None
+    save_ability: str | None = None
+    save_dc: int | None = Field(default=None, ge=1)
+    save_succeeded: bool | None = None
     damage_roll: DiceRoll | None = None
     death_save_roll: DiceRoll | None = None
     damage_components: list[DamageRollComponent] = Field(default_factory=list)
