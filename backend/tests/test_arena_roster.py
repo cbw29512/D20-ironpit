@@ -12,6 +12,7 @@ def test_arena_roster_exposes_certified_batch() -> None:
     assert isinstance(roster, ArenaRoster)
     assert [item.id for item in roster.characters] == [
         "karnok-stoneward-l1",
+        "rokhan-stonefury-l1",
         "aldric-vane-l1",
         "brom-ironmark-l1",
         "selene-asharrow-l1",
