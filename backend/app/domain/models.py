@@ -14,6 +14,7 @@ from app.domain.combatants import (
     WeaponAttackKind,
 )
 from app.domain.encounters import (
+    EncounterBattleResult,
     EncounterCombatant,
     EncounterInitiative,
     EncounterOutcome,
@@ -36,6 +37,7 @@ __all__ = [
     "DamageType",
     "DemoRoster",
     "DiceRoll",
+    "EncounterBattleResult",
     "EncounterCombatant",
     "EncounterInitiative",
     "EncounterOutcome",
