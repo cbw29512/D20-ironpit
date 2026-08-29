@@ -50,12 +50,17 @@ def select_allowed_weapon_attack(
 
 
 def select_weapon_attack(state: CombatantState, distance_ft: int) -> WeaponAttack | None:
-    """Prefer the primary attack profile, then the first legal alternate profile."""
-    return select_allowed_weapon_attack(
-        state,
-        distance_ft,
-        [attack.id for attack in weapon_attack_profiles(state)],
-    )
+    """Use a melee option when engaged; otherwise preserve the card's attack priority."""
+    profiles = weapon_attack_profiles(state)
+    melee_ids = [
+        attack.id
+        for attack in profiles
+        if attack.weapon.attack_kind is WeaponAttackKind.MELEE
+        and distance_ft <= attack.weapon.reach_ft
+    ]
+    if melee_ids:
+        return select_allowed_weapon_attack(state, distance_ft, melee_ids)
+    return select_allowed_weapon_attack(state, distance_ft, [attack.id for attack in profiles])
 
 
 def preferred_distance_for_attacks(state: CombatantState, allowed_ids: list[str]) -> int:
