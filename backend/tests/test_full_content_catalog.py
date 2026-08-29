@@ -48,27 +48,13 @@ def test_uncertified_cards_fail_closed_in_catalog() -> None:
     assert blocked_monster.blockers
 
 
-def test_current_certified_hero_builds_are_linked_to_runtime_templates() -> None:
+def test_no_hero_is_raw_ready_until_legal_build_audit_controls_certification() -> None:
     catalog = build_full_content_catalog()
-    fighter_1 = {
-        card.build_id: card.runnable_template_id
-        for card in catalog.heroes
-        if card.class_id == "fighter" and card.level == 1
-    }
-    assert fighter_1 == {
-        "guardian": "aldric-vane-l1",
-        "great-weapon": "brom-ironmark-l1",
-        "archer": "selene-asharrow-l1",
-    }
-
-    rogue_1 = [
-        card
-        for card in catalog.heroes
-        if card.class_id == "rogue" and card.level == 1 and card.coverage_status is CoverageStatus.RAW_READY
+    ready_heroes = [
+        card for card in catalog.heroes if card.coverage_status is CoverageStatus.RAW_READY
     ]
-    assert len(rogue_1) == 1
-    assert rogue_1[0].build_id == "skirmisher"
-    assert rogue_1[0].runnable_template_id == "mara-quickstep-l1"
+    assert ready_heroes == []
+    assert all(card.runnable_template_id is None for card in catalog.heroes)
 
 
 def test_current_certified_monsters_are_linked_to_runtime_templates() -> None:
@@ -78,5 +64,9 @@ def test_current_certified_monsters_are_linked_to_runtime_templates() -> None:
         for monster in catalog.monsters
         if monster.coverage_status is CoverageStatus.RAW_READY
     }
-    assert ready_monsters["Giant Rat"] == "srd-giant-rat"
-    assert ready_monsters["Goblin Warrior"] == "srd-goblin-warrior"
+    assert ready_monsters == {
+        "Axe Beak": "srd-axe-beak",
+        "Bandit": "srd-bandit",
+        "Goblin Warrior": "srd-goblin-warrior",
+        "Guard": "srd-guard",
+    }
