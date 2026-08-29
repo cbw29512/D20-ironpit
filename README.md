@@ -29,6 +29,25 @@ The battlefield always presents six fixed slots per side.
 - Clicking an occupied slot allows that card to be changed or removed before the fight.
 - The battlefield contract is **1–6 cards per side**.
 
+## RAW action economy and healing policy
+
+Iron Pit tactics never create extra economy. The rules engine tracks the printed cost of every supported option.
+
+- A combatant normally has one **Action** on its turn.
+- A **Bonus Action** can be used only when a feature, spell, or stat block provides one, and only one Bonus Action can be spent on that turn.
+- A **Reaction** is trigger-driven. Once spent, it is unavailable until the start of that combatant's next turn.
+- **Extra Attack / Multiattack** represents multiple strikes within one Attack/Multiattack action; it is not another Action.
+- Features that actually grant another Action, such as Action Surge, remain blocked until their exact additional-action rules are explicitly modeled and certified.
+- Incapacitated creatures cannot spend Actions, Bonus Actions, or Reactions. Movement remains governed separately by the actual condition's Speed rules.
+
+When a supported combatant has a legal healing option, Iron Pit's deterministic tactical priority is:
+
+1. heal a living ally at **0 HP** when legally possible;
+2. otherwise heal a **Bloodied** ally (half maximum HP or fewer);
+3. only then consider self-healing, with Action-cost self-heals used conservatively because spending an Action can sacrifice offense.
+
+That priority is AI policy only. The heal itself always obeys its printed range, target restrictions, Action/Bonus Action/Reaction cost, resource or spell-slot cost, and other rules. Reaction healing is never fired proactively; it requires its actual trigger to be implemented first.
+
 ## Current content model
 
 - 330 unique SRD 5.2.1 monsters are cataloged with source metadata.
@@ -82,6 +101,7 @@ GitHub Actions must pass on the exact head before a roster count or UI build is 
 - static browser packaging and the 330-monster data artifact;
 - JavaScript syntax;
 - deterministic browser combat regressions;
+- RAW Action/Bonus Action/Reaction availability and healing-target priority;
 - numeric monster-CR sorting and the character catalog model;
 - six-slot battlefield wiring and DOM references;
 - initiative/card-turn/critical/fumble presentation hooks;
