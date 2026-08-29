@@ -9,7 +9,7 @@ global.window = globalThis;
 
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
-  "browser-heroes.js", "browser-monsters.js", "browser-state.js", "browser-rolls.js",
+  "browser-heroes.js", "browser-monsters.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
   "browser-attack.js", "browser-multiattack.js", "browser-turn.js", "browser-engine.js",
 ]) load(file);
 
@@ -75,15 +75,26 @@ function fight(heroIds, monsterIds, distance = 30, dice = deterministicDice()) {
 }
 
 {
-  const testMulti = structuredClone(window.IRON_PIT_BROWSER_MONSTERS["srd-dire-wolf"]);
-  testMulti.id = "test-multiattack";
-  testMulti.name = "Test Multiattack";
-  testMulti.attack_action = { id: "multiattack", slots: [["dire-wolf-bite"], ["dire-wolf-bite"]] };
-  window.IRON_PIT_BROWSER_MONSTERS[testMulti.id] = testMulti;
-  const battle = fight(["karnok-stoneward-l1"], [testMulti.id], 5, queuedDice([1, 20, 15, 1, 15, 15, 1]));
+  const battle = fight(["karnok-stoneward-l1"], ["srd-black-bear"], 5, queuedDice([1, 20, 15, 1, 15, 1]));
   const strikes = battle.events.filter((event) => event.round_number === 1 && event.event_type === "attack" && event.actor_id.startsWith("monster-1:"));
-  assert.equal(strikes.length, 2, "expected two attacks from one Attack action");
-  delete window.IRON_PIT_BROWSER_MONSTERS[testMulti.id];
+  assert.equal(strikes.length, 2, "Black Bear should make two Rend attacks");
+  assert.deepEqual(strikes.map((event) => event.weapon_id), ["black-bear-rend", "black-bear-rend"]);
+}
+
+{
+  const battle = fight(["karnok-stoneward-l1"], ["srd-brown-bear"], 5, queuedDice([1, 20, 15, 1, 15, 1]));
+  const strikes = battle.events.filter((event) => event.round_number === 1 && event.event_type === "attack" && event.actor_id.startsWith("monster-1:"));
+  assert.deepEqual(strikes.map((event) => event.weapon_id), ["brown-bear-bite", "brown-bear-claw"]);
+  assert.ok(strikes[1].applied_condition_ids?.includes("prone"), "Brown Bear Claw should knock a surviving Large-or-smaller target Prone");
+}
+
+{
+  const battle = fight(["rokhan-stonefury-l1"], ["srd-commoner"], 5, queuedDice([20, 1, 15, 6, 6]));
+  const rage = battle.events.find((event) => event.actor_id.startsWith("hero-1:") && event.feature_id === "rage");
+  const attack = battle.events.find((event) => event.actor_id.startsWith("hero-1:") && event.event_type === "attack");
+  assert.ok(rage, "audited Barbarian should Rage in combat");
+  assert.equal(attack?.weapon_id, "rokhan-greataxe");
+  assert.equal(attack?.damage_roll?.modifier, 5, "Rokhan should add +3 Strength and +2 Rage damage");
 }
 
 {
