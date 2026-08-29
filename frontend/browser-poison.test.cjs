@@ -75,4 +75,19 @@ assert.equal(Object.keys(monsters).length, 59, "poison batch must bring browser 
   assert.equal(hero.state.timed_effects.length, 0);
 }
 
+{
+  const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
+  const first = member("monster-1:centipede", "monsters", monsters["srd-giant-centipede"]);
+  const second = member("monster-2:centipede", "monsters", monsters["srd-giant-centipede"]);
+  const setup = { heroes: [hero], monsters: [first, second] };
+  T.apply(hero.state, "poisoned", first.combatant_id, true);
+  T.apply(hero.state, "poisoned", second.combatant_id, true);
+  const firstExpiry = T.expireSourceStart(1, 2, first, setup);
+  assert.equal(firstExpiry.events.length, 0);
+  assert.equal(hero.state.active_effect_ids.includes("poisoned"), true);
+  const secondExpiry = T.expireSourceStart(firstExpiry.sequence, 2, second, setup);
+  assert.equal(secondExpiry.events.length, 1);
+  assert.equal(hero.state.active_effect_ids.includes("poisoned"), false);
+}
+
 console.log("Browser Poisoned and timed-condition regressions passed.");
