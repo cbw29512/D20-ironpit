@@ -1,5 +1,7 @@
 from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_engine import run_encounter
+from app.combat.encounter_outcome import resolve_encounter_outcome
+from app.combat.encounter_setup import build_encounter_setup
 from app.domain.models import EncounterSelection
 
 
@@ -82,7 +84,23 @@ def test_downed_hero_makes_death_save_while_an_ally_is_still_fighting() -> None:
     assert result.outcome == "heroes_win"
 
 
-def test_ranged_attacker_does_not_kite_or_close_when_already_in_normal_range() -> None:
+def test_zero_hp_character_does_not_end_deathmatch_until_dead() -> None:
+    setup = build_encounter_setup(EncounterSelection(
+        hero_ids=["aldric-vane-l1"], monster_ids=["srd-commoner"], starting_distance_ft=5,
+    ))
+    hero = setup.heroes[0].state
+    hero.current_hp = 0
+    hero.is_unconscious = True
+
+    assert resolve_encounter_outcome(setup) == "active"
+
+    hero.is_dead = True
+    hero.is_alive = False
+    hero.is_unconscious = False
+    assert resolve_encounter_outcome(setup) == "monsters_win"
+
+
+def test_ranged_attacker_fires_while_closing_instead_of_holding_range() -> None:
     result = run_encounter(
         EncounterSelection(
             hero_ids=["selene-asharrow-l1"],
@@ -93,10 +111,11 @@ def test_ranged_attacker_does_not_kite_or_close_when_already_in_normal_range() -
     )
 
     assert result.outcome == "heroes_win"
-    assert not any(
-        event.event_type == "movement" and event.actor_id == "hero-1:selene-asharrow-l1"
-        for event in result.events
-    )
     attack = next(event for event in result.events if event.event_type == "attack")
+    movement = next(
+        event for event in result.events
+        if event.event_type == "movement" and event.actor_id == "hero-1:selene-asharrow-l1"
+    )
     assert attack.actor_id == "hero-1:selene-asharrow-l1"
     assert attack.target_id == "monster-1:srd-commoner"
+    assert movement.distance_after_ft < movement.distance_before_ft
