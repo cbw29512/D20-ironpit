@@ -5,7 +5,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-from app.domain.actions import AttackActionDefinition, HitControlEffect, SavingThrowAction
+from app.domain.actions import AttackActionDefinition, ConditionName, HitControlEffect, SavingThrowAction
 from app.domain.size import CreatureSize
 from app.domain.traits import CombatTrait
 
@@ -112,6 +112,7 @@ class CombatantTemplate(BaseModel):
     damage_resistances: list[DamageType] = Field(default_factory=list)
     damage_vulnerabilities: list[DamageType] = Field(default_factory=list)
     damage_immunities: list[DamageType] = Field(default_factory=list)
+    condition_immunities: list[ConditionName] = Field(default_factory=list)
     wearing_heavy_armor: bool = False
     rage_damage_bonus: int = Field(default=0, ge=0, le=10)
     visual: VisualLoadout
