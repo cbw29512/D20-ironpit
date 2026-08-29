@@ -6,34 +6,47 @@ Iron Pit is a rules-first browser combat game built against the D&D 2024 / SRD 5
 
 ## Locked product goal
 
-1. Pick 1–8 RAW-ready hero cards.
-2. Pick 1–8 RAW-ready monster cards.
-3. Start in the standard flat Pit, normally 30 feet apart.
-4. Combatants use legal ranged/thrown attacks while closing when available.
-5. They continue closing and do not kite, retreat, flee, or disengage to preserve range.
-6. Once engaged, legal melee attacks are preferred. Ranged-only combatants can still attack in melee with the normal rules penalties.
-7. The fight continues until one side is dead, not merely reduced to 0 HP.
-8. The browser replays the event stream as a stick-figure battle while preserving the detailed combat log for rules auditing.
+1. Choose a party size of 1–6 characters.
+2. For each character slot, choose one of the 12 core classes, a level from 1–20, and an available build/card.
+3. Add RAW-ready monster cards from a catalog sorted numerically by Challenge Rating.
+4. Start in the standard flat Pit, normally 30 feet apart.
+5. Combatants use legal ranged/thrown attacks while closing when available.
+6. They continue closing and do not kite, retreat, flee, or disengage to preserve range.
+7. Once engaged, legal melee attacks are preferred. Ranged-only combatants can still attack in melee with the normal rules penalties.
+8. The fight continues until one side is dead, not merely reduced to 0 HP.
+9. The browser replays the event stream as a stick-figure battle while preserving the detailed combat log for rules auditing.
 
 See `docs/ARENA_POLICY.md` for the exact arena assumptions.
+
+## Encounter builder
+
+The character side uses dropdown menus instead of a single long card picker:
+
+- **How many characters?** 1–6.
+- **Class:** all 12 core classes.
+- **Level:** 1–20.
+- **Build / Card:** the three planned build tracks for that class/level.
+- Uncertified class/level/build combinations remain visible but are marked unavailable for fighting; the app never substitutes an approximate build.
+
+The monster side is ordered by numeric CR, not alphabetically. A CR filter narrows the 330-monster catalog, and **Add Monster** places the chosen RAW-ready creature into the encounter rotation. Multiple copies can be added up to the Pit encounter limit.
 
 ## Current content model
 
 - 330 unique SRD 5.2.1 monsters are cataloged with source metadata.
 - Unsupported outcome-changing mechanics fail closed instead of being approximated.
-- The current feature branch is expanding the RAW-ready runtime roster in certified batches; 55 monster templates are presently linked as certification candidates.
+- 63 monster templates are currently certified runnable in the browser combat engine.
 - The hero catalog contains 720 planned cards across the 12 core classes, levels 1–20, and three build slots per level. Only explicitly audited builds are runnable; the current RAW-ready browser heroes are the level-1 Fighter and Barbarian builds.
 
 ## Combat foundation already represented
 
-The certified subset includes core d20 attack resolution, AC, HP, initiative, natural 1/20 behavior, critical weapon dice, typed damage defenses, temporary HP hooks, advantage/disadvantage, range penalties, Multiattack/Extra Attack sequencing, movement, Charge, Pack Tactics, Prone, Rage, Savage Attacker, Second Wind, Orc Adrenaline Rush/Relentless Endurance, zero-HP handling, Death Saving Throws, and deathmatch targeting of downed player characters when no standing enemy remains.
+The certified subset includes core d20 attack resolution, AC, HP, initiative, natural 1/20 behavior, critical weapon dice, typed and mixed damage defenses, temporary HP hooks, advantage/disadvantage, range penalties, ordered Multiattack including mixed weapon/save steps, movement, Charge, Pack Tactics, Prone, Grappled, Restrained, Poisoned, timed conditions, condition immunities, Rage, Savage Attacker, Second Wind, Orc Adrenaline Rush/Relentless Endurance, zero-HP handling, Death Saving Throws, and deathmatch targeting of downed player characters.
 
 A mechanic is considered ready only when both the Python reference and browser production path are covered by regression tests where applicable.
 
 ## Production architecture
 
 - **GitHub:** source of truth and CI.
-- **Netlify:** static production site.
+- **GitHub Pages / Netlify:** static deployment targets.
 - **Browser engine:** authoritative production fight execution; no production `/api/` dependency.
 - **Python rules reference:** CI oracle and test bed, not required by the deployed site.
 
@@ -63,13 +76,14 @@ pytest -q
 
 ## Certification gate
 
-GitHub Actions must pass on the exact head before a roster count is called certified. The gate checks:
+GitHub Actions must pass on the exact head before a roster count or UI build is called certified. The gate checks:
 
 - production source-size limits;
 - the full Python rules-reference suite;
 - static browser packaging and the 330-monster data artifact;
 - JavaScript syntax;
 - deterministic browser combat regressions;
+- numeric monster-CR sorting and the character dropdown model;
 - the melee-deathmatch contract;
 - the animated Pit wiring;
 - backend-free production execution;
@@ -77,4 +91,4 @@ GitHub Actions must pass on the exact head before a roster count is called certi
 
 ## Next product priorities
 
-After the current exact head is green: continue strengthening the watchable stick-figure fight loop, then add outcome-changing mechanics such as saving throws, Grappled, Restrained, additional conditions/riders, reactions, recharge actions, and later spellcasting. Monster and hero coverage expands only when the mechanics they depend on are correctly supported.
+Continue expanding the RAW rules engine and monster-specific animation vocabulary. New monsters and heroes become runnable only after every outcome-changing mechanic they depend on is implemented and certified; unsupported rules are never approximated just to increase the card count.
