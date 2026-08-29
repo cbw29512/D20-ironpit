@@ -3,6 +3,7 @@
 
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (state) => state.action_available };
 
   function movementEvent(sequence, round, member, target, movement) {
     return {
@@ -20,7 +21,7 @@
       (item) => item.id === member.state.template.primary_attack_id,
     ) || member.state.template.attacks[0];
     const profile = attack?.charge;
-    if (!profile || !member.state.action_available) return { events: [], sequence, handled: false };
+    if (!profile || !E().available(member.state, "action")) return { events: [], sequence, handled: false };
     const distance = S().distance(member, target);
     const movementNeeded = Math.max(0, distance - (attack.reach || 5));
     if (movementNeeded < profile.minimumMove || movementNeeded > member.state.movement_remaining_ft) {
