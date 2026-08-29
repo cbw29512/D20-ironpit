@@ -11,11 +11,17 @@ for (const file of [
   "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js", "browser-monsters-beast2.js",
   "browser-monsters-batch3.js", "browser-monsters-control.js", "browser-monsters-poison.js", "browser-monsters-venom.js",
   "browser-grapple.js", "browser-timed-conditions.js", "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-attack.js",
+  "browser-saves.js", "browser-charge.js", "browser-multiattack.js", "browser-turn.js", "browser-engine.js",
 ]) load(file);
 
 const queuedDice = (values, fallback = 10) => {
   const queue = [...values];
   const roll = (sides) => ((queue.length ? queue.shift() : fallback) - 1) % sides + 1;
+  return { roll, rollMany: (count, sides) => Array.from({ length: count }, () => roll(sides)) };
+};
+const deterministicDice = (seed = 99) => {
+  let state = seed >>> 0;
+  const roll = (sides) => { state = (1664525 * state + 1013904223) >>> 0; return (state % sides) + 1; };
   return { roll, rollMany: (count, sides) => Array.from({ length: count }, () => roll(sides)) };
 };
 const S = window.IRON_PIT_BROWSER_STATE;
@@ -69,6 +75,16 @@ assert.equal(Object.keys(monsters).length, 62, "venom batch must bring browser r
   assert.deepEqual(event.damage_components.map((part) => part.total), [5, 8]);
   assert.deepEqual(event.damage_components.map((part) => part.applied_total), [5, 0]);
   assert.equal(event.damage_roll.total, 5);
+}
+
+{
+  window.IRON_PIT_DICE = deterministicDice(41);
+  const battle = window.IRON_PIT_BROWSER_ENGINE.runEncounter({
+    hero_ids: ["karnok-stoneward-l1"], monster_ids: ["srd-giant-wolf-spider"], starting_distance_ft: 30,
+  });
+  assert.notEqual(battle.outcome, "active");
+  assert.ok(battle.events.some((event) => event.event_type === "attack" && event.actor_id.startsWith("monster-")));
+  assert.ok(battle.events.some((event) => event.damage_components?.some((part) => part.damage_type === "poison")));
 }
 
 console.log("Browser SRD venom monster regressions passed.");
