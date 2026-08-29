@@ -21,6 +21,7 @@
       resources: { ...(template.resources || {}) },
       active_effect_ids: [],
       grapple_sources: [],
+      timed_effects: [],
       feature_last_turn_keys: {},
       temporary_damage_resistances: [],
       rage_expires_round: null,
