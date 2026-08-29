@@ -13,6 +13,12 @@ class ResourceState(BaseModel):
     max_uses: int = Field(ge=0)
 
 
+class TimedEffect(BaseModel):
+    effect_id: str
+    source_id: str
+    expires_at_start_of_source_turn: bool = True
+
+
 class DemoRoster(BaseModel):
     fighter: CombatantTemplate
     monster: CombatantTemplate
@@ -41,6 +47,7 @@ class CombatantState(BaseModel):
     resources: list[ResourceState] = Field(default_factory=list)
     active_effect_ids: list[str] = Field(default_factory=list)
     grapple_sources: list[GrappleSource] = Field(default_factory=list)
+    timed_effects: list[TimedEffect] = Field(default_factory=list)
     feature_last_turn_keys: dict[str, str] = Field(default_factory=dict)
     temporary_damage_resistances: list[DamageType] = Field(default_factory=list)
     rage_expires_round: int | None = Field(default=None, ge=1)
