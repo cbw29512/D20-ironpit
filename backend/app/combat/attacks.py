@@ -19,6 +19,8 @@ def resolve_attack(
     attack: WeaponAttack,
     distance_ft: int,
     dice: DiceProvider,
+    actor_event_id: str | None = None,
+    target_event_id: str | None = None,
 ) -> BattleEvent:
     try:
         if not attacker.action_available:
@@ -51,9 +53,9 @@ def resolve_attack(
             sequence=sequence,
             round_number=round_number,
             event_type="attack",
-            actor_id=attacker.template.id,
+            actor_id=actor_event_id or attacker.template.id,
             actor_name=attacker.template.name,
-            target_id=defender.template.id,
+            target_id=target_event_id or defender.template.id,
             target_name=defender.template.name,
             attack_roll=attack_roll,
             damage_roll=damage_roll,
