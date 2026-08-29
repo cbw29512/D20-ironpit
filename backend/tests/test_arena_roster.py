@@ -29,6 +29,8 @@ def test_arena_roster_exposes_certified_batch() -> None:
         "srd-giant-lizard",
         "srd-wolf",
         "srd-dire-wolf",
+        "srd-black-bear",
+        "srd-brown-bear",
     ]
 
 
@@ -141,3 +143,28 @@ def test_srd_giant_lizard_profile() -> None:
     assert (lizard.weapon_attack.attack_bonus, lizard.weapon_attack.damage_bonus) == (4, 2)
     assert lizard.weapon_attack.weapon.dice_size == 8
     assert lizard.weapon_attack.weapon.damage_type is DamageType.PIERCING
+
+
+def test_srd_black_bear_profile_and_multiattack() -> None:
+    bear = _by_id(get_arena_roster().monsters, "srd-black-bear")
+
+    assert (bear.challenge_rating, bear.armor_class, bear.max_hp) == ("1/2", 11, 19)
+    assert (bear.speed_ft, bear.initiative_bonus) == (30, 1)
+    assert (bear.weapon_attack.attack_bonus, bear.weapon_attack.damage_bonus) == (4, 2)
+    assert (bear.weapon_attack.weapon.dice_size, bear.weapon_attack.weapon.damage_type) == (6, DamageType.SLASHING)
+    assert bear.attack_action is not None
+    assert [slot.attack_ids for slot in bear.attack_action.slots] == [["black-bear-rend"], ["black-bear-rend"]]
+
+
+def test_srd_brown_bear_profile_multiattack_and_prone_claw() -> None:
+    bear = _by_id(get_arena_roster().monsters, "srd-brown-bear")
+
+    assert (bear.challenge_rating, bear.armor_class, bear.max_hp) == ("1", 11, 22)
+    assert (bear.speed_ft, bear.initiative_bonus) == (40, 1)
+    bite = bear.weapon_attack
+    claw = bear.alternate_weapon_attacks[0]
+    assert (bite.attack_bonus, bite.damage_bonus, bite.weapon.dice_size) == (5, 3, 8)
+    assert (claw.attack_bonus, claw.damage_bonus, claw.weapon.dice_size) == (5, 3, 4)
+    assert claw.knocks_prone_max_size.value == "large"
+    assert bear.attack_action is not None
+    assert [slot.attack_ids for slot in bear.attack_action.slots] == [["brown-bear-bite"], ["brown-bear-claw"]]
