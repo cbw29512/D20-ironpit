@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.encounter_targeting import combatant_distance
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.traits import CombatTrait
 
@@ -22,16 +21,27 @@ def active_allies(attacker: EncounterCombatant, setup: EncounterSetup) -> list[E
     ]
 
 
+def has_adjacent_active_ally(attacker: EncounterCombatant, setup: EncounterSetup) -> bool:
+    """Iron Pit abstraction: any active ally counts as being within 5 feet.
+
+    The card-v-card fight intentionally does not simulate allied formation movement.
+    If a side has at least two active combatants, ally-proximity mechanics treat the
+    combatants as adjacent to one another.
+    """
+    return bool(active_allies(attacker, setup))
+
+
 def pack_tactics_active(
     attacker: EncounterCombatant,
     target: EncounterCombatant,
     setup: EncounterSetup,
 ) -> bool:
-    """Return whether the attacker has a qualifying ally within 5 feet of the target."""
+    """Return whether Pack Tactics is active under Iron Pit's adjacency abstraction."""
     try:
+        del target  # Pack Tactics still targets an enemy; exact ally geometry is abstracted.
         if CombatTrait.PACK_TACTICS not in attacker.state.template.combat_traits:
             return False
-        return any(combatant_distance(ally, target) <= 5 for ally in active_allies(attacker, setup))
+        return has_adjacent_active_ally(attacker, setup)
     except Exception as exc:
         logger.exception("Pack Tactics evaluation failed for %s.", attacker.combatant_id)
         raise RuntimeError("Pack Tactics could not be evaluated.") from exc
