@@ -1,0 +1,36 @@
+import pytest
+from fastapi import HTTPException
+
+from app.content.readiness import assert_public_selection_runnable
+from app.domain.models import EncounterSelection
+from app.main import create_encounter_setup
+
+
+def _selection(hero_id: str, monster_id: str = "srd-goblin-warrior") -> EncounterSelection:
+    return EncounterSelection(
+        hero_ids=[hero_id],
+        monster_ids=[monster_id],
+        starting_distance_ft=30,
+    )
+
+
+def test_audited_karnok_and_certified_monster_pass_public_readiness() -> None:
+    assert_public_selection_runnable(_selection("karnok-stoneward-l1"))
+
+
+def test_legacy_uncertified_hero_cannot_bypass_catalog_through_api_id() -> None:
+    with pytest.raises(ValueError, match="aldric-vane-l1"):
+        assert_public_selection_runnable(_selection("aldric-vane-l1"))
+
+
+def test_uncertified_monster_id_is_rejected_before_engine_setup() -> None:
+    with pytest.raises(ValueError, match="srd-zombie"):
+        assert_public_selection_runnable(_selection("karnok-stoneward-l1", "srd-zombie"))
+
+
+def test_public_setup_endpoint_returns_400_for_uncertified_hero() -> None:
+    with pytest.raises(HTTPException) as caught:
+        create_encounter_setup(_selection("brom-ironmark-l1"))
+
+    assert caught.value.status_code == 400
+    assert "brom-ironmark-l1" in str(caught.value.detail)
