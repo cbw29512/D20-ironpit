@@ -102,7 +102,8 @@ def test_immune_critical_at_zero_causes_no_death_save_failure() -> None:
 
     assert event.critical is True
     assert event.damage_roll is not None
-    assert event.damage_roll.total == 14
+    assert event.damage_components[0].total == 14
     assert event.damage_components[0].applied_total == 0
+    assert event.damage_roll.total == 0
     assert defender.death_save_failures == 0
     assert defender.is_dead is False
