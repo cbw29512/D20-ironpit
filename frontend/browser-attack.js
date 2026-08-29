@@ -68,7 +68,6 @@
     }
     if (state.template.kind === "monster" || amount >= state.template.max_hp) { markDead(state); return "dead"; }
     state.is_stable = false;
-    state.death_save_successes = 0;
     state.death_save_failures = Math.min(3, state.death_save_failures + (critical ? 2 : 1));
     state.is_unconscious = true;
     if (state.death_save_failures >= 3) { markDead(state); return "dead"; }
