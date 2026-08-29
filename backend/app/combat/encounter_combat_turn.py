@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 from app.combat.ally_context import pack_tactics_active
-from app.combat.arena_closing import resolve_simple_closing
+from app.combat.arena_closing import MELEE_BRAWL_DISTANCE_FT, resolve_simple_closing
 from app.combat.attack_actions import resolve_attack_action
 from app.combat.attacks import resolve_attack
 from app.combat.barbarian import enter_rage, finalize_rage_turn
 from app.combat.dice import DiceProvider
-from app.combat.encounter_targeting import combatant_distance
+from app.combat.encounter_movement import move_toward_combatant
+from app.combat.encounter_targeting import combatant_distance, select_nearest_target
 from app.combat.encounter_turns import prepare_encounter_attack
 from app.combat.fighter import use_second_wind
 from app.combat.orc import use_adrenaline_rush
@@ -14,6 +15,27 @@ from app.combat.policy import should_use_second_wind
 from app.combat.state import begin_turn
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
+
+
+def _close_after_attack_action(
+    sequence: int,
+    round_number: int,
+    attacker: EncounterCombatant,
+    setup: EncounterSetup,
+) -> tuple[list[BattleEvent], int]:
+    target = select_nearest_target(attacker, setup)
+    if target is None or combatant_distance(attacker, target) <= MELEE_BRAWL_DISTANCE_FT:
+        return [], sequence
+    movement = move_toward_combatant(
+        sequence,
+        round_number,
+        attacker,
+        target,
+        MELEE_BRAWL_DISTANCE_FT,
+    )
+    if movement is None:
+        return [], sequence
+    return [movement], sequence + 1
 
 
 def resolve_combat_turn(
@@ -24,7 +46,7 @@ def resolve_combat_turn(
     setup: EncounterSetup,
     dice: DiceProvider,
 ) -> tuple[list[BattleEvent], int]:
-    """Resolve one living combatant turn through the canonical encounter rules."""
+    """Resolve one living combatant turn through the canonical Iron Pit rules."""
     events: list[BattleEvent] = []
     begin_turn(attacker.state)
 
@@ -58,6 +80,10 @@ def resolve_combat_turn(
             sequence, round_number, attacker, setup, dice
         )
         events.extend(action_events)
+        movement_events, sequence = _close_after_attack_action(
+            sequence, round_number, attacker, setup
+        )
+        events.extend(movement_events)
     elif not closing_handled:
         attack, prep_events, sequence = prepare_encounter_attack(
             sequence, round_number, attacker, target
