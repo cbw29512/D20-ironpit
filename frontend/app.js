@@ -2,12 +2,12 @@
   "use strict";
 
   const apiBase = String(window.IRON_PIT_API_BASE || "").trim().replace(/\/$/, "");
-  const state = { catalog: null, heroes: [], monsters: [] };
+  const state = { catalog: null, heroes: [], monsters: [], apiReady: false };
   const el = (id) => document.getElementById(id);
   const view = window.createEncounterView();
 
   function render() {
-    view.renderSelection(state, Boolean(apiBase), (side, index) => {
+    view.renderSelection(state, state.apiReady, (side, index) => {
       state[side].splice(index, 1);
       render();
     });
@@ -40,11 +40,31 @@
     render();
   }
 
+  async function fetchWithTimeout(url, options = {}, timeoutMs = 20000) {
+    const controller = new AbortController();
+    const timer = window.setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      return await fetch(url, { ...options, signal: controller.signal, cache: "no-store" });
+    } finally {
+      window.clearTimeout(timer);
+    }
+  }
+
+  async function requireHealthyApi() {
+    if (!apiBase) throw new Error("Production API base is blank.");
+    view.setStatus("Waking the production combat engine…");
+    const response = await fetchWithTimeout(`${apiBase}/health`, {}, 45000);
+    if (!response.ok) throw new Error(`Health API returned ${response.status}`);
+    const health = await response.json();
+    if (health.status !== "ok") throw new Error("Production API health check failed.");
+  }
+
   async function fight() {
     try {
-      el("fight-button").disabled = true;
+      state.apiReady = false;
+      render();
       view.setStatus("Rolling initiative and resolving the fight…");
-      const response = await fetch(`${apiBase}/api/encounters/fight`, {
+      const response = await fetchWithTimeout(`${apiBase}/api/encounters/fight`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -52,14 +72,21 @@
           monster_ids: state.monsters.map((item) => item.id),
           starting_distance_ft: Number(el("distance").value),
         }),
-      });
+      }, 60000);
       if (!response.ok) throw new Error(`Fight API returned ${response.status}`);
       const battle = await response.json();
       view.showResult(battle);
       await window.playIronPitCriticalEffects?.(battle);
+      state.apiReady = true;
     } catch (error) {
       console.error(error);
-      view.setStatus("Fight failed. The production API may still be deploying.");
+      view.setStatus("Fight failed. Production API is unavailable or still waking up.");
+      try {
+        await requireHealthyApi();
+        state.apiReady = true;
+      } catch (healthError) {
+        console.error(healthError);
+      }
     } finally {
       render();
     }
@@ -72,28 +99,28 @@
   }
 
   async function boot() {
-    if (!apiBase) {
-      view.setStatus("Production API is not configured.");
-      render();
-      return;
-    }
-    const response = await fetch(`${apiBase}/api/catalog`);
+    await requireHealthyApi();
+    view.setStatus("Production API online. Loading certified cards…");
+    const response = await fetchWithTimeout(`${apiBase}/api/catalog`);
     if (!response.ok) throw new Error(`Catalog API returned ${response.status}`);
     state.catalog = await response.json();
     view.fillPicker("hero-picker", state.catalog.heroes);
     view.fillPicker("monster-picker", state.catalog.monsters);
     seedReadyCard("heroes");
     seedReadyCard("monsters");
-    view.setStatus(`Loaded ${state.catalog.hero_count} hero builds and ${state.catalog.monster_count} SRD monsters.`);
+    state.apiReady = true;
+    view.setStatus(`Production ready · ${state.catalog.hero_count} hero builds · ${state.catalog.monster_count} SRD monsters cataloged.`);
     render();
   }
 
   el("add-hero").addEventListener("click", () => addSelected("heroes"));
   el("add-monster").addEventListener("click", () => addSelected("monsters"));
   el("fight-button").addEventListener("click", fight);
+  render();
   boot().catch((error) => {
     console.error(error);
-    view.setStatus("Catalog failed to load from production API.");
+    state.apiReady = false;
+    view.setStatus("Production combat engine is offline. FIGHT is disabled until health checks pass.");
     render();
   });
 })();
