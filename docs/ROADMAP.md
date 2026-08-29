@@ -1,56 +1,65 @@
-# Iron Pit D20 Roadmap
+# Iron Pit Roadmap
 
-## Milestone 0 — Deployed vertical slice
+## P0 — Prove the actual game
 
-- Fighter vs Goblin duel deployed end to end.
-- CI green.
-- Netlify frontend connected to the public FastAPI service.
-- Deployment smoke test completed.
+- Exact-head CI green.
+- Static browser combat only; no production API dependency.
+- 1–8 hero cards vs. 1–8 monster cards.
+- Standard 30-foot Pit and optional 5-foot already-engaged start.
+- Every combatant closes toward melee; nobody kites or retreats.
+- Legal ranged/thrown attacks can be used while closing.
+- Full legal Multiattack/Extra Attack resolves before remaining movement closes the gap.
+- Fight continues until one side is dead, not merely at 0 HP.
+- Unconscious player characters, Death Saving Throws, damage at 0 HP, massive damage, and finishing attacks resolve correctly.
+- Selected combatants replay as stick figures with HP, movement, attacks, hits, criticals, healing, downed/dead states, and a final result.
+- Browser and Python reference behavior remain covered by deterministic regression tests.
 
-## Milestone 1 — Reusable combat content
+## P1 — Unlock more RAW combatants through reusable mechanics
 
-- Extract reusable weapon, shield, and armor records.
-- Add weapon animation families (`slash`, `chop`, `thrust`, `smash`).
-- Keep final AC and attack resolution server-authoritative.
+Implement outcome-changing mechanics as engine capabilities before marking dependent cards RAW-ready:
 
-## Milestone 2 — First RAW expansion
+- general saving throws;
+- Grappled;
+- Restrained;
+- broader condition support;
+- save-based damage/condition riders;
+- reactions that can change combat outcome;
+- recharge actions;
+- poison and similar riders;
+- forced movement/pushback interactions that return to the close-and-brawl policy;
+- spell slots, concentration, spell attacks, and saving-throw spells after the martial/monster foundation is stable.
 
-- Advantage and disadvantage.
-- Goblin conditional bonus damage.
-- Fighter Second Wind.
-- Longsword Sap Weapon Mastery.
-- Published rules-coverage status for each feature.
+## P1 — Expand representative hero coverage
 
-## Milestone 3 — Ranged combat
+Prioritize a small set that proves distinct combat behavior before attempting the full 720-card plan:
 
-- Distance/range state.
-- Shortbow attack option.
-- Projectile battle events.
-- Directional arrow animation.
+- Fighter;
+- Barbarian;
+- Rogue;
+- Ranger;
+- Cleric;
+- Wizard;
+- then the remaining core classes.
 
-## Milestone 4 — Character and monster catalogs
+Each runnable build must have the class features, resources, attacks, defenses, and action economy that can affect its Pit result.
 
-- Pregenerated character progression data for levels 1–20.
-- SRD-licensed monster catalog with source/license metadata.
-- Character and monster selection UI.
+## P2 — Resume monster expansion
 
-## Milestone 5 — Spell and condition event system
+- Keep the full 330 SRD 5.2.1 catalog available for browsing.
+- Promote monsters to RAW-ready only in mechanic-compatible audited batches.
+- Preserve exact source/license metadata.
+- Never increase the ready count by ignoring an outcome-changing feature.
 
-- Saving throws.
-- Spell slots and concentration.
-- Spell visual/icon metadata.
-- Conditions and visual state transforms.
-- Petrified state can render a combatant gray/frozen.
-- Breath-weapon area-effect event/animation family.
+## P2 — Presentation polish
 
-## Milestone 6 — Accounts and persistence
+- Improve class/monster-specific stick silhouettes and weapon animation families.
+- Add clearer round pacing and optional replay speed controls.
+- Improve target/hit/death readability for 8-vs-8 fights.
+- Preserve reduced-motion support.
+- Keep the detailed rules log secondary to the watchable fight.
 
-- Supabase Auth.
-- Profiles and battle history.
-- Server-side auth validation.
-- Postgres battle persistence.
-- Rate limiting and abuse controls.
+## P3 — Persistence and social/product features
 
-## Deferred product experiments
+Accounts, battle history, rankings, tournaments, cosmetics, and other persistence features come only after the combat/watch loop is excellent and mechanically trustworthy.
 
-Prediction points, rankings, tournaments, cosmetics, and any collectible system are intentionally deferred until the combat/watch loop is proven. Anything involving staking money or prizes of value requires separate legal/product review before implementation.
+Anything involving money, prizes, wagering, crypto, or cash-value predictions requires a separate product/legal review and is not part of the combat roadmap.
