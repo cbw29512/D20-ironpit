@@ -7,21 +7,18 @@ from app.domain.catalog import CoverageStatus, MonsterCatalogCard
 
 _DATA_PATH = Path(__file__).with_name("data") / "srd_5_2_1_monsters.json"
 
-# Only monsters whose combat-relevant stat-block behavior is fully represented by
-# the current arena engine belong here. Deliberately unused retreat/flee options
-# do not block readiness in Iron Pit's fight-to-the-death arena policy.
+# Ready means every mechanic capable of changing a standard flat-arena fight is
+# represented. Terrain-only movement and deliberately unused flee/retreat options
+# do not block readiness under docs/ARENA_POLICY.md.
 _READY_BY_NAME = {
     "Axe Beak": "srd-axe-beak",
     "Bandit": "srd-bandit",
+    "Commoner": "srd-commoner",
+    "Giant Lizard": "srd-giant-lizard",
+    "Giant Rat": "srd-giant-rat",
+    "Giant Weasel": "srd-giant-weasel",
     "Goblin Warrior": "srd-goblin-warrior",
     "Guard": "srd-guard",
-}
-
-_BLOCKERS_BY_NAME = {
-    "Commoner": ["training-ability-check-trait-not-modeled"],
-    "Giant Lizard": ["climb-speed-and-spider-climb-not-modeled"],
-    "Giant Rat": ["pack-tactics-target-adjacency-not-modeled-raw", "climb-speed-not-modeled"],
-    "Giant Weasel": ["climb-speed-not-modeled"],
 }
 
 
@@ -35,7 +32,6 @@ def _load_rows() -> list[dict[str, object]]:
 def _card(row: dict[str, object]) -> MonsterCatalogCard:
     name = str(row["name"])
     template_id = _READY_BY_NAME.get(name)
-    blockers = _BLOCKERS_BY_NAME.get(name, ["monster-combat-mechanics-not-certified"])
     return MonsterCatalogCard(
         id=str(row["id"]),
         name=name,
@@ -48,7 +44,7 @@ def _card(row: dict[str, object]) -> MonsterCatalogCard:
         source_reference=str(row["sourceReference"]),
         coverage_status=(CoverageStatus.RAW_READY if template_id else CoverageStatus.BLOCKED),
         runnable_template_id=template_id,
-        blockers=[] if template_id else blockers,
+        blockers=[] if template_id else ["monster-combat-mechanics-not-certified"],
     )
 
 
