@@ -25,6 +25,7 @@ from app.domain.encounters import (
     InitiativeGroup,
 )
 from app.domain.events import BattleEvent, BattleResult, DamageRollComponent, DiceRoll, RollMode
+from app.domain.traits import CombatTrait
 
 __all__ = [
     "ArenaRoster",
@@ -33,6 +34,7 @@ __all__ = [
     "BattleEvent",
     "BattlefieldState",
     "BattleResult",
+    "CombatTrait",
     "CombatantState",
     "CombatantTemplate",
     "ConditionalDamage",
