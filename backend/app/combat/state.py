@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.condition_rules import is_incapacitated
 from app.combat.conditions import DODGE_EFFECT_ID, stand_from_prone
 from app.combat.grapple import speed_is_zero
 from app.domain.models import CombatantState, CombatantTemplate, ResourceState
@@ -32,8 +33,9 @@ def build_combatant_state(template: CombatantTemplate) -> CombatantState:
 
 def begin_turn(state: CombatantState) -> None:
     try:
-        state.action_available = True
-        state.bonus_action_available = True
+        incapacitated = is_incapacitated(state)
+        state.action_available = not incapacitated
+        state.bonus_action_available = not incapacitated
         state.movement_remaining_ft = 0 if speed_is_zero(state) else state.template.speed_ft
         if DODGE_EFFECT_ID in state.active_effect_ids:
             state.active_effect_ids.remove(DODGE_EFFECT_ID)
