@@ -4,8 +4,8 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-from app.domain.combatants import CombatantState
 from app.domain.events import BattleEvent
+from app.domain.runtime import CombatantState
 
 
 EncounterSide = Literal["heroes", "monsters"]
