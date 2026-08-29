@@ -28,6 +28,7 @@ def resolve_attack(
     advantage_sources: int = 0,
     other_disadvantage_sources: int = 0,
     feature_id: str | None = None,
+    turn_key: str | None = None,
 ) -> BattleEvent:
     try:
         if spend_action and not attacker.action_available:
@@ -52,12 +53,14 @@ def resolve_attack(
         damage_components = []
 
         if hit:
+            active_turn_key = turn_key or f"{round_number}:{actor_event_id or attacker.template.id}"
             damage_roll, rolled_components = resolve_weapon_damage(
                 attacker,
                 attack,
                 dice,
                 critical,
                 mode,
+                active_turn_key,
             )
             applied_total, damage_components = apply_damage_defenses(
                 defender,
