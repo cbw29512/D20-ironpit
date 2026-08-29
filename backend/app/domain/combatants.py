@@ -5,6 +5,8 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
+from app.domain.actions import AttackActionDefinition
+
 
 class DamageType(StrEnum):
     SLASHING = "slashing"
@@ -81,6 +83,7 @@ class CombatantTemplate(BaseModel):
     initiative_bonus: int
     weapon_attack: WeaponAttack
     alternate_weapon_attacks: list[WeaponAttack] = Field(default_factory=list)
+    attack_action: AttackActionDefinition | None = None
     fighting_style: str | None = None
     weapon_masteries: list[str] = Field(default_factory=list)
     visual: VisualLoadout
