@@ -6,6 +6,7 @@ from app.content.certified_heroes import build_certified_hero_templates
 from app.content.demo import build_demo_fighter, build_goblin_warrior
 from app.content.monsters import build_axe_beak, build_bandit, build_commoner, build_giant_lizard
 from app.content.monsters_bears import build_black_bear, build_brown_bear
+from app.content.monsters_charge import build_boar, build_elk, build_giant_boar
 from app.content.monsters_low_cr import build_giant_rat, build_giant_weasel, build_guard
 from app.content.monsters_simple_beasts import build_camel, build_deer, build_draft_horse, build_giant_badger
 from app.content.monsters_wolves import build_dire_wolf, build_wolf
@@ -26,22 +27,11 @@ def build_arena_roster() -> ArenaRoster:
                 build_mara_quickstep(),
             ],
             monsters=[
-                build_goblin_warrior(),
-                build_bandit(),
-                build_commoner(),
-                build_guard(),
-                build_giant_rat(),
-                build_giant_weasel(),
-                build_axe_beak(),
-                build_giant_lizard(),
-                build_wolf(),
-                build_dire_wolf(),
-                build_black_bear(),
-                build_brown_bear(),
-                build_camel(),
-                build_deer(),
-                build_draft_horse(),
-                build_giant_badger(),
+                build_goblin_warrior(), build_bandit(), build_commoner(), build_guard(),
+                build_giant_rat(), build_giant_weasel(), build_axe_beak(), build_giant_lizard(),
+                build_wolf(), build_dire_wolf(), build_black_bear(), build_brown_bear(),
+                build_camel(), build_deer(), build_draft_horse(), build_giant_badger(),
+                build_boar(), build_elk(), build_giant_boar(),
             ],
         )
     except Exception as exc:
