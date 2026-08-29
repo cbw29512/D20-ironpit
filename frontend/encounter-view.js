@@ -99,7 +99,10 @@
     log.replaceChildren();
     for (const event of battle.events) {
       const item = document.createElement("li");
+      const naturalOne = event.event_type === "attack" && event.attack_roll?.selected_roll === 1;
       item.textContent = `R${event.round_number}: ${event.description}`;
+      if (event.critical) item.classList.add("log-critical");
+      if (naturalOne) item.classList.add("log-fumble");
       log.append(item);
     }
     el("result-panel").hidden = false;
