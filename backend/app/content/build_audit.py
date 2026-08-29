@@ -3,7 +3,14 @@ from __future__ import annotations
 from app.domain.character_builds import AbilityName, CharacterBuildProfile
 from app.domain.models import CombatantTemplate
 
-_ABILITIES: tuple[AbilityName, ...] = ("str", "dex", "con", "int", "wis", "cha")
+_ABILITIES: tuple[AbilityName, ...] = (
+    "strength",
+    "dexterity",
+    "constitution",
+    "intelligence",
+    "wisdom",
+    "charisma",
+)
 _REQUIRED_AUDIT_CATEGORIES = {"class", "species", "feat", "equipment"}
 
 
