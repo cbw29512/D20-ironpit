@@ -3,7 +3,7 @@ from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_combat_turn import resolve_combat_turn
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.state import build_combatant_state
-from app.content.demo import build_demo_fighter
+from app.content.monsters import build_commoner
 from app.content.monsters_charge import build_boar
 from app.domain.models import EncounterSelection, RollMode
 
@@ -50,7 +50,7 @@ def test_boar_without_twenty_feet_of_runup_dodges_while_closing() -> None:
 
 def test_bloodied_fury_supplies_advantage_on_melee_attack() -> None:
     attacker = build_combatant_state(build_boar())
-    defender = build_combatant_state(build_demo_fighter())
+    defender = build_combatant_state(build_commoner())
     attacker.current_hp = 6
 
     event = resolve_attack(
