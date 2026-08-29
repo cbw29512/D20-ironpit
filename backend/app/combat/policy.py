@@ -27,23 +27,30 @@ def weapon_attack_profiles(state: CombatantState) -> list[WeaponAttack]:
     return [state.template.weapon_attack, *state.template.alternate_weapon_attacks]
 
 
+def _legal_attack(attack: WeaponAttack, distance_ft: int) -> bool:
+    try:
+        resolve_attack_roll_mode(attack.weapon, distance_ft)
+        return True
+    except ValueError:
+        return False
+
+
 def select_allowed_weapon_attack(
     state: CombatantState,
     distance_ft: int,
     allowed_ids: list[str],
 ) -> WeaponAttack | None:
-    """Choose the first listed attack that is both allowed for this slot and legal at range."""
+    """Prefer legal melee while engaged; otherwise use the first legal allowed profile."""
     try:
         allowed = set(allowed_ids)
-        for attack in weapon_attack_profiles(state):
-            if attack.id not in allowed:
-                continue
-            try:
-                resolve_attack_roll_mode(attack.weapon, distance_ft)
-                return attack
-            except ValueError:
-                continue
-        return None
+        profiles = [attack for attack in weapon_attack_profiles(state) if attack.id in allowed]
+        melee = next((
+            attack for attack in profiles
+            if attack.weapon.attack_kind is WeaponAttackKind.MELEE and _legal_attack(attack, distance_ft)
+        ), None)
+        if melee is not None:
+            return melee
+        return next((attack for attack in profiles if _legal_attack(attack, distance_ft)), None)
     except Exception as exc:
         logger.exception("Failed to select allowed attack for %s.", state.template.name)
         raise RuntimeError("Allowed attack selection could not be evaluated.") from exc
@@ -51,16 +58,11 @@ def select_allowed_weapon_attack(
 
 def select_weapon_attack(state: CombatantState, distance_ft: int) -> WeaponAttack | None:
     """Use a melee option when engaged; otherwise preserve the card's attack priority."""
-    profiles = weapon_attack_profiles(state)
-    melee_ids = [
-        attack.id
-        for attack in profiles
-        if attack.weapon.attack_kind is WeaponAttackKind.MELEE
-        and distance_ft <= attack.weapon.reach_ft
-    ]
-    if melee_ids:
-        return select_allowed_weapon_attack(state, distance_ft, melee_ids)
-    return select_allowed_weapon_attack(state, distance_ft, [attack.id for attack in profiles])
+    return select_allowed_weapon_attack(
+        state,
+        distance_ft,
+        [attack.id for attack in weapon_attack_profiles(state)],
+    )
 
 
 def preferred_distance_for_attacks(state: CombatantState, allowed_ids: list[str]) -> int:
