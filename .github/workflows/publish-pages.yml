@@ -29,6 +29,23 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Wait for exact Render production commit
+        env:
+          IRON_PIT_API_BASE: https://iron-pit-d20-api.onrender.com
+          TARGET_SHA: ${{ github.event_name == 'workflow_dispatch' && github.sha || github.event.workflow_run.head_sha }}
+        run: |
+          for attempt in $(seq 1 40); do
+            body="$(curl --silent --show-error --fail --max-time 30 "${IRON_PIT_API_BASE}/version" || true)"
+            if printf '%s' "$body" | grep -q "$TARGET_SHA"; then
+              echo "Render is serving certified commit $TARGET_SHA"
+              exit 0
+            fi
+            echo "Waiting for Render deploy ($attempt/40): ${body:-unavailable}"
+            sleep 15
+          done
+          echo "Render never reported certified commit $TARGET_SHA"
+          exit 1
+
       - name: Generate production API config
         env:
           IRON_PIT_API_BASE: https://iron-pit-d20-api.onrender.com
@@ -52,6 +69,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add --all
-          git commit -m "deploy: publish certified main ${GITHUB_SHA}"
+          git commit -m "deploy: publish certified main ${TARGET_SHA:-$GITHUB_SHA}"
           git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git push --force origin gh-pages
