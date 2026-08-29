@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from app.content.monster_equipment import build_monster_visual
 from app.content.monster_simple_beast_attacks import (
+    build_baboon_bite,
     build_camel_bite,
     build_deer_ram,
     build_draft_horse_hooves,
@@ -9,10 +10,21 @@ from app.content.monster_simple_beast_attacks import (
 )
 from app.domain.models import CombatantTemplate, DamageType
 from app.domain.size import CreatureSize
+from app.domain.traits import CombatTrait
 
 
 def _beast(**kwargs) -> CombatantTemplate:
     return CombatantTemplate(kind="monster", **kwargs)
+
+
+def build_baboon() -> CombatantTemplate:
+    return _beast(
+        id="srd-baboon", name="Baboon", archetype="Baboon", challenge_rating="0",
+        size=CreatureSize.SMALL, armor_class=12, max_hp=3, speed_ft=30, initiative_bonus=2,
+        weapon_attack=build_baboon_bite(), combat_traits=[CombatTrait.PACK_TACTICS],
+        visual=build_monster_visual("fur", "bite", "baboon"),
+        source="SRD 5.2.1 Baboon p. 345",
+    )
 
 
 def build_camel() -> CombatantTemplate:
