@@ -3,79 +3,42 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>The Iron Pit — Stick-Figure D&amp;D Deathmatch</title>
+  <title>The Iron Pit — D&amp;D 2024 Auto Battle</title>
   <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="encounter-picker.css">
+  <link rel="stylesheet" href="battlefield.css">
   <link rel="stylesheet" href="figure-visuals.css">
   <link rel="stylesheet" href="figure-poison.css">
   <link rel="stylesheet" href="figure-venom.css">
 </head>
 <body>
   <main class="shell">
-    <header class="hero">
+    <header class="hero compact-hero">
       <p class="eyebrow">D&amp;D 2024 · SRD 5.2.1</p>
       <h1>THE IRON PIT</h1>
-      <p>Pick your cards. They close. They fight. <strong>One side dies.</strong></p>
+      <p>Load the cards. Roll initiative. <strong>Fight by RAW.</strong></p>
     </header>
 
-    <section class="matchup" aria-label="Encounter builder">
-      <article class="side heroes-side">
-        <div class="side-heading">
-          <div><span class="side-label">CHARACTER CARDS</span><h2>Your Party</h2></div>
-          <strong id="hero-summary">0 characters · Total Levels 0</strong>
-        </div>
-        <div class="party-size-row">
-          <label class="picker-field" for="party-size"><span>How many characters?</span>
-            <select id="party-size" aria-label="Number of characters">
-              <option value="1" selected>1</option><option value="2">2</option><option value="3">3</option>
-              <option value="4">4</option><option value="5">5</option><option value="6">6</option>
-            </select>
-          </label>
-        </div>
-        <p class="picker-help">Each party member gets an individual card and its own HP, conditions, and death state.</p>
-        <div id="hero-slot-pickers" class="hero-slot-pickers" aria-live="polite"></div>
-        <div id="hero-cards" class="card-stack selected-party" aria-live="polite"></div>
-      </article>
+    <section class="battlefield" aria-label="Iron Pit battlefield">
+      <div class="battle-side hero-field">
+        <div class="field-heading"><span>HERO CARDS</span><strong id="hero-summary">0 / 6</strong></div>
+        <div id="hero-slots" class="battle-slots" aria-label="Six hero card slots"></div>
+      </div>
 
-      <div class="fight-column">
+      <div class="battle-controls">
         <span class="versus">VS</span>
         <label for="distance">Starting distance</label>
         <select id="distance">
-          <option value="5">5 ft · Already engaged</option>
+          <option value="5">5 ft · Engaged</option>
           <option value="30" selected>30 ft · Standard Pit</option>
         </select>
-        <button id="fight-button" class="fight-button" type="button">⚔ FIGHT</button>
-        <p id="status" aria-live="polite">Loading browser combat engine…</p>
+        <button id="fight-button" class="fight-button" type="button" disabled>⚔ FIGHT</button>
+        <strong id="pit-round" class="round-badge"></strong>
+        <p id="status" aria-live="polite">Loading the Pit…</p>
       </div>
 
-      <article class="side monsters-side">
-        <div class="side-heading">
-          <div><span class="side-label">MONSTER CARDS</span><h2>The Encounter</h2></div>
-          <strong id="monster-summary">0 cards · Total CR 0</strong>
-        </div>
-        <div class="monster-picker-grid">
-          <label class="picker-field" for="monster-cr-filter"><span>Challenge Rating</span>
-            <select id="monster-cr-filter" aria-label="Filter monsters by challenge rating"></select>
-          </label>
-          <label class="picker-field monster-name-field" for="monster-picker"><span>Monster</span>
-            <select id="monster-picker" aria-label="Choose a monster"></select>
-          </label>
-          <button id="add-monster" type="button">+ Add Monster Card</button>
-        </div>
-        <p id="monster-picker-note" class="picker-help" aria-live="polite"></p>
-        <div id="monster-cards" class="card-stack monster-rotation" aria-live="polite"></div>
-      </article>
-    </section>
-
-    <section id="pit-arena" class="pit-arena" aria-label="Animated battle pit" hidden>
-      <div class="result-heading">
-        <div><span class="side-label">LIVE DEATHMATCH</span><h2>Stick-Figure Battle Pit</h2></div>
-        <strong id="pit-round"></strong>
-      </div>
-      <div class="pit-stage">
-        <div id="pit-heroes" class="pit-team pit-heroes" aria-label="Heroes"></div>
-        <div class="pit-center"><span id="pit-callout">ROLL INITIATIVE</span><b>⚔</b></div>
-        <div id="pit-monsters" class="pit-team pit-monsters" aria-label="Monsters"></div>
+      <div class="battle-side monster-field">
+        <div class="field-heading"><span>MONSTER CARDS</span><strong id="monster-summary">0 / 6</strong></div>
+        <div id="monster-slots" class="battle-slots" aria-label="Six monster card slots"></div>
       </div>
     </section>
 
@@ -91,43 +54,35 @@
     </section>
 
     <section class="log-panel">
-      <div class="result-heading"><div><span class="side-label">DM DETAILS</span><h2>Battle Log</h2></div><span class="rules-note">RAW subset · local browser engine · unsupported mechanics fail closed</span></div>
-      <ol id="battle-log"><li>Choose at least one character and one monster.</li></ol>
+      <div class="result-heading"><div><span class="side-label">DM DETAILS</span><h2>Battle Log</h2></div><span class="rules-note">D&amp;D 2024 / SRD 5.2.1 · unsupported mechanics fail closed</span></div>
+      <ol id="battle-log"><li>Click an empty card slot on each side to load the Pit.</li></ol>
     </section>
 
-    <footer class="site-footer">
-      <span>Enjoying The Iron Pit?</span>
-      <a class="support-link" href="https://www.buymeacoffee.com/divclass016" target="_blank" rel="noopener noreferrer">☕ Buy Me a Coffee</a>
-    </footer>
+    <footer class="site-footer"><span>Enjoying The Iron Pit?</span><a class="support-link" href="https://www.buymeacoffee.com/divclass016" target="_blank" rel="noopener noreferrer">☕ Buy Me a Coffee</a></footer>
   </main>
-  <script src="browser-dice.js"></script>
-  <script src="browser-heroes.js"></script>
-  <script src="browser-monsters.js"></script>
-  <script src="browser-monsters-fixed.js"></script>
-  <script src="browser-monsters-beast2.js"></script>
-  <script src="browser-monsters-batch3.js"></script>
-  <script src="browser-monsters-control.js"></script>
-  <script src="browser-monsters-poison.js"></script>
-  <script src="browser-monsters-venom.js"></script>
-  <script src="browser-monsters-mixed.js"></script>
-  <script src="browser-condition-immunity.js"></script>
-  <script src="browser-grapple.js"></script>
-  <script src="browser-timed-conditions.js"></script>
-  <script src="browser-state.js"></script>
-  <script src="browser-rage.js"></script>
-  <script src="browser-rolls.js"></script>
-  <script src="browser-attack.js"></script>
-  <script src="browser-saves.js"></script>
-  <script src="browser-charge.js"></script>
-  <script src="browser-multiattack.js"></script>
-  <script src="browser-turn.js"></script>
-  <script src="browser-engine.js"></script>
-  <script src="browser-catalog.js"></script>
-  <script src="encounter-picker.js"></script>
-  <script src="encounter-picker-view.js"></script>
-  <script src="encounter-view.js"></script>
-  <script src="figure-visuals.js"></script>
-  <script src="battle-replay.js"></script>
-  <script src="app.js"></script>
+
+  <dialog id="card-picker" class="card-picker">
+    <form method="dialog" class="picker-shell">
+      <div class="picker-title"><div><span id="picker-kicker">CARD SLOT</span><h2 id="picker-title">Choose a card</h2></div><button value="cancel" class="picker-close" aria-label="Close">×</button></div>
+      <div id="hero-picker-fields" class="picker-fields" hidden>
+        <label>Class<select id="picker-class"></select></label>
+        <label>Level<select id="picker-level"></select></label>
+        <label>Pregen / Build<select id="picker-hero"></select></label>
+      </div>
+      <div id="monster-picker-fields" class="picker-fields" hidden>
+        <label>Challenge Rating<select id="picker-cr"></select></label>
+        <label>Monster<select id="picker-monster"></select></label>
+      </div>
+      <p id="picker-note" class="picker-note"></p>
+      <div class="picker-actions"><button id="remove-card" value="cancel" class="remove-card" type="button">Remove Card</button><button id="confirm-card" value="cancel" type="button">Add to Slot</button></div>
+    </form>
+  </dialog>
+
+  <div id="combat-fx-overlay" aria-hidden="true"><strong></strong></div>
+
+  <script src="browser-dice.js"></script><script src="browser-heroes.js"></script>
+  <script src="browser-monsters.js"></script><script src="browser-monsters-fixed.js"></script><script src="browser-monsters-beast2.js"></script><script src="browser-monsters-batch3.js"></script><script src="browser-monsters-control.js"></script><script src="browser-monsters-poison.js"></script><script src="browser-monsters-venom.js"></script><script src="browser-monsters-mixed.js"></script>
+  <script src="browser-condition-immunity.js"></script><script src="browser-grapple.js"></script><script src="browser-timed-conditions.js"></script><script src="browser-state.js"></script><script src="browser-rage.js"></script><script src="browser-rolls.js"></script><script src="browser-attack.js"></script><script src="browser-saves.js"></script><script src="browser-charge.js"></script><script src="browser-multiattack.js"></script><script src="browser-turn.js"></script><script src="browser-engine.js"></script>
+  <script src="browser-catalog.js"></script><script src="encounter-picker.js"></script><script src="figure-visuals.js"></script><script src="battlefield-view.js"></script><script src="battlefield-replay.js"></script><script src="app.js"></script>
 </body>
 </html>
