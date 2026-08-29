@@ -70,12 +70,18 @@
     };
   }
 
+  function defeatedMember(member) {
+    const state = member.state;
+    if (state.template.kind === "character") return state.is_dead || !state.is_alive;
+    return state.current_hp <= 0 || state.is_dead || !state.is_alive;
+  }
+
   function outcome(setup) {
-    const defeated = (side) => side.every((member) => member.state.current_hp <= 0 || !member.state.is_alive);
-    const heroesDown = defeated(setup.heroes), monstersDown = defeated(setup.monsters);
-    if (heroesDown && monstersDown) return "draw";
-    if (monstersDown) return "heroes_win";
-    if (heroesDown) return "monsters_win";
+    const defeated = (side) => side.every(defeatedMember);
+    const heroesDead = defeated(setup.heroes), monstersDead = defeated(setup.monsters);
+    if (heroesDead && monstersDead) return "draw";
+    if (monstersDead) return "heroes_win";
+    if (heroesDead) return "monsters_win";
     return "active";
   }
 
@@ -109,8 +115,8 @@
   }
 
   function finish(setup, init, events, result, round, sequence) {
-    events.push({ sequence, round_number: round, event_type: result === "draw" ? "draw" : "victory", actor_id: "arena", actor_name: "Iron Pit", animation: "victory", description: result === "heroes_win" ? "Heroes win the fight." : result === "monsters_win" ? "Monsters win the fight." : "The fight ends in a draw." });
-    return { battle_id: crypto.randomUUID?.() || `battle-${Date.now()}`, outcome: result, rounds: round, setup, initiative: init, events, ruleset: "SRD 5.2.1 browser combat subset" };
+    events.push({ sequence, round_number: round, event_type: result === "draw" ? "draw" : "victory", actor_id: "arena", actor_name: "Iron Pit", animation: "victory", description: result === "heroes_win" ? "Heroes win the deathmatch." : result === "monsters_win" ? "Monsters win the deathmatch." : "The fight reaches the arena round limit and ends in a draw." });
+    return { battle_id: crypto.randomUUID?.() || `battle-${Date.now()}`, outcome: result, rounds: round, setup, initiative: init, events, ruleset: "SRD 5.2.1 Iron Pit melee deathmatch subset" };
   }
 
   window.IRON_PIT_BROWSER_ENGINE = { runEncounter };
