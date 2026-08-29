@@ -72,19 +72,18 @@ def resolve_weapon_damage(
             components = [fixed_damage_component(weapon.name, attack.fixed_damage, weapon.damage_type)]
         else:
             weapon_modifier = attack.damage_bonus + rage_damage_bonus(attacker, attack)
-            components = [
-                roll_weapon_component(
-                    attacker,
-                    dice,
-                    source=weapon.name,
-                    dice_count=weapon.dice_count,
-                    dice_size=weapon.dice_size,
-                    modifier=weapon_modifier,
-                    damage_type=weapon.damage_type,
-                    critical=critical,
-                    turn_key=turn_key,
-                )
-            ]
+            components = [roll_weapon_component(
+                attacker, dice, source=weapon.name,
+                dice_count=weapon.dice_count, dice_size=weapon.dice_size,
+                modifier=weapon_modifier, damage_type=weapon.damage_type,
+                critical=critical, turn_key=turn_key,
+            )]
+
+        for extra in attack.on_hit_damage:
+            components.append(roll_damage_component(
+                dice, extra.source, extra.dice_count, extra.dice_size,
+                extra.damage_bonus, extra.damage_type, critical,
+            ))
 
         for conditional in attack.conditional_damage:
             if conditional.trigger == "attack_advantage" and attack_mode is RollMode.ADVANTAGE:
