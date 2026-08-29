@@ -15,28 +15,43 @@
     return quarters === 1 ? "1/4" : quarters === 2 ? "1/2" : quarters === 3 ? "3/4" : value.toFixed(2);
   }
 
+  function cardState(template) {
+    if (template.battle_status === "DEAD") return "✕ DEAD";
+    if (template.battle_status === "DOWN") return "DOWN";
+    if (template.current_hp != null && template.max_hp != null) return `${template.current_hp}/${template.max_hp} HP`;
+    return "";
+  }
+
   function card(template, side, index, removeMonster) {
     const node = document.createElement("div"); node.className = "combat-card";
+    if (template.combatant_id) node.dataset.combatantId = template.combatant_id;
+    if (template.battle_status === "DEAD") node.classList.add("battle-dead");
+    if (template.battle_status === "DOWN") node.classList.add("battle-down");
     const copy = document.createElement("div"), title = document.createElement("strong"), meta = document.createElement("small");
     title.textContent = template.name;
     if (side === "heroes") {
       const ready = template.coverage_status === "raw_ready" && template.id;
       meta.textContent = `${template.archetype} · Level ${template.level}${template.build_name ? ` · ${template.build_name}` : ""} · ${ready ? "RAW ready" : "not certified yet"}`;
       if (!ready) node.classList.add("blocked-card");
-    } else {
-      meta.textContent = `${template.archetype} · CR ${template.challenge_rating}`;
+    } else meta.textContent = `${template.archetype} · CR ${template.challenge_rating}`;
+    copy.append(title, meta); node.append(copy);
+    const state = cardState(template);
+    if (state) {
+      const badge = document.createElement("span"); badge.className = "card-state"; badge.textContent = state; node.append(badge);
+    }
+    if (side === "monsters") {
       const remove = document.createElement("button");
       remove.className = "remove-card"; remove.type = "button"; remove.textContent = "Remove";
-      remove.addEventListener("click", () => removeMonster(index)); node.append(copy, remove);
+      remove.addEventListener("click", () => removeMonster(index)); node.append(remove);
     }
-    copy.append(title, meta); if (side === "heroes") node.append(copy); return node;
+    return node;
   }
 
   function renderSide(side, list, removeMonster) {
     const root = el(side === "heroes" ? "hero-cards" : "monster-cards"); root.replaceChildren();
     if (!list.length) {
       const empty = document.createElement("div"); empty.className = "empty";
-      empty.textContent = side === "heroes" ? "Choose your character slots above." : "Add monsters by CR to build the encounter.";
+      empty.textContent = side === "heroes" ? "Choose your character slots above." : "Add individual monster cards by CR.";
       root.append(empty); return;
     }
     list.forEach((item, index) => root.append(card(item, side, index, removeMonster)));
