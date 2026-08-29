@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.ally_context import pack_tactics_active
 from app.combat.attack_actions import resolve_attack_action
 from app.combat.attacks import resolve_attack
 from app.combat.death_saves import resolve_death_save
@@ -96,6 +97,7 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                 if attack is None:
                     continue
 
+                pack = pack_tactics_active(attacker, target, setup)
                 events.append(resolve_attack(
                     sequence,
                     round_number,
@@ -106,6 +108,8 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                     dice,
                     actor_event_id=attacker.combatant_id,
                     target_event_id=target.combatant_id,
+                    advantage_sources=1 if pack else 0,
+                    feature_id="pack-tactics" if pack else None,
                 ))
                 sequence += 1
 

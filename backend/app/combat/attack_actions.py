@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.ally_context import pack_tactics_active
 from app.combat.attacks import resolve_attack
 from app.combat.dice import DiceProvider
 from app.combat.encounter_movement import move_toward_combatant, take_encounter_dash
@@ -101,6 +102,7 @@ def resolve_attack_action(
                 )
             if attack is None:
                 continue
+            pack = pack_tactics_active(attacker, target, setup)
             events.append(resolve_attack(
                 sequence,
                 round_number,
@@ -112,6 +114,8 @@ def resolve_attack_action(
                 actor_event_id=attacker.combatant_id,
                 target_event_id=target.combatant_id,
                 spend_action=False,
+                advantage_sources=1 if pack else 0,
+                feature_id="pack-tactics" if pack else None,
             ))
             sequence += 1
         return events, sequence

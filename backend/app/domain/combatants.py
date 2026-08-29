@@ -6,6 +6,7 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 from app.domain.actions import AttackActionDefinition
+from app.domain.traits import CombatTrait
 
 
 class DamageType(StrEnum):
@@ -94,6 +95,7 @@ class CombatantTemplate(BaseModel):
     weapon_attack: WeaponAttack
     alternate_weapon_attacks: list[WeaponAttack] = Field(default_factory=list)
     attack_action: AttackActionDefinition | None = None
+    combat_traits: list[CombatTrait] = Field(default_factory=list)
     fighting_style: str | None = None
     weapon_masteries: list[str] = Field(default_factory=list)
     damage_resistances: list[DamageType] = Field(default_factory=list)
