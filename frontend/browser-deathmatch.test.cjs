@@ -55,7 +55,7 @@ const monsters = window.IRON_PIT_BROWSER_MONSTERS;
 }
 
 {
-  window.IRON_PIT_DICE = maxDice;
+  window.IRON_PIT_DICE = queuedDice([10, 15, 10, 10], 20);
   const battle = window.IRON_PIT_BROWSER_ENGINE.runEncounter({
     hero_ids: ["karnok-stoneward-l1"], monster_ids: ["srd-scout"], starting_distance_ft: 30,
   });
