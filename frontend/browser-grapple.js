@@ -2,7 +2,7 @@
   "use strict";
 
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
-  const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY;
+  const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
 
   function sync(state) {
     const grappled = state.grapple_sources.length > 0;
