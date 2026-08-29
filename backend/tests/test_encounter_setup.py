@@ -1,4 +1,5 @@
 import pytest
+from pydantic import ValidationError
 
 from app.combat.encounter_setup import build_encounter_setup
 from app.domain.models import EncounterSelection
@@ -22,6 +23,8 @@ def test_builds_full_party_against_multiple_monsters() -> None:
 
     assert len(encounter.heroes) == 4
     assert len(encounter.monsters) == 3
+    assert encounter.hero_total_levels == 4
+    assert encounter.monster_total_cr == "5/8"
     assert [hero.position_ft for hero in encounter.heroes] == [0, 0, 0, 0]
     assert [monster.position_ft for monster in encounter.monsters] == [30, 30, 30]
     assert encounter.monsters[0].state.template.id == "srd-goblin-warrior"
@@ -41,6 +44,23 @@ def test_duplicate_cards_receive_independent_runtime_state() -> None:
     first.state.resources[0].current_uses = 0
     assert second.state.current_hp == second.state.template.max_hp
     assert second.state.resources[0].current_uses == 2
+
+
+def test_selection_allows_at_most_eight_cards_per_side() -> None:
+    eight_heroes = ["aldric-vane-l1"] * 8
+    eight_monsters = ["srd-goblin-warrior"] * 8
+    selection = EncounterSelection(hero_ids=eight_heroes, monster_ids=eight_monsters)
+    encounter = build_encounter_setup(selection)
+
+    assert len(encounter.heroes) == 8
+    assert len(encounter.monsters) == 8
+    assert encounter.hero_total_levels == 8
+    assert encounter.monster_total_cr == "2"
+
+    with pytest.raises(ValidationError):
+        EncounterSelection(hero_ids=eight_heroes + ["aldric-vane-l1"], monster_ids=eight_monsters)
+    with pytest.raises(ValidationError):
+        EncounterSelection(hero_ids=eight_heroes, monster_ids=eight_monsters + ["srd-goblin-warrior"])
 
 
 def test_unknown_card_fails_closed() -> None:
