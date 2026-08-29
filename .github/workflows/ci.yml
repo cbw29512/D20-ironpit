@@ -43,6 +43,7 @@ jobs:
           node frontend/browser-venom.test.cjs
           node frontend/browser-mixed-multiattack.test.cjs
           node frontend/browser-condition-immunity.test.cjs
+          node frontend/browser-action-healing.test.cjs
           node frontend/figure-visuals.test.cjs
           node frontend/encounter-picker.test.cjs
           node frontend/encounter-wiring.test.cjs
@@ -61,6 +62,8 @@ jobs:
           grep -q 'id="hero-slots"' index.html
           grep -q 'id="monster-slots"' index.html
           grep -q 'id="fight-button"' index.html
+          grep -q 'browser-action-economy.js' index.html
+          grep -q 'browser-healing.js' index.html
           grep -q 'battlefield-picker.js' index.html
           grep -q 'battlefield-replay.js' index.html
           ! grep -qi 'http-equiv="refresh"' index.html
@@ -77,8 +80,10 @@ jobs:
           grep -q 'browser-condition-immunity.js' frontend/index.html
           grep -q 'browser-grapple.js' frontend/index.html
           grep -q 'browser-timed-conditions.js' frontend/index.html
+          grep -q 'browser-action-economy.js' frontend/index.html
           grep -q 'browser-saves.js' frontend/index.html
           grep -q 'browser-multiattack.js' frontend/index.html
+          grep -q 'browser-healing.js' frontend/index.html
           grep -q 'figure-visuals.js' frontend/index.html
           grep -q 'playIronPitBattle' frontend/app.js
       - name: Validate Netlify production-only credit guard
