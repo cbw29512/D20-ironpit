@@ -50,10 +50,7 @@ def test_uncertified_cards_fail_closed_in_catalog() -> None:
 
 def test_current_audited_heroes_are_raw_ready() -> None:
     catalog = build_full_content_catalog()
-    ready_heroes = [
-        card for card in catalog.heroes if card.coverage_status is CoverageStatus.RAW_READY
-    ]
-
+    ready_heroes = [card for card in catalog.heroes if card.coverage_status is CoverageStatus.RAW_READY]
     assert {
         (card.class_id, card.level, card.build_id, card.name, card.runnable_template_id)
         for card in ready_heroes
@@ -75,13 +72,16 @@ def test_current_certified_monsters_are_linked_to_runtime_templates() -> None:
         "Axe Beak": "srd-axe-beak",
         "Bandit": "srd-bandit",
         "Black Bear": "srd-black-bear",
+        "Boar": "srd-boar",
         "Brown Bear": "srd-brown-bear",
         "Camel": "srd-camel",
         "Commoner": "srd-commoner",
         "Deer": "srd-deer",
         "Dire Wolf": "srd-dire-wolf",
         "Draft Horse": "srd-draft-horse",
+        "Elk": "srd-elk",
         "Giant Badger": "srd-giant-badger",
+        "Giant Boar": "srd-giant-boar",
         "Giant Lizard": "srd-giant-lizard",
         "Giant Rat": "srd-giant-rat",
         "Giant Weasel": "srd-giant-weasel",
