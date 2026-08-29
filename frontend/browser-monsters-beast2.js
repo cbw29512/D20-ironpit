@@ -13,6 +13,10 @@
     source: `SRD 5.2.1 ${name}`, ...extra,
   });
 
+  const charge = (minimumMove, diceCount, diceSize, damageType, proneMaxSize) => ({
+    minimumMove, diceCount, diceSize, damageType, proneMaxSize,
+  });
+
   const items = [
     monster("srd-eagle", "Eagle", "0", "small", 12, 4, 60, 2, [
       attack("eagle-talons", "Talons", 4, 1, 4, 2, "slashing"),
@@ -40,6 +44,20 @@
     ]),
     monster("srd-vulture", "Vulture", "0", "medium", 10, 5, 50, 0, [
       attack("vulture-beak", "Beak", 2, 1, 4, 0, "piercing"),
+    ], { traits: ["pack-tactics"] }),
+    monster("srd-giant-fire-beetle", "Giant Fire Beetle", "0", "small", 13, 4, 30, 0, [
+      attack("giant-fire-beetle-bite", "Bite", 1, 0, 2, 0, "fire", { fixedDamage: 1 }),
+    ], { damage_resistances: ["fire"] }),
+    monster("srd-giant-goat", "Giant Goat", "1/2", "large", 11, 19, 40, 1, [
+      attack("giant-goat-ram", "Ram", 5, 1, 6, 3, "bludgeoning", {
+        charge: charge(20, 2, 4, "bludgeoning", "large"),
+      }),
+    ], { traits: ["charge"] }),
+    monster("srd-giant-owl", "Giant Owl", "1/4", "large", 12, 19, 60, 2, [
+      attack("giant-owl-talons", "Talons", 4, 1, 10, 2, "slashing"),
+    ], { damage_resistances: ["necrotic", "radiant"] }),
+    monster("srd-hyena", "Hyena", "0", "medium", 11, 5, 50, 1, [
+      attack("hyena-bite", "Bite", 2, 1, 6, 0, "piercing"),
     ], { traits: ["pack-tactics"] }),
   ];
 
