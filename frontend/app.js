@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const state = { catalog: null, heroSlots: [], heroCards: [], heroes: [], monsters: [], monsterCr: "all" };
+  const state = { catalog: null, heroSlots: [], heroCards: [], heroes: [], monsters: [], monsterCr: "all", monsterChoice: null };
   const el = (id) => document.getElementById(id);
   const view = window.createEncounterView();
   const pickerView = window.createEncounterPickerView();
@@ -39,7 +39,11 @@
     });
     if (!state.catalog) return;
     pickerView.renderParty(state, setPartySize, updateHeroSlot);
-    pickerView.renderMonsterFilters(state, (value) => { state.monsterCr = value; render(); });
+    state.monsterChoice = pickerView.renderMonsterFilters(
+      state,
+      (value) => { state.monsterCr = value; state.monsterChoice = null; render(); },
+      (value) => { state.monsterChoice = value; },
+    );
   }
 
   function setPartySize(value) {
@@ -56,7 +60,7 @@
 
   function addMonster() {
     if (state.monsters.length >= 8 || !state.catalog) return;
-    const chosen = state.catalog.monsters.find((item) => item.id === el("monster-picker").value);
+    const chosen = state.catalog.monsters.find((item) => item.id === state.monsterChoice);
     if (!chosen) return;
     if (chosen.coverage_status !== "raw_ready" || !chosen.runnable_template_id) {
       view.setStatus(`${chosen.name} is cataloged but not RAW-certified for automated fights yet.`); return;
@@ -90,7 +94,7 @@
     }
     state.catalog = await window.IRON_PIT_BROWSER_CATALOG.buildCatalog();
     state.heroSlots = [defaultHeroSlot()]; syncHeroes();
-    view.setStatus(`Pit ready · choose 1–6 characters, then add RAW-certified monsters by CR.`); render();
+    view.setStatus("Pit ready · choose 1–6 characters, then add RAW-certified monsters by CR."); render();
   }
 
   el("add-monster").addEventListener("click", addMonster);
