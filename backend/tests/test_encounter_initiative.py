@@ -36,12 +36,12 @@ def test_tied_heroes_keep_selected_party_order() -> None:
 
 def test_cross_side_tie_uses_explicit_arena_gm_tiebreak() -> None:
     setup = _setup(["aldric-vane-l1"], ["srd-commoner"])
-    initiative = roll_encounter_initiative(setup, FixedDiceProvider([10, 11, 3, 17]))
+    initiative = roll_encounter_initiative(setup, FixedDiceProvider([10, 11, 17]))
 
-    assert initiative.groups[0].side == "monsters"
+    assert initiative.groups[0].side == "heroes"
     assert initiative.groups[0].tie_break_roll == 17
-    assert initiative.groups[1].side == "heroes"
-    assert initiative.groups[1].tie_break_roll == 3
+    assert initiative.groups[1].side == "monsters"
+    assert initiative.groups[1].tie_break_roll == 4
 
 
 def test_encounter_outcome_requires_an_entire_side_down() -> None:

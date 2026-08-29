@@ -44,15 +44,13 @@ def _resolve_cross_side_ties(groups: list[InitiativeGroup], dice: DiceProvider) 
     for group in groups:
         by_count[group.initiative_count].append(group)
     for tied in by_count.values():
-        sides = {group.side for group in tied}
-        if len(sides) < 2:
+        if len({group.side for group in tied}) < 2:
             continue
-        hero_break = dice.roll(20)
-        monster_break = dice.roll(20)
-        while monster_break == hero_break:
-            monster_break = dice.roll(20)
+        arena_roll = dice.roll(20)
+        hero_rank = arena_roll
+        monster_rank = 21 - arena_roll
         for group in tied:
-            group.tie_break_roll = hero_break if group.side == "heroes" else monster_break
+            group.tie_break_roll = hero_rank if group.side == "heroes" else monster_rank
 
 
 def roll_encounter_initiative(setup: EncounterSetup, dice: DiceProvider) -> EncounterInitiative:

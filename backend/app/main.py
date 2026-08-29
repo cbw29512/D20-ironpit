@@ -7,6 +7,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.combat.dice import SecureDiceProvider
+from app.combat.encounter_engine import run_encounter
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.engine import run_duel
 from app.content.demo import build_demo_fighter, build_goblin_warrior
@@ -15,6 +16,7 @@ from app.domain.models import (
     ArenaRoster,
     BattleResult,
     DemoRoster,
+    EncounterBattleResult,
     EncounterSelection,
     EncounterSetup,
 )
@@ -67,6 +69,17 @@ def create_encounter_setup(selection: EncounterSelection) -> EncounterSetup:
     except Exception as exc:
         logger.exception("Encounter setup API failed.")
         raise HTTPException(status_code=500, detail="Encounter setup could not be created.") from exc
+
+
+@app.post("/api/encounters/fight", response_model=EncounterBattleResult)
+def create_encounter_battle(selection: EncounterSelection) -> EncounterBattleResult:
+    try:
+        return run_encounter(selection, SecureDiceProvider())
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except Exception as exc:
+        logger.exception("Encounter fight API failed.")
+        raise HTTPException(status_code=500, detail="Encounter fight could not be completed.") from exc
 
 
 @app.get("/api/roster/demo", response_model=DemoRoster)
