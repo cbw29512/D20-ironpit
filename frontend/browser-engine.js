@@ -4,6 +4,7 @@
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
   const T = () => window.IRON_PIT_BROWSER_TURN;
+  const C = () => window.IRON_PIT_BROWSER_TIMED;
   const heroes = () => window.IRON_PIT_BROWSER_HEROES;
   const monsters = () => window.IRON_PIT_BROWSER_MONSTERS;
 
@@ -103,6 +104,7 @@
       for (const id of init.turn_order) {
         const current = outcome(setup); if (current !== "active") return finish(setup, init, events, current, round, sequence);
         const member = byId.get(id);
+        const expired = C()?.expireSourceStart(sequence, round, member, setup); if (expired) { events.push(...expired.events); sequence = expired.sequence; }
         if (member.state.template.kind === "character" && member.state.current_hp === 0 && !member.state.is_dead && !member.state.is_stable) {
           events.push(T().deathSave(sequence++, round, member));
         }
