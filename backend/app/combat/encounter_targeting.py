@@ -36,12 +36,15 @@ def living_opponents(attacker: EncounterCombatant, setup: EncounterSetup) -> lis
 
 
 def select_nearest_target(attacker: EncounterCombatant, setup: EncounterSetup) -> EncounterCombatant | None:
-    """Arena tactic: engage the nearest eligible enemy; encounter order breaks distance ties."""
+    """Arena tactic: fight an active grappler first; otherwise engage the nearest eligible enemy."""
     try:
         opponents = living_opponents(attacker, setup)
         if not opponents:
             return None
-        return min(opponents, key=lambda target: combatant_distance(attacker, target))
+        grappler_ids = {source.source_id for source in attacker.state.grapple_sources}
+        grapplers = [target for target in opponents if target.combatant_id in grappler_ids]
+        choices = grapplers or opponents
+        return min(choices, key=lambda target: combatant_distance(attacker, target))
     except Exception as exc:
         logger.exception("Target selection failed for %s.", attacker.combatant_id)
         raise RuntimeError("Encounter target could not be selected.") from exc
