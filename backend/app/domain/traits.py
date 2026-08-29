@@ -6,3 +6,5 @@ class CombatTrait(StrEnum):
     SAVAGE_ATTACKER = "savage-attacker"
     ADRENALINE_RUSH = "adrenaline-rush"
     RELENTLESS_ENDURANCE = "relentless-endurance"
+    CHARGE = "charge"
+    BLOODIED_FURY = "bloodied-fury"
