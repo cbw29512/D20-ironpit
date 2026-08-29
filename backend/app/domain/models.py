@@ -1,4 +1,10 @@
-from app.domain.actions import AttackActionDefinition, AttackActionSlot
+from app.domain.actions import (
+    AttackActionDefinition,
+    AttackActionSlot,
+    GrappleSource,
+    HitControlEffect,
+    SavingThrowAction,
+)
 from app.domain.combatants import (
     ArenaRoster,
     BattlefieldState,
@@ -49,10 +55,13 @@ __all__ = [
     "EncounterSelection",
     "EncounterSetup",
     "EncounterSide",
+    "GrappleSource",
+    "HitControlEffect",
     "InitiativeGroup",
     "ResourceDefinition",
     "ResourceState",
     "RollMode",
+    "SavingThrowAction",
     "VisualLoadout",
     "Weapon",
     "WeaponAttack",
