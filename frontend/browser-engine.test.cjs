@@ -10,7 +10,7 @@ global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
   "browser-heroes.js", "browser-monsters.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
-  "browser-attack.js", "browser-multiattack.js", "browser-turn.js", "browser-engine.js",
+  "browser-attack.js", "browser-charge.js", "browser-multiattack.js", "browser-turn.js", "browser-engine.js",
 ]) load(file);
 
 function deterministicDice(seed = 12345) {
@@ -86,6 +86,33 @@ function fight(heroIds, monsterIds, distance = 30, dice = deterministicDice()) {
   const strikes = battle.events.filter((event) => event.round_number === 1 && event.event_type === "attack" && event.actor_id.startsWith("monster-1:"));
   assert.deepEqual(strikes.map((event) => event.weapon_id), ["brown-bear-bite", "brown-bear-claw"]);
   assert.ok(strikes[1].applied_condition_ids?.includes("prone"), "Brown Bear Claw should knock a surviving Large-or-smaller target Prone");
+}
+
+{
+  const heroTemplate = structuredClone(window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"]);
+  const boarTemplate = structuredClone(window.IRON_PIT_BROWSER_MONSTERS["srd-boar"]);
+  const hero = { combatant_id: "hero-1:karnok", side: "heroes", position_ft: 0, state: window.IRON_PIT_BROWSER_STATE.buildState(heroTemplate) };
+  const boar = { combatant_id: "monster-1:boar", side: "monsters", position_ft: 30, state: window.IRON_PIT_BROWSER_STATE.buildState(boarTemplate) };
+  window.IRON_PIT_BROWSER_STATE.beginTurn(boar.state);
+  window.IRON_PIT_DICE = queuedDice([15, 2, 3]);
+  const charged = window.IRON_PIT_BROWSER_CHARGE.resolveClosing(1, 1, boar, hero);
+  assert.equal(charged.handled, true);
+  assert.equal(charged.events[0].movement_ft, 25);
+  assert.equal(charged.events[1].feature_id, "charge");
+  assert.equal(charged.events[1].damage_roll.notation, "1d6+1 + 1d6+0");
+  assert.ok(charged.events[1].applied_condition_ids.includes("prone"));
+}
+
+{
+  const heroTemplate = structuredClone(window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"]);
+  const boarTemplate = structuredClone(window.IRON_PIT_BROWSER_MONSTERS["srd-boar"]);
+  const hero = { combatant_id: "hero-1:karnok", side: "heroes", position_ft: 0, state: window.IRON_PIT_BROWSER_STATE.buildState(heroTemplate) };
+  const boar = { combatant_id: "monster-1:boar", side: "monsters", position_ft: 5, state: window.IRON_PIT_BROWSER_STATE.buildState(boarTemplate) };
+  boar.state.current_hp = 6;
+  window.IRON_PIT_DICE = queuedDice([4, 15, 3]);
+  const event = window.IRON_PIT_BROWSER_ATTACK.resolveAttack(1, 1, boar, hero, boarTemplate.attacks[0], 5);
+  assert.equal(event.attack_roll.mode, "advantage");
+  assert.equal(event.attack_roll.selected_roll, 15);
 }
 
 {
