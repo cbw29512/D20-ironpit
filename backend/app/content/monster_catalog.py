@@ -8,11 +8,12 @@ from app.domain.catalog import CoverageStatus, MonsterCatalogCard
 _DATA_PATH = Path(__file__).with_name("data") / "srd_5_2_1_monsters.json"
 
 # Only monsters whose combat-relevant stat-block behavior is fully represented by
-# the current arena engine belong here. Everything else remains browsable but
-# fails closed until its missing mechanics are certified.
+# the current arena engine belong here. Deliberately unused retreat/flee options
+# do not block readiness in Iron Pit's fight-to-the-death arena policy.
 _READY_BY_NAME = {
     "Axe Beak": "srd-axe-beak",
     "Bandit": "srd-bandit",
+    "Goblin Warrior": "srd-goblin-warrior",
     "Guard": "srd-guard",
 }
 
@@ -21,7 +22,6 @@ _BLOCKERS_BY_NAME = {
     "Giant Lizard": ["climb-speed-and-spider-climb-not-modeled"],
     "Giant Rat": ["pack-tactics-target-adjacency-not-modeled-raw", "climb-speed-not-modeled"],
     "Giant Weasel": ["climb-speed-not-modeled"],
-    "Goblin Warrior": ["nimble-escape-not-modeled"],
 }
 
 
