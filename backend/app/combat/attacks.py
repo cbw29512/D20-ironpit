@@ -85,6 +85,7 @@ def resolve_attack(
                 defender,
                 rolled_components,
             )
+            damage_roll.total = applied_total
             damage_outcome = apply_damage(defender, applied_total, critical=critical)
             end_rage_if_incapacitated(defender)
             applied_conditions = apply_hit_conditions(attack, defender, attacker_event_id)
@@ -99,6 +100,8 @@ def resolve_attack(
             description += f" {defender.template.name} is Grappled."
         if "restrained" in applied_conditions:
             description += f" {defender.template.name} is Restrained while Grappled."
+        if "poisoned" in applied_conditions:
+            description += f" {defender.template.name} is Poisoned."
         return BattleEvent(
             sequence=sequence,
             round_number=round_number,
