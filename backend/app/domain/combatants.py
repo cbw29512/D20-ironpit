@@ -104,6 +104,11 @@ class CombatantState(BaseModel):
     initiative_roll: int | None = None
     initiative_total: int | None = None
     is_alive: bool = True
+    is_unconscious: bool = False
+    is_stable: bool = False
+    is_dead: bool = False
+    death_save_successes: int = Field(default=0, ge=0, le=3)
+    death_save_failures: int = Field(default=0, ge=0, le=3)
     action_available: bool = True
     bonus_action_available: bool = True
     movement_remaining_ft: int = Field(default=0, ge=0)
