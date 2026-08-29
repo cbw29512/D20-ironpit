@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.content.equipment import build_shortbow
 from app.domain.models import (
     CombatantTemplate,
     DamageType,
@@ -31,6 +32,15 @@ def _greatsword_attack() -> WeaponAttack:
     )
 
 
+def _shortbow_attack() -> WeaponAttack:
+    return WeaponAttack(
+        id="karnok-shortbow",
+        weapon=build_shortbow(),
+        attack_bonus=3,
+        damage_bonus=1,
+    )
+
+
 def build_karnok_stoneward() -> CombatantTemplate:
     """Level-1 Orc Soldier Fighter derived from the 2024 Basic Rules."""
     return CombatantTemplate(
@@ -44,6 +54,7 @@ def build_karnok_stoneward() -> CombatantTemplate:
         speed_ft=30,
         initiative_bonus=1,
         weapon_attack=_greatsword_attack(),
+        alternate_weapon_attacks=[_shortbow_attack()],
         combat_traits=[
             CombatTrait.SAVAGE_ATTACKER,
             CombatTrait.ADRENALINE_RUSH,
