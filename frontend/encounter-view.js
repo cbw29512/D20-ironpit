@@ -6,8 +6,7 @@
   function crNumber(value) {
     const text = String(value ?? "0");
     if (!text.includes("/")) return Number(text) || 0;
-    const [a, b] = text.split("/").map(Number);
-    return b ? a / b : 0;
+    const [a, b] = text.split("/").map(Number); return b ? a / b : 0;
   }
 
   function formatCr(value) {
@@ -16,54 +15,41 @@
     return quarters === 1 ? "1/4" : quarters === 2 ? "1/2" : quarters === 3 ? "3/4" : value.toFixed(2);
   }
 
-  function card(template, side, index, removeCard) {
-    const node = document.createElement("div");
-    node.className = "combat-card";
+  function card(template, side, index, removeMonster) {
+    const node = document.createElement("div"); node.className = "combat-card";
     const copy = document.createElement("div"), title = document.createElement("strong"), meta = document.createElement("small");
     title.textContent = template.name;
-    meta.textContent = side === "heroes"
-      ? `${template.archetype} · Level ${template.level}${template.build_name ? ` · ${template.build_name}` : ""}`
-      : `${template.archetype} · CR ${template.challenge_rating}`;
-    copy.append(title, meta);
-    const remove = document.createElement("button");
-    remove.className = "remove-card"; remove.type = "button"; remove.textContent = "Remove";
-    remove.addEventListener("click", () => removeCard(side, index));
-    node.append(copy, remove);
-    return node;
+    if (side === "heroes") {
+      const ready = template.coverage_status === "raw_ready" && template.id;
+      meta.textContent = `${template.archetype} · Level ${template.level}${template.build_name ? ` · ${template.build_name}` : ""} · ${ready ? "RAW ready" : "not certified yet"}`;
+      if (!ready) node.classList.add("blocked-card");
+    } else {
+      meta.textContent = `${template.archetype} · CR ${template.challenge_rating}`;
+      const remove = document.createElement("button");
+      remove.className = "remove-card"; remove.type = "button"; remove.textContent = "Remove";
+      remove.addEventListener("click", () => removeMonster(index)); node.append(copy, remove);
+    }
+    copy.append(title, meta); if (side === "heroes") node.append(copy); return node;
   }
 
-  function renderSide(side, list, removeCard) {
-    const root = el(side === "heroes" ? "hero-cards" : "monster-cards");
-    root.replaceChildren();
+  function renderSide(side, list, removeMonster) {
+    const root = el(side === "heroes" ? "hero-cards" : "monster-cards"); root.replaceChildren();
     if (!list.length) {
-      const empty = document.createElement("div");
-      empty.className = "empty";
-      empty.textContent = side === "heroes" ? "Add 1–8 Hero Cards" : "Add 1–8 Monster Cards";
+      const empty = document.createElement("div"); empty.className = "empty";
+      empty.textContent = side === "heroes" ? "Choose your character slots above." : "Add monsters by CR to build the encounter.";
       root.append(empty); return;
     }
-    list.forEach((item, index) => root.append(card(item, side, index, removeCard)));
+    list.forEach((item, index) => root.append(card(item, side, index, removeMonster)));
   }
 
-  function renderSelection(state, ready, removeCard) {
-    renderSide("heroes", state.heroes, removeCard); renderSide("monsters", state.monsters, removeCard);
-    const levels = state.heroes.reduce((sum, hero) => sum + Number(hero.level || 0), 0);
+  function renderSelection(state, ready, removeMonster) {
+    renderSide("heroes", state.heroCards, removeMonster); renderSide("monsters", state.monsters, removeMonster);
+    const levels = state.heroCards.reduce((sum, hero) => sum + Number(hero.level || 0), 0);
     const cr = state.monsters.reduce((sum, monster) => sum + crNumber(monster.challenge_rating), 0);
-    el("hero-summary").textContent = `${state.heroes.length} cards · Total Levels ${levels}`;
+    el("hero-summary").textContent = `${state.heroCards.length} character${state.heroCards.length === 1 ? "" : "s"} · Total Levels ${levels}`;
     el("monster-summary").textContent = `${state.monsters.length} cards · Total CR ${formatCr(cr)}`;
-    el("add-hero").disabled = state.heroes.length >= 8; el("add-monster").disabled = state.monsters.length >= 8;
-    el("fight-button").disabled = !state.heroes.length || !state.monsters.length || !ready;
-  }
-
-  function fillPicker(id, items) {
-    const picker = el(id); picker.replaceChildren();
-    for (const item of items) {
-      const option = document.createElement("option"), ready = item.coverage_status === "raw_ready";
-      option.value = item.id;
-      option.textContent = item.level
-        ? `${item.name} — ${item.class_name} ${item.level} · ${item.build_name}${ready ? "" : " — not ready yet"}`
-        : `${item.name} — CR ${item.challenge_rating}${ready ? "" : " — not ready yet"}`;
-      picker.append(option);
-    }
+    const partyCertified = state.heroSlots.length > 0 && state.heroes.length === state.heroSlots.length;
+    el("fight-button").disabled = !partyCertified || !state.monsters.length || !ready;
   }
 
   function finalState(member) {
@@ -86,8 +72,7 @@
     for (const member of combatants) {
       const row = document.createElement("div"), status = finalState(member);
       row.className = `survivor ${status === "ALIVE" ? "alive" : "down"}`;
-      row.textContent = `${member.state.template.name} — ${status} · ${member.state.current_hp}/${member.state.template.max_hp} HP`;
-      survivors.append(row);
+      row.textContent = `${member.state.template.name} — ${status} · ${member.state.current_hp}/${member.state.template.max_hp} HP`; survivors.append(row);
     }
     const log = el("battle-log"); log.replaceChildren();
     for (const event of battle.events) {
@@ -99,5 +84,5 @@
     el("status").textContent = `${winner} · Total Levels ${battle.setup.hero_total_levels} vs Total CR ${battle.setup.monster_total_cr}`;
   }
 
-  window.createEncounterView = () => ({ fillPicker, renderSelection, showResult, setStatus: (text) => { el("status").textContent = text; } });
+  window.createEncounterView = () => ({ renderSelection, showResult, setStatus: (text) => { el("status").textContent = text; } });
 })();
