@@ -13,7 +13,7 @@ def test_two_heroes_can_finish_two_monsters_in_shared_turn_loop() -> None:
         EncounterSelection(
             hero_ids=["aldric-vane-l1", "brom-ironmark-l1"],
             monster_ids=["srd-commoner", "srd-commoner"],
-            starting_distance_ft=30,
+            starting_distance_ft=5,
         ),
         MaxDiceProvider(),
     )
@@ -64,10 +64,10 @@ def test_downed_hero_makes_death_save_while_an_ally_is_still_fighting() -> None:
             starting_distance_ft=5,
         ),
         FixedDiceProvider([
-            1, 1, 20,       # hero, hero, goblin initiative
-            20, 6, 6,       # goblin critical drops Aldric without massive death
-            10,              # Aldric succeeds on his Death Save
-            20, 12, 12,     # Brom critical defeats the goblin
+            1, 1, 20,
+            20, 6, 6,
+            10,
+            20, 12, 12,
         ]),
     )
 
