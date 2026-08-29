@@ -8,7 +8,7 @@
     let advantage = 0;
     let disadvantage = 0;
     if (attacker.active_effect_ids.includes("prone")) disadvantage += 1;
-    if (defender.active_effect_ids.includes("dodge")) disadvantage += 1;
+    if (defender.active_effect_ids.includes("dodge") && !defender.is_unconscious && defender.template.speed_ft > 0) disadvantage += 1;
     if (defender.is_unconscious) advantage += 1;
     if (defender.active_effect_ids.includes("prone")) distance <= 5 ? advantage += 1 : disadvantage += 1;
     return { advantage, disadvantage };
@@ -40,12 +40,25 @@
     return true;
   }
 
+  function endDodge(state) {
+    state.active_effect_ids = state.active_effect_ids.filter((id) => id !== "dodge");
+  }
+
+  function markUnconscious(state) {
+    state.is_alive = true;
+    state.is_unconscious = true;
+    state.is_stable = false;
+    endDodge(state);
+    if (!state.active_effect_ids.includes("prone")) state.active_effect_ids.push("prone");
+  }
+
   function markDead(state) {
     state.current_hp = 0;
     state.is_alive = false;
     state.is_dead = true;
     state.is_unconscious = false;
     state.is_stable = false;
+    endDodge(state);
   }
 
   function applyDamage(state, amount, critical) {
@@ -61,17 +74,13 @@
       const remaining = Math.max(0, amount - before);
       if (remaining >= state.template.max_hp) { markDead(state); return "dead"; }
       if (useRelentless(state, remaining)) return "relentless_endurance";
-      state.is_alive = true;
-      state.is_unconscious = true;
-      state.is_stable = false;
-      return "unconscious";
+      markUnconscious(state); return "unconscious";
     }
     if (state.template.kind === "monster" || amount >= state.template.max_hp) { markDead(state); return "dead"; }
     state.is_stable = false;
     state.death_save_failures = Math.min(3, state.death_save_failures + (critical ? 2 : 1));
-    state.is_unconscious = true;
     if (state.death_save_failures >= 3) { markDead(state); return "dead"; }
-    return "unconscious";
+    markUnconscious(state); return "unconscious";
   }
 
   function resolveAttack(sequence, round, attacker, target, attack, distance, extra = {}) {
