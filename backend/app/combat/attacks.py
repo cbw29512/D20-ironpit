@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.action_economy import is_available, spend
 from app.combat.barbarian import end_rage_if_incapacitated, extend_rage_from_attack
 from app.combat.bloodied import bloodied_fury_advantage
 from app.combat.conditions import apply_hit_conditions, attack_roll_condition_sources
@@ -34,7 +35,7 @@ def resolve_attack(
     bonus_damage: BonusDamageSpec | None = None,
 ) -> BattleEvent:
     try:
-        if spend_action and not attacker.action_available:
+        if spend_action and not is_available(attacker, "action"):
             raise ValueError("Action is not available for an attack.")
 
         weapon = attack.weapon
@@ -59,7 +60,7 @@ def resolve_attack(
         attack_roll = roll_d20(dice, attack.attack_bonus, mode)
         extend_rage_from_attack(attacker, round_number)
         if spend_action:
-            attacker.action_available = False
+            spend(attacker, "action")
         natural = attack_roll.selected_roll or 0
         natural_critical = natural == 20
         hit = natural != 1 and (natural_critical or attack_roll.total >= defender.template.armor_class)
