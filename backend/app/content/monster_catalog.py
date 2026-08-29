@@ -13,6 +13,8 @@ _DATA_PATH = Path(__file__).with_name("data") / "srd_5_2_1_monsters.json"
 _READY_BY_NAME = {
     "Axe Beak": "srd-axe-beak",
     "Bandit": "srd-bandit",
+    "Black Bear": "srd-black-bear",
+    "Brown Bear": "srd-brown-bear",
     "Commoner": "srd-commoner",
     "Dire Wolf": "srd-dire-wolf",
     "Giant Lizard": "srd-giant-lizard",
