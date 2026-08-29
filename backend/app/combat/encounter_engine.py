@@ -134,6 +134,8 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
 
         events.append(_finish_event(sequence, MAX_ENCOUNTER_ROUNDS, "draw"))
         return _result(setup, initiative, events, "draw", MAX_ENCOUNTER_ROUNDS)
+    except ValueError:
+        raise
     except Exception as exc:
         logger.exception("Encounter execution failed.")
         raise RuntimeError("Encounter execution failed.") from exc
