@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.barbarian import rage_active
+from app.combat.condition_rules import automatically_fails_strength_dexterity_save
 from app.combat.dice import DiceProvider
 from app.combat.grapple import RESTRAINED_EFFECT_ID
 from app.combat.rolls import roll_d20
@@ -21,7 +22,7 @@ def resolve_saving_throw(
     dc: int,
     dice: DiceProvider,
 ) -> tuple[DiceRoll | None, bool]:
-    if state.is_unconscious and ability in {"strength", "dexterity"}:
+    if ability in {"strength", "dexterity"} and automatically_fails_strength_dexterity_save(state):
         return None, False
     if ability not in state.template.saving_throw_bonuses:
         raise ValueError(f"{state.template.name} lacks a certified {ability.title()} saving throw bonus.")
