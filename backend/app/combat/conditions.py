@@ -53,7 +53,7 @@ def apply_hit_conditions(
     source_id: str,
 ) -> list[str]:
     """Apply certified automatic conditions from a successful weapon hit."""
-    if defender.current_hp <= 0 or not defender.is_alive:
+    if defender.is_dead or not defender.is_alive:
         return []
     applied: list[str] = []
     maximum = attack.knocks_prone_max_size
