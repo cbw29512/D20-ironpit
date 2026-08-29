@@ -13,6 +13,12 @@
     return { advantage, disadvantage };
   }
 
+  function bloodiedFury(state, attack) {
+    return state.template.traits?.includes("bloodied-fury")
+      && attack.kind === "melee"
+      && state.current_hp * 2 <= state.template.max_hp ? 1 : 0;
+  }
+
   function adjustedDamage(target, amount, type) {
     if (target.template.damage_immunities?.includes(type)) return 0;
     let value = amount;
@@ -65,7 +71,7 @@
 
   function resolveAttack(sequence, round, attacker, target, attack, distance, extra = {}) {
     const conditions = conditionSources(attacker.state, target.state, distance);
-    const advantage = (extra.advantage || 0) + conditions.advantage;
+    const advantage = (extra.advantage || 0) + conditions.advantage + bloodiedFury(attacker.state, attack);
     const mode = R().attackMode(attack, distance, advantage, conditions.disadvantage);
     const attackRoll = R().d20(attack.bonus, mode);
     window.IRON_PIT_BROWSER_RAGE?.extendFromAttack(attacker.state, round);
@@ -79,12 +85,15 @@
     let damageOutcome = null;
     const applied = [];
     if (hit) {
-      const damage = R().weaponDamage(attacker.state, attack, critical, mode, `${round}:${attacker.combatant_id}`);
+      const damage = R().weaponDamage(
+        attacker.state, attack, critical, mode, `${round}:${attacker.combatant_id}`, extra.bonusDamage || null,
+      );
       damageComponents = damage.components.map((part) => ({ ...part, applied_total: adjustedDamage(target.state, part.total, part.damage_type) }));
       damageRoll = { ...damage.roll, total: damageComponents.reduce((sum, part) => sum + part.applied_total, 0) };
       damageOutcome = applyDamage(target.state, damageRoll.total, critical);
       window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(target.state);
-      if (S().canProne(target, attack.proneMaxSize) && target.state.current_hp > 0) {
+      const proneMaxSize = extra.proneMaxSize || attack.proneMaxSize;
+      if (S().canProne(target, proneMaxSize) && target.state.current_hp > 0) {
         if (!target.state.active_effect_ids.includes("prone")) target.state.active_effect_ids.push("prone");
         applied.push("prone");
       }
