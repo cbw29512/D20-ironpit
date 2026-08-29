@@ -4,7 +4,7 @@ on:
   push:
   pull_request:
 
-# Exact-head certification for melee deathmatch, save/control conditions, browser/Python parity, and monster silhouettes.
+# Exact-head certification for melee deathmatch, RAW conditions/timing, browser/Python parity, and monster silhouettes.
 jobs:
   combat-certification:
     runs-on: ubuntu-latest
@@ -38,6 +38,7 @@ jobs:
           node frontend/browser-batch3.test.cjs
           node frontend/browser-deathmatch.test.cjs
           node frontend/browser-control.test.cjs
+          node frontend/browser-poison.test.cjs
           node frontend/figure-visuals.test.cjs
       - name: Prove production fight path is backend-free
         run: |
@@ -52,10 +53,13 @@ jobs:
           grep -q 'id="pit-arena"' frontend/index.html
           grep -q 'browser-dice.js' frontend/index.html
           grep -q 'browser-monsters-control.js' frontend/index.html
+          grep -q 'browser-monsters-poison.js' frontend/index.html
           grep -q 'browser-grapple.js' frontend/index.html
+          grep -q 'browser-timed-conditions.js' frontend/index.html
           grep -q 'browser-saves.js' frontend/index.html
           grep -q 'figure-visuals.js' frontend/index.html
           grep -q 'figure-visuals.css' frontend/index.html
+          grep -q 'figure-poison.css' frontend/index.html
           grep -q 'battle-replay.js' frontend/index.html
           grep -q 'playIronPitBattle' frontend/app.js
       - name: Validate Netlify production-only credit guard
