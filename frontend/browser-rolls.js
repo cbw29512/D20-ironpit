@@ -36,7 +36,20 @@
     };
   }
 
-  function weaponDamage(attacker, attack, critical, mode, turnKey) {
+  function bonusComponent(spec, critical) {
+    const count = spec.diceCount * (critical ? 2 : 1);
+    const rolls = dice().rollMany(count, spec.diceSize);
+    return {
+      source: spec.source,
+      damage_type: spec.damageType,
+      notation: `${count}d${spec.diceSize}+0`,
+      rolls,
+      modifier: 0,
+      total: rolls.reduce((sum, roll) => sum + roll, 0),
+    };
+  }
+
+  function weaponDamage(attacker, attack, critical, mode, turnKey, bonusDamage = null) {
     const rageBonus = window.IRON_PIT_BROWSER_RAGE?.damageBonus(attacker, attack) || 0;
     const effective = { ...attack, damageBonus: attack.damageBonus + rageBonus };
     let rolled = candidate(effective, critical);
@@ -55,6 +68,7 @@
         notation: `${count}d${sides}+0`, rolls, modifier: 0, total: rolls.reduce((a, b) => a + b, 0),
       });
     }
+    if (bonusDamage) components.push(bonusComponent(bonusDamage, critical));
     const total = components.reduce((sum, item) => sum + item.total, 0);
     return {
       roll: {
