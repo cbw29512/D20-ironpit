@@ -4,7 +4,7 @@ on:
   push:
   pull_request:
 
-# Exact-head production certification for audited browser/Python deathmatch parity.
+# Exact-head certification for audited SRD unconscious rules, melee deathmatch, and browser/Python parity.
 jobs:
   combat-certification:
     runs-on: ubuntu-latest
