@@ -67,6 +67,10 @@ def test_current_certified_monsters_are_linked_to_runtime_templates() -> None:
     assert ready_monsters == {
         "Axe Beak": "srd-axe-beak",
         "Bandit": "srd-bandit",
+        "Commoner": "srd-commoner",
+        "Giant Lizard": "srd-giant-lizard",
+        "Giant Rat": "srd-giant-rat",
+        "Giant Weasel": "srd-giant-weasel",
         "Goblin Warrior": "srd-goblin-warrior",
         "Guard": "srd-guard",
     }
