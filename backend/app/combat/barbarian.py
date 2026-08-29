@@ -3,6 +3,7 @@ from __future__ import annotations
 from app.domain.models import BattleEvent, CombatantState, DamageType, WeaponAttack
 
 RAGE_EFFECT_ID = "rage"
+_RAGE_MAX_ROUNDS = 100
 _RAGE_RESISTANCES = (
     DamageType.BLUDGEONING,
     DamageType.PIERCING,
@@ -31,7 +32,9 @@ def enter_rage(
     actor_id: str,
 ) -> BattleEvent | None:
     """Use a Bonus Action and one Rage use, then apply the 2024 Rage combat effects."""
-    if state.template.rage_damage_bonus <= 0 or rage_active(state):
+    if state.template.wearing_heavy_armor or state.template.rage_damage_bonus <= 0:
+        return None
+    if rage_active(state):
         return None
     resource = _rage_resource(state)
     if resource is None or resource.current_uses <= 0 or not state.bonus_action_available:
@@ -44,6 +47,7 @@ def enter_rage(
         if damage_type not in state.temporary_damage_resistances:
             state.temporary_damage_resistances.append(damage_type)
     state.rage_expires_round = round_number + 1
+    state.rage_max_round = round_number + _RAGE_MAX_ROUNDS
     return BattleEvent(
         sequence=sequence,
         round_number=round_number,
@@ -60,7 +64,8 @@ def enter_rage(
 def extend_rage_from_attack(state: CombatantState, round_number: int) -> None:
     """Making an attack roll extends Rage through the end of the Barbarian's next turn."""
     if rage_active(state):
-        state.rage_expires_round = round_number + 1
+        maximum = state.rage_max_round or round_number + 1
+        state.rage_expires_round = min(round_number + 1, maximum)
 
 
 def maintain_rage_with_bonus_action(
@@ -71,10 +76,13 @@ def maintain_rage_with_bonus_action(
 ) -> BattleEvent | None:
     if not rage_active(state) or state.rage_expires_round is None:
         return None
+    if state.rage_max_round is not None and state.rage_max_round <= round_number:
+        return None
     if state.rage_expires_round > round_number or not state.bonus_action_available:
         return None
     state.bonus_action_available = False
-    state.rage_expires_round = round_number + 1
+    maximum = state.rage_max_round or round_number + 1
+    state.rage_expires_round = min(round_number + 1, maximum)
     return BattleEvent(
         sequence=sequence,
         round_number=round_number,
@@ -97,6 +105,7 @@ def end_rage(state: CombatantState) -> None:
         if damage_type not in _RAGE_RESISTANCES
     ]
     state.rage_expires_round = None
+    state.rage_max_round = None
 
 
 def finish_rage_turn(state: CombatantState, round_number: int) -> None:
@@ -119,5 +128,5 @@ def finalize_rage_turn(
 
 
 def end_rage_if_incapacitated(state: CombatantState) -> None:
-    if state.is_unconscious or state.is_dead:
+    if state.template.wearing_heavy_armor or state.is_unconscious or state.is_dead:
         end_rage(state)
