@@ -6,6 +6,7 @@ from app.content.certified_heroes import build_certified_hero_templates
 from app.content.demo import build_demo_fighter, build_goblin_warrior
 from app.content.monsters import build_axe_beak, build_bandit, build_commoner, build_giant_lizard
 from app.content.monsters_bears import build_black_bear, build_brown_bear
+from app.content.monsters_batch_three import build_monster_batch_three
 from app.content.monsters_beast_batch_two import build_beast_batch_two
 from app.content.monsters_charge import build_boar, build_elk, build_giant_boar
 from app.content.monsters_fixed_damage import build_fixed_damage_monsters
@@ -34,7 +35,7 @@ def build_arena_roster() -> ArenaRoster:
                 build_wolf(), build_dire_wolf(), build_black_bear(), build_brown_bear(),
                 build_baboon(), build_camel(), build_deer(), build_draft_horse(), build_giant_badger(),
                 build_boar(), build_elk(), build_giant_boar(),
-                *build_fixed_damage_monsters(), *build_beast_batch_two(),
+                *build_fixed_damage_monsters(), *build_beast_batch_two(), *build_monster_batch_three(),
             ],
         )
     except Exception as exc:
