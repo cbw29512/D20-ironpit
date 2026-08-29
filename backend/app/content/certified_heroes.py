@@ -1,27 +1,40 @@
 from __future__ import annotations
 
+from collections.abc import Callable
+
+from app.content.audited_barbarian import build_rokhan_stonefury
+from app.content.audited_barbarian_profile import build_rokhan_stonefury_profile
 from app.content.audited_fighter import build_karnok_stoneward
 from app.content.audited_fighter_profile import build_karnok_stoneward_profile
 from app.content.build_audit import assert_character_build_raw_ready
+from app.domain.character_builds import CharacterBuildProfile
 from app.domain.models import CombatantTemplate
 
 HeroBuildKey = tuple[str, int, str]
 HeroCatalogReady = tuple[str, str]
 
 
-def _validated_karnok() -> tuple[HeroBuildKey, CombatantTemplate]:
-    template = build_karnok_stoneward()
-    profile = build_karnok_stoneward_profile()
+def _validated(
+    template_builder: Callable[[], CombatantTemplate],
+    profile_builder: Callable[[], CharacterBuildProfile],
+    build_id: str,
+) -> tuple[HeroBuildKey, CombatantTemplate]:
+    template = template_builder()
+    profile = profile_builder()
     assert_character_build_raw_ready(profile, template)
-    key: HeroBuildKey = (profile.class_id, profile.level, "great-weapon")
-    return key, template
+    return (profile.class_id, profile.level, build_id), template
+
+
+def _validated_builds() -> list[tuple[HeroBuildKey, CombatantTemplate]]:
+    return [
+        _validated(build_karnok_stoneward, build_karnok_stoneward_profile, "great-weapon"),
+        _validated(build_rokhan_stonefury, build_rokhan_stonefury_profile, "great-weapon"),
+    ]
 
 
 def build_certified_hero_registry() -> dict[HeroBuildKey, HeroCatalogReady]:
-    key, template = _validated_karnok()
-    return {key: (template.name, template.id)}
+    return {key: (template.name, template.id) for key, template in _validated_builds()}
 
 
 def build_certified_hero_templates() -> list[CombatantTemplate]:
-    _, template = _validated_karnok()
-    return [template]
+    return [template for _, template in _validated_builds()]
