@@ -34,6 +34,7 @@ def begin_turn(state: CombatantState) -> None:
     try:
         state.action_available = True
         state.bonus_action_available = True
+        state.reaction_available = True
         state.movement_remaining_ft = 0 if speed_is_zero(state) else state.template.speed_ft
         if DODGE_EFFECT_ID in state.active_effect_ids:
             state.active_effect_ids.remove(DODGE_EFFECT_ID)
