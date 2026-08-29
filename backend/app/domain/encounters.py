@@ -5,6 +5,7 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 from app.domain.combatants import CombatantState
+from app.domain.events import BattleEvent
 
 
 EncounterSide = Literal["heroes", "monsters"]
@@ -45,3 +46,13 @@ class InitiativeGroup(BaseModel):
 class EncounterInitiative(BaseModel):
     groups: list[InitiativeGroup] = Field(min_length=2, max_length=16)
     turn_order: list[str] = Field(min_length=2, max_length=16)
+
+
+class EncounterBattleResult(BaseModel):
+    battle_id: str
+    outcome: EncounterOutcome
+    rounds: int = Field(ge=0)
+    setup: EncounterSetup
+    initiative: EncounterInitiative
+    events: list[BattleEvent] = Field(default_factory=list)
+    ruleset: str = "SRD 5.2.1 combat subset"
