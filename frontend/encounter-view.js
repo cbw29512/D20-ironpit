@@ -24,7 +24,7 @@
     const meta = document.createElement("small");
     title.textContent = template.name;
     meta.textContent = side === "heroes"
-      ? `${template.archetype} · Level ${template.level}`
+      ? `${template.archetype} · Level ${template.level}${template.build_name ? ` · ${template.build_name}` : ""}`
       : `${template.archetype} · CR ${template.challenge_rating}`;
     copy.append(title, meta);
     const remove = document.createElement("button");
@@ -69,7 +69,7 @@
       const ready = item.coverage_status === "raw_ready";
       option.value = item.id;
       option.textContent = item.level
-        ? `${item.name} — ${item.class_name} ${item.level}${ready ? "" : " — not ready yet"}`
+        ? `${item.name} — ${item.class_name} ${item.level} · ${item.build_name}${ready ? "" : " — not ready yet"}`
         : `${item.name} — CR ${item.challenge_rating}${ready ? "" : " — not ready yet"}`;
       picker.append(option);
     }
