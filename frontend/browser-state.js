@@ -17,6 +17,7 @@
       death_save_failures: 0,
       action_available: true,
       bonus_action_available: true,
+      reaction_available: true,
       movement_remaining_ft: 0,
       resources: { ...(template.resources || {}) },
       active_effect_ids: [],
@@ -32,6 +33,7 @@
   function beginTurn(state) {
     state.action_available = true;
     state.bonus_action_available = true;
+    state.reaction_available = true;
     const speedZero = G()?.speedIsZero(state) || false;
     state.movement_remaining_ft = speedZero ? 0 : state.template.speed_ft;
     state.active_effect_ids = state.active_effect_ids.filter((id) => id !== "dodge");
