@@ -4,6 +4,7 @@ import logging
 import uuid
 
 from app.combat.attacks import resolve_attack
+from app.combat.death_saves import resolve_death_save
 from app.combat.dice import DiceProvider
 from app.combat.encounter_initiative import roll_encounter_initiative
 from app.combat.encounter_outcome import resolve_encounter_outcome
@@ -78,8 +79,23 @@ def _result(setup, initiative, events, outcome: str, rounds: int) -> EncounterBa
     )
 
 
+def _resolve_zero_hp_turn(
+    sequence: int,
+    round_number: int,
+    combatant: EncounterCombatant,
+    dice: DiceProvider,
+) -> tuple[BattleEvent | None, int]:
+    state = combatant.state
+    if state.template.kind != "character" or state.current_hp != 0:
+        return None, sequence
+    if state.is_dead or state.is_stable:
+        return None, sequence
+    event = resolve_death_save(sequence, round_number, combatant.combatant_id, state, dice)
+    return event, sequence + 1
+
+
 def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> EncounterBattleResult:
-    """Run the currently certified weapon-combat subset over a 1-8 vs. 1-8 encounter."""
+    """Run the currently certified combat subset over a 1-8 vs. 1-8 encounter."""
     try:
         setup = build_encounter_setup(selection)
         initiative = roll_encounter_initiative(setup, dice)
@@ -94,8 +110,14 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                     return _result(setup, initiative, events, outcome, round_number)
 
                 attacker = by_id[combatant_id]
-                if not attacker.state.is_alive or attacker.state.current_hp <= 0:
+                death_event, sequence = _resolve_zero_hp_turn(
+                    sequence, round_number, attacker, dice
+                )
+                if death_event is not None:
+                    events.append(death_event)
+                if attacker.state.current_hp <= 0 or attacker.state.is_dead:
                     continue
+
                 target = select_nearest_target(attacker, setup)
                 if target is None:
                     continue
