@@ -88,6 +88,7 @@ def test_immune_critical_at_zero_causes_no_death_save_failure() -> None:
     defender.template.damage_immunities = [DamageType.FIRE]
     fire_attack = attacker.template.weapon_attack.model_copy(deep=True)
     fire_attack.weapon.damage_type = DamageType.FIRE
+    fire_attack.conditional_damage = []
 
     event = resolve_attack(
         1,
@@ -96,7 +97,7 @@ def test_immune_critical_at_zero_causes_no_death_save_failure() -> None:
         defender,
         fire_attack,
         5,
-        FixedDiceProvider([20, 6, 6]),
+        FixedDiceProvider([20, 19, 6, 6]),
     )
 
     assert event.critical is True
