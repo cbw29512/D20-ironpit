@@ -1,13 +1,13 @@
 (() => {
   "use strict";
 
-  const apiBase = String(window.IRON_PIT_API_BASE || "").trim().replace(/\/$/, "");
   const state = { catalog: null, heroes: [], monsters: [] };
   const el = (id) => document.getElementById(id);
   const view = window.createEncounterView();
 
   function render() {
-    view.renderSelection(state, Boolean(apiBase), (side, index) => {
+    const ready = Boolean(window.IRON_PIT_BROWSER_ENGINE && state.catalog);
+    view.renderSelection(state, ready, (side, index) => {
       state[side].splice(index, 1);
       render();
     });
@@ -43,23 +43,18 @@
   async function fight() {
     try {
       el("fight-button").disabled = true;
-      view.setStatus("Rolling initiative and resolving the fight…");
-      const response = await fetch(`${apiBase}/api/encounters/fight`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          hero_ids: state.heroes.map((item) => item.id),
-          monster_ids: state.monsters.map((item) => item.id),
-          starting_distance_ft: Number(el("distance").value),
-        }),
+      view.setStatus("Rolling initiative and resolving the fight in your browser…");
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      const battle = window.IRON_PIT_BROWSER_ENGINE.runEncounter({
+        hero_ids: state.heroes.map((item) => item.id),
+        monster_ids: state.monsters.map((item) => item.id),
+        starting_distance_ft: Number(el("distance").value),
       });
-      if (!response.ok) throw new Error(`Fight API returned ${response.status}`);
-      const battle = await response.json();
       view.showResult(battle);
       await window.playIronPitCriticalEffects?.(battle);
     } catch (error) {
       console.error(error);
-      view.setStatus("Fight failed. The production API may still be deploying.");
+      view.setStatus("Fight failed locally. Check the battle log/console for the blocked mechanic.");
     } finally {
       render();
     }
@@ -72,19 +67,13 @@
   }
 
   async function boot() {
-    if (!apiBase) {
-      view.setStatus("Production API is not configured.");
-      render();
-      return;
-    }
-    const response = await fetch(`${apiBase}/api/catalog`);
-    if (!response.ok) throw new Error(`Catalog API returned ${response.status}`);
-    state.catalog = await response.json();
+    if (!window.IRON_PIT_BROWSER_ENGINE || !window.IRON_PIT_BROWSER_CATALOG) throw new Error("Browser combat engine did not load.");
+    state.catalog = await window.IRON_PIT_BROWSER_CATALOG.buildCatalog();
     view.fillPicker("hero-picker", state.catalog.heroes);
     view.fillPicker("monster-picker", state.catalog.monsters);
     seedReadyCard("heroes");
     seedReadyCard("monsters");
-    view.setStatus(`Loaded ${state.catalog.hero_count} hero builds and ${state.catalog.monster_count} SRD monsters.`);
+    view.setStatus(`Browser engine ready · ${state.catalog.hero_count} hero builds · ${state.catalog.monster_count} SRD monsters cataloged.`);
     render();
   }
 
@@ -93,7 +82,7 @@
   el("fight-button").addEventListener("click", fight);
   boot().catch((error) => {
     console.error(error);
-    view.setStatus("Catalog failed to load from production API.");
+    view.setStatus("Browser combat engine failed to initialize.");
     render();
   });
 })();
