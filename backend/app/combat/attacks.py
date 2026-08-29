@@ -6,6 +6,7 @@ from app.combat.damage import resolve_weapon_damage
 from app.combat.dice import DiceProvider
 from app.combat.range import resolve_attack_roll_mode
 from app.combat.rolls import roll_d20
+from app.combat.zero_hp import apply_damage
 from app.domain.models import BattleEvent, CombatantState, WeaponAttack
 
 logger = logging.getLogger(__name__)
@@ -45,8 +46,7 @@ def resolve_attack(
                 critical,
                 mode,
             )
-            defender.current_hp = max(0, defender.current_hp - damage_roll.total)
-            defender.is_alive = defender.current_hp > 0
+            apply_damage(defender, damage_roll.total, critical=critical)
 
         outcome = "CRITICAL HIT" if critical else ("HIT" if hit else "MISS")
         return BattleEvent(
@@ -64,6 +64,10 @@ def resolve_attack(
             critical=critical,
             hp_before=hp_before,
             hp_after=defender.current_hp,
+            death_save_successes=defender.death_save_successes,
+            death_save_failures=defender.death_save_failures,
+            is_stable=defender.is_stable,
+            is_dead=defender.is_dead,
             weapon_id=weapon.id,
             projectile=weapon.projectile,
             animation=weapon.animation,
