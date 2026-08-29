@@ -29,6 +29,7 @@ def test_arena_roster_exposes_certified_batch() -> None:
         "srd-ogre", "srd-owlbear", "srd-saber-toothed-tiger", "srd-scout", "srd-warrior-infantry",
         "srd-crocodile", "srd-giant-crab", "srd-constrictor-snake", "srd-giant-centipede",
         "srd-giant-venomous-snake", "srd-giant-wasp", "srd-giant-wolf-spider",
+        "srd-giant-constrictor-snake",
     ]
 
 
