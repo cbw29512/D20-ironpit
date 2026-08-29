@@ -31,6 +31,10 @@ def test_arena_roster_exposes_certified_batch() -> None:
         "srd-dire-wolf",
         "srd-black-bear",
         "srd-brown-bear",
+        "srd-camel",
+        "srd-deer",
+        "srd-draft-horse",
+        "srd-giant-badger",
     ]
 
 
