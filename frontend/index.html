@@ -21,7 +21,7 @@
     <section class="matchup" aria-label="Encounter builder">
       <article class="side heroes-side">
         <div class="side-heading">
-          <div><span class="side-label">CHARACTERS</span><h2>Your Party</h2></div>
+          <div><span class="side-label">CHARACTER CARDS</span><h2>Your Party</h2></div>
           <strong id="hero-summary">0 characters · Total Levels 0</strong>
         </div>
         <div class="party-size-row">
@@ -32,6 +32,7 @@
             </select>
           </label>
         </div>
+        <p class="picker-help">Each party member gets an individual card and its own HP, conditions, and death state.</p>
         <div id="hero-slot-pickers" class="hero-slot-pickers" aria-live="polite"></div>
         <div id="hero-cards" class="card-stack selected-party" aria-live="polite"></div>
       </article>
@@ -59,8 +60,9 @@
           <label class="picker-field monster-name-field" for="monster-picker"><span>Monster</span>
             <select id="monster-picker" aria-label="Choose a monster"></select>
           </label>
-          <button id="add-monster" type="button">+ Add Monster</button>
+          <button id="add-monster" type="button">+ Add Monster Card</button>
         </div>
+        <p id="monster-picker-note" class="picker-help" aria-live="polite"></p>
         <div id="monster-cards" class="card-stack monster-rotation" aria-live="polite"></div>
       </article>
     </section>
