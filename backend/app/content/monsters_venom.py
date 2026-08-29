@@ -31,7 +31,7 @@ def _venom_attack(
 
 def _monster(
     monster_id: str, name: str, cr: str, ac: int, hp: int, speed: int, initiative: int,
-    attack: WeaponAttack, saves: dict[str, int], skills: dict[str, int], body: str,
+    attack: WeaponAttack, saves: dict[str, int], skills: dict[str, int], body: str, page: int,
 ) -> CombatantTemplate:
     return CombatantTemplate(
         id=monster_id, name=name, archetype=name, challenge_rating=cr, kind="monster",
@@ -39,7 +39,7 @@ def _monster(
         initiative_bonus=initiative, weapon_attack=attack,
         saving_throw_bonuses=saves, skill_bonuses=skills,
         visual=build_monster_visual("natural", attack.weapon.name.lower(), body),
-        source=f"SRD 5.2.1 {name} p. 354-355",
+        source=f"SRD 5.2.1 {name} p. {page}",
     )
 
 
@@ -49,18 +49,18 @@ def build_venom_monsters() -> list[CombatantTemplate]:
             "srd-giant-venomous-snake", "Giant Venomous Snake", "1/4", 14, 11, 40, 4,
             _venom_attack("giant-venomous-snake-bite", "Bite", 6, (1, 4, 4), (1, 8), reach=10),
             {"strength": 0, "dexterity": 4, "constitution": 1, "intelligence": -4, "wisdom": 0, "charisma": -4},
-            {"athletics": 0, "acrobatics": 4, "perception": 2}, "giant-venomous-snake",
+            {"athletics": 0, "acrobatics": 4, "perception": 2}, "giant-venomous-snake", 354,
         ),
         _monster(
             "srd-giant-wasp", "Giant Wasp", "1/2", 13, 22, 50, 2,
             _venom_attack("giant-wasp-sting", "Sting", 4, (1, 6, 2), (2, 4)),
             {"strength": 0, "dexterity": 2, "constitution": 0, "intelligence": -5, "wisdom": 0, "charisma": -4},
-            {"athletics": 0, "acrobatics": 2}, "giant-wasp",
+            {"athletics": 0, "acrobatics": 2}, "giant-wasp", 355,
         ),
         _monster(
             "srd-giant-wolf-spider", "Giant Wolf Spider", "1/4", 13, 11, 40, 3,
             _venom_attack("giant-wolf-spider-bite", "Bite", 5, (1, 4, 3), (2, 4)),
             {"strength": 1, "dexterity": 3, "constitution": 1, "intelligence": -4, "wisdom": 1, "charisma": -3},
-            {"athletics": 1, "acrobatics": 3, "perception": 3, "stealth": 7}, "giant-wolf-spider",
+            {"athletics": 1, "acrobatics": 3, "perception": 3, "stealth": 7}, "giant-wolf-spider", 355,
         ),
     ]
