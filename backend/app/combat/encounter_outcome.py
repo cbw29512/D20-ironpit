@@ -7,20 +7,27 @@ from app.domain.encounters import EncounterCombatant, EncounterOutcome, Encounte
 logger = logging.getLogger(__name__)
 
 
+def _combatant_defeated(member: EncounterCombatant) -> bool:
+    state = member.state
+    if state.template.kind == "character":
+        return state.is_dead or not state.is_alive
+    return state.current_hp <= 0 or state.is_dead or not state.is_alive
+
+
 def _side_defeated(combatants: list[EncounterCombatant]) -> bool:
-    return all(member.state.current_hp <= 0 or not member.state.is_alive for member in combatants)
+    return all(_combatant_defeated(member) for member in combatants)
 
 
 def resolve_encounter_outcome(setup: EncounterSetup) -> EncounterOutcome:
-    """Return the side-level outcome without inventing recovery or death rules."""
+    """Return the deathmatch outcome; 0 HP alone does not defeat a living player character."""
     try:
-        heroes_down = _side_defeated(setup.heroes)
-        monsters_down = _side_defeated(setup.monsters)
-        if heroes_down and monsters_down:
+        heroes_dead = _side_defeated(setup.heroes)
+        monsters_dead = _side_defeated(setup.monsters)
+        if heroes_dead and monsters_dead:
             return "draw"
-        if monsters_down:
+        if monsters_dead:
             return "heroes_win"
-        if heroes_down:
+        if heroes_dead:
             return "monsters_win"
         return "active"
     except Exception as exc:
