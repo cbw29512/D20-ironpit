@@ -14,6 +14,10 @@
     ...extra,
   });
 
+  const charge = (minimumMove, diceCount, diceSize, damageType, proneMaxSize) => ({
+    minimumMove, diceCount, diceSize, damageType, proneMaxSize,
+  });
+
   const monsters = [
     monster("srd-goblin-warrior", "Goblin Warrior", "1/4", "small", 15, 10, 30, 2, [
       attack("goblin-scimitar", "Scimitar", "melee", 4, 1, 6, 2, "slashing", { conditionalAdvantage: [1, 4] }),
@@ -73,6 +77,21 @@
     monster("srd-giant-badger", "Giant Badger", "1/4", "medium", 13, 15, 30, 0, [
       attack("giant-badger-bite", "Bite", "melee", 3, 2, 4, 1, "piercing", { animation: "bite" }),
     ], { damage_resistances: ["poison"] }),
+    monster("srd-boar", "Boar", "1/4", "medium", 11, 13, 40, 0, [
+      attack("boar-gore", "Gore", "melee", 3, 1, 6, 1, "piercing", {
+        animation: "heavy-strike", charge: charge(20, 1, 6, "piercing", "medium"),
+      }),
+    ], { traits: ["charge", "bloodied-fury"] }),
+    monster("srd-elk", "Elk", "1/4", "large", 10, 11, 50, 0, [
+      attack("elk-ram", "Ram", "melee", 5, 1, 6, 3, "bludgeoning", {
+        animation: "heavy-strike", charge: charge(20, 1, 6, "bludgeoning", "large"),
+      }),
+    ], { traits: ["charge"] }),
+    monster("srd-giant-boar", "Giant Boar", "2", "large", 13, 42, 40, 0, [
+      attack("giant-boar-gore", "Gore", "melee", 5, 2, 6, 3, "piercing", {
+        animation: "heavy-strike", charge: charge(20, 2, 6, "piercing", "large"),
+      }),
+    ], { traits: ["charge", "bloodied-fury"] }),
   ];
 
   window.IRON_PIT_BROWSER_MONSTERS = Object.fromEntries(monsters.map((item) => [item.id, item]));
