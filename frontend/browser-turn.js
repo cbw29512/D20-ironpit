@@ -7,9 +7,9 @@
   const M = () => window.IRON_PIT_BROWSER_MULTIATTACK;
   const G = () => window.IRON_PIT_BROWSER_RAGE;
   const D = () => window.IRON_PIT_DICE;
+  const BRAWL_DISTANCE = 5;
 
   const attacks = (member) => member.state.template.attacks || [];
-  const primary = (member) => attacks(member).find((item) => item.id === member.state.template.primary_attack_id) || attacks(member)[0];
 
   function legalAttack(member, distance) {
     const profiles = attacks(member);
@@ -22,12 +22,9 @@
     const state = member.state;
     const uses = state.resources["second-wind"] || 0;
     if (!uses || !state.bonus_action_available || state.current_hp <= 0 || state.current_hp > Math.floor(state.template.max_hp / 2)) return null;
-    const die = D().roll(10);
-    const total = die + state.template.level;
-    const before = state.current_hp;
+    const die = D().roll(10), total = die + state.template.level, before = state.current_hp;
     state.current_hp = Math.min(state.template.max_hp, state.current_hp + total);
-    state.resources["second-wind"] -= 1;
-    state.bonus_action_available = false;
+    state.resources["second-wind"] -= 1; state.bonus_action_available = false;
     return { sequence, round_number: round, event_type: "healing", actor_id: member.combatant_id, actor_name: state.template.name,
       target_id: member.combatant_id, target_name: state.template.name, hp_before: before, hp_after: state.current_hp,
       healing_roll: { notation: `1d10+${state.template.level}`, rolls: [die], modifier: state.template.level, total },
@@ -38,11 +35,8 @@
   function adrenaline(sequence, round, member) {
     const state = member.state;
     if (!state.template.traits?.includes("adrenaline-rush") || !state.bonus_action_available || !(state.resources["adrenaline-rush"] > 0)) return null;
-    state.resources["adrenaline-rush"] -= 1;
-    state.bonus_action_available = false;
-    state.movement_remaining_ft += state.template.speed_ft;
-    const pb = 2 + Math.floor((state.template.level - 1) / 4);
-    state.temporary_hp = Math.max(state.temporary_hp, pb);
+    state.resources["adrenaline-rush"] -= 1; state.bonus_action_available = false; state.movement_remaining_ft += state.template.speed_ft;
+    const pb = 2 + Math.floor((state.template.level - 1) / 4); state.temporary_hp = Math.max(state.temporary_hp, pb);
     return { sequence, round_number: round, event_type: "feature", actor_id: member.combatant_id, actor_name: state.template.name,
       feature_id: "adrenaline-rush", resource_remaining: state.resources["adrenaline-rush"], movement_ft: state.template.speed_ft,
       animation: "dash", description: `${state.template.name} uses Adrenaline Rush.` };
@@ -52,18 +46,18 @@
     return { sequence, round_number: round, event_type: "movement", actor_id: member.combatant_id, actor_name: member.state.template.name,
       target_id: target.combatant_id, target_name: target.state.template.name, distance_before_ft: movement.before,
       distance_after_ft: movement.after, movement_ft: movement.moved, animation: "advance",
-      description: `${member.state.template.name} advances ${movement.moved} feet.` };
+      description: `${member.state.template.name} closes ${movement.moved} feet toward melee.` };
   }
 
   function closeTurn(sequence, round, member, target) {
-    const weapon = primary(member);
-    if (weapon.kind !== "melee" || S().distance(member, target) <= (weapon.reach || 5)) return { events: [], sequence, handled: false };
+    if (S().distance(member, target) <= BRAWL_DISTANCE) return { events: [], sequence, handled: false };
     const charged = C()?.resolveClosing(sequence, round, member, target);
     if (charged?.handled) return charged;
+    if (member.state.template.attack_action) return { events: [], sequence, handled: false };
+
     const events = [];
-    const ranged = attacks(member).find((item) => item.kind === "ranged" && !member.state.active_effect_ids.includes("opening-volley-used") && S().distance(member, target) <= item.long);
+    const ranged = attacks(member).find((item) => item.kind === "ranged" && S().distance(member, target) <= item.long);
     if (ranged && member.state.action_available) {
-      member.state.active_effect_ids.push("opening-volley-used");
       events.push(A().resolveAttack(sequence++, round, member, target, ranged, S().distance(member, target)));
     } else if (member.state.action_available) {
       member.state.action_available = false;
@@ -72,21 +66,26 @@
         actor_name: member.state.template.name, feature_id: "dodge", animation: "dodge",
         description: `${member.state.template.name} Dodges while closing to melee.` });
     }
-    const movement = S().moveToward(member, target, weapon.reach || 5);
+    const movement = S().moveToward(member, target, BRAWL_DISTANCE);
     if (movement) events.push(moveEvent(sequence++, round, member, target, movement));
     return { events, sequence, handled: true };
   }
 
+  function closeAfterAction(sequence, round, member, setup) {
+    const target = S().nearestTarget(member, setup);
+    if (!target || S().distance(member, target) <= BRAWL_DISTANCE) return { events: [], sequence };
+    const movement = S().moveToward(member, target, BRAWL_DISTANCE);
+    return movement ? { events: [moveEvent(sequence++, round, member, target, movement)], sequence } : { events: [], sequence };
+  }
+
   function deathSave(sequence, round, member) {
-    const state = member.state;
-    const natural = D().roll(20);
-    let result = "failure";
-    if (natural === 20) { state.current_hp = 1; state.is_unconscious = false; state.death_save_successes = 0; state.death_save_failures = 0; result = "natural 20; regains 1 HP"; }
+    const state = member.state, natural = D().roll(20); let result = "failure";
+    if (natural === 20) { state.current_hp = 1; state.is_alive = true; state.is_unconscious = false; state.is_stable = false; state.death_save_successes = 0; state.death_save_failures = 0; result = "natural 20; regains 1 HP"; }
     else if (natural === 1) { state.death_save_failures = Math.min(3, state.death_save_failures + 2); result = "natural 1; two failures"; }
     else if (natural >= 10) { state.death_save_successes = Math.min(3, state.death_save_successes + 1); result = "success"; }
     else state.death_save_failures = Math.min(3, state.death_save_failures + 1);
-    if (state.death_save_failures >= 3) { state.is_alive = false; state.is_dead = true; state.is_unconscious = false; result = "third failure; dies"; }
-    else if (state.death_save_successes >= 3) { state.is_stable = true; state.death_save_successes = 0; state.death_save_failures = 0; result = "third success; becomes Stable"; }
+    if (state.death_save_failures >= 3) { state.is_alive = false; state.is_dead = true; state.is_unconscious = false; state.is_stable = false; result = "third failure; dies"; }
+    else if (state.death_save_successes >= 3) { state.is_stable = true; state.is_unconscious = true; state.death_save_successes = 0; state.death_save_failures = 0; result = "third success; becomes Stable"; }
     return { sequence, round_number: round, event_type: "death_save", actor_id: member.combatant_id, actor_name: state.template.name,
       death_save_roll: { notation: "1d20", rolls: [natural], selected_roll: natural, modifier: 0, mode: "normal", total: natural },
       hp_after: state.current_hp, death_save_successes: state.death_save_successes, death_save_failures: state.death_save_failures,
@@ -94,14 +93,12 @@
   }
 
   function finalize(events, sequence, round, member) {
-    const rage = G()?.finalize(sequence, round, member);
-    if (rage?.event) events.push(rage.event);
+    const rage = G()?.finalize(sequence, round, member); if (rage?.event) events.push(rage.event);
     return { events, sequence: rage?.sequence ?? sequence };
   }
 
   function resolveTurn(sequence, round, member, setup) {
-    const events = [];
-    S().beginTurn(member.state);
+    const events = []; S().beginTurn(member.state);
     const rage = G()?.enter(sequence, round, member); if (rage) { events.push(rage); sequence += 1; }
     const wind = secondWind(sequence, round, member); if (wind) { events.push(wind); sequence += 1; }
     const rush = adrenaline(sequence, round, member); if (rush) { events.push(rush); sequence += 1; }
@@ -109,9 +106,9 @@
     const closing = closeTurn(sequence, round, member, target); events.push(...closing.events); sequence = closing.sequence;
     if (closing.handled) return finalize(events, sequence, round, member);
     if (member.state.template.attack_action) {
-      const multi = M().resolveAttackAction(sequence, round, member, setup);
-      events.push(...multi.events);
-      return finalize(events, multi.sequence, round, member);
+      const multi = M().resolveAttackAction(sequence, round, member, setup); events.push(...multi.events); sequence = multi.sequence;
+      const approach = closeAfterAction(sequence, round, member, setup); events.push(...approach.events);
+      return finalize(events, approach.sequence, round, member);
     }
     const attack = legalAttack(member, S().distance(member, target));
     if (attack && member.state.action_available) {
