@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.combat.action_economy import is_available, spend
 from app.combat.barbarian import rage_active
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.dice import DiceProvider
@@ -82,7 +83,7 @@ def cleanup_grapples(setup: EncounterSetup) -> None:
 
 
 def should_escape_grapple(state: CombatantState) -> bool:
-    return state.action_available and any(source.restrains for source in state.grapple_sources)
+    return is_available(state, "action") and any(source.restrains for source in state.grapple_sources)
 
 
 def _check_mode(state: CombatantState, strength_check: bool) -> RollMode:
@@ -110,11 +111,13 @@ def resolve_escape_grapple(
     state: CombatantState,
     dice: DiceProvider,
 ) -> BattleEvent:
+    if not is_available(state, "action"):
+        raise ValueError("Action is not available to escape a grapple.")
     source = next((item for item in state.grapple_sources if item.restrains), state.grapple_sources[0])
     check_name, bonus, mode = _escape_choice(state)
     check = roll_d20(dice, bonus, mode)
     success = check.total >= source.escape_dc
-    state.action_available = False
+    spend(state, "action")
     if success:
         release_grapple(state, source.source_id)
         if not speed_is_zero(state):
