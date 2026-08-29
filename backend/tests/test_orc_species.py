@@ -87,7 +87,7 @@ def test_relentless_endurance_does_not_prevent_instant_death() -> None:
     assert resource.current_uses == 1
 
 
-def test_canonical_turn_uses_adrenaline_rush_before_closing_to_melee() -> None:
+def test_canonical_turn_uses_adrenaline_rush_then_dodges_while_closing() -> None:
     hero = EncounterCombatant(
         combatant_id="hero-1:orc-fighter",
         side="heroes",
@@ -113,6 +113,7 @@ def test_canonical_turn_uses_adrenaline_rush_before_closing_to_melee() -> None:
     )
 
     assert any(event.feature_id == ADRENALINE_RESOURCE_ID for event in events)
-    assert any(event.event_type == "attack" for event in events)
+    assert any(event.feature_id == "dodge" for event in events)
+    assert not any(event.event_type == "attack" for event in events)
     assert hero.position_ft == 55
     assert hero.state.temporary_hp == 2
