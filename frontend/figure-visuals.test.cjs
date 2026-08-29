@@ -13,6 +13,7 @@ const p = (name, size = "medium", visual = undefined) => profile({ name, size, v
 assert.equal(p("Crocodile", "large").form, "reptile");
 assert.equal(p("Giant Crab").form, "crab");
 assert.equal(p("Constrictor Snake", "large").form, "snake");
+assert.equal(p("Giant Centipede", "small").form, "centipede");
 assert.equal(p("Wolf").form, "quadruped");
 assert.equal(p("Brown Bear", "large").form, "bear");
 assert.equal(p("Giant Eagle", "large").form, "bird");
