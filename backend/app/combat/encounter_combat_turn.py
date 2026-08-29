@@ -10,8 +10,10 @@ from app.combat.encounter_movement import move_toward_combatant
 from app.combat.encounter_targeting import combatant_distance, select_nearest_target
 from app.combat.encounter_turns import prepare_encounter_attack
 from app.combat.fighter import use_second_wind
+from app.combat.grapple import cleanup_grapples, resolve_escape_grapple, should_escape_grapple
 from app.combat.orc import use_adrenaline_rush
 from app.combat.policy import should_use_second_wind
+from app.combat.saving_throws import legal_save_action, resolve_save_action
 from app.combat.state import begin_turn
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
@@ -38,6 +40,20 @@ def _close_after_attack_action(
     return [movement], sequence + 1
 
 
+def _finish_turn(
+    events: list[BattleEvent],
+    sequence: int,
+    round_number: int,
+    attacker: EncounterCombatant,
+) -> tuple[list[BattleEvent], int]:
+    rage_event, sequence = finalize_rage_turn(
+        sequence, round_number, attacker.state, attacker.combatant_id
+    )
+    if rage_event is not None:
+        events.append(rage_event)
+    return events, sequence
+
+
 def resolve_combat_turn(
     sequence: int,
     round_number: int,
@@ -48,6 +64,7 @@ def resolve_combat_turn(
 ) -> tuple[list[BattleEvent], int]:
     """Resolve one living combatant turn through the canonical Iron Pit rules."""
     events: list[BattleEvent] = []
+    cleanup_grapples(setup)
     begin_turn(attacker.state)
 
     rage_event = enter_rage(
@@ -63,6 +80,13 @@ def resolve_combat_turn(
         ))
         sequence += 1
 
+    if should_escape_grapple(attacker.state):
+        events.append(resolve_escape_grapple(
+            sequence, round_number, attacker.combatant_id, attacker.state, dice
+        ))
+        sequence += 1
+        return _finish_turn(events, sequence, round_number, attacker)
+
     adrenaline_event = use_adrenaline_rush(
         sequence, round_number, attacker.state, attacker.combatant_id
     )
@@ -75,7 +99,17 @@ def resolve_combat_turn(
     )
     events.extend(closing_events)
 
-    if not closing_handled and attacker.state.template.attack_action is not None:
+    distance = combatant_distance(attacker, target)
+    save_action = next((
+        action for action in attacker.state.template.saving_throw_actions
+        if legal_save_action(action, target, distance)
+    ), None)
+    if not closing_handled and save_action is not None and attacker.state.action_available:
+        events.append(resolve_save_action(
+            sequence, round_number, attacker, target, save_action, distance, dice
+        ))
+        sequence += 1
+    elif not closing_handled and attacker.state.template.attack_action is not None:
         action_events, sequence = resolve_attack_action(
             sequence, round_number, attacker, setup, dice
         )
@@ -89,7 +123,7 @@ def resolve_combat_turn(
             sequence, round_number, attacker, target
         )
         events.extend(prep_events)
-        if attack is not None:
+        if attack is not None and attacker.state.action_available:
             pack = pack_tactics_active(attacker, target, setup)
             events.append(resolve_attack(
                 sequence,
@@ -106,9 +140,4 @@ def resolve_combat_turn(
             ))
             sequence += 1
 
-    rage_event, sequence = finalize_rage_turn(
-        sequence, round_number, attacker.state, attacker.combatant_id
-    )
-    if rage_event is not None:
-        events.append(rage_event)
-    return events, sequence
+    return _finish_turn(events, sequence, round_number, attacker)
