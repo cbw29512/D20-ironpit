@@ -114,10 +114,10 @@ def test_action_heal_prevents_charge_attack_and_partial_charge_movement() -> Non
     heal = HealingAction(
         id="self-heal", name="Self Heal", action_cost="action", target_mode="self", healing_bonus=5,
     )
-    resolve_healing(1, 1, healer, healer, heal, FixedDiceProvider([]))
+    resolve_healing(1, 1, healer, healer, heal, FixedDiceProvider([1]))
     before = healer.position_ft
 
-    events, _, handled = resolve_charge_closing(2, 1, healer, target, FixedDiceProvider([]))
+    events, _, handled = resolve_charge_closing(2, 1, healer, target, FixedDiceProvider([1]))
     assert handled is False
     assert events == []
     assert healer.position_ft == before
