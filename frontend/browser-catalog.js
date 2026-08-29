@@ -35,20 +35,28 @@
     return index === 0 ? base : `${base}-${buildId}`;
   }
 
+  function readyHeroIndex() {
+    return new Map(Object.values(window.IRON_PIT_BROWSER_HEROES).map((hero) => [
+      `${hero.class_id}:${hero.level}:${hero.build_id}`,
+      hero,
+    ]));
+  }
+
   function buildHeroes() {
     const cards = [];
+    const readyHeroes = readyHeroIndex();
     for (const [classId, className, subclassId, subclassName] of CLASS_ROWS) {
       for (let level = 1; level <= 20; level += 1) {
         BUILD_ROWS[classId].forEach(([buildId, buildName], index) => {
-          const ready = classId === "fighter" && level === 1 && buildId === "great-weapon";
+          const runtime = readyHeroes.get(`${classId}:${level}:${buildId}`) || null;
           cards.push({
             id: heroId(classId, level, buildId, index),
-            name: ready ? "Karnok Stoneward" : `${className} ${level} — ${buildName}`,
+            name: runtime?.name || `${className} ${level} — ${buildName}`,
             class_id: classId, class_name: className, level, build_id: buildId, build_name: buildName,
             subclass_id: level >= 3 ? subclassId : null, subclass_name: level >= 3 ? subclassName : null,
-            coverage_status: ready ? "raw_ready" : "blocked",
-            runnable_template_id: ready ? "karnok-stoneward-l1" : null,
-            blockers: ready ? [] : ["legal-character-build-not-certified", "combat-feature-coverage-not-certified"],
+            coverage_status: runtime ? "raw_ready" : "blocked",
+            runnable_template_id: runtime?.id || null,
+            blockers: runtime ? [] : ["legal-character-build-not-certified", "combat-feature-coverage-not-certified"],
           });
         });
       }
