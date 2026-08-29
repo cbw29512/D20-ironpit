@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.content.certified_heroes import build_certified_hero_registry
 from app.domain.catalog import CoverageStatus, HeroCatalogCard
 
 SOURCE = "SRD 5.2.1 / 2024 Free Rules"
@@ -34,10 +35,6 @@ _BUILD_ROWS = {
     "wizard": [("evoker", "Evoker"), ("controller", "Controller"), ("defender", "Defender")],
 }
 
-# RAW_READY is intentionally empty until a build has a complete legal-character
-# dossier and all combat-relevant mechanics used by that build are certified.
-_READY_BUILDS: dict[tuple[str, int, str], tuple[str, str]] = {}
-
 
 def _card_id(class_id: str, level: int, build_id: str, build_index: int) -> str:
     base = f"hero-2024-{class_id}-l{level}"
@@ -49,10 +46,11 @@ def _hero_card(
     level: int,
     build: tuple[str, str],
     build_index: int,
+    ready_builds: dict[tuple[str, int, str], tuple[str, str]],
 ) -> HeroCatalogCard:
     class_id, class_name, subclass_id, subclass_name = class_row
     build_id, build_name = build
-    ready = _READY_BUILDS.get((class_id, level, build_id))
+    ready = ready_builds.get((class_id, level, build_id))
     subclass_ready = level >= 3
     common = dict(
         id=_card_id(class_id, level, build_id, build_index),
@@ -85,8 +83,9 @@ def _hero_card(
 
 
 def build_hero_catalog() -> list[HeroCatalogCard]:
+    ready_builds = build_certified_hero_registry()
     return [
-        _hero_card(class_row, level, build, build_index)
+        _hero_card(class_row, level, build, build_index, ready_builds)
         for class_row in _CLASS_ROWS
         for level in range(1, 21)
         for build_index, build in enumerate(_BUILD_ROWS[class_row[0]])
