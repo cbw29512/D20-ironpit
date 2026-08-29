@@ -4,7 +4,7 @@ on:
   push:
   pull_request:
 
-# Exact-head certification for melee deathmatch, RAW conditions/damage/action economy, browser/Python parity, and monster silhouettes.
+# Exact-head certification for melee deathmatch, RAW conditions/damage/action economy, browser/Python parity, and encounter UI.
 jobs:
   combat-certification:
     runs-on: ubuntu-latest
@@ -44,6 +44,7 @@ jobs:
           node frontend/browser-mixed-multiattack.test.cjs
           node frontend/browser-condition-immunity.test.cjs
           node frontend/figure-visuals.test.cjs
+          node frontend/encounter-picker.test.cjs
       - name: Prove production fight path is backend-free
         run: |
           ! grep -R -q 'IRON_PIT_API_BASE' frontend scripts
@@ -52,9 +53,15 @@ jobs:
           ! test -e frontend/config.js
           ! test -e scripts/write_frontend_config.py
           grep -q 'IRON_PIT_BROWSER_ENGINE.runEncounter' frontend/app.js
-      - name: Prove animated Pit is wired to production fight path
+      - name: Prove animated Pit and encounter picker are wired
         run: |
           grep -q 'id="pit-arena"' frontend/index.html
+          grep -q 'id="party-size"' frontend/index.html
+          grep -q 'id="hero-slot-pickers"' frontend/index.html
+          grep -q 'id="monster-cr-filter"' frontend/index.html
+          grep -q 'encounter-picker.js' frontend/index.html
+          grep -q 'encounter-picker-view.js' frontend/index.html
+          grep -q 'encounter-picker.css' frontend/index.html
           grep -q 'browser-dice.js' frontend/index.html
           grep -q 'browser-monsters-control.js' frontend/index.html
           grep -q 'browser-monsters-poison.js' frontend/index.html
