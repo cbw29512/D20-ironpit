@@ -30,18 +30,22 @@ jobs:
           node --check frontend/preview-engine.js
           node --check frontend/arena-view.js
           node --check frontend/arena-animations.js
-      - name: Validate Netlify static preview config
+      - name: Validate production API fallback config
         run: |
           unset IRON_PIT_API_BASE
           python scripts/write_frontend_config.py
-          grep -q 'IRON_PIT_API_BASE = ""' frontend/config.js
-      - name: Validate Netlify live API config
+          grep -q 'https://iron-pit-d20-api.onrender.com' frontend/config.js
+      - name: Validate deploy API override config
         env:
           IRON_PIT_API_BASE: https://example.com
         run: |
           python scripts/write_frontend_config.py
           grep -q 'https://example.com' frontend/config.js
-      - name: Validate Netlify production-only credit guard
-        run: grep -q 'CONTEXT.*production' netlify.toml
+      - name: Validate production wiring guards
+        run: |
+          grep -q 'CONTEXT.*production' netlify.toml
+          grep -q 'workflow_run' .github/workflows/publish-pages.yml
+          grep -q 'head_branch == '\''main'\''' .github/workflows/publish-pages.yml
+          grep -q 'iron-pit-d20-api.onrender.com' .github/workflows/publish-pages.yml
       - name: Build API Docker image
         run: docker build -t iron-pit-d20-api ./backend
