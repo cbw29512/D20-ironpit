@@ -35,11 +35,12 @@ def resolve_attack(
             raise ValueError("Action is not available for an attack.")
 
         weapon = attack.weapon
+        dodge_disadvantage = 1 if "dodge" in defender.active_effect_ids else 0
         mode = resolve_attack_roll_mode(
             weapon,
             distance_ft,
             advantage_sources=advantage_sources,
-            other_disadvantage_sources=other_disadvantage_sources,
+            other_disadvantage_sources=other_disadvantage_sources + dodge_disadvantage,
         )
         attack_roll = roll_d20(dice, attack.attack_bonus, mode)
         extend_rage_from_attack(attacker, round_number)
