@@ -23,6 +23,7 @@ jobs:
       - name: Validate frontend JavaScript syntax
         run: |
           node --check frontend/app.js
+          node --check frontend/encounter-view.js
           node --check frontend/preview-data.js
           node --check frontend/preview-dice.js
           node --check frontend/preview-engine.js
@@ -39,5 +40,7 @@ jobs:
         run: |
           python scripts/write_frontend_config.py
           grep -q 'https://example.com' frontend/config.js
+      - name: Validate Netlify production-only credit guard
+        run: grep -q 'CONTEXT.*production' netlify.toml
       - name: Build API Docker image
         run: docker build -t iron-pit-d20-api ./backend
