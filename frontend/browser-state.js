@@ -39,13 +39,16 @@
 
   const distance = (a, b) => Math.abs(a.position_ft - b.position_ft);
   const active = (member) => member.state.is_alive && !member.state.is_dead && !member.state.is_unconscious && member.state.current_hp > 0;
+  const downedCharacter = (member) => member.state.template.kind === "character" && member.state.is_alive && !member.state.is_dead && member.state.current_hp === 0;
 
   function opponents(member, setup) {
     return member.side === "heroes" ? setup.monsters : setup.heroes;
   }
 
   function nearestTarget(member, setup) {
-    const candidates = opponents(member, setup).filter(active);
+    const enemies = opponents(member, setup);
+    let candidates = enemies.filter(active);
+    if (!candidates.length) candidates = enemies.filter(downedCharacter);
     return candidates.length ? candidates.reduce((best, item) => distance(member, item) < distance(member, best) ? item : best) : null;
   }
 
@@ -72,6 +75,6 @@
   }
 
   window.IRON_PIT_BROWSER_STATE = {
-    active, beginTurn, buildState, canProne, distance, hasActiveAlly, moveToward, nearestTarget, packTactics,
+    active, beginTurn, buildState, canProne, distance, downedCharacter, hasActiveAlly, moveToward, nearestTarget, packTactics,
   };
 })();
