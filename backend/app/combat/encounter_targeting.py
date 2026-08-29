@@ -36,11 +36,17 @@ def living_opponents(attacker: EncounterCombatant, setup: EncounterSetup) -> lis
 
 
 def select_nearest_target(attacker: EncounterCombatant, setup: EncounterSetup) -> EncounterCombatant | None:
-    """Arena tactic: fight an active grappler first; otherwise engage the nearest eligible enemy."""
+    """Prefer held targets/grapplers, then the nearest eligible enemy."""
     try:
         opponents = living_opponents(attacker, setup)
         if not opponents:
             return None
+        held = [
+            target for target in opponents
+            if any(source.source_id == attacker.combatant_id for source in target.state.grapple_sources)
+        ]
+        if held:
+            return min(held, key=lambda target: combatant_distance(attacker, target))
         grappler_ids = {source.source_id for source in attacker.state.grapple_sources}
         grapplers = [target for target in opponents if target.combatant_id in grappler_ids]
         choices = grapplers or opponents
