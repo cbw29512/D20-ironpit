@@ -35,6 +35,14 @@ const monsters = window.IRON_PIT_BROWSER_MONSTERS;
 
 {
   const hero = { combatant_id: "hero-1:karnok", side: "heroes", position_ft: 0, state: S.buildState(structuredClone(heroes["karnok-stoneward-l1"])) };
+  hero.state.current_hp = 0; hero.state.is_unconscious = true; hero.state.death_save_successes = 2;
+  A.applyDamage(hero.state, 1, false);
+  assert.equal(hero.state.death_save_successes, 2, "damage at 0 HP must not erase existing Death Save successes");
+  assert.equal(hero.state.death_save_failures, 1);
+}
+
+{
+  const hero = { combatant_id: "hero-1:karnok", side: "heroes", position_ft: 0, state: S.buildState(structuredClone(heroes["karnok-stoneward-l1"])) };
   const monster = { combatant_id: "monster-1:commoner", side: "monsters", position_ft: 5, state: S.buildState(structuredClone(monsters["srd-commoner"])) };
   hero.state.current_hp = 0; hero.state.is_unconscious = true;
   window.IRON_PIT_DICE = queuedDice([19, 19, 4, 4, 4, 4]);
