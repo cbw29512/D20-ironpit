@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.barbarian import end_rage_if_incapacitated, extend_rage_from_attack
 from app.combat.damage import resolve_weapon_damage
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
@@ -40,6 +41,7 @@ def resolve_attack(
             other_disadvantage_sources=other_disadvantage_sources,
         )
         attack_roll = roll_d20(dice, attack.attack_bonus, mode)
+        extend_rage_from_attack(attacker, round_number)
         if spend_action:
             attacker.action_available = False
         natural = attack_roll.selected_roll or 0
@@ -62,6 +64,7 @@ def resolve_attack(
                 rolled_components,
             )
             apply_damage(defender, applied_total, critical=critical)
+            end_rage_if_incapacitated(defender)
 
         outcome = "CRITICAL HIT" if critical else ("HIT" if hit else "MISS")
         return BattleEvent(
