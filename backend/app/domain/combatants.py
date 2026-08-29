@@ -43,7 +43,7 @@ class Weapon(BaseModel):
     id: str
     name: str
     attack_kind: WeaponAttackKind
-    dice_count: int = Field(ge=1, le=20)
+    dice_count: int = Field(ge=0, le=20)
     dice_size: int = Field(ge=2, le=100)
     damage_type: DamageType
     animation: str
@@ -53,12 +53,12 @@ class Weapon(BaseModel):
     projectile: str | None = None
     mastery_property: str | None = None
 
-
 class WeaponAttack(BaseModel):
     id: str
     weapon: Weapon
     attack_bonus: int
     damage_bonus: int
+    fixed_damage: int | None = Field(default=None, ge=0)
     conditional_damage: list[ConditionalDamage] = Field(default_factory=list)
     rage_eligible: bool = False
     knocks_prone_max_size: CreatureSize | None = None
