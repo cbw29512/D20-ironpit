@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.combat.action_economy import is_available, spend
 from app.combat.attacks import resolve_attack
 from app.combat.charge import resolve_charge_closing
 from app.combat.dice import DiceProvider
@@ -16,15 +17,14 @@ MELEE_BRAWL_DISTANCE_FT = 5
 def _legal_ranged_attack(attacker: EncounterCombatant, distance_ft: int):
     for attack in weapon_attack_profiles(attacker.state):
         weapon = attack.weapon
-        if weapon.attack_kind is not WeaponAttackKind.RANGED:
-            continue
-        if weapon.long_range_ft is not None and distance_ft <= weapon.long_range_ft:
-            return attack
+        if weapon.attack_kind is WeaponAttackKind.RANGED:
+            if weapon.long_range_ft is not None and distance_ft <= weapon.long_range_ft:
+                return attack
     return None
 
 
 def _take_dodge(sequence: int, round_number: int, attacker: EncounterCombatant) -> BattleEvent:
-    attacker.state.action_available = False
+    spend(attacker.state, "action")
     if DODGE_EFFECT_ID not in attacker.state.active_effect_ids:
         attacker.state.active_effect_ids.append(DODGE_EFFECT_ID)
     return BattleEvent(
@@ -56,36 +56,26 @@ def resolve_simple_closing(
     if charged:
         return charge_events, charge_sequence, True
 
-    # Multiattack/Extra Attack must keep its full printed action economy. The caller
-    # resolves the Attack action first and then spends any remaining movement closing.
+    # Multiattack/Extra Attack keeps its full printed action economy. The caller
+    # resolves that action first and then spends any remaining movement closing.
     if attacker.state.template.attack_action is not None:
         return [], sequence, False
 
     events: list[BattleEvent] = []
     ranged = _legal_ranged_attack(attacker, combatant_distance(attacker, target))
-    if ranged is not None and attacker.state.action_available:
+    if ranged is not None and is_available(attacker.state, "action"):
         events.append(resolve_attack(
-            sequence,
-            round_number,
-            attacker.state,
-            target.state,
-            ranged,
-            combatant_distance(attacker, target),
-            dice,
-            actor_event_id=attacker.combatant_id,
-            target_event_id=target.combatant_id,
+            sequence, round_number, attacker.state, target.state, ranged,
+            combatant_distance(attacker, target), dice,
+            actor_event_id=attacker.combatant_id, target_event_id=target.combatant_id,
         ))
         sequence += 1
-    elif attacker.state.action_available:
+    elif is_available(attacker.state, "action"):
         events.append(_take_dodge(sequence, round_number, attacker))
         sequence += 1
 
     movement = move_toward_combatant(
-        sequence,
-        round_number,
-        attacker,
-        target,
-        MELEE_BRAWL_DISTANCE_FT,
+        sequence, round_number, attacker, target, MELEE_BRAWL_DISTANCE_FT,
     )
     if movement is not None:
         events.append(movement)
