@@ -35,11 +35,11 @@
     let damageRoll = null;
     let damageComponents = [];
     const count = action.damageDiceCount || 0;
-    if (count) {
+    if (count && !(save.succeeded && action.successDamage === "none")) {
       if (!action.damageType) throw new Error(`${action.name} has damage dice but no damage type.`);
       const rolls = D().rollMany(count, action.damageDiceSize);
       let total = rolls.reduce((sum, roll) => sum + roll, 0) + (action.damageBonus || 0);
-      if (save.succeeded) total = action.successDamage === "half" ? Math.floor(total / 2) : 0;
+      if (save.succeeded && action.successDamage === "half") total = Math.floor(total / 2);
       const applied = A().adjustedDamage(target.state, Math.max(0, total), action.damageType);
       damageComponents = [{
         source: action.name, notation: `${count}d${action.damageDiceSize}+${action.damageBonus || 0}`,
@@ -53,7 +53,7 @@
       }
     }
     let appliedConditions = [];
-    if (!save.succeeded && target.state.current_hp > 0 && action.grappleEscapeDc) {
+    if (!save.succeeded && target.state.is_alive && !target.state.is_dead && action.grappleEscapeDc) {
       appliedConditions = G().apply(
         target.state, actor.combatant_id, action.grappleEscapeDc, action.range, Boolean(action.restrainsWhileGrappled),
       );
