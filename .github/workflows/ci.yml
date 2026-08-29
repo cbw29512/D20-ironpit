@@ -33,6 +33,7 @@ jobs:
         run: |
           node frontend/browser-engine.test.cjs
           node frontend/browser-rage.test.cjs
+          node frontend/browser-beast2.test.cjs
       - name: Prove production fight path is backend-free
         run: |
           ! grep -q 'IRON_PIT_API_BASE' frontend/app.js
