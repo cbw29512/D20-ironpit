@@ -3,6 +3,7 @@
 
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const M = () => window.IRON_PIT_BROWSER_MULTIATTACK;
   const D = () => window.IRON_PIT_DICE;
 
   const attacks = (member) => member.state.template.attacks || [];
@@ -96,6 +97,11 @@
     const target = S().nearestTarget(member, setup); if (!target) return { events, sequence };
     const closing = closeTurn(sequence, round, member, target); events.push(...closing.events); sequence = closing.sequence;
     if (closing.handled) return { events, sequence };
+    if (member.state.template.attack_action) {
+      const multi = M().resolveAttackAction(sequence, round, member, setup);
+      events.push(...multi.events);
+      return { events, sequence: multi.sequence };
+    }
     const attack = legalAttack(member, S().distance(member, target));
     if (attack && member.state.action_available) {
       const pack = S().packTactics(member, setup);
