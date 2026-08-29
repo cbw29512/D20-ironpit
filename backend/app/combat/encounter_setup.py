@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from fractions import Fraction
 
 from app.combat.state import build_combatant_state
 from app.content.roster import build_arena_roster
@@ -20,6 +21,27 @@ def _resolve_card(card_id: str, cards: dict[str, CombatantTemplate], side: str) 
     except KeyError as exc:
         logger.warning("Unknown %s card requested: %s", side, card_id)
         raise ValueError(f"Unknown {side} card: {card_id}") from exc
+
+
+def _format_fraction(value: Fraction) -> str:
+    return str(value.numerator) if value.denominator == 1 else f"{value.numerator}/{value.denominator}"
+
+
+def _hero_level_total(heroes: list[EncounterCombatant]) -> int:
+    levels = [hero.state.template.level for hero in heroes]
+    if any(level is None for level in levels):
+        raise ValueError("Every hero card must have a character level.")
+    return sum(int(level) for level in levels)
+
+
+def _monster_cr_total(monsters: list[EncounterCombatant]) -> str:
+    total = Fraction(0, 1)
+    for monster in monsters:
+        challenge_rating = monster.state.template.challenge_rating
+        if challenge_rating is None:
+            raise ValueError("Every monster card must have a challenge rating.")
+        total += Fraction(challenge_rating)
+    return _format_fraction(total)
 
 
 def build_encounter_setup(selection: EncounterSelection) -> EncounterSetup:
@@ -49,6 +71,8 @@ def build_encounter_setup(selection: EncounterSelection) -> EncounterSetup:
         return EncounterSetup(
             heroes=hero_states,
             monsters=monster_states,
+            hero_total_levels=_hero_level_total(hero_states),
+            monster_total_cr=_monster_cr_total(monster_states),
             starting_distance_ft=selection.starting_distance_ft,
         )
     except ValueError:
