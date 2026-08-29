@@ -37,10 +37,11 @@
   function adrenaline(sequence, round, member) {
     const state = member.state;
     if (!state.template.traits?.includes("adrenaline-rush") || !state.bonus_action_available || !(state.resources["adrenaline-rush"] > 0)) return null;
-    state.resources["adrenaline-rush"] -= 1; state.bonus_action_available = false; state.movement_remaining_ft += state.template.speed_ft;
+    const movement = H().speedIsZero(state) ? 0 : state.template.speed_ft;
+    state.resources["adrenaline-rush"] -= 1; state.bonus_action_available = false; state.movement_remaining_ft += movement;
     const pb = 2 + Math.floor((state.template.level - 1) / 4); state.temporary_hp = Math.max(state.temporary_hp, pb);
     return { sequence, round_number: round, event_type: "feature", actor_id: member.combatant_id, actor_name: state.template.name,
-      feature_id: "adrenaline-rush", resource_remaining: state.resources["adrenaline-rush"], movement_ft: state.template.speed_ft,
+      feature_id: "adrenaline-rush", resource_remaining: state.resources["adrenaline-rush"], movement_ft: movement,
       animation: "dash", description: `${state.template.name} uses Adrenaline Rush.` };
   }
 
