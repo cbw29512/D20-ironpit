@@ -5,7 +5,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-from app.domain.actions import AttackActionDefinition
+from app.domain.actions import AttackActionDefinition, GrappleSource, HitControlEffect, SavingThrowAction
 from app.domain.size import CreatureSize
 from app.domain.traits import CombatTrait
 
@@ -53,6 +53,7 @@ class Weapon(BaseModel):
     projectile: str | None = None
     mastery_property: str | None = None
 
+
 class WeaponAttack(BaseModel):
     id: str
     weapon: Weapon
@@ -62,6 +63,7 @@ class WeaponAttack(BaseModel):
     conditional_damage: list[ConditionalDamage] = Field(default_factory=list)
     rage_eligible: bool = False
     knocks_prone_max_size: CreatureSize | None = None
+    control_effect: HitControlEffect | None = None
 
 
 class VisualLoadout(BaseModel):
@@ -99,6 +101,9 @@ class CombatantTemplate(BaseModel):
     weapon_attack: WeaponAttack
     alternate_weapon_attacks: list[WeaponAttack] = Field(default_factory=list)
     attack_action: AttackActionDefinition | None = None
+    saving_throw_actions: list[SavingThrowAction] = Field(default_factory=list)
+    saving_throw_bonuses: dict[str, int] = Field(default_factory=dict)
+    skill_bonuses: dict[str, int] = Field(default_factory=dict)
     combat_traits: list[CombatTrait] = Field(default_factory=list)
     fighting_style: str | None = None
     weapon_masteries: list[str] = Field(default_factory=list)
@@ -139,6 +144,7 @@ class CombatantState(BaseModel):
     movement_remaining_ft: int = Field(default=0, ge=0)
     resources: list[ResourceState] = Field(default_factory=list)
     active_effect_ids: list[str] = Field(default_factory=list)
+    grapple_sources: list[GrappleSource] = Field(default_factory=list)
     feature_last_turn_keys: dict[str, str] = Field(default_factory=dict)
     temporary_damage_resistances: list[DamageType] = Field(default_factory=list)
     rage_expires_round: int | None = Field(default=None, ge=1)
