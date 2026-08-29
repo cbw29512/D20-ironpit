@@ -6,15 +6,10 @@ from app.domain.actions import (
     SavingThrowAction,
 )
 from app.domain.combatants import (
-    ArenaRoster,
-    BattlefieldState,
-    CombatantState,
     CombatantTemplate,
     ConditionalDamage,
     DamageType,
-    DemoRoster,
     ResourceDefinition,
-    ResourceState,
     VisualLoadout,
     Weapon,
     WeaponAttack,
@@ -31,6 +26,7 @@ from app.domain.encounters import (
     InitiativeGroup,
 )
 from app.domain.events import BattleEvent, BattleResult, DamageRollComponent, DiceRoll, RollMode
+from app.domain.runtime import ArenaRoster, BattlefieldState, CombatantState, DemoRoster, ResourceState
 from app.domain.traits import CombatTrait
 
 __all__ = [
