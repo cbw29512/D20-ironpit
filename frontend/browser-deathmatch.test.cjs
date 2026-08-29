@@ -22,6 +22,7 @@ const queuedDice = (values, fallback = 10) => {
 
 const S = window.IRON_PIT_BROWSER_STATE;
 const A = window.IRON_PIT_BROWSER_ATTACK;
+const T = window.IRON_PIT_BROWSER_TURN;
 const heroes = window.IRON_PIT_BROWSER_HEROES;
 const monsters = window.IRON_PIT_BROWSER_MONSTERS;
 
@@ -34,17 +35,37 @@ const monsters = window.IRON_PIT_BROWSER_MONSTERS;
 
 {
   const hero = { combatant_id: "hero-1:karnok", side: "heroes", position_ft: 0, state: S.buildState(structuredClone(heroes["karnok-stoneward-l1"])) };
-  hero.state.current_hp = 0; hero.state.is_unconscious = true; hero.state.death_save_successes = 2;
+  hero.state.active_effect_ids.push("dodge");
+  A.applyDamage(hero.state, hero.state.current_hp, false);
+  assert.equal(hero.state.is_unconscious, true);
+  assert.ok(hero.state.active_effect_ids.includes("prone"), "Unconscious must include Prone");
+  assert.ok(!hero.state.active_effect_ids.includes("dodge"), "Dodge benefit must end when Incapacitated");
+}
+
+{
+  const hero = { combatant_id: "hero-1:karnok", side: "heroes", position_ft: 0, state: S.buildState(structuredClone(heroes["karnok-stoneward-l1"])) };
+  A.applyDamage(hero.state, hero.state.current_hp, false);
+  hero.state.death_save_successes = 2;
   A.applyDamage(hero.state, 1, false);
   assert.equal(hero.state.death_save_successes, 2, "damage at 0 HP must not erase existing Death Save successes");
   assert.equal(hero.state.death_save_failures, 1);
 }
 
 {
+  const member = { combatant_id: "hero-1:karnok", side: "heroes", position_ft: 0, state: S.buildState(structuredClone(heroes["karnok-stoneward-l1"])) };
+  A.applyDamage(member.state, member.state.current_hp, false);
+  window.IRON_PIT_DICE = queuedDice([20]);
+  T.deathSave(1, 1, member);
+  assert.equal(member.state.current_hp, 1);
+  assert.equal(member.state.is_unconscious, false);
+  assert.ok(member.state.active_effect_ids.includes("prone"), "ending Unconscious after a natural 20 must leave Prone");
+}
+
+{
   const hero = { combatant_id: "hero-1:karnok", side: "heroes", position_ft: 0, state: S.buildState(structuredClone(heroes["karnok-stoneward-l1"])) };
   const monster = { combatant_id: "monster-1:commoner", side: "monsters", position_ft: 5, state: S.buildState(structuredClone(monsters["srd-commoner"])) };
-  hero.state.current_hp = 0; hero.state.is_unconscious = true;
-  window.IRON_PIT_DICE = queuedDice([19, 19, 4, 4, 4, 4]);
+  A.applyDamage(hero.state, hero.state.current_hp, false);
+  window.IRON_PIT_DICE = queuedDice([19, 19, 1, 1]);
   const event = A.resolveAttack(1, 1, monster, hero, monster.state.template.attacks[0], 5);
   assert.equal(event.attack_roll.mode, "advantage");
   assert.equal(event.attack_roll.selected_roll, 19);
