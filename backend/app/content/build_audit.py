@@ -45,7 +45,10 @@ def _audit_final_scores(profile: CharacterBuildProfile) -> list[str]:
     return issues
 
 
-def _audit_features(profile: CharacterBuildProfile) -> list[str]:
+def _audit_features(
+    profile: CharacterBuildProfile,
+    template: CombatantTemplate,
+) -> list[str]:
     issues: list[str] = []
     feature_ids = [audit.feature_id for audit in profile.feature_audits]
     if len(feature_ids) != len(set(feature_ids)):
@@ -55,9 +58,17 @@ def _audit_features(profile: CharacterBuildProfile) -> list[str]:
         issues.append(f"missing-{category}-feature-audit")
     if profile.origin_feat_id not in feature_ids:
         issues.append("origin-feat-missing-from-feature-audit")
+
+    runtime_weapon_ids = {
+        template.weapon_attack.weapon.id,
+        *(attack.weapon.id for attack in template.alternate_weapon_attacks),
+    }
     for audit in profile.feature_audits:
         if audit.combat_relevant and not audit.automated:
             issues.append(f"combat-feature-not-automated:{audit.feature_id}")
+        required_weapon = audit.runtime_attack_weapon_id
+        if required_weapon and required_weapon not in runtime_weapon_ids:
+            issues.append(f"runtime-weapon-not-automated:{required_weapon}")
     return issues
 
 
@@ -82,7 +93,7 @@ def audit_character_build(
 
     issues.extend(_audit_background_increases(profile))
     issues.extend(_audit_final_scores(profile))
-    issues.extend(_audit_features(profile))
+    issues.extend(_audit_features(profile, template))
     if not profile.source_references or any(not ref.strip() for ref in profile.source_references):
         issues.append("source-reference-missing")
     return issues
