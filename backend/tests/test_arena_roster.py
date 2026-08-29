@@ -19,7 +19,9 @@ def test_arena_roster_exposes_certified_batch() -> None:
         "srd-giant-rat", "srd-giant-weasel", "srd-axe-beak", "srd-giant-lizard",
         "srd-wolf", "srd-dire-wolf", "srd-black-bear", "srd-brown-bear",
         "srd-camel", "srd-deer", "srd-draft-horse", "srd-giant-badger",
-        "srd-boar", "srd-elk", "srd-giant-boar",
+        "srd-boar", "srd-elk", "srd-giant-boar", "srd-awakened-shrub",
+        "srd-badger", "srd-bat", "srd-cat", "srd-crab", "srd-frog", "srd-hawk",
+        "srd-lizard", "srd-owl", "srd-rat", "srd-raven", "srd-weasel",
     ]
 
 
