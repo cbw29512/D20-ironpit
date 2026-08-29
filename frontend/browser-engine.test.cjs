@@ -50,20 +50,22 @@ function fight(heroIds, monsterIds, distance = 30, dice = deterministicDice()) {
 }
 
 {
-  const battle = fight(["karnok-stoneward-l1"], ["srd-giant-rat", "srd-giant-rat"], 5, deterministicDice(19));
+  const battle = fight(["karnok-stoneward-l1"], ["srd-dire-wolf", "srd-dire-wolf"], 5, queuedDice([1, 20, 20, 20, 10, 10, 10]));
   const packAttack = battle.events.find((event) => event.event_type === "attack" && event.feature_id === "pack-tactics");
   assert.ok(packAttack, "expected Pack Tactics attack");
   assert.equal(packAttack.attack_roll.mode, "advantage");
 }
 
 {
-  const battle = fight(["karnok-stoneward-l1"], ["srd-wolf"], 5, queuedDice([20, 1, 15, 6, 6, 6, 6]));
+  const battle = fight(["karnok-stoneward-l1"], ["srd-dire-wolf"], 5,
+    queuedDice([20, 1, 20, 1, 1, 1, 1, 1, 1, 1, 1, 10, 1]));
   assert.ok(battle.events.some((event) => event.event_type === "attack" && event.critical), "expected a critical attack");
   assert.ok(battle.events.some((event) => event.event_type === "attack" && event.attack_roll.selected_roll === 1), "expected a natural 1 attack");
 }
 
 {
-  const battle = fight(["karnok-stoneward-l1"], ["srd-wolf", "srd-wolf"], 5, deterministicDice(3));
+  const battle = fight(["karnok-stoneward-l1"], ["srd-wolf", "srd-wolf"], 5,
+    queuedDice([1, 20, 20, 20, 6, 6, 10, 10]));
   assert.ok(battle.events.some((event) => event.applied_condition_ids?.includes("prone")), "expected Wolf/Dire Wolf Prone support");
 }
 
