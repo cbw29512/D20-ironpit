@@ -3,8 +3,9 @@ from __future__ import annotations
 import logging
 
 from app.combat.barbarian import end_rage_if_incapacitated, extend_rage_from_attack
+from app.combat.bloodied import bloodied_fury_advantage
 from app.combat.conditions import apply_hit_conditions, attack_roll_condition_sources
-from app.combat.damage import resolve_weapon_damage
+from app.combat.damage import BonusDamageSpec, resolve_weapon_damage
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
 from app.combat.range import resolve_attack_roll_mode
@@ -30,6 +31,7 @@ def resolve_attack(
     other_disadvantage_sources: int = 0,
     feature_id: str | None = None,
     turn_key: str | None = None,
+    bonus_damage: BonusDamageSpec | None = None,
 ) -> BattleEvent:
     try:
         if spend_action and not attacker.action_available:
@@ -44,7 +46,11 @@ def resolve_attack(
         mode = resolve_attack_roll_mode(
             weapon,
             distance_ft,
-            advantage_sources=advantage_sources + condition_advantage,
+            advantage_sources=(
+                advantage_sources
+                + condition_advantage
+                + bloodied_fury_advantage(attacker, attack)
+            ),
             other_disadvantage_sources=other_disadvantage_sources + condition_disadvantage,
         )
         attack_roll = roll_d20(dice, attack.attack_bonus, mode)
@@ -69,6 +75,7 @@ def resolve_attack(
                 critical,
                 mode,
                 active_turn_key,
+                bonus_damage=bonus_damage,
             )
             applied_total, damage_components = apply_damage_defenses(
                 defender,
