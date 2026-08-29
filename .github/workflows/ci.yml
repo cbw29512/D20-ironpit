@@ -42,6 +42,7 @@ jobs:
           node frontend/browser-mixed-damage.test.cjs
           node frontend/browser-venom.test.cjs
           node frontend/browser-mixed-multiattack.test.cjs
+          node frontend/browser-condition-immunity.test.cjs
           node frontend/figure-visuals.test.cjs
       - name: Prove production fight path is backend-free
         run: |
@@ -59,6 +60,7 @@ jobs:
           grep -q 'browser-monsters-poison.js' frontend/index.html
           grep -q 'browser-monsters-venom.js' frontend/index.html
           grep -q 'browser-monsters-mixed.js' frontend/index.html
+          grep -q 'browser-condition-immunity.js' frontend/index.html
           grep -q 'browser-grapple.js' frontend/index.html
           grep -q 'browser-timed-conditions.js' frontend/index.html
           grep -q 'browser-saves.js' frontend/index.html
