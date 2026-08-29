@@ -4,12 +4,14 @@
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
+  const T = () => window.IRON_PIT_BROWSER_TIMED;
 
   function conditionSources(attacker, defender, distance, targetId) {
     let advantage = 0;
     let disadvantage = 0;
     if (attacker.active_effect_ids.includes("prone")) disadvantage += 1;
     if (attacker.active_effect_ids.includes("restrained")) disadvantage += 1;
+    if (attacker.active_effect_ids.includes("poisoned")) disadvantage += 1;
     disadvantage += G()?.attackDisadvantage(attacker, targetId) || 0;
     if (defender.active_effect_ids.includes("dodge") && !defender.is_unconscious && defender.template.speed_ft > 0 && !G()?.speedIsZero(defender)) disadvantage += 1;
     if (defender.is_unconscious) advantage += 1;
@@ -121,12 +123,14 @@
       if (livingTarget && control?.grappleEscapeDc && (!control.maxTargetSize || S().sizeAtMost(target, control.maxTargetSize))) {
         applied.push(...G().apply(target.state, attacker.combatant_id, control.grappleEscapeDc, attack.reach || 5, Boolean(control.restrainsWhileGrappled)));
       }
+      if (livingTarget && control?.conditionId) applied.push(T().apply(target.state, control.conditionId, attacker.combatant_id, Boolean(control.expiresAtStartOfSourceTurn)));
     }
     let description = `${attacker.state.template.name}: ${critical ? "CRITICAL HIT" : hit ? "HIT" : "MISS"} with ${attack.name}.`;
     if (damageOutcome === "relentless_endurance") description += ` ${target.state.template.name} uses Relentless Endurance and remains at 1 HP.`;
     if (applied.includes("prone")) description += ` ${target.state.template.name} is knocked Prone.`;
     if (applied.includes("grappled")) description += ` ${target.state.template.name} is Grappled.`;
     if (applied.includes("restrained")) description += ` ${target.state.template.name} is Restrained while Grappled.`;
+    if (applied.includes("poisoned")) description += ` ${target.state.template.name} is Poisoned.`;
     return {
       sequence, round_number: round, event_type: "attack", actor_id: attacker.combatant_id,
       actor_name: attacker.state.template.name, target_id: target.combatant_id, target_name: target.state.template.name,
