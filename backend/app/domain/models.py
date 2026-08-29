@@ -26,7 +26,7 @@ from app.domain.encounters import (
     InitiativeGroup,
 )
 from app.domain.events import BattleEvent, BattleResult, DamageRollComponent, DiceRoll, RollMode
-from app.domain.runtime import ArenaRoster, BattlefieldState, CombatantState, DemoRoster, ResourceState
+from app.domain.runtime import ArenaRoster, BattlefieldState, CombatantState, DemoRoster, ResourceState, TimedEffect
 from app.domain.traits import CombatTrait
 
 __all__ = [
@@ -58,6 +58,7 @@ __all__ = [
     "ResourceState",
     "RollMode",
     "SavingThrowAction",
+    "TimedEffect",
     "VisualLoadout",
     "Weapon",
     "WeaponAttack",
