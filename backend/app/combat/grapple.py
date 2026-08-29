@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.barbarian import rage_active
+from app.combat.condition_immunity import condition_is_immune
 from app.combat.dice import DiceProvider
 from app.combat.rolls import roll_d20
 from app.domain.models import BattleEvent, CombatantState, EncounterSetup, GrappleSource, RollMode
@@ -33,7 +34,10 @@ def apply_grapple(
     *,
     restrains: bool = False,
 ) -> list[str]:
+    if condition_is_immune(state, GRAPPLED_EFFECT_ID):
+        return []
     state.grapple_sources = [source for source in state.grapple_sources if source.source_id != source_id]
+    restrains = restrains and not condition_is_immune(state, RESTRAINED_EFFECT_ID)
     state.grapple_sources.append(GrappleSource(
         source_id=source_id,
         escape_dc=escape_dc,
