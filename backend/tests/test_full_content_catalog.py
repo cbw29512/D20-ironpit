@@ -77,9 +77,11 @@ def test_current_certified_monsters_are_linked_to_runtime_templates() -> None:
         "Axe Beak": "srd-axe-beak",
         "Bandit": "srd-bandit",
         "Commoner": "srd-commoner",
+        "Dire Wolf": "srd-dire-wolf",
         "Giant Lizard": "srd-giant-lizard",
         "Giant Rat": "srd-giant-rat",
         "Giant Weasel": "srd-giant-weasel",
         "Goblin Warrior": "srd-goblin-warrior",
         "Guard": "srd-guard",
+        "Wolf": "srd-wolf",
     }
