@@ -3,10 +3,11 @@ from __future__ import annotations
 import logging
 from typing import Literal
 
+from app.combat.orc import use_relentless_endurance
 from app.domain.models import CombatantState
 
 logger = logging.getLogger(__name__)
-ZeroHpOutcome = Literal["damaged", "unconscious", "dead", "unchanged"]
+ZeroHpOutcome = Literal["damaged", "unconscious", "dead", "unchanged", "relentless_endurance"]
 
 
 def reset_death_saves(state: CombatantState) -> None:
@@ -21,6 +22,12 @@ def _mark_dead(state: CombatantState) -> ZeroHpOutcome:
     state.is_unconscious = False
     state.is_stable = False
     return "dead"
+
+
+def _after_temporary_hp(state: CombatantState, amount: int) -> int:
+    absorbed = min(state.temporary_hp, amount)
+    state.temporary_hp -= absorbed
+    return amount - absorbed
 
 
 def restore_hit_points(state: CombatantState, amount: int) -> int:
@@ -41,12 +48,16 @@ def restore_hit_points(state: CombatantState, amount: int) -> int:
 
 
 def apply_damage(state: CombatantState, amount: int, *, critical: bool = False) -> ZeroHpOutcome:
-    """Apply SRD 5.2.1 zero-HP rules for ordinary monsters and player characters."""
+    """Apply temporary HP, SRD zero-HP rules, and certified zero-HP prevention."""
     try:
         if amount < 0:
             raise ValueError("Damage cannot be negative.")
         if amount == 0 or state.is_dead:
             return "unchanged"
+
+        amount = _after_temporary_hp(state, amount)
+        if amount == 0:
+            return "damaged"
 
         if state.current_hp > 0:
             hp_before = state.current_hp
@@ -59,6 +70,8 @@ def apply_damage(state: CombatantState, amount: int, *, critical: bool = False) 
             remaining_damage = max(0, amount - hp_before)
             if remaining_damage >= state.template.max_hp:
                 return _mark_dead(state)
+            if use_relentless_endurance(state, remaining_damage):
+                return "relentless_endurance"
             state.is_alive = True
             state.is_unconscious = True
             state.is_stable = False
