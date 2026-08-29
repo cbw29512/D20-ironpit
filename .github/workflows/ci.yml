@@ -5,43 +5,32 @@ on:
   pull_request:
 
 jobs:
-  backend-tests:
+  combat-certification:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Install
+      - name: Install Python rules reference
         working-directory: backend
         run: pip install -e '.[dev]'
       - name: Enforce production source limits
         run: python scripts/check_source_limits.py
-      - name: Test
+      - name: Certify Python rules reference
         working-directory: backend
         run: pytest -q
-      - name: Validate frontend JavaScript syntax
+      - name: Validate browser JavaScript syntax
         run: |
-          node --check frontend/app.js
-          node --check frontend/encounter-view.js
-          node --check frontend/combat-effects.js
-          node --check frontend/preview-data.js
-          node --check frontend/preview-dice.js
-          node --check frontend/preview-engine.js
-          node --check frontend/arena-view.js
-          node --check frontend/arena-animations.js
-      - name: Validate Netlify static preview config
+          for file in frontend/*.js; do
+            node --check "$file"
+          done
+      - name: Run deterministic browser combat regressions
+        run: node frontend/browser-engine.test.cjs
+      - name: Prove production fight path is backend-free
         run: |
-          unset IRON_PIT_API_BASE
-          python scripts/write_frontend_config.py
-          grep -q 'IRON_PIT_API_BASE = ""' frontend/config.js
-      - name: Validate Netlify live API config
-        env:
-          IRON_PIT_API_BASE: https://example.com
-        run: |
-          python scripts/write_frontend_config.py
-          grep -q 'https://example.com' frontend/config.js
+          ! grep -q 'IRON_PIT_API_BASE' frontend/app.js
+          ! grep -q '/api/' frontend/app.js
+          grep -q 'IRON_PIT_BROWSER_ENGINE.runEncounter' frontend/app.js
       - name: Validate Netlify production-only credit guard
         run: grep -q 'CONTEXT.*production' netlify.toml
-      - name: Build API Docker image
-        run: docker build -t iron-pit-d20-api ./backend
