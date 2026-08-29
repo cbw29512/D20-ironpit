@@ -32,14 +32,14 @@ def _damage_components(
     dice: DiceProvider,
     succeeded: bool,
 ) -> list[DamageRollComponent]:
-    if action.damage_dice_count == 0:
+    if action.damage_dice_count == 0 or (succeeded and action.success_damage == "none"):
         return []
     if action.damage_type is None:
         raise ValueError(f"{action.name} has damage dice but no damage type.")
     rolls = [dice.roll(action.damage_dice_size) for _ in range(action.damage_dice_count)]
     total = sum(rolls) + action.damage_bonus
-    if succeeded:
-        total = total // 2 if action.success_damage == "half" else 0
+    if succeeded and action.success_damage == "half":
+        total //= 2
     return [DamageRollComponent(
         source=action.name,
         notation=f"{action.damage_dice_count}d{action.damage_dice_size}+{action.damage_bonus}",
@@ -82,7 +82,7 @@ def resolve_save_action(
         end_rage_if_incapacitated(target.state)
 
     applied_conditions: list[str] = []
-    if not succeeded and target.state.current_hp > 0 and action.grapple_escape_dc is not None:
+    if not succeeded and target.state.is_alive and not target.state.is_dead and action.grapple_escape_dc is not None:
         applied_conditions = apply_grapple(
             target.state,
             actor.combatant_id,
