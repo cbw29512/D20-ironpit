@@ -28,6 +28,12 @@
     return node;
   }
 
+  function anchorBanner(screen, card) {
+    const rect = card?.getBoundingClientRect();
+    const top = rect ? Math.max(18, Math.min(window.innerHeight - 150, rect.top - 76)) : 28;
+    screen.style.setProperty("--fx-top", `${top}px`);
+  }
+
   async function showMoment(event, kind) {
     const card = actorCard(event.actor_id);
     const screen = overlay();
@@ -37,6 +43,7 @@
     label.textContent = critical
       ? `${actor} — CRITICAL HIT!`
       : `${actor} — NATURAL 1 · MISS!`;
+    anchorBanner(screen, card);
     screen.setAttribute("aria-hidden", "false");
     screen.className = critical ? "critical-screen" : "fumble-screen";
     card?.classList.add(critical ? "critical-hit" : "critical-fumble");
