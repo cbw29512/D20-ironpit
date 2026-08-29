@@ -46,7 +46,17 @@ jobs:
           grep -q 'CONTEXT.*production' netlify.toml
           grep -q 'workflow_run' .github/workflows/publish-pages.yml
           grep -q 'head_branch == '\''main'\''' .github/workflows/publish-pages.yml
-          grep -q 'iron-pit-d20-api.onrender.com' .github/workflows/publish-pages.yml
+      - name: Inspect current Netlify production config
+        if: github.ref == 'refs/heads/fix/production-api-wiring'
+        run: |
+          echo '--- Netlify root status ---'
+          curl --silent --show-error --fail --location --max-time 30 --write-out '\nHTTP %{http_code}\n' https://ironpit.netlify.app/ | head -c 2000
+          echo
+          echo '--- Netlify config.js ---'
+          curl --silent --show-error --fail --location --max-time 30 https://ironpit.netlify.app/config.js | tee /tmp/netlify-config.js
+          echo
+          api_base="$(sed -n 's/.*IRON_PIT_API_BASE = "\(https:[^"]*\)".*/\1/p' /tmp/netlify-config.js)"
+          echo "Recovered Netlify API base: ${api_base:-<blank>}"
       - name: Validate production Render health endpoint
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/fix/production-api-wiring'
         run: |
