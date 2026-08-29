@@ -16,6 +16,7 @@ DamageTypeName = Literal[
 class GrappleSource(BaseModel):
     source_id: str
     escape_dc: int = Field(ge=1, le=40)
+    range_ft: int = Field(default=5, ge=0)
     restrains: bool = False
 
 
