@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.damage import resolve_weapon_damage
+from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
 from app.combat.range import resolve_attack_roll_mode
 from app.combat.rolls import roll_d20
@@ -41,14 +42,18 @@ def resolve_attack(
         damage_components = []
 
         if hit:
-            damage_roll, damage_components = resolve_weapon_damage(
+            damage_roll, rolled_components = resolve_weapon_damage(
                 attacker,
                 attack,
                 dice,
                 critical,
                 mode,
             )
-            apply_damage(defender, damage_roll.total, critical=critical)
+            applied_total, damage_components = apply_damage_defenses(
+                defender,
+                rolled_components,
+            )
+            apply_damage(defender, applied_total, critical=critical)
 
         outcome = "CRITICAL HIT" if critical else ("HIT" if hit else "MISS")
         return BattleEvent(

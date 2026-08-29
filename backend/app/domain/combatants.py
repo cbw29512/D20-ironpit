@@ -9,9 +9,19 @@ from app.domain.actions import AttackActionDefinition
 
 
 class DamageType(StrEnum):
-    SLASHING = "slashing"
-    PIERCING = "piercing"
+    ACID = "acid"
     BLUDGEONING = "bludgeoning"
+    COLD = "cold"
+    FIRE = "fire"
+    FORCE = "force"
+    LIGHTNING = "lightning"
+    NECROTIC = "necrotic"
+    PIERCING = "piercing"
+    POISON = "poison"
+    PSYCHIC = "psychic"
+    RADIANT = "radiant"
+    SLASHING = "slashing"
+    THUNDER = "thunder"
 
 
 class WeaponAttackKind(StrEnum):
@@ -86,6 +96,9 @@ class CombatantTemplate(BaseModel):
     attack_action: AttackActionDefinition | None = None
     fighting_style: str | None = None
     weapon_masteries: list[str] = Field(default_factory=list)
+    damage_resistances: list[DamageType] = Field(default_factory=list)
+    damage_vulnerabilities: list[DamageType] = Field(default_factory=list)
+    damage_immunities: list[DamageType] = Field(default_factory=list)
     visual: VisualLoadout
     resources: list[ResourceDefinition] = Field(default_factory=list)
     source: str
