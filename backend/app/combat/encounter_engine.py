@@ -14,6 +14,7 @@ from app.combat.encounter_initiative import roll_encounter_initiative
 from app.combat.encounter_outcome import resolve_encounter_outcome
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.encounter_targeting import select_nearest_target
+from app.combat.timed_conditions import expire_start_of_turn_conditions
 from app.domain.encounters import EncounterBattleResult, EncounterCombatant, EncounterSelection
 from app.domain.models import BattleEvent
 
@@ -58,6 +59,11 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                     )
 
                 attacker = by_id[combatant_id]
+                expiry_events, sequence = expire_start_of_turn_conditions(
+                    sequence, round_number, attacker, setup
+                )
+                events.extend(expiry_events)
+
                 death_event, sequence = _resolve_zero_hp_turn(
                     sequence, round_number, attacker, dice
                 )
