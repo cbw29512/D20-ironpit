@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.combat.action_economy import is_available, is_incapacitated, spend
 from app.domain.models import BattleEvent, CombatantState, DamageType, WeaponAttack
 
 RAGE_EFFECT_ID = "rage"
@@ -37,11 +38,11 @@ def enter_rage(
     if rage_active(state):
         return None
     resource = _rage_resource(state)
-    if resource is None or resource.current_uses <= 0 or not state.bonus_action_available:
+    if resource is None or resource.current_uses <= 0 or not is_available(state, "bonus_action"):
         return None
 
     resource.current_uses -= 1
-    state.bonus_action_available = False
+    spend(state, "bonus_action")
     state.active_effect_ids.append(RAGE_EFFECT_ID)
     for damage_type in _RAGE_RESISTANCES:
         if damage_type not in state.temporary_damage_resistances:
@@ -78,9 +79,9 @@ def maintain_rage_with_bonus_action(
         return None
     if state.rage_max_round is not None and state.rage_max_round <= round_number:
         return None
-    if state.rage_expires_round > round_number or not state.bonus_action_available:
+    if state.rage_expires_round > round_number or not is_available(state, "bonus_action"):
         return None
-    state.bonus_action_available = False
+    spend(state, "bonus_action")
     maximum = state.rage_max_round or round_number + 1
     state.rage_expires_round = min(round_number + 1, maximum)
     return BattleEvent(
@@ -128,5 +129,5 @@ def finalize_rage_turn(
 
 
 def end_rage_if_incapacitated(state: CombatantState) -> None:
-    if state.template.wearing_heavy_armor or state.is_unconscious or state.is_dead:
+    if state.template.wearing_heavy_armor or is_incapacitated(state):
         end_rage(state)
