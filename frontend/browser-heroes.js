@@ -6,11 +6,14 @@
     reach: kind === "melee" ? 5 : 0,
     ...extra,
   });
+  const saves = { strength: 5, dexterity: 1, constitution: 4, intelligence: -1, wisdom: 1, charisma: 0 };
+  const skills = { athletics: 5, acrobatics: 1 };
 
   const karnok = {
     id: "karnok-stoneward-l1", class_id: "fighter", build_id: "great-weapon",
     name: "Karnok Stoneward", archetype: "Fighter", level: 1, kind: "character", size: "medium",
     armor_class: 17, max_hp: 12, speed_ft: 30, initiative_bonus: 1,
+    saving_throw_bonuses: { ...saves }, skill_bonuses: { ...skills },
     attacks: [
       attack("karnok-greatsword", "Greatsword", "melee", 5, 2, 6, 3, "slashing", { animation: "heavy-slash" }),
       attack("karnok-shortbow", "Shortbow", "ranged", 3, 1, 6, 1, "piercing", {
@@ -28,6 +31,7 @@
     id: "rokhan-stonefury-l1", class_id: "barbarian", build_id: "great-weapon",
     name: "Rokhan Stonefury", archetype: "Barbarian", level: 1, kind: "character", size: "medium",
     armor_class: 13, max_hp: 14, speed_ft: 30, initiative_bonus: 1,
+    saving_throw_bonuses: { ...saves }, skill_bonuses: { ...skills },
     attacks: [
       attack("rokhan-greataxe", "Greataxe", "melee", 5, 1, 12, 3, "slashing", {
         animation: "heavy-slash", rageEligible: true,
