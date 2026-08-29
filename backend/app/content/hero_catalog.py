@@ -34,12 +34,9 @@ _BUILD_ROWS = {
     "wizard": [("evoker", "Evoker"), ("controller", "Controller"), ("defender", "Defender")],
 }
 
-_READY_BUILDS = {
-    ("fighter", 1, "guardian"): ("Aldric Vane", "aldric-vane-l1"),
-    ("fighter", 1, "great-weapon"): ("Brom Ironmark", "brom-ironmark-l1"),
-    ("fighter", 1, "archer"): ("Selene Asharrow", "selene-asharrow-l1"),
-    ("rogue", 1, "skirmisher"): ("Mara Quickstep", "mara-quickstep-l1"),
-}
+# RAW_READY is intentionally empty until a build has a complete legal-character
+# dossier and all combat-relevant mechanics used by that build are certified.
+_READY_BUILDS: dict[tuple[str, int, str], tuple[str, str]] = {}
 
 
 def _card_id(class_id: str, level: int, build_id: str, build_index: int) -> str:
@@ -80,7 +77,10 @@ def _hero_card(
         **common,
         name=f"{class_name} {level} — {build_name}",
         coverage_status=CoverageStatus.BLOCKED,
-        blockers=["pregen-build-not-certified", "class-level-mechanics-not-certified"],
+        blockers=[
+            "legal-character-build-not-certified",
+            "combat-feature-coverage-not-certified",
+        ],
     )
 
 
