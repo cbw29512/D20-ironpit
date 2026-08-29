@@ -4,7 +4,7 @@ on:
   push:
   pull_request:
 
-# Exact-head production certification for the audited browser deathmatch and Python rules oracle.
+# Exact-head production certification for audited browser/Python deathmatch parity.
 jobs:
   combat-certification:
     runs-on: ubuntu-latest
