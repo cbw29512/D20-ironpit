@@ -7,9 +7,10 @@ from app.domain.traits import CombatTrait
 FEATURE_ID = CombatTrait.SAVAGE_ATTACKER.value
 
 
-def savage_attacker_available(state: CombatantState, turn_key: str) -> bool:
+def savage_attacker_available(state: CombatantState, turn_key: str | None) -> bool:
     return (
-        CombatTrait.SAVAGE_ATTACKER in state.template.combat_traits
+        turn_key is not None
+        and CombatTrait.SAVAGE_ATTACKER in state.template.combat_traits
         and state.feature_last_turn_keys.get(FEATURE_ID) != turn_key
     )
 
@@ -24,7 +25,7 @@ def roll_weapon_component(
     modifier: int,
     damage_type: DamageType,
     critical: bool,
-    turn_key: str,
+    turn_key: str | None,
 ) -> DamageRollComponent:
     count = dice_count * (2 if critical else 1)
 
