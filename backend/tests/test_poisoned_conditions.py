@@ -3,14 +3,14 @@ from app.combat.conditions import attack_roll_condition_sources
 from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.grapple import apply_grapple, resolve_escape_grapple
-from app.combat.timed_conditions import expire_start_of_turn_conditions
+from app.combat.timed_conditions import apply_timed_condition, expire_start_of_turn_conditions
 from app.domain.models import EncounterSelection, RollMode
 
 
-def _setup():
+def _setup(monster_ids=None):
     return build_encounter_setup(EncounterSelection(
         hero_ids=["karnok-stoneward-l1"],
-        monster_ids=["srd-giant-centipede"],
+        monster_ids=monster_ids or ["srd-giant-centipede"],
         starting_distance_ft=5,
     ))
 
@@ -92,5 +92,24 @@ def test_timed_poison_expires_at_source_slot_even_if_source_died() -> None:
     assert len(events) == 1
     assert events[0].removed_condition_ids == ["poisoned"]
     assert events[0].target_id == hero.combatant_id
+    assert "poisoned" not in hero.state.active_effect_ids
+    assert hero.state.timed_effects == []
+
+
+def test_poisoned_remains_until_last_source_expires() -> None:
+    setup = _setup(["srd-giant-centipede", "srd-giant-centipede"])
+    hero, first, second = setup.heroes[0], *setup.monsters
+    apply_timed_condition(hero.state, "poisoned", first.combatant_id)
+    apply_timed_condition(hero.state, "poisoned", second.combatant_id)
+
+    first_events, sequence = expire_start_of_turn_conditions(1, 2, first, setup)
+    assert first_events == []
+    assert sequence == 1
+    assert "poisoned" in hero.state.active_effect_ids
+    assert len(hero.state.timed_effects) == 1
+
+    second_events, sequence = expire_start_of_turn_conditions(sequence, 2, second, setup)
+    assert len(second_events) == 1
+    assert sequence == 2
     assert "poisoned" not in hero.state.active_effect_ids
     assert hero.state.timed_effects == []
