@@ -48,22 +48,20 @@ def test_uncertified_cards_fail_closed_in_catalog() -> None:
     assert blocked_monster.blockers
 
 
-def test_only_audited_karnok_is_currently_raw_ready() -> None:
+def test_current_audited_heroes_are_raw_ready() -> None:
     catalog = build_full_content_catalog()
     ready_heroes = [
         card for card in catalog.heroes if card.coverage_status is CoverageStatus.RAW_READY
     ]
 
-    assert len(ready_heroes) == 1
-    karnok = ready_heroes[0]
-    assert (karnok.class_id, karnok.level, karnok.build_id) == (
-        "fighter",
-        1,
-        "great-weapon",
-    )
-    assert karnok.name == "Karnok Stoneward"
-    assert karnok.runnable_template_id == "karnok-stoneward-l1"
-    assert not karnok.blockers
+    assert {
+        (card.class_id, card.level, card.build_id, card.name, card.runnable_template_id)
+        for card in ready_heroes
+    } == {
+        ("barbarian", 1, "great-weapon", "Rokhan Stonefury", "rokhan-stonefury-l1"),
+        ("fighter", 1, "great-weapon", "Karnok Stoneward", "karnok-stoneward-l1"),
+    }
+    assert all(not card.blockers for card in ready_heroes)
 
 
 def test_current_certified_monsters_are_linked_to_runtime_templates() -> None:
