@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from app.combat.action_economy import is_available
 from app.combat.attacks import resolve_attack
 from app.combat.dice import DiceProvider
 from app.combat.encounter_movement import move_toward_combatant
@@ -55,6 +56,8 @@ def charge_can_close(
     distance_ft: int,
 ) -> bool:
     profile = _PROFILES.get(attack.id)
+    if not is_available(attacker, "action"):
+        return False
     if CombatTrait.CHARGE not in attacker.template.combat_traits or profile is None:
         return False
     movement_needed = max(0, distance_ft - attack.weapon.reach_ft)
