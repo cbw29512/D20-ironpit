@@ -102,6 +102,7 @@ class CombatantTemplate(BaseModel):
     damage_resistances: list[DamageType] = Field(default_factory=list)
     damage_vulnerabilities: list[DamageType] = Field(default_factory=list)
     damage_immunities: list[DamageType] = Field(default_factory=list)
+    wearing_heavy_armor: bool = False
     rage_damage_bonus: int = Field(default=0, ge=0, le=10)
     visual: VisualLoadout
     resources: list[ResourceDefinition] = Field(default_factory=list)
@@ -136,6 +137,7 @@ class CombatantState(BaseModel):
     active_effect_ids: list[str] = Field(default_factory=list)
     temporary_damage_resistances: list[DamageType] = Field(default_factory=list)
     rage_expires_round: int | None = Field(default=None, ge=1)
+    rage_max_round: int | None = Field(default=None, ge=1)
 
 
 class BattlefieldState(BaseModel):
