@@ -37,9 +37,11 @@
   }
 
   function weaponDamage(attacker, attack, critical, mode, turnKey) {
-    let rolled = candidate(attack, critical);
+    const rageBonus = window.IRON_PIT_BROWSER_RAGE?.damageBonus(attacker, attack) || 0;
+    const effective = { ...attack, damageBonus: attack.damageBonus + rageBonus };
+    let rolled = candidate(effective, critical);
     if (attacker.template.traits?.includes("savage-attacker") && attacker.feature_last_turn_keys["savage-attacker"] !== turnKey) {
-      const second = candidate(attack, critical);
+      const second = candidate(effective, critical);
       attacker.feature_last_turn_keys["savage-attacker"] = turnKey;
       if (second.total > rolled.total) rolled = second;
     }
