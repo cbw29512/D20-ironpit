@@ -38,10 +38,13 @@ def resolve_attack(
             raise ValueError("Action is not available for an attack.")
 
         weapon = attack.weapon
+        defender_event_id = target_event_id or defender.template.id
+        attacker_event_id = actor_event_id or attacker.template.id
         condition_advantage, condition_disadvantage = attack_roll_condition_sources(
             attacker,
             defender,
             distance_ft,
+            defender_event_id,
         )
         mode = resolve_attack_roll_mode(
             weapon,
@@ -68,7 +71,7 @@ def resolve_attack(
         applied_conditions: list[str] = []
 
         if hit:
-            active_turn_key = turn_key or f"{round_number}:{actor_event_id or attacker.template.id}"
+            active_turn_key = turn_key or f"{round_number}:{attacker_event_id}"
             damage_roll, rolled_components = resolve_weapon_damage(
                 attacker,
                 attack,
@@ -84,7 +87,7 @@ def resolve_attack(
             )
             damage_outcome = apply_damage(defender, applied_total, critical=critical)
             end_rage_if_incapacitated(defender)
-            applied_conditions = apply_hit_conditions(attack, defender)
+            applied_conditions = apply_hit_conditions(attack, defender, attacker_event_id)
 
         outcome = "CRITICAL HIT" if critical else ("HIT" if hit else "MISS")
         description = f"{attacker.template.name}: {outcome} with {weapon.name}."
@@ -92,13 +95,17 @@ def resolve_attack(
             description += f" {defender.template.name} uses Relentless Endurance and remains at 1 HP."
         if "prone" in applied_conditions:
             description += f" {defender.template.name} is knocked Prone."
+        if "grappled" in applied_conditions:
+            description += f" {defender.template.name} is Grappled."
+        if "restrained" in applied_conditions:
+            description += f" {defender.template.name} is Restrained while Grappled."
         return BattleEvent(
             sequence=sequence,
             round_number=round_number,
             event_type="attack",
-            actor_id=actor_event_id or attacker.template.id,
+            actor_id=attacker_event_id,
             actor_name=attacker.template.name,
-            target_id=target_event_id or defender.template.id,
+            target_id=defender_event_id,
             target_name=defender.template.name,
             attack_roll=attack_roll,
             damage_roll=damage_roll,
