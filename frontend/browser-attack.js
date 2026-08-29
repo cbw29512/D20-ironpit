@@ -111,13 +111,14 @@
       damageRoll = { ...damage.roll, total: damageComponents.reduce((sum, part) => sum + part.applied_total, 0) };
       damageOutcome = applyDamage(target.state, damageRoll.total, critical);
       window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(target.state);
+      const livingTarget = target.state.is_alive && !target.state.is_dead;
       const proneMaxSize = extra.proneMaxSize || attack.proneMaxSize;
-      if (S().canProne(target, proneMaxSize) && target.state.current_hp > 0) {
+      if (livingTarget && S().canProne(target, proneMaxSize)) {
         if (!target.state.active_effect_ids.includes("prone")) target.state.active_effect_ids.push("prone");
         applied.push("prone");
       }
       const control = attack.controlEffect;
-      if (control?.grappleEscapeDc && target.state.current_hp > 0 && (!control.maxTargetSize || S().sizeAtMost(target, control.maxTargetSize))) {
+      if (livingTarget && control?.grappleEscapeDc && (!control.maxTargetSize || S().sizeAtMost(target, control.maxTargetSize))) {
         applied.push(...G().apply(target.state, attacker.combatant_id, control.grappleEscapeDc, attack.reach || 5, Boolean(control.restrainsWhileGrappled)));
       }
     }
