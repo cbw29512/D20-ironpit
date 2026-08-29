@@ -4,7 +4,7 @@ on:
   push:
   pull_request:
 
-# Exact-head certification for melee deathmatch, RAW conditions/damage/action economy, browser/Python parity, and encounter UI.
+# Exact-head certification for melee deathmatch, RAW conditions/damage/action economy, browser/Python parity, encounter UI, and Pages root entry.
 jobs:
   combat-certification:
     runs-on: ubuntu-latest
@@ -54,6 +54,15 @@ jobs:
           ! test -e frontend/config.js
           ! test -e scripts/write_frontend_config.py
           grep -q 'IRON_PIT_BROWSER_ENGINE.runEncounter' frontend/app.js
+      - name: Prove clean GitHub Pages root entry
+        run: |
+          test -s index.html
+          grep -q '<base href="./frontend/">' index.html
+          grep -q 'id="party-size"' index.html
+          grep -q 'id="monster-cr-filter"' index.html
+          grep -q 'encounter-picker.js' index.html
+          grep -q 'app.js' index.html
+          ! grep -qi 'http-equiv="refresh"' index.html
       - name: Prove animated Pit and encounter picker are wired
         run: |
           grep -q 'id="pit-arena"' frontend/index.html
