@@ -17,7 +17,11 @@ def attack_roll_condition_sources(
     disadvantage = 0
     if PRONE_EFFECT_ID in attacker.active_effect_ids:
         disadvantage += 1
-    if DODGE_EFFECT_ID in defender.active_effect_ids:
+    if (
+        DODGE_EFFECT_ID in defender.active_effect_ids
+        and not defender.is_unconscious
+        and defender.template.speed_ft > 0
+    ):
         disadvantage += 1
     if defender.is_unconscious:
         advantage += 1
