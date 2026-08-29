@@ -1,78 +1,58 @@
-# Iron Pit D20 — Locked MVP
+# Iron Pit — Locked Product Acceptance Target
 
 ## Definition of Done
 
-The MVP is complete when a user can open the deployed Netlify site, start a server-resolved duel between **Aldric Vane (Level 1 Fighter)** and the **SRD 5.2.1 Goblin Warrior**, watch the battle replay through stick-figure animation events, and see a winner that matches the FastAPI battle result.
+The current product milestone is complete when a user can open the deployed static site, choose 1–8 RAW-ready hero cards and 1–8 RAW-ready monster cards, press **FIGHT**, and watch the browser replay a rules-resolved stick-figure deathmatch until one side is actually dead.
 
-The locked acceptance test remains the **5-foot melee duel**. A separate **90-foot ranged development mode** now exercises movement, Dash, weapon selection, Shortbow range, and projectile replay without changing that acceptance target.
+The standard Pit starts combatants 30 feet apart. A 5-foot option exists for already-engaged testing. Long-distance ranged-duel modes are not part of the standard product.
 
 ## Required combat behavior
 
-- Secure OS-backed dice rolls.
-- Initiative with modifiers.
-- Melee attack rolls against Armor Class.
-- Natural 1 miss behavior.
-- Natural 20 hit and critical damage dice.
-- Damage and HP tracking.
-- Combat ends at 0 HP.
-- Immutable-style ordered battle event output for replay/audit.
-- Advantage/disadvantage preserves both d20s and the selected result.
-- Level-1 Fighter Second Wind: 2 uses, Bonus Action, 1d10 + Fighter level healing, capped at max HP.
-
-## Implemented development extensions
-
-- Typed melee/ranged weapon metadata.
-- Goblin Shortbow: 80/320 ft., Piercing damage, projectile metadata.
-- Ranged attacks beyond normal range have Disadvantage; attacks beyond long range are illegal.
-- Ranged attacks within 5 feet of an active enemy have Disadvantage.
-- Goblin attacks made with Advantage add the SRD conditional d4 damage.
-- Critical hits double both base and other attack damage dice.
-- Speed, remaining movement, Action availability, movement events, and Dash.
-- Arena weapon selection prefers the primary weapon, then a legal alternate.
-- Optional 90-foot ranged duel endpoint and UI control.
+- Browser-secure random dice.
+- Initiative and initiative modifiers.
+- Attack rolls against Armor Class.
+- Natural 1 misses and natural 20 critical hits.
+- Critical weapon damage dice.
+- Typed damage, HP, temporary HP, Resistance, Immunity, and Vulnerability where certified.
+- Advantage/disadvantage with both d20 results preserved.
+- Legal melee/ranged range handling and ranged-in-melee Disadvantage.
+- Multiattack/Extra Attack action economy and legal retargeting.
+- Combatants use legal ranged/thrown offense while closing, then spend remaining movement toward the melee brawl.
+- No kiting, retreat, surrender, morale, or range-preserving movement.
+- Once engaged, legal melee attacks are preferred.
+- Standard monsters die at 0 HP.
+- Player characters use supported Unconscious, Death Saving Throw, damage-at-0, massive-damage, and recovery rules.
+- A living player character at 0 HP does not end the match.
+- When no standing enemy remains, downed living player characters remain targetable so the deathmatch can reach a rules-resolved death.
+- Attacks against Unconscious targets apply the supported Advantage and close-range critical-hit rules.
+- Unsupported outcome-changing mechanics fail closed.
 
 ## Required presentation behavior
 
-- Fighter uses a longsword and shield visual loadout.
-- Goblin uses a scimitar and shield visual loadout with Shortbow available as an alternate.
-- Combatant labels, HP, level/CR, weapon, armor, and off-hand data hydrate from the API.
-- Attack events produce stick-figure weapon swings.
-- Projectile attacks flash an arrow in the attack direction.
-- Movement events update the displayed distance and animate an advance.
-- Hits visibly react and update HP.
-- Critical hits receive a distinct animation state.
-- Second Wind produces a healing pulse and HP recovery.
-- Death produces a defeated visual state.
+- The selected card teams remain visible.
+- Pressing **FIGHT** reveals the live Pit.
+- Each selected combatant has a stick-figure representation and HP bar.
+- Initiative, movement, attacks, hits, healing, death saves, critical hits, unconscious states, and deaths replay from the same authoritative browser event stream used for the result.
+- The result panel appears after the replay and distinguishes Alive, Unconscious/Stable, and Dead states.
+- The detailed battle log remains available for rules auditing.
+- Reduced-motion preferences are respected.
 
 ## Required platform behavior
 
-- Source is hosted publicly on GitHub.
-- GitHub Actions tests backend rules, source-size limits, frontend JavaScript syntax, Netlify configuration generation, and the Docker image build.
-- Frontend deploys to Netlify.
-- FastAPI deploys as a Docker service.
-- No secrets are committed.
+- GitHub is the source of truth.
+- Netlify serves the production static site.
+- Production combat has no backend/API dependency.
+- Python remains the CI/reference rules oracle.
+- Non-production Netlify builds remain skipped to protect deploy credits.
+- Exact-head CI must pass before a content count or mechanic is called certified.
 
-## Published arena assumptions / tactics
+## Content acceptance
 
-- Initiative ties currently use initiative bonus as the arena tiebreaker.
-- The demo Fighter uses Second Wind at or below half maximum HP when a use and Bonus Action remain.
-- A combatant prefers its primary weapon; if it is out of range, it selects the first legal alternate weapon.
-- If no weapon can attack, the combatant advances toward primary-weapon range and Dashes if one normal move is insufficient.
-- The Goblin does not yet kite away from the Fighter.
+- The full SRD 5.2.1 monster catalog remains 330 unique records with source metadata.
+- Only explicitly audited monster templates are runnable.
+- The hero catalog may contain planned builds, but only explicitly audited builds are runnable.
+- New content never bypasses missing outcome-changing mechanics.
 
-## Explicitly deferred
+## Next mechanics after the core Pit is certified
 
-- User accounts and Supabase persistence.
-- Betting, cash-value predictions, crypto, or NFTs.
-- Multiple character levels and classes.
-- Character selection UI.
-- Monster selection UI.
-- Opportunity attacks and Disengage.
-- Goblin Nimble Escape/Hide behavior.
-- Cover and terrain.
-- Spells and spell effects.
-- Conditions such as Petrified.
-- Breath weapons.
-- Fighter Weapon Mastery.
-
-These are expansions after the deployed Fighter-vs-Goblin vertical slice is verified.
+Saving throws, Grappled, Restrained, broader conditions and riders, reactions, recharge actions, and spellcasting are added as reusable engine capabilities. Monster and hero coverage expands behind those capabilities instead of approximating unsupported rules.
