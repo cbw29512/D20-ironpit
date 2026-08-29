@@ -6,6 +6,7 @@
   const C = () => window.IRON_PIT_BROWSER_CHARGE;
   const M = () => window.IRON_PIT_BROWSER_MULTIATTACK;
   const G = () => window.IRON_PIT_BROWSER_RAGE;
+  const Y = () => window.IRON_PIT_BROWSER_HEALING;
   const NO_CONTROL = { cleanup: () => {}, shouldEscape: () => false, speedIsZero: () => false };
   const H = () => window.IRON_PIT_BROWSER_GRAPPLE || NO_CONTROL;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
@@ -103,6 +104,7 @@
 
   function resolveTurn(sequence, round, member, setup) {
     const events = []; H().cleanup(setup); S().beginTurn(member.state);
+    const healing = Y()?.chooseAction(member, setup); if (healing) { events.push(Y().resolve(sequence++, round, member, healing.target, healing.action)); }
     const rage = G()?.enter(sequence, round, member); if (rage) { events.push(rage); sequence += 1; }
     const wind = secondWind(sequence, round, member); if (wind) { events.push(wind); sequence += 1; }
     if (H().shouldEscape(member.state)) { events.push(H().escape(sequence++, round, member)); return finalize(events, sequence, round, member); }
