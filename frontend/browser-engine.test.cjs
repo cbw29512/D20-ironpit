@@ -10,7 +10,7 @@ global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
   "browser-heroes.js", "browser-monsters.js", "browser-state.js", "browser-rolls.js",
-  "browser-attack.js", "browser-turn.js", "browser-engine.js",
+  "browser-attack.js", "browser-multiattack.js", "browser-turn.js", "browser-engine.js",
 ]) load(file);
 
 function deterministicDice(seed = 12345) {
@@ -72,6 +72,18 @@ function fight(heroIds, monsterIds, distance = 30, dice = deterministicDice()) {
 {
   const battle = fight(["karnok-stoneward-l1"], ["srd-axe-beak"], 90, deterministicDice(11));
   assert.ok(battle.events.some((event) => event.feature_id === "dodge" && event.actor_id.startsWith("monster-")), "expected melee-only monster to Dodge while closing");
+}
+
+{
+  const testMulti = structuredClone(window.IRON_PIT_BROWSER_MONSTERS["srd-dire-wolf"]);
+  testMulti.id = "test-multiattack";
+  testMulti.name = "Test Multiattack";
+  testMulti.attack_action = { id: "multiattack", slots: [["dire-wolf-bite"], ["dire-wolf-bite"]] };
+  window.IRON_PIT_BROWSER_MONSTERS[testMulti.id] = testMulti;
+  const battle = fight(["karnok-stoneward-l1"], [testMulti.id], 5, queuedDice([1, 20, 15, 1, 15, 15, 1]));
+  const strikes = battle.events.filter((event) => event.round_number === 1 && event.event_type === "attack" && event.actor_id.startsWith("monster-1:"));
+  assert.equal(strikes.length, 2, "expected two attacks from one Attack action");
+  delete window.IRON_PIT_BROWSER_MONSTERS[testMulti.id];
 }
 
 {
