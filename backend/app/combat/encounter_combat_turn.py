@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.ally_context import pack_tactics_active
+from app.combat.arena_closing import resolve_simple_closing
 from app.combat.attack_actions import resolve_attack_action
 from app.combat.attacks import resolve_attack
 from app.combat.barbarian import enter_rage, finalize_rage_turn
@@ -47,12 +48,17 @@ def resolve_combat_turn(
         events.append(adrenaline_event)
         sequence += 1
 
-    if attacker.state.template.attack_action is not None:
+    closing_events, sequence, closing_handled = resolve_simple_closing(
+        sequence, round_number, attacker, target, dice
+    )
+    events.extend(closing_events)
+
+    if not closing_handled and attacker.state.template.attack_action is not None:
         action_events, sequence = resolve_attack_action(
             sequence, round_number, attacker, setup, dice
         )
         events.extend(action_events)
-    else:
+    elif not closing_handled:
         attack, prep_events, sequence = prepare_encounter_attack(
             sequence, round_number, attacker, target
         )
