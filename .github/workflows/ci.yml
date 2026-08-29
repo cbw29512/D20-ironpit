@@ -4,7 +4,7 @@ on:
   push:
   pull_request:
 
-# Exact-head certification for audited SRD unconscious rules, melee deathmatch, and browser/Python parity.
+# Exact-head certification for melee deathmatch, save/control conditions, and browser/Python parity.
 jobs:
   combat-certification:
     runs-on: ubuntu-latest
@@ -37,6 +37,7 @@ jobs:
           node frontend/browser-beast2.test.cjs
           node frontend/browser-batch3.test.cjs
           node frontend/browser-deathmatch.test.cjs
+          node frontend/browser-control.test.cjs
       - name: Prove production fight path is backend-free
         run: |
           ! grep -R -q 'IRON_PIT_API_BASE' frontend scripts
@@ -49,6 +50,9 @@ jobs:
         run: |
           grep -q 'id="pit-arena"' frontend/index.html
           grep -q 'browser-dice.js' frontend/index.html
+          grep -q 'browser-monsters-control.js' frontend/index.html
+          grep -q 'browser-grapple.js' frontend/index.html
+          grep -q 'browser-saves.js' frontend/index.html
           grep -q 'battle-replay.js' frontend/index.html
           grep -q 'playIronPitBattle' frontend/app.js
       - name: Validate Netlify production-only credit guard
