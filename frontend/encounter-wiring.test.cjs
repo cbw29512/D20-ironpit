@@ -8,7 +8,7 @@ const root = __dirname;
 const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
 const ids = new Set([...html.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]));
 
-for (const file of ["app.js", "encounter-view.js", "encounter-picker-view.js", "battle-replay.js"]) {
+for (const file of ["app.js", "battlefield-picker.js", "battlefield-view.js", "battlefield-replay.js"]) {
   const source = fs.readFileSync(path.join(root, file), "utf8");
   const referenced = [
     ...source.matchAll(/\bel\("([^"]+)"\)/g),
@@ -18,14 +18,28 @@ for (const file of ["app.js", "encounter-view.js", "encounter-picker-view.js", "
 }
 
 for (const id of [
-  "party-size", "hero-slot-pickers", "hero-cards", "monster-cr-filter",
-  "monster-picker", "monster-picker-note", "add-monster", "monster-cards", "fight-button",
-]) assert.ok(ids.has(id), `production picker is missing #${id}`);
+  "hero-slots", "monster-slots", "fight-button", "distance", "pit-round", "status",
+  "card-picker", "picker-class", "picker-level", "picker-hero", "picker-cr", "picker-monster",
+  "confirm-card", "remove-card", "combat-fx-overlay",
+]) assert.ok(ids.has(id), `battlefield is missing #${id}`);
 
-const sizeOptions = [...html.matchAll(/<option value="([1-6])"[^>]*>[1-6]<\/option>/g)].map((match) => match[1]);
-assert.deepEqual(sizeOptions, ["1", "2", "3", "4", "5", "6"]);
-assert.ok(html.indexOf("encounter-picker.js") < html.indexOf("app.js"));
-assert.ok(html.indexOf("encounter-picker-view.js") < html.indexOf("app.js"));
-assert.ok(html.indexOf("encounter-view.js") < html.indexOf("app.js"));
+const view = fs.readFileSync(path.join(root, "battlefield-view.js"), "utf8");
+const replay = fs.readFileSync(path.join(root, "battlefield-replay.js"), "utf8");
+const app = fs.readFileSync(path.join(root, "app.js"), "utf8");
+const engine = fs.readFileSync(path.join(root, "browser-engine.js"), "utf8");
+const css = fs.readFileSync(path.join(root, "battlefield.css"), "utf8");
 
-console.log("encounter DOM wiring regression passed");
+assert.match(view, /MAX_SLOTS = 6/);
+assert.match(app, /MAX_SLOTS = 6/);
+assert.match(engine, /1-6 cards per side/);
+assert.match(replay, /initiative-badge/);
+assert.match(replay, /critical-screen/);
+assert.match(replay, /fumble-blackout/);
+assert.match(css, /\.battle-card\.turn-active/);
+assert.match(css, /card-turn-shake/);
+assert.match(css, /\.battle-card\.battle-dead/);
+assert.ok(html.indexOf("battlefield-picker.js") < html.indexOf("app.js"));
+assert.ok(html.indexOf("battlefield-view.js") < html.indexOf("app.js"));
+assert.ok(html.indexOf("battlefield-replay.js") < html.indexOf("app.js"));
+
+console.log("six-slot battlefield wiring regression passed");
