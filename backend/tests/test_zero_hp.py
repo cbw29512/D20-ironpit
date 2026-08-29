@@ -1,4 +1,5 @@
 from app.combat.attacks import resolve_attack
+from app.combat.conditions import attack_roll_condition_sources
 from app.combat.death_saves import resolve_death_save
 from app.combat.dice import FixedDiceProvider
 from app.combat.state import build_combatant_state
@@ -23,13 +24,34 @@ def test_monster_dies_at_zero_hp_by_default() -> None:
     assert state.is_alive is False
 
 
-def test_character_at_zero_is_unconscious_but_alive() -> None:
+def test_character_at_zero_is_unconscious_prone_but_alive() -> None:
     state = _downed_character()
 
     assert state.current_hp == 0
     assert state.is_alive is True
     assert state.is_unconscious is True
     assert state.is_dead is False
+    assert "prone" in state.active_effect_ids
+
+
+def test_becoming_unconscious_ends_dodge_benefit() -> None:
+    state = build_combatant_state(build_demo_fighter())
+    state.active_effect_ids.append("dodge")
+
+    apply_damage(state, state.current_hp)
+
+    assert "dodge" not in state.active_effect_ids
+    assert "prone" in state.active_effect_ids
+
+
+def test_unconscious_prone_cancels_attack_advantage_from_beyond_five_feet() -> None:
+    attacker = build_combatant_state(build_goblin_warrior())
+    defender = _downed_character()
+
+    advantage, disadvantage = attack_roll_condition_sources(attacker, defender, 30)
+
+    assert advantage > 0
+    assert disadvantage > 0
 
 
 def test_massive_damage_can_kill_character_instantly() -> None:
@@ -85,7 +107,7 @@ def test_natural_one_on_death_save_counts_as_two_failures() -> None:
     assert event.death_save_roll.total == 1
 
 
-def test_natural_twenty_restores_one_hp_and_resets_death_saves() -> None:
+def test_natural_twenty_restores_one_hp_resets_saves_and_leaves_prone() -> None:
     state = _downed_character()
     state.death_save_successes = 2
     state.death_save_failures = 1
@@ -94,6 +116,7 @@ def test_natural_twenty_restores_one_hp_and_resets_death_saves() -> None:
 
     assert state.current_hp == 1
     assert state.is_unconscious is False
+    assert "prone" in state.active_effect_ids
     assert state.death_save_successes == 0
     assert state.death_save_failures == 0
     assert event.hp_after == 1
