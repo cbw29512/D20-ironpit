@@ -13,6 +13,8 @@ def _sync_effect_ids(state: CombatantState) -> None:
     if state.grapple_sources:
         if GRAPPLED_EFFECT_ID not in state.active_effect_ids:
             state.active_effect_ids.append(GRAPPLED_EFFECT_ID)
+        if "dodge" in state.active_effect_ids:
+            state.active_effect_ids.remove("dodge")
     elif GRAPPLED_EFFECT_ID in state.active_effect_ids:
         state.active_effect_ids.remove(GRAPPLED_EFFECT_ID)
     restrained = any(source.restrains for source in state.grapple_sources)
