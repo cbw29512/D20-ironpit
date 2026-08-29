@@ -72,6 +72,19 @@ def _audit_features(
     return issues
 
 
+def _audit_magic_items(profile: CharacterBuildProfile) -> list[str]:
+    issues: list[str] = []
+    item_ids = [item.item_id for item in profile.magic_item_audits]
+    if len(item_ids) != len(set(item_ids)):
+        issues.append("magic-item-audit-ids-must-be-unique")
+    for item in profile.magic_item_audits:
+        if not item.source_reference.strip():
+            issues.append(f"magic-item-source-missing:{item.item_id}")
+        if item.combat_relevant and not item.automated:
+            issues.append(f"combat-magic-item-not-automated:{item.item_id}")
+    return issues
+
+
 def audit_character_build(
     profile: CharacterBuildProfile,
     template: CombatantTemplate,
@@ -94,6 +107,7 @@ def audit_character_build(
     issues.extend(_audit_background_increases(profile))
     issues.extend(_audit_final_scores(profile))
     issues.extend(_audit_features(profile, template))
+    issues.extend(_audit_magic_items(profile))
     if not profile.source_references or any(not ref.strip() for ref in profile.source_references):
         issues.append("source-reference-missing")
     return issues
