@@ -39,6 +39,14 @@ class ConditionalDamage(BaseModel):
     damage_type: DamageType
 
 
+class OnHitDamage(BaseModel):
+    source: str
+    dice_count: int = Field(ge=1, le=40)
+    dice_size: int = Field(ge=2, le=100)
+    damage_bonus: int = 0
+    damage_type: DamageType
+
+
 class Weapon(BaseModel):
     id: str
     name: str
@@ -61,6 +69,7 @@ class WeaponAttack(BaseModel):
     damage_bonus: int
     fixed_damage: int | None = Field(default=None, ge=0)
     conditional_damage: list[ConditionalDamage] = Field(default_factory=list)
+    on_hit_damage: list[OnHitDamage] = Field(default_factory=list)
     rage_eligible: bool = False
     knocks_prone_max_size: CreatureSize | None = None
     control_effect: HitControlEffect | None = None
