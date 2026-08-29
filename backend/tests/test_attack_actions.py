@@ -109,6 +109,31 @@ def test_mixed_multiattack_switches_to_melee_when_engaged() -> None:
     assert [event.weapon_id for event in attacks] == ["scimitar", "scimitar"]
 
 
+def test_giant_constrictor_snake_multiattack_is_bite_then_constrict() -> None:
+    setup = build_encounter_setup(EncounterSelection(
+        hero_ids=["karnok-stoneward-l1"],
+        monster_ids=["srd-giant-constrictor-snake"],
+        starting_distance_ft=10,
+    ))
+    attacker, target = setup.monsters[0], setup.heroes[0]
+    begin_turn(attacker.state)
+
+    events, _ = resolve_attack_action(
+        1, 1, attacker, setup, FixedDiceProvider([15, 1, 1, 1, 1, 1])
+    )
+
+    assert [event.event_type for event in events] == ["attack", "saving_throw"]
+    assert events[0].weapon_id == "giant-constrictor-snake-bite"
+    assert events[1].feature_id == "giant-constrictor-snake-constrict"
+    assert events[1].save_ability == "strength"
+    assert events[1].save_dc == 14
+    assert events[1].save_succeeded is False
+    assert events[1].damage_roll is not None and events[1].damage_roll.total == 6
+    assert events[1].applied_condition_ids == ["grappled"]
+    assert "restrained" not in target.state.active_effect_ids
+    assert attacker.state.action_available is False
+
+
 def test_attack_action_fails_closed_on_unknown_attack_id() -> None:
     setup, attacker = _extra_attack_setup()
     attacker.state.template.attack_action = AttackActionDefinition(
@@ -120,5 +145,5 @@ def test_attack_action_fails_closed_on_unknown_attack_id() -> None:
         ],
     )
 
-    with pytest.raises(ValueError, match="Unknown attack IDs"):
+    with pytest.raises(ValueError, match="Unknown Multiattack IDs"):
         resolve_attack_action(1, 1, attacker, setup, FixedDiceProvider([10]))
