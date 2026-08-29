@@ -24,13 +24,21 @@ def resolve_attack(
     actor_event_id: str | None = None,
     target_event_id: str | None = None,
     spend_action: bool = True,
+    advantage_sources: int = 0,
+    other_disadvantage_sources: int = 0,
+    feature_id: str | None = None,
 ) -> BattleEvent:
     try:
         if spend_action and not attacker.action_available:
             raise ValueError("Action is not available for an attack.")
 
         weapon = attack.weapon
-        mode = resolve_attack_roll_mode(weapon, distance_ft)
+        mode = resolve_attack_roll_mode(
+            weapon,
+            distance_ft,
+            advantage_sources=advantage_sources,
+            other_disadvantage_sources=other_disadvantage_sources,
+        )
         attack_roll = roll_d20(dice, attack.attack_bonus, mode)
         if spend_action:
             attacker.action_available = False
@@ -77,6 +85,7 @@ def resolve_attack(
             is_dead=defender.is_dead,
             weapon_id=weapon.id,
             projectile=weapon.projectile,
+            feature_id=feature_id,
             animation=weapon.animation,
             description=f"{attacker.template.name}: {outcome} with {weapon.name}.",
         )
