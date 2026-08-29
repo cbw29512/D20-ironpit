@@ -102,6 +102,8 @@ def resolve_escape_grapple(
     state.action_available = False
     if success:
         release_grapple(state, source.source_id)
+        if not speed_is_zero(state):
+            state.movement_remaining_ft = max(state.movement_remaining_ft, state.template.speed_ft)
     return BattleEvent(
         sequence=sequence,
         round_number=round_number,
