@@ -57,7 +57,7 @@ def run_duel(
         for round_number in range(1, MAX_ROUNDS + 1):
             for attacker in order:
                 defender = monster if attacker is fighter else fighter
-                if not attacker.is_alive or not defender.is_alive:
+                if attacker.current_hp <= 0 or defender.current_hp <= 0:
                     continue
 
                 begin_turn(attacker)
@@ -87,7 +87,7 @@ def run_duel(
                 events.append(event)
                 sequence += 1
 
-                if not defender.is_alive:
+                if defender.current_hp <= 0:
                     events.append(BattleEvent(
                         sequence=sequence,
                         round_number=round_number,

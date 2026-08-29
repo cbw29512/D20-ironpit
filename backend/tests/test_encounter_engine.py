@@ -1,3 +1,4 @@
+from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_engine import run_encounter
 from app.domain.models import EncounterSelection
 
@@ -53,6 +54,32 @@ def test_duplicate_monsters_take_distinct_turns_and_retarget_living_heroes() -> 
         "hero-1:aldric-vane-l1",
         "hero-2:brom-ironmark-l1",
     ]
+
+
+def test_downed_hero_makes_death_save_while_an_ally_is_still_fighting() -> None:
+    result = run_encounter(
+        EncounterSelection(
+            hero_ids=["aldric-vane-l1", "brom-ironmark-l1"],
+            monster_ids=["srd-goblin-warrior"],
+            starting_distance_ft=5,
+        ),
+        FixedDiceProvider([
+            1, 1, 20,       # hero, hero, goblin initiative
+            20, 6, 6,       # goblin critical drops Aldric without massive death
+            10,              # Aldric succeeds on his Death Save
+            20, 12, 12,     # Brom critical defeats the goblin
+        ]),
+    )
+
+    death_save = next(event for event in result.events if event.event_type == "death_save")
+    aldric = result.setup.heroes[0].state
+    assert death_save.actor_id == "hero-1:aldric-vane-l1"
+    assert death_save.death_save_roll is not None
+    assert death_save.death_save_roll.total == 10
+    assert aldric.current_hp == 0
+    assert aldric.is_unconscious is True
+    assert aldric.death_save_successes == 1
+    assert result.outcome == "heroes_win"
 
 
 def test_ranged_attacker_does_not_kite_or_close_when_already_in_normal_range() -> None:
