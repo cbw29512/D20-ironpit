@@ -22,12 +22,22 @@ def test_catalog_contains_three_builds_for_every_core_class_level() -> None:
             assert len({card.build_id for card in level_cards}) == 3
 
 
-def test_catalog_contains_all_srd_5_2_1_monsters() -> None:
+def test_catalog_contains_all_330_srd_5_2_1_monsters() -> None:
     catalog = build_full_content_catalog()
-    assert catalog.monster_count == 328
-    assert len(catalog.monsters) == 328
-    assert len({monster.id for monster in catalog.monsters}) == 328
+    assert catalog.monster_count == 330
+    assert len(catalog.monsters) == 330
+    assert len({monster.id for monster in catalog.monsters}) == 330
+    assert len({monster.name for monster in catalog.monsters}) == 330
     assert all(monster.source_reference for monster in catalog.monsters)
+
+    crab = next(monster for monster in catalog.monsters if monster.name == "Crab")
+    crocodile = next(monster for monster in catalog.monsters if monster.name == "Crocodile")
+    assert (crab.source_page, crab.challenge_rating) == (346, "0 (XP 10; PB +2)")
+    assert crab.runnable_template_id == "srd-crab"
+    assert crab.coverage_status is CoverageStatus.RAW_READY
+    assert (crocodile.source_page, crocodile.challenge_rating) == (346, "1/2 (XP 100; PB +2)")
+    assert crocodile.coverage_status is CoverageStatus.BLOCKED
+    assert crocodile.runnable_template_id is None
 
 
 def test_uncertified_cards_fail_closed_in_catalog() -> None:
