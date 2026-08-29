@@ -104,12 +104,7 @@ def resolve_combat_turn(
         action for action in attacker.state.template.saving_throw_actions
         if legal_save_action(action, target, distance)
     ), None)
-    if not closing_handled and save_action is not None and attacker.state.action_available:
-        events.append(resolve_save_action(
-            sequence, round_number, attacker, target, save_action, distance, dice
-        ))
-        sequence += 1
-    elif not closing_handled and attacker.state.template.attack_action is not None:
+    if not closing_handled and attacker.state.template.attack_action is not None:
         action_events, sequence = resolve_attack_action(
             sequence, round_number, attacker, setup, dice
         )
@@ -118,6 +113,11 @@ def resolve_combat_turn(
             sequence, round_number, attacker, setup
         )
         events.extend(movement_events)
+    elif not closing_handled and save_action is not None and attacker.state.action_available:
+        events.append(resolve_save_action(
+            sequence, round_number, attacker, target, save_action, distance, dice
+        ))
+        sequence += 1
     elif not closing_handled:
         attack, prep_events, sequence = prepare_encounter_attack(
             sequence, round_number, attacker, target
