@@ -9,6 +9,7 @@ from app.content.monsters_bears import build_black_bear, build_brown_bear
 from app.content.monsters_batch_three import build_monster_batch_three
 from app.content.monsters_beast_batch_two import build_beast_batch_two
 from app.content.monsters_charge import build_boar, build_elk, build_giant_boar
+from app.content.monsters_control import build_control_monsters
 from app.content.monsters_fixed_damage import build_fixed_damage_monsters
 from app.content.monsters_low_cr import build_giant_rat, build_giant_weasel, build_guard
 from app.content.monsters_simple_beasts import build_baboon, build_camel, build_deer, build_draft_horse, build_giant_badger
@@ -36,6 +37,7 @@ def build_arena_roster() -> ArenaRoster:
                 build_baboon(), build_camel(), build_deer(), build_draft_horse(), build_giant_badger(),
                 build_boar(), build_elk(), build_giant_boar(),
                 *build_fixed_damage_monsters(), *build_beast_batch_two(), *build_monster_batch_three(),
+                *build_control_monsters(),
             ],
         )
     except Exception as exc:
