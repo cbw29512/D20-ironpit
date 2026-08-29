@@ -36,8 +36,8 @@ def test_catalog_contains_all_330_srd_5_2_1_monsters() -> None:
     assert crab.runnable_template_id == "srd-crab"
     assert crab.coverage_status is CoverageStatus.RAW_READY
     assert (crocodile.source_page, crocodile.challenge_rating) == (346, "1/2 (XP 100; PB +2)")
-    assert crocodile.coverage_status is CoverageStatus.BLOCKED
-    assert crocodile.runnable_template_id is None
+    assert crocodile.coverage_status is CoverageStatus.RAW_READY
+    assert crocodile.runnable_template_id == "srd-crocodile"
 
 
 def test_uncertified_cards_fail_closed_in_catalog() -> None:
@@ -74,7 +74,7 @@ def test_current_certified_monsters_are_linked_to_runtime_templates() -> None:
         monster.name: monster.runnable_template_id
         for monster in catalog.monsters if monster.coverage_status is CoverageStatus.RAW_READY
     }
-    assert len(ready_monsters) == 55
+    assert len(ready_monsters) == 58
     assert ready_monsters == {
         "Awakened Shrub": "srd-awakened-shrub",
         "Axe Beak": "srd-axe-beak",
@@ -88,7 +88,9 @@ def test_current_certified_monsters_are_linked_to_runtime_templates() -> None:
         "Camel": "srd-camel",
         "Cat": "srd-cat",
         "Commoner": "srd-commoner",
+        "Constrictor Snake": "srd-constrictor-snake",
         "Crab": "srd-crab",
+        "Crocodile": "srd-crocodile",
         "Deer": "srd-deer",
         "Dire Wolf": "srd-dire-wolf",
         "Draft Horse": "srd-draft-horse",
@@ -98,6 +100,7 @@ def test_current_certified_monsters_are_linked_to_runtime_templates() -> None:
         "Giant Badger": "srd-giant-badger",
         "Giant Bat": "srd-giant-bat",
         "Giant Boar": "srd-giant-boar",
+        "Giant Crab": "srd-giant-crab",
         "Giant Fire Beetle": "srd-giant-fire-beetle",
         "Giant Goat": "srd-giant-goat",
         "Giant Lizard": "srd-giant-lizard",
