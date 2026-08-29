@@ -26,11 +26,12 @@
     return !action.targetMaxSize || S().sizeAtMost(target, action.targetMaxSize);
   }
 
-  function resolveAction(sequence, round, actor, target, action, distance) {
-    if (!actor.state.action_available) throw new Error("Action is unavailable for saving throw action.");
+  function resolveAction(sequence, round, actor, target, action, distance, options = {}) {
+    const spendAction = options.spendAction !== false;
+    if (spendAction && !actor.state.action_available) throw new Error("Action is unavailable for saving throw action.");
     if (!legalAction(action, target, distance)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
     const save = resolveSavingThrow(target.state, action.saveAbility, action.dc);
-    actor.state.action_available = false;
+    if (spendAction) actor.state.action_available = false;
     const hpBefore = target.state.current_hp;
     let damageRoll = null;
     let damageComponents = [];
