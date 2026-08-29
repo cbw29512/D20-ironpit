@@ -37,9 +37,8 @@
       });
       if (!response.ok) throw new Error(`Fight API returned ${response.status}`);
       const battle = await response.json();
-      view.setStatus("Fight resolved. Replaying critical moments…");
-      await window.playIronPitCriticalEffects?.(battle);
       view.showResult(battle);
+      await window.playIronPitCriticalEffects?.(battle);
     } catch (error) {
       console.error(error);
       view.setStatus("Fight failed. The production API may still be deploying.");
