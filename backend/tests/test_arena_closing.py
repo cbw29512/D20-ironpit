@@ -30,7 +30,7 @@ def test_melee_only_creature_dodges_and_moves_toward_melee() -> None:
     assert not any(event.event_type in {"attack", "dash"} for event in events)
 
 
-def test_melee_primary_creature_gets_one_opening_ranged_attack_then_closes() -> None:
+def test_ranged_option_is_used_while_combatant_keeps_closing_to_melee() -> None:
     setup = build_encounter_setup(EncounterSelection(
         hero_ids=["mara-quickstep-l1"],
         monster_ids=["srd-giant-lizard"],
@@ -41,18 +41,18 @@ def test_melee_primary_creature_gets_one_opening_ranged_attack_then_closes() -> 
     events, sequence = resolve_combat_turn(
         1, 1, hero, monster, setup, FixedDiceProvider([10, 1])
     )
-
-    attack = next(event for event in events if event.event_type == "attack")
-    movement = next(event for event in events if event.event_type == "movement")
-    assert attack.weapon_id == "shortbow"
-    assert movement.distance_after_ft == 30
-    assert "opening-volley-used" in hero.state.active_effect_ids
+    first_attack = next(event for event in events if event.event_type == "attack")
+    first_move = next(event for event in events if event.event_type == "movement")
+    assert first_attack.weapon_id == "shortbow"
+    assert first_move.distance_after_ft == 30
 
     second_events, _ = resolve_combat_turn(
-        sequence, 2, hero, monster, setup, FixedDiceProvider([10])
+        sequence, 2, hero, monster, setup, FixedDiceProvider([10, 1])
     )
-    assert any(event.feature_id == "dodge" for event in second_events)
-    assert not any(event.event_type == "attack" for event in second_events)
+    second_attack = next(event for event in second_events if event.event_type == "attack")
+    second_move = next(event for event in second_events if event.event_type == "movement")
+    assert second_attack.weapon_id == "shortbow"
+    assert second_move.distance_after_ft == 5
     assert abs(hero.position_ft - monster.position_ft) == 5
 
 
