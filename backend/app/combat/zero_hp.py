@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 from typing import Literal
 
+from app.combat.condition_immunity import condition_is_immune
 from app.combat.orc import use_relentless_endurance
 from app.domain.models import CombatantState
 
@@ -32,7 +33,7 @@ def _mark_unconscious(state: CombatantState) -> ZeroHpOutcome:
     state.is_unconscious = True
     state.is_stable = False
     state.active_effect_ids = [effect for effect in state.active_effect_ids if effect != DODGE_EFFECT_ID]
-    if PRONE_EFFECT_ID not in state.active_effect_ids:
+    if not condition_is_immune(state, PRONE_EFFECT_ID) and PRONE_EFFECT_ID not in state.active_effect_ids:
         state.active_effect_ids.append(PRONE_EFFECT_ID)
     return "unconscious"
 
