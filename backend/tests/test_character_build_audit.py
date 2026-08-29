@@ -9,6 +9,7 @@ from app.domain.character_builds import (
     AbilityScores,
     CharacterBuildProfile,
     FeatureAudit,
+    MagicItemAudit,
 )
 
 
@@ -90,7 +91,6 @@ def _profile() -> CharacterBuildProfile:
 def test_complete_profile_passes_structural_raw_audit() -> None:
     template = build_brom_ironmark()
     profile = _profile()
-
     assert audit_character_build(profile, template) == []
     assert_character_build_raw_ready(profile, template)
     assert profile.final_ability_scores.modifier("strength") == 3
@@ -103,9 +103,7 @@ def test_background_increases_must_follow_2024_pattern_and_allowed_scores() -> N
         AbilityIncrease(ability="strength", amount=1),
         AbilityIncrease(ability="wisdom", amount=2),
     ]
-
     issues = audit_character_build(profile, template)
-
     assert "background-increase-uses-disallowed-ability" in issues
     assert "final-strength-does-not-match-background-increases" in issues
     assert "final-constitution-does-not-match-background-increases" in issues
@@ -115,11 +113,26 @@ def test_any_unautomated_combat_feature_blocks_raw_ready_claim() -> None:
     template = build_brom_ironmark()
     profile = _profile()
     profile.feature_audits[2].automated = False
-
     issues = audit_character_build(profile, template)
-
     assert "combat-feature-not-automated:savage-attacker" in issues
     with pytest.raises(ValueError, match="savage-attacker"):
+        assert_character_build_raw_ready(profile, template)
+
+
+def test_unautomated_combat_magic_item_blocks_raw_ready_claim() -> None:
+    template = build_brom_ironmark()
+    profile = _profile()
+    profile.magic_item_audits.append(MagicItemAudit(
+        item_id="plus-1-greataxe",
+        item_name="+1 Greataxe",
+        rarity="uncommon",
+        source_reference="2024 Basic Rules: Magic Items",
+        combat_relevant=True,
+        automated=False,
+    ))
+    issues = audit_character_build(profile, template)
+    assert "combat-magic-item-not-automated:plus-1-greataxe" in issues
+    with pytest.raises(ValueError, match="plus-1-greataxe"):
         assert_character_build_raw_ready(profile, template)
 
 
@@ -130,9 +143,7 @@ def test_runtime_template_identity_and_build_choices_must_match_profile() -> Non
     profile.level = 2
     profile.weapon_masteries = ["dagger"]
     profile.fighting_style = "Archery"
-
     issues = audit_character_build(profile, template)
-
     assert "runtime-template-id-mismatch" in issues
     assert "runtime-level-mismatch" in issues
     assert "runtime-weapon-masteries-mismatch" in issues
@@ -143,9 +154,7 @@ def test_feature_audit_requires_class_species_feat_and_equipment_coverage() -> N
     template = build_brom_ironmark()
     profile = _profile()
     profile.feature_audits = [_audit("fighting-style", "class")]
-
     issues = audit_character_build(profile, template)
-
     assert "missing-species-feature-audit" in issues
     assert "missing-feat-feature-audit" in issues
     assert "missing-equipment-feature-audit" in issues
@@ -155,23 +164,14 @@ def test_feature_audit_requires_class_species_feat_and_equipment_coverage() -> N
 def test_declared_combat_weapon_must_exist_in_runtime_attack_profiles() -> None:
     template = build_brom_ironmark()
     profile = _profile()
-    profile.feature_audits.append(
-        _audit(
-            "shortbow",
-            "equipment",
-            runtime_attack_weapon_id="shortbow",
-        )
-    )
-
+    profile.feature_audits.append(_audit("shortbow", "equipment", runtime_attack_weapon_id="shortbow"))
     issues = audit_character_build(profile, template)
-
     assert "runtime-weapon-not-automated:shortbow" in issues
 
 
 def test_karnok_full_profile_passes_and_exposes_arena_weapons() -> None:
     template = build_karnok_stoneward()
     profile = build_karnok_stoneward_profile()
-
     assert audit_character_build(profile, template) == []
     assert_character_build_raw_ready(profile, template)
     runtime_weapon_ids = {
