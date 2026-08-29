@@ -1,14 +1,16 @@
 (() => {
   "use strict";
 
-  const D = () => window.IRON_PIT_DICE;
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
 
   function sync(state) {
     const grappled = state.grapple_sources.length > 0;
     const restrained = state.grapple_sources.some((source) => source.restrains);
     state.active_effect_ids = state.active_effect_ids.filter((id) => id !== "grappled" && id !== "restrained");
-    if (grappled) state.active_effect_ids.push("grappled");
+    if (grappled) {
+      state.active_effect_ids.push("grappled");
+      state.active_effect_ids = state.active_effect_ids.filter((id) => id !== "dodge");
+    }
     if (restrained) state.active_effect_ids.push("restrained");
   }
 
