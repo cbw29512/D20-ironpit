@@ -33,17 +33,14 @@ def test_catalog_contains_all_srd_5_2_1_monsters() -> None:
 def test_uncertified_cards_fail_closed_in_catalog() -> None:
     catalog = build_full_content_catalog()
     barbarian_20 = next(
-        card
-        for card in catalog.heroes
+        card for card in catalog.heroes
         if card.class_id == "barbarian" and card.level == 20 and card.build_id == "great-weapon"
     )
     assert barbarian_20.coverage_status is CoverageStatus.BLOCKED
     assert barbarian_20.runnable_template_id is None
     assert barbarian_20.blockers
 
-    blocked_monster = next(
-        monster for monster in catalog.monsters if monster.coverage_status is CoverageStatus.BLOCKED
-    )
+    blocked_monster = next(monster for monster in catalog.monsters if monster.coverage_status is CoverageStatus.BLOCKED)
     assert blocked_monster.runnable_template_id is None
     assert blocked_monster.blockers
 
@@ -65,21 +62,26 @@ def test_current_certified_monsters_are_linked_to_runtime_templates() -> None:
     catalog = build_full_content_catalog()
     ready_monsters = {
         monster.name: monster.runnable_template_id
-        for monster in catalog.monsters
-        if monster.coverage_status is CoverageStatus.RAW_READY
+        for monster in catalog.monsters if monster.coverage_status is CoverageStatus.RAW_READY
     }
     assert ready_monsters == {
+        "Awakened Shrub": "srd-awakened-shrub",
         "Axe Beak": "srd-axe-beak",
+        "Badger": "srd-badger",
         "Bandit": "srd-bandit",
+        "Bat": "srd-bat",
         "Black Bear": "srd-black-bear",
         "Boar": "srd-boar",
         "Brown Bear": "srd-brown-bear",
         "Camel": "srd-camel",
+        "Cat": "srd-cat",
         "Commoner": "srd-commoner",
+        "Crab": "srd-crab",
         "Deer": "srd-deer",
         "Dire Wolf": "srd-dire-wolf",
         "Draft Horse": "srd-draft-horse",
         "Elk": "srd-elk",
+        "Frog": "srd-frog",
         "Giant Badger": "srd-giant-badger",
         "Giant Boar": "srd-giant-boar",
         "Giant Lizard": "srd-giant-lizard",
@@ -87,5 +89,11 @@ def test_current_certified_monsters_are_linked_to_runtime_templates() -> None:
         "Giant Weasel": "srd-giant-weasel",
         "Goblin Warrior": "srd-goblin-warrior",
         "Guard": "srd-guard",
+        "Hawk": "srd-hawk",
+        "Lizard": "srd-lizard",
+        "Owl": "srd-owl",
+        "Rat": "srd-rat",
+        "Raven": "srd-raven",
+        "Weasel": "srd-weasel",
         "Wolf": "srd-wolf",
     }
