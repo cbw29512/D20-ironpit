@@ -11,6 +11,7 @@ from app.combat.encounter_targeting import combatant_distance, select_nearest_ta
 from app.combat.encounter_turns import prepare_encounter_attack
 from app.combat.fighter import use_second_wind
 from app.combat.grapple import cleanup_grapples, resolve_escape_grapple, should_escape_grapple
+from app.combat.healing import choose_healing_action, resolve_healing
 from app.combat.orc import use_adrenaline_rush
 from app.combat.policy import should_use_second_wind
 from app.combat.saving_throws import legal_save_action, resolve_save_action
@@ -66,6 +67,14 @@ def resolve_combat_turn(
     events: list[BattleEvent] = []
     cleanup_grapples(setup)
     begin_turn(attacker.state)
+
+    healing_choice = choose_healing_action(attacker, setup)
+    if healing_choice is not None:
+        healing_action, healing_target = healing_choice
+        events.append(resolve_healing(
+            sequence, round_number, attacker, healing_target, healing_action, dice
+        ))
+        sequence += 1
 
     rage_event = enter_rage(
         sequence, round_number, attacker.state, attacker.combatant_id
