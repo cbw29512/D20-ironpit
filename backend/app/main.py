@@ -10,8 +10,10 @@ from app.combat.dice import SecureDiceProvider
 from app.combat.encounter_engine import run_encounter
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.engine import run_duel
+from app.content.catalog import build_full_content_catalog
 from app.content.demo import build_demo_fighter, build_goblin_warrior
 from app.content.roster import build_arena_roster
+from app.domain.catalog import FullContentCatalog
 from app.domain.models import (
     ArenaRoster,
     BattleResult,
@@ -44,11 +46,16 @@ app.add_middleware(
 
 @app.get("/health")
 def health() -> dict[str, str]:
+    return {"status": "ok"}
+
+
+@app.get("/api/catalog", response_model=FullContentCatalog)
+def get_full_content_catalog() -> FullContentCatalog:
     try:
-        return {"status": "ok"}
+        return build_full_content_catalog()
     except Exception as exc:
-        logger.exception("Health endpoint failed.")
-        raise HTTPException(status_code=500, detail="Health check failed.") from exc
+        logger.exception("Full content catalog API failed.")
+        raise HTTPException(status_code=500, detail="Content catalog could not be loaded.") from exc
 
 
 @app.get("/api/roster", response_model=ArenaRoster)
@@ -85,10 +92,7 @@ def create_encounter_battle(selection: EncounterSelection) -> EncounterBattleRes
 @app.get("/api/roster/demo", response_model=DemoRoster)
 def get_demo_roster() -> DemoRoster:
     try:
-        return DemoRoster(
-            fighter=build_demo_fighter(),
-            monster=build_goblin_warrior(),
-        )
+        return DemoRoster(fighter=build_demo_fighter(), monster=build_goblin_warrior())
     except Exception as exc:
         logger.exception("Demo roster API failed.")
         raise HTTPException(status_code=500, detail="Demo roster could not be loaded.") from exc
@@ -98,10 +102,7 @@ def get_demo_roster() -> DemoRoster:
 def create_demo_battle() -> BattleResult:
     try:
         return run_duel(
-            build_demo_fighter(),
-            build_goblin_warrior(),
-            SecureDiceProvider(),
-            starting_distance_ft=5,
+            build_demo_fighter(), build_goblin_warrior(), SecureDiceProvider(), starting_distance_ft=5
         )
     except Exception as exc:
         logger.exception("Demo battle API failed.")
@@ -112,10 +113,7 @@ def create_demo_battle() -> BattleResult:
 def create_ranged_demo_battle() -> BattleResult:
     try:
         return run_duel(
-            build_demo_fighter(),
-            build_goblin_warrior(),
-            SecureDiceProvider(),
-            starting_distance_ft=90,
+            build_demo_fighter(), build_goblin_warrior(), SecureDiceProvider(), starting_distance_ft=90
         )
     except Exception as exc:
         logger.exception("Ranged demo battle API failed.")
