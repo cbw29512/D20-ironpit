@@ -68,6 +68,11 @@ def build_rokhan_stonefury() -> CombatantTemplate:
         initiative_bonus=1,
         weapon_attack=_greataxe_attack(),
         alternate_weapon_attacks=[_handaxe_throw()],
+        saving_throw_bonuses={
+            "strength": 5, "dexterity": 1, "constitution": 4,
+            "intelligence": -1, "wisdom": 1, "charisma": 0,
+        },
+        skill_bonuses={"athletics": 5, "acrobatics": 1},
         combat_traits=[
             CombatTrait.SAVAGE_ATTACKER,
             CombatTrait.ADRENALINE_RUSH,
