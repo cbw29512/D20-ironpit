@@ -77,7 +77,7 @@
       const response = await fetch("data/srd_5_2_1_monsters.json", { cache: "no-cache" });
       if (!response.ok) throw new Error(`Monster catalog returned ${response.status}`);
       const rows = await response.json();
-      if (!Array.isArray(rows) || rows.length !== 328) throw new Error("Expected 328 SRD monsters.");
+      if (!Array.isArray(rows) || rows.length !== 330) throw new Error("Expected 330 SRD monsters.");
       return rows.map((row) => {
         const templateId = ready.get(row.name) || null;
         return {
