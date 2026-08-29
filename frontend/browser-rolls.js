@@ -40,17 +40,22 @@
     return { notation: String(attack.fixedDamage), rolls: [], modifier: 0, total: attack.fixedDamage };
   }
 
-  function bonusComponent(spec, critical) {
+  function damageComponent(spec, critical) {
     const count = spec.diceCount * (critical ? 2 : 1);
     const rolls = dice().rollMany(count, spec.diceSize);
+    const modifier = spec.damageBonus || 0;
     return {
       source: spec.source,
       damage_type: spec.damageType,
-      notation: `${count}d${spec.diceSize}+0`,
+      notation: `${count}d${spec.diceSize}+${modifier}`,
       rolls,
-      modifier: 0,
-      total: rolls.reduce((sum, roll) => sum + roll, 0),
+      modifier,
+      total: rolls.reduce((sum, roll) => sum + roll, 0) + modifier,
     };
+  }
+
+  function bonusComponent(spec, critical) {
+    return damageComponent({ ...spec, damageBonus: 0 }, critical);
   }
 
   function weaponDamage(attacker, attack, critical, mode, turnKey, bonusDamage = null) {
@@ -68,6 +73,7 @@
       }
     }
     const components = [{ source: attack.name, damage_type: attack.damageType, ...rolled }];
+    for (const extra of attack.onHitDamage || []) components.push(damageComponent(extra, critical));
     if (mode === "advantage" && attack.conditionalAdvantage) {
       const [baseCount, sides] = attack.conditionalAdvantage;
       const count = baseCount * (critical ? 2 : 1);
