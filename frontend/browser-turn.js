@@ -3,6 +3,7 @@
 
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const C = () => window.IRON_PIT_BROWSER_CHARGE;
   const M = () => window.IRON_PIT_BROWSER_MULTIATTACK;
   const G = () => window.IRON_PIT_BROWSER_RAGE;
   const D = () => window.IRON_PIT_DICE;
@@ -57,6 +58,8 @@
   function closeTurn(sequence, round, member, target) {
     const weapon = primary(member);
     if (weapon.kind !== "melee" || S().distance(member, target) <= (weapon.reach || 5)) return { events: [], sequence, handled: false };
+    const charged = C()?.resolveClosing(sequence, round, member, target);
+    if (charged?.handled) return charged;
     const events = [];
     const ranged = attacks(member).find((item) => item.kind === "ranged" && !member.state.active_effect_ids.includes("opening-volley-used") && S().distance(member, target) <= item.long);
     if (ranged && member.state.action_available) {
