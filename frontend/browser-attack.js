@@ -5,6 +5,10 @@
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
   const T = () => window.IRON_PIT_BROWSER_TIMED;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
+  const E = () => window.IRON_PIT_ACTION_ECONOMY || {
+    available: (state, cost) => cost === "action" && state.action_available,
+    spend: (state) => { state.action_available = false; },
+  };
 
   function conditionSources(attacker, defender, distance, targetId) {
     let advantage = 0, disadvantage = 0;
@@ -68,12 +72,14 @@
   }
 
   function resolveAttack(sequence, round, attacker, target, attack, distance, extra = {}) {
+    const spendAction = extra.spendAction !== false;
+    if (spendAction && !E().available(attacker.state, "action")) throw new Error("Action is unavailable for attack.");
     const conditions = conditionSources(attacker.state, target.state, distance, target.combatant_id);
     const advantage = (extra.advantage || 0) + conditions.advantage + bloodiedFury(attacker.state, attack);
     const mode = R().attackMode(attack, distance, advantage, conditions.disadvantage);
     const attackRoll = R().d20(attack.bonus, mode);
     window.IRON_PIT_BROWSER_RAGE?.extendFromAttack(attacker.state, round);
-    if (extra.spendAction !== false) attacker.state.action_available = false;
+    if (spendAction) E().spend(attacker.state, "action");
     const natural = attackRoll.selected_roll, naturalCritical = natural === 20;
     const hit = natural !== 1 && (naturalCritical || attackRoll.total >= target.state.template.armor_class);
     const critical = Boolean(hit && (naturalCritical || (target.state.is_unconscious && distance <= 5)));
