@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.condition_immunity import condition_is_immune
+from app.combat.condition_rules import attacks_have_advantage_against
 from app.combat.grapple import (
     RESTRAINED_EFFECT_ID,
     apply_grapple,
@@ -35,12 +36,12 @@ def attack_roll_condition_sources(
         disadvantage += grapple_attack_disadvantage(attacker, target_id)
     if (
         DODGE_EFFECT_ID in defender.active_effect_ids
-        and not defender.is_unconscious
+        and not attacks_have_advantage_against(defender)
         and not speed_is_zero(defender)
         and defender.template.speed_ft > 0
     ):
         disadvantage += 1
-    if defender.is_unconscious:
+    if attacks_have_advantage_against(defender):
         advantage += 1
     if RESTRAINED_EFFECT_ID in defender.active_effect_ids:
         advantage += 1
