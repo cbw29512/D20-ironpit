@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.combat.condition_immunity import condition_is_immune
 from app.combat.grapple import (
     RESTRAINED_EFFECT_ID,
     apply_grapple,
@@ -61,7 +62,11 @@ def apply_hit_conditions(
         return []
     applied: list[str] = []
     maximum = attack.knocks_prone_max_size
-    if maximum is not None and size_at_most(defender.template.size, maximum):
+    if (
+        maximum is not None
+        and size_at_most(defender.template.size, maximum)
+        and not condition_is_immune(defender, PRONE_EFFECT_ID)
+    ):
         if PRONE_EFFECT_ID not in defender.active_effect_ids:
             defender.active_effect_ids.append(PRONE_EFFECT_ID)
         applied.append(PRONE_EFFECT_ID)
@@ -76,12 +81,14 @@ def apply_hit_conditions(
                 restrains=control.restrains_while_grappled,
             ))
     if control is not None and control.condition_id is not None:
-        applied.append(apply_timed_condition(
+        timed = apply_timed_condition(
             defender,
             control.condition_id,
             source_id,
             expires_at_start_of_source_turn=control.expires_at_start_of_source_turn,
-        ))
+        )
+        if timed is not None:
+            applied.append(timed)
     return list(dict.fromkeys(applied))
 
 
