@@ -10,12 +10,10 @@ from app.domain.encounters import EncounterCombatant
 from app.domain.models import BattleEvent, WeaponAttackKind
 
 DODGE_EFFECT_ID = "dodge"
-OPENING_VOLLEY_EFFECT_ID = "opening-volley-used"
+MELEE_BRAWL_DISTANCE_FT = 5
 
 
-def _opening_ranged_attack(attacker: EncounterCombatant, distance_ft: int):
-    if OPENING_VOLLEY_EFFECT_ID in attacker.state.active_effect_ids:
-        return None
+def _legal_ranged_attack(attacker: EncounterCombatant, distance_ft: int):
     for attack in weapon_attack_profiles(attacker.state):
         weapon = attack.weapon
         if weapon.attack_kind is not WeaponAttackKind.RANGED:
@@ -48,11 +46,8 @@ def resolve_simple_closing(
     target: EncounterCombatant,
     dice: DiceProvider,
 ) -> tuple[list[BattleEvent], int, bool]:
-    """Resolve Iron Pit's simple opening approach for melee-primary combatants."""
-    primary = attacker.state.template.weapon_attack.weapon
-    if primary.attack_kind is not WeaponAttackKind.MELEE:
-        return [], sequence, False
-    if combatant_distance(attacker, target) <= primary.reach_ft:
+    """Resolve the flat-pit approach: use legal ranged offense while closing, never hold range."""
+    if combatant_distance(attacker, target) <= MELEE_BRAWL_DISTANCE_FT:
         return [], sequence, False
 
     charge_events, charge_sequence, charged = resolve_charge_closing(
@@ -61,10 +56,14 @@ def resolve_simple_closing(
     if charged:
         return charge_events, charge_sequence, True
 
+    # Multiattack/Extra Attack must keep its full printed action economy. The caller
+    # resolves the Attack action first and then spends any remaining movement closing.
+    if attacker.state.template.attack_action is not None:
+        return [], sequence, False
+
     events: list[BattleEvent] = []
-    ranged = _opening_ranged_attack(attacker, combatant_distance(attacker, target))
+    ranged = _legal_ranged_attack(attacker, combatant_distance(attacker, target))
     if ranged is not None and attacker.state.action_available:
-        attacker.state.active_effect_ids.append(OPENING_VOLLEY_EFFECT_ID)
         events.append(resolve_attack(
             sequence,
             round_number,
@@ -86,7 +85,7 @@ def resolve_simple_closing(
         round_number,
         attacker,
         target,
-        primary.reach_ft,
+        MELEE_BRAWL_DISTANCE_FT,
     )
     if movement is not None:
         events.append(movement)
