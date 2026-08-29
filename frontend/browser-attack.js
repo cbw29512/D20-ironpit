@@ -16,7 +16,8 @@
   function adjustedDamage(target, amount, type) {
     if (target.template.damage_immunities?.includes(type)) return 0;
     let value = amount;
-    if (target.template.damage_resistances?.includes(type)) value = Math.floor(value / 2);
+    const resistant = target.template.damage_resistances?.includes(type) || target.temporary_damage_resistances?.includes(type);
+    if (resistant) value = Math.floor(value / 2);
     if (target.template.damage_vulnerabilities?.includes(type)) value *= 2;
     return value;
   }
@@ -67,6 +68,7 @@
     const advantage = (extra.advantage || 0) + conditions.advantage;
     const mode = R().attackMode(attack, distance, advantage, conditions.disadvantage);
     const attackRoll = R().d20(attack.bonus, mode);
+    window.IRON_PIT_BROWSER_RAGE?.extendFromAttack(attacker.state, round);
     if (extra.spendAction !== false) attacker.state.action_available = false;
     const natural = attackRoll.selected_roll;
     const critical = natural === 20;
@@ -81,6 +83,7 @@
       damageComponents = damage.components.map((part) => ({ ...part, applied_total: adjustedDamage(target.state, part.total, part.damage_type) }));
       damageRoll = { ...damage.roll, total: damageComponents.reduce((sum, part) => sum + part.applied_total, 0) };
       damageOutcome = applyDamage(target.state, damageRoll.total, critical);
+      window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(target.state);
       if (S().canProne(target, attack.proneMaxSize) && target.state.current_hp > 0) {
         if (!target.state.active_effect_ids.includes("prone")) target.state.active_effect_ids.push("prone");
         applied.push("prone");
