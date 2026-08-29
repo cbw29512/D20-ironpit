@@ -122,6 +122,7 @@ class ArenaRoster(BaseModel):
 class CombatantState(BaseModel):
     template: CombatantTemplate
     current_hp: int
+    temporary_hp: int = Field(default=0, ge=0)
     initiative_roll: int | None = None
     initiative_total: int | None = None
     is_alive: bool = True
