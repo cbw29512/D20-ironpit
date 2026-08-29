@@ -10,15 +10,13 @@ logger = logging.getLogger(__name__)
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
 CONFIG_PATH = ROOT_DIR / "frontend" / "config.js"
+DEFAULT_API_BASE = "https://iron-pit-d20-api.onrender.com"
 
 
 def get_api_base() -> str:
-    """Return a validated public API base URL, or blank for static preview mode."""
+    """Return a validated public API base URL with a stable production default."""
     try:
-        api_base = os.getenv("IRON_PIT_API_BASE", "").strip().rstrip("/")
-        if not api_base:
-            logger.warning("IRON_PIT_API_BASE is unset; building Netlify static preview mode.")
-            return ""
+        api_base = os.getenv("IRON_PIT_API_BASE", DEFAULT_API_BASE).strip().rstrip("/")
         if not api_base.startswith(("http://", "https://")):
             raise ValueError("IRON_PIT_API_BASE must begin with http:// or https://.")
         return api_base
