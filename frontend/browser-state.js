@@ -2,6 +2,7 @@
   "use strict";
 
   const SIZE_RANK = { tiny: 0, small: 1, medium: 2, large: 3, huge: 4, gargantuan: 5 };
+  const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
 
   function buildState(template) {
     return {
@@ -19,6 +20,7 @@
       movement_remaining_ft: 0,
       resources: { ...(template.resources || {}) },
       active_effect_ids: [],
+      grapple_sources: [],
       feature_last_turn_keys: {},
       temporary_damage_resistances: [],
       rage_expires_round: null,
@@ -29,9 +31,10 @@
   function beginTurn(state) {
     state.action_available = true;
     state.bonus_action_available = true;
-    state.movement_remaining_ft = state.template.speed_ft;
+    const speedZero = G()?.speedIsZero(state) || false;
+    state.movement_remaining_ft = speedZero ? 0 : state.template.speed_ft;
     state.active_effect_ids = state.active_effect_ids.filter((id) => id !== "dodge");
-    if (state.active_effect_ids.includes("prone") && state.template.speed_ft > 0) {
+    if (state.active_effect_ids.includes("prone") && state.template.speed_ft > 0 && !speedZero) {
       state.movement_remaining_ft = Math.max(0, state.movement_remaining_ft - Math.floor(state.template.speed_ft / 2));
       state.active_effect_ids = state.active_effect_ids.filter((id) => id !== "prone");
     }
@@ -70,11 +73,10 @@
     return { before, after: distance(member, target), moved };
   }
 
-  function canProne(target, maxSize) {
-    return maxSize && SIZE_RANK[target.state.template.size] <= SIZE_RANK[maxSize];
-  }
+  const sizeAtMost = (member, maxSize) => Boolean(maxSize) && SIZE_RANK[member.state.template.size] <= SIZE_RANK[maxSize];
+  const canProne = (target, maxSize) => sizeAtMost(target, maxSize);
 
   window.IRON_PIT_BROWSER_STATE = {
-    active, beginTurn, buildState, canProne, distance, downedCharacter, hasActiveAlly, moveToward, nearestTarget, packTactics,
+    active, beginTurn, buildState, canProne, distance, downedCharacter, hasActiveAlly, moveToward, nearestTarget, packTactics, sizeAtMost,
   };
 })();
