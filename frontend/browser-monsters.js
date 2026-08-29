@@ -65,6 +65,9 @@
       attack("brown-bear-bite", "Bite", "melee", 5, 1, 8, 3, "piercing", { animation: "bite" }),
       attack("brown-bear-claw", "Claw", "melee", 5, 1, 4, 3, "slashing", { animation: "heavy-slash", proneMaxSize: "large" }),
     ], { attack_action: { id: "brown-bear-multiattack", slots: [["brown-bear-bite"], ["brown-bear-claw"]] } }),
+    monster("srd-baboon", "Baboon", "0", "small", 12, 3, 30, 2, [
+      attack("baboon-bite", "Bite", "melee", 1, 1, 4, -1, "piercing", { animation: "bite" }),
+    ], { traits: ["pack-tactics"] }),
     monster("srd-camel", "Camel", "1/8", "large", 10, 17, 50, -1, [
       attack("camel-bite", "Bite", "melee", 4, 1, 4, 2, "bludgeoning", { animation: "bite" }),
     ]),
