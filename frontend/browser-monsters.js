@@ -54,6 +54,13 @@
     monster("srd-dire-wolf", "Dire Wolf", "1", "large", 14, 22, 50, 2, [
       attack("dire-wolf-bite", "Bite", "melee", 5, 1, 10, 3, "piercing", { animation: "bite", proneMaxSize: "large" }),
     ], { traits: ["pack-tactics"] }),
+    monster("srd-black-bear", "Black Bear", "1/2", "medium", 11, 19, 30, 1, [
+      attack("black-bear-rend", "Rend", "melee", 4, 1, 6, 2, "slashing", { animation: "heavy-slash" }),
+    ], { attack_action: { id: "black-bear-multiattack", slots: [["black-bear-rend"], ["black-bear-rend"]] } }),
+    monster("srd-brown-bear", "Brown Bear", "1", "large", 11, 22, 40, 1, [
+      attack("brown-bear-bite", "Bite", "melee", 5, 1, 8, 3, "piercing", { animation: "bite" }),
+      attack("brown-bear-claw", "Claw", "melee", 5, 1, 4, 3, "slashing", { animation: "heavy-slash", proneMaxSize: "large" }),
+    ], { attack_action: { id: "brown-bear-multiattack", slots: [["brown-bear-bite"], ["brown-bear-claw"]] } }),
   ];
 
   window.IRON_PIT_BROWSER_MONSTERS = Object.fromEntries(monsters.map((item) => [item.id, item]));
