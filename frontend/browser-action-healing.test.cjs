@@ -7,7 +7,10 @@ const vm = require("node:vm");
 
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
-for (const file of ["browser-heroes.js", "browser-state.js", "browser-action-economy.js", "browser-healing.js"]) load(file);
+for (const file of [
+  "browser-heroes.js", "browser-monsters.js", "browser-monsters-beast2.js", "browser-state.js",
+  "browser-action-economy.js", "browser-healing.js", "browser-charge.js",
+]) load(file);
 
 const S = window.IRON_PIT_BROWSER_STATE;
 const E = window.IRON_PIT_ACTION_ECONOMY;
@@ -82,6 +85,25 @@ const setup = (healer, ally) => ({ heroes: [healer, ally], monsters: [] });
   healer.state.template.healingActions = [{ id: "reaction-heal", name: "Reaction Heal", actionCost: "reaction", range: 60,
     targetMode: "ally", diceCount: 0, diceSize: 6, healingBonus: 5 }];
   assert.equal(H.chooseAction(healer, setup(healer, ally)), null);
+}
+
+{
+  const target = member("hero-1");
+  const goat = {
+    combatant_id: "monster-1:giant-goat", side: "monsters", position_ft: 30,
+    state: S.buildState(structuredClone(window.IRON_PIT_BROWSER_MONSTERS["srd-giant-goat"])),
+  };
+  S.beginTurn(goat.state);
+  goat.state.current_hp = 1;
+  const heal = { id: "self-heal", name: "Self Heal", actionCost: "action", range: 5,
+    targetMode: "self", diceCount: 0, diceSize: 6, healingBonus: 5 };
+  H.resolve(1, 1, goat, goat, heal);
+  const before = goat.position_ft;
+  const result = window.IRON_PIT_BROWSER_CHARGE.resolveClosing(2, 1, goat, target);
+  assert.equal(result.handled, false);
+  assert.deepEqual(result.events, []);
+  assert.equal(goat.position_ft, before);
+  assert.equal(goat.state.action_available, false);
 }
 
 console.log("Browser action economy and healing AI regressions passed.");
