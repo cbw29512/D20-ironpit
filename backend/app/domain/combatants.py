@@ -6,6 +6,7 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 from app.domain.actions import AttackActionDefinition
+from app.domain.size import CreatureSize
 from app.domain.traits import CombatTrait
 
 
@@ -60,6 +61,7 @@ class WeaponAttack(BaseModel):
     damage_bonus: int
     conditional_damage: list[ConditionalDamage] = Field(default_factory=list)
     rage_eligible: bool = False
+    knocks_prone_max_size: CreatureSize | None = None
 
 
 class VisualLoadout(BaseModel):
@@ -89,6 +91,7 @@ class CombatantTemplate(BaseModel):
     level: int | None = Field(default=None, ge=1, le=20)
     challenge_rating: str | None = None
     kind: Literal["character", "monster"]
+    size: CreatureSize = CreatureSize.MEDIUM
     armor_class: int = Field(ge=1)
     max_hp: int = Field(ge=1)
     speed_ft: int = Field(ge=0)
