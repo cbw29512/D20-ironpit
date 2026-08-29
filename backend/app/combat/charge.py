@@ -26,6 +26,7 @@ _PROFILES = {
     "boar-gore": ChargeProfile("boar-gore", 20, 1, 6, DamageType.PIERCING, CreatureSize.MEDIUM),
     "elk-ram": ChargeProfile("elk-ram", 20, 1, 6, DamageType.BLUDGEONING, CreatureSize.LARGE),
     "giant-boar-gore": ChargeProfile("giant-boar-gore", 20, 2, 6, DamageType.PIERCING, CreatureSize.LARGE),
+    "giant-goat-ram": ChargeProfile("giant-goat-ram", 20, 2, 4, DamageType.BLUDGEONING, CreatureSize.LARGE),
 }
 
 
