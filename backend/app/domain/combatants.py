@@ -135,6 +135,7 @@ class CombatantState(BaseModel):
     movement_remaining_ft: int = Field(default=0, ge=0)
     resources: list[ResourceState] = Field(default_factory=list)
     active_effect_ids: list[str] = Field(default_factory=list)
+    feature_last_turn_keys: dict[str, str] = Field(default_factory=dict)
     temporary_damage_resistances: list[DamageType] = Field(default_factory=list)
     rage_expires_round: int | None = Field(default=None, ge=1)
     rage_max_round: int | None = Field(default=None, ge=1)
