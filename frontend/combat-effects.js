@@ -28,28 +28,24 @@
     return node;
   }
 
-  async function flashCritical(event) {
+  async function showMoment(event, kind) {
     const card = actorCard(event.actor_id);
     const screen = overlay();
     const label = document.getElementById("combat-fx-text");
-    label.textContent = "CRITICAL HIT!";
-    screen.className = "critical-screen";
-    card?.classList.add("critical-hit");
-    await sleep(prefersReducedMotion() ? 120 : 650);
-    card?.classList.remove("critical-hit");
+    const actor = event.actor_name || "Combatant";
+    const critical = kind === "critical";
+    label.textContent = critical
+      ? `${actor} — CRITICAL HIT!`
+      : `${actor} — NATURAL 1 · MISS!`;
+    screen.setAttribute("aria-hidden", "false");
+    screen.className = critical ? "critical-screen" : "fumble-screen";
+    card?.classList.add(critical ? "critical-hit" : "critical-fumble");
+    const duration = prefersReducedMotion() ? 900 : (critical ? 1250 : 1100);
+    await sleep(duration);
+    card?.classList.remove("critical-hit", "critical-fumble");
     screen.className = "";
-  }
-
-  async function flashFumble(event) {
-    const card = actorCard(event.actor_id);
-    const screen = overlay();
-    const label = document.getElementById("combat-fx-text");
-    label.textContent = "NATURAL 1 · MISS";
-    screen.className = "fumble-screen";
-    card?.classList.add("critical-fumble");
-    await sleep(prefersReducedMotion() ? 120 : 700);
-    card?.classList.remove("critical-fumble");
-    screen.className = "";
+    screen.setAttribute("aria-hidden", "true");
+    await sleep(120);
   }
 
   function isNaturalOne(event) {
@@ -58,13 +54,21 @@
 
   async function playCriticalEffects(battle) {
     try {
+      let played = 0;
       for (const event of battle.events || []) {
         if (event.event_type !== "attack") continue;
-        if (event.critical) await flashCritical(event);
-        else if (isNaturalOne(event)) await flashFumble(event);
+        if (event.critical) {
+          await showMoment(event, "critical");
+          played += 1;
+        } else if (isNaturalOne(event)) {
+          await showMoment(event, "fumble");
+          played += 1;
+        }
       }
+      return played;
     } catch (error) {
       console.error("Combat visual effect failed", error);
+      return 0;
     }
   }
 
