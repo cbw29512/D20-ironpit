@@ -43,6 +43,7 @@
   const distance = (a, b) => Math.abs(a.position_ft - b.position_ft);
   const active = (member) => member.state.is_alive && !member.state.is_dead && !member.state.is_unconscious && member.state.current_hp > 0;
   const downedCharacter = (member) => member.state.template.kind === "character" && member.state.is_alive && !member.state.is_dead && member.state.current_hp === 0;
+  const eligibleHeld = (member) => member.state.is_alive && !member.state.is_dead && (member.state.current_hp > 0 || member.state.template.kind === "character");
 
   function opponents(member, setup) {
     return member.side === "heroes" ? setup.monsters : setup.heroes;
@@ -50,11 +51,12 @@
 
   function nearestTarget(member, setup) {
     const enemies = opponents(member, setup);
+    const held = enemies.filter((candidate) => eligibleHeld(candidate)
+      && candidate.state.grapple_sources.some((source) => source.source_id === member.combatant_id));
+    if (held.length) return held.reduce((best, item) => distance(member, item) < distance(member, best) ? item : best);
     let candidates = enemies.filter(active);
     if (!candidates.length) candidates = enemies.filter(downedCharacter);
     if (!candidates.length) return null;
-    const held = candidates.filter((candidate) => candidate.state.grapple_sources.some((source) => source.source_id === member.combatant_id));
-    if (held.length) return held.reduce((best, item) => distance(member, item) < distance(member, best) ? item : best);
     const grapplerIds = new Set(member.state.grapple_sources.map((source) => source.source_id));
     const grapplers = candidates.filter((candidate) => grapplerIds.has(candidate.combatant_id));
     const choices = grapplers.length ? grapplers : candidates;
