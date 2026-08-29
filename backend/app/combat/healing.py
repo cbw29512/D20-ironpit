@@ -47,7 +47,7 @@ def choose_healing_target(
     setup: EncounterSetup,
     action: HealingAction,
 ) -> EncounterCombatant | None:
-    """Prioritize living downed allies, then Bloodied allies, then conservative self-healing."""
+    """For one action, prefer a living 0-HP ally, then a Bloodied ally, then self."""
     if action.action_cost == "reaction" or not is_available(healer.state, action.action_cost):
         return None
     if not _resource_available(healer, action):
@@ -57,29 +57,41 @@ def choose_healing_target(
     others = [target for target in legal if target.combatant_id != healer.combatant_id]
     downed = [target for target in others if target.state.current_hp == 0]
     if downed:
-        return min(downed, key=lambda target: target.state.death_save_failures * -1)
+        return max(downed, key=lambda target: target.state.death_save_failures)
     bloodied = [target for target in others if is_bloodied(target.state)]
     if bloodied:
         return min(bloodied, key=lambda target: target.state.current_hp / target.state.template.max_hp)
-    if healer in legal and _self_heal_worthwhile(healer, action):
-        return healer
+    self_target = next((target for target in legal if target.combatant_id == healer.combatant_id), None)
+    if self_target is not None and _self_heal_worthwhile(healer, action):
+        return self_target
     return None
+
+
+def _choice_priority(
+    healer: EncounterCombatant,
+    action: HealingAction,
+    target: EncounterCombatant,
+) -> tuple[int, int, float]:
+    ally = target.combatant_id != healer.combatant_id
+    urgency = 0 if ally and target.state.current_hp == 0 else 1 if ally else 2
+    cost = 0 if action.action_cost == "bonus_action" else 1
+    ratio = target.state.current_hp / target.state.template.max_hp
+    return urgency, cost, ratio
 
 
 def choose_healing_action(
     healer: EncounterCombatant,
     setup: EncounterSetup,
 ) -> tuple[HealingAction, EncounterCombatant] | None:
-    """Prefer a legal Bonus Action heal over an Action heal for the same urgent need."""
-    actions = sorted(
-        healer.state.template.healing_actions,
-        key=lambda action: 0 if action.action_cost == "bonus_action" else 1,
-    )
-    for action in actions:
+    """Choose the most urgent legal heal; ally rescue always outranks self-healing."""
+    choices: list[tuple[HealingAction, EncounterCombatant]] = []
+    for action in healer.state.template.healing_actions:
         target = choose_healing_target(healer, setup, action)
         if target is not None:
-            return action, target
-    return None
+            choices.append((action, target))
+    if not choices:
+        return None
+    return min(choices, key=lambda choice: _choice_priority(healer, choice[0], choice[1]))
 
 
 def resolve_healing(
@@ -102,6 +114,7 @@ def resolve_healing(
         resource = next(item for item in healer.state.resources if item.id == action.resource_id)
         resource.current_uses -= action.resource_cost
         remaining = resource.current_uses
+    notation = f"{action.dice_count}d{action.dice_size}+{action.healing_bonus}" if action.dice_count else str(action.healing_bonus)
     return BattleEvent(
         sequence=sequence,
         round_number=round_number,
@@ -111,7 +124,7 @@ def resolve_healing(
         target_id=target.combatant_id,
         target_name=target.state.template.name,
         healing_roll=DiceRoll(
-            notation=f"{action.dice_count}d{action.dice_size}+{action.healing_bonus}",
+            notation=notation,
             rolls=rolls,
             modifier=action.healing_bonus,
             total=total,
