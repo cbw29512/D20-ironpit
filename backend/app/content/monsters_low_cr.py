@@ -9,7 +9,7 @@ from app.content.monster_attacks import (
     build_guard_spear_thrown_attack,
 )
 from app.content.monster_equipment import build_monster_visual
-from app.domain.models import CombatantTemplate
+from app.domain.models import CombatTrait, CombatantTemplate
 
 logger = logging.getLogger(__name__)
 
@@ -39,8 +39,9 @@ def build_giant_rat() -> CombatantTemplate:
         id="srd-giant-rat", name="Giant Rat", archetype="Giant Rat", challenge_rating="1/8",
         armor_class=13, max_hp=7, speed_ft=30, initiative_bonus=3,
         weapon_attack=build_giant_rat_attack(),
+        combat_traits=[CombatTrait.PACK_TACTICS],
         visual=build_monster_visual("none", "bite", "giant-rat"),
-        source="SRD 5.2.1 Giant Rat; Pack Tactics has no legal ally trigger in 1v1",
+        source="SRD 5.2.1 Giant Rat",
     )
 
 
