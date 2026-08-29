@@ -26,6 +26,8 @@ def test_arena_roster_exposes_certified_batch() -> None:
         "srd-giant-weasel",
         "srd-axe-beak",
         "srd-giant-lizard",
+        "srd-wolf",
+        "srd-dire-wolf",
     ]
 
 
