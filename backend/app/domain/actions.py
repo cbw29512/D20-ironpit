@@ -7,6 +7,8 @@ from pydantic import BaseModel, Field, model_validator
 from app.domain.size import CreatureSize
 
 AbilityName = Literal["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
+ActionCost = Literal["action", "bonus_action", "reaction"]
+HealingTargetMode = Literal["self", "ally", "self_or_ally"]
 DamageTypeName = Literal[
     "acid", "bludgeoning", "cold", "fire", "force", "lightning", "necrotic",
     "piercing", "poison", "psychic", "radiant", "slashing", "thunder",
@@ -31,6 +33,22 @@ class HitControlEffect(BaseModel):
     restrains_while_grappled: bool = False
     condition_id: ConditionName | None = None
     expires_at_start_of_source_turn: bool = False
+
+
+class HealingAction(BaseModel):
+    """A printed healing option with its actual action cost and target restrictions."""
+
+    id: str
+    name: str
+    action_cost: ActionCost
+    range_ft: int = Field(default=5, ge=0)
+    target_mode: HealingTargetMode = "self_or_ally"
+    dice_count: int = Field(default=0, ge=0, le=40)
+    dice_size: int = Field(default=6, ge=2, le=100)
+    healing_bonus: int = Field(default=0, ge=0)
+    resource_id: str | None = None
+    resource_cost: int = Field(default=1, ge=1, le=20)
+    animation: str = "healing"
 
 
 class SavingThrowAction(BaseModel):
