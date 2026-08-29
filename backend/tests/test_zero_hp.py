@@ -1,8 +1,10 @@
+from app.combat.attacks import resolve_attack
 from app.combat.death_saves import resolve_death_save
 from app.combat.dice import FixedDiceProvider
 from app.combat.state import build_combatant_state
 from app.combat.zero_hp import apply_damage
 from app.content.demo import build_demo_fighter, build_goblin_warrior
+from app.domain.models import RollMode
 
 
 def _downed_character():
@@ -54,6 +56,22 @@ def test_damage_at_zero_equal_to_max_hp_kills_immediately() -> None:
 
     apply_damage(state, state.template.max_hp)
     assert state.is_dead is True
+
+
+def test_close_hit_on_unconscious_character_has_advantage_and_is_critical() -> None:
+    defender = _downed_character()
+    attacker = build_combatant_state(build_goblin_warrior())
+    event = resolve_attack(
+        1, 1, attacker, defender, attacker.template.weapon_attack, 5,
+        FixedDiceProvider([19, 19, 6, 6, 6, 6, 6, 6]),
+    )
+
+    assert event.attack_roll is not None
+    assert event.attack_roll.mode is RollMode.ADVANTAGE
+    assert event.attack_roll.selected_roll == 19
+    assert event.hit is True
+    assert event.critical is True
+    assert defender.death_save_failures == 2
 
 
 def test_natural_one_on_death_save_counts_as_two_failures() -> None:
