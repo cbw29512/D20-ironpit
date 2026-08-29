@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.combat.action_economy import is_available
 from app.combat.ally_context import pack_tactics_active
 from app.combat.arena_closing import MELEE_BRAWL_DISTANCE_FT, resolve_simple_closing
 from app.combat.attack_actions import resolve_attack_action
@@ -20,36 +21,16 @@ from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 
 
-def _close_after_attack_action(
-    sequence: int,
-    round_number: int,
-    attacker: EncounterCombatant,
-    setup: EncounterSetup,
-) -> tuple[list[BattleEvent], int]:
+def _close_after_attack_action(sequence, round_number, attacker, setup):
     target = select_nearest_target(attacker, setup)
     if target is None or combatant_distance(attacker, target) <= MELEE_BRAWL_DISTANCE_FT:
         return [], sequence
-    movement = move_toward_combatant(
-        sequence,
-        round_number,
-        attacker,
-        target,
-        MELEE_BRAWL_DISTANCE_FT,
-    )
-    if movement is None:
-        return [], sequence
-    return [movement], sequence + 1
+    movement = move_toward_combatant(sequence, round_number, attacker, target, MELEE_BRAWL_DISTANCE_FT)
+    return ([], sequence) if movement is None else ([movement], sequence + 1)
 
 
-def _finish_turn(
-    events: list[BattleEvent],
-    sequence: int,
-    round_number: int,
-    attacker: EncounterCombatant,
-) -> tuple[list[BattleEvent], int]:
-    rage_event, sequence = finalize_rage_turn(
-        sequence, round_number, attacker.state, attacker.combatant_id
-    )
+def _finish_turn(events, sequence, round_number, attacker):
+    rage_event, sequence = finalize_rage_turn(sequence, round_number, attacker.state, attacker.combatant_id)
     if rage_event is not None:
         events.append(rage_event)
     return events, sequence
@@ -71,82 +52,52 @@ def resolve_combat_turn(
     healing_choice = choose_healing_action(attacker, setup)
     if healing_choice is not None:
         healing_action, healing_target = healing_choice
-        events.append(resolve_healing(
-            sequence, round_number, attacker, healing_target, healing_action, dice
-        ))
+        events.append(resolve_healing(sequence, round_number, attacker, healing_target, healing_action, dice))
         sequence += 1
 
-    rage_event = enter_rage(
-        sequence, round_number, attacker.state, attacker.combatant_id
-    )
+    rage_event = enter_rage(sequence, round_number, attacker.state, attacker.combatant_id)
     if rage_event is not None:
         events.append(rage_event)
         sequence += 1
-
     if should_use_second_wind(attacker.state):
-        events.append(use_second_wind(
-            sequence, round_number, attacker.state, dice, attacker.combatant_id
-        ))
+        events.append(use_second_wind(sequence, round_number, attacker.state, dice, attacker.combatant_id))
         sequence += 1
-
     if should_escape_grapple(attacker.state):
-        events.append(resolve_escape_grapple(
-            sequence, round_number, attacker.combatant_id, attacker.state, dice
-        ))
+        events.append(resolve_escape_grapple(sequence, round_number, attacker.combatant_id, attacker.state, dice))
         sequence += 1
         return _finish_turn(events, sequence, round_number, attacker)
 
-    adrenaline_event = use_adrenaline_rush(
-        sequence, round_number, attacker.state, attacker.combatant_id
-    )
+    adrenaline_event = use_adrenaline_rush(sequence, round_number, attacker.state, attacker.combatant_id)
     if adrenaline_event is not None:
         events.append(adrenaline_event)
         sequence += 1
-
     closing_events, sequence, closing_handled = resolve_simple_closing(
         sequence, round_number, attacker, target, dice
     )
     events.extend(closing_events)
 
     distance = combatant_distance(attacker, target)
-    save_action = next((
-        action for action in attacker.state.template.saving_throw_actions
-        if legal_save_action(action, target, distance)
-    ), None)
+    save_action = next((action for action in attacker.state.template.saving_throw_actions
+                        if legal_save_action(action, target, distance)), None)
     if not closing_handled and attacker.state.template.attack_action is not None:
-        action_events, sequence = resolve_attack_action(
-            sequence, round_number, attacker, setup, dice
-        )
+        action_events, sequence = resolve_attack_action(sequence, round_number, attacker, setup, dice)
         events.extend(action_events)
-        movement_events, sequence = _close_after_attack_action(
-            sequence, round_number, attacker, setup
-        )
+        movement_events, sequence = _close_after_attack_action(sequence, round_number, attacker, setup)
         events.extend(movement_events)
-    elif not closing_handled and save_action is not None and attacker.state.action_available:
-        events.append(resolve_save_action(
-            sequence, round_number, attacker, target, save_action, distance, dice
-        ))
+    elif not closing_handled and save_action is not None and is_available(attacker.state, "action"):
+        events.append(resolve_save_action(sequence, round_number, attacker, target, save_action, distance, dice))
         sequence += 1
     elif not closing_handled:
-        attack, prep_events, sequence = prepare_encounter_attack(
-            sequence, round_number, attacker, target
-        )
+        attack, prep_events, sequence = prepare_encounter_attack(sequence, round_number, attacker, target)
         events.extend(prep_events)
-        if attack is not None and attacker.state.action_available:
+        if attack is not None and is_available(attacker.state, "action"):
             pack = pack_tactics_active(attacker, target, setup)
             events.append(resolve_attack(
-                sequence,
-                round_number,
-                attacker.state,
-                target.state,
-                attack,
-                combatant_distance(attacker, target),
-                dice,
-                actor_event_id=attacker.combatant_id,
-                target_event_id=target.combatant_id,
+                sequence, round_number, attacker.state, target.state, attack,
+                combatant_distance(attacker, target), dice,
+                actor_event_id=attacker.combatant_id, target_event_id=target.combatant_id,
                 advantage_sources=1 if pack else 0,
                 feature_id="pack-tactics" if pack else None,
             ))
             sequence += 1
-
     return _finish_turn(events, sequence, round_number, attacker)
