@@ -7,10 +7,10 @@ def _by_id(monster_id: str):
     return next(item for item in build_beast_batch_two() if item.id == monster_id)
 
 
-def test_second_beast_batch_has_nine_unique_templates() -> None:
+def test_second_beast_batch_has_thirteen_unique_templates() -> None:
     monsters = build_beast_batch_two()
-    assert len(monsters) == 9
-    assert len({monster.id for monster in monsters}) == 9
+    assert len(monsters) == 13
+    assert len({monster.id for monster in monsters}) == 13
 
 
 def test_polar_bear_multiattack_and_cold_resistance() -> None:
@@ -29,3 +29,24 @@ def test_tiger_prone_vulture_pack_and_plesiosaurus_reach() -> None:
     assert tiger.weapon_attack.knocks_prone_max_size.value == "large"
     assert vulture.combat_traits == [CombatTrait.PACK_TACTICS]
     assert plesiosaurus.weapon_attack.weapon.reach_ft == 10
+
+
+def test_new_beasts_use_only_certified_combat_mechanics() -> None:
+    beetle = _by_id("srd-giant-fire-beetle")
+    goat = _by_id("srd-giant-goat")
+    owl = _by_id("srd-giant-owl")
+    hyena = _by_id("srd-hyena")
+
+    assert beetle.weapon_attack.fixed_damage == 1
+    assert beetle.weapon_attack.weapon.damage_type is DamageType.FIRE
+    assert beetle.damage_resistances == [DamageType.FIRE]
+
+    assert goat.combat_traits == [CombatTrait.CHARGE]
+    assert goat.weapon_attack.id == "giant-goat-ram"
+
+    assert owl.damage_resistances == [DamageType.NECROTIC, DamageType.RADIANT]
+    assert owl.weapon_attack.weapon.dice_size == 10
+
+    assert hyena.combat_traits == [CombatTrait.PACK_TACTICS]
+    assert hyena.weapon_attack.weapon.dice_count == 1
+    assert hyena.weapon_attack.weapon.dice_size == 6
