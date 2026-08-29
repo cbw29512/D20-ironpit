@@ -3,7 +3,7 @@ import pytest
 from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.saving_throws import legal_save_action, resolve_save_action, resolve_saving_throw
-from app.domain.models import EncounterSelection, RollMode
+from app.domain.models import DamageType, EncounterSelection, RollMode
 
 
 def _state(hero_id="karnok-stoneward-l1"):
@@ -80,6 +80,23 @@ def test_constrict_success_rolls_no_damage_and_applies_no_grapple() -> None:
     assert event.damage_roll is None and event.damage_components == []
     assert hero.state.current_hp == hero.state.template.max_hp
     assert hero.state.grapple_sources == []
+
+
+def test_half_damage_on_success_precedes_resistance() -> None:
+    _, hero, snake = _constrict_setup()
+    hero.state.template.damage_resistances = [DamageType.FIRE]
+    action = snake.state.template.saving_throw_actions[0].model_copy(update={
+        "damage_dice_count": 2,
+        "damage_dice_size": 6,
+        "damage_type": "fire",
+        "success_damage": "half",
+    })
+    event = resolve_save_action(1, 1, snake, hero, action, 5, FixedDiceProvider([10, 5, 6]))
+    assert event.save_succeeded is True
+    assert event.damage_roll is not None and event.damage_roll.total == 2
+    assert event.damage_components[0].total == 5
+    assert event.damage_components[0].applied_total == 2
+    assert hero.state.current_hp == 10
 
 
 def test_constrict_rider_still_applies_when_damage_knocks_character_unconscious() -> None:
