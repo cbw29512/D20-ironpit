@@ -6,6 +6,7 @@ from app.combat.rolls import roll_d20
 from app.domain.models import BattleEvent, CombatantState, EncounterSetup, GrappleSource, RollMode
 
 GRAPPLED_EFFECT_ID = "grappled"
+POISONED_EFFECT_ID = "poisoned"
 RESTRAINED_EFFECT_ID = "restrained"
 
 
@@ -80,14 +81,22 @@ def should_escape_grapple(state: CombatantState) -> bool:
     return state.action_available and any(source.restrains for source in state.grapple_sources)
 
 
+def _check_mode(state: CombatantState, strength_check: bool) -> RollMode:
+    advantage = strength_check and rage_active(state)
+    disadvantage = POISONED_EFFECT_ID in state.active_effect_ids
+    if advantage == disadvantage:
+        return RollMode.NORMAL
+    return RollMode.ADVANTAGE if advantage else RollMode.DISADVANTAGE
+
+
 def _escape_choice(state: CombatantState) -> tuple[str, int, RollMode]:
     athletics = state.template.skill_bonuses.get("athletics")
     acrobatics = state.template.skill_bonuses.get("acrobatics")
     if athletics is None and acrobatics is None:
         raise ValueError(f"{state.template.name} lacks certified Athletics/Acrobatics bonuses.")
     if athletics is not None and (acrobatics is None or athletics >= acrobatics):
-        return "strength (athletics)", athletics, RollMode.ADVANTAGE if rage_active(state) else RollMode.NORMAL
-    return "dexterity (acrobatics)", int(acrobatics), RollMode.NORMAL
+        return "strength (athletics)", athletics, _check_mode(state, True)
+    return "dexterity (acrobatics)", int(acrobatics), _check_mode(state, False)
 
 
 def resolve_escape_grapple(
