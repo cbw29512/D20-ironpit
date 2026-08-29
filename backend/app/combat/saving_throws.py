@@ -1,48 +1,20 @@
 from __future__ import annotations
 
-from app.combat.barbarian import end_rage_if_incapacitated, rage_active
+from app.combat.barbarian import end_rage_if_incapacitated
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
-from app.combat.grapple import RESTRAINED_EFFECT_ID, apply_grapple
-from app.combat.rolls import roll_d20
+from app.combat.grapple import apply_grapple
+from app.combat.saving_throw_rolls import resolve_saving_throw, saving_throw_mode
 from app.combat.zero_hp import apply_damage
 from app.domain.models import (
     BattleEvent,
-    CombatantState,
     DamageRollComponent,
     DamageType,
     DiceRoll,
     EncounterCombatant,
-    RollMode,
     SavingThrowAction,
 )
 from app.domain.size import size_at_most
-
-
-def saving_throw_mode(state: CombatantState, ability: str) -> RollMode:
-    advantage = 1 if ability == "strength" and rage_active(state) else 0
-    disadvantage = 1 if ability == "dexterity" and RESTRAINED_EFFECT_ID in state.active_effect_ids else 0
-    if (advantage > 0) == (disadvantage > 0):
-        return RollMode.NORMAL
-    return RollMode.ADVANTAGE if advantage else RollMode.DISADVANTAGE
-
-
-def resolve_saving_throw(
-    state: CombatantState,
-    ability: str,
-    dc: int,
-    dice: DiceProvider,
-) -> tuple[DiceRoll | None, bool]:
-    if state.is_unconscious and ability in {"strength", "dexterity"}:
-        return None, False
-    if ability not in state.template.saving_throw_bonuses:
-        raise ValueError(f"{state.template.name} lacks a certified {ability.title()} saving throw bonus.")
-    roll = roll_d20(
-        dice,
-        state.template.saving_throw_bonuses[ability],
-        saving_throw_mode(state, ability),
-    )
-    return roll, roll.total >= dc
 
 
 def legal_save_action(
