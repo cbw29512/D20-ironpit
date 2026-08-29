@@ -74,7 +74,7 @@ def test_current_certified_monsters_are_linked_to_runtime_templates() -> None:
         monster.name: monster.runnable_template_id
         for monster in catalog.monsters if monster.coverage_status is CoverageStatus.RAW_READY
     }
-    assert len(ready_monsters) == 59
+    assert len(ready_monsters) == 62
     assert ready_monsters == {
         "Awakened Shrub": "srd-awakened-shrub",
         "Axe Beak": "srd-axe-beak",
@@ -107,7 +107,10 @@ def test_current_certified_monsters_are_linked_to_runtime_templates() -> None:
         "Giant Lizard": "srd-giant-lizard",
         "Giant Owl": "srd-giant-owl",
         "Giant Rat": "srd-giant-rat",
+        "Giant Venomous Snake": "srd-giant-venomous-snake",
+        "Giant Wasp": "srd-giant-wasp",
         "Giant Weasel": "srd-giant-weasel",
+        "Giant Wolf Spider": "srd-giant-wolf-spider",
         "Goblin Warrior": "srd-goblin-warrior",
         "Guard": "srd-guard",
         "Hawk": "srd-hawk",
