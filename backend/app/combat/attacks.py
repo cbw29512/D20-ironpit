@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.barbarian import end_rage_if_incapacitated, extend_rage_from_attack
+from app.combat.conditions import apply_hit_conditions, attack_roll_condition_sources
 from app.combat.damage import resolve_weapon_damage
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
@@ -27,19 +29,26 @@ def resolve_attack(
     advantage_sources: int = 0,
     other_disadvantage_sources: int = 0,
     feature_id: str | None = None,
+    turn_key: str | None = None,
 ) -> BattleEvent:
     try:
         if spend_action and not attacker.action_available:
             raise ValueError("Action is not available for an attack.")
 
         weapon = attack.weapon
+        condition_advantage, condition_disadvantage = attack_roll_condition_sources(
+            attacker,
+            defender,
+            distance_ft,
+        )
         mode = resolve_attack_roll_mode(
             weapon,
             distance_ft,
-            advantage_sources=advantage_sources,
-            other_disadvantage_sources=other_disadvantage_sources,
+            advantage_sources=advantage_sources + condition_advantage,
+            other_disadvantage_sources=other_disadvantage_sources + condition_disadvantage,
         )
         attack_roll = roll_d20(dice, attack.attack_bonus, mode)
+        extend_rage_from_attack(attacker, round_number)
         if spend_action:
             attacker.action_available = False
         natural = attack_roll.selected_roll or 0
@@ -48,22 +57,33 @@ def resolve_attack(
         hp_before = defender.current_hp
         damage_roll = None
         damage_components = []
+        damage_outcome = None
+        applied_conditions: list[str] = []
 
         if hit:
+            active_turn_key = turn_key or f"{round_number}:{actor_event_id or attacker.template.id}"
             damage_roll, rolled_components = resolve_weapon_damage(
                 attacker,
                 attack,
                 dice,
                 critical,
                 mode,
+                active_turn_key,
             )
             applied_total, damage_components = apply_damage_defenses(
                 defender,
                 rolled_components,
             )
-            apply_damage(defender, applied_total, critical=critical)
+            damage_outcome = apply_damage(defender, applied_total, critical=critical)
+            end_rage_if_incapacitated(defender)
+            applied_conditions = apply_hit_conditions(attack, defender)
 
         outcome = "CRITICAL HIT" if critical else ("HIT" if hit else "MISS")
+        description = f"{attacker.template.name}: {outcome} with {weapon.name}."
+        if damage_outcome == "relentless_endurance":
+            description += f" {defender.template.name} uses Relentless Endurance and remains at 1 HP."
+        if "prone" in applied_conditions:
+            description += f" {defender.template.name} is knocked Prone."
         return BattleEvent(
             sequence=sequence,
             round_number=round_number,
@@ -75,6 +95,7 @@ def resolve_attack(
             attack_roll=attack_roll,
             damage_roll=damage_roll,
             damage_components=damage_components,
+            applied_condition_ids=applied_conditions,
             hit=hit,
             critical=critical,
             hp_before=hp_before,
@@ -87,7 +108,7 @@ def resolve_attack(
             projectile=weapon.projectile,
             feature_id=feature_id,
             animation=weapon.animation,
-            description=f"{attacker.template.name}: {outcome} with {weapon.name}.",
+            description=description,
         )
     except Exception as exc:
         logger.exception("Attack failed: %s -> %s.", attacker.template.name, defender.template.name)

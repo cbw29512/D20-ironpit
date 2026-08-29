@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.content.certified_heroes import build_certified_hero_registry
 from app.domain.catalog import CoverageStatus, HeroCatalogCard
 
 SOURCE = "SRD 5.2.1 / 2024 Free Rules"
@@ -19,48 +20,73 @@ _CLASS_ROWS = [
     ("wizard", "Wizard", "evoker", "Evoker"),
 ]
 
-_READY_SLOTS = {
-    ("fighter", 1): ("Aldric Vane", "aldric-vane-l1"),
-    ("rogue", 1): ("Mara Quickstep", "mara-quickstep-l1"),
+_BUILD_ROWS = {
+    "barbarian": [("great-weapon", "Great Weapon"), ("axe-shield", "Axe & Shield"), ("dual-wielder", "Dual Wielder")],
+    "bard": [("support", "Support"), ("duelist", "Duelist"), ("controller", "Controller")],
+    "cleric": [("guardian", "Guardian"), ("healer", "Healer"), ("war-priest", "War Priest")],
+    "druid": [("wild-shaper", "Wild Shaper"), ("primal-caster", "Primal Caster"), ("warden", "Warden")],
+    "fighter": [("guardian", "Sword & Shield"), ("great-weapon", "Great Weapon"), ("archer", "Archer")],
+    "monk": [("striker", "Striker"), ("skirmisher", "Skirmisher"), ("defender", "Defender")],
+    "paladin": [("guardian", "Guardian"), ("great-weapon", "Great Weapon"), ("avenger", "Avenger")],
+    "ranger": [("archer", "Archer"), ("dual-wielder", "Dual Wielder"), ("warden", "Warden")],
+    "rogue": [("skirmisher", "Skirmisher"), ("archer", "Archer"), ("duelist", "Duelist")],
+    "sorcerer": [("blaster", "Blaster"), ("controller", "Controller"), ("survivor", "Survivor")],
+    "warlock": [("eldritch-blaster", "Eldritch Blaster"), ("blade", "Blade"), ("controller", "Controller")],
+    "wizard": [("evoker", "Evoker"), ("controller", "Controller"), ("defender", "Defender")],
 }
 
 
-def _hero_card(class_row: tuple[str, str, str, str], level: int) -> HeroCatalogCard:
+def _card_id(class_id: str, level: int, build_id: str, build_index: int) -> str:
+    base = f"hero-2024-{class_id}-l{level}"
+    return base if build_index == 0 else f"{base}-{build_id}"
+
+
+def _hero_card(
+    class_row: tuple[str, str, str, str],
+    level: int,
+    build: tuple[str, str],
+    build_index: int,
+    ready_builds: dict[tuple[str, int, str], tuple[str, str]],
+) -> HeroCatalogCard:
     class_id, class_name, subclass_id, subclass_name = class_row
-    ready = _READY_SLOTS.get((class_id, level))
-    unlocked_subclass_id = subclass_id if level >= 3 else None
-    unlocked_subclass_name = subclass_name if level >= 3 else None
+    build_id, build_name = build
+    ready = ready_builds.get((class_id, level, build_id))
+    subclass_ready = level >= 3
+    common = dict(
+        id=_card_id(class_id, level, build_id, build_index),
+        class_id=class_id,
+        class_name=class_name,
+        level=level,
+        build_id=build_id,
+        build_name=build_name,
+        subclass_id=subclass_id if subclass_ready else None,
+        subclass_name=subclass_name if subclass_ready else None,
+        source=SOURCE,
+    )
     if ready:
         name, template_id = ready
         return HeroCatalogCard(
-            id=f"hero-2024-{class_id}-l{level}",
+            **common,
             name=name,
-            class_id=class_id,
-            class_name=class_name,
-            level=level,
-            subclass_id=unlocked_subclass_id,
-            subclass_name=unlocked_subclass_name,
-            source=SOURCE,
             coverage_status=CoverageStatus.RAW_READY,
             runnable_template_id=template_id,
         )
     return HeroCatalogCard(
-        id=f"hero-2024-{class_id}-l{level}",
-        name=f"{class_name} {level}",
-        class_id=class_id,
-        class_name=class_name,
-        level=level,
-        subclass_id=unlocked_subclass_id,
-        subclass_name=unlocked_subclass_name,
-        source=SOURCE,
+        **common,
+        name=f"{class_name} {level} — {build_name}",
         coverage_status=CoverageStatus.BLOCKED,
-        blockers=["pregen-build-not-certified", "class-level-mechanics-not-certified"],
+        blockers=[
+            "legal-character-build-not-certified",
+            "combat-feature-coverage-not-certified",
+        ],
     )
 
 
 def build_hero_catalog() -> list[HeroCatalogCard]:
+    ready_builds = build_certified_hero_registry()
     return [
-        _hero_card(class_row, level)
+        _hero_card(class_row, level, build, build_index, ready_builds)
         for class_row in _CLASS_ROWS
         for level in range(1, 21)
+        for build_index, build in enumerate(_BUILD_ROWS[class_row[0]])
     ]

@@ -21,7 +21,11 @@ def adjusted_damage_amount(
             return 0
 
         adjusted = amount
-        if damage_type in template.damage_resistances:
+        resistances = {
+            *template.damage_resistances,
+            *target.temporary_damage_resistances,
+        }
+        if damage_type in resistances:
             adjusted //= 2
         if damage_type in template.damage_vulnerabilities:
             adjusted *= 2

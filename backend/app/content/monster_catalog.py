@@ -7,15 +7,20 @@ from app.domain.catalog import CoverageStatus, MonsterCatalogCard
 
 _DATA_PATH = Path(__file__).with_name("data") / "srd_5_2_1_monsters.json"
 
+# Ready means every mechanic capable of changing a standard flat-arena fight is
+# represented. Terrain-only movement and deliberately unused flee/retreat options
+# do not block readiness under docs/ARENA_POLICY.md.
 _READY_BY_NAME = {
     "Axe Beak": "srd-axe-beak",
     "Bandit": "srd-bandit",
     "Commoner": "srd-commoner",
+    "Dire Wolf": "srd-dire-wolf",
     "Giant Lizard": "srd-giant-lizard",
     "Giant Rat": "srd-giant-rat",
     "Giant Weasel": "srd-giant-weasel",
     "Goblin Warrior": "srd-goblin-warrior",
     "Guard": "srd-guard",
+    "Wolf": "srd-wolf",
 }
 
 

@@ -12,6 +12,7 @@ from app.combat.encounter_setup import build_encounter_setup
 from app.combat.engine import run_duel
 from app.content.catalog import build_full_content_catalog
 from app.content.demo import build_demo_fighter, build_goblin_warrior
+from app.content.readiness import assert_public_selection_runnable
 from app.content.roster import build_arena_roster
 from app.domain.catalog import FullContentCatalog
 from app.domain.models import (
@@ -70,6 +71,7 @@ def get_arena_roster() -> ArenaRoster:
 @app.post("/api/encounters/setup", response_model=EncounterSetup)
 def create_encounter_setup(selection: EncounterSelection) -> EncounterSetup:
     try:
+        assert_public_selection_runnable(selection)
         return build_encounter_setup(selection)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
@@ -81,6 +83,7 @@ def create_encounter_setup(selection: EncounterSelection) -> EncounterSetup:
 @app.post("/api/encounters/fight", response_model=EncounterBattleResult)
 def create_encounter_battle(selection: EncounterSelection) -> EncounterBattleResult:
     try:
+        assert_public_selection_runnable(selection)
         return run_encounter(selection, SecureDiceProvider())
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc

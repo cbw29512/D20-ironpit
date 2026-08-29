@@ -16,6 +16,8 @@ class HeroCatalogCard(BaseModel):
     class_id: str
     class_name: str
     level: int = Field(ge=1, le=20)
+    build_id: str
+    build_name: str
     subclass_id: str | None = None
     subclass_name: str | None = None
     source: str

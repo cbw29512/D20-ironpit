@@ -2,11 +2,9 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.ally_context import pack_tactics_active
-from app.combat.attack_actions import resolve_attack_action
-from app.combat.attacks import resolve_attack
 from app.combat.death_saves import resolve_death_save
 from app.combat.dice import DiceProvider
+from app.combat.encounter_combat_turn import resolve_combat_turn
 from app.combat.encounter_events import (
     build_encounter_result,
     build_finish_event,
@@ -15,11 +13,7 @@ from app.combat.encounter_events import (
 from app.combat.encounter_initiative import roll_encounter_initiative
 from app.combat.encounter_outcome import resolve_encounter_outcome
 from app.combat.encounter_setup import build_encounter_setup
-from app.combat.encounter_targeting import combatant_distance, select_nearest_target
-from app.combat.encounter_turns import prepare_encounter_attack
-from app.combat.fighter import use_second_wind
-from app.combat.policy import should_use_second_wind
-from app.combat.state import begin_turn
+from app.combat.encounter_targeting import select_nearest_target
 from app.domain.encounters import EncounterBattleResult, EncounterCombatant, EncounterSelection
 from app.domain.models import BattleEvent
 
@@ -75,43 +69,10 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                 target = select_nearest_target(attacker, setup)
                 if target is None:
                     continue
-
-                begin_turn(attacker.state)
-                if should_use_second_wind(attacker.state):
-                    events.append(use_second_wind(
-                        sequence, round_number, attacker.state, dice, attacker.combatant_id
-                    ))
-                    sequence += 1
-
-                if attacker.state.template.attack_action is not None:
-                    action_events, sequence = resolve_attack_action(
-                        sequence, round_number, attacker, setup, dice
-                    )
-                    events.extend(action_events)
-                    continue
-
-                attack, prep_events, sequence = prepare_encounter_attack(
-                    sequence, round_number, attacker, target
+                turn_events, sequence = resolve_combat_turn(
+                    sequence, round_number, attacker, target, setup, dice
                 )
-                events.extend(prep_events)
-                if attack is None:
-                    continue
-
-                pack = pack_tactics_active(attacker, target, setup)
-                events.append(resolve_attack(
-                    sequence,
-                    round_number,
-                    attacker.state,
-                    target.state,
-                    attack,
-                    combatant_distance(attacker, target),
-                    dice,
-                    actor_event_id=attacker.combatant_id,
-                    target_event_id=target.combatant_id,
-                    advantage_sources=1 if pack else 0,
-                    feature_id="pack-tactics" if pack else None,
-                ))
-                sequence += 1
+                events.extend(turn_events)
 
             outcome = resolve_encounter_outcome(setup)
             if outcome != "active":

@@ -4,16 +4,22 @@ from app.content.catalog import build_full_content_catalog
 from app.domain.catalog import CoverageStatus
 
 
-def test_catalog_contains_every_core_class_at_every_level() -> None:
+def test_catalog_contains_three_builds_for_every_core_class_level() -> None:
     catalog = build_full_content_catalog()
-    assert catalog.hero_count == 240
-    assert len(catalog.heroes) == 240
+    assert catalog.hero_count == 720
+    assert len(catalog.heroes) == 720
+    assert len({card.id for card in catalog.heroes}) == 720
 
     counts = Counter(card.class_id for card in catalog.heroes)
-    assert set(counts.values()) == {20}
+    assert set(counts.values()) == {60}
     assert len(counts) == 12
     for class_id in counts:
-        assert {card.level for card in catalog.heroes if card.class_id == class_id} == set(range(1, 21))
+        class_cards = [card for card in catalog.heroes if card.class_id == class_id]
+        assert {card.level for card in class_cards} == set(range(1, 21))
+        for level in range(1, 21):
+            level_cards = [card for card in class_cards if card.level == level]
+            assert len(level_cards) == 3
+            assert len({card.build_id for card in level_cards}) == 3
 
 
 def test_catalog_contains_all_srd_5_2_1_monsters() -> None:
@@ -27,7 +33,9 @@ def test_catalog_contains_all_srd_5_2_1_monsters() -> None:
 def test_uncertified_cards_fail_closed_in_catalog() -> None:
     catalog = build_full_content_catalog()
     barbarian_20 = next(
-        card for card in catalog.heroes if card.class_id == "barbarian" and card.level == 20
+        card
+        for card in catalog.heroes
+        if card.class_id == "barbarian" and card.level == 20 and card.build_id == "great-weapon"
     )
     assert barbarian_20.coverage_status is CoverageStatus.BLOCKED
     assert barbarian_20.runnable_template_id is None
@@ -40,17 +48,40 @@ def test_uncertified_cards_fail_closed_in_catalog() -> None:
     assert blocked_monster.blockers
 
 
-def test_current_certified_cards_are_linked_to_runtime_templates() -> None:
+def test_only_audited_karnok_is_currently_raw_ready() -> None:
     catalog = build_full_content_catalog()
-    fighter_1 = next(card for card in catalog.heroes if card.class_id == "fighter" and card.level == 1)
-    rogue_1 = next(card for card in catalog.heroes if card.class_id == "rogue" and card.level == 1)
-    assert fighter_1.runnable_template_id == "aldric-vane-l1"
-    assert rogue_1.runnable_template_id == "mara-quickstep-l1"
+    ready_heroes = [
+        card for card in catalog.heroes if card.coverage_status is CoverageStatus.RAW_READY
+    ]
 
+    assert len(ready_heroes) == 1
+    karnok = ready_heroes[0]
+    assert (karnok.class_id, karnok.level, karnok.build_id) == (
+        "fighter",
+        1,
+        "great-weapon",
+    )
+    assert karnok.name == "Karnok Stoneward"
+    assert karnok.runnable_template_id == "karnok-stoneward-l1"
+    assert not karnok.blockers
+
+
+def test_current_certified_monsters_are_linked_to_runtime_templates() -> None:
+    catalog = build_full_content_catalog()
     ready_monsters = {
         monster.name: monster.runnable_template_id
         for monster in catalog.monsters
         if monster.coverage_status is CoverageStatus.RAW_READY
     }
-    assert ready_monsters["Giant Rat"] == "srd-giant-rat"
-    assert ready_monsters["Goblin Warrior"] == "srd-goblin-warrior"
+    assert ready_monsters == {
+        "Axe Beak": "srd-axe-beak",
+        "Bandit": "srd-bandit",
+        "Commoner": "srd-commoner",
+        "Dire Wolf": "srd-dire-wolf",
+        "Giant Lizard": "srd-giant-lizard",
+        "Giant Rat": "srd-giant-rat",
+        "Giant Weasel": "srd-giant-weasel",
+        "Goblin Warrior": "srd-goblin-warrior",
+        "Guard": "srd-guard",
+        "Wolf": "srd-wolf",
+    }
