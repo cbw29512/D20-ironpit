@@ -105,6 +105,19 @@ def finish_rage_turn(state: CombatantState, round_number: int) -> None:
             end_rage(state)
 
 
+def finalize_rage_turn(
+    sequence: int,
+    round_number: int,
+    state: CombatantState,
+    actor_id: str,
+) -> tuple[BattleEvent | None, int]:
+    event = maintain_rage_with_bonus_action(sequence, round_number, state, actor_id)
+    if event is not None:
+        sequence += 1
+    finish_rage_turn(state, round_number)
+    return event, sequence
+
+
 def end_rage_if_incapacitated(state: CombatantState) -> None:
     if state.is_unconscious or state.is_dead:
         end_rage(state)
