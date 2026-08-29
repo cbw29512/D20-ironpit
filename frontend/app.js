@@ -2,7 +2,7 @@
   "use strict";
 
   const apiBase = String(window.IRON_PIT_API_BASE || "").trim().replace(/\/$/, "");
-  const state = { roster: null, heroes: [], monsters: [] };
+  const state = { catalog: null, heroes: [], monsters: [] };
   const el = (id) => document.getElementById(id);
   const view = window.createEncounterView();
 
@@ -13,12 +13,29 @@
     });
   }
 
+  function runtimeCard(card, side) {
+    return {
+      id: card.runnable_template_id,
+      catalog_id: card.id,
+      name: card.name,
+      archetype: side === "heroes" ? card.class_name : card.monster_type,
+      level: card.level || null,
+      challenge_rating: card.challenge_rating || null,
+      coverage_status: card.coverage_status,
+    };
+  }
+
   function addSelected(side) {
-    if (state[side].length >= 8 || !state.roster) return;
+    if (state[side].length >= 8 || !state.catalog) return;
     const pickerId = side === "heroes" ? "hero-picker" : "monster-picker";
-    const source = side === "heroes" ? state.roster.characters : state.roster.monsters;
+    const source = side === "heroes" ? state.catalog.heroes : state.catalog.monsters;
     const chosen = source.find((item) => item.id === el(pickerId).value);
-    if (chosen) state[side].push(chosen);
+    if (!chosen) return;
+    if (chosen.coverage_status !== "raw_ready" || !chosen.runnable_template_id) {
+      view.setStatus(`${chosen.name} is cataloged but not RAW-certified for automated fights yet.`);
+      return;
+    }
+    state[side].push(runtimeCard(chosen, side));
     render();
   }
 
@@ -47,20 +64,26 @@
     }
   }
 
+  function seedReadyCard(side) {
+    const source = side === "heroes" ? state.catalog.heroes : state.catalog.monsters;
+    const card = source.find((item) => item.coverage_status === "raw_ready" && item.runnable_template_id);
+    if (card) state[side].push(runtimeCard(card, side));
+  }
+
   async function boot() {
     if (!apiBase) {
       view.setStatus("Production API is not configured.");
       render();
       return;
     }
-    const response = await fetch(`${apiBase}/api/roster`);
-    if (!response.ok) throw new Error(`Roster API returned ${response.status}`);
-    state.roster = await response.json();
-    view.fillPicker("hero-picker", state.roster.characters);
-    view.fillPicker("monster-picker", state.roster.monsters);
-    if (state.roster.characters[0]) state.heroes.push(state.roster.characters[0]);
-    if (state.roster.monsters[0]) state.monsters.push(state.roster.monsters[0]);
-    view.setStatus("Ready. Build the matchup and hit FIGHT.");
+    const response = await fetch(`${apiBase}/api/catalog`);
+    if (!response.ok) throw new Error(`Catalog API returned ${response.status}`);
+    state.catalog = await response.json();
+    view.fillPicker("hero-picker", state.catalog.heroes);
+    view.fillPicker("monster-picker", state.catalog.monsters);
+    seedReadyCard("heroes");
+    seedReadyCard("monsters");
+    view.setStatus(`Loaded ${state.catalog.hero_count} hero slots and ${state.catalog.monster_count} SRD monsters.`);
     render();
   }
 
@@ -69,7 +92,7 @@
   el("fight-button").addEventListener("click", fight);
   boot().catch((error) => {
     console.error(error);
-    view.setStatus("Roster failed to load from production API.");
+    view.setStatus("Catalog failed to load from production API.");
     render();
   });
 })();

@@ -66,10 +66,11 @@
     picker.replaceChildren();
     for (const item of items) {
       const option = document.createElement("option");
+      const ready = item.coverage_status === "raw_ready";
       option.value = item.id;
       option.textContent = item.level
-        ? `${item.name} — ${item.archetype} ${item.level}`
-        : `${item.name} — CR ${item.challenge_rating}`;
+        ? `${item.name} — ${item.class_name} ${item.level}${ready ? "" : " — not ready yet"}`
+        : `${item.name} — CR ${item.challenge_rating}${ready ? "" : " — not ready yet"}`;
       picker.append(option);
     }
   }
