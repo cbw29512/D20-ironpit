@@ -11,17 +11,23 @@ _DATA_PATH = Path(__file__).with_name("data") / "srd_5_2_1_monsters.json"
 # represented. Terrain-only movement and deliberately unused flee/retreat options
 # do not block readiness under docs/ARENA_POLICY.md.
 _READY_BY_NAME = {
+    "Awakened Shrub": "srd-awakened-shrub",
     "Axe Beak": "srd-axe-beak",
+    "Badger": "srd-badger",
     "Bandit": "srd-bandit",
+    "Bat": "srd-bat",
     "Black Bear": "srd-black-bear",
     "Boar": "srd-boar",
     "Brown Bear": "srd-brown-bear",
     "Camel": "srd-camel",
+    "Cat": "srd-cat",
     "Commoner": "srd-commoner",
+    "Crab": "srd-crab",
     "Deer": "srd-deer",
     "Dire Wolf": "srd-dire-wolf",
     "Draft Horse": "srd-draft-horse",
     "Elk": "srd-elk",
+    "Frog": "srd-frog",
     "Giant Badger": "srd-giant-badger",
     "Giant Boar": "srd-giant-boar",
     "Giant Lizard": "srd-giant-lizard",
@@ -29,6 +35,12 @@ _READY_BY_NAME = {
     "Giant Weasel": "srd-giant-weasel",
     "Goblin Warrior": "srd-goblin-warrior",
     "Guard": "srd-guard",
+    "Hawk": "srd-hawk",
+    "Lizard": "srd-lizard",
+    "Owl": "srd-owl",
+    "Rat": "srd-rat",
+    "Raven": "srd-raven",
+    "Weasel": "srd-weasel",
     "Wolf": "srd-wolf",
 }
 
