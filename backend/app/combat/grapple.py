@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from app.combat.barbarian import rage_active
 from app.combat.condition_immunity import condition_is_immune
+from app.combat.condition_rules import condition_speed_is_zero
 from app.combat.dice import DiceProvider
 from app.combat.rolls import roll_d20
 from app.domain.models import BattleEvent, CombatantState, EncounterSetup, GrappleSource, RollMode
@@ -57,7 +58,7 @@ def release_grapple(state: CombatantState, source_id: str) -> None:
 
 
 def speed_is_zero(state: CombatantState) -> bool:
-    return bool(state.grapple_sources or RESTRAINED_EFFECT_ID in state.active_effect_ids)
+    return bool(state.grapple_sources) or condition_speed_is_zero(state)
 
 
 def grapple_attack_disadvantage(state: CombatantState, target_id: str) -> int:
