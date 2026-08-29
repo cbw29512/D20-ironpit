@@ -8,7 +8,8 @@
     const visual = template.visual || {};
     let form = "humanoid", detail = "none";
 
-    if (has(name, /snake/)) form = "snake";
+    if (has(name, /centipede/)) form = "centipede";
+    else if (has(name, /snake/)) form = "snake";
     else if (has(name, /crab/)) form = "crab";
     else if (has(name, /bat/)) form = "bat";
     else if (has(name, /eagle|hawk|owl|vulture|raven|pteranodon/)) form = "bird";
