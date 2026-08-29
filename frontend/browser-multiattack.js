@@ -4,6 +4,10 @@
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
+  const E = () => window.IRON_PIT_ACTION_ECONOMY || {
+    available: (state, cost) => cost === "action" && state.action_available,
+    spend: (state) => { state.action_available = false; },
+  };
 
   const slotData = (slot) => Array.isArray(slot)
     ? { attackIds: slot, saveActionIds: [] }
@@ -54,9 +58,9 @@
 
   function resolveAttackAction(sequence, round, member, setup) {
     const slots = member.state.template.attack_action?.slots;
-    if (!slots?.length || !member.state.action_available) return { events: [], sequence };
+    if (!slots?.length || !E().available(member.state, "action")) return { events: [], sequence };
     const events = [];
-    member.state.action_available = false;
+    E().spend(member.state, "action");
     for (const slot of slots) {
       const target = S().nearestTarget(member, setup);
       if (!target) break;

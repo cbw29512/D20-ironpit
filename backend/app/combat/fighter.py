@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.action_economy import is_available, spend
 from app.combat.dice import DiceProvider
+from app.combat.zero_hp import restore_hit_points
 from app.domain.models import BattleEvent, CombatantState, DiceRoll
 
 logger = logging.getLogger(__name__)
@@ -20,7 +22,7 @@ def use_second_wind(
         resource = next((item for item in fighter.resources if item.id == "second-wind"), None)
         if resource is None or resource.current_uses <= 0:
             raise ValueError("Second Wind has no remaining uses.")
-        if not fighter.bonus_action_available:
+        if not is_available(fighter, "bonus_action"):
             raise ValueError("Bonus Action is not available.")
         if fighter.template.level is None:
             raise ValueError("Second Wind requires a Fighter level.")
@@ -33,10 +35,9 @@ def use_second_wind(
             total=rolled + fighter.template.level,
         )
         hp_before = fighter.current_hp
-        fighter.current_hp = min(fighter.template.max_hp, fighter.current_hp + healing_roll.total)
-        fighter.bonus_action_available = False
+        healed = restore_hit_points(fighter, healing_roll.total)
+        spend(fighter, "bonus_action")
         resource.current_uses -= 1
-        healed = fighter.current_hp - hp_before
         event_id = actor_event_id or fighter.template.id
 
         return BattleEvent(

@@ -1,90 +1,76 @@
 (() => {
   "use strict";
 
-  const state = { catalog: null, heroes: [], monsters: [] };
+  const MAX_SLOTS = 6;
+  const state = { catalog: null, heroSlots: Array(MAX_SLOTS).fill(null), monsterSlots: Array(MAX_SLOTS).fill(null), fighting: false };
   const el = (id) => document.getElementById(id);
-  const view = window.createEncounterView();
+  const view = () => window.IRON_PIT_BATTLEFIELD_VIEW;
+  const picker = () => window.IRON_PIT_BATTLEFIELD_PICKER;
 
-  function render() {
-    const ready = Boolean(window.IRON_PIT_BROWSER_ENGINE && state.catalog);
-    view.renderSelection(state, ready, (side, index) => {
-      state[side].splice(index, 1);
-      render();
-    });
+  function clearResult() {
+    el("result-panel").hidden = true; el("pit-round").textContent = "";
+    el("battle-log").replaceChildren(Object.assign(document.createElement("li"), { textContent: "Cards loaded. Press FIGHT when both sides are ready." }));
   }
 
-  function runtimeCard(card, side) {
-    return {
-      id: card.runnable_template_id,
-      catalog_id: card.id,
-      name: card.name,
-      archetype: side === "heroes" ? card.class_name : card.monster_type,
-      level: card.level || null,
-      build_name: card.build_name || null,
-      challenge_rating: card.challenge_rating || null,
-      coverage_status: card.coverage_status,
-    };
+  function render() { if (state.catalog) view().render(state, openSlot); }
+
+  function setSlot(side, index, card) {
+    const slots = side === "heroes" ? state.heroSlots : state.monsterSlots;
+    slots[index] = card; clearResult(); render();
   }
 
-  function addSelected(side) {
-    if (state[side].length >= 8 || !state.catalog) return;
-    const pickerId = side === "heroes" ? "hero-picker" : "monster-picker";
-    const source = side === "heroes" ? state.catalog.heroes : state.catalog.monsters;
-    const chosen = source.find((item) => item.id === el(pickerId).value);
-    if (!chosen) return;
-    if (chosen.coverage_status !== "raw_ready" || !chosen.runnable_template_id) {
-      view.setStatus(`${chosen.name} is cataloged but not RAW-certified for automated fights yet.`);
-      return;
-    }
-    state[side].push(runtimeCard(chosen, side));
-    render();
+  function removeSlot(side, index) {
+    const slots = side === "heroes" ? state.heroSlots : state.monsterSlots;
+    slots[index] = null; clearResult(); render();
+  }
+
+  function openSlot(side, index) {
+    if (state.fighting || !state.catalog) return;
+    picker().open(state, side, index, setSlot, removeSlot);
+  }
+
+  function selected(side) {
+    const slots = side === "heroes" ? state.heroSlots : state.monsterSlots;
+    const cards = [], indexes = [];
+    slots.forEach((card, index) => { if (card) { cards.push(card); indexes.push(index); } });
+    return { cards, indexes };
+  }
+
+  function validate(cards, side) {
+    if (!cards.length) return `${side === "heroes" ? "Hero" : "Monster"} side needs at least one card.`;
+    const blocked = cards.find((card) => card.coverage_status !== "raw_ready" || !card.runnable_template_id);
+    return blocked ? `${blocked.name} is not RAW-certified for automated combat yet.` : null;
   }
 
   async function fight() {
+    const heroes = selected("heroes"), monsters = selected("monsters");
+    const error = validate(heroes.cards, "heroes") || validate(monsters.cards, "monsters");
+    if (error) { el("status").textContent = error; return; }
     try {
-      el("fight-button").disabled = true;
-      el("result-panel").hidden = true;
-      view.setStatus("Rolling initiative. Entering the Pit…");
+      state.fighting = true; render(); clearResult(); el("status").textContent = "Rolling initiative…";
       await new Promise((resolve) => requestAnimationFrame(resolve));
       const battle = window.IRON_PIT_BROWSER_ENGINE.runEncounter({
-        hero_ids: state.heroes.map((item) => item.id),
-        monster_ids: state.monsters.map((item) => item.id),
+        hero_ids: heroes.cards.map((card) => card.runnable_template_id),
+        monster_ids: monsters.cards.map((card) => card.runnable_template_id),
         starting_distance_ft: Number(el("distance").value),
       });
-      if (!window.playIronPitBattle) throw new Error("Battle replay system did not load.");
-      await window.playIronPitBattle(battle);
-      view.showResult(battle);
-    } catch (error) {
-      console.error(error);
-      view.setStatus("Fight failed locally. Check the battle log/console for the blocked mechanic.");
+      await window.playIronPitBattle(battle, { heroes: heroes.indexes, monsters: monsters.indexes });
+      view().writeLog(battle); view().showResult(battle);
+    } catch (errorCaught) {
+      console.error(errorCaught); el("status").textContent = "Fight stopped because a required RAW mechanic is unsupported or the battle engine failed.";
     } finally {
-      render();
+      state.fighting = false; el("fight-button").disabled = false;
     }
   }
 
-  function seedReadyCard(side) {
-    const source = side === "heroes" ? state.catalog.heroes : state.catalog.monsters;
-    const card = source.find((item) => item.coverage_status === "raw_ready" && item.runnable_template_id);
-    if (card) state[side].push(runtimeCard(card, side));
-  }
-
   async function boot() {
-    if (!window.IRON_PIT_BROWSER_ENGINE || !window.IRON_PIT_BROWSER_CATALOG) throw new Error("Browser combat engine did not load.");
+    const required = [window.IRON_PIT_BROWSER_ENGINE, window.IRON_PIT_BROWSER_CATALOG, window.IRON_PIT_ENCOUNTER_PICKER, view(), picker()];
+    if (required.some((item) => !item)) throw new Error("Iron Pit browser modules did not load.");
     state.catalog = await window.IRON_PIT_BROWSER_CATALOG.buildCatalog();
-    view.fillPicker("hero-picker", state.catalog.heroes);
-    view.fillPicker("monster-picker", state.catalog.monsters);
-    seedReadyCard("heroes");
-    seedReadyCard("monsters");
-    view.setStatus(`Pit ready · ${state.catalog.hero_count} hero builds · ${state.catalog.monster_count} SRD monsters cataloged.`);
-    render();
+    picker().bind(() => state); render();
+    el("status").textContent = "Click an empty slot to add a RAW-certified card.";
   }
 
-  el("add-hero").addEventListener("click", () => addSelected("heroes"));
-  el("add-monster").addEventListener("click", () => addSelected("monsters"));
   el("fight-button").addEventListener("click", fight);
-  boot().catch((error) => {
-    console.error(error);
-    view.setStatus("Browser combat engine failed to initialize.");
-    render();
-  });
+  boot().catch((error) => { console.error(error); el("status").textContent = "The Iron Pit failed to initialize."; });
 })();

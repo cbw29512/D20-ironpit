@@ -82,13 +82,10 @@
     const actor = nodes.get(event.actor_id), target = nodes.get(event.target_id);
     if (!actor || !target) return;
     const motion = motionClass(event);
-    actor.classList.add("attacking", motion);
-    callout(event.description);
-    await delay(190);
+    actor.classList.add("attacking", motion); callout(event.description); await delay(190);
     if (event.damage_roll?.total) target.classList.add("hit");
     if (event.hp_after != null) hp(target, event.hp_after);
-    statuses(target, event.applied_condition_ids || []);
-    await delay(210);
+    statuses(target, event.applied_condition_ids || []); await delay(210);
     actor.classList.remove("attacking", motion); target.classList.remove("hit");
   }
 
@@ -100,8 +97,7 @@
 
   async function feature(event) {
     const actor = nodes.get(event.actor_id); if (!actor) return delay(80);
-    const target = nodes.get(event.target_id);
-    callout(event.description || event.feature_id || "Feature");
+    const target = nodes.get(event.target_id); callout(event.description || event.feature_id || "Feature");
     if (event.feature_id === "escape-grapple" && event.check_succeeded) statuses(actor, [], ["grappled", "restrained"]);
     if (target && event.removed_condition_ids?.length) statuses(target, [], event.removed_condition_ids);
     actor.classList.add("feature-pulse"); await delay(200); actor.classList.remove("feature-pulse");
@@ -131,14 +127,13 @@
     if (event.event_type === "death_save") return deathSave(event);
     if (event.event_type === "victory" || event.event_type === "draw") { callout(event.description); return delay(500); }
     if (event.event_type === "initiative") { callout(event.description); return delay(110); }
-    if (event.description) callout(event.description);
-    return delay(120);
+    if (event.description) callout(event.description); return delay(120);
   }
 
-  async function play(battle) {
+  async function play(battle, onEvent = null) {
     reset(battle.setup);
     el("pit-arena").scrollIntoView({ behavior: reduced() ? "auto" : "smooth", block: "center" });
-    for (const event of battle.events || []) await playEvent(event);
+    for (const event of battle.events || []) { await playEvent(event); if (onEvent) onEvent(event); }
     return battle;
   }
 

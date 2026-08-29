@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.combat.action_economy import is_available, spend
 from app.combat.barbarian import end_rage_if_incapacitated
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
@@ -61,14 +62,14 @@ def resolve_save_action(
     *,
     spend_action: bool = True,
 ) -> BattleEvent:
-    if spend_action and not actor.state.action_available:
+    if spend_action and not is_available(actor.state, "action"):
         raise ValueError("Action is not available for a saving throw action.")
     if not legal_save_action(action, target, distance_ft):
         raise ValueError(f"{action.name} has no legal target at {distance_ft} feet.")
 
     save_roll, succeeded = resolve_saving_throw(target.state, action.save_ability, action.dc, dice)
     if spend_action:
-        actor.state.action_available = False
+        spend(actor.state, "action")
     hp_before = target.state.current_hp
     rolled_components = _damage_components(action, dice, succeeded)
     applied_total, damage_components = apply_damage_defenses(target.state, rolled_components)

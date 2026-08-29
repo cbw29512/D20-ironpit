@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.combat.action_economy import is_available, spend
 from app.combat.grapple import speed_is_zero
 from app.domain.models import BattleEvent, CombatantState
 from app.domain.traits import CombatTrait
@@ -30,7 +31,7 @@ def adrenaline_rush_available(state: CombatantState) -> bool:
     resource = _resource(state, ADRENALINE_RESOURCE_ID)
     return (
         CombatTrait.ADRENALINE_RUSH in state.template.combat_traits
-        and state.bonus_action_available
+        and is_available(state, "bonus_action")
         and resource is not None
         and resource.current_uses > 0
     )
@@ -47,7 +48,7 @@ def use_adrenaline_rush(
     resource = _resource(state, ADRENALINE_RESOURCE_ID)
     assert resource is not None
     resource.current_uses -= 1
-    state.bonus_action_available = False
+    spend(state, "bonus_action")
     movement = 0 if speed_is_zero(state) else state.template.speed_ft
     state.movement_remaining_ft += movement
     grant_temporary_hit_points(state, proficiency_bonus(state))

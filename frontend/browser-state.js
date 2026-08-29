@@ -7,26 +7,13 @@
 
   function buildState(template) {
     return {
-      template,
-      current_hp: template.max_hp,
-      temporary_hp: 0,
-      is_alive: true,
-      is_unconscious: false,
-      is_stable: false,
-      is_dead: false,
-      death_save_successes: 0,
-      death_save_failures: 0,
-      action_available: true,
-      bonus_action_available: true,
-      movement_remaining_ft: 0,
-      resources: { ...(template.resources || {}) },
-      active_effect_ids: [],
-      grapple_sources: [],
-      timed_effects: [],
-      feature_last_turn_keys: {},
-      temporary_damage_resistances: [],
-      rage_expires_round: null,
-      rage_max_round: null,
+      template, current_hp: template.max_hp, temporary_hp: 0, is_alive: true,
+      is_unconscious: false, is_stable: false, is_dead: false,
+      death_save_successes: 0, death_save_failures: 0,
+      action_available: true, bonus_action_available: true, reaction_available: true,
+      movement_remaining_ft: 0, resources: { ...(template.resources || {}) },
+      active_effect_ids: [], grapple_sources: [], timed_effects: [], feature_last_turn_keys: {},
+      temporary_damage_resistances: [], rage_expires_round: null, rage_max_round: null,
     };
   }
 
@@ -34,6 +21,7 @@
     const incapacitated = Q().incapacitated(state);
     state.action_available = !incapacitated;
     state.bonus_action_available = !incapacitated;
+    state.reaction_available = true;
     const speedZero = G()?.speedIsZero(state) || false;
     state.movement_remaining_ft = speedZero ? 0 : state.template.speed_ft;
     state.active_effect_ids = state.active_effect_ids.filter((id) => id !== "dodge");
@@ -47,10 +35,7 @@
   const active = (member) => member.state.is_alive && !member.state.is_dead && !member.state.is_unconscious && member.state.current_hp > 0;
   const downedCharacter = (member) => member.state.template.kind === "character" && member.state.is_alive && !member.state.is_dead && member.state.current_hp === 0;
   const eligibleHeld = (member) => member.state.is_alive && !member.state.is_dead && (member.state.current_hp > 0 || member.state.template.kind === "character");
-
-  function opponents(member, setup) {
-    return member.side === "heroes" ? setup.monsters : setup.heroes;
-  }
+  const opponents = (member, setup) => member.side === "heroes" ? setup.monsters : setup.heroes;
 
   function nearestTarget(member, setup) {
     const enemies = opponents(member, setup);
@@ -71,10 +56,7 @@
     return allies.some((ally) => ally.combatant_id !== member.combatant_id && active(ally));
   }
 
-  function packTactics(member, setup) {
-    return member.state.template.traits?.includes("pack-tactics") && hasActiveAlly(member, setup);
-  }
-
+  const packTactics = (member, setup) => member.state.template.traits?.includes("pack-tactics") && hasActiveAlly(member, setup);
   function moveToward(member, target, desired) {
     const before = distance(member, target);
     const moved = Math.min(Math.max(0, before - desired), member.state.movement_remaining_ft);
@@ -86,8 +68,8 @@
 
   const sizeAtMost = (member, maxSize) => Boolean(maxSize) && SIZE_RANK[member.state.template.size] <= SIZE_RANK[maxSize];
   const canProne = (target, maxSize) => sizeAtMost(target, maxSize);
-
   window.IRON_PIT_BROWSER_STATE = {
-    active, beginTurn, buildState, canProne, distance, downedCharacter, hasActiveAlly, moveToward, nearestTarget, packTactics, sizeAtMost,
+    active, beginTurn, buildState, canProne, distance, downedCharacter, hasActiveAlly,
+    moveToward, nearestTarget, packTactics, sizeAtMost,
   };
 })();

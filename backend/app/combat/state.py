@@ -17,13 +17,8 @@ def build_combatant_state(template: CombatantTemplate) -> CombatantState:
             current_hp=template.max_hp,
             movement_remaining_ft=0,
             resources=[
-                ResourceState(
-                    id=resource.id,
-                    name=resource.name,
-                    current_uses=resource.max_uses,
-                    max_uses=resource.max_uses,
-                )
-                for resource in template.resources
+                ResourceState(id=r.id, name=r.name, current_uses=r.max_uses, max_uses=r.max_uses)
+                for r in template.resources
             ],
         )
     except Exception as exc:
@@ -36,6 +31,7 @@ def begin_turn(state: CombatantState) -> None:
         incapacitated = is_incapacitated(state)
         state.action_available = not incapacitated
         state.bonus_action_available = not incapacitated
+        state.reaction_available = True
         state.movement_remaining_ft = 0 if speed_is_zero(state) else state.template.speed_ft
         if DODGE_EFFECT_ID in state.active_effect_ids:
             state.active_effect_ids.remove(DODGE_EFFECT_ID)

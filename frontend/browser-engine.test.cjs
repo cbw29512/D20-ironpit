@@ -139,13 +139,14 @@ function fight(heroIds, monsterIds, distance = 30, dice = deterministicDice()) {
 }
 
 {
-  const heroes = Array(8).fill("karnok-stoneward-l1");
-  const monsters = Array(8).fill("srd-wolf");
+  const heroes = Array(6).fill("karnok-stoneward-l1");
+  const monsters = Array(6).fill("srd-wolf");
   const battle = fight(heroes, monsters, 30, deterministicDice(42));
   assert.notEqual(battle.outcome, "active");
   assert.ok(battle.rounds <= 100);
-  assert.equal(battle.setup.heroes.length, 8);
-  assert.equal(battle.setup.monsters.length, 8);
+  assert.equal(battle.setup.heroes.length, 6);
+  assert.equal(battle.setup.monsters.length, 6);
+  assert.throws(() => fight(Array(7).fill("karnok-stoneward-l1"), ["srd-wolf"]), /1-6 cards per side/);
 }
 
 console.log("Browser combat regressions passed.");

@@ -46,21 +46,21 @@ def test_duplicate_cards_receive_independent_runtime_state() -> None:
     assert second.state.resources[0].current_uses == 2
 
 
-def test_selection_allows_at_most_eight_cards_per_side() -> None:
-    eight_heroes = ["aldric-vane-l1"] * 8
-    eight_monsters = ["srd-goblin-warrior"] * 8
-    selection = EncounterSelection(hero_ids=eight_heroes, monster_ids=eight_monsters)
+def test_selection_allows_at_most_six_cards_per_side() -> None:
+    six_heroes = ["aldric-vane-l1"] * 6
+    six_monsters = ["srd-goblin-warrior"] * 6
+    selection = EncounterSelection(hero_ids=six_heroes, monster_ids=six_monsters)
     encounter = build_encounter_setup(selection)
 
-    assert len(encounter.heroes) == 8
-    assert len(encounter.monsters) == 8
-    assert encounter.hero_total_levels == 8
-    assert encounter.monster_total_cr == "2"
+    assert len(encounter.heroes) == 6
+    assert len(encounter.monsters) == 6
+    assert encounter.hero_total_levels == 6
+    assert encounter.monster_total_cr == "3/2"
 
     with pytest.raises(ValidationError):
-        EncounterSelection(hero_ids=eight_heroes + ["aldric-vane-l1"], monster_ids=eight_monsters)
+        EncounterSelection(hero_ids=six_heroes + ["aldric-vane-l1"], monster_ids=six_monsters)
     with pytest.raises(ValidationError):
-        EncounterSelection(hero_ids=eight_heroes, monster_ids=eight_monsters + ["srd-goblin-warrior"])
+        EncounterSelection(hero_ids=six_heroes, monster_ids=six_monsters + ["srd-goblin-warrior"])
 
 
 def test_unknown_card_fails_closed() -> None:
