@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.attack_actions import resolve_attack_action
 from app.combat.attacks import resolve_attack
 from app.combat.death_saves import resolve_death_save
 from app.combat.dice import DiceProvider
@@ -80,6 +81,13 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                         sequence, round_number, attacker.state, dice, attacker.combatant_id
                     ))
                     sequence += 1
+
+                if attacker.state.template.attack_action is not None:
+                    action_events, sequence = resolve_attack_action(
+                        sequence, round_number, attacker, setup, dice
+                    )
+                    events.extend(action_events)
+                    continue
 
                 attack, prep_events, sequence = prepare_encounter_attack(
                     sequence, round_number, attacker, target
