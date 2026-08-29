@@ -4,17 +4,24 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-AbilityName = Literal["str", "dex", "con", "int", "wis", "cha"]
+AbilityName = Literal[
+    "strength",
+    "dexterity",
+    "constitution",
+    "intelligence",
+    "wisdom",
+    "charisma",
+]
 EquipmentOption = Literal["package", "gold"]
 
 
 class AbilityScores(BaseModel):
-    str: int = Field(ge=1, le=30)
-    dex: int = Field(ge=1, le=30)
-    con: int = Field(ge=1, le=30)
-    int: int = Field(ge=1, le=30)
-    wis: int = Field(ge=1, le=30)
-    cha: int = Field(ge=1, le=30)
+    strength: int = Field(ge=1, le=30)
+    dexterity: int = Field(ge=1, le=30)
+    constitution: int = Field(ge=1, le=30)
+    intelligence: int = Field(ge=1, le=30)
+    wisdom: int = Field(ge=1, le=30)
+    charisma: int = Field(ge=1, le=30)
 
     def score(self, ability: AbilityName) -> int:
         return int(getattr(self, ability))
