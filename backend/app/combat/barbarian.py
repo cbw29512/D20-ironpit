@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.combat.condition_rules import is_incapacitated
 from app.domain.models import BattleEvent, CombatantState, DamageType, WeaponAttack
 
 RAGE_EFFECT_ID = "rage"
@@ -128,5 +129,5 @@ def finalize_rage_turn(
 
 
 def end_rage_if_incapacitated(state: CombatantState) -> None:
-    if state.template.wearing_heavy_armor or state.is_unconscious or state.is_dead:
+    if state.template.wearing_heavy_armor or is_incapacitated(state) or state.is_dead:
         end_rage(state)
