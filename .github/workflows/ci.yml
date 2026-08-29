@@ -20,6 +20,10 @@ jobs:
       - name: Certify Python rules reference
         working-directory: backend
         run: pytest -q
+      - name: Prepare static browser package
+        run: |
+          python scripts/prepare_static_site.py
+          test -s frontend/data/srd_5_2_1_monsters.json
       - name: Validate browser JavaScript syntax
         run: |
           for file in frontend/*.js; do
@@ -33,4 +37,6 @@ jobs:
           ! grep -q '/api/' frontend/app.js
           grep -q 'IRON_PIT_BROWSER_ENGINE.runEncounter' frontend/app.js
       - name: Validate Netlify production-only credit guard
-        run: grep -q 'CONTEXT.*production' netlify.toml
+        run: |
+          grep -q 'CONTEXT.*production' netlify.toml
+          grep -q 'prepare_static_site.py' netlify.toml
