@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.combat.action_economy import is_available, spend
 from app.combat.barbarian import rage_active
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.condition_rules import condition_speed_is_zero
@@ -28,28 +29,17 @@ def _sync_effect_ids(state: CombatantState) -> None:
 
 
 def apply_grapple(
-    state: CombatantState,
-    source_id: str,
-    escape_dc: int,
-    range_ft: int,
-    *,
-    restrains: bool = False,
+    state: CombatantState, source_id: str, escape_dc: int, range_ft: int, *, restrains: bool = False,
 ) -> list[str]:
     if condition_is_immune(state, GRAPPLED_EFFECT_ID):
         return []
     state.grapple_sources = [source for source in state.grapple_sources if source.source_id != source_id]
     restrains = restrains and not condition_is_immune(state, RESTRAINED_EFFECT_ID)
     state.grapple_sources.append(GrappleSource(
-        source_id=source_id,
-        escape_dc=escape_dc,
-        range_ft=range_ft,
-        restrains=restrains,
+        source_id=source_id, escape_dc=escape_dc, range_ft=range_ft, restrains=restrains,
     ))
     _sync_effect_ids(state)
-    applied = [GRAPPLED_EFFECT_ID]
-    if restrains:
-        applied.append(RESTRAINED_EFFECT_ID)
-    return applied
+    return [GRAPPLED_EFFECT_ID, RESTRAINED_EFFECT_ID] if restrains else [GRAPPLED_EFFECT_ID]
 
 
 def release_grapple(state: CombatantState, source_id: str) -> None:
@@ -83,7 +73,7 @@ def cleanup_grapples(setup: EncounterSetup) -> None:
 
 
 def should_escape_grapple(state: CombatantState) -> bool:
-    return state.action_available and any(source.restrains for source in state.grapple_sources)
+    return is_available(state, "action") and any(source.restrains for source in state.grapple_sources)
 
 
 def _check_mode(state: CombatantState, strength_check: bool) -> RollMode:
@@ -105,36 +95,24 @@ def _escape_choice(state: CombatantState) -> tuple[str, int, RollMode]:
 
 
 def resolve_escape_grapple(
-    sequence: int,
-    round_number: int,
-    actor_id: str,
-    state: CombatantState,
-    dice: DiceProvider,
+    sequence: int, round_number: int, actor_id: str, state: CombatantState, dice: DiceProvider,
 ) -> BattleEvent:
+    if not is_available(state, "action"):
+        raise ValueError("Action is not available to escape a grapple.")
     source = next((item for item in state.grapple_sources if item.restrains), state.grapple_sources[0])
     check_name, bonus, mode = _escape_choice(state)
     check = roll_d20(dice, bonus, mode)
     success = check.total >= source.escape_dc
-    state.action_available = False
+    spend(state, "action")
     if success:
         release_grapple(state, source.source_id)
         if not speed_is_zero(state):
             state.movement_remaining_ft = max(state.movement_remaining_ft, state.template.speed_ft)
     return BattleEvent(
-        sequence=sequence,
-        round_number=round_number,
-        event_type="feature",
-        actor_id=actor_id,
-        actor_name=state.template.name,
-        target_id=source.source_id,
-        ability_check_roll=check,
-        check_ability=check_name,
-        check_dc=source.escape_dc,
-        check_succeeded=success,
-        feature_id="escape-grapple",
-        animation="escape-grapple",
-        description=(
-            f"{state.template.name} {'escapes' if success else 'fails to escape'} the grapple "
-            f"with {check_name.title()} against DC {source.escape_dc}."
-        ),
+        sequence=sequence, round_number=round_number, event_type="feature", actor_id=actor_id,
+        actor_name=state.template.name, target_id=source.source_id, ability_check_roll=check,
+        check_ability=check_name, check_dc=source.escape_dc, check_succeeded=success,
+        feature_id="escape-grapple", animation="escape-grapple",
+        description=(f"{state.template.name} {'escapes' if success else 'fails to escape'} the grapple "
+                     f"with {check_name.title()} against DC {source.escape_dc}."),
     )

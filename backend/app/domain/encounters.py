@@ -13,8 +13,8 @@ EncounterOutcome = Literal["active", "heroes_win", "monsters_win", "draw"]
 
 
 class EncounterSelection(BaseModel):
-    hero_ids: list[str] = Field(min_length=1, max_length=8)
-    monster_ids: list[str] = Field(min_length=1, max_length=8)
+    hero_ids: list[str] = Field(min_length=1, max_length=6)
+    monster_ids: list[str] = Field(min_length=1, max_length=6)
     starting_distance_ft: int = Field(default=30, ge=0)
 
 
@@ -26,9 +26,9 @@ class EncounterCombatant(BaseModel):
 
 
 class EncounterSetup(BaseModel):
-    heroes: list[EncounterCombatant] = Field(min_length=1, max_length=8)
-    monsters: list[EncounterCombatant] = Field(min_length=1, max_length=8)
-    hero_total_levels: int = Field(ge=1, le=160)
+    heroes: list[EncounterCombatant] = Field(min_length=1, max_length=6)
+    monsters: list[EncounterCombatant] = Field(min_length=1, max_length=6)
+    hero_total_levels: int = Field(ge=1, le=120)
     monster_total_cr: str
     starting_distance_ft: int = Field(ge=0)
 
@@ -36,7 +36,7 @@ class EncounterSetup(BaseModel):
 class InitiativeGroup(BaseModel):
     side: EncounterSide
     template_id: str
-    combatant_ids: list[str] = Field(min_length=1, max_length=8)
+    combatant_ids: list[str] = Field(min_length=1, max_length=6)
     natural_roll: int = Field(ge=1, le=20)
     initiative_bonus: int
     initiative_count: int
@@ -44,8 +44,8 @@ class InitiativeGroup(BaseModel):
 
 
 class EncounterInitiative(BaseModel):
-    groups: list[InitiativeGroup] = Field(min_length=2, max_length=16)
-    turn_order: list[str] = Field(min_length=2, max_length=16)
+    groups: list[InitiativeGroup] = Field(min_length=2, max_length=12)
+    turn_order: list[str] = Field(min_length=2, max_length=12)
 
 
 class EncounterBattleResult(BaseModel):

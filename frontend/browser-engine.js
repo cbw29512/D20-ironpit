@@ -94,7 +94,7 @@
   }
 
   function runEncounter(selection) {
-    if (!selection.hero_ids?.length || !selection.monster_ids?.length || selection.hero_ids.length > 8 || selection.monster_ids.length > 8) throw new Error("Iron Pit requires 1-8 cards per side.");
+    if (!selection.hero_ids?.length || !selection.monster_ids?.length || selection.hero_ids.length > 6 || selection.monster_ids.length > 6) throw new Error("Iron Pit requires 1-6 cards per side.");
     const setup = buildSetup({ ...selection, starting_distance_ft: Number(selection.starting_distance_ft ?? 30) });
     const init = initiative(setup);
     const byId = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));

@@ -4,7 +4,7 @@ on:
   push:
   pull_request:
 
-# Exact-head certification for melee deathmatch, RAW conditions/damage/action economy, browser/Python parity, and monster silhouettes.
+# Exact-head certification for RAW combat, condition/action economy parity, six-slot battlefield UI, and Pages root entry.
 jobs:
   combat-certification:
     runs-on: ubuntu-latest
@@ -27,9 +27,7 @@ jobs:
           test -s frontend/data/srd_5_2_1_monsters.json
       - name: Validate browser JavaScript syntax
         run: |
-          for file in frontend/*.js; do
-            node --check "$file"
-          done
+          for file in frontend/*.js; do node --check "$file"; done
       - name: Run deterministic browser combat regressions
         run: |
           node frontend/browser-engine.test.cjs
@@ -43,7 +41,11 @@ jobs:
           node frontend/browser-venom.test.cjs
           node frontend/browser-mixed-multiattack.test.cjs
           node frontend/browser-condition-immunity.test.cjs
+          node frontend/browser-action-healing.test.cjs
+          node frontend/browser-action-condition.test.cjs
           node frontend/figure-visuals.test.cjs
+          node frontend/encounter-picker.test.cjs
+          node frontend/encounter-wiring.test.cjs
       - name: Prove production fight path is backend-free
         run: |
           ! grep -R -q 'IRON_PIT_API_BASE' frontend scripts
@@ -52,24 +54,38 @@ jobs:
           ! test -e frontend/config.js
           ! test -e scripts/write_frontend_config.py
           grep -q 'IRON_PIT_BROWSER_ENGINE.runEncounter' frontend/app.js
-      - name: Prove animated Pit is wired to production fight path
+      - name: Prove clean GitHub Pages root entry
         run: |
-          grep -q 'id="pit-arena"' frontend/index.html
-          grep -q 'browser-dice.js' frontend/index.html
-          grep -q 'browser-monsters-control.js' frontend/index.html
-          grep -q 'browser-monsters-poison.js' frontend/index.html
-          grep -q 'browser-monsters-venom.js' frontend/index.html
-          grep -q 'browser-monsters-mixed.js' frontend/index.html
+          test -s index.html
+          grep -q '<base href="./frontend/">' index.html
+          grep -q 'id="hero-slots"' index.html
+          grep -q 'id="monster-slots"' index.html
+          grep -q 'id="fight-button"' index.html
+          grep -q 'browser-condition-rules.js' index.html
+          grep -q 'browser-action-economy.js' index.html
+          grep -q 'browser-healing.js' index.html
+          grep -q 'battlefield-picker.js' index.html
+          grep -q 'battlefield-replay.js' index.html
+          ! grep -qi 'http-equiv="refresh"' index.html
+      - name: Prove live battlefield is wired
+        run: |
+          grep -q 'id="hero-slots"' frontend/index.html
+          grep -q 'id="monster-slots"' frontend/index.html
+          grep -q 'id="card-picker"' frontend/index.html
+          grep -q 'id="combat-fx-overlay"' frontend/index.html
+          grep -q 'battlefield.css' frontend/index.html
+          grep -q 'battlefield-picker.js' frontend/index.html
+          grep -q 'battlefield-view.js' frontend/index.html
+          grep -q 'battlefield-replay.js' frontend/index.html
           grep -q 'browser-condition-immunity.js' frontend/index.html
+          grep -q 'browser-condition-rules.js' frontend/index.html
+          grep -q 'browser-action-economy.js' frontend/index.html
           grep -q 'browser-grapple.js' frontend/index.html
           grep -q 'browser-timed-conditions.js' frontend/index.html
           grep -q 'browser-saves.js' frontend/index.html
           grep -q 'browser-multiattack.js' frontend/index.html
+          grep -q 'browser-healing.js' frontend/index.html
           grep -q 'figure-visuals.js' frontend/index.html
-          grep -q 'figure-visuals.css' frontend/index.html
-          grep -q 'figure-poison.css' frontend/index.html
-          grep -q 'figure-venom.css' frontend/index.html
-          grep -q 'battle-replay.js' frontend/index.html
           grep -q 'playIronPitBattle' frontend/app.js
       - name: Validate Netlify production-only credit guard
         run: |

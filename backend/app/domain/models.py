@@ -2,6 +2,7 @@ from app.domain.actions import (
     AttackActionDefinition,
     AttackActionSlot,
     GrappleSource,
+    HealingAction,
     HitControlEffect,
     SavingThrowAction,
 )
@@ -53,6 +54,7 @@ __all__ = [
     "EncounterSetup",
     "EncounterSide",
     "GrappleSource",
+    "HealingAction",
     "HitControlEffect",
     "InitiativeGroup",
     "OnHitDamage",

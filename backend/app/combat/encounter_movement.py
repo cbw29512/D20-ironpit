@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.action_economy import is_available, spend
 from app.combat.encounter_targeting import combatant_distance
 from app.domain.encounters import EncounterCombatant
 from app.domain.models import BattleEvent
@@ -57,10 +58,10 @@ def take_encounter_dash(
     target: EncounterCombatant,
 ) -> BattleEvent:
     try:
-        if not mover.state.action_available:
+        if not is_available(mover.state, "action"):
             raise ValueError("Action is not available for Dash.")
         before = combatant_distance(mover, target)
-        mover.state.action_available = False
+        spend(mover.state, "action")
         mover.state.movement_remaining_ft += mover.state.template.speed_ft
         return BattleEvent(
             sequence=sequence,

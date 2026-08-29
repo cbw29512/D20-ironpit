@@ -90,6 +90,20 @@ def test_unreachable_first_attack_dashes_instead_of_half_using_attack_action() -
     assert attacker.state.action_available is False
 
 
+def test_dash_that_reaches_melee_still_cannot_multiattack_same_turn() -> None:
+    setup, attacker = _extra_attack_setup()
+    setup.starting_distance_ft = 50
+    setup.monsters[0].position_ft = 50
+    setup.monsters[1].position_ft = 50
+
+    events, _ = resolve_attack_action(1, 1, attacker, setup, MaxDiceProvider())
+
+    assert [event.event_type for event in events] == ["movement", "dash", "movement"]
+    assert events[-1].distance_after_ft == 5
+    assert not any(event.event_type == "attack" for event in events)
+    assert attacker.state.action_available is False
+
+
 def test_mixed_multiattack_uses_ranged_option_until_engaged() -> None:
     setup, attacker = _mixed_attack_setup(30)
     events, _ = resolve_attack_action(1, 1, attacker, setup, FixedDiceProvider([10, 4, 10, 4]))

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.action_economy import is_available, spend
 from app.combat.ally_context import pack_tactics_active
 from app.combat.attacks import resolve_attack
 from app.combat.dice import DiceProvider
@@ -26,26 +27,15 @@ def _validate_slots(attacker: EncounterCombatant) -> None:
     }
     known_saves = {action.id for action in attacker.state.template.saving_throw_actions}
     for slot in definition.slots:
-        unknown_attacks = set(slot.attack_ids) - known_attacks
-        unknown_saves = set(slot.save_action_ids) - known_saves
-        if unknown_attacks or unknown_saves:
-            raise ValueError(
-                f"Unknown Multiattack IDs in {definition.name}: "
-                f"{sorted(unknown_attacks | unknown_saves)}"
-            )
+        unknown = (set(slot.attack_ids) - known_attacks) | (set(slot.save_action_ids) - known_saves)
+        if unknown:
+            raise ValueError(f"Unknown Multiattack IDs in {definition.name}: {sorted(unknown)}")
 
 
-def _save_choice(
-    attacker: EncounterCombatant,
-    target: EncounterCombatant,
-    slot: AttackActionSlot,
-    distance: int,
-) -> SavingThrowAction | None:
+def _save_choice(attacker, target, slot, distance):
     allowed = set(slot.save_action_ids)
-    return next((
-        action for action in attacker.state.template.saving_throw_actions
-        if action.id in allowed and legal_save_action(action, target, distance)
-    ), None)
+    return next((action for action in attacker.state.template.saving_throw_actions
+                 if action.id in allowed and legal_save_action(action, target, distance)), None)
 
 
 def _slot_choice(attacker, target, slot):
@@ -58,19 +48,14 @@ def _preferred_distance(attacker: EncounterCombatant, slot: AttackActionSlot) ->
     if slot.attack_ids:
         return preferred_distance_for_attacks(attacker.state, slot.attack_ids)
     allowed = set(slot.save_action_ids)
-    ranges = [
-        action.range_ft for action in attacker.state.template.saving_throw_actions
-        if action.id in allowed
-    ]
+    ranges = [action.range_ft for action in attacker.state.template.saving_throw_actions if action.id in allowed]
     if not ranges:
         raise ValueError("Multiattack slot has no known action range.")
     return max(ranges)
 
 
 def _move_for_slot(sequence, round_number, attacker, target, slot):
-    movement = move_toward_combatant(
-        sequence, round_number, attacker, target, _preferred_distance(attacker, slot)
-    )
+    movement = move_toward_combatant(sequence, round_number, attacker, target, _preferred_distance(attacker, slot))
     return ([movement], sequence + 1) if movement is not None else ([], sequence)
 
 
@@ -80,11 +65,13 @@ def _prepare_first_slot(sequence, round_number, attacker, target, slot):
     events, sequence = _move_for_slot(sequence, round_number, attacker, target, slot)
     if any(_slot_choice(attacker, target, slot)):
         return events, sequence, True
+    if not is_available(attacker.state, "action"):
+        return events, sequence, False
     events.append(take_encounter_dash(sequence, round_number, attacker, target))
     sequence += 1
     more, sequence = _move_for_slot(sequence, round_number, attacker, target, slot)
     events.extend(more)
-    return events, sequence, any(_slot_choice(attacker, target, slot))
+    return events, sequence, False
 
 
 def resolve_attack_action(
@@ -98,27 +85,23 @@ def resolve_attack_action(
     try:
         _validate_slots(attacker)
         definition = attacker.state.template.attack_action
-        if definition is None or not attacker.state.action_available:
+        if definition is None or not is_available(attacker.state, "action"):
             raise ValueError("Multiattack action is not available.")
         target = select_nearest_target(attacker, setup)
         if target is None:
             return [], sequence
-        events, sequence, ready = _prepare_first_slot(
-            sequence, round_number, attacker, target, definition.slots[0]
-        )
+        events, sequence, ready = _prepare_first_slot(sequence, round_number, attacker, target, definition.slots[0])
         if not ready:
             return events, sequence
 
-        attacker.state.action_available = False
+        spend(attacker.state, "action")
         for slot in definition.slots:
             target = select_nearest_target(attacker, setup)
             if target is None:
                 break
             attack, save_action = _slot_choice(attacker, target, slot)
             if attack is None and save_action is None:
-                movement, sequence = _move_for_slot(
-                    sequence, round_number, attacker, target, slot
-                )
+                movement, sequence = _move_for_slot(sequence, round_number, attacker, target, slot)
                 events.extend(movement)
                 attack, save_action = _slot_choice(attacker, target, slot)
             if attack is not None:
@@ -126,10 +109,8 @@ def resolve_attack_action(
                 events.append(resolve_attack(
                     sequence, round_number, attacker.state, target.state, attack,
                     combatant_distance(attacker, target), dice,
-                    actor_event_id=attacker.combatant_id,
-                    target_event_id=target.combatant_id,
-                    spend_action=False,
-                    advantage_sources=1 if pack else 0,
+                    actor_event_id=attacker.combatant_id, target_event_id=target.combatant_id,
+                    spend_action=False, advantage_sources=1 if pack else 0,
                     feature_id="pack-tactics" if pack else definition.id,
                 ))
                 sequence += 1
