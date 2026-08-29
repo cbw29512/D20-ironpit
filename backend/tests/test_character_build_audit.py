@@ -21,6 +21,24 @@ def _audit(feature_id: str, category: str, *, automated: bool = True) -> Feature
     )
 
 
+def _scores(
+    strength: int,
+    dexterity: int,
+    constitution: int,
+    intelligence: int,
+    wisdom: int,
+    charisma: int,
+) -> AbilityScores:
+    return AbilityScores(
+        strength=strength,
+        dexterity=dexterity,
+        constitution=constitution,
+        intelligence=intelligence,
+        wisdom=wisdom,
+        charisma=charisma,
+    )
+
+
 def _profile() -> CharacterBuildProfile:
     template = build_brom_ironmark()
     return CharacterBuildProfile(
@@ -36,13 +54,13 @@ def _profile() -> CharacterBuildProfile:
         background_name="Soldier",
         origin_feat_id="savage-attacker",
         origin_feat_name="Savage Attacker",
-        base_ability_scores=AbilityScores(str=15, dex=13, con=14, int=10, wis=12, cha=8),
-        background_allowed_abilities=["str", "dex", "con"],
+        base_ability_scores=_scores(15, 13, 14, 10, 12, 8),
+        background_allowed_abilities=["strength", "dexterity", "constitution"],
         background_increases=[
-            AbilityIncrease(ability="str", amount=2),
-            AbilityIncrease(ability="con", amount=1),
+            AbilityIncrease(ability="strength", amount=2),
+            AbilityIncrease(ability="constitution", amount=1),
         ],
-        final_ability_scores=AbilityScores(str=17, dex=13, con=15, int=10, wis=12, cha=8),
+        final_ability_scores=_scores(17, 13, 15, 10, 12, 8),
         class_equipment_option="gold",
         class_equipment=["Chain Mail", "Greataxe", "Dungeoneer's Pack"],
         background_equipment_option="package",
@@ -66,22 +84,22 @@ def test_complete_profile_passes_structural_raw_audit() -> None:
 
     assert audit_character_build(profile, template) == []
     assert_character_build_raw_ready(profile, template)
-    assert profile.final_ability_scores.modifier("str") == 3
+    assert profile.final_ability_scores.modifier("strength") == 3
 
 
 def test_background_increases_must_follow_2024_pattern_and_allowed_scores() -> None:
     template = build_brom_ironmark()
     profile = _profile()
     profile.background_increases = [
-        AbilityIncrease(ability="str", amount=1),
-        AbilityIncrease(ability="wis", amount=2),
+        AbilityIncrease(ability="strength", amount=1),
+        AbilityIncrease(ability="wisdom", amount=2),
     ]
 
     issues = audit_character_build(profile, template)
 
     assert "background-increase-uses-disallowed-ability" in issues
-    assert "final-str-does-not-match-background-increases" in issues
-    assert "final-con-does-not-match-background-increases" in issues
+    assert "final-strength-does-not-match-background-increases" in issues
+    assert "final-constitution-does-not-match-background-increases" in issues
 
 
 def test_any_unautomated_combat_feature_blocks_raw_ready_claim() -> None:
