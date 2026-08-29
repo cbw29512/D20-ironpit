@@ -50,6 +50,11 @@ def health() -> dict[str, str]:
     return {"status": "ok"}
 
 
+@app.get("/version")
+def version() -> dict[str, str]:
+    return {"commit": os.getenv("RENDER_GIT_COMMIT", "local")}
+
+
 @app.get("/api/catalog", response_model=FullContentCatalog)
 def get_full_content_catalog() -> FullContentCatalog:
     try:
@@ -119,5 +124,5 @@ def create_ranged_demo_battle() -> BattleResult:
             build_demo_fighter(), build_goblin_warrior(), SecureDiceProvider(), starting_distance_ft=90
         )
     except Exception as exc:
-        logger.exception("Ranged demo battle API failed.")
+        logger.exception("Ranged demo battle failed.")
         raise HTTPException(status_code=500, detail="Ranged battle could not be completed.") from exc
