@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.combat.condition_immunity import condition_is_immune
 from app.domain.models import BattleEvent, CombatantState, EncounterCombatant, EncounterSetup, TimedEffect
 
 
@@ -9,7 +10,9 @@ def apply_timed_condition(
     source_id: str,
     *,
     expires_at_start_of_source_turn: bool = True,
-) -> str:
+) -> str | None:
+    if condition_is_immune(state, effect_id):
+        return None
     state.timed_effects = [
         effect for effect in state.timed_effects
         if not (effect.effect_id == effect_id and effect.source_id == source_id)
