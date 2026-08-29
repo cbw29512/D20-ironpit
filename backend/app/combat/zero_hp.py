@@ -8,6 +8,8 @@ from app.domain.models import CombatantState
 
 logger = logging.getLogger(__name__)
 ZeroHpOutcome = Literal["damaged", "unconscious", "dead", "unchanged", "relentless_endurance"]
+DODGE_EFFECT_ID = "dodge"
+PRONE_EFFECT_ID = "prone"
 
 
 def reset_death_saves(state: CombatantState) -> None:
@@ -21,7 +23,18 @@ def _mark_dead(state: CombatantState) -> ZeroHpOutcome:
     state.is_dead = True
     state.is_unconscious = False
     state.is_stable = False
+    state.active_effect_ids = [effect for effect in state.active_effect_ids if effect != DODGE_EFFECT_ID]
     return "dead"
+
+
+def _mark_unconscious(state: CombatantState) -> ZeroHpOutcome:
+    state.is_alive = True
+    state.is_unconscious = True
+    state.is_stable = False
+    state.active_effect_ids = [effect for effect in state.active_effect_ids if effect != DODGE_EFFECT_ID]
+    if PRONE_EFFECT_ID not in state.active_effect_ids:
+        state.active_effect_ids.append(PRONE_EFFECT_ID)
+    return "unconscious"
 
 
 def _after_temporary_hp(state: CombatantState, amount: int) -> int:
@@ -72,10 +85,7 @@ def apply_damage(state: CombatantState, amount: int, *, critical: bool = False) 
                 return _mark_dead(state)
             if use_relentless_endurance(state, remaining_damage):
                 return "relentless_endurance"
-            state.is_alive = True
-            state.is_unconscious = True
-            state.is_stable = False
-            return "unconscious"
+            return _mark_unconscious(state)
 
         if state.template.kind == "monster":
             return _mark_dead(state)
@@ -90,7 +100,7 @@ def apply_damage(state: CombatantState, amount: int, *, critical: bool = False) 
         )
         if state.death_save_failures >= 3:
             return _mark_dead(state)
-        return "unconscious"
+        return _mark_unconscious(state)
     except ValueError:
         raise
     except Exception as exc:
