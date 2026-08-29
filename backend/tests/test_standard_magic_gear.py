@@ -6,15 +6,20 @@ from app.content.standard_magic_gear import (
 )
 
 
+def _budget(level: int) -> tuple[int, int, int, int]:
+    value = higher_level_magic_item_budget(level)
+    return value.common, value.uncommon, value.rare, value.very_rare
+
+
 def test_official_higher_level_magic_item_budgets() -> None:
-    assert higher_level_magic_item_budget(1) == (0, 0, 0, 0)
-    assert higher_level_magic_item_budget(4) == (1, 0, 0, 0)
-    assert higher_level_magic_item_budget(5) == (1, 1, 0, 0)
-    assert higher_level_magic_item_budget(10) == (1, 1, 0, 0)
-    assert higher_level_magic_item_budget(11) == (2, 3, 1, 0)
-    assert higher_level_magic_item_budget(16) == (2, 3, 1, 0)
-    assert higher_level_magic_item_budget(17) == (2, 4, 3, 1)
-    assert higher_level_magic_item_budget(20) == (2, 4, 3, 1)
+    assert _budget(1) == (0, 0, 0, 0)
+    assert _budget(4) == (1, 0, 0, 0)
+    assert _budget(5) == (1, 1, 0, 0)
+    assert _budget(10) == (1, 1, 0, 0)
+    assert _budget(11) == (2, 3, 1, 0)
+    assert _budget(16) == (2, 3, 1, 0)
+    assert _budget(17) == (2, 4, 3, 1)
+    assert _budget(20) == (2, 4, 3, 1)
 
 
 def test_standard_martial_magic_scaling_stays_simple() -> None:
