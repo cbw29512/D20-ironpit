@@ -20,6 +20,7 @@
       name: card.name,
       archetype: side === "heroes" ? card.class_name : card.monster_type,
       level: card.level || null,
+      build_name: card.build_name || null,
       challenge_rating: card.challenge_rating || null,
       coverage_status: card.coverage_status,
     };
@@ -83,7 +84,7 @@
     view.fillPicker("monster-picker", state.catalog.monsters);
     seedReadyCard("heroes");
     seedReadyCard("monsters");
-    view.setStatus(`Loaded ${state.catalog.hero_count} hero slots and ${state.catalog.monster_count} SRD monsters.`);
+    view.setStatus(`Loaded ${state.catalog.hero_count} hero builds and ${state.catalog.monster_count} SRD monsters.`);
     render();
   }
 
