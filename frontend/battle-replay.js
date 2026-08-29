@@ -7,7 +7,7 @@
   const el = (id) => document.getElementById(id);
   const V = () => window.IRON_PIT_FIGURE_VISUALS;
   const nodes = new Map();
-  const persistent = new Set(["grappled", "restrained"]);
+  const persistent = new Set(["grappled", "restrained", "poisoned"]);
 
   function figure(member) {
     const state = member.state, node = document.createElement("div");
@@ -49,7 +49,8 @@
     node.dataset.conditions = [...set].join(",");
     node.classList.toggle("is-grappled", set.has("grappled"));
     node.classList.toggle("is-restrained", set.has("restrained"));
-    node.querySelector(".pit-status").textContent = [...set].map((id) => id === "grappled" ? "⛓ GRAPPLED" : "⌁ RESTRAINED").join(" · ");
+    node.classList.toggle("is-poisoned", set.has("poisoned"));
+    node.querySelector(".pit-status").textContent = [...set].map((id) => id === "grappled" ? "⛓ GRAPPLED" : id === "restrained" ? "⌁ RESTRAINED" : "☠ POISONED").join(" · ");
   }
 
   function callout(text, critical = false) {
@@ -99,8 +100,10 @@
 
   async function feature(event) {
     const actor = nodes.get(event.actor_id); if (!actor) return delay(80);
+    const target = nodes.get(event.target_id);
     callout(event.description || event.feature_id || "Feature");
     if (event.feature_id === "escape-grapple" && event.check_succeeded) statuses(actor, [], ["grappled", "restrained"]);
+    if (target && event.removed_condition_ids?.length) statuses(target, [], event.removed_condition_ids);
     actor.classList.add("feature-pulse"); await delay(200); actor.classList.remove("feature-pulse");
   }
 
