@@ -3,6 +3,10 @@
 
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
+  const E = () => window.IRON_PIT_ACTION_ECONOMY || {
+    available: (state, cost) => cost === "action" && state.action_available,
+    spend: (state) => { state.action_available = false; },
+  };
 
   function sync(state) {
     const grappled = state.grapple_sources.length > 0;
@@ -48,10 +52,11 @@
     }
   }
 
-  const shouldEscape = (state) => state.action_available && state.grapple_sources.some((source) => source.restrains);
+  const shouldEscape = (state) => E().available(state, "action") && state.grapple_sources.some((source) => source.restrains);
 
   function escape(sequence, round, member) {
     const state = member.state;
+    if (!E().available(state, "action")) throw new Error("Action is unavailable to escape grapple.");
     const source = state.grapple_sources.find((item) => item.restrains) || state.grapple_sources[0];
     const athletics = state.template.skill_bonuses?.athletics;
     const acrobatics = state.template.skill_bonuses?.acrobatics;
@@ -62,7 +67,7 @@
     const disadvantage = state.active_effect_ids.includes("poisoned") ? 1 : 0;
     const roll = R().d20(bonus, R().modeFromSources(advantage, disadvantage));
     const success = roll.total >= source.escape_dc;
-    state.action_available = false;
+    E().spend(state, "action");
     if (success) {
       release(state, source.source_id);
       if (!speedIsZero(state)) state.movement_remaining_ft = Math.max(state.movement_remaining_ft, state.template.speed_ft);
