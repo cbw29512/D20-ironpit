@@ -77,6 +77,7 @@ def test_current_certified_monsters_are_linked_to_runtime_templates() -> None:
     assert ready_monsters == {
         "Awakened Shrub": "srd-awakened-shrub",
         "Axe Beak": "srd-axe-beak",
+        "Baboon": "srd-baboon",
         "Badger": "srd-badger",
         "Bandit": "srd-bandit",
         "Bat": "srd-bat",
