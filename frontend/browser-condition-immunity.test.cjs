@@ -21,7 +21,7 @@ const S = window.IRON_PIT_BROWSER_STATE;
 const G = window.IRON_PIT_BROWSER_GRAPPLE;
 const T = window.IRON_PIT_BROWSER_TIMED;
 const A = window.IRON_PIT_BROWSER_ATTACK;
-const heroTemplate = window.IRON_PIT_BROWSER_HEROES["aldric-vane-l1"];
+const heroTemplate = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"];
 const member = (id, template, position = 0) => ({ combatant_id: id, side: "heroes", position_ft: position, state: S.buildState(structuredClone(template)) });
 
 {
@@ -64,6 +64,7 @@ const member = (id, template, position = 0) => ({ combatant_id: id, side: "heroe
 {
   const target = member("target", heroTemplate);
   target.state.template.condition_immunities = ["prone"];
+  target.state.resources["relentless-endurance"] = 0;
   const outcome = A.applyDamage(target.state, target.state.current_hp, false);
   assert.equal(outcome, "unconscious");
   assert.equal(target.state.is_unconscious, true);
