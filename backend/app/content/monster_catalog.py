@@ -37,6 +37,7 @@ _READY_BY_NAME = {
     "Giant Badger": "srd-giant-badger",
     "Giant Bat": "srd-giant-bat",
     "Giant Boar": "srd-giant-boar",
+    "Giant Centipede": "srd-giant-centipede",
     "Giant Crab": "srd-giant-crab",
     "Giant Fire Beetle": "srd-giant-fire-beetle",
     "Giant Goat": "srd-giant-goat",
