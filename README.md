@@ -38,6 +38,7 @@ Iron Pit tactics never create extra economy. The rules engine tracks the printed
 - A **Reaction** is trigger-driven. Once spent, it is unavailable until the start of that combatant's next turn.
 - **Extra Attack / Multiattack** represents multiple strikes within one Attack/Multiattack action; it is not another Action.
 - An Action spent on Dash cannot also pay for Attack or Multiattack that turn unless a separate rule explicitly grants another Action.
+- An Action spent on healing also blocks Action-cost attacks, Dodge, Dash, Charge attacks, and other Action options for the rest of that turn; normal movement and an unused legal Bonus Action remain separate.
 - Features that actually grant another Action, such as Action Surge, remain blocked until their exact additional-action rules are explicitly modeled and certified.
 - Incapacitated creatures cannot spend Actions, Bonus Actions, or Reactions. Movement remains governed separately by the actual condition's Speed rules.
 
@@ -103,7 +104,7 @@ GitHub Actions must pass on the exact head before a roster count or UI build is 
 - JavaScript syntax;
 - deterministic browser combat regressions;
 - RAW Action/Bonus Action/Reaction availability and healing-target priority;
-- Dash and Multiattack action-cost exclusivity;
+- Dash/Multiattack and post-heal action-cost exclusivity;
 - numeric monster-CR sorting and the character catalog model;
 - six-slot battlefield wiring and DOM references;
 - initiative/card-turn/critical/fumble presentation hooks;
