@@ -6,7 +6,8 @@
   const C = () => window.IRON_PIT_BROWSER_CHARGE;
   const M = () => window.IRON_PIT_BROWSER_MULTIATTACK;
   const G = () => window.IRON_PIT_BROWSER_RAGE;
-  const H = () => window.IRON_PIT_BROWSER_GRAPPLE;
+  const NO_CONTROL = { cleanup: () => {}, shouldEscape: () => false, speedIsZero: () => false };
+  const H = () => window.IRON_PIT_BROWSER_GRAPPLE || NO_CONTROL;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const D = () => window.IRON_PIT_DICE;
   const BRAWL_DISTANCE = 5;
