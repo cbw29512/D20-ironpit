@@ -13,6 +13,20 @@ from app.domain.models import BattleEvent
 logger = logging.getLogger(__name__)
 
 
+def _validate_slots(attacker: EncounterCombatant) -> None:
+    definition = attacker.state.template.attack_action
+    if definition is None:
+        raise ValueError("Combatant has no multi-strike Attack action.")
+    known = {
+        attacker.state.template.weapon_attack.id,
+        *(attack.id for attack in attacker.state.template.alternate_weapon_attacks),
+    }
+    for slot in definition.slots:
+        unknown = set(slot.attack_ids) - known
+        if unknown:
+            raise ValueError(f"Unknown attack IDs in {definition.name}: {sorted(unknown)}")
+
+
 def _prepare_first_slot(
     sequence: int,
     round_number: int,
@@ -51,6 +65,7 @@ def resolve_attack_action(
 ) -> tuple[list[BattleEvent], int]:
     """Resolve a multi-strike Attack action with legal movement and retargeting between strikes."""
     try:
+        _validate_slots(attacker)
         definition = attacker.state.template.attack_action
         if definition is None:
             raise ValueError("Combatant has no multi-strike Attack action.")
