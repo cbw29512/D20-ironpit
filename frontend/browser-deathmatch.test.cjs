@@ -6,7 +6,6 @@ const path = require("node:path");
 const vm = require("node:vm");
 
 global.window = globalThis;
-global.crypto = { randomUUID: () => "test-battle" };
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
   "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js", "browser-monsters-beast2.js",
