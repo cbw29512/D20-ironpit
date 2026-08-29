@@ -27,7 +27,6 @@ def _combatant_index(combatants: list[EncounterCombatant]) -> dict[str, Encounte
 def _initiative_events(result, sequence: int) -> tuple[list[BattleEvent], int]:
     events: list[BattleEvent] = []
     for group in result.groups:
-        names = ", ".join(group.combatant_ids)
         roll = DiceRoll(
             notation="1d20",
             rolls=[group.natural_roll],
@@ -43,13 +42,23 @@ def _initiative_events(result, sequence: int) -> tuple[list[BattleEvent], int]:
             actor_name=group.template_id,
             attack_roll=roll,
             animation="initiative",
-            description=f"{names} act at Initiative {group.initiative_count}.",
+            description=f"{', '.join(group.combatant_ids)} act at Initiative {group.initiative_count}.",
         ))
         sequence += 1
     return events, sequence
 
 
-def _victory_event(sequence: int, round_number: int, outcome: str) -> BattleEvent:
+def _finish_event(sequence: int, round_number: int, outcome: str) -> BattleEvent:
+    if outcome == "draw":
+        return BattleEvent(
+            sequence=sequence,
+            round_number=round_number,
+            event_type="draw",
+            actor_id="arena",
+            actor_name="Iron Pit",
+            animation="draw",
+            description="The encounter ends without a winning side.",
+        )
     winner = "Heroes" if outcome == "heroes_win" else "Monsters"
     return BattleEvent(
         sequence=sequence,
@@ -62,24 +71,27 @@ def _victory_event(sequence: int, round_number: int, outcome: str) -> BattleEven
     )
 
 
+def _result(setup, initiative, events, outcome: str, rounds: int) -> EncounterBattleResult:
+    return EncounterBattleResult(
+        battle_id=str(uuid.uuid4()), outcome=outcome, rounds=rounds,
+        setup=setup, initiative=initiative, events=events,
+    )
+
+
 def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> EncounterBattleResult:
     """Run the currently certified weapon-combat subset over a 1-8 vs. 1-8 encounter."""
     try:
         setup = build_encounter_setup(selection)
         initiative = roll_encounter_initiative(setup, dice)
-        all_combatants = [*setup.heroes, *setup.monsters]
-        by_id = _combatant_index(all_combatants)
+        by_id = _combatant_index([*setup.heroes, *setup.monsters])
         events, sequence = _initiative_events(initiative, 1)
 
         for round_number in range(1, MAX_ENCOUNTER_ROUNDS + 1):
             for combatant_id in initiative.turn_order:
                 outcome = resolve_encounter_outcome(setup)
                 if outcome != "active":
-                    events.append(_victory_event(sequence, round_number, outcome))
-                    return EncounterBattleResult(
-                        battle_id=str(uuid.uuid4()), outcome=outcome, rounds=round_number,
-                        setup=setup, initiative=initiative, events=events,
-                    )
+                    events.append(_finish_event(sequence, round_number, outcome))
+                    return _result(setup, initiative, events, outcome, round_number)
 
                 attacker = by_id[combatant_id]
                 if not attacker.state.is_alive or attacker.state.current_hp <= 0:
@@ -117,16 +129,11 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
 
             outcome = resolve_encounter_outcome(setup)
             if outcome != "active":
-                events.append(_victory_event(sequence, round_number, outcome))
-                return EncounterBattleResult(
-                    battle_id=str(uuid.uuid4()), outcome=outcome, rounds=round_number,
-                    setup=setup, initiative=initiative, events=events,
-                )
+                events.append(_finish_event(sequence, round_number, outcome))
+                return _result(setup, initiative, events, outcome, round_number)
 
-        return EncounterBattleResult(
-            battle_id=str(uuid.uuid4()), outcome="active", rounds=MAX_ENCOUNTER_ROUNDS,
-            setup=setup, initiative=initiative, events=events,
-        )
+        events.append(_finish_event(sequence, MAX_ENCOUNTER_ROUNDS, "draw"))
+        return _result(setup, initiative, events, "draw", MAX_ENCOUNTER_ROUNDS)
     except Exception as exc:
         logger.exception("Encounter execution failed.")
         raise RuntimeError("Encounter execution failed.") from exc
