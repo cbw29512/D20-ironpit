@@ -1,4 +1,6 @@
+from app.domain.actions import AttackActionDefinition, AttackActionSlot
 from app.domain.combatants import (
+    ArenaRoster,
     BattlefieldState,
     CombatantState,
     CombatantTemplate,
@@ -12,9 +14,22 @@ from app.domain.combatants import (
     WeaponAttack,
     WeaponAttackKind,
 )
+from app.domain.encounters import (
+    EncounterBattleResult,
+    EncounterCombatant,
+    EncounterInitiative,
+    EncounterOutcome,
+    EncounterSelection,
+    EncounterSetup,
+    EncounterSide,
+    InitiativeGroup,
+)
 from app.domain.events import BattleEvent, BattleResult, DamageRollComponent, DiceRoll, RollMode
 
 __all__ = [
+    "ArenaRoster",
+    "AttackActionDefinition",
+    "AttackActionSlot",
     "BattleEvent",
     "BattlefieldState",
     "BattleResult",
@@ -25,6 +40,14 @@ __all__ = [
     "DamageType",
     "DemoRoster",
     "DiceRoll",
+    "EncounterBattleResult",
+    "EncounterCombatant",
+    "EncounterInitiative",
+    "EncounterOutcome",
+    "EncounterSelection",
+    "EncounterSetup",
+    "EncounterSide",
+    "InitiativeGroup",
     "ResourceDefinition",
     "ResourceState",
     "RollMode",

@@ -30,13 +30,21 @@ class DamageRollComponent(BaseModel):
     modifier: int = 0
     damage_type: DamageType
     total: int
+    applied_total: int | None = Field(default=None, ge=0)
 
 
 class BattleEvent(BaseModel):
     sequence: int
     round_number: int
     event_type: Literal[
-        "initiative", "movement", "dash", "attack", "healing", "victory", "draw"
+        "initiative",
+        "movement",
+        "dash",
+        "attack",
+        "healing",
+        "death_save",
+        "victory",
+        "draw",
     ]
     actor_id: str
     actor_name: str
@@ -44,12 +52,17 @@ class BattleEvent(BaseModel):
     target_name: str | None = None
     attack_roll: DiceRoll | None = None
     damage_roll: DiceRoll | None = None
+    death_save_roll: DiceRoll | None = None
     damage_components: list[DamageRollComponent] = Field(default_factory=list)
     healing_roll: DiceRoll | None = None
     hit: bool | None = None
     critical: bool = False
     hp_before: int | None = None
     hp_after: int | None = None
+    death_save_successes: int | None = Field(default=None, ge=0, le=3)
+    death_save_failures: int | None = Field(default=None, ge=0, le=3)
+    is_stable: bool | None = None
+    is_dead: bool | None = None
     distance_before_ft: int | None = None
     distance_after_ft: int | None = None
     movement_ft: int | None = None

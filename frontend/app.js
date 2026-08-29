@@ -1,78 +1,73 @@
 (() => {
   "use strict";
 
-  const meleeButton = document.querySelector("#fight-button");
-  const rangedButton = document.querySelector("#ranged-button");
-  const buttons = [meleeButton, rangedButton];
   const apiBase = String(window.IRON_PIT_API_BASE || "").trim().replace(/\/$/, "");
-  const preview = window.IRON_PIT_PREVIEW;
-  const arenaState = {
-    fighter: { id: "aldric-vane-l1", maxHp: 12 },
-    goblin: { id: "srd-goblin-warrior", maxHp: 10 },
-  };
+  const state = { roster: null, heroes: [], monsters: [] };
+  const el = (id) => document.getElementById(id);
+  const view = window.createEncounterView();
 
-  function setButtonsDisabled(disabled) {
-    try { for (const button of buttons) button.disabled = disabled; }
-    catch (error) { console.error("Button state update failed", error); }
+  function render() {
+    view.renderSelection(state, Boolean(apiBase), (side, index) => {
+      state[side].splice(index, 1);
+      render();
+    });
   }
 
-  async function loadRoster(view) {
-    try {
-      if (!apiBase) {
-        if (!preview?.roster) throw new Error("Secure preview roster is unavailable.");
-        view.hydrateRoster(preview.roster);
-        view.resetArena("Secure random preview ready — choose a starting distance.", 5);
-        return;
-      }
-      const response = await fetch(`${apiBase}/api/roster/demo`);
-      if (!response.ok) throw new Error(`Roster API returned ${response.status}`);
-      view.hydrateRoster(await response.json());
-      view.resetArena("Ready — choose a starting distance.", 5);
-    } catch (error) {
-      console.error("Roster load failed", error);
-      view.resetArena("Arena data could not be loaded.", 5);
-    }
+  function addSelected(side) {
+    if (state[side].length >= 8 || !state.roster) return;
+    const pickerId = side === "heroes" ? "hero-picker" : "monster-picker";
+    const source = side === "heroes" ? state.roster.characters : state.roster.monsters;
+    const chosen = source.find((item) => item.id === el(pickerId).value);
+    if (chosen) state[side].push(chosen);
+    render();
   }
 
-  async function requestBattle(endpoint) {
+  async function fight() {
     try {
-      if (!apiBase) {
-        if (!preview?.buildBattle) throw new Error("Secure preview engine is unavailable.");
-        return preview.buildBattle(endpoint.includes("ranged") ? 90 : 5);
-      }
-      const response = await fetch(`${apiBase}${endpoint}`, { method: "POST" });
-      if (!response.ok) throw new Error(`Battle API returned ${response.status}`);
-      return await response.json();
+      el("fight-button").disabled = true;
+      view.setStatus("Rolling initiative and resolving the fight…");
+      const response = await fetch(`${apiBase}/api/encounters/fight`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          hero_ids: state.heroes.map((item) => item.id),
+          monster_ids: state.monsters.map((item) => item.id),
+          starting_distance_ft: Number(el("distance").value),
+        }),
+      });
+      if (!response.ok) throw new Error(`Fight API returned ${response.status}`);
+      view.showResult(await response.json());
     } catch (error) {
-      console.error("Battle request failed", error);
-      throw error;
-    }
-  }
-
-  async function startFight(view, endpoint, fallbackDistance) {
-    try {
-      setButtonsDisabled(true);
-      view.resetArena(apiBase ? "Requesting battle..." : "Rolling secure random battle...", fallbackDistance);
-      const battle = await requestBattle(endpoint);
-      view.hydrateRoster({ fighter: battle.fighter.template, monster: battle.monster.template });
-      view.resetArena("Rolling initiative...", battle.battlefield.starting_distance_ft);
-      await view.replay(battle.events);
-      view.setStatus(battle.winner_name ? `${battle.winner_name} wins in round ${battle.rounds}!` : "The duel is a draw.");
-    } catch (error) {
-      console.error("Fight failed", error);
-      view.setStatus(apiBase ? "Battle failed. Check the FastAPI deployment." : "Secure preview battle failed.");
+      console.error(error);
+      view.setStatus("Fight failed. The production API may still be deploying.");
     } finally {
-      setButtonsDisabled(false);
+      render();
     }
   }
 
-  try {
-    const view = window.createIronPitArenaView(arenaState);
-    meleeButton.addEventListener("click", () => startFight(view, "/api/battles/demo", 5));
-    rangedButton.addEventListener("click", () => startFight(view, "/api/battles/demo-ranged", 90));
-    loadRoster(view);
-  } catch (error) {
-    console.error("App initialization failed", error);
-    document.querySelector("#status").textContent = "Arena initialization failed.";
+  async function boot() {
+    if (!apiBase) {
+      view.setStatus("Production API is not configured.");
+      render();
+      return;
+    }
+    const response = await fetch(`${apiBase}/api/roster`);
+    if (!response.ok) throw new Error(`Roster API returned ${response.status}`);
+    state.roster = await response.json();
+    view.fillPicker("hero-picker", state.roster.characters);
+    view.fillPicker("monster-picker", state.roster.monsters);
+    if (state.roster.characters[0]) state.heroes.push(state.roster.characters[0]);
+    if (state.roster.monsters[0]) state.monsters.push(state.roster.monsters[0]);
+    view.setStatus("Ready. Build the matchup and hit FIGHT.");
+    render();
   }
+
+  el("add-hero").addEventListener("click", () => addSelected("heroes"));
+  el("add-monster").addEventListener("click", () => addSelected("monsters"));
+  el("fight-button").addEventListener("click", fight);
+  boot().catch((error) => {
+    console.error(error);
+    view.setStatus("Roster failed to load from production API.");
+    render();
+  });
 })();

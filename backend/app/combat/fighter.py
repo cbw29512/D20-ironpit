@@ -13,6 +13,7 @@ def use_second_wind(
     round_number: int,
     fighter: CombatantState,
     dice: DiceProvider,
+    actor_event_id: str | None = None,
 ) -> BattleEvent:
     """Apply the SRD 5.2.1 Second Wind healing/resource rules to a Fighter state."""
     try:
@@ -36,14 +37,15 @@ def use_second_wind(
         fighter.bonus_action_available = False
         resource.current_uses -= 1
         healed = fighter.current_hp - hp_before
+        event_id = actor_event_id or fighter.template.id
 
         return BattleEvent(
             sequence=sequence,
             round_number=round_number,
             event_type="healing",
-            actor_id=fighter.template.id,
+            actor_id=event_id,
             actor_name=fighter.template.name,
-            target_id=fighter.template.id,
+            target_id=event_id,
             target_name=fighter.template.name,
             healing_roll=healing_roll,
             hp_before=hp_before,

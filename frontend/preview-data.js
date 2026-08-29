@@ -8,12 +8,14 @@
       archetype: "Fighter",
       level: 1,
       challenge_rating: null,
-      armor_class: 18,
+      armor_class: 19,
       max_hp: 12,
       speed_ft: 30,
       initiative_bonus: 1,
       weapon_attack: { weapon: { name: "Longsword" } },
       alternate_weapon_attacks: [],
+      fighting_style: "Defense",
+      weapon_masteries: ["greataxe", "greatsword", "halberd"],
       visual: { armor: "chain-mail", off_hand: "shield" },
     };
 

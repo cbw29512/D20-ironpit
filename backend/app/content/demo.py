@@ -21,16 +21,18 @@ def build_demo_fighter() -> CombatantTemplate:
             archetype="Fighter",
             level=1,
             kind="character",
-            armor_class=18,
+            armor_class=19,
             max_hp=12,
             speed_ft=30,
             initiative_bonus=1,
             weapon_attack=build_fighter_longsword_attack(),
+            fighting_style="Defense",
+            weapon_masteries=["greataxe", "greatsword", "halberd"],
             visual=build_fighter_visual_loadout(),
             resources=[
                 ResourceDefinition(id="second-wind", name="Second Wind", max_uses=2),
             ],
-            source="Original pregen using SRD 5.2.1 rules",
+            source="Original pregen built from SRD 5.2.1 Fighter level 1 rules",
         )
     except Exception as exc:
         logger.exception("Failed to build demo fighter.")

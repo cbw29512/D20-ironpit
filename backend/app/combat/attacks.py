@@ -3,9 +3,11 @@ from __future__ import annotations
 import logging
 
 from app.combat.damage import resolve_weapon_damage
+from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
 from app.combat.range import resolve_attack_roll_mode
 from app.combat.rolls import roll_d20
+from app.combat.zero_hp import apply_damage
 from app.domain.models import BattleEvent, CombatantState, WeaponAttack
 
 logger = logging.getLogger(__name__)
@@ -19,15 +21,19 @@ def resolve_attack(
     attack: WeaponAttack,
     distance_ft: int,
     dice: DiceProvider,
+    actor_event_id: str | None = None,
+    target_event_id: str | None = None,
+    spend_action: bool = True,
 ) -> BattleEvent:
     try:
-        if not attacker.action_available:
+        if spend_action and not attacker.action_available:
             raise ValueError("Action is not available for an attack.")
 
         weapon = attack.weapon
         mode = resolve_attack_roll_mode(weapon, distance_ft)
         attack_roll = roll_d20(dice, attack.attack_bonus, mode)
-        attacker.action_available = False
+        if spend_action:
+            attacker.action_available = False
         natural = attack_roll.selected_roll or 0
         critical = natural == 20
         hit = natural != 1 and (critical or attack_roll.total >= defender.template.armor_class)
@@ -36,24 +42,27 @@ def resolve_attack(
         damage_components = []
 
         if hit:
-            damage_roll, damage_components = resolve_weapon_damage(
+            damage_roll, rolled_components = resolve_weapon_damage(
                 attacker,
                 attack,
                 dice,
                 critical,
                 mode,
             )
-            defender.current_hp = max(0, defender.current_hp - damage_roll.total)
-            defender.is_alive = defender.current_hp > 0
+            applied_total, damage_components = apply_damage_defenses(
+                defender,
+                rolled_components,
+            )
+            apply_damage(defender, applied_total, critical=critical)
 
         outcome = "CRITICAL HIT" if critical else ("HIT" if hit else "MISS")
         return BattleEvent(
             sequence=sequence,
             round_number=round_number,
             event_type="attack",
-            actor_id=attacker.template.id,
+            actor_id=actor_event_id or attacker.template.id,
             actor_name=attacker.template.name,
-            target_id=defender.template.id,
+            target_id=target_event_id or defender.template.id,
             target_name=defender.template.name,
             attack_roll=attack_roll,
             damage_roll=damage_roll,
@@ -62,6 +71,10 @@ def resolve_attack(
             critical=critical,
             hp_before=hp_before,
             hp_after=defender.current_hp,
+            death_save_successes=defender.death_save_successes,
+            death_save_failures=defender.death_save_failures,
+            is_stable=defender.is_stable,
+            is_dead=defender.is_dead,
             weapon_id=weapon.id,
             projectile=weapon.projectile,
             animation=weapon.animation,

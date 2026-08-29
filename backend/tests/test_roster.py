@@ -7,8 +7,11 @@ def test_demo_roster_exposes_render_metadata() -> None:
     assert roster.fighter.id == "aldric-vane-l1"
     assert roster.fighter.archetype == "Fighter"
     assert roster.fighter.level == 1
+    assert roster.fighter.armor_class == 19
     assert roster.fighter.max_hp == 12
     assert roster.fighter.weapon_attack.weapon.name == "Longsword"
+    assert roster.fighter.fighting_style == "Defense"
+    assert len(roster.fighter.weapon_masteries) == 3
     assert roster.fighter.visual.off_hand == "shield"
 
     assert roster.monster.id == "srd-goblin-warrior"
