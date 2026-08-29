@@ -6,10 +6,12 @@ from app.combat.grapple import (
     grapple_attack_disadvantage,
     speed_is_zero,
 )
+from app.combat.timed_conditions import apply_timed_condition
 from app.domain.models import CombatantState, WeaponAttack
 from app.domain.size import size_at_most
 
 DODGE_EFFECT_ID = "dodge"
+POISONED_EFFECT_ID = "poisoned"
 PRONE_EFFECT_ID = "prone"
 
 
@@ -25,6 +27,8 @@ def attack_roll_condition_sources(
     if PRONE_EFFECT_ID in attacker.active_effect_ids:
         disadvantage += 1
     if RESTRAINED_EFFECT_ID in attacker.active_effect_ids:
+        disadvantage += 1
+    if POISONED_EFFECT_ID in attacker.active_effect_ids:
         disadvantage += 1
     if target_id is not None:
         disadvantage += grapple_attack_disadvantage(attacker, target_id)
@@ -71,6 +75,13 @@ def apply_hit_conditions(
                 attack.weapon.reach_ft,
                 restrains=control.restrains_while_grappled,
             ))
+    if control is not None and control.condition_id is not None:
+        applied.append(apply_timed_condition(
+            defender,
+            control.condition_id,
+            source_id,
+            expires_at_start_of_source_turn=control.expires_at_start_of_source_turn,
+        ))
     return list(dict.fromkeys(applied))
 
 
