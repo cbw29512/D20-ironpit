@@ -9,7 +9,7 @@ global.window = globalThis;
 
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
-  "browser-heroes.js", "browser-monsters.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
+  "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
   "browser-attack.js", "browser-charge.js", "browser-multiattack.js", "browser-turn.js", "browser-engine.js",
 ]) load(file);
 
@@ -40,6 +40,20 @@ function fight(heroIds, monsterIds, distance = 30, dice = deterministicDice()) {
   const battle = fight(["karnok-stoneward-l1"], ["srd-commoner"]);
   assert.notEqual(battle.outcome, "active");
   assert.ok(battle.events.some((event) => event.event_type === "attack"));
+}
+
+{
+  const batTemplate = structuredClone(window.IRON_PIT_BROWSER_MONSTERS["srd-bat"]);
+  const heroTemplate = structuredClone(window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"]);
+  const bat = { combatant_id: "monster-1:bat", side: "monsters", position_ft: 5, state: window.IRON_PIT_BROWSER_STATE.buildState(batTemplate) };
+  const hero = { combatant_id: "hero-1:karnok", side: "heroes", position_ft: 0, state: window.IRON_PIT_BROWSER_STATE.buildState(heroTemplate) };
+  window.IRON_PIT_BROWSER_STATE.beginTurn(bat.state);
+  window.IRON_PIT_DICE = queuedDice([20]);
+  const event = window.IRON_PIT_BROWSER_ATTACK.resolveAttack(1, 1, bat, hero, batTemplate.attacks[0], 5);
+  assert.equal(event.critical, true);
+  assert.equal(event.damage_roll.notation, "1");
+  assert.deepEqual(event.damage_roll.rolls, []);
+  assert.equal(event.damage_roll.total, 1, "fixed damage must not double on a critical hit");
 }
 
 {
