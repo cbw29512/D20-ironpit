@@ -19,6 +19,8 @@ def attack_roll_condition_sources(
         disadvantage += 1
     if DODGE_EFFECT_ID in defender.active_effect_ids:
         disadvantage += 1
+    if defender.is_unconscious:
+        advantage += 1
     if PRONE_EFFECT_ID in defender.active_effect_ids:
         if distance_ft <= 5:
             advantage += 1
