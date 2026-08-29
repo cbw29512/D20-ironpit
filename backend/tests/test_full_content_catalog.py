@@ -74,6 +74,7 @@ def test_current_certified_monsters_are_linked_to_runtime_templates() -> None:
         monster.name: monster.runnable_template_id
         for monster in catalog.monsters if monster.coverage_status is CoverageStatus.RAW_READY
     }
+    assert len(ready_monsters) == 55
     assert ready_monsters == {
         "Awakened Shrub": "srd-awakened-shrub",
         "Axe Beak": "srd-axe-beak",
