@@ -43,15 +43,17 @@
   async function fight() {
     try {
       el("fight-button").disabled = true;
-      view.setStatus("Rolling initiative and resolving the fight in your browser…");
+      el("result-panel").hidden = true;
+      view.setStatus("Rolling initiative. Entering the Pit…");
       await new Promise((resolve) => requestAnimationFrame(resolve));
       const battle = window.IRON_PIT_BROWSER_ENGINE.runEncounter({
         hero_ids: state.heroes.map((item) => item.id),
         monster_ids: state.monsters.map((item) => item.id),
         starting_distance_ft: Number(el("distance").value),
       });
+      if (!window.playIronPitBattle) throw new Error("Battle replay system did not load.");
+      await window.playIronPitBattle(battle);
       view.showResult(battle);
-      await window.playIronPitCriticalEffects?.(battle);
     } catch (error) {
       console.error(error);
       view.setStatus("Fight failed locally. Check the battle log/console for the blocked mechanic.");
@@ -73,7 +75,7 @@
     view.fillPicker("monster-picker", state.catalog.monsters);
     seedReadyCard("heroes");
     seedReadyCard("monsters");
-    view.setStatus(`Browser engine ready · ${state.catalog.hero_count} hero builds · ${state.catalog.monster_count} SRD monsters cataloged.`);
+    view.setStatus(`Pit ready · ${state.catalog.hero_count} hero builds · ${state.catalog.monster_count} SRD monsters cataloged.`);
     render();
   }
 
