@@ -35,11 +35,17 @@ jobs:
           node frontend/browser-rage.test.cjs
           node frontend/browser-beast2.test.cjs
           node frontend/browser-batch3.test.cjs
+          node frontend/browser-deathmatch.test.cjs
       - name: Prove production fight path is backend-free
         run: |
           ! grep -q 'IRON_PIT_API_BASE' frontend/app.js
           ! grep -q '/api/' frontend/app.js
           grep -q 'IRON_PIT_BROWSER_ENGINE.runEncounter' frontend/app.js
+      - name: Prove animated Pit is wired to production fight path
+        run: |
+          grep -q 'id="pit-arena"' frontend/index.html
+          grep -q 'battle-replay.js' frontend/index.html
+          grep -q 'playIronPitBattle' frontend/app.js
       - name: Validate Netlify production-only credit guard
         run: |
           grep -q 'CONTEXT.*production' netlify.toml
