@@ -58,8 +58,9 @@ def resolve_attack(
         if spend_action:
             attacker.action_available = False
         natural = attack_roll.selected_roll or 0
-        critical = natural == 20
-        hit = natural != 1 and (critical or attack_roll.total >= defender.template.armor_class)
+        natural_critical = natural == 20
+        hit = natural != 1 and (natural_critical or attack_roll.total >= defender.template.armor_class)
+        critical = bool(hit and (natural_critical or (defender.is_unconscious and distance_ft <= 5)))
         hp_before = defender.current_hp
         damage_roll = None
         damage_components = []
