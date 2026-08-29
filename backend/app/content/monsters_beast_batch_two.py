@@ -12,7 +12,7 @@ from app.domain.traits import CombatTrait
 def _attack(
     attack_id: str, name: str, bonus: int, dice_count: int, dice_size: int,
     damage_bonus: int, damage_type: DamageType, *, reach: int = 5,
-    prone: CreatureSize | None = None,
+    prone: CreatureSize | None = None, fixed_damage: int | None = None,
 ) -> WeaponAttack:
     return WeaponAttack(
         id=attack_id,
@@ -22,6 +22,7 @@ def _attack(
             animation="bite" if name == "Bite" else "heavy-strike", reach_ft=reach,
         ),
         attack_bonus=bonus, damage_bonus=damage_bonus, knocks_prone_max_size=prone,
+        fixed_damage=fixed_damage,
     )
 
 
@@ -69,5 +70,18 @@ def build_beast_batch_two() -> list[CombatantTemplate]:
                        prone=CreatureSize.LARGE), 362),
         _beast("srd-vulture", "Vulture", "0", CreatureSize.MEDIUM, 10, 5, 50, 0,
                _attack("vulture-beak", "Beak", 2, 1, 4, 0, DamageType.PIERCING), 363,
+               traits=(CombatTrait.PACK_TACTICS,)),
+        _beast("srd-giant-fire-beetle", "Giant Fire Beetle", "0", CreatureSize.SMALL, 13, 4, 30, 0,
+               _attack("giant-fire-beetle-bite", "Bite", 1, 0, 2, 0, DamageType.FIRE, fixed_damage=1),
+               351, resistances=(DamageType.FIRE,)),
+        _beast("srd-giant-goat", "Giant Goat", "1/2", CreatureSize.LARGE, 11, 19, 40, 1,
+               _attack("giant-goat-ram", "Ram", 5, 1, 6, 3, DamageType.BLUDGEONING), 351,
+               traits=(CombatTrait.CHARGE,)),
+        # Flyby and utility-only spellcasting never alter the no-kiting flat-arena fight.
+        _beast("srd-giant-owl", "Giant Owl", "1/4", CreatureSize.LARGE, 12, 19, 60, 2,
+               _attack("giant-owl-talons", "Talons", 4, 1, 10, 2, DamageType.SLASHING), 352,
+               resistances=(DamageType.NECROTIC, DamageType.RADIANT)),
+        _beast("srd-hyena", "Hyena", "0", CreatureSize.MEDIUM, 11, 5, 50, 1,
+               _attack("hyena-bite", "Bite", 2, 1, 6, 0, DamageType.PIERCING), 356,
                traits=(CombatTrait.PACK_TACTICS,)),
     ]
