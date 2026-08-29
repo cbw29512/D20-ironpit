@@ -3,6 +3,7 @@
 
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
+  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { speedZero: (state) => state.active_effect_ids.includes("restrained") };
 
   function sync(state) {
     const grappled = state.grapple_sources.length > 0;
@@ -29,7 +30,7 @@
     sync(state);
   }
 
-  const speedIsZero = (state) => state.grapple_sources.length > 0 || state.active_effect_ids.includes("restrained");
+  const speedIsZero = (state) => state.grapple_sources.length > 0 || Q().speedZero(state);
 
   function attackDisadvantage(state, targetId) {
     if (!state.grapple_sources.length) return 0;
