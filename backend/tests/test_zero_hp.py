@@ -63,7 +63,7 @@ def test_close_hit_on_unconscious_character_has_advantage_and_is_critical() -> N
     attacker = build_combatant_state(build_goblin_warrior())
     event = resolve_attack(
         1, 1, attacker, defender, attacker.template.weapon_attack, 5,
-        FixedDiceProvider([19, 19, 6, 6, 6, 6, 6, 6]),
+        FixedDiceProvider([19, 19, 1, 1, 1, 1]),
     )
 
     assert event.attack_roll is not None
@@ -72,6 +72,7 @@ def test_close_hit_on_unconscious_character_has_advantage_and_is_critical() -> N
     assert event.hit is True
     assert event.critical is True
     assert defender.death_save_failures == 2
+    assert defender.is_dead is False
 
 
 def test_natural_one_on_death_save_counts_as_two_failures() -> None:
