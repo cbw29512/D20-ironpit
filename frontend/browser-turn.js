@@ -111,13 +111,13 @@
     const closing = closeTurn(sequence, round, member, target); events.push(...closing.events); sequence = closing.sequence;
     if (closing.handled) return finalize(events, sequence, round, member);
     const distance = S().distance(member, target);
-    const saveAction = member.state.template.saving_throw_actions?.find((action) => V().legalAction(action, target, distance));
-    if (saveAction && member.state.action_available) { events.push(V().resolveAction(sequence++, round, member, target, saveAction, distance)); return finalize(events, sequence, round, member); }
     if (member.state.template.attack_action) {
       const multi = M().resolveAttackAction(sequence, round, member, setup); events.push(...multi.events); sequence = multi.sequence;
       const approach = closeAfterAction(sequence, round, member, setup); events.push(...approach.events);
       return finalize(events, approach.sequence, round, member);
     }
+    const saveAction = member.state.template.saving_throw_actions?.find((action) => V().legalAction(action, target, distance));
+    if (saveAction && member.state.action_available) { events.push(V().resolveAction(sequence++, round, member, target, saveAction, distance)); return finalize(events, sequence, round, member); }
     const attack = legalAttack(member, distance);
     if (attack && member.state.action_available) {
       const pack = S().packTactics(member, setup);
