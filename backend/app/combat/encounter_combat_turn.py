@@ -94,6 +94,11 @@ def resolve_combat_turn(
         events.append(adrenaline_event)
         sequence += 1
 
+    if not attacker.state.action_available:
+        movement_events, sequence = _close_after_attack_action(sequence, round_number, attacker, setup)
+        events.extend(movement_events)
+        return _finish_turn(events, sequence, round_number, attacker)
+
     closing_events, sequence, closing_handled = resolve_simple_closing(
         sequence, round_number, attacker, target, dice
     )
