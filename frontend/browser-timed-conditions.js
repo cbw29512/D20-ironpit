@@ -1,7 +1,10 @@
 (() => {
   "use strict";
 
+  const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY;
+
   function apply(state, effectId, sourceId, expiresAtStartOfSourceTurn = true) {
+    if (I().immune(state, effectId)) return null;
     state.timed_effects = state.timed_effects.filter((effect) => !(effect.effect_id === effectId && effect.source_id === sourceId));
     state.timed_effects.push({ effect_id: effectId, source_id: sourceId, expires_at_start_of_source_turn: expiresAtStartOfSourceTurn });
     if (!state.active_effect_ids.includes(effectId)) state.active_effect_ids.push(effectId);
