@@ -35,9 +35,10 @@ assert.equal(Object.keys(monsters).length, 58, "control batch must bring browser
   const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
   const croc = member("monster-1:crocodile", "monsters", monsters["srd-crocodile"]);
   hero.state.active_effect_ids.push("dodge");
-  window.IRON_PIT_DICE = queuedDice([15, 1]);
+  window.IRON_PIT_DICE = queuedDice([15, 15, 1]);
   const event = A.resolveAttack(1, 1, croc, hero, croc.state.template.attacks[0], 5);
   assert.equal(event.hit, true);
+  assert.equal(event.attack_roll.mode, "disadvantage");
   assert.deepEqual(event.applied_condition_ids, ["grappled", "restrained"]);
   assert.equal(G.speedIsZero(hero.state), true);
   assert.equal(hero.state.active_effect_ids.includes("dodge"), false);
