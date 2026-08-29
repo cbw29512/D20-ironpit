@@ -11,13 +11,32 @@ def combatant_distance(attacker: EncounterCombatant, target: EncounterCombatant)
     return abs(attacker.position_ft - target.position_ft)
 
 
+def _opponents(attacker: EncounterCombatant, setup: EncounterSetup) -> list[EncounterCombatant]:
+    return setup.monsters if attacker.side == "heroes" else setup.heroes
+
+
 def living_opponents(attacker: EncounterCombatant, setup: EncounterSetup) -> list[EncounterCombatant]:
-    candidates = setup.monsters if attacker.side == "heroes" else setup.heroes
-    return [member for member in candidates if member.state.is_alive and member.state.current_hp > 0]
+    """Prefer standing enemies; if none remain, return living downed characters for deathmatch resolution."""
+    candidates = _opponents(attacker, setup)
+    standing = [
+        member for member in candidates
+        if member.state.is_alive and not member.state.is_dead and member.state.current_hp > 0
+    ]
+    if standing:
+        return standing
+    return [
+        member for member in candidates
+        if (
+            member.state.template.kind == "character"
+            and member.state.is_alive
+            and not member.state.is_dead
+            and member.state.current_hp == 0
+        )
+    ]
 
 
 def select_nearest_target(attacker: EncounterCombatant, setup: EncounterSetup) -> EncounterCombatant | None:
-    """Arena tactic: engage the nearest living enemy; encounter order breaks distance ties."""
+    """Arena tactic: engage the nearest eligible enemy; encounter order breaks distance ties."""
     try:
         opponents = living_opponents(attacker, setup)
         if not opponents:
