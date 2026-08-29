@@ -3,6 +3,7 @@
 
   const SIZE_RANK = { tiny: 0, small: 1, medium: 2, large: 3, huge: 4, gargantuan: 5 };
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
+  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { incapacitated: (state) => state.is_unconscious };
 
   function buildState(template) {
     return {
@@ -30,8 +31,9 @@
   }
 
   function beginTurn(state) {
-    state.action_available = true;
-    state.bonus_action_available = true;
+    const incapacitated = Q().incapacitated(state);
+    state.action_available = !incapacitated;
+    state.bonus_action_available = !incapacitated;
     const speedZero = G()?.speedIsZero(state) || false;
     state.movement_remaining_ft = speedZero ? 0 : state.template.speed_ft;
     state.active_effect_ids = state.active_effect_ids.filter((id) => id !== "dodge");
