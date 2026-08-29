@@ -4,6 +4,7 @@ import logging
 
 from app.combat.barbarian import end_rage_if_incapacitated, extend_rage_from_attack
 from app.combat.bloodied import bloodied_fury_advantage
+from app.combat.condition_rules import close_hit_is_automatic_critical
 from app.combat.conditions import apply_hit_conditions, attack_roll_condition_sources
 from app.combat.damage import BonusDamageSpec, resolve_weapon_damage
 from app.combat.damage_defenses import apply_damage_defenses
@@ -63,7 +64,13 @@ def resolve_attack(
         natural = attack_roll.selected_roll or 0
         natural_critical = natural == 20
         hit = natural != 1 and (natural_critical or attack_roll.total >= defender.template.armor_class)
-        critical = bool(hit and (natural_critical or (defender.is_unconscious and distance_ft <= 5)))
+        critical = bool(
+            hit
+            and (
+                natural_critical
+                or (close_hit_is_automatic_critical(defender) and distance_ft <= 5)
+            )
+        )
         hp_before = defender.current_hp
         damage_roll = None
         damage_components = []
