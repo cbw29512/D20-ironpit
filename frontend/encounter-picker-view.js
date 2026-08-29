@@ -49,21 +49,24 @@
     });
   }
 
-  function renderMonsterFilters(state, onCrChange) {
+  function renderMonsterFilters(state, onCrChange, onMonsterChange) {
     const cr = el("monster-cr-filter"); cr.replaceChildren(option("all", "All CRs", state.monsterCr === "all"));
     P().challengeRatings(state.catalog.monsters).forEach((value) => cr.append(option(value, `CR ${value}`, value === state.monsterCr)));
     cr.onchange = () => onCrChange(cr.value);
     const picker = el("monster-picker"); picker.replaceChildren();
     const monsters = P().sortedMonsters(state.catalog.monsters, state.monsterCr);
-    let firstReady = null;
+    const readyIds = [];
     monsters.forEach((monster) => {
       const ready = monster.coverage_status === "raw_ready" && monster.runnable_template_id;
-      if (ready && firstReady === null) firstReady = monster.id;
+      if (ready) readyIds.push(monster.id);
       picker.append(option(monster.id, `CR ${monster.challenge_rating} · ${monster.name}${ready ? "" : " · not ready"}`, false, !ready));
     });
-    if (firstReady !== null) picker.value = firstReady;
+    const selected = readyIds.includes(state.monsterChoice) ? state.monsterChoice : readyIds[0] || null;
+    if (selected) picker.value = selected;
     else picker.append(option("", "No RAW-certified monsters at this CR", true, true));
-    el("add-monster").disabled = state.monsters.length >= 8 || firstReady === null;
+    picker.onchange = () => onMonsterChange(picker.value);
+    el("add-monster").disabled = state.monsters.length >= 8 || selected === null;
+    return selected;
   }
 
   window.createEncounterPickerView = () => ({ renderMonsterFilters, renderParty });
