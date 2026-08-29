@@ -5,7 +5,9 @@ from pathlib import Path
 
 from app.domain.catalog import CoverageStatus, MonsterCatalogCard
 
-_DATA_PATH = Path(__file__).with_name("data") / "srd_5_2_1_monsters.json"
+_DATA_DIR = Path(__file__).with_name("data")
+_DATA_PATH = _DATA_DIR / "srd_5_2_1_monsters.json"
+_CORRECTIONS_PATH = _DATA_DIR / "srd_5_2_1_monster_corrections.json"
 
 # Ready means every mechanic capable of changing a standard flat-arena fight is
 # represented. Terrain-only movement and deliberately unused flee/retreat options
@@ -45,11 +47,19 @@ _READY_BY_NAME = {
 }
 
 
-def _load_rows() -> list[dict[str, object]]:
+def load_monster_rows() -> list[dict[str, object]]:
     rows = json.loads(_DATA_PATH.read_text(encoding="utf-8"))
+    corrections = json.loads(_CORRECTIONS_PATH.read_text(encoding="utf-8"))
     if not isinstance(rows, list) or len(rows) != 328:
-        raise RuntimeError("SRD 5.2.1 monster catalog must contain exactly 328 records.")
-    return rows
+        raise RuntimeError("Vended parser output must contain its known 328 base records.")
+    if not isinstance(corrections, list) or len(corrections) != 2:
+        raise RuntimeError("SRD correction layer must restore exactly two swallowed records.")
+    combined = [*rows, *corrections]
+    ids = {str(row["id"]) for row in combined}
+    names = {str(row["name"]) for row in combined}
+    if len(combined) != 330 or len(ids) != 330 or len(names) != 330:
+        raise RuntimeError("SRD 5.2.1 monster catalog must contain 330 unique creatures.")
+    return combined
 
 
 def _card(row: dict[str, object]) -> MonsterCatalogCard:
@@ -72,4 +82,4 @@ def _card(row: dict[str, object]) -> MonsterCatalogCard:
 
 
 def build_monster_catalog() -> list[MonsterCatalogCard]:
-    return [_card(row) for row in _load_rows()]
+    return [_card(row) for row in load_monster_rows()]
