@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.attacks import resolve_attack
+from app.combat.charge import resolve_charge_closing
 from app.combat.dice import DiceProvider
 from app.combat.encounter_movement import move_toward_combatant
 from app.combat.encounter_targeting import combatant_distance
@@ -47,12 +48,18 @@ def resolve_simple_closing(
     target: EncounterCombatant,
     dice: DiceProvider,
 ) -> tuple[list[BattleEvent], int, bool]:
-    """Resolve Iron Pit's one-volley-or-Dodge approach for melee-primary combatants."""
+    """Resolve Iron Pit's simple opening approach for melee-primary combatants."""
     primary = attacker.state.template.weapon_attack.weapon
     if primary.attack_kind is not WeaponAttackKind.MELEE:
         return [], sequence, False
     if combatant_distance(attacker, target) <= primary.reach_ft:
         return [], sequence, False
+
+    charge_events, charge_sequence, charged = resolve_charge_closing(
+        sequence, round_number, attacker, target, dice,
+    )
+    if charged:
+        return charge_events, charge_sequence, True
 
     events: list[BattleEvent] = []
     ranged = _opening_ranged_attack(attacker, combatant_distance(attacker, target))
