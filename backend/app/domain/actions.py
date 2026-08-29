@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from app.domain.size import CreatureSize
 
@@ -47,13 +47,20 @@ class SavingThrowAction(BaseModel):
 
 
 class AttackActionSlot(BaseModel):
-    """One attack granted by an Attack action; listed IDs are legal choices for the slot."""
+    """One ordered Multiattack step; listed weapon/save IDs are legal choices for that step."""
 
-    attack_ids: list[str] = Field(min_length=1, max_length=16)
+    attack_ids: list[str] = Field(default_factory=list, max_length=16)
+    save_action_ids: list[str] = Field(default_factory=list, max_length=16)
+
+    @model_validator(mode="after")
+    def require_choice(self) -> "AttackActionSlot":
+        if not self.attack_ids and not self.save_action_ids:
+            raise ValueError("Multiattack slot must contain a weapon attack or saving-throw action.")
+        return self
 
 
 class AttackActionDefinition(BaseModel):
-    """The attack rolls a combatant can make when it takes its preferred Attack action."""
+    """The ordered strikes/effects a combatant resolves when it uses Multiattack."""
 
     id: str
     name: str
