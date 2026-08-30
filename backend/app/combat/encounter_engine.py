@@ -11,6 +11,7 @@ from app.combat.encounter_initiative import roll_encounter_initiative
 from app.combat.encounter_outcome import resolve_encounter_outcome
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.encounter_targeting import select_nearest_target
+from app.combat.precombat_spells import prepare_defenses
 from app.combat.state import refresh_reaction
 from app.combat.timed_conditions import expire_start_of_turn_conditions
 from app.domain.encounters import EncounterBattleResult, EncounterCombatant, EncounterSelection
@@ -51,12 +52,14 @@ def _end_turn_lifecycle(sequence, round_number, member, setup, dice):
 
 
 def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> EncounterBattleResult:
-    """Run the currently certified combat subset over a 1-8 vs. 1-8 encounter."""
+    """Run the currently certified combat subset over a 1-6 vs. 1-6 encounter."""
     try:
         setup = build_encounter_setup(selection)
+        events, sequence = prepare_defenses(setup, 1)
         initiative = roll_encounter_initiative(setup, dice)
         by_id = _combatant_index([*setup.heroes, *setup.monsters])
-        events, sequence = build_initiative_events(initiative, 1)
+        initiative_events, sequence = build_initiative_events(initiative, sequence)
+        events.extend(initiative_events)
 
         for round_number in range(1, MAX_ENCOUNTER_ROUNDS + 1):
             for combatant_id in initiative.turn_order:
