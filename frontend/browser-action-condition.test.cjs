@@ -57,13 +57,36 @@ window.IRON_PIT_DICE = { roll: (sides) => sides === 20 ? 19 : 1, rollMany: (coun
   assert.equal(event.attack_roll.mode, "advantage"); assert.equal(event.critical, true, "Paralyzed close hit is an automatic critical");
 }
 {
-  const attacker = member("monster-attacker"); attacker.side = "monsters"; attacker.position_ft = 30;
-  const statue = member("petrified-target"); statue.position_ft = 25; statue.state.active_effect_ids.push("petrified");
-  const active = member("active-target"); active.position_ft = 0;
-  const setup = { heroes: [statue, active], monsters: [attacker] };
-  assert.equal(S.nearestTarget(attacker, setup), active, "nearby Petrified target must be deferred while an active target remains");
-  active.state.current_hp = 0; active.state.is_unconscious = true;
-  assert.equal(S.nearestTarget(attacker, setup), statue, "Petrified target becomes priority once no non-Petrified standing target remains");
+  for (const condition of ["incapacitated", "paralyzed", "petrified", "stunned"]) {
+    const attacker = member(`monster-${condition}`); attacker.side = "monsters"; attacker.position_ft = 30;
+    const disabled = member(`${condition}-target`); disabled.position_ft = 25; disabled.state.active_effect_ids.push(condition);
+    const active = member("active-target"); active.position_ft = 0;
+    const setup = { heroes: [disabled, active], monsters: [attacker] };
+    assert.equal(S.nearestTarget(attacker, setup), active, `${condition} target must be deferred while an active threat remains`);
+    active.state.current_hp = 0; active.state.is_unconscious = true;
+    assert.equal(S.nearestTarget(attacker, setup), disabled, `${condition} target becomes priority when no active threat remains`);
+  }
+}
+{
+  for (const condition of ["blinded", "frightened", "poisoned", "prone", "restrained"]) {
+    const attacker = member(`monster-partial-${condition}`); attacker.side = "monsters"; attacker.position_ft = 30;
+    const debuffed = member(`${condition}-target`); debuffed.position_ft = 25; debuffed.state.active_effect_ids.push(condition);
+    const healthy = member("healthy-target"); healthy.position_ft = 0;
+    const setup = { heroes: [debuffed, healthy], monsters: [attacker] };
+    assert.equal(S.nearestTarget(attacker, setup), debuffed, `${condition} must remain an active-threat condition`);
+  }
+}
+{
+  const attacker = member("pack-attacker"); attacker.side = "monsters";
+  attacker.state.template.traits = ["pack-tactics"];
+  const ally = member("pack-ally"); ally.side = "monsters"; ally.state.active_effect_ids.push("stunned");
+  const target = member("pack-target");
+  const setup = { heroes: [target], monsters: [attacker, ally] };
+  assert.equal(S.active(ally), false, "Incapacitated ally is not an active combatant");
+  assert.equal(S.packTactics(attacker, setup), false, "Incapacitated ally cannot enable Pack Tactics");
+  ally.state.active_effect_ids = ["poisoned"];
+  assert.equal(S.active(ally), true, "partially debuffed ally remains active");
+  assert.equal(S.packTactics(attacker, setup), true, "partially debuffed ally can still enable Pack Tactics");
 }
 console.log("Browser condition/action-economy integration regressions passed.");
 
