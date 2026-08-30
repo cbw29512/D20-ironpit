@@ -33,12 +33,16 @@ _PROFILES = {
 }
 
 
+def charge_profile_for_attack_id(attack_id: str) -> ChargeProfile | None:
+    return _PROFILES.get(attack_id)
+
+
 def charge_profile(
     attacker: CombatantState, defender: CombatantState, attack: WeaponAttack, movement_ft: int,
 ) -> ChargeProfile | None:
     if CombatTrait.CHARGE not in attacker.template.combat_traits:
         return None
-    profile = _PROFILES.get(attack.id)
+    profile = charge_profile_for_attack_id(attack.id)
     if profile is None or movement_ft < profile.minimum_move_ft:
         return None
     return profile if size_at_most(defender.template.size, profile.max_target_size) else None
@@ -47,7 +51,7 @@ def charge_profile(
 def charge_can_close(
     attacker: CombatantState, defender: CombatantState, attack: WeaponAttack, distance_ft: int,
 ) -> bool:
-    profile = _PROFILES.get(attack.id)
+    profile = charge_profile_for_attack_id(attack.id)
     if not is_available(attacker, "action") or CombatTrait.CHARGE not in attacker.template.combat_traits or profile is None:
         return False
     needed = max(0, distance_ft - attack.weapon.reach_ft)
