@@ -43,6 +43,7 @@
     if (key === "rogue:archer") return weapon("shortbow", "Shortbow", "ranged", level, dex, 1, 6, "piercing", { normal: 80, long: 320, projectile: "arrow", animation: "projectile" });
     if (classId === "rogue") return weapon(buildId === "duelist" ? "rapier" : "shortsword", buildId === "duelist" ? "Rapier" : "Shortsword", "melee", level, dex, 1, buildId === "duelist" ? 8 : 6, "piercing", { animation: "quick-strike" });
     if (key === "warlock:blade") return weapon("pact-quarterstaff", "Pact Quarterstaff", "melee", level, cha, 1, 8, "bludgeoning", { animation: "quick-strike" });
+    if (classId === "cleric") return weapon("mace", "Mace", "melee", level, str, 1, 6, "bludgeoning", { animation: "quick-strike" });
     if (classId === "bard") return weapon("light-crossbow", "Light Crossbow", "ranged", level, dex, 1, 8, "piercing", { normal: 80, long: 320, projectile: "bolt", animation: "projectile" });
     return null;
   }
