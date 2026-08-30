@@ -106,6 +106,20 @@ def _save(action: Any) -> dict[str, Any]:
     return row
 
 
+def _spell(action: Any) -> dict[str, Any]:
+    row = {
+        "id": action.id, "name": action.name, "level": action.level, "actionCost": action.action_cost,
+        "range": action.range_ft, "saveAbility": action.save_ability, "dc": action.dc,
+        "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
+        "damageBonus": action.damage_bonus, "damageType": action.damage_type,
+        "successDamage": action.success_damage, "upcastDicePerLevel": action.upcast_dice_per_level,
+        "concentration": action.concentration, "animation": action.animation,
+    }
+    if action.area_radius_ft is not None:
+        row["areaRadius"] = action.area_radius_ft
+    return row
+
+
 def _removal(action: Any) -> dict[str, Any]:
     row = {
         "id": action.id, "name": action.name, "actionCost": action.action_cost, "range": action.range_ft,
@@ -140,6 +154,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                        "off_hand": template.visual.off_hand, "body_style": template.visual.body_style},
             "source": template.source,
         }
+        if template.spell_save_actions:
+            row["spell_save_actions"] = [_spell(item) for item in template.spell_save_actions]
         if template.condition_removal_actions:
             row["condition_removal_actions"] = [_removal(item) for item in template.condition_removal_actions]
         if template.attack_action:
