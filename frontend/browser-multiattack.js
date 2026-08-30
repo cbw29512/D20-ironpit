@@ -26,6 +26,23 @@
     const save = attack ? null : member.state.template.saving_throw_actions?.find((a) => allowed.has(a.id) && V().legalAction(a, target, distance)) || null;
     return { attack, save, data };
   }
+  function staticSlotAllows(member, target, data) {
+    const attacks = member.state.template.attacks.filter((a) => data.attackIds.includes(a.id) && targetAllowed(member, target, a));
+    if (attacks.length) return true;
+    return (member.state.template.saving_throw_actions || []).some((action) =>
+      data.saveActionIds.includes(action.id) && (!action.targetMaxSize || S().sizeAtMost(target, action.targetMaxSize)),
+    );
+  }
+  function slotTarget(member, setup, slot) {
+    const data = slotData(slot), preferred = S().nearestTarget(member, setup);
+    const enemies = member.side === "heroes" ? setup.monsters : setup.heroes;
+    let eligible = enemies.filter((target) => target.state.is_alive && !target.state.is_dead && target.state.current_hp > 0);
+    if (!eligible.length) eligible = enemies.filter((target) => target.state.template.kind === "character"
+      && target.state.is_alive && !target.state.is_dead && target.state.current_hp === 0);
+    eligible.sort((a, b) => S().distance(member, a) - S().distance(member, b));
+    const ordered = preferred ? [preferred, ...eligible.filter((target) => target !== preferred)] : eligible;
+    return ordered.find((target) => staticSlotAllows(member, target, data)) || null;
+  }
   function desiredDistance(member, data) {
     if (data.attackIds.length) {
       const profiles = member.state.template.attacks.filter((a) => data.attackIds.includes(a.id));
@@ -49,7 +66,7 @@
     const events = []; E().spend(member.state, "action");
     for (const slot of slots) {
       if (member.state.is_dead || member.state.is_unconscious) break;
-      const target = S().nearestTarget(member, setup); if (!target) break;
+      const target = slotTarget(member, setup, slot); if (!target) continue;
       let choice = slotChoice(member, target, slot);
       if (!choice.attack && !choice.save) {
         const moved = W().moveToward(sequence, round, member, target, setup, desiredDistance(member, choice.data));
@@ -70,5 +87,5 @@
     }
     return { events, sequence };
   }
-  window.IRON_PIT_BROWSER_MULTIATTACK = { resolveAttackAction, targetAllowed };
+  window.IRON_PIT_BROWSER_MULTIATTACK = { resolveAttackAction, slotTarget, targetAllowed };
 })();
