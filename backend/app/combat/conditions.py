@@ -14,6 +14,7 @@ from app.domain.size import size_at_most
 
 BLINDED_EFFECT_ID = "blinded"
 DODGE_EFFECT_ID = "dodge"
+FRIGHTENED_EFFECT_ID = "frightened"
 POISONED_EFFECT_ID = "poisoned"
 PRONE_EFFECT_ID = "prone"
 
@@ -28,6 +29,9 @@ def attack_roll_condition_sources(
     advantage = 0
     disadvantage = 0
     if has_condition(attacker, BLINDED_EFFECT_ID):
+        disadvantage += 1
+    if has_condition(attacker, FRIGHTENED_EFFECT_ID):
+        # Standard Iron Pit encounters are unobstructed, so an active fear source is in line of sight.
         disadvantage += 1
     if PRONE_EFFECT_ID in attacker.active_effect_ids:
         disadvantage += 1
