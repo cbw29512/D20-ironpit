@@ -17,13 +17,18 @@ def _value(item: Any) -> Any:
 def _control(effect: Any) -> dict[str, Any] | None:
     if effect is None:
         return None
-    return {
-        "maxTargetSize": _value(effect.max_target_size) if effect.max_target_size else None,
-        "grappleEscapeDc": effect.grapple_escape_dc,
-        "restrainsWhileGrappled": effect.restrains_while_grappled,
-        "conditionId": effect.condition_id,
-        "expiresAtStartOfSourceTurn": effect.expires_at_start_of_source_turn,
-    }
+    row: dict[str, Any] = {}
+    if effect.max_target_size:
+        row["maxTargetSize"] = _value(effect.max_target_size)
+    if effect.grapple_escape_dc is not None:
+        row["grappleEscapeDc"] = effect.grapple_escape_dc
+    if effect.restrains_while_grappled:
+        row["restrainsWhileGrappled"] = True
+    if effect.condition_id:
+        row["conditionId"] = effect.condition_id
+        if effect.expires_at_start_of_source_turn:
+            row["expiresAtStartOfSourceTurn"] = True
+    return row or None
 
 
 def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
@@ -55,7 +60,7 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             conditional = attack.conditional_damage[0]
             if conditional.trigger != "attack_advantage" or conditional.damage_bonus != 0:
                 raise ValueError(f"Unsupported browser conditional damage on {attack.id}.")
-            if conditional.damage_type is not weapon.damage_type:
+            if conditional.damage_type != weapon.damage_type:
                 raise ValueError(f"Conditional damage type differs from weapon type on {attack.id}.")
             row["conditionalAdvantage"] = [conditional.dice_count, conditional.dice_size]
         control = _control(attack.control_effect)
