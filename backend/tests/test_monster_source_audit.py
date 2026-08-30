@@ -10,10 +10,16 @@ def test_every_raw_ready_monster_reconciles_to_srd_5_2_1_source() -> None:
     ready = [card for card in build_monster_catalog() if card.coverage_status is CoverageStatus.RAW_READY]
 
     assert len(ready) == 63
+    mismatches: list[str] = []
     for card in ready:
-        assert card.runnable_template_id in runtime, f"Missing runtime template for {card.name}"
+        if card.runnable_template_id not in runtime:
+            mismatches.append(f"{card.name}: missing-runtime-template")
+            continue
         issues = audit_monster_source(runtime[card.runnable_template_id], rows[card.name])
-        assert issues == [], f"{card.name} does not reconcile to {card.source_reference}: {issues}"
+        if issues:
+            mismatches.append(f"{card.name} ({card.source_reference}): {', '.join(issues)}")
+
+    assert mismatches == [], "RAW-ready monster source mismatches:\n" + "\n".join(mismatches)
 
 
 def test_every_runtime_monster_is_publicly_certified() -> None:

@@ -49,6 +49,11 @@ def _dice_pattern(count: int, size: int, bonus: int) -> re.Pattern[str]:
     return re.compile(base + rf"\s*{sign}\s*{abs(bonus)}", re.IGNORECASE)
 
 
+def _melee_reach_pattern(reach_ft: int) -> re.Pattern[str]:
+    # SRD 5.2.1 uses both abbreviated and written distance units in stat blocks.
+    return re.compile(rf"\breach\s+{reach_ft}\s*(?:ft\.?|feet)\b", re.IGNORECASE)
+
+
 def _attack_issues(attack: WeaponAttack, actions: str) -> list[str]:
     issues: list[str] = []
     weapon = attack.weapon
@@ -63,10 +68,10 @@ def _attack_issues(attack: WeaponAttack, actions: str) -> list[str]:
         issues.append(f"damage-dice-mismatch:{attack.id}")
     if weapon.damage_type.value.lower() not in actions:
         issues.append(f"damage-type-missing:{attack.id}")
-    if weapon.attack_kind.value == "melee" and f"reach {weapon.reach_ft} ft" not in actions:
+    if weapon.attack_kind.value == "melee" and not _melee_reach_pattern(weapon.reach_ft).search(actions):
         issues.append(f"melee-reach-mismatch:{attack.id}")
     if weapon.attack_kind.value == "ranged" and weapon.normal_range_ft is not None:
-        ranged = rf"range\s+{weapon.normal_range_ft}\s*/\s*{weapon.long_range_ft}\s*ft"
+        ranged = rf"range\s+{weapon.normal_range_ft}\s*/\s*{weapon.long_range_ft}\s*(?:ft\.?|feet)\b"
         if not re.search(ranged, actions, re.IGNORECASE):
             issues.append(f"ranged-range-mismatch:{attack.id}")
     for extra in attack.on_hit_damage:
