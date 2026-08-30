@@ -4,6 +4,7 @@ import logging
 
 from app.combat.action_economy import is_available, spend
 from app.combat.ally_context import pack_tactics_active
+from app.combat.attack_legality import attack_allowed_against
 from app.combat.attacks import resolve_attack
 from app.combat.dice import DiceProvider
 from app.combat.encounter_movement import take_encounter_dash
@@ -32,7 +33,12 @@ def _validate_slots(attacker: EncounterCombatant) -> None:
 
 def _slot_choice(attacker, target, slot):
     distance = combatant_distance(attacker, target)
-    attack = select_allowed_weapon_attack(attacker.state, distance, slot.attack_ids)
+    profiles = [attacker.state.template.weapon_attack, *attacker.state.template.alternate_weapon_attacks]
+    legal_ids = [
+        attack.id for attack in profiles
+        if attack.id in slot.attack_ids and attack_allowed_against(attack, attacker.combatant_id, target.state)
+    ]
+    attack = select_allowed_weapon_attack(attacker.state, distance, legal_ids)
     allowed = set(slot.save_action_ids)
     save = None if attack is not None else next((
         action for action in attacker.state.template.saving_throw_actions
