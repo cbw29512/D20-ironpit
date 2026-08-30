@@ -30,7 +30,7 @@ def test_arena_roster_exposes_certified_batch() -> None:
         "srd-ogre", "srd-owlbear", "srd-saber-toothed-tiger", "srd-scout", "srd-warrior-infantry",
         "srd-crocodile", "srd-giant-crab", "srd-constrictor-snake", "srd-giant-centipede",
         "srd-giant-venomous-snake", "srd-giant-wasp", "srd-giant-wolf-spider",
-        "srd-giant-constrictor-snake",
+        "srd-giant-constrictor-snake", "srd-tyrannosaurus-rex",
     ]
 
 
@@ -193,3 +193,17 @@ def test_hippogriff_matches_srd_multiattack_and_arena_flight_speed() -> None:
     assert (hippogriff.weapon_attack.attack_bonus, hippogriff.weapon_attack.weapon.dice_size) == (5, 8)
     assert hippogriff.attack_action is not None
     assert [slot.attack_ids for slot in hippogriff.attack_action.slots] == [["hippogriff-rend"], ["hippogriff-rend"]]
+
+
+def test_tyrannosaurus_rex_matches_srd_and_tail_target_restriction() -> None:
+    rex = _by_id(get_arena_roster().monsters, "srd-tyrannosaurus-rex")
+    assert (rex.challenge_rating, rex.size.value, rex.armor_class, rex.max_hp) == ("8", "huge", 13, 136)
+    assert (rex.speed_ft, rex.initiative_bonus) == (50, 3)
+    bite, tail = rex.weapon_attack, rex.alternate_weapon_attacks[0]
+    assert (bite.attack_bonus, bite.weapon.dice_count, bite.weapon.dice_size, bite.damage_bonus) == (10, 4, 12, 7)
+    assert bite.control_effect is not None and bite.control_effect.restrains_while_grappled
+    assert (tail.attack_bonus, tail.weapon.dice_count, tail.weapon.dice_size, tail.damage_bonus) == (10, 4, 8, 7)
+    assert tail.knocks_prone_max_size.value == "huge"
+    assert tail.forbid_target_grappled_by_self is True
+    assert rex.attack_action is not None
+    assert [slot.attack_ids for slot in rex.attack_action.slots] == [[bite.id], [tail.id]]
