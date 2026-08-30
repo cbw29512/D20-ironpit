@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from app.combat.condition_immunity import condition_is_immune
-from app.combat.condition_rules import attacks_have_advantage_against
+from app.combat.condition_rules import attacks_have_advantage_against, has_condition
 from app.combat.grapple import (
     RESTRAINED_EFFECT_ID,
     apply_grapple,
@@ -12,6 +12,7 @@ from app.combat.timed_conditions import apply_timed_condition
 from app.domain.models import CombatantState, WeaponAttack
 from app.domain.size import size_at_most
 
+BLINDED_EFFECT_ID = "blinded"
 DODGE_EFFECT_ID = "dodge"
 POISONED_EFFECT_ID = "poisoned"
 PRONE_EFFECT_ID = "prone"
@@ -26,6 +27,8 @@ def attack_roll_condition_sources(
     """Return Advantage and Disadvantage sources from supported conditions."""
     advantage = 0
     disadvantage = 0
+    if has_condition(attacker, BLINDED_EFFECT_ID):
+        disadvantage += 1
     if PRONE_EFFECT_ID in attacker.active_effect_ids:
         disadvantage += 1
     if RESTRAINED_EFFECT_ID in attacker.active_effect_ids:
