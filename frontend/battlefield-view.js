@@ -3,6 +3,7 @@
 
   const el = (id) => document.getElementById(id);
   const V = () => window.IRON_PIT_FIGURE_VISUALS;
+  const P = () => window.IRON_PIT_FIGURE_PORTRAITS;
   const L = () => window.IRON_PIT_BATTLE_LOG;
   const MAX_SLOTS = 6;
 
@@ -13,8 +14,9 @@
       : window.IRON_PIT_BROWSER_MONSTERS[card.runnable_template_id];
   }
 
-  function figureMarkup() {
-    return '<div class="stick-figure" aria-hidden="true"><i class="head"></i><i class="body"></i><i class="arms"></i><i class="legs"></i><i class="tail"></i><i class="feature feature-one"></i><i class="feature feature-two"></i><i class="weapon"></i></div>';
+  function figureMarkup(template) {
+    const portrait = P()?.markup(template) || '<svg class="portrait-svg" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="32"/></svg>';
+    return `<div class="stick-figure fighter-portrait" aria-hidden="true">${portrait}</div>`;
   }
 
   function emptySlot(side, index, onOpen) {
@@ -31,7 +33,7 @@
     const node = document.createElement("button");
     node.type = "button"; node.className = `battle-card occupied ${side}`;
     node.dataset.slotIndex = String(index);
-    node.innerHTML = `<span class="slot-number">${index + 1}</span><span class="initiative-badge" aria-label="Initiative">—</span><strong class="card-name"></strong><small class="card-meta"></small>${figureMarkup()}<div class="card-conditions"></div><div class="card-hp"><span></span></div><small class="hp-text"></small><span class="death-stamp">✕ DEAD</span>`;
+    node.innerHTML = `<span class="slot-number">${index + 1}</span><span class="initiative-badge" aria-label="Initiative">—</span><strong class="card-name"></strong><small class="card-meta"></small>${figureMarkup(template)}<div class="card-conditions"></div><div class="card-hp"><span></span></div><small class="hp-text"></small><span class="death-stamp">✕ DEAD</span>`;
     node.querySelector(".card-name").textContent = card.name;
     node.querySelector(".card-meta").textContent = side === "heroes"
       ? `${card.class_name} · Level ${card.level} · ${card.build_name}`
