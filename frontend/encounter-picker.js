@@ -6,6 +6,7 @@
     "paladin", "ranger", "rogue", "sorcerer", "warlock", "wizard",
   ];
   const LEVELS = Array.from({ length: 20 }, (_, index) => index + 1);
+  const runnable = (hero) => ["raw_ready", "raw_playable"].includes(hero?.coverage_status) && hero?.runnable_template_id;
 
   function crNumber(value) {
     const text = String(value ?? "0").trim();
@@ -24,7 +25,7 @@
   }
 
   function preferredHero(builds) {
-    return builds.find((hero) => hero.coverage_status === "raw_ready" && hero.runnable_template_id) || builds[0] || null;
+    return builds.find(runnable) || builds[0] || null;
   }
 
   function sortedMonsters(monsters, crFilter = "all") {
