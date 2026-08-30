@@ -75,6 +75,7 @@ _READY_BY_NAME = {
     "Saber-Toothed Tiger": "srd-saber-toothed-tiger",
     "Scout": "srd-scout",
     "Tiger": "srd-tiger",
+    "Tyrannosaurus Rex": "srd-tyrannosaurus-rex",
     "Vulture": "srd-vulture",
     "Warhorse": "srd-warhorse",
     "Warrior Infantry": "srd-warrior-infantry",
