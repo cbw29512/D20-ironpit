@@ -4,7 +4,7 @@ from app.combat.action_economy import is_available, spend
 from app.combat.attacks import resolve_attack
 from app.combat.charge import resolve_charge_closing
 from app.combat.dice import DiceProvider
-from app.combat.encounter_targeting import combatant_distance
+from app.combat.encounter_targeting import close_ranged_threat_exists, combatant_distance
 from app.combat.policy import weapon_attack_profiles
 from app.combat.reaction_movement import move_toward_with_reactions
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -58,10 +58,12 @@ def resolve_simple_closing(
     events: list[BattleEvent] = []
     ranged = _legal_ranged_attack(attacker, combatant_distance(attacker, target))
     if ranged is not None and is_available(attacker.state, "action"):
+        close_enemy = close_ranged_threat_exists(attacker, setup) if setup is not None else True
         events.append(resolve_attack(
             sequence, round_number, attacker.state, target.state, ranged,
             combatant_distance(attacker, target), dice,
             actor_event_id=attacker.combatant_id, target_event_id=target.combatant_id,
+            close_enemy_active=close_enemy,
         ))
         sequence += 1
     elif is_available(attacker.state, "action"):

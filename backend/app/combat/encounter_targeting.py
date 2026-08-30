@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.condition_rules import is_incapacitated
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 
 logger = logging.getLogger(__name__)
@@ -13,6 +14,18 @@ def combatant_distance(attacker: EncounterCombatant, target: EncounterCombatant)
 
 def _opponents(attacker: EncounterCombatant, setup: EncounterSetup) -> list[EncounterCombatant]:
     return setup.monsters if attacker.side == "heroes" else setup.heroes
+
+
+def close_ranged_threat_exists(attacker: EncounterCombatant, setup: EncounterSetup) -> bool:
+    """Pit visibility is unobstructed; only a non-Incapacitated enemy within 5 ft. threatens a ranged attack."""
+    return any(
+        member.state.is_alive
+        and not member.state.is_dead
+        and member.state.current_hp > 0
+        and not is_incapacitated(member.state)
+        and combatant_distance(attacker, member) <= 5
+        for member in _opponents(attacker, setup)
+    )
 
 
 def _eligible_held_target(member: EncounterCombatant) -> bool:

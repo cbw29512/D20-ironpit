@@ -34,6 +34,7 @@ def resolve_attack(
     feature_id: str | None = None,
     turn_key: str | None = None,
     bonus_damage: BonusDamageSpec | None = None,
+    close_enemy_active: bool = True,
 ) -> BattleEvent:
     try:
         if spend_action and not is_available(attacker, "action"):
@@ -49,6 +50,7 @@ def resolve_attack(
             distance_ft,
             advantage_sources=(advantage_sources + condition_advantage + bloodied_fury_advantage(attacker, attack)),
             other_disadvantage_sources=other_disadvantage_sources + condition_disadvantage,
+            close_enemy_active=close_enemy_active,
         )
         attack_roll = roll_d20(dice, attack.attack_bonus, mode)
         extend_rage_from_attack(attacker, round_number)

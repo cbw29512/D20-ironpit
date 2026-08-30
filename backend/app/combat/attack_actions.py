@@ -7,7 +7,7 @@ from app.combat.ally_context import pack_tactics_active
 from app.combat.attacks import resolve_attack
 from app.combat.dice import DiceProvider
 from app.combat.encounter_movement import take_encounter_dash
-from app.combat.encounter_targeting import combatant_distance, select_nearest_target
+from app.combat.encounter_targeting import close_ranged_threat_exists, combatant_distance, select_nearest_target
 from app.combat.policy import preferred_distance_for_attacks, select_allowed_weapon_attack
 from app.combat.reaction_movement import move_toward_with_reactions
 from app.combat.saving_throws import legal_save_action, resolve_save_action
@@ -116,6 +116,7 @@ def resolve_attack_action(
                     actor_event_id=attacker.combatant_id, target_event_id=target.combatant_id,
                     spend_action=False, advantage_sources=1 if pack else 0,
                     feature_id="pack-tactics" if pack else definition.id,
+                    close_enemy_active=close_ranged_threat_exists(attacker, setup),
                 ))
                 sequence += 1
             elif save_action is not None:

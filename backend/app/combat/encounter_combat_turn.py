@@ -7,7 +7,7 @@ from app.combat.attack_actions import resolve_attack_action
 from app.combat.attacks import resolve_attack
 from app.combat.barbarian import enter_rage, finalize_rage_turn
 from app.combat.dice import DiceProvider
-from app.combat.encounter_targeting import combatant_distance, select_nearest_target
+from app.combat.encounter_targeting import close_ranged_threat_exists, combatant_distance, select_nearest_target
 from app.combat.encounter_turns import prepare_encounter_attack
 from app.combat.fighter import use_second_wind
 from app.combat.grapple import cleanup_grapples, resolve_escape_grapple, should_escape_grapple
@@ -90,5 +90,6 @@ def resolve_combat_turn(
                 combatant_distance(attacker, target), dice,
                 actor_event_id=attacker.combatant_id, target_event_id=target.combatant_id,
                 advantage_sources=1 if pack else 0, feature_id="pack-tactics" if pack else None,
+                close_enemy_active=close_ranged_threat_exists(attacker, setup),
             )); sequence += 1
     return _finish_turn(events, sequence, round_number, attacker)
