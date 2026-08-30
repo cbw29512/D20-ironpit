@@ -27,11 +27,26 @@
     node.classList.toggle("battle-down", safe === 0 && !node.classList.contains("battle-dead"));
   }
 
+  function renderConditions(node, set) {
+    if (!node) return;
+    const rack = node.querySelector(".card-conditions");
+    const badges = [...set].sort().map((id) => {
+      const badge = document.createElement("span");
+      badge.className = `condition-badge condition-${id}`;
+      badge.dataset.condition = id;
+      badge.textContent = id.replaceAll("_", " ").toUpperCase();
+      return badge;
+    });
+    rack.replaceChildren(...badges);
+    node.classList.toggle("has-condition", badges.length > 0);
+  }
+
   function conditions(node, added = [], removed = []) {
     if (!node) return;
     const set = new Set((node.dataset.conditions || "").split(",").filter(Boolean));
-    removed.forEach((id) => set.delete(id)); added.forEach((id) => set.add(id)); node.dataset.conditions = [...set].join(",");
-    node.querySelector(".card-conditions").textContent = [...set].map((id) => id.toUpperCase()).join(" · ");
+    removed.forEach((id) => set.delete(id)); added.forEach((id) => set.add(id));
+    node.dataset.conditions = [...set].join(",");
+    renderConditions(node, set);
   }
 
   function dead(node) {
@@ -70,6 +85,8 @@
       const node = nodes.get(member.combatant_id), state = member.state; if (!node) return;
       hp(node, state.current_hp); if (state.is_dead || !state.is_alive) dead(node);
       node.classList.toggle("battle-stable", Boolean(state.is_stable && state.current_hp === 0));
+      node.dataset.conditions = (state.active_effect_ids || []).join(",");
+      renderConditions(node, new Set(state.active_effect_ids || []));
     });
   }
 
