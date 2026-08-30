@@ -44,7 +44,7 @@ def test_blinded_attacker_against_blinded_defender_rolls_normally() -> None:
 
     event = resolve_attack(
         1, 1, attacker, defender, attacker.template.weapon_attack, 5,
-        FixedDiceProvider([12, 3, 3]),
+        FixedDiceProvider([12, 1, 1, 1, 1]),
     )
 
     assert event.attack_roll is not None
