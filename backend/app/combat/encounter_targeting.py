@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.condition_rules import has_condition, is_incapacitated
+from app.combat.condition_rules import is_incapacitated
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 
 logger = logging.getLogger(__name__)
@@ -29,12 +29,12 @@ def close_ranged_threat_exists(attacker: EncounterCombatant, setup: EncounterSet
 
 
 def _target_priority(member: EncounterCombatant) -> int | None:
-    """Iron Pit policy: active enemies first, Petrified statues second, downed characters last."""
+    """Iron Pit policy: active threats first, Incapacitated living enemies second, downed characters last."""
     state = member.state
     if not state.is_alive or state.is_dead:
         return None
     if state.current_hp > 0:
-        return 1 if has_condition(state, "petrified") else 0
+        return 1 if is_incapacitated(state) else 0
     if state.template.kind == "character" and state.current_hp == 0:
         return 2
     return None
