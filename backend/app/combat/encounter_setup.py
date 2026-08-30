@@ -46,9 +46,10 @@ def _monster_cr_total(monsters: list[EncounterCombatant]) -> str:
 
 
 def _member(card_id: str, index: int, side: str, cards: dict[str, CombatantTemplate]) -> EncounterCombatant:
-    template = _resolve_card(card_id, cards, side[:-1] if side.endswith("s") else side)
+    label = "hero" if side == "heroes" else "monster"
+    template = _resolve_card(card_id, cards, label)
     return EncounterCombatant(
-        combatant_id=f"{side[:-1]}-{index}:{card_id}",
+        combatant_id=f"{label}-{index}:{card_id}",
         side=side,
         position_ft=starting_position_ft(template, side),
         state=build_combatant_state(template),
