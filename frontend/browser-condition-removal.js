@@ -2,6 +2,7 @@
   "use strict";
 
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
+  const P = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const PRIORITY = {
     paralyzed: 0, stunned: 0, incapacitated: 0, petrified: 0,
     blinded: 1, restrained: 1, poisoned: 2, frightened: 2, charmed: 2,
@@ -31,10 +32,16 @@
     return Object.entries(costs(action, count)).every(([id, cost]) => (member.state.resources[id] || 0) >= cost);
   }
 
+  function effectAllows(target, conditionId, actionId) {
+    return target.state.timed_effects.filter((effect) => effect.effect_id === conditionId).every((effect) =>
+      !effect.allowed_removal_action_ids?.length || effect.allowed_removal_action_ids.includes(actionId),
+    );
+  }
+
   function removable(target, action) {
     const allowed = new Set(action.removableConditions || []);
     return target.state.active_effect_ids
-      .filter((id) => allowed.has(id))
+      .filter((id) => allowed.has(id) && effectAllows(target, id, action.id))
       .sort((a, b) => (PRIORITY[a] ?? 9) - (PRIORITY[b] ?? 9) || a.localeCompare(b));
   }
 
@@ -44,10 +51,15 @@
     return result;
   }
 
-  function chooseAction(remover, setup) {
+  function slotAvailable(remover, action, turnKey) {
+    return !action.expendsSpellSlot || P().slotSpellAvailable(remover.state, turnKey);
+  }
+
+  function chooseAction(remover, setup, turnKey) {
     const choices = [];
     for (const action of remover.state.template.condition_removal_actions || []) {
       if (action.actionCost === "reaction" || !E().available(remover.state, action.actionCost)) continue;
+      if (!slotAvailable(remover, action, turnKey)) continue;
       for (const target of allies(remover, setup)) {
         if (!targetAllowed(remover, target, action)) continue;
         const conditions = affordable(remover, target, action);
@@ -71,12 +83,14 @@
     if (id === "grappled") target.state.grapple_sources = [];
   }
 
-  function resolve(sequence, round, remover, target, action, conditionIds) {
+  function resolve(sequence, round, remover, target, action, conditionIds, turnKey) {
     if (action.actionCost === "reaction") throw new Error("Reaction cleansing requires a matching trigger.");
     if (!targetAllowed(remover, target, action) || !conditionIds?.length) throw new Error("Illegal condition-removal target.");
+    if (!slotAvailable(remover, action, turnKey)) throw new Error("A spell slot was already expended to cast a spell this turn.");
     const legal = new Set(affordable(remover, target, action));
     if (conditionIds.some((id) => !legal.has(id))) throw new Error("Condition-removal action cannot remove this effect.");
     E().spend(remover.state, action.actionCost);
+    if (action.expendsSpellSlot) P().markSlotSpellCast(remover.state, turnKey);
     Object.entries(costs(action, conditionIds.length)).forEach(([id, cost]) => {
       if ((remover.state.resources[id] || 0) < cost) throw new Error(`Required resource ${id} is unavailable.`);
       remover.state.resources[id] -= cost;
@@ -93,10 +107,10 @@
     };
   }
 
-  function chooseReaction(remover, setup, trigger, affectedTarget) {
+  function chooseReaction(remover, setup, trigger, affectedTarget, turnKey) {
     if (!E().available(remover.state, "reaction")) return null;
     const actions = (remover.state.template.condition_removal_actions || []).filter((action) =>
-      action.actionCost === "reaction" && action.reactionTrigger === trigger,
+      action.actionCost === "reaction" && action.reactionTrigger === trigger && slotAvailable(remover, action, turnKey),
     );
     for (const action of actions) {
       if (!targetAllowed(remover, affectedTarget, action)) continue;
