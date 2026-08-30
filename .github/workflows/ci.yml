@@ -25,6 +25,7 @@ jobs:
         run: |
           python scripts/prepare_static_site.py
           test -s frontend/data/srd_5_2_1_monsters.json
+          test -s frontend/browser-monsters-generated.js
           git diff --exit-code -- frontend/browser-heroes.js frontend/figure-profiles.js frontend/data/srd_5_2_1_monsters.json
       - name: Validate browser JavaScript syntax
         run: |
@@ -43,6 +44,7 @@ jobs:
           node frontend/browser-venom.test.cjs
           node frontend/browser-mixed-multiattack.test.cjs
           node frontend/browser-expansion.test.cjs
+          node frontend/browser-generated-monsters.test.cjs
           node frontend/browser-condition-immunity.test.cjs
           node frontend/browser-action-healing.test.cjs
           node frontend/browser-action-condition.test.cjs
