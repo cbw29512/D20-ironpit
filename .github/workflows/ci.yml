@@ -45,6 +45,7 @@ jobs:
           node frontend/browser-action-condition.test.cjs
           node frontend/browser-reactions.test.cjs
           node frontend/browser-reaction-movement.test.cjs
+          node frontend/battle-log-format.test.cjs
           node frontend/figure-visuals.test.cjs
           node frontend/encounter-picker.test.cjs
           node frontend/encounter-wiring.test.cjs
@@ -78,6 +79,8 @@ jobs:
           grep -q 'id="card-picker"' frontend/index.html
           grep -q 'id="combat-fx-overlay"' frontend/index.html
           grep -q 'battlefield.css' frontend/index.html
+          grep -q 'figure-archetypes.css' frontend/index.html
+          grep -q 'battle-log-format.js' frontend/index.html
           grep -q 'battlefield-picker.js' frontend/index.html
           grep -q 'battlefield-view.js' frontend/index.html
           grep -q 'battlefield-replay.js' frontend/index.html

@@ -1,0 +1,52 @@
+/* Identity-specific silhouettes layered after figure-visuals.css. */
+
+/* Owlbear: keep a heavy bear body, then add the unmistakable owl beak and ear tufts. */
+.stick-figure[data-form="bear"][data-detail="owlbear"] .head {
+  width: 27px; height: 24px; left: -1px; top: 29px; border-radius: 48%;
+}
+.stick-figure[data-form="bear"][data-detail="owlbear"] .feature-one {
+  display: block; width: 16px; height: 11px; left: -10px; top: 39px;
+  background: currentColor; clip-path: polygon(0 50%, 100% 0, 100% 100%);
+}
+.stick-figure[data-form="bear"][data-detail="owlbear"] .feature-two {
+  display: block; width: 25px; height: 11px; left: 0; top: 24px; background: transparent;
+  border-left: 5px solid currentColor; border-right: 5px solid currentColor;
+  transform: skewY(-18deg);
+}
+
+/* Axe Beak: a tall bird with a dramatically longer wedge-shaped beak. */
+.stick-figure[data-form="bird"][data-detail="beak"] .tail {
+  display: block; width: 24px; height: 11px; left: -3px; top: 18px;
+  background: currentColor; clip-path: polygon(0 50%, 100% 0, 100% 100%); transform: none;
+}
+
+/* Humanoid equipment should read at a glance instead of sharing one generic baton. */
+.stick-figure[data-form="humanoid"][data-weapon*="greatsword"] .weapon::after,
+.stick-figure[data-form="humanoid"][data-weapon*="longsword"] .weapon::after,
+.stick-figure[data-form="humanoid"][data-weapon*="scimitar"] .weapon::after {
+  content: ""; position: absolute; width: 17px; height: 4px; left: -6px; bottom: 8px;
+  background: currentColor; border-radius: 999px;
+}
+.stick-figure[data-form="humanoid"][data-weapon*="greataxe"] .weapon::after,
+.stick-figure[data-form="humanoid"][data-weapon*="handaxe"] .weapon::after {
+  content: ""; position: absolute; width: 22px; height: 16px; left: -8px; top: -4px;
+  background: currentColor; clip-path: polygon(35% 0, 100% 15%, 82% 85%, 35% 100%, 48% 50%);
+}
+.stick-figure[data-form="humanoid"][data-weapon*="mace"] .weapon::after {
+  content: ""; position: absolute; width: 14px; height: 14px; left: -4px; top: -7px;
+  background: currentColor; border-radius: 50%;
+}
+.stick-figure[data-form="humanoid"][data-weapon*="bow"] .weapon {
+  width: 25px; height: 54px; right: -7px; top: 29px; background: transparent;
+  border: 4px solid currentColor; border-left-color: transparent; border-radius: 50%; transform: rotate(5deg);
+}
+.stick-figure[data-form="humanoid"][data-off-hand="shield"] .feature-one {
+  display: block; width: 25px; height: 31px; left: -8px; top: 42px;
+  background: transparent; border: 5px solid currentColor; border-radius: 48% 48% 60% 60%;
+}
+
+/* Casters retain a humanoid silhouette but hold their casting arm outward. */
+.stick-figure[data-form="humanoid"][data-role*="warlock"] .arms,
+.stick-figure[data-form="humanoid"][data-role*="cleric"] .arms {
+  transform: rotate(-12deg);
+}

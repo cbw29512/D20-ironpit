@@ -3,6 +3,7 @@
 
   const el = (id) => document.getElementById(id);
   const V = () => window.IRON_PIT_FIGURE_VISUALS;
+  const L = () => window.IRON_PIT_BATTLE_LOG;
   const MAX_SLOTS = 6;
 
   function runtimeTemplate(card, side) {
@@ -77,10 +78,20 @@
     el("result-panel").hidden = false; el("status").textContent = winner;
   }
 
+  function logContext(battle, event) {
+    if (event.event_type !== "attack") return event;
+    const combatants = [...battle.setup.heroes, ...battle.setup.monsters];
+    const actor = combatants.find((member) => member.combatant_id === event.actor_id);
+    const target = combatants.find((member) => member.combatant_id === event.target_id);
+    const attack = actor?.state.template.attacks?.find((item) => item.id === event.weapon_id);
+    return { ...event, attack_name: attack?.name, target_ac: target?.state.template.armor_class };
+  }
+
   function writeLog(battle) {
     const root = el("battle-log"); root.replaceChildren();
     battle.events.forEach((event) => {
-      const li = document.createElement("li"); li.textContent = `R${event.round_number}: ${event.description}`;
+      const li = document.createElement("li"), enriched = logContext(battle, event);
+      li.textContent = `R${event.round_number}: ${L()?.format(enriched) || event.description}`;
       if (event.critical) li.classList.add("log-critical");
       if (event.event_type === "attack" && event.attack_roll?.selected_roll === 1) li.classList.add("log-fumble");
       root.append(li);

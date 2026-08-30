@@ -27,6 +27,24 @@ assert.equal(p("Giant Goat", "large").detail, "horns");
 assert.equal(p("Boar").detail, "tusks");
 assert.equal(p("Ogre", "large").form, "brute");
 assert.equal(p("Guard").form, "humanoid");
-assert.equal(profile({ name: "Karnok", size: "medium", visual: { main_hand: "greatsword" }, attacks: [] }).weapon, "greatsword");
 
-console.log("Monster stick silhouette regressions passed.");
+assert.deepEqual(
+  { form: p("Owlbear", "large").form, detail: p("Owlbear", "large").detail },
+  { form: "bear", detail: "owlbear" },
+  "Owlbear must use the heavy hybrid silhouette, not the generic bird profile",
+);
+assert.deepEqual(
+  { form: p("Axe Beak", "large").form, detail: p("Axe Beak", "large").detail },
+  { form: "bird", detail: "beak" },
+  "Axe Beak must never fall through to a humanoid silhouette",
+);
+
+const explicit = profile({
+  name: "Custom Guardian", size: "medium", archetype: "Paladin",
+  visual: { figure_form: "humanoid", figure_detail: "none", main_hand: "longsword", off_hand: "shield" }, attacks: [],
+});
+assert.equal(explicit.weapon, "longsword");
+assert.equal(explicit.offHand, "shield");
+assert.equal(explicit.role, "paladin");
+
+console.log("Monster and hero stick silhouette regressions passed.");

@@ -2,19 +2,20 @@
   "use strict";
 
   const has = (name, pattern) => pattern.test(name);
+  const EXPLICIT = new Map([
+    ["owlbear", { form: "bear", detail: "owlbear" }],
+    ["axe beak", { form: "bird", detail: "beak" }],
+  ]);
 
-  function profile(template) {
-    const name = String(template.name || "").toLowerCase();
-    const visual = template.visual || {};
+  function inferredProfile(name) {
     let form = "humanoid", detail = "none";
-
     if (has(name, /wolf spider|spider/)) form = "spider";
     else if (has(name, /wasp/)) form = "winged-insect";
     else if (has(name, /centipede/)) form = "centipede";
     else if (has(name, /snake/)) form = "snake";
     else if (has(name, /crab/)) form = "crab";
     else if (has(name, /bat/)) form = "bat";
-    else if (has(name, /eagle|hawk|owl|vulture|raven|pteranodon/)) form = "bird";
+    else if (has(name, /axe beak|eagle|hawk|owl|vulture|raven|pteranodon/)) form = "bird";
     else if (has(name, /crocodile|lizard/)) form = "reptile";
     else if (has(name, /bear/)) form = "bear";
     else if (has(name, /frog/)) form = "frog";
@@ -31,12 +32,20 @@
     else if (has(name, /tiger|panther/)) detail = "cat";
     else if (has(name, /wolf|hyena|mastiff/)) detail = "canine";
     else if (has(name, /axe beak/)) detail = "beak";
+    return { form, detail };
+  }
 
+  function profile(template) {
+    const name = String(template.name || "").toLowerCase();
+    const visual = template.visual || {};
+    const inferred = EXPLICIT.get(name) || inferredProfile(name);
     return {
-      form,
-      detail,
-      size: template.size || "medium",
-      weapon: visual.main_hand || template.attacks?.[0]?.name?.toLowerCase() || "natural",
+      form: visual.figure_form || inferred.form,
+      detail: visual.figure_detail || inferred.detail,
+      size: String(template.size || "medium").toLowerCase(),
+      weapon: String(visual.main_hand || template.attacks?.[0]?.name || "natural").toLowerCase(),
+      offHand: String(visual.off_hand || "none").toLowerCase(),
+      role: String(visual.role || template.archetype || "creature").toLowerCase(),
     };
   }
 
@@ -48,10 +57,12 @@
     stick.dataset.detail = info.detail;
     stick.dataset.size = info.size;
     stick.dataset.weapon = info.weapon;
+    stick.dataset.offHand = info.offHand;
+    stick.dataset.role = info.role;
     node.dataset.figureForm = info.form;
     node.classList.toggle("pit-large", ["large", "huge", "gargantuan"].includes(info.size));
     node.classList.toggle("pit-small", ["tiny", "small"].includes(info.size));
   }
 
-  window.IRON_PIT_FIGURE_VISUALS = { decorate, profile };
+  window.IRON_PIT_FIGURE_VISUALS = { decorate, inferredProfile, profile };
 })();
