@@ -7,10 +7,10 @@ def _setup(condition: str):
     setup = build_encounter_setup(EncounterSelection(
         hero_ids=["aldric-vane-l1", "brom-ironmark-l1"],
         monster_ids=["srd-commoner"],
-        starting_distance_ft=30,
     ))
     disabled, active = setup.heroes
     attacker = setup.monsters[0]
+    attacker.position_ft = 30
     disabled.position_ft = 25
     active.position_ft = 0
     disabled.state.active_effect_ids.append(condition)
