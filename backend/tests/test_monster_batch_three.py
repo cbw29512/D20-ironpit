@@ -55,9 +55,11 @@ def test_scout_and_infantry_match_srd_weapon_options() -> None:
 
 def _scout_attack_ids(distance_ft: int) -> list[str]:
     setup = build_encounter_setup(EncounterSelection(
-        hero_ids=["aldric-vane-l1"], monster_ids=["srd-scout"], starting_distance_ft=distance_ft,
+        hero_ids=["aldric-vane-l1"], monster_ids=["srd-scout"],
     ))
-    scout = setup.monsters[0]
+    hero, scout = setup.heroes[0], setup.monsters[0]
+    hero.position_ft = 0
+    scout.position_ft = distance_ft
     begin_turn(scout.state)
     events, _ = resolve_attack_action(1, 1, scout, setup, FixedDiceProvider([10, 4, 10, 4]))
     return [event.weapon_id for event in events if event.event_type == "attack"]
