@@ -50,6 +50,7 @@ jobs:
           node frontend/browser-action-condition.test.cjs
           node frontend/browser-reactions.test.cjs
           node frontend/browser-reaction-movement.test.cjs
+          node frontend/browser-spell-area.test.cjs
           node frontend/battle-log-format.test.cjs
           node frontend/figure-visuals.test.cjs
           node frontend/figure-portraits.test.cjs
