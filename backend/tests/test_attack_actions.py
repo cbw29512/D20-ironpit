@@ -14,11 +14,12 @@ class MaxDiceProvider:
 
 def _extra_attack_setup():
     setup = build_encounter_setup(EncounterSelection(
-        hero_ids=["aldric-vane-l1"],
-        monster_ids=["srd-commoner", "srd-commoner"],
-        starting_distance_ft=30,
+        hero_ids=["aldric-vane-l1"], monster_ids=["srd-commoner", "srd-commoner"],
     ))
     attacker = setup.heroes[0]
+    attacker.position_ft = 0
+    setup.monsters[0].position_ft = 30
+    setup.monsters[1].position_ft = 30
     attacker.state.template.attack_action = AttackActionDefinition(
         id="fighter-extra-attack",
         name="Extra Attack",
@@ -33,11 +34,11 @@ def _extra_attack_setup():
 
 def _mixed_attack_setup(distance_ft: int):
     setup = build_encounter_setup(EncounterSelection(
-        hero_ids=["aldric-vane-l1"],
-        monster_ids=["srd-bandit"],
-        starting_distance_ft=distance_ft,
+        hero_ids=["aldric-vane-l1"], monster_ids=["srd-bandit"],
     ))
     attacker = setup.monsters[0]
+    setup.heroes[0].position_ft = 0
+    attacker.position_ft = distance_ft
     attacker.state.template.attack_action = AttackActionDefinition(
         id="mixed-multiattack",
         name="Mixed Multiattack",
@@ -79,7 +80,6 @@ def test_attack_action_can_spend_remaining_movement_between_attacks() -> None:
 
 def test_unreachable_first_attack_dashes_instead_of_half_using_attack_action() -> None:
     setup, attacker = _extra_attack_setup()
-    setup.starting_distance_ft = 100
     setup.monsters[0].position_ft = 100
     setup.monsters[1].position_ft = 100
 
@@ -92,7 +92,6 @@ def test_unreachable_first_attack_dashes_instead_of_half_using_attack_action() -
 
 def test_dash_that_reaches_melee_still_cannot_multiattack_same_turn() -> None:
     setup, attacker = _extra_attack_setup()
-    setup.starting_distance_ft = 50
     setup.monsters[0].position_ft = 50
     setup.monsters[1].position_ft = 50
 
@@ -104,7 +103,7 @@ def test_dash_that_reaches_melee_still_cannot_multiattack_same_turn() -> None:
     assert attacker.state.action_available is False
 
 
-def test_mixed_multiattack_uses_ranged_option_until_engaged() -> None:
+def test_mixed_multiattack_uses_ranged_option_when_fixture_starts_outside_melee() -> None:
     setup, attacker = _mixed_attack_setup(30)
     events, _ = resolve_attack_action(1, 1, attacker, setup, FixedDiceProvider([10, 4, 10, 4]))
 
@@ -125,9 +124,7 @@ def test_mixed_multiattack_switches_to_melee_when_engaged() -> None:
 
 def test_giant_constrictor_snake_multiattack_is_bite_then_constrict() -> None:
     setup = build_encounter_setup(EncounterSelection(
-        hero_ids=["karnok-stoneward-l1"],
-        monster_ids=["srd-giant-constrictor-snake"],
-        starting_distance_ft=10,
+        hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-giant-constrictor-snake"],
     ))
     attacker, target = setup.monsters[0], setup.heroes[0]
     begin_turn(attacker.state)
@@ -152,7 +149,6 @@ def test_tyrannosaurus_bite_grapple_forces_tail_to_retarget() -> None:
     setup = build_encounter_setup(EncounterSelection(
         hero_ids=["karnok-stoneward-l1", "rokhan-stonefury-l1"],
         monster_ids=["srd-tyrannosaurus-rex"],
-        starting_distance_ft=10,
     ))
     attacker = setup.monsters[0]
     begin_turn(attacker.state)
