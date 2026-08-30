@@ -3,7 +3,7 @@
 
   const SIZE_RANK = { tiny: 0, small: 1, medium: 2, large: 3, huge: 4, gargantuan: 5 };
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
-  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { has: (state, id) => state.active_effect_ids.includes(id), incapacitated: (state) => state.is_unconscious };
+  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { incapacitated: (state) => state.is_unconscious };
 
   function buildState(template) {
     return {
@@ -35,14 +35,15 @@
   }
 
   const distance = (a, b) => Math.abs(a.position_ft - b.position_ft);
-  const active = (member) => member.state.is_alive && !member.state.is_dead && !member.state.is_unconscious && member.state.current_hp > 0;
+  const active = (member) => member.state.is_alive && !member.state.is_dead
+    && member.state.current_hp > 0 && !Q().incapacitated(member.state);
   const downedCharacter = (member) => member.state.template.kind === "character" && member.state.is_alive && !member.state.is_dead && member.state.current_hp === 0;
   const opponents = (member, setup) => member.side === "heroes" ? setup.monsters : setup.heroes;
 
   function targetPriority(member) {
     const state = member.state;
     if (!state.is_alive || state.is_dead) return null;
-    if (state.current_hp > 0) return Q().has(state, "petrified") ? 1 : 0;
+    if (state.current_hp > 0) return Q().incapacitated(state) ? 1 : 0;
     if (state.template.kind === "character" && state.current_hp === 0) return 2;
     return null;
   }
