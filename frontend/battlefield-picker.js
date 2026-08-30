@@ -54,6 +54,7 @@
       const chosen = rows.find((monster) => monster.id === monsterSelect.value) || null;
       el("picker-note").textContent = monsterNote(rows, chosen);
       el("confirm-card").disabled = !ready(chosen);
+      el("confirm-card").textContent = ready(chosen) ? "Add to Slot" : "Certification Pending";
     }
 
     function refreshMonsters() {
@@ -63,12 +64,12 @@
         monster.id,
         `CR ${monster.challenge_rating} · ${monster.name}${ready(monster) ? " · RAW READY" : " · certification pending"}`,
         monster.id === existing?.id,
-        !ready(monster),
       )));
-      const existingReady = existing && ready(existing) && rows.some((monster) => monster.id === existing.id);
+      const existingShown = existing && rows.some((monster) => monster.id === existing.id);
       const firstReady = rows.find(ready);
-      if (existingReady) monsterSelect.value = existing.id;
+      if (existingShown) monsterSelect.value = existing.id;
       else if (firstReady) monsterSelect.value = firstReady.id;
+      else if (rows[0]) monsterSelect.value = rows[0].id;
       refreshNote(rows);
     }
 
@@ -91,6 +92,7 @@
     el("picker-title").textContent = existing ? `Change ${existing.name}` : side === "heroes" ? "Choose a pregen" : "Choose a monster";
     el("hero-picker-fields").hidden = side !== "heroes"; el("monster-picker-fields").hidden = side !== "monsters";
     el("remove-card").hidden = !existing;
+    el("confirm-card").textContent = "Add to Slot";
     if (side === "heroes") populateHero(state, existing); else populateMonster(state, existing);
     el("card-picker").showModal();
   }
