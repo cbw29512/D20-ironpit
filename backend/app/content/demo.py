@@ -47,6 +47,7 @@ def build_goblin_warrior() -> CombatantTemplate:
             archetype="Goblin Warrior",
             challenge_rating="1/4",
             kind="monster",
+            size="small",
             armor_class=15,
             max_hp=10,
             speed_ft=30,

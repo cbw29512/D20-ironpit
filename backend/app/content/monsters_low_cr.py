@@ -37,7 +37,7 @@ def build_guard() -> CombatantTemplate:
 def build_giant_rat() -> CombatantTemplate:
     return _monster(
         id="srd-giant-rat", name="Giant Rat", archetype="Giant Rat", challenge_rating="1/8",
-        armor_class=13, max_hp=7, speed_ft=30, initiative_bonus=3,
+        size="small", armor_class=13, max_hp=7, speed_ft=30, initiative_bonus=3,
         weapon_attack=build_giant_rat_attack(),
         combat_traits=[CombatTrait.PACK_TACTICS],
         visual=build_monster_visual("none", "bite", "giant-rat"),

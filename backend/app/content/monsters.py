@@ -80,6 +80,7 @@ def build_giant_lizard() -> CombatantTemplate:
         name="Giant Lizard",
         archetype="Giant Lizard",
         challenge_rating="1/4",
+        size="large",
         armor_class=12,
         max_hp=19,
         speed_ft=40,
