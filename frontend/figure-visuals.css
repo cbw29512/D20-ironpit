@@ -1,78 +1,655 @@
-.stick-figure .tail,.stick-figure .feature,.stick-figure .weapon{display:none}
-.pit-fighter.pit-large .stick-figure{transform:scale(1.08);transform-origin:50% 100%}
-.pit-fighter.pit-small .stick-figure{transform:scale(.88);transform-origin:50% 100%}
-.pit-status{min-height:1.05rem;margin:-2px 0 4px;font-size:.52rem;font-weight:1000;letter-spacing:.035em;color:#e4c88e}
-.pit-fighter.is-grappled .stick-figure{filter:drop-shadow(0 0 5px rgba(221,184,112,.55))}
-.pit-fighter.is-grappled .stick-figure::after{content:"";position:absolute;inset:20px 2px 10px;border:2px dashed currentColor;border-radius:38%;opacity:.62}
-.pit-fighter.is-restrained .stick-figure::after{border-style:double;border-width:5px;opacity:.78}
+.stick-figure .tail,
+.stick-figure .feature,
+.stick-figure .weapon { display: none; }
 
-/* Humanoids keep the classic Iron Pit stick body and carry a simple weapon silhouette. */
-.stick-figure[data-form="humanoid"] .weapon,.stick-figure[data-form="brute"] .weapon{display:block;width:5px;height:50px;right:2px;top:34px;transform:rotate(24deg);border-radius:999px}
-.stick-figure[data-form="brute"] .head{width:29px;height:29px;left:15px;border-width:5px}
-.stick-figure[data-form="brute"] .body{width:7px;height:43px;left:27px}
-.stick-figure[data-form="brute"] .arms{height:6px;top:42px}
+/* Size now targets the actual six-slot battlefield cards. */
+.battle-card.pit-large .stick-figure {
+  transform: scale(.8);
+  transform-origin: 50% 100%;
+}
 
-/* Four-legged beasts are still line art, but unmistakably horizontal and animal-shaped. */
-.stick-figure[data-form="quadruped"] .head,.stick-figure[data-form="hoofed"] .head,.stick-figure[data-form="reptile"] .head,.stick-figure[data-form="bear"] .head,.stick-figure[data-form="frog"] .head{width:20px;height:18px;left:3px;top:34px;border:4px solid currentColor;border-radius:50%;background:transparent}
-.stick-figure[data-form="quadruped"] .body,.stick-figure[data-form="hoofed"] .body,.stick-figure[data-form="reptile"] .body,.stick-figure[data-form="bear"] .body{width:40px;height:6px;left:16px;top:47px;border-radius:999px}
-.stick-figure[data-form="quadruped"] .arms,.stick-figure[data-form="hoofed"] .arms,.stick-figure[data-form="reptile"] .arms,.stick-figure[data-form="bear"] .arms{display:none}
-.stick-figure[data-form="quadruped"] .legs,.stick-figure[data-form="hoofed"] .legs,.stick-figure[data-form="reptile"] .legs,.stick-figure[data-form="bear"] .legs{width:4px;height:34px;left:22px;top:49px;transform:rotate(8deg);box-shadow:25px 0 0 currentColor}
-.stick-figure[data-form="quadruped"] .legs::after,.stick-figure[data-form="hoofed"] .legs::after,.stick-figure[data-form="reptile"] .legs::after,.stick-figure[data-form="bear"] .legs::after{width:4px;height:32px;left:8px;top:0;transform:rotate(-14deg);box-shadow:22px 5px 0 currentColor}
-.stick-figure[data-form="quadruped"] .tail,.stick-figure[data-form="hoofed"] .tail,.stick-figure[data-form="reptile"] .tail{display:block;width:30px;height:4px;right:-19px;top:46px;transform:rotate(-24deg);transform-origin:left center;border-radius:999px}
-.stick-figure[data-form="bear"] .body{height:15px;top:42px;border-radius:50%}
-.stick-figure[data-form="bear"] .head{width:24px;height:22px;left:1px;top:32px}
-.stick-figure[data-form="bear"] .tail{display:block;width:9px;height:9px;right:-3px;top:42px;border-radius:50%}
+.battle-card.pit-small .stick-figure {
+  transform: scale(.64);
+  transform-origin: 50% 100%;
+}
 
-/* Horns, antlers, tusks, and rhino horn distinguish hoofed silhouettes. */
-.stick-figure[data-form="hoofed"][data-detail="antlers"] .feature-one,.stick-figure[data-form="hoofed"][data-detail="antlers"] .feature-two{display:block;width:18px;height:3px;left:0;top:27px;transform:rotate(-55deg);transform-origin:right center}
-.stick-figure[data-form="hoofed"][data-detail="antlers"] .feature-two{left:8px;transform:rotate(-125deg)}
-.stick-figure[data-form="hoofed"][data-detail="horns"] .feature-one,.stick-figure[data-form="hoofed"][data-detail="horns"] .feature-two{display:block;width:15px;height:3px;left:2px;top:31px;transform:rotate(-42deg)}
-.stick-figure[data-form="hoofed"][data-detail="horns"] .feature-two{left:11px;transform:rotate(-138deg)}
-.stick-figure[data-form="hoofed"][data-detail="horn"] .feature-one{display:block;width:21px;height:4px;left:-13px;top:37px;transform:rotate(-12deg);clip-path:polygon(0 50%,100% 0,100% 100%)}
-.stick-figure[data-form="quadruped"][data-detail="tusks"] .feature-one,.stick-figure[data-form="quadruped"][data-detail="tusks"] .feature-two{display:block;width:12px;height:3px;left:-4px;top:48px;transform:rotate(35deg)}
-.stick-figure[data-form="quadruped"][data-detail="tusks"] .feature-two{top:42px;transform:rotate(-35deg)}
+/* Humanoids keep the classic Iron Pit body and a simple weapon silhouette. */
+.stick-figure[data-form="humanoid"] .weapon,
+.stick-figure[data-form="brute"] .weapon {
+  display: block;
+  width: 5px;
+  height: 50px;
+  right: 2px;
+  top: 34px;
+  transform: rotate(24deg);
+  border-radius: 999px;
+}
 
-/* Crocodiles and lizards get low jaws and a long tail. */
-.stick-figure[data-form="reptile"] .head{width:28px;height:13px;left:-5px;top:42px;border-radius:45% 10% 10% 45%}
-.stick-figure[data-form="reptile"] .body{height:9px;top:45px}
-.stick-figure[data-form="reptile"] .legs{height:22px;top:51px;transform:rotate(35deg);box-shadow:25px 0 0 currentColor}
-.stick-figure[data-form="reptile"] .legs::after{height:22px;transform:rotate(-60deg)}
-.stick-figure[data-form="reptile"] .tail{width:42px;right:-29px;top:47px;transform:rotate(10deg)}
+.stick-figure[data-form="brute"] .head {
+  width: 29px;
+  height: 29px;
+  left: 15px;
+  border-width: 5px;
+}
 
-/* Snakes use a coiled line body instead of humanoid limbs. */
-.stick-figure[data-form="snake"] .arms,.stick-figure[data-form="snake"] .legs,.stick-figure[data-form="snake"] .weapon{display:none}
-.stick-figure[data-form="snake"] .head{width:22px;height:16px;left:4px;top:23px;border:4px solid currentColor;border-radius:55% 45% 45% 55%;background:transparent}
-.stick-figure[data-form="snake"] .body{width:42px;height:42px;left:13px;top:35px;background:transparent;border:5px solid currentColor;border-left-color:transparent;border-radius:50%;transform:rotate(23deg)}
-.stick-figure[data-form="snake"] .tail{display:block;width:37px;height:5px;left:4px;top:75px;transform:rotate(-20deg);border-radius:999px}
+.stick-figure[data-form="brute"] .body {
+  width: 7px;
+  height: 43px;
+  left: 27px;
+}
 
-/* Crabs sit wide with two obvious claws. */
-.stick-figure[data-form="crab"] .head{width:38px;height:24px;left:11px;top:42px;border:5px solid currentColor;border-radius:45%;background:transparent}
-.stick-figure[data-form="crab"] .body{display:none}.stick-figure[data-form="crab"] .arms{width:55px;height:4px;left:2px;top:53px;transform:none}.stick-figure[data-form="crab"] .legs{width:35px;height:3px;left:11px;top:68px;transform:rotate(25deg);box-shadow:0 8px 0 currentColor}.stick-figure[data-form="crab"] .legs::after{width:35px;height:3px;transform:rotate(130deg);box-shadow:0 8px 0 currentColor}
-.stick-figure[data-form="crab"] .feature-one,.stick-figure[data-form="crab"] .feature-two{display:block;width:16px;height:16px;top:38px;border:4px solid currentColor;border-bottom-color:transparent;border-radius:50%;background:transparent}.stick-figure[data-form="crab"] .feature-one{left:-3px}.stick-figure[data-form="crab"] .feature-two{right:-3px}
+.stick-figure[data-form="brute"] .arms {
+  height: 6px;
+  top: 42px;
+}
 
-/* Birds and bats are wing-first silhouettes. */
-.stick-figure[data-form="bird"] .head,.stick-figure[data-form="bat"] .head{width:18px;height:18px;left:21px;top:13px;border:4px solid currentColor;border-radius:50%;background:transparent}
-.stick-figure[data-form="bird"] .body,.stick-figure[data-form="bat"] .body{width:6px;height:38px;left:27px;top:30px;border-radius:999px}
-.stick-figure[data-form="bird"] .arms,.stick-figure[data-form="bat"] .arms{width:54px;height:5px;left:3px;top:39px;transform:rotate(-12deg)}
-.stick-figure[data-form="bird"] .legs,.stick-figure[data-form="bat"] .legs{width:3px;height:25px;left:23px;top:65px;transform:rotate(15deg);box-shadow:13px 0 0 currentColor}.stick-figure[data-form="bird"] .legs::after,.stick-figure[data-form="bat"] .legs::after{display:none}
-.stick-figure[data-form="bird"] .feature-one,.stick-figure[data-form="bat"] .feature-one{display:block;width:28px;height:22px;left:0;top:31px;background:transparent;border-top:4px solid currentColor;border-left:3px solid currentColor;transform:skewY(-28deg)}
-.stick-figure[data-form="bird"] .feature-two,.stick-figure[data-form="bat"] .feature-two{display:block;width:28px;height:22px;right:0;top:31px;background:transparent;border-top:4px solid currentColor;border-right:3px solid currentColor;transform:skewY(28deg)}
-.stick-figure[data-form="bat"] .feature-one,.stick-figure[data-form="bat"] .feature-two{height:31px;top:28px}
-.stick-figure[data-form="bird"][data-detail="beak"] .tail{display:block;width:13px;height:4px;left:10px;top:20px;transform:rotate(7deg)}
+/* Four-legged beasts. */
+.stick-figure[data-form="quadruped"] .head,
+.stick-figure[data-form="hoofed"] .head,
+.stick-figure[data-form="reptile"] .head,
+.stick-figure[data-form="bear"] .head,
+.stick-figure[data-form="frog"] .head {
+  width: 20px;
+  height: 18px;
+  left: 3px;
+  top: 34px;
+  border: 4px solid currentColor;
+  border-radius: 50%;
+  background: transparent;
+}
 
-/* Remaining low creatures get dedicated squat silhouettes. */
-.stick-figure[data-form="frog"] .body{width:34px;height:20px;left:14px;top:50px;border-radius:50%}.stick-figure[data-form="frog"] .arms{display:none}.stick-figure[data-form="frog"] .legs{width:28px;height:5px;left:2px;top:70px;transform:rotate(-22deg);box-shadow:29px 0 0 currentColor}.stick-figure[data-form="frog"] .legs::after{display:none}
-.stick-figure[data-form="insect"] .head{width:14px;height:14px;left:23px;top:23px;border:3px solid currentColor;border-radius:50%;background:transparent}.stick-figure[data-form="insect"] .body{width:25px;height:42px;left:18px;top:35px;border-radius:50%}.stick-figure[data-form="insect"] .arms{width:48px;height:3px;left:6px;top:46px;transform:rotate(18deg);box-shadow:0 12px 0 currentColor,0 24px 0 currentColor}.stick-figure[data-form="insect"] .legs{display:none}
-.stick-figure[data-form="plant"] .head{display:none}.stick-figure[data-form="plant"] .body{width:7px;height:58px;left:27px;top:25px}.stick-figure[data-form="plant"] .arms{width:48px;height:4px;left:6px;top:43px;transform:rotate(-28deg);box-shadow:0 17px 0 currentColor}.stick-figure[data-form="plant"] .legs{width:35px;height:4px;left:12px;top:80px;transform:rotate(25deg)}
+.stick-figure[data-form="quadruped"] .body,
+.stick-figure[data-form="hoofed"] .body,
+.stick-figure[data-form="reptile"] .body,
+.stick-figure[data-form="bear"] .body {
+  width: 40px;
+  height: 6px;
+  left: 16px;
+  top: 47px;
+  border-radius: 999px;
+}
 
-/* Attack language now affects the actual silhouette instead of only moving the card. */
-.pit-fighter.motion-bite .stick-figure .head{animation:pit-bite .34s ease-in-out}
-.pit-fighter.motion-claw .stick-figure .feature-one,.pit-fighter.motion-claw .stick-figure .arms{animation:pit-claw .34s ease-in-out}
-.pit-fighter.motion-constrict .stick-figure .body,.pit-fighter.motion-constrict .stick-figure .tail{animation:pit-coil .42s ease-in-out}
-.pit-fighter.motion-heavy-slash .stick-figure .weapon,.pit-fighter.motion-quick-strike .stick-figure .weapon,.pit-fighter.motion-thrust .stick-figure .weapon{animation:pit-weapon .34s ease-in-out}
-.pit-fighter.feature-pulse{filter:brightness(1.25)}
-@keyframes pit-bite{50%{transform:translateX(-8px) scaleX(1.18)}}
-@keyframes pit-claw{50%{transform:rotate(-45deg) scale(1.28)}}
-@keyframes pit-coil{50%{transform:rotate(38deg) scale(.82,1.18)}}
-@keyframes pit-weapon{50%{transform:rotate(-62deg) translateY(-8px)}}
-@media(prefers-reduced-motion:reduce){.pit-fighter.motion-bite .stick-figure .head,.pit-fighter.motion-claw .stick-figure .feature-one,.pit-fighter.motion-claw .stick-figure .arms,.pit-fighter.motion-constrict .stick-figure .body,.pit-fighter.motion-constrict .stick-figure .tail,.pit-fighter.motion-heavy-slash .stick-figure .weapon,.pit-fighter.motion-quick-strike .stick-figure .weapon,.pit-fighter.motion-thrust .stick-figure .weapon{animation:none!important}}
+.stick-figure[data-form="quadruped"] .arms,
+.stick-figure[data-form="hoofed"] .arms,
+.stick-figure[data-form="reptile"] .arms,
+.stick-figure[data-form="bear"] .arms { display: none; }
+
+.stick-figure[data-form="quadruped"] .legs,
+.stick-figure[data-form="hoofed"] .legs,
+.stick-figure[data-form="reptile"] .legs,
+.stick-figure[data-form="bear"] .legs {
+  width: 4px;
+  height: 34px;
+  left: 22px;
+  top: 49px;
+  transform: rotate(8deg);
+  box-shadow: 25px 0 0 currentColor;
+}
+
+.stick-figure[data-form="quadruped"] .legs::after,
+.stick-figure[data-form="hoofed"] .legs::after,
+.stick-figure[data-form="reptile"] .legs::after,
+.stick-figure[data-form="bear"] .legs::after {
+  width: 4px;
+  height: 32px;
+  left: 8px;
+  top: 0;
+  transform: rotate(-14deg);
+  box-shadow: 22px 5px 0 currentColor;
+}
+
+.stick-figure[data-form="quadruped"] .tail,
+.stick-figure[data-form="hoofed"] .tail,
+.stick-figure[data-form="reptile"] .tail {
+  display: block;
+  width: 30px;
+  height: 4px;
+  right: -19px;
+  top: 46px;
+  transform: rotate(-24deg);
+  transform-origin: left center;
+  border-radius: 999px;
+}
+
+.stick-figure[data-form="bear"] .body {
+  height: 15px;
+  top: 42px;
+  border-radius: 50%;
+}
+
+.stick-figure[data-form="bear"] .head {
+  width: 24px;
+  height: 22px;
+  left: 1px;
+  top: 32px;
+}
+
+.stick-figure[data-form="bear"] .tail {
+  display: block;
+  width: 9px;
+  height: 9px;
+  right: -3px;
+  top: 42px;
+  border-radius: 50%;
+}
+
+/* Horns, antlers, tusks, and rhino horn. */
+.stick-figure[data-form="hoofed"][data-detail="antlers"] .feature-one,
+.stick-figure[data-form="hoofed"][data-detail="antlers"] .feature-two {
+  display: block;
+  width: 18px;
+  height: 3px;
+  left: 0;
+  top: 27px;
+  transform: rotate(-55deg);
+  transform-origin: right center;
+}
+
+.stick-figure[data-form="hoofed"][data-detail="antlers"] .feature-two {
+  left: 8px;
+  transform: rotate(-125deg);
+}
+
+.stick-figure[data-form="hoofed"][data-detail="horns"] .feature-one,
+.stick-figure[data-form="hoofed"][data-detail="horns"] .feature-two {
+  display: block;
+  width: 15px;
+  height: 3px;
+  left: 2px;
+  top: 31px;
+  transform: rotate(-42deg);
+}
+
+.stick-figure[data-form="hoofed"][data-detail="horns"] .feature-two {
+  left: 11px;
+  transform: rotate(-138deg);
+}
+
+.stick-figure[data-form="hoofed"][data-detail="horn"] .feature-one {
+  display: block;
+  width: 21px;
+  height: 4px;
+  left: -13px;
+  top: 37px;
+  transform: rotate(-12deg);
+  clip-path: polygon(0 50%, 100% 0, 100% 100%);
+}
+
+.stick-figure[data-form="quadruped"][data-detail="tusks"] .feature-one,
+.stick-figure[data-form="quadruped"][data-detail="tusks"] .feature-two {
+  display: block;
+  width: 12px;
+  height: 3px;
+  left: -4px;
+  top: 48px;
+  transform: rotate(35deg);
+}
+
+.stick-figure[data-form="quadruped"][data-detail="tusks"] .feature-two {
+  top: 42px;
+  transform: rotate(-35deg);
+}
+
+/* Crocodiles and lizards. */
+.stick-figure[data-form="reptile"] .head {
+  width: 28px;
+  height: 13px;
+  left: -5px;
+  top: 42px;
+  border-radius: 45% 10% 10% 45%;
+}
+
+.stick-figure[data-form="reptile"] .body {
+  height: 9px;
+  top: 45px;
+}
+
+.stick-figure[data-form="reptile"] .legs {
+  height: 22px;
+  top: 51px;
+  transform: rotate(35deg);
+  box-shadow: 25px 0 0 currentColor;
+}
+
+.stick-figure[data-form="reptile"] .legs::after {
+  height: 22px;
+  transform: rotate(-60deg);
+}
+
+.stick-figure[data-form="reptile"] .tail {
+  width: 42px;
+  right: -29px;
+  top: 47px;
+  transform: rotate(10deg);
+}
+
+/* Snakes. */
+.stick-figure[data-form="snake"] .arms,
+.stick-figure[data-form="snake"] .legs,
+.stick-figure[data-form="snake"] .weapon { display: none; }
+
+.stick-figure[data-form="snake"] .head {
+  width: 22px;
+  height: 16px;
+  left: 4px;
+  top: 23px;
+  border: 4px solid currentColor;
+  border-radius: 55% 45% 45% 55%;
+  background: transparent;
+}
+
+.stick-figure[data-form="snake"] .body {
+  width: 42px;
+  height: 42px;
+  left: 13px;
+  top: 35px;
+  border: 5px solid currentColor;
+  border-left-color: transparent;
+  border-radius: 50%;
+  background: transparent;
+  transform: rotate(23deg);
+}
+
+.stick-figure[data-form="snake"] .tail {
+  display: block;
+  width: 37px;
+  height: 5px;
+  left: 4px;
+  top: 75px;
+  transform: rotate(-20deg);
+  border-radius: 999px;
+}
+
+/* Crabs. */
+.stick-figure[data-form="crab"] .head {
+  width: 38px;
+  height: 24px;
+  left: 11px;
+  top: 42px;
+  border: 5px solid currentColor;
+  border-radius: 45%;
+  background: transparent;
+}
+
+.stick-figure[data-form="crab"] .body { display: none; }
+.stick-figure[data-form="crab"] .arms {
+  width: 55px;
+  height: 4px;
+  left: 2px;
+  top: 53px;
+  transform: none;
+}
+
+.stick-figure[data-form="crab"] .legs {
+  width: 35px;
+  height: 3px;
+  left: 11px;
+  top: 68px;
+  transform: rotate(25deg);
+  box-shadow: 0 8px 0 currentColor;
+}
+
+.stick-figure[data-form="crab"] .legs::after {
+  width: 35px;
+  height: 3px;
+  transform: rotate(130deg);
+  box-shadow: 0 8px 0 currentColor;
+}
+
+.stick-figure[data-form="crab"] .feature-one,
+.stick-figure[data-form="crab"] .feature-two {
+  display: block;
+  width: 16px;
+  height: 16px;
+  top: 38px;
+  border: 4px solid currentColor;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.stick-figure[data-form="crab"] .feature-one { left: -3px; }
+.stick-figure[data-form="crab"] .feature-two { right: -3px; }
+
+/* Birds and bats. */
+.stick-figure[data-form="bird"] .head,
+.stick-figure[data-form="bat"] .head {
+  width: 18px;
+  height: 18px;
+  left: 21px;
+  top: 13px;
+  border: 4px solid currentColor;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.stick-figure[data-form="bird"] .body,
+.stick-figure[data-form="bat"] .body {
+  width: 6px;
+  height: 38px;
+  left: 27px;
+  top: 30px;
+  border-radius: 999px;
+}
+
+.stick-figure[data-form="bird"] .arms,
+.stick-figure[data-form="bat"] .arms {
+  width: 54px;
+  height: 5px;
+  left: 3px;
+  top: 39px;
+  transform: rotate(-12deg);
+}
+
+.stick-figure[data-form="bird"] .legs,
+.stick-figure[data-form="bat"] .legs {
+  width: 3px;
+  height: 25px;
+  left: 23px;
+  top: 65px;
+  transform: rotate(15deg);
+  box-shadow: 13px 0 0 currentColor;
+}
+
+.stick-figure[data-form="bird"] .legs::after,
+.stick-figure[data-form="bat"] .legs::after { display: none; }
+
+.stick-figure[data-form="bird"] .feature-one,
+.stick-figure[data-form="bat"] .feature-one,
+.stick-figure[data-form="bird"] .feature-two,
+.stick-figure[data-form="bat"] .feature-two {
+  display: block;
+  width: 28px;
+  height: 22px;
+  top: 31px;
+  background: transparent;
+  border-top: 4px solid currentColor;
+}
+
+.stick-figure[data-form="bird"] .feature-one,
+.stick-figure[data-form="bat"] .feature-one {
+  left: 0;
+  border-left: 3px solid currentColor;
+  transform: skewY(-28deg);
+}
+
+.stick-figure[data-form="bird"] .feature-two,
+.stick-figure[data-form="bat"] .feature-two {
+  right: 0;
+  border-right: 3px solid currentColor;
+  transform: skewY(28deg);
+}
+
+.stick-figure[data-form="bat"] .feature-one,
+.stick-figure[data-form="bat"] .feature-two {
+  height: 31px;
+  top: 28px;
+}
+
+.stick-figure[data-form="bird"][data-detail="beak"] .tail {
+  display: block;
+  width: 13px;
+  height: 4px;
+  left: 10px;
+  top: 20px;
+  transform: rotate(7deg);
+}
+
+/* Frogs, beetles, and plants. */
+.stick-figure[data-form="frog"] .body {
+  width: 34px;
+  height: 20px;
+  left: 14px;
+  top: 50px;
+  border-radius: 50%;
+}
+
+.stick-figure[data-form="frog"] .arms { display: none; }
+.stick-figure[data-form="frog"] .legs {
+  width: 28px;
+  height: 5px;
+  left: 2px;
+  top: 70px;
+  transform: rotate(-22deg);
+  box-shadow: 29px 0 0 currentColor;
+}
+.stick-figure[data-form="frog"] .legs::after { display: none; }
+
+.stick-figure[data-form="insect"] .head {
+  width: 14px;
+  height: 14px;
+  left: 23px;
+  top: 23px;
+  border: 3px solid currentColor;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.stick-figure[data-form="insect"] .body {
+  width: 25px;
+  height: 42px;
+  left: 18px;
+  top: 35px;
+  border-radius: 50%;
+}
+
+.stick-figure[data-form="insect"] .arms {
+  width: 48px;
+  height: 3px;
+  left: 6px;
+  top: 46px;
+  transform: rotate(18deg);
+  box-shadow: 0 12px 0 currentColor, 0 24px 0 currentColor;
+}
+
+.stick-figure[data-form="insect"] .legs { display: none; }
+
+.stick-figure[data-form="plant"] .head { display: none; }
+.stick-figure[data-form="plant"] .body {
+  width: 7px;
+  height: 58px;
+  left: 27px;
+  top: 25px;
+}
+
+.stick-figure[data-form="plant"] .arms {
+  width: 48px;
+  height: 4px;
+  left: 6px;
+  top: 43px;
+  transform: rotate(-28deg);
+  box-shadow: 0 17px 0 currentColor;
+}
+
+.stick-figure[data-form="plant"] .legs {
+  width: 35px;
+  height: 4px;
+  left: 12px;
+  top: 80px;
+  transform: rotate(25deg);
+}
+
+/* Centipedes. */
+.stick-figure[data-form="centipede"] .head {
+  width: 13px;
+  height: 13px;
+  left: 2px;
+  top: 47px;
+  border: 3px solid currentColor;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.stick-figure[data-form="centipede"] .body {
+  width: 43px;
+  height: 8px;
+  left: 13px;
+  top: 50px;
+  border-radius: 999px;
+  box-shadow: inset 8px 0 0 rgba(0, 0, 0, .22), inset 16px 0 0 transparent, inset 24px 0 0 rgba(0, 0, 0, .22), inset 32px 0 0 transparent;
+}
+
+.stick-figure[data-form="centipede"] .arms {
+  width: 42px;
+  height: 3px;
+  left: 13px;
+  top: 44px;
+  transform: rotate(18deg);
+  box-shadow: 0 13px 0 currentColor;
+}
+
+.stick-figure[data-form="centipede"] .legs {
+  width: 38px;
+  height: 3px;
+  left: 15px;
+  top: 47px;
+  transform: rotate(-28deg);
+  box-shadow: 0 7px 0 currentColor, 0 14px 0 currentColor;
+}
+
+.stick-figure[data-form="centipede"] .legs::after {
+  width: 38px;
+  height: 3px;
+  transform: rotate(56deg);
+  box-shadow: 0 7px 0 currentColor, 0 14px 0 currentColor;
+}
+
+.stick-figure[data-form="centipede"] .tail {
+  display: block;
+  width: 18px;
+  height: 3px;
+  right: -9px;
+  top: 52px;
+  transform: rotate(12deg);
+  border-radius: 999px;
+}
+
+/* Spiders. */
+.stick-figure[data-form="spider"] .head {
+  width: 18px;
+  height: 17px;
+  left: 6px;
+  top: 44px;
+  border: 4px solid currentColor;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.stick-figure[data-form="spider"] .body {
+  width: 30px;
+  height: 25px;
+  left: 23px;
+  top: 40px;
+  border-radius: 50%;
+}
+
+.stick-figure[data-form="spider"] .arms {
+  width: 52px;
+  height: 3px;
+  left: 4px;
+  top: 43px;
+  transform: rotate(24deg);
+  box-shadow: 0 10px 0 currentColor, 0 20px 0 currentColor, 0 30px 0 currentColor;
+}
+
+.stick-figure[data-form="spider"] .legs {
+  width: 50px;
+  height: 3px;
+  left: 5px;
+  top: 45px;
+  transform: rotate(-25deg);
+  box-shadow: 0 10px 0 currentColor, 0 20px 0 currentColor, 0 30px 0 currentColor;
+}
+
+.stick-figure[data-form="spider"] .legs::after { display: none; }
+
+.stick-figure[data-form="spider"] .feature-one,
+.stick-figure[data-form="spider"] .feature-two {
+  display: block;
+  width: 8px;
+  height: 3px;
+  left: 1px;
+  top: 51px;
+  transform: rotate(35deg);
+}
+
+.stick-figure[data-form="spider"] .feature-two {
+  top: 55px;
+  transform: rotate(-35deg);
+}
+
+/* Winged insects. */
+.stick-figure[data-form="winged-insect"] .head {
+  width: 13px;
+  height: 13px;
+  left: 23px;
+  top: 24px;
+  border: 3px solid currentColor;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.stick-figure[data-form="winged-insect"] .body {
+  width: 10px;
+  height: 38px;
+  left: 25px;
+  top: 36px;
+  border-radius: 55% 55% 70% 70%;
+}
+
+.stick-figure[data-form="winged-insect"] .arms {
+  width: 48px;
+  height: 3px;
+  left: 6px;
+  top: 43px;
+  transform: rotate(12deg);
+}
+
+.stick-figure[data-form="winged-insect"] .legs {
+  width: 33px;
+  height: 3px;
+  left: 14px;
+  top: 58px;
+  transform: rotate(28deg);
+  box-shadow: 0 9px 0 currentColor;
+}
+
+.stick-figure[data-form="winged-insect"] .legs::after {
+  width: 33px;
+  height: 3px;
+  transform: rotate(124deg);
+  box-shadow: 0 9px 0 currentColor;
+}
+
+.stick-figure[data-form="winged-insect"] .feature-one,
+.stick-figure[data-form="winged-insect"] .feature-two {
+  display: block;
+  width: 25px;
+  height: 23px;
+  top: 34px;
+  border: 3px solid currentColor;
+  border-bottom-color: transparent;
+  border-radius: 70% 20%;
+  background: transparent;
+}
+
+.stick-figure[data-form="winged-insect"] .feature-one {
+  left: 3px;
+  transform: rotate(-24deg);
+}
+
+.stick-figure[data-form="winged-insect"] .feature-two {
+  right: 3px;
+  transform: scaleX(-1) rotate(-24deg);
+}
+
+.stick-figure[data-form="winged-insect"] .tail {
+  display: block;
+  width: 22px;
+  height: 3px;
+  left: 27px;
+  top: 72px;
+  transform: rotate(70deg);
+  transform-origin: left center;
+  clip-path: polygon(0 25%, 100% 50%, 0 75%);
+}
