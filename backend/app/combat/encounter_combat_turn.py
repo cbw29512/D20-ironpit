@@ -17,6 +17,8 @@ from app.combat.orc import use_adrenaline_rush
 from app.combat.policy import should_use_second_wind
 from app.combat.reaction_movement import move_toward_with_reactions
 from app.combat.saving_throws import legal_save_action, resolve_save_action
+from app.combat.spell_policy import choose_spell
+from app.combat.spell_resolution import resolve_spell
 from app.combat.state import begin_turn
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
@@ -47,13 +49,11 @@ def _resolve_support_actions(sequence, round_number, member, setup, dice, turn_k
         action, target = healing_choice
         events.append(resolve_healing(sequence, round_number, member, target, action, dice))
         sequence += 1
-
     removal_choice = choose_condition_removal_action(member, setup, turn_key)
     if removal_choice is not None:
         action, target, conditions = removal_choice
         events.append(resolve_condition_removal(sequence, round_number, member, target, action, conditions, turn_key))
         sequence += 1
-
     healing_choice = choose_healing_action(member, setup)
     if healing_choice is not None:
         action, target = healing_choice
@@ -84,6 +84,13 @@ def resolve_combat_turn(
     adrenaline_event = use_adrenaline_rush(sequence, round_number, attacker.state, attacker.combatant_id)
     if adrenaline_event is not None:
         events.append(adrenaline_event); sequence += 1
+
+    spell_choice = choose_spell(attacker, setup, turn_key)
+    if spell_choice is not None:
+        spell_events, sequence = resolve_spell(sequence, round_number, attacker, setup, spell_choice, turn_key, dice)
+        events.extend(spell_events)
+        if not is_available(attacker.state, "action"):
+            return _finish_turn(events, sequence, round_number, attacker)
     if not is_available(attacker.state, "action"):
         moved, sequence = _close_after_action(sequence, round_number, attacker, setup, dice)
         events.extend(moved)
