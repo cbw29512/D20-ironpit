@@ -3,7 +3,8 @@
 
   const el = (id) => document.getElementById(id);
   const P = () => window.IRON_PIT_ENCOUNTER_PICKER;
-  const ready = (item) => Boolean(item?.coverage_status === "raw_ready" && item?.runnable_template_id);
+  const ready = (item) => Boolean(["raw_ready", "raw_playable"].includes(item?.coverage_status) && item?.runnable_template_id);
+  const full = (item) => item?.coverage_status === "raw_ready";
   let active = null;
 
   function option(value, text, selected = false, disabled = false) {
@@ -23,11 +24,16 @@
       heroSelect.replaceChildren();
       builds.forEach((hero) => heroSelect.append(option(
         hero.id,
-        ready(hero) ? `${hero.name} — ${hero.build_name} · RAW ready` : `${hero.build_name} · not certified yet`,
+        full(hero) ? `${hero.name} · FULL RAW` : ready(hero) ? `${hero.name} · RAW core` : `${hero.build_name} · unavailable`,
         hero.id === existing?.id,
+        !ready(hero),
       )));
-      const chosen = builds.find((hero) => hero.id === heroSelect.value) || builds[0] || null;
-      el("picker-note").textContent = ready(chosen) ? "This pregen is RAW-certified for automated combat." : "This class/level build is not RAW-certified yet.";
+      const chosen = builds.find((hero) => hero.id === heroSelect.value) || builds.find(ready) || builds[0] || null;
+      if (chosen && ready(chosen)) heroSelect.value = chosen.id;
+      el("picker-note").textContent = full(chosen)
+        ? "Full automated feature coverage certified."
+        : ready(chosen) ? "Playable now with RAW core combat; advanced class/subclass actions continue to be certified without blocking the card."
+          : "This pregen has no runnable combat template.";
       el("confirm-card").disabled = !ready(chosen);
     }
     classSelect.value = fallback.class_id; levelSelect.value = String(fallback.level);
