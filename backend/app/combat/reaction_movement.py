@@ -7,6 +7,8 @@ from app.combat.opportunity_attacks import MovementSource, resolve_opportunity_a
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 
+FRIGHTENED_EFFECT_ID = "frightened"
+
 
 def _proposed_position(
     mover: EncounterCombatant,
@@ -19,6 +21,41 @@ def _proposed_position(
     moved = min(max(0, before - desired_distance_ft), mover.state.movement_remaining_ft)
     direction = 1 if mover.position_ft < target.position_ft else -1
     return mover.position_ft + direction * moved, moved
+
+
+def _fear_source_ids(mover: EncounterCombatant) -> set[str]:
+    if FRIGHTENED_EFFECT_ID not in mover.state.active_effect_ids:
+        return set()
+    return {
+        effect.source_id for effect in mover.state.timed_effects
+        if effect.effect_id == FRIGHTENED_EFFECT_ID
+    }
+
+
+def _approaches_fear_source(
+    mover: EncounterCombatant,
+    target: EncounterCombatant,
+    setup: EncounterSetup | None,
+    proposed_position: int,
+) -> bool:
+    source_ids = _fear_source_ids(mover)
+    if not source_ids:
+        return False
+    if setup is None:
+        return (
+            target.combatant_id in source_ids
+            and abs(proposed_position - target.position_ft) < abs(mover.position_ft - target.position_ft)
+        )
+    members = {member.combatant_id: member for member in [*setup.heroes, *setup.monsters]}
+    for source_id in source_ids:
+        source = members.get(source_id)
+        if source is None:
+            continue
+        before = abs(mover.position_ft - source.position_ft)
+        after = abs(proposed_position - source.position_ft)
+        if after < before:
+            return True
+    return False
 
 
 def move_toward_with_reactions(
@@ -35,7 +72,7 @@ def move_toward_with_reactions(
 ) -> tuple[list[BattleEvent], int, BattleEvent | None]:
     """Open departure Reaction windows, then apply the intended move if it can continue."""
     proposed_position, moved = _proposed_position(mover, target, desired_distance_ft)
-    if moved <= 0:
+    if moved <= 0 or _approaches_fear_source(mover, target, setup, proposed_position):
         return [], sequence, None
 
     events: list[BattleEvent] = []
