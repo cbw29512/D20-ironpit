@@ -12,6 +12,7 @@
     bear: '<ellipse cx="56" cy="56" rx="32" ry="22"/><circle cx="22" cy="47" r="15"/><circle cx="13" cy="34" r="6"/><circle cx="29" cy="33" r="6"/><path d="m33 68-5 20h11l6-21zm34 0 4 20h11l-4-23z"/>',
     hoofed: '<ellipse cx="56" cy="55" rx="30" ry="16"/><path d="M28 50 17 29l7-3 14 22z"/><circle cx="20" cy="39" r="11"/><path d="m39 64-4 25h8l7-25zm31 0 4 25h8l-2-28zM9 30 4 13l5-2 8 17zm14-2 7-16 5 3-5 18z"/>',
     reptile: '<path d="M8 51q9-18 29-13l41 9 18-9-12 16 12 14-21-8-38 8Q14 70 8 51Z"/><path d="m33 66-12 18 8 3 14-18zm34-2 9 20 8-4-7-19z"/>',
+    theropod: '<path d="M9 53q9-18 31-17l25 5 20-16 13 4-9 15 9 9-20 2-17 9-15 1-5 22H29l5-23Q18 66 9 53Z"/><path d="m31 45-20-9 17 16zm32 15 11 26H63l-9-22z"/><path d="M80 30h17l-8 7 8 5-18 3z"/>',
     snake: '<path fill="none" stroke="currentColor" stroke-width="13" stroke-linecap="round" d="M18 72q22 20 48 1T77 39Q68 19 47 26T23 42"/><path d="M14 32 29 24l8 12-16 9z"/>',
     crab: '<ellipse cx="50" cy="58" rx="25" ry="18"/><path d="M27 50 10 37 3 47l18 13zm46 0 17-13 7 10-18 13zM27 69 12 83l8 4 16-13zm46 0 15 14-8 4-16-13z"/><circle cx="10" cy="34" r="10"/><circle cx="90" cy="34" r="10"/>',
     bird: '<path d="M49 47 7 21l23 38-18 17 35-12 3 26 7-27 35 13-18-18 20-37-39 25z"/><circle cx="52" cy="28" r="10"/><path d="m60 27 18 5-17 7z"/>',
