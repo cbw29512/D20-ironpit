@@ -38,6 +38,13 @@ window.IRON_PIT_DICE = { roll: (sides) => sides === 20 ? 19 : 1, rollMany: (coun
   assert.equal(V.resolveSavingThrow(paralyzed.state, "dexterity", 1).succeeded, false);
 }
 {
+  const petrified = member("petrified"); petrified.state.active_effect_ids.push("petrified"); S.beginTurn(petrified.state);
+  assert.equal(Q.speedZero(petrified.state), true); assert.equal(petrified.state.movement_remaining_ft, 0);
+  for (const cost of ["action", "bonus_action", "reaction"]) assert.equal(E.available(petrified.state, cost), false);
+  assert.equal(V.resolveSavingThrow(petrified.state, "strength", 1).succeeded, false);
+  assert.equal(V.resolveSavingThrow(petrified.state, "dexterity", 1).succeeded, false);
+}
+{
   const attacker = member("attacker"), stunned = member("stunned-target"); stunned.state.active_effect_ids.push("stunned");
   const attack = attacker.state.template.attacks.find((item) => item.kind === "melee");
   const event = A.resolveAttack(1, 1, attacker, stunned, attack, 5, { spendAction: false });
@@ -48,6 +55,15 @@ window.IRON_PIT_DICE = { roll: (sides) => sides === 20 ? 19 : 1, rollMany: (coun
   const attack = attacker.state.template.attacks.find((item) => item.kind === "melee");
   const event = A.resolveAttack(1, 1, attacker, paralyzed, attack, 5, { spendAction: false });
   assert.equal(event.attack_roll.mode, "advantage"); assert.equal(event.critical, true, "Paralyzed close hit is an automatic critical");
+}
+{
+  const attacker = member("monster-attacker"); attacker.side = "monsters"; attacker.position_ft = 30;
+  const statue = member("petrified-target"); statue.position_ft = 25; statue.state.active_effect_ids.push("petrified");
+  const active = member("active-target"); active.position_ft = 0;
+  const setup = { heroes: [statue, active], monsters: [attacker] };
+  assert.equal(S.nearestTarget(attacker, setup), active, "nearby Petrified target must be deferred while an active target remains");
+  active.state.current_hp = 0; active.state.is_unconscious = true;
+  assert.equal(S.nearestTarget(attacker, setup), statue, "Petrified target becomes priority once no non-Petrified standing target remains");
 }
 console.log("Browser condition/action-economy integration regressions passed.");
 
