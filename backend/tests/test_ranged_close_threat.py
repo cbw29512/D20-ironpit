@@ -9,15 +9,16 @@ from app.domain.models import EncounterSelection, RollMode, WeaponAttackKind
 def _setup(two_heroes: bool = False):
     hero_ids = ["aldric-vane-l1", "brom-ironmark-l1"] if two_heroes else ["aldric-vane-l1"]
     setup = build_encounter_setup(EncounterSelection(
-        hero_ids=hero_ids,
-        monster_ids=["srd-scout"],
-        starting_distance_ft=5,
+        hero_ids=hero_ids, monster_ids=["srd-scout"],
     ))
     downed = setup.heroes[0]
     downed.state.current_hp = 0
     downed.state.is_unconscious = True
     downed.state.active_effect_ids.append("prone")
     scout = setup.monsters[0]
+    scout.position_ft = 10
+    for hero in setup.heroes:
+        hero.position_ft = 5
     ranged = next(
         attack for attack in [scout.state.template.weapon_attack, *scout.state.template.alternate_weapon_attacks]
         if attack.weapon.attack_kind is WeaponAttackKind.RANGED
