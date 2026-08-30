@@ -81,6 +81,21 @@ jobs:
           grep -q 'browser-multiattack.js' frontend/index.html
           grep -q 'figure-visuals.js' frontend/index.html
           grep -q 'playIronPitBattle' frontend/app.js
+      - name: Prove legacy site assets stay removed
+        run: |
+          ! test -e frontend/battle-replay.js
+          ! test -e frontend/encounter-picker-view.js
+          ! test -e frontend/encounter-picker.css
+          ! test -e frontend/encounter-view.js
+          ! test -e frontend/figure-poison.css
+          ! test -e frontend/figure-venom.css
+          ! grep -Eq 'figure-(poison|venom)\.css' index.html frontend/index.html
+          ! grep -Eq '\.(matchup|fight-column|pit-stage|pit-fighter|combat-card)' frontend/styles.css
+          ! grep -q '\.pit-fighter' frontend/figure-visuals.css
+          grep -q 'battle-card.pit-large' frontend/figure-visuals.css
+          grep -q 'data-form="centipede"' frontend/figure-visuals.css
+          grep -q 'data-form="spider"' frontend/figure-visuals.css
+          grep -q 'data-form="winged-insect"' frontend/figure-visuals.css
       - name: Validate Netlify production-only credit guard
         run: |
           grep -q 'CONTEXT.*production' netlify.toml
