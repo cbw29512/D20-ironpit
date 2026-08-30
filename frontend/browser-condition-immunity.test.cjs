@@ -8,8 +8,8 @@ const vm = require("node:vm");
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
-  "browser-heroes.js", "browser-condition-immunity.js", "browser-grapple.js", "browser-timed-conditions.js",
-  "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-attack.js",
+  "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-grapple.js",
+  "browser-timed-conditions.js", "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-attack.js",
 ]) load(file);
 
 const queuedDice = (values, fallback = 10) => {
@@ -71,4 +71,35 @@ const member = (id, template, position = 0) => ({ combatant_id: id, side: "heroe
   assert.equal(target.state.active_effect_ids.includes("prone"), false);
 }
 
-console.log("Browser condition immunity regressions passed.");
+{
+  const attacker = member("blinded-attacker", heroTemplate, 5);
+  const target = member("target", heroTemplate, 0);
+  attacker.state.active_effect_ids.push("blinded");
+  window.IRON_PIT_DICE = queuedDice([17, 3]);
+  const event = A.resolveAttack(1, 1, attacker, target, attacker.state.template.attacks[0], 5);
+  assert.equal(event.attack_roll.mode, "disadvantage");
+  assert.equal(event.attack_roll.selected_roll, 3);
+}
+
+{
+  const attacker = member("attacker", heroTemplate, 5);
+  const target = member("blinded-target", heroTemplate, 0);
+  target.state.active_effect_ids.push("blinded");
+  window.IRON_PIT_DICE = queuedDice([3, 17, 1, 1]);
+  const event = A.resolveAttack(1, 1, attacker, target, attacker.state.template.attacks[0], 5);
+  assert.equal(event.attack_roll.mode, "advantage");
+  assert.equal(event.attack_roll.selected_roll, 17);
+}
+
+{
+  const attacker = member("blinded-attacker", heroTemplate, 5);
+  const target = member("blinded-target", heroTemplate, 0);
+  attacker.state.active_effect_ids.push("blinded");
+  target.state.active_effect_ids.push("blinded");
+  window.IRON_PIT_DICE = queuedDice([12, 1, 1]);
+  const event = A.resolveAttack(1, 1, attacker, target, attacker.state.template.attacks[0], 5);
+  assert.equal(event.attack_roll.mode, "normal");
+  assert.equal(event.attack_roll.selected_roll, 12);
+}
+
+console.log("Browser condition immunity and Blinded attack regressions passed.");
