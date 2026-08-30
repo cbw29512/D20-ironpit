@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.condition_rules import has_condition
 from app.domain.models import CombatantState, DamageRollComponent, DamageType
 
 logger = logging.getLogger(__name__)
@@ -25,7 +26,7 @@ def adjusted_damage_amount(
             *template.damage_resistances,
             *target.temporary_damage_resistances,
         }
-        if damage_type in resistances:
+        if damage_type in resistances or has_condition(target, "petrified"):
             adjusted //= 2
         if damage_type in template.damage_vulnerabilities:
             adjusted *= 2
