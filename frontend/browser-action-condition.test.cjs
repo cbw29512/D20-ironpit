@@ -50,3 +50,6 @@ window.IRON_PIT_DICE = { roll: (sides) => sides === 20 ? 19 : 1, rollMany: (coun
   assert.equal(event.attack_roll.mode, "advantage"); assert.equal(event.critical, true, "Paralyzed close hit is an automatic critical");
 }
 console.log("Browser condition/action-economy integration regressions passed.");
+
+// Keep condition-removal parity inside an already mandatory CI entry point.
+require("./browser-condition-removal.test.cjs");
