@@ -5,7 +5,7 @@ from app.combat.encounter_setup import build_encounter_setup
 from app.domain.models import EncounterSelection
 
 
-def test_builds_full_party_against_multiple_monsters() -> None:
+def test_builds_full_party_in_fixed_front_and_back_lines() -> None:
     encounter = build_encounter_setup(EncounterSelection(
         hero_ids=[
             "aldric-vane-l1",
@@ -18,18 +18,33 @@ def test_builds_full_party_against_multiple_monsters() -> None:
             "srd-goblin-warrior",
             "srd-guard",
         ],
-        starting_distance_ft=30,
     ))
 
     assert len(encounter.heroes) == 4
     assert len(encounter.monsters) == 3
     assert encounter.hero_total_levels == 4
     assert encounter.monster_total_cr == "5/8"
-    assert [hero.position_ft for hero in encounter.heroes] == [0, 0, 0, 0]
-    assert [monster.position_ft for monster in encounter.monsters] == [30, 30, 30]
+    assert [hero.position_ft for hero in encounter.heroes] == [5, 5, 0, 5]
+    assert [monster.position_ft for monster in encounter.monsters] == [10, 10, 10]
+    assert encounter.starting_distance_ft == 5
     assert encounter.monsters[0].state.template.id == "srd-goblin-warrior"
     assert encounter.monsters[1].state.template.id == "srd-goblin-warrior"
     assert encounter.monsters[0].combatant_id != encounter.monsters[1].combatant_id
+
+
+def test_dedicated_ranged_pregen_starts_in_back_line() -> None:
+    encounter = build_encounter_setup(EncounterSelection(
+        hero_ids=["selene-asharrow-l1"], monster_ids=["srd-commoner"],
+    ))
+    assert encounter.heroes[0].position_ft == 0
+    assert encounter.monsters[0].position_ft == 10
+
+
+def test_melee_front_lines_begin_engaged() -> None:
+    encounter = build_encounter_setup(EncounterSelection(
+        hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-commoner"],
+    ))
+    assert abs(encounter.heroes[0].position_ft - encounter.monsters[0].position_ft) == 5
 
 
 def test_duplicate_cards_receive_independent_runtime_state() -> None:
@@ -66,6 +81,5 @@ def test_selection_allows_at_most_six_cards_per_side() -> None:
 def test_unknown_card_fails_closed() -> None:
     with pytest.raises(ValueError, match="Unknown monster card"):
         build_encounter_setup(EncounterSelection(
-            hero_ids=["aldric-vane-l1"],
-            monster_ids=["not-a-real-monster"],
+            hero_ids=["aldric-vane-l1"], monster_ids=["not-a-real-monster"],
         ))
