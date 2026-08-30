@@ -22,6 +22,7 @@ assert.equal(P.normalizedSlot(heroes, {}, { class_id: "fighter", level: 1 }).car
 assert.equal(P.normalizedSlot(heroes, {}, { class_id: "wizard", level: 1 }).card_id, "wizard-1-a");
 
 const monsters = [
+  { id: "m30", name: "Tarrasque", challenge_rating: "30" },
   { id: "m2", name: "Two", challenge_rating: "2" },
   { id: "m18", name: "Eighth", challenge_rating: "1/8" },
   { id: "m1", name: "One", challenge_rating: "1" },
@@ -29,8 +30,9 @@ const monsters = [
   { id: "m14", name: "Quarter", challenge_rating: "1/4" },
   { id: "m0", name: "Zero", challenge_rating: "0" },
 ];
-assert.deepEqual(P.challengeRatings(monsters), ["0", "1/8", "1/4", "1/2", "1", "2"]);
-assert.deepEqual(P.sortedMonsters(monsters).map((monster) => monster.id), ["m0", "m18", "m14", "m12", "m1", "m2"]);
+assert.deepEqual(P.challengeRatings(monsters), ["0", "1/8", "1/4", "1/2", "1", "2", "30"]);
+assert.deepEqual(P.sortedMonsters(monsters).map((monster) => monster.id), ["m0", "m18", "m14", "m12", "m1", "m2", "m30"]);
 assert.deepEqual(P.sortedMonsters(monsters, "1/2").map((monster) => monster.id), ["m12"]);
+assert.deepEqual(P.sortedMonsters(monsters, "30").map((monster) => monster.name), ["Tarrasque"]);
 
-console.log("Encounter picker regressions passed.");
+console.log("Encounter picker regressions passed through CR 30.");
