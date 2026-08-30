@@ -30,13 +30,15 @@
 
   function legalAction(action, target, distance) {
     if (distance > action.range) return false;
-    return !action.targetMaxSize || S().sizeAtMost(target, action.targetMaxSize);
+    if (action.targetMaxSize && !S().sizeAtMost(target, action.targetMaxSize)) return false;
+    const autoFails = (action.saveAbility === "strength" || action.saveAbility === "dexterity") && Q().autoFailStrDex(target.state);
+    return autoFails || target.state.template.saving_throw_bonuses?.[action.saveAbility] != null;
   }
 
   function resolveAction(sequence, round, actor, target, action, distance, options = {}) {
     const spendAction = options.spendAction !== false;
     if (spendAction && !E().available(actor.state, "action")) throw new Error("Action is unavailable for saving throw action.");
-    if (!legalAction(action, target, distance)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
+    if (!legalAction(action, target, distance)) throw new Error(`${action.name} has no certified legal target at ${distance} feet.`);
     const save = resolveSavingThrow(target.state, action.saveAbility, action.dc);
     if (spendAction) E().spend(actor.state, "action");
     const hpBefore = target.state.current_hp;
