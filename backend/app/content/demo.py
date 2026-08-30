@@ -26,6 +26,11 @@ def build_demo_fighter() -> CombatantTemplate:
             speed_ft=30,
             initiative_bonus=1,
             weapon_attack=build_fighter_longsword_attack(),
+            saving_throw_bonuses={
+                "strength": 5, "dexterity": 1, "constitution": 4,
+                "intelligence": 0, "wisdom": 1, "charisma": -1,
+            },
+            skill_bonuses={"athletics": 5, "acrobatics": 1},
             fighting_style="Defense",
             weapon_masteries=["greataxe", "greatsword", "halberd"],
             visual=build_fighter_visual_loadout(),
