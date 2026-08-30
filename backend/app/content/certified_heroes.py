@@ -7,6 +7,8 @@ from app.content.audited_barbarian_profile import build_rokhan_stonefury_profile
 from app.content.audited_fighter import build_karnok_stoneward
 from app.content.audited_fighter_profile import build_karnok_stoneward_profile
 from app.content.build_audit import assert_character_build_raw_ready
+from app.content.pregen_combat_audit import assert_pregen_combat_stats
+from app.content.pregen_combat_profiles import build_pregen_combat_profiles
 from app.domain.character_builds import CharacterBuildProfile
 from app.domain.models import CombatantTemplate
 
@@ -22,11 +24,15 @@ def _validated(
     template = template_builder()
     profile = profile_builder()
     assert_character_build_raw_ready(profile, template)
+    combat_profile = build_pregen_combat_profiles().get(template.id)
+    if combat_profile is None:
+        raise ValueError(f"Certified hero {template.id} lacks a combat fingerprint.")
+    assert_pregen_combat_stats(template, combat_profile)
     return (profile.class_id, profile.level, build_id), template
 
 
 def build_certified_hero_entries() -> list[tuple[HeroBuildKey, CombatantTemplate]]:
-    """Return only builds that pass the fail-closed RAW character audit."""
+    """Return only builds that pass build-legality and complete combat-stat audits."""
     return [
         _validated(build_karnok_stoneward, build_karnok_stoneward_profile, "great-weapon"),
         _validated(build_rokhan_stonefury, build_rokhan_stonefury_profile, "great-weapon"),
