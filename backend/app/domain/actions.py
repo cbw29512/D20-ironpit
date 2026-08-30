@@ -93,6 +93,10 @@ class ConditionRemovalAction(BaseModel):
             raise ValueError("Reaction condition removal requires an explicit RAW trigger.")
         if self.action_cost != "reaction" and self.reaction_trigger is not None:
             raise ValueError("Only Reaction condition removal can define a reaction trigger.")
+        resource_ids = {*self.resource_costs, *self.resource_costs_per_condition}
+        has_spell_slot_resource = any(resource_id.startswith("spell-slot-") for resource_id in resource_ids)
+        if has_spell_slot_resource != self.expends_spell_slot:
+            raise ValueError("Spell-slot resources and expends_spell_slot must agree.")
         return self
 
 
