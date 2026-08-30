@@ -11,11 +11,28 @@ _ABILITY_NAMES = {
     "Int": "intelligence", "Wis": "wisdom", "Cha": "charisma",
 }
 _SAVE_PATTERN = re.compile(r"\b(Str|Dex|Con|Int|Wis|Cha)\s+\d+\s+([+-]\d+)\s+([+-]\d+)")
+_VENDED_SAVE_TEXT_CORRECTIONS = {
+    "Adult White Dragon": ("Con22 +6 +6", "Con 22 +6 +6"),
+    "Young White Dragon": ("Int 6 -2 2", "Int 6 -2 -2"),
+}
+
+
+def _normalized_save_text(row: dict[str, object]) -> str:
+    text = str(row.get("rawText", ""))
+    correction = _VENDED_SAVE_TEXT_CORRECTIONS.get(str(row.get("name", "")))
+    if correction is None:
+        return text
+    malformed, corrected = correction
+    if malformed in text:
+        return text.replace(malformed, corrected, 1)
+    if corrected in text:
+        return text
+    raise ValueError(f"Known SRD save-table correction no longer matches {row.get('name')!r}.")
 
 
 def parse_saving_throw_bonuses(row: dict[str, object]) -> dict[str, int]:
-    """Parse the six SAVE values from the SRD stat table, never guessing missing modifiers."""
-    matches = _SAVE_PATTERN.findall(str(row.get("rawText", "")))
+    """Parse all six SRD SAVE values; only exact audited vending defects are normalized."""
+    matches = _SAVE_PATTERN.findall(_normalized_save_text(row))
     bonuses = {_ABILITY_NAMES[label]: int(save) for label, _modifier, save in matches}
     if set(bonuses) != set(_ABILITY_NAMES.values()):
         missing = sorted(set(_ABILITY_NAMES.values()) - set(bonuses))
