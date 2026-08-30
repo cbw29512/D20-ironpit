@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.condition_rules import is_incapacitated
+from app.combat.condition_rules import has_condition, is_incapacitated
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 
 logger = logging.getLogger(__name__)
@@ -28,47 +28,39 @@ def close_ranged_threat_exists(attacker: EncounterCombatant, setup: EncounterSet
     )
 
 
-def _eligible_held_target(member: EncounterCombatant) -> bool:
-    return (
-        member.state.is_alive
-        and not member.state.is_dead
-        and (member.state.current_hp > 0 or member.state.template.kind == "character")
-    )
+def _target_priority(member: EncounterCombatant) -> int | None:
+    """Iron Pit policy: active enemies first, Petrified statues second, downed characters last."""
+    state = member.state
+    if not state.is_alive or state.is_dead:
+        return None
+    if state.current_hp > 0:
+        return 1 if has_condition(state, "petrified") else 0
+    if state.template.kind == "character" and state.current_hp == 0:
+        return 2
+    return None
 
 
 def living_opponents(attacker: EncounterCombatant, setup: EncounterSetup) -> list[EncounterCombatant]:
-    """Prefer standing enemies; if none remain, return living downed characters for deathmatch resolution."""
-    candidates = _opponents(attacker, setup)
-    standing = [
-        member for member in candidates
-        if member.state.is_alive and not member.state.is_dead and member.state.current_hp > 0
-    ]
-    if standing:
-        return standing
-    return [
-        member for member in candidates
-        if (
-            member.state.template.kind == "character"
-            and member.state.is_alive
-            and not member.state.is_dead
-            and member.state.current_hp == 0
-        )
-    ]
+    """Return only the highest-priority eligible target class under deterministic Pit policy."""
+    candidates = [member for member in _opponents(attacker, setup) if _target_priority(member) is not None]
+    if not candidates:
+        return []
+    priority = min(_target_priority(member) for member in candidates)
+    return [member for member in candidates if _target_priority(member) == priority]
 
 
 def select_nearest_target(attacker: EncounterCombatant, setup: EncounterSetup) -> EncounterCombatant | None:
-    """Finish a held target, fight a grappler, then engage the nearest eligible enemy."""
+    """Within the current target class, finish a held target, fight a grappler, then engage nearest."""
     try:
-        held = [
-            target for target in _opponents(attacker, setup)
-            if _eligible_held_target(target)
-            and any(source.source_id == attacker.combatant_id for source in target.state.grapple_sources)
-        ]
-        if held:
-            return min(held, key=lambda target: combatant_distance(attacker, target))
         opponents = living_opponents(attacker, setup)
         if not opponents:
             return None
+        held = [
+            target for target in opponents
+            if any(source.source_id == attacker.combatant_id for source in target.state.grapple_sources)
+        ]
+        if held:
+            return min(held, key=lambda target: combatant_distance(attacker, target))
         grappler_ids = {source.source_id for source in attacker.state.grapple_sources}
         grapplers = [target for target in opponents if target.combatant_id in grappler_ids]
         choices = grapplers or opponents
