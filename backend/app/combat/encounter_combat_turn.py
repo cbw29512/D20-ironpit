@@ -105,7 +105,7 @@ def resolve_combat_turn(
         attack, prep_events, sequence = prepare_encounter_attack(sequence, round_number, attacker, target)
         events.extend(prep_events)
         if attack is not None and is_available(attacker.state, "action"):
-            pack = pack_tactics_active(attacker, setup)
+            pack = pack_tactics_active(attacker, target, setup)
             events.append(resolve_attack(
                 sequence, round_number, attacker.state, target.state, attack,
                 combatant_distance(attacker, target), dice,
