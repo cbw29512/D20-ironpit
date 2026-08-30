@@ -119,9 +119,9 @@ def test_srd_giant_weasel_profile() -> None:
 def test_srd_axe_beak_profile() -> None:
     axe_beak = _by_id(get_arena_roster().monsters, "srd-axe-beak")
     assert (axe_beak.challenge_rating, axe_beak.armor_class, axe_beak.max_hp) == ("1/4", 11, 19)
-    assert axe_beak.speed_ft == 50
+    assert (axe_beak.size.value, axe_beak.speed_ft, axe_beak.initiative_bonus) == ("large", 50, 1)
     assert (axe_beak.weapon_attack.attack_bonus, axe_beak.weapon_attack.damage_bonus) == (4, 2)
-    assert axe_beak.weapon_attack.weapon.dice_size == 6
+    assert axe_beak.weapon_attack.weapon.dice_size == 8
     assert axe_beak.weapon_attack.weapon.damage_type is DamageType.SLASHING
 
 

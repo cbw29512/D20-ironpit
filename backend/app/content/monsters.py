@@ -63,13 +63,14 @@ def build_axe_beak() -> CombatantTemplate:
         name="Axe Beak",
         archetype="Axe Beak",
         challenge_rating="1/4",
+        size="large",
         armor_class=11,
         max_hp=19,
         speed_ft=50,
         initiative_bonus=1,
         weapon_attack=build_axe_beak_attack(),
         visual=build_monster_visual("none", "beak", "axe-beak"),
-        source="SRD 5.2.1 Axe Beak",
+        source="SRD 5.2.1 p. 260 Axe Beak",
     )
 
 

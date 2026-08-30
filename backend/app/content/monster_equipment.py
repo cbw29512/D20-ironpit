@@ -34,7 +34,7 @@ def build_club() -> Weapon:
 def build_axe_beak_beak() -> Weapon:
     return _weapon(
         id="axe-beak-beak", name="Beak", attack_kind=WeaponAttackKind.MELEE,
-        dice_count=1, dice_size=6, damage_type=DamageType.SLASHING, animation="bite",
+        dice_count=1, dice_size=8, damage_type=DamageType.SLASHING, animation="bite",
     )
 
 

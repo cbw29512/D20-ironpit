@@ -47,7 +47,7 @@
       attack("giant-weasel-bite", "Bite", "melee", 5, 1, 4, 3, "piercing", { animation: "bite" }),
     ]),
     monster("srd-axe-beak", "Axe Beak", "1/4", "large", 11, 19, 50, 1, [
-      attack("axe-beak-beak", "Beak", "melee", 4, 1, 6, 2, "slashing", { animation: "bite" }),
+      attack("axe-beak-beak", "Beak", "melee", 4, 1, 8, 2, "slashing", { animation: "bite" }),
     ]),
     monster("srd-giant-lizard", "Giant Lizard", "1/4", "large", 12, 19, 40, 1, [
       attack("giant-lizard-bite", "Bite", "melee", 4, 1, 8, 2, "piercing", { animation: "bite" }),
