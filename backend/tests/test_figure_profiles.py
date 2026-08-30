@@ -9,7 +9,7 @@ def test_reviewed_figure_registry_matches_raw_ready_monster_set_exactly() -> Non
         for card in build_monster_catalog()
         if card.coverage_status is CoverageStatus.RAW_READY
     }
-    assert len(ready_names) == 67
+    assert len(ready_names) == 68
     assert set(MONSTER_FIGURE_PROFILES) == ready_names
 
 
@@ -31,6 +31,7 @@ def test_anatomically_distinct_monsters_do_not_share_humanoid_fallbacks() -> Non
         "Plesiosaurus": "aquatic-reptile",
         "Pteranodon": "pterosaur",
         "Rhinoceros": "hoofed",
+        "Tyrannosaurus Rex": "reptile",
     }
     for name, form in expected.items():
         assert MONSTER_FIGURE_PROFILES[name]["form"] == form
