@@ -7,9 +7,7 @@ from app.domain.models import EncounterSelection
 
 def _three_way(reactor_id: str = "srd-commoner"):
     setup = build_encounter_setup(EncounterSelection(
-        hero_ids=["karnok-stoneward-l1"],
-        monster_ids=[reactor_id, "srd-commoner"],
-        starting_distance_ft=5,
+        hero_ids=["karnok-stoneward-l1"], monster_ids=[reactor_id, "srd-commoner"],
     ))
     mover, reactor, target = setup.heroes[0], setup.monsters[0], setup.monsters[1]
     mover.position_ft, reactor.position_ft, target.position_ft = 5, 0, 30
@@ -32,9 +30,10 @@ def test_departure_reaction_resolves_before_movement_then_move_completes() -> No
 
 def test_creature_being_approached_does_not_get_opportunity_attack() -> None:
     setup = build_encounter_setup(EncounterSelection(
-        hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-commoner"], starting_distance_ft=30,
+        hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-commoner"],
     ))
     mover, target = setup.heroes[0], setup.monsters[0]
+    mover.position_ft, target.position_ft = 0, 30
     begin_turn(mover.state)
     events, _, movement = move_toward_with_reactions(
         1, 1, mover, target, setup, 5, FixedDiceProvider([2]),
