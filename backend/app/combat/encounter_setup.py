@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 from fractions import Fraction
 
+from app.combat.formation import FRONT_LINE_DISTANCE_FT, starting_position_ft
 from app.combat.state import build_combatant_state
 from app.content.roster import build_arena_roster
 from app.domain.encounters import EncounterCombatant, EncounterSelection, EncounterSetup
@@ -44,36 +45,29 @@ def _monster_cr_total(monsters: list[EncounterCombatant]) -> str:
     return _format_fraction(total)
 
 
+def _member(card_id: str, index: int, side: str, cards: dict[str, CombatantTemplate]) -> EncounterCombatant:
+    template = _resolve_card(card_id, cards, side[:-1] if side.endswith("s") else side)
+    return EncounterCombatant(
+        combatant_id=f"{side[:-1]}-{index}:{card_id}",
+        side=side,
+        position_ft=starting_position_ft(template, side),
+        state=build_combatant_state(template),
+    )
+
+
 def build_encounter_setup(selection: EncounterSelection) -> EncounterSetup:
     try:
         roster = build_arena_roster()
         heroes = _index_templates(roster.characters)
         monsters = _index_templates(roster.monsters)
-
-        hero_states = [
-            EncounterCombatant(
-                combatant_id=f"hero-{index}:{card_id}",
-                side="heroes",
-                position_ft=0,
-                state=build_combatant_state(_resolve_card(card_id, heroes, "hero")),
-            )
-            for index, card_id in enumerate(selection.hero_ids, start=1)
-        ]
-        monster_states = [
-            EncounterCombatant(
-                combatant_id=f"monster-{index}:{card_id}",
-                side="monsters",
-                position_ft=selection.starting_distance_ft,
-                state=build_combatant_state(_resolve_card(card_id, monsters, "monster")),
-            )
-            for index, card_id in enumerate(selection.monster_ids, start=1)
-        ]
+        hero_states = [_member(card_id, index, "heroes", heroes) for index, card_id in enumerate(selection.hero_ids, start=1)]
+        monster_states = [_member(card_id, index, "monsters", monsters) for index, card_id in enumerate(selection.monster_ids, start=1)]
         return EncounterSetup(
             heroes=hero_states,
             monsters=monster_states,
             hero_total_levels=_hero_level_total(hero_states),
             monster_total_cr=_monster_cr_total(monster_states),
-            starting_distance_ft=selection.starting_distance_ft,
+            starting_distance_ft=FRONT_LINE_DISTANCE_FT,
         )
     except ValueError:
         raise
