@@ -46,6 +46,7 @@ jobs:
           node frontend/browser-reactions.test.cjs
           node frontend/browser-reaction-movement.test.cjs
           node frontend/browser-pregens.test.cjs
+          node frontend/browser-pregen-fights.test.cjs
           node frontend/figure-visuals.test.cjs
           node frontend/encounter-picker.test.cjs
           node frontend/encounter-wiring.test.cjs
