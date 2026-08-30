@@ -50,8 +50,15 @@ def _dice_pattern(count: int, size: int, bonus: int) -> re.Pattern[str]:
 
 
 def _melee_reach_pattern(reach_ft: int) -> re.Pattern[str]:
-    # SRD 5.2.1 uses both abbreviated and written distance units in stat blocks.
     return re.compile(rf"\breach\s+{reach_ft}\s*(?:ft\.?|feet)\b", re.IGNORECASE)
+
+
+def _max_size_rider_present(actions: str, size: Any, condition: str) -> bool:
+    size_name = getattr(size, "value", size)
+    return bool(
+        re.search(rf"\b{re.escape(str(size_name))}\s+or\s+smaller\b", actions, re.IGNORECASE)
+        and condition.lower() in actions
+    )
 
 
 def _attack_issues(attack: WeaponAttack, actions: str) -> list[str]:
@@ -79,10 +86,18 @@ def _attack_issues(attack: WeaponAttack, actions: str) -> list[str]:
             issues.append(f"on-hit-dice-missing:{attack.id}:{extra.source}")
         if extra.damage_type.value.lower() not in actions:
             issues.append(f"on-hit-type-missing:{attack.id}:{extra.source}")
+    if attack.knocks_prone_max_size is not None and not _max_size_rider_present(actions, attack.knocks_prone_max_size, "prone"):
+        issues.append(f"prone-rider-mismatch:{attack.id}")
+    if attack.forbid_target_grappled_by_self:
+        untargetable = re.search(r"can(?:not|'t|’t)\s+be\s+targeted", actions, re.IGNORECASE)
+        if not untargetable or weapon.name.lower() not in actions:
+            issues.append(f"grappled-target-restriction-mismatch:{attack.id}")
     control = attack.control_effect
     if control and control.grapple_escape_dc is not None:
         if "grappled" not in actions or f"escape dc {control.grapple_escape_dc}" not in actions:
             issues.append(f"grapple-rider-mismatch:{attack.id}")
+        if control.max_target_size is not None and not _max_size_rider_present(actions, control.max_target_size, "grappled"):
+            issues.append(f"grapple-size-mismatch:{attack.id}")
         if control.restrains_while_grappled and "restrained" not in actions:
             issues.append(f"restrained-rider-mismatch:{attack.id}")
     return issues
