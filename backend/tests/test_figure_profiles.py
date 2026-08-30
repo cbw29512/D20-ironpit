@@ -31,7 +31,7 @@ def test_anatomically_distinct_monsters_do_not_share_humanoid_fallbacks() -> Non
         "Plesiosaurus": "aquatic-reptile",
         "Pteranodon": "pterosaur",
         "Rhinoceros": "hoofed",
-        "Tyrannosaurus Rex": "reptile",
+        "Tyrannosaurus Rex": "theropod",
     }
     for name, form in expected.items():
         assert MONSTER_FIGURE_PROFILES[name]["form"] == form
