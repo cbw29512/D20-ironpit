@@ -45,9 +45,10 @@
     return slot == null ? { type: "wait" } : { type: "advance", slot };
   }
 
-  function advance(sequence, round, member, slot) {
+  function advance(sequence, round, member, slot, setup) {
     const from = member.formation_slot;
     member.formation_rank = "front"; member.formation_slot = slot;
+    member.position_ft = member.side === "heroes" ? 0 : setup.starting_distance_ft;
     return {
       sequence, round_number: round, event_type: "formation", actor_id: member.combatant_id,
       actor_name: member.state.template.name, feature_id: "advance-to-front", from_slot: from, to_slot: slot,
@@ -57,7 +58,8 @@
 
   function wait(sequence, round, member) {
     const state = member.state;
-    if (state.action_available) state.action_available = false;
+    if (!state.action_available) return null;
+    state.action_available = false;
     if (!state.active_effect_ids.includes("dodge")) state.active_effect_ids.push("dodge");
     return {
       sequence, round_number: round, event_type: "feature", actor_id: member.combatant_id,
