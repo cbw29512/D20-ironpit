@@ -45,6 +45,7 @@ jobs:
           node frontend/browser-mixed-multiattack.test.cjs
           node frontend/browser-expansion.test.cjs
           node frontend/browser-generated-monsters.test.cjs
+          node frontend/browser-monster-saves.test.cjs
           node frontend/browser-condition-immunity.test.cjs
           node frontend/browser-action-healing.test.cjs
           node frontend/browser-action-condition.test.cjs
