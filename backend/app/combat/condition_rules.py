@@ -3,6 +3,7 @@ from __future__ import annotations
 from app.combat.condition_immunity import condition_is_immune
 from app.domain.models import CombatantState
 
+BLINDED = "blinded"
 INCAPACITATED = "incapacitated"
 PARALYZED = "paralyzed"
 PETRIFIED = "petrified"
@@ -38,6 +39,7 @@ def automatically_fails_strength_dexterity_save(state: CombatantState) -> bool:
 def attacks_have_advantage_against(state: CombatantState) -> bool:
     return (
         state.is_unconscious
+        or has_condition(state, BLINDED)
         or has_condition(state, PARALYZED)
         or has_condition(state, PETRIFIED)
         or has_condition(state, STUNNED)
