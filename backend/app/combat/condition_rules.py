@@ -5,6 +5,7 @@ from app.domain.models import CombatantState
 
 INCAPACITATED = "incapacitated"
 PARALYZED = "paralyzed"
+PETRIFIED = "petrified"
 RESTRAINED = "restrained"
 STUNNED = "stunned"
 
@@ -20,16 +21,27 @@ def is_incapacitated(state: CombatantState) -> bool:
         state.is_unconscious
         or has_condition(state, INCAPACITATED)
         or has_condition(state, PARALYZED)
+        or has_condition(state, PETRIFIED)
         or has_condition(state, STUNNED)
     )
 
 
 def automatically_fails_strength_dexterity_save(state: CombatantState) -> bool:
-    return state.is_unconscious or has_condition(state, PARALYZED) or has_condition(state, STUNNED)
+    return (
+        state.is_unconscious
+        or has_condition(state, PARALYZED)
+        or has_condition(state, PETRIFIED)
+        or has_condition(state, STUNNED)
+    )
 
 
 def attacks_have_advantage_against(state: CombatantState) -> bool:
-    return state.is_unconscious or has_condition(state, PARALYZED) or has_condition(state, STUNNED)
+    return (
+        state.is_unconscious
+        or has_condition(state, PARALYZED)
+        or has_condition(state, PETRIFIED)
+        or has_condition(state, STUNNED)
+    )
 
 
 def close_hit_is_automatic_critical(state: CombatantState) -> bool:
@@ -37,4 +49,9 @@ def close_hit_is_automatic_critical(state: CombatantState) -> bool:
 
 
 def condition_speed_is_zero(state: CombatantState) -> bool:
-    return state.is_unconscious or has_condition(state, PARALYZED) or has_condition(state, RESTRAINED)
+    return (
+        state.is_unconscious
+        or has_condition(state, PARALYZED)
+        or has_condition(state, PETRIFIED)
+        or has_condition(state, RESTRAINED)
+    )
