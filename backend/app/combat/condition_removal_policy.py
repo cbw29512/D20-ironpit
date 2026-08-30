@@ -53,10 +53,21 @@ def resources_available(member: EncounterCombatant, action: ConditionRemovalActi
     )
 
 
+def _effect_allows_removal(target: EncounterCombatant, condition_id: str, action_id: str) -> bool:
+    effects = [effect for effect in target.state.timed_effects if effect.effect_id == condition_id]
+    return all(
+        not effect.allowed_removal_action_ids or action_id in effect.allowed_removal_action_ids
+        for effect in effects
+    )
+
+
 def removable(target: EncounterCombatant, action: ConditionRemovalAction) -> list[str]:
     allowed = set(action.removable_conditions)
     return sorted(
-        (effect for effect in target.state.active_effect_ids if effect in allowed),
+        (
+            effect for effect in target.state.active_effect_ids
+            if effect in allowed and _effect_allows_removal(target, effect, action.id)
+        ),
         key=lambda effect: (CONDITION_PRIORITY.get(effect, 9), effect),
     )
 
