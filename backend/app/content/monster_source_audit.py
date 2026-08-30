@@ -4,6 +4,7 @@ import logging
 import re
 
 from app.content.monster_attack_source_audit import attack_issues, normalized, save_action_issues
+from app.content.monster_saving_throws import parse_saving_throw_bonuses
 from app.content.movement_modes import standard_arena_closing_speed
 from app.domain.models import CombatantTemplate
 
@@ -48,6 +49,7 @@ def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) ->
             (template.speed_ft == standard_arena_closing_speed(row["speed"]), "arena-speed-mismatch"),
             (template.challenge_rating == _challenge(row), "challenge-rating-mismatch"),
             (template.initiative_bonus == _initiative(row), "initiative-mismatch"),
+            (template.saving_throw_bonuses == parse_saving_throw_bonuses(row), "saving-throws-mismatch"),
         )
         issues = [label for passed, label in checks if not passed]
         actions = normalized(row.get("actions", ""))
