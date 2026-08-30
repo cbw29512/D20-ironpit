@@ -9,8 +9,12 @@ global.window = globalThis;
 
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
-  "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
-  "browser-attack.js", "browser-charge.js", "browser-multiattack.js", "browser-turn.js", "browser-engine.js",
+  "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js",
+  "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
+  "browser-grapple.js", "browser-timed-conditions.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
+  "browser-attack.js", "browser-reactions.js", "browser-reaction-movement.js", "browser-saves.js",
+  "browser-condition-lifecycle.js", "browser-charge.js", "browser-multiattack.js", "browser-healing.js",
+  "browser-spellcasting.js", "browser-condition-removal.js", "browser-support.js", "browser-turn.js", "browser-engine.js",
 ]) load(file);
 
 function deterministicDice(seed = 12345) {
