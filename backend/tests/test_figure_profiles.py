@@ -9,7 +9,7 @@ def test_reviewed_figure_registry_matches_raw_ready_monster_set_exactly() -> Non
         for card in build_monster_catalog()
         if card.coverage_status is CoverageStatus.RAW_READY
     }
-    assert len(ready_names) == 63
+    assert len(ready_names) == 67
     assert set(MONSTER_FIGURE_PROFILES) == ready_names
 
 
@@ -26,6 +26,7 @@ def test_anatomically_distinct_monsters_do_not_share_humanoid_fallbacks() -> Non
         "Baboon": "primate",
         "Giant Constrictor Snake": "snake",
         "Giant Wolf Spider": "spider",
+        "Hippogriff": "hippogriff",
         "Owlbear": "bear",
         "Plesiosaurus": "aquatic-reptile",
         "Pteranodon": "pterosaur",
