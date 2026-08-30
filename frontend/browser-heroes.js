@@ -52,6 +52,6 @@
   };
 
   const skipped = new Set(["fighter:1:great-weapon", "barbarian:1:great-weapon"]);
-  const generated = window.IRON_PIT_PREGEN_FACTORY.buildAll(skipped);
+  const generated = window.IRON_PIT_PREGEN_FACTORY?.buildAll?.(skipped) || [];
   window.IRON_PIT_BROWSER_HEROES = Object.fromEntries([...generated, karnok, rokhan].map((item) => [item.id, item]));
 })();
