@@ -5,19 +5,26 @@
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
   const T = () => window.IRON_PIT_BROWSER_TURN;
   const C = () => window.IRON_PIT_BROWSER_TIMED;
+  const F = () => window.IRON_PIT_BROWSER_FORMATIONS;
   const heroes = () => window.IRON_PIT_BROWSER_HEROES;
   const monsters = () => window.IRON_PIT_BROWSER_MONSTERS;
 
   function cloneTemplate(template) { return structuredClone(template); }
+  function formationSlot(slots, index) { return Array.isArray(slots) ? Number(slots[index]) : index; }
+  function rank(slots, index) { return Array.isArray(slots) ? F().rankForSlot(formationSlot(slots, index)) : "front"; }
 
   function buildSetup(selection) {
     const heroMembers = selection.hero_ids.map((id, index) => {
       if (!heroes()[id]) throw new Error(`Unknown certified hero: ${id}`);
-      return { combatant_id: `hero-${index + 1}:${id}`, side: "heroes", position_ft: 0, state: S().buildState(cloneTemplate(heroes()[id])) };
+      const slot = formationSlot(selection.hero_slots, index), formationRank = rank(selection.hero_slots, index);
+      return { combatant_id: `hero-${index + 1}:${id}`, side: "heroes", formation_slot: slot, formation_rank: formationRank,
+        position_ft: formationRank === "back" ? -5 : 0, state: S().buildState(cloneTemplate(heroes()[id])) };
     });
     const monsterMembers = selection.monster_ids.map((id, index) => {
       if (!monsters()[id]) throw new Error(`Unknown certified monster: ${id}`);
-      return { combatant_id: `monster-${index + 1}:${id}`, side: "monsters", position_ft: selection.starting_distance_ft, state: S().buildState(cloneTemplate(monsters()[id])) };
+      const slot = formationSlot(selection.monster_slots, index), formationRank = rank(selection.monster_slots, index);
+      return { combatant_id: `monster-${index + 1}:${id}`, side: "monsters", formation_slot: slot, formation_rank: formationRank,
+        position_ft: selection.starting_distance_ft + (formationRank === "back" ? 5 : 0), state: S().buildState(cloneTemplate(monsters()[id])) };
     });
     return {
       heroes: heroMembers,
@@ -118,7 +125,7 @@
 
   function finish(setup, init, events, result, round, sequence) {
     events.push({ sequence, round_number: round, event_type: result === "draw" ? "draw" : "victory", actor_id: "arena", actor_name: "Iron Pit", animation: "victory", description: result === "heroes_win" ? "Heroes win the deathmatch." : result === "monsters_win" ? "Monsters win the deathmatch." : "The fight reaches the arena round limit and ends in a draw." });
-    return { battle_id: crypto.randomUUID?.() || `battle-${Date.now()}`, outcome: result, rounds: round, setup, initiative: init, events, ruleset: "SRD 5.2.1 Iron Pit melee deathmatch subset" };
+    return { battle_id: crypto.randomUUID?.() || `battle-${Date.now()}`, outcome: result, rounds: round, setup, initiative: init, events, ruleset: "SRD 5.2.1 + Iron Pit two-rank formation" };
   }
 
   window.IRON_PIT_BROWSER_ENGINE = { runEncounter };
