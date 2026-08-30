@@ -4,7 +4,6 @@ from app.combat.spell_resolution import resolve_spell
 from app.combat.spellcasting import mark_slot_spell_cast
 from app.combat.state import build_combatant_state
 from app.content.audited_fighter import build_karnok_stoneward
-from app.content.demo import build_goblin_warrior
 from app.domain.combatants import ResourceDefinition
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.spells import SpellSaveAction
@@ -27,9 +26,10 @@ def _caster(spells, slots):
 
 
 def _monster(index: int, position: int):
+    # Synthetic enemy uses Karnok's complete certified six-save profile. Spell tests must never infer a missing save bonus.
     return EncounterCombatant(
         combatant_id=f"monster-{index}", side="monsters", position_ft=position,
-        state=build_combatant_state(build_goblin_warrior()),
+        state=build_combatant_state(build_karnok_stoneward()),
     )
 
 
