@@ -65,20 +65,23 @@
   }
 
   function applyDamage(state, amount, critical) {
+    const incoming = amount;
+    if (!incoming || state.is_dead) return "damaged";
     const absorbed = Math.min(state.temporary_hp, amount); state.temporary_hp -= absorbed; amount -= absorbed;
-    if (!amount || state.is_dead) return "damaged";
-    if (state.current_hp > 0) {
-      const before = state.current_hp; state.current_hp = Math.max(0, before - amount);
-      if (state.current_hp > 0) return "damaged";
-      if (state.template.kind === "monster") { markDead(state); return "dead"; }
-      const remaining = Math.max(0, amount - before);
-      if (remaining >= state.template.max_hp) { markDead(state); return "dead"; }
-      if (useRelentless(state, remaining)) return "relentless_endurance";
+    if (state.current_hp === 0) {
+      if (state.template.kind === "monster" || incoming >= state.template.max_hp) { markDead(state); return "dead"; }
+      state.is_stable = false;
+      state.death_save_failures = Math.min(3, state.death_save_failures + (critical ? 2 : 1));
+      if (state.death_save_failures >= 3) { markDead(state); return "dead"; }
       markUnconscious(state); return "unconscious";
     }
-    if (state.template.kind === "monster" || amount >= state.template.max_hp) { markDead(state); return "dead"; }
-    state.is_stable = false; state.death_save_failures = Math.min(3, state.death_save_failures + (critical ? 2 : 1));
-    if (state.death_save_failures >= 3) { markDead(state); return "dead"; }
+    if (!amount) return "damaged";
+    const before = state.current_hp; state.current_hp = Math.max(0, before - amount);
+    if (state.current_hp > 0) return "damaged";
+    if (state.template.kind === "monster") { markDead(state); return "dead"; }
+    const remaining = Math.max(0, amount - before);
+    if (remaining >= state.template.max_hp) { markDead(state); return "dead"; }
+    if (useRelentless(state, remaining)) return "relentless_endurance";
     markUnconscious(state); return "unconscious";
   }
 
@@ -95,7 +98,7 @@
     const natural = attackRoll.selected_roll, naturalCritical = natural === 20;
     const hit = natural !== 1 && (naturalCritical || attackRoll.total >= target.state.template.armor_class);
     const critical = Boolean(hit && (naturalCritical || (Q().autoCritical(target.state) && distance <= 5)));
-    const hpBefore = target.state.current_hp;
+    const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
     let damageRoll = null, damageComponents = [], damageOutcome = null; const applied = [];
     if (hit) {
       const damage = R().weaponDamage(attacker.state, attack, critical, mode, `${round}:${attacker.combatant_id}`, extra.bonusDamage || null);
@@ -126,10 +129,10 @@
     return { sequence, round_number: round, event_type: "attack", actor_id: attacker.combatant_id, actor_name: attacker.state.template.name,
       target_id: target.combatant_id, target_name: target.state.template.name, attack_roll: attackRoll, damage_roll: damageRoll,
       damage_components: damageComponents, applied_condition_ids: [...new Set(applied)], hit, critical, hp_before: hpBefore,
-      hp_after: target.state.current_hp, death_save_successes: target.state.death_save_successes,
-      death_save_failures: target.state.death_save_failures, is_stable: target.state.is_stable, is_dead: target.state.is_dead,
-      weapon_id: attack.id, projectile: attack.projectile || null, feature_id: extra.featureId || null,
-      animation: attack.animation || (attack.kind === "ranged" ? "projectile" : "slash"), description };
+      hp_after: target.state.current_hp, temporary_hp_before: temporaryHpBefore, temporary_hp_after: target.state.temporary_hp,
+      death_save_successes: target.state.death_save_successes, death_save_failures: target.state.death_save_failures,
+      is_stable: target.state.is_stable, is_dead: target.state.is_dead, weapon_id: attack.id, projectile: attack.projectile || null,
+      feature_id: extra.featureId || null, animation: attack.animation || (attack.kind === "ranged" ? "projectile" : "slash"), description };
   }
   window.IRON_PIT_BROWSER_ATTACK = { adjustedDamage, applyDamage, rangedCloseThreat, resolveAttack };
 })();

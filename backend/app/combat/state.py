@@ -26,12 +26,17 @@ def build_combatant_state(template: CombatantTemplate) -> CombatantState:
         raise RuntimeError("Combatant state could not be created.") from exc
 
 
+def refresh_reaction(state: CombatantState) -> None:
+    """A creature regains its Reaction at the start of its turn, even if Incapacitated."""
+    state.reaction_available = True
+
+
 def begin_turn(state: CombatantState) -> None:
     try:
         incapacitated = is_incapacitated(state)
         state.action_available = not incapacitated
         state.bonus_action_available = not incapacitated
-        state.reaction_available = True
+        refresh_reaction(state)
         state.movement_remaining_ft = 0 if speed_is_zero(state) else state.template.speed_ft
         if DODGE_EFFECT_ID in state.active_effect_ids:
             state.active_effect_ids.remove(DODGE_EFFECT_ID)

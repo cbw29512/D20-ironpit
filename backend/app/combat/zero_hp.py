@@ -61,46 +61,47 @@ def restore_hit_points(state: CombatantState, amount: int) -> int:
     return healed
 
 
+def _damage_at_zero(state: CombatantState, incoming: int, *, critical: bool) -> ZeroHpOutcome:
+    if state.template.kind == "monster" or incoming >= state.template.max_hp:
+        return _mark_dead(state)
+    state.is_stable = False
+    state.death_save_failures = min(3, state.death_save_failures + (2 if critical else 1))
+    if state.death_save_failures >= 3:
+        return _mark_dead(state)
+    return _mark_unconscious(state)
+
+
 def apply_damage(state: CombatantState, amount: int, *, critical: bool = False) -> ZeroHpOutcome:
-    """Apply temporary HP, SRD zero-HP rules, and certified zero-HP prevention."""
+    """Apply Temporary HP and SRD 5.2.1 zero-HP damage rules."""
     try:
         if amount < 0:
             raise ValueError("Damage cannot be negative.")
         if amount == 0 or state.is_dead:
             return "unchanged"
 
+        incoming = amount
         amount = _after_temporary_hp(state, amount)
+
+        # SRD: Temporary HP are lost when the creature takes damage. At 0 HP,
+        # taking any nonzero damage still causes Death Save failure(s), even if
+        # Temporary HP absorb all loss to actual Hit Points.
+        if state.current_hp == 0:
+            return _damage_at_zero(state, incoming, critical=critical)
         if amount == 0:
             return "damaged"
 
+        hp_before = state.current_hp
+        state.current_hp = max(0, hp_before - amount)
         if state.current_hp > 0:
-            hp_before = state.current_hp
-            state.current_hp = max(0, hp_before - amount)
-            if state.current_hp > 0:
-                return "damaged"
-            if state.template.kind == "monster":
-                return _mark_dead(state)
-
-            remaining_damage = max(0, amount - hp_before)
-            if remaining_damage >= state.template.max_hp:
-                return _mark_dead(state)
-            if use_relentless_endurance(state, remaining_damage):
-                return "relentless_endurance"
-            return _mark_unconscious(state)
-
+            return "damaged"
         if state.template.kind == "monster":
             return _mark_dead(state)
-        if amount >= state.template.max_hp:
-            return _mark_dead(state)
 
-        state.is_stable = False
-        state.is_unconscious = True
-        state.death_save_failures = min(
-            3,
-            state.death_save_failures + (2 if critical else 1),
-        )
-        if state.death_save_failures >= 3:
+        remaining_damage = max(0, amount - hp_before)
+        if remaining_damage >= state.template.max_hp:
             return _mark_dead(state)
+        if use_relentless_endurance(state, remaining_damage):
+            return "relentless_endurance"
         return _mark_unconscious(state)
     except ValueError:
         raise

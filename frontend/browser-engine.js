@@ -104,6 +104,7 @@
       for (const id of init.turn_order) {
         const current = outcome(setup); if (current !== "active") return finish(setup, init, events, current, round, sequence);
         const member = byId.get(id);
+        S().refreshReaction(member.state);
         const expired = C()?.expireSourceStart(sequence, round, member, setup); if (expired) { events.push(...expired.events); sequence = expired.sequence; }
         if (member.state.template.kind === "character" && member.state.current_hp === 0 && !member.state.is_dead && !member.state.is_stable) {
           events.push(T().deathSave(sequence++, round, member));

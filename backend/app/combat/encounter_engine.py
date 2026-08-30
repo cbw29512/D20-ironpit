@@ -14,6 +14,7 @@ from app.combat.encounter_initiative import roll_encounter_initiative
 from app.combat.encounter_outcome import resolve_encounter_outcome
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.encounter_targeting import select_nearest_target
+from app.combat.state import refresh_reaction
 from app.combat.timed_conditions import expire_start_of_turn_conditions
 from app.domain.encounters import EncounterBattleResult, EncounterCombatant, EncounterSelection
 from app.domain.models import BattleEvent
@@ -59,6 +60,9 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                     )
 
                 attacker = by_id[combatant_id]
+                # RAW refresh happens at the start of every turn. Incapacitation
+                # prevents using the Reaction; it does not prevent regaining it.
+                refresh_reaction(attacker.state)
                 expiry_events, sequence = expire_start_of_turn_conditions(
                     sequence, round_number, attacker, setup
                 )

@@ -17,11 +17,13 @@
     };
   }
 
+  function refreshReaction(state) { state.reaction_available = true; }
+
   function beginTurn(state) {
     const incapacitated = Q().incapacitated(state);
     state.action_available = !incapacitated;
     state.bonus_action_available = !incapacitated;
-    state.reaction_available = true;
+    refreshReaction(state);
     const speedZero = G()?.speedIsZero(state) || false;
     state.movement_remaining_ft = speedZero ? 0 : state.template.speed_ft;
     state.active_effect_ids = state.active_effect_ids.filter((id) => id !== "dodge");
@@ -70,6 +72,6 @@
   const canProne = (target, maxSize) => sizeAtMost(target, maxSize);
   window.IRON_PIT_BROWSER_STATE = {
     active, beginTurn, buildState, canProne, distance, downedCharacter, hasActiveAlly,
-    moveToward, nearestTarget, packTactics, sizeAtMost,
+    moveToward, nearestTarget, packTactics, refreshReaction, sizeAtMost,
   };
 })();
