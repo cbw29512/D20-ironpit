@@ -79,6 +79,18 @@ def _healing(action: Any) -> dict[str, Any]:
     }
 
 
+def _removal(action: Any) -> dict[str, Any]:
+    row = {
+        "id": action.id, "name": action.name, "actionCost": action.action_cost, "range": action.range_ft,
+        "targetMode": action.target_mode, "removableConditions": list(action.removable_conditions),
+        "maxConditionsPerUse": action.max_conditions_per_use, "resourceCosts": dict(action.resource_costs),
+        "resourceCostsPerCondition": dict(action.resource_costs_per_condition), "animation": action.animation,
+    }
+    if action.reaction_trigger:
+        row["reactionTrigger"] = action.reaction_trigger
+    return row
+
+
 def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[str, Any]:
     class_id, _, build_id = key
     attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
@@ -91,6 +103,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "primary_attack_id": template.weapon_attack.id,
         "saving_throw_actions": [_save(item) for item in template.saving_throw_actions],
         "healingActions": [_healing(item) for item in template.healing_actions],
+        "condition_removal_actions": [_removal(item) for item in template.condition_removal_actions],
         "traits": [item.value for item in template.combat_traits],
         "resources": {item.id: item.max_uses for item in template.resources},
         "rage_damage_bonus": template.rage_damage_bonus, "wearing_heavy_armor": template.wearing_heavy_armor,
