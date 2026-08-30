@@ -51,5 +51,6 @@ window.IRON_PIT_DICE = { roll: (sides) => sides === 20 ? 19 : 1, rollMany: (coun
 }
 console.log("Browser condition/action-economy integration regressions passed.");
 
-// Keep condition-removal parity inside an already mandatory CI entry point.
+// Keep newer condition subsystems inside an already mandatory CI entry point.
 require("./browser-condition-removal.test.cjs");
+require("./browser-condition-lifecycle.test.cjs");
