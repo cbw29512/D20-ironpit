@@ -10,7 +10,7 @@
   }
 
   const autoFailStrDex = (state) => state.is_unconscious || has(state, "paralyzed") || has(state, "petrified") || has(state, "stunned");
-  const attackAdvantage = (state) => state.is_unconscious || has(state, "paralyzed") || has(state, "petrified") || has(state, "stunned");
+  const attackAdvantage = (state) => state.is_unconscious || has(state, "blinded") || has(state, "paralyzed") || has(state, "petrified") || has(state, "stunned");
   const autoCritical = (state) => state.is_unconscious || has(state, "paralyzed");
   const speedZero = (state) => state.is_unconscious || has(state, "paralyzed") || has(state, "petrified") || has(state, "restrained");
 
