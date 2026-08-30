@@ -24,17 +24,24 @@ for (const [classId] of D.CLASS_ROWS) for (let level = 1; level <= 20; level += 
     assert.ok(hero, `missing ${classId} ${level} ${buildId}`);
     assert.ok(hero.max_hp > 0 && hero.armor_class > 0 && hero.speed_ft > 0);
     assert.equal(Object.keys(hero.saving_throw_bonuses).length, 6);
-    assert.ok(hero.attacks.length || hero.saving_throw_actions.length, `${hero.name} needs a legal offensive action`);
+    assert.ok(hero.attacks.length, `${hero.name} needs a certified fallback attack`);
   }
 }
 
-const wizard1 = byKey.get("wizard:1:evoker"), wizard17 = byKey.get("wizard:17:evoker");
+const wizard1 = byKey.get("wizard:1:evoker"), wizard17 = byKey.get("wizard:17:evoker"), wizard19 = byKey.get("wizard:19:evoker");
 assert.equal(wizard1.attacks[0].name, "Fire Bolt");
 assert.equal(wizard1.attacks[0].diceCount, 1);
 assert.equal(wizard17.attacks[0].diceCount, 4);
 assert.ok(wizard17.attacks[0].bonus > wizard1.attacks[0].bonus);
+assert.equal(wizard19.ability_scores.intelligence, 21, "level-19 Epic Boon chassis should raise the primary ability above 20");
 
-const fighter5 = byKey.get("fighter:5:guardian"), fighter11 = byKey.get("fighter:11:guardian"), fighter20 = byKey.get("fighter:20:guardian");
+const fighter3 = byKey.get("fighter:3:guardian"), fighter4 = byKey.get("fighter:4:guardian");
+const fighter5 = byKey.get("fighter:5:guardian"), fighter9 = byKey.get("fighter:9:guardian");
+const fighter10 = byKey.get("fighter:10:guardian"), fighter11 = byKey.get("fighter:11:guardian"), fighter20 = byKey.get("fighter:20:guardian");
+assert.equal(fighter3.resources["second-wind"], 2);
+assert.equal(fighter4.resources["second-wind"], 3);
+assert.equal(fighter9.resources["second-wind"], 3);
+assert.equal(fighter10.resources["second-wind"], 4);
 assert.equal(fighter5.attack_action.slots.length, 2);
 assert.equal(fighter11.attack_action.slots.length, 3);
 assert.equal(fighter20.attack_action.slots.length, 4);
@@ -42,7 +49,15 @@ assert.match(fighter5.attacks[0].name, /^\+1 /);
 assert.match(fighter11.attacks[0].name, /^\+2 /);
 assert.match(fighter20.attacks[0].name, /^\+3 /);
 
+const barbarian20 = byKey.get("barbarian:20:axe-shield");
+assert.equal(barbarian20.ability_scores.strength, 25);
+assert.equal(barbarian20.ability_scores.constitution, 24);
+const monk20 = byKey.get("monk:20:striker");
+assert.equal(monk20.ability_scores.dexterity, 25);
+assert.equal(monk20.ability_scores.wisdom, 24);
+
 const cleric5 = byKey.get("cleric:5:healer");
+assert.match(cleric5.attacks[0].name, /Mace$/);
 assert.equal(cleric5.saving_throw_actions[0].name, "Sacred Flame");
 assert.equal(cleric5.healingActions[0].name, "Healing Word");
 assert.equal(cleric5.resources["healing-word-slot"], 4);
