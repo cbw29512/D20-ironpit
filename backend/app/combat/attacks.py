@@ -74,7 +74,7 @@ def resolve_attack(
             damage_roll.total = applied_total
             damage_outcome = apply_damage(defender, applied_total, critical=critical)
             end_rage_if_incapacitated(defender)
-            applied_conditions = apply_hit_conditions(attack, defender, attacker_event_id)
+            applied_conditions = apply_hit_conditions(attack, defender, attacker_event_id, round_number)
         outcome = "CRITICAL HIT" if critical else ("HIT" if hit else "MISS")
         description = f"{attacker.template.name}: {outcome} with {weapon.name}."
         if damage_outcome == "relentless_endurance":
