@@ -9,6 +9,8 @@ from app.domain.size import CreatureSize
 AbilityName = Literal["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
 ActionCost = Literal["action", "bonus_action", "reaction"]
 HealingTargetMode = Literal["self", "ally", "self_or_ally"]
+ConditionRemovalTargetMode = Literal["self", "ally", "self_or_ally"]
+ConditionReactionTrigger = Literal["condition_applied_to_self", "condition_applied_to_ally"]
 DamageTypeName = Literal[
     "acid", "bludgeoning", "cold", "fire", "force", "lightning", "necrotic",
     "piercing", "poison", "psychic", "radiant", "slashing", "thunder",
@@ -49,6 +51,33 @@ class HealingAction(BaseModel):
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
     animation: str = "healing"
+
+
+class ConditionRemovalAction(BaseModel):
+    """A 2024 spell/feature that can legally end one or more named conditions."""
+
+    id: str
+    name: str
+    action_cost: ActionCost
+    range_ft: int = Field(default=5, ge=0)
+    target_mode: ConditionRemovalTargetMode = "self_or_ally"
+    removable_conditions: list[ConditionName] = Field(min_length=1)
+    max_conditions_per_use: int = Field(default=1, ge=1, le=16)
+    resource_costs: dict[str, int] = Field(default_factory=dict)
+    resource_costs_per_condition: dict[str, int] = Field(default_factory=dict)
+    reaction_trigger: ConditionReactionTrigger | None = None
+    animation: str = "condition-removal"
+
+    @model_validator(mode="after")
+    def validate_costs_and_timing(self) -> "ConditionRemovalAction":
+        costs = [*self.resource_costs.values(), *self.resource_costs_per_condition.values()]
+        if any(cost <= 0 for cost in costs):
+            raise ValueError("Condition-removal resource costs must be positive.")
+        if self.action_cost == "reaction" and self.reaction_trigger is None:
+            raise ValueError("Reaction condition removal requires an explicit RAW trigger.")
+        if self.action_cost != "reaction" and self.reaction_trigger is not None:
+            raise ValueError("Only Reaction condition removal can define a reaction trigger.")
+        return self
 
 
 class SavingThrowAction(BaseModel):
