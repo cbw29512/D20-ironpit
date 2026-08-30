@@ -85,7 +85,7 @@ const member = (id, template, position = 0) => ({ combatant_id: id, side: "heroe
   const attacker = member("attacker", heroTemplate, 5);
   const target = member("blinded-target", heroTemplate, 0);
   target.state.active_effect_ids.push("blinded");
-  window.IRON_PIT_DICE = queuedDice([3, 17, 1, 1]);
+  window.IRON_PIT_DICE = queuedDice([3, 17, 1, 1, 1, 1]);
   const event = A.resolveAttack(1, 1, attacker, target, attacker.state.template.attacks[0], 5);
   assert.equal(event.attack_roll.mode, "advantage");
   assert.equal(event.attack_roll.selected_roll, 17);
@@ -96,7 +96,7 @@ const member = (id, template, position = 0) => ({ combatant_id: id, side: "heroe
   const target = member("blinded-target", heroTemplate, 0);
   attacker.state.active_effect_ids.push("blinded");
   target.state.active_effect_ids.push("blinded");
-  window.IRON_PIT_DICE = queuedDice([12, 1, 1]);
+  window.IRON_PIT_DICE = queuedDice([12, 1, 1, 1, 1]);
   const event = A.resolveAttack(1, 1, attacker, target, attacker.state.template.attacks[0], 5);
   assert.equal(event.attack_roll.mode, "normal");
   assert.equal(event.attack_roll.selected_roll, 12);
