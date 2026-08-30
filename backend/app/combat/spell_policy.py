@@ -55,6 +55,8 @@ def choose_spell(
     """Try highest-level spells first; unsafe AoEs fall through to the next spell."""
     indexed = list(enumerate(caster.state.template.spell_save_actions))
     for _, action in sorted(indexed, key=lambda item: (-item[1].level, item[0])):
+        if action.action_cost == "reaction":
+            continue
         if action.concentration:
             continue  # Concentration spells remain fail-closed until that subsystem is certified.
         if not is_available(caster.state, action.action_cost):
