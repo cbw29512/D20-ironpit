@@ -12,13 +12,18 @@ from app.content.rogue_attacks import build_mara_shortbow_attack, build_mara_sho
 from app.domain.models import EncounterSelection, RollMode
 
 
-def test_melee_only_creature_dodges_and_moves_toward_melee() -> None:
-    setup = build_encounter_setup(EncounterSelection(
-        hero_ids=["aldric-vane-l1"],
-        monster_ids=["srd-giant-lizard"],
-        starting_distance_ft=60,
-    ))
+def _at_distance(setup, distance_ft: int):
     hero, monster = setup.heroes[0], setup.monsters[0]
+    hero.position_ft = 0
+    monster.position_ft = distance_ft
+    return hero, monster
+
+
+def test_melee_only_creature_dodges_and_moves_when_melee_is_unreachable_this_turn() -> None:
+    setup = build_encounter_setup(EncounterSelection(
+        hero_ids=["aldric-vane-l1"], monster_ids=["srd-giant-lizard"],
+    ))
+    hero, monster = _at_distance(setup, 60)
 
     events, _ = resolve_combat_turn(1, 1, hero, monster, setup, FixedDiceProvider([10]))
 
@@ -30,13 +35,11 @@ def test_melee_only_creature_dodges_and_moves_toward_melee() -> None:
     assert not any(event.event_type in {"attack", "dash"} for event in events)
 
 
-def test_ranged_option_is_used_while_combatant_keeps_closing_to_melee() -> None:
+def test_ranged_option_closes_until_melee_can_be_reached_then_moves_and_attacks() -> None:
     setup = build_encounter_setup(EncounterSelection(
-        hero_ids=["mara-quickstep-l1"],
-        monster_ids=["srd-giant-lizard"],
-        starting_distance_ft=60,
+        hero_ids=["mara-quickstep-l1"], monster_ids=["srd-giant-lizard"],
     ))
-    hero, monster = setup.heroes[0], setup.monsters[0]
+    hero, monster = _at_distance(setup, 60)
 
     events, sequence = resolve_combat_turn(
         1, 1, hero, monster, setup, FixedDiceProvider([10, 1])
@@ -49,11 +52,25 @@ def test_ranged_option_is_used_while_combatant_keeps_closing_to_melee() -> None:
     second_events, _ = resolve_combat_turn(
         sequence, 2, hero, monster, setup, FixedDiceProvider([10, 1])
     )
-    second_attack = next(event for event in second_events if event.event_type == "attack")
     second_move = next(event for event in second_events if event.event_type == "movement")
-    assert second_attack.weapon_id == "shortbow"
+    second_attack = next(event for event in second_events if event.event_type == "attack")
     assert second_move.distance_after_ft == 5
+    assert second_attack.weapon_id == "shortsword"
+    assert second_events.index(second_move) < second_events.index(second_attack)
     assert abs(hero.position_ft - monster.position_ft) == 5
+
+
+def test_melee_one_card_behind_backline_moves_and_attacks_same_turn() -> None:
+    setup = build_encounter_setup(EncounterSelection(
+        hero_ids=["aldric-vane-l1"], monster_ids=["srd-giant-lizard"],
+    ))
+    hero, monster = _at_distance(setup, 10)
+
+    events, _ = resolve_combat_turn(1, 1, hero, monster, setup, FixedDiceProvider([10, 4]))
+
+    assert [event.event_type for event in events] == ["movement", "attack"]
+    assert events[0].movement_ft == 5
+    assert events[1].weapon_id == "longsword"
 
 
 def test_dodge_imposes_attack_disadvantage_until_dodgers_next_turn() -> None:
@@ -62,12 +79,7 @@ def test_dodge_imposes_attack_disadvantage_until_dodgers_next_turn() -> None:
     defender.active_effect_ids.append("dodge")
 
     event = resolve_attack(
-        1,
-        1,
-        attacker,
-        defender,
-        build_giant_lizard_attack(),
-        5,
+        1, 1, attacker, defender, build_giant_lizard_attack(), 5,
         FixedDiceProvider([15, 2]),
     )
 
