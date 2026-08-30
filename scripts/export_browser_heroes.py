@@ -103,7 +103,6 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "primary_attack_id": template.weapon_attack.id,
         "saving_throw_actions": [_save(item) for item in template.saving_throw_actions],
         "healingActions": [_healing(item) for item in template.healing_actions],
-        "condition_removal_actions": [_removal(item) for item in template.condition_removal_actions],
         "traits": [item.value for item in template.combat_traits],
         "resources": {item.id: item.max_uses for item in template.resources},
         "rage_damage_bonus": template.rage_damage_bonus, "wearing_heavy_armor": template.wearing_heavy_armor,
@@ -112,6 +111,8 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
                    "figure_form": template.visual.body_style, "role": template.archetype.lower()},
         "source": template.source,
     }
+    if template.condition_removal_actions:
+        row["condition_removal_actions"] = [_removal(item) for item in template.condition_removal_actions]
     if template.attack_action:
         row["attack_action"] = {"id": template.attack_action.id, "name": template.attack_action.name, "slots": [
             {"attackIds": slot.attack_ids, "saveActionIds": slot.save_action_ids} for slot in template.attack_action.slots
