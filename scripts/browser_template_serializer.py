@@ -48,6 +48,8 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             row["rageEligible"] = True
         if attack.knocks_prone_max_size is not None:
             row["proneMaxSize"] = attack.knocks_prone_max_size.value
+        if attack.forbid_target_grappled_by_self:
+            row["forbidSelfGrappledTarget"] = True
         if attack.on_hit_damage:
             row["onHitDamage"] = [
                 {"source": part.source, "diceCount": part.dice_count, "diceSize": part.dice_size,
