@@ -120,6 +120,16 @@ def _spell(action: Any) -> dict[str, Any]:
     return row
 
 
+def _defense(action: Any) -> dict[str, Any]:
+    return {
+        "id": action.id, "name": action.name, "level": action.level, "actionCost": action.action_cost,
+        "durationMinutes": action.duration_minutes, "temporaryHp": action.temporary_hp,
+        "temporaryHpPerSlotAbove": action.temporary_hp_per_slot_above,
+        "damageResistances": list(action.damage_resistances), "concentration": action.concentration,
+        "priority": action.priority, "animation": action.animation,
+    }
+
+
 def _removal(action: Any) -> dict[str, Any]:
     row = {
         "id": action.id, "name": action.name, "actionCost": action.action_cost, "range": action.range_ft,
@@ -156,6 +166,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
         }
         if template.spell_save_actions:
             row["spell_save_actions"] = [_spell(item) for item in template.spell_save_actions]
+        if template.defensive_spell_actions:
+            row["defensive_spell_actions"] = [_defense(item) for item in template.defensive_spell_actions]
         if template.condition_removal_actions:
             row["condition_removal_actions"] = [_removal(item) for item in template.condition_removal_actions]
         if template.attack_action:
