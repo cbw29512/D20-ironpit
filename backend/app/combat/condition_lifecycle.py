@@ -1,0 +1,121 @@
+from __future__ import annotations
+
+import logging
+
+from app.combat.saving_throw_rolls import resolve_saving_throw
+from app.combat.timed_conditions import remove_effect_instance
+from app.domain.actions import ConditionTiming
+from app.domain.encounters import EncounterCombatant, EncounterSetup
+from app.domain.models import BattleEvent
+
+logger = logging.getLogger(__name__)
+
+
+def _condition_name(effect_id: str) -> str:
+    return effect_id.replace("_", " ").title()
+
+
+def resolve_target_condition_timing(
+    sequence: int,
+    round_number: int,
+    target: EncounterCombatant,
+    timing: ConditionTiming,
+    dice,
+) -> tuple[list[BattleEvent], int]:
+    """Resolve expiry and repeat saves tied to the affected creature's turn."""
+    try:
+        events: list[BattleEvent] = []
+        for effect in list(target.state.timed_effects):
+            if effect.repeat_save_timing == timing:
+                roll, succeeded = resolve_saving_throw(
+                    target.state,
+                    effect.repeat_save_ability,
+                    effect.repeat_save_dc,
+                    dice,
+                )
+                removed = succeeded and remove_effect_instance(target.state, effect)
+                events.append(BattleEvent(
+                    sequence=sequence,
+                    round_number=round_number,
+                    event_type="saving_throw",
+                    actor_id=target.combatant_id,
+                    actor_name=target.state.template.name,
+                    target_id=target.combatant_id,
+                    target_name=target.state.template.name,
+                    saving_throw_roll=roll,
+                    save_ability=effect.repeat_save_ability,
+                    save_dc=effect.repeat_save_dc,
+                    save_succeeded=succeeded,
+                    removed_condition_ids=[effect.effect_id] if removed else [],
+                    feature_id=effect.source_effect_id or "condition-repeat-save",
+                    animation="condition-save",
+                    description=(
+                        f"{target.state.template.name} repeats the {effect.repeat_save_ability.title()} save "
+                        f"against {_condition_name(effect.effect_id)}: {'SUCCESS' if succeeded else 'FAILURE'}."
+                    ),
+                ))
+                sequence += 1
+                if succeeded:
+                    continue
+            if effect.expiry_timing == timing:
+                removed = remove_effect_instance(target.state, effect)
+                if removed:
+                    events.append(BattleEvent(
+                        sequence=sequence,
+                        round_number=round_number,
+                        event_type="feature",
+                        actor_id=target.combatant_id,
+                        actor_name=target.state.template.name,
+                        target_id=target.combatant_id,
+                        target_name=target.state.template.name,
+                        removed_condition_ids=[effect.effect_id],
+                        feature_id=effect.source_effect_id or "condition-ended",
+                        animation="condition-ended",
+                        description=f"{_condition_name(effect.effect_id)} ends on {target.state.template.name}.",
+                    ))
+                    sequence += 1
+        return events, sequence
+    except (TypeError, ValueError):
+        raise
+    except Exception as exc:
+        logger.exception("Target condition lifecycle failed for %s at %s.", target.combatant_id, timing)
+        raise RuntimeError("Target condition lifecycle could not be resolved.") from exc
+
+
+def resolve_source_condition_timing(
+    sequence: int,
+    round_number: int,
+    source: EncounterCombatant,
+    setup: EncounterSetup,
+    timing: ConditionTiming,
+) -> tuple[list[BattleEvent], int]:
+    """Expire conditions whose source-relative duration ends at this timing."""
+    try:
+        events: list[BattleEvent] = []
+        for target in [*setup.heroes, *setup.monsters]:
+            expiring = [
+                effect for effect in target.state.timed_effects
+                if effect.source_id == source.combatant_id and effect.expiry_timing == timing
+            ]
+            for effect in expiring:
+                removed = remove_effect_instance(target.state, effect)
+                if not removed:
+                    continue
+                events.append(BattleEvent(
+                    sequence=sequence,
+                    round_number=round_number,
+                    event_type="feature",
+                    actor_id=source.combatant_id,
+                    actor_name=source.state.template.name,
+                    target_id=target.combatant_id,
+                    target_name=target.state.template.name,
+                    removed_condition_ids=[effect.effect_id],
+                    feature_id=effect.source_effect_id or "condition-ended",
+                    animation="condition-ended",
+                    description=f"{_condition_name(effect.effect_id)} ends on {target.state.template.name}.",
+                ))
+                sequence += 1
+        return events, sequence
+    except Exception as exc:
+        logger.exception("Source condition lifecycle failed for %s at %s.", source.combatant_id, timing)
+        raise RuntimeError("Source condition lifecycle could not be resolved.") from exc
