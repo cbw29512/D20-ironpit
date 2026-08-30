@@ -1,5 +1,6 @@
 "use strict";
 
+// Exact-head certification: every public pregen must complete a real browser fight.
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
