@@ -73,6 +73,7 @@ class WeaponAttack(BaseModel):
     rage_eligible: bool = False
     knocks_prone_max_size: CreatureSize | None = None
     control_effect: HitControlEffect | None = None
+    forbid_target_grappled_by_self: bool = False
 
 
 class VisualLoadout(BaseModel):
