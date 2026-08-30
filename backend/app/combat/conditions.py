@@ -57,6 +57,7 @@ def apply_hit_conditions(
     attack: WeaponAttack,
     defender: CombatantState,
     source_id: str,
+    round_number: int | None = None,
 ) -> list[str]:
     """Apply certified automatic conditions from a successful weapon hit."""
     if defender.is_dead or not defender.is_alive:
@@ -86,7 +87,14 @@ def apply_hit_conditions(
             defender,
             control.condition_id,
             source_id,
+            source_effect_id=attack.id,
+            applied_round=round_number,
             expires_at_start_of_source_turn=control.expires_at_start_of_source_turn,
+            expiry_timing=control.expiry_timing,
+            repeat_save_ability=control.repeat_save_ability,
+            repeat_save_dc=control.repeat_save_dc,
+            repeat_save_timing=control.repeat_save_timing,
+            allowed_removal_action_ids=control.allowed_removal_action_ids,
         )
         if timed is not None:
             applied.append(timed)
