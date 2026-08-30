@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.condition_rules import is_incapacitated
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.traits import CombatTrait
 
@@ -16,13 +17,13 @@ def active_allies(attacker: EncounterCombatant, setup: EncounterSetup) -> list[E
         if ally.combatant_id != attacker.combatant_id
         and ally.state.is_alive
         and not ally.state.is_dead
-        and not ally.state.is_unconscious
         and ally.state.current_hp > 0
+        and not is_incapacitated(ally.state)
     ]
 
 
 def has_adjacent_active_ally(attacker: EncounterCombatant, setup: EncounterSetup) -> bool:
-    """Iron Pit abstraction: any active ally counts as being within 5 feet.
+    """Iron Pit abstraction: any non-Incapacitated active ally counts as being within 5 feet.
 
     The card-v-card fight intentionally does not simulate allied formation movement.
     If a side has at least two active combatants, ally-proximity mechanics treat the
