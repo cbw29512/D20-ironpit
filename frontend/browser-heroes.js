@@ -24,6 +24,7 @@
     traits: ["savage-attacker", "adrenaline-rush", "relentless-endurance"],
     resources: { "second-wind": 2, "adrenaline-rush": 2, "relentless-endurance": 1 },
     visual: { armor: "chain-mail", main_hand: "greatsword", body_style: "humanoid" },
+    automation_coverage: "full-raw", full_feature_coverage: true,
     source: "D&D 2024 Free Rules: Fighter, Orc, Soldier, Savage Attacker",
   };
 
@@ -46,8 +47,11 @@
     rage_damage_bonus: 2,
     wearing_heavy_armor: false,
     visual: { armor: "unarmored", main_hand: "greataxe", body_style: "humanoid" },
+    automation_coverage: "full-raw", full_feature_coverage: true,
     source: "D&D 2024 Free Rules: Barbarian, Orc, Soldier, Savage Attacker",
   };
 
-  window.IRON_PIT_BROWSER_HEROES = Object.fromEntries([karnok, rokhan].map((item) => [item.id, item]));
+  const skipped = new Set(["fighter:1:great-weapon", "barbarian:1:great-weapon"]);
+  const generated = window.IRON_PIT_PREGEN_FACTORY.buildAll(skipped);
+  window.IRON_PIT_BROWSER_HEROES = Object.fromEntries([...generated, karnok, rokhan].map((item) => [item.id, item]));
 })();
