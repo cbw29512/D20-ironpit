@@ -11,13 +11,17 @@
   const slotData = (slot) => Array.isArray(slot) ? { attackIds: slot, saveActionIds: [] }
     : { attackIds: slot.attackIds || [], saveActionIds: slot.saveActionIds || [] };
 
-  function allowedAttack(member, ids, distance) {
-    const allowed = new Set(ids), profiles = member.state.template.attacks.filter((a) => allowed.has(a.id));
+  function targetAllowed(member, target, attack) {
+    if (!attack.forbidSelfGrappledTarget) return true;
+    return !target.state.grapple_sources.some((source) => source.source_id === member.combatant_id);
+  }
+  function allowedAttack(member, target, ids, distance) {
+    const allowed = new Set(ids), profiles = member.state.template.attacks.filter((a) => allowed.has(a.id) && targetAllowed(member, target, a));
     return profiles.find((a) => a.kind === "melee" && distance <= (a.reach || 5))
       || profiles.find((a) => a.kind === "ranged" && distance <= a.long) || null;
   }
   function slotChoice(member, target, slot) {
-    const data = slotData(slot), distance = S().distance(member, target), attack = allowedAttack(member, data.attackIds, distance);
+    const data = slotData(slot), distance = S().distance(member, target), attack = allowedAttack(member, target, data.attackIds, distance);
     const allowed = new Set(data.saveActionIds);
     const save = attack ? null : member.state.template.saving_throw_actions?.find((a) => allowed.has(a.id) && V().legalAction(a, target, distance)) || null;
     return { attack, save, data };
@@ -66,5 +70,5 @@
     }
     return { events, sequence };
   }
-  window.IRON_PIT_BROWSER_MULTIATTACK = { resolveAttackAction };
+  window.IRON_PIT_BROWSER_MULTIATTACK = { resolveAttackAction, targetAllowed };
 })();
