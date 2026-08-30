@@ -26,6 +26,11 @@ def _control(effect: Any) -> dict[str, Any] | None:
         "restrainsWhileGrappled": effect.restrains_while_grappled,
         "conditionId": effect.condition_id,
         "expiresAtStartOfSourceTurn": effect.expires_at_start_of_source_turn,
+        "expiryTiming": effect.expiry_timing,
+        "repeatSaveAbility": effect.repeat_save_ability,
+        "repeatSaveDc": effect.repeat_save_dc,
+        "repeatSaveTiming": effect.repeat_save_timing,
+        "allowedRemovalActionIds": list(effect.allowed_removal_action_ids),
     }
 
 
@@ -84,7 +89,8 @@ def _removal(action: Any) -> dict[str, Any]:
         "id": action.id, "name": action.name, "actionCost": action.action_cost, "range": action.range_ft,
         "targetMode": action.target_mode, "removableConditions": list(action.removable_conditions),
         "maxConditionsPerUse": action.max_conditions_per_use, "resourceCosts": dict(action.resource_costs),
-        "resourceCostsPerCondition": dict(action.resource_costs_per_condition), "animation": action.animation,
+        "resourceCostsPerCondition": dict(action.resource_costs_per_condition),
+        "expendsSpellSlot": action.expends_spell_slot, "animation": action.animation,
     }
     if action.reaction_trigger:
         row["reactionTrigger"] = action.reaction_trigger
