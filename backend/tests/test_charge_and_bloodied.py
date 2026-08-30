@@ -8,13 +8,18 @@ from app.content.monsters_charge import build_boar
 from app.domain.models import EncounterSelection, RollMode
 
 
-def test_boar_charges_instead_of_dodging_when_twenty_feet_of_runup_exists() -> None:
+def _boar_fixture(distance_ft: int):
     setup = build_encounter_setup(EncounterSelection(
-        hero_ids=["karnok-stoneward-l1"],
-        monster_ids=["srd-boar"],
-        starting_distance_ft=30,
+        hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-boar"],
     ))
     hero, boar = setup.heroes[0], setup.monsters[0]
+    hero.position_ft = 0
+    boar.position_ft = distance_ft
+    return setup, hero, boar
+
+
+def test_boar_charges_when_twenty_feet_of_runup_exists() -> None:
+    setup, hero, boar = _boar_fixture(30)
 
     events, _ = resolve_combat_turn(
         1, 1, boar, hero, setup, FixedDiceProvider([15, 2, 3])
@@ -32,20 +37,16 @@ def test_boar_charges_instead_of_dodging_when_twenty_feet_of_runup_exists() -> N
     assert "dodge" not in boar.state.active_effect_ids
 
 
-def test_boar_without_twenty_feet_of_runup_dodges_while_closing() -> None:
-    setup = build_encounter_setup(EncounterSelection(
-        hero_ids=["karnok-stoneward-l1"],
-        monster_ids=["srd-boar"],
-        starting_distance_ft=15,
-    ))
-    hero, boar = setup.heroes[0], setup.monsters[0]
+def test_boar_without_charge_runup_moves_and_attacks_normally() -> None:
+    setup, hero, boar = _boar_fixture(15)
 
-    events, _ = resolve_combat_turn(1, 1, boar, hero, setup, FixedDiceProvider([10]))
+    events, _ = resolve_combat_turn(1, 1, boar, hero, setup, FixedDiceProvider([10, 3]))
 
-    assert [event.event_type for event in events] == ["feature", "movement"]
-    assert events[0].feature_id == "dodge"
-    assert events[1].movement_ft == 10
-    assert not any(event.feature_id == "charge" for event in events)
+    assert [event.event_type for event in events] == ["movement", "attack"]
+    assert events[0].movement_ft == 10
+    assert events[1].feature_id != "charge"
+    assert events[1].weapon_id == "gore"
+    assert "dodge" not in boar.state.active_effect_ids
 
 
 def test_bloodied_fury_supplies_advantage_on_melee_attack() -> None:
