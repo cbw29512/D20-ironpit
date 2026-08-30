@@ -28,6 +28,14 @@ def _control(effect: Any) -> dict[str, Any] | None:
         row["conditionId"] = effect.condition_id
         if effect.expires_at_start_of_source_turn:
             row["expiresAtStartOfSourceTurn"] = True
+        if effect.expiry_timing:
+            row["expiryTiming"] = effect.expiry_timing
+        if effect.repeat_save_ability:
+            row["repeatSaveAbility"] = effect.repeat_save_ability
+            row["repeatSaveDc"] = effect.repeat_save_dc
+            row["repeatSaveTiming"] = effect.repeat_save_timing
+        if effect.allowed_removal_action_ids:
+            row["allowedRemovalActionIds"] = list(effect.allowed_removal_action_ids)
     return row or None
 
 
@@ -100,16 +108,11 @@ def _save(action: Any) -> dict[str, Any]:
 
 def _removal(action: Any) -> dict[str, Any]:
     row = {
-        "id": action.id,
-        "name": action.name,
-        "actionCost": action.action_cost,
-        "range": action.range_ft,
-        "targetMode": action.target_mode,
-        "removableConditions": list(action.removable_conditions),
-        "maxConditionsPerUse": action.max_conditions_per_use,
-        "resourceCosts": dict(action.resource_costs),
+        "id": action.id, "name": action.name, "actionCost": action.action_cost, "range": action.range_ft,
+        "targetMode": action.target_mode, "removableConditions": list(action.removable_conditions),
+        "maxConditionsPerUse": action.max_conditions_per_use, "resourceCosts": dict(action.resource_costs),
         "resourceCostsPerCondition": dict(action.resource_costs_per_condition),
-        "animation": action.animation,
+        "expendsSpellSlot": action.expends_spell_slot, "animation": action.animation,
     }
     if action.reaction_trigger:
         row["reactionTrigger"] = action.reaction_trigger
