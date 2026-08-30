@@ -2,14 +2,11 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.condition_lifecycle import resolve_source_condition_timing, resolve_target_condition_timing
 from app.combat.death_saves import resolve_death_save
 from app.combat.dice import DiceProvider
 from app.combat.encounter_combat_turn import resolve_combat_turn
-from app.combat.encounter_events import (
-    build_encounter_result,
-    build_finish_event,
-    build_initiative_events,
-)
+from app.combat.encounter_events import build_encounter_result, build_finish_event, build_initiative_events
 from app.combat.encounter_initiative import roll_encounter_initiative
 from app.combat.encounter_outcome import resolve_encounter_outcome
 from app.combat.encounter_setup import build_encounter_setup
@@ -42,6 +39,17 @@ def _resolve_zero_hp_turn(
     return event, sequence + 1
 
 
+def _end_turn_lifecycle(sequence, round_number, member, setup, dice):
+    events, sequence = resolve_target_condition_timing(
+        sequence, round_number, member, "target_turn_end", dice,
+    )
+    source_events, sequence = resolve_source_condition_timing(
+        sequence, round_number, member, setup, "source_turn_end",
+    )
+    events.extend(source_events)
+    return events, sequence
+
+
 def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> EncounterBattleResult:
     """Run the currently certified combat subset over a 1-8 vs. 1-8 encounter."""
     try:
@@ -55,34 +63,35 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                 outcome = resolve_encounter_outcome(setup)
                 if outcome != "active":
                     events.append(build_finish_event(sequence, round_number, outcome))
-                    return build_encounter_result(
-                        setup, initiative, events, outcome, round_number
-                    )
+                    return build_encounter_result(setup, initiative, events, outcome, round_number)
 
-                attacker = by_id[combatant_id]
-                # RAW refresh happens at the start of every turn. Incapacitation
-                # prevents using the Reaction; it does not prevent regaining it.
-                refresh_reaction(attacker.state)
+                member = by_id[combatant_id]
+                refresh_reaction(member.state)
                 expiry_events, sequence = expire_start_of_turn_conditions(
-                    sequence, round_number, attacker, setup
+                    sequence, round_number, member, setup,
                 )
                 events.extend(expiry_events)
-
-                death_event, sequence = _resolve_zero_hp_turn(
-                    sequence, round_number, attacker, dice
+                lifecycle_events, sequence = resolve_target_condition_timing(
+                    sequence, round_number, member, "target_turn_start", dice,
                 )
+                events.extend(lifecycle_events)
+
+                death_event, sequence = _resolve_zero_hp_turn(sequence, round_number, member, dice)
                 if death_event is not None:
                     events.append(death_event)
-                if attacker.state.current_hp <= 0 or attacker.state.is_dead:
+                if member.state.current_hp <= 0 or member.state.is_dead:
+                    end_events, sequence = _end_turn_lifecycle(sequence, round_number, member, setup, dice)
+                    events.extend(end_events)
                     continue
 
-                target = select_nearest_target(attacker, setup)
-                if target is None:
-                    continue
-                turn_events, sequence = resolve_combat_turn(
-                    sequence, round_number, attacker, target, setup, dice
-                )
-                events.extend(turn_events)
+                target = select_nearest_target(member, setup)
+                if target is not None:
+                    turn_events, sequence = resolve_combat_turn(
+                        sequence, round_number, member, target, setup, dice,
+                    )
+                    events.extend(turn_events)
+                end_events, sequence = _end_turn_lifecycle(sequence, round_number, member, setup, dice)
+                events.extend(end_events)
 
             outcome = resolve_encounter_outcome(setup)
             if outcome != "active":
@@ -90,9 +99,7 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                 return build_encounter_result(setup, initiative, events, outcome, round_number)
 
         events.append(build_finish_event(sequence, MAX_ENCOUNTER_ROUNDS, "draw"))
-        return build_encounter_result(
-            setup, initiative, events, "draw", MAX_ENCOUNTER_ROUNDS
-        )
+        return build_encounter_result(setup, initiative, events, "draw", MAX_ENCOUNTER_ROUNDS)
     except ValueError:
         raise
     except Exception as exc:
