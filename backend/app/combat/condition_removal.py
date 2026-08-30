@@ -10,6 +10,7 @@ from app.combat.condition_removal_policy import (
     resource,
     target_allowed,
 )
+from app.combat.spellcasting import mark_slot_spell_cast, slot_spell_available
 from app.domain.encounters import EncounterCombatant
 from app.domain.models import BattleEvent, ConditionRemovalAction
 
@@ -30,6 +31,7 @@ def resolve_condition_removal(
     target: EncounterCombatant,
     action: ConditionRemovalAction,
     condition_ids: list[str],
+    turn_key: str,
 ) -> BattleEvent:
     """Spend printed economy/resources and end only conditions this action can remove."""
     try:
@@ -37,10 +39,14 @@ def resolve_condition_removal(
             raise ValueError("Reaction condition removal requires a matching trigger, not an on-turn resolution.")
         if not target_allowed(remover, target, action) or not condition_ids:
             raise ValueError("Condition-removal action is not legal for this target.")
+        if action.expends_spell_slot and not slot_spell_available(remover.state, turn_key):
+            raise ValueError("A spell slot has already been expended to cast a spell on this turn.")
         legal = set(affordable_conditions(remover, target, action))
         if any(condition_id not in legal for condition_id in condition_ids):
             raise ValueError("Attempted to remove a condition this action cannot legally remove.")
         spend(remover.state, action.action_cost)
+        if action.expends_spell_slot:
+            mark_slot_spell_cast(remover.state, turn_key)
         for resource_id, cost in costs(action, len(condition_ids)).items():
             item = resource(remover, resource_id)
             if item is None or item.current_uses < cost:
