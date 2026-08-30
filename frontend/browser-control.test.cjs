@@ -62,7 +62,11 @@ assert.equal(Object.keys(monsters).length, 58, "control batch must bring browser
   const crab = member("monster-1:crab", "monsters", monsters["srd-giant-crab"]);
   G.apply(held.state, crab.combatant_id, 11, 5, false);
   held.state.current_hp = 0; held.state.is_unconscious = true;
-  assert.equal(S.nearestTarget(crab, { heroes: [held, other], monsters: [crab] }), held);
+  assert.equal(
+    S.nearestTarget(crab, { heroes: [held, other], monsters: [crab] }),
+    other,
+    "an active combatant must be targeted before an Unconscious disabled target",
+  );
   crab.state.is_dead = true; crab.state.is_alive = false;
   G.cleanup({ heroes: [held, other], monsters: [crab] });
   assert.equal(held.state.grapple_sources.length, 0);
