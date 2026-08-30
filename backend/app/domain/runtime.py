@@ -66,6 +66,7 @@ class CombatantState(BaseModel):
     grapple_sources: list[GrappleSource] = Field(default_factory=list)
     timed_effects: list[TimedEffect] = Field(default_factory=list)
     feature_last_turn_keys: dict[str, str] = Field(default_factory=dict)
+    spell_slot_expended_turn_key: str | None = None
     temporary_damage_resistances: list[DamageType] = Field(default_factory=list)
     rage_expires_round: int | None = Field(default=None, ge=1)
     rage_max_round: int | None = Field(default=None, ge=1)
