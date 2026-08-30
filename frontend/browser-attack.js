@@ -18,6 +18,7 @@
 
   function conditionSources(attacker, defender, distance, targetId) {
     let advantage = 0, disadvantage = 0;
+    if (Q().has(attacker, "blinded")) disadvantage += 1;
     if (attacker.active_effect_ids.includes("prone")) disadvantage += 1;
     if (attacker.active_effect_ids.includes("restrained")) disadvantage += 1;
     if (attacker.active_effect_ids.includes("poisoned")) disadvantage += 1;
