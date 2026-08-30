@@ -27,6 +27,10 @@
     const profiles = attacks(member), melee = profiles.find((a) => a.kind === "melee" && distance <= (a.reach || 5));
     return melee || profiles.find((a) => a.kind === "ranged" && distance <= a.long) || null;
   }
+  function reachableMelee(member, distance) {
+    if (!(member.state.movement_remaining_ft > 0)) return null;
+    return attacks(member).find((a) => a.kind === "melee" && distance > (a.reach || 5) && distance - (a.reach || 5) <= member.state.movement_remaining_ft) || null;
+  }
   function secondWind(sequence, round, member) {
     const state = member.state, uses = state.resources["second-wind"] || 0;
     if (!uses || !E().available(state, "bonus_action") || state.current_hp <= 0 || state.current_hp > Math.floor(state.template.max_hp / 2)) return null;
@@ -55,30 +59,39 @@
       distance_after_ft: movement.after, movement_ft: movement.moved, animation: "advance",
       description: `${member.state.template.name} closes ${movement.moved} feet toward melee.` };
   }
+  function applyMove(sequence, round, member, target, setup, desired) {
+    const moved = W().moveToward(sequence, round, member, target, setup, desired), events = [...moved.events];
+    sequence = moved.sequence; if (moved.movement) events.push(moveEvent(sequence++, round, member, target, moved.movement));
+    return { events, sequence, movement: moved.movement };
+  }
   function closeTurn(sequence, round, member, target, setup) {
-    if (S().distance(member, target) <= BRAWL_DISTANCE) return { events: [], sequence, handled: false };
+    let distance = S().distance(member, target);
+    if (distance <= BRAWL_DISTANCE) return { events: [], sequence, handled: false };
     const charged = C()?.resolveClosing(sequence, round, member, target, setup); if (charged?.handled) return charged;
     if (member.state.template.attack_action) return { events: [], sequence, handled: false };
-    const events = [], canAct = E().available(member.state, "action");
-    const ranged = attacks(member).find((a) => a.kind === "ranged" && S().distance(member, target) <= a.long);
-    if (ranged && canAct) events.push(A().resolveAttack(sequence++, round, member, target, ranged, S().distance(member, target), { setup }));
+    const melee = reachableMelee(member, distance);
+    if (melee) {
+      const move = applyMove(sequence, round, member, target, setup, melee.reach || 5);
+      if (member.state.is_dead || member.state.is_unconscious) return { events: move.events, sequence: move.sequence, handled: true };
+      if (move.movement && S().distance(member, target) <= (melee.reach || 5)) return { events: move.events, sequence: move.sequence, handled: false };
+    }
+    const events = [], canAct = E().available(member.state, "action"); distance = S().distance(member, target);
+    const ranged = attacks(member).find((a) => a.kind === "ranged" && distance <= a.long);
+    if (ranged && canAct) events.push(A().resolveAttack(sequence++, round, member, target, ranged, distance, { setup }));
     else if (canAct) {
       E().spend(member.state, "action"); if (!member.state.active_effect_ids.includes("dodge")) member.state.active_effect_ids.push("dodge");
       events.push({ sequence: sequence++, round_number: round, event_type: "feature", actor_id: member.combatant_id,
         actor_name: member.state.template.name, feature_id: "dodge", animation: "dodge",
         description: `${member.state.template.name} Dodges while closing to melee.` });
     }
-    const moved = W().moveToward(sequence, round, member, target, setup, BRAWL_DISTANCE);
-    events.push(...moved.events); sequence = moved.sequence;
-    if (moved.movement) events.push(moveEvent(sequence++, round, member, target, moved.movement));
-    return { events, sequence, handled: true };
+    const move = applyMove(sequence, round, member, target, setup, BRAWL_DISTANCE); events.push(...move.events);
+    return { events, sequence: move.sequence, handled: true };
   }
   function closeAfterAction(sequence, round, member, setup) {
     const target = S().nearestTarget(member, setup);
     if (!target || S().distance(member, target) <= BRAWL_DISTANCE) return { events: [], sequence };
-    const moved = W().moveToward(sequence, round, member, target, setup, BRAWL_DISTANCE), events = [...moved.events];
-    sequence = moved.sequence; if (moved.movement) events.push(moveEvent(sequence++, round, member, target, moved.movement));
-    return { events, sequence };
+    const moved = applyMove(sequence, round, member, target, setup, BRAWL_DISTANCE);
+    return { events: moved.events, sequence: moved.sequence };
   }
   function deathSave(sequence, round, member) {
     const state = member.state, natural = D().roll(20);
