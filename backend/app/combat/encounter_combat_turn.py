@@ -6,6 +6,7 @@ from app.combat.arena_closing import MELEE_BRAWL_DISTANCE_FT, resolve_simple_clo
 from app.combat.attack_actions import resolve_attack_action
 from app.combat.attacks import resolve_attack
 from app.combat.barbarian import enter_rage, finalize_rage_turn
+from app.combat.condition_removal import choose_condition_removal_action, resolve_condition_removal
 from app.combat.dice import DiceProvider
 from app.combat.encounter_targeting import close_ranged_threat_exists, combatant_distance, select_nearest_target
 from app.combat.encounter_turns import prepare_encounter_attack
@@ -38,6 +39,29 @@ def _finish_turn(events, sequence, round_number, attacker):
     return events, sequence
 
 
+def _resolve_support_actions(sequence, round_number, member, setup, dice):
+    """Rescue 0-HP allies first, then clear urgent removable debuffs, then consider ordinary healing."""
+    events: list[BattleEvent] = []
+    healing_choice = choose_healing_action(member, setup)
+    if healing_choice is not None and healing_choice[1].state.current_hp == 0:
+        action, target = healing_choice
+        events.append(resolve_healing(sequence, round_number, member, target, action, dice))
+        sequence += 1
+
+    removal_choice = choose_condition_removal_action(member, setup)
+    if removal_choice is not None:
+        action, target, conditions = removal_choice
+        events.append(resolve_condition_removal(sequence, round_number, member, target, action, conditions))
+        sequence += 1
+
+    healing_choice = choose_healing_action(member, setup)
+    if healing_choice is not None:
+        action, target = healing_choice
+        events.append(resolve_healing(sequence, round_number, member, target, action, dice))
+        sequence += 1
+    return events, sequence
+
+
 def resolve_combat_turn(
     sequence: int, round_number: int, attacker: EncounterCombatant, target: EncounterCombatant,
     setup: EncounterSetup, dice: DiceProvider,
@@ -46,11 +70,8 @@ def resolve_combat_turn(
     events: list[BattleEvent] = []
     cleanup_grapples(setup)
     begin_turn(attacker.state)
-    healing_choice = choose_healing_action(attacker, setup)
-    if healing_choice is not None:
-        healing_action, healing_target = healing_choice
-        events.append(resolve_healing(sequence, round_number, attacker, healing_target, healing_action, dice))
-        sequence += 1
+    support_events, sequence = _resolve_support_actions(sequence, round_number, attacker, setup, dice)
+    events.extend(support_events)
     rage_event = enter_rage(sequence, round_number, attacker.state, attacker.combatant_id)
     if rage_event is not None:
         events.append(rage_event); sequence += 1
@@ -84,7 +105,7 @@ def resolve_combat_turn(
         attack, prep_events, sequence = prepare_encounter_attack(sequence, round_number, attacker, target)
         events.extend(prep_events)
         if attack is not None and is_available(attacker.state, "action"):
-            pack = pack_tactics_active(attacker, target, setup)
+            pack = pack_tactics_active(attacker, setup)
             events.append(resolve_attack(
                 sequence, round_number, attacker.state, target.state, attack,
                 combatant_distance(attacker, target), dice,
