@@ -148,6 +148,31 @@ def test_giant_constrictor_snake_multiattack_is_bite_then_constrict() -> None:
     assert attacker.state.action_available is False
 
 
+def test_tyrannosaurus_bite_grapple_forces_tail_to_retarget() -> None:
+    setup = build_encounter_setup(EncounterSelection(
+        hero_ids=["karnok-stoneward-l1", "rokhan-stonefury-l1"],
+        monster_ids=["srd-tyrannosaurus-rex"],
+        starting_distance_ft=10,
+    ))
+    attacker = setup.monsters[0]
+    begin_turn(attacker.state)
+
+    events, _ = resolve_attack_action(
+        1, 1, attacker, setup,
+        FixedDiceProvider([10, 1, 1, 1, 1, 10, 1, 1, 1, 1]),
+    )
+    attacks = [event for event in events if event.event_type == "attack"]
+
+    assert [event.weapon_id for event in attacks] == ["tyrannosaurus-rex-bite", "tyrannosaurus-rex-tail"]
+    assert attacks[0].target_id == "hero-1:karnok-stoneward-l1"
+    assert attacks[1].target_id == "hero-2:rokhan-stonefury-l1"
+    bitten, tailed = setup.heroes
+    assert "grappled" in bitten.state.active_effect_ids
+    assert "restrained" in bitten.state.active_effect_ids
+    assert any(source.source_id == attacker.combatant_id for source in bitten.state.grapple_sources)
+    assert "prone" in tailed.state.active_effect_ids
+
+
 def test_attack_action_fails_closed_on_unknown_attack_id() -> None:
     setup, attacker = _extra_attack_setup()
     attacker.state.template.attack_action = AttackActionDefinition(
