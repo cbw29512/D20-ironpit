@@ -5,6 +5,7 @@ import logging
 from pathlib import Path
 
 from export_browser_heroes import main as export_browser_heroes
+from export_browser_monsters import main as export_browser_monsters
 from export_figure_profiles import main as export_figure_profiles
 
 logger = logging.getLogger(__name__)
@@ -40,6 +41,7 @@ def main() -> None:
     try:
         _prepare_monster_catalog()
         export_browser_heroes()
+        export_browser_monsters()
         export_figure_profiles()
         logger.info("Static Iron Pit content preparation completed.")
     except Exception:
