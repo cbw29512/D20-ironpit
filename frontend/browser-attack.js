@@ -8,6 +8,7 @@
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || {
     attackAdvantage: (state) => state.is_unconscious,
     autoCritical: (state) => state.is_unconscious,
+    has: (state, id) => state.active_effect_ids.includes(id),
     incapacitated: (state) => state.is_unconscious,
   };
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
@@ -42,7 +43,7 @@
   function adjustedDamage(target, amount, type) {
     if (target.template.damage_immunities?.includes(type)) return 0;
     let value = amount;
-    if (target.template.damage_resistances?.includes(type) || target.temporary_damage_resistances?.includes(type)) value = Math.floor(value / 2);
+    if (target.template.damage_resistances?.includes(type) || target.temporary_damage_resistances?.includes(type) || Q().has(target, "petrified")) value = Math.floor(value / 2);
     if (target.template.damage_vulnerabilities?.includes(type)) value *= 2;
     return value;
   }
