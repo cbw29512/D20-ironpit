@@ -14,6 +14,7 @@ from app.domain.actions import (
     SavingThrowAction,
 )
 from app.domain.size import CreatureSize
+from app.domain.spells import SpellSaveAction
 from app.domain.traits import CombatTrait
 
 
@@ -112,6 +113,7 @@ class CombatantTemplate(BaseModel):
     alternate_weapon_attacks: list[WeaponAttack] = Field(default_factory=list)
     attack_action: AttackActionDefinition | None = None
     saving_throw_actions: list[SavingThrowAction] = Field(default_factory=list)
+    spell_save_actions: list[SpellSaveAction] = Field(default_factory=list)
     healing_actions: list[HealingAction] = Field(default_factory=list)
     condition_removal_actions: list[ConditionRemovalAction] = Field(default_factory=list)
     saving_throw_bonuses: dict[str, int] = Field(default_factory=dict)
