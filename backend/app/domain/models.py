@@ -1,6 +1,7 @@
 from app.domain.actions import (
     AttackActionDefinition,
     AttackActionSlot,
+    ConditionRemovalAction,
     GrappleSource,
     HealingAction,
     HitControlEffect,
@@ -41,6 +42,7 @@ __all__ = [
     "CombatTrait",
     "CombatantState",
     "CombatantTemplate",
+    "ConditionRemovalAction",
     "ConditionalDamage",
     "DamageRollComponent",
     "DamageType",
