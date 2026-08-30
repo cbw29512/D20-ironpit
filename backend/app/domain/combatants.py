@@ -5,7 +5,14 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-from app.domain.actions import AttackActionDefinition, ConditionName, HealingAction, HitControlEffect, SavingThrowAction
+from app.domain.actions import (
+    AttackActionDefinition,
+    ConditionName,
+    ConditionRemovalAction,
+    HealingAction,
+    HitControlEffect,
+    SavingThrowAction,
+)
 from app.domain.size import CreatureSize
 from app.domain.traits import CombatTrait
 
@@ -106,6 +113,7 @@ class CombatantTemplate(BaseModel):
     attack_action: AttackActionDefinition | None = None
     saving_throw_actions: list[SavingThrowAction] = Field(default_factory=list)
     healing_actions: list[HealingAction] = Field(default_factory=list)
+    condition_removal_actions: list[ConditionRemovalAction] = Field(default_factory=list)
     saving_throw_bonuses: dict[str, int] = Field(default_factory=dict)
     skill_bonuses: dict[str, int] = Field(default_factory=dict)
     combat_traits: list[CombatTrait] = Field(default_factory=list)
