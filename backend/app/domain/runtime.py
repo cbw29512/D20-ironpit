@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
-from app.domain.actions import GrappleSource
+from app.domain.actions import AbilityName, ConditionTiming, GrappleSource
 from app.domain.combatants import CombatantTemplate, DamageType
 
 
@@ -16,7 +16,23 @@ class ResourceState(BaseModel):
 class TimedEffect(BaseModel):
     effect_id: str
     source_id: str
+    source_effect_id: str | None = None
+    applied_round: int | None = Field(default=None, ge=1)
     expires_at_start_of_source_turn: bool = True
+    expiry_timing: ConditionTiming | None = None
+    repeat_save_ability: AbilityName | None = None
+    repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
+    repeat_save_timing: ConditionTiming | None = None
+    allowed_removal_action_ids: list[str] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def validate_lifecycle(self) -> "TimedEffect":
+        repeat_fields = (self.repeat_save_ability, self.repeat_save_dc, self.repeat_save_timing)
+        if any(item is not None for item in repeat_fields) and not all(item is not None for item in repeat_fields):
+            raise ValueError("Timed effect repeat save requires ability, DC, and timing together.")
+        if self.expiry_timing is not None:
+            self.expires_at_start_of_source_turn = self.expiry_timing == "source_turn_start"
+        return self
 
 
 class DemoRoster(BaseModel):
