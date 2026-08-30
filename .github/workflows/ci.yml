@@ -4,7 +4,7 @@ on:
   push:
   pull_request:
 
-# Exact-head certification for RAW combat, condition/action/reaction parity, six-slot battlefield UI, and Pages root entry.
+# Exact-head certification for RAW combat, source parity, figure identity, six-slot UI, and Pages root entry.
 jobs:
   combat-certification:
     runs-on: ubuntu-latest
@@ -25,7 +25,7 @@ jobs:
         run: |
           python scripts/prepare_static_site.py
           test -s frontend/data/srd_5_2_1_monsters.json
-          git diff --exit-code -- frontend/browser-heroes.js frontend/data/srd_5_2_1_monsters.json
+          git diff --exit-code -- frontend/browser-heroes.js frontend/figure-profiles.js frontend/data/srd_5_2_1_monsters.json
       - name: Validate browser JavaScript syntax
         run: |
           for file in frontend/*.js; do node --check "$file"; done
@@ -66,6 +66,8 @@ jobs:
           grep -q 'id="hero-slots"' index.html
           grep -q 'id="monster-slots"' index.html
           grep -q 'id="fight-button"' index.html
+          grep -q 'figure-archetypes.css' index.html
+          grep -q 'figure-profiles.js' index.html
           grep -q 'browser-condition-rules.js' index.html
           grep -q 'browser-action-economy.js' index.html
           grep -q 'browser-reactions.js' index.html
@@ -82,6 +84,7 @@ jobs:
           grep -q 'id="combat-fx-overlay"' frontend/index.html
           grep -q 'battlefield.css' frontend/index.html
           grep -q 'figure-archetypes.css' frontend/index.html
+          grep -q 'figure-profiles.js' frontend/index.html
           grep -q 'battle-log-format.js' frontend/index.html
           grep -q 'battlefield-picker.js' frontend/index.html
           grep -q 'battlefield-view.js' frontend/index.html
