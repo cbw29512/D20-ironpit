@@ -4,11 +4,12 @@ import logging
 
 from app.combat.action_economy import is_available, spend
 from app.combat.ally_context import pack_tactics_active
+from app.combat.attack_action_targeting import select_slot_target
 from app.combat.attack_legality import attack_allowed_against
 from app.combat.attacks import resolve_attack
 from app.combat.dice import DiceProvider
 from app.combat.encounter_movement import take_encounter_dash
-from app.combat.encounter_targeting import close_ranged_threat_exists, combatant_distance, select_nearest_target
+from app.combat.encounter_targeting import close_ranged_threat_exists, combatant_distance
 from app.combat.policy import preferred_distance_for_attacks, select_allowed_weapon_attack
 from app.combat.reaction_movement import move_toward_with_reactions
 from app.combat.saving_throws import legal_save_action, resolve_save_action
@@ -85,13 +86,13 @@ def resolve_attack_action(
     sequence: int, round_number: int, attacker: EncounterCombatant,
     setup: EncounterSetup, dice: DiceProvider,
 ) -> tuple[list[BattleEvent], int]:
-    """Resolve ordered Multiattack weapon/save steps with movement, retargeting, and Reactions."""
+    """Resolve ordered Multiattack weapon/save steps with movement, legal retargeting, and Reactions."""
     try:
         _validate_slots(attacker)
         definition = attacker.state.template.attack_action
         if definition is None or not is_available(attacker.state, "action"):
             raise ValueError("Multiattack action is not available.")
-        target = select_nearest_target(attacker, setup)
+        target = select_slot_target(attacker, setup, definition.slots[0])
         if target is None:
             return [], sequence
         events, sequence, ready = _prepare_first_slot(
@@ -104,9 +105,9 @@ def resolve_attack_action(
         for slot in definition.slots:
             if attacker.state.is_dead or attacker.state.is_unconscious:
                 break
-            target = select_nearest_target(attacker, setup)
+            target = select_slot_target(attacker, setup, slot)
             if target is None:
-                break
+                continue
             attack, save_action = _slot_choice(attacker, target, slot)
             if attack is None and save_action is None:
                 moved, sequence = _move_for_slot(sequence, round_number, attacker, target, slot, setup, dice)
