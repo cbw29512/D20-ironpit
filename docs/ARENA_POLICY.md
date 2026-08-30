@@ -5,7 +5,9 @@ Iron Pit is a rules-first card-vs-card deathmatch. It intentionally simplifies b
 ## Locked standard arena assumptions
 
 - Every fight continues until one side is dead. There is no morale, surrender, fleeing, retreat, or kiting AI.
-- The standard arena is flat and unobstructed. Terrain-only movement modes do not matter unless a future arena explicitly enables that terrain.
+- The standard arena is flat, unobstructed, dry, and open to the air. Printed movement modes remain distinct data; the arena does not rewrite a creature's stat block.
+- Walking and horizontal Flying speeds are usable for closing in the standard arena. A creature may use the faster legal mode, but the AI does not gain altitude, hover out of melee, or use flight to kite.
+- Climb, Swim, and Burrow speeds require matching terrain and are unavailable in the standard arena unless a future arena explicitly enables that terrain.
 - Combatants always close toward the enemy. Movement away from the enemy is not part of the standard arena policy.
 - Ranged and thrown attacks may be used while closing when legal. They are an approach option, not a reason to hold distance.
 - Once a combatant reaches melee range, it stays in the brawl. If it has a legal melee attack, that attack is preferred. A truly ranged-only combatant may keep making its ranged attack in melee and takes the normal Disadvantage where the rules require it.
@@ -19,6 +21,6 @@ Iron Pit is a rules-first card-vs-card deathmatch. It intentionally simplifies b
 
 ## Readiness rule
 
-A stat-block feature does not block standard-arena readiness when these arena assumptions make that feature unable to affect the fight. A missing attack, damage rider, defense, saving throw, condition, resource, reaction, spell, recharge feature, or other mechanic that can change the combat outcome still blocks readiness.
+A stat-block feature does not block standard-arena readiness when these arena assumptions make that feature unable to affect the fight. A missing attack, damage rider, defense, saving throw, condition, resource, reaction, spell, recharge feature, movement rule, or other mechanic that can change the combat outcome still blocks readiness.
 
-These are explicit Iron Pit arena assumptions, not changes to a creature's printed statistics. Unsupported outcome-changing mechanics fail closed instead of being approximated.
+These are explicit Iron Pit arena/environment assumptions, not changes to a creature's printed statistics. Unsupported outcome-changing mechanics fail closed instead of being approximated.

@@ -4,6 +4,7 @@ import logging
 import re
 from typing import Any
 
+from app.content.movement_modes import standard_arena_closing_speed
 from app.domain.models import CombatantTemplate, WeaponAttack
 
 logger = logging.getLogger(__name__)
@@ -89,9 +90,7 @@ def _save_action_issues(action: Any, actions: str) -> list[str]:
     save = rf"{action.save_ability}\s+Saving Throw:\s*DC\s*{action.dc}\b"
     if not re.search(save, actions, re.IGNORECASE):
         issues.append(f"save-dc-mismatch:{action.id}")
-    if action.damage_dice_count and not _dice_pattern(
-        action.damage_dice_count, action.damage_dice_size, action.damage_bonus,
-    ).search(actions):
+    if action.damage_dice_count and not _dice_pattern(action.damage_dice_count, action.damage_dice_size, action.damage_bonus).search(actions):
         issues.append(f"save-damage-mismatch:{action.id}")
     if action.grapple_escape_dc is not None:
         if "grappled" not in actions or f"escape dc {action.grapple_escape_dc}" not in actions:
@@ -102,17 +101,16 @@ def _save_action_issues(action: Any, actions: str) -> list[str]:
 def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
     """Reconcile a RAW-ready runtime monster against its vended SRD 5.2.1 record."""
     try:
-        issues: list[str] = []
         checks = (
             (template.name == str(row["name"]), "name-mismatch"),
             (_size_matches(template.size.value, row["size"]), "size-mismatch"),
             (template.armor_class == _first_int(row["armorClass"]), "armor-class-mismatch"),
             (template.max_hp == _first_int(row["hitPoints"]), "hit-points-mismatch"),
-            (template.speed_ft == _first_int(row["speed"]), "speed-mismatch"),
+            (template.speed_ft == standard_arena_closing_speed(row["speed"]), "arena-speed-mismatch"),
             (template.challenge_rating == _challenge(row), "challenge-rating-mismatch"),
             (template.initiative_bonus == _initiative(row), "initiative-mismatch"),
         )
-        issues.extend(label for passed, label in checks if not passed)
+        issues = [label for passed, label in checks if not passed]
         actions = _normalized(row.get("actions", ""))
         for attack in [template.weapon_attack, *template.alternate_weapon_attacks]:
             issues.extend(_attack_issues(attack, actions))
