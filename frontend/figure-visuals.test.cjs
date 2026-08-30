@@ -13,7 +13,7 @@ const V = window.IRON_PIT_FIGURE_VISUALS;
 const registry = window.IRON_PIT_MONSTER_FIGURE_PROFILES;
 const monster = (name, size = "medium") => V.profile({ name, size, kind: "monster", attacks: [{ name: "Bite" }] });
 
-assert.equal(Object.keys(registry).length, 63, "every currently RAW-ready monster needs a reviewed figure profile");
+assert.equal(Object.keys(registry).length, 67, "every currently RAW-ready monster needs a reviewed figure profile");
 for (const name of Object.keys(registry)) {
   const info = monster(name);
   assert.equal(info.certified, true, `${name} must use a reviewed figure profile`);
@@ -31,6 +31,9 @@ assert.deepEqual(
 assert.equal(monster("Baboon", "small").form, "primate");
 assert.equal(monster("Plesiosaurus", "large").form, "aquatic-reptile");
 assert.equal(monster("Pteranodon").form, "pterosaur");
+assert.equal(monster("Hippogriff", "large").form, "hippogriff");
+assert.equal(monster("Kobold Warrior", "small").detail, "kobold");
+assert.equal(monster("Hobgoblin Warrior").detail, "hobgoblin");
 assert.equal(monster("Giant Wolf Spider").form, "spider");
 assert.equal(monster("Giant Wasp").form, "winged-insect");
 assert.equal(monster("Giant Centipede").form, "centipede");

@@ -31,6 +31,15 @@
 .stick-figure[data-form="pterosaur"] .tail{display:block;width:25px;height:7px;left:3px;top:27px;background:currentColor;clip-path:polygon(0 50%,100% 0,100% 100%)}
 .stick-figure[data-form="pterosaur"] .legs{width:3px;height:17px;left:23px;top:68px;transform:rotate(18deg);box-shadow:12px 0 0 currentColor}.stick-figure[data-form="pterosaur"] .legs::after{display:none}
 
+/* Hippogriff: eagle head and wings on a horse-like body. */
+.stick-figure[data-form="hippogriff"] .head{width:19px;height:18px;left:1px;top:31px;border:4px solid currentColor;border-radius:50%;background:transparent}
+.stick-figure[data-form="hippogriff"] .body{width:41px;height:11px;left:16px;top:48px;border-radius:55%}
+.stick-figure[data-form="hippogriff"] .arms{width:48px;height:4px;left:10px;top:43px;transform:rotate(-17deg)}
+.stick-figure[data-form="hippogriff"] .feature-one{display:block;width:26px;height:22px;left:13px;top:34px;background:transparent;border-top:4px solid currentColor;border-left:3px solid currentColor;transform:skewY(-24deg)}
+.stick-figure[data-form="hippogriff"] .feature-two{display:block;width:15px;height:8px;left:-11px;top:37px;background:currentColor;clip-path:polygon(0 50%,100% 0,100% 100%)}
+.stick-figure[data-form="hippogriff"] .legs{width:4px;height:31px;left:22px;top:54px;transform:rotate(8deg);box-shadow:25px 0 0 currentColor}.stick-figure[data-form="hippogriff"] .legs::after{width:4px;height:29px;left:8px;top:0;transform:rotate(-14deg);box-shadow:22px 5px 0 currentColor}
+.stick-figure[data-form="hippogriff"] .tail{display:block;width:27px;height:4px;right:-18px;top:49px;transform:rotate(-22deg);border-radius:999px}
+
 /* Plesiosaurus: long neck, broad body, four flippers, short tail. */
 .stick-figure[data-form="aquatic-reptile"] .head{width:18px;height:14px;left:0;top:20px;border:4px solid currentColor;border-radius:50%;background:transparent}
 .stick-figure[data-form="aquatic-reptile"] .body{width:42px;height:17px;left:16px;top:52px;border-radius:50%}
@@ -48,8 +57,12 @@
 /* Hoofed identifiers. */
 .stick-figure[data-form="hoofed"][data-detail="camel"] .feature-one{display:block;width:24px;height:17px;left:25px;top:31px;background:transparent;border-top:9px solid currentColor;border-radius:50%}
 
-/* Goblins get pointed ears; owls get a broad round head. */
+/* Goblinoids and kobolds get distinct head language. */
 .stick-figure[data-form="humanoid"][data-detail="goblin"] .feature-one{display:block;width:34px;height:12px;left:13px;top:24px;background:transparent;border-left:10px solid currentColor;border-right:10px solid currentColor;transform:skewY(-18deg)}
+.stick-figure[data-form="humanoid"][data-detail="hobgoblin"] .feature-one{display:block;width:29px;height:10px;left:15px;top:25px;background:transparent;border-left:8px solid currentColor;border-right:8px solid currentColor;transform:skewY(-10deg)}
+.stick-figure[data-form="humanoid"][data-detail="kobold"] .head{width:22px;height:17px;left:18px;top:28px;border-radius:55% 30% 30% 55%}
+.stick-figure[data-form="humanoid"][data-detail="kobold"] .feature-one{display:block;width:15px;height:7px;left:7px;top:34px;background:currentColor;clip-path:polygon(0 50%,100% 0,100% 100%)}
+.stick-figure[data-form="humanoid"][data-detail="kobold"] .tail{display:block;width:29px;height:4px;right:-17px;top:66px;transform:rotate(-28deg);border-radius:999px}
 .stick-figure[data-form="bird"][data-detail="owl"] .head{width:25px;height:23px;left:17px;top:10px}
 
 /* Humanoid equipment should read at a glance. */

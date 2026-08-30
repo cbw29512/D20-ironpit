@@ -4,8 +4,8 @@ from typing import Literal, TypedDict
 
 FigureForm = Literal[
     "aquatic-reptile", "bat", "bear", "bird", "brute", "centipede", "crab", "frog",
-    "hoofed", "humanoid", "insect", "plant", "primate", "pterosaur", "quadruped",
-    "reptile", "snake", "spider", "winged-insect",
+    "hippogriff", "hoofed", "humanoid", "insect", "plant", "primate", "pterosaur",
+    "quadruped", "reptile", "snake", "spider", "winged-insect",
 ]
 
 
@@ -55,10 +55,14 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Giant Wasp": _p("winged-insect", "wasp"),
     "Giant Weasel": _p("quadruped", "mustelid"),
     "Giant Wolf Spider": _p("spider", "spider"),
+    "Goblin Minion": _p("humanoid", "goblin"),
     "Goblin Warrior": _p("humanoid", "goblin"),
     "Guard": _p("humanoid", "guard"),
     "Hawk": _p("bird", "raptor"),
+    "Hippogriff": _p("hippogriff", "hippogriff"),
+    "Hobgoblin Warrior": _p("humanoid", "hobgoblin"),
     "Hyena": _p("quadruped", "hyena"),
+    "Kobold Warrior": _p("humanoid", "kobold"),
     "Lizard": _p("reptile", "lizard"),
     "Mastiff": _p("quadruped", "canine"),
     "Mule": _p("hoofed", "equine"),

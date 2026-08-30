@@ -1,5 +1,6 @@
 from app.main import get_arena_roster
 from app.domain.models import ArenaRoster, DamageType, WeaponAttackKind
+from app.domain.traits import CombatTrait
 
 
 def _by_id(items, item_id: str):
@@ -15,13 +16,13 @@ def test_arena_roster_exposes_certified_batch() -> None:
         "brom-ironmark-l1", "selene-asharrow-l1", "mara-quickstep-l1",
     ]
     assert [item.id for item in roster.monsters] == [
-        "srd-goblin-warrior", "srd-bandit", "srd-commoner", "srd-guard",
-        "srd-giant-rat", "srd-giant-weasel", "srd-axe-beak", "srd-giant-lizard",
-        "srd-wolf", "srd-dire-wolf", "srd-black-bear", "srd-brown-bear",
-        "srd-baboon", "srd-camel", "srd-deer", "srd-draft-horse", "srd-giant-badger",
-        "srd-boar", "srd-elk", "srd-giant-boar", "srd-awakened-shrub",
-        "srd-badger", "srd-bat", "srd-cat", "srd-crab", "srd-frog", "srd-hawk",
-        "srd-lizard", "srd-owl", "srd-rat", "srd-raven", "srd-weasel",
+        "srd-goblin-warrior", "srd-goblin-minion", "srd-hobgoblin-warrior", "srd-kobold-warrior",
+        "srd-bandit", "srd-commoner", "srd-guard", "srd-giant-rat", "srd-giant-weasel",
+        "srd-axe-beak", "srd-giant-lizard", "srd-wolf", "srd-dire-wolf", "srd-black-bear",
+        "srd-brown-bear", "srd-baboon", "srd-camel", "srd-deer", "srd-draft-horse",
+        "srd-giant-badger", "srd-boar", "srd-elk", "srd-giant-boar", "srd-hippogriff",
+        "srd-awakened-shrub", "srd-badger", "srd-bat", "srd-cat", "srd-crab", "srd-frog",
+        "srd-hawk", "srd-lizard", "srd-owl", "srd-rat", "srd-raven", "srd-weasel",
         "srd-eagle", "srd-panther", "srd-plesiosaurus", "srd-polar-bear", "srd-pony",
         "srd-pteranodon", "srd-riding-horse", "srd-tiger", "srd-vulture",
         "srd-giant-fire-beetle", "srd-giant-goat", "srd-giant-owl", "srd-hyena",
@@ -103,7 +104,7 @@ def test_srd_guard_profile() -> None:
 def test_srd_giant_rat_profile() -> None:
     rat = _by_id(get_arena_roster().monsters, "srd-giant-rat")
     assert (rat.challenge_rating, rat.armor_class, rat.max_hp) == ("1/8", 13, 7)
-    assert (rat.speed_ft, rat.initiative_bonus) == (30, 3)
+    assert (rat.size.value, rat.speed_ft, rat.initiative_bonus) == ("small", 30, 3)
     assert (rat.weapon_attack.attack_bonus, rat.weapon_attack.damage_bonus) == (5, 3)
     assert rat.weapon_attack.weapon.dice_size == 4
 
@@ -128,7 +129,7 @@ def test_srd_axe_beak_profile() -> None:
 def test_srd_giant_lizard_profile() -> None:
     lizard = _by_id(get_arena_roster().monsters, "srd-giant-lizard")
     assert (lizard.challenge_rating, lizard.armor_class, lizard.max_hp) == ("1/4", 12, 19)
-    assert lizard.speed_ft == 40
+    assert (lizard.size.value, lizard.speed_ft) == ("large", 40)
     assert (lizard.weapon_attack.attack_bonus, lizard.weapon_attack.damage_bonus) == (4, 2)
     assert lizard.weapon_attack.weapon.dice_size == 8
     assert lizard.weapon_attack.weapon.damage_type is DamageType.PIERCING
@@ -167,3 +168,28 @@ def test_charge_beast_stat_blocks() -> None:
     assert (elk.weapon_attack.attack_bonus, elk.weapon_attack.weapon.dice_size, elk.weapon_attack.damage_bonus) == (5, 6, 3)
     assert (giant_boar.armor_class, giant_boar.max_hp, giant_boar.speed_ft) == (13, 42, 40)
     assert (giant_boar.weapon_attack.attack_bonus, giant_boar.weapon_attack.weapon.dice_count, giant_boar.weapon_attack.damage_bonus) == (5, 2, 3)
+
+
+def test_humanoid_expansion_matches_srd_profiles() -> None:
+    monsters = get_arena_roster().monsters
+    goblin = _by_id(monsters, "srd-goblin-minion")
+    kobold = _by_id(monsters, "srd-kobold-warrior")
+    hobgoblin = _by_id(monsters, "srd-hobgoblin-warrior")
+
+    assert (goblin.size.value, goblin.armor_class, goblin.max_hp, goblin.initiative_bonus) == ("small", 12, 7, 2)
+    assert goblin.alternate_weapon_attacks[0].weapon.normal_range_ft == 20
+    assert CombatTrait.PACK_TACTICS in kobold.combat_traits
+    assert (kobold.size.value, kobold.armor_class, kobold.max_hp) == ("small", 14, 7)
+    assert CombatTrait.PACK_TACTICS in hobgoblin.combat_traits
+    assert (hobgoblin.armor_class, hobgoblin.max_hp, hobgoblin.initiative_bonus) == (18, 11, 3)
+    poison = hobgoblin.alternate_weapon_attacks[0].on_hit_damage[0]
+    assert (poison.dice_count, poison.dice_size, poison.damage_type) == (3, 4, DamageType.POISON)
+
+
+def test_hippogriff_matches_srd_multiattack_and_arena_flight_speed() -> None:
+    hippogriff = _by_id(get_arena_roster().monsters, "srd-hippogriff")
+    assert (hippogriff.size.value, hippogriff.armor_class, hippogriff.max_hp) == ("large", 11, 26)
+    assert (hippogriff.speed_ft, hippogriff.initiative_bonus) == (60, 1)
+    assert (hippogriff.weapon_attack.attack_bonus, hippogriff.weapon_attack.weapon.dice_size) == (5, 8)
+    assert hippogriff.attack_action is not None
+    assert [slot.attack_ids for slot in hippogriff.attack_action.slots] == [["hippogriff-rend"], ["hippogriff-rend"]]
