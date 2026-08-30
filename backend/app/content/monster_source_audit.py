@@ -7,6 +7,7 @@ from typing import Any
 from app.domain.models import CombatantTemplate, WeaponAttack
 
 logger = logging.getLogger(__name__)
+_SIZE_NAMES = ("tiny", "small", "medium", "large", "huge", "gargantuan")
 
 
 def _first_int(value: object) -> int:
@@ -25,6 +26,14 @@ def _initiative(row: dict[str, object]) -> int:
 
 def _challenge(row: dict[str, object]) -> str:
     return str(row["challenge"]).split()[0]
+
+
+def _size_matches(runtime_size: str, source_size: object) -> bool:
+    text = str(source_size).lower()
+    allowed = {size for size in _SIZE_NAMES if re.search(rf"\b{size}\b", text)}
+    if not allowed:
+        raise ValueError(f"SRD size could not be parsed: {source_size!r}")
+    return runtime_size.lower() in allowed
 
 
 def _normalized(text: object) -> str:
@@ -96,7 +105,7 @@ def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) ->
         issues: list[str] = []
         checks = (
             (template.name == str(row["name"]), "name-mismatch"),
-            (template.size.value.lower() == str(row["size"]).lower(), "size-mismatch"),
+            (_size_matches(template.size.value, row["size"]), "size-mismatch"),
             (template.armor_class == _first_int(row["armorClass"]), "armor-class-mismatch"),
             (template.max_hp == _first_int(row["hitPoints"]), "hit-points-mismatch"),
             (template.speed_ft == _first_int(row["speed"]), "speed-mismatch"),
