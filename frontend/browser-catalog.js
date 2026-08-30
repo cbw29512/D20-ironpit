@@ -1,34 +1,7 @@
 (() => {
   "use strict";
 
-  const CLASS_ROWS = [
-    ["barbarian", "Barbarian", "path-berserker", "Path of the Berserker"],
-    ["bard", "Bard", "college-lore", "College of Lore"],
-    ["cleric", "Cleric", "life-domain", "Life Domain"],
-    ["druid", "Druid", "circle-land", "Circle of the Land"],
-    ["fighter", "Fighter", "champion", "Champion"],
-    ["monk", "Monk", "warrior-open-hand", "Warrior of the Open Hand"],
-    ["paladin", "Paladin", "oath-devotion", "Oath of Devotion"],
-    ["ranger", "Ranger", "hunter", "Hunter"],
-    ["rogue", "Rogue", "thief", "Thief"],
-    ["sorcerer", "Sorcerer", "draconic-sorcery", "Draconic Sorcery"],
-    ["warlock", "Warlock", "fiend-patron", "Fiend Patron"],
-    ["wizard", "Wizard", "evoker", "Evoker"],
-  ];
-  const BUILD_ROWS = {
-    barbarian: [["great-weapon", "Great Weapon"], ["axe-shield", "Axe & Shield"], ["dual-wielder", "Dual Wielder"]],
-    bard: [["support", "Support"], ["duelist", "Duelist"], ["controller", "Controller"]],
-    cleric: [["guardian", "Guardian"], ["healer", "Healer"], ["war-priest", "War Priest"]],
-    druid: [["wild-shaper", "Wild Shaper"], ["primal-caster", "Primal Caster"], ["warden", "Warden"]],
-    fighter: [["guardian", "Sword & Shield"], ["great-weapon", "Great Weapon"], ["archer", "Archer"]],
-    monk: [["striker", "Striker"], ["skirmisher", "Skirmisher"], ["defender", "Defender"]],
-    paladin: [["guardian", "Guardian"], ["great-weapon", "Great Weapon"], ["avenger", "Avenger"]],
-    ranger: [["archer", "Archer"], ["dual-wielder", "Dual Wielder"], ["warden", "Warden"]],
-    rogue: [["skirmisher", "Skirmisher"], ["archer", "Archer"], ["duelist", "Duelist"]],
-    sorcerer: [["blaster", "Blaster"], ["controller", "Controller"], ["survivor", "Survivor"]],
-    warlock: [["eldritch-blaster", "Eldritch Blaster"], ["blade", "Blade"], ["controller", "Controller"]],
-    wizard: [["evoker", "Evoker"], ["controller", "Controller"], ["defender", "Defender"]],
-  };
+  const D = () => window.IRON_PIT_PREGEN_DATA;
 
   function heroId(classId, level, buildId, index) {
     const base = `hero-2024-${classId}-l${level}`;
@@ -43,20 +16,22 @@
   }
 
   function buildHeroes() {
-    const cards = [];
-    const readyHeroes = readyHeroIndex();
-    for (const [classId, className, subclassId, subclassName] of CLASS_ROWS) {
+    const cards = [], readyHeroes = readyHeroIndex();
+    for (const [classId, className, subclassId, subclassName] of D().CLASS_ROWS) {
       for (let level = 1; level <= 20; level += 1) {
-        BUILD_ROWS[classId].forEach(([buildId, buildName], index) => {
+        D().BUILD_ROWS[classId].forEach(([buildId, buildName], index) => {
           const runtime = readyHeroes.get(`${classId}:${level}:${buildId}`) || null;
+          const full = Boolean(runtime?.full_feature_coverage);
           cards.push({
             id: heroId(classId, level, buildId, index),
             name: runtime?.name || `${className} ${level} — ${buildName}`,
             class_id: classId, class_name: className, level, build_id: buildId, build_name: buildName,
             subclass_id: level >= 3 ? subclassId : null, subclass_name: level >= 3 ? subclassName : null,
-            coverage_status: runtime ? "raw_ready" : "blocked",
+            coverage_status: runtime ? (full ? "raw_ready" : "raw_playable") : "blocked",
+            automation_coverage: runtime?.automation_coverage || "none",
             runnable_template_id: runtime?.id || null,
-            blockers: runtime ? [] : ["legal-character-build-not-certified", "combat-feature-coverage-not-certified"],
+            blockers: runtime ? [] : ["legal-character-runtime-missing"],
+            feature_gaps: runtime && !full ? ["advanced-class-and-subclass-actions-still-expanding"] : [],
           });
         });
       }
@@ -94,8 +69,7 @@
   }
 
   async function buildCatalog() {
-    const heroes = buildHeroes();
-    const monsters = await buildMonsters();
+    const heroes = buildHeroes(), monsters = await buildMonsters();
     return { heroes, monsters, hero_count: heroes.length, monster_count: monsters.length };
   }
 
