@@ -8,9 +8,9 @@
   const asiLevels = (classId) => classId === "fighter" ? [4, 6, 8, 12, 14, 16]
     : classId === "rogue" ? [4, 8, 10, 12, 16] : [4, 8, 12, 16];
 
-  function increase(scores, ability, amount) {
+  function increase(scores, ability, amount, maximum = 20) {
     const index = ABILITIES.indexOf(ability);
-    const room = Math.max(0, 20 - scores[index]);
+    const room = Math.max(0, maximum - scores[index]);
     const used = Math.min(room, amount);
     scores[index] += used;
     return amount - used;
@@ -23,6 +23,13 @@
       let remaining = increase(values, spec.primary, 2);
       if (remaining) remaining = increase(values, spec.secondary, remaining);
       if (remaining) increase(values, "constitution", remaining);
+    }
+    if (level >= 19) increase(values, spec.primary, 1, 30);
+    if (classId === "barbarian" && level >= 20) {
+      increase(values, "strength", 4, 25); increase(values, "constitution", 4, 25);
+    }
+    if (classId === "monk" && level >= 20) {
+      increase(values, "dexterity", 4, 25); increase(values, "wisdom", 4, 25);
     }
     return Object.fromEntries(ABILITIES.map((ability, index) => [ability, values[index]]));
   }
