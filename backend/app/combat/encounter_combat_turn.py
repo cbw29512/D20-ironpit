@@ -39,7 +39,7 @@ def _finish_turn(events, sequence, round_number, attacker):
     return events, sequence
 
 
-def _resolve_support_actions(sequence, round_number, member, setup, dice):
+def _resolve_support_actions(sequence, round_number, member, setup, dice, turn_key):
     """Rescue 0-HP allies first, then clear urgent removable debuffs, then consider ordinary healing."""
     events: list[BattleEvent] = []
     healing_choice = choose_healing_action(member, setup)
@@ -48,10 +48,10 @@ def _resolve_support_actions(sequence, round_number, member, setup, dice):
         events.append(resolve_healing(sequence, round_number, member, target, action, dice))
         sequence += 1
 
-    removal_choice = choose_condition_removal_action(member, setup)
+    removal_choice = choose_condition_removal_action(member, setup, turn_key)
     if removal_choice is not None:
         action, target, conditions = removal_choice
-        events.append(resolve_condition_removal(sequence, round_number, member, target, action, conditions))
+        events.append(resolve_condition_removal(sequence, round_number, member, target, action, conditions, turn_key))
         sequence += 1
 
     healing_choice = choose_healing_action(member, setup)
@@ -70,7 +70,8 @@ def resolve_combat_turn(
     events: list[BattleEvent] = []
     cleanup_grapples(setup)
     begin_turn(attacker.state)
-    support_events, sequence = _resolve_support_actions(sequence, round_number, attacker, setup, dice)
+    turn_key = f"{round_number}:{attacker.combatant_id}"
+    support_events, sequence = _resolve_support_actions(sequence, round_number, attacker, setup, dice, turn_key)
     events.extend(support_events)
     rage_event = enter_rage(sequence, round_number, attacker.state, attacker.combatant_id)
     if rage_event is not None:
