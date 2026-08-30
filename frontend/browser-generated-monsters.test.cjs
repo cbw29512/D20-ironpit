@@ -17,9 +17,9 @@ const manual = structuredClone(window.IRON_PIT_BROWSER_MONSTERS);
 
 load("browser-monsters-generated.js");
 const generated = window.IRON_PIT_BROWSER_MONSTERS;
-assert.equal(Object.keys(manual).length, 67);
-assert.equal(Object.keys(generated).length, 67);
-assert.deepEqual(Object.keys(generated).sort(), Object.keys(manual).sort());
+assert.equal(Object.keys(manual).length, 67, "Legacy fragments remain a 67-monster compatibility subset");
+assert.equal(Object.keys(generated).length, 68, "Generated canonical runtime must expose all certified monsters");
+assert.ok(generated["srd-tyrannosaurus-rex"]);
 
 const slots = (action) => (action?.slots || []).map((slot) => Array.isArray(slot)
   ? { attackIds: slot, saveActionIds: [] }
@@ -31,7 +31,7 @@ const attack = (item) => ({
   normal: item.normal || null, long: item.long || null, fixedDamage: item.fixedDamage ?? null,
   conditionalAdvantage: item.conditionalAdvantage || null, onHitDamage: item.onHitDamage || [],
   proneMaxSize: item.proneMaxSize || null, controlEffect: item.controlEffect || null,
-  charge: item.charge || null,
+  forbidSelfGrappledTarget: Boolean(item.forbidSelfGrappledTarget), charge: item.charge || null,
 });
 const normalized = (item) => ({
   id: item.id, name: item.name, challenge_rating: item.challenge_rating, size: item.size,
@@ -46,7 +46,49 @@ const normalized = (item) => ({
 });
 
 for (const id of Object.keys(manual)) {
-  assert.deepEqual(normalized(generated[id]), normalized(manual[id]), `${id} generated runtime drifted from certified browser data`);
+  assert.ok(generated[id], `${id} must remain in the canonical generated runtime`);
+  assert.deepEqual(normalized(generated[id]), normalized(manual[id]), `${id} generated runtime drifted from certified compatibility data`);
 }
 
-console.log("Generated monster roster matches all 67 certified production templates.");
+const rex = generated["srd-tyrannosaurus-rex"];
+assert.equal(rex.challenge_rating, "8");
+assert.deepEqual(rex.attack_action.slots.map((slot) => slot.attackIds), [
+  ["tyrannosaurus-rex-bite"], ["tyrannosaurus-rex-tail"],
+]);
+const bite = rex.attacks.find((item) => item.id === "tyrannosaurus-rex-bite");
+const tail = rex.attacks.find((item) => item.id === "tyrannosaurus-rex-tail");
+assert.equal(bite.controlEffect.maxTargetSize, "large");
+assert.equal(bite.controlEffect.grappleEscapeDc, 17);
+assert.equal(bite.controlEffect.restrainsWhileGrappled, true);
+assert.equal(tail.forbidSelfGrappledTarget, true);
+assert.equal(tail.proneMaxSize, "huge");
+
+for (const file of [
+  "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
+  "browser-grapple.js", "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-timed-conditions.js",
+  "browser-attack.js", "browser-saves.js", "browser-multiattack.js",
+]) load(file);
+window.IRON_PIT_DICE = {
+  roll: (sides) => sides === 20 ? 10 : 1,
+  rollMany: (count, sides) => Array.from({ length: count }, () => sides === 20 ? 10 : 1),
+};
+const S = window.IRON_PIT_BROWSER_STATE;
+const M = window.IRON_PIT_BROWSER_MULTIATTACK;
+const combatant = (id, side, position, template) => ({
+  combatant_id: id, side, position_ft: position, state: S.buildState(structuredClone(template)),
+});
+const rexMember = combatant("monster-1:srd-tyrannosaurus-rex", "monsters", 10, rex);
+const heroOne = combatant("hero-1:karnok-stoneward-l1", "heroes", 0, window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"]);
+const heroTwo = combatant("hero-2:rokhan-stonefury-l1", "heroes", 0, window.IRON_PIT_BROWSER_HEROES["rokhan-stonefury-l1"]);
+const setup = { heroes: [heroOne, heroTwo], monsters: [rexMember] };
+S.beginTurn(rexMember.state);
+const result = M.resolveAttackAction(1, 1, rexMember, setup);
+const attacks = result.events.filter((event) => event.event_type === "attack");
+assert.deepEqual(attacks.map((event) => event.weapon_id), ["tyrannosaurus-rex-bite", "tyrannosaurus-rex-tail"]);
+assert.equal(attacks[0].target_id, heroOne.combatant_id);
+assert.equal(attacks[1].target_id, heroTwo.combatant_id, "Tail must retarget away from the creature held by Bite");
+assert.ok(heroOne.state.active_effect_ids.includes("grappled"));
+assert.ok(heroOne.state.active_effect_ids.includes("restrained"));
+assert.ok(heroTwo.state.active_effect_ids.includes("prone"));
+
+console.log("Generated monster roster is canonical for 68 certified templates, including T. rex retargeting.");
