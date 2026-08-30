@@ -98,6 +98,24 @@ def _save(action: Any) -> dict[str, Any]:
     return row
 
 
+def _removal(action: Any) -> dict[str, Any]:
+    row = {
+        "id": action.id,
+        "name": action.name,
+        "actionCost": action.action_cost,
+        "range": action.range_ft,
+        "targetMode": action.target_mode,
+        "removableConditions": list(action.removable_conditions),
+        "maxConditionsPerUse": action.max_conditions_per_use,
+        "resourceCosts": dict(action.resource_costs),
+        "resourceCostsPerCondition": dict(action.resource_costs_per_condition),
+        "animation": action.animation,
+    }
+    if action.reaction_trigger:
+        row["reactionTrigger"] = action.reaction_trigger
+    return row
+
+
 def template_row(template: CombatantTemplate) -> dict[str, Any]:
     try:
         traits = {item.value for item in template.combat_traits}
@@ -119,6 +137,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                        "off_hand": template.visual.off_hand, "body_style": template.visual.body_style},
             "source": template.source,
         }
+        if template.condition_removal_actions:
+            row["condition_removal_actions"] = [_removal(item) for item in template.condition_removal_actions]
         if template.attack_action:
             row["attack_action"] = {"id": template.attack_action.id, "name": template.attack_action.name, "slots": [
                 {"attackIds": slot.attack_ids, "saveActionIds": slot.save_action_ids}
