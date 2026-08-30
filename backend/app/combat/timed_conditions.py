@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.condition_immunity import condition_is_immune
+from app.domain.actions import AbilityName, ConditionTiming
 from app.domain.models import BattleEvent, CombatantState, EncounterCombatant, EncounterSetup, TimedEffect
 
 
@@ -9,25 +10,43 @@ def apply_timed_condition(
     effect_id: str,
     source_id: str,
     *,
+    source_effect_id: str | None = None,
+    applied_round: int | None = None,
     expires_at_start_of_source_turn: bool = True,
+    expiry_timing: ConditionTiming | None = None,
+    repeat_save_ability: AbilityName | None = None,
+    repeat_save_dc: int | None = None,
+    repeat_save_timing: ConditionTiming | None = None,
+    allowed_removal_action_ids: list[str] | None = None,
 ) -> str | None:
     if condition_is_immune(state, effect_id):
         return None
     state.timed_effects = [
         effect for effect in state.timed_effects
-        if not (effect.effect_id == effect_id and effect.source_id == source_id)
+        if not (
+            effect.effect_id == effect_id
+            and effect.source_id == source_id
+            and effect.source_effect_id == source_effect_id
+        )
     ]
     state.timed_effects.append(TimedEffect(
         effect_id=effect_id,
         source_id=source_id,
+        source_effect_id=source_effect_id,
+        applied_round=applied_round,
         expires_at_start_of_source_turn=expires_at_start_of_source_turn,
+        expiry_timing=expiry_timing,
+        repeat_save_ability=repeat_save_ability,
+        repeat_save_dc=repeat_save_dc,
+        repeat_save_timing=repeat_save_timing,
+        allowed_removal_action_ids=allowed_removal_action_ids or [],
     ))
     if effect_id not in state.active_effect_ids:
         state.active_effect_ids.append(effect_id)
     return effect_id
 
 
-def _remove_source_effect(state: CombatantState, effect: TimedEffect) -> bool:
+def remove_effect_instance(state: CombatantState, effect: TimedEffect) -> bool:
     state.timed_effects = [item for item in state.timed_effects if item != effect]
     still_active = any(item.effect_id == effect.effect_id for item in state.timed_effects)
     if not still_active and effect.effect_id in state.active_effect_ids:
@@ -46,10 +65,11 @@ def expire_start_of_turn_conditions(
     for target in [*setup.heroes, *setup.monsters]:
         expiring = [
             effect for effect in target.state.timed_effects
-            if effect.source_id == source.combatant_id and effect.expires_at_start_of_source_turn
+            if effect.source_id == source.combatant_id
+            and (effect.expiry_timing == "source_turn_start" or effect.expires_at_start_of_source_turn)
         ]
         for effect in expiring:
-            removed = _remove_source_effect(target.state, effect)
+            removed = remove_effect_instance(target.state, effect)
             if not removed:
                 continue
             events.append(BattleEvent(
