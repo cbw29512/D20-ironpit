@@ -101,7 +101,8 @@
   }
   function resolveTurn(sequence, round, member, setup) {
     const events = []; H().cleanup(setup); S().beginTurn(member.state);
-    const support = P()?.resolve(sequence, round, member, setup); if (support) { events.push(...support.events); sequence = support.sequence; }
+    const turnKey = `${round}:${member.combatant_id}`;
+    const support = P()?.resolve(sequence, round, member, setup, turnKey); if (support) { events.push(...support.events); sequence = support.sequence; }
     const rage = G()?.enter(sequence, round, member); if (rage) { events.push(rage); sequence += 1; }
     const wind = secondWind(sequence, round, member); if (wind) { events.push(wind); sequence += 1; }
     if (H().shouldEscape(member.state)) { events.push(H().escape(sequence++, round, member)); return finalize(events, sequence, round, member); }
