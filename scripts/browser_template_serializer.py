@@ -81,14 +81,19 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
 
 
 def _save(action: Any) -> dict[str, Any]:
-    return {
+    row: dict[str, Any] = {
         "id": action.id, "name": action.name, "saveAbility": action.save_ability, "dc": action.dc,
-        "range": action.range_ft, "targetMaxSize": _value(action.target_max_size) if action.target_max_size else None,
-        "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
-        "damageBonus": action.damage_bonus, "damageType": action.damage_type, "successDamage": action.success_damage,
-        "grappleEscapeDc": action.grapple_escape_dc, "restrainsWhileGrappled": action.restrains_while_grappled,
-        "animation": action.animation,
+        "range": action.range_ft, "damageDiceCount": action.damage_dice_count,
+        "damageDiceSize": action.damage_dice_size, "damageBonus": action.damage_bonus,
+        "damageType": action.damage_type, "successDamage": action.success_damage, "animation": action.animation,
     }
+    if action.target_max_size:
+        row["targetMaxSize"] = _value(action.target_max_size)
+    if action.grapple_escape_dc is not None:
+        row["grappleEscapeDc"] = action.grapple_escape_dc
+    if action.restrains_while_grappled:
+        row["restrainsWhileGrappled"] = True
+    return row
 
 
 def template_row(template: CombatantTemplate) -> dict[str, Any]:
