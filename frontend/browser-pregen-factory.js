@@ -9,6 +9,7 @@
   function runtimeId(classId, level, buildId) { return `pregen-2024-${classId}-l${level}-${buildId}`; }
   function rageUses(level) { return level >= 17 ? 6 : level >= 12 ? 5 : level >= 6 ? 4 : level >= 3 ? 3 : 2; }
   function rageBonus(level) { return level >= 16 ? 4 : level >= 9 ? 3 : 2; }
+  function secondWindUses(level) { return level >= 10 ? 4 : level >= 4 ? 3 : 2; }
   function speed(classId, level) {
     if (classId === "barbarian" && level >= 5) return 40;
     if (classId === "monk") return level >= 18 ? 60 : level >= 14 ? 55 : level >= 10 ? 50 : level >= 6 ? 45 : level >= 2 ? 40 : 30;
@@ -27,7 +28,7 @@
 
   function classResources(classId, level) {
     if (classId === "barbarian") return { rage: rageUses(level) };
-    if (classId === "fighter") return { "second-wind": 2 };
+    if (classId === "fighter") return { "second-wind": secondWindUses(level) };
     return {};
   }
 
