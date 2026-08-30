@@ -4,7 +4,7 @@
   const H = () => window.IRON_PIT_BROWSER_HEALING;
   const C = () => window.IRON_PIT_BROWSER_CONDITION_REMOVAL;
 
-  function resolve(sequence, round, member, setup) {
+  function resolve(sequence, round, member, setup, turnKey) {
     const events = [];
 
     // RAW does not impose this priority; this is Iron Pit's deterministic support AI.
@@ -15,9 +15,9 @@
       events.push(H().resolve(sequence++, round, member, healing.target, healing.action));
     }
 
-    const removal = C()?.chooseAction(member, setup);
+    const removal = C()?.chooseAction(member, setup, turnKey);
     if (removal) {
-      events.push(C().resolve(sequence++, round, member, removal.target, removal.action, removal.conditions));
+      events.push(C().resolve(sequence++, round, member, removal.target, removal.action, removal.conditions, turnKey));
     }
 
     healing = H()?.chooseAction(member, setup);
