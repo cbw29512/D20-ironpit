@@ -4,6 +4,7 @@
   const SIZE_RANK = { tiny: 0, small: 1, medium: 2, large: 3, huge: 4, gargantuan: 5 };
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { incapacitated: (state) => state.is_unconscious };
+  const F = () => window.IRON_PIT_BROWSER_FORMATIONS;
 
   function buildState(template) {
     return {
@@ -42,13 +43,15 @@
     const held = enemies.filter((candidate) => eligibleHeld(candidate)
       && candidate.state.grapple_sources.some((source) => source.source_id === member.combatant_id));
     if (held.length) return held.reduce((best, item) => distance(member, item) < distance(member, best) ? item : best);
-    let candidates = enemies.filter(active);
-    if (!candidates.length) candidates = enemies.filter(downedCharacter);
-    if (!candidates.length) return null;
+    let allCandidates = enemies.filter((candidate) => active(candidate) || downedCharacter(candidate));
     const grapplerIds = new Set(member.state.grapple_sources.map((source) => source.source_id));
-    const grapplers = candidates.filter((candidate) => grapplerIds.has(candidate.combatant_id));
-    const choices = grapplers.length ? grapplers : candidates;
-    return choices.reduce((best, item) => distance(member, item) < distance(member, best) ? item : best);
+    const grapplers = allCandidates.filter((candidate) => grapplerIds.has(candidate.combatant_id));
+    if (grapplers.length) return grapplers.reduce((best, item) => distance(member, item) < distance(member, best) ? item : best);
+    const pool = F()?.targetPool(member, setup) || enemies;
+    let candidates = pool.filter(active);
+    if (!candidates.length) candidates = pool.filter(downedCharacter);
+    if (!candidates.length) return null;
+    return candidates.reduce((best, item) => distance(member, item) < distance(member, best) ? item : best);
   }
 
   function hasActiveAlly(member, setup) {
