@@ -51,6 +51,7 @@ jobs:
           node frontend/browser-reactions.test.cjs
           node frontend/browser-reaction-movement.test.cjs
           node frontend/browser-spell-area.test.cjs
+          node frontend/browser-spell-policy.test.cjs
           node frontend/battle-log-format.test.cjs
           node frontend/figure-visuals.test.cjs
           node frontend/figure-portraits.test.cjs
@@ -81,6 +82,9 @@ jobs:
           grep -q 'browser-reactions.js' index.html
           grep -q 'browser-reaction-movement.js' index.html
           grep -q 'browser-healing.js' index.html
+          grep -q 'browser-spell-area.js' index.html
+          grep -q 'browser-spell-policy.js' index.html
+          grep -q 'browser-spell-resolution.js' index.html
           grep -q 'battlefield-picker.js' index.html
           grep -q 'battlefield-replay.js' index.html
           ! grep -qi 'http-equiv="refresh"' index.html
@@ -110,6 +114,9 @@ jobs:
           grep -q 'browser-saves.js' frontend/index.html
           grep -q 'browser-multiattack.js' frontend/index.html
           grep -q 'browser-healing.js' frontend/index.html
+          grep -q 'browser-spell-area.js' frontend/index.html
+          grep -q 'browser-spell-policy.js' frontend/index.html
+          grep -q 'browser-spell-resolution.js' frontend/index.html
           grep -q 'figure-visuals.js' frontend/index.html
           grep -q 'playIronPitBattle' frontend/app.js
       - name: Validate Netlify production-only credit guard
