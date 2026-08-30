@@ -59,7 +59,7 @@
     if (member.state.template.attack_action) return { events: [], sequence, handled: false };
     const events = [], canAct = E().available(member.state, "action");
     const ranged = attacks(member).find((a) => a.kind === "ranged" && S().distance(member, target) <= a.long);
-    if (ranged && canAct) events.push(A().resolveAttack(sequence++, round, member, target, ranged, S().distance(member, target)));
+    if (ranged && canAct) events.push(A().resolveAttack(sequence++, round, member, target, ranged, S().distance(member, target), { setup }));
     else if (canAct) {
       E().spend(member.state, "action"); if (!member.state.active_effect_ids.includes("dodge")) member.state.active_effect_ids.push("dodge");
       events.push({ sequence: sequence++, round_number: round, event_type: "feature", actor_id: member.combatant_id,
@@ -79,16 +79,20 @@
     return { events, sequence };
   }
   function deathSave(sequence, round, member) {
-    const state = member.state, natural = D().roll(20); let result = "failure";
+    const state = member.state, natural = D().roll(20);
+    const successesBefore = state.death_save_successes, failuresBefore = state.death_save_failures;
+    let result = "failure";
     if (natural === 20) { state.current_hp = 1; state.is_alive = true; state.is_unconscious = false; state.is_stable = false; state.death_save_successes = 0; state.death_save_failures = 0; result = "natural 20; regains 1 HP"; }
     else if (natural === 1) { state.death_save_failures = Math.min(3, state.death_save_failures + 2); result = "natural 1; two failures"; }
     else if (natural >= 10) { state.death_save_successes = Math.min(3, state.death_save_successes + 1); result = "success"; }
     else state.death_save_failures = Math.min(3, state.death_save_failures + 1);
-    if (state.death_save_failures >= 3) { state.is_alive = false; state.is_dead = true; state.is_unconscious = false; state.is_stable = false; result = "third failure; dies"; }
+    if (state.death_save_failures >= 3) result += "; dies";
+    if (state.death_save_failures >= 3) { state.is_alive = false; state.is_dead = true; state.is_unconscious = false; state.is_stable = false; }
     else if (state.death_save_successes >= 3) { state.is_stable = true; state.is_unconscious = true; state.death_save_successes = 0; state.death_save_failures = 0; result = "third success; becomes Stable"; }
     return { sequence, round_number: round, event_type: "death_save", actor_id: member.combatant_id, actor_name: state.template.name,
       death_save_roll: { notation: "1d20", rolls: [natural], selected_roll: natural, modifier: 0, mode: "normal", total: natural },
-      hp_after: state.current_hp, death_save_successes: state.death_save_successes, death_save_failures: state.death_save_failures,
+      hp_after: state.current_hp, death_save_successes_before: successesBefore, death_save_failures_before: failuresBefore,
+      death_save_successes: state.death_save_successes, death_save_failures: state.death_save_failures,
       is_stable: state.is_stable, is_dead: state.is_dead, animation: "death-save", description: `${state.template.name} makes a Death Save: ${result}.` };
   }
   function finalize(events, sequence, round, member) {
@@ -116,7 +120,7 @@
     const attack = legalAttack(member, distance);
     if (attack && E().available(member.state, "action")) {
       const pack = S().packTactics(member, setup);
-      events.push(A().resolveAttack(sequence++, round, member, target, attack, distance, { advantage: pack ? 1 : 0, featureId: pack ? "pack-tactics" : null }));
+      events.push(A().resolveAttack(sequence++, round, member, target, attack, distance, { advantage: pack ? 1 : 0, featureId: pack ? "pack-tactics" : null, setup }));
     }
     return finalize(events, sequence, round, member);
   }

@@ -14,13 +14,13 @@
     return { notation: mode === "normal" ? "1d20" : "2d20", rolls, modifier, selected_roll: selected, mode, total: selected + modifier };
   }
 
-  function attackMode(attack, distance, advantage = 0, disadvantage = 0) {
+  function attackMode(attack, distance, advantage = 0, disadvantage = 0, closeCombatThreat = distance <= 5) {
     if (attack.kind === "melee") {
       if (distance > (attack.reach || 5)) throw new Error(`${attack.name} is out of melee reach.`);
     } else {
       if (!attack.normal || !attack.long || distance > attack.long) throw new Error(`${attack.name} is out of range.`);
       if (distance > attack.normal) disadvantage += 1;
-      if (distance <= 5) disadvantage += 1;
+      if (closeCombatThreat) disadvantage += 1;
     }
     return modeFromSources(advantage, disadvantage);
   }

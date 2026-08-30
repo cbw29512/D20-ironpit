@@ -57,7 +57,7 @@
       if (choice.attack) {
         const pack = S().packTactics(member, setup);
         events.push(A().resolveAttack(sequence++, round, member, target, choice.attack, S().distance(member, target), {
-          spendAction: false, advantage: pack ? 1 : 0,
+          spendAction: false, advantage: pack ? 1 : 0, setup,
           featureId: pack ? "pack-tactics" : member.state.template.attack_action.id,
         }));
       } else if (choice.save) {

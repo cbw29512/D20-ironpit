@@ -34,6 +34,10 @@ function downedHero() {
   return member;
 }
 
+function scoutAtFive() {
+  return { combatant_id: "monster-1:scout", side: "monsters", position_ft: 5, state: S.buildState(structuredClone(monsters["srd-scout"])) };
+}
+
 {
   const hero = downedHero();
   const monster = { combatant_id: "monster-1:commoner", side: "monsters", position_ft: 5, state: S.buildState(structuredClone(monsters["srd-commoner"])) };
@@ -68,6 +72,16 @@ function downedHero() {
 }
 
 {
+  const member = downedHero();
+  member.state.death_save_failures = 1;
+  window.IRON_PIT_DICE = queuedDice([1]);
+  const event = T.deathSave(1, 1, member);
+  assert.equal(event.death_save_failures_before, 1);
+  assert.equal(event.death_save_failures, 3);
+  assert.match(event.description, /natural 1; two failures; dies/);
+}
+
+{
   const hero = downedHero();
   const monster = { combatant_id: "monster-1:commoner", side: "monsters", position_ft: 5, state: S.buildState(structuredClone(monsters["srd-commoner"])) };
   window.IRON_PIT_DICE = queuedDice([19, 19, 1, 1]);
@@ -76,6 +90,24 @@ function downedHero() {
   assert.equal(event.attack_roll.selected_roll, 19);
   assert.equal(event.critical, true, "a hit from within 5 feet against Unconscious must be critical");
   assert.equal(hero.state.death_save_failures, 2);
+}
+
+{
+  const hero = downedHero(), scout = scoutAtFive();
+  const bow = scout.state.template.attacks.find((attack) => attack.kind === "ranged");
+  window.IRON_PIT_DICE = queuedDice([18, 7, 1, 1]);
+  const event = A.resolveAttack(1, 1, scout, hero, bow, 5, { spendAction: false });
+  assert.equal(event.attack_roll.mode, "advantage", "an Incapacitated adjacent enemy cannot impose close-combat ranged Disadvantage");
+}
+
+{
+  const downed = downedHero(), scout = scoutAtFive();
+  const standing = { combatant_id: "hero-2:karnok", side: "heroes", position_ft: 0, state: S.buildState(structuredClone(heroes["karnok-stoneward-l1"])) };
+  const setup = { heroes: [downed, standing], monsters: [scout] };
+  const bow = scout.state.template.attacks.find((attack) => attack.kind === "ranged");
+  window.IRON_PIT_DICE = queuedDice([18, 1, 1]);
+  const event = A.resolveAttack(1, 1, scout, downed, bow, 5, { spendAction: false, setup });
+  assert.equal(event.attack_roll.mode, "normal", "a different non-Incapacitated adjacent enemy must still impose close-combat ranged Disadvantage");
 }
 
 {

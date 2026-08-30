@@ -29,6 +29,14 @@
     return { advantage, disadvantage };
   }
 
+  function rangedCloseThreat(attacker, target, distance, setup) {
+    if (distance > 5 && !setup) return false;
+    if (!setup) return distance <= 5 && !Q().incapacitated(target.state);
+    const enemies = attacker.side === "heroes" ? setup.monsters : setup.heroes;
+    return enemies.some((enemy) => enemy.state.is_alive && !enemy.state.is_dead && enemy.state.current_hp > 0
+      && !Q().incapacitated(enemy.state) && S().distance(attacker, enemy) <= 5);
+  }
+
   const bloodiedFury = (state, attack) => state.template.traits?.includes("bloodied-fury")
     && attack.kind === "melee" && state.current_hp * 2 <= state.template.max_hp ? 1 : 0;
   function adjustedDamage(target, amount, type) {
@@ -79,7 +87,8 @@
     if (spendAction && !E().available(attacker.state, "action")) throw new Error("Action is unavailable for attack.");
     const conditions = conditionSources(attacker.state, target.state, distance, target.combatant_id);
     const advantage = (extra.advantage || 0) + conditions.advantage + bloodiedFury(attacker.state, attack);
-    const mode = R().attackMode(attack, distance, advantage, conditions.disadvantage);
+    const closeThreat = attack.kind === "ranged" && rangedCloseThreat(attacker, target, distance, extra.setup);
+    const mode = R().attackMode(attack, distance, advantage, conditions.disadvantage, closeThreat);
     const attackRoll = R().d20(attack.bonus, mode);
     window.IRON_PIT_BROWSER_RAGE?.extendFromAttack(attacker.state, round);
     if (spendAction) E().spend(attacker.state, "action");
@@ -122,5 +131,5 @@
       weapon_id: attack.id, projectile: attack.projectile || null, feature_id: extra.featureId || null,
       animation: attack.animation || (attack.kind === "ranged" ? "projectile" : "slash"), description };
   }
-  window.IRON_PIT_BROWSER_ATTACK = { adjustedDamage, applyDamage, resolveAttack };
+  window.IRON_PIT_BROWSER_ATTACK = { adjustedDamage, applyDamage, rangedCloseThreat, resolveAttack };
 })();
