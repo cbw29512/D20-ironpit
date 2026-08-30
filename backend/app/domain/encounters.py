@@ -15,7 +15,6 @@ EncounterOutcome = Literal["active", "heroes_win", "monsters_win", "draw"]
 class EncounterSelection(BaseModel):
     hero_ids: list[str] = Field(min_length=1, max_length=6)
     monster_ids: list[str] = Field(min_length=1, max_length=6)
-    starting_distance_ft: int = Field(default=30, ge=0)
 
 
 class EncounterCombatant(BaseModel):
@@ -30,7 +29,7 @@ class EncounterSetup(BaseModel):
     monsters: list[EncounterCombatant] = Field(min_length=1, max_length=6)
     hero_total_levels: int = Field(ge=1, le=120)
     monster_total_cr: str
-    starting_distance_ft: int = Field(ge=0)
+    starting_distance_ft: int = Field(default=5, ge=0)
 
 
 class InitiativeGroup(BaseModel):
