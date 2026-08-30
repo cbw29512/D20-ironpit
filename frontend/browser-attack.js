@@ -116,7 +116,16 @@
         applied.push(...G().apply(target.state, attacker.combatant_id, control.grappleEscapeDc, attack.reach || 5, Boolean(control.restrainsWhileGrappled)));
       }
       if (living && control?.conditionId) {
-        const timed = T().apply(target.state, control.conditionId, attacker.combatant_id, Boolean(control.expiresAtStartOfSourceTurn));
+        const timed = T().apply(target.state, control.conditionId, attacker.combatant_id, {
+          sourceEffectId: attack.id,
+          appliedRound: round,
+          expiresAtStartOfSourceTurn: Boolean(control.expiresAtStartOfSourceTurn),
+          expiryTiming: control.expiryTiming || null,
+          repeatSaveAbility: control.repeatSaveAbility || null,
+          repeatSaveDc: control.repeatSaveDc || null,
+          repeatSaveTiming: control.repeatSaveTiming || null,
+          allowedRemovalActionIds: control.allowedRemovalActionIds || [],
+        });
         if (timed) applied.push(timed);
       }
     }
