@@ -6,6 +6,7 @@
   const el = (id) => document.getElementById(id);
   const view = () => window.IRON_PIT_BATTLEFIELD_VIEW;
   const picker = () => window.IRON_PIT_BATTLEFIELD_PICKER;
+  const runnable = (card) => Boolean(["raw_ready", "raw_playable"].includes(card?.coverage_status) && card?.runnable_template_id);
 
   function clearResult() {
     el("result-panel").hidden = true; el("pit-round").textContent = "";
@@ -38,8 +39,8 @@
 
   function validate(cards, side) {
     if (!cards.length) return `${side === "heroes" ? "Hero" : "Monster"} side needs at least one card.`;
-    const blocked = cards.find((card) => card.coverage_status !== "raw_ready" || !card.runnable_template_id);
-    return blocked ? `${blocked.name} is not RAW-certified for automated combat yet.` : null;
+    const blocked = cards.find((card) => !runnable(card));
+    return blocked ? `${blocked.name} has no runnable RAW combat template yet.` : null;
   }
 
   async function fight() {
@@ -68,7 +69,7 @@
     if (required.some((item) => !item)) throw new Error("Iron Pit browser modules did not load.");
     state.catalog = await window.IRON_PIT_BROWSER_CATALOG.buildCatalog();
     picker().bind(() => state); render();
-    el("status").textContent = "Click an empty slot to add a RAW-certified card.";
+    el("status").textContent = "Click any empty slot to add a pregen or monster.";
   }
 
   el("fight-button").addEventListener("click", fight);
