@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available
+from app.combat.spellcasting import slot_spell_available
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import ConditionRemovalAction
 
@@ -70,6 +71,7 @@ def affordable_conditions(remover: EncounterCombatant, target: EncounterCombatan
 def choose_condition_removal_action(
     remover: EncounterCombatant,
     setup: EncounterSetup,
+    turn_key: str,
 ) -> tuple[ConditionRemovalAction, EncounterCombatant, list[str]] | None:
     """Choose a legal on-turn removal. Reaction removals require their trigger hook."""
     try:
@@ -77,6 +79,8 @@ def choose_condition_removal_action(
         choices: list[tuple[ConditionRemovalAction, EncounterCombatant, list[str]]] = []
         for action in remover.state.template.condition_removal_actions:
             if action.action_cost == "reaction" or not is_available(remover.state, action.action_cost):
+                continue
+            if action.expends_spell_slot and not slot_spell_available(remover.state, turn_key):
                 continue
             for target in allies:
                 if not target_allowed(remover, target, action):
