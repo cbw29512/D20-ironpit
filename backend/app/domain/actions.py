@@ -11,6 +11,7 @@ ActionCost = Literal["action", "bonus_action", "reaction"]
 HealingTargetMode = Literal["self", "ally", "self_or_ally"]
 ConditionRemovalTargetMode = Literal["self", "ally", "self_or_ally"]
 ConditionReactionTrigger = Literal["condition_applied_to_self", "condition_applied_to_ally"]
+ConditionTiming = Literal["source_turn_start", "source_turn_end", "target_turn_start", "target_turn_end"]
 DamageTypeName = Literal[
     "acid", "bludgeoning", "cold", "fire", "force", "lightning", "necrotic",
     "piercing", "poison", "psychic", "radiant", "slashing", "thunder",
@@ -35,6 +36,20 @@ class HitControlEffect(BaseModel):
     restrains_while_grappled: bool = False
     condition_id: ConditionName | None = None
     expires_at_start_of_source_turn: bool = False
+    expiry_timing: ConditionTiming | None = None
+    repeat_save_ability: AbilityName | None = None
+    repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
+    repeat_save_timing: ConditionTiming | None = None
+    allowed_removal_action_ids: list[str] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def validate_condition_lifecycle(self) -> "HitControlEffect":
+        repeat_fields = (self.repeat_save_ability, self.repeat_save_dc, self.repeat_save_timing)
+        if any(item is not None for item in repeat_fields) and not all(item is not None for item in repeat_fields):
+            raise ValueError("Repeat-save condition lifecycle requires ability, DC, and timing together.")
+        if self.expires_at_start_of_source_turn and self.expiry_timing not in {None, "source_turn_start"}:
+            raise ValueError("Legacy source-start expiry conflicts with explicit condition timing.")
+        return self
 
 
 class HealingAction(BaseModel):
@@ -66,6 +81,7 @@ class ConditionRemovalAction(BaseModel):
     resource_costs: dict[str, int] = Field(default_factory=dict)
     resource_costs_per_condition: dict[str, int] = Field(default_factory=dict)
     reaction_trigger: ConditionReactionTrigger | None = None
+    expends_spell_slot: bool = False
     animation: str = "condition-removal"
 
     @model_validator(mode="after")
