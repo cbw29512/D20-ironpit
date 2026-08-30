@@ -52,7 +52,6 @@
       const battle = window.IRON_PIT_BROWSER_ENGINE.runEncounter({
         hero_ids: heroes.cards.map((card) => card.runnable_template_id),
         monster_ids: monsters.cards.map((card) => card.runnable_template_id),
-        starting_distance_ft: Number(el("distance").value),
       });
       await window.playIronPitBattle(battle, { heroes: heroes.indexes, monsters: monsters.indexes });
       view().writeLog(battle); view().showResult(battle);
@@ -68,7 +67,7 @@
     if (required.some((item) => !item)) throw new Error("Iron Pit browser modules did not load.");
     state.catalog = await window.IRON_PIT_BROWSER_CATALOG.buildCatalog();
     picker().bind(() => state); render();
-    el("status").textContent = "Click an empty slot to add a RAW-certified card.";
+    el("status").textContent = "Choose the cards, then press FIGHT.";
   }
 
   el("fight-button").addEventListener("click", fight);
