@@ -27,6 +27,7 @@ const monsters = window.IRON_PIT_BROWSER_MONSTERS;
 const member = (id, side, template, position = side === "heroes" ? 0 : 5) => ({
   combatant_id: id, side, position_ft: position, state: S.buildState(structuredClone(template)),
 });
+const sourceStartExpiry = { expiresAtStartOfSourceTurn: true };
 
 assert.equal(Object.keys(monsters).length, 59, "poison batch must bring browser roster to 59 monsters");
 
@@ -55,7 +56,7 @@ assert.equal(Object.keys(monsters).length, 59, "poison batch must bring browser 
 {
   const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
   const centipede = member("monster-1:centipede", "monsters", monsters["srd-giant-centipede"]);
-  T.apply(hero.state, "poisoned", centipede.combatant_id, true);
+  T.apply(hero.state, "poisoned", centipede.combatant_id, sourceStartExpiry);
   G.apply(hero.state, centipede.combatant_id, 12, 5, true);
   window.IRON_PIT_DICE = queuedDice([18, 2]);
   const escape = G.escape(1, 1, hero);
@@ -66,7 +67,7 @@ assert.equal(Object.keys(monsters).length, 59, "poison batch must bring browser 
 {
   const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
   const centipede = member("monster-1:centipede", "monsters", monsters["srd-giant-centipede"]);
-  T.apply(hero.state, "poisoned", centipede.combatant_id, true);
+  T.apply(hero.state, "poisoned", centipede.combatant_id, sourceStartExpiry);
   centipede.state.current_hp = 0; centipede.state.is_alive = false; centipede.state.is_dead = true;
   const expired = T.expireSourceStart(4, 2, centipede, { heroes: [hero], monsters: [centipede] });
   assert.equal(expired.events.length, 1);
@@ -80,8 +81,8 @@ assert.equal(Object.keys(monsters).length, 59, "poison batch must bring browser 
   const first = member("monster-1:centipede", "monsters", monsters["srd-giant-centipede"]);
   const second = member("monster-2:centipede", "monsters", monsters["srd-giant-centipede"]);
   const setup = { heroes: [hero], monsters: [first, second] };
-  T.apply(hero.state, "poisoned", first.combatant_id, true);
-  T.apply(hero.state, "poisoned", second.combatant_id, true);
+  T.apply(hero.state, "poisoned", first.combatant_id, sourceStartExpiry);
+  T.apply(hero.state, "poisoned", second.combatant_id, sourceStartExpiry);
   const firstExpiry = T.expireSourceStart(1, 2, first, setup);
   assert.equal(firstExpiry.events.length, 0);
   assert.equal(hero.state.active_effect_ids.includes("poisoned"), true);
