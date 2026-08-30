@@ -3,7 +3,7 @@
 
   const SIZE_RANK = { tiny: 0, small: 1, medium: 2, large: 3, huge: 4, gargantuan: 5 };
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
-  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { incapacitated: (state) => state.is_unconscious };
+  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { has: (state, id) => state.active_effect_ids.includes(id), incapacitated: (state) => state.is_unconscious };
 
   function buildState(template) {
     return {
@@ -37,17 +37,29 @@
   const distance = (a, b) => Math.abs(a.position_ft - b.position_ft);
   const active = (member) => member.state.is_alive && !member.state.is_dead && !member.state.is_unconscious && member.state.current_hp > 0;
   const downedCharacter = (member) => member.state.template.kind === "character" && member.state.is_alive && !member.state.is_dead && member.state.current_hp === 0;
-  const eligibleHeld = (member) => member.state.is_alive && !member.state.is_dead && (member.state.current_hp > 0 || member.state.template.kind === "character");
   const opponents = (member, setup) => member.side === "heroes" ? setup.monsters : setup.heroes;
 
+  function targetPriority(member) {
+    const state = member.state;
+    if (!state.is_alive || state.is_dead) return null;
+    if (state.current_hp > 0) return Q().has(state, "petrified") ? 1 : 0;
+    if (state.template.kind === "character" && state.current_hp === 0) return 2;
+    return null;
+  }
+
+  function priorityTargets(member, setup) {
+    const eligible = opponents(member, setup).filter((candidate) => targetPriority(candidate) !== null);
+    if (!eligible.length) return [];
+    const priority = Math.min(...eligible.map(targetPriority));
+    return eligible.filter((candidate) => targetPriority(candidate) === priority);
+  }
+
   function nearestTarget(member, setup) {
-    const enemies = opponents(member, setup);
-    const held = enemies.filter((candidate) => eligibleHeld(candidate)
-      && candidate.state.grapple_sources.some((source) => source.source_id === member.combatant_id));
-    if (held.length) return held.reduce((best, item) => distance(member, item) < distance(member, best) ? item : best);
-    let candidates = enemies.filter(active);
-    if (!candidates.length) candidates = enemies.filter(downedCharacter);
+    const candidates = priorityTargets(member, setup);
     if (!candidates.length) return null;
+    const held = candidates.filter((candidate) =>
+      candidate.state.grapple_sources.some((source) => source.source_id === member.combatant_id));
+    if (held.length) return held.reduce((best, item) => distance(member, item) < distance(member, best) ? item : best);
     const grapplerIds = new Set(member.state.grapple_sources.map((source) => source.source_id));
     const grapplers = candidates.filter((candidate) => grapplerIds.has(candidate.combatant_id));
     const choices = grapplers.length ? grapplers : candidates;
@@ -73,6 +85,6 @@
   const canProne = (target, maxSize) => sizeAtMost(target, maxSize);
   window.IRON_PIT_BROWSER_STATE = {
     active, beginTurn, buildState, canProne, distance, downedCharacter, hasActiveAlly,
-    moveToward, nearestTarget, packTactics, refreshReaction, sizeAtMost,
+    moveToward, nearestTarget, packTactics, refreshReaction, sizeAtMost, targetPriority,
   };
 })();
