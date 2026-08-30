@@ -7,8 +7,10 @@
   let active = null;
 
   function option(value, text, selected = false, disabled = false) {
-    const node = document.createElement("option"); node.value = String(value); node.textContent = text;
-    node.selected = selected; node.disabled = disabled; return node;
+    const node = document.createElement("option");
+    node.value = String(value); node.textContent = text;
+    node.selected = selected; node.disabled = disabled;
+    return node;
   }
 
   function populateHero(state, existing) {
@@ -35,22 +37,45 @@
     heroSelect.onchange = refreshBuilds; refreshBuilds();
   }
 
+  function monsterNote(rows, chosen) {
+    const certified = rows.filter(ready).length;
+    if (!rows.length) return "No SRD monsters exist at this Challenge Rating.";
+    if (chosen && !ready(chosen)) return `${chosen.name} is in the SRD catalog, but its outcome-changing combat mechanics are still being RAW-certified.`;
+    return `${rows.length} SRD monster${rows.length === 1 ? "" : "s"} shown · ${certified} RAW-ready for automated combat.`;
+  }
+
   function populateMonster(state, existing) {
-    const all = state.catalog.monsters.filter(ready);
+    const all = state.catalog.monsters;
     const crSelect = el("picker-cr"), monsterSelect = el("picker-monster");
-    crSelect.replaceChildren(option("all", "All CRs", true));
+    crSelect.replaceChildren(option("all", `All CRs · ${all.length} monsters`, true));
     P().challengeRatings(all).forEach((cr) => crSelect.append(option(cr, `CR ${cr}`)));
+
+    function refreshNote(rows) {
+      const chosen = rows.find((monster) => monster.id === monsterSelect.value) || null;
+      el("picker-note").textContent = monsterNote(rows, chosen);
+      el("confirm-card").disabled = !ready(chosen);
+    }
 
     function refreshMonsters() {
       const rows = P().sortedMonsters(all, crSelect.value);
       monsterSelect.replaceChildren();
-      rows.forEach((monster) => monsterSelect.append(option(monster.id, `CR ${monster.challenge_rating} · ${monster.name}`, monster.id === existing?.id)));
-      if (existing && rows.some((monster) => monster.id === existing.id)) monsterSelect.value = existing.id;
-      el("picker-note").textContent = `${rows.length} RAW-certified monster card${rows.length === 1 ? "" : "s"} available.`;
-      el("confirm-card").disabled = rows.length === 0;
+      rows.forEach((monster) => monsterSelect.append(option(
+        monster.id,
+        `CR ${monster.challenge_rating} · ${monster.name}${ready(monster) ? " · RAW READY" : " · certification pending"}`,
+        monster.id === existing?.id,
+        !ready(monster),
+      )));
+      const existingReady = existing && ready(existing) && rows.some((monster) => monster.id === existing.id);
+      const firstReady = rows.find(ready);
+      if (existingReady) monsterSelect.value = existing.id;
+      else if (firstReady) monsterSelect.value = firstReady.id;
+      refreshNote(rows);
     }
+
     if (existing) crSelect.value = String(existing.challenge_rating);
-    crSelect.onchange = refreshMonsters; refreshMonsters();
+    crSelect.onchange = refreshMonsters;
+    monsterSelect.onchange = () => refreshNote(P().sortedMonsters(all, crSelect.value));
+    refreshMonsters();
   }
 
   function selectedCard(state) {
