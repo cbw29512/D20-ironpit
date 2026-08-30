@@ -7,6 +7,30 @@ from pydantic import BaseModel, Field, model_validator
 from app.domain.actions import AbilityName, ActionCost, DamageTypeName
 
 
+class DefensiveSpellAction(BaseModel):
+    """A long-duration self-defense spell eligible for Iron Pit precombat preparation."""
+
+    id: str
+    name: str
+    level: int = Field(ge=1, le=9)
+    action_cost: ActionCost = "action"
+    duration_minutes: int = Field(ge=10)
+    temporary_hp: int = Field(default=0, ge=0)
+    temporary_hp_per_slot_above: int = Field(default=0, ge=0)
+    damage_resistances: list[DamageTypeName] = Field(default_factory=list)
+    concentration: bool = False
+    priority: int = 0
+    animation: str = "precombat-defense"
+
+    @model_validator(mode="after")
+    def validate_defense(self) -> "DefensiveSpellAction":
+        if self.action_cost == "reaction":
+            raise ValueError("Reaction spells cannot be pre-cast without their trigger.")
+        if not self.temporary_hp and not self.damage_resistances:
+            raise ValueError("Certified defensive spell must define an implemented defensive effect.")
+        return self
+
+
 class SpellSaveAction(BaseModel):
     """A spell whose certified combat resolution is a saving throw and optional damage."""
 
