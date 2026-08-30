@@ -3,11 +3,12 @@ from __future__ import annotations
 from app.combat.action_economy import is_available, spend
 from app.combat.barbarian import rage_active
 from app.combat.condition_immunity import condition_is_immune
-from app.combat.condition_rules import condition_speed_is_zero
+from app.combat.condition_rules import condition_speed_is_zero, has_condition
 from app.combat.dice import DiceProvider
 from app.combat.rolls import roll_d20
 from app.domain.models import BattleEvent, CombatantState, EncounterSetup, GrappleSource, RollMode
 
+FRIGHTENED_EFFECT_ID = "frightened"
 GRAPPLED_EFFECT_ID = "grappled"
 POISONED_EFFECT_ID = "poisoned"
 RESTRAINED_EFFECT_ID = "restrained"
@@ -78,7 +79,10 @@ def should_escape_grapple(state: CombatantState) -> bool:
 
 def _check_mode(state: CombatantState, strength_check: bool) -> RollMode:
     advantage = strength_check and rage_active(state)
-    disadvantage = POISONED_EFFECT_ID in state.active_effect_ids
+    disadvantage = (
+        has_condition(state, POISONED_EFFECT_ID)
+        or has_condition(state, FRIGHTENED_EFFECT_ID)
+    )
     if advantage == disadvantage:
         return RollMode.NORMAL
     return RollMode.ADVANTAGE if advantage else RollMode.DISADVANTAGE
