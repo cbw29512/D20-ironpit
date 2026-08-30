@@ -4,7 +4,7 @@
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
   const T = () => window.IRON_PIT_BROWSER_TURN;
-  const C = () => window.IRON_PIT_BROWSER_TIMED;
+  const L = () => window.IRON_PIT_BROWSER_CONDITION_LIFECYCLE;
   const heroes = () => window.IRON_PIT_BROWSER_HEROES;
   const monsters = () => window.IRON_PIT_BROWSER_MONSTERS;
 
@@ -93,6 +93,12 @@
     return init.groups.map((group) => ({ sequence: sequence++, round_number: 1, event_type: "initiative", actor_id: group.combatant_ids[0], actor_name: names.get(group.combatant_ids[0]), animation: "initiative", description: `${names.get(group.combatant_ids[0])}${group.combatant_ids.length > 1 ? ` group (${group.combatant_ids.length})` : ""} rolls initiative ${group.initiative_count}.` }));
   }
 
+  function lifecycle(sequence, round, member, setup, targetTiming, sourceTiming) {
+    const target = L().resolveTargetTiming(sequence, round, member, targetTiming);
+    const source = L().resolveSourceTiming(target.sequence, round, member, setup, sourceTiming);
+    return { events: [...target.events, ...source.events], sequence: source.sequence };
+  }
+
   function runEncounter(selection) {
     if (!selection.hero_ids?.length || !selection.monster_ids?.length || selection.hero_ids.length > 6 || selection.monster_ids.length > 6) throw new Error("Iron Pit requires 1-6 cards per side.");
     const setup = buildSetup({ ...selection, starting_distance_ft: Number(selection.starting_distance_ft ?? 30) });
@@ -105,12 +111,16 @@
         const current = outcome(setup); if (current !== "active") return finish(setup, init, events, current, round, sequence);
         const member = byId.get(id);
         S().refreshReaction(member.state);
-        const expired = C()?.expireSourceStart(sequence, round, member, setup); if (expired) { events.push(...expired.events); sequence = expired.sequence; }
+        const start = lifecycle(sequence, round, member, setup, "target_turn_start", "source_turn_start");
+        events.push(...start.events); sequence = start.sequence;
         if (member.state.template.kind === "character" && member.state.current_hp === 0 && !member.state.is_dead && !member.state.is_stable) {
           events.push(T().deathSave(sequence++, round, member));
         }
-        if (member.state.current_hp <= 0 || member.state.is_dead) continue;
-        const turn = T().resolveTurn(sequence, round, member, setup); events.push(...turn.events); sequence = turn.sequence;
+        if (member.state.current_hp > 0 && !member.state.is_dead) {
+          const turn = T().resolveTurn(sequence, round, member, setup); events.push(...turn.events); sequence = turn.sequence;
+        }
+        const end = lifecycle(sequence, round, member, setup, "target_turn_end", "source_turn_end");
+        events.push(...end.events); sequence = end.sequence;
       }
       const current = outcome(setup); if (current !== "active") return finish(setup, init, events, current, round, sequence);
     }
