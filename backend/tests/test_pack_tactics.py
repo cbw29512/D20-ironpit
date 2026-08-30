@@ -41,6 +41,25 @@ def test_downed_or_unconscious_ally_does_not_count_as_adjacent() -> None:
     assert pack_tactics_active(attacker, target, setup) is False
 
 
+def test_incapacitated_ally_does_not_enable_pack_tactics() -> None:
+    for condition in ("incapacitated", "paralyzed", "petrified", "stunned"):
+        setup = _rat_pack_setup()
+        attacker, ally = setup.monsters
+        target = setup.heroes[0]
+        ally.state.active_effect_ids.append(condition)
+        assert has_adjacent_active_ally(attacker, setup) is False, condition
+        assert pack_tactics_active(attacker, target, setup) is False, condition
+
+
+def test_partial_debuffed_ally_still_counts_for_pack_tactics() -> None:
+    setup = _rat_pack_setup()
+    attacker, ally = setup.monsters
+    target = setup.heroes[0]
+    ally.state.active_effect_ids.append("poisoned")
+    assert has_adjacent_active_ally(attacker, setup) is True
+    assert pack_tactics_active(attacker, target, setup) is True
+
+
 def test_single_combatant_side_has_no_adjacent_ally() -> None:
     setup = build_encounter_setup(EncounterSelection(
         hero_ids=["aldric-vane-l1"],
