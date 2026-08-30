@@ -25,6 +25,7 @@ jobs:
         run: |
           python scripts/prepare_static_site.py
           test -s frontend/data/srd_5_2_1_monsters.json
+          git diff --exit-code -- frontend/browser-heroes.js frontend/data/srd_5_2_1_monsters.json
       - name: Validate browser JavaScript syntax
         run: |
           for file in frontend/*.js; do node --check "$file"; done

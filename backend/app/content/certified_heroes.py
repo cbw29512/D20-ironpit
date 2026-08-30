@@ -25,7 +25,8 @@ def _validated(
     return (profile.class_id, profile.level, build_id), template
 
 
-def _validated_builds() -> list[tuple[HeroBuildKey, CombatantTemplate]]:
+def build_certified_hero_entries() -> list[tuple[HeroBuildKey, CombatantTemplate]]:
+    """Return only builds that pass the fail-closed RAW character audit."""
     return [
         _validated(build_karnok_stoneward, build_karnok_stoneward_profile, "great-weapon"),
         _validated(build_rokhan_stonefury, build_rokhan_stonefury_profile, "great-weapon"),
@@ -33,8 +34,8 @@ def _validated_builds() -> list[tuple[HeroBuildKey, CombatantTemplate]]:
 
 
 def build_certified_hero_registry() -> dict[HeroBuildKey, HeroCatalogReady]:
-    return {key: (template.name, template.id) for key, template in _validated_builds()}
+    return {key: (template.name, template.id) for key, template in build_certified_hero_entries()}
 
 
 def build_certified_hero_templates() -> list[CombatantTemplate]:
-    return [template for _, template in _validated_builds()]
+    return [template for _, template in build_certified_hero_entries()]
