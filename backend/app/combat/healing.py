@@ -6,6 +6,7 @@ from app.combat.dice import DiceProvider
 from app.combat.zero_hp import restore_hit_points
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, DiceRoll, HealingAction
+from app.domain.traits import CombatTrait
 
 
 def _distance(a: EncounterCombatant, b: EncounterCombatant) -> int:
@@ -21,6 +22,8 @@ def _resource_available(member: EncounterCombatant, action: HealingAction) -> bo
 
 def _target_allowed(healer: EncounterCombatant, target: EncounterCombatant, action: HealingAction) -> bool:
     if target.state.is_dead or not target.state.is_alive or target.state.current_hp >= target.state.template.max_hp:
+        return False
+    if CombatTrait.SWARM in target.state.template.combat_traits:
         return False
     if _distance(healer, target) > action.range_ft:
         return False
@@ -83,7 +86,6 @@ def choose_healing_action(
     healer: EncounterCombatant,
     setup: EncounterSetup,
 ) -> tuple[HealingAction, EncounterCombatant] | None:
-    """Choose the most urgent legal heal; ally rescue always outranks self-healing."""
     choices: list[tuple[HealingAction, EncounterCombatant]] = []
     for action in healer.state.template.healing_actions:
         target = choose_healing_target(healer, setup, action)
@@ -116,27 +118,14 @@ def resolve_healing(
         remaining = resource.current_uses
     notation = f"{action.dice_count}d{action.dice_size}+{action.healing_bonus}" if action.dice_count else str(action.healing_bonus)
     return BattleEvent(
-        sequence=sequence,
-        round_number=round_number,
-        event_type="healing",
-        actor_id=healer.combatant_id,
-        actor_name=healer.state.template.name,
-        target_id=target.combatant_id,
-        target_name=target.state.template.name,
-        healing_roll=DiceRoll(
-            notation=notation,
-            rolls=rolls,
-            modifier=action.healing_bonus,
-            total=total,
-        ),
-        hp_before=hp_before,
-        hp_after=target.state.current_hp,
+        sequence=sequence, round_number=round_number, event_type="healing",
+        actor_id=healer.combatant_id, actor_name=healer.state.template.name,
+        target_id=target.combatant_id, target_name=target.state.template.name,
+        healing_roll=DiceRoll(notation=notation, rolls=rolls, modifier=action.healing_bonus, total=total),
+        hp_before=hp_before, hp_after=target.state.current_hp,
         death_save_successes=target.state.death_save_successes,
         death_save_failures=target.state.death_save_failures,
-        is_stable=target.state.is_stable,
-        is_dead=target.state.is_dead,
-        feature_id=action.id,
-        resource_remaining=remaining,
-        animation=action.animation,
+        is_stable=target.state.is_stable, is_dead=target.state.is_dead,
+        feature_id=action.id, resource_remaining=remaining, animation=action.animation,
         description=f"{healer.state.template.name} uses {action.name} on {target.state.template.name} and restores {healed} HP.",
     )
