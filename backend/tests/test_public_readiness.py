@@ -18,6 +18,10 @@ def test_audited_karnok_and_certified_monster_pass_public_readiness() -> None:
     assert_public_selection_runnable(_selection("karnok-stoneward-l1"))
 
 
+def test_goblin_boss_passes_public_readiness() -> None:
+    assert_public_selection_runnable(_selection("karnok-stoneward-l1", "srd-goblin-boss"))
+
+
 @pytest.mark.parametrize(
     "monster_id",
     ["srd-bandit-captain", "srd-knight", "srd-noble", "srd-warrior-veteran"],
