@@ -68,11 +68,18 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             if len(attack.conditional_damage) != 1:
                 raise ValueError(f"Browser supports one conditional damage rider on {attack.id}.")
             conditional = attack.conditional_damage[0]
-            if conditional.trigger != "attack_advantage" or conditional.damage_bonus != 0:
-                raise ValueError(f"Unsupported browser conditional damage on {attack.id}.")
-            if conditional.damage_type != weapon.damage_type:
-                raise ValueError(f"Conditional damage type differs from weapon type on {attack.id}.")
-            row["conditionalAdvantage"] = [conditional.dice_count, conditional.dice_size]
+            legacy = (
+                conditional.trigger == "attack_advantage" and conditional.mode == "add"
+                and conditional.damage_bonus == 0 and conditional.damage_type == weapon.damage_type
+            )
+            if legacy:
+                row["conditionalAdvantage"] = [conditional.dice_count, conditional.dice_size]
+            else:
+                row["conditionalDamage"] = {
+                    "trigger": conditional.trigger, "mode": conditional.mode,
+                    "diceCount": conditional.dice_count, "diceSize": conditional.dice_size,
+                    "damageBonus": conditional.damage_bonus, "damageType": conditional.damage_type.value,
+                }
         control = _control(attack.control_effect)
         if control:
             row["controlEffect"] = control
