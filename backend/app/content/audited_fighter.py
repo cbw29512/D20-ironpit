@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.content.equipment import build_shortbow
+from app.content.level_resources import fighter_second_wind_uses, orc_adrenaline_rush_uses
 from app.domain.models import (
     CombatantTemplate,
     DamageType,
@@ -43,11 +44,12 @@ def _shortbow_attack() -> WeaponAttack:
 
 def build_karnok_stoneward() -> CombatantTemplate:
     """Level-1 Orc Soldier Fighter derived from the 2024 Basic Rules."""
+    level = 1
     return CombatantTemplate(
         id="karnok-stoneward-l1",
         name="Karnok Stoneward",
         archetype="Fighter",
-        level=1,
+        level=level,
         kind="character",
         armor_class=17,
         max_hp=12,
@@ -73,8 +75,16 @@ def build_karnok_stoneward() -> CombatantTemplate:
             body_style="humanoid",
         ),
         resources=[
-            ResourceDefinition(id="second-wind", name="Second Wind", max_uses=2),
-            ResourceDefinition(id="adrenaline-rush", name="Adrenaline Rush", max_uses=2),
+            ResourceDefinition(
+                id="second-wind",
+                name="Second Wind",
+                max_uses=fighter_second_wind_uses(level),
+            ),
+            ResourceDefinition(
+                id="adrenaline-rush",
+                name="Adrenaline Rush",
+                max_uses=orc_adrenaline_rush_uses(level),
+            ),
             ResourceDefinition(id="relentless-endurance", name="Relentless Endurance", max_uses=1),
         ],
         source="D&D Beyond Basic Rules 2024: Fighter, Orc, Soldier, Savage Attacker, Equipment",
