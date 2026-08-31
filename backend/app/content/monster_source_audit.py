@@ -11,7 +11,9 @@ from app.domain.models import CombatantTemplate
 
 logger = logging.getLogger(__name__)
 _SIZE_NAMES = ("tiny", "small", "medium", "large", "huge", "gargantuan")
-_ATTACK_ROLL = re.compile(r"\b(?:Melee|Ranged|Melee\s+or\s+Ranged)\s+Attack Roll:", re.IGNORECASE)
+_MELEE_ATTACK_ROLL = re.compile(r"\bMelee\s+Attack Roll:", re.IGNORECASE)
+_RANGED_ATTACK_ROLL = re.compile(r"\bRanged\s+Attack Roll:", re.IGNORECASE)
+_COMBINED_ATTACK_ROLL = re.compile(r"\bMelee\s+or\s+Ranged\s+Attack Roll:", re.IGNORECASE)
 _SAVING_THROW = re.compile(
     r"\b(?:Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma)\s+Saving Throw:",
     re.IGNORECASE,
@@ -44,6 +46,15 @@ def _size_matches(runtime_size: str, source_size: object) -> bool:
     return runtime_size.lower() in allowed
 
 
+def _source_attack_mode_count(actions: str) -> int:
+    """Count legal attack modes; one combined melee/ranged action exposes two runtime modes."""
+    return (
+        len(_MELEE_ATTACK_ROLL.findall(actions))
+        + len(_RANGED_ATTACK_ROLL.findall(actions))
+        + 2 * len(_COMBINED_ATTACK_ROLL.findall(actions))
+    )
+
+
 def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
     """Reconcile a RAW-ready runtime monster against its vendored SRD 5.2.1 record."""
     try:
@@ -61,7 +72,7 @@ def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) ->
         issues.extend(defense_issues(template, row))
         actions = normalized(row.get("actions", ""))
         runtime_attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
-        if len(_ATTACK_ROLL.findall(actions)) != len(runtime_attacks):
+        if _source_attack_mode_count(actions) != len(runtime_attacks):
             issues.append("source-attack-count-mismatch")
         if len(_SAVING_THROW.findall(actions)) != len(template.saving_throw_actions):
             issues.append("source-save-action-count-mismatch")
