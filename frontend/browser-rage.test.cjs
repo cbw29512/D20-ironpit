@@ -11,8 +11,8 @@ for (const file of [
   "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js",
   "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-grapple.js", "browser-timed-conditions.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
-  "browser-attack.js", "browser-reactions.js", "browser-reaction-movement.js", "browser-saves.js",
-  "browser-condition-lifecycle.js", "browser-charge.js", "browser-multiattack.js", "browser-healing.js",
+  "browser-attack.js", "browser-healing.js", "browser-reactions.js", "browser-reaction-movement.js", "browser-saves.js",
+  "browser-condition-lifecycle.js", "browser-charge.js", "browser-multiattack.js",
   "browser-spellcasting.js", "browser-condition-removal.js", "browser-support.js", "browser-turn.js",
   "browser-formation.js", "browser-engine.js",
 ]) load(file);
@@ -54,6 +54,36 @@ function queuedDice(values, fallback = 10) {
   hero.state.is_unconscious = true;
   window.IRON_PIT_BROWSER_RAGE.endIfIncapacitated(hero.state);
   assert.equal(window.IRON_PIT_BROWSER_RAGE.active(hero.state), false, "incapacitation should end Rage");
+}
+
+{
+  const template = structuredClone(window.IRON_PIT_BROWSER_HEROES["rokhan-stonefury-l1"]);
+  const hero = { combatant_id: "hero-rage-ledger", side: "heroes", position_ft: 0, state: window.IRON_PIT_BROWSER_STATE.buildState(template) };
+  const RAGE = window.IRON_PIT_BROWSER_RAGE;
+  const ATTACK = window.IRON_PIT_BROWSER_ATTACK;
+  const HEALING = window.IRON_PIT_BROWSER_HEALING;
+
+  assert.equal(hero.state.resources.rage, 2, "level-1 Barbarian must enter the fight with two Rage uses");
+  for (const [round, remaining] of [[1, 1], [2, 0]]) {
+    window.IRON_PIT_BROWSER_STATE.beginTurn(hero.state);
+    assert.ok(RAGE.enter(round, round, hero), `Rage ${round} should be available`);
+    assert.equal(hero.state.resources.rage, remaining);
+
+    assert.equal(ATTACK.applyDamage(hero.state, hero.state.current_hp, false), "unconscious");
+    RAGE.endIfIncapacitated(hero.state);
+    assert.equal(RAGE.active(hero.state), false, "dropping to 0 HP must end active Rage");
+    assert.equal(hero.state.resources.rage, remaining, "ending Rage must not refund a spent use");
+
+    assert.equal(HEALING.restore(hero.state, 5), 5);
+    assert.equal(hero.state.current_hp, 5);
+    assert.equal(hero.state.is_unconscious, false);
+    assert.equal(hero.state.resources.rage, remaining, "healing must not refresh encounter resources");
+  }
+
+  window.IRON_PIT_BROWSER_STATE.beginTurn(hero.state);
+  assert.equal(RAGE.enter(3, 3, hero), null, "third Rage must fail after both uses were spent");
+  assert.equal(hero.state.resources.rage, 0);
+  assert.equal(RAGE.active(hero.state), false);
 }
 
 console.log("Browser Rage regressions passed.");
