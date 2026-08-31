@@ -32,7 +32,7 @@ _HIDDEN_RIDER = re.compile(
 _ATTACK_ROLL = re.compile(r"\b(?:Melee|Ranged|Melee or Ranged)\s+Attack Roll:", re.I)
 _ALLOWED_TRAITS = set(_ARENA_NEUTRAL_TRAITS) | set(_MODELED_TRAITS)
 _DETAIL_FIELDS = ("name", "size", "armorClass", "hitPoints", "speed", "challenge", "traits", "actions")
-_DETAIL_BLOCKER_LIMIT = 10
+_DETAIL_BLOCKER_LIMIT = 30
 
 
 def _has_neighbor_bleed(row: dict[str, object], monster_names: set[str]) -> bool:
