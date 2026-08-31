@@ -2,6 +2,7 @@
   "use strict";
 
   const dice = () => window.IRON_PIT_DICE;
+  const bloodied = (state) => state.current_hp * 2 <= state.template.max_hp;
 
   function modeFromSources(advantage = 0, disadvantage = 0) {
     if ((advantage > 0) === (disadvantage > 0)) return "normal";
@@ -58,9 +59,25 @@
     return damageComponent({ ...spec, damageBonus: 0 }, critical);
   }
 
-  function weaponDamage(attacker, attack, critical, mode, turnKey, bonusDamage = null) {
+  function conditionalActive(spec, attacker, target, mode) {
+    if (!spec) return false;
+    if (spec.trigger === "attack_advantage") return mode === "advantage";
+    if (spec.trigger === "attacker_bloodied") return bloodied(attacker);
+    if (spec.trigger === "target_bloodied") {
+      if (!target) throw new Error("Target state is required for target-Bloodied conditional damage.");
+      return bloodied(target);
+    }
+    throw new Error(`Unsupported conditional damage trigger: ${spec.trigger}`);
+  }
+
+  function weaponDamage(attacker, attack, critical, mode, turnKey, bonusDamage = null, target = null) {
+    const conditional = attack.conditionalDamage || null;
+    const replacement = conditional?.mode === "replace_weapon" && conditionalActive(conditional, attacker, target, mode)
+      ? conditional : null;
     let rolled;
-    if (attack.fixedDamage != null) {
+    if (replacement) {
+      rolled = candidate(replacement, critical);
+    } else if (attack.fixedDamage != null) {
       rolled = fixedCandidate(attack);
     } else {
       const rageBonus = window.IRON_PIT_BROWSER_RAGE?.damageBonus(attacker, attack) || 0;
@@ -72,7 +89,7 @@
         if (second.total > rolled.total) rolled = second;
       }
     }
-    const components = [{ source: attack.name, damage_type: attack.damageType, ...rolled }];
+    const components = [{ source: attack.name, damage_type: replacement?.damageType || attack.damageType, ...rolled }];
     for (const extra of attack.onHitDamage || []) components.push(damageComponent(extra, critical));
     if (mode === "advantage" && attack.conditionalAdvantage) {
       const [baseCount, sides] = attack.conditionalAdvantage;
@@ -82,6 +99,9 @@
         source: "Advantage bonus damage", damage_type: attack.damageType,
         notation: `${count}d${sides}+0`, rolls, modifier: 0, total: rolls.reduce((a, b) => a + b, 0),
       });
+    }
+    if (conditional?.mode === "add" && conditionalActive(conditional, attacker, target, mode)) {
+      components.push(damageComponent({ ...conditional, source: "Conditional bonus damage" }, critical));
     }
     if (bonusDamage) components.push(bonusComponent(bonusDamage, critical));
     const total = components.reduce((sum, item) => sum + item.total, 0);
