@@ -30,6 +30,7 @@ for (const monster of Object.values(generated)) {
   assert.ok(Array.isArray(monster.source_bonus_action_names), `${monster.id} must export its printed bonus-action fingerprint`);
   assert.ok(Array.isArray(monster.source_limited_use_names), `${monster.id} must export its limited-use fingerprint`);
   assert.ok(Array.isArray(monster.source_legendary_action_names), `${monster.id} must export its legendary-action fingerprint`);
+  assert.ok(monster.source_spellcasting_fingerprint === null || typeof monster.source_spellcasting_fingerprint === "string");
 }
 assert.deepEqual(generated["srd-bat"].movement_modes, {
   walk_ft: 5, fly_ft: 30, climb_ft: 0, swim_ft: 0, burrow_ft: 0, hover: false,
@@ -40,6 +41,7 @@ assert.deepEqual(generated["srd-saber-toothed-tiger"].source_reaction_names, [])
 assert.deepEqual(generated["srd-saber-toothed-tiger"].source_bonus_action_names, ["Nimble Escape"]);
 assert.deepEqual(generated["srd-saber-toothed-tiger"].source_limited_use_names, []);
 assert.deepEqual(generated["srd-saber-toothed-tiger"].source_legendary_action_names, []);
+assert.equal(generated["srd-saber-toothed-tiger"].source_spellcasting_fingerprint, null);
 
 const slots = (action) => (action?.slots || []).map((slot) => Array.isArray(slot)
   ? { attackIds: slot, saveActionIds: [] }

@@ -10,6 +10,7 @@ from app.content.monster_legendary_source_audit import complete_monster_legendar
 from app.content.monster_limited_use_source_audit import complete_monster_limited_use_fingerprints
 from app.content.monster_reaction_source_audit import complete_monster_reaction_fingerprints
 from app.content.monster_saving_throws import complete_monster_saving_throws
+from app.content.monster_spellcasting_source_audit import complete_monster_spellcasting_fingerprints
 from app.content.monster_trait_source_audit import complete_monster_trait_fingerprints
 from app.content.monster_tyrannosaurus import build_tyrannosaurus_rex
 from app.content.monsters import build_axe_beak, build_bandit, build_commoner, build_giant_lizard
@@ -51,6 +52,7 @@ def build_arena_roster() -> ArenaRoster:
         monsters = complete_monster_bonus_action_fingerprints(monsters)
         monsters = complete_monster_limited_use_fingerprints(monsters)
         monsters = complete_monster_legendary_fingerprints(monsters)
+        monsters = complete_monster_spellcasting_fingerprints(monsters)
         return ArenaRoster(
             characters=[
                 *build_certified_hero_templates(),

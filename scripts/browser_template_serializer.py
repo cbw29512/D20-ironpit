@@ -171,6 +171,7 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["source_bonus_action_names"] = list(template.source_bonus_action_names)
             row["source_limited_use_names"] = list(template.source_limited_use_names)
             row["source_legendary_action_names"] = list(template.source_legendary_action_names)
+            row["source_spellcasting_fingerprint"] = template.source_spellcasting_fingerprint
         if template.spell_save_actions:
             row["spell_save_actions"] = [_spell(item) for item in template.spell_save_actions]
         if template.defensive_spell_actions:
