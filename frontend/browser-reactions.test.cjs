@@ -58,4 +58,19 @@ function setup(monsterId = "srd-commoner") {
     assert.ok(X.resolveOpportunityAttack(1, 1, monster, hero, fight, 5, 10, source));
   }
 }
-console.log("Browser Opportunity Attack Reaction regressions passed.");
+{
+  const defender = S.buildState(heroTemplate()); defender.template.parry_reaction = { ac_bonus: 2 };
+  const attack = monsterTemplate("srd-commoner").attacks[0]; const total = defender.template.armor_class + 1;
+  assert.deepEqual(X.parryHit(defender, attack, { selected_roll: 12, total }, true), { hit: false, used: true });
+  assert.equal(defender.reaction_available, false);
+}
+{
+  const defender = S.buildState(heroTemplate()); defender.template.parry_reaction = { ac_bonus: 2 };
+  const melee = monsterTemplate("srd-commoner").attacks[0]; const ranged = { ...melee, kind: "ranged" };
+  const total = defender.template.armor_class + 2;
+  assert.deepEqual(X.parryHit(defender, melee, { selected_roll: 12, total }, true), { hit: true, used: false });
+  assert.deepEqual(X.parryHit(defender, ranged, { selected_roll: 12, total: defender.template.armor_class }, true), { hit: true, used: false });
+  assert.deepEqual(X.parryHit(defender, melee, { selected_roll: 20, total: 99 }, true), { hit: true, used: false });
+  assert.equal(defender.reaction_available, true);
+}
+console.log("Browser Opportunity Attack and Parry Reaction regressions passed.");
