@@ -19,12 +19,13 @@ for (const file of ["app.js", "battlefield-picker.js", "battlefield-view.js", "b
 
 for (const id of [
   "hero-slots", "monster-slots", "fight-button", "pit-round", "status",
-  "card-picker", "picker-class", "picker-level", "picker-hero", "picker-cr", "picker-monster",
+  "card-picker", "picker-class", "picker-level", "picker-cr", "picker-monster",
   "confirm-card", "remove-card", "combat-fx-overlay",
 ]) assert.ok(ids.has(id), `battlefield is missing #${id}`);
-
+assert.equal(ids.has("picker-hero"), false, "canonical heroes must not expose a redundant build selector");
 assert.equal(ids.has("distance"), false, "formation combat must not expose a starting-distance control");
 assert.doesNotMatch(html, /\bid="distance"/i, "distance setup must stay removed from the production battlefield");
+assert.match(html, /<label>Hero<select id="picker-class">/);
 
 const view = fs.readFileSync(path.join(root, "battlefield-view.js"), "utf8");
 const replay = fs.readFileSync(path.join(root, "battlefield-replay.js"), "utf8");
@@ -46,9 +47,11 @@ assert.match(replay, /fumble-blackout/);
 assert.match(css, /\.battle-card\.turn-active/);
 assert.match(css, /card-turn-shake/);
 assert.match(css, /\.battle-card\.battle-dead/);
+assert.ok(html.indexOf("browser-tactical-mind.js") < html.indexOf("browser-grapple.js"));
+assert.ok(html.indexOf("browser-action-surge.js") < html.indexOf("browser-turn.js"));
 assert.ok(html.indexOf("browser-formation.js") < html.indexOf("browser-engine.js"), "formation must load before the combat engine");
 assert.ok(html.indexOf("battlefield-picker.js") < html.indexOf("app.js"));
 assert.ok(html.indexOf("battlefield-view.js") < html.indexOf("app.js"));
 assert.ok(html.indexOf("battlefield-replay.js") < html.indexOf("app.js"));
 
-console.log("six-slot formation battlefield wiring regression passed");
+console.log("six-slot canonical-hero formation battlefield wiring regression passed");
