@@ -9,7 +9,6 @@ from app.content.monster_bonus_action_source_audit import (
 )
 from app.content.monster_catalog import _READY_BY_NAME, load_monster_rows
 from app.content.monster_defense_source_audit import parse_defense_profile
-from app.content.monster_legendary_source_audit import parse_legendary_action_names
 from app.content.monster_limited_use_source_audit import parse_limited_use_names
 from app.content.monster_reaction_source_audit import parse_reaction_names
 from app.content.monster_spellcasting_source_audit import arena_neutral_spellcasting, spellcasting_fingerprint
@@ -29,19 +28,30 @@ _ALLOWED_TRAITS = set(_ARENA_NEUTRAL_TRAITS) | set(_MODELED_TRAITS)
 
 def _source_blockers(row: dict[str, object]) -> list[str]:
     blockers: list[str] = []
-    traits = parse_trait_names(row.get("traits", ""))
-    unknown_traits = [name for name in traits if name not in _ALLOWED_TRAITS]
-    if unknown_traits:
-        blockers.append("trait")
-    reactions = parse_reaction_names(row.get("reactions", ""))
-    if reactions:
-        blockers.append("reaction")
-    bonus = parse_bonus_action_names(row.get("bonusActions", ""))
-    if any(_base_name(name) not in _ARENA_NEUTRAL_BONUS_ACTIONS for name in bonus):
-        blockers.append("bonus-action")
-    if parse_limited_use_names(row):
-        blockers.append("limited-use")
-    if parse_legendary_action_names(row.get("legendaryActions", "")):
+    try:
+        traits = parse_trait_names(row.get("traits", ""))
+        if any(name not in _ALLOWED_TRAITS for name in traits):
+            blockers.append("trait")
+    except ValueError:
+        blockers.append("trait-parse")
+    try:
+        reactions = parse_reaction_names(row.get("reactions", ""))
+        if reactions:
+            blockers.append("reaction")
+    except ValueError:
+        blockers.append("reaction-parse")
+    try:
+        bonus = parse_bonus_action_names(row.get("bonusActions", ""))
+        if any(_base_name(name) not in _ARENA_NEUTRAL_BONUS_ACTIONS for name in bonus):
+            blockers.append("bonus-action")
+    except ValueError:
+        blockers.append("bonus-action-parse")
+    try:
+        if parse_limited_use_names(row):
+            blockers.append("limited-use")
+    except ValueError:
+        blockers.append("limited-use-parse")
+    if str(row.get("legendaryActions", "")).strip():
         blockers.append("legendary")
     if spellcasting_fingerprint(row) is not None and not arena_neutral_spellcasting(row):
         blockers.append("spellcasting")
@@ -61,10 +71,13 @@ def _source_blockers(row: dict[str, object]) -> list[str]:
 
 def main() -> None:
     rows = load_monster_rows()
-    safe = []
-    already_ready = []
+    safe: list[str] = []
+    already_ready: list[str] = []
+    blocker_counts: dict[str, int] = {}
     for row in rows:
         blockers = _source_blockers(row)
+        for blocker in set(blockers):
+            blocker_counts[blocker] = blocker_counts.get(blocker, 0) + 1
         if blockers:
             continue
         name = str(row["name"])
@@ -75,6 +88,8 @@ def main() -> None:
     print(f"ZERO_ENGINE_BASELINE existing={len(already_ready)} missing={len(safe)}")
     for name in safe:
         print(f"ZERO_ENGINE_MISSING\t{name}")
+    for blocker, count in sorted(blocker_counts.items(), key=lambda item: (-item[1], item[0])):
+        print(f"ZERO_ENGINE_BLOCKER\t{blocker}\t{count}")
 
 
 if __name__ == "__main__":
