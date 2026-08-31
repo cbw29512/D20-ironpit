@@ -4,7 +4,6 @@ import logging
 
 from app.content.certified_heroes import build_certified_hero_templates
 from app.content.demo import build_demo_fighter, build_goblin_warrior
-from app.content.fighter_progression import build_karnok_stoneward_level
 from app.content.monster_blood_hawk import build_blood_hawk
 from app.content.monster_bonus_action_source_audit import complete_monster_bonus_action_fingerprints
 from app.content.monster_giant_crocodile import build_giant_crocodile
@@ -65,10 +64,9 @@ def build_arena_roster() -> ArenaRoster:
         monsters = complete_monster_legendary_fingerprints(monsters)
         monsters = complete_monster_spellcasting_fingerprints(monsters)
         monsters = complete_monster_saving_throws(monsters)
-        certified = build_certified_hero_templates()
         characters = [
-            certified[0], build_karnok_stoneward_level(2), *certified[1:], build_demo_fighter(),
-            build_brom_ironmark(), build_selene_asharrow(), build_mara_quickstep(),
+            *build_certified_hero_templates(), build_demo_fighter(), build_brom_ironmark(),
+            build_selene_asharrow(), build_mara_quickstep(),
         ]
         return ArenaRoster(
             characters=complete_unarmed_opportunity_profiles(characters),
