@@ -12,10 +12,17 @@ from app.domain.models import RollMode
 logger = logging.getLogger(__name__)
 
 
+def _initiative_mode(member: EncounterCombatant) -> RollMode:
+    advantage = member.state.template.initiative_advantage
+    disadvantage = is_incapacitated(member.state)
+    if advantage == disadvantage:
+        return RollMode.NORMAL
+    return RollMode.ADVANTAGE if advantage else RollMode.DISADVANTAGE
+
+
 def _roll_group(members: list[EncounterCombatant], dice: DiceProvider) -> InitiativeGroup:
     template = members[0].state.template
-    mode = RollMode.DISADVANTAGE if is_incapacitated(members[0].state) else RollMode.NORMAL
-    roll = roll_d20(dice, template.initiative_bonus, mode)
+    roll = roll_d20(dice, template.initiative_bonus, _initiative_mode(members[0]))
     for member in members:
         member.state.initiative_roll = roll.selected_roll
         member.state.initiative_total = roll.total
