@@ -4,6 +4,10 @@ on:
   push:
   pull_request:
 
+concurrency:
+  group: ci-${{ github.event.pull_request.head.ref || github.ref_name }}
+  cancel-in-progress: true
+
 # Exact-head certification for RAW combat, source parity, figure identity, full SRD roster visibility, six-slot UI, and Pages root entry.
 jobs:
   combat-certification:
@@ -130,4 +134,5 @@ jobs:
       - name: Validate Netlify production-only credit guard
         run: |
           grep -q 'CONTEXT.*production' netlify.toml
+          grep -q 'pip install -e ./backend' netlify.toml
           grep -q 'prepare_static_site.py' netlify.toml
