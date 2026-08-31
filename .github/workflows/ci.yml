@@ -56,6 +56,7 @@ jobs:
         run: |
           node frontend/browser-engine.test.cjs
           node frontend/browser-conditional-damage.test.cjs
+          node frontend/browser-swarm.test.cjs
           node frontend/browser-rage.test.cjs
           node frontend/browser-beast2.test.cjs
           node frontend/browser-batch3.test.cjs
