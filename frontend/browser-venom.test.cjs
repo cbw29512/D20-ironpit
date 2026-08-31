@@ -14,7 +14,7 @@ for (const file of [
   "browser-timed-conditions.js", "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-attack.js",
   "browser-reactions.js", "browser-reaction-movement.js", "browser-saves.js", "browser-condition-lifecycle.js",
   "browser-charge.js", "browser-multiattack.js", "browser-healing.js", "browser-spellcasting.js",
-  "browser-condition-removal.js", "browser-support.js", "browser-turn.js", "browser-engine.js",
+  "browser-condition-removal.js", "browser-support.js", "browser-turn.js", "browser-formation.js", "browser-engine.js",
 ]) load(file);
 
 const queuedDice = (values, fallback = 10) => {
@@ -83,7 +83,7 @@ assert.equal(Object.keys(monsters).length, 62, "venom batch must bring browser r
 {
   window.IRON_PIT_DICE = deterministicDice(41);
   const battle = window.IRON_PIT_BROWSER_ENGINE.runEncounter({
-    hero_ids: ["karnok-stoneward-l1"], monster_ids: ["srd-giant-wolf-spider"], starting_distance_ft: 30,
+    hero_ids: ["karnok-stoneward-l1"], monster_ids: ["srd-giant-wolf-spider"],
   });
   assert.notEqual(battle.outcome, "active");
   assert.ok(battle.events.some((event) => event.event_type === "attack" && event.actor_id.startsWith("monster-")));
