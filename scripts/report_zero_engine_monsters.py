@@ -109,6 +109,7 @@ def main() -> None:
     blocker_counts: dict[str, int] = {}
     blocker_names: dict[str, list[str]] = {}
     reaction_details: list[dict[str, object]] = []
+    rider_details: list[dict[str, object]] = []
     for row in rows:
         name = str(row["name"])
         blockers = _source_blockers(row, monster_names)
@@ -120,6 +121,12 @@ def main() -> None:
                 "name": name,
                 "blockers": blockers,
                 "reactions": str(row.get("reactions", "")),
+            })
+        if "unsupported-action-rider" in blockers:
+            rider_details.append({
+                "name": name,
+                "blockers": blockers,
+                "actions": str(row.get("actions", "")),
             })
         if blockers:
             continue
@@ -136,6 +143,8 @@ def main() -> None:
         print("ZERO_ENGINE_DETAIL\t" + json.dumps(detail, ensure_ascii=False, separators=(",", ":")))
     for detail in reaction_details:
         print("ZERO_ENGINE_REACTION_DETAIL\t" + json.dumps(detail, ensure_ascii=False, separators=(",", ":")))
+    for detail in rider_details:
+        print("ZERO_ENGINE_RIDER_DETAIL\t" + json.dumps(detail, ensure_ascii=False, separators=(",", ":")))
     for blocker, count in sorted(blocker_counts.items(), key=lambda item: (-item[1], item[0])):
         print(f"ZERO_ENGINE_BLOCKER\t{blocker}\t{count}")
         if count <= _DETAIL_BLOCKER_LIMIT:
