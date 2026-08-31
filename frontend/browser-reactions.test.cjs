@@ -29,7 +29,7 @@ const fixedDice = (values) => {
   };
 };
 
-function setup(monsterId = "srd-commoner") {
+function setup(monsterId = "srd-goblin-warrior") {
   const hero = member("hero-1", "heroes", heroTemplate(), 5);
   const monster = member("monster-1", "monsters", monsterTemplate(monsterId), 0);
   return { hero, monster, fight: { heroes: [hero], monsters: [monster] } };
@@ -82,7 +82,7 @@ function redirectTemplate() {
   rangedOnly.primary_attack_id = rangedOnly.attacks[0].id;
   rangedOnly.unarmed_opportunity_attack = { attack_bonus: 3, damage: 2 };
   const reactor = member("selene-shape", "heroes", rangedOnly, 0);
-  const mover = member("monster-1", "monsters", monsterTemplate("srd-commoner"), 5);
+  const mover = member("monster-1", "monsters", monsterTemplate("srd-goblin-warrior"), 5);
   const fight = { heroes: [reactor], monsters: [mover] };
   fixedDice([12]);
   const event = X.resolveOpportunityAttack(1, 1, reactor, mover, fight, 5, 10, "speed");
@@ -97,13 +97,13 @@ function redirectTemplate() {
 }
 {
   const defender = S.buildState(heroTemplate()); defender.template.parry_reaction = { ac_bonus: 2 };
-  const attack = monsterTemplate("srd-commoner").attacks[0]; const total = defender.template.armor_class + 1;
+  const attack = monsterTemplate("srd-goblin-warrior").attacks[0]; const total = defender.template.armor_class + 1;
   assert.deepEqual(X.parryHit(defender, attack, { selected_roll: 12, total }, true), { hit: false, used: true });
   assert.equal(defender.reaction_available, false);
 }
 {
   const defender = S.buildState(heroTemplate()); defender.template.parry_reaction = { ac_bonus: 2 };
-  const melee = monsterTemplate("srd-commoner").attacks[0]; const ranged = { ...melee, kind: "ranged" };
+  const melee = monsterTemplate("srd-goblin-warrior").attacks[0]; const ranged = { ...melee, kind: "ranged" };
   const total = defender.template.armor_class + 2;
   assert.deepEqual(X.parryHit(defender, melee, { selected_roll: 12, total }, true), { hit: true, used: false });
   assert.deepEqual(X.parryHit(defender, ranged, { selected_roll: 12, total: defender.template.armor_class }, true), { hit: true, used: false });
