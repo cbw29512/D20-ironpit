@@ -46,9 +46,17 @@ def load_monster_rows() -> list[dict[str, object]]:
     corrections = json.loads(_CORRECTIONS_PATH.read_text(encoding="utf-8"))
     if not isinstance(rows, list) or len(rows) != 328:
         raise RuntimeError("Vended parser output must contain its known 328 base records.")
-    if not isinstance(corrections, list) or len(corrections) != 2:
-        raise RuntimeError("SRD correction layer must restore exactly two swallowed records.")
-    combined = [*rows, *corrections]
+    if not isinstance(corrections, list) or len(corrections) != 3:
+        raise RuntimeError("SRD correction layer must contain one replacement and two restored records.")
+    correction_by_id = {str(row["id"]): row for row in corrections}
+    if len(correction_by_id) != 3:
+        raise RuntimeError("SRD correction records must have unique ids.")
+    base_ids = {str(row["id"]) for row in rows}
+    replacements = [row for row in corrections if str(row["id"]) in base_ids]
+    additions = [row for row in corrections if str(row["id"]) not in base_ids]
+    if len(replacements) != 1 or len(additions) != 2:
+        raise RuntimeError("SRD correction layer must replace one row and restore two swallowed rows.")
+    combined = [correction_by_id.get(str(row["id"]), row) for row in rows] + additions
     ids = {str(row["id"]) for row in combined}
     names = {str(row["name"]) for row in combined}
     if len(combined) != 330 or len(ids) != 330 or len(names) != 330:

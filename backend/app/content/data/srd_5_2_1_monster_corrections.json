@@ -1,5 +1,26 @@
 [
   {
+    "id": "srd-5.2.1-2024-monster-constrictor-snake",
+    "edition": "srd-5.2.1-2024",
+    "sourceVersion": "5.2.1",
+    "name": "Constrictor Snake",
+    "size": "Large",
+    "type": "Beast",
+    "alignment": "Unaligned",
+    "armorClass": "13",
+    "hitPoints": "13 (2d10 + 2)",
+    "speed": "30 ft., Swim 30 ft.",
+    "challenge": "1/4 (XP 50; PB +2)",
+    "traits": "",
+    "actions": "Bite. Melee Attack Roll: +4, reach 5 ft. Hit: 6 (1d8 + 2) Piercing damage. Constrict. Strength Saving Throw: DC 12, one Medium or smaller creature the snake can see within 5 feet. Failure: 7 (3d4) Bludgeoning damage, and the target has the Grappled condition (escape DC 12).",
+    "bonusActions": "",
+    "reactions": "",
+    "legendaryActions": "",
+    "rawText": "AC 13 Initiative +2 (12) HP 13 (2d10 + 2) Speed 30 ft., Swim 30 ft. MOD SAVE MOD SAVE MOD SAVE Str 15 +2 +2 Dex 14 +2 +2 Con 12 +1 +1 Int 1 -5 -5 Wis 10 +0 +0 Cha 3 -4 -4 Skills Perception +2, Stealth +4 Senses Blindsight 10 ft.; Passive Perception 12 Languages None CR 1/4 (XP 50; PB +2) Actions Bite. Melee Attack Roll: +4, reach 5 ft. Hit: 6 (1d8 + 2) Piercing damage. Constrict. Strength Saving Throw: DC 12, one Medium or smaller creature the snake can see within 5 feet. Failure: 7 (3d4) Bludgeoning damage, and the target has the Grappled condition (escape DC 12).",
+    "sourcePage": 346,
+    "sourceReference": "SRD 5.2.1 p. 346"
+  },
+  {
     "id": "srd-5.2.1-2024-monster-crab",
     "edition": "srd-5.2.1-2024",
     "sourceVersion": "5.2.1",
@@ -17,8 +38,8 @@
     "reactions": "",
     "legendaryActions": "",
     "rawText": "Crab Tiny Beast, Unaligned. AC 11. Initiative +0 (10). HP 3 (1d4 + 1). Speed 20 ft., Swim 20 ft. MOD SAVE MOD SAVE MOD SAVE Str 6 -2 -2 Dex 11 +0 +0 Con 12 +1 +1 Int 1 -5 -5 Wis 8 -1 -1 Cha 2 -4 -4 Skills Stealth +2 Senses Blindsight 30 ft.; Passive Perception 9 Languages None CR 0 (XP 10; PB +2). Amphibious. The crab can breathe air and water. Actions: Claw. Melee Attack Roll: +2, reach 5 ft. Hit: 1 Bludgeoning damage.",
-    "sourcePage": 346,
-    "sourceReference": "SRD 5.2.1 p. 346"
+    "sourcePage": 347,
+    "sourceReference": "SRD 5.2.1 p. 347"
   },
   {
     "id": "srd-5.2.1-2024-monster-crocodile",
@@ -38,7 +59,7 @@
     "reactions": "",
     "legendaryActions": "",
     "rawText": "Crocodile Large Beast, Unaligned. AC 12. Initiative +0 (10). HP 13 (2d10 + 2). Speed 20 ft., Swim 30 ft. MOD SAVE MOD SAVE MOD SAVE Str 15 +2 +2 Dex 10 +0 +0 Con 13 +1 +3 Int 2 -4 -4 Wis 10 +0 +0 Cha 5 -3 -3 Skills Stealth +2 Senses Passive Perception 10 Languages None CR 1/2 (XP 100; PB +2). Hold Breath. The crocodile can hold its breath for 1 hour. Actions: Bite. Melee Attack Roll: +4, reach 5 ft. Hit: 6 (1d8 + 2) Piercing damage. If the target is a Medium or smaller creature, it has the Grappled condition (escape DC 12). While Grappled, the target has the Restrained condition.",
-    "sourcePage": 346,
-    "sourceReference": "SRD 5.2.1 p. 346"
+    "sourcePage": 347,
+    "sourceReference": "SRD 5.2.1 p. 347"
   }
 ]

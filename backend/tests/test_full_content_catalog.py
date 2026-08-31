@@ -1,6 +1,7 @@
 from collections import Counter
 
 from app.content.catalog import build_full_content_catalog
+from app.content.monster_catalog import load_monster_rows
 from app.domain.catalog import CoverageStatus
 
 
@@ -32,12 +33,22 @@ def test_catalog_contains_all_330_srd_5_2_1_monsters() -> None:
 
     crab = next(monster for monster in catalog.monsters if monster.name == "Crab")
     crocodile = next(monster for monster in catalog.monsters if monster.name == "Crocodile")
-    assert (crab.source_page, crab.challenge_rating) == (346, "0 (XP 10; PB +2)")
+    assert (crab.source_page, crab.challenge_rating) == (347, "0 (XP 10; PB +2)")
     assert crab.runnable_template_id == "srd-crab"
     assert crab.coverage_status is CoverageStatus.RAW_READY
-    assert (crocodile.source_page, crocodile.challenge_rating) == (346, "1/2 (XP 100; PB +2)")
+    assert (crocodile.source_page, crocodile.challenge_rating) == (347, "1/2 (XP 100; PB +2)")
     assert crocodile.coverage_status is CoverageStatus.RAW_READY
     assert crocodile.runnable_template_id == "srd-crocodile"
+
+
+def test_constrictor_snake_source_correction_removes_neighbor_bleed() -> None:
+    row = next(row for row in load_monster_rows() if row["name"] == "Constrictor Snake")
+    assert row["sourcePage"] == 346
+    assert row["sourceReference"] == "SRD 5.2.1 p. 346"
+    assert row["traits"] == ""
+    assert "Crab Tiny Beast" not in str(row["actions"])
+    assert "Crab Tiny Beast" not in str(row["rawText"])
+    assert "Crocodile Large Beast" not in str(row["rawText"])
 
 
 def test_uncertified_cards_fail_closed_in_catalog() -> None:
