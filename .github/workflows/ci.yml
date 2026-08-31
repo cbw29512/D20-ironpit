@@ -55,6 +55,7 @@ jobs:
       - name: Run deterministic browser combat regressions
         run: |
           node frontend/browser-engine.test.cjs
+          node frontend/browser-formation.test.cjs
           node frontend/browser-conditional-damage.test.cjs
           node frontend/browser-swarm.test.cjs
           node frontend/browser-rage.test.cjs
@@ -99,6 +100,7 @@ jobs:
           grep -q 'id="hero-slots"' index.html
           grep -q 'id="monster-slots"' index.html
           grep -q 'id="fight-button"' index.html
+          ! grep -q 'id="distance"' index.html
           grep -q 'figure-archetypes.css' index.html
           grep -q 'figure-swarms.css' index.html
           grep -q 'figure-portraits.css' index.html
@@ -125,6 +127,7 @@ jobs:
           grep -q 'id="monster-slots"' frontend/index.html
           grep -q 'id="card-picker"' frontend/index.html
           grep -q 'id="combat-fx-overlay"' frontend/index.html
+          ! grep -q 'id="distance"' frontend/index.html
           grep -q 'battlefield.css' frontend/index.html
           grep -q 'figure-archetypes.css' frontend/index.html
           grep -q 'figure-swarms.css' frontend/index.html
