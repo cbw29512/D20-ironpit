@@ -39,6 +39,7 @@ def render() -> str:
             "(() => {\n  \"use strict\";\n"
             f"  const monsters = {payload};\n"
             "  window.IRON_PIT_BROWSER_MONSTERS = Object.fromEntries(monsters.map((item) => [item.id, item]));\n"
+            "  window.IRON_PIT_CANONICAL_MONSTERS_READY = true;\n"
             "})();\n"
         )
     except Exception:
