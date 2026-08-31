@@ -95,12 +95,19 @@ def main() -> None:
     already_ready: list[str] = []
     blocker_counts: dict[str, int] = {}
     blocker_names: dict[str, list[str]] = {}
+    reaction_details: list[dict[str, object]] = []
     for row in rows:
         name = str(row["name"])
         blockers = _source_blockers(row, monster_names)
         for blocker in set(blockers):
             blocker_counts[blocker] = blocker_counts.get(blocker, 0) + 1
             blocker_names.setdefault(blocker, []).append(name)
+        if "reaction" in blockers:
+            reaction_details.append({
+                "name": name,
+                "blockers": blockers,
+                "reactions": str(row.get("reactions", "")),
+            })
         if blockers:
             continue
         if name in _READY_BY_NAME:
@@ -114,6 +121,8 @@ def main() -> None:
         initiative = re.search(r"\bInitiative\s+([+-]?\d+)", raw, re.I)
         detail["initiative"] = int(initiative.group(1)) if initiative else None
         print("ZERO_ENGINE_DETAIL\t" + json.dumps(detail, ensure_ascii=False, separators=(",", ":")))
+    for detail in reaction_details:
+        print("ZERO_ENGINE_REACTION_DETAIL\t" + json.dumps(detail, ensure_ascii=False, separators=(",", ":")))
     for blocker, count in sorted(blocker_counts.items(), key=lambda item: (-item[1], item[0])):
         print(f"ZERO_ENGINE_BLOCKER\t{blocker}\t{count}")
         if count <= _DETAIL_BLOCKER_LIMIT:
