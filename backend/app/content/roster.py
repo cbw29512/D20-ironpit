@@ -4,6 +4,7 @@ import logging
 
 from app.content.certified_heroes import build_certified_hero_templates
 from app.content.demo import build_demo_fighter, build_goblin_warrior
+from app.content.monster_blood_hawk import build_blood_hawk
 from app.content.monster_bonus_action_source_audit import complete_monster_bonus_action_fingerprints
 from app.content.monster_giant_crocodile import build_giant_crocodile
 from app.content.monster_goblin_boss import build_goblin_boss
@@ -44,7 +45,7 @@ def build_arena_roster() -> ArenaRoster:
     try:
         monsters = [
             build_goblin_warrior(), build_goblin_minion(), build_hobgoblin_warrior(), build_kobold_warrior(), build_goblin_boss(),
-            build_bandit(), build_commoner(), build_guard(), build_giant_rat(), build_giant_weasel(),
+            build_bandit(), build_commoner(), build_guard(), build_giant_rat(), build_giant_weasel(), build_blood_hawk(),
             build_axe_beak(), build_giant_lizard(), build_wolf(), build_dire_wolf(),
             build_black_bear(), build_brown_bear(), build_baboon(), build_camel(), build_deer(),
             build_draft_horse(), build_giant_badger(), build_jackal(), build_boar(), build_elk(), build_giant_boar(),
