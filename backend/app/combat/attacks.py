@@ -10,6 +10,7 @@ from app.combat.conditions import apply_hit_conditions, attack_roll_condition_so
 from app.combat.damage import BonusDamageSpec, resolve_weapon_damage
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
+from app.combat.parry import resolve_parry_hit
 from app.combat.range import resolve_attack_roll_mode
 from app.combat.rolls import roll_d20
 from app.combat.zero_hp import apply_damage
@@ -59,6 +60,7 @@ def resolve_attack(
         natural = attack_roll.selected_roll or 0
         natural_critical = natural == 20
         hit = natural != 1 and (natural_critical or attack_roll.total >= defender.template.armor_class)
+        hit, parry_used = resolve_parry_hit(defender, attack, attack_roll.total, natural, hit)
         critical = bool(hit and (natural_critical or (close_hit_is_automatic_critical(defender) and distance_ft <= 5)))
         hp_before = defender.current_hp
         damage_roll = None
@@ -77,6 +79,8 @@ def resolve_attack(
             end_rage_if_incapacitated(defender)
         outcome = "CRITICAL HIT" if critical else ("HIT" if hit else "MISS")
         description = f"{attacker.template.name}: {outcome} with {weapon.name}."
+        if parry_used:
+            description += f" {defender.template.name} uses Parry."
         if damage_outcome == "relentless_endurance":
             description += f" {defender.template.name} uses Relentless Endurance and remains at 1 HP."
         if "prone" in applied_conditions:
