@@ -43,11 +43,19 @@ def _character_profiles() -> dict[str, UnarmedStrikeDamage]:
 
 def complete_unarmed_opportunity_profiles(templates: list[CombatantTemplate]) -> list[CombatantTemplate]:
     try:
-        monsters = {str(row["name"]): monster_unarmed_profile(row) for row in load_monster_rows()}
-        characters = _character_profiles()
+        characters = _character_profiles() if any(item.kind == "character" for item in templates) else {}
+        monster_rows = (
+            {str(row["name"]): row for row in load_monster_rows()}
+            if any(item.kind == "monster" for item in templates)
+            else {}
+        )
         completed: list[CombatantTemplate] = []
         for template in templates:
-            profile = characters.get(template.id) if template.kind == "character" else monsters.get(template.name)
+            if template.kind == "character":
+                profile = characters.get(template.id)
+            else:
+                row = monster_rows.get(template.name)
+                profile = monster_unarmed_profile(row) if row is not None else None
             if profile is None:
                 raise ValueError(f"No certified Unarmed Strike profile for {template.name!r}.")
             completed.append(template.model_copy(update={"unarmed_opportunity_attack": profile}))
