@@ -11,6 +11,11 @@ from app.domain.models import CombatantTemplate
 
 logger = logging.getLogger(__name__)
 _SIZE_NAMES = ("tiny", "small", "medium", "large", "huge", "gargantuan")
+_ATTACK_ROLL = re.compile(r"\b(?:Melee|Ranged|Melee\s+or\s+Ranged)\s+Attack Roll:", re.IGNORECASE)
+_SAVING_THROW = re.compile(
+    r"\b(?:Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma)\s+Saving Throw:",
+    re.IGNORECASE,
+)
 
 
 def _first_int(value: object) -> int:
@@ -55,7 +60,12 @@ def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) ->
         issues = [label for passed, label in checks if not passed]
         issues.extend(defense_issues(template, row))
         actions = normalized(row.get("actions", ""))
-        for attack in [template.weapon_attack, *template.alternate_weapon_attacks]:
+        runtime_attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
+        if len(_ATTACK_ROLL.findall(actions)) != len(runtime_attacks):
+            issues.append("source-attack-count-mismatch")
+        if len(_SAVING_THROW.findall(actions)) != len(template.saving_throw_actions):
+            issues.append("source-save-action-count-mismatch")
+        for attack in runtime_attacks:
             issues.extend(attack_issues(attack, actions))
         for action in template.saving_throw_actions:
             issues.extend(save_action_issues(action, actions))
