@@ -18,6 +18,7 @@ def test_arena_roster_exposes_canonical_template_batch() -> None:
     assert [item.id for item in roster.monsters] == [
         "srd-goblin-warrior", "srd-goblin-minion", "srd-hobgoblin-warrior", "srd-kobold-warrior",
         "srd-goblin-boss", "srd-bandit", "srd-commoner", "srd-guard", "srd-giant-rat", "srd-giant-weasel",
+        "srd-blood-hawk",
         "srd-axe-beak", "srd-giant-lizard", "srd-wolf", "srd-dire-wolf", "srd-black-bear",
         "srd-brown-bear", "srd-baboon", "srd-camel", "srd-deer", "srd-draft-horse",
         "srd-giant-badger", "srd-jackal", "srd-boar", "srd-elk", "srd-giant-boar", "srd-hippogriff",
