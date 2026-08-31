@@ -18,6 +18,13 @@
     };
   }
 
+  function grantTemporaryHp(state, amount) {
+    if (amount < 0) throw new Error("Temporary HP cannot be negative.");
+    if (state.template.traits?.includes("swarm")) return state.temporary_hp;
+    state.temporary_hp = Math.max(state.temporary_hp, amount);
+    return state.temporary_hp;
+  }
+
   function refreshReaction(state) { state.reaction_available = true; }
 
   function beginTurn(state) {
@@ -85,7 +92,7 @@
   const sizeAtMost = (member, maxSize) => Boolean(maxSize) && SIZE_RANK[member.state.template.size] <= SIZE_RANK[maxSize];
   const canProne = (target, maxSize) => sizeAtMost(target, maxSize);
   window.IRON_PIT_BROWSER_STATE = {
-    active, beginTurn, buildState, canProne, distance, downedCharacter, hasActiveAlly,
+    active, beginTurn, buildState, canProne, distance, downedCharacter, grantTemporaryHp, hasActiveAlly,
     moveToward, nearestTarget, packTactics, refreshReaction, sizeAtMost, targetPriority,
   };
 })();
