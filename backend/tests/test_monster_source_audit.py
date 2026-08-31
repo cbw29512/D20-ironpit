@@ -55,6 +55,18 @@ def test_catalog_blocks_raw_ready_when_movement_fingerprint_drifts(monkeypatch) 
     assert "movement-fly-mismatch" in card.blockers
 
 
+def test_catalog_blocks_raw_ready_when_any_source_stat_drifts(monkeypatch) -> None:
+    roster = build_arena_roster()
+    guard = next(template for template in roster.monsters if template.name == "Guard")
+    guard.armor_class += 1
+    monkeypatch.setattr("app.content.roster.build_arena_roster", lambda: roster)
+
+    card = next(item for item in build_monster_catalog() if item.name == "Guard")
+    assert card.coverage_status is CoverageStatus.BLOCKED
+    assert card.runnable_template_id is None
+    assert "armor-class-mismatch" in card.blockers
+
+
 def test_srd_defense_parser_distinguishes_damage_and_condition_defenses() -> None:
     rows = _rows_by_name()
 
