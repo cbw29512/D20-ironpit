@@ -14,6 +14,11 @@ _SPELL_TRIGGER_HEADING = re.compile(
     r"(?=[^.]{1,300}\bcasts?\b[^.]{0,200}\bin response to\b[^.]{0,100}\btrigger\b)",
     re.IGNORECASE | re.MULTILINE,
 )
+_PARRY = re.compile(
+    r"\bParry\.\s+Trigger:\s+The [^.]+ is hit by a melee attack roll while holding a weapon\.\s+"
+    r"Response:\s+The [^.]+ adds (?P<bonus>\d+) to its AC against that attack, possibly causing it to miss\.",
+    re.IGNORECASE,
+)
 
 
 def _slug(name: str) -> str:
@@ -40,13 +45,26 @@ def parse_reaction_names(source_reactions: object) -> list[str]:
     return names
 
 
+def parse_parry_ac_bonus(source_reactions: object) -> int | None:
+    match = _PARRY.search(str(source_reactions or ""))
+    return int(match.group("bonus")) if match else None
+
+
 def reaction_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
-    """Fail closed until each printed named reaction has explicit runtime semantics."""
+    """Certify exact standard Parry; fail closed on every other printed reaction."""
     expected = parse_reaction_names(row.get("reactions", ""))
     issues: list[str] = []
     if template.source_reaction_names != expected:
         issues.append("source-reaction-fingerprint-mismatch")
-    issues.extend(f"uncertified-reaction:{_slug(name)}" for name in expected)
+    if template.parry_reaction is not None and "Parry" not in expected:
+        issues.append("unexpected-parry-reaction")
+    for name in expected:
+        if name == "Parry":
+            source_bonus = parse_parry_ac_bonus(row.get("reactions", ""))
+            if source_bonus is not None and template.parry_reaction is not None and template.parry_reaction.ac_bonus == source_bonus:
+                continue
+            issues.append("parry-source-mismatch")
+        issues.append(f"uncertified-reaction:{_slug(name)}")
     return issues
 
 
