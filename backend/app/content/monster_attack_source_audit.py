@@ -18,6 +18,29 @@ def _dice_pattern(count: int, size: int, bonus: int) -> re.Pattern[str]:
     return re.compile(base + rf"\s*{sign}\s*{abs(bonus)}", re.IGNORECASE)
 
 
+def _dice_text(count: int, size: int, bonus: int) -> str:
+    base = rf"{count}\s*d\s*{size}"
+    if bonus == 0:
+        return base + r"(?:\s*\+\s*0)?"
+    sign = r"\+" if bonus > 0 else "-"
+    return base + rf"\s*{sign}\s*{abs(bonus)}"
+
+
+def _conditional_clause_pattern(conditional: Any) -> re.Pattern[str]:
+    connective = "plus" if conditional.mode == "add" else "or"
+    dice = _dice_text(conditional.dice_count, conditional.dice_size, conditional.damage_bonus)
+    if conditional.trigger == "attack_advantage":
+        trigger = r"if\s+the\s+attack\s+roll\s+had\s+advantage"
+    elif conditional.trigger == "target_bloodied":
+        trigger = r"if\s+the\s+target\s+is\s+bloodied"
+    else:
+        trigger = r"if\s+the\s+(?!target\b)[a-z][a-z -]*\s+is\s+bloodied"
+    return re.compile(
+        rf"\b{connective}\s+\d+\s*\(\s*{dice}\s*\)\s+{conditional.damage_type.value}\s+damage\s+{trigger}",
+        re.IGNORECASE,
+    )
+
+
 def _melee_reach_pattern(reach_ft: int) -> re.Pattern[str]:
     return re.compile(rf"\breach\s+{reach_ft}\s*(?:ft\.?|feet)\b", re.IGNORECASE)
 
@@ -55,6 +78,9 @@ def attack_issues(attack: WeaponAttack, actions: str) -> list[str]:
             issues.append(f"on-hit-dice-missing:{attack.id}:{extra.source}")
         if extra.damage_type.value.lower() not in actions:
             issues.append(f"on-hit-type-missing:{attack.id}:{extra.source}")
+    for conditional in attack.conditional_damage:
+        if not _conditional_clause_pattern(conditional).search(actions):
+            issues.append(f"conditional-damage-mismatch:{attack.id}:{conditional.trigger}")
     if attack.knocks_prone_max_size is not None and not _max_size_rider_present(actions, attack.knocks_prone_max_size, "prone"):
         issues.append(f"prone-rider-mismatch:{attack.id}")
     if attack.forbid_target_grappled_by_self:
