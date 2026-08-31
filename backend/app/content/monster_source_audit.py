@@ -48,10 +48,12 @@ def _size_matches(runtime_size: str, source_size: object) -> bool:
 
 def _source_attack_mode_count(actions: str) -> int:
     """Count legal attack modes; one combined melee/ranged action exposes two runtime modes."""
+    combined = len(_COMBINED_ATTACK_ROLL.findall(actions))
+    standalone = _COMBINED_ATTACK_ROLL.sub("", actions)
     return (
-        len(_MELEE_ATTACK_ROLL.findall(actions))
-        + len(_RANGED_ATTACK_ROLL.findall(actions))
-        + 2 * len(_COMBINED_ATTACK_ROLL.findall(actions))
+        len(_MELEE_ATTACK_ROLL.findall(standalone))
+        + len(_RANGED_ATTACK_ROLL.findall(standalone))
+        + 2 * combined
     )
 
 
