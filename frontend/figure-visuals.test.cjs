@@ -48,6 +48,19 @@ assert.equal(monster("Rhinoceros", "large").detail, "horn");
 assert.equal(monster("Giant Goat", "large").detail, "horns");
 assert.equal(monster("Saber-Toothed Tiger", "large").detail, "sabertooth");
 
+assert.equal(monster("Animated Flying Sword").form, "weapon");
+assert.equal(monster("Animated Flying Sword").detail, "flying-sword");
+assert.equal(monster("Animated Armor").detail, "animated-armor");
+assert.equal(monster("Flying Snake", "tiny").detail, "flying-snake");
+assert.equal(monster("Hippopotamus", "large").detail, "hippopotamus");
+assert.equal(monster("Killer Whale", "huge").form, "aquatic-mammal");
+assert.equal(monster("Killer Whale", "huge").detail, "orca");
+assert.equal(monster("Manticore", "large").detail, "manticore");
+assert.equal(monster("Pegasus", "large").detail, "pegasus");
+assert.equal(monster("Scorpion", "tiny").form, "scorpion");
+assert.equal(monster("Skeleton").detail, "skeleton");
+assert.equal(monster("Spider", "tiny").form, "spider");
+
 const unknown = monster("Future Unreviewed Monster");
 assert.equal(unknown.certified, false);
 assert.equal(unknown.form, "unknown", "uncertified monsters must fail visually closed rather than guessing anatomy");
