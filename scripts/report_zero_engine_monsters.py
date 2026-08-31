@@ -32,6 +32,7 @@ _HIDDEN_RIDER = re.compile(
 _ATTACK_ROLL = re.compile(r"\b(?:Melee|Ranged|Melee or Ranged)\s+Attack Roll:", re.I)
 _ALLOWED_TRAITS = set(_ARENA_NEUTRAL_TRAITS) | set(_MODELED_TRAITS)
 _DETAIL_FIELDS = ("name", "size", "armorClass", "hitPoints", "speed", "challenge", "traits", "actions")
+_DETAIL_BLOCKER_LIMIT = 10
 
 
 def _has_neighbor_bleed(row: dict[str, object], monster_names: set[str]) -> bool:
@@ -93,13 +94,15 @@ def main() -> None:
     safe: list[dict[str, object]] = []
     already_ready: list[str] = []
     blocker_counts: dict[str, int] = {}
+    blocker_names: dict[str, list[str]] = {}
     for row in rows:
+        name = str(row["name"])
         blockers = _source_blockers(row, monster_names)
         for blocker in set(blockers):
             blocker_counts[blocker] = blocker_counts.get(blocker, 0) + 1
+            blocker_names.setdefault(blocker, []).append(name)
         if blockers:
             continue
-        name = str(row["name"])
         if name in _READY_BY_NAME:
             already_ready.append(name)
         else:
@@ -113,6 +116,8 @@ def main() -> None:
         print("ZERO_ENGINE_DETAIL\t" + json.dumps(detail, ensure_ascii=False, separators=(",", ":")))
     for blocker, count in sorted(blocker_counts.items(), key=lambda item: (-item[1], item[0])):
         print(f"ZERO_ENGINE_BLOCKER\t{blocker}\t{count}")
+        if count <= _DETAIL_BLOCKER_LIMIT:
+            print(f"ZERO_ENGINE_BLOCKER_NAMES\t{blocker}\t" + " | ".join(sorted(blocker_names[blocker])))
 
 
 if __name__ == "__main__":
