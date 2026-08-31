@@ -42,6 +42,11 @@ _READY_BY_NAME = {
     "Scout": "srd-scout", "Tiger": "srd-tiger", "Tyrannosaurus Rex": "srd-tyrannosaurus-rex",
     "Vulture": "srd-vulture", "Warhorse": "srd-warhorse", "Warrior Infantry": "srd-warrior-infantry",
     "Weasel": "srd-weasel", "Wolf": "srd-wolf",
+    "Animated Armor": "srd-animated-armor", "Animated Flying Sword": "srd-animated-flying-sword",
+    "Flying Snake": "srd-flying-snake", "Hippopotamus": "srd-hippopotamus",
+    "Killer Whale": "srd-killer-whale", "Manticore": "srd-manticore", "Pegasus": "srd-pegasus",
+    "Scorpion": "srd-scorpion", "Skeleton": "srd-skeleton", "Spider": "srd-spider",
+    "Tough": "srd-tough", "Venomous Snake": "srd-venomous-snake",
 }
 
 
