@@ -98,7 +98,8 @@
     window.IRON_PIT_BROWSER_RAGE?.extendFromAttack(attacker.state, round);
     if (spendAction) E().spend(attacker.state, "action");
     const natural = attackRoll.selected_roll, naturalCritical = natural === 20;
-    const hit = natural !== 1 && (naturalCritical || attackRoll.total >= target.state.template.armor_class);
+    const initialHit = natural !== 1 && (naturalCritical || attackRoll.total >= target.state.template.armor_class);
+    const parry = window.IRON_PIT_BROWSER_REACTIONS?.parryHit?.(target.state, attack, attackRoll, initialHit) || { hit: initialHit, used: false }, hit = parry.hit;
     const critical = Boolean(hit && (naturalCritical || (Q().autoCritical(target.state) && distance <= 5)));
     const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
     let damageRoll = null, damageComponents = [], damageOutcome = null; const applied = [];
@@ -131,7 +132,7 @@
       }
       window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(target.state);
     }
-    let description = `${attacker.state.template.name}: ${critical ? "CRITICAL HIT" : hit ? "HIT" : "MISS"} with ${attack.name}.`;
+    let description = `${attacker.state.template.name}: ${critical ? "CRITICAL HIT" : hit ? "HIT" : "MISS"} with ${attack.name}.${parry.used ? ` ${target.state.template.name} uses Parry.` : ""}`;
     if (damageOutcome === "relentless_endurance") description += ` ${target.state.template.name} uses Relentless Endurance and remains at 1 HP.`;
     if (applied.includes("prone")) description += ` ${target.state.template.name} is knocked Prone.`;
     if (applied.includes("grappled")) description += ` ${target.state.template.name} is Grappled.`;
