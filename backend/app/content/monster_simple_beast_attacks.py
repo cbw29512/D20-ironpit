@@ -47,3 +47,7 @@ def build_draft_horse_hooves() -> WeaponAttack:
 
 def build_giant_badger_bite() -> WeaponAttack:
     return _attack("giant-badger-bite", "Bite", 3, 2, 4, 1, DamageType.PIERCING)
+
+
+def build_jackal_bite() -> WeaponAttack:
+    return _attack("jackal-bite", "Bite", 1, 1, 4, -1, DamageType.PIERCING)

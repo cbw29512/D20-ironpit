@@ -7,6 +7,7 @@ from app.content.monster_simple_beast_attacks import (
     build_deer_ram,
     build_draft_horse_hooves,
     build_giant_badger_bite,
+    build_jackal_bite,
 )
 from app.domain.models import CombatantTemplate, DamageType
 from app.domain.size import CreatureSize
@@ -65,4 +66,14 @@ def build_giant_badger() -> CombatantTemplate:
         damage_resistances=[DamageType.POISON],
         visual=build_monster_visual("fur", "bite", "badger"),
         source="SRD 5.2.1 / 2024 Basic Rules Giant Badger",
+    )
+
+
+def build_jackal() -> CombatantTemplate:
+    return _beast(
+        id="srd-jackal", name="Jackal", archetype="Jackal", challenge_rating="0",
+        size=CreatureSize.SMALL, armor_class=12, max_hp=3, speed_ft=40, initiative_bonus=2,
+        weapon_attack=build_jackal_bite(),
+        visual=build_monster_visual("fur", "bite", "jackal"),
+        source="SRD 5.2.1 Jackal p. 356",
     )

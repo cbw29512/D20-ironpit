@@ -30,14 +30,15 @@ _READY_BY_NAME = {
     "Giant Wolf Spider": "srd-giant-wolf-spider", "Goblin Minion": "srd-goblin-minion",
     "Goblin Warrior": "srd-goblin-warrior", "Guard": "srd-guard", "Hawk": "srd-hawk",
     "Hippogriff": "srd-hippogriff", "Hobgoblin Warrior": "srd-hobgoblin-warrior", "Hyena": "srd-hyena",
-    "Kobold Warrior": "srd-kobold-warrior", "Lizard": "srd-lizard", "Mastiff": "srd-mastiff",
-    "Mule": "srd-mule", "Ogre": "srd-ogre", "Owl": "srd-owl", "Owlbear": "srd-owlbear",
-    "Panther": "srd-panther", "Plesiosaurus": "srd-plesiosaurus", "Polar Bear": "srd-polar-bear",
-    "Pony": "srd-pony", "Pteranodon": "srd-pteranodon", "Rat": "srd-rat", "Raven": "srd-raven",
-    "Rhinoceros": "srd-rhinoceros", "Riding Horse": "srd-riding-horse",
-    "Saber-Toothed Tiger": "srd-saber-toothed-tiger", "Scout": "srd-scout", "Tiger": "srd-tiger",
-    "Tyrannosaurus Rex": "srd-tyrannosaurus-rex", "Vulture": "srd-vulture", "Warhorse": "srd-warhorse",
-    "Warrior Infantry": "srd-warrior-infantry", "Weasel": "srd-weasel", "Wolf": "srd-wolf",
+    "Jackal": "srd-jackal", "Kobold Warrior": "srd-kobold-warrior", "Lizard": "srd-lizard",
+    "Mastiff": "srd-mastiff", "Mule": "srd-mule", "Ogre": "srd-ogre", "Owl": "srd-owl",
+    "Owlbear": "srd-owlbear", "Panther": "srd-panther", "Plesiosaurus": "srd-plesiosaurus",
+    "Polar Bear": "srd-polar-bear", "Pony": "srd-pony", "Pteranodon": "srd-pteranodon",
+    "Rat": "srd-rat", "Raven": "srd-raven", "Rhinoceros": "srd-rhinoceros",
+    "Riding Horse": "srd-riding-horse", "Saber-Toothed Tiger": "srd-saber-toothed-tiger",
+    "Scout": "srd-scout", "Tiger": "srd-tiger", "Tyrannosaurus Rex": "srd-tyrannosaurus-rex",
+    "Vulture": "srd-vulture", "Warhorse": "srd-warhorse", "Warrior Infantry": "srd-warrior-infantry",
+    "Weasel": "srd-weasel", "Wolf": "srd-wolf",
 }
 
 

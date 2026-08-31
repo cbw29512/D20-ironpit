@@ -62,6 +62,7 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Hippogriff": _p("hippogriff", "hippogriff"),
     "Hobgoblin Warrior": _p("humanoid", "hobgoblin"),
     "Hyena": _p("quadruped", "hyena"),
+    "Jackal": _p("quadruped", "canine"),
     "Kobold Warrior": _p("humanoid", "kobold"),
     "Lizard": _p("reptile", "lizard"),
     "Mastiff": _p("quadruped", "canine"),
