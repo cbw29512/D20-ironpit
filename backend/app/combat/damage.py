@@ -3,9 +3,10 @@ from __future__ import annotations
 import logging
 
 from app.combat.barbarian import rage_damage_bonus
+from app.combat.bloodied import is_bloodied
 from app.combat.dice import DiceProvider
 from app.combat.savage_attacker import roll_weapon_component
-from app.domain.models import CombatantState, DamageRollComponent, DamageType, DiceRoll, RollMode, WeaponAttack
+from app.domain.models import CombatantState, ConditionalDamage, DamageRollComponent, DamageType, DiceRoll, RollMode, WeaponAttack
 
 logger = logging.getLogger(__name__)
 BonusDamageSpec = tuple[str, int, int, DamageType]
@@ -56,6 +57,36 @@ def aggregate_damage_components(components: list[DamageRollComponent]) -> DiceRo
     )
 
 
+def _conditional_active(
+    conditional: ConditionalDamage,
+    attacker: CombatantState,
+    target: CombatantState | None,
+    attack_mode: RollMode,
+) -> bool:
+    if conditional.trigger == "attack_advantage":
+        return attack_mode is RollMode.ADVANTAGE
+    if conditional.trigger == "attacker_bloodied":
+        return is_bloodied(attacker)
+    if target is None:
+        raise ValueError("Target state is required for target-Bloodied conditional damage.")
+    return is_bloodied(target)
+
+
+def _active_replacement(
+    attacker: CombatantState,
+    target: CombatantState | None,
+    attack: WeaponAttack,
+    attack_mode: RollMode,
+) -> ConditionalDamage | None:
+    active = [
+        item for item in attack.conditional_damage
+        if item.mode == "replace_weapon" and _conditional_active(item, attacker, target, attack_mode)
+    ]
+    if len(active) > 1:
+        raise ValueError(f"Multiple replacement damage profiles are active for {attack.id}.")
+    return active[0] if active else None
+
+
 def resolve_weapon_damage(
     attacker: CombatantState,
     attack: WeaponAttack,
@@ -64,11 +95,18 @@ def resolve_weapon_damage(
     attack_mode: RollMode,
     turn_key: str | None = None,
     bonus_damage: BonusDamageSpec | None = None,
+    target: CombatantState | None = None,
 ) -> tuple[DiceRoll, list[DamageRollComponent]]:
     """Resolve weapon dice or fixed damage plus certified hit-specific riders."""
     try:
         weapon = attack.weapon
-        if attack.fixed_damage is not None:
+        replacement = _active_replacement(attacker, target, attack, attack_mode)
+        if replacement is not None:
+            components = [roll_damage_component(
+                dice, weapon.name, replacement.dice_count, replacement.dice_size,
+                replacement.damage_bonus, replacement.damage_type, critical,
+            )]
+        elif attack.fixed_damage is not None:
             components = [fixed_damage_component(weapon.name, attack.fixed_damage, weapon.damage_type)]
         else:
             weapon_modifier = attack.damage_bonus + rage_damage_bonus(attacker, attack)
@@ -86,16 +124,17 @@ def resolve_weapon_damage(
             ))
 
         for conditional in attack.conditional_damage:
-            if conditional.trigger == "attack_advantage" and attack_mode is RollMode.ADVANTAGE:
-                components.append(roll_damage_component(
-                    dice=dice,
-                    source="Advantage bonus damage",
-                    dice_count=conditional.dice_count,
-                    dice_size=conditional.dice_size,
-                    modifier=conditional.damage_bonus,
-                    damage_type=conditional.damage_type,
-                    critical=critical,
-                ))
+            if conditional.mode != "add" or not _conditional_active(conditional, attacker, target, attack_mode):
+                continue
+            components.append(roll_damage_component(
+                dice=dice,
+                source="Advantage bonus damage" if conditional.trigger == "attack_advantage" else "Conditional bonus damage",
+                dice_count=conditional.dice_count,
+                dice_size=conditional.dice_size,
+                modifier=conditional.damage_bonus,
+                damage_type=conditional.damage_type,
+                critical=critical,
+            ))
 
         if bonus_damage is not None:
             source, dice_count, dice_size, damage_type = bonus_damage
