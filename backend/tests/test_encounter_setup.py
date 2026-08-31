@@ -2,24 +2,15 @@ import pytest
 from pydantic import ValidationError
 
 from app.combat.encounter_setup import build_encounter_setup
+from app.combat.formation import backline_holds_position
 from app.domain.models import EncounterSelection
 
 
 def test_builds_full_party_in_fixed_front_and_back_lines() -> None:
     encounter = build_encounter_setup(EncounterSelection(
-        hero_ids=[
-            "aldric-vane-l1",
-            "brom-ironmark-l1",
-            "selene-asharrow-l1",
-            "mara-quickstep-l1",
-        ],
-        monster_ids=[
-            "srd-goblin-warrior",
-            "srd-goblin-warrior",
-            "srd-guard",
-        ],
+        hero_ids=["aldric-vane-l1", "brom-ironmark-l1", "selene-asharrow-l1", "mara-quickstep-l1"],
+        monster_ids=["srd-goblin-warrior", "srd-goblin-warrior", "srd-guard"],
     ))
-
     assert len(encounter.heroes) == 4
     assert len(encounter.monsters) == 3
     assert encounter.hero_total_levels == 4
@@ -40,6 +31,18 @@ def test_dedicated_ranged_pregen_starts_in_back_line() -> None:
     assert encounter.monsters[0].position_ft == 10
 
 
+def test_backliner_holds_only_while_active_frontline_ally_exists() -> None:
+    encounter = build_encounter_setup(EncounterSelection(
+        hero_ids=["aldric-vane-l1", "selene-asharrow-l1"], monster_ids=["srd-commoner"],
+    ))
+    frontline, backline = encounter.heroes
+    assert backline_holds_position(backline, encounter) is True
+    frontline.state.current_hp = 0
+    frontline.state.is_alive = False
+    frontline.state.is_dead = True
+    assert backline_holds_position(backline, encounter) is False
+
+
 def test_melee_front_lines_begin_engaged() -> None:
     encounter = build_encounter_setup(EncounterSelection(
         hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-commoner"],
@@ -49,10 +52,8 @@ def test_melee_front_lines_begin_engaged() -> None:
 
 def test_duplicate_cards_receive_independent_runtime_state() -> None:
     encounter = build_encounter_setup(EncounterSelection(
-        hero_ids=["aldric-vane-l1", "aldric-vane-l1"],
-        monster_ids=["srd-goblin-warrior"],
+        hero_ids=["aldric-vane-l1", "aldric-vane-l1"], monster_ids=["srd-goblin-warrior"],
     ))
-
     first, second = encounter.heroes
     assert first.combatant_id != second.combatant_id
     first.state.current_hp = 1
@@ -64,14 +65,11 @@ def test_duplicate_cards_receive_independent_runtime_state() -> None:
 def test_selection_allows_at_most_six_cards_per_side() -> None:
     six_heroes = ["aldric-vane-l1"] * 6
     six_monsters = ["srd-goblin-warrior"] * 6
-    selection = EncounterSelection(hero_ids=six_heroes, monster_ids=six_monsters)
-    encounter = build_encounter_setup(selection)
-
+    encounter = build_encounter_setup(EncounterSelection(hero_ids=six_heroes, monster_ids=six_monsters))
     assert len(encounter.heroes) == 6
     assert len(encounter.monsters) == 6
     assert encounter.hero_total_levels == 6
     assert encounter.monster_total_cr == "3/2"
-
     with pytest.raises(ValidationError):
         EncounterSelection(hero_ids=six_heroes + ["aldric-vane-l1"], monster_ids=six_monsters)
     with pytest.raises(ValidationError):
