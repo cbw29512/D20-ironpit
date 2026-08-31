@@ -92,10 +92,11 @@
     if (spendAction) E().spend(attacker.state, "action");
     const redirected = window.IRON_PIT_BROWSER_REACTIONS?.redirectAttack?.(target, extra.setup) || null;
     const actualTarget = redirected || target;
-    const natural = attackRoll.selected_roll, naturalCritical = natural === 20;
-    const initialHit = natural !== 1 && (naturalCritical || attackRoll.total >= actualTarget.state.template.armor_class);
+    const natural = attackRoll.selected_roll, naturalTwenty = natural === 20;
+    const initialHit = natural !== 1 && (naturalTwenty || attackRoll.total >= actualTarget.state.template.armor_class);
     const parry = window.IRON_PIT_BROWSER_REACTIONS?.parryHit?.(actualTarget.state, attack, attackRoll, initialHit) || { hit: initialHit, used: false }, hit = parry.hit;
-    const critical = Boolean(hit && (naturalCritical || (Q().autoCritical(actualTarget.state) && distance <= 5)));
+    const expandedCritical = natural >= (attacker.state.template.critical_hit_minimum || 20);
+    const critical = Boolean(hit && (expandedCritical || (Q().autoCritical(actualTarget.state) && distance <= 5)));
     const hpBefore = actualTarget.state.current_hp, temporaryHpBefore = actualTarget.state.temporary_hp;
     let damageRoll = null, damageComponents = [], damageOutcome = null; const applied = [];
     if (hit) {
@@ -134,13 +135,14 @@
     if (applied.includes("grappled")) description += ` ${actualTarget.state.template.name} is Grappled.`;
     if (applied.includes("restrained")) description += ` ${actualTarget.state.template.name} is Restrained while Grappled.`;
     if (applied.includes("poisoned")) description += ` ${actualTarget.state.template.name} is Poisoned.`;
-    return { sequence, round_number: round, event_type: "attack", actor_id: attacker.combatant_id, actor_name: attacker.state.template.name,
+    const event = { sequence, round_number: round, event_type: "attack", actor_id: attacker.combatant_id, actor_name: attacker.state.template.name,
       target_id: actualTarget.combatant_id, target_name: actualTarget.state.template.name, attack_roll: attackRoll, damage_roll: damageRoll,
       damage_components: damageComponents, applied_condition_ids: [...new Set(applied)], hit, critical, hp_before: hpBefore,
       hp_after: actualTarget.state.current_hp, temporary_hp_before: temporaryHpBefore, temporary_hp_after: actualTarget.state.temporary_hp,
       death_save_successes: actualTarget.state.death_save_successes, death_save_failures: actualTarget.state.death_save_failures,
       is_stable: actualTarget.state.is_stable, is_dead: actualTarget.state.is_dead, weapon_id: attack.id, projectile: attack.projectile || null,
       feature_id: extra.featureId || null, animation: attack.animation || (attack.kind === "ranged" ? "projectile" : "slash"), description };
+    return window.IRON_PIT_BROWSER_CHAMPION?.criticalMove(attacker, extra.setup, event) || event;
   }
   window.IRON_PIT_BROWSER_ATTACK = { adjustedDamage, applyDamage, rangedCloseThreat, resolveAttack };
 })();
