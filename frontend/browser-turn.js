@@ -20,6 +20,7 @@
   const W = () => window.IRON_PIT_BROWSER_REACTION_MOVEMENT || {
     moveToward: (q, r, m, t, _s, d) => ({ events: [], sequence: q, movement: S().moveToward(m, t, d) }),
   };
+  const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const BRAWL_DISTANCE = 5;
   const attacks = (member) => member.state.template.attacks || [];
 
@@ -64,10 +65,25 @@
     sequence = moved.sequence; if (moved.movement) events.push(moveEvent(sequence++, round, member, target, moved.movement));
     return { events, sequence, movement: moved.movement };
   }
+  function holdBackline(sequence, round, member, target, setup) {
+    if (!F()?.backlineHoldsPosition(member, setup)) return null;
+    const distance = S().distance(member, target), ranged = attacks(member).find((a) => a.kind === "ranged" && distance <= a.long);
+    if (ranged && E().available(member.state, "action")) {
+      return { events: [A().resolveAttack(sequence++, round, member, target, ranged, distance, { setup })], sequence, handled: true };
+    }
+    if (E().available(member.state, "action")) {
+      E().spend(member.state, "action"); if (!member.state.active_effect_ids.includes("dodge")) member.state.active_effect_ids.push("dodge");
+      return { events: [{ sequence: sequence++, round_number: round, event_type: "feature", actor_id: member.combatant_id,
+        actor_name: member.state.template.name, feature_id: "dodge", animation: "dodge",
+        description: `${member.state.template.name} Dodges while holding the backline.` }], sequence, handled: true };
+    }
+    return { events: [], sequence, handled: true };
+  }
   function closeTurn(sequence, round, member, target, setup) {
     let distance = S().distance(member, target);
     const charged = C()?.resolveClosing(sequence, round, member, target, setup); if (charged?.handled) return charged;
     if (distance <= BRAWL_DISTANCE) return { events: [], sequence, handled: false };
+    const held = holdBackline(sequence, round, member, target, setup); if (held) return held;
     if (member.state.template.attack_action) return { events: [], sequence, handled: false };
     const melee = reachableMelee(member, distance);
     if (melee) {
@@ -88,6 +104,7 @@
     return { events, sequence: move.sequence, handled: true };
   }
   function closeAfterAction(sequence, round, member, setup) {
+    if (F()?.backlineHoldsPosition(member, setup)) return { events: [], sequence };
     const target = S().nearestTarget(member, setup);
     if (!target || S().distance(member, target) <= BRAWL_DISTANCE) return { events: [], sequence };
     const moved = applyMove(sequence, round, member, target, setup, BRAWL_DISTANCE);
