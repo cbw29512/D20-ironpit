@@ -6,6 +6,7 @@ from app.combat.condition_immunity import condition_is_immune
 from app.combat.condition_rules import condition_speed_is_zero, has_condition
 from app.combat.dice import DiceProvider
 from app.combat.rolls import roll_d20
+from app.combat.tactical_mind import apply_tactical_mind
 from app.domain.models import BattleEvent, CombatantState, EncounterSetup, GrappleSource, RollMode
 
 FRIGHTENED_EFFECT_ID = "frightened"
@@ -79,10 +80,7 @@ def should_escape_grapple(state: CombatantState) -> bool:
 
 def _check_mode(state: CombatantState, strength_check: bool) -> RollMode:
     advantage = strength_check and rage_active(state)
-    disadvantage = (
-        has_condition(state, POISONED_EFFECT_ID)
-        or has_condition(state, FRIGHTENED_EFFECT_ID)
-    )
+    disadvantage = has_condition(state, POISONED_EFFECT_ID) or has_condition(state, FRIGHTENED_EFFECT_ID)
     if advantage == disadvantage:
         return RollMode.NORMAL
     return RollMode.ADVANTAGE if advantage else RollMode.DISADVANTAGE
@@ -107,16 +105,22 @@ def resolve_escape_grapple(
     check_name, bonus, mode = _escape_choice(state)
     check = roll_d20(dice, bonus, mode)
     success = check.total >= source.escape_dc
+    tactical_used = False
+    if not success:
+        check, tactical_used, success = apply_tactical_mind(state, check, source.escape_dc, dice)
     spend(state, "action")
     if success:
         release_grapple(state, source.source_id)
         if not speed_is_zero(state):
             state.movement_remaining_ft = max(state.movement_remaining_ft, state.template.speed_ft)
+    second_wind = next((item for item in state.resources if item.id == "second-wind"), None)
+    tactical = " after using Tactical Mind" if tactical_used else ""
     return BattleEvent(
         sequence=sequence, round_number=round_number, event_type="feature", actor_id=actor_id,
         actor_name=state.template.name, target_id=source.source_id, ability_check_roll=check,
         check_ability=check_name, check_dc=source.escape_dc, check_succeeded=success,
-        feature_id="escape-grapple", animation="escape-grapple",
-        description=(f"{state.template.name} {'escapes' if success else 'fails to escape'} the grapple "
+        feature_id="escape-grapple", resource_remaining=second_wind.current_uses if tactical_used and second_wind else None,
+        animation="escape-grapple",
+        description=(f"{state.template.name} {'escapes' if success else 'fails to escape'} the grapple{tactical} "
                      f"with {check_name.title()} against DC {source.escape_dc}."),
     )
