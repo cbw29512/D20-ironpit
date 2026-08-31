@@ -90,6 +90,7 @@ jobs:
           grep -q 'browser-precombat-spells.js' index.html
           grep -q 'battlefield-picker.js' index.html
           grep -q 'battlefield-replay.js' index.html
+          grep -q 'https://www.buymeacoffee.com/divclass016' index.html
           ! grep -qi 'http-equiv="refresh"' index.html
       - name: Prove live battlefield is wired
         run: |
@@ -123,6 +124,7 @@ jobs:
           grep -q 'browser-precombat-spells.js' frontend/index.html
           grep -q 'figure-visuals.js' frontend/index.html
           grep -q 'playIronPitBattle' frontend/app.js
+          grep -q 'https://www.buymeacoffee.com/divclass016' frontend/index.html
       - name: Validate Netlify production-only credit guard
         run: |
           grep -q 'CONTEXT.*production' netlify.toml
