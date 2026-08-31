@@ -47,7 +47,8 @@ function fight(heroIds, monsterIds, dice = deterministicDice()) {
   assert.ok(battle.events.some((event) => event.event_type === "attack"));
   assert.equal(battle.setup.heroes[0].position_ft, 5);
   assert.equal(battle.setup.monsters[0].position_ft, 10);
-  assert.equal(battle.setup.starting_distance_ft, 5);
+  assert.equal(Object.hasOwn(battle.setup, "starting_distance_ft"), false, "formation setup must not expose a user-configurable starting distance");
+  assert.equal(Math.abs(battle.setup.heroes[0].position_ft - battle.setup.monsters[0].position_ft), 5, "front-line melee must begin engaged");
 }
 
 {
