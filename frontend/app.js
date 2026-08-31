@@ -63,6 +63,9 @@
   }
 
   async function boot() {
+    if (window.IRON_PIT_CANONICAL_MONSTERS_READY !== true) {
+      throw new Error("Canonical RAW-certified monster bundle did not load.");
+    }
     const required = [window.IRON_PIT_BROWSER_ENGINE, window.IRON_PIT_BROWSER_CATALOG, window.IRON_PIT_ENCOUNTER_PICKER, view(), picker()];
     if (required.some((item) => !item)) throw new Error("Iron Pit browser modules did not load.");
     state.catalog = await window.IRON_PIT_BROWSER_CATALOG.buildCatalog();
