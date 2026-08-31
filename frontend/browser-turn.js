@@ -32,28 +32,6 @@
     if (!(member.state.movement_remaining_ft > 0)) return null;
     return attacks(member).find((a) => a.kind === "melee" && distance > (a.reach || 5) && distance - (a.reach || 5) <= member.state.movement_remaining_ft) || null;
   }
-  function secondWind(sequence, round, member) {
-    const state = member.state, uses = state.resources["second-wind"] || 0;
-    if (!uses || !E().available(state, "bonus_action") || state.current_hp <= 0 || state.current_hp > Math.floor(state.template.max_hp / 2)) return null;
-    const die = D().roll(10), total = die + state.template.level, before = state.current_hp;
-    state.current_hp = Math.min(state.template.max_hp, state.current_hp + total);
-    state.resources["second-wind"] -= 1; E().spend(state, "bonus_action");
-    return { sequence, round_number: round, event_type: "healing", actor_id: member.combatant_id, actor_name: state.template.name,
-      target_id: member.combatant_id, target_name: state.template.name, hp_before: before, hp_after: state.current_hp,
-      healing_roll: { notation: `1d10+${state.template.level}`, rolls: [die], modifier: state.template.level, total },
-      feature_id: "second-wind", resource_remaining: state.resources["second-wind"], animation: "second-wind",
-      description: `${state.template.name} uses Second Wind and regains ${state.current_hp - before} HP.` };
-  }
-  function adrenaline(sequence, round, member) {
-    const state = member.state;
-    if (!state.template.traits?.includes("adrenaline-rush") || !E().available(state, "bonus_action") || !(state.resources["adrenaline-rush"] > 0)) return null;
-    const movement = H().speedIsZero(state) ? 0 : state.template.speed_ft;
-    state.resources["adrenaline-rush"] -= 1; E().spend(state, "bonus_action"); state.movement_remaining_ft += movement;
-    const pb = 2 + Math.floor((state.template.level - 1) / 4); state.temporary_hp = Math.max(state.temporary_hp, pb);
-    return { sequence, round_number: round, event_type: "feature", actor_id: member.combatant_id, actor_name: state.template.name,
-      feature_id: "adrenaline-rush", resource_remaining: state.resources["adrenaline-rush"], movement_ft: movement,
-      animation: "dash", description: `${state.template.name} uses Adrenaline Rush.` };
-  }
   function moveEvent(sequence, round, member, target, movement) {
     return { sequence, round_number: round, event_type: "movement", actor_id: member.combatant_id, actor_name: member.state.template.name,
       target_id: target.combatant_id, target_name: target.state.template.name, distance_before_ft: movement.before,
@@ -136,9 +114,9 @@
     const turnKey = `${round}:${member.combatant_id}`;
     const support = P()?.resolve(sequence, round, member, setup, turnKey); if (support) { events.push(...support.events); sequence = support.sequence; }
     const rage = G()?.enter(sequence, round, member); if (rage) { events.push(rage); sequence += 1; }
-    const wind = secondWind(sequence, round, member); if (wind) { events.push(wind); sequence += 1; }
+    const wind = P()?.secondWind(sequence, round, member); if (wind) { events.push(wind); sequence += 1; }
     if (H().shouldEscape(member.state)) { events.push(H().escape(sequence++, round, member)); return finalize(events, sequence, round, member); }
-    const rush = adrenaline(sequence, round, member); if (rush) { events.push(rush); sequence += 1; }
+    const rush = P()?.adrenaline(sequence, round, member); if (rush) { events.push(rush); sequence += 1; }
     const spell = Y()?.choose(member, setup, turnKey); if (spell) { const cast = Z().resolve(sequence, round, member, setup, spell, turnKey); events.push(...cast.events); sequence = cast.sequence; if (!E().available(member.state, "action")) return finalize(events, sequence, round, member); }
     const target = S().nearestTarget(member, setup); if (!target) return finalize(events, sequence, round, member);
     const closing = closeTurn(sequence, round, member, target, setup); events.push(...closing.events); sequence = closing.sequence;
