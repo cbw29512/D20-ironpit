@@ -36,5 +36,6 @@ def test_only_certified_canonical_levels_are_runnable() -> None:
     ready = [card for card in build_hero_catalog() if card.coverage_status is CoverageStatus.RAW_READY]
     assert {(card.name, card.level, card.runnable_template_id) for card in ready} == {
         ("Karnok Stoneward", 1, "karnok-stoneward-l1"),
+        ("Karnok Stoneward", 2, "karnok-stoneward-l2"),
         ("Rokhan Stonefury", 1, "rokhan-stonefury-l1"),
     }
