@@ -12,6 +12,16 @@ def proficiency_bonus(level: int) -> int:
     return 2 + (level - 1) // 4
 
 
+def fixed_class_hit_points(level: int, hit_die_size: int, constitution_modifier: int) -> int:
+    """RAW fixed-HP option: max Hit Die at level 1, fixed average thereafter."""
+    level = _checked_level(level)
+    if hit_die_size not in (6, 8, 10, 12):
+        raise ValueError("Class Hit Die must be d6, d8, d10, or d12.")
+    first = max(1, hit_die_size + constitution_modifier)
+    later = max(1, hit_die_size // 2 + 1 + constitution_modifier)
+    return first + (level - 1) * later
+
+
 def barbarian_rage_uses(level: int) -> int:
     """2024 Barbarian Rage uses available when a fresh fight begins."""
     level = _checked_level(level)
@@ -43,6 +53,14 @@ def fighter_second_wind_uses(level: int) -> int:
     if level <= 9:
         return 3
     return 4
+
+
+def fighter_action_surge_uses(level: int) -> int:
+    """2024 Fighter Action Surge uses; level 17 grants a second use."""
+    level = _checked_level(level)
+    if level < 2:
+        return 0
+    return 2 if level >= 17 else 1
 
 
 def orc_adrenaline_rush_uses(level: int) -> int:
