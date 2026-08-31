@@ -174,6 +174,11 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["source_spellcasting_fingerprint"] = template.source_spellcasting_fingerprint
         if template.parry_reaction:
             row["parry_reaction"] = {"ac_bonus": template.parry_reaction.ac_bonus}
+        if template.redirect_attack_reaction:
+            row["redirect_attack_reaction"] = {
+                "ally_range_ft": template.redirect_attack_reaction.ally_range_ft,
+                "ally_max_size": template.redirect_attack_reaction.ally_max_size.value,
+            }
         if template.spell_save_actions:
             row["spell_save_actions"] = [_spell(item) for item in template.spell_save_actions]
         if template.defensive_spell_actions:
