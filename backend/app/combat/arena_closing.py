@@ -5,6 +5,7 @@ from app.combat.charge import resolve_charge_closing
 from app.combat.dice import DiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.encounter_targeting import combatant_distance
+from app.combat.formation import backline_holds_position
 from app.combat.policy import weapon_attack_profiles
 from app.combat.reaction_movement import move_toward_with_reactions
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -47,6 +48,30 @@ def _take_dodge(sequence: int, round_number: int, attacker: EncounterCombatant) 
     )
 
 
+def _hold_backline(
+    sequence: int,
+    round_number: int,
+    attacker: EncounterCombatant,
+    target: EncounterCombatant,
+    dice: DiceProvider,
+    setup: EncounterSetup,
+) -> tuple[list[BattleEvent], int, bool] | None:
+    if not backline_holds_position(attacker, setup):
+        return None
+    events: list[BattleEvent] = []
+    ranged = _legal_ranged_attack(attacker, combatant_distance(attacker, target))
+    if ranged is not None and is_available(attacker.state, "action"):
+        events.append(resolve_encounter_attack(
+            sequence, round_number, attacker, target, ranged,
+            combatant_distance(attacker, target), dice, setup,
+        ))
+        sequence += 1
+    elif is_available(attacker.state, "action"):
+        events.append(_take_dodge(sequence, round_number, attacker))
+        sequence += 1
+    return events, sequence, True
+
+
 def resolve_simple_closing(
     sequence: int,
     round_number: int,
@@ -55,7 +80,7 @@ def resolve_simple_closing(
     dice: DiceProvider,
     setup: EncounterSetup | None = None,
 ) -> tuple[list[BattleEvent], int, bool]:
-    """Reach melee this turn when possible; otherwise use legal ranged offense/Dodge while closing."""
+    """Reach melee when arena policy allows; backliners hold while an allied frontline is active."""
     distance = combatant_distance(attacker, target)
     charge_events, charge_sequence, charged = resolve_charge_closing(
         sequence, round_number, attacker, target, dice, setup,
@@ -64,6 +89,10 @@ def resolve_simple_closing(
         return charge_events, charge_sequence, True
     if distance <= MELEE_BRAWL_DISTANCE_FT:
         return [], sequence, False
+    if setup is not None:
+        held = _hold_backline(sequence, round_number, attacker, target, dice, setup)
+        if held is not None:
+            return held
     if attacker.state.template.attack_action is not None:
         return [], sequence, False
 
