@@ -28,6 +28,7 @@ def test_anatomically_distinct_monsters_do_not_share_humanoid_fallbacks() -> Non
         "Axe Beak": "bird",
         "Baboon": "primate",
         "Flying Snake": "snake",
+        "Gargoyle": "gargoyle",
         "Giant Constrictor Snake": "snake",
         "Giant Crocodile": "reptile",
         "Giant Eagle": "bird",
@@ -54,13 +55,18 @@ def test_new_batch_has_specific_reviewed_details() -> None:
     expected = {
         "Animated Armor": "animated-armor",
         "Animated Flying Sword": "flying-sword",
+        "Awakened Tree": "tree",
         "Flying Snake": "flying-snake",
+        "Gargoyle": "gargoyle",
+        "Grimlock": "grimlock",
+        "Guard Captain": "guard-captain",
         "Hippopotamus": "hippopotamus",
         "Killer Whale": "orca",
         "Manticore": "manticore",
         "Pegasus": "pegasus",
         "Scorpion": "scorpion",
         "Skeleton": "skeleton",
+        "Violet Fungus": "violet-fungus",
     }
     for name, detail in expected.items():
         assert MONSTER_FIGURE_PROFILES[name]["detail"] == detail
