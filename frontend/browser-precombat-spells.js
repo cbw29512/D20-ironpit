@@ -1,6 +1,8 @@
 (() => {
   "use strict";
 
+  const S = () => window.IRON_PIT_BROWSER_STATE;
+
   function slotChoice(member, spell) {
     const levels = Object.entries(member.state.resources || {})
       .filter(([id, uses]) => id.startsWith("spell-slot-") && uses > 0)
@@ -30,12 +32,12 @@
     member.state.resources[resourceId] -= 1;
     const extra = Math.max(0, slotLevel - spell.level);
     const tempHp = (spell.temporaryHp || 0) + extra * (spell.temporaryHpPerSlotAbove || 0);
-    member.state.temporary_hp = Math.max(member.state.temporary_hp, tempHp);
+    const grantedTempHp = S().grantTemporaryHp(member.state, tempHp);
     for (const type of spell.damageResistances || []) {
       if (!member.state.temporary_damage_resistances.includes(type)) member.state.temporary_damage_resistances.push(type);
     }
     const details = [];
-    if (tempHp) details.push(`${tempHp} Temporary HP`);
+    if (tempHp && grantedTempHp) details.push(`${grantedTempHp} Temporary HP`);
     if (spell.damageResistances?.length) details.push(`resistance to ${spell.damageResistances.join(", ")}`);
     return {
       sequence, round_number: 0, event_type: "feature", actor_id: member.combatant_id,
