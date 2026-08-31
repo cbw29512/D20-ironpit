@@ -99,7 +99,10 @@
     const hpBefore = actualTarget.state.current_hp, temporaryHpBefore = actualTarget.state.temporary_hp;
     let damageRoll = null, damageComponents = [], damageOutcome = null; const applied = [];
     if (hit) {
-      const damage = R().weaponDamage(attacker.state, attack, critical, mode, `${round}:${attacker.combatant_id}`, extra.bonusDamage || null);
+      const damage = R().weaponDamage(
+        attacker.state, attack, critical, mode, `${round}:${attacker.combatant_id}`,
+        extra.bonusDamage || null, actualTarget.state,
+      );
       damageComponents = damage.components.map((part) => ({ ...part, applied_total: adjustedDamage(actualTarget.state, part.total, part.damage_type) }));
       damageRoll = { ...damage.roll, total: damageComponents.reduce((sum, part) => sum + part.applied_total, 0) };
       damageOutcome = applyDamage(actualTarget.state, damageRoll.total, critical);
