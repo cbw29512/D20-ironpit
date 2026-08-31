@@ -62,6 +62,7 @@ function queuedDice(values, fallback = 10) {
   const RAGE = window.IRON_PIT_BROWSER_RAGE;
   const ATTACK = window.IRON_PIT_BROWSER_ATTACK;
   const HEALING = window.IRON_PIT_BROWSER_HEALING;
+  hero.state.resources["relentless-endurance"] = 0;
 
   assert.equal(hero.state.resources.rage, 2, "level-1 Barbarian must enter the fight with two Rage uses");
   for (const [round, remaining] of [[1, 1], [2, 0]]) {
