@@ -34,6 +34,7 @@ from app.content.monsters_wolves import build_dire_wolf, build_wolf
 from app.content.monsters_zero_engine import build_zero_engine_monsters
 from app.content.movement_modes import complete_monster_movement_modes
 from app.content.pregens import build_brom_ironmark, build_mara_quickstep, build_selene_asharrow
+from app.content.unarmed_opportunity_profiles import complete_unarmed_opportunity_profiles
 from app.domain.models import ArenaRoster
 
 logger = logging.getLogger(__name__)
@@ -59,15 +60,14 @@ def build_arena_roster() -> ArenaRoster:
         monsters = complete_monster_limited_use_fingerprints(monsters)
         monsters = complete_monster_legendary_fingerprints(monsters)
         monsters = complete_monster_spellcasting_fingerprints(monsters)
+        monsters = complete_monster_saving_throws(monsters)
+        characters = [
+            *build_certified_hero_templates(), build_demo_fighter(), build_brom_ironmark(),
+            build_selene_asharrow(), build_mara_quickstep(),
+        ]
         return ArenaRoster(
-            characters=[
-                *build_certified_hero_templates(),
-                build_demo_fighter(),
-                build_brom_ironmark(),
-                build_selene_asharrow(),
-                build_mara_quickstep(),
-            ],
-            monsters=complete_monster_saving_throws(monsters),
+            characters=complete_unarmed_opportunity_profiles(characters),
+            monsters=complete_unarmed_opportunity_profiles(monsters),
         )
     except Exception as exc:
         logger.exception("Failed to build Iron Pit arena roster.")
