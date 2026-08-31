@@ -16,7 +16,6 @@ def test_two_heroes_can_finish_two_monsters_in_shared_turn_loop() -> None:
         EncounterSelection(
             hero_ids=["aldric-vane-l1", "brom-ironmark-l1"],
             monster_ids=["srd-commoner", "srd-commoner"],
-            starting_distance_ft=5,
         ),
         MaxDiceProvider(),
     )
@@ -33,7 +32,6 @@ def test_duplicate_monsters_take_distinct_turns_and_retarget_living_heroes() -> 
         EncounterSelection(
             hero_ids=["aldric-vane-l1", "brom-ironmark-l1"],
             monster_ids=["srd-goblin-warrior", "srd-goblin-warrior"],
-            starting_distance_ft=30,
         ),
         MaxDiceProvider(),
     )
@@ -51,7 +49,6 @@ def _downed_hero_result():
         EncounterSelection(
             hero_ids=["aldric-vane-l1", "brom-ironmark-l1"],
             monster_ids=["srd-goblin-warrior"],
-            starting_distance_ft=5,
         ),
         FixedDiceProvider([1, 1, 20, 20, 6, 6, 10, 20, 12, 12]),
     )
@@ -86,7 +83,7 @@ def test_downed_turn_refreshes_reaction_before_death_save(monkeypatch) -> None:
 
 def test_zero_hp_character_does_not_end_deathmatch_until_dead() -> None:
     setup = build_encounter_setup(EncounterSelection(
-        hero_ids=["aldric-vane-l1"], monster_ids=["srd-commoner"], starting_distance_ft=5,
+        hero_ids=["aldric-vane-l1"], monster_ids=["srd-commoner"],
     ))
     hero = setup.heroes[0].state
     hero.current_hp = 0
@@ -103,7 +100,6 @@ def test_ranged_attacker_fires_while_closing_instead_of_holding_range() -> None:
         EncounterSelection(
             hero_ids=["selene-asharrow-l1"],
             monster_ids=["srd-commoner"],
-            starting_distance_ft=90,
         ),
         MaxDiceProvider(),
     )

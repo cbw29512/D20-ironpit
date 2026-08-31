@@ -86,7 +86,6 @@ def test_two_wolves_activate_pack_tactics_under_arena_adjacency() -> None:
     setup = build_encounter_setup(EncounterSelection(
         hero_ids=["karnok-stoneward-l1"],
         monster_ids=["srd-wolf", "srd-wolf"],
-        starting_distance_ft=5,
     ))
     wolf = setup.monsters[0]
     target = setup.heroes[0]
@@ -98,7 +97,6 @@ def test_single_wolf_does_not_activate_pack_tactics() -> None:
     setup = build_encounter_setup(EncounterSelection(
         hero_ids=["karnok-stoneward-l1"],
         monster_ids=["srd-wolf"],
-        starting_distance_ft=5,
     ))
 
     assert pack_tactics_active(setup.monsters[0], setup.heroes[0], setup) is False

@@ -6,7 +6,7 @@ from app.domain.models import DamageType, EncounterSelection
 
 def _setup(monster_id: str):
     return build_encounter_setup(EncounterSelection(
-        hero_ids=["karnok-stoneward-l1"], monster_ids=[monster_id], starting_distance_ft=5,
+        hero_ids=["karnok-stoneward-l1"], monster_ids=[monster_id],
     ))
 
 

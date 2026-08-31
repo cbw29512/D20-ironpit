@@ -8,7 +8,7 @@ from app.domain.models import EncounterSelection
 
 def _setup(monster_id: str = "srd-commoner", hero_id: str = "karnok-stoneward-l1"):
     setup = build_encounter_setup(EncounterSelection(
-        hero_ids=[hero_id], monster_ids=[monster_id], starting_distance_ft=5,
+        hero_ids=[hero_id], monster_ids=[monster_id],
     ))
     return setup, setup.monsters[0], setup.heroes[0]
 

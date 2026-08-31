@@ -26,7 +26,7 @@ def _setup(caster):
         combatant_id="enemy", side="monsters", position_ft=30,
         state=build_combatant_state(build_karnok_stoneward()),
     )
-    return EncounterSetup(heroes=[caster], monsters=[enemy], hero_total_levels=1, monster_total_cr="1", starting_distance_ft=30)
+    return EncounterSetup(heroes=[caster], monsters=[enemy], hero_total_levels=1, monster_total_cr="1")
 
 
 def test_precombat_uses_one_declared_defense_and_lowest_legal_slot() -> None:

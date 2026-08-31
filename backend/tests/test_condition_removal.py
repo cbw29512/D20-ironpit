@@ -12,7 +12,6 @@ def _setup():
     setup = build_encounter_setup(EncounterSelection(
         hero_ids=["karnok-stoneward-l1", "rokhan-stonefury-l1"],
         monster_ids=["srd-commoner"],
-        starting_distance_ft=5,
     ))
     return setup, setup.heroes[0], setup.heroes[1]
 

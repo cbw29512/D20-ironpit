@@ -44,7 +44,7 @@ def _setup(caster, monsters, allies=()):
     heroes = [caster, *allies]
     return EncounterSetup(
         heroes=heroes, monsters=list(monsters), hero_total_levels=len(heroes),
-        monster_total_cr="1", starting_distance_ft=30,
+        monster_total_cr="1",
     )
 
 

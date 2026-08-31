@@ -8,14 +8,14 @@ from app.domain.models import DamageType, EncounterSelection, RollMode
 
 def _state(hero_id="karnok-stoneward-l1"):
     setup = build_encounter_setup(EncounterSelection(
-        hero_ids=[hero_id], monster_ids=["srd-commoner"], starting_distance_ft=5,
+        hero_ids=[hero_id], monster_ids=["srd-commoner"],
     ))
     return setup.heroes[0].state
 
 
 def _constrict_setup():
     setup = build_encounter_setup(EncounterSelection(
-        hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-constrictor-snake"], starting_distance_ft=5,
+        hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-constrictor-snake"],
     ))
     return setup, setup.heroes[0], setup.monsters[0]
 
@@ -113,7 +113,7 @@ def test_constrict_rider_still_applies_when_damage_knocks_character_unconscious(
 
 def test_constrict_rejects_large_target() -> None:
     setup = build_encounter_setup(EncounterSelection(
-        hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-constrictor-snake", "srd-crocodile"], starting_distance_ft=5,
+        hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-constrictor-snake", "srd-crocodile"],
     ))
     snake, crocodile = setup.monsters
     action = snake.state.template.saving_throw_actions[0]

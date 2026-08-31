@@ -16,7 +16,6 @@ def _setup(monster_ids=None):
     return build_encounter_setup(EncounterSelection(
         hero_ids=["karnok-stoneward-l1"],
         monster_ids=monster_ids or ["srd-crocodile"],
-        starting_distance_ft=5,
     ))
 
 
@@ -63,7 +62,6 @@ def test_grappler_keeps_attacking_a_held_target() -> None:
     setup = build_encounter_setup(EncounterSelection(
         hero_ids=["karnok-stoneward-l1", "rokhan-stonefury-l1"],
         monster_ids=["srd-giant-crab"],
-        starting_distance_ft=5,
     ))
     crab = setup.monsters[0]
     held, other = setup.heroes
@@ -95,7 +93,7 @@ def test_grapple_ends_when_grappler_is_dead_or_out_of_range() -> None:
 
 def test_restrained_grapple_escape_spends_action_and_rage_helps_strength_check() -> None:
     setup = build_encounter_setup(EncounterSelection(
-        hero_ids=["rokhan-stonefury-l1"], monster_ids=["srd-crocodile"], starting_distance_ft=5,
+        hero_ids=["rokhan-stonefury-l1"], monster_ids=["srd-crocodile"],
     ))
     hero, crocodile = setup.heroes[0], setup.monsters[0]
     hero.state.action_available = True

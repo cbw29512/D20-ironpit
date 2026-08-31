@@ -32,7 +32,7 @@ def test_swarm_cannot_gain_temporary_hit_points() -> None:
 def test_healing_policy_never_selects_a_swarm() -> None:
     setup = build_encounter_setup(EncounterSelection(
         hero_ids=["aldric-vane-l1", "brom-ironmark-l1"],
-        monster_ids=["srd-goblin-warrior"], starting_distance_ft=30,
+        monster_ids=["srd-goblin-warrior"],
     ))
     healer, target = setup.heroes
     target.state.template.combat_traits.append(CombatTrait.SWARM)

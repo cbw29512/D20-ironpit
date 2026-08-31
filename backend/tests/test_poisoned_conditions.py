@@ -11,7 +11,6 @@ def _setup(monster_ids=None):
     return build_encounter_setup(EncounterSelection(
         hero_ids=["karnok-stoneward-l1"],
         monster_ids=monster_ids or ["srd-giant-centipede"],
-        starting_distance_ft=5,
     ))
 
 

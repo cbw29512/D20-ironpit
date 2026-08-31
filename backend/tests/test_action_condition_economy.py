@@ -8,7 +8,7 @@ from app.domain.models import EncounterSelection, RollMode
 
 def _setup(condition: str):
     setup = build_encounter_setup(EncounterSelection(
-        hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-commoner"], starting_distance_ft=5,
+        hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-commoner"],
     ))
     attacker, defender = setup.monsters[0], setup.heroes[0]
     defender.state.active_effect_ids.append(condition)

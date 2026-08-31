@@ -10,7 +10,6 @@ def _rat_pack_setup(starting_distance_ft: int = 5):
     return build_encounter_setup(EncounterSelection(
         hero_ids=["aldric-vane-l1"],
         monster_ids=["srd-giant-rat", "srd-giant-rat"],
-        starting_distance_ft=starting_distance_ft,
     ))
 
 
@@ -64,7 +63,6 @@ def test_single_combatant_side_has_no_adjacent_ally() -> None:
     setup = build_encounter_setup(EncounterSelection(
         hero_ids=["aldric-vane-l1"],
         monster_ids=["srd-giant-rat"],
-        starting_distance_ft=5,
     ))
     attacker = setup.monsters[0]
     target = setup.heroes[0]
