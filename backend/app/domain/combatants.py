@@ -106,6 +106,10 @@ class CombatantTemplate(BaseModel):
     speed_ft: int = Field(ge=0)
     movement_modes: MovementModes
     initiative_bonus: int
+    critical_hit_minimum: int = Field(default=20, ge=2, le=20)
+    initiative_advantage: bool = False
+    athletics_advantage: bool = False
+    critical_move_fraction: float = Field(default=0.0, ge=0.0, le=1.0)
     weapon_attack: WeaponAttack
     alternate_weapon_attacks: list[WeaponAttack] = Field(default_factory=list)
     unarmed_opportunity_attack: UnarmedStrikeDamage | None = None
