@@ -57,6 +57,25 @@ function queuedDice(values, fallback = 10) {
 }
 
 {
+  const barbarian = structuredClone(window.IRON_PIT_BROWSER_HEROES["rokhan-stonefury-l1"]);
+  const bandit = structuredClone(window.IRON_PIT_BROWSER_MONSTERS["srd-bandit"]);
+  const hero = { combatant_id: "hero-stunned-rage", side: "heroes", position_ft: 0, state: window.IRON_PIT_BROWSER_STATE.buildState(barbarian) };
+  const monster = { combatant_id: "monster-stunner", side: "monsters", position_ft: 5, state: window.IRON_PIT_BROWSER_STATE.buildState(bandit) };
+  window.IRON_PIT_BROWSER_STATE.beginTurn(hero.state);
+  assert.ok(window.IRON_PIT_BROWSER_RAGE.enter(1, 1, hero));
+  const attack = structuredClone(bandit.attacks.find((item) => item.id === "bandit-scimitar"));
+  attack.controlEffect = { conditionId: "stunned", expiresAtStartOfSourceTurn: true };
+  window.IRON_PIT_DICE = queuedDice([15, 1]);
+
+  const event = window.IRON_PIT_BROWSER_ATTACK.resolveAttack(2, 1, monster, hero, attack, 5);
+
+  assert.ok(event.hit);
+  assert.ok(hero.state.active_effect_ids.includes("stunned"));
+  assert.equal(window.IRON_PIT_BROWSER_RAGE.active(hero.state), false, "hit-applied Incapacitation must end Rage immediately");
+  assert.equal(hero.state.resources.rage, 1, "ending Rage must not refund the spent use");
+}
+
+{
   const template = structuredClone(window.IRON_PIT_BROWSER_HEROES["rokhan-stonefury-l1"]);
   const hero = { combatant_id: "hero-rage-ledger", side: "heroes", position_ft: 0, state: window.IRON_PIT_BROWSER_STATE.buildState(template) };
   const RAGE = window.IRON_PIT_BROWSER_RAGE;
