@@ -26,7 +26,7 @@ def test_builds_full_party_in_fixed_front_and_back_lines() -> None:
     assert encounter.monster_total_cr == "5/8"
     assert [hero.position_ft for hero in encounter.heroes] == [5, 5, 0, 5]
     assert [monster.position_ft for monster in encounter.monsters] == [10, 10, 10]
-    assert encounter.starting_distance_ft == 5
+    assert "starting_distance_ft" not in encounter.model_dump()
     assert encounter.monsters[0].state.template.id == "srd-goblin-warrior"
     assert encounter.monsters[1].state.template.id == "srd-goblin-warrior"
     assert encounter.monsters[0].combatant_id != encounter.monsters[1].combatant_id
