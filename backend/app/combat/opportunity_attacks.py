@@ -4,8 +4,8 @@ from typing import Literal
 
 from app.combat.action_economy import is_available, spend
 from app.combat.ally_context import pack_tactics_active
-from app.combat.attacks import resolve_attack
 from app.combat.dice import DiceProvider
+from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.policy import weapon_attack_profiles
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, WeaponAttack, WeaponAttackKind
@@ -53,17 +53,8 @@ def resolve_opportunity_attack(
         return None
     spend(reactor.state, "reaction")
     pack = pack_tactics_active(reactor, mover, setup)
-    return resolve_attack(
-        sequence,
-        round_number,
-        reactor.state,
-        mover.state,
-        attack,
-        distance_before_ft,
-        dice,
-        actor_event_id=reactor.combatant_id,
-        target_event_id=mover.combatant_id,
-        spend_action=False,
-        advantage_sources=1 if pack else 0,
-        feature_id="opportunity-attack",
+    return resolve_encounter_attack(
+        sequence, round_number, reactor, mover, attack, distance_before_ft, dice, setup,
+        spend_action=False, advantage_sources=1 if pack else 0,
+        feature_id="opportunity-attack", close_enemy_active=True,
     )
