@@ -24,10 +24,13 @@ assert.ok(generated["srd-tyrannosaurus-rex"]);
 const movementKeys = ["burrow_ft", "climb_ft", "fly_ft", "hover", "swim_ft", "walk_ft"];
 for (const monster of Object.values(generated)) {
   assert.deepEqual(Object.keys(monster.movement_modes).sort(), movementKeys, `${monster.id} must export the full movement fingerprint`);
+  assert.ok(Array.isArray(monster.source_trait_names), `${monster.id} must export its printed trait fingerprint`);
 }
 assert.deepEqual(generated["srd-bat"].movement_modes, {
   walk_ft: 5, fly_ft: 30, climb_ft: 0, swim_ft: 0, burrow_ft: 0, hover: false,
 });
+assert.deepEqual(generated["srd-wolf"].source_trait_names, ["Pack Tactics"]);
+assert.deepEqual(generated["srd-deer"].source_trait_names, ["Agile"]);
 
 const slots = (action) => (action?.slots || []).map((slot) => Array.isArray(slot)
   ? { attackIds: slot, saveActionIds: [] }
@@ -99,4 +102,4 @@ assert.ok(heroOne.state.active_effect_ids.includes("grappled"));
 assert.ok(heroOne.state.active_effect_ids.includes("restrained"));
 assert.ok(heroTwo.state.active_effect_ids.includes("prone"));
 
-console.log("Generated monster roster is canonical for 68 certified templates, including movement fingerprints and T. rex retargeting.");
+console.log("Generated monster roster is canonical for 68 certified templates, including movement/trait fingerprints and T. rex retargeting.");

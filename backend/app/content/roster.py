@@ -6,6 +6,7 @@ from app.content.certified_heroes import build_certified_hero_templates
 from app.content.demo import build_demo_fighter, build_goblin_warrior
 from app.content.monster_hippogriff import build_hippogriff
 from app.content.monster_saving_throws import complete_monster_saving_throws
+from app.content.monster_trait_source_audit import complete_monster_trait_fingerprints
 from app.content.monster_tyrannosaurus import build_tyrannosaurus_rex
 from app.content.monsters import build_axe_beak, build_bandit, build_commoner, build_giant_lizard
 from app.content.monsters_bears import build_black_bear, build_brown_bear
@@ -41,6 +42,7 @@ def build_arena_roster() -> ArenaRoster:
             *build_venom_monsters(), build_giant_constrictor_snake(), build_tyrannosaurus_rex(),
         ]
         monsters = complete_monster_movement_modes(monsters)
+        monsters = complete_monster_trait_fingerprints(monsters)
         return ArenaRoster(
             characters=[
                 *build_certified_hero_templates(),
