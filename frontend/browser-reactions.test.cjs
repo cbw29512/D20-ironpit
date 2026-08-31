@@ -9,7 +9,7 @@ global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
   "browser-heroes.js", "browser-monsters.js", "browser-monsters-beast2.js", "browser-monsters-generated.js",
-  "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
+  "browser-unarmed-opportunity.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-grapple.js", "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-timed-conditions.js",
   "browser-attack.js", "browser-reactions.js",
 ]) load(file);
@@ -69,7 +69,7 @@ function redirectTemplate() {
   const bite = monster.state.template.attacks.find((item) => item.kind === "melee"); assert.equal(bite.reach, 10);
   const event = X.resolveOpportunityAttack(1, 1, monster, hero, fight, 5, 10, "speed");
   assert.ok(event); assert.equal(event.weapon_id, "unarmed-strike-opportunity");
-  assert.equal(event.damage_roll.total, monster.state.template.unarmed_opportunity_attack.damage);
+  assert.equal(event.damage_roll.total, window.IRON_PIT_UNARMED_OPPORTUNITY["srd-plesiosaurus"].damage);
 }
 {
   dice(); const { hero, monster, fight } = setup("srd-plesiosaurus");
