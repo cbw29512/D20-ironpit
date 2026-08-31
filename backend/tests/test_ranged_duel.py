@@ -9,6 +9,7 @@ def test_ninety_foot_duel_forces_dash_then_shortbow_attack() -> None:
         build_demo_fighter(),
         build_goblin_warrior(),
         FixedDiceProvider([20, 1, 20, 6, 6]),
+        starting_distance_ft=90,
     )
 
     event_types = [event.event_type for event in battle.events]
