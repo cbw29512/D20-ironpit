@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from copy import deepcopy
+from functools import lru_cache
 import json
 import logging
 from pathlib import Path
@@ -53,7 +55,8 @@ _READY_BY_NAME = {
 }
 
 
-def load_monster_rows() -> list[dict[str, object]]:
+@lru_cache(maxsize=1)
+def _canonical_monster_rows() -> tuple[dict[str, object], ...]:
     rows = json.loads(_DATA_PATH.read_text(encoding="utf-8"))
     corrections = json.loads(_CORRECTIONS_PATH.read_text(encoding="utf-8"))
     if not isinstance(rows, list) or len(rows) != 328:
@@ -79,7 +82,12 @@ def load_monster_rows() -> list[dict[str, object]]:
     from app.content.monster_source_integrity import validate_monster_source_integrity
 
     validate_monster_source_integrity(combined)
-    return combined
+    return tuple(combined)
+
+
+def load_monster_rows() -> list[dict[str, object]]:
+    """Return mutation-safe copies of the once-validated canonical SRD catalog."""
+    return deepcopy(list(_canonical_monster_rows()))
 
 
 def _runtime_monsters() -> dict[str, CombatantTemplate]:
