@@ -35,6 +35,13 @@ function setup(monsterId = "srd-commoner") {
   return { hero, monster, fight: { heroes: [hero], monsters: [monster] } };
 }
 
+function redirectTemplate() {
+  const template = monsterTemplate("srd-goblin-warrior");
+  template.name = "Goblin Boss"; template.armor_class = 17; template.max_hp = 21;
+  template.redirect_attack_reaction = { ally_range_ft: 5, ally_max_size: "medium" };
+  return template;
+}
+
 {
   dice(); const { hero, monster, fight } = setup();
   const event = X.resolveOpportunityAttack(1, 1, monster, hero, fight, 5, 10, "speed");
@@ -51,8 +58,11 @@ function setup(monsterId = "srd-commoner") {
   }
 }
 {
-  dice(); const { hero, monster, fight } = setup(); monster.state.active_effect_ids.push("stunned");
-  assert.equal(X.resolveOpportunityAttack(1, 1, monster, hero, fight, 5, 10, "speed"), null);
+  for (const condition of ["stunned", "blinded"]) {
+    dice(); const { hero, monster, fight } = setup(); monster.state.active_effect_ids.push(condition);
+    assert.equal(X.resolveOpportunityAttack(1, 1, monster, hero, fight, 5, 10, "speed"), null);
+    assert.equal(monster.state.reaction_available, true);
+  }
 }
 {
   dice(); const { hero, monster, fight } = setup("srd-plesiosaurus");
@@ -83,10 +93,7 @@ function setup(monsterId = "srd-commoner") {
 }
 {
   const attacker = member("archer-1", "heroes", monsterTemplate("srd-goblin-warrior"), 0);
-  const bossTemplate = monsterTemplate("srd-goblin-warrior");
-  bossTemplate.name = "Goblin Boss"; bossTemplate.armor_class = 17; bossTemplate.max_hp = 21;
-  bossTemplate.redirect_attack_reaction = { ally_range_ft: 5, ally_max_size: "medium" };
-  const boss = member("boss-1", "monsters", bossTemplate, 20);
+  const boss = member("boss-1", "monsters", redirectTemplate(), 20);
   const ally = member("ally-1", "monsters", monsterTemplate("srd-goblin-warrior"), 25);
   const fight = { heroes: [attacker], monsters: [boss, ally] };
   const ranged = attacker.state.template.attacks.find((attack) => attack.kind === "ranged");
@@ -99,9 +106,15 @@ function setup(monsterId = "srd-commoner") {
   assert.match(event.description, /uses Redirect Attack/);
 }
 {
-  const bossTemplate = monsterTemplate("srd-goblin-warrior");
-  bossTemplate.redirect_attack_reaction = { ally_range_ft: 5, ally_max_size: "medium" };
-  const boss = member("boss-1", "monsters", bossTemplate, 20);
+  const attacker = member("hero-1", "heroes", heroTemplate(), 0);
+  const boss = member("boss-1", "monsters", redirectTemplate(), 5);
+  const ally = member("ally-1", "monsters", monsterTemplate("srd-goblin-warrior"), 10);
+  const fight = { heroes: [attacker], monsters: [boss, ally] };
+  assert.equal(X.redirectAttack(boss, fight), null); assert.equal(boss.state.reaction_available, true);
+  assert.deepEqual([boss.position_ft, ally.position_ft], [5, 10]);
+}
+{
+  const boss = member("boss-1", "monsters", redirectTemplate(), 20);
   const ally = member("ally-1", "monsters", monsterTemplate("srd-goblin-warrior"), 25);
   const fight = { heroes: [member("hero-1", "heroes", heroTemplate(), 0)], monsters: [boss, ally] };
   boss.state.active_effect_ids.push("blinded");
