@@ -122,9 +122,12 @@ function fight(heroIds, monsterIds, dice = deterministicDice()) {
   const boarTemplate = structuredClone(window.IRON_PIT_BROWSER_MONSTERS["srd-boar"]);
   const hero = { combatant_id: "hero-1:karnok", side: "heroes", position_ft: 0, state: window.IRON_PIT_BROWSER_STATE.buildState(heroTemplate) };
   const boar = { combatant_id: "monster-1:boar", side: "monsters", position_ft: 30, state: window.IRON_PIT_BROWSER_STATE.buildState(boarTemplate) };
+  hero.state.initiative_total = 10;
+  boar.state.initiative_total = 20;
+  const setup = { heroes: [hero], monsters: [boar] };
   window.IRON_PIT_BROWSER_STATE.beginTurn(boar.state);
   window.IRON_PIT_DICE = queuedDice([15, 2, 3]);
-  const charged = window.IRON_PIT_BROWSER_CHARGE.resolveClosing(1, 1, boar, hero);
+  const charged = window.IRON_PIT_BROWSER_CHARGE.resolveClosing(1, 1, boar, hero, setup);
   assert.equal(charged.handled, true);
   assert.equal(charged.events[0].movement_ft, 25);
   assert.equal(charged.events[1].feature_id, "charge");
