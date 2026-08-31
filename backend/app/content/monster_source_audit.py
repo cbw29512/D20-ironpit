@@ -4,6 +4,7 @@ import logging
 import re
 
 from app.content.monster_attack_source_audit import attack_issues, normalized, save_action_issues
+from app.content.monster_bonus_action_source_audit import bonus_action_issues
 from app.content.monster_defense_source_audit import defense_issues
 from app.content.monster_reaction_source_audit import reaction_issues
 from app.content.monster_saving_throws import parse_saving_throw_bonuses
@@ -77,6 +78,7 @@ def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) ->
         issues.extend(defense_issues(template, row))
         issues.extend(trait_issues(template, row))
         issues.extend(reaction_issues(template, row))
+        issues.extend(bonus_action_issues(template, row))
         actions = normalized(row.get("actions", ""))
         runtime_attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
         if _source_attack_mode_count(actions) != len(runtime_attacks):

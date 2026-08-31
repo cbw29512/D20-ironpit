@@ -124,6 +124,7 @@ class CombatantTemplate(BaseModel):
     combat_traits: list[CombatTrait] = Field(default_factory=list)
     source_trait_names: list[str] = Field(default_factory=list)
     source_reaction_names: list[str] = Field(default_factory=list)
+    source_bonus_action_names: list[str] = Field(default_factory=list)
     fighting_style: str | None = None
     weapon_masteries: list[str] = Field(default_factory=list)
     damage_resistances: list[DamageType] = Field(default_factory=list)

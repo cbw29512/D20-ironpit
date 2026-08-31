@@ -27,6 +27,7 @@ for (const monster of Object.values(generated)) {
   assert.deepEqual(Object.keys(monster.movement_modes).sort(), movementKeys, `${monster.id} must export the full movement fingerprint`);
   assert.ok(Array.isArray(monster.source_trait_names), `${monster.id} must export its printed trait fingerprint`);
   assert.ok(Array.isArray(monster.source_reaction_names), `${monster.id} must export its printed reaction fingerprint`);
+  assert.ok(Array.isArray(monster.source_bonus_action_names), `${monster.id} must export its printed bonus-action fingerprint`);
 }
 assert.deepEqual(generated["srd-bat"].movement_modes, {
   walk_ft: 5, fly_ft: 30, climb_ft: 0, swim_ft: 0, burrow_ft: 0, hover: false,
@@ -34,6 +35,7 @@ assert.deepEqual(generated["srd-bat"].movement_modes, {
 assert.deepEqual(generated["srd-wolf"].source_trait_names, ["Pack Tactics"]);
 assert.deepEqual(generated["srd-deer"].source_trait_names, ["Agile"]);
 assert.deepEqual(generated["srd-saber-toothed-tiger"].source_reaction_names, []);
+assert.deepEqual(generated["srd-saber-toothed-tiger"].source_bonus_action_names, ["Nimble Escape"]);
 
 const slots = (action) => (action?.slots || []).map((slot) => Array.isArray(slot)
   ? { attackIds: slot, saveActionIds: [] }
@@ -105,4 +107,4 @@ assert.ok(heroOne.state.active_effect_ids.includes("grappled"));
 assert.ok(heroOne.state.active_effect_ids.includes("restrained"));
 assert.ok(heroTwo.state.active_effect_ids.includes("prone"));
 
-console.log("Generated monster runtime contains only RAW-certified templates, with movement/trait/reaction fingerprints and T. rex retargeting.");
+console.log("Generated monster runtime contains only RAW-certified templates, with movement/trait/reaction/bonus-action fingerprints and T. rex retargeting.");

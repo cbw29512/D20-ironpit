@@ -168,6 +168,7 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
         if template.kind == "monster":
             row["source_trait_names"] = list(template.source_trait_names)
             row["source_reaction_names"] = list(template.source_reaction_names)
+            row["source_bonus_action_names"] = list(template.source_bonus_action_names)
         if template.spell_save_actions:
             row["spell_save_actions"] = [_spell(item) for item in template.spell_save_actions]
         if template.defensive_spell_actions:
