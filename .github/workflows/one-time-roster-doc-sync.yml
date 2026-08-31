@@ -1,0 +1,65 @@
+name: One-time roster contract sync
+
+on:
+  push:
+    branches:
+      - audit/raw-combat-log-figures-20260830
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/raw-combat-log-figures-20260830
+      - name: Update canonical roster contract and docs
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          test_path = Path('backend/tests/test_arena_roster.py')
+          text = test_path.read_text(encoding='utf-8')
+          text = text.replace(
+              'def test_arena_roster_exposes_certified_batch() -> None:',
+              'def test_arena_roster_exposes_canonical_template_batch() -> None:',
+          )
+          old = '        "srd-animated-armor", "srd-animated-flying-sword", "srd-flying-snake", "srd-hippopotamus",'
+          new = (
+              '        "srd-animated-armor", "srd-animated-flying-sword", "srd-awakened-tree", "srd-flying-snake",\n'
+              '        "srd-gargoyle", "srd-grimlock", "srd-guard-captain", "srd-hippopotamus",'
+          )
+          if old in text:
+              text = text.replace(old, new, 1)
+          elif '"srd-awakened-tree"' not in text:
+              raise RuntimeError('Arena roster insertion point drifted.')
+          old_tail = '        "srd-tough", "srd-venomous-snake",\n'
+          new_tail = '        "srd-tough", "srd-venomous-snake", "srd-violet-fungus",\n'
+          if old_tail in text:
+              text = text.replace(old_tail, new_tail, 1)
+          elif '"srd-violet-fungus"' not in text:
+              raise RuntimeError('Arena roster tail insertion point drifted.')
+          test_path.write_text(text, encoding='utf-8')
+
+          readme_path = Path('README.md')
+          readme = readme_path.read_text(encoding='utf-8')
+          old_count = '63 monster templates are currently certified runnable in the browser combat engine.'
+          new_count = '85 monster templates are currently certified runnable in the browser combat engine.'
+          if old_count in readme:
+              readme = readme.replace(old_count, new_count, 1)
+          elif new_count not in readme:
+              raise RuntimeError('README certified-monster count wording drifted.')
+          readme_path.write_text(readme, encoding='utf-8')
+          PY
+      - name: Commit exact contract update
+        run: |
+          if ! git diff --quiet -- backend/tests/test_arena_roster.py README.md; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add backend/tests/test_arena_roster.py README.md
+            git commit -m "test: align canonical roster contract and certified count"
+            git push origin HEAD:audit/raw-combat-log-figures-20260830
+          fi
