@@ -18,28 +18,37 @@ for (const file of ["app.js", "battlefield-picker.js", "battlefield-view.js", "b
 }
 
 for (const id of [
-  "hero-slots", "monster-slots", "fight-button", "distance", "pit-round", "status",
+  "hero-slots", "monster-slots", "fight-button", "pit-round", "status",
   "card-picker", "picker-class", "picker-level", "picker-hero", "picker-cr", "picker-monster",
   "confirm-card", "remove-card", "combat-fx-overlay",
 ]) assert.ok(ids.has(id), `battlefield is missing #${id}`);
+
+assert.equal(ids.has("distance"), false, "formation combat must not expose a starting-distance control");
+assert.doesNotMatch(html, /\bid="distance"/i, "distance setup must stay removed from the production battlefield");
 
 const view = fs.readFileSync(path.join(root, "battlefield-view.js"), "utf8");
 const replay = fs.readFileSync(path.join(root, "battlefield-replay.js"), "utf8");
 const app = fs.readFileSync(path.join(root, "app.js"), "utf8");
 const engine = fs.readFileSync(path.join(root, "browser-engine.js"), "utf8");
+const formation = fs.readFileSync(path.join(root, "browser-formation.js"), "utf8");
 const css = fs.readFileSync(path.join(root, "battlefield.css"), "utf8");
 
 assert.match(view, /MAX_SLOTS = 6/);
 assert.match(app, /MAX_SLOTS = 6/);
+assert.match(app, /Choose the cards, then press FIGHT\./);
 assert.match(engine, /1-6 cards per side/);
+assert.match(engine, /IRON_PIT_BROWSER_FORMATION/);
+assert.match(formation, /HERO_FRONT = 5/);
+assert.match(formation, /MONSTER_FRONT = 10/);
 assert.match(replay, /initiative-badge/);
 assert.match(replay, /critical-screen/);
 assert.match(replay, /fumble-blackout/);
 assert.match(css, /\.battle-card\.turn-active/);
 assert.match(css, /card-turn-shake/);
 assert.match(css, /\.battle-card\.battle-dead/);
+assert.ok(html.indexOf("browser-formation.js") < html.indexOf("browser-engine.js"), "formation must load before the combat engine");
 assert.ok(html.indexOf("battlefield-picker.js") < html.indexOf("app.js"));
 assert.ok(html.indexOf("battlefield-view.js") < html.indexOf("app.js"));
 assert.ok(html.indexOf("battlefield-replay.js") < html.indexOf("app.js"));
 
-console.log("six-slot battlefield wiring regression passed");
+console.log("six-slot formation battlefield wiring regression passed");
