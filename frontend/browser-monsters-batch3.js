@@ -17,6 +17,7 @@
   const items = [
     monster("srd-ogre", "Ogre", "2", "large", 11, 68, 40, -1, [
       attack("ogre-greatclub", "Greatclub", "melee", 6, 2, 8, 4, "bludgeoning", { animation: "heavy-strike" }),
+      attack("ogre-javelin-melee", "Javelin", "melee", 6, 2, 6, 4, "piercing", { animation: "heavy-strike" }),
       attack("ogre-javelin", "Javelin", "ranged", 6, 2, 6, 4, "piercing", {
         normal: 30, long: 120, projectile: "spear", animation: "projectile",
       }),
