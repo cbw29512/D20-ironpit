@@ -6,6 +6,7 @@ from app.content.certified_heroes import build_certified_hero_templates
 from app.content.demo import build_demo_fighter, build_goblin_warrior
 from app.content.monster_bonus_action_source_audit import complete_monster_bonus_action_fingerprints
 from app.content.monster_hippogriff import build_hippogriff
+from app.content.monster_limited_use_source_audit import complete_monster_limited_use_fingerprints
 from app.content.monster_reaction_source_audit import complete_monster_reaction_fingerprints
 from app.content.monster_saving_throws import complete_monster_saving_throws
 from app.content.monster_trait_source_audit import complete_monster_trait_fingerprints
@@ -47,6 +48,7 @@ def build_arena_roster() -> ArenaRoster:
         monsters = complete_monster_trait_fingerprints(monsters)
         monsters = complete_monster_reaction_fingerprints(monsters)
         monsters = complete_monster_bonus_action_fingerprints(monsters)
+        monsters = complete_monster_limited_use_fingerprints(monsters)
         return ArenaRoster(
             characters=[
                 *build_certified_hero_templates(),
