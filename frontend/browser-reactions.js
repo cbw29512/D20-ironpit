@@ -12,6 +12,15 @@
     ) || null;
   }
 
+  function parryHit(defender, attack, attackRoll, hit) {
+    const parry = defender.template.parry_reaction;
+    if (!hit || !parry || attack.kind !== "melee" || attackRoll.selected_roll === 20) return { hit, used: false };
+    if (!E().available(defender, "reaction")) return { hit, used: false };
+    if (attackRoll.total >= defender.template.armor_class + parry.ac_bonus) return { hit, used: false };
+    E().spend(defender, "reaction");
+    return { hit: false, used: true };
+  }
+
   function resolveOpportunityAttack(sequence, round, reactor, mover, setup, before, after, movementSource, options = {}) {
     if (reactor.side === mover.side || options.canSee === false || options.disengaged === true) return null;
     if (!PROVOKING.has(movementSource) || !E().available(reactor.state, "reaction")) return null;
@@ -26,5 +35,5 @@
     });
   }
 
-  window.IRON_PIT_BROWSER_REACTIONS = { resolveOpportunityAttack };
+  window.IRON_PIT_BROWSER_REACTIONS = { parryHit, resolveOpportunityAttack };
 })();
