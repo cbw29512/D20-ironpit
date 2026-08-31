@@ -5,22 +5,22 @@ from app.content.monster_catalog import load_monster_rows
 from app.domain.catalog import CoverageStatus
 
 
-def test_catalog_contains_three_builds_for_every_core_class_level() -> None:
+def test_catalog_contains_one_canonical_hero_for_every_class_level() -> None:
     catalog = build_full_content_catalog()
-    assert catalog.hero_count == 720
-    assert len(catalog.heroes) == 720
-    assert len({card.id for card in catalog.heroes}) == 720
+    assert catalog.hero_count == 240
+    assert len(catalog.heroes) == 240
+    assert len({card.id for card in catalog.heroes}) == 240
 
     counts = Counter(card.class_id for card in catalog.heroes)
-    assert set(counts.values()) == {60}
+    assert set(counts.values()) == {20}
     assert len(counts) == 12
     for class_id in counts:
         class_cards = [card for card in catalog.heroes if card.class_id == class_id]
         assert {card.level for card in class_cards} == set(range(1, 21))
         for level in range(1, 21):
             level_cards = [card for card in class_cards if card.level == level]
-            assert len(level_cards) == 3
-            assert len({card.build_id for card in level_cards}) == 3
+            assert len(level_cards) == 1
+            assert {card.build_id for card in level_cards} == {"canonical"}
 
 
 def test_catalog_contains_all_330_srd_5_2_1_monsters() -> None:
@@ -55,7 +55,7 @@ def test_uncertified_cards_fail_closed_in_catalog() -> None:
     catalog = build_full_content_catalog()
     barbarian_20 = next(
         card for card in catalog.heroes
-        if card.class_id == "barbarian" and card.level == 20 and card.build_id == "great-weapon"
+        if card.class_id == "barbarian" and card.level == 20 and card.build_id == "canonical"
     )
     assert barbarian_20.coverage_status is CoverageStatus.BLOCKED
     assert barbarian_20.runnable_template_id is None
@@ -74,8 +74,8 @@ def test_current_audited_heroes_are_raw_ready() -> None:
         (card.class_id, card.level, card.build_id, card.name, card.runnable_template_id)
         for card in ready_heroes
     } == {
-        ("barbarian", 1, "great-weapon", "Rokhan Stonefury", "rokhan-stonefury-l1"),
-        ("fighter", 1, "great-weapon", "Karnok Stoneward", "karnok-stoneward-l1"),
+        ("barbarian", 1, "canonical", "Rokhan Stonefury", "rokhan-stonefury-l1"),
+        ("fighter", 1, "canonical", "Karnok Stoneward", "karnok-stoneward-l1"),
     }
     assert all(not card.blockers for card in ready_heroes)
 

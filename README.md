@@ -23,7 +23,7 @@ See `docs/ARENA_POLICY.md` for the exact arena assumptions.
 
 The battlefield always presents six fixed slots per side.
 
-- **Hero slot:** click the slot, then choose Class → Level → Pregen / Build. All 12 classes and levels 1–20 are represented in the catalog; uncertified combinations remain unavailable for automated combat rather than being approximated.
+- **Hero slot:** click the slot, choose one of the 12 persistent heroes, then choose Level 1–20. Uncertified hero levels remain unavailable for automated combat rather than being approximated.
 - **Monster slot:** click the slot, then choose Challenge Rating → Monster. Only RAW-certified runnable monsters are selectable, sorted by numeric CR.
 - Duplicate monsters are separate combatants. Three Goblins occupy three cards, keep three independent HP totals, and are defeated independently.
 - Clicking an occupied slot allows that card to be changed or removed before the fight.
@@ -55,7 +55,7 @@ That priority is AI policy only. The heal itself always obeys its printed range,
 - 330 unique SRD 5.2.1 monsters are cataloged with source metadata.
 - Unsupported outcome-changing mechanics fail closed instead of being approximated.
 - 99 monster templates are currently certified runnable in the browser combat engine.
-- The hero catalog contains 720 planned cards across the 12 core classes, levels 1–20, and three build slots per level. Only explicitly audited builds are runnable; the current RAW-ready browser heroes are the level-1 Fighter and Barbarian builds.
+- The hero catalog contains 240 level snapshots across 12 persistent named heroes, one per core class, each progressing from level 1–20. Only explicitly audited levels are runnable; the current RAW-ready browser heroes are Karnok Stoneward (Fighter 1) and Rokhan Stonefury (Barbarian 1).
 
 ## Combat foundation already represented
 
