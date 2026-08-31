@@ -14,9 +14,9 @@ def _member(combatant_id, side, position, template):
     )
 
 
-def _setup(ally_position: int = 10):
-    attacker = _member("hero-1", "heroes", 0, build_demo_fighter())
-    boss = _member("boss-1", "monsters", 5, build_goblin_boss())
+def _ranged_setup(ally_position: int = 25):
+    attacker = _member("hero-1", "heroes", 0, build_goblin_warrior())
+    boss = _member("boss-1", "monsters", 20, build_goblin_boss())
     ally = _member("goblin-1", "monsters", ally_position, build_goblin_warrior())
     setup = EncounterSetup(
         heroes=[attacker], monsters=[boss, ally], hero_total_levels=1, monster_total_cr="1.25",
@@ -24,44 +24,60 @@ def _setup(ally_position: int = 10):
     return attacker, boss, ally, setup
 
 
+def _melee_setup():
+    attacker = _member("hero-1", "heroes", 0, build_demo_fighter())
+    boss = _member("boss-1", "monsters", 5, build_goblin_boss())
+    ally = _member("goblin-1", "monsters", 10, build_goblin_warrior())
+    setup = EncounterSetup(
+        heroes=[attacker], monsters=[boss, ally], hero_total_levels=1, monster_total_cr="1.25",
+    )
+    return attacker, boss, ally, setup
+
+
 def test_redirect_uses_same_roll_against_ally_ac_and_swaps_positions() -> None:
-    attacker, boss, ally, setup = _setup()
+    attacker, boss, ally, setup = _ranged_setup()
     boss_hp, ally_hp = boss.state.current_hp, ally.state.current_hp
+    attack = attacker.state.template.alternate_weapon_attacks[0]
 
     event = resolve_encounter_attack(
-        1, 1, attacker, boss, attacker.state.template.weapon_attack, 5,
-        FixedDiceProvider([10, 4]), setup,
+        1, 1, attacker, boss, attack, 20, FixedDiceProvider([11, 4]), setup,
     )
 
-    assert event.attack_roll is not None and event.attack_roll.selected_roll == 10
+    assert event.attack_roll is not None and event.attack_roll.selected_roll == 11
     assert event.attack_roll.total == 15
     assert event.target_id == ally.combatant_id
     assert event.hit is True
     assert boss.state.current_hp == boss_hp
     assert ally.state.current_hp < ally_hp
     assert boss.state.reaction_available is False
-    assert (boss.position_ft, ally.position_ft) == (10, 5)
+    assert (boss.position_ft, ally.position_ft) == (25, 20)
     assert "uses Redirect Attack" in event.description
 
 
+def test_redirect_declines_swap_that_would_provoke_opportunity_attack() -> None:
+    _, boss, _, setup = _melee_setup()
+    assert select_redirect_ally(boss, setup) is None
+    assert boss.state.reaction_available is True
+
+
 def test_redirect_requires_ally_within_five_feet() -> None:
-    _, boss, _, setup = _setup(ally_position=15)
+    _, boss, _, setup = _ranged_setup(ally_position=30)
     assert select_redirect_ally(boss, setup) is None
 
 
 def test_redirect_rejects_large_ally() -> None:
-    _, boss, ally, setup = _setup()
+    _, boss, ally, setup = _ranged_setup()
     ally.state.template.size = "large"
     assert select_redirect_ally(boss, setup) is None
 
 
 def test_redirect_requires_available_reaction() -> None:
-    _, boss, _, setup = _setup()
+    _, boss, _, setup = _ranged_setup()
     boss.state.reaction_available = False
     assert select_redirect_ally(boss, setup) is None
 
 
 def test_blinded_goblin_boss_cannot_redirect_attack() -> None:
-    _, boss, _, setup = _setup()
+    _, boss, _, setup = _ranged_setup()
     boss.state.active_effect_ids.append("blinded")
     assert select_redirect_ally(boss, setup) is None
