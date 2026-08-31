@@ -5,6 +5,7 @@ import logging
 from pathlib import Path
 
 from app.content.monster_neighbor_bleed_corrections import apply_neighbor_bleed_corrections
+from app.content.monster_neighbor_bleed_normalizer import normalize_neighbor_name_bleed
 from app.domain.catalog import CoverageStatus, MonsterCatalogCard
 from app.domain.models import CombatantTemplate
 
@@ -68,6 +69,7 @@ def load_monster_rows() -> list[dict[str, object]]:
         raise RuntimeError("SRD correction layer must replace one row and restore two swallowed rows.")
     combined = [correction_by_id.get(str(row["id"]), row) for row in rows] + additions
     combined = apply_neighbor_bleed_corrections(combined)
+    combined = normalize_neighbor_name_bleed(combined)
     ids = {str(row["id"]) for row in combined}
     names = {str(row["name"]) for row in combined}
     if len(combined) != 330 or len(ids) != 330 or len(names) != 330:
