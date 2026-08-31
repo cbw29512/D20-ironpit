@@ -5,19 +5,13 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
-from app.domain.actions import (
-    AttackActionDefinition,
-    ConditionName,
-    ConditionRemovalAction,
-    HealingAction,
-    HitControlEffect,
-    SavingThrowAction,
-)
+from app.domain.actions import AttackActionDefinition, ConditionName, ConditionRemovalAction, HealingAction, HitControlEffect, SavingThrowAction
 from app.domain.movement import MovementModes
 from app.domain.reactions import ParryReaction, RedirectAttackReaction
 from app.domain.size import CreatureSize
 from app.domain.spells import DefensiveSpellAction, SpellSaveAction
 from app.domain.traits import CombatTrait
+from app.domain.unarmed import UnarmedStrikeDamage
 
 
 class DamageType(StrEnum):
@@ -113,6 +107,7 @@ class CombatantTemplate(BaseModel):
     initiative_bonus: int
     weapon_attack: WeaponAttack
     alternate_weapon_attacks: list[WeaponAttack] = Field(default_factory=list)
+    unarmed_opportunity_attack: UnarmedStrikeDamage | None = None
     attack_action: AttackActionDefinition | None = None
     saving_throw_actions: list[SavingThrowAction] = Field(default_factory=list)
     spell_save_actions: list[SpellSaveAction] = Field(default_factory=list)
