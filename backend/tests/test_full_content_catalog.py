@@ -86,7 +86,7 @@ def test_current_certified_monsters_are_linked_to_runtime_templates() -> None:
         monster.name: monster.runnable_template_id
         for monster in catalog.monsters if monster.coverage_status is CoverageStatus.RAW_READY
     }
-    assert len(ready_monsters) == 94
+    assert len(ready_monsters) == 95
     assert ready_monsters == {
         "Animated Armor": "srd-animated-armor", "Animated Flying Sword": "srd-animated-flying-sword",
         "Ankylosaurus": "srd-ankylosaurus", "Archelon": "srd-archelon",
@@ -106,9 +106,9 @@ def test_current_certified_monsters_are_linked_to_runtime_templates() -> None:
         "Giant Goat": "srd-giant-goat", "Giant Lizard": "srd-giant-lizard", "Giant Owl": "srd-giant-owl",
         "Giant Rat": "srd-giant-rat", "Giant Venomous Snake": "srd-giant-venomous-snake",
         "Giant Wasp": "srd-giant-wasp", "Giant Weasel": "srd-giant-weasel",
-        "Giant Wolf Spider": "srd-giant-wolf-spider", "Goblin Minion": "srd-goblin-minion",
-        "Goblin Warrior": "srd-goblin-warrior", "Grimlock": "srd-grimlock", "Guard": "srd-guard",
-        "Guard Captain": "srd-guard-captain", "Hawk": "srd-hawk",
+        "Giant Wolf Spider": "srd-giant-wolf-spider", "Goblin Boss": "srd-goblin-boss",
+        "Goblin Minion": "srd-goblin-minion", "Goblin Warrior": "srd-goblin-warrior", "Grimlock": "srd-grimlock",
+        "Guard": "srd-guard", "Guard Captain": "srd-guard-captain", "Hawk": "srd-hawk",
         "Hippogriff": "srd-hippogriff", "Hippopotamus": "srd-hippopotamus",
         "Hobgoblin Warrior": "srd-hobgoblin-warrior", "Hyena": "srd-hyena", "Jackal": "srd-jackal",
         "Killer Whale": "srd-killer-whale", "Knight": "srd-knight", "Kobold Warrior": "srd-kobold-warrior",
