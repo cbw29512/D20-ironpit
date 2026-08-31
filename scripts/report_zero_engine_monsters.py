@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import re
 
 from app.content.monster_bonus_action_source_audit import (
@@ -24,6 +25,7 @@ _COMPLEX_ACTION = re.compile(
 )
 _ATTACK_ROLL = re.compile(r"\b(?:Melee|Ranged|Melee or Ranged)\s+Attack Roll:", re.I)
 _ALLOWED_TRAITS = set(_ARENA_NEUTRAL_TRAITS) | set(_MODELED_TRAITS)
+_DETAIL_FIELDS = ("name", "size", "armorClass", "hitPoints", "speed", "challenge", "traits", "actions")
 
 
 def _source_blockers(row: dict[str, object]) -> list[str]:
@@ -71,7 +73,7 @@ def _source_blockers(row: dict[str, object]) -> list[str]:
 
 def main() -> None:
     rows = load_monster_rows()
-    safe: list[str] = []
+    safe: list[dict[str, object]] = []
     already_ready: list[str] = []
     blocker_counts: dict[str, int] = {}
     for row in rows:
@@ -84,10 +86,14 @@ def main() -> None:
         if name in _READY_BY_NAME:
             already_ready.append(name)
         else:
-            safe.append(name)
+            safe.append(row)
     print(f"ZERO_ENGINE_BASELINE existing={len(already_ready)} missing={len(safe)}")
-    for name in safe:
-        print(f"ZERO_ENGINE_MISSING\t{name}")
+    for row in safe:
+        detail = {field: row.get(field, "") for field in _DETAIL_FIELDS}
+        raw = str(row.get("rawText", ""))
+        initiative = re.search(r"\bInitiative\s+([+-]?\d+)", raw, re.I)
+        detail["initiative"] = int(initiative.group(1)) if initiative else None
+        print("ZERO_ENGINE_DETAIL\t" + json.dumps(detail, ensure_ascii=False, separators=(",", ":")))
     for blocker, count in sorted(blocker_counts.items(), key=lambda item: (-item[1], item[0])):
         print(f"ZERO_ENGINE_BLOCKER\t{blocker}\t{count}")
 
