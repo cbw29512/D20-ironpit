@@ -4,6 +4,7 @@
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { speedZero: (state) => state.active_effect_ids.includes("restrained") };
+  const T = () => window.IRON_PIT_BROWSER_TACTICAL_MIND;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
     available: (state, cost) => cost === "action" && state.action_available,
     spend: (state) => { state.action_available = false; },
@@ -63,9 +64,13 @@
     const useAthletics = athletics != null && (acrobatics == null || athletics >= acrobatics);
     const bonus = useAthletics ? athletics : acrobatics;
     const advantage = useAthletics && state.active_effect_ids.includes("rage") ? 1 : 0;
-    const disadvantage = state.active_effect_ids.includes("poisoned") ? 1 : 0;
-    const roll = R().d20(bonus, R().modeFromSources(advantage, disadvantage));
-    const success = roll.total >= source.escape_dc;
+    const disadvantage = state.active_effect_ids.includes("poisoned") || state.active_effect_ids.includes("frightened") ? 1 : 0;
+    let roll = R().d20(bonus, R().modeFromSources(advantage, disadvantage));
+    let success = roll.total >= source.escape_dc, tactical = null;
+    if (!success && T()) {
+      tactical = T().apply(state, roll, source.escape_dc);
+      roll = tactical.roll; success = tactical.succeeded;
+    }
     E().spend(state, "action");
     if (success) {
       release(state, source.source_id);
@@ -76,8 +81,9 @@
       sequence, round_number: round, event_type: "feature", actor_id: member.combatant_id,
       actor_name: state.template.name, target_id: source.source_id, ability_check_roll: roll,
       check_ability: check, check_dc: source.escape_dc, check_succeeded: success,
-      feature_id: "escape-grapple", animation: "escape-grapple",
-      description: `${state.template.name} ${success ? "escapes" : "fails to escape"} the grapple with ${check} against DC ${source.escape_dc}.`,
+      feature_id: "escape-grapple", resource_remaining: tactical?.used ? tactical.resource_remaining : null,
+      animation: "escape-grapple",
+      description: `${state.template.name} ${success ? "escapes" : "fails to escape"} the grapple${tactical?.used ? " after using Tactical Mind" : ""} with ${check} against DC ${source.escape_dc}.`,
     };
   }
 
