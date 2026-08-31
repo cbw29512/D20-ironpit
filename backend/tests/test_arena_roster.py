@@ -66,7 +66,7 @@ def test_selene_asharrow_matches_archery_fighter_loadout() -> None:
 
 
 def test_mara_quickstep_matches_level_one_rogue_loadout() -> None:
-    mara = _by_id(get_arena_roster().monsters if False else get_arena_roster().characters, "mara-quickstep-l1")
+    mara = _by_id(get_arena_roster().characters, "mara-quickstep-l1")
     assert (mara.level, mara.armor_class, mara.max_hp) == (1, 14, 10)
     assert mara.archetype == "Rogue"
     assert mara.initiative_bonus == 3
