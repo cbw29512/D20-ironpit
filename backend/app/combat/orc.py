@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from app.combat.action_economy import is_available, spend
 from app.combat.grapple import speed_is_zero
+from app.combat.temporary_hp import grant_temporary_hit_points
 from app.domain.models import BattleEvent, CombatantState
 from app.domain.traits import CombatTrait
 
@@ -18,13 +19,6 @@ def proficiency_bonus(state: CombatantState) -> int:
     if level is None:
         raise ValueError("Orc character traits require a character level.")
     return 2 + (level - 1) // 4
-
-
-def grant_temporary_hit_points(state: CombatantState, amount: int) -> int:
-    if amount < 0:
-        raise ValueError("Temporary Hit Points cannot be negative.")
-    state.temporary_hp = max(state.temporary_hp, amount)
-    return state.temporary_hp
 
 
 def adrenaline_rush_available(state: CombatantState) -> bool:
