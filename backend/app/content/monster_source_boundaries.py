@@ -9,11 +9,17 @@ _BARE_HEADING = re.compile(
 
 
 def ends_with_heading(value: object, heading: str) -> bool:
-    """Return True only when heading is a complete terminal token sequence."""
+    """Return True only when heading is a complete case-insensitive terminal token sequence."""
     text = str(value).strip()
-    if not text or not heading:
+    candidate = str(heading).strip()
+    if not text or not candidate:
         return False
-    return bool(re.search(rf"(?:^|\s){re.escape(heading)}\s*$", text, re.IGNORECASE))
+    folded_text = text.casefold()
+    folded_candidate = candidate.casefold()
+    if not folded_text.endswith(folded_candidate):
+        return False
+    start = len(text) - len(candidate)
+    return start == 0 or text[start - 1].isspace()
 
 
 def longest_terminal_monster_name(
@@ -44,7 +50,8 @@ def terminal_bare_heading(value: object) -> str | None:
 def strip_terminal_heading(value: object, heading: str) -> str:
     """Remove one exact terminal heading and preserve the completed prose before it."""
     text = str(value).rstrip()
-    match = re.search(rf"(?:\s+){re.escape(heading)}\s*$", text, re.IGNORECASE)
-    if match is None:
+    candidate = str(heading).strip()
+    if not ends_with_heading(text, candidate):
         raise ValueError(f"Expected terminal heading {heading!r}.")
-    return text[: match.start()].rstrip()
+    start = len(text) - len(candidate)
+    return text[:start].rstrip()
