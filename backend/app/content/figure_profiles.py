@@ -3,9 +3,9 @@ from __future__ import annotations
 from typing import Literal, TypedDict
 
 FigureForm = Literal[
-    "aquatic-reptile", "bat", "bear", "bird", "brute", "centipede", "crab", "frog",
-    "hippogriff", "hoofed", "humanoid", "insect", "plant", "primate", "pterosaur",
-    "quadruped", "reptile", "snake", "spider", "theropod", "winged-insect",
+    "aquatic-mammal", "aquatic-reptile", "bat", "bear", "bird", "brute", "centipede", "crab", "frog",
+    "hippogriff", "hoofed", "humanoid", "insect", "plant", "primate", "pterosaur", "quadruped",
+    "reptile", "scorpion", "snake", "spider", "theropod", "weapon", "winged-insect",
 ]
 
 
@@ -19,6 +19,8 @@ def _p(form: FigureForm, detail: str) -> FigureProfile:
 
 
 MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
+    "Animated Armor": _p("humanoid", "animated-armor"),
+    "Animated Flying Sword": _p("weapon", "flying-sword"),
     "Ankylosaurus": _p("reptile", "ankylosaurus"),
     "Archelon": _p("aquatic-reptile", "archelon"),
     "Awakened Shrub": _p("plant", "shrub"),
@@ -41,6 +43,7 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Draft Horse": _p("hoofed", "equine"),
     "Eagle": _p("bird", "raptor"),
     "Elk": _p("hoofed", "antlers"),
+    "Flying Snake": _p("snake", "flying-snake"),
     "Frog": _p("frog", "frog"),
     "Giant Badger": _p("quadruped", "badger"),
     "Giant Bat": _p("bat", "bat"),
@@ -65,17 +68,21 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Guard": _p("humanoid", "guard"),
     "Hawk": _p("bird", "raptor"),
     "Hippogriff": _p("hippogriff", "hippogriff"),
+    "Hippopotamus": _p("quadruped", "hippopotamus"),
     "Hobgoblin Warrior": _p("humanoid", "hobgoblin"),
     "Hyena": _p("quadruped", "hyena"),
     "Jackal": _p("quadruped", "canine"),
+    "Killer Whale": _p("aquatic-mammal", "orca"),
     "Kobold Warrior": _p("humanoid", "kobold"),
     "Lizard": _p("reptile", "lizard"),
+    "Manticore": _p("quadruped", "manticore"),
     "Mastiff": _p("quadruped", "canine"),
     "Mule": _p("hoofed", "equine"),
     "Ogre": _p("brute", "ogre"),
     "Owl": _p("bird", "owl"),
     "Owlbear": _p("bear", "owlbear"),
     "Panther": _p("quadruped", "cat"),
+    "Pegasus": _p("hoofed", "pegasus"),
     "Plesiosaurus": _p("aquatic-reptile", "plesiosaur"),
     "Polar Bear": _p("bear", "bear"),
     "Pony": _p("hoofed", "equine"),
@@ -85,9 +92,14 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Rhinoceros": _p("hoofed", "horn"),
     "Riding Horse": _p("hoofed", "equine"),
     "Saber-Toothed Tiger": _p("quadruped", "sabertooth"),
+    "Scorpion": _p("scorpion", "scorpion"),
     "Scout": _p("humanoid", "scout"),
+    "Skeleton": _p("humanoid", "skeleton"),
+    "Spider": _p("spider", "spider"),
     "Tiger": _p("quadruped", "cat"),
+    "Tough": _p("humanoid", "tough"),
     "Tyrannosaurus Rex": _p("theropod", "tyrannosaurus"),
+    "Venomous Snake": _p("snake", "snake"),
     "Vulture": _p("bird", "vulture"),
     "Warhorse": _p("hoofed", "equine"),
     "Warrior Infantry": _p("humanoid", "infantry"),
