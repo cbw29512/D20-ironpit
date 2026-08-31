@@ -14,7 +14,7 @@ for (const file of [
   "browser-rage.js", "browser-rolls.js", "browser-attack.js", "browser-reactions.js",
   "browser-reaction-movement.js", "browser-saves.js", "browser-condition-lifecycle.js", "browser-charge.js",
   "browser-multiattack.js", "browser-healing.js", "browser-spellcasting.js", "browser-condition-removal.js",
-  "browser-support.js", "browser-turn.js", "browser-engine.js",
+  "browser-support.js", "browser-turn.js", "browser-formation.js", "browser-engine.js",
 ]) load(file);
 
 const maxDice = { roll: (sides) => sides, rollMany: (count, sides) => Array(count).fill(sides) };
@@ -117,7 +117,7 @@ function scoutAtFive() {
 {
   window.IRON_PIT_DICE = maxDice;
   const battle = window.IRON_PIT_BROWSER_ENGINE.runEncounter({
-    hero_ids: ["karnok-stoneward-l1"], monster_ids: ["srd-ogre"], starting_distance_ft: 5,
+    hero_ids: ["karnok-stoneward-l1"], monster_ids: ["srd-ogre"],
   });
   assert.equal(battle.outcome, "monsters_win");
   assert.equal(battle.setup.heroes[0].state.is_dead, true, "monster victory must be actual character death, not merely 0 HP");
@@ -126,12 +126,12 @@ function scoutAtFive() {
 {
   window.IRON_PIT_DICE = queuedDice([10, 15, 10, 10], 20);
   const battle = window.IRON_PIT_BROWSER_ENGINE.runEncounter({
-    hero_ids: ["karnok-stoneward-l1"], monster_ids: ["srd-scout"], starting_distance_ft: 30,
+    hero_ids: ["karnok-stoneward-l1"], monster_ids: ["srd-scout"],
   });
   const scoutAttacks = battle.events.filter((event) => event.event_type === "attack" && event.actor_id.startsWith("monster-1:"));
   const scoutMove = battle.events.find((event) => event.event_type === "movement" && event.actor_id.startsWith("monster-1:"));
   assert.deepEqual(scoutAttacks.slice(0, 2).map((event) => event.weapon_id), ["scout-longbow", "scout-longbow"]);
-  assert.ok(scoutMove && scoutMove.distance_after_ft === 5, "ranged multiattack must spend remaining movement closing into melee");
+  assert.ok(scoutMove && scoutMove.movement_ft === 5 && scoutMove.distance_after_ft === 5, "back-line ranged multiattack must close one card-space after firing");
 }
 
 console.log("Browser melee deathmatch regressions passed.");
