@@ -11,7 +11,11 @@ from app.content.monster_bonus_action_source_audit import (
 from app.content.monster_catalog import _READY_BY_NAME, load_monster_rows
 from app.content.monster_defense_source_audit import parse_defense_profile
 from app.content.monster_limited_use_source_audit import parse_limited_use_names
-from app.content.monster_reaction_source_audit import parse_parry_ac_bonus, parse_reaction_names
+from app.content.monster_reaction_source_audit import (
+    parse_parry_ac_bonus,
+    parse_reaction_names,
+    parse_redirect_attack_range,
+)
 from app.content.monster_spellcasting_source_audit import arena_neutral_spellcasting, spellcasting_fingerprint
 from app.content.monster_trait_source_audit import _ARENA_NEUTRAL_TRAITS, _MODELED_TRAITS, parse_trait_names
 
@@ -41,6 +45,15 @@ def _has_neighbor_bleed(row: dict[str, object], monster_names: set[str]) -> bool
     return any(name != own_name and actions.endswith(name) for name in monster_names)
 
 
+def _reaction_is_modeled(row: dict[str, object], reactions: list[str]) -> bool:
+    source = row.get("reactions", "")
+    if reactions == ["Parry"]:
+        return parse_parry_ac_bonus(source) is not None
+    if reactions == ["Redirect Attack"]:
+        return parse_redirect_attack_range(source) == 5
+    return not reactions
+
+
 def _source_blockers(row: dict[str, object], monster_names: set[str]) -> list[str]:
     blockers: list[str] = []
     try:
@@ -51,11 +64,7 @@ def _source_blockers(row: dict[str, object], monster_names: set[str]) -> list[st
         blockers.append("trait-parse")
     try:
         reactions = parse_reaction_names(row.get("reactions", ""))
-        standard_parry_only = (
-            reactions == ["Parry"]
-            and parse_parry_ac_bonus(row.get("reactions", "")) is not None
-        )
-        if reactions and not standard_parry_only:
+        if not _reaction_is_modeled(row, reactions):
             blockers.append("reaction")
     except ValueError:
         blockers.append("reaction-parse")
