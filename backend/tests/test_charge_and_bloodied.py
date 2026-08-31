@@ -45,7 +45,7 @@ def test_boar_without_charge_runup_moves_and_attacks_normally() -> None:
     assert [event.event_type for event in events] == ["movement", "attack"]
     assert events[0].movement_ft == 10
     assert events[1].feature_id != "charge"
-    assert events[1].weapon_id == "gore"
+    assert events[1].weapon_id == "boar-gore-weapon"
     assert "dodge" not in boar.state.active_effect_ids
 
 
