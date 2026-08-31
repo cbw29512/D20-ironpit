@@ -6,19 +6,24 @@ const path = require("node:path");
 const vm = require("node:vm");
 
 global.window = globalThis;
-for (const file of ["figure-profiles.js", "figure-visuals.js"]) {
+for (const file of ["figure-profiles.js", "figure-visuals.js", "browser-monsters-generated.js"]) {
   vm.runInThisContext(fs.readFileSync(path.join(__dirname, file), "utf8"), { filename: file });
 }
 const V = window.IRON_PIT_FIGURE_VISUALS;
 const registry = window.IRON_PIT_MONSTER_FIGURE_PROFILES;
+const runnable = Object.values(window.IRON_PIT_BROWSER_MONSTERS);
 const monster = (name, size = "medium") => V.profile({ name, size, kind: "monster", attacks: [{ name: "Bite" }] });
 
-assert.equal(Object.keys(registry).length, 68, "every currently RAW-ready monster needs a reviewed figure profile");
+assert.ok(Object.keys(registry).length >= runnable.length, "reviewed figure registry may include blocked monsters but cannot omit runnable monsters");
+for (const template of runnable) {
+  assert.ok(registry[template.name], `${template.name} needs a reviewed figure profile before becoming runnable`);
+}
 for (const name of Object.keys(registry)) {
   const info = monster(name);
   assert.equal(info.certified, true, `${name} must use a reviewed figure profile`);
   assert.notEqual(info.form, "unknown", `${name} must not render as an unknown creature`);
 }
+assert.ok(registry.Jackal, "Jackal must retain its reviewed canine figure profile");
 
 assert.deepEqual(
   { form: monster("Owlbear", "large").form, detail: monster("Owlbear", "large").detail },
