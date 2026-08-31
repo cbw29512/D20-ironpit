@@ -1,0 +1,168 @@
+name: One-Time Swarm Promotion Sync
+
+on:
+  push:
+    branches:
+      - audit/raw-combat-log-figures-20260830
+
+permissions:
+  contents: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/raw-combat-log-figures-20260830
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Python rules reference
+        working-directory: backend
+        run: pip install -e '.[dev]'
+      - name: Promote three source-certified swarms
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          def replace_once(path: str, old: str, new: str) -> None:
+              file = Path(path)
+              text = file.read_text(encoding="utf-8")
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"{path}: expected one replacement target, found {count}")
+              file.write_text(text.replace(old, new), encoding="utf-8")
+
+          replace_once(
+              "backend/app/content/monster_catalog.py",
+              '    "Skeleton": "srd-skeleton", "Spider": "srd-spider", "Tough": "srd-tough",\n    "Venomous Snake": "srd-venomous-snake", "Violet Fungus": "srd-violet-fungus",\n',
+              '    "Skeleton": "srd-skeleton", "Spider": "srd-spider",\n    "Swarm of Bats": "srd-swarm-of-bats", "Swarm of Crawling Claws": "srd-swarm-of-crawling-claws",\n    "Swarm of Rats": "srd-swarm-of-rats", "Tough": "srd-tough",\n    "Venomous Snake": "srd-venomous-snake", "Violet Fungus": "srd-violet-fungus",\n',
+          )
+
+          replace_once(
+              "backend/app/content/figure_profiles.py",
+              '    "reptile", "scorpion", "snake", "spider", "theropod", "weapon", "winged-insect",\n',
+              '    "reptile", "scorpion", "snake", "spider", "swarm", "theropod", "weapon", "winged-insect",\n',
+          )
+          replace_once(
+              "backend/app/content/figure_profiles.py",
+              '    "Spider": _p("spider", "spider"),\n    "Tiger": _p("quadruped", "cat"),\n',
+              '    "Spider": _p("spider", "spider"),\n    "Swarm of Bats": _p("swarm", "bats"),\n    "Swarm of Crawling Claws": _p("swarm", "crawling-claws"),\n    "Swarm of Rats": _p("swarm", "rats"),\n    "Tiger": _p("quadruped", "cat"),\n',
+          )
+
+          replace_once("backend/tests/test_monster_source_audit.py", "    assert len(ready) == 96\n", "    assert len(ready) == 99\n")
+          replace_once("backend/tests/test_figure_profiles.py", "    assert len(ready_names) == 96\n", "    assert len(ready_names) == 99\n")
+          replace_once(
+              "backend/tests/test_figure_profiles.py",
+              '        "Spider": "spider",\n        "Tyrannosaurus Rex": "theropod",\n',
+              '        "Spider": "spider",\n        "Swarm of Bats": "swarm",\n        "Swarm of Crawling Claws": "swarm",\n        "Swarm of Rats": "swarm",\n        "Tyrannosaurus Rex": "theropod",\n',
+          )
+          replace_once(
+              "backend/tests/test_figure_profiles.py",
+              '        "Skeleton": "skeleton",\n        "Violet Fungus": "violet-fungus",\n',
+              '        "Skeleton": "skeleton",\n        "Swarm of Bats": "bats",\n        "Swarm of Crawling Claws": "crawling-claws",\n        "Swarm of Rats": "rats",\n        "Violet Fungus": "violet-fungus",\n',
+          )
+
+          replace_once("backend/tests/test_full_content_catalog.py", "    assert len(ready_monsters) == 96\n", "    assert len(ready_monsters) == 99\n")
+          replace_once(
+              "backend/tests/test_full_content_catalog.py",
+              '        "Spider": "srd-spider", "Tiger": "srd-tiger", "Tough": "srd-tough",\n',
+              '        "Spider": "srd-spider", "Swarm of Bats": "srd-swarm-of-bats",\n        "Swarm of Crawling Claws": "srd-swarm-of-crawling-claws", "Swarm of Rats": "srd-swarm-of-rats",\n        "Tiger": "srd-tiger", "Tough": "srd-tough",\n',
+          )
+
+          replace_once(
+              "backend/tests/test_arena_roster.py",
+              '        "srd-tough", "srd-venomous-snake", "srd-violet-fungus",\n        "srd-bandit-captain", "srd-knight", "srd-noble", "srd-warrior-veteran",\n',
+              '        "srd-tough", "srd-venomous-snake", "srd-violet-fungus",\n        "srd-swarm-of-bats", "srd-swarm-of-rats", "srd-swarm-of-crawling-claws",\n        "srd-bandit-captain", "srd-knight", "srd-noble", "srd-warrior-veteran",\n',
+          )
+
+          replace_once(
+              "backend/tests/test_public_readiness.py",
+              'def test_blood_hawk_passes_public_readiness() -> None:\n    assert_public_selection_runnable(_selection("karnok-stoneward-l1", "srd-blood-hawk"))\n\n\n',
+              'def test_blood_hawk_passes_public_readiness() -> None:\n    assert_public_selection_runnable(_selection("karnok-stoneward-l1", "srd-blood-hawk"))\n\n\n@pytest.mark.parametrize("monster_id", ["srd-swarm-of-bats", "srd-swarm-of-rats", "srd-swarm-of-crawling-claws"])\ndef test_certified_swarms_pass_public_readiness(monster_id: str) -> None:\n    assert_public_selection_runnable(_selection("karnok-stoneward-l1", monster_id))\n\n\n',
+          )
+
+          replace_once(
+              "frontend/browser-generated-monsters.test.cjs",
+              'assert.equal(Object.keys(generated).length, 96, "Generated runtime must expose only currently RAW-certified monsters");',
+              'assert.equal(Object.keys(generated).length, 99, "Generated runtime must expose only currently RAW-certified monsters");',
+          )
+          replace_once(
+              "frontend/browser-generated-monsters.test.cjs",
+              '  "srd-noble", "srd-warrior-veteran", "srd-goblin-boss", "srd-blood-hawk",\n',
+              '  "srd-noble", "srd-warrior-veteran", "srd-goblin-boss", "srd-blood-hawk",\n  "srd-swarm-of-bats", "srd-swarm-of-rats", "srd-swarm-of-crawling-claws",\n',
+          )
+          replace_once(
+              "frontend/browser-generated-monsters.test.cjs",
+              'assert.deepEqual(generated["srd-deer"].source_trait_names, ["Agile"]);\n',
+              'for (const id of ["srd-swarm-of-bats", "srd-swarm-of-rats", "srd-swarm-of-crawling-claws"]) {\n  assert.deepEqual(generated[id].source_trait_names, ["Swarm"]);\n  assert.equal(generated[id].traits.includes("swarm"), true);\n  assert.equal(generated[id].attacks[0].conditionalDamage.trigger, "attacker_bloodied");\n  assert.equal(generated[id].attacks[0].conditionalDamage.mode, "replace_weapon");\n}\nassert.equal(generated["srd-swarm-of-crawling-claws"].attacks[0].proneMaxSize, "medium");\nassert.deepEqual(generated["srd-deer"].source_trait_names, ["Agile"]);\n',
+          )
+          replace_once(
+              "frontend/browser-generated-monsters.test.cjs",
+              'console.log("Generated monster runtime contains 96 RAW-certified templates with Blood Hawk conditional damage, Redirect Attack, and T. rex retargeting.");',
+              'console.log("Generated monster runtime contains 99 RAW-certified templates with Blood Hawk and Swarm conditional damage, Redirect Attack, and T. rex retargeting.");',
+          )
+
+          replace_once(
+              "frontend/figure-visuals.test.cjs",
+              'assert.equal(monster("Spider", "tiny").form, "spider");\n\nconst unknown',
+              'assert.equal(monster("Spider", "tiny").form, "spider");\nassert.deepEqual({ form: monster("Swarm of Bats").form, detail: monster("Swarm of Bats").detail }, { form: "swarm", detail: "bats" });\nassert.deepEqual({ form: monster("Swarm of Rats").form, detail: monster("Swarm of Rats").detail }, { form: "swarm", detail: "rats" });\nassert.deepEqual({ form: monster("Swarm of Crawling Claws").form, detail: monster("Swarm of Crawling Claws").detail }, { form: "swarm", detail: "crawling-claws" });\n\nconst unknown',
+          )
+
+          for html in ["frontend/index.html", "index.html"]:
+              replace_once(
+                  html,
+                  '<link rel="stylesheet" href="figure-archetypes.css"><link rel="stylesheet" href="figure-portraits.css">',
+                  '<link rel="stylesheet" href="figure-archetypes.css"><link rel="stylesheet" href="figure-swarms.css"><link rel="stylesheet" href="figure-portraits.css">',
+              )
+
+          replace_once(
+              ".github/workflows/ci.yml",
+              "          grep -q 'figure-archetypes.css' index.html\n          grep -q 'figure-portraits.css' index.html\n",
+              "          grep -q 'figure-archetypes.css' index.html\n          grep -q 'figure-swarms.css' index.html\n          grep -q 'figure-portraits.css' index.html\n",
+          )
+          replace_once(
+              ".github/workflows/ci.yml",
+              "          grep -q 'figure-archetypes.css' frontend/index.html\n          grep -q 'figure-portraits.css' frontend/index.html\n",
+              "          grep -q 'figure-archetypes.css' frontend/index.html\n          grep -q 'figure-swarms.css' frontend/index.html\n          grep -q 'figure-portraits.css' frontend/index.html\n",
+          )
+
+          Path("frontend/figure-swarms.css").write_text('''/* Reviewed swarm silhouettes: multiple bodies, never a single-creature fallback. */
+.stick-figure[data-form="swarm"] .head,
+.stick-figure[data-form="swarm"] .body,
+.stick-figure[data-form="swarm"] .arms,
+.stick-figure[data-form="swarm"] .legs,
+.stick-figure[data-form="swarm"] .tail,
+.stick-figure[data-form="swarm"] .weapon{display:none}
+.stick-figure[data-form="swarm"] .feature-one,
+.stick-figure[data-form="swarm"] .feature-two{display:block;position:absolute;background:currentColor}
+.stick-figure[data-form="swarm"] .feature-one{width:8px;height:8px;left:13px;top:31px;border-radius:50%;box-shadow:16px -8px 0 currentColor,31px 3px 0 currentColor,7px 20px 0 currentColor,28px 27px 0 currentColor,42px 17px 0 currentColor}
+.stick-figure[data-form="swarm"] .feature-two{width:6px;height:6px;left:20px;top:51px;border-radius:50%;box-shadow:18px -17px 0 currentColor,29px 6px 0 currentColor,-10px 15px 0 currentColor,12px 28px 0 currentColor}
+.stick-figure[data-form="swarm"][data-detail="bats"] .feature-one{border-radius:15% 70%;transform:rotate(22deg)}
+.stick-figure[data-form="swarm"][data-detail="rats"] .feature-two{width:10px;height:4px;border-radius:999px;transform:rotate(-18deg)}
+.stick-figure[data-form="swarm"][data-detail="crawling-claws"] .feature-one{width:10px;height:8px;border-radius:45% 45% 20% 20%}
+''', encoding="utf-8")
+          PY
+      - name: Regenerate canonical static package
+        run: python scripts/prepare_static_site.py
+      - name: Focused promotion certification
+        run: |
+          cd backend
+          pytest -q tests/test_swarm_trait.py tests/test_swarm_candidates.py tests/test_monster_source_audit.py tests/test_full_content_catalog.py tests/test_figure_profiles.py tests/test_arena_roster.py tests/test_public_readiness.py
+          cd ..
+          node frontend/browser-swarm.test.cjs
+          node frontend/browser-generated-monsters.test.cjs
+          node frontend/figure-visuals.test.cjs
+      - name: Remove one-time helper and commit exact promotion
+        shell: bash
+        run: |
+          rm .github/workflows/one-time-swarm-promotion.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/workflows/ci.yml backend frontend index.html
+          git status --short
+          git commit -m "content: promote three RAW-certified swarms to runtime 99"
+          git push origin HEAD:audit/raw-combat-log-figures-20260830
