@@ -4,7 +4,7 @@ from typing import Literal, TypedDict
 
 FigureForm = Literal[
     "aquatic-mammal", "aquatic-reptile", "bat", "bear", "bird", "brute", "centipede", "crab", "frog",
-    "hippogriff", "hoofed", "humanoid", "insect", "plant", "primate", "pterosaur", "quadruped",
+    "gargoyle", "hippogriff", "hoofed", "humanoid", "insect", "plant", "primate", "pterosaur", "quadruped",
     "reptile", "scorpion", "snake", "spider", "theropod", "weapon", "winged-insect",
 ]
 
@@ -24,6 +24,7 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Ankylosaurus": _p("reptile", "ankylosaurus"),
     "Archelon": _p("aquatic-reptile", "archelon"),
     "Awakened Shrub": _p("plant", "shrub"),
+    "Awakened Tree": _p("plant", "tree"),
     "Axe Beak": _p("bird", "beak"),
     "Baboon": _p("primate", "baboon"),
     "Badger": _p("quadruped", "badger"),
@@ -45,6 +46,7 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Elk": _p("hoofed", "antlers"),
     "Flying Snake": _p("snake", "flying-snake"),
     "Frog": _p("frog", "frog"),
+    "Gargoyle": _p("gargoyle", "gargoyle"),
     "Giant Badger": _p("quadruped", "badger"),
     "Giant Bat": _p("bat", "bat"),
     "Giant Boar": _p("quadruped", "tusks"),
@@ -65,7 +67,9 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Giant Wolf Spider": _p("spider", "spider"),
     "Goblin Minion": _p("humanoid", "goblin"),
     "Goblin Warrior": _p("humanoid", "goblin"),
+    "Grimlock": _p("humanoid", "grimlock"),
     "Guard": _p("humanoid", "guard"),
+    "Guard Captain": _p("humanoid", "guard-captain"),
     "Hawk": _p("bird", "raptor"),
     "Hippogriff": _p("hippogriff", "hippogriff"),
     "Hippopotamus": _p("quadruped", "hippopotamus"),
@@ -100,6 +104,7 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Tough": _p("humanoid", "tough"),
     "Tyrannosaurus Rex": _p("theropod", "tyrannosaurus"),
     "Venomous Snake": _p("snake", "snake"),
+    "Violet Fungus": _p("plant", "violet-fungus"),
     "Vulture": _p("bird", "vulture"),
     "Warhorse": _p("hoofed", "equine"),
     "Warrior Infantry": _p("humanoid", "infantry"),
