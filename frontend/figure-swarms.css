@@ -1,0 +1,15 @@
+/* Reviewed swarm silhouettes: multiple bodies, never a single-creature fallback. */
+.stick-figure[data-form="swarm"] .head,
+.stick-figure[data-form="swarm"] .body,
+.stick-figure[data-form="swarm"] .arms,
+.stick-figure[data-form="swarm"] .legs,
+.stick-figure[data-form="swarm"] .tail,
+.stick-figure[data-form="swarm"] .weapon{display:none}
+
+.stick-figure[data-form="swarm"] .feature-one,
+.stick-figure[data-form="swarm"] .feature-two{display:block;position:absolute;background:currentColor}
+.stick-figure[data-form="swarm"] .feature-one{width:8px;height:8px;left:13px;top:31px;border-radius:50%;box-shadow:16px -8px 0 currentColor,31px 3px 0 currentColor,7px 20px 0 currentColor,28px 27px 0 currentColor,42px 17px 0 currentColor}
+.stick-figure[data-form="swarm"] .feature-two{width:6px;height:6px;left:20px;top:51px;border-radius:50%;box-shadow:18px -17px 0 currentColor,29px 6px 0 currentColor,-10px 15px 0 currentColor,12px 28px 0 currentColor}
+.stick-figure[data-form="swarm"][data-detail="bats"] .feature-one{border-radius:15% 70%;transform:rotate(22deg)}
+.stick-figure[data-form="swarm"][data-detail="rats"] .feature-two{width:10px;height:4px;border-radius:999px;transform:rotate(-18deg)}
+.stick-figure[data-form="swarm"][data-detail="crawling-claws"] .feature-one{width:10px;height:8px;border-radius:45% 45% 20% 20%}
