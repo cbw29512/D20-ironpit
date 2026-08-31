@@ -165,11 +165,6 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                        "off_hand": template.visual.off_hand, "body_style": template.visual.body_style},
             "source": template.source,
         }
-        if template.unarmed_opportunity_attack:
-            row["unarmed_opportunity_attack"] = {
-                "attack_bonus": template.unarmed_opportunity_attack.attack_bonus,
-                "damage": template.unarmed_opportunity_attack.damage,
-            }
         if template.kind == "monster":
             row["source_trait_names"] = list(template.source_trait_names)
             row["source_reaction_names"] = list(template.source_reaction_names)
