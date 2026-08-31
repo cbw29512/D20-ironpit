@@ -59,3 +59,9 @@ def test_redirect_requires_available_reaction() -> None:
     _, boss, _, setup = _setup()
     boss.state.reaction_available = False
     assert select_redirect_ally(boss, setup) is None
+
+
+def test_blinded_goblin_boss_cannot_redirect_attack() -> None:
+    _, boss, _, setup = _setup()
+    boss.state.active_effect_ids.append("blinded")
+    assert select_redirect_ally(boss, setup) is None
