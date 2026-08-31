@@ -117,6 +117,11 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
                    "figure_form": template.visual.body_style, "role": template.archetype.lower()},
         "source": template.source,
     }
+    if template.unarmed_opportunity_attack:
+        row["unarmed_opportunity_attack"] = {
+            "attack_bonus": template.unarmed_opportunity_attack.attack_bonus,
+            "damage": template.unarmed_opportunity_attack.damage,
+        }
     if template.condition_removal_actions:
         row["condition_removal_actions"] = [_removal(item) for item in template.condition_removal_actions]
     if template.attack_action:
