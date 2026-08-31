@@ -7,7 +7,7 @@ def _by_id(items, item_id: str):
     return next(item for item in items if item.id == item_id)
 
 
-def test_arena_roster_exposes_certified_batch() -> None:
+def test_arena_roster_exposes_canonical_template_batch() -> None:
     roster = get_arena_roster()
 
     assert isinstance(roster, ArenaRoster)
@@ -32,9 +32,10 @@ def test_arena_roster_exposes_certified_batch() -> None:
         "srd-giant-venomous-snake", "srd-giant-wasp", "srd-giant-wolf-spider",
         "srd-archelon", "srd-ankylosaurus", "srd-giant-eagle", "srd-giant-elk", "srd-giant-crocodile",
         "srd-giant-constrictor-snake", "srd-tyrannosaurus-rex",
-        "srd-animated-armor", "srd-animated-flying-sword", "srd-flying-snake", "srd-hippopotamus",
+        "srd-animated-armor", "srd-animated-flying-sword", "srd-awakened-tree", "srd-flying-snake",
+        "srd-gargoyle", "srd-grimlock", "srd-guard-captain", "srd-hippopotamus",
         "srd-killer-whale", "srd-manticore", "srd-pegasus", "srd-scorpion", "srd-skeleton", "srd-spider",
-        "srd-tough", "srd-venomous-snake",
+        "srd-tough", "srd-venomous-snake", "srd-violet-fungus",
     ]
 
 

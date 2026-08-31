@@ -54,7 +54,7 @@ That priority is AI policy only. The heal itself always obeys its printed range,
 
 - 330 unique SRD 5.2.1 monsters are cataloged with source metadata.
 - Unsupported outcome-changing mechanics fail closed instead of being approximated.
-- 63 monster templates are currently certified runnable in the browser combat engine.
+- 85 monster templates are currently certified runnable in the browser combat engine.
 - The hero catalog contains 720 planned cards across the 12 core classes, levels 1–20, and three build slots per level. Only explicitly audited builds are runnable; the current RAW-ready browser heroes are the level-1 Fighter and Barbarian builds.
 
 ## Combat foundation already represented
