@@ -110,16 +110,6 @@ jobs:
                   '<link rel="stylesheet" href="figure-archetypes.css"><link rel="stylesheet" href="figure-portraits.css">',
                   '<link rel="stylesheet" href="figure-archetypes.css"><link rel="stylesheet" href="figure-swarms.css"><link rel="stylesheet" href="figure-portraits.css">',
               )
-          replace_once(
-              ".github/workflows/ci.yml",
-              "          grep -q 'figure-archetypes.css' index.html\n          grep -q 'figure-portraits.css' index.html\n",
-              "          grep -q 'figure-archetypes.css' index.html\n          grep -q 'figure-swarms.css' index.html\n          grep -q 'figure-portraits.css' index.html\n",
-          )
-          replace_once(
-              ".github/workflows/ci.yml",
-              "          grep -q 'figure-archetypes.css' frontend/index.html\n          grep -q 'figure-portraits.css' frontend/index.html\n",
-              "          grep -q 'figure-archetypes.css' frontend/index.html\n          grep -q 'figure-swarms.css' frontend/index.html\n          grep -q 'figure-portraits.css' frontend/index.html\n",
-          )
           PY
       - name: Regenerate canonical static package
         run: python scripts/prepare_static_site.py
@@ -131,13 +121,15 @@ jobs:
           node frontend/browser-swarm.test.cjs
           node frontend/browser-generated-monsters.test.cjs
           node frontend/figure-visuals.test.cjs
-      - name: Remove one-time helpers and commit exact promotion
+      - name: Commit product promotion only
         shell: bash
         run: |
-          rm -f .github/workflows/one-time-swarm-promotion.yml .github/workflows/one-time-swarm-promotion-v2.yml
+          rm -rf backend/iron_pit_backend.egg-info
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A .github/workflows backend frontend index.html
+          git add backend/app/content/monster_catalog.py backend/app/content/figure_profiles.py
+          git add backend/tests/test_monster_source_audit.py backend/tests/test_figure_profiles.py backend/tests/test_full_content_catalog.py backend/tests/test_arena_roster.py backend/tests/test_public_readiness.py
+          git add frontend/browser-generated-monsters.test.cjs frontend/browser-monsters-generated.js frontend/figure-profiles.js frontend/figure-visuals.test.cjs frontend/index.html index.html
           git status --short
           git commit -m "content: promote three RAW-certified swarms to runtime 99"
           git push origin HEAD:audit/raw-combat-log-figures-20260830
