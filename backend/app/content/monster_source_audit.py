@@ -4,6 +4,7 @@ import logging
 import re
 
 from app.content.monster_attack_source_audit import attack_issues, normalized, save_action_issues
+from app.content.monster_defense_source_audit import defense_issues
 from app.content.monster_saving_throws import parse_saving_throw_bonuses
 from app.content.movement_modes import standard_arena_closing_speed
 from app.domain.models import CombatantTemplate
@@ -39,7 +40,7 @@ def _size_matches(runtime_size: str, source_size: object) -> bool:
 
 
 def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
-    """Reconcile a RAW-ready runtime monster against its vended SRD 5.2.1 record."""
+    """Reconcile a RAW-ready runtime monster against its vendored SRD 5.2.1 record."""
     try:
         checks = (
             (template.name == str(row["name"]), "name-mismatch"),
@@ -52,6 +53,7 @@ def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) ->
             (template.saving_throw_bonuses == parse_saving_throw_bonuses(row), "saving-throws-mismatch"),
         )
         issues = [label for passed, label in checks if not passed]
+        issues.extend(defense_issues(template, row))
         actions = normalized(row.get("actions", ""))
         for attack in [template.weapon_attack, *template.alternate_weapon_attacks]:
             issues.extend(attack_issues(attack, actions))
