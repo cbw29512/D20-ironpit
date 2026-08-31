@@ -23,7 +23,7 @@ _READY_BY_NAME = {
     "Ankylosaurus": "srd-ankylosaurus", "Archelon": "srd-archelon",
     "Awakened Shrub": "srd-awakened-shrub", "Axe Beak": "srd-axe-beak", "Baboon": "srd-baboon",
     "Badger": "srd-badger", "Bandit": "srd-bandit", "Bandit Captain": "srd-bandit-captain",
-    "Bat": "srd-bat", "Black Bear": "srd-black-bear", "Boar": "srd-boar", "Brown Bear": "srd-brown-bear",
+    "Bat": "srd-bat", "Black Bear": "srd-black-bear", "Blood Hawk": "srd-blood-hawk", "Boar": "srd-boar", "Brown Bear": "srd-brown-bear",
     "Camel": "srd-camel", "Cat": "srd-cat", "Commoner": "srd-commoner", "Constrictor Snake": "srd-constrictor-snake",
     "Crab": "srd-crab", "Crocodile": "srd-crocodile", "Deer": "srd-deer", "Dire Wolf": "srd-dire-wolf",
     "Draft Horse": "srd-draft-horse", "Eagle": "srd-eagle", "Elk": "srd-elk", "Frog": "srd-frog",
