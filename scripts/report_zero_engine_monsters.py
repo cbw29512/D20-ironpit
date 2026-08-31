@@ -16,11 +16,17 @@ from app.content.monster_spellcasting_source_audit import arena_neutral_spellcas
 from app.content.monster_trait_source_audit import _ARENA_NEUTRAL_TRAITS, _MODELED_TRAITS, parse_trait_names
 
 _CONDITION_OR_CONTROL = re.compile(
-    r"\b(blinded|charmed|deafened|frightened|grappled|incapacitated|paralyzed|petrified|poisoned|prone|restrained|stunned|unconscious|push(?:ed)?|pull(?:ed)?|swallow(?:ed)?)\b",
+    r"\b(blinded|charmed|deafened|frightened|grappled|incapacitated|paralyzed|petrified|poisoned|prone|restrained|stunned|unconscious|push(?:es|ed)?|pull(?:s|ed)?|swallow(?:s|ed)?)\b",
     re.I,
 )
 _COMPLEX_ACTION = re.compile(
     r"\b(Saving Throw|Failure:|Success:|Temporary Hit Points?|regains?\s+\d+|teleport|Concentration)\b",
+    re.I,
+)
+_HIDDEN_RIDER = re.compile(
+    r"\b(?:Speed decreases|attaches?|detaches?|next attack roll|Hit or Miss:)\b"
+    r"|\bdamage,?\s+or\s+\d+\s*\([^)]*\)\s+\w+\s+damage\s+if\b"
+    r"|\bplus\s+\d+\s+(?:Acid|Bludgeoning|Cold|Fire|Force|Lightning|Necrotic|Piercing|Poison|Psychic|Radiant|Slashing|Thunder)\s+damage\b",
     re.I,
 )
 _ATTACK_ROLL = re.compile(r"\b(?:Melee|Ranged|Melee or Ranged)\s+Attack Roll:", re.I)
@@ -28,7 +34,13 @@ _ALLOWED_TRAITS = set(_ARENA_NEUTRAL_TRAITS) | set(_MODELED_TRAITS)
 _DETAIL_FIELDS = ("name", "size", "armorClass", "hitPoints", "speed", "challenge", "traits", "actions")
 
 
-def _source_blockers(row: dict[str, object]) -> list[str]:
+def _has_neighbor_bleed(row: dict[str, object], monster_names: set[str]) -> bool:
+    actions = str(row.get("actions", "")).rstrip()
+    own_name = str(row.get("name", ""))
+    return any(name != own_name and actions.endswith(name) for name in monster_names)
+
+
+def _source_blockers(row: dict[str, object], monster_names: set[str]) -> list[str]:
     blockers: list[str] = []
     try:
         traits = parse_trait_names(row.get("traits", ""))
@@ -68,16 +80,21 @@ def _source_blockers(row: dict[str, object]) -> list[str]:
         blockers.append("save-or-complex-action")
     if _CONDITION_OR_CONTROL.search(actions):
         blockers.append("condition-or-control")
+    if _HIDDEN_RIDER.search(actions):
+        blockers.append("unsupported-action-rider")
+    if _has_neighbor_bleed(row, monster_names):
+        blockers.append("source-neighbor-bleed")
     return blockers
 
 
 def main() -> None:
     rows = load_monster_rows()
+    monster_names = {str(row["name"]) for row in rows}
     safe: list[dict[str, object]] = []
     already_ready: list[str] = []
     blocker_counts: dict[str, int] = {}
     for row in rows:
-        blockers = _source_blockers(row)
+        blockers = _source_blockers(row, monster_names)
         for blocker in set(blockers):
             blocker_counts[blocker] = blocker_counts.get(blocker, 0) + 1
         if blockers:
