@@ -40,10 +40,8 @@ def test_unknown_limited_runtime_resource_fails_closed() -> None:
 
 def test_class_without_independent_level_resource_rules_fails_closed() -> None:
     template = build_rokhan_stonefury().model_copy(deep=True)
-    build_profile = replace(
-        build_rokhan_stonefury_profile(),
-        class_id="bard",
-        class_name="Bard",
+    build_profile = build_rokhan_stonefury_profile().model_copy(
+        update={"class_id": "bard", "class_name": "Bard"}
     )
     combat_profile = build_pregen_combat_profiles()[template.id]
 
