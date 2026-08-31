@@ -7,8 +7,10 @@
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES;
   const PROVOKING = new Set(["speed", "action", "bonus_action", "reaction"]);
 
-  function meleeDepartureAttack(member, before, after) {
-    return (member.state.template.attacks || []).find((attack) =>
+  function opportunityAttackWeapon(reactor, mover, before, after, source, options = {}) {
+    if (reactor.side === mover.side || options.canSee === false || options.disengaged === true) return null;
+    if (Q()?.has(reactor.state, "blinded") || !PROVOKING.has(source) || !E().available(reactor.state, "reaction")) return null;
+    return (reactor.state.template.attacks || []).find((attack) =>
       attack.kind === "melee" && before <= (attack.reach || 5) && after > (attack.reach || 5),
     ) || null;
   }
@@ -22,12 +24,20 @@
     return { hit: false, used: true };
   }
 
+  function swapWouldProvoke(defender, ally, setup) {
+    const opponents = defender.side === "heroes" ? setup.monsters : setup.heroes;
+    return opponents.some((reactor) => opportunityAttackWeapon(
+      reactor, defender, S().distance(reactor, defender), Math.abs(reactor.position_ft - ally.position_ft), "reaction",
+    ));
+  }
+
   function redirectAttack(defender, setup) {
     const rule = defender.state.template.redirect_attack_reaction;
     if (!rule || !setup || !E().available(defender.state, "reaction") || Q()?.has(defender.state, "blinded")) return null;
     const allies = defender.side === "heroes" ? setup.heroes : setup.monsters;
     const candidates = allies.filter((ally) => ally !== defender && ally.state.is_alive && !ally.state.is_dead
-      && S().sizeAtMost(ally, rule.ally_max_size) && S().distance(defender, ally) <= rule.ally_range_ft);
+      && S().sizeAtMost(ally, rule.ally_max_size) && S().distance(defender, ally) <= rule.ally_range_ft
+      && !swapWouldProvoke(defender, ally, setup));
     candidates.sort((a, b) => S().distance(defender, a) - S().distance(defender, b)
       || a.combatant_id.localeCompare(b.combatant_id));
     const ally = candidates[0] || null;
@@ -38,9 +48,7 @@
   }
 
   function resolveOpportunityAttack(sequence, round, reactor, mover, setup, before, after, movementSource, options = {}) {
-    if (reactor.side === mover.side || options.canSee === false || options.disengaged === true) return null;
-    if (!PROVOKING.has(movementSource) || !E().available(reactor.state, "reaction")) return null;
-    const attack = meleeDepartureAttack(reactor, before, after);
+    const attack = opportunityAttackWeapon(reactor, mover, before, after, movementSource, options);
     if (!attack) return null;
     E().spend(reactor.state, "reaction");
     const pack = S().packTactics(reactor, setup);
@@ -49,5 +57,5 @@
     });
   }
 
-  window.IRON_PIT_BROWSER_REACTIONS = { parryHit, redirectAttack, resolveOpportunityAttack };
+  window.IRON_PIT_BROWSER_REACTIONS = { opportunityAttackWeapon, parryHit, redirectAttack, resolveOpportunityAttack };
 })();
