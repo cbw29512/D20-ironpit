@@ -8,6 +8,7 @@ from app.content.audited_fighter import build_karnok_stoneward
 from app.content.audited_fighter_profile import build_karnok_stoneward_profile
 from app.content.build_audit import assert_character_build_raw_ready
 from app.content.character_resource_audit import assert_character_resources_raw_ready
+from app.content.hero_progressions import CANONICAL_BUILD_ID
 from app.content.pregen_combat_audit import assert_pregen_combat_stats
 from app.content.pregen_combat_profiles import build_pregen_combat_profiles
 from app.content.unarmed_opportunity_profiles import complete_unarmed_opportunity_profiles
@@ -21,7 +22,6 @@ HeroCatalogReady = tuple[str, str]
 def _validated(
     template_builder: Callable[[], CombatantTemplate],
     profile_builder: Callable[[], CharacterBuildProfile],
-    build_id: str,
 ) -> tuple[HeroBuildKey, CombatantTemplate]:
     template = template_builder()
     profile = profile_builder()
@@ -32,14 +32,14 @@ def _validated(
     assert_pregen_combat_stats(template, combat_profile)
     assert_character_resources_raw_ready(template, profile, combat_profile)
     template = complete_unarmed_opportunity_profiles([template])[0]
-    return (profile.class_id, profile.level, build_id), template
+    return (profile.class_id, profile.level, CANONICAL_BUILD_ID), template
 
 
 def build_certified_hero_entries() -> list[tuple[HeroBuildKey, CombatantTemplate]]:
-    """Return only builds that pass legality, combat-stat, and level-scaling audits."""
+    """Return only canonical hero levels that pass every RAW certification gate."""
     return [
-        _validated(build_karnok_stoneward, build_karnok_stoneward_profile, "great-weapon"),
-        _validated(build_rokhan_stonefury, build_rokhan_stonefury_profile, "great-weapon"),
+        _validated(build_karnok_stoneward, build_karnok_stoneward_profile),
+        _validated(build_rokhan_stonefury, build_rokhan_stonefury_profile),
     ]
 
 
