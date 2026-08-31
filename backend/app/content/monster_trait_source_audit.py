@@ -13,30 +13,13 @@ _CONNECTORS = frozenset({"a", "an", "and", "of", "or", "the", "to"})
 _MODELED_TRAITS = {
     "Pack Tactics": CombatTrait.PACK_TACTICS,
     "Bloodied Fury": CombatTrait.BLOODIED_FURY,
+    "Swarm": CombatTrait.SWARM,
 }
-# These printed traits cannot change a standard Iron Pit result under the
-# documented flat, illuminated, no-Hide, no-kiting arena assumptions.
 _ARENA_NEUTRAL_TRAITS = frozenset({
-    "Agile",
-    "Amphibious",
-    "Beast of Burden",
-    "False Appearance",
-    "Flyby",
-    "Hold Breath",
-    "Ice Walk",
-    "Illumination",
-    "Jumper",
-    "Keen Hearing",
-    "Keen Hearing and Sight",
-    "Keen Hearing and Smell",
-    "Keen Sight",
-    "Keen Smell",
-    "Mimicry",
-    "Running Leap",
-    "Spider Climb",
-    "Standing Leap",
-    "Sunlight Sensitivity",
-    "Web Walker",
+    "Agile", "Amphibious", "Beast of Burden", "False Appearance", "Flyby", "Hold Breath",
+    "Ice Walk", "Illumination", "Jumper", "Keen Hearing", "Keen Hearing and Sight",
+    "Keen Hearing and Smell", "Keen Sight", "Keen Smell", "Mimicry", "Running Leap",
+    "Spider Climb", "Standing Leap", "Sunlight Sensitivity", "Web Walker",
 })
 
 
@@ -56,7 +39,6 @@ def _is_heading(value: str) -> bool:
 
 
 def parse_trait_names(source_traits: object) -> list[str]:
-    """Extract printed trait headings from the SRD trait prose, preserving order."""
     text = str(source_traits or "").strip()
     if not text:
         return []
@@ -71,7 +53,6 @@ def parse_trait_names(source_traits: object) -> list[str]:
 
 
 def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
-    """Fail closed when a printed combat trait lacks certified arena semantics."""
     expected = parse_trait_names(row.get("traits", ""))
     issues: list[str] = []
     if template.source_trait_names != expected:
