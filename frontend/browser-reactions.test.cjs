@@ -8,7 +8,7 @@ const vm = require("node:vm");
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
-  "browser-heroes.js", "browser-monsters.js", "browser-monsters-beast2.js",
+  "browser-heroes.js", "browser-monsters.js", "browser-monsters-beast2.js", "browser-monsters-generated.js",
   "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-grapple.js", "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-timed-conditions.js",
   "browser-attack.js", "browser-reactions.js",
@@ -65,10 +65,29 @@ function redirectTemplate() {
   }
 }
 {
+  fixedDice([19]); const { hero, monster, fight } = setup("srd-plesiosaurus");
+  const bite = monster.state.template.attacks.find((item) => item.kind === "melee"); assert.equal(bite.reach, 10);
+  const event = X.resolveOpportunityAttack(1, 1, monster, hero, fight, 5, 10, "speed");
+  assert.ok(event); assert.equal(event.weapon_id, "unarmed-strike-opportunity");
+  assert.equal(event.damage_roll.total, monster.state.template.unarmed_opportunity_attack.damage);
+}
+{
   dice(); const { hero, monster, fight } = setup("srd-plesiosaurus");
-  const attack = monster.state.template.attacks.find((item) => item.kind === "melee"); assert.equal(attack.reach, 10);
-  assert.equal(X.resolveOpportunityAttack(1, 1, monster, hero, fight, 5, 10, "speed"), null);
-  assert.ok(X.resolveOpportunityAttack(1, 1, monster, hero, fight, 10, 15, "speed"));
+  const event = X.resolveOpportunityAttack(1, 1, monster, hero, fight, 10, 15, "speed");
+  assert.ok(event); assert.equal(event.weapon_id, monster.state.template.primary_attack_id);
+}
+{
+  const rangedOnly = heroTemplate();
+  rangedOnly.attacks = [rangedOnly.attacks.find((attack) => attack.kind === "ranged")];
+  rangedOnly.primary_attack_id = rangedOnly.attacks[0].id;
+  rangedOnly.unarmed_opportunity_attack = { attack_bonus: 3, damage: 2 };
+  const reactor = member("selene-shape", "heroes", rangedOnly, 0);
+  const mover = member("monster-1", "monsters", monsterTemplate("srd-commoner"), 5);
+  const fight = { heroes: [reactor], monsters: [mover] };
+  fixedDice([12]);
+  const event = X.resolveOpportunityAttack(1, 1, reactor, mover, fight, 5, 10, "speed");
+  assert.ok(event); assert.equal(event.attack_roll.total, 15); assert.equal(event.weapon_id, "unarmed-strike-opportunity");
+  assert.equal(event.damage_roll.total, 2);
 }
 {
   for (const source of ["action", "bonus_action", "reaction"]) {
