@@ -59,6 +59,10 @@
       group.initiative_bonus = group.members[0].state.template.initiative_bonus;
       group.initiative_count = roll.total;
       group.tie_break_roll = null;
+      group.members.forEach((member) => {
+        member.state.initiative_roll = roll.selected_roll;
+        member.state.initiative_total = roll.total;
+      });
     }
     const tiedCounts = new Map();
     groups.forEach((group) => { const list = tiedCounts.get(group.initiative_count) || []; list.push(group); tiedCounts.set(group.initiative_count, list); });

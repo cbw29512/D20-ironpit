@@ -6,6 +6,7 @@ from app.combat.action_economy import is_available
 from app.combat.attacks import resolve_attack
 from app.combat.dice import DiceProvider
 from app.combat.encounter_targeting import combatant_distance
+from app.combat.opening_burst import opening_burst_available
 from app.combat.reaction_movement import move_toward_with_reactions
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, CombatantState, DamageType, WeaponAttack
@@ -71,6 +72,8 @@ def resolve_charge_closing(
     setup: EncounterSetup | None = None,
 ) -> tuple[list[BattleEvent], int, bool]:
     attack = attacker.state.template.weapon_attack
+    if not opening_burst_available(round_number, attacker, setup):
+        return [], sequence, False
     if not charge_can_close(attacker.state, target.state, attack, combatant_distance(attacker, target)):
         return [], sequence, False
 

@@ -15,10 +15,12 @@ def _boar_fixture(distance_ft: int):
     hero, boar = setup.heroes[0], setup.monsters[0]
     hero.position_ft = 0
     boar.position_ft = distance_ft
+    hero.state.initiative_total = 10
+    boar.state.initiative_total = 20
     return setup, hero, boar
 
 
-def test_boar_charges_when_twenty_feet_of_runup_exists() -> None:
+def test_boar_charges_when_it_sweeps_initiative_and_has_twenty_feet_of_runup() -> None:
     setup, hero, boar = _boar_fixture(30)
 
     events, _ = resolve_combat_turn(
@@ -35,6 +37,27 @@ def test_boar_charges_when_twenty_feet_of_runup_exists() -> None:
     assert attack.damage_roll.total == 6
     assert attack.applied_condition_ids == ["prone"]
     assert "dodge" not in boar.state.active_effect_ids
+
+
+def test_boar_that_does_not_win_initiative_uses_normal_melee_closing() -> None:
+    setup, hero, boar = _boar_fixture(30)
+    boar.state.initiative_total = hero.state.initiative_total
+
+    events, _ = resolve_combat_turn(1, 1, boar, hero, setup, FixedDiceProvider([10, 3]))
+
+    assert [event.event_type for event in events] == ["movement", "attack"]
+    assert events[0].movement_ft == 25
+    assert events[1].feature_id != "charge"
+    assert events[1].weapon_id == "boar-gore-weapon"
+
+
+def test_charge_is_not_reused_after_round_one() -> None:
+    setup, hero, boar = _boar_fixture(30)
+
+    events, _ = resolve_combat_turn(1, 2, boar, hero, setup, FixedDiceProvider([10, 3]))
+
+    assert [event.event_type for event in events] == ["movement", "attack"]
+    assert events[1].feature_id != "charge"
 
 
 def test_boar_without_charge_runup_moves_and_attacks_normally() -> None:

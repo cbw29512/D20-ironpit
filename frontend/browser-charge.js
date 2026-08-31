@@ -8,6 +8,12 @@
     moveToward: (q, r, m, t, _s, d) => ({ events: [], sequence: q, movement: S().moveToward(m, t, d) }),
   };
 
+  function openingEligible(round, member, setup) {
+    if (round !== 1 || !setup || !Number.isInteger(member.state.initiative_total)) return false;
+    const enemies = member.side === "heroes" ? setup.monsters : setup.heroes;
+    return enemies.length > 0 && enemies.every((enemy) => Number.isInteger(enemy.state.initiative_total)
+      && member.state.initiative_total > enemy.state.initiative_total);
+  }
   function movementEvent(sequence, round, member, target, movement) {
     return { sequence, round_number: round, event_type: "movement", actor_id: member.combatant_id,
       actor_name: member.state.template.name, target_id: target.combatant_id, target_name: target.state.template.name,
@@ -15,6 +21,7 @@
       animation: "advance", description: `${member.state.template.name} charges ${movement.moved} feet.` };
   }
   function resolveClosing(sequence, round, member, target, setup = null) {
+    if (!openingEligible(round, member, setup)) return { events: [], sequence, handled: false };
     const attack = member.state.template.attacks.find((a) => a.id === member.state.template.primary_attack_id) || member.state.template.attacks[0];
     const profile = attack?.charge;
     if (!profile || !E().available(member.state, "action")) return { events: [], sequence, handled: false };
@@ -33,5 +40,5 @@
     }));
     return { events, sequence, handled: true };
   }
-  window.IRON_PIT_BROWSER_CHARGE = { resolveClosing };
+  window.IRON_PIT_BROWSER_CHARGE = { openingEligible, resolveClosing };
 })();
