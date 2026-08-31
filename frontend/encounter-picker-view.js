@@ -24,30 +24,23 @@
     size.value = String(state.heroSlots.length);
     size.onchange = () => onPartySize(Number(size.value));
     const root = el("hero-slot-pickers"); root.replaceChildren();
-    const classes = P().classOptions(state.catalog.heroes);
+    const heroes = P().classOptions(state.catalog.heroes);
     state.heroSlots.forEach((slot, index) => {
       const row = document.createElement("div"); row.className = "hero-slot-picker";
       const heading = document.createElement("strong"); heading.textContent = `Character ${index + 1}`;
-      const classField = labeledSelect("Class");
-      classes.forEach((item) => classField.select.append(option(item.id, item.name, item.id === slot.class_id)));
-      classField.select.onchange = () => onHeroChange(index, { class_id: classField.select.value });
+      const heroField = labeledSelect("Hero");
+      heroes.forEach((item) => heroField.select.append(option(item.id, item.name, item.id === slot.class_id)));
+      heroField.select.onchange = () => onHeroChange(index, { class_id: heroField.select.value });
       const levelField = labeledSelect("Level");
       P().LEVELS.forEach((level) => levelField.select.append(option(level, level, level === Number(slot.level))));
       levelField.select.onchange = () => onHeroChange(index, { level: Number(levelField.select.value) });
-      const buildField = labeledSelect("Pregen / Build", "build-field");
-      const builds = P().heroBuilds(state.catalog.heroes, slot.class_id, slot.level);
-      builds.forEach((hero) => {
-        const label = ready(hero)
-          ? `${hero.name} — ${hero.build_name} · RAW ready`
-          : `${hero.build_name} · not certified yet`;
-        buildField.select.append(option(hero.id, label, hero.id === slot.card_id));
-      });
-      buildField.select.onchange = () => onHeroChange(index, { card_id: buildField.select.value });
       const chosen = P().cardForSlot(state.catalog.heroes, slot);
       const status = document.createElement("small"), isReady = ready(chosen || {});
       status.className = `slot-status ${isReady ? "ready" : "blocked"}`;
-      status.textContent = isReady ? `Selected card · ${chosen.name}` : "This class/level pregen is not RAW-certified yet.";
-      row.append(heading, classField.label, levelField.label, buildField.label, status); root.append(row);
+      status.textContent = isReady
+        ? `${chosen.name} · ${chosen.class_name} ${chosen.level} · RAW ready`
+        : `${chosen?.name || "Hero"} level ${slot.level} is not RAW-certified yet.`;
+      row.append(heading, heroField.label, levelField.label, status); root.append(row);
     });
   }
 
@@ -66,7 +59,7 @@
     if (selected) picker.value = selected;
     else picker.append(option("", "No certified monsters at this CR", true, true));
     picker.onchange = () => onMonsterChange(picker.value);
-    el("add-monster").disabled = state.monsters.length >= 8 || selected === null;
+    el("add-monster").disabled = state.monsters.length >= 6 || selected === null;
     el("monster-picker-note").textContent = `${runnable.length} RAW-certified monster cards available.`;
     return selected;
   }
