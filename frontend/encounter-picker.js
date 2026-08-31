@@ -15,8 +15,14 @@
   }
 
   function classOptions(heroes) {
-    const names = new Map(heroes.map((hero) => [hero.class_id, hero.class_name]));
-    return CLASS_ORDER.map((id) => ({ id, name: names.get(id) || id }));
+    const byClass = new Map();
+    heroes.forEach((hero) => {
+      if (!byClass.has(hero.class_id)) byClass.set(hero.class_id, hero);
+    });
+    return CLASS_ORDER.map((id) => {
+      const hero = byClass.get(id);
+      return { id, name: hero ? `${hero.name} — ${hero.class_name}` : id };
+    });
   }
 
   function heroBuilds(heroes, classId, level) {
@@ -46,9 +52,9 @@
   function normalizedSlot(heroes, slot = {}, patch = {}) {
     const classId = patch.class_id ?? slot.class_id ?? CLASS_ORDER[0];
     const level = Number(patch.level ?? slot.level ?? 1);
-    const builds = heroBuilds(heroes, classId, level);
+    const candidates = heroBuilds(heroes, classId, level);
     const requestedId = patch.card_id ?? (slot.class_id === classId && Number(slot.level) === level ? slot.card_id : null);
-    const chosen = builds.find((hero) => hero.id === requestedId) || preferredHero(builds);
+    const chosen = candidates.find((hero) => hero.id === requestedId) || preferredHero(candidates);
     return { class_id: classId, level, card_id: chosen?.id || null };
   }
 
