@@ -4,6 +4,7 @@
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const bloodied = (state) => state.current_hp * 2 <= state.template.max_hp;
   const distance = (a, b) => Math.abs(a.position_ft - b.position_ft);
+  const swarm = (state) => state.template.traits?.includes("swarm");
 
   function resourceAvailable(member, action) {
     if (!action.resourceId) return true;
@@ -11,7 +12,7 @@
   }
 
   function targetAllowed(healer, target, action) {
-    if (target.state.is_dead || !target.state.is_alive || target.state.current_hp >= target.state.template.max_hp) return false;
+    if (target.state.is_dead || !target.state.is_alive || target.state.current_hp >= target.state.template.max_hp || swarm(target.state)) return false;
     if (distance(healer, target) > (action.range || 5)) return false;
     if (action.targetMode === "self") return target.combatant_id === healer.combatant_id;
     if (action.targetMode === "ally") return target.combatant_id !== healer.combatant_id && target.side === healer.side;
@@ -56,7 +57,7 @@
   }
 
   function restore(state, amount) {
-    if (state.is_dead || amount <= 0) return 0;
+    if (state.is_dead || amount <= 0 || swarm(state)) return 0;
     const before = state.current_hp;
     state.current_hp = Math.min(state.template.max_hp, before + amount);
     const healed = state.current_hp - before;
