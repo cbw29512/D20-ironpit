@@ -27,6 +27,14 @@ def test_every_raw_ready_monster_reconciles_to_srd_5_2_1_source() -> None:
     assert mismatches == [], "RAW-ready monster source mismatches:\n" + "\n".join(mismatches)
 
 
+def test_source_audit_detects_an_omitted_printed_attack() -> None:
+    rows = _rows_by_name()
+    bear = next(template for template in build_arena_roster().monsters if template.name == "Brown Bear").model_copy(deep=True)
+    assert len(bear.alternate_weapon_attacks) == 1
+    bear.alternate_weapon_attacks = []
+    assert "source-attack-count-mismatch" in audit_monster_source(bear, rows["Brown Bear"])
+
+
 def test_srd_defense_parser_distinguishes_damage_and_condition_defenses() -> None:
     rows = _rows_by_name()
 
