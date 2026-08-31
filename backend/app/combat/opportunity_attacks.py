@@ -1,32 +1,12 @@
 from __future__ import annotations
 
-from typing import Literal
-
-from app.combat.action_economy import is_available, spend
+from app.combat.action_economy import spend
 from app.combat.ally_context import pack_tactics_active
 from app.combat.dice import DiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
-from app.combat.policy import weapon_attack_profiles
+from app.combat.opportunity_attack_rules import MovementSource, opportunity_attack_weapon
 from app.domain.encounters import EncounterCombatant, EncounterSetup
-from app.domain.models import BattleEvent, WeaponAttack, WeaponAttackKind
-
-MovementSource = Literal["speed", "action", "bonus_action", "reaction", "forced", "teleport"]
-_PROVOKING_SOURCES = frozenset({"speed", "action", "bonus_action", "reaction"})
-
-
-def _melee_departure_attack(
-    reactor: EncounterCombatant,
-    distance_before_ft: int,
-    distance_after_ft: int,
-) -> WeaponAttack | None:
-    """Choose one physical melee profile whose reach is actually being left."""
-    for attack in weapon_attack_profiles(reactor.state):
-        weapon = attack.weapon
-        if weapon.attack_kind is not WeaponAttackKind.MELEE:
-            continue
-        if distance_before_ft <= weapon.reach_ft < distance_after_ft:
-            return attack
-    return None
+from app.domain.models import BattleEvent
 
 
 def resolve_opportunity_attack(
@@ -44,11 +24,10 @@ def resolve_opportunity_attack(
     can_see: bool = True,
 ) -> BattleEvent | None:
     """Resolve the universal 2024 Opportunity Attack Reaction immediately before reach is left."""
-    if reactor.side == mover.side or not can_see or disengaged:
-        return None
-    if movement_source not in _PROVOKING_SOURCES or not is_available(reactor.state, "reaction"):
-        return None
-    attack = _melee_departure_attack(reactor, distance_before_ft, distance_after_ft)
+    attack = opportunity_attack_weapon(
+        reactor, mover, distance_before_ft, distance_after_ft, movement_source,
+        disengaged=disengaged, can_see=can_see,
+    )
     if attack is None:
         return None
     spend(reactor.state, "reaction")
