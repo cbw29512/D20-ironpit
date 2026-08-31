@@ -66,6 +66,7 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Giant Wasp": _p("winged-insect", "wasp"),
     "Giant Weasel": _p("quadruped", "mustelid"),
     "Giant Wolf Spider": _p("spider", "spider"),
+    "Goblin Boss": _p("humanoid", "goblin-boss"),
     "Goblin Minion": _p("humanoid", "goblin"),
     "Goblin Warrior": _p("humanoid", "goblin"),
     "Grimlock": _p("humanoid", "grimlock"),
