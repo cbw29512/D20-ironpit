@@ -13,7 +13,8 @@ for (const file of [
   "browser-grapple.js", "browser-timed-conditions.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
   "browser-attack.js", "browser-reactions.js", "browser-reaction-movement.js", "browser-saves.js",
   "browser-condition-lifecycle.js", "browser-charge.js", "browser-multiattack.js", "browser-healing.js",
-  "browser-spellcasting.js", "browser-condition-removal.js", "browser-support.js", "browser-turn.js", "browser-engine.js",
+  "browser-spellcasting.js", "browser-condition-removal.js", "browser-support.js", "browser-turn.js",
+  "browser-formation.js", "browser-engine.js",
 ]) load(file);
 
 function queuedDice(values, fallback = 10) {
@@ -25,7 +26,7 @@ function queuedDice(values, fallback = 10) {
 {
   window.IRON_PIT_DICE = queuedDice([20, 1, 15, 6, 6]);
   const battle = window.IRON_PIT_BROWSER_ENGINE.runEncounter({
-    hero_ids: ["rokhan-stonefury-l1"], monster_ids: ["srd-commoner"], starting_distance_ft: 5,
+    hero_ids: ["rokhan-stonefury-l1"], monster_ids: ["srd-commoner"],
   });
   const rage = battle.events.find((event) => event.feature_id === "rage");
   const attack = battle.events.find((event) => event.event_type === "attack" && event.actor_id.startsWith("hero-1:"));
