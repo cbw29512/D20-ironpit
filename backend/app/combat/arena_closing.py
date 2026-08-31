@@ -57,14 +57,13 @@ def resolve_simple_closing(
 ) -> tuple[list[BattleEvent], int, bool]:
     """Reach melee this turn when possible; otherwise use legal ranged offense/Dodge while closing."""
     distance = combatant_distance(attacker, target)
-    if distance <= MELEE_BRAWL_DISTANCE_FT:
-        return [], sequence, False
-
     charge_events, charge_sequence, charged = resolve_charge_closing(
         sequence, round_number, attacker, target, dice, setup,
     )
     if charged:
         return charge_events, charge_sequence, True
+    if distance <= MELEE_BRAWL_DISTANCE_FT:
+        return [], sequence, False
     if attacker.state.template.attack_action is not None:
         return [], sequence, False
 

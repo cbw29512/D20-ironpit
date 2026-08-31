@@ -3,6 +3,7 @@
 
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const C = () => window.IRON_PIT_BROWSER_CHARGE;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (s) => s.action_available, spend: (s) => { s.action_available = false; } };
   const W = () => window.IRON_PIT_BROWSER_REACTION_MOVEMENT || {
@@ -64,6 +65,7 @@
     const slots = member.state.template.attack_action?.slots;
     if (!slots?.length || !E().available(member.state, "action")) return { events: [], sequence };
     const events = []; E().spend(member.state, "action");
+    let openingFeature = C()?.openingFeature?.(round, member, setup) || null;
     for (const slot of slots) {
       if (member.state.is_dead || member.state.is_unconscious) break;
       const target = slotTarget(member, setup, slot); if (!target) continue;
@@ -76,11 +78,11 @@
         choice = slotChoice(member, target, slot);
       }
       if (choice.attack) {
-        const pack = S().packTactics(member, setup);
+        const pack = S().packTactics(member, setup), featureId = openingFeature || (pack ? "pack-tactics" : member.state.template.attack_action.id);
         events.push(A().resolveAttack(sequence++, round, member, target, choice.attack, S().distance(member, target), {
-          spendAction: false, advantage: pack ? 1 : 0, setup,
-          featureId: pack ? "pack-tactics" : member.state.template.attack_action.id,
+          spendAction: false, advantage: pack ? 1 : 0, setup, featureId,
         }));
+        openingFeature = null;
       } else if (choice.save) {
         events.push(V().resolveAction(sequence++, round, member, target, choice.save, S().distance(member, target), { spendAction: false }));
       }

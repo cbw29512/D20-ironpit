@@ -51,13 +51,15 @@ def charge_profile(
 
 def charge_can_close(
     attacker: CombatantState, defender: CombatantState, attack: WeaponAttack, distance_ft: int,
+    *, assume_precontact_runup: bool = False,
 ) -> bool:
     profile = charge_profile_for_attack_id(attack.id)
     if not is_available(attacker, "action") or CombatTrait.CHARGE not in attacker.template.combat_traits or profile is None:
         return False
     needed = max(0, distance_ft - attack.weapon.reach_ft)
+    enough_runup = assume_precontact_runup or needed >= profile.minimum_move_ft
     return (
-        needed >= profile.minimum_move_ft
+        enough_runup
         and needed <= attacker.movement_remaining_ft
         and size_at_most(defender.template.size, profile.max_target_size)
     )
@@ -74,15 +76,25 @@ def resolve_charge_closing(
     attack = attacker.state.template.weapon_attack
     if not opening_burst_available(round_number, attacker, setup):
         return [], sequence, False
-    if not charge_can_close(attacker.state, target.state, attack, combatant_distance(attacker, target)):
+    if not charge_can_close(
+        attacker.state, target.state, attack, combatant_distance(attacker, target),
+        assume_precontact_runup=True,
+    ):
         return [], sequence, False
 
-    move_events, sequence, movement = move_toward_with_reactions(
-        sequence, round_number, attacker, target, setup, attack.weapon.reach_ft, dice,
-    )
-    if movement is None:
-        return move_events, sequence, bool(move_events)
-    profile = charge_profile(attacker.state, target.state, attack, movement.movement_ft or 0)
+    profile = charge_profile_for_attack_id(attack.id)
+    if profile is None:
+        return [], sequence, False
+    move_events: list[BattleEvent] = []
+    movement_ft = profile.minimum_move_ft
+    if combatant_distance(attacker, target) > attack.weapon.reach_ft:
+        move_events, sequence, movement = move_toward_with_reactions(
+            sequence, round_number, attacker, target, setup, attack.weapon.reach_ft, dice,
+        )
+        if movement is None:
+            return move_events, sequence, bool(move_events)
+        movement_ft = max(movement_ft, movement.movement_ft or 0)
+    profile = charge_profile(attacker.state, target.state, attack, movement_ft)
     if profile is None:
         return move_events, sequence, bool(move_events)
 

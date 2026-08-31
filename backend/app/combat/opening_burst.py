@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 
+_OPENING_TRAIT_FEATURES = (("Running Leap", "running-leap"),)
+
 
 def wins_initiative_over_all_enemies(attacker: EncounterCombatant, setup: EncounterSetup) -> bool:
     """Require a strict initiative-total win over every enemy; tie-breakers do not qualify."""
@@ -20,5 +22,15 @@ def wins_initiative_over_all_enemies(attacker: EncounterCombatant, setup: Encoun
 def opening_burst_available(
     round_number: int, attacker: EncounterCombatant, setup: EncounterSetup | None,
 ) -> bool:
-    """Iron Pit opener policy: special run-up/leap/charge logic exists only on round 1 after an initiative sweep."""
+    """Allow one opener only in round 1 after a strict initiative sweep."""
     return round_number == 1 and setup is not None and wins_initiative_over_all_enemies(attacker, setup)
+
+
+def opening_feature_id(
+    round_number: int, attacker: EncounterCombatant, setup: EncounterSetup | None,
+) -> str | None:
+    """Label source-backed movement openers that modify no printed attack math."""
+    if not opening_burst_available(round_number, attacker, setup):
+        return None
+    names = set(attacker.state.template.source_trait_names)
+    return next((feature for source, feature in _OPENING_TRAIT_FEATURES if source in names), None)

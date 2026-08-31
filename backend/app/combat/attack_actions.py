@@ -10,6 +10,7 @@ from app.combat.attacks import resolve_attack
 from app.combat.dice import DiceProvider
 from app.combat.encounter_movement import take_encounter_dash
 from app.combat.encounter_targeting import close_ranged_threat_exists, combatant_distance
+from app.combat.opening_burst import opening_feature_id
 from app.combat.policy import preferred_distance_for_attacks, select_allowed_weapon_attack
 from app.combat.reaction_movement import move_toward_with_reactions
 from app.combat.saving_throws import legal_save_action, resolve_save_action
@@ -102,6 +103,7 @@ def resolve_attack_action(
             return events, sequence
 
         spend(attacker.state, "action")
+        opening_feature = opening_feature_id(round_number, attacker, setup)
         for slot in definition.slots:
             if attacker.state.is_dead or attacker.state.is_unconscious:
                 break
@@ -117,14 +119,16 @@ def resolve_attack_action(
                 attack, save_action = _slot_choice(attacker, target, slot)
             if attack is not None:
                 pack = pack_tactics_active(attacker, target, setup)
+                feature_id = opening_feature or ("pack-tactics" if pack else definition.id)
                 events.append(resolve_attack(
                     sequence, round_number, attacker.state, target.state, attack,
                     combatant_distance(attacker, target), dice,
                     actor_event_id=attacker.combatant_id, target_event_id=target.combatant_id,
                     spend_action=False, advantage_sources=1 if pack else 0,
-                    feature_id="pack-tactics" if pack else definition.id,
+                    feature_id=feature_id,
                     close_enemy_active=close_ranged_threat_exists(attacker, setup),
                 ))
+                opening_feature = None
                 sequence += 1
             elif save_action is not None:
                 events.append(resolve_save_action(

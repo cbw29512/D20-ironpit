@@ -27,7 +27,7 @@
     ], { attack_action: { id: "owlbear-multiattack", slots: [["owlbear-rend"], ["owlbear-rend"]] } }),
     monster("srd-saber-toothed-tiger", "Saber-Toothed Tiger", "2", "large", 13, 52, 40, 3, [
       attack("saber-toothed-tiger-rend", "Rend", "melee", 6, 2, 6, 4, "slashing", { animation: "heavy-slash" }),
-    ], { attack_action: { id: "saber-toothed-tiger-multiattack", slots: [["saber-toothed-tiger-rend"], ["saber-toothed-tiger-rend"]] } }),
+    ], { source_trait_names: ["Running Leap"], attack_action: { id: "saber-toothed-tiger-multiattack", slots: [["saber-toothed-tiger-rend"], ["saber-toothed-tiger-rend"]] } }),
     monster("srd-scout", "Scout", "1/2", "medium", 13, 16, 30, 2, [
       attack("scout-longbow", "Longbow", "ranged", 4, 1, 8, 2, "piercing", {
         normal: 150, long: 600, projectile: "arrow", animation: "projectile",

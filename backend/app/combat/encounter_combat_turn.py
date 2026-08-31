@@ -13,6 +13,7 @@ from app.combat.encounter_turns import prepare_encounter_attack
 from app.combat.fighter import use_second_wind
 from app.combat.grapple import cleanup_grapples, resolve_escape_grapple, should_escape_grapple
 from app.combat.healing import choose_healing_action, resolve_healing
+from app.combat.opening_burst import opening_feature_id
 from app.combat.orc import use_adrenaline_rush
 from app.combat.policy import should_use_second_wind
 from app.combat.reaction_movement import move_toward_with_reactions
@@ -114,11 +115,12 @@ def resolve_combat_turn(
         events.extend(prep_events)
         if attack is not None and is_available(attacker.state, "action"):
             pack = pack_tactics_active(attacker, target, setup)
+            feature = opening_feature_id(round_number, attacker, setup) or ("pack-tactics" if pack else None)
             events.append(resolve_attack(
                 sequence, round_number, attacker.state, target.state, attack,
                 combatant_distance(attacker, target), dice,
                 actor_event_id=attacker.combatant_id, target_event_id=target.combatant_id,
-                advantage_sources=1 if pack else 0, feature_id="pack-tactics" if pack else None,
+                advantage_sources=1 if pack else 0, feature_id=feature,
                 close_enemy_active=close_ranged_threat_exists(attacker, setup),
             )); sequence += 1
     return _finish_turn(events, sequence, round_number, attacker)

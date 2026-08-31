@@ -79,6 +79,16 @@ function openingSetup(attacker, hero, attackerInit = 20, heroInit = 10) {
 }
 
 {
+  const goat = { combatant_id: "monster-1:goat-slot", side: "monsters", position_ft: 5, state: S.buildState(structuredClone(monsters["srd-giant-goat"])) };
+  const hero = freshHero(), setup = openingSetup(goat, hero);
+  window.IRON_PIT_DICE = queuedDice([15, 2, 3, 4]);
+  const turn = window.IRON_PIT_BROWSER_TURN.resolveTurn(1, 1, goat, setup);
+  const attack = turn.events.find((event) => event.event_type === "attack");
+  assert.equal(attack?.feature_id, "charge", "initiative sweep should assume pre-contact run-up from the melee slot");
+  assert.equal(turn.events.some((event) => event.event_type === "movement"), false);
+}
+
+{
   const goat = { combatant_id: "monster-1:goat-loser", side: "monsters", position_ft: 30, state: S.buildState(structuredClone(monsters["srd-giant-goat"])) };
   const hero = freshHero(), setup = openingSetup(goat, hero, 10, 10);
   S.beginTurn(goat.state);

@@ -56,6 +56,19 @@ assert.deepEqual(multiattackIds("srd-scout", 30), ["scout-longbow", "scout-longb
 assert.deepEqual(multiattackIds("srd-scout", 5), ["scout-shortsword", "scout-shortsword"]);
 
 {
+  const saber = {
+    combatant_id: "monster-1:saber-opener", side: "monsters", position_ft: 5,
+    state: S.buildState(structuredClone(monsters["srd-saber-toothed-tiger"])),
+  };
+  const hero = freshHero(), setup = { heroes: [hero], monsters: [saber] };
+  saber.state.initiative_total = 20; hero.state.initiative_total = 10;
+  S.beginTurn(saber.state); window.IRON_PIT_DICE = queuedDice([15, 1, 1, 15, 1, 1]);
+  const attacks = M.resolveAttackAction(1, 1, saber, setup).events.filter((event) => event.event_type === "attack");
+  assert.equal(attacks[0].feature_id, "running-leap");
+  assert.equal(attacks[1].feature_id, "saber-toothed-tiger-multiattack");
+}
+
+{
   const ogre = monsters["srd-ogre"];
   assert.deepEqual(ogre.attacks.map((attack) => attack.id), ["ogre-greatclub", "ogre-javelin-melee", "ogre-javelin"]);
   assert.deepEqual([ogre.attacks[0].bonus, ogre.attacks[0].diceCount, ogre.attacks[0].diceSize, ogre.attacks[0].damageBonus], [6, 2, 8, 4]);

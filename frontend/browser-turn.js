@@ -66,8 +66,8 @@
   }
   function closeTurn(sequence, round, member, target, setup) {
     let distance = S().distance(member, target);
-    if (distance <= BRAWL_DISTANCE) return { events: [], sequence, handled: false };
     const charged = C()?.resolveClosing(sequence, round, member, target, setup); if (charged?.handled) return charged;
+    if (distance <= BRAWL_DISTANCE) return { events: [], sequence, handled: false };
     if (member.state.template.attack_action) return { events: [], sequence, handled: false };
     const melee = reachableMelee(member, distance);
     if (melee) {
@@ -136,8 +136,8 @@
     if (saveAction && E().available(member.state, "action")) { events.push(V().resolveAction(sequence++, round, member, target, saveAction, distance)); return finalize(events, sequence, round, member); }
     const attack = legalAttack(member, distance);
     if (attack && E().available(member.state, "action")) {
-      const pack = S().packTactics(member, setup);
-      events.push(A().resolveAttack(sequence++, round, member, target, attack, distance, { advantage: pack ? 1 : 0, featureId: pack ? "pack-tactics" : null, setup }));
+      const pack = S().packTactics(member, setup), opener = C()?.openingFeature?.(round, member, setup) || null;
+      events.push(A().resolveAttack(sequence++, round, member, target, attack, distance, { advantage: pack ? 1 : 0, featureId: opener || (pack ? "pack-tactics" : null), setup }));
     }
     return finalize(events, sequence, round, member);
   }

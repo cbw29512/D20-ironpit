@@ -60,16 +60,17 @@ def test_charge_is_not_reused_after_round_one() -> None:
     assert events[1].feature_id != "charge"
 
 
-def test_boar_without_charge_runup_moves_and_attacks_normally() -> None:
-    setup, hero, boar = _boar_fixture(15)
+def test_initiative_sweep_assumes_precontact_charge_runup_from_melee_slot() -> None:
+    setup, hero, boar = _boar_fixture(5)
 
-    events, _ = resolve_combat_turn(1, 1, boar, hero, setup, FixedDiceProvider([10, 3]))
+    events, _ = resolve_combat_turn(1, 1, boar, hero, setup, FixedDiceProvider([15, 2, 3]))
 
-    assert [event.event_type for event in events] == ["movement", "attack"]
-    assert events[0].movement_ft == 10
-    assert events[1].feature_id != "charge"
-    assert events[1].weapon_id == "boar-gore-weapon"
-    assert "dodge" not in boar.state.active_effect_ids
+    attacks = [event for event in events if event.event_type == "attack"]
+    assert len(attacks) == 1
+    assert attacks[0].feature_id == "charge"
+    assert attacks[0].damage_roll is not None
+    assert attacks[0].damage_roll.notation == "1d6+1 + 1d6+0"
+    assert not any(event.event_type == "movement" for event in events)
 
 
 def test_bloodied_fury_supplies_advantage_on_melee_attack() -> None:
