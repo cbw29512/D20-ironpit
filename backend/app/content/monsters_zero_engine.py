@@ -15,7 +15,15 @@ from app.domain.traits import CombatTrait
 _ATTACKS = {
     "Animated Armor": [("Slam", "melee", 4, 1, 6, 2, "bludgeoning", None, 5, None, None, [])],
     "Animated Flying Sword": [("Slash", "melee", 4, 1, 8, 2, "slashing", None, 5, None, None, [])],
+    "Awakened Tree": [("Slam", "melee", 6, 3, 6, 4, "bludgeoning", None, 10, None, None, [])],
     "Flying Snake": [("Bite", "melee", 4, 0, 2, 0, "piercing", 1, 5, None, None, [("Poison", 2, 4, 0, "poison")])],
+    "Gargoyle": [("Claw", "melee", 4, 2, 4, 2, "slashing", None, 5, None, None, [])],
+    "Grimlock": [("Bone Cudgel", "melee", 5, 1, 6, 3, "bludgeoning", None, 5, None, None, [("Psychic", 1, 4, 0, "psychic")])],
+    "Guard Captain": [
+        ("Javelin", "melee", 6, 3, 6, 4, "piercing", None, 5, None, None, []),
+        ("Javelin", "ranged", 6, 3, 6, 4, "piercing", None, 5, 30, 120, []),
+        ("Longsword", "melee", 6, 2, 10, 4, "slashing", None, 5, None, None, []),
+    ],
     "Hippopotamus": [("Bite", "melee", 7, 2, 10, 5, "piercing", None, 5, None, None, [])],
     "Killer Whale": [("Bite", "melee", 6, 5, 6, 4, "piercing", None, 5, None, None, [])],
     "Manticore": [
@@ -34,8 +42,13 @@ _ATTACKS = {
         ("Heavy Crossbow", "ranged", 3, 1, 10, 1, "piercing", None, 5, 100, 400, []),
     ],
     "Venomous Snake": [("Bite", "melee", 4, 1, 4, 2, "piercing", None, 5, None, None, [("Poison", 1, 6, 0, "poison")])],
+    "Violet Fungus": [("Rotting Touch", "melee", 2, 1, 8, 0, "necrotic", None, 10, None, None, [])],
 }
-_MULTI = {"Animated Armor": (2, ("Slam",)), "Hippopotamus": (2, ("Bite",)), "Manticore": (3, ("Rend", "Tail Spike"))}
+_MULTI = {
+    "Animated Armor": (2, ("Slam",)), "Gargoyle": (2, ("Claw",)),
+    "Guard Captain": (2, ("Javelin", "Longsword")), "Hippopotamus": (2, ("Bite",)),
+    "Manticore": (3, ("Rend", "Tail Spike")), "Violet Fungus": (2, ("Rotting Touch",)),
+}
 _TRAITS = {"Tough": [CombatTrait.PACK_TACTICS]}
 
 
@@ -52,7 +65,9 @@ def _row(name: str) -> dict[str, object]:
 
 def _weapon_attack(monster: str, spec: tuple) -> WeaponAttack:
     name, kind, bonus, count, size, damage_bonus, damage_type, fixed, reach, normal, long, extras = spec
-    attack_id = f"srd-{_slug(monster)}-{_slug(name)}"
+    duplicate_name = sum(1 for item in _ATTACKS[monster] if item[0] == name) > 1
+    mode_suffix = f"-{kind}" if duplicate_name else ""
+    attack_id = f"srd-{_slug(monster)}-{_slug(name)}{mode_suffix}"
     weapon = Weapon(
         id=f"{attack_id}-weapon", name=name, attack_kind=WeaponAttackKind(kind), dice_count=count,
         dice_size=size, damage_type=DamageType(damage_type), animation="strike", reach_ft=reach,
