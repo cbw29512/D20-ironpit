@@ -27,10 +27,16 @@ _COMPLEX_ACTION = re.compile(
     r"\b(Saving Throw|Failure:|Success:|Temporary Hit Points?|regains?\s+\d+|teleport|Concentration)\b",
     re.I,
 )
+_DAMAGE_TYPES = r"Acid|Bludgeoning|Cold|Fire|Force|Lightning|Necrotic|Piercing|Poison|Psychic|Radiant|Slashing|Thunder"
+_SUPPORTED_BLOODIED_REPLACEMENT = re.compile(
+    rf"\bdamage,?\s+or\s+\d+\s*\(\s*\d+\s*d\s*\d+(?:\s*[+-]\s*\d+)?\s*\)\s+"
+    rf"(?:{_DAMAGE_TYPES})\s+damage\s+if\s+the\s+[a-z][a-z -]*\s+is\s+Bloodied\b",
+    re.I,
+)
 _HIDDEN_RIDER = re.compile(
     r"\b(?:Speed decreases|attaches?|detaches?|next attack roll|Hit or Miss:)\b"
     r"|\bdamage,?\s+or\s+\d+\s*\([^)]*\)\s+\w+\s+damage\s+if\b"
-    r"|\bplus\s+\d+\s+(?:Acid|Bludgeoning|Cold|Fire|Force|Lightning|Necrotic|Piercing|Poison|Psychic|Radiant|Slashing|Thunder)\s+damage\b",
+    rf"|\bplus\s+\d+\s+(?:{_DAMAGE_TYPES})\s+damage\b",
     re.I,
 )
 _ATTACK_ROLL = re.compile(r"\b(?:Melee|Ranged|Melee or Ranged)\s+Attack Roll:", re.I)
@@ -52,6 +58,11 @@ def _reaction_is_modeled(row: dict[str, object], reactions: list[str]) -> bool:
     if reactions == ["Redirect Attack"]:
         return parse_redirect_attack_range(source) == 5
     return not reactions
+
+
+def _unmodeled_action_rider(actions: str) -> bool:
+    sanitized = _SUPPORTED_BLOODIED_REPLACEMENT.sub("damage", actions)
+    return bool(_HIDDEN_RIDER.search(sanitized))
 
 
 def _source_blockers(row: dict[str, object], monster_names: set[str]) -> list[str]:
@@ -94,7 +105,7 @@ def _source_blockers(row: dict[str, object], monster_names: set[str]) -> list[st
         blockers.append("save-or-complex-action")
     if _CONDITION_OR_CONTROL.search(actions):
         blockers.append("condition-or-control")
-    if _HIDDEN_RIDER.search(actions):
+    if _unmodeled_action_rider(actions):
         blockers.append("unsupported-action-rider")
     if _has_neighbor_bleed(row, monster_names):
         blockers.append("source-neighbor-bleed")
