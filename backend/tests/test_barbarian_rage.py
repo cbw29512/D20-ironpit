@@ -13,6 +13,7 @@ from app.combat.state import begin_turn, build_combatant_state
 from app.combat.zero_hp import apply_damage, restore_hit_points
 from app.content.demo import build_goblin_warrior
 from app.content.pregens import build_brom_ironmark
+from app.domain.actions import HitControlEffect
 from app.domain.models import DamageType, ResourceDefinition, RollMode
 
 
@@ -133,6 +134,24 @@ def test_rage_ends_when_not_extended_or_when_incapacitated() -> None:
     end_rage_if_incapacitated(state)
     assert rage_active(state) is False
     assert state.rage_max_round is None
+
+
+def test_hit_applied_incapacitation_ends_rage_immediately() -> None:
+    defender = _barbarian_state()
+    attacker = build_combatant_state(build_goblin_warrior())
+    enter_rage(1, 1, defender, "barbarian-1")
+    attack = attacker.template.weapon_attack.model_copy(deep=True)
+    attack.control_effect = HitControlEffect(
+        condition_id="stunned",
+        expires_at_start_of_source_turn=True,
+    )
+
+    event = resolve_attack(2, 1, attacker, defender, attack, 5, FixedDiceProvider([15, 1]))
+
+    assert event.hit is True
+    assert "stunned" in defender.active_effect_ids
+    assert rage_active(defender) is False
+    assert defender.resources[0].current_uses == 1
 
 
 def test_two_rages_stay_spent_after_two_knockouts_and_heals() -> None:
