@@ -3,9 +3,14 @@ from __future__ import annotations
 import pytest
 
 from app.content.monster_catalog import load_monster_rows
-from app.content.monster_reaction_source_audit import parse_parry_ac_bonus, parse_reaction_names, reaction_issues
+from app.content.monster_reaction_source_audit import (
+    parse_parry_ac_bonus,
+    parse_reaction_names,
+    parse_redirect_attack_range,
+    reaction_issues,
+)
 from app.content.roster import build_arena_roster
-from app.domain.reactions import ParryReaction
+from app.domain.reactions import ParryReaction, RedirectAttackReaction
 
 
 def _row(name: str) -> dict[str, object]:
@@ -61,6 +66,22 @@ def test_wrong_parry_bonus_still_fails_closed() -> None:
     issues = reaction_issues(template, _row("Bandit Captain"))
     assert "parry-source-mismatch" in issues
     assert "uncertified-reaction:parry" in issues
+
+
+def test_exact_redirect_attack_can_be_certified() -> None:
+    boss = _monster("Goblin Boss")
+    assert parse_redirect_attack_range(_row("Goblin Boss")["reactions"]) == 5
+    assert boss.source_reaction_names == ["Redirect Attack"]
+    assert reaction_issues(boss, _row("Goblin Boss")) == []
+
+
+def test_redirect_attack_range_drift_fails_closed() -> None:
+    boss = _monster("Goblin Boss").model_copy(update={
+        "redirect_attack_reaction": RedirectAttackReaction(ally_range_ft=10),
+    })
+    issues = reaction_issues(boss, _row("Goblin Boss"))
+    assert "redirect-attack-source-mismatch" in issues
+    assert "uncertified-reaction:redirect-attack" in issues
 
 
 def test_empty_reaction_fingerprint_is_source_derived() -> None:
