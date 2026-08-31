@@ -11,7 +11,7 @@ from app.content.monster_bonus_action_source_audit import (
 from app.content.monster_catalog import _READY_BY_NAME, load_monster_rows
 from app.content.monster_defense_source_audit import parse_defense_profile
 from app.content.monster_limited_use_source_audit import parse_limited_use_names
-from app.content.monster_reaction_source_audit import parse_reaction_names
+from app.content.monster_reaction_source_audit import parse_parry_ac_bonus, parse_reaction_names
 from app.content.monster_spellcasting_source_audit import arena_neutral_spellcasting, spellcasting_fingerprint
 from app.content.monster_trait_source_audit import _ARENA_NEUTRAL_TRAITS, _MODELED_TRAITS, parse_trait_names
 
@@ -51,7 +51,11 @@ def _source_blockers(row: dict[str, object], monster_names: set[str]) -> list[st
         blockers.append("trait-parse")
     try:
         reactions = parse_reaction_names(row.get("reactions", ""))
-        if reactions:
+        standard_parry_only = (
+            reactions == ["Parry"]
+            and parse_parry_ac_bonus(row.get("reactions", "")) is not None
+        )
+        if reactions and not standard_parry_only:
             blockers.append("reaction")
     except ValueError:
         blockers.append("reaction-parse")
