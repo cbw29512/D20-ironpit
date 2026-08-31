@@ -3,10 +3,10 @@ from __future__ import annotations
 import logging
 
 from app.combat.barbarian import rage_damage_bonus
-from app.combat.bloodied import is_bloodied
+from app.combat.conditional_damage import active_replacement_damage, conditional_damage_active
 from app.combat.dice import DiceProvider
 from app.combat.savage_attacker import roll_weapon_component
-from app.domain.models import CombatantState, ConditionalDamage, DamageRollComponent, DamageType, DiceRoll, RollMode, WeaponAttack
+from app.domain.models import CombatantState, DamageRollComponent, DamageType, DiceRoll, RollMode, WeaponAttack
 
 logger = logging.getLogger(__name__)
 BonusDamageSpec = tuple[str, int, int, DamageType]
@@ -57,36 +57,6 @@ def aggregate_damage_components(components: list[DamageRollComponent]) -> DiceRo
     )
 
 
-def _conditional_active(
-    conditional: ConditionalDamage,
-    attacker: CombatantState,
-    target: CombatantState | None,
-    attack_mode: RollMode,
-) -> bool:
-    if conditional.trigger == "attack_advantage":
-        return attack_mode is RollMode.ADVANTAGE
-    if conditional.trigger == "attacker_bloodied":
-        return is_bloodied(attacker)
-    if target is None:
-        raise ValueError("Target state is required for target-Bloodied conditional damage.")
-    return is_bloodied(target)
-
-
-def _active_replacement(
-    attacker: CombatantState,
-    target: CombatantState | None,
-    attack: WeaponAttack,
-    attack_mode: RollMode,
-) -> ConditionalDamage | None:
-    active = [
-        item for item in attack.conditional_damage
-        if item.mode == "replace_weapon" and _conditional_active(item, attacker, target, attack_mode)
-    ]
-    if len(active) > 1:
-        raise ValueError(f"Multiple replacement damage profiles are active for {attack.id}.")
-    return active[0] if active else None
-
-
 def resolve_weapon_damage(
     attacker: CombatantState,
     attack: WeaponAttack,
@@ -100,7 +70,7 @@ def resolve_weapon_damage(
     """Resolve weapon dice or fixed damage plus certified hit-specific riders."""
     try:
         weapon = attack.weapon
-        replacement = _active_replacement(attacker, target, attack, attack_mode)
+        replacement = active_replacement_damage(attacker, target, attack, attack_mode)
         if replacement is not None:
             components = [roll_damage_component(
                 dice, weapon.name, replacement.dice_count, replacement.dice_size,
@@ -124,7 +94,7 @@ def resolve_weapon_damage(
             ))
 
         for conditional in attack.conditional_damage:
-            if conditional.mode != "add" or not _conditional_active(conditional, attacker, target, attack_mode):
+            if conditional.mode != "add" or not conditional_damage_active(conditional, attacker, target, attack_mode):
                 continue
             components.append(roll_damage_component(
                 dice=dice,
