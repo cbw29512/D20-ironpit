@@ -11,6 +11,7 @@ from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.encounter_targeting import combatant_distance, select_nearest_target
 from app.combat.encounter_turns import prepare_encounter_attack
 from app.combat.fighter import use_second_wind
+from app.combat.formation import backline_holds_position
 from app.combat.grapple import cleanup_grapples, resolve_escape_grapple, should_escape_grapple
 from app.combat.healing import choose_healing_action, resolve_healing
 from app.combat.opening_burst import opening_feature_id
@@ -26,6 +27,8 @@ from app.domain.models import BattleEvent
 
 
 def _close_after_action(sequence, round_number, attacker, setup, dice):
+    if backline_holds_position(attacker, setup):
+        return [], sequence
     target = select_nearest_target(attacker, setup)
     if target is None or combatant_distance(attacker, target) <= MELEE_BRAWL_DISTANCE_FT:
         return [], sequence
