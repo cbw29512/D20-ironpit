@@ -19,9 +19,15 @@ Iron Pit is a rules-first card-vs-card deathmatch. It intentionally simplifies b
 - Standing enemies are targeted before downed enemies. If no standing enemy remains, living unconscious or stable player characters remain valid targets so the deathmatch can reach a rules-resolved death rather than ending merely at 0 HP.
 - Standard monsters die at 0 HP. Player characters use the supported zero-HP, Unconscious, Death Saving Throw, massive-damage, and damage-while-at-0 rules until they die or regain HP.
 - Unconscious player characters are also Incapacitated and Prone. Attack rolls against them have Advantage; hits from attackers within 5 feet are Critical Hits; and when Unconscious ends they remain Prone until they stand normally.
+- Iron Pit has no Short Rest or Long Rest during a fight. Each limited-use combat resource begins with the exact uses granted by that combatant's class, species, level, or printed stat block. Once spent, a use remains spent for the rest of the fight. Ending an effect, dropping to 0 HP, stabilizing, or regaining HP never refunds or refreshes that resource.
+- Effects end only when their own rules say they end. Becoming Incapacitated can end effects such as Rage or Dodge when their printed rules require it, but it does not erase unrelated conditions or restore spent resources. Healing above 0 HP does not reactivate an effect that ended.
+- Multiple sources of Advantage never become more than Advantage. Multiple sources of Disadvantage never become worse than Disadvantage. If any Advantage and any Disadvantage both apply, the d20 roll is normal regardless of how many sources exist on either side.
+- The same named condition is not multiplied into stronger copies merely because multiple sources apply it. Each source still matters for its own duration and removal rules where RAW requires that distinction.
 
 ## Readiness rule
 
 A stat-block feature does not block standard-arena readiness when these arena assumptions make that feature unable to affect the fight. A missing attack, damage rider, defense, saving throw, condition, resource, reaction, spell, recharge feature, or other mechanic that can change the combat outcome still blocks readiness.
+
+Every runnable pregen must independently reconcile its combat-relevant class, species, feat, equipment, resource, and level-scaling rules. Every runnable monster must reconcile every combat-relevant printed stat-block mechanic. If a scaling rule or outcome-changing mechanic has not been independently certified, the card remains blocked.
 
 These are explicit Iron Pit arena assumptions, not changes to a creature's printed statistics. Unsupported outcome-changing mechanics fail closed instead of being approximated.
