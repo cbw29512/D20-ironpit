@@ -3,12 +3,12 @@ from app.combat.encounter_setup import build_encounter_setup
 from app.combat.opportunity_attacks import resolve_opportunity_attack
 from app.combat.state import begin_turn
 from app.content.roster import build_arena_roster
-from app.domain.models import EncounterSelection, WeaponAttackKind
+from app.domain.models import EncounterSelection
 
 
-def _setup(monster_id: str = "srd-commoner"):
+def _setup(monster_id: str = "srd-commoner", hero_id: str = "karnok-stoneward-l1"):
     setup = build_encounter_setup(EncounterSelection(
-        hero_ids=["karnok-stoneward-l1"], monster_ids=[monster_id], starting_distance_ft=5,
+        hero_ids=[hero_id], monster_ids=[monster_id], starting_distance_ft=5,
     ))
     return setup, setup.monsters[0], setup.heroes[0]
 
@@ -51,17 +51,33 @@ def test_incapacitated_or_blinded_reactor_cannot_make_opportunity_attack() -> No
         assert reactor.state.reaction_available is True
 
 
-def test_reach_is_left_before_opportunity_attack_triggers() -> None:
+def test_reach_weapon_and_unarmed_strike_use_their_actual_boundaries() -> None:
     setup, reactor, mover = _setup("srd-plesiosaurus")
     assert reactor.state.template.weapon_attack.weapon.reach_ft == 10
-    assert resolve_opportunity_attack(
-        1, 1, reactor, mover, setup, 5, 10, "speed", FixedDiceProvider([19])
-    ) is None
+    unarmed = resolve_opportunity_attack(
+        1, 1, reactor, mover, setup, 5, 10, "speed", FixedDiceProvider([19]),
+    )
+    assert unarmed is not None and unarmed.weapon_id == "unarmed-strike"
+
+    begin_turn(reactor.state)
+    weapon = resolve_opportunity_attack(
+        2, 1, reactor, mover, setup, 10, 15, "speed", FixedDiceProvider([19, 1, 1]),
+    )
+    assert weapon is not None and weapon.weapon_id == reactor.state.template.weapon_attack.weapon.id
+
+
+def test_selene_uses_certified_unarmed_strike_for_opportunity_attack() -> None:
+    setup, mover, selene = _setup(hero_id="selene-asharrow-l1")
+    profile = selene.state.template.unarmed_opportunity_attack
+    assert profile is not None and (profile.attack_bonus, profile.damage) == (3, 2)
+    hp_before = mover.state.current_hp
     event = resolve_opportunity_attack(
-        1, 1, reactor, mover, setup, 10, 15, "speed", FixedDiceProvider([19, 1, 1]),
+        1, 1, selene, mover, setup, 5, 10, "speed", FixedDiceProvider([19]),
     )
     assert event is not None
-    assert event.feature_id == "opportunity-attack"
+    assert event.weapon_id == "unarmed-strike"
+    assert event.hit is True and event.damage_roll is not None and event.damage_roll.total == 2
+    assert mover.state.current_hp == hp_before - 2
 
 
 def test_action_bonus_action_and_reaction_movement_sources_can_provoke() -> None:
@@ -73,11 +89,10 @@ def test_action_bonus_action_and_reaction_movement_sources_can_provoke() -> None
         assert event is not None
 
 
-def test_every_runtime_combatant_has_a_modeled_melee_opportunity_attack() -> None:
+def test_every_runtime_combatant_has_certified_unarmed_opportunity_profile() -> None:
     roster = build_arena_roster()
-    missing: list[str] = []
-    for template in [*roster.characters, *roster.monsters]:
-        attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
-        if not any(attack.weapon.attack_kind is WeaponAttackKind.MELEE for attack in attacks):
-            missing.append(template.name)
-    assert missing == [], f"Runtime combatants require Unarmed Strike OA support: {missing}"
+    missing = [
+        template.name for template in [*roster.characters, *roster.monsters]
+        if template.unarmed_opportunity_attack is None
+    ]
+    assert missing == []
