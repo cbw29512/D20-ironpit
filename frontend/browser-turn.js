@@ -6,6 +6,7 @@
   const C = () => window.IRON_PIT_BROWSER_CHARGE;
   const M = () => window.IRON_PIT_BROWSER_MULTIATTACK;
   const G = () => window.IRON_PIT_BROWSER_RAGE;
+  const J = () => window.IRON_PIT_BROWSER_ACTION_SURGE;
   const P = () => window.IRON_PIT_BROWSER_SUPPORT;
   const Y = () => window.IRON_PIT_BROWSER_SPELL_POLICY;
   const Z = () => window.IRON_PIT_BROWSER_SPELL_RESOLUTION;
@@ -105,7 +106,9 @@
       death_save_successes: state.death_save_successes, death_save_failures: state.death_save_failures,
       is_stable: state.is_stable, is_dead: state.is_dead, animation: "death-save", description: `${state.template.name} makes a Death Save: ${result}.` };
   }
-  function finalize(events, sequence, round, member) {
+  function finalize(events, sequence, round, member, setup, turnKey) {
+    const surge = J()?.resolveAttack(sequence, round, member, setup, turnKey);
+    if (surge) { events.push(...surge.events); sequence = surge.sequence; }
     const rage = G()?.finalize(sequence, round, member); if (rage?.event) events.push(rage.event);
     return { events, sequence: rage?.sequence ?? sequence };
   }
@@ -115,26 +118,26 @@
     const support = P()?.resolve(sequence, round, member, setup, turnKey); if (support) { events.push(...support.events); sequence = support.sequence; }
     const rage = G()?.enter(sequence, round, member); if (rage) { events.push(rage); sequence += 1; }
     const wind = P()?.secondWind(sequence, round, member); if (wind) { events.push(wind); sequence += 1; }
-    if (H().shouldEscape(member.state)) { events.push(H().escape(sequence++, round, member)); return finalize(events, sequence, round, member); }
+    if (H().shouldEscape(member.state)) { events.push(H().escape(sequence++, round, member)); return finalize(events, sequence, round, member, setup, turnKey); }
     const rush = P()?.adrenaline(sequence, round, member); if (rush) { events.push(rush); sequence += 1; }
-    const spell = Y()?.choose(member, setup, turnKey); if (spell) { const cast = Z().resolve(sequence, round, member, setup, spell, turnKey); events.push(...cast.events); sequence = cast.sequence; if (!E().available(member.state, "action")) return finalize(events, sequence, round, member); }
-    const target = S().nearestTarget(member, setup); if (!target) return finalize(events, sequence, round, member);
+    const spell = Y()?.choose(member, setup, turnKey); if (spell) { const cast = Z().resolve(sequence, round, member, setup, spell, turnKey); events.push(...cast.events); sequence = cast.sequence; if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey); }
+    const target = S().nearestTarget(member, setup); if (!target) return finalize(events, sequence, round, member, setup, turnKey);
     const closing = closeTurn(sequence, round, member, target, setup); events.push(...closing.events); sequence = closing.sequence;
-    if (member.state.is_dead || member.state.is_unconscious || closing.handled) return finalize(events, sequence, round, member);
+    if (member.state.is_dead || member.state.is_unconscious || closing.handled) return finalize(events, sequence, round, member, setup, turnKey);
     const distance = S().distance(member, target);
     if (member.state.template.attack_action) {
       const multi = M().resolveAttackAction(sequence, round, member, setup); events.push(...multi.events); sequence = multi.sequence;
       const approach = closeAfterAction(sequence, round, member, setup); events.push(...approach.events);
-      return finalize(events, approach.sequence, round, member);
+      return finalize(events, approach.sequence, round, member, setup, turnKey);
     }
     const saveAction = member.state.template.saving_throw_actions?.find((a) => V().legalAction(a, target, distance));
-    if (saveAction && E().available(member.state, "action")) { events.push(V().resolveAction(sequence++, round, member, target, saveAction, distance)); return finalize(events, sequence, round, member); }
+    if (saveAction && E().available(member.state, "action")) { events.push(V().resolveAction(sequence++, round, member, target, saveAction, distance)); return finalize(events, sequence, round, member, setup, turnKey); }
     const attack = legalAttack(member, distance);
     if (attack && E().available(member.state, "action")) {
       const pack = S().packTactics(member, setup), opener = C()?.openingFeature?.(round, member, setup) || null;
       events.push(A().resolveAttack(sequence++, round, member, target, attack, distance, { advantage: pack ? 1 : 0, featureId: opener || (pack ? "pack-tactics" : null), setup }));
     }
-    return finalize(events, sequence, round, member);
+    return finalize(events, sequence, round, member, setup, turnKey);
   }
   window.IRON_PIT_BROWSER_TURN = { deathSave, resolveTurn };
 })();
