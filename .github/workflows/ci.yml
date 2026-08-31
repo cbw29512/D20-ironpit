@@ -5,7 +5,7 @@ on:
   pull_request:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: ci-${{ github.event.pull_request.head.ref || github.ref_name }}
@@ -42,16 +42,6 @@ jobs:
             frontend/browser-monsters-generated.js
             frontend/data/srd_5_2_1_monsters.json
           retention-days: 1
-      - name: Sync canonical static artifacts on hardening branch
-        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'audit/raw-combat-log-figures-20260830'
-        run: |
-          if [ -n "$(git status --porcelain --untracked-files=all -- frontend/browser-monsters-generated.js frontend/data/srd_5_2_1_monsters.json)" ]; then
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add frontend/browser-monsters-generated.js frontend/data/srd_5_2_1_monsters.json
-            git commit -m "build: sync canonical static monster assets"
-            git push origin HEAD:${{ github.event.pull_request.head.ref }}
-          fi
       - name: Enforce generated static parity
         run: |
           git diff --exit-code -- frontend/browser-heroes.js frontend/figure-profiles.js frontend/browser-monsters-generated.js frontend/data/srd_5_2_1_monsters.json
