@@ -79,7 +79,7 @@ def resolve_simple_closing(
 
     events: list[BattleEvent] = []
     ranged = _legal_ranged_attack(attacker, combatant_distance(attacker, target))
-    if ranged is not None and is_available(attacker.state, "action") and setup is not None:
+    if ranged is not None and is_available(attacker.state, "action"):
         events.append(resolve_encounter_attack(
             sequence, round_number, attacker, target, ranged,
             combatant_distance(attacker, target), dice, setup,
