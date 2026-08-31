@@ -25,6 +25,7 @@ from app.content.monsters_fixed_damage import build_fixed_damage_monsters
 from app.content.monsters_humanoid_expansion import build_goblin_minion, build_hobgoblin_warrior, build_kobold_warrior
 from app.content.monsters_low_cr import build_giant_rat, build_giant_weasel, build_guard
 from app.content.monsters_mixed_multiattack import build_giant_constrictor_snake
+from app.content.monsters_parry import build_parry_monsters
 from app.content.monsters_poison import build_poison_monsters
 from app.content.monsters_simple_beasts import build_baboon, build_camel, build_deer, build_draft_horse, build_giant_badger, build_jackal
 from app.content.monsters_venom import build_venom_monsters
@@ -48,7 +49,7 @@ def build_arena_roster() -> ArenaRoster:
             build_hippogriff(), *build_fixed_damage_monsters(), *build_beast_batch_two(),
             *build_monster_batch_three(), *build_control_monsters(), *build_poison_monsters(),
             *build_venom_monsters(), *build_expansion_four(), build_giant_crocodile(),
-            build_giant_constrictor_snake(), build_tyrannosaurus_rex(), *build_zero_engine_monsters(),
+            build_giant_constrictor_snake(), build_tyrannosaurus_rex(), *build_zero_engine_monsters(), *build_parry_monsters(),
         ]
         monsters = complete_monster_movement_modes(monsters)
         monsters = complete_monster_trait_fingerprints(monsters)
