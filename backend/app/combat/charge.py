@@ -3,8 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from app.combat.action_economy import is_available
-from app.combat.attacks import resolve_attack
 from app.combat.dice import DiceProvider
+from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.opening_burst import opening_burst_available
 from app.combat.reaction_movement import move_toward_with_reactions
@@ -100,10 +100,9 @@ def resolve_charge_closing(
         return move_events, sequence, bool(move_events)
 
     charged_attack = attack.model_copy(update={"knocks_prone_max_size": profile.max_target_size})
-    event = resolve_attack(
-        sequence, round_number, attacker.state, target.state, charged_attack,
-        combatant_distance(attacker, target), dice,
-        actor_event_id=attacker.combatant_id, target_event_id=target.combatant_id,
+    event = resolve_encounter_attack(
+        sequence, round_number, attacker, target, charged_attack,
+        combatant_distance(attacker, target), dice, setup,
         feature_id="charge",
         bonus_damage=("Charge", profile.dice_count, profile.dice_size, profile.damage_type),
     )
