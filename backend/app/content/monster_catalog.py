@@ -61,6 +61,9 @@ def load_monster_rows() -> list[dict[str, object]]:
     names = {str(row["name"]) for row in combined}
     if len(combined) != 330 or len(ids) != 330 or len(names) != 330:
         raise RuntimeError("SRD 5.2.1 monster catalog must contain 330 unique creatures.")
+    from app.content.monster_source_integrity import validate_monster_source_integrity
+
+    validate_monster_source_integrity(combined)
     return combined
 
 

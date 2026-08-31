@@ -4,6 +4,7 @@ import json
 import logging
 from pathlib import Path
 
+from app.content.monster_source_integrity import validate_monster_source_integrity
 from export_browser_heroes import main as export_browser_heroes
 from export_browser_monsters import main as export_browser_monsters
 from export_figure_profiles import main as export_figure_profiles
@@ -37,6 +38,7 @@ def _prepare_monster_catalog() -> None:
         names = {str(row["name"]) for row in combined}
         if len(combined) != 330 or len(ids) != 330 or len(names) != 330:
             raise RuntimeError("Static SRD monster catalog must contain 330 unique records.")
+        validate_monster_source_integrity(combined)
         DESTINATION.parent.mkdir(parents=True, exist_ok=True)
         DESTINATION.write_text(json.dumps(combined, separators=(",", ":")), encoding="utf-8")
         logger.info("Prepared 330 corrected SRD monsters for static browser delivery.")
