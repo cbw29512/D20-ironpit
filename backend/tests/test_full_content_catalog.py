@@ -86,14 +86,14 @@ def test_current_certified_monsters_are_linked_to_runtime_templates() -> None:
         monster.name: monster.runnable_template_id
         for monster in catalog.monsters if monster.coverage_status is CoverageStatus.RAW_READY
     }
-    assert len(ready_monsters) == 90
+    assert len(ready_monsters) == 94
     assert ready_monsters == {
         "Animated Armor": "srd-animated-armor", "Animated Flying Sword": "srd-animated-flying-sword",
         "Ankylosaurus": "srd-ankylosaurus", "Archelon": "srd-archelon",
         "Awakened Shrub": "srd-awakened-shrub", "Awakened Tree": "srd-awakened-tree", "Axe Beak": "srd-axe-beak",
         "Baboon": "srd-baboon", "Badger": "srd-badger", "Bandit": "srd-bandit",
-        "Bat": "srd-bat", "Black Bear": "srd-black-bear", "Boar": "srd-boar",
-        "Brown Bear": "srd-brown-bear", "Camel": "srd-camel", "Cat": "srd-cat",
+        "Bandit Captain": "srd-bandit-captain", "Bat": "srd-bat", "Black Bear": "srd-black-bear",
+        "Boar": "srd-boar", "Brown Bear": "srd-brown-bear", "Camel": "srd-camel", "Cat": "srd-cat",
         "Constrictor Snake": "srd-constrictor-snake", "Crab": "srd-crab",
         "Crocodile": "srd-crocodile", "Deer": "srd-deer", "Dire Wolf": "srd-dire-wolf",
         "Draft Horse": "srd-draft-horse", "Eagle": "srd-eagle", "Elk": "srd-elk",
@@ -111,9 +111,9 @@ def test_current_certified_monsters_are_linked_to_runtime_templates() -> None:
         "Guard Captain": "srd-guard-captain", "Hawk": "srd-hawk",
         "Hippogriff": "srd-hippogriff", "Hippopotamus": "srd-hippopotamus",
         "Hobgoblin Warrior": "srd-hobgoblin-warrior", "Hyena": "srd-hyena", "Jackal": "srd-jackal",
-        "Killer Whale": "srd-killer-whale", "Kobold Warrior": "srd-kobold-warrior",
+        "Killer Whale": "srd-killer-whale", "Knight": "srd-knight", "Kobold Warrior": "srd-kobold-warrior",
         "Lizard": "srd-lizard", "Manticore": "srd-manticore", "Mastiff": "srd-mastiff",
-        "Mule": "srd-mule", "Ogre": "srd-ogre", "Owl": "srd-owl", "Owlbear": "srd-owlbear",
+        "Mule": "srd-mule", "Noble": "srd-noble", "Ogre": "srd-ogre", "Owl": "srd-owl", "Owlbear": "srd-owlbear",
         "Panther": "srd-panther", "Pegasus": "srd-pegasus", "Plesiosaurus": "srd-plesiosaurus",
         "Polar Bear": "srd-polar-bear", "Pony": "srd-pony", "Pteranodon": "srd-pteranodon",
         "Rat": "srd-rat", "Raven": "srd-raven", "Rhinoceros": "srd-rhinoceros",
@@ -121,6 +121,7 @@ def test_current_certified_monsters_are_linked_to_runtime_templates() -> None:
         "Scorpion": "srd-scorpion", "Scout": "srd-scout", "Skeleton": "srd-skeleton",
         "Spider": "srd-spider", "Tiger": "srd-tiger", "Tough": "srd-tough",
         "Tyrannosaurus Rex": "srd-tyrannosaurus-rex", "Venomous Snake": "srd-venomous-snake",
-        "Violet Fungus": "srd-violet-fungus", "Vulture": "srd-vulture", "Warhorse": "srd-warhorse", "Warrior Infantry": "srd-warrior-infantry",
+        "Violet Fungus": "srd-violet-fungus", "Vulture": "srd-vulture", "Warhorse": "srd-warhorse",
+        "Warrior Infantry": "srd-warrior-infantry", "Warrior Veteran": "srd-warrior-veteran",
         "Weasel": "srd-weasel", "Wolf": "srd-wolf",
     }
