@@ -79,7 +79,7 @@ def should_escape_grapple(state: CombatantState) -> bool:
 
 
 def _check_mode(state: CombatantState, strength_check: bool) -> RollMode:
-    advantage = strength_check and rage_active(state)
+    advantage = strength_check and (rage_active(state) or state.template.athletics_advantage)
     disadvantage = has_condition(state, POISONED_EFFECT_ID) or has_condition(state, FRIGHTENED_EFFECT_ID)
     if advantage == disadvantage:
         return RollMode.NORMAL
