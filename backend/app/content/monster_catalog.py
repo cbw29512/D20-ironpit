@@ -1,86 +1,43 @@
 from __future__ import annotations
 
 import json
+import logging
 from pathlib import Path
 
 from app.domain.catalog import CoverageStatus, MonsterCatalogCard
+from app.domain.models import CombatantTemplate
 
+logger = logging.getLogger(__name__)
 _DATA_DIR = Path(__file__).with_name("data")
 _DATA_PATH = _DATA_DIR / "srd_5_2_1_monsters.json"
 _CORRECTIONS_PATH = _DATA_DIR / "srd_5_2_1_monster_corrections.json"
 
-# Ready means every mechanic capable of changing a standard flat-arena fight is
-# represented. Terrain-only movement and deliberately unused flee/retreat options
-# do not block readiness under docs/ARENA_POLICY.md.
+# Candidate means the combat mechanics are implemented. The final catalog gate
+# still reconciles source-derived movement before a card may remain RAW READY.
 _READY_BY_NAME = {
-    "Awakened Shrub": "srd-awakened-shrub",
-    "Axe Beak": "srd-axe-beak",
-    "Baboon": "srd-baboon",
-    "Badger": "srd-badger",
-    "Bandit": "srd-bandit",
-    "Bat": "srd-bat",
-    "Black Bear": "srd-black-bear",
-    "Boar": "srd-boar",
-    "Brown Bear": "srd-brown-bear",
-    "Camel": "srd-camel",
-    "Cat": "srd-cat",
-    "Commoner": "srd-commoner",
-    "Constrictor Snake": "srd-constrictor-snake",
-    "Crab": "srd-crab",
-    "Crocodile": "srd-crocodile",
-    "Deer": "srd-deer",
-    "Dire Wolf": "srd-dire-wolf",
-    "Draft Horse": "srd-draft-horse",
-    "Eagle": "srd-eagle",
-    "Elk": "srd-elk",
-    "Frog": "srd-frog",
-    "Giant Badger": "srd-giant-badger",
-    "Giant Bat": "srd-giant-bat",
-    "Giant Boar": "srd-giant-boar",
-    "Giant Centipede": "srd-giant-centipede",
-    "Giant Constrictor Snake": "srd-giant-constrictor-snake",
-    "Giant Crab": "srd-giant-crab",
-    "Giant Fire Beetle": "srd-giant-fire-beetle",
-    "Giant Goat": "srd-giant-goat",
-    "Giant Lizard": "srd-giant-lizard",
-    "Giant Owl": "srd-giant-owl",
-    "Giant Rat": "srd-giant-rat",
-    "Giant Venomous Snake": "srd-giant-venomous-snake",
-    "Giant Wasp": "srd-giant-wasp",
-    "Giant Weasel": "srd-giant-weasel",
-    "Giant Wolf Spider": "srd-giant-wolf-spider",
-    "Goblin Minion": "srd-goblin-minion",
-    "Goblin Warrior": "srd-goblin-warrior",
-    "Guard": "srd-guard",
-    "Hawk": "srd-hawk",
-    "Hippogriff": "srd-hippogriff",
-    "Hobgoblin Warrior": "srd-hobgoblin-warrior",
-    "Hyena": "srd-hyena",
-    "Kobold Warrior": "srd-kobold-warrior",
-    "Lizard": "srd-lizard",
-    "Mastiff": "srd-mastiff",
-    "Mule": "srd-mule",
-    "Ogre": "srd-ogre",
-    "Owl": "srd-owl",
-    "Owlbear": "srd-owlbear",
-    "Panther": "srd-panther",
-    "Plesiosaurus": "srd-plesiosaurus",
-    "Polar Bear": "srd-polar-bear",
-    "Pony": "srd-pony",
-    "Pteranodon": "srd-pteranodon",
-    "Rat": "srd-rat",
-    "Raven": "srd-raven",
-    "Rhinoceros": "srd-rhinoceros",
-    "Riding Horse": "srd-riding-horse",
-    "Saber-Toothed Tiger": "srd-saber-toothed-tiger",
-    "Scout": "srd-scout",
-    "Tiger": "srd-tiger",
-    "Tyrannosaurus Rex": "srd-tyrannosaurus-rex",
-    "Vulture": "srd-vulture",
-    "Warhorse": "srd-warhorse",
-    "Warrior Infantry": "srd-warrior-infantry",
-    "Weasel": "srd-weasel",
-    "Wolf": "srd-wolf",
+    "Awakened Shrub": "srd-awakened-shrub", "Axe Beak": "srd-axe-beak", "Baboon": "srd-baboon",
+    "Badger": "srd-badger", "Bandit": "srd-bandit", "Bat": "srd-bat", "Black Bear": "srd-black-bear",
+    "Boar": "srd-boar", "Brown Bear": "srd-brown-bear", "Camel": "srd-camel", "Cat": "srd-cat",
+    "Commoner": "srd-commoner", "Constrictor Snake": "srd-constrictor-snake", "Crab": "srd-crab",
+    "Crocodile": "srd-crocodile", "Deer": "srd-deer", "Dire Wolf": "srd-dire-wolf",
+    "Draft Horse": "srd-draft-horse", "Eagle": "srd-eagle", "Elk": "srd-elk", "Frog": "srd-frog",
+    "Giant Badger": "srd-giant-badger", "Giant Bat": "srd-giant-bat", "Giant Boar": "srd-giant-boar",
+    "Giant Centipede": "srd-giant-centipede", "Giant Constrictor Snake": "srd-giant-constrictor-snake",
+    "Giant Crab": "srd-giant-crab", "Giant Fire Beetle": "srd-giant-fire-beetle",
+    "Giant Goat": "srd-giant-goat", "Giant Lizard": "srd-giant-lizard", "Giant Owl": "srd-giant-owl",
+    "Giant Rat": "srd-giant-rat", "Giant Venomous Snake": "srd-giant-venomous-snake",
+    "Giant Wasp": "srd-giant-wasp", "Giant Weasel": "srd-giant-weasel",
+    "Giant Wolf Spider": "srd-giant-wolf-spider", "Goblin Minion": "srd-goblin-minion",
+    "Goblin Warrior": "srd-goblin-warrior", "Guard": "srd-guard", "Hawk": "srd-hawk",
+    "Hippogriff": "srd-hippogriff", "Hobgoblin Warrior": "srd-hobgoblin-warrior", "Hyena": "srd-hyena",
+    "Kobold Warrior": "srd-kobold-warrior", "Lizard": "srd-lizard", "Mastiff": "srd-mastiff",
+    "Mule": "srd-mule", "Ogre": "srd-ogre", "Owl": "srd-owl", "Owlbear": "srd-owlbear",
+    "Panther": "srd-panther", "Plesiosaurus": "srd-plesiosaurus", "Polar Bear": "srd-polar-bear",
+    "Pony": "srd-pony", "Pteranodon": "srd-pteranodon", "Rat": "srd-rat", "Raven": "srd-raven",
+    "Rhinoceros": "srd-rhinoceros", "Riding Horse": "srd-riding-horse",
+    "Saber-Toothed Tiger": "srd-saber-toothed-tiger", "Scout": "srd-scout", "Tiger": "srd-tiger",
+    "Tyrannosaurus Rex": "srd-tyrannosaurus-rex", "Vulture": "srd-vulture", "Warhorse": "srd-warhorse",
+    "Warrior Infantry": "srd-warrior-infantry", "Weasel": "srd-weasel", "Wolf": "srd-wolf",
 }
 
 
@@ -99,24 +56,43 @@ def load_monster_rows() -> list[dict[str, object]]:
     return combined
 
 
-def _card(row: dict[str, object]) -> MonsterCatalogCard:
+def _runtime_monsters() -> dict[str, CombatantTemplate]:
+    try:
+        from app.content.roster import build_arena_roster
+
+        return {template.id: template for template in build_arena_roster().monsters}
+    except Exception:
+        logger.exception("Runtime monster roster failed; RAW READY candidates will fail closed.")
+        return {}
+
+
+def _card(row: dict[str, object], runtime: dict[str, CombatantTemplate]) -> MonsterCatalogCard:
     name = str(row["name"])
-    template_id = _READY_BY_NAME.get(name)
+    candidate_id = _READY_BY_NAME.get(name)
+    blockers = [] if candidate_id else ["monster-combat-mechanics-not-certified"]
+    if candidate_id:
+        template = runtime.get(candidate_id)
+        if template is None:
+            blockers = ["missing-runtime-template"]
+        else:
+            try:
+                from app.content.movement_modes import movement_mode_issues
+
+                blockers = movement_mode_issues(template, row)
+            except Exception:
+                logger.exception("Movement certification failed for %s.", name)
+                blockers = ["movement-source-audit-failed"]
+    raw_ready = bool(candidate_id and not blockers)
     return MonsterCatalogCard(
-        id=str(row["id"]),
-        name=name,
-        challenge_rating=str(row["challenge"]),
-        monster_type=str(row["type"]),
-        armor_class=str(row["armorClass"]),
-        hit_points=str(row["hitPoints"]),
-        speed=str(row["speed"]),
-        source_page=int(row["sourcePage"]),
-        source_reference=str(row["sourceReference"]),
-        coverage_status=(CoverageStatus.RAW_READY if template_id else CoverageStatus.BLOCKED),
-        runnable_template_id=template_id,
-        blockers=[] if template_id else ["monster-combat-mechanics-not-certified"],
+        id=str(row["id"]), name=name, challenge_rating=str(row["challenge"]), monster_type=str(row["type"]),
+        armor_class=str(row["armorClass"]), hit_points=str(row["hitPoints"]), speed=str(row["speed"]),
+        source_page=int(row["sourcePage"]), source_reference=str(row["sourceReference"]),
+        coverage_status=CoverageStatus.RAW_READY if raw_ready else CoverageStatus.BLOCKED,
+        runnable_template_id=candidate_id if raw_ready else None,
+        blockers=blockers,
     )
 
 
 def build_monster_catalog() -> list[MonsterCatalogCard]:
-    return [_card(row) for row in load_monster_rows()]
+    runtime = _runtime_monsters()
+    return [_card(row, runtime) for row in load_monster_rows()]

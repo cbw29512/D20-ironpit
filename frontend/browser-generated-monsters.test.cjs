@@ -21,6 +21,14 @@ assert.equal(Object.keys(manual).length, 67, "Legacy fragments remain a 67-monst
 assert.equal(Object.keys(generated).length, 68, "Generated canonical runtime must expose all certified monsters");
 assert.ok(generated["srd-tyrannosaurus-rex"]);
 
+const movementKeys = ["burrow_ft", "climb_ft", "fly_ft", "hover", "swim_ft", "walk_ft"];
+for (const monster of Object.values(generated)) {
+  assert.deepEqual(Object.keys(monster.movement_modes).sort(), movementKeys, `${monster.id} must export the full movement fingerprint`);
+}
+assert.deepEqual(generated["srd-bat"].movement_modes, {
+  walk_ft: 5, fly_ft: 30, climb_ft: 0, swim_ft: 0, burrow_ft: 0, hover: false,
+});
+
 const slots = (action) => (action?.slots || []).map((slot) => Array.isArray(slot)
   ? { attackIds: slot, saveActionIds: [] }
   : { attackIds: slot.attackIds || [], saveActionIds: slot.saveActionIds || [] });
@@ -91,4 +99,4 @@ assert.ok(heroOne.state.active_effect_ids.includes("grappled"));
 assert.ok(heroOne.state.active_effect_ids.includes("restrained"));
 assert.ok(heroTwo.state.active_effect_ids.includes("prone"));
 
-console.log("Generated monster roster is canonical for 68 certified templates, including T. rex retargeting.");
+console.log("Generated monster roster is canonical for 68 certified templates, including movement fingerprints and T. rex retargeting.");

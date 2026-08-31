@@ -3,7 +3,7 @@ from __future__ import annotations
 from enum import StrEnum
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import (
     AttackActionDefinition,
@@ -13,6 +13,7 @@ from app.domain.actions import (
     HitControlEffect,
     SavingThrowAction,
 )
+from app.domain.movement import MovementModes
 from app.domain.size import CreatureSize
 from app.domain.spells import DefensiveSpellAction, SpellSaveAction
 from app.domain.traits import CombatTrait
@@ -108,6 +109,7 @@ class CombatantTemplate(BaseModel):
     armor_class: int = Field(ge=1)
     max_hp: int = Field(ge=1)
     speed_ft: int = Field(ge=0)
+    movement_modes: MovementModes
     initiative_bonus: int
     weapon_attack: WeaponAttack
     alternate_weapon_attacks: list[WeaponAttack] = Field(default_factory=list)
@@ -131,3 +133,10 @@ class CombatantTemplate(BaseModel):
     visual: VisualLoadout
     resources: list[ResourceDefinition] = Field(default_factory=list)
     source: str
+
+    @model_validator(mode="before")
+    @classmethod
+    def _default_movement_modes(cls, values: object) -> object:
+        if isinstance(values, dict) and "movement_modes" not in values and "speed_ft" in values:
+            return {**values, "movement_modes": {"walk_ft": values["speed_ft"]}}
+        return values

@@ -35,6 +35,26 @@ def test_source_audit_detects_an_omitted_printed_attack() -> None:
     assert "source-attack-count-mismatch" in audit_monster_source(bear, rows["Brown Bear"])
 
 
+def test_source_audit_detects_movement_fingerprint_drift() -> None:
+    rows = _rows_by_name()
+    bat = next(template for template in build_arena_roster().monsters if template.name == "Bat").model_copy(deep=True)
+    assert bat.movement_modes.fly_ft == 30
+    bat.movement_modes.fly_ft = 0
+    assert "movement-fly-mismatch" in audit_monster_source(bat, rows["Bat"])
+
+
+def test_catalog_blocks_raw_ready_when_movement_fingerprint_drifts(monkeypatch) -> None:
+    roster = build_arena_roster()
+    bat = next(template for template in roster.monsters if template.name == "Bat")
+    bat.movement_modes.fly_ft = 0
+    monkeypatch.setattr("app.content.roster.build_arena_roster", lambda: roster)
+
+    card = next(item for item in build_monster_catalog() if item.name == "Bat")
+    assert card.coverage_status is CoverageStatus.BLOCKED
+    assert card.runnable_template_id is None
+    assert "movement-fly-mismatch" in card.blockers
+
+
 def test_srd_defense_parser_distinguishes_damage_and_condition_defenses() -> None:
     rows = _rows_by_name()
 
