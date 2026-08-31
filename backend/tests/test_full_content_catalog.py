@@ -86,14 +86,14 @@ def test_current_certified_monsters_are_linked_to_runtime_templates() -> None:
         monster.name: monster.runnable_template_id
         for monster in catalog.monsters if monster.coverage_status is CoverageStatus.RAW_READY
     }
-    assert len(ready_monsters) == 95
+    assert len(ready_monsters) == 96
     assert ready_monsters == {
         "Animated Armor": "srd-animated-armor", "Animated Flying Sword": "srd-animated-flying-sword",
         "Ankylosaurus": "srd-ankylosaurus", "Archelon": "srd-archelon",
         "Awakened Shrub": "srd-awakened-shrub", "Awakened Tree": "srd-awakened-tree", "Axe Beak": "srd-axe-beak",
         "Baboon": "srd-baboon", "Badger": "srd-badger", "Bandit": "srd-bandit",
         "Bandit Captain": "srd-bandit-captain", "Bat": "srd-bat", "Black Bear": "srd-black-bear",
-        "Boar": "srd-boar", "Brown Bear": "srd-brown-bear", "Camel": "srd-camel", "Cat": "srd-cat",
+        "Blood Hawk": "srd-blood-hawk", "Boar": "srd-boar", "Brown Bear": "srd-brown-bear", "Camel": "srd-camel", "Cat": "srd-cat",
         "Constrictor Snake": "srd-constrictor-snake", "Crab": "srd-crab",
         "Crocodile": "srd-crocodile", "Deer": "srd-deer", "Dire Wolf": "srd-dire-wolf",
         "Draft Horse": "srd-draft-horse", "Eagle": "srd-eagle", "Elk": "srd-elk",
