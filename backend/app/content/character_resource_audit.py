@@ -4,6 +4,7 @@ from collections.abc import Callable
 
 from app.content.level_resources import (
     barbarian_rage_uses,
+    fighter_action_surge_uses,
     fighter_second_wind_uses,
     orc_adrenaline_rush_uses,
 )
@@ -17,7 +18,10 @@ ResourceRule = tuple[str, str, Callable[[int], int]]
 # resource rules are considered independently audited for RAW certification.
 _CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
     "barbarian": (("rage", "Rage", barbarian_rage_uses),),
-    "fighter": (("second-wind", "Second Wind", fighter_second_wind_uses),),
+    "fighter": (
+        ("second-wind", "Second Wind", fighter_second_wind_uses),
+        ("action-surge", "Action Surge", fighter_action_surge_uses),
+    ),
 }
 _SPECIES_RULES: dict[str, tuple[ResourceRule, ...]] = {
     "orc": (
@@ -28,12 +32,13 @@ _SPECIES_RULES: dict[str, tuple[ResourceRule, ...]] = {
 
 
 def expected_resources(profile: CharacterBuildProfile) -> dict[str, int]:
-    """Return every independently certified limited-use resource for this build."""
+    """Return every independently certified positive-use resource for this build."""
     rules = [
         *_CLASS_RULES.get(profile.class_id, ()),
         *_SPECIES_RULES.get(profile.species_id, ()),
     ]
-    return {resource_id: resolver(profile.level) for resource_id, _name, resolver in rules}
+    resolved = {resource_id: resolver(profile.level) for resource_id, _name, resolver in rules}
+    return {resource_id: uses for resource_id, uses in resolved.items() if uses > 0}
 
 
 def audit_character_resources(
