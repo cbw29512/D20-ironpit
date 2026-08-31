@@ -87,17 +87,17 @@ def test_relentless_endurance_does_not_prevent_instant_death() -> None:
     assert resource.current_uses == 1
 
 
-def test_canonical_turn_uses_adrenaline_rush_then_dodges_while_closing() -> None:
+def test_canonical_formation_turn_starts_engaged_and_attacks_without_closing_dodge() -> None:
     hero = EncounterCombatant(
         combatant_id="hero-1:orc-fighter",
         side="heroes",
-        position_ft=0,
+        position_ft=5,
         state=_orc_fighter_state(),
     )
     monster = EncounterCombatant(
         combatant_id="monster-1:goblin",
         side="monsters",
-        position_ft=60,
+        position_ft=10,
         state=build_combatant_state(build_goblin_warrior()),
     )
     setup = EncounterSetup(
@@ -105,7 +105,6 @@ def test_canonical_turn_uses_adrenaline_rush_then_dodges_while_closing() -> None
         monsters=[monster],
         hero_total_levels=1,
         monster_total_cr="1/4",
-        starting_distance_ft=60,
     )
 
     events, _ = resolve_combat_turn(
@@ -113,7 +112,8 @@ def test_canonical_turn_uses_adrenaline_rush_then_dodges_while_closing() -> None
     )
 
     assert any(event.feature_id == ADRENALINE_RESOURCE_ID for event in events)
-    assert any(event.feature_id == "dodge" for event in events)
-    assert not any(event.event_type == "attack" for event in events)
-    assert hero.position_ft == 55
+    assert not any(event.feature_id == "dodge" for event in events)
+    assert any(event.event_type == "attack" for event in events)
+    assert not any(event.event_type == "movement" for event in events)
+    assert hero.position_ft == 5
     assert hero.state.temporary_hp == 2
