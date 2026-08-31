@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 from fractions import Fraction
 
-from app.combat.formation import FRONT_LINE_DISTANCE_FT, starting_position_ft
+from app.combat.formation import starting_position_ft
 from app.combat.state import build_combatant_state
 from app.content.roster import build_arena_roster
 from app.domain.encounters import EncounterCombatant, EncounterSelection, EncounterSetup
@@ -68,7 +68,6 @@ def build_encounter_setup(selection: EncounterSelection) -> EncounterSetup:
             monsters=monster_states,
             hero_total_levels=_hero_level_total(hero_states),
             monster_total_cr=_monster_cr_total(monster_states),
-            starting_distance_ft=FRONT_LINE_DISTANCE_FT,
         )
     except ValueError:
         raise
