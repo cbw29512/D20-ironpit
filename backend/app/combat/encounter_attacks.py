@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.attacks import resolve_attack
+from app.combat.champion import apply_critical_closing_move
 from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
 from app.combat.encounter_targeting import close_ranged_threat_exists
@@ -42,4 +43,4 @@ def resolve_encounter_attack(
     )
     if redirect is not None and event.target_id == redirect.combatant_id:
         swap_redirect_positions(target, redirect)
-    return event
+    return apply_critical_closing_move(attacker, setup, event)
