@@ -8,3 +8,4 @@ class CombatTrait(StrEnum):
     RELENTLESS_ENDURANCE = "relentless-endurance"
     CHARGE = "charge"
     BLOODIED_FURY = "bloodied-fury"
+    SWARM = "swarm"
