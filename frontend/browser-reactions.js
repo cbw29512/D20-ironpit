@@ -8,7 +8,7 @@
   const PROVOKING = new Set(["speed", "action", "bonus_action", "reaction"]);
 
   function unarmedOpportunityAttack(template) {
-    const profile = template.unarmed_opportunity_attack;
+    const profile = template.unarmed_opportunity_attack || window.IRON_PIT_UNARMED_OPPORTUNITY?.[template.id];
     if (!profile) return null;
     return {
       id: "unarmed-strike-opportunity",
