@@ -32,6 +32,9 @@ def test_arena_roster_exposes_certified_batch() -> None:
         "srd-giant-venomous-snake", "srd-giant-wasp", "srd-giant-wolf-spider",
         "srd-archelon", "srd-ankylosaurus", "srd-giant-eagle", "srd-giant-elk", "srd-giant-crocodile",
         "srd-giant-constrictor-snake", "srd-tyrannosaurus-rex",
+        "srd-animated-armor", "srd-animated-flying-sword", "srd-flying-snake", "srd-hippopotamus",
+        "srd-killer-whale", "srd-manticore", "srd-pegasus", "srd-scorpion", "srd-skeleton", "srd-spider",
+        "srd-tough", "srd-venomous-snake",
     ]
 
 
