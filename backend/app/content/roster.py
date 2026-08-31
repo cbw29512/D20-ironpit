@@ -6,6 +6,7 @@ from app.content.certified_heroes import build_certified_hero_templates
 from app.content.demo import build_demo_fighter, build_goblin_warrior
 from app.content.monster_bonus_action_source_audit import complete_monster_bonus_action_fingerprints
 from app.content.monster_giant_crocodile import build_giant_crocodile
+from app.content.monster_goblin_boss import build_goblin_boss
 from app.content.monster_hippogriff import build_hippogriff
 from app.content.monster_legendary_source_audit import complete_monster_legendary_fingerprints
 from app.content.monster_limited_use_source_audit import complete_monster_limited_use_fingerprints
@@ -41,7 +42,7 @@ logger = logging.getLogger(__name__)
 def build_arena_roster() -> ArenaRoster:
     try:
         monsters = [
-            build_goblin_warrior(), build_goblin_minion(), build_hobgoblin_warrior(), build_kobold_warrior(),
+            build_goblin_warrior(), build_goblin_minion(), build_hobgoblin_warrior(), build_kobold_warrior(), build_goblin_boss(),
             build_bandit(), build_commoner(), build_guard(), build_giant_rat(), build_giant_weasel(),
             build_axe_beak(), build_giant_lizard(), build_wolf(), build_dire_wolf(),
             build_black_bear(), build_brown_bear(), build_baboon(), build_camel(), build_deer(),
