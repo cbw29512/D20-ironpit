@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.content.level_resources import fighter_second_wind_uses
 from app.content.pregen_attacks import build_brom_greataxe_attack, build_selene_longbow_attack
 from app.content.pregen_equipment import (
     build_archer_fighter_visual_loadout,
@@ -14,17 +15,24 @@ from app.domain.models import CombatantTemplate, ResourceDefinition
 logger = logging.getLogger(__name__)
 
 
-def _second_wind() -> list[ResourceDefinition]:
-    return [ResourceDefinition(id="second-wind", name="Second Wind", max_uses=2)]
+def _second_wind(level: int) -> list[ResourceDefinition]:
+    return [
+        ResourceDefinition(
+            id="second-wind",
+            name="Second Wind",
+            max_uses=fighter_second_wind_uses(level),
+        )
+    ]
 
 
 def build_brom_ironmark() -> CombatantTemplate:
     try:
+        level = 1
         return CombatantTemplate(
             id="brom-ironmark-l1",
             name="Brom Ironmark",
             archetype="Fighter",
-            level=1,
+            level=level,
             kind="character",
             armor_class=17,
             max_hp=12,
@@ -39,7 +47,7 @@ def build_brom_ironmark() -> CombatantTemplate:
             fighting_style="Defense",
             weapon_masteries=["greataxe", "greatsword", "halberd"],
             visual=build_heavy_fighter_visual_loadout(),
-            resources=_second_wind(),
+            resources=_second_wind(level),
             source="Original pregen built from SRD 5.2.1 Fighter level 1 rules",
         )
     except Exception as exc:
@@ -49,11 +57,12 @@ def build_brom_ironmark() -> CombatantTemplate:
 
 def build_selene_asharrow() -> CombatantTemplate:
     try:
+        level = 1
         return CombatantTemplate(
             id="selene-asharrow-l1",
             name="Selene Asharrow",
             archetype="Fighter",
-            level=1,
+            level=level,
             kind="character",
             armor_class=16,
             max_hp=12,
@@ -68,7 +77,7 @@ def build_selene_asharrow() -> CombatantTemplate:
             fighting_style="Archery",
             weapon_masteries=["greataxe", "greatsword", "halberd"],
             visual=build_archer_fighter_visual_loadout(),
-            resources=_second_wind(),
+            resources=_second_wind(level),
             source="Original pregen built from SRD 5.2.1 Fighter level 1 rules",
         )
     except Exception as exc:
