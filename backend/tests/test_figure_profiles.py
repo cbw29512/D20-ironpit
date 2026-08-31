@@ -9,7 +9,7 @@ def test_every_raw_ready_monster_has_a_reviewed_figure_profile() -> None:
         for card in build_monster_catalog()
         if card.coverage_status is CoverageStatus.RAW_READY
     }
-    assert len(ready_names) == 95
+    assert len(ready_names) == 96
     assert ready_names <= set(MONSTER_FIGURE_PROFILES)
 
 
@@ -27,6 +27,7 @@ def test_anatomically_distinct_monsters_do_not_share_humanoid_fallbacks() -> Non
         "Archelon": "aquatic-reptile",
         "Axe Beak": "bird",
         "Baboon": "primate",
+        "Blood Hawk": "bird",
         "Flying Snake": "snake",
         "Gargoyle": "gargoyle",
         "Giant Constrictor Snake": "snake",
@@ -56,6 +57,7 @@ def test_new_batch_has_specific_reviewed_details() -> None:
         "Animated Armor": "animated-armor",
         "Animated Flying Sword": "flying-sword",
         "Awakened Tree": "tree",
+        "Blood Hawk": "blood-hawk",
         "Flying Snake": "flying-snake",
         "Gargoyle": "gargoyle",
         "Goblin Boss": "goblin-boss",
