@@ -62,6 +62,7 @@ def _monster(**kwargs) -> CombatantTemplate:
 
 def build_monster_batch_three() -> list[CombatantTemplate]:
     ogre_club = _attack("ogre-greatclub", "Greatclub", WeaponAttackKind.MELEE, 6, 2, 8, 4, DamageType.BLUDGEONING)
+    ogre_javelin_melee = _attack("ogre-javelin-melee", "Javelin", WeaponAttackKind.MELEE, 6, 2, 6, 4, DamageType.PIERCING)
     ogre_javelin = _attack("ogre-javelin", "Javelin", WeaponAttackKind.RANGED, 6, 2, 6, 4, DamageType.PIERCING, normal=30, long=120)
     owlbear_rend = _attack("owlbear-rend", "Rend", WeaponAttackKind.MELEE, 7, 2, 8, 5, DamageType.SLASHING)
     saber_rend = _attack("saber-toothed-tiger-rend", "Rend", WeaponAttackKind.MELEE, 6, 2, 6, 4, DamageType.SLASHING)
@@ -74,7 +75,7 @@ def build_monster_batch_three() -> list[CombatantTemplate]:
         _monster(
             id="srd-ogre", name="Ogre", archetype="Ogre", challenge_rating="2",
             size=CreatureSize.LARGE, armor_class=11, max_hp=68, speed_ft=40, initiative_bonus=-1,
-            weapon_attack=ogre_club, alternate_weapon_attacks=[ogre_javelin],
+            weapon_attack=ogre_club, alternate_weapon_attacks=[ogre_javelin_melee, ogre_javelin],
             visual=build_monster_visual("natural", "greatclub", "ogre"), source="SRD 5.2.1 Ogre p. 312",
         ),
         _monster(
