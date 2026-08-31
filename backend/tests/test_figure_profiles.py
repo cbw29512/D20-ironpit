@@ -9,7 +9,7 @@ def test_every_raw_ready_monster_has_a_reviewed_figure_profile() -> None:
         for card in build_monster_catalog()
         if card.coverage_status is CoverageStatus.RAW_READY
     }
-    assert len(ready_names) == 94
+    assert len(ready_names) == 95
     assert ready_names <= set(MONSTER_FIGURE_PROFILES)
 
 
@@ -58,6 +58,7 @@ def test_new_batch_has_specific_reviewed_details() -> None:
         "Awakened Tree": "tree",
         "Flying Snake": "flying-snake",
         "Gargoyle": "gargoyle",
+        "Goblin Boss": "goblin-boss",
         "Grimlock": "grimlock",
         "Guard Captain": "guard-captain",
         "Hippopotamus": "hippopotamus",
