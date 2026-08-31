@@ -16,10 +16,18 @@ for (const file of [
 
 const S = window.IRON_PIT_BROWSER_STATE;
 const X = window.IRON_PIT_BROWSER_REACTIONS;
+const A = window.IRON_PIT_BROWSER_ATTACK;
 const heroTemplate = () => structuredClone(window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"]);
 const monsterTemplate = (id) => structuredClone(window.IRON_PIT_BROWSER_MONSTERS[id]);
 const member = (id, side, template, position) => ({ combatant_id: id, side, position_ft: position, state: S.buildState(template) });
 const dice = () => { window.IRON_PIT_DICE = { roll: (sides) => sides === 20 ? 19 : 1, rollMany: (count, sides) => Array.from({ length: count }, () => sides === 20 ? 19 : 1) }; };
+const fixedDice = (values) => {
+  const queue = [...values];
+  window.IRON_PIT_DICE = {
+    roll: () => queue.shift(),
+    rollMany: (count) => Array.from({ length: count }, () => queue.shift()),
+  };
+};
 
 function setup(monsterId = "srd-commoner") {
   const hero = member("hero-1", "heroes", heroTemplate(), 5);
@@ -73,4 +81,30 @@ function setup(monsterId = "srd-commoner") {
   assert.deepEqual(X.parryHit(defender, melee, { selected_roll: 20, total: 99 }, true), { hit: true, used: false });
   assert.equal(defender.reaction_available, true);
 }
-console.log("Browser Opportunity Attack and Parry Reaction regressions passed.");
+{
+  const attacker = member("archer-1", "heroes", monsterTemplate("srd-goblin-warrior"), 0);
+  const bossTemplate = monsterTemplate("srd-goblin-warrior");
+  bossTemplate.name = "Goblin Boss"; bossTemplate.armor_class = 17; bossTemplate.max_hp = 21;
+  bossTemplate.redirect_attack_reaction = { ally_range_ft: 5, ally_max_size: "medium" };
+  const boss = member("boss-1", "monsters", bossTemplate, 20);
+  const ally = member("ally-1", "monsters", monsterTemplate("srd-goblin-warrior"), 25);
+  const fight = { heroes: [attacker], monsters: [boss, ally] };
+  const ranged = attacker.state.template.attacks.find((attack) => attack.kind === "ranged");
+  const bossHp = boss.state.current_hp, allyHp = ally.state.current_hp;
+  fixedDice([11, 1]);
+  const event = A.resolveAttack(1, 1, attacker, boss, ranged, 20, { setup: fight });
+  assert.equal(event.attack_roll.total, 15); assert.equal(event.target_id, ally.combatant_id); assert.equal(event.hit, true);
+  assert.equal(boss.state.current_hp, bossHp); assert.ok(ally.state.current_hp < allyHp);
+  assert.equal(boss.state.reaction_available, false); assert.deepEqual([boss.position_ft, ally.position_ft], [25, 20]);
+  assert.match(event.description, /uses Redirect Attack/);
+}
+{
+  const bossTemplate = monsterTemplate("srd-goblin-warrior");
+  bossTemplate.redirect_attack_reaction = { ally_range_ft: 5, ally_max_size: "medium" };
+  const boss = member("boss-1", "monsters", bossTemplate, 20);
+  const ally = member("ally-1", "monsters", monsterTemplate("srd-goblin-warrior"), 25);
+  const fight = { heroes: [member("hero-1", "heroes", heroTemplate(), 0)], monsters: [boss, ally] };
+  boss.state.active_effect_ids.push("blinded");
+  assert.equal(X.redirectAttack(boss, fight), null); assert.equal(boss.state.reaction_available, true);
+}
+console.log("Browser Opportunity Attack, Parry, and Redirect Attack regressions passed.");
