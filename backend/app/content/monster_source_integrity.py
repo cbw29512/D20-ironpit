@@ -3,9 +3,14 @@ from __future__ import annotations
 import logging
 import re
 
-logger = logging.getLogger(__name__)
+from app.content.monster_source_boundaries import (
+    STRUCTURED_FIELDS,
+    ends_with_heading,
+    longest_terminal_monster_name,
+    terminal_bare_heading,
+)
 
-_STRUCTURED_FIELDS = ("traits", "actions", "bonusActions", "reactions", "legendaryActions")
+logger = logging.getLogger(__name__)
 _STAT_BLOCK_HEADER = re.compile(
     r"\bAC\s+\d+(?:\s*\([^)]*\))?\s+Initiative\s+[+-]?\d+\s*\(\d+\)\s+HP\s+\d+",
     re.IGNORECASE,
@@ -15,7 +20,7 @@ _STAT_BLOCK_HEADER = re.compile(
 def source_integrity_issues(row: dict[str, object]) -> list[str]:
     """Detect a second stat block swallowed into one parsed monster record."""
     issues: list[str] = []
-    for field in _STRUCTURED_FIELDS:
+    for field in STRUCTURED_FIELDS:
         if _STAT_BLOCK_HEADER.search(str(row.get(field, ""))):
             issues.append(f"embedded-stat-block:{field}")
     raw_text = str(row.get("rawText", ""))
@@ -24,27 +29,31 @@ def source_integrity_issues(row: dict[str, object]) -> list[str]:
     return issues
 
 
-def _ends_with_monster_name(value: object, monster_name: str) -> bool:
-    """Match a leaked terminal monster heading without treating interior references as contamination."""
-    text = str(value).strip()
-    if not text:
-        return False
-    return bool(re.search(rf"(?:^|\s){re.escape(monster_name)}\s*$", text, re.IGNORECASE))
-
-
 def neighbor_name_bleed_issues(row: dict[str, object], monster_names: set[str]) -> list[str]:
-    """Detect a bare neighboring monster heading copied onto both raw and structured source text."""
+    """Detect the longest exact monster heading copied onto raw and structured source text."""
     own_name = str(row.get("name", "")).strip()
-    raw_text = row.get("rawText", "")
-    issues: list[str] = []
-    for candidate in monster_names:
-        if not candidate or candidate.casefold() == own_name.casefold():
-            continue
-        if not _ends_with_monster_name(raw_text, candidate):
-            continue
-        if any(_ends_with_monster_name(row.get(field, ""), candidate) for field in _STRUCTURED_FIELDS):
-            issues.append(f"neighbor-name-bleed:{candidate}")
-    return sorted(issues)
+    heading = longest_terminal_monster_name(
+        row.get("rawText", ""), monster_names, exclude_name=own_name
+    )
+    if heading is None:
+        return []
+    if any(ends_with_heading(row.get(field, ""), heading) for field in STRUCTURED_FIELDS):
+        return [f"neighbor-name-bleed:{heading}"]
+    return []
+
+
+def terminal_heading_bleed_issues(row: dict[str, object], monster_names: set[str]) -> list[str]:
+    """Detect non-monster headings such as source section labels left at a stat-block boundary."""
+    own_name = str(row.get("name", "")).strip()
+    if longest_terminal_monster_name(row.get("rawText", ""), monster_names, exclude_name=own_name):
+        return []
+    heading = terminal_bare_heading(row.get("rawText", ""))
+    if heading is None:
+        return []
+    matching = any(
+        terminal_bare_heading(row.get(field, "")) == heading for field in STRUCTURED_FIELDS
+    )
+    return [f"terminal-heading-bleed:{heading}"] if matching else []
 
 
 def validate_monster_source_integrity(rows: list[dict[str, object]]) -> None:
@@ -55,6 +64,7 @@ def validate_monster_source_integrity(rows: list[dict[str, object]]) -> None:
         for row in rows:
             issues = source_integrity_issues(row)
             issues.extend(neighbor_name_bleed_issues(row, monster_names))
+            issues.extend(terminal_heading_bleed_issues(row, monster_names))
             if issues:
                 name = str(row.get("name", row.get("id", "unknown")))
                 failures[name] = issues
