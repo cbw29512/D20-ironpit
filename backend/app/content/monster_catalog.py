@@ -15,6 +15,7 @@ _CORRECTIONS_PATH = _DATA_DIR / "srd_5_2_1_monster_corrections.json"
 # Candidate means combat mechanics are implemented. Final RAW READY status is
 # granted only after the runtime template passes the complete source audit.
 _READY_BY_NAME = {
+    "Ankylosaurus": "srd-ankylosaurus", "Archelon": "srd-archelon",
     "Awakened Shrub": "srd-awakened-shrub", "Axe Beak": "srd-axe-beak", "Baboon": "srd-baboon",
     "Badger": "srd-badger", "Bandit": "srd-bandit", "Bat": "srd-bat", "Black Bear": "srd-black-bear",
     "Boar": "srd-boar", "Brown Bear": "srd-brown-bear", "Camel": "srd-camel", "Cat": "srd-cat",
@@ -23,8 +24,9 @@ _READY_BY_NAME = {
     "Draft Horse": "srd-draft-horse", "Eagle": "srd-eagle", "Elk": "srd-elk", "Frog": "srd-frog",
     "Giant Badger": "srd-giant-badger", "Giant Bat": "srd-giant-bat", "Giant Boar": "srd-giant-boar",
     "Giant Centipede": "srd-giant-centipede", "Giant Constrictor Snake": "srd-giant-constrictor-snake",
-    "Giant Crab": "srd-giant-crab", "Giant Fire Beetle": "srd-giant-fire-beetle",
-    "Giant Goat": "srd-giant-goat", "Giant Lizard": "srd-giant-lizard", "Giant Owl": "srd-giant-owl",
+    "Giant Crab": "srd-giant-crab", "Giant Eagle": "srd-giant-eagle", "Giant Elk": "srd-giant-elk",
+    "Giant Fire Beetle": "srd-giant-fire-beetle", "Giant Goat": "srd-giant-goat",
+    "Giant Lizard": "srd-giant-lizard", "Giant Owl": "srd-giant-owl",
     "Giant Rat": "srd-giant-rat", "Giant Venomous Snake": "srd-giant-venomous-snake",
     "Giant Wasp": "srd-giant-wasp", "Giant Weasel": "srd-giant-weasel",
     "Giant Wolf Spider": "srd-giant-wolf-spider", "Goblin Minion": "srd-goblin-minion",

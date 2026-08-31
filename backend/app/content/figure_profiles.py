@@ -19,6 +19,8 @@ def _p(form: FigureForm, detail: str) -> FigureProfile:
 
 
 MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
+    "Ankylosaurus": _p("reptile", "ankylosaurus"),
+    "Archelon": _p("aquatic-reptile", "archelon"),
     "Awakened Shrub": _p("plant", "shrub"),
     "Axe Beak": _p("bird", "beak"),
     "Baboon": _p("primate", "baboon"),
@@ -46,6 +48,8 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Giant Centipede": _p("centipede", "centipede"),
     "Giant Constrictor Snake": _p("snake", "snake"),
     "Giant Crab": _p("crab", "crab"),
+    "Giant Eagle": _p("bird", "raptor"),
+    "Giant Elk": _p("hoofed", "antlers"),
     "Giant Fire Beetle": _p("insect", "beetle"),
     "Giant Goat": _p("hoofed", "horns"),
     "Giant Lizard": _p("reptile", "lizard"),
