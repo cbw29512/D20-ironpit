@@ -7,12 +7,33 @@
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES;
   const PROVOKING = new Set(["speed", "action", "bonus_action", "reaction"]);
 
+  function unarmedOpportunityAttack(template) {
+    const profile = template.unarmed_opportunity_attack;
+    if (!profile) return null;
+    return {
+      id: "unarmed-strike-opportunity",
+      name: "Unarmed Strike",
+      kind: "melee",
+      bonus: profile.attack_bonus,
+      diceCount: 0,
+      diceSize: 2,
+      damageBonus: 0,
+      fixedDamage: profile.damage,
+      damageType: "bludgeoning",
+      reach: 5,
+      animation: "punch",
+    };
+  }
+
   function opportunityAttackWeapon(reactor, mover, before, after, source, options = {}) {
     if (reactor.side === mover.side || options.canSee === false || options.disengaged === true) return null;
     if (Q()?.has(reactor.state, "blinded") || !PROVOKING.has(source) || !E().available(reactor.state, "reaction")) return null;
-    return (reactor.state.template.attacks || []).find((attack) =>
+    const weapon = (reactor.state.template.attacks || []).find((attack) =>
       attack.kind === "melee" && before <= (attack.reach || 5) && after > (attack.reach || 5),
-    ) || null;
+    );
+    if (weapon) return weapon;
+    const unarmed = unarmedOpportunityAttack(reactor.state.template);
+    return unarmed && before <= 5 && after > 5 ? unarmed : null;
   }
 
   function parryHit(defender, attack, attackRoll, hit) {
@@ -57,5 +78,7 @@
     });
   }
 
-  window.IRON_PIT_BROWSER_REACTIONS = { opportunityAttackWeapon, parryHit, redirectAttack, resolveOpportunityAttack };
+  window.IRON_PIT_BROWSER_REACTIONS = {
+    opportunityAttackWeapon, parryHit, redirectAttack, resolveOpportunityAttack,
+  };
 })();
