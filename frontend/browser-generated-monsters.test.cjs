@@ -17,15 +17,16 @@ const manual = structuredClone(window.IRON_PIT_BROWSER_MONSTERS);
 
 load("browser-monsters-generated.js");
 const generated = window.IRON_PIT_BROWSER_MONSTERS;
+assert.equal(window.IRON_PIT_CANONICAL_MONSTERS_READY, true, "Canonical generated monster bundle must mark itself ready");
 assert.equal(Object.keys(manual).length, 67, "Legacy fragments remain a 67-monster compatibility subset");
-assert.equal(Object.keys(generated).length, 94, "Generated runtime must expose only currently RAW-certified monsters");
+assert.equal(Object.keys(generated).length, 95, "Generated runtime must expose only currently RAW-certified monsters");
 for (const id of [
   "srd-jackal", "srd-archelon", "srd-ankylosaurus", "srd-giant-eagle", "srd-giant-elk", "srd-giant-crocodile",
   "srd-animated-armor", "srd-animated-flying-sword", "srd-awakened-tree", "srd-flying-snake",
   "srd-gargoyle", "srd-grimlock", "srd-guard-captain", "srd-hippopotamus",
   "srd-killer-whale", "srd-manticore", "srd-pegasus", "srd-scorpion", "srd-skeleton", "srd-spider",
   "srd-tough", "srd-venomous-snake", "srd-violet-fungus", "srd-bandit-captain", "srd-knight",
-  "srd-noble", "srd-warrior-veteran",
+  "srd-noble", "srd-warrior-veteran", "srd-goblin-boss",
 ]) {
   assert.ok(generated[id], `${id} must be present in generated runtime`);
 }
@@ -60,6 +61,10 @@ for (const id of ["srd-bandit-captain", "srd-knight", "srd-noble", "srd-warrior-
   assert.deepEqual(generated[id].source_reaction_names, ["Parry"]);
   assert.deepEqual(generated[id].parry_reaction, { ac_bonus: 2 });
 }
+assert.deepEqual(generated["srd-goblin-boss"].source_reaction_names, ["Redirect Attack"]);
+assert.deepEqual(generated["srd-goblin-boss"].redirect_attack_reaction, {
+  ally_max_size: "medium", ally_range_ft: 5,
+});
 
 const slots = (action) => (action?.slots || []).map((slot) => Array.isArray(slot)
   ? { attackIds: slot, saveActionIds: [] }
@@ -131,4 +136,4 @@ assert.ok(heroOne.state.active_effect_ids.includes("grappled"));
 assert.ok(heroOne.state.active_effect_ids.includes("restrained"));
 assert.ok(heroTwo.state.active_effect_ids.includes("prone"));
 
-console.log("Generated monster runtime contains only RAW-certified templates, with complete source fingerprints and T. rex retargeting.");
+console.log("Generated monster runtime contains only RAW-certified templates, with complete source fingerprints, Redirect Attack, and T. rex retargeting.");
