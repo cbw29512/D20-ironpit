@@ -65,8 +65,9 @@ def build_arena_roster() -> ArenaRoster:
         monsters = complete_monster_legendary_fingerprints(monsters)
         monsters = complete_monster_spellcasting_fingerprints(monsters)
         monsters = complete_monster_saving_throws(monsters)
+        certified = build_certified_hero_templates()
         characters = [
-            *build_certified_hero_templates(), build_karnok_stoneward_level(2), build_demo_fighter(),
+            certified[0], build_karnok_stoneward_level(2), *certified[1:], build_demo_fighter(),
             build_brom_ironmark(), build_selene_asharrow(), build_mara_quickstep(),
         ]
         return ArenaRoster(
