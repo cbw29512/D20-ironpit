@@ -18,8 +18,13 @@ const manual = structuredClone(window.IRON_PIT_BROWSER_MONSTERS);
 load("browser-monsters-generated.js");
 const generated = window.IRON_PIT_BROWSER_MONSTERS;
 assert.equal(Object.keys(manual).length, 67, "Legacy fragments remain a 67-monster compatibility subset");
-assert.equal(Object.keys(generated).length, 73, "Generated runtime must expose only currently RAW-certified monsters");
-for (const id of ["srd-jackal", "srd-archelon", "srd-ankylosaurus", "srd-giant-eagle", "srd-giant-elk", "srd-giant-crocodile"]) {
+assert.equal(Object.keys(generated).length, 85, "Generated runtime must expose only currently RAW-certified monsters");
+for (const id of [
+  "srd-jackal", "srd-archelon", "srd-ankylosaurus", "srd-giant-eagle", "srd-giant-elk", "srd-giant-crocodile",
+  "srd-animated-armor", "srd-animated-flying-sword", "srd-flying-snake", "srd-hippopotamus",
+  "srd-killer-whale", "srd-manticore", "srd-pegasus", "srd-scorpion", "srd-skeleton", "srd-spider",
+  "srd-tough", "srd-venomous-snake",
+]) {
   assert.ok(generated[id], `${id} must be present in generated runtime`);
 }
 assert.ok(generated["srd-tyrannosaurus-rex"]);
@@ -38,7 +43,11 @@ for (const monster of Object.values(generated)) {
 assert.deepEqual(generated["srd-bat"].movement_modes, {
   walk_ft: 5, fly_ft: 30, climb_ft: 0, swim_ft: 0, burrow_ft: 0, hover: false,
 });
+assert.deepEqual(generated["srd-animated-flying-sword"].movement_modes, {
+  walk_ft: 5, fly_ft: 50, climb_ft: 0, swim_ft: 0, burrow_ft: 0, hover: true,
+});
 assert.deepEqual(generated["srd-wolf"].source_trait_names, ["Pack Tactics"]);
+assert.deepEqual(generated["srd-tough"].source_trait_names, ["Pack Tactics"]);
 assert.deepEqual(generated["srd-deer"].source_trait_names, ["Agile"]);
 assert.deepEqual(generated["srd-saber-toothed-tiger"].source_reaction_names, []);
 assert.deepEqual(generated["srd-saber-toothed-tiger"].source_bonus_action_names, ["Nimble Escape"]);
