@@ -4,11 +4,11 @@ from app.combat.action_economy import is_available
 from app.combat.ally_context import pack_tactics_active
 from app.combat.arena_closing import MELEE_BRAWL_DISTANCE_FT, resolve_simple_closing
 from app.combat.attack_actions import resolve_attack_action
-from app.combat.attacks import resolve_attack
 from app.combat.barbarian import enter_rage, finalize_rage_turn
 from app.combat.condition_removal import choose_condition_removal_action, resolve_condition_removal
 from app.combat.dice import DiceProvider
-from app.combat.encounter_targeting import close_ranged_threat_exists, combatant_distance, select_nearest_target
+from app.combat.encounter_attacks import resolve_encounter_attack
+from app.combat.encounter_targeting import combatant_distance, select_nearest_target
 from app.combat.encounter_turns import prepare_encounter_attack
 from app.combat.fighter import use_second_wind
 from app.combat.grapple import cleanup_grapples, resolve_escape_grapple, should_escape_grapple
@@ -116,11 +116,8 @@ def resolve_combat_turn(
         if attack is not None and is_available(attacker.state, "action"):
             pack = pack_tactics_active(attacker, target, setup)
             feature = opening_feature_id(round_number, attacker, setup) or ("pack-tactics" if pack else None)
-            events.append(resolve_attack(
-                sequence, round_number, attacker.state, target.state, attack,
-                combatant_distance(attacker, target), dice,
-                actor_event_id=attacker.combatant_id, target_event_id=target.combatant_id,
+            events.append(resolve_encounter_attack(
+                sequence, round_number, attacker, target, attack, combatant_distance(attacker, target), dice, setup,
                 advantage_sources=1 if pack else 0, feature_id=feature,
-                close_enemy_active=close_ranged_threat_exists(attacker, setup),
             )); sequence += 1
     return _finish_turn(events, sequence, round_number, attacker)
