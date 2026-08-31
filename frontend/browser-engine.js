@@ -28,7 +28,6 @@
       monsters: monsterMembers,
       hero_total_levels: heroMembers.reduce((sum, item) => sum + item.state.template.level, 0),
       monster_total_cr: totalCr(monsterMembers.map((item) => item.state.template.challenge_rating)),
-      starting_distance_ft: F().FRONT_DISTANCE,
     };
   }
 
