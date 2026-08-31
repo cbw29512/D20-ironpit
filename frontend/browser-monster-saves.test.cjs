@@ -9,7 +9,7 @@ global.window = globalThis;
 vm.runInThisContext(fs.readFileSync(path.join(__dirname, "browser-monsters-generated.js"), "utf8"));
 const expected = ["charisma", "constitution", "dexterity", "intelligence", "strength", "wisdom"];
 const monsters = Object.values(window.IRON_PIT_BROWSER_MONSTERS);
-assert.equal(monsters.length, 85, "Only currently RAW-certified monsters belong in the generated runtime");
+assert.equal(monsters.length, 90, "Only currently RAW-certified monsters belong in the generated runtime");
 assert.equal(window.IRON_PIT_BROWSER_MONSTERS["srd-commoner"], undefined);
 for (const monster of monsters) {
   assert.deepEqual(Object.keys(monster.saving_throw_bonuses || {}).sort(), expected, `${monster.name} must expose all six certified saves`);
