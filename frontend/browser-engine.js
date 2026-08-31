@@ -7,6 +7,7 @@
   const L = () => window.IRON_PIT_BROWSER_CONDITION_LIFECYCLE;
   const P = () => window.IRON_PIT_BROWSER_PRECOMBAT_SPELLS;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
+  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { incapacitated: (state) => state.is_unconscious };
   const heroes = () => window.IRON_PIT_BROWSER_HEROES;
   const monsters = () => window.IRON_PIT_BROWSER_MONSTERS;
 
@@ -54,9 +55,11 @@
     });
     groups.push(...byTemplate.values());
     for (const group of groups) {
-      const roll = R().d20(group.members[0].state.template.initiative_bonus);
+      const state = group.members[0].state, advantage = Boolean(state.template.initiative_advantage), disadvantage = Q().incapacitated(state);
+      const mode = advantage === disadvantage ? "normal" : advantage ? "advantage" : "disadvantage";
+      const roll = R().d20(state.template.initiative_bonus, mode);
       group.natural_roll = roll.selected_roll;
-      group.initiative_bonus = group.members[0].state.template.initiative_bonus;
+      group.initiative_bonus = state.template.initiative_bonus;
       group.initiative_count = roll.total;
       group.tie_break_roll = null;
       group.members.forEach((member) => {
