@@ -17,7 +17,7 @@ def resolve_encounter_attack(
     attack: WeaponAttack,
     distance_ft: int,
     dice: DiceProvider,
-    setup: EncounterSetup,
+    setup: EncounterSetup | None,
     *,
     spend_action: bool = True,
     advantage_sources: int = 0,
@@ -27,15 +27,16 @@ def resolve_encounter_attack(
     bonus_damage: BonusDamageSpec | None = None,
     close_enemy_active: bool | None = None,
 ) -> BattleEvent:
-    redirect = select_redirect_ally(target, setup)
+    redirect = select_redirect_ally(target, setup) if setup is not None else None
+    close_enemy = close_enemy_active
+    if close_enemy is None:
+        close_enemy = close_ranged_threat_exists(attacker, setup) if setup is not None else True
     event = resolve_attack(
         sequence, round_number, attacker.state, target.state, attack, distance_ft, dice,
         actor_event_id=attacker.combatant_id, target_event_id=target.combatant_id,
         spend_action=spend_action, advantage_sources=advantage_sources,
         other_disadvantage_sources=other_disadvantage_sources, feature_id=feature_id,
-        turn_key=turn_key, bonus_damage=bonus_damage,
-        close_enemy_active=(close_ranged_threat_exists(attacker, setup)
-                            if close_enemy_active is None else close_enemy_active),
+        turn_key=turn_key, bonus_damage=bonus_damage, close_enemy_active=close_enemy,
         redirect_target=redirect.state if redirect is not None else None,
         redirect_target_event_id=redirect.combatant_id if redirect is not None else None,
     )
