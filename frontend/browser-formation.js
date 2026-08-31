@@ -5,7 +5,6 @@
   const HERO_FRONT = 5;
   const MONSTER_FRONT = 10;
   const MONSTER_BACK = 15;
-  const FRONT_DISTANCE = 5;
 
   function usesBackline(template) {
     const primary = template?.attacks?.find((attack) => attack.id === template.primary_attack_id) || template?.attacks?.[0];
@@ -22,7 +21,6 @@
   }
 
   window.IRON_PIT_BROWSER_FORMATION = {
-    FRONT_DISTANCE,
     usesBackline,
     startingPosition,
   };
