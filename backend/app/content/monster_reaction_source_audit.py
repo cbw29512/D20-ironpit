@@ -8,19 +8,33 @@ from app.content.monster_catalog import load_monster_rows
 from app.domain.models import CombatantTemplate
 
 logger = logging.getLogger(__name__)
-_REACTION_HEADING = re.compile(r"(?:^|(?<=\.\s))([^.]{1,80})\.\s+Trigger:\s", re.MULTILINE)
+_TRIGGER_RESPONSE_HEADING = re.compile(r"(?:^|(?<=\.\s))([^.]{1,80})\.\s+Trigger:\s", re.MULTILINE)
+_SPELL_TRIGGER_HEADING = re.compile(
+    r"(?:^|(?<=\.\s))([^.]{1,80})\.\s+"
+    r"(?=[^.]{1,300}\bcasts?\b[^.]{0,200}\bin response to\b[^.]{0,100}\btrigger\b)",
+    re.IGNORECASE | re.MULTILINE,
+)
 
 
 def _slug(name: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
 
 
+def _reaction_heading_matches(text: str) -> list[tuple[int, str]]:
+    matches = [
+        (match.start(1), match.group(1).strip())
+        for pattern in (_TRIGGER_RESPONSE_HEADING, _SPELL_TRIGGER_HEADING)
+        for match in pattern.finditer(text)
+    ]
+    return sorted(set(matches), key=lambda item: item[0])
+
+
 def parse_reaction_names(source_reactions: object) -> list[str]:
-    """Extract SRD 5.2.1 reaction headings from structured Trigger/Response prose."""
+    """Extract named SRD reactions from reviewed 2024 reaction prose shapes."""
     text = str(source_reactions or "").strip()
     if not text:
         return []
-    names = [match.strip() for match in _REACTION_HEADING.findall(text)]
+    names = [name for _, name in _reaction_heading_matches(text)]
     if not names:
         raise ValueError(f"SRD reaction headings could not be parsed from: {text!r}")
     return names
