@@ -32,7 +32,18 @@ jobs:
           python scripts/prepare_static_site.py
           test -s frontend/data/srd_5_2_1_monsters.json
           test -s frontend/browser-monsters-generated.js
-          git diff --exit-code -- frontend/browser-heroes.js frontend/figure-profiles.js frontend/data/srd_5_2_1_monsters.json
+      - name: Upload canonical static artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: canonical-static-${{ github.sha }}
+          path: |
+            frontend/browser-monsters-generated.js
+            frontend/data/srd_5_2_1_monsters.json
+          retention-days: 1
+      - name: Enforce generated static parity
+        run: |
+          git diff --exit-code -- frontend/browser-heroes.js frontend/figure-profiles.js frontend/browser-monsters-generated.js frontend/data/srd_5_2_1_monsters.json
+          test -z "$(git status --porcelain --untracked-files=all -- frontend/browser-monsters-generated.js frontend/data/srd_5_2_1_monsters.json)"
       - name: Validate browser JavaScript syntax
         run: |
           for file in frontend/*.js; do node --check "$file"; done
@@ -73,6 +84,7 @@ jobs:
           ! test -e frontend/config.js
           ! test -e scripts/write_frontend_config.py
           grep -q 'IRON_PIT_BROWSER_ENGINE.runEncounter' frontend/app.js
+          grep -q 'IRON_PIT_CANONICAL_MONSTERS_READY' frontend/app.js
       - name: Prove clean GitHub Pages root entry
         run: |
           test -s index.html
@@ -84,6 +96,7 @@ jobs:
           grep -q 'figure-portraits.css' index.html
           grep -q 'figure-profiles.js' index.html
           grep -q 'figure-portraits.js' index.html
+          grep -q 'browser-monsters-generated.js' index.html
           grep -q 'browser-monsters-expansion.js' index.html
           grep -q 'browser-condition-rules.js' index.html
           grep -q 'browser-action-economy.js' index.html
@@ -109,6 +122,7 @@ jobs:
           grep -q 'figure-portraits.css' frontend/index.html
           grep -q 'figure-profiles.js' frontend/index.html
           grep -q 'figure-portraits.js' frontend/index.html
+          grep -q 'browser-monsters-generated.js' frontend/index.html
           grep -q 'browser-monsters-expansion.js' frontend/index.html
           grep -q 'battle-log-format.js' frontend/index.html
           grep -q 'battlefield-picker.js' frontend/index.html
