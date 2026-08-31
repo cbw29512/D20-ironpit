@@ -10,6 +10,7 @@ from app.content.build_audit import assert_character_build_raw_ready
 from app.content.character_resource_audit import assert_character_resources_raw_ready
 from app.content.pregen_combat_audit import assert_pregen_combat_stats
 from app.content.pregen_combat_profiles import build_pregen_combat_profiles
+from app.content.unarmed_opportunity_profiles import complete_unarmed_opportunity_profiles
 from app.domain.character_builds import CharacterBuildProfile
 from app.domain.models import CombatantTemplate
 
@@ -30,6 +31,7 @@ def _validated(
         raise ValueError(f"Certified hero {template.id} lacks a combat fingerprint.")
     assert_pregen_combat_stats(template, combat_profile)
     assert_character_resources_raw_ready(template, profile, combat_profile)
+    template = complete_unarmed_opportunity_profiles([template])[0]
     return (profile.class_id, profile.level, build_id), template
 
 
