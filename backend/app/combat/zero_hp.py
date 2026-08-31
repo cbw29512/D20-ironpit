@@ -6,6 +6,7 @@ from typing import Literal
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.orc import use_relentless_endurance
 from app.domain.models import CombatantState
+from app.domain.traits import CombatTrait
 
 logger = logging.getLogger(__name__)
 ZeroHpOutcome = Literal["damaged", "unconscious", "dead", "unchanged", "relentless_endurance"]
@@ -45,10 +46,10 @@ def _after_temporary_hp(state: CombatantState, amount: int) -> int:
 
 
 def restore_hit_points(state: CombatantState, amount: int) -> int:
-    """Restore true HP; ordinary healing cannot restore a dead creature."""
+    """Restore true HP; ordinary healing cannot restore a dead creature or a Swarm."""
     if amount < 0:
         raise ValueError("Healing cannot be negative.")
-    if state.is_dead or amount == 0:
+    if state.is_dead or amount == 0 or CombatTrait.SWARM in state.template.combat_traits:
         return 0
     before = state.current_hp
     state.current_hp = min(state.template.max_hp, before + amount)
@@ -81,10 +82,6 @@ def apply_damage(state: CombatantState, amount: int, *, critical: bool = False) 
 
         incoming = amount
         amount = _after_temporary_hp(state, amount)
-
-        # SRD: Temporary HP are lost when the creature takes damage. At 0 HP,
-        # taking any nonzero damage still causes Death Save failure(s), even if
-        # Temporary HP absorb all loss to actual Hit Points.
         if state.current_hp == 0:
             return _damage_at_zero(state, incoming, critical=critical)
         if amount == 0:
