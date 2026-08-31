@@ -12,8 +12,8 @@ _DATA_DIR = Path(__file__).with_name("data")
 _DATA_PATH = _DATA_DIR / "srd_5_2_1_monsters.json"
 _CORRECTIONS_PATH = _DATA_DIR / "srd_5_2_1_monster_corrections.json"
 
-# Candidate means the combat mechanics are implemented. The final catalog gate
-# still reconciles source-derived movement before a card may remain RAW READY.
+# Candidate means combat mechanics are implemented. Final RAW READY status is
+# granted only after the runtime template passes the complete source audit.
 _READY_BY_NAME = {
     "Awakened Shrub": "srd-awakened-shrub", "Axe Beak": "srd-axe-beak", "Baboon": "srd-baboon",
     "Badger": "srd-badger", "Bandit": "srd-bandit", "Bat": "srd-bat", "Black Bear": "srd-black-bear",
@@ -76,12 +76,12 @@ def _card(row: dict[str, object], runtime: dict[str, CombatantTemplate]) -> Mons
             blockers = ["missing-runtime-template"]
         else:
             try:
-                from app.content.movement_modes import movement_mode_issues
+                from app.content.monster_source_audit import audit_monster_source
 
-                blockers = movement_mode_issues(template, row)
+                blockers = audit_monster_source(template, row)
             except Exception:
-                logger.exception("Movement certification failed for %s.", name)
-                blockers = ["movement-source-audit-failed"]
+                logger.exception("Full SRD certification failed for %s.", name)
+                blockers = ["monster-source-audit-failed"]
     raw_ready = bool(candidate_id and not blockers)
     return MonsterCatalogCard(
         id=str(row["id"]), name=name, challenge_rating=str(row["challenge"]), monster_type=str(row["type"]),
