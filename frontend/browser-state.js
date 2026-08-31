@@ -43,43 +43,49 @@
   function targetPriority(member) {
     const state = member.state;
     if (!state.is_alive || state.is_dead) return null;
-    if (state.template.kind === "character" && state.current_hp === 0) return state.is_unconscious || state.is_stable ? 1 : null;
-    return state.current_hp > 0 && !Q().incapacitated(state) ? 0 : null;
+    if (state.current_hp > 0) return Q().incapacitated(state) ? 1 : 0;
+    if (state.template.kind === "character" && state.current_hp === 0) return 2;
+    return null;
+  }
+
+  function priorityTargets(member, setup) {
+    const eligible = opponents(member, setup).filter((candidate) => targetPriority(candidate) !== null);
+    if (!eligible.length) return [];
+    const priority = Math.min(...eligible.map(targetPriority));
+    return eligible.filter((candidate) => targetPriority(candidate) === priority);
   }
 
   function nearestTarget(member, setup) {
-    const candidates = opponents(member, setup)
-      .map((target) => ({ target, priority: targetPriority(target) }))
-      .filter((item) => item.priority !== null)
-      .sort((a, b) => a.priority - b.priority || distance(member, a.target) - distance(member, b.target));
-    return candidates[0]?.target || null;
+    const candidates = priorityTargets(member, setup);
+    if (!candidates.length) return null;
+    const held = candidates.filter((candidate) =>
+      candidate.state.grapple_sources.some((source) => source.source_id === member.combatant_id));
+    if (held.length) return held.reduce((best, item) => distance(member, item) < distance(member, best) ? item : best);
+    const grapplerIds = new Set(member.state.grapple_sources.map((source) => source.source_id));
+    const grapplers = candidates.filter((candidate) => grapplerIds.has(candidate.combatant_id));
+    const choices = grapplers.length ? grapplers : candidates;
+    return choices.reduce((best, item) => distance(member, item) < distance(member, best) ? item : best);
   }
 
-  function packTactics(member, setup) {
-    if (!member.state.template.traits?.includes("pack-tactics") || !active(member)) return false;
-    return (member.side === "heroes" ? setup.heroes : setup.monsters)
-      .some((ally) => ally.combatant_id !== member.combatant_id && active(ally));
+  function hasActiveAlly(member, setup) {
+    const allies = member.side === "heroes" ? setup.heroes : setup.monsters;
+    return allies.some((ally) => ally.combatant_id !== member.combatant_id && active(ally));
   }
 
-  function canProne(target, maxSize) {
-    if (!maxSize) return true;
-    return (SIZE_RANK[target.state.template.size] ?? 2) <= (SIZE_RANK[maxSize] ?? 2);
-  }
-
-  function moveToward(member, target, desiredDistance = 5) {
-    const before = distance(member, target), needed = Math.max(0, before - desiredDistance);
-    const moved = Math.min(needed, member.state.movement_remaining_ft);
-    if (moved <= 0) return null;
-    member.position_ft += member.position_ft < target.position_ft ? moved : -moved;
+  const packTactics = (member, setup) => member.state.template.traits?.includes("pack-tactics") && hasActiveAlly(member, setup);
+  function moveToward(member, target, desired) {
+    const before = distance(member, target);
+    const moved = Math.min(Math.max(0, before - desired), member.state.movement_remaining_ft);
+    if (!moved) return null;
+    member.position_ft += (member.position_ft < target.position_ft ? 1 : -1) * moved;
     member.state.movement_remaining_ft -= moved;
     return { before, after: distance(member, target), moved };
   }
 
-  function refreshStartTurn(state) {
-    refreshReaction(state);
-  }
-
+  const sizeAtMost = (member, maxSize) => Boolean(maxSize) && SIZE_RANK[member.state.template.size] <= SIZE_RANK[maxSize];
+  const canProne = (target, maxSize) => sizeAtMost(target, maxSize);
   window.IRON_PIT_BROWSER_STATE = {
-    buildState, beginTurn, refreshStartTurn, refreshReaction, distance, nearestTarget, packTactics, canProne, moveToward,
+    active, beginTurn, buildState, canProne, distance, downedCharacter, hasActiveAlly,
+    moveToward, nearestTarget, packTactics, refreshReaction, sizeAtMost, targetPriority,
   };
 })();
