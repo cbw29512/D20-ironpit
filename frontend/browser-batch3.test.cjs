@@ -40,7 +40,7 @@ function multiattackIds(monsterId, distance) {
     state: S.buildState(structuredClone(monsters[monsterId])),
   };
   const hero = freshHero();
-  const setup = { heroes: [hero], monsters: [attacker], starting_distance_ft: distance };
+  const setup = { heroes: [hero], monsters: [attacker] };
   S.beginTurn(attacker.state);
   window.IRON_PIT_DICE = queuedDice([10, 1, 1, 10, 1, 1]);
   return M.resolveAttackAction(1, 1, attacker, setup).events
@@ -57,9 +57,10 @@ assert.deepEqual(multiattackIds("srd-scout", 5), ["scout-shortsword", "scout-sho
 
 {
   const ogre = monsters["srd-ogre"];
-  assert.equal(ogre.attacks[0].id, "ogre-greatclub");
+  assert.deepEqual(ogre.attacks.map((attack) => attack.id), ["ogre-greatclub", "ogre-javelin-melee", "ogre-javelin"]);
   assert.deepEqual([ogre.attacks[0].bonus, ogre.attacks[0].diceCount, ogre.attacks[0].diceSize, ogre.attacks[0].damageBonus], [6, 2, 8, 4]);
-  assert.deepEqual([ogre.attacks[1].normal, ogre.attacks[1].long], [30, 120]);
+  assert.deepEqual([ogre.attacks[1].kind, ogre.attacks[1].reach, ogre.attacks[1].diceCount, ogre.attacks[1].diceSize, ogre.attacks[1].damageBonus], ["melee", 5, 2, 6, 4]);
+  assert.deepEqual([ogre.attacks[2].kind, ogre.attacks[2].normal, ogre.attacks[2].long], ["ranged", 30, 120]);
 }
 
 {
