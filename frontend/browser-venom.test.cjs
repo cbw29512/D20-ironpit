@@ -22,11 +22,6 @@ const queuedDice = (values, fallback = 10) => {
   const roll = (sides) => ((queue.length ? queue.shift() : fallback) - 1) % sides + 1;
   return { roll, rollMany: (count, sides) => Array.from({ length: count }, () => roll(sides)) };
 };
-const deterministicDice = (seed = 99) => {
-  let state = seed >>> 0;
-  const roll = (sides) => { state = (1664525 * state + 1013904223) >>> 0; return (state % sides) + 1; };
-  return { roll, rollMany: (count, sides) => Array.from({ length: count }, () => roll(sides)) };
-};
 const S = window.IRON_PIT_BROWSER_STATE;
 const A = window.IRON_PIT_BROWSER_ATTACK;
 const heroes = window.IRON_PIT_BROWSER_HEROES;
@@ -81,13 +76,15 @@ assert.equal(Object.keys(monsters).length, 62, "venom batch must bring browser r
 }
 
 {
-  window.IRON_PIT_DICE = deterministicDice(41);
+  // Deterministic end-to-end proof: Karnok rolls low initiative, the spider wins initiative,
+  // then lands a Bite so the real encounter log must contain a poison damage component.
+  window.IRON_PIT_DICE = queuedDice([1, 20, 15, 3, 4, 4], 10);
   const battle = window.IRON_PIT_BROWSER_ENGINE.runEncounter({
     hero_ids: ["karnok-stoneward-l1"], monster_ids: ["srd-giant-wolf-spider"],
   });
   assert.notEqual(battle.outcome, "active");
   assert.ok(battle.events.some((event) => event.event_type === "attack" && event.actor_id.startsWith("monster-")));
-  assert.ok(battle.events.some((event) => event.damage_components?.some((part) => part.damage_type === "poison")));
+  assert.ok(battle.events.some((event) => event.damage_components?.some((part) => part.damage_type === "poison")), "expected a venomous Bite in the end-to-end encounter log");
 }
 
 console.log("Browser SRD venom monster regressions passed.");
