@@ -1,5 +1,6 @@
 import pytest
 from fastapi import HTTPException
+from pydantic import ValidationError
 
 from app.content.readiness import assert_public_selection_runnable
 from app.domain.models import EncounterSelection
@@ -7,11 +8,16 @@ from app.main import create_encounter_setup
 
 
 def _selection(hero_id: str, monster_id: str = "srd-goblin-warrior") -> EncounterSelection:
-    return EncounterSelection(
-        hero_ids=[hero_id],
-        monster_ids=[monster_id],
-        starting_distance_ft=30,
-    )
+    return EncounterSelection(hero_ids=[hero_id], monster_ids=[monster_id])
+
+
+def test_starting_distance_is_not_a_public_selection_option() -> None:
+    with pytest.raises(ValidationError):
+        EncounterSelection(
+            hero_ids=["karnok-stoneward-l1"],
+            monster_ids=["srd-goblin-warrior"],
+            starting_distance_ft=30,
+        )
 
 
 def test_audited_karnok_and_certified_monster_pass_public_readiness() -> None:
