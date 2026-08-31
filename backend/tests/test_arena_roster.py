@@ -17,7 +17,7 @@ def test_arena_roster_exposes_canonical_template_batch() -> None:
     ]
     assert [item.id for item in roster.monsters] == [
         "srd-goblin-warrior", "srd-goblin-minion", "srd-hobgoblin-warrior", "srd-kobold-warrior",
-        "srd-bandit", "srd-commoner", "srd-guard", "srd-giant-rat", "srd-giant-weasel",
+        "srd-goblin-boss", "srd-bandit", "srd-commoner", "srd-guard", "srd-giant-rat", "srd-giant-weasel",
         "srd-axe-beak", "srd-giant-lizard", "srd-wolf", "srd-dire-wolf", "srd-black-bear",
         "srd-brown-bear", "srd-baboon", "srd-camel", "srd-deer", "srd-draft-horse",
         "srd-giant-badger", "srd-jackal", "srd-boar", "srd-elk", "srd-giant-boar", "srd-hippogriff",
@@ -66,7 +66,7 @@ def test_selene_asharrow_matches_archery_fighter_loadout() -> None:
 
 
 def test_mara_quickstep_matches_level_one_rogue_loadout() -> None:
-    mara = _by_id(get_arena_roster().characters, "mara-quickstep-l1")
+    mara = _by_id(get_arena_roster().monsters if False else get_arena_roster().characters, "mara-quickstep-l1")
     assert (mara.level, mara.armor_class, mara.max_hp) == (1, 14, 10)
     assert mara.archetype == "Rogue"
     assert mara.initiative_bonus == 3
