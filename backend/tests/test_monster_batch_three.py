@@ -17,14 +17,17 @@ def test_batch_three_has_five_unique_templates() -> None:
     assert len({monster.id for monster in monsters}) == 5
 
 
-def test_ogre_has_greatclub_and_javelin_profiles() -> None:
+def test_ogre_has_greatclub_and_both_javelin_attack_modes() -> None:
     ogre = _by_id("srd-ogre")
     assert (ogre.armor_class, ogre.max_hp, ogre.speed_ft, ogre.initiative_bonus) == (11, 68, 40, -1)
     assert (ogre.weapon_attack.attack_bonus, ogre.weapon_attack.weapon.dice_count, ogre.weapon_attack.weapon.dice_size, ogre.weapon_attack.damage_bonus) == (6, 2, 8, 4)
-    javelin = ogre.alternate_weapon_attacks[0]
-    assert javelin.weapon.attack_kind is WeaponAttackKind.RANGED
-    assert (javelin.attack_bonus, javelin.weapon.dice_count, javelin.weapon.dice_size, javelin.damage_bonus) == (6, 2, 6, 4)
-    assert (javelin.weapon.normal_range_ft, javelin.weapon.long_range_ft) == (30, 120)
+    assert [attack.id for attack in ogre.alternate_weapon_attacks] == ["ogre-javelin-melee", "ogre-javelin"]
+    melee_javelin, ranged_javelin = ogre.alternate_weapon_attacks
+    assert melee_javelin.weapon.attack_kind is WeaponAttackKind.MELEE
+    assert (melee_javelin.weapon.reach_ft, melee_javelin.attack_bonus, melee_javelin.weapon.dice_count, melee_javelin.weapon.dice_size, melee_javelin.damage_bonus) == (5, 6, 2, 6, 4)
+    assert ranged_javelin.weapon.attack_kind is WeaponAttackKind.RANGED
+    assert (ranged_javelin.attack_bonus, ranged_javelin.weapon.dice_count, ranged_javelin.weapon.dice_size, ranged_javelin.damage_bonus) == (6, 2, 6, 4)
+    assert (ranged_javelin.weapon.normal_range_ft, ranged_javelin.weapon.long_range_ft) == (30, 120)
 
 
 def test_owlbear_and_saber_tiger_make_two_rend_attacks() -> None:
