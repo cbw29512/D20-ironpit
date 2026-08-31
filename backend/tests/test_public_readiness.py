@@ -20,8 +20,9 @@ def test_starting_distance_is_not_a_public_selection_option() -> None:
         )
 
 
-def test_audited_karnok_and_certified_monster_pass_public_readiness() -> None:
-    assert_public_selection_runnable(_selection("karnok-stoneward-l1"))
+@pytest.mark.parametrize("hero_id", ["karnok-stoneward-l1", "karnok-stoneward-l2"])
+def test_audited_karnok_levels_and_certified_monster_pass_public_readiness(hero_id: str) -> None:
+    assert_public_selection_runnable(_selection(hero_id))
 
 
 def test_goblin_boss_passes_public_readiness() -> None:
