@@ -22,16 +22,24 @@ def _prepare_monster_catalog() -> None:
         corrections = json.loads(CORRECTIONS.read_text(encoding="utf-8"))
         if not isinstance(rows, list) or len(rows) != 328:
             raise RuntimeError("Expected known 328-record parser base before corrections.")
-        if not isinstance(corrections, list) or len(corrections) != 2:
-            raise RuntimeError("Expected exactly two SRD parser correction records.")
-        combined = [*rows, *corrections]
+        if not isinstance(corrections, list) or len(corrections) != 3:
+            raise RuntimeError("Expected one replacement plus two restored SRD records.")
+        correction_by_id = {str(row["id"]): row for row in corrections}
+        if len(correction_by_id) != 3:
+            raise RuntimeError("SRD correction records must have unique ids.")
+        base_ids = {str(row["id"]) for row in rows}
+        replacements = [row for row in corrections if str(row["id"]) in base_ids]
+        additions = [row for row in corrections if str(row["id"]) not in base_ids]
+        if len(replacements) != 1 or len(additions) != 2:
+            raise RuntimeError("Expected exactly one replacement and two restored records.")
+        combined = [correction_by_id.get(str(row["id"]), row) for row in rows] + additions
         ids = {str(row["id"]) for row in combined}
         names = {str(row["name"]) for row in combined}
         if len(combined) != 330 or len(ids) != 330 or len(names) != 330:
             raise RuntimeError("Static SRD monster catalog must contain 330 unique records.")
         DESTINATION.parent.mkdir(parents=True, exist_ok=True)
         DESTINATION.write_text(json.dumps(combined, separators=(",", ":")), encoding="utf-8")
-        logger.info("Prepared 330 SRD monsters for static browser delivery.")
+        logger.info("Prepared 330 corrected SRD monsters for static browser delivery.")
     except Exception:
         logger.exception("Static SRD monster preparation failed.")
         raise
