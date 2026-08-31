@@ -1,63 +1,46 @@
 (() => {
   "use strict";
 
-  const CLASS_ROWS = [
-    ["barbarian", "Barbarian", "path-berserker", "Path of the Berserker"],
-    ["bard", "Bard", "college-lore", "College of Lore"],
-    ["cleric", "Cleric", "life-domain", "Life Domain"],
-    ["druid", "Druid", "circle-land", "Circle of the Land"],
-    ["fighter", "Fighter", "champion", "Champion"],
-    ["monk", "Monk", "warrior-open-hand", "Warrior of the Open Hand"],
-    ["paladin", "Paladin", "oath-devotion", "Oath of Devotion"],
-    ["ranger", "Ranger", "hunter", "Hunter"],
-    ["rogue", "Rogue", "thief", "Thief"],
-    ["sorcerer", "Sorcerer", "draconic-sorcery", "Draconic Sorcery"],
-    ["warlock", "Warlock", "fiend-patron", "Fiend Patron"],
-    ["wizard", "Wizard", "evoker", "Evoker"],
+  const HERO_ROWS = [
+    ["barbarian", "Barbarian", "Rokhan Stonefury", "path-berserker", "Path of the Berserker"],
+    ["bard", "Bard", "Lyra Silverstring", "college-lore", "College of Lore"],
+    ["cleric", "Cleric", "Seraphine Dawnshield", "life-domain", "Life Domain"],
+    ["druid", "Druid", "Thalen Greenbough", "circle-land", "Circle of the Land"],
+    ["fighter", "Fighter", "Karnok Stoneward", "champion", "Champion"],
+    ["monk", "Monk", "Kael Stillwater", "warrior-open-hand", "Warrior of the Open Hand"],
+    ["paladin", "Paladin", "Aurelia Brightshield", "oath-devotion", "Oath of Devotion"],
+    ["ranger", "Ranger", "Rowan Ashtrail", "hunter", "Hunter"],
+    ["rogue", "Rogue", "Mara Quickstep", "thief", "Thief"],
+    ["sorcerer", "Sorcerer", "Nyra Emberveil", "draconic-sorcery", "Draconic Sorcery"],
+    ["warlock", "Warlock", "Varek Ashenmark", "fiend-patron", "Fiend Patron"],
+    ["wizard", "Wizard", "Elian Starweaver", "evoker", "Evoker"],
   ];
-  const BUILD_ROWS = {
-    barbarian: [["great-weapon", "Great Weapon"], ["axe-shield", "Axe & Shield"], ["dual-wielder", "Dual Wielder"]],
-    bard: [["support", "Support"], ["duelist", "Duelist"], ["controller", "Controller"]],
-    cleric: [["guardian", "Guardian"], ["healer", "Healer"], ["war-priest", "War Priest"]],
-    druid: [["wild-shaper", "Wild Shaper"], ["primal-caster", "Primal Caster"], ["warden", "Warden"]],
-    fighter: [["guardian", "Sword & Shield"], ["great-weapon", "Great Weapon"], ["archer", "Archer"]],
-    monk: [["striker", "Striker"], ["skirmisher", "Skirmisher"], ["defender", "Defender"]],
-    paladin: [["guardian", "Guardian"], ["great-weapon", "Great Weapon"], ["avenger", "Avenger"]],
-    ranger: [["archer", "Archer"], ["dual-wielder", "Dual Wielder"], ["warden", "Warden"]],
-    rogue: [["skirmisher", "Skirmisher"], ["archer", "Archer"], ["duelist", "Duelist"]],
-    sorcerer: [["blaster", "Blaster"], ["controller", "Controller"], ["survivor", "Survivor"]],
-    warlock: [["eldritch-blaster", "Eldritch Blaster"], ["blade", "Blade"], ["controller", "Controller"]],
-    wizard: [["evoker", "Evoker"], ["controller", "Controller"], ["defender", "Defender"]],
-  };
-
-  function heroId(classId, level, buildId, index) {
-    const base = `hero-2024-${classId}-l${level}`;
-    return index === 0 ? base : `${base}-${buildId}`;
-  }
 
   function readyHeroIndex() {
     return new Map(Object.values(window.IRON_PIT_BROWSER_HEROES).map((hero) => [
-      `${hero.class_id}:${hero.level}:${hero.build_id}`,
+      `${hero.class_id}:${hero.level}`,
       hero,
     ]));
   }
 
   function buildHeroes() {
-    const cards = [];
-    const readyHeroes = readyHeroIndex();
-    for (const [classId, className, subclassId, subclassName] of CLASS_ROWS) {
+    const cards = [], readyHeroes = readyHeroIndex();
+    for (const [classId, className, heroName, subclassId, subclassName] of HERO_ROWS) {
       for (let level = 1; level <= 20; level += 1) {
-        BUILD_ROWS[classId].forEach(([buildId, buildName], index) => {
-          const runtime = readyHeroes.get(`${classId}:${level}:${buildId}`) || null;
-          cards.push({
-            id: heroId(classId, level, buildId, index),
-            name: runtime?.name || `${className} ${level} — ${buildName}`,
-            class_id: classId, class_name: className, level, build_id: buildId, build_name: buildName,
-            subclass_id: level >= 3 ? subclassId : null, subclass_name: level >= 3 ? subclassName : null,
-            coverage_status: runtime ? "raw_ready" : "blocked",
-            runnable_template_id: runtime?.id || null,
-            blockers: runtime ? [] : ["legal-character-build-not-certified", "combat-feature-coverage-not-certified"],
-          });
+        const runtime = readyHeroes.get(`${classId}:${level}`) || null;
+        cards.push({
+          id: `hero-2024-${classId}-l${level}`,
+          name: heroName,
+          class_id: classId,
+          class_name: className,
+          level,
+          build_id: "canonical",
+          build_name: "Canonical RAW Progression",
+          subclass_id: level >= 3 ? subclassId : null,
+          subclass_name: level >= 3 ? subclassName : null,
+          coverage_status: runtime ? "raw_ready" : "blocked",
+          runnable_template_id: runtime?.id || null,
+          blockers: runtime ? [] : ["hero-level-not-certified", "combat-feature-coverage-not-certified"],
         });
       }
     }
@@ -94,8 +77,7 @@
   }
 
   async function buildCatalog() {
-    const heroes = buildHeroes();
-    const monsters = await buildMonsters();
+    const heroes = buildHeroes(), monsters = await buildMonsters();
     return { heroes, monsters, hero_count: heroes.length, monster_count: monsters.length };
   }
 
