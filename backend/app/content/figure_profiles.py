@@ -48,6 +48,7 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Giant Centipede": _p("centipede", "centipede"),
     "Giant Constrictor Snake": _p("snake", "snake"),
     "Giant Crab": _p("crab", "crab"),
+    "Giant Crocodile": _p("reptile", "crocodile"),
     "Giant Eagle": _p("bird", "raptor"),
     "Giant Elk": _p("hoofed", "antlers"),
     "Giant Fire Beetle": _p("insect", "beetle"),
