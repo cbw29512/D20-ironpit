@@ -3,14 +3,14 @@ from app.content.monster_catalog import build_monster_catalog
 from app.domain.catalog import CoverageStatus
 
 
-def test_reviewed_figure_registry_matches_raw_ready_monster_set_exactly() -> None:
+def test_every_raw_ready_monster_has_a_reviewed_figure_profile() -> None:
     ready_names = {
         card.name
         for card in build_monster_catalog()
         if card.coverage_status is CoverageStatus.RAW_READY
     }
-    assert len(ready_names) == 68
-    assert set(MONSTER_FIGURE_PROFILES) == ready_names
+    assert len(ready_names) == 67
+    assert ready_names <= set(MONSTER_FIGURE_PROFILES)
 
 
 def test_reviewed_profiles_are_explicit_and_nonempty() -> None:

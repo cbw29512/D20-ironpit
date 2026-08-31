@@ -14,7 +14,7 @@ def test_every_raw_ready_monster_reconciles_to_srd_5_2_1_source() -> None:
     runtime = {template.id: template for template in build_arena_roster().monsters}
     ready = [card for card in build_monster_catalog() if card.coverage_status is CoverageStatus.RAW_READY]
 
-    assert len(ready) == 68
+    assert len(ready) == 67
     mismatches: list[str] = []
     for card in ready:
         if card.runnable_template_id not in runtime:
@@ -96,14 +96,18 @@ def test_srd_defense_parser_distinguishes_damage_and_condition_defenses() -> Non
     }
 
 
-def test_every_runtime_monster_is_publicly_certified() -> None:
+def test_raw_ready_monsters_are_audited_runtime_subset() -> None:
+    cards = build_monster_catalog()
     ready_ids = {
         card.runnable_template_id
-        for card in build_monster_catalog()
+        for card in cards
         if card.coverage_status is CoverageStatus.RAW_READY
     }
     runtime_ids = {template.id for template in build_arena_roster().monsters}
-    assert runtime_ids == ready_ids
+    assert ready_ids <= runtime_ids
+    commoner = next(card for card in cards if card.name == "Commoner")
+    assert commoner.runnable_template_id is None
+    assert "uncertified-trait:training" in commoner.blockers
 
 
 def test_raw_ready_monsters_have_precise_srd_page_references() -> None:

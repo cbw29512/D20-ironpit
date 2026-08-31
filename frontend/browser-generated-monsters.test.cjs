@@ -18,8 +18,9 @@ const manual = structuredClone(window.IRON_PIT_BROWSER_MONSTERS);
 load("browser-monsters-generated.js");
 const generated = window.IRON_PIT_BROWSER_MONSTERS;
 assert.equal(Object.keys(manual).length, 67, "Legacy fragments remain a 67-monster compatibility subset");
-assert.equal(Object.keys(generated).length, 68, "Generated canonical runtime must expose all certified monsters");
+assert.equal(Object.keys(generated).length, 67, "Generated runtime must expose only currently RAW-certified monsters");
 assert.ok(generated["srd-tyrannosaurus-rex"]);
+assert.equal(generated["srd-commoner"], undefined, "Blocked Commoner must not leak into the browser runtime");
 
 const movementKeys = ["burrow_ft", "climb_ft", "fly_ft", "hover", "swim_ft", "walk_ft"];
 for (const monster of Object.values(generated)) {
@@ -57,7 +58,7 @@ const normalized = (item) => ({
 });
 
 for (const id of Object.keys(manual)) {
-  assert.ok(generated[id], `${id} must remain in the canonical generated runtime`);
+  if (!generated[id]) continue;
   assert.deepEqual(normalized(generated[id]), normalized(manual[id]), `${id} generated runtime drifted from certified compatibility data`);
 }
 
@@ -102,4 +103,4 @@ assert.ok(heroOne.state.active_effect_ids.includes("grappled"));
 assert.ok(heroOne.state.active_effect_ids.includes("restrained"));
 assert.ok(heroTwo.state.active_effect_ids.includes("prone"));
 
-console.log("Generated monster roster is canonical for 68 certified templates, including movement/trait fingerprints and T. rex retargeting.");
+console.log("Generated monster runtime contains only RAW-certified templates, with movement/trait fingerprints and T. rex retargeting.");

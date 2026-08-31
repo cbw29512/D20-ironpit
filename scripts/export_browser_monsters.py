@@ -4,7 +4,9 @@ import json
 import logging
 from pathlib import Path
 
+from app.content.monster_catalog import build_monster_catalog
 from app.content.roster import build_arena_roster
+from app.domain.catalog import CoverageStatus
 from browser_template_serializer import template_row
 
 logger = logging.getLogger(__name__)
@@ -12,10 +14,22 @@ ROOT = Path(__file__).resolve().parents[1]
 DESTINATION = ROOT / "frontend" / "browser-monsters-generated.js"
 
 
+def _certified_monsters():
+    catalog = build_monster_catalog()
+    ready_ids = {
+        card.runnable_template_id
+        for card in catalog
+        if card.coverage_status is CoverageStatus.RAW_READY and card.runnable_template_id is not None
+    }
+    monsters = [template for template in build_arena_roster().monsters if template.id in ready_ids]
+    if {template.id for template in monsters} != ready_ids:
+        raise RuntimeError("RAW-ready catalog and canonical monster roster disagree.")
+    return monsters
+
+
 def render() -> str:
     try:
-        monsters = build_arena_roster().monsters
-        rows = [template_row(template) for template in monsters]
+        rows = [template_row(template) for template in _certified_monsters()]
         ids = {row["id"] for row in rows}
         if len(rows) != len(ids):
             raise RuntimeError("Certified browser monster export contains duplicate template IDs.")
