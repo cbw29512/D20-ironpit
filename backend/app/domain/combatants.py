@@ -14,7 +14,7 @@ from app.domain.actions import (
     SavingThrowAction,
 )
 from app.domain.movement import MovementModes
-from app.domain.reactions import ParryReaction
+from app.domain.reactions import ParryReaction, RedirectAttackReaction
 from app.domain.size import CreatureSize
 from app.domain.spells import DefensiveSpellAction, SpellSaveAction
 from app.domain.traits import CombatTrait
@@ -130,6 +130,7 @@ class CombatantTemplate(BaseModel):
     source_legendary_action_names: list[str] = Field(default_factory=list)
     source_spellcasting_fingerprint: str | None = None
     parry_reaction: ParryReaction | None = None
+    redirect_attack_reaction: RedirectAttackReaction | None = None
     fighting_style: str | None = None
     weapon_masteries: list[str] = Field(default_factory=list)
     damage_resistances: list[DamageType] = Field(default_factory=list)
