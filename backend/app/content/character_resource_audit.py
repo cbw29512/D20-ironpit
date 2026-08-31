@@ -13,6 +13,8 @@ from app.domain.models import CombatantTemplate
 
 ResourceRule = tuple[str, str, Callable[[int], int]]
 
+# A class must appear here, even with an empty tuple, before its level-scaling
+# resource rules are considered independently audited for RAW certification.
 _CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
     "barbarian": (("rage", "Rage", barbarian_rage_uses),),
     "fighter": (("second-wind", "Second Wind", fighter_second_wind_uses),),
@@ -41,6 +43,8 @@ def audit_character_resources(
 ) -> list[str]:
     """Fail closed when runtime/profile resource counts disagree with level-derived RAW rules."""
     issues: list[str] = []
+    if build_profile.class_id not in _CLASS_RULES:
+        issues.append("class-level-resource-rules-not-certified")
     expected = expected_resources(build_profile)
     runtime = {item.id: item.max_uses for item in template.resources}
     fingerprint = dict(combat_profile.resources)
