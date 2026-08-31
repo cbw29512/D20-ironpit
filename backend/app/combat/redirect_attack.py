@@ -5,7 +5,7 @@ import logging
 from app.combat.action_economy import is_available
 from app.combat.condition_rules import BLINDED, has_condition
 from app.combat.encounter_targeting import combatant_distance
-from app.combat.opportunity_attack_rules import opportunity_attack_weapon
+from app.combat.opportunity_attack_rules import opportunity_attack_available
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.size import size_at_most
 
@@ -15,10 +15,10 @@ logger = logging.getLogger(__name__)
 def _swap_would_provoke(defender: EncounterCombatant, ally: EncounterCombatant, setup: EncounterSetup) -> bool:
     opponents = setup.monsters if defender.side == "heroes" else setup.heroes
     return any(
-        opportunity_attack_weapon(
+        opportunity_attack_available(
             reactor, defender,
             combatant_distance(reactor, defender), abs(reactor.position_ft - ally.position_ft), "reaction",
-        ) is not None
+        )
         for reactor in opponents
     )
 
