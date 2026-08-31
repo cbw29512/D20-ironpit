@@ -10,6 +10,7 @@ from app.combat.damage import resolve_weapon_damage
 from app.combat.damage_defenses import adjusted_damage_amount
 from app.combat.dice import FixedDiceProvider
 from app.combat.state import begin_turn, build_combatant_state
+from app.combat.zero_hp import apply_damage, restore_hit_points
 from app.content.demo import build_goblin_warrior
 from app.content.pregens import build_brom_ironmark
 from app.domain.models import DamageType, ResourceDefinition, RollMode
@@ -132,6 +133,33 @@ def test_rage_ends_when_not_extended_or_when_incapacitated() -> None:
     end_rage_if_incapacitated(state)
     assert rage_active(state) is False
     assert state.rage_max_round is None
+
+
+def test_two_rages_stay_spent_after_two_knockouts_and_heals() -> None:
+    state = _barbarian_state()
+    rage = state.resources[0]
+
+    for round_number, remaining in [(1, 1), (2, 0)]:
+        begin_turn(state)
+        event = enter_rage(round_number, round_number, state, "barbarian-1")
+        assert event is not None
+        assert rage.current_uses == remaining
+        assert rage_active(state)
+
+        assert apply_damage(state, state.current_hp) == "unconscious"
+        end_rage_if_incapacitated(state)
+        assert rage_active(state) is False
+        assert rage.current_uses == remaining
+
+        assert restore_hit_points(state, 5) == 5
+        assert state.current_hp == 5
+        assert state.is_unconscious is False
+        assert rage.current_uses == remaining
+
+    begin_turn(state)
+    assert enter_rage(3, 3, state, "barbarian-1") is None
+    assert rage.current_uses == 0
+    assert rage_active(state) is False
 
 
 def test_rage_cannot_extend_past_ten_minute_limit() -> None:
