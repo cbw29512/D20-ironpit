@@ -24,9 +24,6 @@ jobs:
         run: python scripts/check_source_limits.py
       - name: Report zero-engine monster candidates
         run: python scripts/report_zero_engine_monsters.py
-      - name: Certify Python rules reference
-        working-directory: backend
-        run: pytest -q
       - name: Prepare static browser package
         run: |
           python scripts/prepare_static_site.py
@@ -44,6 +41,9 @@ jobs:
         run: |
           git diff --exit-code -- frontend/browser-heroes.js frontend/figure-profiles.js frontend/browser-monsters-generated.js frontend/data/srd_5_2_1_monsters.json
           test -z "$(git status --porcelain --untracked-files=all -- frontend/browser-monsters-generated.js frontend/data/srd_5_2_1_monsters.json)"
+      - name: Certify Python rules reference
+        working-directory: backend
+        run: pytest -q
       - name: Validate browser JavaScript syntax
         run: |
           for file in frontend/*.js; do node --check "$file"; done
