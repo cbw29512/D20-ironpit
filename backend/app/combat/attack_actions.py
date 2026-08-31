@@ -6,10 +6,10 @@ from app.combat.action_economy import is_available, spend
 from app.combat.ally_context import pack_tactics_active
 from app.combat.attack_action_targeting import select_slot_target
 from app.combat.attack_legality import attack_allowed_against
-from app.combat.attacks import resolve_attack
 from app.combat.dice import DiceProvider
+from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.encounter_movement import take_encounter_dash
-from app.combat.encounter_targeting import close_ranged_threat_exists, combatant_distance
+from app.combat.encounter_targeting import combatant_distance
 from app.combat.opening_burst import opening_feature_id
 from app.combat.policy import preferred_distance_for_attacks, select_allowed_weapon_attack
 from app.combat.reaction_movement import move_toward_with_reactions
@@ -120,13 +120,10 @@ def resolve_attack_action(
             if attack is not None:
                 pack = pack_tactics_active(attacker, target, setup)
                 feature_id = opening_feature or ("pack-tactics" if pack else definition.id)
-                events.append(resolve_attack(
-                    sequence, round_number, attacker.state, target.state, attack,
-                    combatant_distance(attacker, target), dice,
-                    actor_event_id=attacker.combatant_id, target_event_id=target.combatant_id,
-                    spend_action=False, advantage_sources=1 if pack else 0,
-                    feature_id=feature_id,
-                    close_enemy_active=close_ranged_threat_exists(attacker, setup),
+                events.append(resolve_encounter_attack(
+                    sequence, round_number, attacker, target, attack,
+                    combatant_distance(attacker, target), dice, setup,
+                    spend_action=False, advantage_sources=1 if pack else 0, feature_id=feature_id,
                 ))
                 opening_feature = None
                 sequence += 1
