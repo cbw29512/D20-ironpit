@@ -19,7 +19,7 @@ load("browser-monsters-generated.js");
 const generated = window.IRON_PIT_BROWSER_MONSTERS;
 assert.equal(window.IRON_PIT_CANONICAL_MONSTERS_READY, true, "Canonical generated monster bundle must mark itself ready");
 assert.equal(Object.keys(manual).length, 67, "Legacy fragments remain a 67-monster compatibility subset");
-assert.equal(Object.keys(generated).length, 96, "Generated runtime must expose only currently RAW-certified monsters");
+assert.equal(Object.keys(generated).length, 99, "Generated runtime must expose only currently RAW-certified monsters");
 for (const id of [
   "srd-jackal", "srd-archelon", "srd-ankylosaurus", "srd-giant-eagle", "srd-giant-elk", "srd-giant-crocodile",
   "srd-animated-armor", "srd-animated-flying-sword", "srd-awakened-tree", "srd-flying-snake",
@@ -27,6 +27,7 @@ for (const id of [
   "srd-killer-whale", "srd-manticore", "srd-pegasus", "srd-scorpion", "srd-skeleton", "srd-spider",
   "srd-tough", "srd-venomous-snake", "srd-violet-fungus", "srd-bandit-captain", "srd-knight",
   "srd-noble", "srd-warrior-veteran", "srd-goblin-boss", "srd-blood-hawk",
+  "srd-swarm-of-bats", "srd-swarm-of-rats", "srd-swarm-of-crawling-claws",
 ]) {
   assert.ok(generated[id], `${id} must be present in generated runtime`);
 }
@@ -56,6 +57,13 @@ assert.deepEqual(generated["srd-blood-hawk"].attacks[0].conditionalDamage, {
   trigger: "target_bloodied", mode: "replace_weapon", diceCount: 1, diceSize: 8,
   damageBonus: 2, damageType: "piercing",
 });
+for (const id of ["srd-swarm-of-bats", "srd-swarm-of-rats", "srd-swarm-of-crawling-claws"]) {
+  assert.deepEqual(generated[id].source_trait_names, ["Swarm"]);
+  assert.equal(generated[id].traits.includes("swarm"), true);
+  assert.equal(generated[id].attacks[0].conditionalDamage.trigger, "attacker_bloodied");
+  assert.equal(generated[id].attacks[0].conditionalDamage.mode, "replace_weapon");
+}
+assert.equal(generated["srd-swarm-of-crawling-claws"].attacks[0].proneMaxSize, "medium");
 assert.deepEqual(generated["srd-deer"].source_trait_names, ["Agile"]);
 assert.deepEqual(generated["srd-saber-toothed-tiger"].source_reaction_names, []);
 assert.deepEqual(generated["srd-saber-toothed-tiger"].source_bonus_action_names, ["Nimble Escape"]);
@@ -141,4 +149,4 @@ assert.ok(heroOne.state.active_effect_ids.includes("grappled"));
 assert.ok(heroOne.state.active_effect_ids.includes("restrained"));
 assert.ok(heroTwo.state.active_effect_ids.includes("prone"));
 
-console.log("Generated monster runtime contains 96 RAW-certified templates with Blood Hawk conditional damage, Redirect Attack, and T. rex retargeting.");
+console.log("Generated monster runtime contains 99 RAW-certified templates with Blood Hawk and Swarm conditional damage, Redirect Attack, and T. rex retargeting.");

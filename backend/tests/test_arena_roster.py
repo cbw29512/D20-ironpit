@@ -37,6 +37,7 @@ def test_arena_roster_exposes_canonical_template_batch() -> None:
         "srd-gargoyle", "srd-grimlock", "srd-guard-captain", "srd-hippopotamus",
         "srd-killer-whale", "srd-manticore", "srd-pegasus", "srd-scorpion", "srd-skeleton", "srd-spider",
         "srd-tough", "srd-venomous-snake", "srd-violet-fungus",
+        "srd-swarm-of-bats", "srd-swarm-of-rats", "srd-swarm-of-crawling-claws",
         "srd-bandit-captain", "srd-knight", "srd-noble", "srd-warrior-veteran",
     ]
 

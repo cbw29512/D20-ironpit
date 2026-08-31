@@ -52,7 +52,9 @@ _READY_BY_NAME = {
     "Gargoyle": "srd-gargoyle", "Grimlock": "srd-grimlock", "Guard Captain": "srd-guard-captain",
     "Hippopotamus": "srd-hippopotamus", "Killer Whale": "srd-killer-whale",
     "Manticore": "srd-manticore", "Pegasus": "srd-pegasus", "Scorpion": "srd-scorpion",
-    "Skeleton": "srd-skeleton", "Spider": "srd-spider", "Tough": "srd-tough",
+    "Skeleton": "srd-skeleton", "Spider": "srd-spider",
+    "Swarm of Bats": "srd-swarm-of-bats", "Swarm of Crawling Claws": "srd-swarm-of-crawling-claws",
+    "Swarm of Rats": "srd-swarm-of-rats", "Tough": "srd-tough",
     "Venomous Snake": "srd-venomous-snake", "Violet Fungus": "srd-violet-fungus",
 }
 

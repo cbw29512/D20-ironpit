@@ -9,7 +9,7 @@ def test_every_raw_ready_monster_has_a_reviewed_figure_profile() -> None:
         for card in build_monster_catalog()
         if card.coverage_status is CoverageStatus.RAW_READY
     }
-    assert len(ready_names) == 96
+    assert len(ready_names) == 99
     assert ready_names <= set(MONSTER_FIGURE_PROFILES)
 
 
@@ -46,6 +46,9 @@ def test_anatomically_distinct_monsters_do_not_share_humanoid_fallbacks() -> Non
         "Rhinoceros": "hoofed",
         "Scorpion": "scorpion",
         "Spider": "spider",
+        "Swarm of Bats": "swarm",
+        "Swarm of Crawling Claws": "swarm",
+        "Swarm of Rats": "swarm",
         "Tyrannosaurus Rex": "theropod",
     }
     for name, form in expected.items():
@@ -69,6 +72,9 @@ def test_new_batch_has_specific_reviewed_details() -> None:
         "Pegasus": "pegasus",
         "Scorpion": "scorpion",
         "Skeleton": "skeleton",
+        "Swarm of Bats": "bats",
+        "Swarm of Crawling Claws": "crawling-claws",
+        "Swarm of Rats": "rats",
         "Violet Fungus": "violet-fungus",
     }
     for name, detail in expected.items():

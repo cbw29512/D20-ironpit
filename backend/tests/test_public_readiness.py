@@ -26,6 +26,11 @@ def test_blood_hawk_passes_public_readiness() -> None:
     assert_public_selection_runnable(_selection("karnok-stoneward-l1", "srd-blood-hawk"))
 
 
+@pytest.mark.parametrize("monster_id", ["srd-swarm-of-bats", "srd-swarm-of-rats", "srd-swarm-of-crawling-claws"])
+def test_certified_swarms_pass_public_readiness(monster_id: str) -> None:
+    assert_public_selection_runnable(_selection("karnok-stoneward-l1", monster_id))
+
+
 @pytest.mark.parametrize(
     "monster_id",
     ["srd-bandit-captain", "srd-knight", "srd-noble", "srd-warrior-veteran"],

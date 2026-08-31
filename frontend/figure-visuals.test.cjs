@@ -60,6 +60,9 @@ assert.equal(monster("Pegasus", "large").detail, "pegasus");
 assert.equal(monster("Scorpion", "tiny").form, "scorpion");
 assert.equal(monster("Skeleton").detail, "skeleton");
 assert.equal(monster("Spider", "tiny").form, "spider");
+assert.deepEqual({ form: monster("Swarm of Bats").form, detail: monster("Swarm of Bats").detail }, { form: "swarm", detail: "bats" });
+assert.deepEqual({ form: monster("Swarm of Rats").form, detail: monster("Swarm of Rats").detail }, { form: "swarm", detail: "rats" });
+assert.deepEqual({ form: monster("Swarm of Crawling Claws").form, detail: monster("Swarm of Crawling Claws").detail }, { form: "swarm", detail: "crawling-claws" });
 
 const unknown = monster("Future Unreviewed Monster");
 assert.equal(unknown.certified, false);
