@@ -107,7 +107,6 @@
       damageComponents = damage.components.map((part) => ({ ...part, applied_total: adjustedDamage(target.state, part.total, part.damage_type) }));
       damageRoll = { ...damage.roll, total: damageComponents.reduce((sum, part) => sum + part.applied_total, 0) };
       damageOutcome = applyDamage(target.state, damageRoll.total, critical);
-      window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(target.state);
       const living = target.state.is_alive && !target.state.is_dead;
       const proneMax = extra.proneMaxSize || attack.proneMaxSize;
       if (living && S().canProne(target, proneMax) && !I().immune(target.state, "prone")) {
@@ -130,6 +129,7 @@
         });
         if (timed) applied.push(timed);
       }
+      window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(target.state);
     }
     let description = `${attacker.state.template.name}: ${critical ? "CRITICAL HIT" : hit ? "HIT" : "MISS"} with ${attack.name}.`;
     if (damageOutcome === "relentless_endurance") description += ` ${target.state.template.name} uses Relentless Endurance and remains at 1 HP.`;
