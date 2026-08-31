@@ -9,7 +9,7 @@ def test_every_raw_ready_monster_has_a_reviewed_figure_profile() -> None:
         for card in build_monster_catalog()
         if card.coverage_status is CoverageStatus.RAW_READY
     }
-    assert len(ready_names) == 72
+    assert len(ready_names) == 73
     assert ready_names <= set(MONSTER_FIGURE_PROFILES)
 
 
@@ -27,6 +27,7 @@ def test_anatomically_distinct_monsters_do_not_share_humanoid_fallbacks() -> Non
         "Axe Beak": "bird",
         "Baboon": "primate",
         "Giant Constrictor Snake": "snake",
+        "Giant Crocodile": "reptile",
         "Giant Eagle": "bird",
         "Giant Elk": "hoofed",
         "Giant Wolf Spider": "spider",

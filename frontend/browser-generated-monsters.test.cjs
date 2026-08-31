@@ -18,8 +18,8 @@ const manual = structuredClone(window.IRON_PIT_BROWSER_MONSTERS);
 load("browser-monsters-generated.js");
 const generated = window.IRON_PIT_BROWSER_MONSTERS;
 assert.equal(Object.keys(manual).length, 67, "Legacy fragments remain a 67-monster compatibility subset");
-assert.equal(Object.keys(generated).length, 72, "Generated runtime must expose only currently RAW-certified monsters");
-for (const id of ["srd-jackal", "srd-archelon", "srd-ankylosaurus", "srd-giant-eagle", "srd-giant-elk"]) {
+assert.equal(Object.keys(generated).length, 73, "Generated runtime must expose only currently RAW-certified monsters");
+for (const id of ["srd-jackal", "srd-archelon", "srd-ankylosaurus", "srd-giant-eagle", "srd-giant-elk", "srd-giant-crocodile"]) {
   assert.ok(generated[id], `${id} must be present in generated runtime`);
 }
 assert.ok(generated["srd-tyrannosaurus-rex"]);

@@ -86,7 +86,7 @@ def test_current_certified_monsters_are_linked_to_runtime_templates() -> None:
         monster.name: monster.runnable_template_id
         for monster in catalog.monsters if monster.coverage_status is CoverageStatus.RAW_READY
     }
-    assert len(ready_monsters) == 72
+    assert len(ready_monsters) == 73
     assert ready_monsters == {
         "Ankylosaurus": "srd-ankylosaurus", "Archelon": "srd-archelon",
         "Awakened Shrub": "srd-awakened-shrub", "Axe Beak": "srd-axe-beak",
@@ -99,9 +99,9 @@ def test_current_certified_monsters_are_linked_to_runtime_templates() -> None:
         "Frog": "srd-frog", "Giant Badger": "srd-giant-badger", "Giant Bat": "srd-giant-bat",
         "Giant Boar": "srd-giant-boar", "Giant Centipede": "srd-giant-centipede",
         "Giant Constrictor Snake": "srd-giant-constrictor-snake", "Giant Crab": "srd-giant-crab",
-        "Giant Eagle": "srd-giant-eagle", "Giant Elk": "srd-giant-elk",
-        "Giant Fire Beetle": "srd-giant-fire-beetle", "Giant Goat": "srd-giant-goat",
-        "Giant Lizard": "srd-giant-lizard", "Giant Owl": "srd-giant-owl",
+        "Giant Crocodile": "srd-giant-crocodile", "Giant Eagle": "srd-giant-eagle",
+        "Giant Elk": "srd-giant-elk", "Giant Fire Beetle": "srd-giant-fire-beetle",
+        "Giant Goat": "srd-giant-goat", "Giant Lizard": "srd-giant-lizard", "Giant Owl": "srd-giant-owl",
         "Giant Rat": "srd-giant-rat", "Giant Venomous Snake": "srd-giant-venomous-snake",
         "Giant Wasp": "srd-giant-wasp", "Giant Weasel": "srd-giant-weasel",
         "Giant Wolf Spider": "srd-giant-wolf-spider", "Goblin Minion": "srd-goblin-minion",
