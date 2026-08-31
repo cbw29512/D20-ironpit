@@ -19,6 +19,12 @@ _PARRY = re.compile(
     r"Response:\s+The [^.]+ adds (?P<bonus>\d+) to its AC against that attack, possibly causing it to miss\.",
     re.IGNORECASE,
 )
+_REDIRECT_ATTACK = re.compile(
+    r"\bRedirect Attack\.\s+Trigger:\s+A creature the goblin can see makes an attack roll against it\.\s+"
+    r"Response:\s+The goblin chooses a Small or Medium ally within (?P<range>\d+) feet of itself\.\s+"
+    r"The goblin and that ally swap places, and the ally becomes the target of the attack instead\.",
+    re.IGNORECASE,
+)
 
 
 def _slug(name: str) -> str:
@@ -50,20 +56,43 @@ def parse_parry_ac_bonus(source_reactions: object) -> int | None:
     return int(match.group("bonus")) if match else None
 
 
+def parse_redirect_attack_range(source_reactions: object) -> int | None:
+    match = _REDIRECT_ATTACK.search(str(source_reactions or ""))
+    return int(match.group("range")) if match else None
+
+
+def _parry_matches(template: CombatantTemplate, source: object) -> bool:
+    bonus = parse_parry_ac_bonus(source)
+    return bonus is not None and template.parry_reaction is not None and template.parry_reaction.ac_bonus == bonus
+
+
+def _redirect_matches(template: CombatantTemplate, source: object) -> bool:
+    ally_range = parse_redirect_attack_range(source)
+    reaction = template.redirect_attack_reaction
+    return bool(ally_range is not None and reaction is not None and reaction.ally_range_ft == ally_range
+                and reaction.ally_max_size.value == "medium")
+
+
 def reaction_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
-    """Certify exact standard Parry; fail closed on every other printed reaction."""
-    expected = parse_reaction_names(row.get("reactions", ""))
+    """Certify reviewed reaction semantics; fail closed on every other printed reaction."""
+    source = row.get("reactions", "")
+    expected = parse_reaction_names(source)
     issues: list[str] = []
     if template.source_reaction_names != expected:
         issues.append("source-reaction-fingerprint-mismatch")
     if template.parry_reaction is not None and "Parry" not in expected:
         issues.append("unexpected-parry-reaction")
+    if template.redirect_attack_reaction is not None and "Redirect Attack" not in expected:
+        issues.append("unexpected-redirect-attack-reaction")
     for name in expected:
+        if name == "Parry" and _parry_matches(template, source):
+            continue
+        if name == "Redirect Attack" and _redirect_matches(template, source):
+            continue
         if name == "Parry":
-            source_bonus = parse_parry_ac_bonus(row.get("reactions", ""))
-            if source_bonus is not None and template.parry_reaction is not None and template.parry_reaction.ac_bonus == source_bonus:
-                continue
             issues.append("parry-source-mismatch")
+        elif name == "Redirect Attack":
+            issues.append("redirect-attack-source-mismatch")
         issues.append(f"uncertified-reaction:{_slug(name)}")
     return issues
 
