@@ -14,7 +14,7 @@ def test_every_raw_ready_monster_reconciles_to_srd_5_2_1_source() -> None:
     runtime = {template.id: template for template in build_arena_roster().monsters}
     ready = [card for card in build_monster_catalog() if card.coverage_status is CoverageStatus.RAW_READY]
 
-    assert len(ready) == 68
+    assert len(ready) == 72
     mismatches: list[str] = []
     for card in ready:
         if card.runnable_template_id not in runtime:
