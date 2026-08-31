@@ -18,6 +18,14 @@ def test_audited_karnok_and_certified_monster_pass_public_readiness() -> None:
     assert_public_selection_runnable(_selection("karnok-stoneward-l1"))
 
 
+@pytest.mark.parametrize(
+    "monster_id",
+    ["srd-bandit-captain", "srd-knight", "srd-noble", "srd-warrior-veteran"],
+)
+def test_certified_parry_monsters_pass_public_readiness(monster_id: str) -> None:
+    assert_public_selection_runnable(_selection("karnok-stoneward-l1", monster_id))
+
+
 def test_legacy_uncertified_hero_cannot_bypass_catalog_through_api_id() -> None:
     with pytest.raises(ValueError, match="aldric-vane-l1"):
         assert_public_selection_runnable(_selection("aldric-vane-l1"))
