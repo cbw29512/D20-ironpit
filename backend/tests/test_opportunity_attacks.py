@@ -2,7 +2,8 @@ from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.opportunity_attacks import resolve_opportunity_attack
 from app.combat.state import begin_turn
-from app.domain.models import EncounterSelection
+from app.content.roster import build_arena_roster
+from app.domain.models import EncounterSelection, WeaponAttackKind
 
 
 def _setup(monster_id: str = "srd-commoner"):
@@ -40,12 +41,14 @@ def test_disengage_teleport_and_forced_movement_do_not_provoke() -> None:
         assert reactor.state.reaction_available is True
 
 
-def test_incapacitated_reactor_cannot_make_opportunity_attack() -> None:
-    setup, reactor, mover = _setup()
-    reactor.state.active_effect_ids.append("stunned")
-    assert resolve_opportunity_attack(
-        1, 1, reactor, mover, setup, 5, 10, "speed", FixedDiceProvider([19])
-    ) is None
+def test_incapacitated_or_blinded_reactor_cannot_make_opportunity_attack() -> None:
+    for condition in ("stunned", "blinded"):
+        setup, reactor, mover = _setup()
+        reactor.state.active_effect_ids.append(condition)
+        assert resolve_opportunity_attack(
+            1, 1, reactor, mover, setup, 5, 10, "speed", FixedDiceProvider([19])
+        ) is None
+        assert reactor.state.reaction_available is True
 
 
 def test_reach_is_left_before_opportunity_attack_triggers() -> None:
@@ -68,3 +71,13 @@ def test_action_bonus_action_and_reaction_movement_sources_can_provoke() -> None
             1, 1, reactor, mover, setup, 5, 10, source, FixedDiceProvider([19, 1]),
         )
         assert event is not None
+
+
+def test_every_runtime_combatant_has_a_modeled_melee_opportunity_attack() -> None:
+    roster = build_arena_roster()
+    missing: list[str] = []
+    for template in [*roster.characters, *roster.monsters]:
+        attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
+        if not any(attack.weapon.attack_kind is WeaponAttackKind.MELEE for attack in attacks):
+            missing.append(template.name)
+    assert missing == [], f"Runtime combatants require Unarmed Strike OA support: {missing}"
