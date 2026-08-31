@@ -7,6 +7,7 @@ from app.combat.attack_actions import resolve_attack_action
 from app.combat.barbarian import enter_rage, finalize_rage_turn
 from app.combat.condition_removal import choose_condition_removal_action, resolve_condition_removal
 from app.combat.dice import DiceProvider
+from app.combat.encounter_action_surge import resolve_action_surge_attack
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.encounter_targeting import combatant_distance, select_nearest_target
 from app.combat.encounter_turns import prepare_encounter_attack
@@ -38,7 +39,11 @@ def _close_after_action(sequence, round_number, attacker, setup, dice):
     return events, sequence
 
 
-def _finish_turn(events, sequence, round_number, attacker):
+def _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key):
+    surge_events, sequence = resolve_action_surge_attack(
+        sequence, round_number, attacker, setup, dice, turn_key,
+    )
+    events.extend(surge_events)
     rage_event, sequence = finalize_rage_turn(sequence, round_number, attacker.state, attacker.combatant_id)
     if rage_event is not None:
         events.append(rage_event)
@@ -51,18 +56,15 @@ def _resolve_support_actions(sequence, round_number, member, setup, dice, turn_k
     healing_choice = choose_healing_action(member, setup)
     if healing_choice is not None and healing_choice[1].state.current_hp == 0:
         action, target = healing_choice
-        events.append(resolve_healing(sequence, round_number, member, target, action, dice))
-        sequence += 1
+        events.append(resolve_healing(sequence, round_number, member, target, action, dice)); sequence += 1
     removal_choice = choose_condition_removal_action(member, setup, turn_key)
     if removal_choice is not None:
         action, target, conditions = removal_choice
-        events.append(resolve_condition_removal(sequence, round_number, member, target, action, conditions, turn_key))
-        sequence += 1
+        events.append(resolve_condition_removal(sequence, round_number, member, target, action, conditions, turn_key)); sequence += 1
     healing_choice = choose_healing_action(member, setup)
     if healing_choice is not None:
         action, target = healing_choice
-        events.append(resolve_healing(sequence, round_number, member, target, action, dice))
-        sequence += 1
+        events.append(resolve_healing(sequence, round_number, member, target, action, dice)); sequence += 1
     return events, sequence
 
 
@@ -84,7 +86,7 @@ def resolve_combat_turn(
         events.append(use_second_wind(sequence, round_number, attacker.state, dice, attacker.combatant_id)); sequence += 1
     if should_escape_grapple(attacker.state):
         events.append(resolve_escape_grapple(sequence, round_number, attacker.combatant_id, attacker.state, dice)); sequence += 1
-        return _finish_turn(events, sequence, round_number, attacker)
+        return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
     adrenaline_event = use_adrenaline_rush(sequence, round_number, attacker.state, attacker.combatant_id)
     if adrenaline_event is not None:
         events.append(adrenaline_event); sequence += 1
@@ -94,23 +96,22 @@ def resolve_combat_turn(
         spell_events, sequence = resolve_spell(sequence, round_number, attacker, setup, spell_choice, turn_key, dice)
         events.extend(spell_events)
         if not is_available(attacker.state, "action"):
-            return _finish_turn(events, sequence, round_number, attacker)
+            return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
     if not is_available(attacker.state, "action"):
         moved, sequence = _close_after_action(sequence, round_number, attacker, setup, dice)
         events.extend(moved)
-        return _finish_turn(events, sequence, round_number, attacker)
+        return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
     closing, sequence, handled = resolve_simple_closing(sequence, round_number, attacker, target, dice, setup)
     events.extend(closing)
     if attacker.state.is_dead or attacker.state.is_unconscious:
-        return _finish_turn(events, sequence, round_number, attacker)
+        return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
     distance = combatant_distance(attacker, target)
     save_action = next((a for a in attacker.state.template.saving_throw_actions if legal_save_action(a, target, distance)), None)
     if not handled and attacker.state.template.attack_action is not None:
         action_events, sequence = resolve_attack_action(sequence, round_number, attacker, setup, dice)
         events.extend(action_events)
-        moved, sequence = _close_after_action(sequence, round_number, attacker, setup, dice)
-        events.extend(moved)
+        moved, sequence = _close_after_action(sequence, round_number, attacker, setup, dice); events.extend(moved)
     elif not handled and save_action is not None and is_available(attacker.state, "action"):
         events.append(resolve_save_action(sequence, round_number, attacker, target, save_action, distance, dice)); sequence += 1
     elif not handled:
@@ -123,4 +124,4 @@ def resolve_combat_turn(
                 sequence, round_number, attacker, target, attack, combatant_distance(attacker, target), dice, setup,
                 advantage_sources=1 if pack else 0, feature_id=feature,
             )); sequence += 1
-    return _finish_turn(events, sequence, round_number, attacker)
+    return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
