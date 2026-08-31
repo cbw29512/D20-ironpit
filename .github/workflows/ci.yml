@@ -100,6 +100,7 @@ jobs:
           grep -q 'id="monster-slots"' index.html
           grep -q 'id="fight-button"' index.html
           grep -q 'figure-archetypes.css' index.html
+          grep -q 'figure-swarms.css' index.html
           grep -q 'figure-portraits.css' index.html
           grep -q 'figure-profiles.js' index.html
           grep -q 'figure-portraits.js' index.html
@@ -126,6 +127,7 @@ jobs:
           grep -q 'id="combat-fx-overlay"' frontend/index.html
           grep -q 'battlefield.css' frontend/index.html
           grep -q 'figure-archetypes.css' frontend/index.html
+          grep -q 'figure-swarms.css' frontend/index.html
           grep -q 'figure-portraits.css' frontend/index.html
           grep -q 'figure-profiles.js' frontend/index.html
           grep -q 'figure-portraits.js' frontend/index.html
