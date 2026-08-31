@@ -4,6 +4,7 @@
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
+  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES;
   const PROVOKING = new Set(["speed", "action", "bonus_action", "reaction"]);
 
   function meleeDepartureAttack(member, before, after) {
@@ -23,11 +24,10 @@
 
   function redirectAttack(defender, setup) {
     const rule = defender.state.template.redirect_attack_reaction;
-    if (!rule || !setup || !E().available(defender.state, "reaction")) return null;
+    if (!rule || !setup || !E().available(defender.state, "reaction") || Q()?.has(defender.state, "blinded")) return null;
     const allies = defender.side === "heroes" ? setup.heroes : setup.monsters;
     const candidates = allies.filter((ally) => ally !== defender && ally.state.is_alive && !ally.state.is_dead
-      && ally.state.current_hp > 0 && S().sizeAtMost(ally, rule.ally_max_size)
-      && S().distance(defender, ally) <= rule.ally_range_ft);
+      && S().sizeAtMost(ally, rule.ally_max_size) && S().distance(defender, ally) <= rule.ally_range_ft);
     candidates.sort((a, b) => S().distance(defender, a) - S().distance(defender, b)
       || a.combatant_id.localeCompare(b.combatant_id));
     const ally = candidates[0] || null;
