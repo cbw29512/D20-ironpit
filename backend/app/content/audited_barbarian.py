@@ -35,6 +35,7 @@ def _greataxe_attack() -> WeaponAttack:
         ),
         attack_bonus=5,
         damage_bonus=3,
+        attack_ability="strength",
         rage_eligible=True,
     )
 
@@ -57,6 +58,7 @@ def _handaxe_throw() -> WeaponAttack:
         ),
         attack_bonus=5,
         damage_bonus=3,
+        attack_ability="strength",
         rage_eligible=True,
     )
 
