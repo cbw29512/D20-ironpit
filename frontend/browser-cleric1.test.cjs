@@ -32,6 +32,10 @@ assert.deepEqual(cleric.resources, {
   "relentless-endurance": 1,
   "spell-slot-1": 2,
 });
+assert.deepEqual(cleric.canonical_cantrips.map((spell) => spell.id), ["sacred-flame", "light", "thaumaturgy"]);
+assert.deepEqual(cleric.canonical_prepared_spells.map((spell) => spell.id), [
+  "bless", "cure-wounds", "guiding-bolt", "shield-of-faith",
+]);
 
 assert.deepEqual(cleric.healingActions.map((spell) => spell.id), ["cure-wounds"]);
 const cure = cleric.healingActions[0];
