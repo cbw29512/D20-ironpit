@@ -47,7 +47,7 @@
     if (!legalAction(action, target, distance)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
     const save = resolveSavingThrow(target.state, action.saveAbility, action.dc);
     if (spendAction) E().spend(actor.state, "action");
-    const hpBefore = target.state.current_hp;
+    const hpBefore = target.state.current_hp, concentrationBefore = target.state.concentration?.effect_id || null;
     let damageRoll = null, damageComponents = [], damageOutcome = null;
     const count = action.damageDiceCount || 0;
     if (count && !(save.succeeded && action.successDamage === "none")) {
@@ -81,7 +81,8 @@
       damage_roll: damageRoll, damage_components: damageComponents, applied_condition_ids: appliedConditions,
       hp_before: hpBefore, hp_after: target.state.current_hp, death_save_successes: target.state.death_save_successes,
       death_save_failures: target.state.death_save_failures, is_stable: target.state.is_stable, is_dead: target.state.is_dead,
-      feature_id: action.id, animation: action.animation || "save-effect", description };
+      feature_id: action.id, concentration_ended_effect_id: concentrationBefore && !target.state.concentration ? concentrationBefore : null,
+      animation: action.animation || "save-effect", description };
   }
 
   window.IRON_PIT_BROWSER_SAVES = { legalAction, resolveAction, resolveSavingThrow, saveMode };
