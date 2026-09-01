@@ -85,7 +85,7 @@ def resolve_weapon_damage(
                 attacker, dice, source=weapon.name,
                 dice_count=weapon.dice_count, dice_size=weapon.dice_size,
                 modifier=weapon_modifier, damage_type=weapon.damage_type,
-                critical=critical, turn_key=turn_key,
+                critical=critical, turn_key=turn_key, damage_die_minimum=attack.damage_die_minimum,
             )]
 
         for extra in attack.on_hit_damage:
