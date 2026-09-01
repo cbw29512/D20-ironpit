@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available, spend
+from app.combat.modifier_stack import effective_armor_class
 from app.domain.models import CombatantState, WeaponAttack, WeaponAttackKind
 
 logger = logging.getLogger(__name__)
@@ -24,7 +25,7 @@ def resolve_parry_hit(
             return hit, False
         if not is_available(defender, "reaction"):
             return hit, False
-        if attack_total >= defender.template.armor_class + parry.ac_bonus:
+        if attack_total >= effective_armor_class(defender) + parry.ac_bonus:
             return hit, False
         spend(defender, "reaction")
         return False, True
