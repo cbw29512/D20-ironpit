@@ -3,7 +3,7 @@ from __future__ import annotations
 import uuid
 
 from app.domain.encounters import EncounterBattleResult, EncounterInitiative, EncounterSetup
-from app.domain.models import BattleEvent, DiceRoll
+from app.domain.models import BattleEvent
 
 
 def build_initiative_events(
@@ -12,20 +12,13 @@ def build_initiative_events(
 ) -> tuple[list[BattleEvent], int]:
     events: list[BattleEvent] = []
     for group in initiative.groups:
-        roll = DiceRoll(
-            notation="1d20",
-            rolls=[group.natural_roll],
-            modifier=group.initiative_bonus,
-            selected_roll=group.natural_roll,
-            total=group.initiative_count,
-        )
         events.append(BattleEvent(
             sequence=sequence,
             round_number=0,
             event_type="initiative",
             actor_id=group.combatant_ids[0],
             actor_name=group.template_id,
-            attack_roll=roll,
+            attack_roll=group.initiative_roll,
             animation="initiative",
             description=f"{', '.join(group.combatant_ids)} act at Initiative {group.initiative_count}.",
         ))
