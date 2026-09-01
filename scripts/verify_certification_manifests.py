@@ -51,6 +51,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("danger-sense")
     if features.reckless_attack:
         mechanics.add("reckless-attack")
+    if features.frenzy:
+        mechanics.add("frenzy")
     if features.critical_move_fraction:
         mechanics.add("post-critical-movement")
     if features.tactical_shift_fraction:
