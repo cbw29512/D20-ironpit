@@ -67,9 +67,12 @@ def resolve_defensive_spell(
     if not targets:
         raise ValueError(f"{spell.name} has no legal precombat targets.")
     resource.current_uses -= 1
-    temporary_hp = spell.temporary_hp
+    temp_hp_details: list[str] = []
     for target in targets:
-        grant_temporary_hit_points(target.state, temporary_hp)
+        before = target.state.temporary_hp
+        after = grant_temporary_hit_points(target.state, spell.temporary_hp)
+        if after > before:
+            temp_hp_details.append(f"{target.state.template.name} {after} Temporary HP")
         for damage_type in spell.damage_resistances:
             typed = DamageType(damage_type)
             if typed not in target.state.temporary_damage_resistances:
@@ -79,9 +82,7 @@ def resolve_defensive_spell(
         [(target.combatant_id, target.state) for target in targets],
         member.combatant_id, spell, 0, affected_states,
     )
-    details = []
-    if temporary_hp:
-        details.append(f"{temporary_hp} Temporary HP")
+    details = [*temp_hp_details]
     if spell.damage_resistances:
         details.append("resistance to " + ", ".join(spell.damage_resistances))
     details.extend(_modifier_detail(effect) for effect in spell.modifier_effects)
