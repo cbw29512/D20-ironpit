@@ -22,11 +22,18 @@ jobs:
           from pathlib import Path
 
           changed = []
+          direct = 'load("browser-attack.js");'
+          direct_replacement = 'load("browser-zero-hp.js");\nload("browser-attack.js");'
+          array_entry = '"browser-attack.js"'
+          array_replacement = '"browser-zero-hp.js", "browser-attack.js"'
           for path in sorted(Path('frontend').glob('*.test.cjs')):
               text = path.read_text(encoding='utf-8')
               if 'browser-attack.js' not in text or 'browser-zero-hp.js' in text:
                   continue
-              updated = text.replace('"browser-attack.js"', '"browser-zero-hp.js", "browser-attack.js"')
+              if direct in text:
+                  updated = text.replace(direct, direct_replacement)
+              else:
+                  updated = text.replace(array_entry, array_replacement)
               if updated == text:
                   raise SystemExit(f'Could not migrate {path}')
               path.write_text(updated, encoding='utf-8')
