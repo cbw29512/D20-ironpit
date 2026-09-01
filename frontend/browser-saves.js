@@ -23,28 +23,12 @@
     return R().modeFromSources(advantage, disadvantage);
   }
 
-  const saveBonusDiceMax = (state) => (state.active_modifiers || [])
-    .filter((item) => item.kind === "saving-throw-bonus-die")
-    .reduce((sum, item) => sum + item.dice_count * item.dice_size, 0);
-
-  function rollSave(state, ability, modifier) {
-    return M().applyD20Bonus(state, "saving-throw-bonus-die", R().d20(modifier, saveMode(state, ability)));
-  }
-
   function resolveSavingThrow(state, ability, dc) {
     if ((ability === "strength" || ability === "dexterity") && Q().autoFailStrDex(state)) return { roll: null, succeeded: false };
     const bonus = state.template.saving_throw_bonuses?.[ability];
     if (bonus == null) throw new Error(`${state.template.name} lacks a certified ${ability} saving throw bonus.`);
-    const first = rollSave(state, ability, bonus);
-    if (first.total >= dc) return { roll: first, succeeded: true };
-    const indomitable = state.template.indomitable_bonus || 0;
-    const uses = state.resources?.indomitable || 0;
-    const maximum = 20 + bonus + indomitable + saveBonusDiceMax(state);
-    if (!indomitable || !uses || maximum < dc) return { roll: first, succeeded: false };
-    state.resources.indomitable -= 1;
-    const reroll = rollSave(state, ability, bonus + indomitable);
-    reroll.notation = `${reroll.notation} [Indomitable +${indomitable}]`;
-    return { roll: reroll, succeeded: reroll.total >= dc };
+    const roll = M().applyD20Bonus(state, "saving-throw-bonus-die", R().d20(bonus, saveMode(state, ability)));
+    return { roll, succeeded: roll.total >= dc };
   }
 
   function legalAction(action, target, distance) {
@@ -90,7 +74,6 @@
       appliedConditions = G().apply(target.state, actor.combatant_id, action.grappleEscapeDc, action.range, Boolean(action.restrainsWhileGrappled));
     }
     let description = `${target.state.template.name} ${save.succeeded ? "SUCCEEDS" : "FAILS"} a DC ${action.dc} ${action.saveAbility} save against ${actor.state.template.name}'s ${action.name}.`;
-    if (save.roll?.notation?.includes("Indomitable")) description += ` ${target.state.template.name} uses Indomitable.`;
     if (damageOutcome === "undead_fortitude") description += ` ${target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP.`;
     if (appliedConditions.includes("grappled")) description += ` ${target.state.template.name} is Grappled.`;
     if (appliedConditions.includes("restrained")) description += ` ${target.state.template.name} is Restrained while Grappled.`;
