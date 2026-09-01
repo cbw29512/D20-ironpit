@@ -53,11 +53,11 @@ def _apply_level_five_scaling(data: dict[str, object]) -> None:
 
 
 def build_rokhan_stonefury_level(level: int) -> CombatantTemplate:
-    """Advance the canonical Barbarian one certified level at a time; unsupported levels fail closed."""
+    """Advance the canonical Barbarian one level at a time; only registered levels are public-certified."""
     if level == 1:
         return build_rokhan_stonefury()
-    if level not in (2, 3, 4, 5, 6):
-        raise ValueError(f"Rokhan Barbarian level {level} is not certified yet.")
+    if level not in (2, 3, 4, 5, 6, 7):
+        raise ValueError(f"Rokhan Barbarian level {level} is not implemented yet.")
 
     previous = build_rokhan_stonefury_level(level - 1)
     data = advance_template_data(previous, "barbarian", level)
@@ -68,6 +68,7 @@ def build_rokhan_stonefury_level(level: int) -> CombatantTemplate:
         4: "Barbarian Level 4 Ability Score Improvement",
         5: "Barbarian Level 5 Extra Attack and Fast Movement",
         6: "Barbarian Level 6 Path of the Berserker Mindless Rage",
+        7: "Barbarian Level 7 Feral Instinct and Instinctive Pounce",
     }[level]
     if level == 2:
         features.update(danger_sense=True, reckless_attack=True)
@@ -77,6 +78,8 @@ def build_rokhan_stonefury_level(level: int) -> CombatantTemplate:
         features.update(fast_movement_bonus_ft=10)
     if level == 6:
         features.update(mindless_rage=True)
+    if level == 7:
+        features.update(initiative_advantage=True, instinctive_pounce_fraction=0.5)
     constitution_modifier = 3 if level >= 4 else 2
     data.update(
         max_hp=fixed_class_hit_points(level, 12, constitution_modifier),
