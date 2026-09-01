@@ -6,6 +6,7 @@
   const reduced = () => window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, reduced() ? Math.min(ms, 70) : ms));
   const conditionLabel = (id) => id === "frightened" ? "😱 FEAR" : id.replaceAll("_", " ").toUpperCase();
+  const concentrationLabel = (id) => id ? `✨ CONCENTRATING · ${id.replaceAll("-", " ").toUpperCase()}` : "";
 
   function bindBattle(battle, slotMap) {
     nodes.clear();
@@ -26,6 +27,13 @@
     node.dataset.currentHp = String(safe); node.querySelector(".hp-text").textContent = `${safe} / ${max} HP`;
     node.querySelector(".card-hp span").style.width = `${(safe / max) * 100}%`;
     node.classList.toggle("battle-down", safe === 0 && !node.classList.contains("battle-dead"));
+  }
+
+  function concentration(node, effectId) {
+    if (!node) return;
+    const badge = node.querySelector(".card-concentration"); if (!badge) return;
+    badge.textContent = concentrationLabel(effectId); badge.hidden = !effectId;
+    node.dataset.concentration = effectId || "";
   }
 
   function renderConditions(node, set) {
@@ -75,6 +83,8 @@
     if (target && event.hp_after != null) hp(target, event.hp_after);
     if (actor && event.event_type === "healing" && event.hp_after != null) hp(actor, event.hp_after);
     if (actor && event.event_type === "death_save" && event.hp_after != null) hp(actor, event.hp_after);
+    if (event.concentration_started_effect_id) concentration(actor, event.concentration_started_effect_id);
+    if (event.concentration_ended_effect_id) concentration(target || actor, null);
     conditions(target, event.applied_condition_ids || [], event.removed_condition_ids || []);
     if (event.feature_id === "escape-grapple" && event.check_succeeded) conditions(actor, [], ["grappled", "restrained"]);
     if (target && event.is_dead) dead(target); if (actor && event.event_type === "death_save" && event.is_dead) dead(actor);
@@ -87,6 +97,7 @@
       const node = nodes.get(member.combatant_id), state = member.state; if (!node) return;
       hp(node, state.current_hp); if (state.is_dead || !state.is_alive) dead(node);
       node.classList.toggle("battle-stable", Boolean(state.is_stable && state.current_hp === 0));
+      concentration(node, state.concentration?.effect_id || null);
       node.dataset.conditions = (state.active_effect_ids || []).join(",");
       renderConditions(node, new Set(state.active_effect_ids || []));
     });
@@ -102,6 +113,6 @@
     syncFinal(battle); return battle;
   }
 
-  window.IRON_PIT_BATTLEFIELD_REPLAY = { conditionLabel };
+  window.IRON_PIT_BATTLEFIELD_REPLAY = { concentrationLabel, conditionLabel };
   window.playIronPitBattle = play;
 })();
