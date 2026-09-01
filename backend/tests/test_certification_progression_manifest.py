@@ -31,3 +31,14 @@ def test_barbarian_level_two_manifest_requires_both_level_two_features() -> None
     assert required <= set(level_two["supported_mechanics"])
     assert level_two["unsupported_mechanics"] == []
     assert level_two["public_ready_status"] == "ready"
+
+
+def test_barbarian_level_three_manifest_requires_frenzy() -> None:
+    manifest = json.loads(HERO_MANIFEST.read_text(encoding="utf-8"))
+    barbarian = next(hero for hero in manifest["heroes"] if hero["class_id"] == "barbarian")
+    level_three = next(level for level in barbarian["levels"] if level["level"] == 3)
+
+    assert "frenzy" in level_three["expected_combat_features"]
+    assert "frenzy" in level_three["supported_mechanics"]
+    assert level_three["unsupported_mechanics"] == []
+    assert level_three["public_ready_status"] == "ready"
