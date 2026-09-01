@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AttackActionDefinition, ConditionName, ConditionRemovalAction, HealingAction, HitControlEffect, SavingThrowAction
 from app.domain.movement import MovementModes
+from app.domain.progression import ProgressionCombatFeatures
 from app.domain.reactions import ParryReaction, RedirectAttackReaction
 from app.domain.size import CreatureSize
 from app.domain.spells import DefensiveSpellAction, SpellSaveAction
@@ -93,6 +94,7 @@ class ResourceDefinition(BaseModel):
     name: str
     max_uses: int = Field(ge=0)
 
+
 class CombatantTemplate(BaseModel):
     id: str
     name: str
@@ -106,10 +108,7 @@ class CombatantTemplate(BaseModel):
     speed_ft: int = Field(ge=0)
     movement_modes: MovementModes
     initiative_bonus: int
-    critical_hit_minimum: int = Field(default=20, ge=2, le=20)
-    initiative_advantage: bool = False
-    athletics_advantage: bool = False
-    critical_move_fraction: float = Field(default=0.0, ge=0.0, le=1.0)
+    progression_features: ProgressionCombatFeatures = Field(default_factory=ProgressionCombatFeatures)
     weapon_attack: WeaponAttack
     alternate_weapon_attacks: list[WeaponAttack] = Field(default_factory=list)
     unarmed_opportunity_attack: UnarmedStrikeDamage | None = None
