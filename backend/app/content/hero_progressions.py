@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Literal
+
+CombatMode = Literal["melee", "caster", "hybrid"]
 
 
 @dataclass(frozen=True)
@@ -28,5 +31,19 @@ CANONICAL_HEROES = (
 )
 
 HERO_BY_CLASS = {hero.class_id: hero for hero in CANONICAL_HEROES}
+COMBAT_MODE_BY_CLASS: dict[str, CombatMode] = {
+    "barbarian": "melee",
+    "bard": "caster",
+    "cleric": "caster",
+    "druid": "caster",
+    "fighter": "melee",
+    "monk": "melee",
+    "paladin": "hybrid",
+    "ranger": "hybrid",
+    "rogue": "melee",
+    "sorcerer": "caster",
+    "warlock": "caster",
+    "wizard": "caster",
+}
 CANONICAL_BUILD_ID = "canonical"
 CANONICAL_BUILD_NAME = "Canonical RAW Progression"
