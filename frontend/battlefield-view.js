@@ -33,7 +33,7 @@
     const node = document.createElement("button");
     node.type = "button"; node.className = `battle-card occupied ${side}`;
     node.dataset.slotIndex = String(index);
-    node.innerHTML = `<span class="slot-number">${index + 1}</span><span class="initiative-badge" aria-label="Initiative">—</span><strong class="card-name"></strong><small class="card-meta"></small>${figureMarkup(template)}<div class="card-conditions"></div><div class="card-hp"><span></span></div><small class="hp-text"></small><span class="death-stamp">✕ DEAD</span>`;
+    node.innerHTML = `<span class="slot-number">${index + 1}</span><span class="initiative-badge" aria-label="Initiative">—</span><strong class="card-name"></strong><small class="card-meta"></small>${figureMarkup(template)}<div class="card-concentration" hidden></div><div class="card-conditions"></div><div class="card-hp"><span></span></div><small class="hp-text"></small><span class="death-stamp">✕ DEAD</span>`;
     node.querySelector(".card-name").textContent = card.name;
     node.querySelector(".card-meta").textContent = side === "heroes"
       ? `${card.class_name} · Level ${card.level} · ${card.build_name}`
