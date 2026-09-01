@@ -26,6 +26,24 @@ def build_sacred_flame(save_dc: int, character_level: int) -> SpellSaveAction:
     )
 
 
+def build_inflict_wounds(save_dc: int) -> SpellSaveAction:
+    return SpellSaveAction(
+        id="inflict-wounds",
+        name="Inflict Wounds",
+        level=1,
+        action_cost="action",
+        range_ft=5,
+        save_ability="constitution",
+        dc=save_dc,
+        damage_dice_count=2,
+        damage_dice_size=10,
+        damage_type="necrotic",
+        success_damage="half",
+        upcast_dice_per_level=1,
+        animation="inflict-wounds",
+    )
+
+
 def build_guiding_bolt(attack_bonus: int) -> SpellAttackAction:
     return SpellAttackAction(
         id="guiding-bolt",
