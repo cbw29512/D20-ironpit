@@ -11,15 +11,33 @@ from report_zero_engine_monsters import _ALLOWED_TRAITS, _source_blockers
 _SIGNATURE_LIMIT = 25
 
 
+def _unsupported_traits(row: dict[str, object]) -> tuple[str, ...]:
+    traits = parse_trait_names(row.get("traits", ""))
+    return tuple(sorted(trait for trait in traits if trait not in _ALLOWED_TRAITS))
+
+
 def _trait_heading_yields(rows_by_name: dict[str, dict[str, object]], names: list[str]) -> dict[str, list[str]]:
     yields: dict[str, list[str]] = defaultdict(list)
     for name in names:
-        traits = parse_trait_names(rows_by_name[name].get("traits", ""))
-        unsupported = [trait for trait in traits if trait not in _ALLOWED_TRAITS]
+        unsupported = _unsupported_traits(rows_by_name[name])
         if not unsupported:
             raise RuntimeError(f"Trait-only blocker {name!r} has no unsupported trait heading.")
         for trait in unsupported:
             yields[trait].append(name)
+    return {
+        trait: sorted(monsters)
+        for trait, monsters in sorted(yields.items(), key=lambda item: (-len(item[1]), item[0]))
+    }
+
+
+def _single_trait_heading_yields(
+    rows_by_name: dict[str, dict[str, object]], names: list[str]
+) -> dict[str, list[str]]:
+    yields: dict[str, list[str]] = defaultdict(list)
+    for name in names:
+        unsupported = _unsupported_traits(rows_by_name[name])
+        if len(unsupported) == 1:
+            yields[unsupported[0]].append(name)
     return {
         trait: sorted(monsters)
         for trait, monsters in sorted(yields.items(), key=lambda item: (-len(item[1]), item[0]))
@@ -45,13 +63,16 @@ def main() -> None:
 
     signatures = build_blocker_signatures(blockers_by_name)
     singles = single_family_yields(signatures)
+    trait_only = singles.get("trait", [])
     print(
         "CAPABILITY_YIELD_BASELINE"
         f"\tready={len(ready_names)}\tblocked={len(blockers_by_name)}\tsignatures={len(signatures)}"
     )
     for blocker, names in sorted(singles.items(), key=lambda item: (-len(item[1]), item[0])):
         print(f"CAPABILITY_SINGLE_FAMILY\t{blocker}\t{len(names)}\t" + " | ".join(names))
-    for trait, names in _trait_heading_yields(rows_by_name, singles.get("trait", [])).items():
+    for trait, names in _single_trait_heading_yields(rows_by_name, trait_only).items():
+        print(f"CAPABILITY_TRAIT_SINGLE_HEADING\t{trait}\t{len(names)}\t" + " | ".join(names))
+    for trait, names in _trait_heading_yields(rows_by_name, trait_only).items():
         print(f"CAPABILITY_TRAIT_HEADING\t{trait}\t{len(names)}\t" + " | ".join(names))
     for index, (signature, names) in enumerate(signatures.items()):
         if index >= _SIGNATURE_LIMIT:
