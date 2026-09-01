@@ -40,6 +40,7 @@ def _apply_level_four_advancement(data: dict[str, object]) -> None:
     weapon_attack["attack_bonus"] = 6
     weapon_attack["damage_bonus"] = 4
     saving_throws["strength"] = 6
+    saving_throws["constitution"] = 5
     skills["athletics"] = 6
     masteries.append("longsword")
 
