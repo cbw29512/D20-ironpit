@@ -92,9 +92,13 @@
     });
   }
 
-  async function play(battle, slotMap) {
+  async function play(battle, slotMap, options = {}) {
     bindBattle(battle, slotMap);
-    for (const event of battle.events || []) await eventStep(event);
+    if (!options.instant) {
+      for (const event of battle.events || []) await eventStep(event);
+    } else {
+      el("pit-round").textContent = `ROUND ${battle.rounds}`;
+    }
     syncFinal(battle); return battle;
   }
 
