@@ -107,8 +107,8 @@ def test_background_increases_must_follow_2024_pattern_and_allowed_scores() -> N
     issues = audit_character_build(profile, template)
 
     assert "background-increase-uses-disallowed-ability" in issues
-    assert "final-strength-does-not-match-declared-increases" in issues
-    assert "final-constitution-does-not-match-declared-increases" in issues
+    assert "final-strength-does-not-match-background-increases" in issues
+    assert "final-constitution-does-not-match-background-increases" in issues
 
 
 def test_any_unautomated_combat_feature_blocks_raw_ready_claim() -> None:
