@@ -1,0 +1,53 @@
+name: One-time Browser Zero HP test migration
+
+on:
+  push:
+    paths:
+      - .github/workflows/one-time-browser-zero-hp-test-migration.yml
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - name: Migrate browser test dependency order
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          changed = []
+          for path in sorted(Path('frontend').glob('*.test.cjs')):
+              text = path.read_text(encoding='utf-8')
+              if 'browser-attack.js' not in text or 'browser-zero-hp.js' in text:
+                  continue
+              updated = text.replace('"browser-attack.js"', '"browser-zero-hp.js", "browser-attack.js"')
+              if updated == text:
+                  raise SystemExit(f'Could not migrate {path}')
+              path.write_text(updated, encoding='utf-8')
+              changed.append(str(path))
+          if not changed:
+              raise SystemExit('No browser attack harnesses required migration.')
+          print('Migrated browser zero-HP dependency in:')
+          print('\n'.join(changed))
+          PY
+      - name: Validate JavaScript and all browser tests
+        run: |
+          for file in frontend/*.js; do node --check "$file"; done
+          for file in frontend/*.test.cjs; do echo "RUN $file"; node "$file"; done
+      - name: Prove scoped changes
+        run: |
+          git status --short
+          test -z "$(git status --porcelain --untracked-files=all | grep -vE '^ M frontend/.*\.test\.cjs$')"
+      - name: Persist harness migration
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add frontend/*.test.cjs
+          git commit -m "test: load browser zero hp runtime in attack harnesses"
+          git push origin HEAD:audit/raw-combat-log-figures-20260830
