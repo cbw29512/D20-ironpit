@@ -16,14 +16,15 @@ def _resource(state, level: int):
 
 def _save_action(choice: SpellChoice) -> SavingThrowAction:
     spell = choice.action
-    extra_levels = max(0, choice.slot_level - spell.level)
-    dice_count = spell.damage_dice_count + extra_levels * spell.upcast_dice_per_level
+    if choice.slot_level != spell.level:
+        raise ValueError("Spell upcasting is not certified; use the spell's printed slot level.")
     target_range = spell.range_ft + (spell.area_radius_ft or 0)
     return SavingThrowAction(
         id=spell.id, name=spell.name, save_ability=spell.save_ability, dc=spell.dc,
-        range_ft=target_range, damage_dice_count=dice_count, damage_dice_size=spell.damage_dice_size,
-        damage_bonus=spell.damage_bonus, damage_type=spell.damage_type,
-        success_damage=spell.success_damage, animation=spell.animation,
+        range_ft=target_range, damage_dice_count=spell.damage_dice_count,
+        damage_dice_size=spell.damage_dice_size, damage_bonus=spell.damage_bonus,
+        damage_type=spell.damage_type, success_damage=spell.success_damage,
+        animation=spell.animation,
     )
 
 
@@ -39,6 +40,8 @@ def resolve_spell(
     spell = choice.action
     if spell.action_cost == "reaction":
         raise ValueError("Reaction spells require their own trigger window.")
+    if choice.slot_level != spell.level:
+        raise ValueError("Spell upcasting is not certified; use the spell's printed slot level.")
     if not is_available(caster.state, spell.action_cost):
         raise ValueError(f"{spell.action_cost} is unavailable for {spell.name}.")
 
