@@ -7,6 +7,7 @@ from app.content.audited_barbarian_profile import build_rokhan_stonefury_profile
 from app.content.audited_fighter import build_karnok_stoneward
 from app.content.audited_fighter_profile import build_karnok_stoneward_profile
 from app.content.build_audit import assert_character_build_raw_ready
+from app.content.canonical_hero_policy import assert_canonical_profile_policy
 from app.content.character_resource_audit import assert_character_resources_raw_ready
 from app.content.fighter_progression import build_karnok_stoneward_level
 from app.content.fighter_progression_profile import (
@@ -32,6 +33,7 @@ def _validated(
 ) -> tuple[HeroBuildKey, CombatantTemplate]:
     template = template_builder()
     profile = profile_builder()
+    assert_canonical_profile_policy(profile)
     assert_character_build_raw_ready(profile, template)
     combat_profile = build_pregen_combat_profiles().get(template.id)
     if combat_profile is None:
