@@ -10,6 +10,7 @@ SpellModifierKind = Literal[
     "armor-class", "attack-roll-bonus-die", "saving-throw-bonus-die",
     "attacks-against-advantage", "bonus-damage", "speed",
 ]
+SpellTargetPolicy = Literal["self", "friendly"]
 
 
 class SpellModifierEffect(BaseModel):
@@ -38,14 +39,17 @@ class SpellModifierEffect(BaseModel):
 
 
 class DefensiveSpellAction(BaseModel):
-    """A long-duration self-defense spell eligible for Iron Pit precombat preparation."""
+    """A certified precombat defensive/buff spell with deterministic arena targeting."""
 
     id: str
     name: str
     level: int = Field(ge=1, le=9)
     action_cost: ActionCost = "action"
     range_ft: int = Field(default=0, ge=0)
-    duration_minutes: int = Field(ge=10)
+    duration_minutes: int = Field(ge=1)
+    target_policy: SpellTargetPolicy = "self"
+    target_count: int = Field(default=1, ge=1, le=20)
+    target_count_per_slot_above: int = Field(default=0, ge=0, le=20)
     temporary_hp: int = Field(default=0, ge=0)
     temporary_hp_per_slot_above: int = Field(default=0, ge=0)
     damage_resistances: list[DamageTypeName] = Field(default_factory=list)
@@ -63,6 +67,8 @@ class DefensiveSpellAction(BaseModel):
             raise ValueError("Certified defensive spell must define an implemented defensive effect.")
         if self.concentration and (self.temporary_hp or self.damage_resistances):
             raise ValueError("Concentration defenses require source-owned modifier effects.")
+        if self.target_policy == "self" and (self.target_count != 1 or self.target_count_per_slot_above):
+            raise ValueError("Self-target policy supports exactly one target.")
         return self
 
 
