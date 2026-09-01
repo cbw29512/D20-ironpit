@@ -2,6 +2,9 @@ from __future__ import annotations
 
 import pytest
 
+from app.content.audited_barbarian_profile import build_rokhan_stonefury_profile
+from app.content.audited_cleric_profile import build_seraphine_dawnshield_profile
+from app.content.audited_fighter_profile import build_karnok_stoneward_profile
 from app.content.canonical_combat_build_policy import (
     CANONICAL_POINT_BUY_ARRAY,
     CANONICAL_STAT_PRIORITIES,
@@ -9,6 +12,7 @@ from app.content.canonical_combat_build_policy import (
     canonical_background_increases,
     canonical_base_ability_scores,
 )
+from app.content.canonical_hero_policy import assert_canonical_profile_policy
 from app.content.hero_progressions import HERO_BY_CLASS
 from app.domain.character_builds import AbilityScores
 
@@ -53,6 +57,16 @@ def test_background_increases_follow_primary_then_next_allowed_priority() -> Non
 
     cleric = canonical_background_increases("cleric", ["constitution", "intelligence", "wisdom"])
     assert [(item.ability, item.amount) for item in cleric] == [("wisdom", 2), ("intelligence", 1)]
+
+
+def test_existing_canonical_roots_are_migrated_to_the_mass_production_policy() -> None:
+    for profile in (
+        build_karnok_stoneward_profile(),
+        build_rokhan_stonefury_profile(),
+        build_seraphine_dawnshield_profile(),
+    ):
+        assert_canonical_profile_policy(profile)
+        assert profile.base_ability_scores == canonical_base_ability_scores(profile.class_id)
 
 
 def test_background_policy_fails_closed_when_primary_is_not_legal() -> None:
