@@ -64,7 +64,7 @@ def build_seraphine_dawnshield() -> CombatantTemplate:
         level=level,
         kind="character",
         armor_class=17,
-        max_hp=9,
+        max_hp=10,
         speed_ft=30,
         initiative_bonus=2,
         weapon_attack=_mace_attack(),
