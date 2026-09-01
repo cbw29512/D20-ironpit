@@ -23,6 +23,7 @@ class TimedEffect(BaseModel):
     source_id: str
     source_effect_id: str | None = None
     applied_round: int | None = Field(default=None, ge=1)
+    expires_round: int | None = Field(default=None, ge=1)
     expires_at_start_of_source_turn: bool = True
     expiry_timing: ConditionTiming | None = None
     repeat_save_ability: AbilityName | None = None
@@ -30,12 +31,17 @@ class TimedEffect(BaseModel):
     repeat_save_timing: ConditionTiming | None = None
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
     turn_behavior: TimedTurnBehavior = "normal"
+    ends_on_damage: bool = False
+    ends_if_source_incapacitated: bool = False
+    ends_if_source_dead: bool = False
 
     @model_validator(mode="after")
     def validate_lifecycle(self) -> "TimedEffect":
         repeat_fields = (self.repeat_save_ability, self.repeat_save_dc, self.repeat_save_timing)
         if any(item is not None for item in repeat_fields) and not all(item is not None for item in repeat_fields):
             raise ValueError("Timed effect repeat save requires ability, DC, and timing together.")
+        if self.expires_round is not None and self.applied_round is not None and self.expires_round <= self.applied_round:
+            raise ValueError("Timed effect expiry round must follow its applied round.")
         if self.expiry_timing is not None:
             self.expires_at_start_of_source_turn = self.expiry_timing == "source_turn_start"
         return self
