@@ -73,8 +73,10 @@ def build_karnok_stoneward_level5_combat_profile() -> PregenCombatProfile:
     )
 
 
-def _seraphine_profile(level: int, hp: int, slots: int, channel: int = 0) -> PregenCombatProfile:
-    resources = [("spell-slot-1", slots)]
+def _seraphine_profile(level: int, hp: int, first_slots: int, channel: int = 0, second_slots: int = 0) -> PregenCombatProfile:
+    resources = [("spell-slot-1", first_slots)]
+    if second_slots:
+        resources.append(("spell-slot-2", second_slots))
     if channel:
         resources.append(("channel-divinity", channel))
     resources.extend((("adrenaline-rush", 2), ("relentless-endurance", 1)))
@@ -119,5 +121,6 @@ def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
         ),
         _seraphine_profile(1, 10, 2),
         _seraphine_profile(2, 17, 3, 2),
+        _seraphine_profile(3, 24, 4, 2, 2),
     ]
     return {profile.template_id: profile for profile in profiles}
