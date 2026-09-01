@@ -58,7 +58,7 @@ def test_scout_and_infantry_match_srd_weapon_options() -> None:
 
 def _scout_attack_ids(distance_ft: int) -> list[str]:
     setup = build_encounter_setup(EncounterSelection(
-        hero_ids=["aldric-vane-l1"], monster_ids=["srd-scout"],
+        hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-scout"],
     ))
     hero, scout = setup.heroes[0], setup.monsters[0]
     hero.position_ft = 0
