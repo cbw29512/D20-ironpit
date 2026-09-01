@@ -9,3 +9,4 @@ class CombatTrait(StrEnum):
     CHARGE = "charge"
     BLOODIED_FURY = "bloodied-fury"
     SWARM = "swarm"
+    UNDEAD_FORTITUDE = "undead-fortitude"
