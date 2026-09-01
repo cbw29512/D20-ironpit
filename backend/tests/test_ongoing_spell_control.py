@@ -8,6 +8,11 @@ from app.content.audited_fighter import build_karnok_stoneward
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 
 
+class NoRollDice:
+    def roll(self, sides: int) -> int:
+        raise AssertionError(f"Forced-retreat turn unexpectedly rolled d{sides}.")
+
+
 def _member(combatant_id: str, side: str, position_ft: int) -> EncounterCombatant:
     template = build_karnok_stoneward().model_copy(deep=True)
     template.id = f"template-{combatant_id}"
@@ -69,13 +74,11 @@ def test_forced_retreat_skips_voluntary_turn_without_moving_card() -> None:
         applied_round=1, turn_behavior="forced_retreat",
     )
     before = fighter.position_ft
-    dice = FixedDiceProvider([1])
-    events, _ = resolve_combat_turn(1, 1, fighter, enemy, setup, dice)
+    events, _ = resolve_combat_turn(1, 1, fighter, enemy, setup, NoRollDice())
     assert fighter.position_ft == before
     assert forced_retreat_active(fighter.state) is True
     assert [event.feature_id for event in events] == ["forced-retreat"]
     assert not any(event.event_type in {"attack", "healing", "movement"} for event in events)
-    assert dice.remaining_rolls == 1
 
     save_events, _ = resolve_target_condition_timing(
         2, 1, fighter, "target_turn_end", FixedDiceProvider([20]),
