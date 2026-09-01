@@ -64,14 +64,15 @@
     const closeThreat = attack.kind === "ranged" && rangedCloseThreat(attacker, target, distance, extra.setup);
     const mode = R().attackMode(attack, distance, advantage, conditions.disadvantage, closeThreat);
     const attackRoll = M().applyD20Bonus(attacker.state, "attack-roll-bonus-die", R().d20(attack.bonus, mode));
-    M().consumeAttacksAgainstAdvantage(target.state);
-    window.IRON_PIT_BROWSER_RAGE?.extendFromAttack(attacker.state, round);
+    M().consumeAttacksAgainstAdvantage(target.state); window.IRON_PIT_BROWSER_RAGE?.extendFromAttack(attacker.state, round);
     if (spendAction) E().spend(attacker.state, "action");
     const redirected = window.IRON_PIT_BROWSER_REACTIONS?.redirectAttack?.(target, extra.setup) || null;
     const actualTarget = redirected || target;
     const natural = attackRoll.selected_roll, naturalTwenty = natural === 20;
-    const initialHit = natural !== 1 && (naturalTwenty || attackRoll.total >= M().effectiveArmorClass(actualTarget.state));
-    const parry = window.IRON_PIT_BROWSER_REACTIONS?.parryHit?.(actualTarget.state, attack, attackRoll, initialHit) || { hit: initialHit, used: false }, hit = parry.hit;
+    const baseTargetAc = M().effectiveArmorClass(actualTarget.state);
+    const initialHit = natural !== 1 && (naturalTwenty || attackRoll.total >= baseTargetAc);
+    const parry = window.IRON_PIT_BROWSER_REACTIONS?.parryHit?.(actualTarget.state, attack, attackRoll, initialHit, baseTargetAc) || { hit: initialHit, used: false };
+    const hit = parry.hit, targetAc = baseTargetAc + (parry.used ? actualTarget.state.template.parry_reaction.ac_bonus : 0);
     const expandedCritical = natural >= (attacker.state.template.critical_hit_minimum || 20);
     const critical = Boolean(hit && (expandedCritical || (Q().autoCritical(actualTarget.state) && distance <= 5)));
     const hpBefore = actualTarget.state.current_hp, temporaryHpBefore = actualTarget.state.temporary_hp, concentrationBefore = actualTarget.state.concentration?.effect_id || null;
@@ -102,8 +103,7 @@
         });
         if (timed) applied.push(timed);
       }
-      window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(actualTarget.state);
-      C()?.endIfIncapacitated(actualTarget.state, affectedStates);
+      window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(actualTarget.state); C()?.endIfIncapacitated(actualTarget.state, affectedStates);
     }
     let description = `${attacker.state.template.name}: ${critical ? "CRITICAL HIT" : hit ? "HIT" : "MISS"} with ${attack.name}.`;
     if (redirected) description += ` ${target.state.template.name} uses Redirect Attack; ${actualTarget.state.template.name} becomes the target.`;
@@ -115,9 +115,9 @@
     if (applied.includes("restrained")) description += ` ${actualTarget.state.template.name} is Restrained while Grappled.`;
     if (applied.includes("poisoned")) description += ` ${actualTarget.state.template.name} is Poisoned.`;
     const event = { sequence, round_number: round, event_type: "attack", actor_id: attacker.combatant_id, actor_name: attacker.state.template.name,
-      target_id: actualTarget.combatant_id, target_name: actualTarget.state.template.name, attack_roll: attackRoll, damage_roll: damageRoll,
-      damage_components: damageComponents, applied_condition_ids: [...new Set(applied)], hit, critical, hp_before: hpBefore,
-      hp_after: actualTarget.state.current_hp, temporary_hp_before: temporaryHpBefore, temporary_hp_after: actualTarget.state.temporary_hp,
+      target_id: actualTarget.combatant_id, target_name: actualTarget.state.template.name, attack_name: attack.name, target_ac: targetAc,
+      attack_roll: attackRoll, damage_roll: damageRoll, damage_components: damageComponents, applied_condition_ids: [...new Set(applied)], hit, critical,
+      hp_before: hpBefore, hp_after: actualTarget.state.current_hp, temporary_hp_before: temporaryHpBefore, temporary_hp_after: actualTarget.state.temporary_hp,
       death_save_successes: actualTarget.state.death_save_successes, death_save_failures: actualTarget.state.death_save_failures,
       is_stable: actualTarget.state.is_stable, is_dead: actualTarget.state.is_dead, weapon_id: attack.id, projectile: attack.projectile || null,
       feature_id: extra.featureId || null, concentration_ended_effect_id: concentrationBefore && !actualTarget.state.concentration ? concentrationBefore : null,
