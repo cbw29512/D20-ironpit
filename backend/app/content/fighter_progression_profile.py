@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from app.content.audited_fighter_profile import build_karnok_stoneward_profile
-from app.domain.character_builds import CharacterBuildProfile, FeatureAudit
+from app.domain.character_builds import AbilityIncrease, AbilityScores, CharacterBuildProfile, FeatureAudit
 
 
 def _level_two_features() -> list[FeatureAudit]:
@@ -37,6 +37,31 @@ def _level_three_features() -> list[FeatureAudit]:
     ]
 
 
+def _level_four_features() -> list[FeatureAudit]:
+    source = "D&D Beyond Basic Rules 2024: Fighter Level 4; Feats — Ability Score Improvement"
+    return [
+        FeatureAudit(
+            feature_id="ability-score-improvement-l4", feature_name="Ability Score Improvement", source_reference=source,
+            category="feat", combat_relevant=True, automated=True,
+            notes=("Split +1 Strength / +1 Constitution: STR 17→18 and CON 15→16. Runtime attack, damage, "
+                   "Strength save, Athletics, and retroactive Constitution-based HP are updated."),
+        ),
+    ]
+
+
+def _level_four_feature_audits(data: dict[str, object]) -> list[dict[str, object]]:
+    audits = data.get("feature_audits")
+    if not isinstance(audits, list):
+        raise ValueError("Karnok Fighter 4 profile has an unexpected feature-audit schema.")
+    for audit in audits:
+        if isinstance(audit, dict) and audit.get("feature_id") == "weapon-mastery":
+            audit["notes"] = (
+                "Legal masteries are Flail, Javelin, Spear, and Longsword. The standard arena loadout deliberately "
+                "uses Greatsword and Shortbow, so no selected mastery is invoked."
+            )
+    return [*audits, *(item.model_dump() for item in _level_four_features())]
+
+
 def build_karnok_stoneward_level2_profile() -> CharacterBuildProfile:
     data = build_karnok_stoneward_profile().model_dump()
     data.update(
@@ -53,5 +78,29 @@ def build_karnok_stoneward_level3_profile() -> CharacterBuildProfile:
         id="build-karnok-stoneward-l3", template_id="karnok-stoneward-l3", level=3,
         feature_audits=[*data["feature_audits"], *(item.model_dump() for item in _level_three_features())],
         source_references=[*data["source_references"], "Basic Rules 2024: Champion — Level 3 Improved Critical and Remarkable Athlete"],
+    )
+    return CharacterBuildProfile.model_validate(data)
+
+
+def build_karnok_stoneward_level4_profile() -> CharacterBuildProfile:
+    data = build_karnok_stoneward_level3_profile().model_dump()
+    data.update(
+        id="build-karnok-stoneward-l4",
+        template_id="karnok-stoneward-l4",
+        level=4,
+        advancement_increases=[
+            AbilityIncrease(ability="strength", amount=1).model_dump(),
+            AbilityIncrease(ability="constitution", amount=1).model_dump(),
+        ],
+        final_ability_scores=AbilityScores(
+            strength=18, dexterity=13, constitution=16, intelligence=8, wisdom=12, charisma=10,
+        ).model_dump(),
+        weapon_masteries=[*data["weapon_masteries"], "longsword"],
+        feature_audits=_level_four_feature_audits(data),
+        source_references=[
+            *data["source_references"],
+            "Basic Rules 2024: Fighter — Level 4 Ability Score Improvement, 3 Second Wind uses, 4 Weapon Masteries",
+            "Basic Rules 2024: Feats — Ability Score Improvement (+1 Strength, +1 Constitution)",
+        ],
     )
     return CharacterBuildProfile.model_validate(data)
