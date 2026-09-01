@@ -40,19 +40,32 @@ assert.equal(A.areaSlotCount(60), 6);
   const monsters = Array.from({ length: 3 }, (_, i) => member("monsters", i, 5));
   const result = A.bestPlacement(heroes[0], setup(heroes, monsters), 20, 150);
   assert.equal(result.enemyIds.length, 3);
-  assert.deepEqual(result.friendlyIds, ["heroes-0"]);
+  assert.equal(result.friendlyIds.length, 0);
+  assert.ok(result.centerFt > 5);
 }
 
 {
   const heroes = [member("heroes", 0, 0), member("heroes", 1, 0)];
   const monsters = [member("monsters", 0, 5), member("monsters", 1, 5)];
-  assert.equal(A.bestPlacement(heroes[0], setup(heroes, monsters), 10, 150), null);
+  assert.equal(A.bestPlacement(heroes[0], setup(heroes, monsters), 10, 5), null);
   const protectedResult = A.bestPlacement(
-    heroes[0], setup(heroes, monsters), 10, 150, ["heroes-0", "heroes-1"],
+    heroes[0], setup(heroes, monsters), 10, 5, ["heroes-0", "heroes-1"],
   );
   assert.equal(protectedResult.enemyIds.length, 2);
   assert.equal(protectedResult.friendlyIds.length, 0);
   assert.deepEqual(protectedResult.protectedFriendlyIds, ["heroes-0", "heroes-1"]);
+}
+
+{
+  const heroes = [member("heroes", 0, 0), member("heroes", 1, 5)];
+  const monsters = [
+    ...Array.from({ length: 3 }, (_, i) => member("monsters", i, 10)),
+    ...Array.from({ length: 3 }, (_, i) => member("monsters", i + 3, 15)),
+  ];
+  const result = A.bestPlacement(heroes[0], setup(heroes, monsters), 40, 5280);
+  assert.equal(result.enemyIds.length, 6);
+  assert.equal(result.friendlyIds.length, 0);
+  assert.ok(result.centerFt >= 50);
 }
 
 {
