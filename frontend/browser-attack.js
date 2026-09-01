@@ -5,6 +5,7 @@
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
   const T = () => window.IRON_PIT_BROWSER_TIMED;
   const Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
+  const TM = () => window.IRON_PIT_BROWSER_TACTICAL_MASTER || { apply: () => false, consume: () => 0, disadvantage: () => 0 };
   const B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2 || {
     activate: () => false, attackAdvantage: () => 0, attacksAgainstAdvantage: () => 0,
   };
@@ -68,8 +69,9 @@
     const advantage = (extra.advantage || 0) + conditions.advantage + bloodiedFury(attacker.state, attack)
       + B2().attackAdvantage(attacker.state, attack);
     const closeThreat = attack.kind === "ranged" && rangedCloseThreat(attacker, target, distance, extra.setup);
-    const mode = R().attackMode(attack, distance, advantage, conditions.disadvantage, closeThreat);
+    const mode = R().attackMode(attack, distance, advantage, conditions.disadvantage + TM().disadvantage(attacker.state), closeThreat);
     const attackRoll = M().applyD20Bonus(attacker.state, "attack-roll-bonus-die", R().d20(attack.bonus, mode));
+    TM().consume(attacker.state);
     M().consumeAttacksAgainstAdvantage(target.state); window.IRON_PIT_BROWSER_RAGE?.extendFromAttack(attacker.state, round);
     if (spendAction) E().spend(attacker.state, "action");
     const redirected = window.IRON_PIT_BROWSER_REACTIONS?.redirectAttack?.(target, extra.setup) || null;
@@ -84,7 +86,7 @@
     const hpBefore = actualTarget.state.current_hp, temporaryHpBefore = actualTarget.state.temporary_hp;
     const deathSuccessBefore = actualTarget.state.death_save_successes, deathFailureBefore = actualTarget.state.death_save_failures;
     const concentrationBefore = actualTarget.state.concentration?.effect_id || null;
-    let damageRoll = null, damageComponents = [], damageOutcome = null; const applied = [];
+    let damageRoll = null, damageComponents = [], damageOutcome = null, sapApplied = false; const applied = [];
     if (hit) {
       const damage = R().weaponDamage(attacker.state, attack, critical, mode, extra.turnKey || `${round}:${attacker.combatant_id}`,
         extra.bonusDamage || null, actualTarget.state);
@@ -111,12 +113,14 @@
         });
         if (timed) applied.push(timed);
       }
+      if (living) sapApplied = TM().apply(attacker, actualTarget, attack, round);
       window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(actualTarget.state); C()?.endIfIncapacitated(actualTarget.state, affectedStates);
     }
     let description = `${attacker.state.template.name}: ${critical ? "CRITICAL HIT" : hit ? "HIT" : "MISS"} with ${attack.name}.`;
     if (recklessStarted) description += ` ${attacker.state.template.name} uses Reckless Attack.`;
     if (redirected) description += ` ${target.state.template.name} uses Redirect Attack; ${actualTarget.state.template.name} becomes the target.`;
     if (parry.used) description += ` ${actualTarget.state.template.name} uses Parry.`;
+    if (sapApplied) description += ` Tactical Master applies Sap to ${actualTarget.state.template.name}.`;
     if (damageOutcome === "relentless_endurance") description += ` ${actualTarget.state.template.name} uses Relentless Endurance and remains at 1 HP.`;
     if (damageOutcome === "undead_fortitude") description += ` ${actualTarget.state.template.name} succeeds on Undead Fortitude and remains at 1 HP.`;
     if (applied.includes("prone")) description += ` ${actualTarget.state.template.name} is knocked Prone.`;
