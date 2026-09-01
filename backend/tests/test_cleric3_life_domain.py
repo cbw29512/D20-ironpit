@@ -12,7 +12,7 @@ from app.content.build_audit import assert_character_build_raw_ready
 from app.content.canonical_spell_packages import build_class_spell_package
 from app.content.character_resource_audit import assert_character_resources_raw_ready
 from app.content.pregen_combat_audit import assert_pregen_combat_stats
-from app.content.pregen_combat_profiles import build_pregen_combat_profiles
+from app.content.pregen_combat_profiles import build_seraphine_dawnshield_level3_combat_profile
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.traits import CombatTrait
 
@@ -31,7 +31,7 @@ def _resource(member: EncounterCombatant, resource_id: str) -> int:
 def test_level_three_build_and_spell_package_are_complete_without_counting_domain_spells_against_prepared_slots() -> None:
     template = build_seraphine_dawnshield_level_three()
     profile = build_seraphine_dawnshield_level3_profile()
-    combat = build_pregen_combat_profiles()[template.id]
+    combat = build_seraphine_dawnshield_level3_combat_profile()
     package = build_class_spell_package("cleric", 3)
 
     assert (template.level, template.max_hp, template.armor_class) == (3, 24, 17)
@@ -86,7 +86,7 @@ def test_preserve_life_uses_fifteen_point_pool_and_never_heals_above_half_effect
 
     choice = choose_channel_divinity(cleric, setup)
     assert choice is not None and choice.kind == "preserve-life"
-    events, sequence = resolve_channel_divinity(1, 1, cleric, setup, choice, FixedDiceProvider([]))
+    events, sequence = resolve_channel_divinity(1, 1, cleric, setup, choice, FixedDiceProvider([1]))
 
     assert sequence == 2 and events[0].feature_id == "preserve-life"
     assert (downed.state.current_hp, hurt.state.current_hp, cleric.state.current_hp) == (6, 6, 8)
@@ -111,8 +111,9 @@ def test_aid_bonus_changes_bloodied_and_healing_ceiling_semantics() -> None:
 def test_lesser_restoration_removes_one_printed_condition_with_bonus_action_and_level_two_slot() -> None:
     cleric = _member(build_seraphine_dawnshield_level_three(), "cleric", "heroes", 0)
     ally = _member(build_karnok_stoneward(), "ally", "heroes", 5)
+    enemy = _member(build_karnok_stoneward(), "enemy", "monsters", 10)
     ally.state.active_effect_ids.extend(["paralyzed", "poisoned"])
-    setup = EncounterSetup(heroes=[cleric, ally], monsters=[], hero_total_levels=4, monster_total_cr="0")
+    setup = EncounterSetup(heroes=[cleric, ally], monsters=[enemy], hero_total_levels=4, monster_total_cr="1")
 
     choice = choose_condition_removal_action(cleric, setup, "1:cleric")
     assert choice is not None
