@@ -45,6 +45,18 @@ def barbarian_rage_damage_bonus(level: int) -> int:
     return 4
 
 
+def cleric_channel_divinity_uses(level: int) -> int:
+    """2024 Cleric Channel Divinity uses; feature begins at level 2."""
+    level = _checked_level(level)
+    if level < 2:
+        return 0
+    if level < 6:
+        return 2
+    if level < 18:
+        return 3
+    return 4
+
+
 def fighter_second_wind_uses(level: int) -> int:
     """2024 Fighter Second Wind uses available when a fresh fight begins."""
     level = _checked_level(level)
