@@ -28,7 +28,7 @@ def _mace_attack() -> WeaponAttack:
             dice_count=1, dice_size=6, damage_type=DamageType.BLUDGEONING,
             animation="blunt-strike", reach_ft=5,
         ),
-        attack_bonus=3, damage_bonus=1,
+        attack_bonus=2, damage_bonus=0,
     )
 
 
@@ -70,20 +70,20 @@ def _build_seraphine(level: int) -> CombatantTemplate:
         traits.append(CombatTrait.LIFE_DOMAIN)
     return CombatantTemplate(
         id=canonical_template_id("cleric", level), name=hero.hero_name, archetype=hero.class_name,
-        level=level, kind="character", armor_class=17, max_hp=10 + 7 * (level - 1),
-        speed_ft=30, initiative_bonus=2, weapon_attack=_mace_attack(),
+        level=level, kind="character", armor_class=15, max_hp=8 + 5 * (level - 1),
+        speed_ft=30, initiative_bonus=0, weapon_attack=_mace_attack(),
         spell_save_actions=save_spells,
         spell_attack_actions=[build_guiding_bolt(spell_attack_bonus)],
         defensive_spell_actions=defenses,
         healing_actions=healing,
         condition_removal_actions=[LESSER_RESTORATION.model_copy(deep=True)] if level >= 3 else [],
         saving_throw_bonuses={
-            "strength": 1, "dexterity": 2, "constitution": 2,
-            "intelligence": -1, "wisdom": 6 if level >= 4 else 5, "charisma": 2,
+            "strength": 0, "dexterity": 0, "constitution": 0,
+            "intelligence": 2, "wisdom": 6 if level >= 4 else 5, "charisma": 4,
         },
         skill_bonuses={
-            "athletics": 1, "acrobatics": 2, "arcana": 1,
-            "history": 1, "medicine": 6 if level >= 4 else 5, "persuasion": 2,
+            "athletics": 0, "acrobatics": 0, "arcana": 4,
+            "history": 4, "medicine": 6 if level >= 4 else 5, "persuasion": 4,
         },
         combat_traits=traits,
         visual=VisualLoadout(armor="chain-shirt", main_hand="mace", off_hand="shield", body_style="humanoid"),
