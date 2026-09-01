@@ -5,14 +5,15 @@
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
   const S = () => window.IRON_PIT_BROWSER_STATE;
+  const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
+  const C = () => window.IRON_PIT_BROWSER_CONCENTRATION;
   const D = () => window.IRON_PIT_DICE;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
     available: (state, cost) => cost === "action" && state.action_available,
     spend: (state) => { state.action_available = false; },
   };
-  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || {
-    autoFailStrDex: (state) => state.is_unconscious,
-  };
+  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { autoFailStrDex: (state) => state.is_unconscious };
+  const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
 
   function saveMode(state, ability) {
     const advantage = ability === "strength" && state.active_effect_ids.includes("rage") ? 1 : 0;
@@ -24,7 +25,7 @@
     if ((ability === "strength" || ability === "dexterity") && Q().autoFailStrDex(state)) return { roll: null, succeeded: false };
     const bonus = state.template.saving_throw_bonuses?.[ability];
     if (bonus == null) throw new Error(`${state.template.name} lacks a certified ${ability} saving throw bonus.`);
-    const roll = R().d20(bonus, saveMode(state, ability));
+    const roll = M().applyD20Bonus(state, "saving-throw-bonus-die", R().d20(bonus, saveMode(state, ability)));
     return { roll, succeeded: roll.total >= dc };
   }
 
@@ -36,9 +37,7 @@
   function damageRolls(action, count, shared) {
     if (shared == null) return D().rollMany(count, action.damageDiceSize);
     if (!Array.isArray(shared) || shared.length !== count) throw new Error(`${action.name} shared damage roll count is invalid.`);
-    if (shared.some((roll) => !Number.isInteger(roll) || roll < 1 || roll > action.damageDiceSize)) {
-      throw new Error(`${action.name} shared damage rolls contain an invalid die result.`);
-    }
+    if (shared.some((roll) => !Number.isInteger(roll) || roll < 1 || roll > action.damageDiceSize)) throw new Error(`${action.name} shared damage rolls contain an invalid die result.`);
     return [...shared];
   }
 
@@ -62,8 +61,10 @@
         total: Math.max(0, total), applied_total: applied }];
       damageRoll = { notation: damageComponents[0].notation, rolls, modifier: action.damageBonus || 0, total: applied };
       if (applied) {
-        damageOutcome = A().applyDamage(target.state, applied, false, [action.damageType]);
+        const affectedStates = states(options.setup);
+        damageOutcome = A().applyDamage(target.state, applied, false, [action.damageType], affectedStates);
         window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(target.state);
+        C()?.endIfIncapacitated(target.state, affectedStates);
       }
     }
     let appliedConditions = [];
