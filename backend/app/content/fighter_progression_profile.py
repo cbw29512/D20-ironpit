@@ -49,6 +49,22 @@ def _level_four_features() -> list[FeatureAudit]:
     ]
 
 
+def _level_five_features() -> list[FeatureAudit]:
+    source = "D&D Beyond Basic Rules 2024: Fighter Level 5"
+    return [
+        FeatureAudit(
+            feature_id="extra-attack", feature_name="Extra Attack", source_reference=source,
+            category="class", combat_relevant=True, automated=True,
+            notes="The Attack action resolves two legal weapon attacks; Action Surge reuses the same two-slot Attack action.",
+        ),
+        FeatureAudit(
+            feature_id="tactical-shift", feature_name="Tactical Shift", source_reference=source,
+            category="class", combat_relevant=True, automated=True,
+            notes="After Second Wind, Iron Pit uses the granted half-Speed OA-free movement to close toward the nearest enemy.",
+        ),
+    ]
+
+
 def _level_four_feature_audits(data: dict[str, object]) -> list[dict[str, object]]:
     audits = data.get("feature_audits")
     if not isinstance(audits, list):
@@ -85,9 +101,7 @@ def build_karnok_stoneward_level3_profile() -> CharacterBuildProfile:
 def build_karnok_stoneward_level4_profile() -> CharacterBuildProfile:
     data = build_karnok_stoneward_level3_profile().model_dump()
     data.update(
-        id="build-karnok-stoneward-l4",
-        template_id="karnok-stoneward-l4",
-        level=4,
+        id="build-karnok-stoneward-l4", template_id="karnok-stoneward-l4", level=4,
         advancement_increases=[
             AbilityIncrease(ability="strength", amount=1).model_dump(),
             AbilityIncrease(ability="constitution", amount=1).model_dump(),
@@ -102,5 +116,15 @@ def build_karnok_stoneward_level4_profile() -> CharacterBuildProfile:
             "Basic Rules 2024: Fighter — Level 4 Ability Score Improvement, 3 Second Wind uses, 4 Weapon Masteries",
             "Basic Rules 2024: Feats — Ability Score Improvement (+1 Strength, +1 Constitution)",
         ],
+    )
+    return CharacterBuildProfile.model_validate(data)
+
+
+def build_karnok_stoneward_level5_profile() -> CharacterBuildProfile:
+    data = build_karnok_stoneward_level4_profile().model_dump()
+    data.update(
+        id="build-karnok-stoneward-l5", template_id="karnok-stoneward-l5", level=5,
+        feature_audits=[*data["feature_audits"], *(item.model_dump() for item in _level_five_features())],
+        source_references=[*data["source_references"], "Basic Rules 2024: Fighter — Level 5 Extra Attack and Tactical Shift"],
     )
     return CharacterBuildProfile.model_validate(data)
