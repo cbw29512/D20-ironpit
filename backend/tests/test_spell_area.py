@@ -45,29 +45,47 @@ def test_thirty_foot_area_can_cover_all_six_enemy_cards() -> None:
     assert len(result.enemy_ids) == 6
 
 
-def test_aoe_is_cast_when_enemies_outnumber_friends() -> None:
+def test_point_aoe_edge_places_to_spare_adjacent_friends() -> None:
     setup = _setup(1, 3, monster_position=5)
     result = best_area_placement(setup.heroes[0], setup, 20, 150)
     assert result is not None
     assert len(result.enemy_ids) == 3
-    assert result.friendly_ids == ("heroes-0",)
+    assert result.friendly_ids == ()
+    assert result.center_ft > 5
 
 
-def test_aoe_is_rejected_when_enemies_do_not_outnumber_friends() -> None:
+def test_aoe_falls_through_when_range_prevents_safe_edge_placement() -> None:
     setup = _setup(2, 2, monster_position=5)
-    assert best_area_placement(setup.heroes[0], setup, 10, 150) is None
+    assert best_area_placement(setup.heroes[0], setup, 10, 5) is None
 
 
-def test_raw_feature_protection_removes_spared_friends_from_risk_count() -> None:
+def test_raw_feature_protection_can_make_an_otherwise_unsafe_area_legal() -> None:
     setup = _setup(2, 2, monster_position=5)
     result = best_area_placement(
-        setup.heroes[0], setup, 10, 150,
+        setup.heroes[0], setup, 10, 5,
         protected_ally_ids={"heroes-0", "heroes-1"},
     )
     assert result is not None
     assert len(result.enemy_ids) == 2
     assert result.friendly_ids == ()
     assert result.protected_friendly_ids == ("heroes-0", "heroes-1")
+
+
+def test_large_point_area_can_be_centered_beyond_enemy_line_to_spare_formation() -> None:
+    heroes = [_member("heroes", 0, 0), _member("heroes", 1, 5)]
+    monsters = [
+        *[_member("monsters", index, 10) for index in range(3)],
+        *[_member("monsters", index + 3, 15) for index in range(3)],
+    ]
+    setup = EncounterSetup(
+        heroes=heroes, monsters=monsters, hero_total_levels=2,
+        monster_total_cr="1", starting_distance_ft=5,
+    )
+    result = best_area_placement(heroes[0], setup, 40, 5280)
+    assert result is not None
+    assert len(result.enemy_ids) == 6
+    assert result.friendly_ids == ()
+    assert result.center_ft >= 50
 
 
 def test_area_does_not_jump_over_an_occupied_card_space() -> None:
