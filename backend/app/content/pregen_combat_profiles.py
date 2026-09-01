@@ -46,6 +46,7 @@ def _scores(strength: int, dexterity: int, constitution: int, intelligence: int,
 _ORC = _scores(17, 13, 15, 10, 10, 10)
 _ORC_L4 = _scores(18, 13, 16, 10, 10, 10)
 _ORC_L6 = _scores(20, 13, 16, 10, 10, 10)
+_ORC_L8 = _scores(20, 13, 18, 10, 10, 10)
 _SERAPHINE = _scores(10, 10, 10, 14, 17, 14)
 _SERAPHINE_L4 = _scores(10, 10, 10, 14, 19, 14)
 _KARNOK_ATTACKS = (
@@ -59,7 +60,7 @@ _ROKHAN_ATTACKS = (
 
 
 def _karnok_profile(level: int, hp: int) -> PregenCombatProfile:
-    abilities = _ORC_L6 if level >= 6 else _ORC_L4 if level >= 4 else _ORC
+    abilities = _ORC_L8 if level >= 8 else _ORC_L6 if level >= 6 else _ORC_L4 if level >= 4 else _ORC
     athletics = 8 if level >= 6 else 7 if level >= 5 else 6 if level >= 4 else 5
     masteries = ("flail", "javelin", "spear", "longsword") if level >= 4 else ("flail", "javelin", "spear")
     resources = [("second-wind", 3 if level >= 4 else 2)]
@@ -134,7 +135,7 @@ def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
     profiles = [
         _karnok_profile(1, 12), _karnok_profile(2, 20), _karnok_profile(3, 28),
         build_karnok_stoneward_level4_combat_profile(), build_karnok_stoneward_level5_combat_profile(),
-        build_karnok_stoneward_level6_combat_profile(), build_karnok_stoneward_level7_combat_profile(),
+        build_karnok_stoneward_level6_combat_profile(), build_karnok_stoneward_level7_combat_profile(), _karnok_profile(8, 84),
         _rokhan_profile(1, 14), _rokhan_profile(2, 23), _rokhan_profile(3, 32), _rokhan_profile(4, 45),
         _rokhan_profile(5, 55), _rokhan_profile(6, 65),
         _seraphine_profile(1, 8, 2), _seraphine_profile(2, 13, 3, 2),
