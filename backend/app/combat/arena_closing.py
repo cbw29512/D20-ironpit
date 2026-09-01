@@ -63,7 +63,7 @@ def _hold_backline(
     if ranged is not None and is_available(attacker.state, "action"):
         events.append(resolve_encounter_attack(
             sequence, round_number, attacker, target, ranged,
-            combatant_distance(attacker, target), dice, setup,
+            combatant_distance(attacker, target), dice, setup, allow_reckless=True,
         ))
         sequence += 1
     elif is_available(attacker.state, "action"):
@@ -111,7 +111,7 @@ def resolve_simple_closing(
     if ranged is not None and is_available(attacker.state, "action"):
         events.append(resolve_encounter_attack(
             sequence, round_number, attacker, target, ranged,
-            combatant_distance(attacker, target), dice, setup,
+            combatant_distance(attacker, target), dice, setup, allow_reckless=True,
         ))
         sequence += 1
     elif is_available(attacker.state, "action"):
