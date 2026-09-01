@@ -12,7 +12,7 @@ from app.domain.models import EncounterSelection, HealingAction
 
 def _setup():
     return build_encounter_setup(EncounterSelection(
-        hero_ids=["aldric-vane-l1", "brom-ironmark-l1"],
+        hero_ids=["karnok-stoneward-l1", "rokhan-stonefury-l1"],
         monster_ids=["srd-goblin-warrior"],
     ))
 
@@ -105,7 +105,7 @@ def test_reaction_heal_is_not_used_proactively_on_the_healers_turn() -> None:
 
 def test_action_heal_prevents_charge_attack_and_partial_charge_movement() -> None:
     setup = build_encounter_setup(EncounterSelection(
-        hero_ids=["aldric-vane-l1"], monster_ids=["srd-giant-goat"],
+        hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-giant-goat"],
     ))
     healer, target = setup.monsters[0], setup.heroes[0]
     begin_turn(healer.state)
