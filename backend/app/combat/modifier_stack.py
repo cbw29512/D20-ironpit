@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections.abc import Iterable
 
 from app.combat.dice import DiceProvider
+from app.domain.events import DiceRoll
 from app.domain.modifiers import CombatModifier, ModifierKind
 from app.domain.runtime import CombatantState
 
@@ -17,11 +18,7 @@ def add_modifier(state: CombatantState, modifier: CombatModifier) -> None:
 
 
 def remove_source_modifiers(
-    states: Iterable[CombatantState],
-    source_id: str,
-    source_effect_id: str,
-    *,
-    concentration_only: bool = False,
+    states: Iterable[CombatantState], source_id: str, source_effect_id: str, *, concentration_only: bool = False,
 ) -> int:
     removed = 0
     for state in states:
@@ -39,42 +36,44 @@ def remove_source_modifiers(
 
 
 def effective_armor_class(state: CombatantState) -> int:
-    bonus = sum(
-        item.flat_bonus for item in state.active_modifiers
-        if item.kind is ModifierKind.ARMOR_CLASS
-    )
-    return max(0, state.template.armor_class + bonus)
+    return max(0, state.template.armor_class + sum(
+        item.flat_bonus for item in state.active_modifiers if item.kind is ModifierKind.ARMOR_CLASS
+    ))
 
 
 def effective_speed(state: CombatantState) -> int:
-    bonus = sum(
-        item.flat_bonus for item in state.active_modifiers
-        if item.kind is ModifierKind.SPEED
-    )
-    return max(0, state.template.speed_ft + bonus)
+    return max(0, state.template.speed_ft + sum(
+        item.flat_bonus for item in state.active_modifiers if item.kind is ModifierKind.SPEED
+    ))
 
 
 def attacks_against_advantage_sources(state: CombatantState) -> int:
-    return sum(
-        1 for item in state.active_modifiers
-        if item.kind is ModifierKind.ATTACKS_AGAINST_ADVANTAGE
-    )
+    return sum(1 for item in state.active_modifiers if item.kind is ModifierKind.ATTACKS_AGAINST_ADVANTAGE)
 
 
-def roll_bonus_dice(state: CombatantState, kind: ModifierKind, dice: DiceProvider) -> tuple[int, list[int]]:
+def _die_modifiers(state: CombatantState, kind: ModifierKind) -> list[CombatModifier]:
     if kind not in {ModifierKind.ATTACK_ROLL_BONUS_DIE, ModifierKind.SAVING_THROW_BONUS_DIE}:
         raise ValueError(f"{kind.value} is not a D20 bonus-die modifier.")
-    rolls: list[int] = []
-    for item in state.active_modifiers:
-        if item.kind is not kind:
-            continue
-        rolls.extend(dice.roll(item.dice_size) for _ in range(item.dice_count))
-    return sum(rolls), rolls
+    return [item for item in state.active_modifiers if item.kind is kind]
+
+
+def apply_d20_bonus_dice(
+    state: CombatantState, kind: ModifierKind, roll: DiceRoll, dice: DiceProvider,
+) -> DiceRoll:
+    modifiers = _die_modifiers(state, kind)
+    if not modifiers:
+        return roll
+    bonus_rolls = [dice.roll(item.dice_size) for item in modifiers for _ in range(item.dice_count)]
+    notation = " + ".join([roll.notation, *(f"{item.dice_count}d{item.dice_size}" for item in modifiers)])
+    return roll.model_copy(update={
+        "notation": notation,
+        "rolls": [*roll.rolls, *bonus_rolls],
+        "total": roll.total + sum(bonus_rolls),
+    })
 
 
 def bonus_damage_modifiers(state: CombatantState, target_id: str | None) -> list[CombatModifier]:
     return [
         item for item in state.active_modifiers
-        if item.kind is ModifierKind.BONUS_DAMAGE
-        and (item.target_id is None or item.target_id == target_id)
+        if item.kind is ModifierKind.BONUS_DAMAGE and (item.target_id is None or item.target_id == target_id)
     ]
