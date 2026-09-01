@@ -60,6 +60,23 @@ def _level_four_feature_audits(data: dict[str, object]) -> list[dict[str, object
     return [*audits, asi.model_dump()]
 
 
+def _level_five_features() -> list[FeatureAudit]:
+    source = "D&D Beyond Basic Rules 2024: Barbarian Level 5"
+    return [
+        FeatureAudit(
+            feature_id="extra-attack", feature_name="Extra Attack", source_reference=source,
+            category="class", combat_relevant=True, automated=True,
+            notes=("The Attack action resolves two legal weapon attacks on Rokhan's turn. Both attacks share one "
+                   "turn identity so Reckless Attack and first-hit Frenzy remain RAW across the full Attack action."),
+        ),
+        FeatureAudit(
+            feature_id="fast-movement", feature_name="Fast Movement", source_reference=source,
+            category="class", combat_relevant=True, automated=True,
+            notes="Rokhan is not wearing Heavy armor, so his Speed increases from 30 feet to 40 feet.",
+        ),
+    ]
+
+
 def build_rokhan_stonefury_level2_profile() -> CharacterBuildProfile:
     previous = build_rokhan_stonefury_profile()
     data = advance_profile_data(previous, 2)
@@ -99,5 +116,15 @@ def build_rokhan_stonefury_level4_profile() -> CharacterBuildProfile:
             "Basic Rules 2024: Barbarian — Level 4 Ability Score Improvement and 3 Weapon Masteries",
             "Basic Rules 2024: Feats — Ability Score Improvement (+1 Strength, +1 Constitution)",
         ],
+    )
+    return CharacterBuildProfile.model_validate(data)
+
+
+def build_rokhan_stonefury_level5_profile() -> CharacterBuildProfile:
+    previous = build_rokhan_stonefury_level4_profile()
+    data = advance_profile_data(previous, 5)
+    data.update(
+        feature_audits=[*data["feature_audits"], *(item.model_dump() for item in _level_five_features())],
+        source_references=[*data["source_references"], "Basic Rules 2024: Barbarian — Level 5 Extra Attack and Fast Movement"],
     )
     return CharacterBuildProfile.model_validate(data)
