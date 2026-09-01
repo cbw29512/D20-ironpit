@@ -40,6 +40,7 @@ def resolve_attack(
     close_enemy_active: bool = True,
     redirect_target: CombatantState | None = None,
     redirect_target_event_id: str | None = None,
+    affected_states: list[CombatantState] | None = None,
 ) -> BattleEvent:
     try:
         if spend_action and not is_available(attacker, "action"):
@@ -96,7 +97,8 @@ def resolve_attack(
             damage_roll.total = applied_total
             applied_types = {part.damage_type for part in damage_components if part.applied_total > 0}
             damage_outcome = apply_damage(
-                actual_defender, applied_total, critical=critical, damage_types=applied_types, dice=dice,
+                actual_defender, applied_total, critical=critical, damage_types=applied_types,
+                dice=dice, affected_states=affected_states,
             )
             applied_conditions = apply_hit_conditions(attack, actual_defender, attacker_event_id, round_number)
             end_rage_if_incapacitated(actual_defender)
