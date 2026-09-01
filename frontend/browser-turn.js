@@ -47,7 +47,7 @@
     if (!F()?.backlineHoldsPosition(member, setup)) return null;
     const distance = S().distance(member, target), ranged = attacks(member).find((a) => a.kind === "ranged" && distance <= a.long);
     if (ranged && E().available(member.state, "action")) {
-      return { events: [A().resolveAttack(sequence++, round, member, target, ranged, distance, { setup })], sequence, handled: true };
+      return { events: [A().resolveAttack(sequence++, round, member, target, ranged, distance, { setup, allowReckless: true })], sequence, handled: true };
     }
     if (E().available(member.state, "action")) {
       E().spend(member.state, "action"); if (!member.state.active_effect_ids.includes("dodge")) member.state.active_effect_ids.push("dodge");
@@ -71,7 +71,7 @@
     }
     const events = [], canAct = E().available(member.state, "action"); distance = S().distance(member, target);
     const ranged = attacks(member).find((a) => a.kind === "ranged" && distance <= a.long);
-    if (ranged && canAct) events.push(A().resolveAttack(sequence++, round, member, target, ranged, distance, { setup }));
+    if (ranged && canAct) events.push(A().resolveAttack(sequence++, round, member, target, ranged, distance, { setup, allowReckless: true }));
     else if (canAct) {
       E().spend(member.state, "action"); if (!member.state.active_effect_ids.includes("dodge")) member.state.active_effect_ids.push("dodge");
       events.push({ sequence: sequence++, round_number: round, event_type: "feature", actor_id: member.combatant_id,
@@ -140,7 +140,7 @@
     const attack = legalAttack(member, distance);
     if (attack && E().available(member.state, "action")) {
       const pack = S().packTactics(member, setup), opener = C()?.openingFeature?.(round, member, setup) || null;
-      events.push(A().resolveAttack(sequence++, round, member, target, attack, distance, { advantage: pack ? 1 : 0, featureId: opener || (pack ? "pack-tactics" : null), setup }));
+      events.push(A().resolveAttack(sequence++, round, member, target, attack, distance, { advantage: pack ? 1 : 0, featureId: opener || (pack ? "pack-tactics" : null), setup, allowReckless: true }));
     }
     return finalize(events, sequence, round, member, setup, turnKey);
   }
