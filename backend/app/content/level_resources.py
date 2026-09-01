@@ -75,6 +75,18 @@ def fighter_action_surge_uses(level: int) -> int:
     return 2 if level >= 17 else 1
 
 
+def fighter_indomitable_uses(level: int) -> int:
+    """2024 Fighter Indomitable uses; feature begins at level 9."""
+    level = _checked_level(level)
+    if level < 9:
+        return 0
+    if level < 13:
+        return 1
+    if level < 17:
+        return 2
+    return 3
+
+
 def orc_adrenaline_rush_uses(level: int) -> int:
     """2024 Orc Adrenaline Rush uses equal the character's Proficiency Bonus."""
     return proficiency_bonus(level)
