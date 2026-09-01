@@ -36,7 +36,7 @@
 
   function friendlyBuffPriority(caster, target, setup) {
     const isMelee = primaryAttackKind(target) === "melee";
-    const group = target !== caster && isMelee ? 0 : target === caster ? 1 : 2;
+    const group = isMelee ? 0 : target === caster ? 1 : 2;
     return [group, nearestEnemyDistance(target, setup), Math.abs(caster.position_ft - target.position_ft), target.combatant_id];
   }
 
