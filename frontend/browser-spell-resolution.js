@@ -48,9 +48,17 @@
 
     const members = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));
     const action = saveAction(choice);
+    let sharedDamageRolls = null;
     for (const targetId of choice.targetIds) {
       const target = members.get(targetId);
-      events.push(V().resolveAction(sequence++, round, caster, target, action, S().distance(caster, target), { spendAction: false }));
+      const event = V().resolveAction(
+        sequence++, round, caster, target, action, S().distance(caster, target),
+        { spendAction: false, sharedDamageRolls },
+      );
+      events.push(event);
+      if (sharedDamageRolls == null && event.damage_components?.length) {
+        sharedDamageRolls = [...event.damage_components[0].rolls];
+      }
     }
     return { events, sequence };
   }

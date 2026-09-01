@@ -28,16 +28,31 @@ def legal_save_action(
     return action.target_max_size is None or size_at_most(target.state.template.size, action.target_max_size)
 
 
+def _damage_rolls(
+    action: SavingThrowAction,
+    dice: DiceProvider,
+    shared_damage_rolls: list[int] | None,
+) -> list[int]:
+    if shared_damage_rolls is None:
+        return [dice.roll(action.damage_dice_size) for _ in range(action.damage_dice_count)]
+    if len(shared_damage_rolls) != action.damage_dice_count:
+        raise ValueError(f"{action.name} shared damage roll count does not match its damage dice.")
+    if any(not 1 <= roll <= action.damage_dice_size for roll in shared_damage_rolls):
+        raise ValueError(f"{action.name} shared damage rolls contain an invalid die result.")
+    return list(shared_damage_rolls)
+
+
 def _damage_components(
     action: SavingThrowAction,
     dice: DiceProvider,
     succeeded: bool,
+    shared_damage_rolls: list[int] | None = None,
 ) -> list[DamageRollComponent]:
     if action.damage_dice_count == 0 or (succeeded and action.success_damage == "none"):
         return []
     if action.damage_type is None:
         raise ValueError(f"{action.name} has damage dice but no damage type.")
-    rolls = [dice.roll(action.damage_dice_size) for _ in range(action.damage_dice_count)]
+    rolls = _damage_rolls(action, dice, shared_damage_rolls)
     total = sum(rolls) + action.damage_bonus
     if succeeded and action.success_damage == "half":
         total //= 2
@@ -61,6 +76,7 @@ def resolve_save_action(
     dice: DiceProvider,
     *,
     spend_action: bool = True,
+    shared_damage_rolls: list[int] | None = None,
 ) -> BattleEvent:
     if spend_action and not is_available(actor.state, "action"):
         raise ValueError("Action is not available for a saving throw action.")
@@ -71,7 +87,7 @@ def resolve_save_action(
     if spend_action:
         spend(actor.state, "action")
     hp_before = target.state.current_hp
-    rolled_components = _damage_components(action, dice, succeeded)
+    rolled_components = _damage_components(action, dice, succeeded, shared_damage_rolls)
     applied_total, damage_components = apply_damage_defenses(target.state, rolled_components)
     damage_roll = None
     damage_outcome = None
@@ -86,7 +102,6 @@ def resolve_save_action(
         applied_types = {part.damage_type for part in damage_components if part.applied_total > 0}
         damage_outcome = apply_damage(target.state, applied_total, damage_types=applied_types, dice=dice)
         end_rage_if_incapacitated(target.state)
-
     applied_conditions: list[str] = []
     if not succeeded and target.state.is_alive and not target.state.is_dead and action.grapple_escape_dc is not None:
         applied_conditions = apply_grapple(
@@ -96,7 +111,6 @@ def resolve_save_action(
             action.range_ft,
             restrains=action.restrains_while_grappled,
         )
-
     outcome = "SUCCEEDS" if succeeded else "FAILS"
     description = (
         f"{target.state.template.name} {outcome} a DC {action.dc} "

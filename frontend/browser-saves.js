@@ -33,6 +33,15 @@
     return !action.targetMaxSize || S().sizeAtMost(target, action.targetMaxSize);
   }
 
+  function damageRolls(action, count, shared) {
+    if (shared == null) return D().rollMany(count, action.damageDiceSize);
+    if (!Array.isArray(shared) || shared.length !== count) throw new Error(`${action.name} shared damage roll count is invalid.`);
+    if (shared.some((roll) => !Number.isInteger(roll) || roll < 1 || roll > action.damageDiceSize)) {
+      throw new Error(`${action.name} shared damage rolls contain an invalid die result.`);
+    }
+    return [...shared];
+  }
+
   function resolveAction(sequence, round, actor, target, action, distance, options = {}) {
     const spendAction = options.spendAction !== false;
     if (spendAction && !E().available(actor.state, "action")) throw new Error("Action is unavailable for saving throw action.");
@@ -44,7 +53,7 @@
     const count = action.damageDiceCount || 0;
     if (count && !(save.succeeded && action.successDamage === "none")) {
       if (!action.damageType) throw new Error(`${action.name} has damage dice but no damage type.`);
-      const rolls = D().rollMany(count, action.damageDiceSize);
+      const rolls = damageRolls(action, count, options.sharedDamageRolls);
       let total = rolls.reduce((sum, roll) => sum + roll, 0) + (action.damageBonus || 0);
       if (save.succeeded && action.successDamage === "half") total = Math.floor(total / 2);
       const applied = A().adjustedDamage(target.state, Math.max(0, total), action.damageType);
