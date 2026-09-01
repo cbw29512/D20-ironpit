@@ -113,6 +113,26 @@ jobs:
           if old not in text:
               raise SystemExit('Uncertified monster readiness contract drifted.')
           readiness.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          browser = Path('frontend/browser-generated-monsters.test.cjs')
+          text = browser.read_text(encoding='utf-8')
+          old = 'assert.equal(Object.keys(generated).length, 101, "Generated runtime must expose only currently RAW-certified monsters");'
+          new = 'assert.equal(Object.keys(generated).length, 103, "Generated runtime must expose only currently RAW-certified monsters");'
+          if old not in text:
+              raise SystemExit('Generated browser monster-count contract drifted.')
+          text = text.replace(old, new, 1)
+          old = '"srd-killer-whale", "srd-manticore", "srd-pegasus", "srd-scorpion", "srd-skeleton", "srd-spider",'
+          new = '"srd-killer-whale", "srd-manticore", "srd-ogre-zombie", "srd-pegasus", "srd-scorpion", "srd-skeleton", "srd-spider",'
+          if old not in text:
+              raise SystemExit('Ogre Zombie browser presence insertion point drifted.')
+          text = text.replace(old, new, 1)
+          old = '"srd-swarm-of-insects", "srd-swarm-of-venomous-snakes",\n]) {'
+          new = '"srd-swarm-of-insects", "srd-swarm-of-venomous-snakes", "srd-zombie",\n]) {'
+          if old not in text:
+              raise SystemExit('Zombie browser presence insertion point drifted.')
+          text = text.replace(old, new, 1)
+          text = text.replace('Generated monster runtime contains 101 RAW-certified templates', 'Generated monster runtime contains 103 RAW-certified templates', 1)
+          browser.write_text(text, encoding='utf-8')
           PY
       - name: Enforce source limits before generation
         run: python scripts/check_source_limits.py
@@ -141,7 +161,7 @@ jobs:
         run: |
           rm -rf backend/iron_pit_backend.egg-info
           git status --short
-          test -z "$(git status --porcelain --untracked-files=all | grep -vE '^( M|M |MM) (backend/app/content/monster_catalog.py|backend/app/content/figure_profiles.py|backend/app/content/data/combatant_capabilities_v1.json|backend/tests/test_arena_roster.py|backend/tests/test_figure_profiles.py|backend/tests/test_full_content_catalog.py|backend/tests/test_monster_source_audit.py|backend/tests/test_public_readiness.py|frontend/browser-monsters-generated.js|frontend/figure-profiles.js|data/(hero|monster)_certification_manifest.json)$')"
+          test -z "$(git status --porcelain --untracked-files=all | grep -vE '^( M|M |MM) (backend/app/content/monster_catalog.py|backend/app/content/figure_profiles.py|backend/app/content/data/combatant_capabilities_v1.json|backend/tests/test_arena_roster.py|backend/tests/test_figure_profiles.py|backend/tests/test_full_content_catalog.py|backend/tests/test_monster_source_audit.py|backend/tests/test_public_readiness.py|frontend/browser-generated-monsters.test.cjs|frontend/browser-monsters-generated.js|frontend/figure-profiles.js|data/(hero|monster)_certification_manifest.json)$')"
       - name: Persist only after complete green gate
         run: |
           git config user.name "github-actions[bot]"
@@ -151,7 +171,7 @@ jobs:
             backend/tests/test_arena_roster.py backend/tests/test_figure_profiles.py \
             backend/tests/test_full_content_catalog.py backend/tests/test_monster_source_audit.py \
             backend/tests/test_public_readiness.py \
-            frontend/browser-monsters-generated.js frontend/figure-profiles.js \
+            frontend/browser-generated-monsters.test.cjs frontend/browser-monsters-generated.js frontend/figure-profiles.js \
             data/hero_certification_manifest.json data/monster_certification_manifest.json
           git commit -m "feat: promote Zombie and Ogre Zombie"
           git push origin HEAD:audit/raw-combat-log-figures-20260830
