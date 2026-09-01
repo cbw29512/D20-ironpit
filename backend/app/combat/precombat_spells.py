@@ -33,6 +33,8 @@ def defensive_spell_active(member: EncounterCombatant, setup: EncounterSetup, sp
 def choose_defensive_spell(member: EncounterCombatant, setup: EncounterSetup | None = None):
     indexed = list(enumerate(member.state.template.defensive_spell_actions))
     for _, spell in sorted(indexed, key=lambda item: (-item[1].priority, item[1].level, item[0])):
+        if spell.concentration and member.state.concentration is not None:
+            continue
         if setup is not None and defensive_spell_active(member, setup, spell):
             continue
         slot = _slot_resource(member, spell)
@@ -79,6 +81,8 @@ def resolve_defensive_spell(
         raise ValueError(f"No level {slot_level} spell slot remains for {spell.name}.")
     if not targets:
         raise ValueError(f"{spell.name} has no legal precombat targets.")
+    if spell.concentration and member.state.concentration is not None:
+        raise ValueError(f"{member.state.template.name} is already concentrating and will not replace the active buff automatically.")
     if any(
         spell.id in target.state.active_buff_effect_ids
         or any(modifier.source_effect_id == spell.id for modifier in target.state.active_modifiers)
