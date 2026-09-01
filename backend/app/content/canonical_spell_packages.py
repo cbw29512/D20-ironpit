@@ -4,35 +4,26 @@ from app.content.class_spell_progression import CASTING_ABILITIES, max_spell_lev
 from app.domain.class_loadouts import CanonicalSpellChoice, CasterClassId, ClassSpellPackage
 
 
-def _spell(
-    spell_id: str,
-    name: str,
-    role: str,
-    *capabilities: str,
-) -> CanonicalSpellChoice:
+def _spell(spell_id: str, name: str, role: str, *capabilities: str) -> CanonicalSpellChoice:
     return CanonicalSpellChoice(
-        id=spell_id,
-        name=name,
-        spell_level=1,
-        min_character_level=1,
-        role=role,
-        required_capabilities=list(capabilities),
+        id=spell_id, name=name, spell_level=1, min_character_level=1,
+        role=role, required_capabilities=list(capabilities),
     )
 
 
-def _cantrip(
-    spell_id: str,
-    name: str,
-    role: str,
-    *capabilities: str,
+def _later_spell(
+    spell_id: str, name: str, role: str, min_character_level: int, *capabilities: str,
 ) -> CanonicalSpellChoice:
     return CanonicalSpellChoice(
-        id=spell_id,
-        name=name,
-        spell_level=0,
-        min_character_level=1,
-        role=role,
-        required_capabilities=list(capabilities),
+        id=spell_id, name=name, spell_level=1, min_character_level=min_character_level,
+        role=role, required_capabilities=list(capabilities),
+    )
+
+
+def _cantrip(spell_id: str, name: str, role: str, *capabilities: str) -> CanonicalSpellChoice:
+    return CanonicalSpellChoice(
+        id=spell_id, name=name, spell_level=0, min_character_level=1,
+        role=role, required_capabilities=list(capabilities),
     )
 
 
@@ -57,6 +48,7 @@ CANONICAL_SPELLS: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
         _spell("cure-wounds", "Cure Wounds", "healing", "healing"),
         _spell("guiding-bolt", "Guiding Bolt", "mixed", "spell-attack", "next-attack-advantage"),
         _spell("shield-of-faith", "Shield of Faith", "buff", "modifier-stack", "concentration"),
+        _later_spell("healing-word", "Healing Word", "healing", 2, "healing", "bonus-action"),
     ),
     "druid": (
         _spell("animal-friendship", "Animal Friendship", "control", "charmed"),
@@ -102,13 +94,11 @@ def build_class_spell_package(class_id: CasterClassId, character_level: int) -> 
             f"needs {expected} prepared spells, has {len(spells)}."
         )
     cantrips = list(CANONICAL_CANTRIPS.get(class_id, ()))
-    if class_id == "cleric" and character_level == 1 and len(cantrips) != 3:
-        raise ValueError("Cleric level 1 canonical package must retain exactly three chosen cantrips.")
+    if class_id == "cleric" and character_level <= 3 and len(cantrips) != 3:
+        raise ValueError("Cleric levels 1-3 canonical package must retain exactly three chosen cantrips.")
     return ClassSpellPackage(
-        class_id=class_id,
-        casting_ability=CASTING_ABILITIES[class_id],
-        cantrips=cantrips,
-        spells=spells[:expected],
+        class_id=class_id, casting_ability=CASTING_ABILITIES[class_id],
+        cantrips=cantrips, spells=spells[:expected],
     )
 
 
