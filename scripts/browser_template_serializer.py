@@ -150,6 +150,20 @@ def _removal(action: Any) -> dict[str, Any]:
     return row
 
 
+def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
+    features = template.progression_features
+    row: dict[str, Any] = {}
+    if features.critical_hit_minimum != 20:
+        row["critical_hit_minimum"] = features.critical_hit_minimum
+    if features.initiative_advantage:
+        row["initiative_advantage"] = True
+    if features.athletics_advantage:
+        row["athletics_advantage"] = True
+    if features.critical_move_fraction:
+        row["critical_move_fraction"] = features.critical_move_fraction
+    return row
+
+
 def template_row(template: CombatantTemplate) -> dict[str, Any]:
     try:
         traits = {item.value for item in template.combat_traits}
@@ -170,7 +184,7 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             "condition_immunities": list(template.condition_immunities),
             "visual": {"armor": template.visual.armor, "main_hand": template.visual.main_hand,
                        "off_hand": template.visual.off_hand, "body_style": template.visual.body_style},
-            "source": template.source,
+            "source": template.source, **_progression_features(template),
         }
         if template.kind == "monster":
             row["source_trait_names"] = list(template.source_trait_names)
