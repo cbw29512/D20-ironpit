@@ -23,8 +23,8 @@ const S = window.IRON_PIT_BROWSER_STATE;
 const P = window.IRON_PIT_BROWSER_SPELL_POLICY;
 const X = window.IRON_PIT_BROWSER_SPELL_RESOLUTION;
 const base = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"];
-const spell = (id, level, areaRadius = null) => ({
-  id, name: id, level, actionCost: "action", range: 150, areaRadius,
+const spell = (id, level, areaRadius = null, range = 150) => ({
+  id, name: id, level, actionCost: "action", range, areaRadius,
   saveAbility: "dexterity", dc: 12, damageDiceCount: 1, damageDiceSize: 6,
   damageBonus: 0, damageType: "fire", successDamage: "half",
   concentration: false, animation: "spell-save",
@@ -53,6 +53,15 @@ function caster(spells, slots) {
   const ally = member("ally", "heroes", 0);
   const monsters = [member("monster-0", "monsters", 5), member("monster-1", "monsters", 5)];
   const choice = P.choose(c, { heroes: [c, ally], monsters }, "1:caster");
+  assert.equal(choice.action.id, "fireball");
+  assert.equal(choice.placement.friendlyIds.length, 0);
+}
+
+{
+  const c = caster([spell("burst", 3, 10, 5), spell("lower-bolt", 2)], { 3: 1, 2: 1 });
+  const ally = member("ally", "heroes", 0);
+  const monsters = [member("monster-0", "monsters", 5), member("monster-1", "monsters", 5)];
+  const choice = P.choose(c, { heroes: [c, ally], monsters }, "1:caster");
   assert.equal(choice.action.id, "lower-bolt");
 }
 
@@ -61,11 +70,11 @@ function caster(spells, slots) {
   const monsters = Array.from({ length: 3 }, (_, i) => member(`monster-${i}`, "monsters", 5));
   const setup = { heroes: [c], monsters };
   const choice = P.choose(c, setup, "1:caster");
-  window.IRON_PIT_DICE = queuedDice([1, 6, 1, 6, 1, 6, 1, 6]);
+  window.IRON_PIT_DICE = queuedDice([1, 6, 1, 6, 1, 6]);
   const result = X.resolve(1, 1, c, setup, choice, "1:caster");
-  assert.equal(result.events.length, 5);
-  assert.match(result.events[0].description, /3 enemies and 1 unprotected allies/);
-  assert.deepEqual(new Set(result.events.slice(1).map((event) => event.target_id)), new Set(["caster", "monster-0", "monster-1", "monster-2"]));
+  assert.equal(result.events.length, 4);
+  assert.match(result.events[0].description, /3 enemies and 0 unprotected allies/);
+  assert.deepEqual(new Set(result.events.slice(1).map((event) => event.target_id)), new Set(["monster-0", "monster-1", "monster-2"]));
   assert.equal(c.state.resources["spell-slot-3"], 0);
   assert.equal(c.state.action_available, false);
 }
@@ -80,4 +89,4 @@ function caster(spells, slots) {
   assert.equal(c.state.resources["spell-slot-4"], 1);
 }
 
-console.log("Browser spell priority, friendly-fire, and printed-level slot regressions passed.");
+console.log("Browser spell priority, ally-safe AoE, and printed-level slot regressions passed.");
