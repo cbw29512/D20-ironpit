@@ -78,6 +78,7 @@ def test_current_audited_heroes_are_raw_ready() -> None:
         ("fighter", 1, "canonical", "Karnok Stoneward", "karnok-stoneward-l1"),
         ("fighter", 2, "canonical", "Karnok Stoneward", "karnok-stoneward-l2"),
         ("fighter", 3, "canonical", "Karnok Stoneward", "karnok-stoneward-l3"),
+        ("fighter", 4, "canonical", "Karnok Stoneward", "karnok-stoneward-l4"),
     }
     assert all(not card.blockers for card in ready_heroes)
 
