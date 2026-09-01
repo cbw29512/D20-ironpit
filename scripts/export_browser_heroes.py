@@ -40,7 +40,7 @@ def _attack(attack: WeaponAttack) -> dict[str, Any]:
         raise ValueError(f"Browser hero exporter has no certified conditional-damage mapping for {attack.id}.")
     weapon = attack.weapon
     row: dict[str, Any] = {
-        "id": attack.id, "name": weapon.name, "kind": weapon.attack_kind.value,
+        "id": attack.id, "weaponId": weapon.id, "name": weapon.name, "kind": weapon.attack_kind.value,
         "bonus": attack.attack_bonus, "diceCount": weapon.dice_count, "diceSize": weapon.dice_size,
         "damageBonus": attack.damage_bonus, "damageType": weapon.damage_type.value,
         "reach": weapon.reach_ft, "animation": weapon.animation,
@@ -192,6 +192,8 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "mindless_rage": progression.mindless_rage,
         "instinctive_pounce_fraction": progression.instinctive_pounce_fraction,
         "great_weapon_fighting": progression.great_weapon_fighting,
+        "indomitable_bonus": progression.indomitable_bonus,
+        "tactical_master_sap": progression.tactical_master_sap,
         "critical_move_fraction": progression.critical_move_fraction,
         "tactical_shift_fraction": progression.tactical_shift_fraction,
         "visual": {"armor": template.visual.armor, "main_hand": template.visual.main_hand,
