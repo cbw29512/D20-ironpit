@@ -7,6 +7,7 @@ from app.combat.concentration import resolve_concentration_damage
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.dice import DiceProvider
 from app.combat.orc import use_relentless_endurance
+from app.combat.source_bound_effects import end_damage_sensitive_effects
 from app.combat.undead_fortitude import resolve_undead_fortitude
 from app.domain.models import CombatantState, DamageType
 from app.domain.traits import CombatTrait
@@ -57,6 +58,7 @@ def _finish_damage(
     dice: DiceProvider | None,
     affected_states: list[CombatantState] | None,
 ) -> ZeroHpOutcome:
+    end_damage_sensitive_effects(state)
     if state.concentration is None:
         return outcome
     if dice is None:
