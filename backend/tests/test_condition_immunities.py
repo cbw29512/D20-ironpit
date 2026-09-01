@@ -62,6 +62,8 @@ def test_prone_immunity_blocks_on_hit_prone_rider() -> None:
 def test_prone_immunity_is_respected_when_character_becomes_unconscious() -> None:
     target = build_combatant_state(_template("karnok-stoneward-l1"))
     target.template.condition_immunities = ["prone"]
+    relentless = next(item for item in target.resources if item.id == "relentless-endurance")
+    relentless.current_uses = 0
 
     outcome = apply_damage(target, target.current_hp)
 
