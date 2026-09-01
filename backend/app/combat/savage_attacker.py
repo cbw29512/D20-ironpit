@@ -26,11 +26,13 @@ def roll_weapon_component(
     damage_type: DamageType,
     critical: bool,
     turn_key: str | None,
+    damage_die_minimum: int | None = None,
 ) -> DamageRollComponent:
     count = dice_count * (2 if critical else 1)
 
     def candidate() -> DamageRollComponent:
-        rolls = [dice.roll(dice_size) for _ in range(count)]
+        raw_rolls = [dice.roll(dice_size) for _ in range(count)]
+        rolls = [max(roll, damage_die_minimum) for roll in raw_rolls] if damage_die_minimum else raw_rolls
         return DamageRollComponent(
             source=source,
             notation=f"{count}d{dice_size}+{modifier}",
