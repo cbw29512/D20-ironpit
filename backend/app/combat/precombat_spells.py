@@ -33,6 +33,29 @@ def choose_defensive_spell(member: EncounterCombatant):
     return None
 
 
+def select_defensive_targets(
+    member: EncounterCombatant,
+    setup: EncounterSetup,
+    spell: DefensiveSpellAction,
+    slot_level: int,
+) -> list[EncounterCombatant]:
+    if spell.target_policy == "self":
+        return [member]
+    side = setup.heroes if member.side == "heroes" else setup.monsters
+    count = spell.target_count + max(0, slot_level - spell.level) * spell.target_count_per_slot_above
+    legal = [
+        target for target in side
+        if target.state.is_alive and not target.state.is_dead
+        and abs(member.position_ft - target.position_ft) <= spell.range_ft
+    ]
+    legal.sort(key=lambda target: (
+        target is not member,
+        abs(member.position_ft - target.position_ft),
+        target.combatant_id,
+    ))
+    return legal[:count]
+
+
 def _modifier_detail(effect: SpellModifierEffect) -> str:
     if effect.kind == "armor-class":
         return f"{effect.flat_bonus:+d} AC"
@@ -46,6 +69,7 @@ def _modifier_detail(effect: SpellModifierEffect) -> str:
 def resolve_defensive_spell(
     sequence: int,
     member: EncounterCombatant,
+    targets: list[EncounterCombatant],
     spell: DefensiveSpellAction,
     slot_level: int,
     resource,
@@ -53,35 +77,42 @@ def resolve_defensive_spell(
 ) -> BattleEvent:
     if resource.current_uses < 1:
         raise ValueError(f"No level {slot_level} spell slot remains for {spell.name}.")
+    if not targets:
+        raise ValueError(f"{spell.name} has no legal precombat targets.")
     resource.current_uses -= 1
     extra_levels = max(0, slot_level - spell.level)
     temporary_hp = spell.temporary_hp + extra_levels * spell.temporary_hp_per_slot_above
-    granted_temp_hp = grant_temporary_hit_points(member.state, temporary_hp)
-    for damage_type in spell.damage_resistances:
-        typed = DamageType(damage_type)
-        if typed not in member.state.temporary_damage_resistances:
-            member.state.temporary_damage_resistances.append(typed)
+    for target in targets:
+        grant_temporary_hit_points(target.state, temporary_hp)
+        for damage_type in spell.damage_resistances:
+            typed = DamageType(damage_type)
+            if typed not in target.state.temporary_damage_resistances:
+                target.state.temporary_damage_resistances.append(typed)
     apply_spell_modifiers(
-        member.state, member.state, member.combatant_id, member.combatant_id,
-        spell, 0, affected_states,
+        member.state,
+        [(target.combatant_id, target.state) for target in targets],
+        member.combatant_id, spell, 0, affected_states,
     )
     details = []
-    if temporary_hp and granted_temp_hp:
-        details.append(f"{granted_temp_hp} Temporary HP")
+    if temporary_hp:
+        details.append(f"{temporary_hp} Temporary HP")
     if spell.damage_resistances:
         details.append("resistance to " + ", ".join(spell.damage_resistances))
     details.extend(_modifier_detail(effect) for effect in spell.modifier_effects)
     if spell.concentration:
         details.append("Concentration")
+    names = ", ".join(target.state.template.name for target in targets)
+    single = targets[0] if len(targets) == 1 else None
     return BattleEvent(
         sequence=sequence, round_number=0, event_type="feature",
         actor_id=member.combatant_id, actor_name=member.state.template.name,
-        target_id=member.combatant_id, target_name=member.state.template.name,
+        target_id=single.combatant_id if single else None,
+        target_name=single.state.template.name if single else None,
         feature_id=spell.id, resource_remaining=resource.current_uses,
         animation=spell.animation,
         description=(
-            f"Precombat preparation: {member.state.template.name} casts {spell.name} on itself "
-            f"with a level {slot_level} slot ({'; '.join(details)})."
+            f"Precombat preparation: {member.state.template.name} casts {spell.name} with a level {slot_level} slot "
+            f"on {names} ({'; '.join(details)})."
         ),
     )
 
@@ -98,8 +129,9 @@ def prepare_defenses(
         if choice is None:
             continue
         spell, slot_level, resource = choice
+        targets = select_defensive_targets(member, setup, spell, slot_level)
         events.append(resolve_defensive_spell(
-            sequence, member, spell, slot_level, resource, affected_states,
+            sequence, member, targets, spell, slot_level, resource, affected_states,
         ))
         sequence += 1
     return events, sequence
