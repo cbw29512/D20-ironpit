@@ -4,6 +4,7 @@
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION;
   const U = () => window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
+  const B = () => window.IRON_PIT_BROWSER_SOURCE_BOUND_EFFECTS;
   const DODGE = "dodge";
   const PRONE = "prone";
 
@@ -45,6 +46,7 @@
   }
 
   function finish(state, outcome, incoming, affectedStates) {
+    B()?.endDamageSensitive(state);
     if (!state.concentration) return outcome;
     if (!C()) throw new Error("Browser concentration runtime is not loaded.");
     C().resolveDamage(state, incoming, affectedStates);
