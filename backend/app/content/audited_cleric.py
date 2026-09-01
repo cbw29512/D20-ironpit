@@ -77,6 +77,7 @@ def build_seraphine_dawnshield() -> CombatantTemplate:
             "intelligence": -1, "wisdom": 5, "charisma": 2,
         },
         skill_bonuses={
+            "athletics": 1, "acrobatics": 2,
             "arcana": 1, "history": 1, "medicine": 5, "persuasion": 2,
         },
         combat_traits=[CombatTrait.ADRENALINE_RUSH, CombatTrait.RELENTLESS_ENDURANCE],
