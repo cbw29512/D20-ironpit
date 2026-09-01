@@ -5,10 +5,11 @@
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { effectiveSpeed: (state) => state.template.speed_ft };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { incapacitated: (state) => state.is_unconscious };
+  const effectiveMaxHp = (state) => state.template.max_hp + (state.max_hp_bonus || 0);
 
   function buildState(template) {
     return {
-      template, current_hp: template.max_hp, temporary_hp: 0, initiative_roll: null, initiative_total: null, is_alive: true,
+      template, current_hp: template.max_hp, max_hp_bonus: 0, temporary_hp: 0, initiative_roll: null, initiative_total: null, is_alive: true,
       is_unconscious: false, is_stable: false, is_dead: false,
       death_save_successes: 0, death_save_failures: 0,
       action_available: true, bonus_action_available: true, reaction_available: true,
@@ -94,7 +95,7 @@
   const sizeAtMost = (member, maxSize) => Boolean(maxSize) && SIZE_RANK[member.state.template.size] <= SIZE_RANK[maxSize];
   const canProne = (target, maxSize) => sizeAtMost(target, maxSize);
   window.IRON_PIT_BROWSER_STATE = {
-    active, beginTurn, buildState, canProne, distance, downedCharacter, grantTemporaryHp, hasActiveAlly,
+    active, beginTurn, buildState, canProne, distance, downedCharacter, effectiveMaxHp, grantTemporaryHp, hasActiveAlly,
     moveToward, nearestTarget, packTactics, refreshReaction, sizeAtMost, targetPriority,
   };
 })();
