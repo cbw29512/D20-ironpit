@@ -35,6 +35,24 @@ def remove_source_modifiers(
     return removed
 
 
+def expire_source_turn_modifiers(
+    states: Iterable[CombatantState], source_id: str, round_number: int,
+) -> int:
+    removed = 0
+    for state in states:
+        before = len(state.active_modifiers)
+        state.active_modifiers = [
+            item for item in state.active_modifiers
+            if not (
+                item.source_id == source_id
+                and item.expires_source_turn_end_round is not None
+                and item.expires_source_turn_end_round <= round_number
+            )
+        ]
+        removed += before - len(state.active_modifiers)
+    return removed
+
+
 def effective_armor_class(state: CombatantState) -> int:
     return max(0, state.template.armor_class + sum(
         item.flat_bonus for item in state.active_modifiers if item.kind is ModifierKind.ARMOR_CLASS
@@ -49,6 +67,15 @@ def effective_speed(state: CombatantState) -> int:
 
 def attacks_against_advantage_sources(state: CombatantState) -> int:
     return sum(1 for item in state.active_modifiers if item.kind is ModifierKind.ATTACKS_AGAINST_ADVANTAGE)
+
+
+def consume_attacks_against_advantage(state: CombatantState) -> int:
+    before = len(state.active_modifiers)
+    state.active_modifiers = [
+        item for item in state.active_modifiers
+        if not (item.kind is ModifierKind.ATTACKS_AGAINST_ADVANTAGE and item.consume_on_attack_against)
+    ]
+    return before - len(state.active_modifiers)
 
 
 def _die_modifiers(state: CombatantState, kind: ModifierKind) -> list[CombatModifier]:
