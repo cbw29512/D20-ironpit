@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.combat.concentration import end_concentration_if_incapacitated
 from app.combat.condition_immunity import condition_is_immune
 from app.domain.actions import AbilityName, ConditionTiming
 from app.domain.models import BattleEvent, CombatantState, EncounterCombatant, EncounterSetup, TimedEffect
@@ -43,6 +44,7 @@ def apply_timed_condition(
     ))
     if effect_id not in state.active_effect_ids:
         state.active_effect_ids.append(effect_id)
+    end_concentration_if_incapacitated(state)
     return effect_id
 
 
