@@ -23,15 +23,20 @@ def _member(combatant_id: str, position_ft: int, *, healer: bool = False):
     )
 
 
+def _enemy(position_ft: int = 10):
+    return EncounterCombatant(
+        combatant_id="enemy",
+        side="monsters",
+        position_ft=position_ft,
+        state=build_combatant_state(build_karnok_stoneward()),
+    )
+
+
 def test_cure_wounds_rescues_adjacent_zero_hp_ally_with_printed_level_slot() -> None:
     healer = _member("healer", 0, healer=True)
     ally = _member("ally", 5)
-    enemy = EncounterCombatant(
-        combatant_id="enemy", side="monsters", position_ft=10,
-        state=build_combatant_state(build_karnok_stoneward()),
-    )
     setup = EncounterSetup(
-        heroes=[healer, ally], monsters=[enemy], hero_total_levels=2, monster_total_cr="1",
+        heroes=[healer, ally], monsters=[_enemy()], hero_total_levels=2, monster_total_cr="1",
     )
     relentless = next(item for item in ally.state.resources if item.id == "relentless-endurance")
     relentless.current_uses = 0
@@ -64,7 +69,7 @@ def test_cure_wounds_cannot_reach_beyond_touch_formation_band() -> None:
     ally = _member("ally", 10)
     ally.state.current_hp = 1
     setup = EncounterSetup(
-        heroes=[healer, ally], monsters=[], hero_total_levels=2, monster_total_cr="0",
+        heroes=[healer, ally], monsters=[_enemy()], hero_total_levels=2, monster_total_cr="1",
     )
     assert choose_healing_action(healer, setup) is None
 
@@ -78,7 +83,7 @@ def test_cure_wounds_does_not_substitute_a_higher_level_slot_while_upcasting_is_
     ally = _member("ally", 5)
     ally.state.current_hp = 1
     setup = EncounterSetup(
-        heroes=[healer, ally], monsters=[], hero_total_levels=2, monster_total_cr="0",
+        heroes=[healer, ally], monsters=[_enemy()], hero_total_levels=2, monster_total_cr="1",
     )
     assert choose_healing_action(healer, setup) is None
     assert healer.state.resources[0].current_uses == 1
