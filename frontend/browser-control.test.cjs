@@ -75,8 +75,8 @@ assert.equal(Object.keys(monsters).length, 58, "control batch must bring browser
 {
   const state = S.buildState(structuredClone(heroes["karnok-stoneward-l1"]));
   window.IRON_PIT_DICE = queuedDice([20]);
-  const high = V.resolveSavingThrow(state, "intelligence", 20);
-  assert.equal(high.roll.total, 19); assert.equal(high.succeeded, false);
+  const high = V.resolveSavingThrow(state, "intelligence", 21);
+  assert.equal(high.roll.total, 20); assert.equal(high.succeeded, false);
   window.IRON_PIT_DICE = queuedDice([1]);
   const low = V.resolveSavingThrow(state, "strength", 6);
   assert.equal(low.roll.total, 6); assert.equal(low.succeeded, true);
