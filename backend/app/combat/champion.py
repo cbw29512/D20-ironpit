@@ -13,7 +13,7 @@ def apply_critical_closing_move(
     event: BattleEvent,
 ) -> BattleEvent:
     """Use granted post-critical movement only to close, never to kite or retreat."""
-    fraction = attacker.state.template.critical_move_fraction
+    fraction = attacker.state.template.progression_features.critical_move_fraction
     if not event.critical or setup is None or fraction <= 0 or speed_is_zero(attacker.state):
         return event
     target = select_nearest_target(attacker, setup)
