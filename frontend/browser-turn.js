@@ -1,6 +1,5 @@
 (() => {
   "use strict";
-
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const C = () => window.IRON_PIT_BROWSER_CHARGE;
