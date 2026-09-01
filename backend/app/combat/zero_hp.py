@@ -55,16 +55,17 @@ def _finish_damage(
     outcome: ZeroHpOutcome,
     damage_taken: int,
     dice: DiceProvider | None,
+    affected_states: list[CombatantState] | None,
 ) -> ZeroHpOutcome:
     if state.concentration is None:
         return outcome
     if dice is None:
         if state.is_dead or state.is_unconscious:
             from app.combat.concentration import end_concentration_if_incapacitated
-            end_concentration_if_incapacitated(state)
+            end_concentration_if_incapacitated(state, affected_states)
             return outcome
         raise ValueError("A dice provider is required to resolve Concentration damage.")
-    resolve_concentration_damage(state, damage_taken, dice)
+    resolve_concentration_damage(state, damage_taken, dice, affected_states)
     return outcome
 
 
@@ -102,6 +103,7 @@ def apply_damage(
     critical: bool = False,
     damage_types: set[DamageType] | None = None,
     dice: DiceProvider | None = None,
+    affected_states: list[CombatantState] | None = None,
 ) -> ZeroHpOutcome:
     """Apply Temporary HP, Concentration, and SRD 5.2.1 zero-HP lifecycle rules."""
     try:
@@ -114,27 +116,27 @@ def apply_damage(
         types = damage_types or set()
         amount = _after_temporary_hp(state, amount)
         if state.current_hp == 0:
-            return _finish_damage(state, _damage_at_zero(state, incoming, critical=critical), incoming, dice)
+            return _finish_damage(state, _damage_at_zero(state, incoming, critical=critical), incoming, dice, affected_states)
         if amount == 0:
-            return _finish_damage(state, "damaged", incoming, dice)
+            return _finish_damage(state, "damaged", incoming, dice, affected_states)
 
         hp_before = state.current_hp
         state.current_hp = max(0, hp_before - amount)
         if state.current_hp > 0:
-            return _finish_damage(state, "damaged", incoming, dice)
+            return _finish_damage(state, "damaged", incoming, dice, affected_states)
         if resolve_undead_fortitude(
             state, incoming, types, critical=critical, dice=dice,
         ):
-            return _finish_damage(state, "undead_fortitude", incoming, dice)
+            return _finish_damage(state, "undead_fortitude", incoming, dice, affected_states)
         if state.template.kind == "monster":
-            return _finish_damage(state, _mark_dead(state), incoming, dice)
+            return _finish_damage(state, _mark_dead(state), incoming, dice, affected_states)
 
         remaining_damage = max(0, amount - hp_before)
         if remaining_damage >= state.template.max_hp:
-            return _finish_damage(state, _mark_dead(state), incoming, dice)
+            return _finish_damage(state, _mark_dead(state), incoming, dice, affected_states)
         if use_relentless_endurance(state, remaining_damage):
-            return _finish_damage(state, "relentless_endurance", incoming, dice)
-        return _finish_damage(state, _mark_unconscious(state), incoming, dice)
+            return _finish_damage(state, "relentless_endurance", incoming, dice, affected_states)
+        return _finish_damage(state, _mark_unconscious(state), incoming, dice, affected_states)
     except ValueError:
         raise
     except Exception as exc:
