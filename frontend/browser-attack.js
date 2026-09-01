@@ -6,7 +6,8 @@
   const T = () => window.IRON_PIT_BROWSER_TIMED;
   const Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || {
-    attacksAgainstAdvantage: () => 0, effectiveArmorClass: (state) => state.template.armor_class,
+    attacksAgainstAdvantage: () => 0, consumeAttacksAgainstAdvantage: () => 0,
+    effectiveArmorClass: (state) => state.template.armor_class,
     effectiveSpeed: (state) => state.template.speed_ft, applyD20Bonus: (_state, _kind, roll) => roll,
   };
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION;
@@ -63,6 +64,7 @@
     const closeThreat = attack.kind === "ranged" && rangedCloseThreat(attacker, target, distance, extra.setup);
     const mode = R().attackMode(attack, distance, advantage, conditions.disadvantage, closeThreat);
     const attackRoll = M().applyD20Bonus(attacker.state, "attack-roll-bonus-die", R().d20(attack.bonus, mode));
+    M().consumeAttacksAgainstAdvantage(target.state);
     window.IRON_PIT_BROWSER_RAGE?.extendFromAttack(attacker.state, round);
     if (spendAction) E().spend(attacker.state, "action");
     const redirected = window.IRON_PIT_BROWSER_REACTIONS?.redirectAttack?.(target, extra.setup) || null;
