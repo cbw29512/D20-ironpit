@@ -3,6 +3,7 @@
 
   const H = () => window.IRON_PIT_BROWSER_HEALING;
   const C = () => window.IRON_PIT_BROWSER_CONDITION_REMOVAL;
+  const K = () => window.IRON_PIT_BROWSER_CLERIC_CHANNEL;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const D = () => window.IRON_PIT_DICE;
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
@@ -24,6 +25,8 @@
     }
     healing = H()?.chooseAction(member, setup, turnKey);
     if (healing) events.push(H().resolve(sequence++, round, member, healing.target, healing.action, turnKey));
+    const channel = K()?.resolve(sequence, round, member, setup);
+    if (channel) { events.push(...channel.events); sequence = channel.sequence; }
     return { events, sequence };
   }
 
