@@ -32,14 +32,21 @@ def _audit_background_increases(profile: CharacterBuildProfile) -> list[str]:
     return issues
 
 
+def _total_increases(profile: CharacterBuildProfile) -> dict[AbilityName, int]:
+    totals: dict[AbilityName, int] = {ability: 0 for ability in _ABILITIES}
+    for increase in [*profile.background_increases, *profile.advancement_increases]:
+        totals[increase.ability] += increase.amount
+    return totals
+
+
 def _audit_final_scores(profile: CharacterBuildProfile) -> list[str]:
-    increases = {increase.ability: increase.amount for increase in profile.background_increases}
+    increases = _total_increases(profile)
     issues: list[str] = []
     for ability in _ABILITIES:
-        expected = profile.base_ability_scores.score(ability) + increases.get(ability, 0)
+        expected = profile.base_ability_scores.score(ability) + increases[ability]
         actual = profile.final_ability_scores.score(ability)
         if actual != expected:
-            issues.append(f"final-{ability}-does-not-match-background-increases")
+            issues.append(f"final-{ability}-does-not-match-declared-increases")
         if actual > 20:
             issues.append(f"final-{ability}-exceeds-20")
     return issues
