@@ -7,6 +7,7 @@ from app.domain.models import BattleEvent, CombatantState, DamageType, WeaponAtt
 RAGE_EFFECT_ID = "rage"
 _RAGE_MAX_ROUNDS = 100
 _RAGE_RESISTANCES = (DamageType.BLUDGEONING, DamageType.PIERCING, DamageType.SLASHING)
+_MINDLESS_RAGE_IMMUNITIES = {"charmed", "frightened"}
 
 
 def _rage_resource(state: CombatantState):
@@ -21,6 +22,17 @@ def rage_damage_bonus(state: CombatantState, attack: WeaponAttack) -> int:
     return state.template.rage_damage_bonus if rage_active(state) and attack.rage_eligible else 0
 
 
+def _end_mindless_rage_conditions(state: CombatantState) -> list[str]:
+    if not state.template.progression_features.mindless_rage:
+        return []
+    removed = sorted(_MINDLESS_RAGE_IMMUNITIES.intersection(state.active_effect_ids))
+    if not removed:
+        return []
+    state.timed_effects = [effect for effect in state.timed_effects if effect.effect_id not in removed]
+    state.active_effect_ids = [effect_id for effect_id in state.active_effect_ids if effect_id not in removed]
+    return removed
+
+
 def enter_rage(sequence: int, round_number: int, state: CombatantState, actor_id: str) -> BattleEvent | None:
     """Use a Bonus Action and one Rage use, then apply the 2024 Rage combat effects."""
     if state.template.wearing_heavy_armor or state.template.rage_damage_bonus <= 0 or rage_active(state):
@@ -31,16 +43,20 @@ def enter_rage(sequence: int, round_number: int, state: CombatantState, actor_id
     resource.current_uses -= 1
     spend(state, "bonus_action")
     state.active_effect_ids.append(RAGE_EFFECT_ID)
+    removed = _end_mindless_rage_conditions(state)
     for damage_type in _RAGE_RESISTANCES:
         if damage_type not in state.temporary_damage_resistances:
             state.temporary_damage_resistances.append(damage_type)
     state.rage_expires_round = round_number + 1
     state.rage_max_round = round_number + _RAGE_MAX_ROUNDS
+    description = f"{state.template.name} enters Rage."
+    if removed:
+        description += f" Mindless Rage ends {', '.join(removed)}."
     return BattleEvent(
         sequence=sequence, round_number=round_number, event_type="feature",
         actor_id=actor_id, actor_name=state.template.name, feature_id=RAGE_EFFECT_ID,
-        resource_remaining=resource.current_uses, animation="rage",
-        description=f"{state.template.name} enters Rage.",
+        removed_condition_ids=removed, resource_remaining=resource.current_uses, animation="rage",
+        description=description,
     )
 
 
