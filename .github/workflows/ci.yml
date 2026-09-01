@@ -124,6 +124,7 @@ jobs:
           grep -q 'browser-reactions.js' index.html
           grep -q 'browser-reaction-movement.js' index.html
           grep -q 'browser-champion.js' index.html
+          grep -q 'browser-tactical-shift.js' index.html
           grep -q 'browser-healing.js' index.html
           grep -q 'browser-spell-area.js' index.html
           grep -q 'browser-spell-policy.js' index.html
@@ -159,6 +160,7 @@ jobs:
           grep -q 'browser-reaction-movement.js' frontend/index.html
           grep -q 'browser-grapple.js' frontend/index.html
           grep -q 'browser-champion.js' frontend/index.html
+          grep -q 'browser-tactical-shift.js' frontend/index.html
           grep -q 'browser-timed-conditions.js' frontend/index.html
           grep -q 'browser-saves.js' frontend/index.html
           grep -q 'browser-multiattack.js' frontend/index.html
