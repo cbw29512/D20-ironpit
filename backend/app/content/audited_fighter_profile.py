@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from app.content.canonical_hero_policy import canonical_template_id
+from app.content.hero_progressions import HERO_BY_CLASS
 from app.domain.character_builds import (
     AbilityIncrease,
     AbilityScores,
@@ -31,12 +33,13 @@ def _feature(
 
 
 def build_karnok_stoneward_profile() -> CharacterBuildProfile:
+    hero = HERO_BY_CLASS["fighter"]
     return CharacterBuildProfile(
         id="build-karnok-stoneward-l1",
-        template_id="karnok-stoneward-l1",
-        character_name="Karnok Stoneward",
+        template_id=canonical_template_id("fighter", 1),
+        character_name=hero.hero_name,
         class_id="fighter",
-        class_name="Fighter",
+        class_name=hero.class_name,
         level=1,
         species_id="orc",
         species_name="Orc",
