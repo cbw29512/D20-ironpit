@@ -38,5 +38,6 @@ def test_only_certified_canonical_levels_are_runnable() -> None:
         ("Karnok Stoneward", 1, "karnok-stoneward-l1"),
         ("Karnok Stoneward", 2, "karnok-stoneward-l2"),
         ("Karnok Stoneward", 3, "karnok-stoneward-l3"),
+        ("Karnok Stoneward", 4, "karnok-stoneward-l4"),
         ("Rokhan Stonefury", 1, "rokhan-stonefury-l1"),
     }
