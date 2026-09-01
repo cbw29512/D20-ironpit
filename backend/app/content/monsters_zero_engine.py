@@ -30,6 +30,7 @@ _ATTACKS = {
         ("Rend", "melee", 5, 1, 8, 3, "slashing", None, 5, None, None, []),
         ("Tail Spike", "ranged", 5, 1, 8, 3, "piercing", None, 5, 100, 200, []),
     ],
+    "Ogre Zombie": [("Slam", "melee", 6, 2, 8, 4, "bludgeoning", None, 5, None, None, [])],
     "Pegasus": [("Hooves", "melee", 6, 1, 6, 4, "bludgeoning", None, 5, None, None, [("Radiant", 2, 4, 0, "radiant")])],
     "Scorpion": [("Sting", "melee", 2, 0, 2, 0, "piercing", 1, 5, None, None, [("Poison", 1, 6, 0, "poison")])],
     "Skeleton": [
@@ -43,13 +44,18 @@ _ATTACKS = {
     ],
     "Venomous Snake": [("Bite", "melee", 4, 1, 4, 2, "piercing", None, 5, None, None, [("Poison", 1, 6, 0, "poison")])],
     "Violet Fungus": [("Rotting Touch", "melee", 2, 1, 8, 0, "necrotic", None, 10, None, None, [])],
+    "Zombie": [("Slam", "melee", 3, 1, 8, 1, "bludgeoning", None, 5, None, None, [])],
 }
 _MULTI = {
     "Animated Armor": (2, ("Slam",)), "Gargoyle": (2, ("Claw",)),
     "Guard Captain": (2, ("Javelin", "Longsword")), "Hippopotamus": (2, ("Bite",)),
     "Manticore": (3, ("Rend", "Tail Spike")), "Violet Fungus": (2, ("Rotting Touch",)),
 }
-_TRAITS = {"Tough": [CombatTrait.PACK_TACTICS]}
+_TRAITS = {
+    "Ogre Zombie": [CombatTrait.UNDEAD_FORTITUDE],
+    "Tough": [CombatTrait.PACK_TACTICS],
+    "Zombie": [CombatTrait.UNDEAD_FORTITUDE],
+}
 
 
 def _slug(value: str) -> str:
