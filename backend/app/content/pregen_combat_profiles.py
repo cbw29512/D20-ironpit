@@ -46,6 +46,7 @@ def _scores(strength: int, dexterity: int, constitution: int, intelligence: int,
 
 _ORC = _scores(17, 13, 15, 8, 12, 10)
 _SERAPHINE = _scores(12, 14, 14, 8, 17, 10)
+_SERAPHINE_L4 = _scores(12, 14, 14, 8, 19, 10)
 _KARNOK_L4 = _scores(18, 13, 16, 8, 12, 10)
 _KARNOK_ATTACKS = (
     AttackExpectation("greatsword", "strength", 2, 6, "slashing"),
@@ -91,6 +92,16 @@ def build_seraphine_dawnshield_level3_combat_profile() -> PregenCombatProfile:
     return _seraphine_profile(3, 24, 4, 2, 2)
 
 
+def build_seraphine_dawnshield_level4_combat_profile() -> PregenCombatProfile:
+    return PregenCombatProfile(
+        "seraphine-dawnshield-l4", "Cleric", 4, _SERAPHINE_L4, ("wisdom", "charisma"), 17, 31, 30,
+        (("athletics", 1), ("acrobatics", 2), ("arcana", 1), ("history", 1), ("medicine", 6), ("persuasion", 2)),
+        (AttackExpectation("mace", "strength", 1, 6, "bludgeoning"),), (),
+        (("spell-slot-1", 4), ("spell-slot-2", 3), ("channel-divinity", 2),
+         ("adrenaline-rush", 2), ("relentless-endurance", 1)),
+    )
+
+
 def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
     profiles = [
         PregenCombatProfile(
@@ -126,5 +137,6 @@ def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
         _seraphine_profile(1, 10, 2),
         _seraphine_profile(2, 17, 3, 2),
         build_seraphine_dawnshield_level3_combat_profile(),
+        build_seraphine_dawnshield_level4_combat_profile(),
     ]
     return {profile.template_id: profile for profile in profiles}
