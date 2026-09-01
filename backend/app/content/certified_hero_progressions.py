@@ -22,6 +22,7 @@ from app.content.barbarian_progression_profile import (
     build_rokhan_stonefury_level4_profile,
     build_rokhan_stonefury_level5_profile,
 )
+from app.content.fighter_asi_progression_profile import build_karnok_stoneward_level6_profile
 from app.content.fighter_progression import build_karnok_stoneward_level
 from app.content.fighter_progression_profile import (
     build_karnok_stoneward_level2_profile,
@@ -62,6 +63,7 @@ CERTIFIED_HERO_PROGRESSIONS: tuple[CertifiedHeroProgression, ...] = (
             build_karnok_stoneward_level3_profile,
             build_karnok_stoneward_level4_profile,
             build_karnok_stoneward_level5_profile,
+            build_karnok_stoneward_level6_profile,
         ),
     ),
     CertifiedHeroProgression(
