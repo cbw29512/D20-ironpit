@@ -10,7 +10,7 @@ from app.content.legacy_monster_roster import build_legacy_monster_templates
 
 logger = logging.getLogger(__name__)
 _OUTPUT = Path("backend/app/content/data/combatant_capabilities_v1.json")
-_HERO_ONLY_PROGRESSION_FIELDS = {"danger_sense", "reckless_attack", "frenzy"}
+_HERO_ONLY_PROGRESSION_FIELDS = {"danger_sense", "reckless_attack", "frenzy", "fast_movement_bonus_ft"}
 
 
 def render_registry() -> str:
