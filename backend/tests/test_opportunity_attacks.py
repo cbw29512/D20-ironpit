@@ -1,8 +1,10 @@
 from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.opportunity_attacks import resolve_opportunity_attack
-from app.combat.state import begin_turn
+from app.combat.state import begin_turn, build_combatant_state
+from app.content.pregens import build_selene_asharrow
 from app.content.roster import build_arena_roster
+from app.domain.encounters import EncounterCombatant
 from app.domain.models import EncounterSelection
 
 
@@ -66,8 +68,16 @@ def test_reach_weapon_and_unarmed_strike_use_their_actual_boundaries() -> None:
     assert weapon is not None and weapon.weapon_id == reactor.state.template.weapon_attack.weapon.id
 
 
-def test_selene_uses_certified_unarmed_strike_for_opportunity_attack() -> None:
-    setup, mover, selene = _setup(hero_id="selene-asharrow-l1")
+def test_legacy_selene_fixture_uses_certified_unarmed_strike_for_opportunity_attack() -> None:
+    setup, mover, canonical = _setup()
+    legacy_template = build_selene_asharrow()
+    selene = EncounterCombatant(
+        combatant_id=f"hero-1:{legacy_template.id}",
+        side="heroes",
+        position_ft=canonical.position_ft,
+        state=build_combatant_state(legacy_template),
+    )
+    setup.heroes[0] = selene
     profile = selene.state.template.unarmed_opportunity_attack
     assert profile is not None and (profile.attack_bonus, profile.damage) == (3, 2)
     hp_before = mover.state.current_hp
