@@ -15,8 +15,8 @@ def _replace_once(path: Path, old: str, new: str) -> None:
 def main() -> None:
     _replace_once(
         Path("backend/tests/test_arena_roster.py"),
-        '        "srd-swarm-of-bats", "srd-swarm-of-rats", "srd-swarm-of-crawling-claws",\n        "srd-bandit-captain",',
-        '        "srd-swarm-of-bats", "srd-swarm-of-rats", "srd-swarm-of-crawling-claws",\n        "srd-swarm-of-insects", "srd-swarm-of-venomous-snakes",\n        "srd-bandit-captain",',
+        '        "srd-bandit-captain", "srd-knight", "srd-noble", "srd-warrior-veteran",\n    ]',
+        '        "srd-bandit-captain", "srd-knight", "srd-noble", "srd-warrior-veteran",\n        "srd-swarm-of-insects", "srd-swarm-of-venomous-snakes",\n    ]',
     )
     _replace_once(
         Path("backend/tests/test_full_content_catalog.py"),
@@ -28,6 +28,27 @@ def main() -> None:
         '        "Spider": "srd-spider", "Swarm of Bats": "srd-swarm-of-bats",\n        "Swarm of Crawling Claws": "srd-swarm-of-crawling-claws", "Swarm of Rats": "srd-swarm-of-rats",',
         '        "Spider": "srd-spider", "Swarm of Bats": "srd-swarm-of-bats",\n        "Swarm of Crawling Claws": "srd-swarm-of-crawling-claws", "Swarm of Insects": "srd-swarm-of-insects",\n        "Swarm of Rats": "srd-swarm-of-rats", "Swarm of Venomous Snakes": "srd-swarm-of-venomous-snakes",',
     )
+    _replace_once(
+        Path("backend/tests/test_figure_profiles.py"),
+        "    assert len(ready_names) == 99",
+        "    assert len(ready_names) == 101",
+    )
+    _replace_once(
+        Path("backend/tests/test_figure_profiles.py"),
+        '        "Swarm of Crawling Claws": "swarm",\n        "Swarm of Rats": "swarm",',
+        '        "Swarm of Crawling Claws": "swarm",\n        "Swarm of Insects": "swarm",\n        "Swarm of Rats": "swarm",\n        "Swarm of Venomous Snakes": "swarm",',
+    )
+    _replace_once(
+        Path("backend/tests/test_figure_profiles.py"),
+        '        "Swarm of Crawling Claws": "crawling-claws",\n        "Swarm of Rats": "rats",',
+        '        "Swarm of Crawling Claws": "crawling-claws",\n        "Swarm of Insects": "insects",\n        "Swarm of Rats": "rats",\n        "Swarm of Venomous Snakes": "venomous-snakes",',
+    )
+    _replace_once(
+        Path("backend/tests/test_monster_source_audit.py"),
+        "    assert len(ready) == 99",
+        "    assert len(ready) == 101",
+    )
+
     browser = Path("frontend/browser-generated-monsters.test.cjs")
     _replace_once(browser, "Object.keys(generated).length, 99", "Object.keys(generated).length, 101")
     _replace_once(
