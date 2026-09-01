@@ -39,6 +39,8 @@ def _attack_issues(template: CombatantTemplate, profile: PregenCombatProfile) ->
             issues.append(f"{prefix}:attack-bonus-mismatch")
         if attack.damage_bonus != ability_mod:
             issues.append(f"{prefix}:damage-bonus-mismatch")
+        if attack.damage_die_minimum != expected.damage_die_minimum:
+            issues.append(f"{prefix}:damage-die-minimum-mismatch")
         if weapon.reach_ft != expected.reach_ft:
             issues.append(f"{prefix}:reach-mismatch")
         if (weapon.normal_range_ft, weapon.long_range_ft) != (expected.normal_range_ft, expected.long_range_ft):
