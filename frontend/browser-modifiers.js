@@ -64,10 +64,16 @@
     if (!new Set(["attack-roll-bonus-die", "saving-throw-bonus-die"]).has(kind)) throw new Error(`${kind} is not a D20 bonus modifier.`);
     const modifiers = (state.active_modifiers || []).filter((item) => item.kind === kind);
     if (!modifiers.length) return roll;
-    const bonusRolls = modifiers.flatMap((item) => Array.from({ length: item.dice_count }, () => D().roll(item.dice_size)));
+    const bonusDice = modifiers.map((item) => {
+      const rolls = Array.from({ length: item.dice_count }, () => D().roll(item.dice_size));
+      return { source_effect_id: item.source_effect_id, notation: `${item.dice_count}d${item.dice_size}`, rolls,
+        total: rolls.reduce((sum, value) => sum + value, 0) };
+    });
+    const bonusRolls = bonusDice.flatMap((item) => item.rolls);
     return { ...roll,
-      notation: [roll.notation, ...modifiers.map((item) => `${item.dice_count}d${item.dice_size}`)].join(" + "),
-      rolls: [...roll.rolls, ...bonusRolls], total: roll.total + bonusRolls.reduce((a, b) => a + b, 0) };
+      notation: [roll.notation, ...bonusDice.map((item) => item.notation)].join(" + "),
+      rolls: [...roll.rolls, ...bonusRolls], bonus_dice: bonusDice,
+      total: roll.total + bonusRolls.reduce((a, b) => a + b, 0) };
   }
 
   const bonusDamage = (state, targetId) => (state.active_modifiers || []).filter((item) => item.kind === "bonus-damage"
