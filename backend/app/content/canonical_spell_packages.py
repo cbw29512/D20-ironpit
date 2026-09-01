@@ -20,6 +20,31 @@ def _spell(
     )
 
 
+def _cantrip(
+    spell_id: str,
+    name: str,
+    role: str,
+    *capabilities: str,
+) -> CanonicalSpellChoice:
+    return CanonicalSpellChoice(
+        id=spell_id,
+        name=name,
+        spell_level=0,
+        min_character_level=1,
+        role=role,
+        required_capabilities=list(capabilities),
+    )
+
+
+CANONICAL_CANTRIPS: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
+    "cleric": (
+        _cantrip("sacred-flame", "Sacred Flame", "damage", "save-damage", "cantrip-scaling"),
+        _cantrip("light", "Light", "utility", "arena-out-of-scope"),
+        _cantrip("thaumaturgy", "Thaumaturgy", "utility", "arena-out-of-scope"),
+    ),
+}
+
+
 CANONICAL_SPELLS: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
     "bard": (
         _spell("charm-person", "Charm Person", "control", "charmed"),
@@ -76,9 +101,13 @@ def build_class_spell_package(class_id: CasterClassId, character_level: int) -> 
             f"{class_id} level {character_level} canonical package is incomplete: "
             f"needs {expected} prepared spells, has {len(spells)}."
         )
+    cantrips = list(CANONICAL_CANTRIPS.get(class_id, ()))
+    if class_id == "cleric" and character_level == 1 and len(cantrips) != 3:
+        raise ValueError("Cleric level 1 canonical package must retain exactly three chosen cantrips.")
     return ClassSpellPackage(
         class_id=class_id,
         casting_ability=CASTING_ABILITIES[class_id],
+        cantrips=cantrips,
         spells=spells[:expected],
     )
 
