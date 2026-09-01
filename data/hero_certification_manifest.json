@@ -5,7 +5,7 @@
   "summary": {
     "canonical_heroes": 12,
     "level_slots": 240,
-    "public_ready": 7
+    "public_ready": 8
   },
   "heroes": [
     {
@@ -1076,24 +1076,46 @@
         {
           "level": 2,
           "subclass": null,
-          "runtime_template_id": null,
+          "runtime_template_id": "seraphine-dawnshield-l2",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Cleric level 2, Orc, Sage, Protector, Sacred Flame, Bless, Cure Wounds, Guiding Bolt, Shield of Faith, Healing Word, Channel Divinity, Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:seraphine-mace",
+            "defensive-spell-action:bless",
+            "defensive-spell-action:shield-of-faith",
+            "healing-action:cure-wounds",
+            "healing-action:healing-word",
+            "resource:adrenaline-rush",
+            "resource:channel-divinity",
+            "resource:relentless-endurance",
+            "resource:spell-slot-1",
+            "spell-attack-action:guiding-bolt",
+            "spell-save-action:sacred-flame",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:seraphine-mace",
+            "defensive-spell-action:bless",
+            "defensive-spell-action:shield-of-faith",
+            "healing-action:cure-wounds",
+            "healing-action:healing-word",
+            "resource:adrenaline-rush",
+            "resource:channel-divinity",
+            "resource:relentless-endurance",
+            "resource:spell-slot-1",
+            "spell-attack-action:guiding-bolt",
+            "spell-save-action:sacred-flame",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 3,
