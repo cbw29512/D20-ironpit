@@ -10,6 +10,8 @@ This document is durable program memory for finite Codex goals. Machine-readable
 4. Unsupported outcome-changing mechanics remain fail-closed.
 5. Netlify is reserved for deliberate release/checkpoint hosting validation.
 6. Production monster onboarding is data-first through the Universal Combat Capability registry; bespoke monster builders are migration/parity oracles, not the production roster source.
+7. Production heroes use one canonical identity per core class. Alternate pregens and demo identities may exist only as isolated test fixtures and must never enter the runnable production roster.
+8. Canonical hero level N derives from level N-1 and applies only that level's audited combat delta. Independent per-level rebuilds are not the production progression model.
 
 ## Completion model
 
@@ -36,7 +38,7 @@ The master program is complete only when all of these generated, independently v
 
 ### Capability registry
 
-`backend/app/content/data/combatant_capabilities_v1.json` is the generated legacy compatibility snapshot. Native data-first additions live in `backend/app/content/data/native_combatant_capabilities_v1.json`. `backend/app/content/capability_registry.py` merges those layers with duplicate-ID fail-closed protection and compiles definitions into the same `CombatantTemplate` runtime used by Python and browser export. `backend/app/content/legacy_monster_roster.py` exists only as a migration/parity oracle. `scripts/export_runtime_monster_capabilities.py --check` and permanent CI prevent generated-registry drift or a return to production `monster_*`/`monsters_*` builder imports.
+`backend/app/content/data/combatant_capabilities_v1.json` is the generated legacy compatibility snapshot. Native data-first additions live in `backend/app/content/data/combatant_capabilities_native_v1.json`. `backend/app/content/capability_registry.py` merges those layers with duplicate-ID fail-closed protection and compiles definitions into the same `CombatantTemplate` runtime used by Python and browser export. `backend/app/content/legacy_monster_roster.py` exists only as a migration/parity oracle. `scripts/export_runtime_monster_capabilities.py --check` and permanent CI prevent generated-registry drift or a return to production `monster_*`/`monsters_*` builder imports.
 
 ### Commands
 
@@ -119,40 +121,48 @@ Promotion gate run `33462673589` certified the complete tranche before persisten
 
 Promotion persisted as commit `2775103b6fdbf55b469dd2d8ad7090d1a68048c7`. As with every bot-authored promotion commit, it is not a final immutable checkpoint until a subsequent normal connector commit triggers and passes permanent exact-head CI.
 
-Current top monster blocker families after the 101-monster promotion are:
+## Canonical hero progression architecture checkpoint
 
-- save-or-complex-action: 122;
-- condition-or-control: 115;
-- limited-use: 113;
-- trait: 111;
-- spellcasting: 66;
-- bonus-action: 57;
-- legendary: 30;
-- reaction: 16;
-- unsupported-action-rider: 15;
-- trait-parse: 10.
+Production hero construction now follows one durable pipeline:
+
+`canonical identity -> level 1 combat build -> previous certified level -> current-level delta -> canonical combat policy -> combat audit -> Python/browser runtime -> certification`
+
+The architecture is enforced by source rather than convention:
+
+- `hero_progressions.py` owns the 12 canonical identities and one combat plan per class;
+- `canonical_hero_policy.py` validates class identity, canonical template ID, class name, level range, subclass timing, melee loadout kind, and spell-package availability;
+- `canonical_progression.py` enforces one-level-at-a-time continuity so a certified level cannot skip or silently replace its predecessor;
+- `melee_loadout_policy.py` owns shared melee selection instead of repeating weapon heuristics in class builders;
+- `canonical_spell_packages.py` and `class_spell_progression.py` own deterministic shared spell packages for caster/hybrid classes and fail closed when the requested combat package is not supported;
+- `certified_heroes.py`, the hero manifest, generated browser heroes, and production `roster.py` consume only certified canonical hero templates;
+- `pregen_combat_profiles.py` contains only currently certified canonical profiles. Aldric, Brom, Selene, and other alternate pregens may be constructed only inside explicit unit-test fixtures when a regression needs their historical shape; they are not production-selectable identities;
+- the demo API uses canonical Karnok rather than maintaining a second runnable Fighter identity.
+
+Karnok Fighter 1-5 and Rokhan Barbarian 1 are the currently certified migration anchors. Their existing behavior is preserved while the production identity/progression source has been consolidated. Canonical Orc mechanics such as Adrenaline Rush and Relentless Endurance remain real runtime behavior; tests that need a plain movement or zero-HP fixture must explicitly consume/disable those resources rather than weakening the canonical hero.
+
+Future classes must enter through this same pipeline. Do not create a parallel per-class roster, alternate same-class production identity, independently rebuilt level snapshot, or second spell/loadout policy.
 
 ## Priority queue
 
-### Goal 1 — High-yield capability blocker tranche
+### Goal 1 — Universal combat modifiers, buffs/debuffs, and concentration
+
+Before expanding caster classes, implement one reusable effect/modifier foundation for outcome-changing buffs and debuffs and a complete concentration lifecycle shared by heroes and monsters. Extend existing spell, timed-condition, attack/save, damage, movement, and state systems rather than creating spell-specific state branches. At minimum, the foundation must have explicit schema/state, deterministic application/removal, source ownership, duration/expiry, supported attack/save/AC/damage/speed/roll-mode changes where required by audited SRD effects, concentration replacement, damage-triggered concentration checks, and concentration termination on incapacitation/death where RAW requires it. Unsupported modifier/effect kinds fail closed. Python/browser parity and permanent regressions are required before a caster hero is promoted.
+
+### Goal 2 — High-yield capability blocker tranche
 
 Use the 330-monster blocker analyzer to select a shared mechanic with the largest safe certification yield. Prefer a capability that can be expressed once in schema/compiler/Python/browser and reused across many monsters. Implement source-audit support and deterministic regressions, rerun all 330 records, then certify every newly unlocked monster as one bounded batch. Do not add a bespoke production monster builder to increase the count.
 
-### Goal 2 — Zero-engine/native data tranche
+### Goal 3 — Zero-engine/native data tranche
 
 After each shared capability improvement, review monsters whose remaining outcome-changing mechanics are already represented. Onboard those as native declarative definitions only, with full SRD source reconciliation and generated browser parity. Native entries must extend—not reorder or mutate—the generated legacy compatibility snapshot.
 
-### Goal 3 — Certify Karnok Fighter 6
+### Goal 4 — Certify Karnok Fighter 6
 
-Resume Fighter progression only after the capability-engine tranche reaches a stable exact-head checkpoint. Derive Fighter 6 from the certified Fighter 5 snapshot; source-audit every new level-6 class/subclass/resource/action-economy/scaling rule; preserve Fighter 1-5 behavior; promote only after structural audit, combat/resource fingerprints, generated-card parity, public readiness, permanent regressions, and exact-head CI pass.
+Resume Fighter progression after the shared architecture tranche reaches a stable exact-head checkpoint. Derive Fighter 6 from the certified Fighter 5 snapshot; source-audit every new level-6 class/subclass/resource/action-economy/scaling rule; preserve Fighter 1-5 behavior; promote only after structural audit, combat/resource fingerprints, generated-card parity, public readiness, permanent regressions, and exact-head CI pass.
 
-### Goal 4 — Continue Karnok in finite progression tranches
+### Goal 5 — Continue canonical heroes in finite progression tranches
 
-Advance through coherent Fighter milestones rather than claiming levels 7-20 at once. Each goal must explicitly cover all new class/subclass/feat/resource/action-economy/scaling rules introduced by its selected level range and preserve all previously certified Fighter levels. Ability-score/feat advancements remain explicit audit data rather than hidden stat mutations.
-
-### Goal 5 — Next canonical hero
-
-After Fighter progression is complete or reaches a genuine prerequisite decision, complete one other canonical hero progression in finite, level-bounded goals. Preserve the one-identity-per-class architecture and derive every level from canonical progression data. Reuse the same declarative capability concepts where they improve hero progression without weakening class-specific source audits.
+Advance through coherent class milestones rather than claiming levels 1-20 at once. Every level must derive from the previous canonical level and explicitly cover all new class/subclass/feat/resource/action-economy/scaling rules. Ability-score/feat advancements remain explicit audit data rather than hidden stat mutations. Caster/hybrid classes cannot become public-ready until their deterministic spell package and every outcome-changing spell mechanic in that package are supported in both runtimes.
 
 ## Checkpoint record format
 
