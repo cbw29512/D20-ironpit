@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.modifier_stack import effective_speed
 from app.domain.models import BattleEvent, BattlefieldState, CombatantState
 
 logger = logging.getLogger(__name__)
@@ -55,8 +56,9 @@ def take_dash(
     try:
         if not mover.action_available:
             raise ValueError("Action is not available for Dash.")
+        speed = effective_speed(mover)
         mover.action_available = False
-        mover.movement_remaining_ft += mover.template.speed_ft
+        mover.movement_remaining_ft += speed
         return BattleEvent(
             sequence=sequence,
             round_number=round_number,
@@ -65,7 +67,7 @@ def take_dash(
             actor_name=mover.template.name,
             distance_before_ft=battlefield.distance_ft,
             distance_after_ft=battlefield.distance_ft,
-            movement_ft=mover.template.speed_ft,
+            movement_ft=speed,
             animation="dash",
             description=f"{mover.template.name} takes the Dash action.",
         )
