@@ -7,7 +7,7 @@ ROOT = Path(__file__).resolve().parents[2]
 EXPORTER = ROOT / "scripts" / "export_runtime_monster_capabilities.py"
 HERO_ONLY_FIELDS = {
     "danger_sense", "reckless_attack", "frenzy", "fast_movement_bonus_ft", "mindless_rage",
-    "instinctive_pounce_fraction",
+    "instinctive_pounce_fraction", "great_weapon_fighting",
 }
 
 
