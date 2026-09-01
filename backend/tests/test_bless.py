@@ -70,6 +70,8 @@ def test_bless_applies_independent_attack_and_save_d4s_and_expires_cleanly() -> 
     assert sequence == 2
     assert len(events) == 1
     assert events[0].feature_id == "bless"
+    assert events[0].concentration_started_effect_id == "bless"
+    assert caster.state.opening_buff_spell_id == "bless"
     assert caster.state.concentration is not None
     assert caster.state.concentration.effect_id == "bless"
     assert caster.state.concentration.expires_round == 11
@@ -119,3 +121,19 @@ def test_failed_bless_concentration_save_removes_every_target_modifier() -> None
     assert check is not None and check.ended is True
     assert caster.state.concentration is None
     assert all(not member.state.active_modifiers for member in (front_near, front_far, caster))
+
+
+def test_opening_buff_never_recasts_after_concentration_breaks() -> None:
+    setup, caster, _ = _bless_setup()
+    events, _ = prepare_defenses(setup)
+    assert [event.feature_id for event in events] == ["bless"]
+    slot = next(item for item in caster.state.resources if item.id == "spell-slot-1")
+    states = [member.state for member in [*setup.heroes, *setup.monsters]]
+    assert resolve_concentration_damage(caster.state, 1, FixedDiceProvider([1, 1]), states).ended is True
+    slot.current_uses = 1
+
+    second_prep, _ = prepare_defenses(setup, 99)
+
+    assert second_prep == []
+    assert slot.current_uses == 1
+    assert caster.state.opening_buff_spell_id == "bless"
