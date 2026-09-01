@@ -24,6 +24,8 @@ def test_seraphine_level_one_package_is_raw_audited() -> None:
     assert template.max_hp == 10
     assert template.saving_throw_bonuses["wisdom"] == 5
     assert template.saving_throw_bonuses["charisma"] == 2
+    assert template.skill_bonuses["athletics"] == 1
+    assert template.skill_bonuses["acrobatics"] == 2
     assert {item.id: item.max_uses for item in template.resources} == {
         "spell-slot-1": 2,
         "adrenaline-rush": 2,
