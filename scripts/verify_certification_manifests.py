@@ -55,6 +55,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("frenzy")
     if features.fast_movement_bonus_ft:
         mechanics.add("fast-movement")
+    if features.mindless_rage:
+        mechanics.add("mindless-rage")
     if features.critical_move_fraction:
         mechanics.add("post-critical-movement")
     if features.tactical_shift_fraction:
