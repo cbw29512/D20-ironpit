@@ -27,8 +27,9 @@ jobs:
         run: python scripts/verify_certification_manifests.py --write
       - name: Prove only manifests changed
         run: |
+          rm -rf backend/iron_pit_backend.egg-info
           git status --short
-          test -z "$(git status --porcelain --untracked-files=all | grep -vE '^( M|M |MM) data/(hero|monster)_certification_manifest\.json$')"
+          test -z "$(git status --porcelain --untracked-files=all | grep -vE '^ M data/(hero|monster)_certification_manifest\.json$')"
       - name: Persist generated manifests
         run: |
           git config user.name "github-actions[bot]"
