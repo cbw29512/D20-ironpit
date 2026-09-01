@@ -10,8 +10,9 @@ from app.combat.dice import SecureDiceProvider
 from app.combat.encounter_engine import run_encounter
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.engine import run_duel
+from app.content.audited_fighter import build_karnok_stoneward
 from app.content.catalog import build_full_content_catalog
-from app.content.demo import build_demo_fighter, build_goblin_warrior
+from app.content.demo import build_goblin_warrior
 from app.content.readiness import assert_public_selection_runnable
 from app.content.roster import build_arena_roster
 from app.domain.catalog import FullContentCatalog
@@ -95,7 +96,7 @@ def create_encounter_battle(selection: EncounterSelection) -> EncounterBattleRes
 @app.get("/api/roster/demo", response_model=DemoRoster)
 def get_demo_roster() -> DemoRoster:
     try:
-        return DemoRoster(fighter=build_demo_fighter(), monster=build_goblin_warrior())
+        return DemoRoster(fighter=build_karnok_stoneward(), monster=build_goblin_warrior())
     except Exception as exc:
         logger.exception("Demo roster API failed.")
         raise HTTPException(status_code=500, detail="Demo roster could not be loaded.") from exc
@@ -105,7 +106,7 @@ def get_demo_roster() -> DemoRoster:
 def create_demo_battle() -> BattleResult:
     try:
         return run_duel(
-            build_demo_fighter(), build_goblin_warrior(), SecureDiceProvider(), starting_distance_ft=5
+            build_karnok_stoneward(), build_goblin_warrior(), SecureDiceProvider(), starting_distance_ft=5
         )
     except Exception as exc:
         logger.exception("Demo battle API failed.")
@@ -116,7 +117,7 @@ def create_demo_battle() -> BattleResult:
 def create_ranged_demo_battle() -> BattleResult:
     try:
         return run_duel(
-            build_demo_fighter(), build_goblin_warrior(), SecureDiceProvider(), starting_distance_ft=90
+            build_karnok_stoneward(), build_goblin_warrior(), SecureDiceProvider(), starting_distance_ft=90
         )
     except Exception as exc:
         logger.exception("Ranged demo battle API failed.")
