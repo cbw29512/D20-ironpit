@@ -77,6 +77,7 @@ function rage(hero) {
   assert.equal(template.armor_class, 14);
   assert.equal(template.max_hp, 55);
   assert.equal(template.speed_ft, 40);
+  assert.equal(template.fast_movement_bonus_ft, 10);
   assert.equal(template.resources.rage, 3);
   assert.equal(template.resources["adrenaline-rush"], 3);
   assert.equal(template.danger_sense, true);
