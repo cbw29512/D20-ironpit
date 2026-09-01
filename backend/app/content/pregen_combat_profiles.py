@@ -87,6 +87,11 @@ def _seraphine_profile(level: int, hp: int, first_slots: int, channel: int = 0, 
     )
 
 
+def build_seraphine_dawnshield_level3_combat_profile() -> PregenCombatProfile:
+    """Candidate L3 fingerprint; add to the certified profile map only when L3 is promoted."""
+    return _seraphine_profile(3, 24, 4, 2, 2)
+
+
 def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
     profiles = [
         PregenCombatProfile(
@@ -121,6 +126,5 @@ def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
         ),
         _seraphine_profile(1, 10, 2),
         _seraphine_profile(2, 17, 3, 2),
-        _seraphine_profile(3, 24, 4, 2, 2),
     ]
     return {profile.template_id: profile for profile in profiles}
