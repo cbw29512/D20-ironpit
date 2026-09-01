@@ -74,7 +74,7 @@ def build_seraphine_dawnshield() -> CombatantTemplate:
         healing_actions=[build_cure_wounds(3)],
         saving_throw_bonuses={
             "strength": 1, "dexterity": 2, "constitution": 2,
-            "intelligence": -1, "wisdom": 5, "charisma": 0,
+            "intelligence": -1, "wisdom": 5, "charisma": 2,
         },
         skill_bonuses={
             "arcana": 1, "history": 1, "medicine": 5, "persuasion": 2,
