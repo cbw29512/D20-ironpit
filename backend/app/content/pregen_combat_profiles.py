@@ -62,7 +62,7 @@ _ROKHAN_ATTACKS = (
 def _karnok_profile(level: int, hp: int) -> PregenCombatProfile:
     abilities = _ORC_L8 if level >= 8 else _ORC_L6 if level >= 6 else _ORC_L4 if level >= 4 else _ORC
     athletics = 9 if level >= 9 else 8 if level >= 6 else 7 if level >= 5 else 6 if level >= 4 else 5
-    masteries = (("greatsword", "shortbow", "javelin", "spear") if level >= 9 else
+    masteries = (("flail", "javelin", "spear", "greatsword") if level >= 9 else
                  ("flail", "javelin", "spear", "longsword") if level >= 4 else ("flail", "javelin", "spear"))
     resources = [("second-wind", 3 if level >= 4 else 2)]
     if level >= 2:
