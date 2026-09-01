@@ -22,9 +22,9 @@ def _constrict_setup():
 
 def test_saving_throws_do_not_use_attack_nat_one_or_nat_twenty_rules() -> None:
     state = _state()
-    high_roll, high_success = resolve_saving_throw(state, "intelligence", 20, FixedDiceProvider([20]))
+    high_roll, high_success = resolve_saving_throw(state, "intelligence", 21, FixedDiceProvider([20]))
     low_roll, low_success = resolve_saving_throw(state, "strength", 6, FixedDiceProvider([1]))
-    assert high_roll is not None and high_roll.total == 19 and high_success is False
+    assert high_roll is not None and high_roll.total == 20 and high_success is False
     assert low_roll is not None and low_roll.total == 6 and low_success is True
 
 
