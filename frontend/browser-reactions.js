@@ -11,17 +11,9 @@
     const profile = template.unarmed_opportunity_attack || window.IRON_PIT_UNARMED_OPPORTUNITY?.[template.id];
     if (!profile) return null;
     return {
-      id: "unarmed-strike-opportunity",
-      name: "Unarmed Strike",
-      kind: "melee",
-      bonus: profile.attack_bonus,
-      diceCount: 0,
-      diceSize: 2,
-      damageBonus: 0,
-      fixedDamage: profile.damage,
-      damageType: "bludgeoning",
-      reach: 5,
-      animation: "punch",
+      id: "unarmed-strike-opportunity", name: "Unarmed Strike", kind: "melee", bonus: profile.attack_bonus,
+      diceCount: 0, diceSize: 2, damageBonus: 0, fixedDamage: profile.damage, damageType: "bludgeoning",
+      reach: 5, animation: "punch",
     };
   }
 
@@ -29,18 +21,17 @@
     if (reactor.side === mover.side || options.canSee === false || options.disengaged === true) return null;
     if (Q()?.has(reactor.state, "blinded") || !PROVOKING.has(source) || !E().available(reactor.state, "reaction")) return null;
     const weapon = (reactor.state.template.attacks || []).find((attack) =>
-      attack.kind === "melee" && before <= (attack.reach || 5) && after > (attack.reach || 5),
-    );
+      attack.kind === "melee" && before <= (attack.reach || 5) && after > (attack.reach || 5));
     if (weapon) return weapon;
     const unarmed = unarmedOpportunityAttack(reactor.state.template);
     return unarmed && before <= 5 && after > 5 ? unarmed : null;
   }
 
-  function parryHit(defender, attack, attackRoll, hit) {
+  function parryHit(defender, attack, attackRoll, hit, effectiveAc = defender.template.armor_class) {
     const parry = defender.template.parry_reaction;
     if (!hit || !parry || attack.kind !== "melee" || attackRoll.selected_roll === 20) return { hit, used: false };
     if (!E().available(defender, "reaction")) return { hit, used: false };
-    if (attackRoll.total >= defender.template.armor_class + parry.ac_bonus) return { hit, used: false };
+    if (attackRoll.total >= effectiveAc + parry.ac_bonus) return { hit, used: false };
     E().spend(defender, "reaction");
     return { hit: false, used: true };
   }
@@ -48,8 +39,7 @@
   function swapWouldProvoke(defender, ally, setup) {
     const opponents = defender.side === "heroes" ? setup.monsters : setup.heroes;
     return opponents.some((reactor) => opportunityAttackWeapon(
-      reactor, defender, S().distance(reactor, defender), Math.abs(reactor.position_ft - ally.position_ft), "reaction",
-    ));
+      reactor, defender, S().distance(reactor, defender), Math.abs(reactor.position_ft - ally.position_ft), "reaction"));
   }
 
   function redirectAttack(defender, setup) {
@@ -78,7 +68,5 @@
     });
   }
 
-  window.IRON_PIT_BROWSER_REACTIONS = {
-    opportunityAttackWeapon, parryHit, redirectAttack, resolveOpportunityAttack,
-  };
+  window.IRON_PIT_BROWSER_REACTIONS = { opportunityAttackWeapon, parryHit, redirectAttack, resolveOpportunityAttack };
 })();
