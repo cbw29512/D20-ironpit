@@ -3,6 +3,7 @@
 
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
+  const O = () => window.IRON_PIT_BROWSER_OFFENSE_VALUE;
   const S = () => window.IRON_PIT_BROWSER_STATE;
 
   function slotAvailable(member, spell, turnKey) {
@@ -13,19 +14,19 @@
 
   function choose(member, setup, turnKey) {
     const enemies = member.side === "heroes" ? setup.monsters : setup.heroes;
-    const spells = (member.state.template.spell_attack_actions || [])
-      .map((spell, index) => ({ spell, index }))
-      .sort((a, b) => b.spell.level - a.spell.level || a.index - b.index);
-    for (const { spell } of spells) {
+    const candidates = [];
+    for (const [index, spell] of (member.state.template.spell_attack_actions || []).entries()) {
       if (spell.actionCost === "reaction" || !E().available(member.state, spell.actionCost)) continue;
       if (!slotAvailable(member, spell, turnKey)) continue;
-      const legal = enemies.filter((target) => target.state.is_alive && !target.state.is_dead
-        && target.state.current_hp > 0 && S().distance(member, target) <= spell.range);
-      legal.sort((a, b) => S().distance(member, a) - S().distance(member, b)
-        || a.combatant_id.localeCompare(b.combatant_id));
-      if (legal.length) return { action: spell, target: legal[0] };
+      for (const target of enemies) {
+        if (!target.state.is_alive || target.state.is_dead || target.state.current_hp <= 0 || S().distance(member, target) > spell.range) continue;
+        candidates.push({ spell, target, index, score: O().spellAttack(member, target, spell, setup) });
+      }
     }
-    return null;
+    candidates.sort((a, b) => b.score - a.score || a.spell.level - b.spell.level
+      || a.target.state.current_hp - b.target.state.current_hp || a.index - b.index
+      || a.target.combatant_id.localeCompare(b.target.combatant_id));
+    return candidates.length ? { action: candidates[0].spell, target: candidates[0].target } : null;
   }
 
   window.IRON_PIT_BROWSER_SPELL_ATTACK_POLICY = { choose };
