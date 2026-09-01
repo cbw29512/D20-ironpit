@@ -44,7 +44,8 @@
       || (a.hp ?? Number.MAX_SAFE_INTEGER) - (b.hp ?? Number.MAX_SAFE_INTEGER) || a.index - b.index);
     if (!candidates.length) return null;
     const best = candidates[0];
-    return { action: best.action, slotLevel: best.slotLevel, targetIds: best.targetIds, placement: best.placement };
+    return { action: best.action, slotLevel: best.slotLevel, targetIds: best.targetIds,
+      placement: best.placement, expectedDamage: best.score };
   }
 
   window.IRON_PIT_BROWSER_SPELL_POLICY = { choose, slotLevel };
