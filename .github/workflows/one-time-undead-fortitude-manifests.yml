@@ -1,0 +1,42 @@
+name: One-time Undead Fortitude manifests
+
+on:
+  push:
+    paths:
+      - .github/workflows/one-time-undead-fortitude-manifests.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install rules reference
+        working-directory: backend
+        run: pip install -e '.[dev]'
+      - name: Regenerate certification manifests
+        run: python scripts/verify_certification_manifests.py --write
+      - name: Prove only manifests changed
+        run: |
+          git status --short
+          test -z "$(git status --porcelain --untracked-files=all | grep -vE '^( M|M |MM) data/(hero|monster)_certification_manifest\.json$')"
+      - name: Persist generated manifests
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/hero_certification_manifest.json data/monster_certification_manifest.json
+          if git diff --cached --quiet; then
+            echo "Manifests already current."
+            exit 0
+          fi
+          git commit -m "chore: regenerate certification manifests for undead fortitude"
+          git push origin HEAD:audit/raw-combat-log-figures-20260830
