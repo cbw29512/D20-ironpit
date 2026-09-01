@@ -14,6 +14,7 @@ from app.domain.spells import SpellAttackAction
 class SpellAttackChoice:
     action: SpellAttackAction
     target: EncounterCombatant
+    expected_damage: float
 
 
 def _slot_available(caster: EncounterCombatant, action: SpellAttackAction, turn_key: str) -> bool:
@@ -49,5 +50,5 @@ def choose_spell_attack(
             candidates.append((score, -action.level, -target.state.current_hp, target.combatant_id, action, target))
     if not candidates:
         return None
-    _, _, _, _, action, target = max(candidates, key=lambda item: item[:4])
-    return SpellAttackChoice(action, target)
+    score, _, _, _, action, target = max(candidates, key=lambda item: item[:4])
+    return SpellAttackChoice(action, target, score)
