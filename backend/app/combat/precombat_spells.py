@@ -19,9 +19,22 @@ def _slot_resource(member: EncounterCombatant, spell: DefensiveSpellAction):
     return spell.level, resource
 
 
-def choose_defensive_spell(member: EncounterCombatant):
+def defensive_spell_active(member: EncounterCombatant, setup: EncounterSetup, spell: DefensiveSpellAction) -> bool:
+    allies = setup.heroes if member.side == "heroes" else setup.monsters
+    if member.state.concentration is not None and member.state.concentration.effect_id == spell.id:
+        return True
+    return any(
+        spell.id in target.state.active_buff_effect_ids
+        or any(modifier.source_effect_id == spell.id for modifier in target.state.active_modifiers)
+        for target in allies
+    )
+
+
+def choose_defensive_spell(member: EncounterCombatant, setup: EncounterSetup | None = None):
     indexed = list(enumerate(member.state.template.defensive_spell_actions))
     for _, spell in sorted(indexed, key=lambda item: (-item[1].priority, item[1].level, item[0])):
+        if setup is not None and defensive_spell_active(member, setup, spell):
+            continue
         slot = _slot_resource(member, spell)
         if slot is not None:
             return spell, slot[0], slot[1]
@@ -66,6 +79,12 @@ def resolve_defensive_spell(
         raise ValueError(f"No level {slot_level} spell slot remains for {spell.name}.")
     if not targets:
         raise ValueError(f"{spell.name} has no legal precombat targets.")
+    if any(
+        spell.id in target.state.active_buff_effect_ids
+        or any(modifier.source_effect_id == spell.id for modifier in target.state.active_modifiers)
+        for target in targets
+    ):
+        raise ValueError(f"{spell.name} is already active on a selected target.")
     resource.current_uses -= 1
     temp_hp_details: list[str] = []
     for target in targets:
@@ -81,6 +100,8 @@ def resolve_defensive_spell(
             typed = DamageType(damage_type)
             if typed not in target.state.temporary_damage_resistances:
                 target.state.temporary_damage_resistances.append(typed)
+        if not spell.concentration and spell.id not in target.state.active_buff_effect_ids:
+            target.state.active_buff_effect_ids.append(spell.id)
     apply_spell_modifiers(
         member.state,
         [(target.combatant_id, target.state) for target in targets],
@@ -120,7 +141,7 @@ def prepare_defenses(
     members = [*setup.heroes, *setup.monsters]
     affected_states = [member.state for member in members]
     for member in members:
-        choice = choose_defensive_spell(member)
+        choice = choose_defensive_spell(member, setup)
         if choice is None:
             continue
         spell, slot_level, resource = choice
