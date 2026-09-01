@@ -42,6 +42,7 @@ def test_only_certified_canonical_levels_are_runnable() -> None:
         ("Karnok Stoneward", 5, "karnok-stoneward-l5"),
         ("Rokhan Stonefury", 1, "rokhan-stonefury-l1"),
         ("Rokhan Stonefury", 2, "rokhan-stonefury-l2"),
+        ("Rokhan Stonefury", 3, "rokhan-stonefury-l3"),
         ("Seraphine Dawnshield", 1, "seraphine-dawnshield-l1"),
         ("Seraphine Dawnshield", 2, "seraphine-dawnshield-l2"),
         ("Seraphine Dawnshield", 3, "seraphine-dawnshield-l3"),
