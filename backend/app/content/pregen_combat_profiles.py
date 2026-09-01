@@ -107,7 +107,7 @@ def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
         ),
         PregenCombatProfile(
             "seraphine-dawnshield-l1", "Cleric", 1, _SERAPHINE, ("wisdom", "charisma"), 17, 10, 30,
-            (("arcana", 1), ("history", 1), ("medicine", 5), ("persuasion", 2)),
+            (("athletics", 1), ("acrobatics", 2), ("arcana", 1), ("history", 1), ("medicine", 5), ("persuasion", 2)),
             (AttackExpectation("mace", "strength", 1, 6, "bludgeoning"),), (),
             (("spell-slot-1", 2), ("adrenaline-rush", 2), ("relentless-endurance", 1)),
         ),
