@@ -10,11 +10,13 @@ from app.combat.conditions import apply_hit_conditions, attack_roll_condition_so
 from app.combat.damage import BonusDamageSpec, resolve_weapon_damage
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
+from app.combat.modifier_stack import apply_d20_bonus_dice, attacks_against_advantage_sources, effective_armor_class
 from app.combat.parry import resolve_parry_hit
 from app.combat.range import resolve_attack_roll_mode
 from app.combat.rolls import roll_d20
 from app.combat.zero_hp import apply_damage
 from app.domain.models import BattleEvent, CombatantState, WeaponAttack
+from app.domain.modifiers import ModifierKind
 
 logger = logging.getLogger(__name__)
 
@@ -51,11 +53,15 @@ def resolve_attack(
         mode = resolve_attack_roll_mode(
             weapon,
             distance_ft,
-            advantage_sources=(advantage_sources + condition_advantage + bloodied_fury_advantage(attacker, attack)),
+            advantage_sources=(advantage_sources + condition_advantage + bloodied_fury_advantage(attacker, attack)
+                               + attacks_against_advantage_sources(defender)),
             other_disadvantage_sources=other_disadvantage_sources + condition_disadvantage,
             close_enemy_active=close_enemy_active,
         )
-        attack_roll = roll_d20(dice, attack.attack_bonus, mode)
+        attack_roll = apply_d20_bonus_dice(
+            attacker, ModifierKind.ATTACK_ROLL_BONUS_DIE,
+            roll_d20(dice, attack.attack_bonus, mode), dice,
+        )
         extend_rage_from_attack(attacker, round_number)
         if spend_action:
             spend(attacker, "action")
@@ -72,7 +78,7 @@ def resolve_attack(
         natural = attack_roll.selected_roll or 0
         natural_20 = natural == 20
         expanded_critical = natural >= attacker.template.progression_features.critical_hit_minimum
-        hit = natural != 1 and (natural_20 or attack_roll.total >= actual_defender.template.armor_class)
+        hit = natural != 1 and (natural_20 or attack_roll.total >= effective_armor_class(actual_defender))
         hit, parry_used = resolve_parry_hit(actual_defender, attack, attack_roll.total, natural, hit)
         critical = bool(hit and (expanded_critical or (close_hit_is_automatic_critical(actual_defender) and distance_ft <= 5)))
         hp_before = actual_defender.current_hp
