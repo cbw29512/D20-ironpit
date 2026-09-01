@@ -6,6 +6,7 @@ from app.content.pregens import build_selene_asharrow
 from app.content.roster import build_arena_roster
 from app.domain.encounters import EncounterCombatant
 from app.domain.models import EncounterSelection
+from app.domain.unarmed import UnarmedStrikeDamage
 
 
 def _setup(monster_id: str = "srd-commoner", hero_id: str = "karnok-stoneward-l1"):
@@ -68,9 +69,11 @@ def test_reach_weapon_and_unarmed_strike_use_their_actual_boundaries() -> None:
     assert weapon is not None and weapon.weapon_id == reactor.state.template.weapon_attack.weapon.id
 
 
-def test_legacy_selene_fixture_uses_certified_unarmed_strike_for_opportunity_attack() -> None:
+def test_legacy_selene_fixture_uses_explicit_unarmed_strike_for_opportunity_attack() -> None:
     setup, mover, canonical = _setup()
-    legacy_template = build_selene_asharrow()
+    legacy_template = build_selene_asharrow().model_copy(update={
+        "unarmed_opportunity_attack": UnarmedStrikeDamage(attack_bonus=3, damage=2),
+    })
     selene = EncounterCombatant(
         combatant_id=f"hero-1:{legacy_template.id}",
         side="heroes",
