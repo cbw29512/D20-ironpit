@@ -7,12 +7,14 @@
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const H = () => window.IRON_PIT_BROWSER_HEALING;
+  const S = () => window.IRON_PIT_BROWSER_STATE;
   const D = () => window.IRON_PIT_DICE;
-  const CHANNEL = "channel-divinity", TURN = "turn-undead", TURNED = "turned-undead", SPARK = "divine-spark";
+  const CHANNEL = "channel-divinity", TURN = "turn-undead", TURNED = "turned-undead", SPARK = "divine-spark", PRESERVE = "preserve-life";
   const distance = (a, b) => Math.abs(a.position_ft - b.position_ft);
   const living = (m) => m.state.is_alive && !m.state.is_dead;
   const side = (m, setup, allies) => allies === (m.side === "heroes") ? setup.heroes : setup.monsters;
   const baseType = (m) => String(m.state.template.creature_type || "").split(" (")[0].toLowerCase();
+  const capacity = (m) => Math.max(0, Math.floor(S().effectiveMaxHp(m.state) / 2) - m.state.current_hp);
 
   function saveDc(cleric) {
     const dcs = [...new Set((cleric.state.template.spell_save_actions || []).map((a) => a.dc))];
@@ -29,15 +31,29 @@
     return Object.entries(cleric.state.resources).some(([id, uses]) => id.startsWith("spell-slot-") && uses > 0);
   }
 
+  function preserveTargets(cleric, setup) {
+    if (!cleric.state.template.traits?.includes("life-domain")) return [];
+    return side(cleric, setup, true).filter((m) => living(m) && distance(cleric, m) <= 30
+      && !m.state.template.traits?.includes("swarm") && capacity(m) > 0)
+      .sort((a, b) => (a.state.current_hp > 0) - (b.state.current_hp > 0)
+        || (a.combatant_id === cleric.combatant_id) - (b.combatant_id === cleric.combatant_id)
+        || a.state.current_hp / S().effectiveMaxHp(a.state) - b.state.current_hp / S().effectiveMaxHp(b.state)
+        || distance(cleric, a) - distance(cleric, b) || a.combatant_id.localeCompare(b.combatant_id));
+  }
+
   function choose(cleric, setup) {
     if (!E().available(cleric.state, "action") || !(cleric.state.resources[CHANNEL] > 0)) return null;
+    const preserve = preserveTargets(cleric, setup);
+    if (preserve.length && (preserve.length >= 2 || preserve.some((m) => m.state.current_hp === 0 || m.combatant_id === cleric.combatant_id))) {
+      return { kind: PRESERVE, targets: preserve };
+    }
     const allies = side(cleric, setup, true).filter(living);
     const downed = allies.filter((m) => m.combatant_id !== cleric.combatant_id && m.state.current_hp === 0 && distance(cleric, m) <= 30)
       .sort((a, b) => b.state.death_save_failures - a.state.death_save_failures || a.combatant_id.localeCompare(b.combatant_id));
     if (downed.length && !slotsRemain(cleric)) return { kind: "divine-spark-heal", targets: [downed[0]] };
     const enemies = side(cleric, setup, false).filter((m) => living(m) && m.state.current_hp > 0 && distance(cleric, m) <= 30);
     const undead = enemies.filter((m) => baseType(m) === "undead").sort((a, b) => distance(cleric, a) - distance(cleric, b) || a.combatant_id.localeCompare(b.combatant_id));
-    if (undead.length) return { kind: "turn-undead", targets: undead };
+    if (undead.length) return { kind: TURN, targets: undead };
     if (slotsRemain(cleric)) return null;
     enemies.sort((a, b) => distance(cleric, a) - distance(cleric, b) || a.combatant_id.localeCompare(b.combatant_id));
     return enemies.length ? { kind: "divine-spark-damage", targets: [enemies[0]] } : null;
@@ -47,6 +63,20 @@
     if (!E().available(cleric.state, "action") || !(cleric.state.resources[CHANNEL] > 0)) throw new Error("Channel Divinity is unavailable.");
     E().spend(cleric.state, "action"); cleric.state.resources[CHANNEL] -= 1;
     return cleric.state.resources[CHANNEL];
+  }
+
+  function resolvePreserve(sequence, round, cleric, targets) {
+    let pool = 5 * cleric.state.template.level; const remaining = spend(cleric), allocations = [];
+    for (const target of targets) {
+      if (pool <= 0) break;
+      const amount = Math.min(pool, capacity(target)); if (amount <= 0) continue;
+      const restored = H().restore(target.state, amount); if (!restored) continue;
+      allocations.push(`${target.state.template.name} +${restored} HP`); pool -= restored;
+    }
+    if (!allocations.length) throw new Error("Preserve Life had no legal healing allocation.");
+    return { events: [{ sequence, round_number: round, event_type: "healing", actor_id: cleric.combatant_id,
+      actor_name: cleric.state.template.name, feature_id: PRESERVE, resource_remaining: remaining, animation: PRESERVE,
+      description: `${cleric.state.template.name} uses Preserve Life: ${allocations.join("; ")}.` }], sequence: sequence + 1 };
   }
 
   function turnEffects(cleric, target, round) {
@@ -96,8 +126,9 @@
 
   function resolve(sequence, round, cleric, setup) {
     const choice = choose(cleric, setup); if (!choice) return { events: [], sequence };
-    return choice.kind === "turn-undead" ? resolveTurnUndead(sequence, round, cleric, setup, choice.targets) : resolveSpark(sequence, round, cleric, setup, choice);
+    if (choice.kind === PRESERVE) return resolvePreserve(sequence, round, cleric, choice.targets);
+    return choice.kind === TURN ? resolveTurnUndead(sequence, round, cleric, setup, choice.targets) : resolveSpark(sequence, round, cleric, setup, choice);
   }
 
-  window.IRON_PIT_BROWSER_CLERIC_CHANNEL = { choose, resolve, saveDc, wisdomModifier };
+  window.IRON_PIT_BROWSER_CLERIC_CHANNEL = { choose, preserveTargets, resolve, saveDc, wisdomModifier };
 })();
