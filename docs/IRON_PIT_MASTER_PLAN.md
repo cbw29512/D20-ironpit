@@ -164,23 +164,53 @@ Certified shared behavior at this checkpoint includes:
 
 This is an engine-foundation checkpoint only. It does not certify any new caster hero or spell package by itself.
 
-### Active tranche — first data-driven concentration buff
+## Shield of Faith data-driven concentration checkpoint
 
-Current target: Shield of Faith as the first real spell using the shared modifier/concentration architecture.
+Shield of Faith is the first certified real spell consumer of the shared modifier/concentration architecture.
+
+Exact implementation head: `18a0817502791d1e37d71642de766c28a3d61b09`.
+Permanent GitHub Actions CI run `33488367526` completed successfully on that exact head with **477 Python tests** and the full browser regression suite.
+
+Completed stopping conditions:
+
+- [x] spell schema expresses the effect generically; no spell-name conditional exists in combat resolution;
+- [x] source-backed Shield of Faith data resolves to a source-owned +2 Armor Class modifier;
+- [x] Concentration starts/replaces correctly and removal strips the AC modifier;
+- [x] the 1st-level slot is consumed and the certified precombat policy preserves normal encounter action/Bonus Action economy;
+- [x] deterministic legal self-targeting avoids unsupported tactical target-selection complexity while remaining a legal use of the spell;
+- [x] Python deterministic regression passes through the real precombat resolver, effective-AC path, weapon attack path, damage path, and failed Concentration save;
+- [x] browser implementation consumes generated spell data from the same Python authority and matches the Python lifecycle;
+- [x] permanent CI includes the Shield browser regression and production wiring checks;
+- [x] source-size and generated-static parity remain green;
+- [x] exact-head GitHub CI is green;
+- [x] Cleric remains unpromoted; hero certification stays 6/240 and Cleric 0/20;
+- [x] monster certification remains 103/330 with 227 blocked;
+- [x] no Netlify deployment was used.
+
+The tranche also uncovered and fixed a production entry-point defect: both `index.html` and `frontend/index.html` now explicitly load `browser-zero-hp.js` before `browser-attack.js`. Permanent CI now asserts that wiring as well as generated spell-effect and spell-modifier wiring on both production HTML entry points.
+
+### Active tranche — Bless multi-target concentration buff
+
+Current target: Bless as the second real spell consumer and the first multi-target/upcast concentration modifier spell.
+
+Verified 2024 behavior to preserve in implementation: 1 Action; 30-foot range; Concentration up to 1 minute; up to three creatures at level 1; each target adds 1d4 to every attack roll and saving throw; one additional target per slot level above 1.
 
 Required stopping conditions before this tranche is checked off:
 
-- [ ] spell schema expresses the effect generically; no spell-name conditional in combat code;
-- [ ] source-backed Shield of Faith data resolves to a +2 Armor Class modifier owned by the caster/effect;
-- [ ] Concentration starts/replaces correctly and removal strips the AC modifier;
-- [ ] slot/resource and action timing are accounted for correctly for the certified arena policy;
-- [ ] target selection is deterministic and does not introduce unsupported tactical complexity;
-- [ ] Python deterministic tests pass through the real resolver and real attack/effective-AC path;
-- [ ] browser implementation consumes the same serialized data and matches Python behavior;
-- [ ] permanent CI includes the new Python/browser regression and production wiring checks;
-- [ ] source-size and generated-static parity remain green;
+- [ ] generic spell target policy supports multiple friendly targets without a Bless-specific combat branch;
+- [ ] level-1 target count is three and upcasting adds one legal target per slot level;
+- [ ] range filtering uses the actual encounter positions and fails closed rather than buffing an out-of-range target;
+- [ ] deterministic arena targeting is documented and stable when more legal allies exist than target slots;
+- [ ] each selected target receives independent source-owned 1d4 attack-roll and 1d4 saving-throw modifiers;
+- [ ] the 1d4 is rolled separately for every qualifying attack/save roll, including multiple attacks;
+- [ ] Concentration duration is modeled for the 1-minute spell and expires cleanly after its certified round window if not ended earlier;
+- [ ] replacement, damage failure, incapacitation/death, and duration expiry all remove Bless modifiers from every affected target;
+- [ ] Python tests use the real precombat/modifier/attack/save/concentration paths and cover multi-target/upcast/range/expiry behavior;
+- [ ] browser consumes generated Bless data from the same Python authority and passes equivalent deterministic regressions;
+- [ ] generated spell static parity and permanent production wiring remain green;
+- [ ] source-size limits remain green;
 - [ ] exact-head GitHub CI is green before this tranche is marked complete;
-- [ ] no Cleric or other caster hero is promoted solely because this one spell is supported;
+- [ ] Cleric remains 0/20 until Cure Wounds, Guiding Bolt, package audit, runtime template, browser generation, and public-readiness gates also clear;
 - [ ] no routine Netlify deployment is used.
 
 ## Priority queue
