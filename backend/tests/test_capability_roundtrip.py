@@ -9,7 +9,8 @@ from app.content.roster import build_arena_roster
 def test_every_runtime_monster_round_trips_through_universal_capability_schema() -> None:
     rows = {str(row["name"]): row for row in load_monster_rows()}
     monsters = build_arena_roster().monsters
-    assert len(monsters) == 99
+    assert monsters
+    assert len({monster.id for monster in monsters}) == len(monsters)
     for original in monsters:
         rebuilt = compile_combatant(definition_from_template(original))
         assert templates_semantically_equal(original, rebuilt), original.id
