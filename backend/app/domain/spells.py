@@ -21,6 +21,8 @@ class SpellModifierEffect(BaseModel):
     dice_count: int = Field(default=0, ge=0, le=20)
     dice_size: int = Field(default=0, ge=0, le=100)
     damage_type: DamageTypeName | None = None
+    consume_on_attack_against: bool = False
+    expires_after_source_turns: int | None = Field(default=None, ge=1, le=20)
 
     @model_validator(mode="after")
     def validate_payload(self) -> "SpellModifierEffect":
@@ -35,6 +37,8 @@ class SpellModifierEffect(BaseModel):
             raise ValueError(f"{self.kind} does not accept a damage type.")
         if self.kind == "attacks-against-advantage" and self.flat_bonus:
             raise ValueError("Attack-advantage modifiers do not accept a flat bonus.")
+        if self.consume_on_attack_against and self.kind != "attacks-against-advantage":
+            raise ValueError("Only attack-advantage spell modifiers can be consumed by the next attack.")
         return self
 
 
@@ -69,6 +73,30 @@ class DefensiveSpellAction(BaseModel):
             raise ValueError("Concentration defenses require source-owned modifier effects.")
         if self.target_policy == "self" and (self.target_count != 1 or self.target_count_per_slot_above):
             raise ValueError("Self-target policy supports exactly one target.")
+        return self
+
+
+class SpellAttackAction(BaseModel):
+    """A spell resolved with an attack roll rather than a saving throw."""
+
+    id: str
+    name: str
+    level: int = Field(ge=0, le=9)
+    action_cost: ActionCost = "action"
+    range_ft: int = Field(ge=0)
+    attack_bonus: int
+    damage_dice_count: int = Field(default=0, ge=0, le=40)
+    damage_dice_size: int = Field(default=6, ge=2, le=100)
+    damage_bonus: int = 0
+    damage_type: DamageTypeName | None = None
+    on_hit_modifier_effects: list[SpellModifierEffect] = Field(default_factory=list)
+    animation: str = "spell-attack"
+    source: str | None = None
+
+    @model_validator(mode="after")
+    def validate_attack_spell(self) -> "SpellAttackAction":
+        if self.damage_dice_count and self.damage_type is None:
+            raise ValueError("Damaging spell attacks require a damage type.")
         return self
 
 
