@@ -48,6 +48,7 @@ _COMMON_FIGHTER = _scores(17, 13, 15, 10, 12, 8)
 _ARCHER_FIGHTER = _scores(13, 17, 15, 10, 12, 8)
 _ROGUE = _scores(10, 17, 15, 13, 12, 8)
 _ORC = _scores(17, 13, 15, 8, 12, 10)
+_KARNOK_L4 = _scores(18, 13, 16, 8, 12, 10)
 _KARNOK_ATTACKS = (
     AttackExpectation("greatsword", "strength", 2, 6, "slashing"),
     AttackExpectation("shortbow", "dexterity", 1, 6, "piercing", normal_range_ft=80, long_range_ft=320),
@@ -74,6 +75,13 @@ def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
             (("athletics", 5), ("acrobatics", 1)), _KARNOK_ATTACKS,
             ("flail", "javelin", "spear"),
             (("second-wind", 2), ("action-surge", 1), ("adrenaline-rush", 2), ("relentless-endurance", 1)),
+            "Defense",
+        ),
+        PregenCombatProfile(
+            "karnok-stoneward-l4", "Fighter", 4, _KARNOK_L4, ("strength", "constitution"), 17, 40, 30,
+            (("athletics", 6), ("acrobatics", 1)), _KARNOK_ATTACKS,
+            ("flail", "javelin", "spear", "longsword"),
+            (("second-wind", 3), ("action-surge", 1), ("adrenaline-rush", 2), ("relentless-endurance", 1)),
             "Defense",
         ),
         PregenCombatProfile(
