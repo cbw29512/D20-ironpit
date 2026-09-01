@@ -47,7 +47,9 @@
     if (!legalAction(action, target, distance)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
     const save = resolveSavingThrow(target.state, action.saveAbility, action.dc);
     if (spendAction) E().spend(actor.state, "action");
-    const hpBefore = target.state.current_hp, concentrationBefore = target.state.concentration?.effect_id || null;
+    const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
+    const deathSuccessBefore = target.state.death_save_successes, deathFailureBefore = target.state.death_save_failures;
+    const concentrationBefore = target.state.concentration?.effect_id || null;
     let damageRoll = null, damageComponents = [], damageOutcome = null;
     const count = action.damageDiceCount || 0;
     if (count && !(save.succeeded && action.successDamage === "none")) {
@@ -57,14 +59,12 @@
       if (save.succeeded && action.successDamage === "half") total = Math.floor(total / 2);
       const applied = A().adjustedDamage(target.state, Math.max(0, total), action.damageType);
       damageComponents = [{ source: action.name, notation: `${count}d${action.damageDiceSize}+${action.damageBonus || 0}`,
-        rolls, modifier: action.damageBonus || 0, damage_type: action.damageType,
-        total: Math.max(0, total), applied_total: applied }];
+        rolls, modifier: action.damageBonus || 0, damage_type: action.damageType, total: Math.max(0, total), applied_total: applied }];
       damageRoll = { notation: damageComponents[0].notation, rolls, modifier: action.damageBonus || 0, total: applied };
       if (applied) {
         const affectedStates = states(options.setup);
         damageOutcome = A().applyDamage(target.state, applied, false, [action.damageType], affectedStates);
-        window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(target.state);
-        C()?.endIfIncapacitated(target.state, affectedStates);
+        window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(target.state); C()?.endIfIncapacitated(target.state, affectedStates);
       }
     }
     let appliedConditions = [];
@@ -75,13 +75,15 @@
     if (damageOutcome === "undead_fortitude") description += ` ${target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP.`;
     if (appliedConditions.includes("grappled")) description += ` ${target.state.template.name} is Grappled.`;
     if (appliedConditions.includes("restrained")) description += ` ${target.state.template.name} is Restrained while Grappled.`;
-    return { sequence, round_number: round, event_type: "saving_throw", actor_id: actor.combatant_id,
-      actor_name: actor.state.template.name, target_id: target.combatant_id, target_name: target.state.template.name,
-      saving_throw_roll: save.roll, save_ability: action.saveAbility, save_dc: action.dc, save_succeeded: save.succeeded,
-      damage_roll: damageRoll, damage_components: damageComponents, applied_condition_ids: appliedConditions,
-      hp_before: hpBefore, hp_after: target.state.current_hp, death_save_successes: target.state.death_save_successes,
-      death_save_failures: target.state.death_save_failures, is_stable: target.state.is_stable, is_dead: target.state.is_dead,
-      feature_id: action.id, concentration_ended_effect_id: concentrationBefore && !target.state.concentration ? concentrationBefore : null,
+    return { sequence, round_number: round, event_type: "saving_throw", actor_id: actor.combatant_id, actor_name: actor.state.template.name,
+      target_id: target.combatant_id, target_name: target.state.template.name, saving_throw_roll: save.roll,
+      save_ability: action.saveAbility, save_dc: action.dc, save_succeeded: save.succeeded, damage_roll: damageRoll,
+      damage_components: damageComponents, applied_condition_ids: appliedConditions, hp_before: hpBefore, hp_after: target.state.current_hp,
+      temporary_hp_before: temporaryHpBefore, temporary_hp_after: target.state.temporary_hp,
+      death_save_successes_before: deathSuccessBefore, death_save_failures_before: deathFailureBefore,
+      death_save_successes: target.state.death_save_successes, death_save_failures: target.state.death_save_failures,
+      is_stable: target.state.is_stable, is_dead: target.state.is_dead, feature_id: action.id,
+      concentration_ended_effect_id: concentrationBefore && !target.state.concentration ? concentrationBefore : null,
       animation: action.animation || "save-effect", description };
   }
 
