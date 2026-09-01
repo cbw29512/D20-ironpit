@@ -17,10 +17,11 @@
   }
 
   function choose(member, setup = null) {
+    if (member.state.opening_buff_spell_id) return null;
     const spells = (member.state.template.defensive_spell_actions || [])
       .map((spell, index) => ({ spell, index }))
-      .sort((a, b) => (b.spell.priority || 0) - (a.spell.priority || 0)
-        || a.spell.level - b.spell.level || a.index - b.index);
+      .sort((a, b) => b.spell.level - a.spell.level
+        || (b.spell.priority || 0) - (a.spell.priority || 0) || a.index - b.index);
     for (const { spell } of spells) {
       if (spell.concentration && member.state.concentration) continue;
       if (setup && active(member, setup, spell)) continue;
@@ -79,6 +80,7 @@
     const directHp = (spell.temporaryHp || 0) || (spell.maxHpIncrease || 0) || (spell.currentHpIncrease || 0);
     if (spell.concentration && (directHp || spell.damageResistances?.length)) throw new Error("Concentration defenses require source-owned modifier effects.");
     if (!targets.length) throw new Error(`${spell.name} has no legal precombat targets.`);
+    if (member.state.opening_buff_spell_id) throw new Error(`${member.state.template.name} already committed its one opening buff this battle.`);
     if (spell.concentration && member.state.concentration) throw new Error(`${member.state.template.name} is already concentrating and will not replace the active buff automatically.`);
     if (targets.some((target) => target.state.active_buff_effect_ids?.includes(spell.id)
       || target.state.active_modifiers?.some((modifier) => modifier.source_effect_id === spell.id))) {
@@ -86,6 +88,7 @@
     }
     const resourceId = `spell-slot-${slotLevel}`;
     if (!(member.state.resources?.[resourceId] > 0)) throw new Error(`No level ${slotLevel} spell slot remains for ${spell.name}.`);
+    member.state.opening_buff_spell_id = spell.id;
     member.state.resources[resourceId] -= 1;
     const tempHpDetails = [];
     for (const target of targets) {
@@ -110,7 +113,8 @@
     const single = targets.length === 1 ? targets[0] : null;
     return { sequence, round_number: 0, event_type: "feature", actor_id: member.combatant_id, actor_name: member.state.template.name,
       target_id: single?.combatant_id || null, target_name: single?.state.template.name || null,
-      feature_id: spell.id, resource_remaining: member.state.resources[resourceId], animation: spell.animation || "precombat-defense",
+      feature_id: spell.id, concentration_started_effect_id: spell.concentration ? spell.id : null,
+      resource_remaining: member.state.resources[resourceId], animation: spell.animation || "precombat-defense",
       description: `Precombat preparation: ${member.state.template.name} casts ${spell.name} with a level ${slotLevel} slot on ${targets.map((target) => target.state.template.name).join(", ")} (${details.join("; ")}).` };
   }
 
