@@ -61,6 +61,7 @@ def build_rokhan_stonefury_profile() -> CharacterBuildProfile:
         ],
         skill_proficiencies=["Athletics", "Intimidation", "Perception", "Survival"],
         weapon_masteries=["flail", "pike"],
+        combat_loadout_kind="two-handed",
         feature_audits=[
             _feature("rage", "Rage", "class", combat_relevant=True, automated=True),
             _feature("unarmored-defense", "Unarmored Defense", "class", combat_relevant=True, automated=True),
