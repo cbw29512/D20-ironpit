@@ -69,6 +69,19 @@ jobs:
                   raise SystemExit(f'Expected one 101-monster contract in {filename}.')
               path.write_text(text.replace('== 101', '== 103', 1), encoding='utf-8')
 
+          catalog_test = Path('backend/tests/test_full_content_catalog.py')
+          text = catalog_test.read_text(encoding='utf-8')
+          old = '"Mule": "srd-mule", "Noble": "srd-noble", "Ogre": "srd-ogre", "Owl": "srd-owl", "Owlbear": "srd-owlbear",'
+          new = '"Mule": "srd-mule", "Noble": "srd-noble", "Ogre": "srd-ogre", "Ogre Zombie": "srd-ogre-zombie", "Owl": "srd-owl", "Owlbear": "srd-owlbear",'
+          if old not in text:
+              raise SystemExit('Ogre Zombie full-catalog mapping insertion point drifted.')
+          text = text.replace(old, new, 1)
+          old = '"Weasel": "srd-weasel", "Wolf": "srd-wolf",'
+          new = '"Weasel": "srd-weasel", "Wolf": "srd-wolf", "Zombie": "srd-zombie",'
+          if old not in text:
+              raise SystemExit('Zombie full-catalog mapping insertion point drifted.')
+          catalog_test.write_text(text.replace(old, new, 1), encoding='utf-8')
+
           roster = Path('backend/tests/test_arena_roster.py')
           text = roster.read_text(encoding='utf-8')
           old = '"srd-killer-whale", "srd-manticore", "srd-pegasus"'
