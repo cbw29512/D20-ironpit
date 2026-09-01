@@ -27,7 +27,7 @@ def test_fighter_level_nine_snapshot_is_derived_from_level_eight() -> None:
     assert karnok.saving_throw_bonuses["strength"] == 9
     assert karnok.saving_throw_bonuses["constitution"] == 8
     assert karnok.skill_bonuses["athletics"] == 9
-    assert karnok.weapon_masteries == ["greatsword", "shortbow", "javelin", "spear"]
+    assert karnok.weapon_masteries == ["flail", "javelin", "spear", "greatsword"]
     assert resources == {
         "second-wind": 3, "action-surge": 1, "indomitable": 1,
         "adrenaline-rush": 4, "relentless-endurance": 1,
@@ -37,7 +37,7 @@ def test_fighter_level_nine_snapshot_is_derived_from_level_eight() -> None:
     assert karnok.attack_action is not None and len(karnok.attack_action.slots) == 2
 
 
-def test_fighter_level_nine_profile_fingerprint_resources_and_registry_pass_all_gates() -> None:
+def test_fighter_level_nine_candidate_passes_build_fingerprint_and_resource_gates_but_is_not_public_ready() -> None:
     template = build_karnok_stoneward_level(9)
     profile = build_karnok_stoneward_level9_profile()
     combat_profile = build_pregen_combat_profiles()[template.id]
@@ -48,9 +48,7 @@ def test_fighter_level_nine_profile_fingerprint_resources_and_registry_pass_all_
     assert audit_pregen_combat_stats(template, combat_profile) == []
     assert_pregen_combat_stats(template, combat_profile)
     assert_character_resources_raw_ready(template, profile, combat_profile)
-    assert build_certified_hero_registry()[("fighter", 9, "canonical")] == (
-        "Karnok Stoneward", "karnok-stoneward-l9",
-    )
+    assert ("fighter", 9, "canonical") not in build_certified_hero_registry()
 
 
 def test_indomitable_rerolls_failed_save_with_level_bonus_and_spends_one_use() -> None:
@@ -96,4 +94,19 @@ def test_tactical_master_sap_applies_to_mastered_hit_then_disadvantages_and_is_c
     assert reply.attack_roll.mode is RollMode.DISADVANTAGE
     assert reply.attack_roll.rolls == [18, 2]
     assert reply.hit is False
+    assert not any(effect.effect_id == "tactical-master-sap" for effect in second.timed_effects)
+
+
+def test_tactical_master_does_not_apply_sap_to_unmastered_shortbow() -> None:
+    first = build_combatant_state(build_karnok_stoneward_level(9))
+    second = build_combatant_state(build_karnok_stoneward_level(9))
+    first.feature_last_turn_keys["savage-attacker"] = "1:first"
+    shortbow = first.template.alternate_weapon_attacks[0]
+
+    hit = resolve_attack(
+        1, 1, first, second, shortbow, 30,
+        FixedDiceProvider([15, 4]), actor_event_id="first", target_event_id="second",
+        spend_action=False, turn_key="1:first", close_enemy_active=False,
+    )
+    assert hit.hit is True
     assert not any(effect.effect_id == "tactical-master-sap" for effect in second.timed_effects)
