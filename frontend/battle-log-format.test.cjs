@@ -11,6 +11,15 @@ const L = window.IRON_PIT_BATTLE_LOG;
 
 {
   const text = L.format({
+    event_type: "initiative", actor_name: "Karnok Stoneward", description: "Karnok Stoneward rolls initiative 19.",
+    attack_roll: { selected_roll: 18, rolls: [7, 18], modifier: 1, total: 19, mode: "advantage" },
+  });
+  assert.match(text, /Karnok Stoneward rolls initiative 19/);
+  assert.match(text, /ADV \[7, 18\] 18 \+1 = 19/);
+}
+
+{
+  const text = L.format({
     event_type: "death_save", actor_name: "Warlock 1 — Eldritch Blaster",
     death_save_roll: { selected_roll: 1 }, death_save_successes_before: 0, death_save_successes: 0,
     death_save_failures_before: 1, death_save_failures: 3, is_stable: false, is_dead: true,
