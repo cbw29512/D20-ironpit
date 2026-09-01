@@ -20,6 +20,8 @@ from app.combat.orc import use_adrenaline_rush
 from app.combat.policy import should_use_second_wind
 from app.combat.reaction_movement import move_toward_with_reactions
 from app.combat.saving_throws import legal_save_action, resolve_save_action
+from app.combat.spell_attack_policy import choose_spell_attack
+from app.combat.spell_attack_resolution import resolve_spell_attack
 from app.combat.spell_policy import choose_spell
 from app.combat.spell_resolution import resolve_spell
 from app.combat.state import begin_turn
@@ -95,6 +97,14 @@ def resolve_combat_turn(
     if adrenaline_event is not None:
         events.append(adrenaline_event); sequence += 1
 
+    attack_spell = choose_spell_attack(attacker, setup, turn_key)
+    if attack_spell is not None:
+        events.append(resolve_spell_attack(
+            sequence, round_number, attacker, attack_spell.target,
+            attack_spell.action, setup, turn_key, dice,
+        )); sequence += 1
+        if not is_available(attacker.state, "action"):
+            return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
     spell_choice = choose_spell(attacker, setup, turn_key)
     if spell_choice is not None:
         spell_events, sequence = resolve_spell(sequence, round_number, attacker, setup, spell_choice, turn_key, dice)
