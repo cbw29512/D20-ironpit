@@ -24,6 +24,7 @@ def _compile_control(effect: GrappleEffectDefinition | ConditionEffectDefinition
     return HitControlEffect(
         max_target_size=effect.max_target_size,
         condition_id=effect.condition,
+        expires_at_start_of_source_turn=effect.expires_at_start_of_source_turn,
         expiry_timing=effect.expiry_timing,
         repeat_save_ability=effect.repeat_save_ability,
         repeat_save_dc=effect.repeat_save_dc,
@@ -34,7 +35,7 @@ def _compile_control(effect: GrappleEffectDefinition | ConditionEffectDefinition
 
 def _compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
     dice_count = definition.damage.count if definition.damage else 0
-    dice_size = definition.damage.size if definition.damage else 6
+    dice_size = definition.damage.size if definition.damage else 2
     damage_bonus = definition.damage.bonus if definition.damage else 0
     weapon = Weapon(
         id=definition.weapon_id or definition.id,

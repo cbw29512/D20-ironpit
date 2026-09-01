@@ -40,6 +40,7 @@ class ConditionEffectDefinition(BaseModel):
     kind: Literal["condition"] = "condition"
     condition: ConditionName
     max_target_size: CreatureSize | None = None
+    expires_at_start_of_source_turn: bool = False
     expiry_timing: ConditionTiming | None = None
     repeat_save_ability: AbilityName | None = None
     repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
