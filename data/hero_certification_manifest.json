@@ -5,7 +5,7 @@
   "summary": {
     "canonical_heroes": 12,
     "level_slots": 240,
-    "public_ready": 10
+    "public_ready": 11
   },
   "heroes": [
     {
@@ -52,24 +52,36 @@
         {
           "level": 2,
           "subclass": null,
-          "runtime_template_id": null,
+          "runtime_template_id": "rokhan-stonefury-l2",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Barbarian Level 2, Orc, Soldier, Savage Attacker, Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:rokhan-greataxe",
+            "attack:rokhan-handaxe-thrown",
+            "resource:adrenaline-rush",
+            "resource:rage",
+            "resource:relentless-endurance",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savage-attacker"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:rokhan-greataxe",
+            "attack:rokhan-handaxe-thrown",
+            "resource:adrenaline-rush",
+            "resource:rage",
+            "resource:relentless-endurance",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savage-attacker"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 3,
