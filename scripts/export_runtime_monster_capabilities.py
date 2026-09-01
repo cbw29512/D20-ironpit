@@ -10,6 +10,7 @@ from app.content.legacy_monster_roster import build_legacy_monster_templates
 
 logger = logging.getLogger(__name__)
 _OUTPUT = Path("backend/app/content/data/combatant_capabilities_v1.json")
+_HERO_ONLY_PROGRESSION_FIELDS = {"danger_sense", "reckless_attack"}
 
 
 def render_registry() -> str:
@@ -18,7 +19,14 @@ def render_registry() -> str:
     ids = [definition.id for definition in definitions]
     if len(ids) != len(set(ids)):
         raise RuntimeError("Legacy runtime monster ids must be unique before capability export.")
-    payload = [definition.model_dump(mode="json", exclude_none=True) for definition in definitions]
+    payload = [
+        definition.model_dump(
+            mode="json",
+            exclude_none=True,
+            exclude={"progression_features": _HERO_ONLY_PROGRESSION_FIELDS},
+        )
+        for definition in definitions
+    ]
     return json.dumps(payload, indent=2, sort_keys=False) + "\n"
 
 
