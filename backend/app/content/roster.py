@@ -4,8 +4,6 @@ import logging
 
 from app.content.capability_registry import build_monster_templates_from_capabilities
 from app.content.certified_heroes import build_certified_hero_templates
-from app.content.demo import build_demo_fighter
-from app.content.pregens import build_brom_ironmark, build_mara_quickstep, build_selene_asharrow
 from app.content.unarmed_opportunity_profiles import complete_unarmed_opportunity_profiles
 from app.domain.models import ArenaRoster
 
@@ -14,15 +12,9 @@ logger = logging.getLogger(__name__)
 
 def build_arena_roster() -> ArenaRoster:
     try:
-        characters = [
-            *build_certified_hero_templates(),
-            build_demo_fighter(),
-            build_brom_ironmark(),
-            build_selene_asharrow(),
-            build_mara_quickstep(),
-        ]
+        characters = complete_unarmed_opportunity_profiles(build_certified_hero_templates())
         return ArenaRoster(
-            characters=complete_unarmed_opportunity_profiles(characters),
+            characters=characters,
             monsters=build_monster_templates_from_capabilities(),
         )
     except Exception as exc:
