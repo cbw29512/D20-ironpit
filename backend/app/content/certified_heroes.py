@@ -17,6 +17,7 @@ from app.content.audited_cleric_life_profile import (
 from app.content.audited_cleric_profile import build_seraphine_dawnshield_level2_profile, build_seraphine_dawnshield_profile
 from app.content.audited_fighter import build_karnok_stoneward
 from app.content.audited_fighter_profile import build_karnok_stoneward_profile
+from app.content.barbarian_berserker_progression_profile import build_rokhan_stonefury_level6_profile
 from app.content.barbarian_progression import build_rokhan_stonefury_level
 from app.content.barbarian_progression_profile import (
     build_rokhan_stonefury_level2_profile,
@@ -66,7 +67,7 @@ def build_certified_hero_entries() -> list[tuple[HeroBuildKey, CombatantTemplate
     """Return only canonical hero levels that pass every RAW certification gate."""
     return [
         _validated(build_karnok_stoneward, build_karnok_stoneward_profile),
-        _validated(lambda: build_karnok_stoneward_level(2), build_karnok_stoneward_level2_profile),
+        _validated(lambda: build_karnok_stoneward_level(2), build_karnok_stonefury_level2_profile) if False else _validated(lambda: build_karnok_stoneward_level(2), build_karnok_stoneward_level2_profile),
         _validated(lambda: build_karnok_stoneward_level(3), build_karnok_stoneward_level3_profile),
         _validated(lambda: build_karnok_stoneward_level(4), build_karnok_stoneward_level4_profile),
         _validated(lambda: build_karnok_stoneward_level(5), build_karnok_stoneward_level5_profile),
@@ -75,6 +76,7 @@ def build_certified_hero_entries() -> list[tuple[HeroBuildKey, CombatantTemplate
         _validated(lambda: build_rokhan_stonefury_level(3), build_rokhan_stonefury_level3_profile),
         _validated(lambda: build_rokhan_stonefury_level(4), build_rokhan_stonefury_level4_profile),
         _validated(lambda: build_rokhan_stonefury_level(5), build_rokhan_stonefury_level5_profile),
+        _validated(lambda: build_rokhan_stonefury_level(6), build_rokhan_stonefury_level6_profile),
         _validated(build_seraphine_dawnshield, build_seraphine_dawnshield_profile),
         _validated(build_seraphine_dawnshield_level_two, build_seraphine_dawnshield_level2_profile),
         _validated(build_seraphine_dawnshield_level_three, build_seraphine_dawnshield_level3_profile),
