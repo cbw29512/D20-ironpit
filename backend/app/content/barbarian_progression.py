@@ -32,11 +32,31 @@ def _apply_level_four_advancement(data: dict[str, object]) -> None:
     data["armor_class"] = 14
 
 
+def _apply_level_five_scaling(data: dict[str, object]) -> None:
+    primary = data["weapon_attack"]
+    alternates = data["alternate_weapon_attacks"]
+    saves = data["saving_throw_bonuses"]
+    skills = data["skill_bonuses"]
+    if not isinstance(primary, dict) or not isinstance(alternates, list) or not isinstance(saves, dict) or not isinstance(skills, dict):
+        raise ValueError("Rokhan Barbarian 5 base snapshot has an unexpected schema.")
+    strength_attacks = [primary, *(item for item in alternates if isinstance(item, dict) and item.get("attack_ability") == "strength")]
+    for attack in strength_attacks:
+        attack["attack_bonus"] = 7
+    saves.update(strength=7, constitution=6)
+    skills["athletics"] = 7
+    data["speed_ft"] = 40
+    attack_ids = ["rokhan-greataxe", "rokhan-handaxe-thrown"]
+    data["attack_action"] = {
+        "id": "extra-attack", "name": "Extra Attack",
+        "slots": [{"attack_ids": attack_ids}, {"attack_ids": attack_ids}],
+    }
+
+
 def build_rokhan_stonefury_level(level: int) -> CombatantTemplate:
     """Advance the canonical Barbarian one certified level at a time; unsupported levels fail closed."""
     if level == 1:
         return build_rokhan_stonefury()
-    if level not in (2, 3, 4):
+    if level not in (2, 3, 4, 5):
         raise ValueError(f"Rokhan Barbarian level {level} is not certified yet.")
 
     previous = build_rokhan_stonefury_level(level - 1)
@@ -46,6 +66,7 @@ def build_rokhan_stonefury_level(level: int) -> CombatantTemplate:
         2: "Barbarian Level 2",
         3: "Barbarian Level 3, Path of the Berserker",
         4: "Barbarian Level 4 Ability Score Improvement",
+        5: "Barbarian Level 5 Extra Attack and Fast Movement",
     }[level]
     if level == 2:
         features.update(danger_sense=True, reckless_attack=True)
@@ -60,4 +81,6 @@ def build_rokhan_stonefury_level(level: int) -> CombatantTemplate:
     )
     if level == 4:
         _apply_level_four_advancement(data)
+    if level == 5:
+        _apply_level_five_scaling(data)
     return CombatantTemplate.model_validate(data)
