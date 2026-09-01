@@ -4,6 +4,8 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
+from app.domain.class_loadouts import MeleeLoadoutKind
+
 AbilityName = Literal[
     "strength",
     "dexterity",
@@ -71,5 +73,6 @@ class CharacterBuildProfile(BaseModel):
     skill_proficiencies: list[str] = Field(default_factory=list)
     weapon_masteries: list[str] = Field(default_factory=list)
     fighting_style: str | None = None
+    combat_loadout_kind: MeleeLoadoutKind | None = None
     feature_audits: list[FeatureAudit] = Field(min_length=1)
     source_references: list[str] = Field(min_length=1)
