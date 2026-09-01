@@ -1,6 +1,5 @@
 (() => {
   "use strict";
-
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
   const T = () => window.IRON_PIT_BROWSER_TURN;
