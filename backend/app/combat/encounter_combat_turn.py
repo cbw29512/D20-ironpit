@@ -117,7 +117,10 @@ def resolve_combat_turn(
         events.extend(action_events)
         moved, sequence = _close_after_action(sequence, round_number, attacker, setup, dice); events.extend(moved)
     elif not handled and save_action is not None and is_available(attacker.state, "action"):
-        events.append(resolve_save_action(sequence, round_number, attacker, target, save_action, distance, dice)); sequence += 1
+        affected = [member.state for member in [*setup.heroes, *setup.monsters]]
+        events.append(resolve_save_action(
+            sequence, round_number, attacker, target, save_action, distance, dice, affected_states=affected,
+        )); sequence += 1
     elif not handled:
         attack, prep_events, sequence = prepare_encounter_attack(sequence, round_number, attacker, target)
         events.extend(prep_events)
