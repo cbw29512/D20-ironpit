@@ -105,7 +105,7 @@ def resolve_combat_turn(
     if not is_available(attacker.state, "action"):
         return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
-    closing, sequence, handled = resolve_simple_closing(sequence, round_number, attacker, target, dice, setup)
+    closing, sequence, handled = resolve_simple_closing(sequence, round_number, attacker, target, dice, setup, turn_key)
     events.extend(closing)
     if attacker.state.is_dead or attacker.state.is_unconscious:
         return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
@@ -128,6 +128,6 @@ def resolve_combat_turn(
             feature = opening_feature_id(round_number, attacker, setup) or ("pack-tactics" if pack else None)
             events.append(resolve_encounter_attack(
                 sequence, round_number, attacker, target, attack, combatant_distance(attacker, target), dice, setup,
-                advantage_sources=1 if pack else 0, feature_id=feature, allow_reckless=True,
+                advantage_sources=1 if pack else 0, feature_id=feature, turn_key=turn_key, allow_reckless=True,
             )); sequence += 1
     return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
