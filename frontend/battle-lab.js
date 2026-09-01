@@ -1,32 +1,18 @@
 (() => {
   "use strict";
 
-  function seedNumber(value) {
+  function hashText(value) {
     const text = String(value ?? "");
     let hash = 2166136261;
     for (let index = 0; index < text.length; index += 1) {
       hash ^= text.charCodeAt(index);
       hash = Math.imul(hash, 16777619);
     }
-    return (hash >>> 0) || 0x9e3779b9;
+    return (hash >>> 0).toString(16).padStart(8, "0");
   }
 
-  function createSeededDice(seed) {
-    const label = String(seed ?? "");
-    let state = seedNumber(label);
-    function roll(sides) {
-      if (!Number.isInteger(sides) || sides < 2) throw new RangeError("Die sides must be an integer >= 2.");
-      state = (Math.imul(1664525, state) + 1013904223) >>> 0;
-      return (state % sides) + 1;
-    }
-    return {
-      seed: label,
-      roll,
-      rollMany: (count, sides) => {
-        if (!Number.isInteger(count) || count < 1) throw new RangeError("Dice count must be positive.");
-        return Array.from({ length: count }, () => roll(sides));
-      },
-    };
+  function diagnosticId(heroIds, monsterIds, rolls) {
+    return hashText(JSON.stringify({ hero_ids: heroIds, monster_ids: monsterIds, rolls }));
   }
 
   function fingerprint(battle) {
@@ -65,15 +51,13 @@
     });
   }
 
-  function summary(battle, seed, replayStatus = "") {
+  function summary(battle, rolls, id) {
     const events = battle.events || [];
     const attacks = events.filter((event) => event.event_type === "attack");
     const criticals = attacks.filter((event) => event.critical).length;
     const healing = events.filter((event) => event.event_type === "healing").length;
-    const seedText = seed ? `Seed ${seed}` : "Secure random";
-    const replayText = replayStatus ? ` · ${replayStatus}` : "";
-    return `${seedText} · ${battle.rounds} rounds · ${attacks.length} attacks · ${criticals} criticals · ${healing} heals${replayText}`;
+    return `Battle ${id} · ${rolls.length} secure dice rolls · ${battle.rounds} rounds · ${attacks.length} attacks · ${criticals} criticals · ${healing} heals`;
   }
 
-  window.IRON_PIT_BATTLE_LAB = { createSeededDice, fingerprint, seedNumber, summary };
+  window.IRON_PIT_BATTLE_LAB = { diagnosticId, fingerprint, hashText, summary };
 })();
