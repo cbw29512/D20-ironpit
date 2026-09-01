@@ -3,6 +3,7 @@ from __future__ import annotations
 from app.combat.action_economy import is_available, spend
 from app.combat.bloodied import is_bloodied
 from app.combat.dice import DiceProvider
+from app.combat.hit_points import effective_max_hp
 from app.combat.spellcasting import mark_slot_spell_cast, slot_spell_available
 from app.combat.zero_hp import restore_hit_points
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -28,7 +29,7 @@ def _resource_available(member: EncounterCombatant, action: HealingAction, turn_
 
 
 def _target_allowed(healer: EncounterCombatant, target: EncounterCombatant, action: HealingAction) -> bool:
-    if target.state.is_dead or not target.state.is_alive or target.state.current_hp >= target.state.template.max_hp:
+    if target.state.is_dead or not target.state.is_alive or target.state.current_hp >= effective_max_hp(target.state):
         return False
     if CombatTrait.SWARM in target.state.template.combat_traits or _distance(healer, target) > action.range_ft:
         return False
@@ -48,7 +49,7 @@ def _self_heal_worthwhile(member: EncounterCombatant, action: HealingAction) -> 
     if action.action_cost == "bonus_action":
         return True
     if action.action_cost == "action":
-        return state.current_hp * 4 <= state.template.max_hp
+        return state.current_hp * 4 <= effective_max_hp(state)
     return False
 
 
@@ -68,7 +69,7 @@ def choose_healing_target(
         return max(downed, key=lambda target: target.state.death_save_failures)
     bloodied = [target for target in others if is_bloodied(target.state)]
     if bloodied:
-        return min(bloodied, key=lambda target: target.state.current_hp / target.state.template.max_hp)
+        return min(bloodied, key=lambda target: target.state.current_hp / effective_max_hp(target.state))
     self_target = next((target for target in legal if target.combatant_id == healer.combatant_id), None)
     return self_target if self_target is not None and _self_heal_worthwhile(healer, action) else None
 
@@ -77,7 +78,7 @@ def _choice_priority(healer: EncounterCombatant, action: HealingAction, target: 
     ally = target.combatant_id != healer.combatant_id
     urgency = 0 if ally and target.state.current_hp == 0 else 1 if ally else 2
     cost = 0 if action.action_cost == "bonus_action" else 1
-    return urgency, cost, target.state.current_hp / target.state.template.max_hp
+    return urgency, cost, target.state.current_hp / effective_max_hp(target.state)
 
 
 def choose_healing_action(
