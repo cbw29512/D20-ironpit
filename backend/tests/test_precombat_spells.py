@@ -35,7 +35,7 @@ def _setup(caster):
     return EncounterSetup(heroes=[caster], monsters=[enemy], hero_total_levels=1, monster_total_cr="1/4")
 
 
-def test_precombat_uses_one_declared_defense_and_lowest_legal_slot() -> None:
+def test_precombat_uses_one_declared_defense_and_printed_level_slot() -> None:
     caster = _caster([_defense("preferred", 1, priority=10), _defense("backup", 2)], {1: 1, 3: 1})
     events, sequence = prepare_defenses(_setup(caster))
     assert sequence == 2
@@ -48,11 +48,14 @@ def test_precombat_uses_one_declared_defense_and_lowest_legal_slot() -> None:
     assert caster.state.bonus_action_available is True
 
 
-def test_precombat_upcasts_when_only_higher_slot_is_available() -> None:
+def test_precombat_does_not_use_higher_level_slot_when_upcasting_is_deferred() -> None:
     caster = _caster([_defense("false-life-like", 1)], {3: 1})
-    prepare_defenses(_setup(caster))
-    assert caster.state.temporary_hp == 15
-    assert next(item for item in caster.state.resources if item.id == "spell-slot-3").current_uses == 0
+    events, sequence = prepare_defenses(_setup(caster))
+    assert events == []
+    assert sequence == 1
+    assert caster.state.temporary_hp == 0
+    assert next(item for item in caster.state.resources if item.id == "spell-slot-3").current_uses == 1
+    assert choose_defensive_spell(caster) is None
 
 
 def test_concentration_defense_rejects_anonymous_lifecycle_effects() -> None:
