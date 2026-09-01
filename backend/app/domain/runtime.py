@@ -76,6 +76,7 @@ class CombatantState(BaseModel):
     movement_remaining_ft: int = Field(default=0, ge=0)
     resources: list[ResourceState] = Field(default_factory=list)
     active_effect_ids: list[str] = Field(default_factory=list)
+    active_buff_effect_ids: list[str] = Field(default_factory=list)
     grapple_sources: list[GrappleSource] = Field(default_factory=list)
     timed_effects: list[TimedEffect] = Field(default_factory=list)
     active_modifiers: list[CombatModifier] = Field(default_factory=list)
