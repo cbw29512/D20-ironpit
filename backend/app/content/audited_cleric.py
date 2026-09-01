@@ -99,21 +99,22 @@ def _build_seraphine(level: int) -> CombatantTemplate:
     )
 
 
+def build_seraphine_dawnshield_level(level: int) -> CombatantTemplate:
+    """Build the same canonical Cleric at any currently supported certified level."""
+    return _build_seraphine(level)
+
+
 def build_seraphine_dawnshield() -> CombatantTemplate:
-    """Level-1 canonical Cleric using only fully certified combat-facing choices."""
-    return _build_seraphine(1)
+    return build_seraphine_dawnshield_level(1)
 
 
 def build_seraphine_dawnshield_level_two() -> CombatantTemplate:
-    """Level-2 canonical Cleric with Healing Word and the shared Channel Divinity resource."""
-    return _build_seraphine(2)
+    return build_seraphine_dawnshield_level(2)
 
 
 def build_seraphine_dawnshield_level_three() -> CombatantTemplate:
-    """Level-3 Life Cleric with domain spells, Disciple of Life, and Preserve Life support."""
-    return _build_seraphine(3)
+    return build_seraphine_dawnshield_level(3)
 
 
 def build_seraphine_dawnshield_level_four() -> CombatantTemplate:
-    """Level-4 Life Cleric with WIS 19, a fourth cantrip, and Inflict Wounds offense."""
-    return _build_seraphine(4)
+    return build_seraphine_dawnshield_level(4)
