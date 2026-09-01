@@ -119,7 +119,9 @@ function queuedDice(values, fallback = 10) {
   monster.state.template.armor_class = 99;
   window.IRON_PIT_BROWSER_STATE.beginTurn(hero.state);
   window.IRON_PIT_DICE = queuedDice([2, 15]);
-  const reckless = window.IRON_PIT_BROWSER_ATTACK.resolveAttack(1, 1, hero, monster, template.attacks[0], 5, { setup: { heroes: [hero], monsters: [monster] } });
+  const reckless = window.IRON_PIT_BROWSER_ATTACK.resolveAttack(1, 1, hero, monster, template.attacks[0], 5, {
+    setup: { heroes: [hero], monsters: [monster] }, allowReckless: true,
+  });
   assert.equal(reckless.attack_roll.mode, "advantage");
   assert.deepEqual(reckless.attack_roll.rolls, [2, 15]);
   assert.equal(reckless.feature_id, "reckless-attack");
@@ -137,6 +139,19 @@ function queuedDice(values, fallback = 10) {
   const expired = window.IRON_PIT_BROWSER_CONDITION_LIFECYCLE.resolveSourceTiming(3, 2, hero, setup, "source_turn_start");
   assert.equal(window.IRON_PIT_BROWSER_BARBARIAN2.active(hero.state), false, "Reckless exposure ends at the next turn start");
   assert.ok(expired.events.some((event) => event.feature_id === "reckless-attack"));
+}
+
+{
+  const template = structuredClone(window.IRON_PIT_BROWSER_HEROES["rokhan-stonefury-l2"]);
+  const bandit = structuredClone(window.IRON_PIT_BROWSER_MONSTERS["srd-bandit"]);
+  const hero = { combatant_id: "hero-oa:rokhan", side: "heroes", position_ft: 5, state: window.IRON_PIT_BROWSER_STATE.buildState(template) };
+  const monster = { combatant_id: "monster-oa:bandit", side: "monsters", position_ft: 10, state: window.IRON_PIT_BROWSER_STATE.buildState(bandit) };
+  monster.state.template.armor_class = 99;
+  window.IRON_PIT_DICE = queuedDice([10]);
+  const reactionStyle = window.IRON_PIT_BROWSER_ATTACK.resolveAttack(1, 1, hero, monster, template.attacks[0], 5, { spendAction: false });
+  assert.equal(reactionStyle.attack_roll.mode, "normal", "reaction-style attacks cannot start Reckless Attack");
+  assert.deepEqual(reactionStyle.attack_roll.rolls, [10]);
+  assert.equal(window.IRON_PIT_BROWSER_BARBARIAN2.active(hero.state), false);
 }
 
 {
