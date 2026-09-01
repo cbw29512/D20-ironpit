@@ -31,7 +31,7 @@ def test_swarm_cannot_gain_temporary_hit_points() -> None:
 
 def test_healing_policy_never_selects_a_swarm() -> None:
     setup = build_encounter_setup(EncounterSelection(
-        hero_ids=["aldric-vane-l1", "brom-ironmark-l1"],
+        hero_ids=["karnok-stoneward-l1", "rokhan-stonefury-l1"],
         monster_ids=["srd-goblin-warrior"],
     ))
     healer, target = setup.heroes
