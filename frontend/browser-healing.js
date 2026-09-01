@@ -2,12 +2,15 @@
   "use strict";
 
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
+  const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const bloodied = (state) => state.current_hp * 2 <= state.template.max_hp;
   const distance = (a, b) => Math.abs(a.position_ft - b.position_ft);
   const swarm = (state) => state.template.traits?.includes("swarm");
+  const slotHeal = (action) => Boolean(action.resourceId?.startsWith("spell-slot-"));
 
-  function resourceAvailable(member, action) {
+  function resourceAvailable(member, action, turnKey = null) {
     if (!action.resourceId) return true;
+    if (slotHeal(action) && (!turnKey || !C().slotSpellAvailable(member.state, turnKey))) return false;
     return (member.state.resources[action.resourceId] || 0) >= (action.resourceCost || 1);
   }
 
@@ -16,6 +19,7 @@
     if (distance(healer, target) > (action.range || 5)) return false;
     if (action.targetMode === "self") return target.combatant_id === healer.combatant_id;
     if (action.targetMode === "ally") return target.combatant_id !== healer.combatant_id && target.side === healer.side;
+    if (action.targetMode === "other") return target.combatant_id !== healer.combatant_id;
     return target.side === healer.side;
   }
 
@@ -26,9 +30,9 @@
     return false;
   }
 
-  function chooseTarget(healer, setup, action) {
+  function chooseTarget(healer, setup, action, turnKey = null) {
     if (action.actionCost === "reaction" || !E().available(healer.state, action.actionCost)) return null;
-    if (!resourceAvailable(healer, action)) return null;
+    if (!resourceAvailable(healer, action, turnKey)) return null;
     const allies = healer.side === "heroes" ? setup.heroes : setup.monsters;
     const legal = allies.filter((target) => targetAllowed(healer, target, action));
     const others = legal.filter((target) => target.combatant_id !== healer.combatant_id);
@@ -47,8 +51,8 @@
     return [urgency, cost, target.state.current_hp / target.state.template.max_hp];
   }
 
-  function chooseAction(healer, setup) {
-    const choices = (healer.state.template.healingActions || []).map((action) => ({ action, target: chooseTarget(healer, setup, action) })).filter((item) => item.target);
+  function chooseAction(healer, setup, turnKey = null) {
+    const choices = (healer.state.template.healingActions || []).map((action) => ({ action, target: chooseTarget(healer, setup, action, turnKey) })).filter((item) => item.target);
     choices.sort((a, b) => {
       const pa = priority(healer, a.action, a.target), pb = priority(healer, b.action, b.target);
       return pa[0] - pb[0] || pa[1] - pb[1] || pa[2] - pb[2];
@@ -68,8 +72,12 @@
     return healed;
   }
 
-  function resolve(sequence, round, healer, target, action) {
-    if (!targetAllowed(healer, target, action) || !resourceAvailable(healer, action)) throw new Error("Illegal healing target.");
+  function resolve(sequence, round, healer, target, action, turnKey = null) {
+    if (!targetAllowed(healer, target, action) || !resourceAvailable(healer, action, turnKey)) throw new Error("Illegal healing target or turn.");
+    if (slotHeal(action)) {
+      if (!turnKey) throw new Error("Spell-slot healing requires an active turn key.");
+      C().markSlotSpellCast(healer.state, turnKey);
+    }
     E().spend(healer.state, action.actionCost);
     const rolls = Array.from({ length: action.diceCount || 0 }, () => window.IRON_PIT_DICE.roll(action.diceSize || 6));
     const total = rolls.reduce((sum, roll) => sum + roll, 0) + (action.healingBonus || 0);
