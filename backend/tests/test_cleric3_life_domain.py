@@ -34,7 +34,7 @@ def test_level_three_build_and_spell_package_are_complete_without_counting_domai
     combat = build_seraphine_dawnshield_level3_combat_profile()
     package = build_class_spell_package("cleric", 3)
 
-    assert (template.level, template.max_hp, template.armor_class) == (3, 24, 17)
+    assert (template.level, template.max_hp, template.armor_class) == (3, 18, 15)
     assert {item.id: item.max_uses for item in template.resources} == {
         "spell-slot-1": 4, "spell-slot-2": 2, "channel-divinity": 2,
         "adrenaline-rush": 2, "relentless-endurance": 1,
@@ -99,13 +99,13 @@ def test_preserve_life_uses_fifteen_point_pool_and_never_heals_above_half_effect
 def test_aid_bonus_changes_bloodied_and_healing_ceiling_semantics() -> None:
     cleric = _member(build_seraphine_dawnshield_level_three(), "cleric", "heroes", 0)
     cleric.state.max_hp_bonus = 5
-    cleric.state.current_hp = 14
-    assert effective_max_hp(cleric.state) == 29
+    cleric.state.current_hp = 11
+    assert effective_max_hp(cleric.state) == 23
     from app.combat.bloodied import is_bloodied
     from app.combat.zero_hp import restore_hit_points
     assert is_bloodied(cleric.state) is True
-    assert restore_hit_points(cleric.state, 99) == 15
-    assert cleric.state.current_hp == 29
+    assert restore_hit_points(cleric.state, 99) == 12
+    assert cleric.state.current_hp == 23
 
 
 def test_lesser_restoration_removes_one_printed_condition_with_bonus_action_and_level_two_slot() -> None:
