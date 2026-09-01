@@ -3,6 +3,7 @@
 
   const SIZE_RANK = { tiny: 0, small: 1, medium: 2, large: 3, huge: 4, gargantuan: 5 };
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
+  const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { effectiveSpeed: (state) => state.template.speed_ft };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { incapacitated: (state) => state.is_unconscious };
 
   function buildState(template) {
@@ -12,8 +13,8 @@
       death_save_successes: 0, death_save_failures: 0,
       action_available: true, bonus_action_available: true, reaction_available: true,
       movement_remaining_ft: 0, resources: { ...(template.resources || {}) },
-      active_effect_ids: [], grapple_sources: [], timed_effects: [], feature_last_turn_keys: {},
-      spell_slot_expended_turn_key: null,
+      active_effect_ids: [], grapple_sources: [], timed_effects: [], active_modifiers: [], concentration: null,
+      feature_last_turn_keys: {}, spell_slot_expended_turn_key: null,
       temporary_damage_resistances: [], rage_expires_round: null, rage_max_round: null,
     };
   }
@@ -33,10 +34,11 @@
     state.bonus_action_available = !incapacitated;
     refreshReaction(state);
     const speedZero = G()?.speedIsZero(state) || false;
-    state.movement_remaining_ft = speedZero ? 0 : state.template.speed_ft;
+    const speed = M().effectiveSpeed(state);
+    state.movement_remaining_ft = speedZero ? 0 : speed;
     state.active_effect_ids = state.active_effect_ids.filter((id) => id !== "dodge");
-    if (state.active_effect_ids.includes("prone") && state.template.speed_ft > 0 && !speedZero) {
-      state.movement_remaining_ft = Math.max(0, state.movement_remaining_ft - Math.floor(state.template.speed_ft / 2));
+    if (state.active_effect_ids.includes("prone") && speed > 0 && !speedZero) {
+      state.movement_remaining_ft = Math.max(0, state.movement_remaining_ft - Math.floor(speed / 2));
       state.active_effect_ids = state.active_effect_ids.filter((id) => id !== "prone");
     }
   }
