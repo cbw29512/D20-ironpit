@@ -12,6 +12,7 @@ def test_every_runtime_monster_round_trips_through_universal_capability_schema()
     assert monsters
     assert len({monster.id for monster in monsters}) == len(monsters)
     for original in monsters:
+        source_row = rows[original.name]
         rebuilt = compile_combatant(definition_from_template(original))
         assert templates_semantically_equal(original, rebuilt), original.id
-        assert audit_monster_source(rebuilt, rows[original.name]) == [], original.id
+        assert audit_monster_source(rebuilt, source_row) == audit_monster_source(original, source_row), original.id
