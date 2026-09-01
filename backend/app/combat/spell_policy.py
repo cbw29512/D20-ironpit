@@ -19,21 +19,16 @@ class SpellChoice:
 
 
 def _slot_level(caster: EncounterCombatant, action: SpellSaveAction, turn_key: str) -> int | None:
+    """Return the spell's printed slot level only; upcasting is intentionally deferred."""
     if action.level == 0:
         return 0
     if not slot_spell_available(caster.state, turn_key):
         return None
-    levels = []
-    for resource in caster.state.resources:
-        if not resource.id.startswith("spell-slot-") or resource.current_uses < 1:
-            continue
-        try:
-            level = int(resource.id.removeprefix("spell-slot-"))
-        except ValueError:
-            continue
-        if level >= action.level:
-            levels.append(level)
-    return max(levels) if levels else None
+    resource_id = f"spell-slot-{action.level}"
+    resource = next((item for item in caster.state.resources if item.id == resource_id), None)
+    if resource is None or resource.current_uses < 1:
+        return None
+    return action.level
 
 
 def _single_target(caster: EncounterCombatant, setup: EncounterSetup, action: SpellSaveAction):
@@ -58,7 +53,7 @@ def choose_spell(
         if action.action_cost == "reaction":
             continue
         if action.concentration:
-            continue  # Concentration spells remain fail-closed until that subsystem is certified.
+            continue  # Concentration attack/save spells remain fail-closed until certified.
         if not is_available(caster.state, action.action_cost):
             continue
         slot_level = _slot_level(caster, action, turn_key)
