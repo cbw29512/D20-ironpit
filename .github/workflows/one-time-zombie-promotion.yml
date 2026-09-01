@@ -1,0 +1,91 @@
+name: One-time Zombie promotion
+
+on:
+  push:
+    paths:
+      - .github/workflows/one-time-zombie-promotion.yml
+
+permissions:
+  contents: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Python rules reference
+        working-directory: backend
+        run: pip install -e '.[dev]'
+      - name: Add zombie catalog and figure candidates
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          catalog = Path('backend/app/content/monster_catalog.py')
+          text = catalog.read_text(encoding='utf-8')
+          old = '"Mastiff": "srd-mastiff", "Mule": "srd-mule", "Noble": "srd-noble", "Ogre": "srd-ogre", "Owl": "srd-owl",'
+          new = '"Mastiff": "srd-mastiff", "Mule": "srd-mule", "Noble": "srd-noble", "Ogre": "srd-ogre", "Ogre Zombie": "srd-ogre-zombie", "Owl": "srd-owl",'
+          if old not in text:
+              raise SystemExit('Ogre catalog insertion point drifted.')
+          text = text.replace(old, new, 1)
+          old = '"Venomous Snake": "srd-venomous-snake", "Violet Fungus": "srd-violet-fungus",'
+          new = '"Venomous Snake": "srd-venomous-snake", "Violet Fungus": "srd-violet-fungus", "Zombie": "srd-zombie",'
+          if old not in text:
+              raise SystemExit('Zombie catalog insertion point drifted.')
+          catalog.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          figures = Path('backend/app/content/figure_profiles.py')
+          text = figures.read_text(encoding='utf-8')
+          old = '    "Ogre": _p("brute", "ogre"),\n'
+          new = old + '    "Ogre Zombie": _p("brute", "ogre-zombie"),\n'
+          if old not in text:
+              raise SystemExit('Ogre figure insertion point drifted.')
+          text = text.replace(old, new, 1)
+          old = '    "Wolf": _p("quadruped", "canine"),\n'
+          new = old + '    "Zombie": _p("humanoid", "zombie"),\n'
+          if old not in text:
+              raise SystemExit('Zombie figure insertion point drifted.')
+          figures.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
+      - name: Enforce source limits before generation
+        run: python scripts/check_source_limits.py
+      - name: Regenerate declarative runtime and static artifacts
+        run: |
+          python scripts/export_runtime_monster_capabilities.py
+          python scripts/verify_certification_manifests.py --write
+          python scripts/prepare_static_site.py
+      - name: Prove generated registry is deterministic
+        run: python scripts/export_runtime_monster_capabilities.py --check
+      - name: Certify full Python rules reference
+        working-directory: backend
+        run: pytest -q
+      - name: Validate every browser regression
+        run: |
+          for file in frontend/*.js; do node --check "$file"; done
+          for file in frontend/*.test.cjs; do echo "RUN $file"; node "$file"; done
+      - name: Report certification result
+        run: |
+          python scripts/report_certification_progress.py
+          python scripts/report_zero_engine_monsters.py
+          python scripts/report_capability_yield.py
+      - name: Prove scoped candidate changes
+        run: |
+          rm -rf backend/iron_pit_backend.egg-info
+          git status --short
+          test -z "$(git status --porcelain --untracked-files=all | grep -vE '^( M|M |MM) (backend/app/content/monster_catalog.py|backend/app/content/figure_profiles.py|backend/app/content/data/combatant_capabilities_v1.json|frontend/browser-monsters-generated.js|frontend/figure-profiles.js|data/(hero|monster)_certification_manifest.json)$')"
+      - name: Persist only after complete green gate
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add backend/app/content/monster_catalog.py backend/app/content/figure_profiles.py \
+            backend/app/content/data/combatant_capabilities_v1.json \
+            frontend/browser-monsters-generated.js frontend/figure-profiles.js \
+            data/hero_certification_manifest.json data/monster_certification_manifest.json
+          git commit -m "feat: promote Zombie and Ogre Zombie"
+          git push origin HEAD:audit/raw-combat-log-figures-20260830
