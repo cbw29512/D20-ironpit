@@ -12,4 +12,6 @@ vm.runInThisContext(fs.readFileSync(path.join(__dirname, "battlefield-replay.js"
 
 assert.equal(window.IRON_PIT_BATTLEFIELD_REPLAY.conditionLabel("frightened"), "😱 FEAR");
 assert.equal(window.IRON_PIT_BATTLEFIELD_REPLAY.conditionLabel("poisoned"), "POISONED");
-console.log("Fear condition icon label regression passed.");
+assert.equal(window.IRON_PIT_BATTLEFIELD_REPLAY.concentrationLabel("bless"), "✨ CONCENTRATING · BLESS");
+assert.equal(window.IRON_PIT_BATTLEFIELD_REPLAY.concentrationLabel(null), "");
+console.log("Fear and concentration icon label regressions passed.");
