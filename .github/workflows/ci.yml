@@ -37,6 +37,8 @@ jobs:
           python scripts/report_certification_progress.py
       - name: Report zero-engine monster candidates
         run: python scripts/report_zero_engine_monsters.py
+      - name: Report capability blocker yields
+        run: python scripts/report_capability_yield.py
       - name: Prepare static browser package
         run: |
           python scripts/prepare_static_site.py
