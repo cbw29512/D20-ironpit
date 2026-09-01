@@ -52,6 +52,10 @@ _KARNOK_ATTACKS = (
     AttackExpectation("greatsword", "strength", 2, 6, "slashing"),
     AttackExpectation("shortbow", "dexterity", 1, 6, "piercing", normal_range_ft=80, long_range_ft=320),
 )
+_ROKHAN_ATTACKS = (
+    AttackExpectation("greataxe", "strength", 1, 12, "slashing"),
+    AttackExpectation("handaxe", "strength", 1, 6, "slashing", normal_range_ft=20, long_range_ft=60),
+)
 
 
 def build_karnok_stoneward_level4_combat_profile() -> PregenCombatProfile:
@@ -71,6 +75,14 @@ def build_karnok_stoneward_level5_combat_profile() -> PregenCombatProfile:
         ("flail", "javelin", "spear", "longsword"),
         (("second-wind", 3), ("action-surge", 1), ("adrenaline-rush", 3), ("relentless-endurance", 1)),
         "Defense",
+    )
+
+
+def _rokhan_profile(level: int, hp: int) -> PregenCombatProfile:
+    return PregenCombatProfile(
+        f"rokhan-stonefury-l{level}", "Barbarian", level, _ORC, ("strength", "constitution"), 13, hp, 30,
+        (("athletics", 5), ("acrobatics", 1)), _ROKHAN_ATTACKS, ("flail", "pike"),
+        (("rage", 2), ("adrenaline-rush", 2), ("relentless-endurance", 1)), rage_damage_bonus=2,
     )
 
 
@@ -107,36 +119,21 @@ def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
         PregenCombatProfile(
             "karnok-stoneward-l1", "Fighter", 1, _ORC, ("strength", "constitution"), 17, 12, 30,
             (("athletics", 5), ("acrobatics", 1)), _KARNOK_ATTACKS,
-            ("flail", "javelin", "spear"), (("second-wind", 2), ("adrenaline-rush", 2), ("relentless-endurance", 1)),
-            "Defense",
+            ("flail", "javelin", "spear"), (("second-wind", 2), ("adrenaline-rush", 2), ("relentless-endurance", 1)), "Defense",
         ),
         PregenCombatProfile(
             "karnok-stoneward-l2", "Fighter", 2, _ORC, ("strength", "constitution"), 17, 20, 30,
-            (("athletics", 5), ("acrobatics", 1)), _KARNOK_ATTACKS,
-            ("flail", "javelin", "spear"),
-            (("second-wind", 2), ("action-surge", 1), ("adrenaline-rush", 2), ("relentless-endurance", 1)),
-            "Defense",
+            (("athletics", 5), ("acrobatics", 1)), _KARNOK_ATTACKS, ("flail", "javelin", "spear"),
+            (("second-wind", 2), ("action-surge", 1), ("adrenaline-rush", 2), ("relentless-endurance", 1)), "Defense",
         ),
         PregenCombatProfile(
             "karnok-stoneward-l3", "Fighter", 3, _ORC, ("strength", "constitution"), 17, 28, 30,
-            (("athletics", 5), ("acrobatics", 1)), _KARNOK_ATTACKS,
-            ("flail", "javelin", "spear"),
-            (("second-wind", 2), ("action-surge", 1), ("adrenaline-rush", 2), ("relentless-endurance", 1)),
-            "Defense",
+            (("athletics", 5), ("acrobatics", 1)), _KARNOK_ATTACKS, ("flail", "javelin", "spear"),
+            (("second-wind", 2), ("action-surge", 1), ("adrenaline-rush", 2), ("relentless-endurance", 1)), "Defense",
         ),
-        build_karnok_stoneward_level4_combat_profile(),
-        build_karnok_stoneward_level5_combat_profile(),
-        PregenCombatProfile(
-            "rokhan-stonefury-l1", "Barbarian", 1, _ORC, ("strength", "constitution"), 13, 14, 30,
-            (("athletics", 5), ("acrobatics", 1)),
-            (AttackExpectation("greataxe", "strength", 1, 12, "slashing"),
-             AttackExpectation("handaxe", "strength", 1, 6, "slashing", normal_range_ft=20, long_range_ft=60)),
-            ("flail", "pike"), (("rage", 2), ("adrenaline-rush", 2), ("relentless-endurance", 1)),
-            rage_damage_bonus=2,
-        ),
-        _seraphine_profile(1, 10, 2),
-        _seraphine_profile(2, 17, 3, 2),
-        build_seraphine_dawnshield_level3_combat_profile(),
-        build_seraphine_dawnshield_level4_combat_profile(),
+        build_karnok_stoneward_level4_combat_profile(), build_karnok_stoneward_level5_combat_profile(),
+        _rokhan_profile(1, 14), _rokhan_profile(2, 23),
+        _seraphine_profile(1, 10, 2), _seraphine_profile(2, 17, 3, 2),
+        build_seraphine_dawnshield_level3_combat_profile(), build_seraphine_dawnshield_level4_combat_profile(),
     ]
     return {profile.template_id: profile for profile in profiles}
