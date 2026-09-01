@@ -1,4 +1,5 @@
 from app.combat.dice import FixedDiceProvider
+from app.combat.encounter_events import build_initiative_events
 from app.combat.encounter_initiative import roll_encounter_initiative
 from app.combat.encounter_outcome import resolve_encounter_outcome
 from app.combat.encounter_setup import build_encounter_setup
@@ -22,6 +23,26 @@ def test_identical_monsters_share_one_raw_initiative_roll() -> None:
     assert setup.monsters[0].state.initiative_roll == 15
     assert setup.monsters[1].state.initiative_roll == 15
     assert initiative.turn_order[:2] == goblins.combatant_ids
+
+
+def test_initiative_event_preserves_full_advantage_roll_provenance() -> None:
+    setup = _setup(["karnok-stoneward-l3"], ["srd-commoner"])
+    initiative = roll_encounter_initiative(setup, FixedDiceProvider([7, 18, 10]))
+
+    fighter = next(group for group in initiative.groups if group.side == "heroes")
+    assert fighter.initiative_roll.mode == "advantage"
+    assert fighter.initiative_roll.notation == "2d20"
+    assert fighter.initiative_roll.rolls == [7, 18]
+    assert fighter.initiative_roll.selected_roll == 18
+    assert fighter.initiative_roll.modifier == 1
+    assert fighter.initiative_roll.total == 19
+
+    events, next_sequence = build_initiative_events(initiative, 1)
+    fighter_event = next(event for event in events if event.actor_id.startswith("hero-1:"))
+    assert fighter_event.attack_roll == fighter.initiative_roll
+    assert fighter_event.attack_roll is not None
+    assert fighter_event.attack_roll.rolls == [7, 18]
+    assert next_sequence == 3
 
 
 def test_tied_heroes_keep_selected_party_order() -> None:
