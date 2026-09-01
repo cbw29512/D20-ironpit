@@ -101,6 +101,8 @@ jobs:
           node frontend/browser-precombat-spells.test.cjs
           node frontend/browser-modifiers-concentration.test.cjs
           node frontend/browser-next-attack-advantage.test.cjs
+          node frontend/browser-guiding-bolt.test.cjs
+          node frontend/browser-spell-attack-turn.test.cjs
           node frontend/browser-shield-of-faith.test.cjs
           node frontend/browser-bless.test.cjs
           node frontend/battle-log-format.test.cjs
@@ -148,6 +150,8 @@ jobs:
           grep -q 'browser-spell-area.js' index.html
           grep -q 'browser-spell-policy.js' index.html
           grep -q 'browser-spell-resolution.js' index.html
+          grep -q 'browser-spell-attack-policy.js' index.html
+          grep -q 'browser-spell-attack.js' index.html
           grep -q 'browser-precombat-spells.js' index.html
           grep -q 'battlefield-picker.js' index.html
           grep -q 'battlefield-replay.js' index.html
@@ -193,6 +197,8 @@ jobs:
           grep -q 'browser-spell-area.js' frontend/index.html
           grep -q 'browser-spell-policy.js' frontend/index.html
           grep -q 'browser-spell-resolution.js' frontend/index.html
+          grep -q 'browser-spell-attack-policy.js' frontend/index.html
+          grep -q 'browser-spell-attack.js' frontend/index.html
           grep -q 'browser-precombat-spells.js' frontend/index.html
           grep -q 'figure-visuals.js' frontend/index.html
           grep -q 'playIronPitBattle' frontend/app.js
