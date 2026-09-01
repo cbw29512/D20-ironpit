@@ -94,16 +94,23 @@ def _apply_level_seven_style(data: dict[str, object]) -> None:
     weapon_attack["damage_die_minimum"] = 3
 
 
+def _apply_level_eight_advancement(data: dict[str, object]) -> None:
+    saving_throws = data["saving_throw_bonuses"]
+    if not isinstance(saving_throws, dict):
+        raise ValueError("Karnok Fighter 8 base snapshot has an unexpected schema.")
+    saving_throws["constitution"] = 7
+
+
 def build_karnok_stoneward_level(level: int) -> CombatantTemplate:
     """Level the same canonical Fighter one step at a time; unsupported levels fail closed."""
     if level == 1:
         return build_karnok_stoneward()
-    if level not in (2, 3, 4, 5, 6, 7):
+    if level not in (2, 3, 4, 5, 6, 7, 8):
         raise ValueError(f"Karnok Fighter level {level} is not certified yet.")
 
     previous = build_karnok_stoneward_level(level - 1)
     data = advance_template_data(previous, "fighter", level)
-    constitution_modifier = 3 if level >= 4 else 2
+    constitution_modifier = 4 if level >= 8 else 3 if level >= 4 else 2
     source_by_level = {
         2: "D&D Beyond Basic Rules 2024: Fighter 2, Orc, Soldier, Savage Attacker, Equipment",
         3: "D&D Beyond Basic Rules 2024: Fighter 3 Champion, Orc, Soldier, Savage Attacker, Equipment",
@@ -111,6 +118,7 @@ def build_karnok_stoneward_level(level: int) -> CombatantTemplate:
         5: "D&D Beyond Basic Rules 2024: Fighter 5 Extra Attack and Tactical Shift, Champion, Orc, Soldier, Savage Attacker, Equipment",
         6: "D&D Beyond Basic Rules 2024: Fighter 6 Ability Score Improvement, Champion, Orc, Soldier, Savage Attacker, Equipment",
         7: "D&D Beyond Basic Rules 2024: Fighter 7 Champion Additional Fighting Style, Great Weapon Fighting, Orc, Soldier, Savage Attacker, Equipment",
+        8: "D&D Beyond Basic Rules 2024: Fighter 8 Ability Score Improvement, Champion, Great Weapon Fighting, Orc, Soldier, Savage Attacker, Equipment",
     }
     data.update(
         max_hp=fixed_class_hit_points(level, 10, constitution_modifier),
@@ -126,4 +134,6 @@ def build_karnok_stoneward_level(level: int) -> CombatantTemplate:
         _apply_level_six_advancement(data)
     if level == 7:
         _apply_level_seven_style(data)
+    if level == 8:
+        _apply_level_eight_advancement(data)
     return CombatantTemplate.model_validate(data)
