@@ -1,6 +1,7 @@
 from collections import Counter
 
 from app.content.catalog import build_full_content_catalog
+from app.content.certified_heroes import build_certified_hero_registry
 from app.content.monster_catalog import load_monster_rows
 from app.domain.catalog import CoverageStatus
 
@@ -70,25 +71,15 @@ def test_uncertified_cards_fail_closed_in_catalog() -> None:
 def test_current_audited_heroes_are_raw_ready() -> None:
     catalog = build_full_content_catalog()
     ready_heroes = [card for card in catalog.heroes if card.coverage_status is CoverageStatus.RAW_READY]
-    assert {
+    actual = {
         (card.class_id, card.level, card.build_id, card.name, card.runnable_template_id)
         for card in ready_heroes
-    } == {
-        ("barbarian", 1, "canonical", "Rokhan Stonefury", "rokhan-stonefury-l1"),
-        ("barbarian", 2, "canonical", "Rokhan Stonefury", "rokhan-stonefury-l2"),
-        ("barbarian", 3, "canonical", "Rokhan Stonefury", "rokhan-stonefury-l3"),
-        ("barbarian", 4, "canonical", "Rokhan Stonefury", "rokhan-stonefury-l4"),
-        ("barbarian", 5, "canonical", "Rokhan Stonefury", "rokhan-stonefury-l5"),
-        ("cleric", 1, "canonical", "Seraphine Dawnshield", "seraphine-dawnshield-l1"),
-        ("cleric", 2, "canonical", "Seraphine Dawnshield", "seraphine-dawnshield-l2"),
-        ("cleric", 3, "canonical", "Seraphine Dawnshield", "seraphine-dawnshield-l3"),
-        ("cleric", 4, "canonical", "Seraphine Dawnshield", "seraphine-dawnshield-l4"),
-        ("fighter", 1, "canonical", "Karnok Stoneward", "karnok-stoneward-l1"),
-        ("fighter", 2, "canonical", "Karnok Stoneward", "karnok-stoneward-l2"),
-        ("fighter", 3, "canonical", "Karnok Stoneward", "karnok-stoneward-l3"),
-        ("fighter", 4, "canonical", "Karnok Stoneward", "karnok-stoneward-l4"),
-        ("fighter", 5, "canonical", "Karnok Stoneward", "karnok-stoneward-l5"),
     }
+    expected = {
+        (class_id, level, build_id, name, template_id)
+        for (class_id, level, build_id), (name, template_id) in build_certified_hero_registry().items()
+    }
+    assert actual == expected
     assert all(not card.blockers for card in ready_heroes)
 
 
