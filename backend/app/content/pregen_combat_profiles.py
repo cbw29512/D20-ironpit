@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 from app.domain.character_builds import AbilityScores
 
@@ -16,6 +16,7 @@ class AttackExpectation:
     normal_range_ft: int | None = None
     long_range_ft: int | None = None
     style_attack_bonus: int = 0
+    damage_die_minimum: int | None = None
     conditional_damage: tuple[tuple[int, int, str], ...] = ()
 
 
@@ -65,9 +66,10 @@ def _karnok_profile(level: int, hp: int) -> PregenCombatProfile:
     if level >= 2:
         resources.append(("action-surge", 1))
     resources.extend((("adrenaline-rush", 3 if level >= 5 else 2), ("relentless-endurance", 1)))
+    attacks = (replace(_KARNOK_ATTACKS[0], damage_die_minimum=3), _KARNOK_ATTACKS[1]) if level >= 7 else _KARNOK_ATTACKS
     return PregenCombatProfile(
         f"karnok-stoneward-l{level}", "Fighter", level, abilities, ("strength", "constitution"), 17, hp, 30,
-        (("athletics", athletics), ("acrobatics", 1)), _KARNOK_ATTACKS, masteries, tuple(resources), "Defense",
+        (("athletics", athletics), ("acrobatics", 1)), attacks, masteries, tuple(resources), "Defense",
     )
 
 
@@ -81,6 +83,10 @@ def build_karnok_stoneward_level5_combat_profile() -> PregenCombatProfile:
 
 def build_karnok_stoneward_level6_combat_profile() -> PregenCombatProfile:
     return _karnok_profile(6, 58)
+
+
+def build_karnok_stoneward_level7_combat_profile() -> PregenCombatProfile:
+    return _karnok_profile(7, 67)
 
 
 def _rokhan_profile(level: int, hp: int) -> PregenCombatProfile:
@@ -128,7 +134,7 @@ def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
     profiles = [
         _karnok_profile(1, 12), _karnok_profile(2, 20), _karnok_profile(3, 28),
         build_karnok_stoneward_level4_combat_profile(), build_karnok_stoneward_level5_combat_profile(),
-        build_karnok_stoneward_level6_combat_profile(),
+        build_karnok_stoneward_level6_combat_profile(), build_karnok_stoneward_level7_combat_profile(),
         _rokhan_profile(1, 14), _rokhan_profile(2, 23), _rokhan_profile(3, 32), _rokhan_profile(4, 45),
         _rokhan_profile(5, 55), _rokhan_profile(6, 65),
         _seraphine_profile(1, 8, 2), _seraphine_profile(2, 13, 3, 2),
