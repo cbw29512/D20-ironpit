@@ -3,6 +3,7 @@ from __future__ import annotations
 from app.combat.action_economy import is_available, spend
 from app.combat.cleric_channel_policy import ChannelDivinityChoice
 from app.combat.cleric_divine_spark import resolve_divine_spark
+from app.combat.cleric_preserve_life import resolve_preserve_life
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.dice import DiceProvider
 from app.combat.saving_throw_rolls import resolve_saving_throw
@@ -111,6 +112,8 @@ def resolve_channel_divinity(
     if choice.kind == "turn-undead":
         return resolve_turn_undead(sequence, round_number, cleric, setup, choice.targets, dice)
     remaining = _spend_channel(cleric)
+    if choice.kind == "preserve-life":
+        return [resolve_preserve_life(sequence, round_number, cleric, choice.targets, remaining)], sequence + 1
     event = resolve_divine_spark(
         sequence, round_number, cleric, choice.targets[0], setup, dice,
         healing=choice.kind == "divine-spark-heal",
