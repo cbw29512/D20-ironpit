@@ -5,7 +5,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
-from app.domain.actions import AttackActionDefinition, ConditionName, ConditionRemovalAction, HealingAction, HitControlEffect, SavingThrowAction
+from app.domain.actions import AbilityName, AttackActionDefinition, ConditionName, ConditionRemovalAction, HealingAction, HitControlEffect, SavingThrowAction
 from app.domain.movement import MovementModes
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.reactions import ParryReaction, RedirectAttackReaction
@@ -73,6 +73,7 @@ class WeaponAttack(BaseModel):
     weapon: Weapon
     attack_bonus: int
     damage_bonus: int
+    attack_ability: AbilityName | None = None
     fixed_damage: int | None = Field(default=None, ge=0)
     conditional_damage: list[ConditionalDamage] = Field(default_factory=list)
     on_hit_damage: list[OnHitDamage] = Field(default_factory=list)
