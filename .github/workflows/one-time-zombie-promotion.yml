@@ -133,6 +133,14 @@ jobs:
           text = text.replace(old, new, 1)
           text = text.replace('Generated monster runtime contains 101 RAW-certified templates', 'Generated monster runtime contains 103 RAW-certified templates', 1)
           browser.write_text(text, encoding='utf-8')
+
+          save_test = Path('frontend/browser-monster-saves.test.cjs')
+          text = save_test.read_text(encoding='utf-8')
+          old = 'assert.equal(monsters.length, 101, "Only currently RAW-certified monsters belong in the generated runtime");'
+          new = 'assert.equal(monsters.length, 103, "Only currently RAW-certified monsters belong in the generated runtime");'
+          if old not in text:
+              raise SystemExit('Browser save roster-count contract drifted.')
+          save_test.write_text(text.replace(old, new, 1), encoding='utf-8')
           PY
       - name: Enforce source limits before generation
         run: python scripts/check_source_limits.py
@@ -161,7 +169,7 @@ jobs:
         run: |
           rm -rf backend/iron_pit_backend.egg-info
           git status --short
-          test -z "$(git status --porcelain --untracked-files=all | grep -vE '^( M|M |MM) (backend/app/content/monster_catalog.py|backend/app/content/figure_profiles.py|backend/app/content/data/combatant_capabilities_v1.json|backend/tests/test_arena_roster.py|backend/tests/test_figure_profiles.py|backend/tests/test_full_content_catalog.py|backend/tests/test_monster_source_audit.py|backend/tests/test_public_readiness.py|frontend/browser-generated-monsters.test.cjs|frontend/browser-monsters-generated.js|frontend/figure-profiles.js|data/(hero|monster)_certification_manifest.json)$')"
+          test -z "$(git status --porcelain --untracked-files=all | grep -vE '^( M|M |MM) (backend/app/content/monster_catalog.py|backend/app/content/figure_profiles.py|backend/app/content/data/combatant_capabilities_v1.json|backend/tests/test_arena_roster.py|backend/tests/test_figure_profiles.py|backend/tests/test_full_content_catalog.py|backend/tests/test_monster_source_audit.py|backend/tests/test_public_readiness.py|frontend/browser-generated-monsters.test.cjs|frontend/browser-monster-saves.test.cjs|frontend/browser-monsters-generated.js|frontend/figure-profiles.js|data/(hero|monster)_certification_manifest.json)$')"
       - name: Persist only after complete green gate
         run: |
           git config user.name "github-actions[bot]"
@@ -171,7 +179,8 @@ jobs:
             backend/tests/test_arena_roster.py backend/tests/test_figure_profiles.py \
             backend/tests/test_full_content_catalog.py backend/tests/test_monster_source_audit.py \
             backend/tests/test_public_readiness.py \
-            frontend/browser-generated-monsters.test.cjs frontend/browser-monsters-generated.js frontend/figure-profiles.js \
+            frontend/browser-generated-monsters.test.cjs frontend/browser-monster-saves.test.cjs \
+            frontend/browser-monsters-generated.js frontend/figure-profiles.js \
             data/hero_certification_manifest.json data/monster_certification_manifest.json
           git commit -m "feat: promote Zombie and Ogre Zombie"
           git push origin HEAD:audit/raw-combat-log-figures-20260830
