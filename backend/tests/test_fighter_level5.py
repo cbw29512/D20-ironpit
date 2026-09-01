@@ -1,6 +1,7 @@
 from app.combat.attack_actions import resolve_attack_action
 from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_action_surge import resolve_action_surge_attack
+from app.combat.grapple import apply_grapple
 from app.combat.state import build_combatant_state
 from app.combat.tactical_shift import resolve_tactical_shift
 from app.content.build_audit import assert_character_build_raw_ready, audit_character_build
@@ -70,9 +71,22 @@ def test_tactical_shift_moves_half_speed_without_spending_normal_movement() -> N
     assert monster.state.reaction_available is True
 
 
+def test_tactical_shift_cannot_move_when_fighter_speed_is_zero() -> None:
+    hero, monster, setup = _setup(distance=35)
+    apply_grapple(hero.state, monster.combatant_id, escape_dc=12, range_ft=40)
+
+    event = resolve_tactical_shift(1, 1, hero, setup)
+
+    assert event is None
+    assert hero.position_ft == 0
+    assert monster.state.reaction_available is True
+
+
 def test_extra_attack_and_action_surge_each_resolve_two_attacks() -> None:
     hero, _, setup = _setup(distance=5)
-    dice = FixedDiceProvider([15, 4, 4, 15, 4, 4, 15, 4, 4, 15, 4, 4])
+    # Four deliberate misses prove each Attack action resolves two attack rolls
+    # without coupling this regression to Savage Attacker's damage rerolls.
+    dice = FixedDiceProvider([2, 2, 2, 2])
 
     first_events, sequence = resolve_attack_action(1, 1, hero, setup, dice)
     surge_events, _ = resolve_action_surge_attack(sequence, 1, hero, setup, dice, "1:hero-1:karnok-l5")
