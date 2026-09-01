@@ -1,16 +1,22 @@
+import pytest
+
+from app.combat.dice import FixedDiceProvider
+from app.combat.encounter_attacks import resolve_encounter_attack
+from app.combat.modifier_stack import effective_armor_class
 from app.combat.precombat_spells import choose_defensive_spell, prepare_defenses
 from app.combat.state import build_combatant_state
 from app.content.audited_fighter import build_karnok_stoneward
+from app.content.demo import build_goblin_warrior
+from app.content.spell_effects import SHIELD_OF_FAITH
 from app.domain.combatants import ResourceDefinition
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.spells import DefensiveSpellAction
 
 
-def _defense(spell_id: str, level: int, priority: int = 0, concentration: bool = False):
+def _defense(spell_id: str, level: int, priority: int = 0):
     return DefensiveSpellAction(
         id=spell_id, name=spell_id.title(), level=level, duration_minutes=60,
-        temporary_hp=5, temporary_hp_per_slot_above=5,
-        concentration=concentration, priority=priority,
+        temporary_hp=5, temporary_hp_per_slot_above=5, priority=priority,
     )
 
 
@@ -23,10 +29,10 @@ def _caster(spells, slots):
 
 def _setup(caster):
     enemy = EncounterCombatant(
-        combatant_id="enemy", side="monsters", position_ft=30,
-        state=build_combatant_state(build_karnok_stoneward()),
+        combatant_id="enemy", side="monsters", position_ft=5,
+        state=build_combatant_state(build_goblin_warrior()),
     )
-    return EncounterSetup(heroes=[caster], monsters=[enemy], hero_total_levels=1, monster_total_cr="1")
+    return EncounterSetup(heroes=[caster], monsters=[enemy], hero_total_levels=1, monster_total_cr="1/4")
 
 
 def test_precombat_uses_one_declared_defense_and_lowest_legal_slot() -> None:
@@ -49,11 +55,12 @@ def test_precombat_upcasts_when_only_higher_slot_is_available() -> None:
     assert next(item for item in caster.state.resources if item.id == "spell-slot-3").current_uses == 0
 
 
-def test_concentration_defense_fails_closed_until_concentration_is_certified() -> None:
-    caster = _caster([_defense("concentration-defense", 1, priority=20, concentration=True), _defense("safe-defense", 1)], {1: 1})
-    choice = choose_defensive_spell(caster)
-    assert choice is not None
-    assert choice[0].id == "safe-defense"
+def test_concentration_defense_rejects_anonymous_lifecycle_effects() -> None:
+    with pytest.raises(ValueError, match="source-owned modifier effects"):
+        DefensiveSpellAction(
+            id="unsafe", name="Unsafe", level=1, duration_minutes=10,
+            temporary_hp=5, concentration=True,
+        )
 
 
 def test_precombat_defense_can_apply_temporary_resistance() -> None:
@@ -64,3 +71,34 @@ def test_precombat_defense_can_apply_temporary_resistance() -> None:
     caster = _caster([spell], {1: 1})
     prepare_defenses(_setup(caster))
     assert [item.value for item in caster.state.temporary_damage_resistances] == ["fire"]
+
+
+def test_shield_of_faith_uses_real_modifier_attack_and_concentration_paths() -> None:
+    caster = _caster([SHIELD_OF_FAITH], {1: 1})
+    setup = _setup(caster)
+    events, _ = prepare_defenses(setup)
+    enemy = setup.monsters[0]
+
+    assert SHIELD_OF_FAITH.action_cost == "bonus_action"
+    assert SHIELD_OF_FAITH.range_ft == 60
+    assert SHIELD_OF_FAITH.duration_minutes == 10
+    assert events[0].feature_id == "shield-of-faith"
+    assert caster.state.concentration is not None
+    assert caster.state.concentration.effect_id == "shield-of-faith"
+    assert effective_armor_class(caster.state) == caster.state.template.armor_class + 2
+    assert next(item for item in caster.state.resources if item.id == "spell-slot-1").current_uses == 0
+
+    dice = FixedDiceProvider([14, 16, 1, 1])
+    miss = resolve_encounter_attack(
+        2, 1, enemy, caster, enemy.state.template.weapon_attack, 5, dice, setup, spend_action=False,
+    )
+    assert miss.hit is False
+    assert caster.state.concentration is not None
+
+    hit = resolve_encounter_attack(
+        3, 1, enemy, caster, enemy.state.template.weapon_attack, 5, dice, setup, spend_action=False,
+    )
+    assert hit.hit is True
+    assert caster.state.concentration is None
+    assert caster.state.active_modifiers == []
+    assert effective_armor_class(caster.state) == caster.state.template.armor_class
