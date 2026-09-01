@@ -29,12 +29,14 @@ const member = {
     resources: { "spell-slot-1": 1 },
     defensive_spell_actions: [{
       id: "false-life", name: "False Life", level: 1, concentration: false,
-      temporaryHp: 5, temporaryHpPerSlotAbove: 0, damageResistances: [], priority: 1,
+      targetPolicy: "self", targetCount: 1,
+      temporaryHp: 5, temporaryHpPerSlotAbove: 0, damageResistances: [], modifierEffects: [], priority: 1,
     }],
   }),
 };
+const spell = member.state.template.defensive_spell_actions[0];
 const event = window.IRON_PIT_BROWSER_PRECOMBAT_SPELLS.resolve(
-  1, member, member.state.template.defensive_spell_actions[0], 1,
+  1, member, [member], spell, 1,
 );
 assert.equal(member.state.temporary_hp, 0);
 assert.equal(member.state.resources["spell-slot-1"], 0);
