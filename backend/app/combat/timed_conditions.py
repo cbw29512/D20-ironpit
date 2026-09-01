@@ -19,6 +19,7 @@ def apply_timed_condition(
     repeat_save_dc: int | None = None,
     repeat_save_timing: ConditionTiming | None = None,
     allowed_removal_action_ids: list[str] | None = None,
+    affected_states: list[CombatantState] | None = None,
 ) -> str | None:
     if condition_is_immune(state, effect_id):
         return None
@@ -44,7 +45,7 @@ def apply_timed_condition(
     ))
     if effect_id not in state.active_effect_ids:
         state.active_effect_ids.append(effect_id)
-    end_concentration_if_incapacitated(state)
+    end_concentration_if_incapacitated(state, affected_states)
     return effect_id
 
 
