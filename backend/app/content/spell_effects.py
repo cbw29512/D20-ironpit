@@ -3,6 +3,26 @@ from __future__ import annotations
 from app.domain.spells import DefensiveSpellAction, SpellModifierEffect
 
 
+BLESS = DefensiveSpellAction(
+    id="bless",
+    name="Bless",
+    level=1,
+    action_cost="action",
+    range_ft=30,
+    duration_minutes=1,
+    target_policy="friendly",
+    target_count=3,
+    target_count_per_slot_above=1,
+    modifier_effects=[
+        SpellModifierEffect(kind="attack-roll-bonus-die", dice_count=1, dice_size=4),
+        SpellModifierEffect(kind="saving-throw-bonus-die", dice_count=1, dice_size=4),
+    ],
+    concentration=True,
+    priority=30,
+    animation="bless",
+    source="SRD 5.2.1 Bless",
+)
+
 SHIELD_OF_FAITH = DefensiveSpellAction(
     id="shield-of-faith",
     name="Shield of Faith",
@@ -19,7 +39,7 @@ SHIELD_OF_FAITH = DefensiveSpellAction(
 
 
 def defensive_spell_by_id(spell_id: str) -> DefensiveSpellAction:
-    spells = {SHIELD_OF_FAITH.id: SHIELD_OF_FAITH}
+    spells = {spell.id: spell for spell in (BLESS, SHIELD_OF_FAITH)}
     try:
         return spells[spell_id]
     except KeyError as exc:
