@@ -27,14 +27,14 @@ def build_karnok_stoneward_level9_profile() -> CharacterBuildProfile:
             category="class",
             combat_relevant=True,
             automated=True,
-            notes=("Long-Rest mastery choices are optimized to Greatsword, Shortbow, Javelin, and Spear. On a "
-                   "mastered Greatsword or Shortbow attack, Tactical Master replaces the normal mastery with Sap. "
+            notes=("One legal Long-Rest Weapon Mastery swap changes Longsword to Greatsword, preserving Flail, "
+                   "Javelin, and Spear. Tactical Master replaces the mastered Greatsword's normal mastery with Sap. "
                    "Slow is arena-out-of-scope; Push is not selected because extra separation does not improve "
-                   "Karnok's melee-closing combat outcome."),
+                   "Karnok's melee-closing combat outcome. The backup Shortbow remains unmastered."),
         ),
     ]
     data.update(
-        weapon_masteries=["greatsword", "shortbow", "javelin", "spear"],
+        weapon_masteries=["flail", "javelin", "spear", "greatsword"],
         feature_audits=[*data["feature_audits"], *(item.model_dump() for item in features)],
         source_references=[
             *data["source_references"],
