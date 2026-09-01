@@ -12,9 +12,6 @@
 
   function resolve(sequence, round, member, setup, turnKey) {
     const events = [];
-    // RAW does not impose this priority; this is Iron Pit's deterministic support AI.
-    // A dying ally is rescued first, then debilitating removable conditions are cleared,
-    // then ordinary healing can use any remaining Action/Bonus Action economy.
     let healing = H()?.chooseAction(member, setup, turnKey);
     if (healing?.target.state.current_hp === 0) {
       events.push(H().resolve(sequence++, round, member, healing.target, healing.action, turnKey));
@@ -44,11 +41,12 @@
   }
 
   function adrenaline(sequence, round, member) {
-    const state = member.state;
-    if (!state.template.traits?.includes("adrenaline-rush") || !E().available(state, "bonus_action") || !(state.resources["adrenaline-rush"] > 0)) return null;
+    const state = member.state, pb = 2 + Math.floor((state.template.level - 1) / 4);
+    if (!state.template.traits?.includes("adrenaline-rush") || !E().available(state, "bonus_action")
+        || !(state.resources["adrenaline-rush"] > 0) || state.temporary_hp >= pb) return null;
     const movement = G().speedIsZero(state) ? 0 : M().effectiveSpeed(state);
     state.resources["adrenaline-rush"] -= 1; E().spend(state, "bonus_action"); state.movement_remaining_ft += movement;
-    const pb = 2 + Math.floor((state.template.level - 1) / 4); S().grantTemporaryHp(state, pb);
+    S().grantTemporaryHp(state, pb);
     return { sequence, round_number: round, event_type: "feature", actor_id: member.combatant_id, actor_name: state.template.name,
       feature_id: "adrenaline-rush", resource_remaining: state.resources["adrenaline-rush"], movement_ft: movement,
       animation: "dash", description: `${state.template.name} uses Adrenaline Rush.` };
