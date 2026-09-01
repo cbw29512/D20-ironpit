@@ -33,9 +33,9 @@ jobs:
       - name: Persist only intended migration
         run: |
           changed="$(git diff --name-only)"
-          untracked="$(git ls-files --others --exclude-standard)"
+          untracked="$(git ls-files --others --exclude-standard | grep -v '^backend/iron_pit_backend\.egg-info/' || true)"
           printf 'Changed files:\n%s\n' "$changed"
-          printf 'Untracked files:\n%s\n' "$untracked"
+          printf 'Relevant untracked files:\n%s\n' "$untracked"
           test "$changed" = 'backend/tests/test_arena_roster.py'
           test -z "$untracked"
           git diff --check
