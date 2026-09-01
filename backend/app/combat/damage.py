@@ -5,6 +5,7 @@ import logging
 from app.combat.barbarian import rage_damage_bonus
 from app.combat.conditional_damage import active_replacement_damage, conditional_damage_active
 from app.combat.dice import DiceProvider
+from app.combat.frenzy import frenzy_bonus_damage
 from app.combat.savage_attacker import roll_weapon_component
 from app.domain.models import CombatantState, DamageRollComponent, DamageType, DiceRoll, RollMode, WeaponAttack
 
@@ -104,6 +105,14 @@ def resolve_weapon_damage(
                 modifier=conditional.damage_bonus,
                 damage_type=conditional.damage_type,
                 critical=critical,
+            ))
+
+        frenzy_damage = frenzy_bonus_damage(attacker, attack, turn_key)
+        if frenzy_damage is not None:
+            source, dice_count, dice_size, damage_type = frenzy_damage
+            components.append(roll_damage_component(
+                dice=dice, source=source, dice_count=dice_count, dice_size=dice_size,
+                modifier=0, damage_type=damage_type, critical=critical,
             ))
 
         if bonus_damage is not None:
