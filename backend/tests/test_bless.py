@@ -83,11 +83,11 @@ def test_bless_applies_independent_attack_and_save_d4s_and_expires_cleanly() -> 
 
     first_attack = resolve_attack(
         2, 1, front_near.state, enemy.state, front_near.state.template.weapon_attack, 5,
-        FixedDiceProvider([10, 1]),
+        FixedDiceProvider([10, 1]), spend_action=False,
     )
     second_attack = resolve_attack(
         3, 1, front_near.state, enemy.state, front_near.state.template.weapon_attack, 5,
-        FixedDiceProvider([10, 4]),
+        FixedDiceProvider([10, 4]), spend_action=False,
     )
     assert first_attack.attack_roll is not None and first_attack.attack_roll.rolls[-1] == 1
     assert second_attack.attack_roll is not None and second_attack.attack_roll.rolls[-1] == 4
