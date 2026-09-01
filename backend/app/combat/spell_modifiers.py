@@ -33,19 +33,25 @@ def build_spell_modifier(
 
 def apply_spell_modifiers(
     owner: CombatantState,
-    target: CombatantState,
+    targets: list[tuple[str, CombatantState]],
     source_id: str,
-    target_id: str,
     spell: DefensiveSpellAction,
     round_number: int,
     affected_states: Iterable[CombatantState] | None = None,
 ) -> list[CombatModifier]:
     modifiers = [
         build_spell_modifier(source_id, target_id, spell, effect, index)
+        for target_id, _ in targets
         for index, effect in enumerate(spell.modifier_effects)
     ]
     if spell.concentration:
-        start_concentration(owner, source_id, spell.id, round_number, affected_states)
-    for modifier in modifiers:
-        add_modifier(target, modifier)
+        duration_rounds = spell.duration_minutes * 10
+        expires_round = round_number + duration_rounds + (1 if round_number == 0 else 0)
+        start_concentration(
+            owner, source_id, spell.id, round_number, affected_states,
+            expires_round=expires_round,
+        )
+    for target_id, target in targets:
+        for index, effect in enumerate(spell.modifier_effects):
+            add_modifier(target, build_spell_modifier(source_id, target_id, spell, effect, index))
     return modifiers
