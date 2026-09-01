@@ -38,16 +38,15 @@ class PregenCombatProfile:
 
 
 def _scores(strength: int, dexterity: int, constitution: int, intelligence: int, wisdom: int, charisma: int) -> AbilityScores:
-    return AbilityScores(
-        strength=strength, dexterity=dexterity, constitution=constitution,
-        intelligence=intelligence, wisdom=wisdom, charisma=charisma,
-    )
+    return AbilityScores(strength=strength, dexterity=dexterity, constitution=constitution,
+                         intelligence=intelligence, wisdom=wisdom, charisma=charisma)
 
 
 _ORC = _scores(17, 13, 15, 10, 10, 10)
+_ORC_L4 = _scores(18, 13, 16, 10, 10, 10)
+_ORC_L6 = _scores(20, 13, 16, 10, 10, 10)
 _SERAPHINE = _scores(10, 10, 10, 14, 17, 14)
 _SERAPHINE_L4 = _scores(10, 10, 10, 14, 19, 14)
-_ORC_L4 = _scores(18, 13, 16, 10, 10, 10)
 _KARNOK_ATTACKS = (
     AttackExpectation("greatsword", "strength", 2, 6, "slashing"),
     AttackExpectation("shortbow", "dexterity", 1, 6, "piercing", normal_range_ft=80, long_range_ft=320),
@@ -58,24 +57,30 @@ _ROKHAN_ATTACKS = (
 )
 
 
-def build_karnok_stoneward_level4_combat_profile() -> PregenCombatProfile:
+def _karnok_profile(level: int, hp: int) -> PregenCombatProfile:
+    abilities = _ORC_L6 if level >= 6 else _ORC_L4 if level >= 4 else _ORC
+    athletics = 8 if level >= 6 else 7 if level >= 5 else 6 if level >= 4 else 5
+    masteries = ("flail", "javelin", "spear", "longsword") if level >= 4 else ("flail", "javelin", "spear")
+    resources = [("second-wind", 3 if level >= 4 else 2)]
+    if level >= 2:
+        resources.append(("action-surge", 1))
+    resources.extend((("adrenaline-rush", 3 if level >= 5 else 2), ("relentless-endurance", 1)))
     return PregenCombatProfile(
-        "karnok-stoneward-l4", "Fighter", 4, _ORC_L4, ("strength", "constitution"), 17, 40, 30,
-        (("athletics", 6), ("acrobatics", 1)), _KARNOK_ATTACKS,
-        ("flail", "javelin", "spear", "longsword"),
-        (("second-wind", 3), ("action-surge", 1), ("adrenaline-rush", 2), ("relentless-endurance", 1)),
-        "Defense",
+        f"karnok-stoneward-l{level}", "Fighter", level, abilities, ("strength", "constitution"), 17, hp, 30,
+        (("athletics", athletics), ("acrobatics", 1)), _KARNOK_ATTACKS, masteries, tuple(resources), "Defense",
     )
+
+
+def build_karnok_stoneward_level4_combat_profile() -> PregenCombatProfile:
+    return _karnok_profile(4, 40)
 
 
 def build_karnok_stoneward_level5_combat_profile() -> PregenCombatProfile:
-    return PregenCombatProfile(
-        "karnok-stoneward-l5", "Fighter", 5, _ORC_L4, ("strength", "constitution"), 17, 49, 30,
-        (("athletics", 7), ("acrobatics", 1)), _KARNOK_ATTACKS,
-        ("flail", "javelin", "spear", "longsword"),
-        (("second-wind", 3), ("action-surge", 1), ("adrenaline-rush", 3), ("relentless-endurance", 1)),
-        "Defense",
-    )
+    return _karnok_profile(5, 49)
+
+
+def build_karnok_stoneward_level6_combat_profile() -> PregenCombatProfile:
+    return _karnok_profile(6, 58)
 
 
 def _rokhan_profile(level: int, hp: int) -> PregenCombatProfile:
@@ -121,23 +126,11 @@ def build_seraphine_dawnshield_level4_combat_profile() -> PregenCombatProfile:
 
 def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
     profiles = [
-        PregenCombatProfile(
-            "karnok-stoneward-l1", "Fighter", 1, _ORC, ("strength", "constitution"), 17, 12, 30,
-            (("athletics", 5), ("acrobatics", 1)), _KARNOK_ATTACKS,
-            ("flail", "javelin", "spear"), (("second-wind", 2), ("adrenaline-rush", 2), ("relentless-endurance", 1)), "Defense",
-        ),
-        PregenCombatProfile(
-            "karnok-stoneward-l2", "Fighter", 2, _ORC, ("strength", "constitution"), 17, 20, 30,
-            (("athletics", 5), ("acrobatics", 1)), _KARNOK_ATTACKS, ("flail", "javelin", "spear"),
-            (("second-wind", 2), ("action-surge", 1), ("adrenaline-rush", 2), ("relentless-endurance", 1)), "Defense",
-        ),
-        PregenCombatProfile(
-            "karnok-stoneward-l3", "Fighter", 3, _ORC, ("strength", "constitution"), 17, 28, 30,
-            (("athletics", 5), ("acrobatics", 1)), _KARNOK_ATTACKS, ("flail", "javelin", "spear"),
-            (("second-wind", 2), ("action-surge", 1), ("adrenaline-rush", 2), ("relentless-endurance", 1)), "Defense",
-        ),
+        _karnok_profile(1, 12), _karnok_profile(2, 20), _karnok_profile(3, 28),
         build_karnok_stoneward_level4_combat_profile(), build_karnok_stoneward_level5_combat_profile(),
-        _rokhan_profile(1, 14), _rokhan_profile(2, 23), _rokhan_profile(3, 32), _rokhan_profile(4, 45), _rokhan_profile(5, 55), _rokhan_profile(6, 65),
+        build_karnok_stoneward_level6_combat_profile(),
+        _rokhan_profile(1, 14), _rokhan_profile(2, 23), _rokhan_profile(3, 32), _rokhan_profile(4, 45),
+        _rokhan_profile(5, 55), _rokhan_profile(6, 65),
         _seraphine_profile(1, 8, 2), _seraphine_profile(2, 13, 3, 2),
         build_seraphine_dawnshield_level3_combat_profile(), build_seraphine_dawnshield_level4_combat_profile(),
     ]
