@@ -1,5 +1,6 @@
 from app.combat.cleric_channel_divinity import resolve_channel_divinity
 from app.combat.cleric_channel_policy import choose_channel_divinity
+from app.combat.condition_removal import choose_condition_removal_action, resolve_condition_removal
 from app.combat.dice import FixedDiceProvider
 from app.combat.hit_points import effective_max_hp
 from app.combat.precombat_spells import prepare_defenses
@@ -107,11 +108,22 @@ def test_aid_bonus_changes_bloodied_and_healing_ceiling_semantics() -> None:
     assert cleric.state.current_hp == 29
 
 
-def test_lesser_restoration_is_printed_level_two_bonus_action_spell_removal() -> None:
-    action = build_seraphine_dawnshield_level_three().condition_removal_actions[0]
-    assert action.action_cost == "bonus_action"
-    assert action.range_ft == 5
-    assert action.max_conditions_per_use == 1
-    assert action.removable_conditions == ["blinded", "deafened", "paralyzed", "poisoned"]
-    assert action.resource_costs == {"spell-slot-2": 1}
-    assert action.expends_spell_slot is True
+def test_lesser_restoration_removes_one_printed_condition_with_bonus_action_and_level_two_slot() -> None:
+    cleric = _member(build_seraphine_dawnshield_level_three(), "cleric", "heroes", 0)
+    ally = _member(build_karnok_stoneward(), "ally", "heroes", 5)
+    ally.state.active_effect_ids.extend(["paralyzed", "poisoned"])
+    setup = EncounterSetup(heroes=[cleric, ally], monsters=[], hero_total_levels=4, monster_total_cr="0")
+
+    choice = choose_condition_removal_action(cleric, setup, "1:cleric")
+    assert choice is not None
+    action, target, conditions = choice
+    assert action.id == "lesser-restoration"
+    assert target is ally and conditions == ["paralyzed"]
+    assert action.action_cost == "bonus_action" and action.range_ft == 5
+    event = resolve_condition_removal(1, 1, cleric, ally, action, conditions, "1:cleric")
+
+    assert event.removed_condition_ids == ["paralyzed"]
+    assert ally.state.active_effect_ids == ["poisoned"]
+    assert _resource(cleric, "spell-slot-2") == 1
+    assert cleric.state.bonus_action_available is False
+    assert cleric.state.spell_slot_expended_turn_key == "1:cleric"
