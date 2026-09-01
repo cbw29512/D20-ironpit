@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.content.audited_fighter_profile import build_karnok_stoneward_profile
+from app.content.canonical_hero_policy import canonical_template_id
 from app.domain.character_builds import AbilityIncrease, AbilityScores, CharacterBuildProfile, FeatureAudit
 
 
@@ -81,7 +82,7 @@ def _level_four_feature_audits(data: dict[str, object]) -> list[dict[str, object
 def build_karnok_stoneward_level2_profile() -> CharacterBuildProfile:
     data = build_karnok_stoneward_profile().model_dump()
     data.update(
-        id="build-karnok-stoneward-l2", template_id="karnok-stoneward-l2", level=2,
+        id="build-karnok-stoneward-l2", template_id=canonical_template_id("fighter", 2), level=2,
         feature_audits=[*data["feature_audits"], *(item.model_dump() for item in _level_two_features())],
         source_references=[*data["source_references"], "Basic Rules 2024: Fighter — Level 2 Action Surge and Tactical Mind"],
     )
@@ -91,7 +92,7 @@ def build_karnok_stoneward_level2_profile() -> CharacterBuildProfile:
 def build_karnok_stoneward_level3_profile() -> CharacterBuildProfile:
     data = build_karnok_stoneward_level2_profile().model_dump()
     data.update(
-        id="build-karnok-stoneward-l3", template_id="karnok-stoneward-l3", level=3,
+        id="build-karnok-stoneward-l3", template_id=canonical_template_id("fighter", 3), level=3,
         feature_audits=[*data["feature_audits"], *(item.model_dump() for item in _level_three_features())],
         source_references=[*data["source_references"], "Basic Rules 2024: Champion — Level 3 Improved Critical and Remarkable Athlete"],
     )
@@ -101,7 +102,7 @@ def build_karnok_stoneward_level3_profile() -> CharacterBuildProfile:
 def build_karnok_stoneward_level4_profile() -> CharacterBuildProfile:
     data = build_karnok_stoneward_level3_profile().model_dump()
     data.update(
-        id="build-karnok-stoneward-l4", template_id="karnok-stoneward-l4", level=4,
+        id="build-karnok-stoneward-l4", template_id=canonical_template_id("fighter", 4), level=4,
         advancement_increases=[
             AbilityIncrease(ability="strength", amount=1).model_dump(),
             AbilityIncrease(ability="constitution", amount=1).model_dump(),
@@ -123,7 +124,7 @@ def build_karnok_stoneward_level4_profile() -> CharacterBuildProfile:
 def build_karnok_stoneward_level5_profile() -> CharacterBuildProfile:
     data = build_karnok_stoneward_level4_profile().model_dump()
     data.update(
-        id="build-karnok-stoneward-l5", template_id="karnok-stoneward-l5", level=5,
+        id="build-karnok-stoneward-l5", template_id=canonical_template_id("fighter", 5), level=5,
         feature_audits=[*data["feature_audits"], *(item.model_dump() for item in _level_five_features())],
         source_references=[*data["source_references"], "Basic Rules 2024: Fighter — Level 5 Extra Attack and Tactical Shift"],
     )
