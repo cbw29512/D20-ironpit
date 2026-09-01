@@ -6,6 +6,7 @@ from app.combat.arena_closing import MELEE_BRAWL_DISTANCE_FT, resolve_simple_clo
 from app.combat.attack_actions import resolve_attack_action
 from app.combat.barbarian import enter_rage, finalize_rage_turn
 from app.combat.condition_removal import choose_condition_removal_action, resolve_condition_removal
+from app.combat.condition_rules import is_incapacitated
 from app.combat.dice import DiceProvider
 from app.combat.encounter_action_surge import resolve_action_surge_attack
 from app.combat.encounter_attacks import resolve_encounter_attack
@@ -31,7 +32,7 @@ from app.domain.models import BattleEvent
 
 
 def _close_after_action(sequence, round_number, attacker, setup, dice):
-    if backline_holds_position(attacker, setup):
+    if is_incapacitated(attacker.state) or backline_holds_position(attacker, setup):
         return [], sequence
     target = select_nearest_target(attacker, setup)
     if target is None or combatant_distance(attacker, target) <= MELEE_BRAWL_DISTANCE_FT:
@@ -82,6 +83,8 @@ def resolve_combat_turn(
     turn_key = f"{round_number}:{attacker.combatant_id}"
     support_events, sequence = _resolve_support_actions(sequence, round_number, attacker, setup, dice, turn_key)
     events.extend(support_events)
+    if is_incapacitated(attacker.state):
+        return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
     rage_event = enter_rage(sequence, round_number, attacker.state, attacker.combatant_id)
     if rage_event is not None:
         events.append(rage_event); sequence += 1
