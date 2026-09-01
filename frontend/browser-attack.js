@@ -5,6 +5,9 @@
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
   const T = () => window.IRON_PIT_BROWSER_TIMED;
   const Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
+  const B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2 || {
+    activate: () => false, attackAdvantage: () => 0, attacksAgainstAdvantage: () => 0,
+  };
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || {
     attacksAgainstAdvantage: () => 0, consumeAttacksAgainstAdvantage: () => 0,
     effectiveArmorClass: (state) => state.template.armor_class,
@@ -22,7 +25,7 @@
   };
   const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
   function conditionSources(attacker, defender, distance, targetId) {
-    let advantage = M().attacksAgainstAdvantage(defender), disadvantage = 0;
+    let advantage = M().attacksAgainstAdvantage(defender) + B2().attacksAgainstAdvantage(defender), disadvantage = 0;
     if (Q().has(attacker, "blinded")) disadvantage += 1;
     if (attacker.active_effect_ids.includes("prone")) disadvantage += 1;
     if (attacker.active_effect_ids.includes("restrained")) disadvantage += 1;
@@ -59,8 +62,10 @@
   function resolveAttack(sequence, round, attacker, target, attack, distance, extra = {}) {
     const spendAction = extra.spendAction !== false;
     if (spendAction && !E().available(attacker.state, "action")) throw new Error("Action is unavailable for attack.");
+    const recklessStarted = B2().activate(attacker, attack, round);
     const conditions = conditionSources(attacker.state, target.state, distance, target.combatant_id);
-    const advantage = (extra.advantage || 0) + conditions.advantage + bloodiedFury(attacker.state, attack);
+    const advantage = (extra.advantage || 0) + conditions.advantage + bloodiedFury(attacker.state, attack)
+      + B2().attackAdvantage(attacker.state, attack);
     const closeThreat = attack.kind === "ranged" && rangedCloseThreat(attacker, target, distance, extra.setup);
     const mode = R().attackMode(attack, distance, advantage, conditions.disadvantage, closeThreat);
     const attackRoll = M().applyD20Bonus(attacker.state, "attack-roll-bonus-die", R().d20(attack.bonus, mode));
@@ -108,6 +113,7 @@
       window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(actualTarget.state); C()?.endIfIncapacitated(actualTarget.state, affectedStates);
     }
     let description = `${attacker.state.template.name}: ${critical ? "CRITICAL HIT" : hit ? "HIT" : "MISS"} with ${attack.name}.`;
+    if (recklessStarted) description += ` ${attacker.state.template.name} uses Reckless Attack.`;
     if (redirected) description += ` ${target.state.template.name} uses Redirect Attack; ${actualTarget.state.template.name} becomes the target.`;
     if (parry.used) description += ` ${actualTarget.state.template.name} uses Parry.`;
     if (damageOutcome === "relentless_endurance") description += ` ${actualTarget.state.template.name} uses Relentless Endurance and remains at 1 HP.`;
@@ -123,7 +129,8 @@
       death_save_successes_before: deathSuccessBefore, death_save_failures_before: deathFailureBefore,
       death_save_successes: actualTarget.state.death_save_successes, death_save_failures: actualTarget.state.death_save_failures,
       is_stable: actualTarget.state.is_stable, is_dead: actualTarget.state.is_dead, weapon_id: attack.id, projectile: attack.projectile || null,
-      feature_id: extra.featureId || null, concentration_ended_effect_id: concentrationBefore && !actualTarget.state.concentration ? concentrationBefore : null,
+      feature_id: extra.featureId || (recklessStarted ? "reckless-attack" : null),
+      concentration_ended_effect_id: concentrationBefore && !actualTarget.state.concentration ? concentrationBefore : null,
       animation: attack.animation || (attack.kind === "ranged" ? "projectile" : "slash"), description };
     return window.IRON_PIT_BROWSER_CHAMPION?.criticalMove(attacker, extra.setup, event) || event;
   }
