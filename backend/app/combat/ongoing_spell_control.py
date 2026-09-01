@@ -3,6 +3,11 @@ from __future__ import annotations
 from app.combat.timed_conditions import apply_timed_condition
 from app.domain.actions import AbilityName, ConditionTiming
 from app.domain.models import CombatantState
+from app.domain.runtime import TimedTurnBehavior
+
+
+def forced_retreat_active(state: CombatantState) -> bool:
+    return any(effect.turn_behavior == "forced_retreat" for effect in state.timed_effects)
 
 
 def apply_ongoing_spell_condition(
@@ -17,8 +22,9 @@ def apply_ongoing_spell_condition(
     expiry_timing: ConditionTiming | None = None,
     allowed_removal_action_ids: list[str] | None = None,
     affected_states: list[CombatantState] | None = None,
+    turn_behavior: TimedTurnBehavior = "normal",
 ) -> str | None:
-    """Apply an ongoing harmful spell condition with Iron Pit's end-of-turn repeat-save house rule."""
+    """Apply ongoing harmful spell control with Iron Pit's end-of-turn repeat-save rule."""
     if not spell_id:
         raise ValueError("Ongoing spell control requires a spell id.")
     if save_dc < 1:
@@ -36,4 +42,5 @@ def apply_ongoing_spell_condition(
         repeat_save_timing="target_turn_end",
         allowed_removal_action_ids=allowed_removal_action_ids,
         affected_states=affected_states,
+        turn_behavior=turn_behavior,
     )
