@@ -42,3 +42,15 @@ def get_capability_definition(combatant_id: str) -> CombatantDefinition:
 
 def build_combatant_from_capabilities(combatant_id: str) -> CombatantTemplate:
     return compile_combatant(get_capability_definition(combatant_id))
+
+
+def build_monster_templates_from_capabilities() -> list[CombatantTemplate]:
+    try:
+        definitions = load_capability_definitions().values()
+        monsters = [compile_combatant(item) for item in definitions if item.kind == "monster"]
+        if not monsters:
+            raise ValueError("Combat capability registry contains no monsters.")
+        return monsters
+    except Exception as exc:
+        logger.exception("Failed to compile monster roster from combat capability registry.")
+        raise RuntimeError("Declarative monster roster could not be created.") from exc
