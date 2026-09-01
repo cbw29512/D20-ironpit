@@ -14,7 +14,7 @@
       death_save_successes: 0, death_save_failures: 0,
       action_available: true, bonus_action_available: true, reaction_available: true,
       movement_remaining_ft: 0, resources: { ...(template.resources || {}) },
-      active_effect_ids: [], grapple_sources: [], timed_effects: [], active_modifiers: [], concentration: null,
+      active_effect_ids: [], active_buff_effect_ids: [], grapple_sources: [], timed_effects: [], active_modifiers: [], concentration: null,
       feature_last_turn_keys: {}, spell_slot_expended_turn_key: null,
       temporary_damage_resistances: [], rage_expires_round: null, rage_max_round: null,
     };
