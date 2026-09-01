@@ -35,6 +35,9 @@ The product contains 12 persistent named canonical heroes, one per core class, a
 
 - Each class has exactly one canonical progression identity. Leveling never swaps to a different same-class build, spellbook, subclass, or combat concept unless the user explicitly authorizes a new architecture.
 - Each level must derive from the previous certified canonical progression by applying only that level's RAW combat delta. Do not hand-build 20 separate versions of the same hero.
+- Per-level research is a delta triage, not a full rebuild: identify only what the class/subclass/feat/resource tables add or scale at the new level, then ask whether each change can alter an Iron Pit combat outcome.
+- If a new or scaled feature can change attack rolls, damage, saves, AC/HP, resources, action economy, conditions, healing, defenses, movement that matters to engagement, spell effects, reactions, targeting, or any other arena outcome, it is combat-relevant and must be implemented or remain an explicit certification blocker.
+- If a feature cannot change an Iron Pit combat outcome under the arena model, classify it as noncombat or arena-out-of-scope and do not build engine logic for it. Do not repeatedly research or reimplement inherited features that are already certified.
 - The universal legal base array is the 27-point-buy `15 / 14 / 13 / 10 / 10 / 10` before legal Background increases and later feats/ASIs.
 - Strength-primary melee defaults to STR 15 / CON 14 / DEX 13 with INT/WIS/CHA 10. Dexterity-primary melee/ranged defaults to DEX 15 / CON 14 / STR 13 with INT/WIS/CHA 10.
 - Primary casters keep STR/DEX/CON at 10 and assign 15/14/13 to mental abilities by the deterministic class priorities in `docs/CANONICAL_COMBAT_BUILD_POLICY.md`.
