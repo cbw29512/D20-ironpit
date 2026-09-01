@@ -33,6 +33,14 @@ jobs:
         run: |
           python scripts/export_runtime_monster_capabilities.py --check
           ! grep -Eq 'app\.content\.(legacy_monster_roster|monster_|monsters_)' backend/app/content/roster.py
+      - name: Generate canonical hero artifact
+        run: python scripts/export_browser_heroes.py
+      - name: Upload canonical hero artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: canonical-heroes-${{ github.sha }}
+          path: frontend/browser-heroes.js
+          retention-days: 1
       - name: Verify durable certification manifests
         run: |
           python scripts/verify_certification_manifests.py
@@ -53,6 +61,7 @@ jobs:
         with:
           name: canonical-static-${{ github.sha }}
           path: |
+            frontend/browser-heroes.js
             frontend/browser-monsters-generated.js
             frontend/browser-spell-effects.js
             frontend/data/srd_5_2_1_monsters.json
