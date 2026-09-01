@@ -42,9 +42,10 @@
     E().spend(caster.state, spell.actionCost);
 
     const natural = attackRoll.selected_roll;
-    const hit = natural !== 1 && (natural === 20 || attackRoll.total >= M().effectiveArmorClass(target.state));
+    const targetAc = M().effectiveArmorClass(target.state);
+    const hit = natural !== 1 && (natural === 20 || attackRoll.total >= targetAc);
     const critical = Boolean(hit && (natural === 20 || (Q().autoCritical(target.state) && distance <= 5)));
-    const hpBefore = target.state.current_hp;
+    const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
     let damageRoll = null, damageComponents = [];
     if (hit) {
       const count = spell.damageDiceCount * (critical ? 2 : 1);
@@ -75,8 +76,10 @@
       sequence, round_number: round, event_type: "attack",
       actor_id: caster.combatant_id, actor_name: caster.state.template.name,
       target_id: target.combatant_id, target_name: target.state.template.name,
+      attack_name: spell.name, target_ac: targetAc,
       attack_roll: attackRoll, damage_roll: damageRoll, damage_components: damageComponents,
       applied_condition_ids: [], hit, critical, hp_before: hpBefore, hp_after: target.state.current_hp,
+      temporary_hp_before: temporaryHpBefore, temporary_hp_after: target.state.temporary_hp,
       death_save_successes: target.state.death_save_successes, death_save_failures: target.state.death_save_failures,
       is_stable: target.state.is_stable, is_dead: target.state.is_dead,
       weapon_id: null, projectile: null, feature_id: spell.id,
