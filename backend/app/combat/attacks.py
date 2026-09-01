@@ -88,7 +88,7 @@ def resolve_attack(
         hit = natural != 1 and (natural_20 or attack_roll.total >= effective_armor_class(actual_defender))
         hit, parry_used = resolve_parry_hit(actual_defender, attack, attack_roll.total, natural, hit)
         critical = bool(hit and (expanded_critical or (close_hit_is_automatic_critical(actual_defender) and distance_ft <= 5)))
-        hp_before = actual_defender.current_hp
+        hp_before = actual_defender.current_hp; concentration_before = actual_defender.concentration.effect_id if actual_defender.concentration else None
         damage_roll = None
         damage_components = []
         damage_outcome = None
@@ -139,6 +139,7 @@ def resolve_attack(
             death_save_failures=actual_defender.death_save_failures,
             is_stable=actual_defender.is_stable, is_dead=actual_defender.is_dead,
             weapon_id=weapon.id, projectile=weapon.projectile, feature_id=feature_id,
+            concentration_ended_effect_id=concentration_before if concentration_before and actual_defender.concentration is None else None,
             animation=weapon.animation, description=description,
         )
     except Exception as exc:
