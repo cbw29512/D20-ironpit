@@ -5,7 +5,10 @@
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
   const T = () => window.IRON_PIT_BROWSER_TIMED;
   const Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
-  const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
+  const M = () => window.IRON_PIT_BROWSER_MODIFIERS || {
+    attacksAgainstAdvantage: () => 0, effectiveArmorClass: (state) => state.template.armor_class,
+    effectiveSpeed: (state) => state.template.speed_ft, applyD20Bonus: (_state, _kind, roll) => roll,
+  };
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || {
