@@ -31,6 +31,14 @@ jobs:
         run: |
           python scripts/export_browser_heroes.py
           python scripts/verify_certification_manifests.py --write
+      - name: Refuse unexpected generator drift
+        run: |
+          unexpected="$(git status --porcelain --untracked-files=all | awk '{print $2}' | grep -Ev '^(frontend/browser-heroes.js|data/hero_certification_manifest.json|data/monster_certification_manifest.json)$' || true)"
+          if [ -n "$unexpected" ]; then
+            echo "Generator modified files outside its owned outputs:"
+            echo "$unexpected"
+            exit 1
+          fi
       - name: Commit only generator-owned outputs
         run: |
           if git diff --quiet -- frontend/browser-heroes.js data/hero_certification_manifest.json data/monster_certification_manifest.json; then
