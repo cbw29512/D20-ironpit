@@ -21,6 +21,32 @@
     return null;
   }
 
+  function primaryAttackKind(member) {
+    const attacks = member.state.template.attacks || [];
+    const primaryId = member.state.template.primary_attack_id;
+    return (attacks.find((attack) => attack.id === primaryId) || attacks[0] || {}).kind || null;
+  }
+
+  function nearestEnemyDistance(target, setup) {
+    const enemies = target.side === "heroes" ? setup.monsters : setup.heroes;
+    const living = enemies.filter((enemy) => enemy.state.is_alive && !enemy.state.is_dead);
+    if (!living.length) return Number.MAX_SAFE_INTEGER;
+    return Math.min(...living.map((enemy) => Math.abs(target.position_ft - enemy.position_ft)));
+  }
+
+  function friendlyBuffPriority(caster, target, setup) {
+    const isMelee = primaryAttackKind(target) === "melee";
+    const group = target !== caster && isMelee ? 0 : target === caster ? 1 : 2;
+    return [group, nearestEnemyDistance(target, setup), Math.abs(caster.position_ft - target.position_ft), target.combatant_id];
+  }
+
+  function comparePriority(a, b) {
+    for (let index = 0; index < 3; index += 1) {
+      if (a[index] !== b[index]) return a[index] - b[index];
+    }
+    return a[3].localeCompare(b[3]);
+  }
+
   function selectTargets(member, setup, spell, slotLevel) {
     if (slotLevel !== spell.level) throw new Error("Spell upcasting is not certified; use the spell's printed slot level.");
     if ((spell.targetPolicy || "self") === "self") return [member];
@@ -28,9 +54,7 @@
     const count = spell.targetCount || 1;
     return side.filter((target) => target.state.is_alive && !target.state.is_dead
         && Math.abs(member.position_ft - target.position_ft) <= (spell.range || 0))
-      .sort((a, b) => Number(a !== member) - Number(b !== member)
-        || Math.abs(member.position_ft - a.position_ft) - Math.abs(member.position_ft - b.position_ft)
-        || a.combatant_id.localeCompare(b.combatant_id))
+      .sort((a, b) => comparePriority(friendlyBuffPriority(member, a, setup), friendlyBuffPriority(member, b, setup)))
       .slice(0, count);
   }
 
