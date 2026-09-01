@@ -43,11 +43,11 @@
     sequence = moved.sequence; if (moved.movement) events.push(moveEvent(sequence++, round, member, target, moved.movement));
     return { events, sequence, movement: moved.movement };
   }
-  function holdBackline(sequence, round, member, target, setup) {
+  function holdBackline(sequence, round, member, target, setup, turnKey) {
     if (!F()?.backlineHoldsPosition(member, setup)) return null;
     const distance = S().distance(member, target), ranged = attacks(member).find((a) => a.kind === "ranged" && distance <= a.long);
     if (ranged && E().available(member.state, "action")) {
-      return { events: [A().resolveAttack(sequence++, round, member, target, ranged, distance, { setup, allowReckless: true })], sequence, handled: true };
+      return { events: [A().resolveAttack(sequence++, round, member, target, ranged, distance, { setup, allowReckless: true, turnKey })], sequence, handled: true };
     }
     if (E().available(member.state, "action")) {
       E().spend(member.state, "action"); if (!member.state.active_effect_ids.includes("dodge")) member.state.active_effect_ids.push("dodge");
@@ -57,11 +57,11 @@
     }
     return { events: [], sequence, handled: true };
   }
-  function closeTurn(sequence, round, member, target, setup) {
+  function closeTurn(sequence, round, member, target, setup, turnKey) {
     let distance = S().distance(member, target);
     const charged = C()?.resolveClosing(sequence, round, member, target, setup); if (charged?.handled) return charged;
     if (distance <= BRAWL_DISTANCE) return { events: [], sequence, handled: false };
-    const held = holdBackline(sequence, round, member, target, setup); if (held) return held;
+    const held = holdBackline(sequence, round, member, target, setup, turnKey); if (held) return held;
     if (member.state.template.attack_action) return { events: [], sequence, handled: false };
     const melee = reachableMelee(member, distance);
     if (melee) {
@@ -71,7 +71,7 @@
     }
     const events = [], canAct = E().available(member.state, "action"); distance = S().distance(member, target);
     const ranged = attacks(member).find((a) => a.kind === "ranged" && distance <= a.long);
-    if (ranged && canAct) events.push(A().resolveAttack(sequence++, round, member, target, ranged, distance, { setup, allowReckless: true }));
+    if (ranged && canAct) events.push(A().resolveAttack(sequence++, round, member, target, ranged, distance, { setup, allowReckless: true, turnKey }));
     else if (canAct) {
       E().spend(member.state, "action"); if (!member.state.active_effect_ids.includes("dodge")) member.state.active_effect_ids.push("dodge");
       events.push({ sequence: sequence++, round_number: round, event_type: "feature", actor_id: member.combatant_id,
@@ -127,7 +127,7 @@
     const spell = L()?.resolve(sequence, round, member, setup, turnKey); if (spell) { events.push(...spell.events); sequence = spell.sequence; }
     if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
     const target = S().nearestTarget(member, setup); if (!target) return finalize(events, sequence, round, member, setup, turnKey);
-    const closing = closeTurn(sequence, round, member, target, setup); events.push(...closing.events); sequence = closing.sequence;
+    const closing = closeTurn(sequence, round, member, target, setup, turnKey); events.push(...closing.events); sequence = closing.sequence;
     if (member.state.is_dead || member.state.is_unconscious || closing.handled) return finalize(events, sequence, round, member, setup, turnKey);
     const distance = S().distance(member, target);
     if (member.state.template.attack_action) {
@@ -140,7 +140,7 @@
     const attack = legalAttack(member, distance);
     if (attack && E().available(member.state, "action")) {
       const pack = S().packTactics(member, setup), opener = C()?.openingFeature?.(round, member, setup) || null;
-      events.push(A().resolveAttack(sequence++, round, member, target, attack, distance, { advantage: pack ? 1 : 0, featureId: opener || (pack ? "pack-tactics" : null), setup, allowReckless: true }));
+      events.push(A().resolveAttack(sequence++, round, member, target, attack, distance, { advantage: pack ? 1 : 0, featureId: opener || (pack ? "pack-tactics" : null), setup, allowReckless: true, turnKey }));
     }
     return finalize(events, sequence, round, member, setup, turnKey);
   }
