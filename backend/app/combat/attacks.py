@@ -57,6 +57,7 @@ def resolve_attack(
         if parry_used: target_ac += actual_defender.template.parry_reaction.ac_bonus
         critical = bool(hit and (expanded_critical or (close_hit_is_automatic_critical(actual_defender) and distance_ft <= 5)))
         hp_before = actual_defender.current_hp; temporary_hp_before = actual_defender.temporary_hp
+        death_success_before = actual_defender.death_save_successes; death_failure_before = actual_defender.death_save_failures
         concentration_before = actual_defender.concentration.effect_id if actual_defender.concentration else None
         damage_roll = None; damage_components = []; damage_outcome = None; applied_conditions: list[str] = []
         if hit:
@@ -83,6 +84,7 @@ def resolve_attack(
             attack_roll=attack_roll, damage_roll=damage_roll, damage_components=damage_components, applied_condition_ids=applied_conditions,
             hit=hit, critical=critical, hp_before=hp_before, hp_after=actual_defender.current_hp,
             temporary_hp_before=temporary_hp_before, temporary_hp_after=actual_defender.temporary_hp,
+            death_save_successes_before=death_success_before, death_save_failures_before=death_failure_before,
             death_save_successes=actual_defender.death_save_successes, death_save_failures=actual_defender.death_save_failures,
             is_stable=actual_defender.is_stable, is_dead=actual_defender.is_dead, weapon_id=weapon.id, projectile=weapon.projectile,
             feature_id=feature_id, concentration_ended_effect_id=concentration_before if concentration_before and actual_defender.concentration is None else None,
