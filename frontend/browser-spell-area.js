@@ -20,16 +20,25 @@
     return slot >= start && slot < start + count && Math.abs(member.position_ft - center) <= radius;
   }
 
+  function candidateCenters(caster, enemies, radius, spellRange) {
+    const minimum = Math.min(...enemies.map((member) => member.position_ft)) - radius;
+    const maximum = Math.max(...enemies.map((member) => member.position_ft)) + radius;
+    const points = [];
+    for (let point = minimum; point <= maximum; point += CARD_WIDTH) {
+      if (Math.abs(caster.position_ft - point) <= spellRange) points.push(point);
+    }
+    return points;
+  }
+
   function bestPlacement(caster, setup, radius, spellRange, protectedAllyIds = []) {
     const slotCount = areaSlotCount(radius);
     const [enemies, friends] = sides(caster, setup);
     const protectedIds = new Set(protectedAllyIds);
-    const anchors = enemies.filter(living);
+    const livingEnemies = enemies.filter(living);
+    if (!livingEnemies.length) return null;
     const candidates = [];
 
-    for (const anchor of anchors) {
-      const center = anchor.position_ft;
-      if (Math.abs(caster.position_ft - center) > spellRange) continue;
+    for (const center of candidateCenters(caster, livingEnemies, radius, spellRange)) {
       for (let start = 0; start <= MAX_SLOTS - slotCount; start += 1) {
         const enemyIds = enemies
           .map((member, slot) => ({ member, slot }))
@@ -42,20 +51,16 @@
           if (!living(member) || !inside(member, slot, start, slotCount, center, radius)) return;
           (protectedIds.has(member.combatant_id) ? protectedFriendlyIds : friendlyIds).push(member.combatant_id);
         });
-        if (enemyIds.length <= friendlyIds.length) continue;
+        if (friendlyIds.length) continue;
         candidates.push({ startSlot: start, slotCount, centerFt: center, enemyIds, friendlyIds, protectedFriendlyIds });
       }
     }
 
     if (!candidates.length) return null;
-    candidates.sort((a, b) => {
-      const aNet = a.enemyIds.length - a.friendlyIds.length;
-      const bNet = b.enemyIds.length - b.friendlyIds.length;
-      return bNet - aNet
-        || b.enemyIds.length - a.enemyIds.length
-        || a.friendlyIds.length - b.friendlyIds.length
-        || a.startSlot - b.startSlot;
-    });
+    candidates.sort((a, b) => b.enemyIds.length - a.enemyIds.length
+      || b.protectedFriendlyIds.length - a.protectedFriendlyIds.length
+      || Math.abs(caster.position_ft - a.centerFt) - Math.abs(caster.position_ft - b.centerFt)
+      || a.startSlot - b.startSlot);
     return candidates[0];
   }
 
