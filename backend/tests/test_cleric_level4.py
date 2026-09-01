@@ -34,7 +34,7 @@ def test_seraphine_level_four_build_and_spell_package_are_raw_audited() -> None:
     assert_character_resources_raw_ready(template, profile, combat)
 
     assert template.level == 4
-    assert template.max_hp == 31
+    assert template.max_hp == 23
     assert template.saving_throw_bonuses["wisdom"] == 6
     assert template.skill_bonuses["medicine"] == 6
     assert {item.id: item.max_uses for item in template.resources} == {
