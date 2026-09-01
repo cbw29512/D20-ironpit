@@ -24,14 +24,25 @@ def build_karnok_stoneward_level(level: int) -> CombatantTemplate:
     """Return currently certified Karnok progression snapshots; unsupported levels fail closed."""
     if level == 1:
         return build_karnok_stoneward()
-    if level != 2:
+    if level not in (2, 3):
         raise ValueError(f"Karnok Fighter level {level} is not certified yet.")
     data = build_karnok_stoneward().model_dump()
     data.update(
-        id="karnok-stoneward-l2",
-        level=2,
-        max_hp=fixed_class_hit_points(2, 10, 2),
-        resources=[item.model_dump() for item in _resources(2)],
-        source="D&D Beyond Basic Rules 2024: Fighter 2, Orc, Soldier, Savage Attacker, Equipment",
+        id=f"karnok-stoneward-l{level}",
+        level=level,
+        max_hp=fixed_class_hit_points(level, 10, 2),
+        resources=[item.model_dump() for item in _resources(level)],
+        source=(
+            "D&D Beyond Basic Rules 2024: Fighter 2, Orc, Soldier, Savage Attacker, Equipment"
+            if level == 2 else
+            "D&D Beyond Basic Rules 2024: Fighter 3 Champion, Orc, Soldier, Savage Attacker, Equipment"
+        ),
     )
+    if level == 3:
+        data["progression_features"] = {
+            "critical_hit_minimum": 19,
+            "initiative_advantage": True,
+            "athletics_advantage": True,
+            "critical_move_fraction": 0.5,
+        }
     return CombatantTemplate.model_validate(data)
