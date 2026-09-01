@@ -67,7 +67,7 @@ def build_certified_hero_entries() -> list[tuple[HeroBuildKey, CombatantTemplate
     """Return only canonical hero levels that pass every RAW certification gate."""
     return [
         _validated(build_karnok_stoneward, build_karnok_stoneward_profile),
-        _validated(lambda: build_karnok_stoneward_level(2), build_karnok_stonefury_level2_profile) if False else _validated(lambda: build_karnok_stoneward_level(2), build_karnok_stoneward_level2_profile),
+        _validated(lambda: build_karnok_stoneward_level(2), build_karnok_stoneward_level2_profile),
         _validated(lambda: build_karnok_stoneward_level(3), build_karnok_stoneward_level3_profile),
         _validated(lambda: build_karnok_stoneward_level(4), build_karnok_stoneward_level4_profile),
         _validated(lambda: build_karnok_stoneward_level(5), build_karnok_stoneward_level5_profile),
