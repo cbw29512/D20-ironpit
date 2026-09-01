@@ -82,6 +82,7 @@ def resolve_save_action(
     if spend_action:
         spend(actor.state, "action")
     hp_before = target.state.current_hp
+    concentration_before = target.state.concentration.effect_id if target.state.concentration else None
     rolled_components = _damage_components(action, dice, succeeded, shared_damage_rolls)
     applied_total, damage_components = apply_damage_defenses(target.state, rolled_components)
     damage_roll = None
@@ -141,6 +142,7 @@ def resolve_save_action(
         is_stable=target.state.is_stable,
         is_dead=target.state.is_dead,
         feature_id=action.id,
+        concentration_ended_effect_id=concentration_before if concentration_before and target.state.concentration is None else None,
         animation=action.animation,
         description=description,
     )
