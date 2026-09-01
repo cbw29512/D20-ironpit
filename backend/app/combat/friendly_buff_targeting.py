@@ -20,7 +20,7 @@ def _priority(
     setup: EncounterSetup,
 ) -> tuple[int, int, int, str]:
     is_melee = target.state.template.weapon_attack.weapon.attack_kind is WeaponAttackKind.MELEE
-    group = 0 if target is not caster and is_melee else 1 if target is caster else 2
+    group = 0 if is_melee else 1 if target is caster else 2
     return (
         group,
         _nearest_enemy_distance(target, setup),
@@ -35,7 +35,7 @@ def select_friendly_buff_targets(
     range_ft: int,
     target_count: int,
 ) -> list[EncounterCombatant]:
-    """Select legal friendly targets: melee line first, caster next, then back line."""
+    """Select legal friendly targets: all melee first, then caster, then remaining back line."""
     try:
         side = setup.heroes if caster.side == "heroes" else setup.monsters
         legal = [
