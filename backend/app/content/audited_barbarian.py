@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from app.content.canonical_hero_policy import canonical_template_id
+from app.content.hero_progressions import HERO_BY_CLASS
 from app.content.level_resources import (
     barbarian_rage_damage_bonus,
     barbarian_rage_uses,
@@ -60,12 +62,13 @@ def _handaxe_throw() -> WeaponAttack:
 
 
 def build_rokhan_stonefury() -> CombatantTemplate:
-    """Level-1 Orc Soldier Barbarian derived from the 2024 Basic Rules."""
+    """Level-1 canonical Barbarian derived from the 2024 Basic Rules."""
     level = 1
+    hero = HERO_BY_CLASS["barbarian"]
     return CombatantTemplate(
-        id="rokhan-stonefury-l1",
-        name="Rokhan Stonefury",
-        archetype="Barbarian",
+        id=canonical_template_id("barbarian", level),
+        name=hero.hero_name,
+        archetype=hero.class_name,
         level=level,
         kind="character",
         armor_class=13,
