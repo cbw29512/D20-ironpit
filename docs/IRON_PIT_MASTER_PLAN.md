@@ -56,34 +56,35 @@ Baseline source head before this control-file tranche: `db4fe6bff688827a67b7322e
 
 The Codex-readiness commit that adds this plan must receive its own exact-head CI success before it becomes the new certified checkpoint.
 
-## Fighter 3 / Champion work in progress
+## Fighter 4 / Champion checkpoint
 
-The branch contains reusable, partially integrated Champion infrastructure:
+Karnok Stoneward is now promoted through Fighter 4 using finite, fail-closed progression snapshots.
 
-- runtime fields for expanded critical threshold, Initiative Advantage, Athletics Advantage, and post-critical movement;
-- Python attack, initiative, grapple/Athletics, and post-critical closing consumers;
-- browser attack, initiative, and post-critical closing consumers;
-- Action Surge and Tactical Mind are already certified for Fighter 2 in Python and browser paths.
+Certified progression behavior includes:
 
-Fighter 3 is not certified. The branch does not yet contain:
+- Fighter 1 baseline, Fighter 2 Action Surge/Tactical Mind, and Fighter 3 Champion behavior inherited by later snapshots;
+- Champion Improved Critical at 19-20 without turning a natural 19 into an automatic hit;
+- Remarkable Athlete Initiative Advantage and Athletics Advantage;
+- post-critical half-Speed movement that closes toward the target, does not provoke Opportunity Attacks, and cannot be used to kite or retreat;
+- Fighter 4 Ability Score Improvement represented as explicit advancement data rather than mutating background ability increases;
+- the selected Fighter 4 split increase of +1 Strength and +1 Constitution, producing Strength 18 and Constitution 16;
+- resulting Fighter 4 runtime scaling: 40 HP, Greatsword +6 to hit / +4 damage, Strength save +6, Constitution save +5, Athletics +6, and three Second Wind uses;
+- four selected Weapon Masteries at Fighter 4. The fourth selection is Longsword; the standard arena Greatsword/Shortbow loadout intentionally does not invoke unsupported mastery effects;
+- structural build audit, combat fingerprint audit, resource audit, deterministic Python tests, public readiness, generated browser-card parity, and browser behavior tests.
 
-- a Level-3 Karnok runtime snapshot that enables the 2024 Champion features;
-- a Level-3 audited character build profile and combat fingerprint;
-- Level-3 registration in the certified hero registry and generated browser heroes;
-- dedicated deterministic Python/browser Champion tests covering 19-20 criticals, Initiative Advantage, Athletics Advantage, and post-critical movement/non-provocation;
-- clean manifest/public readiness promotion and exact-head CI for Fighter 3.
+A production-parity hole found during Fighter 4 work was also fixed: the generated browser hero exporter had not serialized Champion progression fields. The exporter now carries critical threshold, Initiative Advantage, Athletics Advantage, critical movement fraction, Fighting Style, and Weapon Masteries from the authoritative Python template. A permanent browser regression loads the real generated Fighter 3 and Fighter 4 cards so future generated-data drift is caught rather than hidden by hand-built test fixtures.
 
-This is the first recommended finite `/goal` tranche.
+Do not regress this checkpoint by weakening generated-static parity or by adding a mastery effect, feat, or progression feature that the runtime/browser paths do not actually support.
 
 ## Priority queue
 
-### Goal 1 — Certify Karnok Fighter 3
+### Goal 1 — Certify Karnok Fighter 5
 
-Stopping condition: Fighter 3 is source-audited, registered, generated, public-ready, represented in both manifests, covered by deterministic Python/browser Champion regressions, and exact-head CI passes without weakening prior gates.
+Stopping condition: derive Fighter 5 from the certified Fighter 4 snapshot; source-audit every new level-5 class/subclass/resource/action-economy/scaling rule; implement Python and browser behavior where outcome-changing; preserve all Fighter 1-4 behavior; promote only after structural audit, combat/resource fingerprints, generated-card parity, public readiness, permanent regressions, and exact-head CI pass.
 
 ### Goal 2 — Continue Karnok in finite progression tranches
 
-Advance through coherent Fighter milestones rather than claiming levels 4-20 at once. Each goal must explicitly cover all new class/subclass/feat/resource/action-economy/scaling rules introduced by its selected level range and preserve levels 1-3.
+Advance through coherent Fighter milestones rather than claiming levels 6-20 at once. Each goal must explicitly cover all new class/subclass/feat/resource/action-economy/scaling rules introduced by its selected level range and preserve all previously certified Fighter levels. Ability-score/feat advancements must remain explicit audit data rather than hidden stat mutations.
 
 ### Goal 3 — Zero-engine monster tranche
 
