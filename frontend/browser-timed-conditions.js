@@ -21,6 +21,7 @@
       repeat_save_dc: options.repeatSaveDc || null,
       repeat_save_timing: options.repeatSaveTiming || null,
       allowed_removal_action_ids: [...(options.allowedRemovalActionIds || [])],
+      turn_behavior: options.turnBehavior || "normal",
     });
     if (!state.active_effect_ids.includes(effectId)) state.active_effect_ids.push(effectId);
     return effectId;
