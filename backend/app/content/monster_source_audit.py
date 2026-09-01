@@ -68,6 +68,7 @@ def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) ->
     try:
         checks = (
             (template.name == str(row["name"]), "name-mismatch"),
+            (template.creature_type == str(row["type"]), "creature-type-mismatch"),
             (_size_matches(template.size.value, row["size"]), "size-mismatch"),
             (template.armor_class == _first_int(row["armorClass"]), "armor-class-mismatch"),
             (template.max_hp == _first_int(row["hitPoints"]), "hit-points-mismatch"),
