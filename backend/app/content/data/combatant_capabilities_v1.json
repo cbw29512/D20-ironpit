@@ -8722,6 +8722,103 @@
   },
   {
     "schema_version": 1,
+    "id": "srd-ogre-zombie",
+    "name": "Ogre Zombie",
+    "archetype": "source-certified monster",
+    "challenge_rating": "2",
+    "kind": "monster",
+    "size": "large",
+    "armor_class": 8,
+    "max_hp": 85,
+    "speed_ft": 30,
+    "movement_modes": {
+      "walk_ft": 30,
+      "fly_ft": 0,
+      "climb_ft": 0,
+      "swim_ft": 0,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": -2,
+    "progression_features": {
+      "critical_hit_minimum": 20,
+      "initiative_advantage": false,
+      "athletics_advantage": false,
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
+    },
+    "attacks": [
+      {
+        "id": "srd-ogre-zombie-slam",
+        "name": "Slam",
+        "weapon_id": "srd-ogre-zombie-slam-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 6,
+        "damage": {
+          "count": 2,
+          "size": 8,
+          "bonus": 4
+        },
+        "damage_type": "bludgeoning",
+        "animation": "strike",
+        "reach_ft": 5,
+        "rage_eligible": false,
+        "effects": [],
+        "forbid_target_grappled_by_self": false
+      }
+    ],
+    "primary_attack_id": "srd-ogre-zombie-slam",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 6,
+      "damage": 5
+    },
+    "save_actions": [],
+    "spell_save_actions": [],
+    "defensive_spell_actions": [],
+    "healing_actions": [],
+    "condition_removal_actions": [],
+    "saving_throw_bonuses": {
+      "strength": 4,
+      "dexterity": -2,
+      "constitution": 4,
+      "intelligence": -4,
+      "wisdom": 0,
+      "charisma": -3
+    },
+    "skill_bonuses": {},
+    "combat_traits": [
+      "undead-fortitude"
+    ],
+    "source_trait_names": [
+      "Undead Fortitude"
+    ],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [],
+    "source_limited_use_names": [],
+    "source_legendary_action_names": [],
+    "weapon_masteries": [],
+    "damage_resistances": [],
+    "damage_vulnerabilities": [],
+    "damage_immunities": [
+      "poison"
+    ],
+    "condition_immunities": [
+      "exhaustion",
+      "poisoned"
+    ],
+    "wearing_heavy_armor": false,
+    "rage_damage_bonus": 0,
+    "resources": [],
+    "visual": {
+      "armor": "natural",
+      "main_hand": "Slam",
+      "body_style": "monster"
+    },
+    "source": "SRD 5.2.1 p. 344",
+    "unsupported_capabilities": []
+  },
+  {
+    "schema_version": 1,
     "id": "srd-pegasus",
     "name": "Pegasus",
     "archetype": "source-certified monster",
@@ -9455,6 +9552,103 @@
       "body_style": "monster"
     },
     "source": "SRD 5.2.1 p. 286",
+    "unsupported_capabilities": []
+  },
+  {
+    "schema_version": 1,
+    "id": "srd-zombie",
+    "name": "Zombie",
+    "archetype": "source-certified monster",
+    "challenge_rating": "1/4",
+    "kind": "monster",
+    "size": "medium",
+    "armor_class": 8,
+    "max_hp": 15,
+    "speed_ft": 20,
+    "movement_modes": {
+      "walk_ft": 20,
+      "fly_ft": 0,
+      "climb_ft": 0,
+      "swim_ft": 0,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": -2,
+    "progression_features": {
+      "critical_hit_minimum": 20,
+      "initiative_advantage": false,
+      "athletics_advantage": false,
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
+    },
+    "attacks": [
+      {
+        "id": "srd-zombie-slam",
+        "name": "Slam",
+        "weapon_id": "srd-zombie-slam-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 3,
+        "damage": {
+          "count": 1,
+          "size": 8,
+          "bonus": 1
+        },
+        "damage_type": "bludgeoning",
+        "animation": "strike",
+        "reach_ft": 5,
+        "rage_eligible": false,
+        "effects": [],
+        "forbid_target_grappled_by_self": false
+      }
+    ],
+    "primary_attack_id": "srd-zombie-slam",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 3,
+      "damage": 2
+    },
+    "save_actions": [],
+    "spell_save_actions": [],
+    "defensive_spell_actions": [],
+    "healing_actions": [],
+    "condition_removal_actions": [],
+    "saving_throw_bonuses": {
+      "strength": 1,
+      "dexterity": -2,
+      "constitution": 3,
+      "intelligence": -4,
+      "wisdom": 0,
+      "charisma": -3
+    },
+    "skill_bonuses": {},
+    "combat_traits": [
+      "undead-fortitude"
+    ],
+    "source_trait_names": [
+      "Undead Fortitude"
+    ],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [],
+    "source_limited_use_names": [],
+    "source_legendary_action_names": [],
+    "weapon_masteries": [],
+    "damage_resistances": [],
+    "damage_vulnerabilities": [],
+    "damage_immunities": [
+      "poison"
+    ],
+    "condition_immunities": [
+      "exhaustion",
+      "poisoned"
+    ],
+    "wearing_heavy_armor": false,
+    "rage_damage_bonus": 0,
+    "resources": [],
+    "visual": {
+      "armor": "natural",
+      "main_hand": "Slam",
+      "body_style": "monster"
+    },
+    "source": "SRD 5.2.1 p. 343",
     "unsupported_capabilities": []
   },
   {

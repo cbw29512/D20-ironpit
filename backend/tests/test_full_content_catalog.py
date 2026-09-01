@@ -90,7 +90,7 @@ def test_current_certified_monsters_are_linked_to_runtime_templates() -> None:
         monster.name: monster.runnable_template_id
         for monster in catalog.monsters if monster.coverage_status is CoverageStatus.RAW_READY
     }
-    assert len(ready_monsters) == 101
+    assert len(ready_monsters) == 103
     assert ready_monsters == {
         "Animated Armor": "srd-animated-armor", "Animated Flying Sword": "srd-animated-flying-sword",
         "Ankylosaurus": "srd-ankylosaurus", "Archelon": "srd-archelon",
@@ -117,7 +117,7 @@ def test_current_certified_monsters_are_linked_to_runtime_templates() -> None:
         "Hobgoblin Warrior": "srd-hobgoblin-warrior", "Hyena": "srd-hyena", "Jackal": "srd-jackal",
         "Killer Whale": "srd-killer-whale", "Knight": "srd-knight", "Kobold Warrior": "srd-kobold-warrior",
         "Lizard": "srd-lizard", "Manticore": "srd-manticore", "Mastiff": "srd-mastiff",
-        "Mule": "srd-mule", "Noble": "srd-noble", "Ogre": "srd-ogre", "Owl": "srd-owl", "Owlbear": "srd-owlbear",
+        "Mule": "srd-mule", "Noble": "srd-noble", "Ogre": "srd-ogre", "Ogre Zombie": "srd-ogre-zombie", "Owl": "srd-owl", "Owlbear": "srd-owlbear",
         "Panther": "srd-panther", "Pegasus": "srd-pegasus", "Plesiosaurus": "srd-plesiosaurus",
         "Polar Bear": "srd-polar-bear", "Pony": "srd-pony", "Pteranodon": "srd-pteranodon",
         "Rat": "srd-rat", "Raven": "srd-raven", "Rhinoceros": "srd-rhinoceros",
@@ -130,5 +130,5 @@ def test_current_certified_monsters_are_linked_to_runtime_templates() -> None:
         "Tyrannosaurus Rex": "srd-tyrannosaurus-rex", "Venomous Snake": "srd-venomous-snake",
         "Violet Fungus": "srd-violet-fungus", "Vulture": "srd-vulture", "Warhorse": "srd-warhorse",
         "Warrior Infantry": "srd-warrior-infantry", "Warrior Veteran": "srd-warrior-veteran",
-        "Weasel": "srd-weasel", "Wolf": "srd-wolf",
+        "Weasel": "srd-weasel", "Wolf": "srd-wolf", "Zombie": "srd-zombie",
     }

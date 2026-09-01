@@ -49,14 +49,19 @@ def test_certified_parry_monsters_pass_public_readiness(monster_id: str) -> None
     assert_public_selection_runnable(_selection("karnok-stoneward-l1", monster_id))
 
 
+@pytest.mark.parametrize("monster_id", ["srd-zombie", "srd-ogre-zombie"])
+def test_certified_zombies_pass_public_readiness(monster_id: str) -> None:
+    assert_public_selection_runnable(_selection("karnok-stoneward-l1", monster_id))
+
+
 def test_legacy_uncertified_hero_cannot_bypass_catalog_through_api_id() -> None:
     with pytest.raises(ValueError, match="aldric-vane-l1"):
         assert_public_selection_runnable(_selection("aldric-vane-l1"))
 
 
 def test_uncertified_monster_id_is_rejected_before_engine_setup() -> None:
-    with pytest.raises(ValueError, match="srd-zombie"):
-        assert_public_selection_runnable(_selection("karnok-stoneward-l1", "srd-zombie"))
+    with pytest.raises(ValueError, match="srd-specter"):
+        assert_public_selection_runnable(_selection("karnok-stoneward-l1", "srd-specter"))
 
 
 def test_public_setup_endpoint_returns_400_for_uncertified_hero() -> None:

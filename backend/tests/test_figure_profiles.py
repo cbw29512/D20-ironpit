@@ -9,7 +9,7 @@ def test_every_raw_ready_monster_has_a_reviewed_figure_profile() -> None:
         for card in build_monster_catalog()
         if card.coverage_status is CoverageStatus.RAW_READY
     }
-    assert len(ready_names) == 101
+    assert len(ready_names) == 103
     assert ready_names <= set(MONSTER_FIGURE_PROFILES)
 
 

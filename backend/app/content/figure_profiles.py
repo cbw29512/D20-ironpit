@@ -88,6 +88,7 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Mule": _p("hoofed", "equine"),
     "Noble": _p("humanoid", "noble"),
     "Ogre": _p("brute", "ogre"),
+    "Ogre Zombie": _p("brute", "ogre-zombie"),
     "Owl": _p("bird", "owl"),
     "Owlbear": _p("bear", "owlbear"),
     "Panther": _p("quadruped", "cat"),
@@ -121,4 +122,5 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Warrior Veteran": _p("humanoid", "veteran"),
     "Weasel": _p("quadruped", "mustelid"),
     "Wolf": _p("quadruped", "canine"),
+    "Zombie": _p("humanoid", "zombie"),
 }

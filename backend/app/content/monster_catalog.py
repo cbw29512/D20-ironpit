@@ -39,7 +39,7 @@ _READY_BY_NAME = {
     "Goblin Minion": "srd-goblin-minion", "Goblin Warrior": "srd-goblin-warrior", "Guard": "srd-guard", "Hawk": "srd-hawk",
     "Hippogriff": "srd-hippogriff", "Hobgoblin Warrior": "srd-hobgoblin-warrior", "Hyena": "srd-hyena",
     "Jackal": "srd-jackal", "Knight": "srd-knight", "Kobold Warrior": "srd-kobold-warrior", "Lizard": "srd-lizard",
-    "Mastiff": "srd-mastiff", "Mule": "srd-mule", "Noble": "srd-noble", "Ogre": "srd-ogre", "Owl": "srd-owl",
+    "Mastiff": "srd-mastiff", "Mule": "srd-mule", "Noble": "srd-noble", "Ogre": "srd-ogre", "Ogre Zombie": "srd-ogre-zombie", "Owl": "srd-owl",
     "Owlbear": "srd-owlbear", "Panther": "srd-panther", "Plesiosaurus": "srd-plesiosaurus",
     "Polar Bear": "srd-polar-bear", "Pony": "srd-pony", "Pteranodon": "srd-pteranodon",
     "Rat": "srd-rat", "Raven": "srd-raven", "Rhinoceros": "srd-rhinoceros",
@@ -56,7 +56,7 @@ _READY_BY_NAME = {
     "Swarm of Bats": "srd-swarm-of-bats", "Swarm of Crawling Claws": "srd-swarm-of-crawling-claws",
     "Swarm of Insects": "srd-swarm-of-insects", "Swarm of Rats": "srd-swarm-of-rats",
     "Swarm of Venomous Snakes": "srd-swarm-of-venomous-snakes", "Tough": "srd-tough",
-    "Venomous Snake": "srd-venomous-snake", "Violet Fungus": "srd-violet-fungus",
+    "Venomous Snake": "srd-venomous-snake", "Violet Fungus": "srd-violet-fungus", "Zombie": "srd-zombie",
 }
 
 

@@ -19,16 +19,16 @@ load("browser-monsters-generated.js");
 const generated = window.IRON_PIT_BROWSER_MONSTERS;
 assert.equal(window.IRON_PIT_CANONICAL_MONSTERS_READY, true, "Canonical generated monster bundle must mark itself ready");
 assert.equal(Object.keys(manual).length, 67, "Legacy fragments remain a 67-monster compatibility subset");
-assert.equal(Object.keys(generated).length, 101, "Generated runtime must expose only currently RAW-certified monsters");
+assert.equal(Object.keys(generated).length, 103, "Generated runtime must expose only currently RAW-certified monsters");
 for (const id of [
   "srd-jackal", "srd-archelon", "srd-ankylosaurus", "srd-giant-eagle", "srd-giant-elk", "srd-giant-crocodile",
   "srd-animated-armor", "srd-animated-flying-sword", "srd-awakened-tree", "srd-flying-snake",
   "srd-gargoyle", "srd-grimlock", "srd-guard-captain", "srd-hippopotamus",
-  "srd-killer-whale", "srd-manticore", "srd-pegasus", "srd-scorpion", "srd-skeleton", "srd-spider",
+  "srd-killer-whale", "srd-manticore", "srd-ogre-zombie", "srd-pegasus", "srd-scorpion", "srd-skeleton", "srd-spider",
   "srd-tough", "srd-venomous-snake", "srd-violet-fungus", "srd-bandit-captain", "srd-knight",
   "srd-noble", "srd-warrior-veteran", "srd-goblin-boss", "srd-blood-hawk",
   "srd-swarm-of-bats", "srd-swarm-of-rats", "srd-swarm-of-crawling-claws",
-  "srd-swarm-of-insects", "srd-swarm-of-venomous-snakes",
+  "srd-swarm-of-insects", "srd-swarm-of-venomous-snakes", "srd-zombie",
 ]) {
   assert.ok(generated[id], `${id} must be present in generated runtime`);
 }
@@ -171,4 +171,4 @@ assert.ok(heroOne.state.active_effect_ids.includes("grappled"));
 assert.ok(heroOne.state.active_effect_ids.includes("restrained"));
 assert.ok(heroTwo.state.active_effect_ids.includes("prone"));
 
-console.log("Generated monster runtime contains 101 RAW-certified templates, including native data-only swarms, with conditional damage, Redirect Attack, and T. rex retargeting.");
+console.log("Generated monster runtime contains 103 RAW-certified templates, including native data-only swarms, with conditional damage, Redirect Attack, and T. rex retargeting.");
