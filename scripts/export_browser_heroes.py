@@ -185,6 +185,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "athletics_advantage": progression.athletics_advantage,
         "danger_sense": progression.danger_sense,
         "reckless_attack": progression.reckless_attack,
+        "frenzy": progression.frenzy,
         "critical_move_fraction": progression.critical_move_fraction,
         "tactical_shift_fraction": progression.tactical_shift_fraction,
         "visual": {"armor": template.visual.armor, "main_hand": template.visual.main_hand,
