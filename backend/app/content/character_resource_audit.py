@@ -9,6 +9,7 @@ from app.content.level_resources import (
     orc_adrenaline_rush_uses,
 )
 from app.content.pregen_combat_profiles import PregenCombatProfile
+from app.content.spell_slot_progression import FULL_CASTER_CLASSES, spell_slot_resources
 from app.domain.character_builds import CharacterBuildProfile
 from app.domain.models import CombatantTemplate
 
@@ -18,6 +19,7 @@ ResourceRule = tuple[str, str, Callable[[int], int]]
 # resource rules are considered independently audited for RAW certification.
 _CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
     "barbarian": (("rage", "Rage", barbarian_rage_uses),),
+    "cleric": (),
     "fighter": (
         ("second-wind", "Second Wind", fighter_second_wind_uses),
         ("action-surge", "Action Surge", fighter_action_surge_uses),
@@ -38,6 +40,8 @@ def expected_resources(profile: CharacterBuildProfile) -> dict[str, int]:
         *_SPECIES_RULES.get(profile.species_id, ()),
     ]
     resolved = {resource_id: resolver(profile.level) for resource_id, _name, resolver in rules}
+    if profile.class_id in FULL_CASTER_CLASSES:
+        resolved.update(spell_slot_resources(profile.class_id, profile.level))
     return {resource_id: uses for resource_id, uses in resolved.items() if uses > 0}
 
 
