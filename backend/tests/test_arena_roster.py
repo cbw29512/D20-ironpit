@@ -1,4 +1,5 @@
 from app.main import get_arena_roster
+from app.content.pregens import build_brom_ironmark, build_mara_quickstep, build_selene_asharrow
 from app.domain.models import ArenaRoster, DamageType, WeaponAttackKind
 from app.domain.traits import CombatTrait
 
@@ -12,9 +13,8 @@ def test_arena_roster_exposes_canonical_template_batch() -> None:
 
     assert isinstance(roster, ArenaRoster)
     assert [item.id for item in roster.characters] == [
-        "karnok-stoneward-l1", "karnok-stoneward-l2", "karnok-stoneward-l3", "karnok-stoneward-l4", "karnok-stoneward-l5", "rokhan-stonefury-l1",
-        "aldric-vane-l1",
-        "brom-ironmark-l1", "selene-asharrow-l1", "mara-quickstep-l1",
+        "karnok-stoneward-l1", "karnok-stoneward-l2", "karnok-stoneward-l3",
+        "karnok-stoneward-l4", "karnok-stoneward-l5", "rokhan-stonefury-l1",
     ]
     assert [item.id for item in roster.monsters] == [
         "srd-goblin-warrior", "srd-goblin-minion", "srd-hobgoblin-warrior", "srd-kobold-warrior",
@@ -45,7 +45,7 @@ def test_arena_roster_exposes_canonical_template_batch() -> None:
 
 
 def test_brom_ironmark_matches_level_one_fighter_loadout() -> None:
-    brom = _by_id(get_arena_roster().characters, "brom-ironmark-l1")
+    brom = build_brom_ironmark()
     assert (brom.level, brom.armor_class, brom.max_hp) == (1, 17, 12)
     assert brom.fighting_style == "Defense"
     assert len(brom.weapon_masteries) == 3
@@ -57,7 +57,7 @@ def test_brom_ironmark_matches_level_one_fighter_loadout() -> None:
 
 
 def test_selene_asharrow_matches_archery_fighter_loadout() -> None:
-    selene = _by_id(get_arena_roster().characters, "selene-asharrow-l1")
+    selene = build_selene_asharrow()
     assert (selene.level, selene.armor_class, selene.max_hp) == (1, 16, 12)
     assert selene.initiative_bonus == 3
     assert selene.fighting_style == "Archery"
@@ -70,7 +70,7 @@ def test_selene_asharrow_matches_archery_fighter_loadout() -> None:
 
 
 def test_mara_quickstep_matches_level_one_rogue_loadout() -> None:
-    mara = _by_id(get_arena_roster().characters, "mara-quickstep-l1")
+    mara = build_mara_quickstep()
     assert (mara.level, mara.armor_class, mara.max_hp) == (1, 14, 10)
     assert mara.archetype == "Rogue"
     assert mara.initiative_bonus == 3
