@@ -1,0 +1,36 @@
+from __future__ import annotations
+
+from app.content.canonical_progression import advance_profile_data
+from app.content.fighter_progression_profile import build_karnok_stoneward_level5_profile
+from app.domain.character_builds import AbilityIncrease, AbilityScores, CharacterBuildProfile, FeatureAudit
+
+
+def build_karnok_stoneward_level6_profile() -> CharacterBuildProfile:
+    previous = build_karnok_stoneward_level5_profile()
+    data = advance_profile_data(previous, 6)
+    feature = FeatureAudit(
+        feature_id="ability-score-improvement-l6",
+        feature_name="Ability Score Improvement",
+        source_reference="D&D Beyond Basic Rules 2024: Fighter Level 6; Feats — Ability Score Improvement",
+        category="feat",
+        combat_relevant=True,
+        automated=True,
+        notes=("Deterministic melee-role choice: +2 Strength, STR 18→20. Runtime Greatsword attack/damage, "
+               "Strength save, and Athletics values are updated; Constitution and HP progression remain unchanged."),
+    )
+    data.update(
+        advancement_increases=[
+            *data["advancement_increases"],
+            AbilityIncrease(ability="strength", amount=2).model_dump(),
+        ],
+        final_ability_scores=AbilityScores(
+            strength=20, dexterity=13, constitution=16, intelligence=10, wisdom=10, charisma=10,
+        ).model_dump(),
+        feature_audits=[*data["feature_audits"], feature.model_dump()],
+        source_references=[
+            *data["source_references"],
+            "Basic Rules 2024: Fighter — Level 6 Ability Score Improvement",
+            "Basic Rules 2024: Feats — Ability Score Improvement (+2 Strength)",
+        ],
+    )
+    return CharacterBuildProfile.model_validate(data)
