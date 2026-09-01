@@ -4,6 +4,11 @@ import logging
 
 from app.combat.action_economy import is_available, spend
 from app.combat.barbarian import end_rage_if_incapacitated, extend_rage_from_attack
+from app.combat.barbarian_level2 import (
+    activate_reckless_attack,
+    attacks_against_reckless_advantage,
+    reckless_attack_advantage,
+)
 from app.combat.bloodied import bloodied_fury_advantage
 from app.combat.condition_rules import close_hit_is_automatic_critical
 from app.combat.conditions import apply_hit_conditions, attack_roll_condition_sources
@@ -35,10 +40,13 @@ def resolve_attack(
             raise ValueError("Action is not available for an attack.")
         weapon = attack.weapon; defender_event_id = target_event_id or defender.template.id
         attacker_event_id = actor_event_id or attacker.template.id
+        reckless_started = activate_reckless_attack(attacker, attack, attacker_event_id, round_number)
         condition_advantage, condition_disadvantage = attack_roll_condition_sources(attacker, defender, distance_ft, defender_event_id)
         mode = resolve_attack_roll_mode(
             weapon, distance_ft,
-            advantage_sources=advantage_sources + condition_advantage + bloodied_fury_advantage(attacker, attack) + attacks_against_advantage_sources(defender),
+            advantage_sources=(advantage_sources + condition_advantage + bloodied_fury_advantage(attacker, attack)
+                               + attacks_against_advantage_sources(defender) + attacks_against_reckless_advantage(defender)
+                               + reckless_attack_advantage(attacker, attack)),
             other_disadvantage_sources=other_disadvantage_sources + condition_disadvantage,
             close_enemy_active=close_enemy_active,
         )
@@ -70,6 +78,7 @@ def resolve_attack(
             end_rage_if_incapacitated(actual_defender)
         outcome = "CRITICAL HIT" if critical else ("HIT" if hit else "MISS")
         description = f"{attacker.template.name}: {outcome} with {weapon.name}."
+        if reckless_started: description += f" {attacker.template.name} uses Reckless Attack."
         if redirect_used: description += f" {defender.template.name} uses Redirect Attack; {actual_defender.template.name} becomes the target."
         if parry_used: description += f" {actual_defender.template.name} uses Parry."
         if damage_outcome == "relentless_endurance": description += f" {actual_defender.template.name} uses Relentless Endurance and remains at 1 HP."
@@ -87,7 +96,7 @@ def resolve_attack(
             death_save_successes_before=death_success_before, death_save_failures_before=death_failure_before,
             death_save_successes=actual_defender.death_save_successes, death_save_failures=actual_defender.death_save_failures,
             is_stable=actual_defender.is_stable, is_dead=actual_defender.is_dead, weapon_id=weapon.id, projectile=weapon.projectile,
-            feature_id=feature_id, concentration_ended_effect_id=concentration_before if concentration_before and actual_defender.concentration is None else None,
+            feature_id=feature_id or ("reckless-attack" if reckless_started else None), concentration_ended_effect_id=concentration_before if concentration_before and actual_defender.concentration is None else None,
             animation=weapon.animation, description=description,
         )
     except Exception as exc:
