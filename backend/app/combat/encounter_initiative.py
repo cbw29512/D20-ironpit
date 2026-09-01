@@ -30,6 +30,7 @@ def _roll_group(members: list[EncounterCombatant], dice: DiceProvider) -> Initia
         side=members[0].side,
         template_id=template.id,
         combatant_ids=[member.combatant_id for member in members],
+        initiative_roll=roll,
         natural_roll=roll.selected_roll or 1,
         initiative_bonus=template.initiative_bonus,
         initiative_count=roll.total,
