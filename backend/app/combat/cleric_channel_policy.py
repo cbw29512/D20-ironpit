@@ -4,10 +4,12 @@ from dataclasses import dataclass
 from typing import Literal
 
 from app.combat.action_economy import is_available
+from app.combat.cleric_preserve_life import preserve_life_targets
 from app.content.monster_creature_types import is_creature_type
 from app.domain.encounters import EncounterCombatant, EncounterSetup
+from app.domain.traits import CombatTrait
 
-ChannelChoiceKind = Literal["turn-undead", "divine-spark-heal", "divine-spark-damage"]
+ChannelChoiceKind = Literal["preserve-life", "turn-undead", "divine-spark-heal", "divine-spark-damage"]
 
 
 @dataclass(frozen=True)
@@ -53,10 +55,21 @@ def _nearest_enemy(cleric: EncounterCombatant, setup: EncounterSetup) -> Encount
     return min(legal, key=lambda enemy: (_distance(cleric, enemy), enemy.combatant_id), default=None)
 
 
+def _worth_preserving(cleric: EncounterCombatant, setup: EncounterSetup) -> tuple[EncounterCombatant, ...]:
+    if CombatTrait.LIFE_DOMAIN not in cleric.state.template.combat_traits:
+        return ()
+    targets = preserve_life_targets(cleric, setup)
+    urgent = any(target.state.current_hp == 0 or target.combatant_id == cleric.combatant_id for target in targets)
+    return targets if urgent or len(targets) >= 2 else ()
+
+
 def choose_channel_divinity(cleric: EncounterCombatant, setup: EncounterSetup) -> ChannelDivinityChoice | None:
-    """Rescue if needed, otherwise control Undead, and conserve damage Spark while spell slots remain."""
+    """Rescue/support first, then control Undead, and conserve damage Spark while spell slots remain."""
     if not is_available(cleric.state, "action") or _uses(cleric, "channel-divinity") < 1:
         return None
+    preserve = _worth_preserving(cleric, setup)
+    if preserve:
+        return ChannelDivinityChoice("preserve-life", preserve)
     downed = _downed_other_ally(cleric, setup)
     if downed is not None and not any(item.id.startswith("spell-slot-") and item.current_uses for item in cleric.state.resources):
         return ChannelDivinityChoice("divine-spark-heal", (downed,))
