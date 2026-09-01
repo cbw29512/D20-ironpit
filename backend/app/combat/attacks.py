@@ -100,7 +100,9 @@ def resolve_attack(
                 actual_defender, applied_total, critical=critical, damage_types=applied_types,
                 dice=dice, affected_states=affected_states,
             )
-            applied_conditions = apply_hit_conditions(attack, actual_defender, attacker_event_id, round_number)
+            applied_conditions = apply_hit_conditions(
+                attack, actual_defender, attacker_event_id, round_number, affected_states,
+            )
             end_rage_if_incapacitated(actual_defender)
         outcome = "CRITICAL HIT" if critical else ("HIT" if hit else "MISS")
         description = f"{attacker.template.name}: {outcome} with {weapon.name}."
