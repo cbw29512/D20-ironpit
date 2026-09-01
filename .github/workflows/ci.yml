@@ -47,6 +47,7 @@ jobs:
           test -s frontend/data/srd_5_2_1_monsters.json
           test -s frontend/browser-monsters-generated.js
           test -s frontend/browser-spell-effects.js
+          grep -q '"id":"bless"' frontend/browser-spell-effects.js
       - name: Upload canonical static artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -100,6 +101,7 @@ jobs:
           node frontend/browser-precombat-spells.test.cjs
           node frontend/browser-modifiers-concentration.test.cjs
           node frontend/browser-shield-of-faith.test.cjs
+          node frontend/browser-bless.test.cjs
           node frontend/battle-log-format.test.cjs
           node frontend/figure-visuals.test.cjs
           node frontend/figure-portraits.test.cjs
