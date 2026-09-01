@@ -5,6 +5,7 @@ import logging
 from pathlib import Path
 from typing import Any
 
+from app.content.canonical_hero_policy import canonical_spell_package
 from app.content.certified_heroes import build_certified_hero_entries
 from app.domain.models import CombatantTemplate, WeaponAttack
 
@@ -153,8 +154,15 @@ def _removal(action: Any) -> dict[str, Any]:
     return row
 
 
+def _spell_choice(choice: Any) -> dict[str, Any]:
+    return {
+        "id": choice.id, "name": choice.name, "level": choice.spell_level,
+        "role": choice.role, "requiredCapabilities": list(choice.required_capabilities),
+    }
+
+
 def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[str, Any]:
-    class_id, _, build_id = key
+    class_id, level, build_id = key
     attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
     progression = template.progression_features
     row: dict[str, Any] = {
@@ -180,6 +188,10 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
                    "figure_form": template.visual.body_style, "role": template.archetype.lower()},
         "source": template.source,
     }
+    package = canonical_spell_package(class_id, level) if template.spell_save_actions or template.spell_attack_actions or template.defensive_spell_actions or template.healing_actions else None
+    if package is not None:
+        row["canonical_cantrips"] = [_spell_choice(item) for item in package.cantrips]
+        row["canonical_prepared_spells"] = [_spell_choice(item) for item in package.spells]
     if template.spell_save_actions:
         row["spell_save_actions"] = [_spell(item) for item in template.spell_save_actions]
     if template.spell_attack_actions:
