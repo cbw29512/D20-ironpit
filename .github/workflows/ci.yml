@@ -46,18 +46,20 @@ jobs:
           python scripts/prepare_static_site.py
           test -s frontend/data/srd_5_2_1_monsters.json
           test -s frontend/browser-monsters-generated.js
+          test -s frontend/browser-spell-effects.js
       - name: Upload canonical static artifacts
         uses: actions/upload-artifact@v4
         with:
           name: canonical-static-${{ github.sha }}
           path: |
             frontend/browser-monsters-generated.js
+            frontend/browser-spell-effects.js
             frontend/data/srd_5_2_1_monsters.json
           retention-days: 1
       - name: Enforce generated static parity
         run: |
-          git diff --exit-code -- frontend/browser-heroes.js frontend/figure-profiles.js frontend/browser-monsters-generated.js frontend/data/srd_5_2_1_monsters.json
-          test -z "$(git status --porcelain --untracked-files=all -- frontend/browser-monsters-generated.js frontend/data/srd_5_2_1_monsters.json)"
+          git diff --exit-code -- frontend/browser-heroes.js frontend/figure-profiles.js frontend/browser-monsters-generated.js frontend/browser-spell-effects.js frontend/data/srd_5_2_1_monsters.json
+          test -z "$(git status --porcelain --untracked-files=all -- frontend/browser-monsters-generated.js frontend/browser-spell-effects.js frontend/data/srd_5_2_1_monsters.json)"
       - name: Certify Python rules reference
         working-directory: backend
         run: pytest -q
@@ -97,6 +99,7 @@ jobs:
           node frontend/browser-spell-policy.test.cjs
           node frontend/browser-precombat-spells.test.cjs
           node frontend/browser-modifiers-concentration.test.cjs
+          node frontend/browser-shield-of-faith.test.cjs
           node frontend/battle-log-format.test.cjs
           node frontend/figure-visuals.test.cjs
           node frontend/figure-portraits.test.cjs
@@ -133,8 +136,11 @@ jobs:
           grep -q 'browser-champion.js' index.html
           grep -q 'browser-tactical-shift.js' index.html
           grep -q 'browser-undead-fortitude.js' index.html
+          grep -q 'browser-zero-hp.js' index.html
           grep -q 'browser-modifiers.js' index.html
           grep -q 'browser-concentration.js' index.html
+          grep -q 'browser-spell-effects.js' index.html
+          grep -q 'browser-spell-modifiers.js' index.html
           grep -q 'browser-healing.js' index.html
           grep -q 'browser-spell-area.js' index.html
           grep -q 'browser-spell-policy.js' index.html
@@ -172,10 +178,13 @@ jobs:
           grep -q 'browser-champion.js' frontend/index.html
           grep -q 'browser-tactical-shift.js' frontend/index.html
           grep -q 'browser-undead-fortitude.js' frontend/index.html
+          grep -q 'browser-zero-hp.js' frontend/index.html
           grep -q 'browser-timed-conditions.js' frontend/index.html
           grep -q 'browser-modifiers.js' frontend/index.html
           grep -q 'browser-saves.js' frontend/index.html
           grep -q 'browser-concentration.js' frontend/index.html
+          grep -q 'browser-spell-effects.js' frontend/index.html
+          grep -q 'browser-spell-modifiers.js' frontend/index.html
           grep -q 'browser-multiattack.js' frontend/index.html
           grep -q 'browser-healing.js' frontend/index.html
           grep -q 'browser-spell-area.js' frontend/index.html
