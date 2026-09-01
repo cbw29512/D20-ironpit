@@ -1,0 +1,49 @@
+import pytest
+
+from app.content.build_audit import assert_character_build_raw_ready, audit_character_build
+from app.content.fighter_progression import build_karnok_stoneward_level
+from app.content.fighter_progression_profile import build_karnok_stoneward_level4_profile
+
+
+def test_fighter_level_four_snapshot_has_raw_advancement() -> None:
+    karnok = build_karnok_stoneward_level(4)
+    resources = {resource.id: resource.max_uses for resource in karnok.resources}
+
+    assert (karnok.id, karnok.level, karnok.max_hp) == ("karnok-stoneward-l4", 4, 40)
+    assert (karnok.weapon_attack.attack_bonus, karnok.weapon_attack.damage_bonus) == (6, 4)
+    assert karnok.saving_throw_bonuses["strength"] == 6
+    assert karnok.skill_bonuses["athletics"] == 6
+    assert resources["second-wind"] == 3
+    assert resources["action-surge"] == 1
+    assert resources["adrenaline-rush"] == 2
+    assert len(karnok.weapon_masteries) == 4
+    assert karnok.weapon_masteries == ["flail", "javelin", "spear", "longsword"]
+
+
+def test_fighter_level_four_inherits_champion_level_three_features() -> None:
+    features = build_karnok_stoneward_level(4).progression_features
+
+    assert features.critical_hit_minimum == 19
+    assert features.initiative_advantage is True
+    assert features.athletics_advantage is True
+    assert features.critical_move_fraction == 0.5
+
+
+def test_fighter_level_four_profile_declares_split_asi_and_passes_structural_audit() -> None:
+    template = build_karnok_stoneward_level(4)
+    profile = build_karnok_stoneward_level4_profile()
+
+    assert [(item.ability, item.amount) for item in profile.advancement_increases] == [
+        ("strength", 1),
+        ("constitution", 1),
+    ]
+    assert profile.final_ability_scores.strength == 18
+    assert profile.final_ability_scores.constitution == 16
+    assert profile.weapon_masteries == template.weapon_masteries
+    assert audit_character_build(profile, template) == []
+    assert_character_build_raw_ready(profile, template)
+
+
+def test_fighter_progression_still_fails_closed_above_certified_level() -> None:
+    with pytest.raises(ValueError, match="level 5 is not certified yet"):
+        build_karnok_stoneward_level(5)
