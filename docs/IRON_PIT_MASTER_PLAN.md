@@ -142,6 +142,47 @@ Karnok Fighter 1-5 and Rokhan Barbarian 1 are the currently certified migration 
 
 Future classes must enter through this same pipeline. Do not create a parallel per-class roster, alternate same-class production identity, independently rebuilt level snapshot, or second spell/loadout policy.
 
+## Universal modifiers and Concentration foundation checkpoint
+
+Exact certified head before the first real concentration spell tranche: `fc5c24fe8f37465d722757023fc7ba2eb02c6e82`.
+
+Permanent GitHub Actions CI run `33473183771` completed successfully on that exact head with 476 Python tests plus every checked-in browser regression, source-size checks, generated-static parity, manifests, GitHub Pages checks, backend-free production checks, and the Netlify guard. Netlify deployment was not invoked.
+
+Certified shared behavior at this checkpoint includes:
+
+- serializable `CombatModifier` state with explicit source ownership and fail-closed validation;
+- modifier kinds for Armor Class, Speed, attack/save D20 bonus dice, attacks-against Advantage, and source-owned typed bonus damage;
+- Python/browser effective AC and effective Speed consumers;
+- effective Speed used by ordinary turn movement, prone recovery, Dash, encounter Dash, Adrenaline Rush, and Tactical Shift;
+- attack-roll modifier dice and save-roll modifier dice in the real attack/save paths;
+- complete Concentration state ownership, replacement, source-effect cleanup, incapacitation/death termination, and damage-triggered Constitution saves;
+- 2024 Concentration DC behavior: DC 10 through 20 damage, half damage above that, capped at DC 30;
+- Concentration checks trigger from incoming damage even when Temporary HP absorbs all HP loss;
+- encounter-wide cleanup removes the failed/replaced concentration effect from allies, not merely the caster;
+- weapon attacks, direct save actions, Multiattack save actions, and damaging spell save paths all pass encounter state into the same concentration lifecycle;
+- permanent browser parity tests cover modifier AC, attack/save bonus dice, effective Speed, Adrenaline Rush, Tactical Shift, concentration replacement, Temporary-HP concentration damage, source cleanup, DC cap, and fail-closed invalid modifiers.
+
+This is an engine-foundation checkpoint only. It does not certify any new caster hero or spell package by itself.
+
+### Active tranche — first data-driven concentration buff
+
+Current target: Shield of Faith as the first real spell using the shared modifier/concentration architecture.
+
+Required stopping conditions before this tranche is checked off:
+
+- [ ] spell schema expresses the effect generically; no spell-name conditional in combat code;
+- [ ] source-backed Shield of Faith data resolves to a +2 Armor Class modifier owned by the caster/effect;
+- [ ] Concentration starts/replaces correctly and removal strips the AC modifier;
+- [ ] slot/resource and action timing are accounted for correctly for the certified arena policy;
+- [ ] target selection is deterministic and does not introduce unsupported tactical complexity;
+- [ ] Python deterministic tests pass through the real resolver and real attack/effective-AC path;
+- [ ] browser implementation consumes the same serialized data and matches Python behavior;
+- [ ] permanent CI includes the new Python/browser regression and production wiring checks;
+- [ ] source-size and generated-static parity remain green;
+- [ ] exact-head GitHub CI is green before this tranche is marked complete;
+- [ ] no Cleric or other caster hero is promoted solely because this one spell is supported;
+- [ ] no routine Netlify deployment is used.
+
 ## Priority queue
 
 ### Goal 1 — Universal combat modifiers, buffs/debuffs, and concentration
