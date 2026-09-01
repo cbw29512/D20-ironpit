@@ -31,7 +31,6 @@ from app.combat.tactical_shift import resolve_tactical_shift
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 
-
 def _close_after_action(sequence, round_number, attacker, setup, dice):
     if is_incapacitated(attacker.state) or backline_holds_position(attacker, setup):
         return [], sequence
@@ -104,7 +103,6 @@ def resolve_combat_turn(
     adrenaline_event = use_adrenaline_rush(sequence, round_number, attacker.state, attacker.combatant_id)
     if adrenaline_event is not None:
         events.append(adrenaline_event); sequence += 1
-
     attack_spell = choose_spell_attack(attacker, setup, turn_key)
     if attack_spell is not None:
         events.append(resolve_spell_attack(
