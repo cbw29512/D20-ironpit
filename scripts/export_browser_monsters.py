@@ -29,7 +29,11 @@ def _certified_monsters():
 
 def render() -> str:
     try:
-        rows = [template_row(template) for template in _certified_monsters()]
+        rows = []
+        for template in _certified_monsters():
+            row = template_row(template)
+            row["creature_type"] = template.creature_type
+            rows.append(row)
         ids = {row["id"] for row in rows}
         if len(rows) != len(ids):
             raise RuntimeError("Certified browser monster export contains duplicate template IDs.")
