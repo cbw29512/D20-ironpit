@@ -123,5 +123,5 @@
       feature_id: extra.featureId || null, animation: attack.animation || (attack.kind === "ranged" ? "projectile" : "slash"), description };
     return window.IRON_PIT_BROWSER_CHAMPION?.criticalMove(attacker, extra.setup, event) || event;
   }
-  window.IRON_PIT_BROWSER_ATTACK = { adjustedDamage, applyDamage, rangedCloseThreat, resolveAttack };
+  window.IRON_PIT_BROWSER_ATTACK = { adjustedDamage, applyDamage, conditionSources, rangedCloseThreat, resolveAttack };
 })();
