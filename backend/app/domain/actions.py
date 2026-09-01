@@ -8,7 +8,7 @@ from app.domain.size import CreatureSize
 
 AbilityName = Literal["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
 ActionCost = Literal["action", "bonus_action", "reaction"]
-HealingTargetMode = Literal["self", "ally", "self_or_ally"]
+HealingTargetMode = Literal["self", "ally", "self_or_ally", "other"]
 ConditionRemovalTargetMode = Literal["self", "ally", "self_or_ally"]
 ConditionReactionTrigger = Literal["condition_applied_to_self", "condition_applied_to_ally"]
 ConditionTiming = Literal["source_turn_start", "source_turn_end", "target_turn_start", "target_turn_end"]
@@ -114,6 +114,8 @@ class SavingThrowAction(BaseModel):
     success_damage: Literal["none", "half"] = "none"
     grapple_escape_dc: int | None = Field(default=None, ge=1, le=40)
     restrains_while_grappled: bool = False
+    resource_id: str | None = None
+    resource_cost: int = Field(default=1, ge=1, le=20)
     animation: str = "save-effect"
 
 
