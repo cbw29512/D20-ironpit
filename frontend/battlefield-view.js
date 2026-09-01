@@ -9,8 +9,7 @@
 
   function runtimeTemplate(card, side) {
     if (!card?.runnable_template_id) return null;
-    return side === "heroes"
-      ? window.IRON_PIT_BROWSER_HEROES[card.runnable_template_id]
+    return side === "heroes" ? window.IRON_PIT_BROWSER_HEROES[card.runnable_template_id]
       : window.IRON_PIT_BROWSER_MONSTERS[card.runnable_template_id];
   }
 
@@ -21,38 +20,26 @@
 
   function emptySlot(side, index, onOpen) {
     const node = document.createElement("button");
-    node.type = "button"; node.className = `battle-card empty-slot ${side}`;
-    node.dataset.slotIndex = String(index);
+    node.type = "button"; node.className = `battle-card empty-slot ${side}`; node.dataset.slotIndex = String(index);
     node.innerHTML = `<span class="slot-number">${index + 1}</span><b>＋</b><strong>${side === "heroes" ? "ADD PREGEN" : "ADD MONSTER"}</strong><small>Click to choose a card</small>`;
-    node.addEventListener("click", () => onOpen(side, index));
-    return node;
+    node.addEventListener("click", () => onOpen(side, index)); return node;
   }
 
   function occupiedSlot(side, index, card, onOpen) {
-    const template = runtimeTemplate(card, side);
-    const node = document.createElement("button");
-    node.type = "button"; node.className = `battle-card occupied ${side}`;
-    node.dataset.slotIndex = String(index);
+    const template = runtimeTemplate(card, side), node = document.createElement("button");
+    node.type = "button"; node.className = `battle-card occupied ${side}`; node.dataset.slotIndex = String(index);
     node.innerHTML = `<span class="slot-number">${index + 1}</span><span class="initiative-badge" aria-label="Initiative">—</span><strong class="card-name"></strong><small class="card-meta"></small>${figureMarkup(template)}<div class="card-concentration" hidden></div><div class="card-conditions"></div><div class="card-hp"><span></span></div><small class="hp-text"></small><span class="death-stamp">✕ DEAD</span>`;
     node.querySelector(".card-name").textContent = card.name;
-    node.querySelector(".card-meta").textContent = side === "heroes"
-      ? `${card.class_name} · Level ${card.level} · ${card.build_name}`
-      : `${card.monster_type} · CR ${card.challenge_rating}`;
+    node.querySelector(".card-meta").textContent = side === "heroes" ? `${card.class_name} · Level ${card.level} · ${card.build_name}` : `${card.monster_type} · CR ${card.challenge_rating}`;
     const hp = Number(template?.max_hp || card.hit_points || 0);
-    node.dataset.maxHp = String(hp); node.dataset.currentHp = String(hp);
-    node.querySelector(".hp-text").textContent = `${hp} / ${hp} HP`;
-    node.querySelector(".card-hp span").style.width = "100%";
-    if (template) V()?.decorate(node, template);
-    node.addEventListener("click", () => onOpen(side, index));
-    return node;
+    node.dataset.maxHp = String(hp); node.dataset.currentHp = String(hp); node.querySelector(".hp-text").textContent = `${hp} / ${hp} HP`;
+    node.querySelector(".card-hp span").style.width = "100%"; if (template) V()?.decorate(node, template);
+    node.addEventListener("click", () => onOpen(side, index)); return node;
   }
 
   function renderSide(side, slots, onOpen) {
-    const root = el(side === "heroes" ? "hero-slots" : "monster-slots");
-    const nodes = [];
-    for (let index = 0; index < MAX_SLOTS; index += 1) {
-      nodes.push(slots[index] ? occupiedSlot(side, index, slots[index], onOpen) : emptySlot(side, index, onOpen));
-    }
+    const root = el(side === "heroes" ? "hero-slots" : "monster-slots"), nodes = [];
+    for (let index = 0; index < MAX_SLOTS; index += 1) nodes.push(slots[index] ? occupiedSlot(side, index, slots[index], onOpen) : emptySlot(side, index, onOpen));
     root.replaceChildren(...nodes);
   }
 
@@ -80,20 +67,10 @@
     el("result-panel").hidden = false; el("status").textContent = winner;
   }
 
-  function logContext(battle, event) {
-    if (event.event_type !== "attack") return event;
-    const combatants = [...battle.setup.heroes, ...battle.setup.monsters];
-    const actor = combatants.find((member) => member.combatant_id === event.actor_id);
-    const target = combatants.find((member) => member.combatant_id === event.target_id);
-    const attack = actor?.state.template.attacks?.find((item) => item.id === event.weapon_id);
-    return { ...event, attack_name: attack?.name, target_ac: target?.state.template.armor_class };
-  }
-
   function writeLog(battle) {
     const root = el("battle-log"); root.replaceChildren();
     battle.events.forEach((event) => {
-      const li = document.createElement("li"), enriched = logContext(battle, event);
-      li.textContent = `R${event.round_number}: ${L()?.format(enriched) || event.description}`;
+      const li = document.createElement("li"); li.textContent = `R${event.round_number}: ${L()?.format(event) || event.description}`;
       if (event.critical) li.classList.add("log-critical");
       if (event.event_type === "attack" && event.attack_roll?.selected_roll === 1) li.classList.add("log-fumble");
       root.append(li);
