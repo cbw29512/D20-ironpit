@@ -7,10 +7,14 @@ from app.domain.models import CombatTrait, EncounterSelection, RollMode
 
 
 def _rat_pack_setup(starting_distance_ft: int = 5):
-    return build_encounter_setup(EncounterSelection(
-        hero_ids=["aldric-vane-l1"],
+    setup = build_encounter_setup(EncounterSelection(
+        hero_ids=["karnok-stoneward-l1"],
         monster_ids=["srd-giant-rat", "srd-giant-rat"],
     ))
+    setup.heroes[0].position_ft = 0
+    for monster in setup.monsters:
+        monster.position_ft = starting_distance_ft
+    return setup
 
 
 def test_giant_rat_is_marked_with_pack_tactics() -> None:
@@ -61,7 +65,7 @@ def test_partial_debuffed_ally_still_counts_for_pack_tactics() -> None:
 
 def test_single_combatant_side_has_no_adjacent_ally() -> None:
     setup = build_encounter_setup(EncounterSelection(
-        hero_ids=["aldric-vane-l1"],
+        hero_ids=["karnok-stoneward-l1"],
         monster_ids=["srd-giant-rat"],
     ))
     attacker = setup.monsters[0]
