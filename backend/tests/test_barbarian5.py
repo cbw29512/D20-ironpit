@@ -39,6 +39,7 @@ def test_barbarian5_snapshot_and_profile_are_exact() -> None:
     assert template.progression_features.danger_sense is True
     assert template.progression_features.reckless_attack is True
     assert template.progression_features.frenzy is True
+    assert template.progression_features.fast_movement_bonus_ft == 10
     assert template.attack_action is not None
     assert [slot.attack_ids for slot in template.attack_action.slots] == [
         ["rokhan-greataxe", "rokhan-handaxe-thrown"],
