@@ -1,7 +1,7 @@
 from app.content.audited_cleric import build_seraphine_dawnshield
 from app.content.audited_cleric_profile import build_seraphine_dawnshield_profile
 from app.content.build_audit import assert_character_build_raw_ready
-from app.content.canonical_hero_policy import assert_canonical_profile_policy
+from app.content.canonical_hero_policy import assert_canonical_profile_policy, canonical_spell_package
 from app.content.character_resource_audit import assert_character_resources_raw_ready
 from app.content.certified_heroes import build_certified_hero_registry
 from app.content.offensive_spell_effects import build_sacred_flame
@@ -13,6 +13,7 @@ def test_seraphine_level_one_package_is_raw_audited() -> None:
     template = build_seraphine_dawnshield()
     profile = build_seraphine_dawnshield_profile()
     combat = build_pregen_combat_profiles()[template.id]
+    spells = canonical_spell_package("cleric", 1)
 
     assert_canonical_profile_policy(profile)
     assert_character_build_raw_ready(profile, template)
@@ -21,11 +22,15 @@ def test_seraphine_level_one_package_is_raw_audited() -> None:
 
     assert template.armor_class == 17
     assert template.max_hp == 10
+    assert template.saving_throw_bonuses["wisdom"] == 5
+    assert template.saving_throw_bonuses["charisma"] == 2
     assert {item.id: item.max_uses for item in template.resources} == {
         "spell-slot-1": 2,
         "adrenaline-rush": 2,
         "relentless-endurance": 1,
     }
+    assert [spell.id for spell in spells.cantrips] == ["sacred-flame", "light", "thaumaturgy"]
+    assert [spell.id for spell in spells.spells] == ["bless", "cure-wounds", "guiding-bolt", "shield-of-faith"]
     assert [spell.id for spell in template.spell_save_actions] == ["sacred-flame"]
     assert [spell.id for spell in template.spell_attack_actions] == ["guiding-bolt"]
     assert [spell.id for spell in template.defensive_spell_actions] == ["bless", "shield-of-faith"]
