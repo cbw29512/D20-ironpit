@@ -11,7 +11,7 @@ concurrency:
   group: ci-${{ github.event.pull_request.head.ref || github.ref_name }}
   cancel-in-progress: true
 
-# Exact-head certification for RAW combat, source parity, figure identity, full SRD roster visibility, six-slot UI, and Pages root entry.
+# Exact-head certification for RAW combat, source parity, figure identity, full SRD roster visibility, six-slot UI, Battle Lab, and Pages root entry.
 jobs:
   combat-certification:
     runs-on: ubuntu-latest
@@ -88,6 +88,7 @@ jobs:
           for file in frontend/*.js; do node --check "$file"; done
       - name: Run deterministic browser combat regressions
         run: |
+          node frontend/battle-lab.test.cjs
           node frontend/browser-engine.test.cjs
           node frontend/browser-formation.test.cjs
           node frontend/browser-conditional-damage.test.cjs
@@ -145,6 +146,7 @@ jobs:
           ! test -e scripts/write_frontend_config.py
           grep -q 'IRON_PIT_BROWSER_ENGINE.runEncounter' frontend/app.js
           grep -q 'IRON_PIT_CANONICAL_MONSTERS_READY' frontend/app.js
+          grep -q 'IRON_PIT_BATTLE_LAB' frontend/app.js
       - name: Prove clean GitHub Pages root entry
         run: |
           test -s index.html
@@ -152,7 +154,13 @@ jobs:
           grep -q 'id="hero-slots"' index.html
           grep -q 'id="monster-slots"' index.html
           grep -q 'id="fight-button"' index.html
+          grep -q 'id="battle-seed"' index.html
+          grep -q 'id="quick-test"' index.html
+          grep -q 'id="rerun-button"' index.html
+          grep -q 'id="instant-mode"' index.html
           ! grep -q 'id="distance"' index.html
+          grep -q 'battle-lab.css' index.html
+          grep -q 'battle-lab.js' index.html
           grep -q 'figure-archetypes.css' index.html
           grep -q 'figure-swarms.css' index.html
           grep -q 'figure-portraits.css' index.html
@@ -193,8 +201,14 @@ jobs:
           grep -q 'id="monster-slots"' frontend/index.html
           grep -q 'id="card-picker"' frontend/index.html
           grep -q 'id="combat-fx-overlay"' frontend/index.html
+          grep -q 'id="battle-seed"' frontend/index.html
+          grep -q 'id="quick-test"' frontend/index.html
+          grep -q 'id="rerun-button"' frontend/index.html
+          grep -q 'id="instant-mode"' frontend/index.html
           ! grep -q 'id="distance"' frontend/index.html
           grep -q 'battlefield.css' frontend/index.html
+          grep -q 'battle-lab.css' frontend/index.html
+          grep -q 'battle-lab.js' frontend/index.html
           grep -q 'figure-archetypes.css' frontend/index.html
           grep -q 'figure-swarms.css' frontend/index.html
           grep -q 'figure-portraits.css' frontend/index.html
