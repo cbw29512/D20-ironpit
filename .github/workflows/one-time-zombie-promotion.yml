@@ -53,6 +53,54 @@ jobs:
               raise SystemExit('Zombie figure insertion point drifted.')
           figures.write_text(text.replace(old, new, 1), encoding='utf-8')
           PY
+      - name: Update durable zombie promotion contracts
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          for filename in (
+              'backend/tests/test_figure_profiles.py',
+              'backend/tests/test_full_content_catalog.py',
+              'backend/tests/test_monster_source_audit.py',
+          ):
+              path = Path(filename)
+              text = path.read_text(encoding='utf-8')
+              if text.count('== 101') != 1:
+                  raise SystemExit(f'Expected one 101-monster contract in {filename}.')
+              path.write_text(text.replace('== 101', '== 103', 1), encoding='utf-8')
+
+          roster = Path('backend/tests/test_arena_roster.py')
+          text = roster.read_text(encoding='utf-8')
+          old = '"srd-killer-whale", "srd-manticore", "srd-pegasus"'
+          new = '"srd-killer-whale", "srd-manticore", "srd-ogre-zombie", "srd-pegasus"'
+          if old not in text:
+              raise SystemExit('Ogre Zombie roster insertion point drifted.')
+          text = text.replace(old, new, 1)
+          old = '"srd-tough", "srd-venomous-snake", "srd-violet-fungus",'
+          new = '"srd-tough", "srd-venomous-snake", "srd-violet-fungus", "srd-zombie",'
+          if old not in text:
+              raise SystemExit('Zombie roster insertion point drifted.')
+          roster.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          readiness = Path('backend/tests/test_public_readiness.py')
+          text = readiness.read_text(encoding='utf-8')
+          marker = 'def test_legacy_uncertified_hero_cannot_bypass_catalog_through_api_id() -> None:\n'
+          addition = (
+              '@pytest.mark.parametrize("monster_id", ["srd-zombie", "srd-ogre-zombie"])\n'
+              'def test_certified_zombies_pass_public_readiness(monster_id: str) -> None:\n'
+              '    assert_public_selection_runnable(_selection("karnok-stoneward-l1", monster_id))\n\n\n'
+          )
+          if marker not in text:
+              raise SystemExit('Public readiness insertion point drifted.')
+          text = text.replace(marker, addition + marker, 1)
+          if text.count('"srd-zombie"') != 3:
+              raise SystemExit('Unexpected Zombie readiness references before rejection update.')
+          old = 'with pytest.raises(ValueError, match="srd-zombie"):\n        assert_public_selection_runnable(_selection("karnok-stoneward-l1", "srd-zombie"))'
+          new = 'with pytest.raises(ValueError, match="srd-specter"):\n        assert_public_selection_runnable(_selection("karnok-stoneward-l1", "srd-specter"))'
+          if old not in text:
+              raise SystemExit('Uncertified monster readiness contract drifted.')
+          readiness.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
       - name: Enforce source limits before generation
         run: python scripts/check_source_limits.py
       - name: Regenerate declarative runtime and static artifacts
@@ -80,13 +128,16 @@ jobs:
         run: |
           rm -rf backend/iron_pit_backend.egg-info
           git status --short
-          test -z "$(git status --porcelain --untracked-files=all | grep -vE '^( M|M |MM) (backend/app/content/monster_catalog.py|backend/app/content/figure_profiles.py|backend/app/content/data/combatant_capabilities_v1.json|frontend/browser-monsters-generated.js|frontend/figure-profiles.js|data/(hero|monster)_certification_manifest.json)$')"
+          test -z "$(git status --porcelain --untracked-files=all | grep -vE '^( M|M |MM) (backend/app/content/monster_catalog.py|backend/app/content/figure_profiles.py|backend/app/content/data/combatant_capabilities_v1.json|backend/tests/test_arena_roster.py|backend/tests/test_figure_profiles.py|backend/tests/test_full_content_catalog.py|backend/tests/test_monster_source_audit.py|backend/tests/test_public_readiness.py|frontend/browser-monsters-generated.js|frontend/figure-profiles.js|data/(hero|monster)_certification_manifest.json)$')"
       - name: Persist only after complete green gate
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add backend/app/content/monster_catalog.py backend/app/content/figure_profiles.py \
             backend/app/content/data/combatant_capabilities_v1.json \
+            backend/tests/test_arena_roster.py backend/tests/test_figure_profiles.py \
+            backend/tests/test_full_content_catalog.py backend/tests/test_monster_source_audit.py \
+            backend/tests/test_public_readiness.py \
             frontend/browser-monsters-generated.js frontend/figure-profiles.js \
             data/hero_certification_manifest.json data/monster_certification_manifest.json
           git commit -m "feat: promote Zombie and Ogre Zombie"
