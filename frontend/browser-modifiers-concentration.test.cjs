@@ -43,7 +43,7 @@ const attack = { id: "test-blade", name: "Test Blade", kind: "melee", reach: 5, 
 {
   const attacker = member("attacker"), target = member("target", "monsters");
   M.add(attacker.state, modifier("bless-attack", "attacker", "bless", "attack-roll-bonus-die", { dice_count: 1, dice_size: 4, concentration_required: true }));
-  dice([10, 2, 1]);
+  dice([10, 2, 1, 1]);
   const event = A.resolveAttack(1, 1, attacker, target, attack, 5);
   assert.equal(event.hit, true); assert.equal(event.attack_roll.total, 12); assert.equal(event.attack_roll.notation, "1d20 + 1d4");
 }
