@@ -31,8 +31,10 @@ def defensive_spell_active(member: EncounterCombatant, setup: EncounterSetup, sp
 
 
 def choose_defensive_spell(member: EncounterCombatant, setup: EncounterSetup | None = None):
+    if member.state.opening_buff_spell_id is not None:
+        return None
     indexed = list(enumerate(member.state.template.defensive_spell_actions))
-    for _, spell in sorted(indexed, key=lambda item: (-item[1].priority, item[1].level, item[0])):
+    for _, spell in sorted(indexed, key=lambda item: (-item[1].level, -item[1].priority, item[0])):
         if spell.concentration and member.state.concentration is not None:
             continue
         if setup is not None and defensive_spell_active(member, setup, spell):
@@ -81,6 +83,8 @@ def resolve_defensive_spell(
         raise ValueError(f"No level {slot_level} spell slot remains for {spell.name}.")
     if not targets:
         raise ValueError(f"{spell.name} has no legal precombat targets.")
+    if member.state.opening_buff_spell_id is not None:
+        raise ValueError(f"{member.state.template.name} already committed its one opening buff this battle.")
     if spell.concentration and member.state.concentration is not None:
         raise ValueError(f"{member.state.template.name} is already concentrating and will not replace the active buff automatically.")
     if any(
@@ -89,6 +93,7 @@ def resolve_defensive_spell(
         for target in targets
     ):
         raise ValueError(f"{spell.name} is already active on a selected target.")
+    member.state.opening_buff_spell_id = spell.id
     resource.current_uses -= 1
     temp_hp_details: list[str] = []
     for target in targets:
@@ -129,6 +134,7 @@ def resolve_defensive_spell(
         target_id=single.combatant_id if single else None,
         target_name=single.state.template.name if single else None,
         feature_id=spell.id, resource_remaining=resource.current_uses,
+        concentration_started_effect_id=spell.id if spell.concentration else None,
         animation=spell.animation,
         description=(
             f"Precombat preparation: {member.state.template.name} casts {spell.name} with a level {slot_level} slot "
