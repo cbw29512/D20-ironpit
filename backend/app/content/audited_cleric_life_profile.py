@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from app.content.audited_cleric_profile import build_seraphine_dawnshield_level2_profile
 from app.content.canonical_hero_policy import canonical_template_id
-from app.domain.character_builds import CharacterBuildProfile, FeatureAudit
+from app.content.canonical_progression import advance_profile_data
+from app.domain.character_builds import AbilityIncrease, AbilityScores, CharacterBuildProfile, FeatureAudit
 
 
 def _class_feature(feature_id: str, name: str, *, combat: bool = True, notes: str | None = None) -> FeatureAudit:
@@ -41,3 +42,50 @@ def build_seraphine_dawnshield_level3_profile() -> CharacterBuildProfile:
             "Basic Rules 2024: Spells — Aid, Lesser Restoration",
         ],
     })
+
+
+def build_seraphine_dawnshield_level4_profile() -> CharacterBuildProfile:
+    base = build_seraphine_dawnshield_level3_profile()
+    data = advance_profile_data(base, 4)
+    additions = [
+        FeatureAudit(
+            feature_id="ability-score-improvement-l4",
+            feature_name="Ability Score Improvement",
+            source_reference="D&D Beyond Basic Rules 2024: Cleric Level 4; Feats — Ability Score Improvement",
+            category="feat",
+            combat_relevant=True,
+            automated=True,
+            notes="+2 Wisdom raises WIS 17→19, spell save DC 13→14, spell attack +5→+6, healing, Wisdom saves, and Medicine.",
+        ),
+        FeatureAudit(
+            feature_id="inflict-wounds",
+            feature_name="Inflict Wounds",
+            source_reference="D&D Beyond Basic Rules 2024: Spells — Inflict Wounds",
+            category="class",
+            combat_relevant=True,
+            automated=True,
+            notes="Touch-range Constitution save; 2d10 Necrotic damage, half on success. No Concentration.",
+        ),
+        FeatureAudit(
+            feature_id="mending",
+            feature_name="Mending",
+            source_reference="D&D Beyond Basic Rules 2024: Spells — Mending",
+            category="class",
+            combat_relevant=False,
+            automated=False,
+            notes="Fourth Cleric cantrip at level 4; arena-irrelevant utility choice.",
+        ),
+    ]
+    data.update(
+        advancement_increases=[AbilityIncrease(ability="wisdom", amount=2).model_dump()],
+        final_ability_scores=AbilityScores(
+            strength=12, dexterity=14, constitution=14, intelligence=8, wisdom=19, charisma=10,
+        ).model_dump(),
+        feature_audits=[*data["feature_audits"], *(feature.model_dump() for feature in additions)],
+        source_references=[
+            *data["source_references"],
+            "Basic Rules 2024: Cleric level 4 — Ability Score Improvement, 4 cantrips, 7 prepared spells, 4/3 spell slots",
+            "Basic Rules 2024: Spells — Mending, Inflict Wounds",
+        ],
+    )
+    return CharacterBuildProfile.model_validate(data)
