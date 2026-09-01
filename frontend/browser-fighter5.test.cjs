@@ -13,7 +13,7 @@ const load = (name) => vm.runInThisContext(
 
 for (const file of [
   "browser-heroes.js", "browser-action-economy.js", "browser-grapple.js", "browser-state.js",
-  "browser-rolls.js", "browser-attack.js", "browser-saves.js", "browser-charge.js",
+  "browser-rolls.js", "browser-zero-hp.js", "browser-attack.js", "browser-saves.js", "browser-charge.js",
   "browser-multiattack.js", "browser-action-surge.js", "browser-support.js", "browser-tactical-shift.js",
 ]) load(file);
 

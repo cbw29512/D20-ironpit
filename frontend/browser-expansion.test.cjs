@@ -11,7 +11,7 @@ for (const file of [
   "browser-dice.js", "browser-monsters.js", "browser-monsters-expansion.js",
   "browser-condition-rules.js", "browser-action-economy.js", "browser-grapple.js",
   "browser-timed-conditions.js", "browser-state.js", "browser-rage.js",
-  "browser-rolls.js", "browser-attack.js", "browser-multiattack.js",
+  "browser-rolls.js", "browser-zero-hp.js", "browser-attack.js", "browser-multiattack.js",
 ]) load(file);
 
 const queuedDice = (values, fallback = 10) => {
