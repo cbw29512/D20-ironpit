@@ -6,10 +6,14 @@ from app.content.audited_barbarian import build_rokhan_stonefury
 from app.content.audited_barbarian_profile import build_rokhan_stonefury_profile
 from app.content.audited_cleric import (
     build_seraphine_dawnshield,
+    build_seraphine_dawnshield_level_four,
     build_seraphine_dawnshield_level_three,
     build_seraphine_dawnshield_level_two,
 )
-from app.content.audited_cleric_life_profile import build_seraphine_dawnshield_level3_profile
+from app.content.audited_cleric_life_profile import (
+    build_seraphine_dawnshield_level3_profile,
+    build_seraphine_dawnshield_level4_profile,
+)
 from app.content.audited_cleric_profile import build_seraphine_dawnshield_level2_profile, build_seraphine_dawnshield_profile
 from app.content.audited_fighter import build_karnok_stoneward
 from app.content.audited_fighter_profile import build_karnok_stoneward_profile
@@ -63,6 +67,7 @@ def build_certified_hero_entries() -> list[tuple[HeroBuildKey, CombatantTemplate
         _validated(build_seraphine_dawnshield, build_seraphine_dawnshield_profile),
         _validated(build_seraphine_dawnshield_level_two, build_seraphine_dawnshield_level2_profile),
         _validated(build_seraphine_dawnshield_level_three, build_seraphine_dawnshield_level3_profile),
+        _validated(build_seraphine_dawnshield_level_four, build_seraphine_dawnshield_level4_profile),
     ]
 
 
