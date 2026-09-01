@@ -95,6 +95,7 @@ jobs:
           node frontend/browser-conditional-damage.test.cjs
           node frontend/browser-swarm.test.cjs
           node frontend/browser-rage.test.cjs
+          node frontend/browser-barbarian3.test.cjs
           node frontend/browser-champion.test.cjs
           node frontend/browser-fighter4.test.cjs
           node frontend/browser-fighter5.test.cjs
@@ -185,6 +186,7 @@ jobs:
           grep -q 'browser-zero-hp.js' index.html
           grep -q 'browser-timed-conditions.js' index.html
           grep -q 'browser-barbarian2.js' index.html
+          grep -q 'browser-barbarian3.js' index.html
           grep -q 'browser-source-bound-effects.js' index.html
           grep -q 'browser-ongoing-spell-control.js' index.html
           grep -q 'browser-modifiers.js' index.html
@@ -241,6 +243,7 @@ jobs:
           grep -q 'browser-zero-hp.js' frontend/index.html
           grep -q 'browser-timed-conditions.js' frontend/index.html
           grep -q 'browser-barbarian2.js' frontend/index.html
+          grep -q 'browser-barbarian3.js' frontend/index.html
           grep -q 'browser-source-bound-effects.js' frontend/index.html
           grep -q 'browser-ongoing-spell-control.js' frontend/index.html
           grep -q 'browser-modifiers.js' frontend/index.html
