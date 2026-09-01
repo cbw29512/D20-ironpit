@@ -23,6 +23,7 @@ from app.combat.saving_throws import legal_save_action, resolve_save_action
 from app.combat.spell_policy import choose_spell
 from app.combat.spell_resolution import resolve_spell
 from app.combat.state import begin_turn
+from app.combat.tactical_shift import resolve_tactical_shift
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 
@@ -84,6 +85,9 @@ def resolve_combat_turn(
         events.append(rage_event); sequence += 1
     if should_use_second_wind(attacker.state):
         events.append(use_second_wind(sequence, round_number, attacker.state, dice, attacker.combatant_id)); sequence += 1
+        shift_event = resolve_tactical_shift(sequence, round_number, attacker, setup)
+        if shift_event is not None:
+            events.append(shift_event); sequence += 1
     if should_escape_grapple(attacker.state):
         events.append(resolve_escape_grapple(sequence, round_number, attacker.combatant_id, attacker.state, dice)); sequence += 1
         return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
