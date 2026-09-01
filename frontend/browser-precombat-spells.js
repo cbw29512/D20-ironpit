@@ -22,6 +22,7 @@
       .sort((a, b) => (b.spell.priority || 0) - (a.spell.priority || 0)
         || a.spell.level - b.spell.level || a.index - b.index);
     for (const { spell } of spells) {
+      if (spell.concentration && member.state.concentration) continue;
       if (setup && active(member, setup, spell)) continue;
       const slotLevel = slotChoice(member, spell);
       if (slotLevel != null) return { spell, slotLevel };
@@ -78,6 +79,7 @@
     const directHp = (spell.temporaryHp || 0) || (spell.maxHpIncrease || 0) || (spell.currentHpIncrease || 0);
     if (spell.concentration && (directHp || spell.damageResistances?.length)) throw new Error("Concentration defenses require source-owned modifier effects.");
     if (!targets.length) throw new Error(`${spell.name} has no legal precombat targets.`);
+    if (spell.concentration && member.state.concentration) throw new Error(`${member.state.template.name} is already concentrating and will not replace the active buff automatically.`);
     if (targets.some((target) => target.state.active_buff_effect_ids?.includes(spell.id)
       || target.state.active_modifiers?.some((modifier) => modifier.source_effect_id === spell.id))) {
       throw new Error(`${spell.name} is already active on a selected target.`);
