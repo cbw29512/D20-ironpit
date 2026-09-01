@@ -9,5 +9,7 @@ class ProgressionCombatFeatures(BaseModel):
     critical_hit_minimum: int = Field(default=20, ge=2, le=20)
     initiative_advantage: bool = False
     athletics_advantage: bool = False
+    danger_sense: bool = False
+    reckless_attack: bool = False
     critical_move_fraction: float = Field(default=0.0, ge=0.0, le=1.0)
     tactical_shift_fraction: float = Field(default=0.0, ge=0.0, le=1.0)
