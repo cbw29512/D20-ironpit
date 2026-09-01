@@ -16,6 +16,7 @@ from app.combat.fighter import use_second_wind
 from app.combat.formation import backline_holds_position
 from app.combat.grapple import cleanup_grapples, resolve_escape_grapple, should_escape_grapple
 from app.combat.healing import choose_healing_action, resolve_healing
+from app.combat.ongoing_spell_control import build_forced_retreat_event, forced_retreat_active
 from app.combat.opening_burst import opening_feature_id
 from app.combat.orc import use_adrenaline_rush
 from app.combat.policy import should_use_second_wind
@@ -43,11 +44,12 @@ def _close_after_action(sequence, round_number, attacker, setup, dice):
     return events, sequence
 
 
-def _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key):
-    surge_events, sequence = resolve_action_surge_attack(
-        sequence, round_number, attacker, setup, dice, turn_key,
-    )
-    events.extend(surge_events)
+def _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key, allow_surge=True):
+    if allow_surge:
+        surge_events, sequence = resolve_action_surge_attack(
+            sequence, round_number, attacker, setup, dice, turn_key,
+        )
+        events.extend(surge_events)
     rage_event, sequence = finalize_rage_turn(sequence, round_number, attacker.state, attacker.combatant_id)
     if rage_event is not None:
         events.append(rage_event)
@@ -81,6 +83,9 @@ def resolve_combat_turn(
     cleanup_grapples(setup)
     begin_turn(attacker.state)
     turn_key = f"{round_number}:{attacker.combatant_id}"
+    if forced_retreat_active(attacker.state):
+        events.append(build_forced_retreat_event(sequence, round_number, attacker.combatant_id, attacker.state)); sequence += 1
+        return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key, allow_surge=False)
     support_events, sequence = _resolve_support_actions(sequence, round_number, attacker, setup, dice, turn_key)
     events.extend(support_events)
     if is_incapacitated(attacker.state):
