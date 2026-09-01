@@ -32,6 +32,7 @@ def resolve_encounter_attack(
     close_enemy = close_enemy_active
     if close_enemy is None:
         close_enemy = close_ranged_threat_exists(attacker, setup) if setup is not None else True
+    affected_states = [member.state for member in [*setup.heroes, *setup.monsters]] if setup is not None else None
     event = resolve_attack(
         sequence, round_number, attacker.state, target.state, attack, distance_ft, dice,
         actor_event_id=attacker.combatant_id, target_event_id=target.combatant_id,
@@ -40,6 +41,7 @@ def resolve_encounter_attack(
         turn_key=turn_key, bonus_damage=bonus_damage, close_enemy_active=close_enemy,
         redirect_target=redirect.state if redirect is not None else None,
         redirect_target_event_id=redirect.combatant_id if redirect is not None else None,
+        affected_states=affected_states,
     )
     if redirect is not None and event.target_id == redirect.combatant_id:
         swap_redirect_positions(target, redirect)
