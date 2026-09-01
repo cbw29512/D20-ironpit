@@ -6,6 +6,7 @@ from typing import Literal
 from app.combat.concentration import resolve_concentration_damage
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.dice import DiceProvider
+from app.combat.hit_points import effective_max_hp
 from app.combat.orc import use_relentless_endurance
 from app.combat.source_bound_effects import end_damage_sensitive_effects
 from app.combat.undead_fortitude import resolve_undead_fortitude
@@ -78,7 +79,7 @@ def restore_hit_points(state: CombatantState, amount: int) -> int:
     if state.is_dead or amount == 0 or CombatTrait.SWARM in state.template.combat_traits:
         return 0
     before = state.current_hp
-    state.current_hp = min(state.template.max_hp, before + amount)
+    state.current_hp = min(effective_max_hp(state), before + amount)
     healed = state.current_hp - before
     if healed > 0:
         state.is_alive = True
@@ -89,7 +90,7 @@ def restore_hit_points(state: CombatantState, amount: int) -> int:
 
 
 def _damage_at_zero(state: CombatantState, incoming: int, *, critical: bool) -> ZeroHpOutcome:
-    if state.template.kind == "monster" or incoming >= state.template.max_hp:
+    if state.template.kind == "monster" or incoming >= effective_max_hp(state):
         return _mark_dead(state)
     state.is_stable = False
     state.death_save_failures = min(3, state.death_save_failures + (2 if critical else 1))
@@ -134,7 +135,7 @@ def apply_damage(
             return _finish_damage(state, _mark_dead(state), incoming, dice, affected_states)
 
         remaining_damage = max(0, amount - hp_before)
-        if remaining_damage >= state.template.max_hp:
+        if remaining_damage >= effective_max_hp(state):
             return _finish_damage(state, _mark_dead(state), incoming, dice, affected_states)
         if use_relentless_endurance(state, remaining_damage):
             return _finish_damage(state, "relentless_endurance", incoming, dice, affected_states)
