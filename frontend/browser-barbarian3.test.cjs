@@ -16,6 +16,7 @@ for (const file of [
   "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-grapple.js", "browser-timed-conditions.js", "browser-barbarian2.js", "browser-state.js",
   "browser-rage.js", "browser-barbarian3.js", "browser-rolls.js", "browser-zero-hp.js", "browser-attack.js",
+  "browser-multiattack.js",
 ]) load(file);
 
 function queuedDice(values, fallback = 10) {
@@ -67,6 +68,49 @@ function rage(hero) {
   assert.equal(template.attacks[0].damageBonus, 4);
   assert.equal(template.attacks[1].bonus, 6);
   assert.equal(template.attacks[1].damageBonus, 4);
+}
+
+{
+  const template = structuredClone(window.IRON_PIT_BROWSER_HEROES["rokhan-stonefury-l5"]);
+  assert.ok(template, "Barbarian 5 must be generated as a browser-ready hero");
+  assert.equal(template.level, 5);
+  assert.equal(template.armor_class, 14);
+  assert.equal(template.max_hp, 55);
+  assert.equal(template.speed_ft, 40);
+  assert.equal(template.resources.rage, 3);
+  assert.equal(template.resources["adrenaline-rush"], 3);
+  assert.equal(template.danger_sense, true);
+  assert.equal(template.reckless_attack, true);
+  assert.equal(template.frenzy, true);
+  assert.equal(template.saving_throw_bonuses.strength, 7);
+  assert.equal(template.saving_throw_bonuses.constitution, 6);
+  assert.equal(template.skill_bonuses.athletics, 7);
+  assert.equal(template.attacks[0].bonus, 7);
+  assert.equal(template.attacks[0].damageBonus, 4);
+  assert.equal(template.attacks[1].bonus, 7);
+  assert.equal(template.attacks[1].damageBonus, 4);
+  assert.equal(template.attack_action.slots.length, 2);
+}
+
+{
+  const template = structuredClone(window.IRON_PIT_BROWSER_HEROES["rokhan-stonefury-l5"]);
+  const targetTemplate = structuredClone(window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l5"]);
+  const hero = { combatant_id: "hero-1:rokhan-stonefury-l5", side: "heroes", position_ft: 5, state: window.IRON_PIT_BROWSER_STATE.buildState(template) };
+  const monster = { combatant_id: "monster-1:test-fighter", side: "monsters", position_ft: 10, state: window.IRON_PIT_BROWSER_STATE.buildState(targetTemplate) };
+  monster.state.template.armor_class = 10;
+  const arena = { heroes: [hero], monsters: [monster] };
+  rage(hero);
+  window.IRON_PIT_DICE = queuedDice([2, 15, 4, 8, 3, 5, 3, 14, 7]);
+  const result = window.IRON_PIT_BROWSER_MULTIATTACK.resolveAttackAction(2, 1, hero, arena);
+  const attacks = result.events.filter((event) => event.event_type === "attack");
+  assert.equal(attacks.length, 2);
+  assert.ok(attacks.every((event) => event.hit));
+  assert.ok(attacks.every((event) => event.attack_roll.mode === "advantage"));
+  const frenzy = attacks.flatMap((event) => event.damage_components).filter((part) => part.source === "Frenzy");
+  assert.equal(frenzy.length, 1, "Extra Attack must share first-hit Frenzy state across both attacks");
+  assert.deepEqual(frenzy[0].rolls, [3, 5]);
+  assert.match(attacks[0].description, /uses Reckless Attack/);
+  assert.doesNotMatch(attacks[1].description, /uses Reckless Attack/);
 }
 
 {
@@ -133,4 +177,4 @@ function rage(hero) {
   assert.ok(noTurn.damage_components.every((part) => part.source !== "Frenzy"), "Frenzy must fail closed without own-turn identity");
 }
 
-console.log("Browser Barbarian 3-4 Frenzy regressions passed.");
+console.log("Browser Barbarian 3-5 Frenzy/Extra Attack regressions passed.");
