@@ -94,7 +94,6 @@ class ResourceDefinition(BaseModel):
     id: str
     name: str
     max_uses: int = Field(ge=0)
-
 class CombatantTemplate(BaseModel):
     id: str
     name: str
