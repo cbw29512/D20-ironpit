@@ -98,6 +98,7 @@ def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
             "Defense",
         ),
         build_karnok_stoneward_level4_combat_profile(),
+        build_karnok_stoneward_level5_combat_profile(),
         PregenCombatProfile(
             "rokhan-stonefury-l1", "Barbarian", 1, _ORC, ("strength", "constitution"), 13, 14, 30,
             (("athletics", 5), ("acrobatics", 1)),
