@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 from app.combat.action_economy import is_available
 from app.combat.encounter_targeting import combatant_distance
+from app.combat.offense_value import spell_attack_expected_damage
 from app.combat.spellcasting import slot_spell_available
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.spells import SpellAttackAction
@@ -32,22 +33,21 @@ def choose_spell_attack(
     turn_key: str,
 ) -> SpellAttackChoice | None:
     enemies = setup.monsters if caster.side == "heroes" else setup.heroes
-    indexed = list(enumerate(caster.state.template.spell_attack_actions))
-    for _, action in sorted(indexed, key=lambda item: (-item[1].level, item[0])):
+    candidates: list[tuple[float, int, int, str, SpellAttackAction, EncounterCombatant]] = []
+    for index, action in enumerate(caster.state.template.spell_attack_actions):
         if action.action_cost == "reaction" or not is_available(caster.state, action.action_cost):
             continue
         if not _slot_available(caster, action, turn_key):
             continue
-        legal = [
-            target for target in enemies
-            if target.state.is_alive and not target.state.is_dead and target.state.current_hp > 0
-            and combatant_distance(caster, target) <= action.range_ft
-        ]
-        target = min(
-            legal,
-            key=lambda member: (combatant_distance(caster, member), member.combatant_id),
-            default=None,
-        )
-        if target is not None:
-            return SpellAttackChoice(action, target)
-    return None
+        for target in enemies:
+            if (
+                not target.state.is_alive or target.state.is_dead or target.state.current_hp <= 0
+                or combatant_distance(caster, target) > action.range_ft
+            ):
+                continue
+            score = spell_attack_expected_damage(caster, target, action, setup)
+            candidates.append((score, -action.level, -target.state.current_hp, target.combatant_id, action, target))
+    if not candidates:
+        return None
+    _, _, _, _, action, target = max(candidates, key=lambda item: item[:4])
+    return SpellAttackChoice(action, target)
