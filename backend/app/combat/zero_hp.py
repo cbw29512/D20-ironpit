@@ -4,12 +4,16 @@ import logging
 from typing import Literal
 
 from app.combat.condition_immunity import condition_is_immune
+from app.combat.dice import DiceProvider
 from app.combat.orc import use_relentless_endurance
-from app.domain.models import CombatantState
+from app.combat.undead_fortitude import resolve_undead_fortitude
+from app.domain.models import CombatantState, DamageType
 from app.domain.traits import CombatTrait
 
 logger = logging.getLogger(__name__)
-ZeroHpOutcome = Literal["damaged", "unconscious", "dead", "unchanged", "relentless_endurance"]
+ZeroHpOutcome = Literal[
+    "damaged", "unconscious", "dead", "unchanged", "relentless_endurance", "undead_fortitude",
+]
 DODGE_EFFECT_ID = "dodge"
 PRONE_EFFECT_ID = "prone"
 
@@ -72,8 +76,15 @@ def _damage_at_zero(state: CombatantState, incoming: int, *, critical: bool) -> 
     return _mark_unconscious(state)
 
 
-def apply_damage(state: CombatantState, amount: int, *, critical: bool = False) -> ZeroHpOutcome:
-    """Apply Temporary HP and SRD 5.2.1 zero-HP damage rules."""
+def apply_damage(
+    state: CombatantState,
+    amount: int,
+    *,
+    critical: bool = False,
+    damage_types: set[DamageType] | None = None,
+    dice: DiceProvider | None = None,
+) -> ZeroHpOutcome:
+    """Apply Temporary HP and SRD 5.2.1 zero-HP prevention/lifecycle rules."""
     try:
         if amount < 0:
             raise ValueError("Damage cannot be negative.")
@@ -81,6 +92,7 @@ def apply_damage(state: CombatantState, amount: int, *, critical: bool = False) 
             return "unchanged"
 
         incoming = amount
+        types = damage_types or set()
         amount = _after_temporary_hp(state, amount)
         if state.current_hp == 0:
             return _damage_at_zero(state, incoming, critical=critical)
@@ -91,6 +103,10 @@ def apply_damage(state: CombatantState, amount: int, *, critical: bool = False) 
         state.current_hp = max(0, hp_before - amount)
         if state.current_hp > 0:
             return "damaged"
+        if resolve_undead_fortitude(
+            state, incoming, types, critical=critical, dice=dice,
+        ):
+            return "undead_fortitude"
         if state.template.kind == "monster":
             return _mark_dead(state)
 
