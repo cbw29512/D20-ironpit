@@ -22,6 +22,7 @@ from app.content.barbarian_progression_profile import (
     build_rokhan_stonefury_level2_profile,
     build_rokhan_stonefury_level3_profile,
     build_rokhan_stonefury_level4_profile,
+    build_rokhan_stonefury_level5_profile,
 )
 from app.content.build_audit import assert_character_build_raw_ready
 from app.content.canonical_hero_policy import assert_canonical_profile_policy
@@ -73,6 +74,7 @@ def build_certified_hero_entries() -> list[tuple[HeroBuildKey, CombatantTemplate
         _validated(lambda: build_rokhan_stonefury_level(2), build_rokhan_stonefury_level2_profile),
         _validated(lambda: build_rokhan_stonefury_level(3), build_rokhan_stonefury_level3_profile),
         _validated(lambda: build_rokhan_stonefury_level(4), build_rokhan_stonefury_level4_profile),
+        _validated(lambda: build_rokhan_stonefury_level(5), build_rokhan_stonefury_level5_profile),
         _validated(build_seraphine_dawnshield, build_seraphine_dawnshield_profile),
         _validated(build_seraphine_dawnshield_level_two, build_seraphine_dawnshield_level2_profile),
         _validated(build_seraphine_dawnshield_level_three, build_seraphine_dawnshield_level3_profile),
