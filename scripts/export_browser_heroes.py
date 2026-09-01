@@ -100,6 +100,7 @@ def _removal(action: Any) -> dict[str, Any]:
 def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[str, Any]:
     class_id, _, build_id = key
     attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
+    progression = template.progression_features
     row: dict[str, Any] = {
         "id": template.id, "class_id": class_id, "build_id": build_id, "name": template.name,
         "archetype": template.archetype, "level": template.level, "kind": template.kind, "size": template.size.value,
@@ -112,6 +113,11 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "traits": [item.value for item in template.combat_traits],
         "resources": {item.id: item.max_uses for item in template.resources},
         "rage_damage_bonus": template.rage_damage_bonus, "wearing_heavy_armor": template.wearing_heavy_armor,
+        "fighting_style": template.fighting_style, "weapon_masteries": list(template.weapon_masteries),
+        "critical_hit_minimum": progression.critical_hit_minimum,
+        "initiative_advantage": progression.initiative_advantage,
+        "athletics_advantage": progression.athletics_advantage,
+        "critical_move_fraction": progression.critical_move_fraction,
         "visual": {"armor": template.visual.armor, "main_hand": template.visual.main_hand,
                    "off_hand": template.visual.off_hand, "body_style": template.visual.body_style,
                    "figure_form": template.visual.body_style, "role": template.archetype.lower()},
