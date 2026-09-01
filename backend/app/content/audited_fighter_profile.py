@@ -88,6 +88,7 @@ def build_karnok_stoneward_profile() -> CharacterBuildProfile:
         skill_proficiencies=["Athletics", "Intimidation", "Perception", "Survival"],
         weapon_masteries=["flail", "javelin", "spear"],
         fighting_style="Defense",
+        combat_loadout_kind="two-handed",
         feature_audits=[
             _feature("fighting-style-defense", "Defense", "class", combat_relevant=True, automated=True),
             _feature("second-wind", "Second Wind", "class", combat_relevant=True, automated=True),
