@@ -79,7 +79,7 @@ def build_seraphine_dawnshield_level4_profile() -> CharacterBuildProfile:
     data.update(
         advancement_increases=[AbilityIncrease(ability="wisdom", amount=2).model_dump()],
         final_ability_scores=AbilityScores(
-            strength=12, dexterity=14, constitution=14, intelligence=8, wisdom=19, charisma=10,
+            strength=10, dexterity=10, constitution=10, intelligence=14, wisdom=19, charisma=14,
         ).model_dump(),
         feature_audits=[*data["feature_audits"], *(feature.model_dump() for feature in additions)],
         source_references=[
