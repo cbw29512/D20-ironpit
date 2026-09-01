@@ -129,6 +129,7 @@ jobs:
           node frontend/browser-bless.test.cjs
           node frontend/browser-cleric1.test.cjs
           node frontend/browser-cleric2.test.cjs
+          node frontend/browser-cleric4.test.cjs
           node frontend/browser-spell-slot-healing.test.cjs
           node frontend/browser-ongoing-spell-control.test.cjs
           node frontend/browser-forced-retreat-turn.test.cjs
