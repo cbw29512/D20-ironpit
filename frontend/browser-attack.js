@@ -4,7 +4,7 @@
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
   const T = () => window.IRON_PIT_BROWSER_TIMED;
-  const U = () => window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE;
+  const Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || {
     attackAdvantage: (state) => state.is_unconscious,
@@ -46,47 +46,10 @@
     if (target.template.damage_vulnerabilities?.includes(type)) value *= 2;
     return value;
   }
-  function useRelentless(state, remaining) {
-    if (!state.template.traits?.includes("relentless-endurance")) return false;
-    if ((state.resources["relentless-endurance"] || 0) < 1 || remaining >= state.template.max_hp) return false;
-    state.resources["relentless-endurance"] -= 1; state.current_hp = 1;
-    state.is_alive = true; state.is_unconscious = false; state.is_stable = false; return true;
-  }
-  function useUndeadFortitude(state, incoming, damageTypes, critical) {
-    if (!state.template.traits?.includes("undead-fortitude")) return false;
-    const resolver = U();
-    if (!resolver) throw new Error("Undead Fortitude runtime is not loaded.");
-    return resolver.resolve(state, incoming, damageTypes, critical);
-  }
-  const endDodge = (state) => { state.active_effect_ids = state.active_effect_ids.filter((id) => id !== "dodge"); };
-  function markUnconscious(state) {
-    state.is_alive = true; state.is_unconscious = true; state.is_stable = false; endDodge(state);
-    if (!I().immune(state, "prone") && !state.active_effect_ids.includes("prone")) state.active_effect_ids.push("prone");
-  }
-  function markDead(state) {
-    state.current_hp = 0; state.is_alive = false; state.is_dead = true;
-    state.is_unconscious = false; state.is_stable = false; endDodge(state);
-  }
   function applyDamage(state, amount, critical = false, damageTypes = []) {
-    const incoming = amount;
-    if (!incoming || state.is_dead) return "damaged";
-    const absorbed = Math.min(state.temporary_hp, amount); state.temporary_hp -= absorbed; amount -= absorbed;
-    if (state.current_hp === 0) {
-      if (state.template.kind === "monster" || incoming >= state.template.max_hp) { markDead(state); return "dead"; }
-      state.is_stable = false;
-      state.death_save_failures = Math.min(3, state.death_save_failures + (critical ? 2 : 1));
-      if (state.death_save_failures >= 3) { markDead(state); return "dead"; }
-      markUnconscious(state); return "unconscious";
-    }
-    if (!amount) return "damaged";
-    const before = state.current_hp; state.current_hp = Math.max(0, before - amount);
-    if (state.current_hp > 0) return "damaged";
-    if (useUndeadFortitude(state, incoming, damageTypes, critical)) return "undead_fortitude";
-    if (state.template.kind === "monster") { markDead(state); return "dead"; }
-    const remaining = Math.max(0, amount - before);
-    if (remaining >= state.template.max_hp) { markDead(state); return "dead"; }
-    if (useRelentless(state, remaining)) return "relentless_endurance";
-    markUnconscious(state); return "unconscious";
+    const lifecycle = Z();
+    if (!lifecycle) throw new Error("Browser zero-HP runtime is not loaded.");
+    return lifecycle.applyDamage(state, amount, critical, damageTypes);
   }
   function resolveAttack(sequence, round, attacker, target, attack, distance, extra = {}) {
     const spendAction = extra.spendAction !== false;
