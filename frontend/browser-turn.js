@@ -9,9 +9,7 @@
   const P = () => window.IRON_PIT_BROWSER_SUPPORT;
   const T = () => window.IRON_PIT_BROWSER_TACTICAL_SHIFT;
   const O = () => window.IRON_PIT_BROWSER_ONGOING_SPELL_CONTROL;
-  const X = () => window.IRON_PIT_BROWSER_SPELL_ATTACK_POLICY, K = () => window.IRON_PIT_BROWSER_SPELL_ATTACK;
-  const Y = () => window.IRON_PIT_BROWSER_SPELL_POLICY;
-  const Z = () => window.IRON_PIT_BROWSER_SPELL_RESOLUTION;
+  const L = () => window.IRON_PIT_BROWSER_SPELL_OFFENSE;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
     available: (s, c) => c === "action" ? s.action_available : s.bonus_action_available,
     spend: (s, c) => { if (c === "action") s.action_available = false; else s.bonus_action_available = false; },
@@ -126,8 +124,8 @@
     }
     if (H().shouldEscape(member.state)) { events.push(H().escape(sequence++, round, member)); return finalize(events, sequence, round, member, setup, turnKey); }
     const rush = P()?.adrenaline(sequence, round, member); if (rush) { events.push(rush); sequence += 1; }
-    const attackSpell = X()?.choose(member, setup, turnKey); if (attackSpell) { events.push(K().resolve(sequence++, round, member, attackSpell.target, attackSpell.action, setup, turnKey)); if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey); }
-    const spell = Y()?.choose(member, setup, turnKey); if (spell) { const cast = Z().resolve(sequence, round, member, setup, spell, turnKey); events.push(...cast.events); sequence = cast.sequence; if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey); }
+    const spell = L()?.resolve(sequence, round, member, setup, turnKey); if (spell) { events.push(...spell.events); sequence = spell.sequence; }
+    if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
     const target = S().nearestTarget(member, setup); if (!target) return finalize(events, sequence, round, member, setup, turnKey);
     const closing = closeTurn(sequence, round, member, target, setup); events.push(...closing.events); sequence = closing.sequence;
     if (member.state.is_dead || member.state.is_unconscious || closing.handled) return finalize(events, sequence, round, member, setup, turnKey);
