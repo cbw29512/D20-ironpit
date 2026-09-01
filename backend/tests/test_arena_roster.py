@@ -40,6 +40,7 @@ def test_arena_roster_exposes_canonical_template_batch() -> None:
         "srd-tough", "srd-venomous-snake", "srd-violet-fungus",
         "srd-swarm-of-bats", "srd-swarm-of-rats", "srd-swarm-of-crawling-claws",
         "srd-bandit-captain", "srd-knight", "srd-noble", "srd-warrior-veteran",
+        "srd-swarm-of-insects", "srd-swarm-of-venomous-snakes",
     ]
 
 

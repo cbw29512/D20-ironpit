@@ -90,7 +90,7 @@ def test_current_certified_monsters_are_linked_to_runtime_templates() -> None:
         monster.name: monster.runnable_template_id
         for monster in catalog.monsters if monster.coverage_status is CoverageStatus.RAW_READY
     }
-    assert len(ready_monsters) == 99
+    assert len(ready_monsters) == 101
     assert ready_monsters == {
         "Animated Armor": "srd-animated-armor", "Animated Flying Sword": "srd-animated-flying-sword",
         "Ankylosaurus": "srd-ankylosaurus", "Archelon": "srd-archelon",
@@ -124,7 +124,8 @@ def test_current_certified_monsters_are_linked_to_runtime_templates() -> None:
         "Riding Horse": "srd-riding-horse", "Saber-Toothed Tiger": "srd-saber-toothed-tiger",
         "Scorpion": "srd-scorpion", "Scout": "srd-scout", "Skeleton": "srd-skeleton",
         "Spider": "srd-spider", "Swarm of Bats": "srd-swarm-of-bats",
-        "Swarm of Crawling Claws": "srd-swarm-of-crawling-claws", "Swarm of Rats": "srd-swarm-of-rats",
+        "Swarm of Crawling Claws": "srd-swarm-of-crawling-claws", "Swarm of Insects": "srd-swarm-of-insects",
+        "Swarm of Rats": "srd-swarm-of-rats", "Swarm of Venomous Snakes": "srd-swarm-of-venomous-snakes",
         "Tiger": "srd-tiger", "Tough": "srd-tough",
         "Tyrannosaurus Rex": "srd-tyrannosaurus-rex", "Venomous Snake": "srd-venomous-snake",
         "Violet Fungus": "srd-violet-fungus", "Vulture": "srd-vulture", "Warhorse": "srd-warhorse",
