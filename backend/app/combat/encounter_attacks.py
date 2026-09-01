@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 from app.combat.attacks import resolve_attack
-from app.combat.barbarian_level2 import activate_reckless_attack
 from app.combat.champion import apply_critical_closing_move
 from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
 from app.combat.encounter_targeting import close_ranged_threat_exists
+from app.combat.reckless_attack import activate_reckless_attack
 from app.combat.redirect_attack import select_redirect_ally, swap_redirect_positions
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, WeaponAttack
