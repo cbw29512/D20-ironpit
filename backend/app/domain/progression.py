@@ -15,5 +15,6 @@ class ProgressionCombatFeatures(BaseModel):
     fast_movement_bonus_ft: int = Field(default=0, ge=0)
     mindless_rage: bool = False
     instinctive_pounce_fraction: float = Field(default=0.0, ge=0.0, le=1.0)
+    great_weapon_fighting: bool = False
     critical_move_fraction: float = Field(default=0.0, ge=0.0, le=1.0)
     tactical_shift_fraction: float = Field(default=0.0, ge=0.0, le=1.0)
