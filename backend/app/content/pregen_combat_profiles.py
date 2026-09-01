@@ -65,6 +65,16 @@ def build_karnok_stoneward_level4_combat_profile() -> PregenCombatProfile:
     )
 
 
+def build_karnok_stoneward_level5_combat_profile() -> PregenCombatProfile:
+    return PregenCombatProfile(
+        "karnok-stoneward-l5", "Fighter", 5, _KARNOK_L4, ("strength", "constitution"), 17, 49, 30,
+        (("athletics", 7), ("acrobatics", 1)), _KARNOK_ATTACKS,
+        ("flail", "javelin", "spear", "longsword"),
+        (("second-wind", 3), ("action-surge", 1), ("adrenaline-rush", 3), ("relentless-endurance", 1)),
+        "Defense",
+    )
+
+
 def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
     profiles = [
         PregenCombatProfile(
