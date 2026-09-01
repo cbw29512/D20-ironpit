@@ -1,6 +1,6 @@
 # D20 Iron Pit repository instructions
 
-Read this file, `docs/IRON_PIT_MASTER_PLAN.md`, and the structured certification manifests before changing code. The repository and its permanent tests are authoritative; prompts and historical counts are not.
+Read this file, `docs/IRON_PIT_MASTER_PLAN.md`, and the structured certification manifests before changing code. The repository and its permanent tests are authoritative; prompts and historical counts are not. Where an older master-plan checkpoint conflicts with a later explicit policy in this file, this file controls until the master-plan text is reconciled.
 
 ## Product and RAW rules
 
@@ -39,6 +39,10 @@ The product contains 12 persistent named canonical heroes, one per core class, a
 - Preserve already-certified levels while extending a progression.
 - Karnok Stoneward is the Fighter progression. Rokhan Stonefury is the Barbarian progression. The remaining identities are defined by `backend/app/content/hero_progressions.py`.
 - Caster classes reuse one deterministic canonical class spell package. Character level controls prepared/known count, available spell levels, and slots; a new level extends the same package instead of creating a new caster-specific spellbook.
+- Every caster level must receive its full class-appropriate prepared/known spell count and full spell-slot allotment before that level can be promoted. A level-20 caster is not flattened to a low-level package; higher-level spells and slots remain required progression work.
+- Spell upcasting is deliberately deferred. Until explicitly reactivated and separately certified, a leveled spell may consume only a slot of its printed spell level and resolves only its printed/base-level effect. A higher-level slot must not increase targets, damage, healing, duration, or any other spell outcome and must not be spent as a substitute slot for a lower-level spell.
+- Cantrip scaling by character level is separate from slot upcasting and remains required wherever the cantrip's RAW progression scales.
+- Generic friendly multi-target buffs prioritize non-caster melee/front-line allies first, then the caster, then remaining ranged/back-line allies. Range and legal-target checks always apply; ties among line-holders use deterministic battlefield position and stable IDs rather than spell-specific branches.
 - Spell packages favor combat-relevant spells. Healing classes retain healing plus damage/support options. Unsupported spell mechanics remain listed with explicit capability requirements and fail closed until the shared engine supports them.
 - Melee loadouts use one repeatable policy: DEX-primary favors dual wielding; STR-primary with shield training favors one-hander plus shield; STR power builds favor a two-hander. Do not invent bespoke loadout logic per hero level.
 - Certification is derived from audited build/profile data, runtime templates, Python gates, browser-generated parity, and public catalog readiness. Never certify by editing a manifest alone.
