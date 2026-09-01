@@ -70,6 +70,13 @@ def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
             "Defense",
         ),
         PregenCombatProfile(
+            "karnok-stoneward-l3", "Fighter", 3, _ORC, ("strength", "constitution"), 17, 28, 30,
+            (("athletics", 5), ("acrobatics", 1)), _KARNOK_ATTACKS,
+            ("flail", "javelin", "spear"),
+            (("second-wind", 2), ("action-surge", 1), ("adrenaline-rush", 2), ("relentless-endurance", 1)),
+            "Defense",
+        ),
+        PregenCombatProfile(
             "rokhan-stonefury-l1", "Barbarian", 1, _ORC, ("strength", "constitution"), 13, 14, 30,
             (("athletics", 5), ("acrobatics", 1)),
             (AttackExpectation("greataxe", "strength", 1, 12, "slashing"),
