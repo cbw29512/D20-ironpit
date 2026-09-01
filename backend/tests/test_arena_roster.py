@@ -16,6 +16,7 @@ def test_arena_roster_exposes_canonical_template_batch() -> None:
         "karnok-stoneward-l1", "karnok-stoneward-l2", "karnok-stoneward-l3",
         "karnok-stoneward-l4", "karnok-stoneward-l5", "rokhan-stonefury-l1",
         "seraphine-dawnshield-l1", "seraphine-dawnshield-l2", "seraphine-dawnshield-l3",
+        "seraphine-dawnshield-l4",
     ]
     assert [item.id for item in roster.monsters] == [
         "srd-goblin-warrior", "srd-goblin-minion", "srd-hobgoblin-warrior", "srd-kobold-warrior",
