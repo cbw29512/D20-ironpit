@@ -116,6 +116,7 @@ jobs:
           node frontend/browser-action-healing.test.cjs
           node frontend/browser-action-condition.test.cjs
           node frontend/browser-reactions.test.cjs
+          node frontend/browser-parry-effective-ac.test.cjs
           node frontend/browser-reaction-movement.test.cjs
           node frontend/browser-spell-area.test.cjs
           node frontend/browser-spell-resolution.test.cjs
