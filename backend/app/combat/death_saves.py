@@ -31,13 +31,10 @@ def resolve_death_save(
             raise ValueError("This character does not currently make a Death Saving Throw.")
 
         natural = dice.roll(20)
-        roll = DiceRoll(
-            notation="1d20",
-            rolls=[natural],
-            selected_roll=natural,
-            total=natural,
-        )
+        roll = DiceRoll(notation="1d20", rolls=[natural], selected_roll=natural, total=natural)
         hp_before = state.current_hp
+        successes_before = state.death_save_successes
+        failures_before = state.death_save_failures
         result = "failure"
 
         if natural == 20:
@@ -62,21 +59,13 @@ def resolve_death_save(
             result = "third success; becomes Stable"
 
         return BattleEvent(
-            sequence=sequence,
-            round_number=round_number,
-            event_type="death_save",
-            actor_id=combatant_id,
-            actor_name=state.template.name,
-            target_id=combatant_id,
-            target_name=state.template.name,
-            death_save_roll=roll,
-            hp_before=hp_before,
-            hp_after=state.current_hp,
-            death_save_successes=state.death_save_successes,
-            death_save_failures=state.death_save_failures,
-            is_stable=state.is_stable,
-            is_dead=state.is_dead,
-            animation="death-save",
+            sequence=sequence, round_number=round_number, event_type="death_save",
+            actor_id=combatant_id, actor_name=state.template.name,
+            target_id=combatant_id, target_name=state.template.name, death_save_roll=roll,
+            hp_before=hp_before, hp_after=state.current_hp,
+            death_save_successes_before=successes_before, death_save_failures_before=failures_before,
+            death_save_successes=state.death_save_successes, death_save_failures=state.death_save_failures,
+            is_stable=state.is_stable, is_dead=state.is_dead, animation="death-save",
             description=f"{state.template.name} makes a Death Save: {result}.",
         )
     except ValueError:
