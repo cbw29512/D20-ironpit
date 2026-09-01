@@ -7,14 +7,17 @@ const vm = require("node:vm");
 
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
-for (const file of ["browser-heroes.js", "browser-condition-rules.js", "browser-state.js", "browser-precombat-spells.js"]) load(file);
+for (const file of [
+  "browser-heroes.js", "browser-condition-rules.js", "browser-modifiers.js", "browser-state.js",
+  "browser-concentration.js", "browser-spell-modifiers.js", "browser-precombat-spells.js",
+]) load(file);
 const S = window.IRON_PIT_BROWSER_STATE;
 const P = window.IRON_PIT_BROWSER_PRECOMBAT_SPELLS;
 const base = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"];
-const defense = (id, level, priority = 0, concentration = false) => ({
-  id, name: id, level, actionCost: "action", durationMinutes: 60,
-  temporaryHp: 5, temporaryHpPerSlotAbove: 5, damageResistances: [],
-  concentration, priority, animation: "precombat-defense",
+const defense = (id, level, priority = 0) => ({
+  id, name: id, level, actionCost: "action", range: 0, durationMinutes: 60,
+  temporaryHp: 5, temporaryHpPerSlotAbove: 5, damageResistances: [], modifierEffects: [],
+  concentration: false, priority, animation: "precombat-defense",
 });
 function caster(spells, slots) {
   const template = structuredClone(base);
@@ -44,8 +47,9 @@ const enemy = () => ({ combatant_id: "enemy", side: "monsters", position_ft: 30,
 }
 
 {
-  const c = caster([defense("concentration-defense", 1, 20, true), defense("safe-defense", 1)], { 1: 1 });
-  assert.equal(P.choose(c).spell.id, "safe-defense");
+  const unsafe = { ...defense("unsafe", 1, 20), concentration: true };
+  const c = caster([unsafe], { 1: 1 });
+  assert.throws(() => P.prepare({ heroes: [c], monsters: [enemy()] }), /source-owned modifier effects/);
 }
 
 {
