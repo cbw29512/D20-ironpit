@@ -23,10 +23,10 @@ const S = window.IRON_PIT_BROWSER_STATE;
 const P = window.IRON_PIT_BROWSER_SPELL_POLICY;
 const X = window.IRON_PIT_BROWSER_SPELL_RESOLUTION;
 const base = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"];
-const spell = (id, level, areaRadius = null, upcast = 0) => ({
+const spell = (id, level, areaRadius = null) => ({
   id, name: id, level, actionCost: "action", range: 150, areaRadius,
   saveAbility: "dexterity", dc: 12, damageDiceCount: 1, damageDiceSize: 6,
-  damageBonus: 0, damageType: "fire", successDamage: "half", upcastDicePerLevel: upcast,
+  damageBonus: 0, damageType: "fire", successDamage: "half",
   concentration: false, animation: "spell-save",
 });
 const member = (id, side, position, template = base) => ({
@@ -71,14 +71,13 @@ function caster(spells, slots) {
 }
 
 {
-  const c = caster([spell("fireball", 3, 20, 1), spell("spark", 0)], { 4: 1 });
+  const c = caster([spell("fireball", 3, 20), spell("spark", 0)], { 4: 1 });
   const monsters = Array.from({ length: 3 }, (_, i) => member(`monster-${i}`, "monsters", 30));
   const setup = { heroes: [c], monsters };
-  assert.equal(P.choose(c, setup, "1:caster").slotLevel, 4);
-  window.IRON_PIT_BROWSER_SPELLCASTING.markSlotSpellCast(c.state, "1:caster");
   const choice = P.choose(c, setup, "1:caster");
   assert.equal(choice.action.id, "spark");
   assert.equal(choice.slotLevel, 0);
+  assert.equal(c.state.resources["spell-slot-4"], 1);
 }
 
-console.log("Browser spell priority and friendly-fire regressions passed.");
+console.log("Browser spell priority, friendly-fire, and printed-level slot regressions passed.");
