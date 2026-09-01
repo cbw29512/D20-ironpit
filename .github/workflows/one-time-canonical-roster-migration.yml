@@ -32,7 +32,12 @@ jobs:
           pytest -q tests/test_arena_roster.py tests/test_roster.py tests/test_canonical_hero_policy.py tests/test_canonical_progression.py
       - name: Persist only intended migration
         run: |
-          test -z "$(git status --porcelain --untracked-files=all | grep -v '^ M backend/tests/test_arena_roster.py$')"
+          changed="$(git diff --name-only)"
+          untracked="$(git ls-files --others --exclude-standard)"
+          printf 'Changed files:\n%s\n' "$changed"
+          printf 'Untracked files:\n%s\n' "$untracked"
+          test "$changed" = 'backend/tests/test_arena_roster.py'
+          test -z "$untracked"
           git diff --check
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
