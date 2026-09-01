@@ -41,7 +41,7 @@ class FeatureAudit(BaseModel):
     feature_id: str
     feature_name: str
     source_reference: str
-    category: Literal["class", "species", "background", "feat", "equipment"]
+    category: Literal["class", "subclass", "species", "background", "feat", "equipment"]
     combat_relevant: bool
     automated: bool
     runtime_attack_weapon_id: str | None = None
