@@ -5,6 +5,7 @@ from app.combat.champion import apply_critical_closing_move
 from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
 from app.combat.encounter_targeting import close_ranged_threat_exists
+from app.combat.frenzy import mark_reckless_use_while_raging
 from app.combat.reckless_attack import activate_reckless_attack
 from app.combat.redirect_attack import select_redirect_ally, swap_redirect_positions
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -33,6 +34,8 @@ def resolve_encounter_attack(
     reckless_started = allow_reckless and activate_reckless_attack(
         attacker.state, attack, attacker.combatant_id, round_number,
     )
+    if reckless_started:
+        mark_reckless_use_while_raging(attacker.state, turn_key)
     redirect = select_redirect_ally(target, setup) if setup is not None else None
     close_enemy = close_enemy_active
     if close_enemy is None:
