@@ -26,7 +26,7 @@
     candidates.sort((a, b) => b.score - a.score || a.spell.level - b.spell.level
       || a.target.state.current_hp - b.target.state.current_hp || a.index - b.index
       || a.target.combatant_id.localeCompare(b.target.combatant_id));
-    return candidates.length ? { action: candidates[0].spell, target: candidates[0].target } : null;
+    return candidates.length ? { action: candidates[0].spell, target: candidates[0].target, expectedDamage: candidates[0].score } : null;
   }
 
   window.IRON_PIT_BROWSER_SPELL_ATTACK_POLICY = { choose };
