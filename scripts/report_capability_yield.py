@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from collections import defaultdict
 
 from app.content.blocker_yield import build_blocker_signatures, single_family_yields
@@ -9,6 +10,10 @@ from app.domain.catalog import CoverageStatus
 from report_zero_engine_monsters import _ALLOWED_TRAITS, _source_blockers
 
 _SIGNATURE_LIMIT = 25
+_CONTROL_EFFECT = re.compile(
+    r"\b(blinded|charmed|deafened|frightened|grappled|incapacitated|paralyzed|petrified|poisoned|prone|restrained|stunned|unconscious|push(?:es|ed)?|pull(?:s|ed)?|swallow(?:s|ed)?)\b",
+    re.I,
+)
 
 
 def _unsupported_traits(row: dict[str, object]) -> tuple[str, ...]:
@@ -44,6 +49,34 @@ def _single_trait_heading_yields(
     }
 
 
+def _normalize_control_effect(value: str) -> str:
+    normalized = value.lower()
+    if normalized.startswith("push"):
+        return "forced-push"
+    if normalized.startswith("pull"):
+        return "forced-pull"
+    if normalized.startswith("swallow"):
+        return "swallow"
+    return normalized
+
+
+def _control_effect_yields(
+    rows_by_name: dict[str, dict[str, object]], names: list[str]
+) -> dict[str, list[str]]:
+    yields: dict[str, list[str]] = defaultdict(list)
+    for name in names:
+        actions = str(rows_by_name[name].get("actions", ""))
+        effects = {_normalize_control_effect(match.group(1)) for match in _CONTROL_EFFECT.finditer(actions)}
+        if not effects:
+            raise RuntimeError(f"Control-only blocker {name!r} has no recognized control effect.")
+        for effect in effects:
+            yields[effect].append(name)
+    return {
+        effect: sorted(monsters)
+        for effect, monsters in sorted(yields.items(), key=lambda item: (-len(item[1]), item[0]))
+    }
+
+
 def main() -> None:
     rows = load_monster_rows()
     rows_by_name = {str(row["name"]): row for row in rows}
@@ -64,12 +97,15 @@ def main() -> None:
     signatures = build_blocker_signatures(blockers_by_name)
     singles = single_family_yields(signatures)
     trait_only = singles.get("trait", [])
+    control_only = singles.get("condition-or-control", [])
     print(
         "CAPABILITY_YIELD_BASELINE"
         f"\tready={len(ready_names)}\tblocked={len(blockers_by_name)}\tsignatures={len(signatures)}"
     )
     for blocker, names in sorted(singles.items(), key=lambda item: (-len(item[1]), item[0])):
         print(f"CAPABILITY_SINGLE_FAMILY\t{blocker}\t{len(names)}\t" + " | ".join(names))
+    for effect, names in _control_effect_yields(rows_by_name, control_only).items():
+        print(f"CAPABILITY_CONTROL_EFFECT\t{effect}\t{len(names)}\t" + " | ".join(names))
     for trait, names in _single_trait_heading_yields(rows_by_name, trait_only).items():
         print(f"CAPABILITY_TRAIT_SINGLE_HEADING\t{trait}\t{len(names)}\t" + " | ".join(names))
     for trait, names in _trait_heading_yields(rows_by_name, trait_only).items():
