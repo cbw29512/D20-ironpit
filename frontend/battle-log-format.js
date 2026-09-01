@@ -20,7 +20,7 @@
     if (!event.damage_roll) return "";
     const parts = (event.damage_components || []).map((part) => {
       const applied = part.applied_total ?? part.total, type = part.damage_type || "damage";
-      return applied === part.total ? `${applied} ${type}` : `${applied} ${type} (${part.total} rolled → ${applied} after defenses)`;
+      return applied === part.total ? `${applied} ${type}` : `${applied} ${type} (${part.total} before defenses → ${applied} after defenses)`;
     });
     return parts.length ? parts.join(" + ") : `${event.damage_roll.total} damage`;
   }
