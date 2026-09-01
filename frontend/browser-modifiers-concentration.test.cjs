@@ -102,7 +102,7 @@ const attack = { id: "test-blade", name: "Test Blade", kind: "melee", reach: 5, 
 {
   const attacker = member("attacker"), caster = member("caster", "monsters"), setup = { heroes: [attacker], monsters: [caster] };
   C.start(caster.state, "caster", "bless", 1, [attacker.state, caster.state]);
-  dice([15, 1, 1]);
+  dice([15, 1, 1, 1, 1]);
   const event = A.resolveAttack(1, 1, attacker, caster, attack, 5, { setup });
   assert.equal(event.hit, true); assert.equal(event.concentration_ended_effect_id, "bless"); assert.equal(caster.state.concentration, null);
 }
