@@ -170,6 +170,7 @@ def defense_row(action: Any) -> dict[str, Any]:
         "targetPolicy": action.target_policy, "targetCount": action.target_count,
         "temporaryHp": action.temporary_hp,
         "temporaryHpPerSlotAbove": action.temporary_hp_per_slot_above,
+        "maxHpIncrease": action.max_hp_increase, "currentHpIncrease": action.current_hp_increase,
         "damageResistances": list(action.damage_resistances),
         "modifierEffects": [_modifier_effect(effect) for effect in action.modifier_effects],
         "concentration": action.concentration, "priority": action.priority, "animation": action.animation,
