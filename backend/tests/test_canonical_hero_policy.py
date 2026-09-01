@@ -7,7 +7,7 @@ from app.content.canonical_hero_policy import (
     canonical_template_id,
     combat_feature_audits,
 )
-from app.content.hero_progressions import CANONICAL_HEROES
+from app.content.hero_progressions import CANONICAL_HEROES, COMBAT_MODE_BY_CLASS
 from app.domain.character_builds import FeatureAudit
 
 
@@ -15,6 +15,7 @@ def test_every_class_has_one_persistent_canonical_identity() -> None:
     assert len(CANONICAL_HEROES) == 12
     assert len({hero.class_id for hero in CANONICAL_HEROES}) == 12
     assert len({hero.hero_name for hero in CANONICAL_HEROES}) == 12
+    assert set(COMBAT_MODE_BY_CLASS) == {hero.class_id for hero in CANONICAL_HEROES}
 
     for hero in CANONICAL_HEROES:
         level_ids = [canonical_template_id(hero.class_id, level) for level in range(1, 21)]
@@ -22,6 +23,15 @@ def test_every_class_has_one_persistent_canonical_identity() -> None:
         assert level_ids == [f"{slug}-l{level}" for level in range(1, 21)]
         assert_canonical_identity(hero.class_id, hero.hero_name, 1)
         assert_canonical_identity(hero.class_id, hero.hero_name, 20)
+
+
+def test_class_combat_modes_are_simple_and_repeatable() -> None:
+    assert COMBAT_MODE_BY_CLASS["fighter"] == "melee"
+    assert COMBAT_MODE_BY_CLASS["rogue"] == "melee"
+    assert COMBAT_MODE_BY_CLASS["wizard"] == "caster"
+    assert COMBAT_MODE_BY_CLASS["cleric"] == "caster"
+    assert COMBAT_MODE_BY_CLASS["paladin"] == "hybrid"
+    assert COMBAT_MODE_BY_CLASS["ranger"] == "hybrid"
 
 
 def test_canonical_identity_rejects_alternate_same_class_character() -> None:
