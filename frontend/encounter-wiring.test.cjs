@@ -29,6 +29,8 @@ assert.equal(ids.has("picker-hero"), false, "canonical heroes must not expose a 
 assert.equal(ids.has("distance"), false, "formation combat must not expose a starting-distance control");
 assert.match(html, /<button id="quick-test" type="button">LOAD SAMPLE<\/button>/);
 assert.match(html, /Production combat path · secure Web Crypto dice/);
+assert.match(html, /browser-offense-value\.js/);
+assert.match(html, /browser-spell-offense\.js/);
 
 const view = fs.readFileSync(path.join(root, "battlefield-view.js"), "utf8");
 const replay = fs.readFileSync(path.join(root, "battlefield-replay.js"), "utf8");
@@ -40,6 +42,7 @@ const dice = fs.readFileSync(path.join(root, "browser-dice.js"), "utf8");
 const css = fs.readFileSync(path.join(root, "battlefield.css"), "utf8");
 
 assert.match(view, /MAX_SLOTS = 6/); assert.match(app, /MAX_SLOTS = 6/);
+assert.match(view, /card-concentration/); assert.match(replay, /CONCENTRATING/);
 assert.match(app, /Iron Pit ready\. Choose cards or load the sample matchup\./);
 assert.doesNotMatch(app, /createSeededDice|battle-seed|instant-mode|IRON_PIT_DICE\s*=/);
 assert.doesNotMatch(lab, /createSeededDice|seedNumber/);
@@ -50,6 +53,8 @@ assert.match(formation, /HERO_FRONT = 5/); assert.match(formation, /MONSTER_FRON
 assert.match(replay, /initiative-badge/); assert.match(replay, /critical-screen/); assert.match(replay, /fumble-blackout/);
 assert.match(css, /\.battle-card\.turn-active/); assert.match(css, /card-turn-shake/); assert.match(css, /\.battle-card\.battle-dead/);
 assert.ok(html.indexOf("browser-tactical-mind.js") < html.indexOf("browser-grapple.js"));
+assert.ok(html.indexOf("browser-offense-value.js") < html.indexOf("browser-spell-offense.js"));
+assert.ok(html.indexOf("browser-spell-offense.js") < html.indexOf("browser-turn.js"));
 assert.ok(html.indexOf("browser-action-surge.js") < html.indexOf("browser-turn.js"));
 assert.ok(html.indexOf("browser-formation.js") < html.indexOf("browser-engine.js"), "formation must load before the combat engine");
 assert.ok(html.indexOf("battlefield-picker.js") < html.indexOf("app.js"));
