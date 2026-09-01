@@ -23,10 +23,7 @@ from app.combat.orc import should_use_adrenaline_rush, use_adrenaline_rush
 from app.combat.policy import should_use_second_wind
 from app.combat.reaction_movement import move_toward_with_reactions
 from app.combat.saving_throws import legal_save_action, resolve_save_action
-from app.combat.spell_attack_policy import choose_spell_attack
-from app.combat.spell_attack_resolution import resolve_spell_attack
-from app.combat.spell_policy import choose_spell
-from app.combat.spell_resolution import resolve_spell
+from app.combat.spell_offense import resolve_best_spell_offense
 from app.combat.state import begin_turn
 from app.combat.tactical_shift import resolve_tactical_shift
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -103,23 +100,9 @@ def resolve_combat_turn(
         adrenaline_event = use_adrenaline_rush(sequence, round_number, attacker.state, attacker.combatant_id)
         if adrenaline_event is not None:
             events.append(adrenaline_event); sequence += 1
-    attack_spell = choose_spell_attack(attacker, setup, turn_key)
-    if attack_spell is not None:
-        events.append(resolve_spell_attack(
-            sequence, round_number, attacker, attack_spell.target,
-            attack_spell.action, setup, turn_key, dice,
-        )); sequence += 1
-        if not is_available(attacker.state, "action"):
-            return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-    spell_choice = choose_spell(attacker, setup, turn_key)
-    if spell_choice is not None:
-        spell_events, sequence = resolve_spell(sequence, round_number, attacker, setup, spell_choice, turn_key, dice)
-        events.extend(spell_events)
-        if not is_available(attacker.state, "action"):
-            return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
+    spell_events, sequence = resolve_best_spell_offense(sequence, round_number, attacker, setup, turn_key, dice)
+    events.extend(spell_events)
     if not is_available(attacker.state, "action"):
-        moved, sequence = _close_after_action(sequence, round_number, attacker, setup, dice)
-        events.extend(moved)
         return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
     closing, sequence, handled = resolve_simple_closing(sequence, round_number, attacker, target, dice, setup)
