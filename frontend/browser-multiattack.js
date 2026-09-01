@@ -66,6 +66,7 @@
     if (!slots?.length || !E().available(member.state, "action")) return { events: [], sequence };
     const events = []; E().spend(member.state, "action");
     let openingFeature = C()?.openingFeature?.(round, member, setup) || null;
+    const turnKey = `${round}:${member.combatant_id}`;
     for (const slot of slots) {
       if (member.state.is_dead || member.state.is_unconscious) break;
       const target = slotTarget(member, setup, slot); if (!target) continue;
@@ -80,7 +81,7 @@
       if (choice.attack) {
         const pack = S().packTactics(member, setup), featureId = openingFeature || (pack ? "pack-tactics" : member.state.template.attack_action.id);
         events.push(A().resolveAttack(sequence++, round, member, target, choice.attack, S().distance(member, target), {
-          spendAction: false, advantage: pack ? 1 : 0, setup, featureId,
+          spendAction: false, advantage: pack ? 1 : 0, setup, featureId, turnKey, allowReckless: true,
         }));
         openingFeature = null;
       } else if (choice.save) {
