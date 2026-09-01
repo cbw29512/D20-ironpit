@@ -55,6 +55,6 @@ def test_fighter_level_four_runtime_matches_candidate_combat_fingerprint() -> No
     assert_pregen_combat_stats(template, combat_profile)
 
 
-def test_fighter_progression_still_fails_closed_above_certified_level() -> None:
-    with pytest.raises(ValueError, match="level 5 is not certified yet"):
-        build_karnok_stoneward_level(5)
+def test_fighter_progression_still_fails_closed_above_candidate_level() -> None:
+    with pytest.raises(ValueError, match="level 6 is not certified yet"):
+        build_karnok_stoneward_level(6)
