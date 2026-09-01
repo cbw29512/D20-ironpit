@@ -127,6 +127,32 @@ def _spell(action: Any) -> dict[str, Any]:
     return row
 
 
+def _modifier_effect(effect: Any) -> dict[str, Any]:
+    row = {
+        "kind": effect.kind, "flatBonus": effect.flat_bonus, "diceCount": effect.dice_count,
+        "diceSize": effect.dice_size, "damageType": effect.damage_type,
+    }
+    if effect.consume_on_attack_against:
+        row["consumeOnAttackAgainst"] = True
+    if effect.expires_after_source_turns is not None:
+        row["expiresAfterSourceTurns"] = effect.expires_after_source_turns
+    return row
+
+
+def _spell_attack(action: Any) -> dict[str, Any]:
+    row = {
+        "id": action.id, "name": action.name, "level": action.level, "actionCost": action.action_cost,
+        "range": action.range_ft, "attackBonus": action.attack_bonus,
+        "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
+        "damageBonus": action.damage_bonus, "damageType": action.damage_type,
+        "onHitModifierEffects": [_modifier_effect(effect) for effect in action.on_hit_modifier_effects],
+        "animation": action.animation,
+    }
+    if action.source:
+        row["source"] = action.source
+    return row
+
+
 def defense_row(action: Any) -> dict[str, Any]:
     row = {
         "id": action.id, "name": action.name, "level": action.level, "actionCost": action.action_cost,
@@ -135,11 +161,7 @@ def defense_row(action: Any) -> dict[str, Any]:
         "temporaryHp": action.temporary_hp,
         "temporaryHpPerSlotAbove": action.temporary_hp_per_slot_above,
         "damageResistances": list(action.damage_resistances),
-        "modifierEffects": [
-            {"kind": effect.kind, "flatBonus": effect.flat_bonus, "diceCount": effect.dice_count,
-             "diceSize": effect.dice_size, "damageType": effect.damage_type}
-            for effect in action.modifier_effects
-        ],
+        "modifierEffects": [_modifier_effect(effect) for effect in action.modifier_effects],
         "concentration": action.concentration, "priority": action.priority, "animation": action.animation,
     }
     if action.source:
@@ -212,6 +234,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             }
         if template.spell_save_actions:
             row["spell_save_actions"] = [_spell(item) for item in template.spell_save_actions]
+        if template.spell_attack_actions:
+            row["spell_attack_actions"] = [_spell_attack(item) for item in template.spell_attack_actions]
         if template.defensive_spell_actions:
             row["defensive_spell_actions"] = [defense_row(item) for item in template.defensive_spell_actions]
         if template.condition_removal_actions:
