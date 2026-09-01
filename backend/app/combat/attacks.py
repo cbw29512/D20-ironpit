@@ -10,7 +10,12 @@ from app.combat.conditions import apply_hit_conditions, attack_roll_condition_so
 from app.combat.damage import BonusDamageSpec, resolve_weapon_damage
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
-from app.combat.modifier_stack import apply_d20_bonus_dice, attacks_against_advantage_sources, effective_armor_class
+from app.combat.modifier_stack import (
+    apply_d20_bonus_dice,
+    attacks_against_advantage_sources,
+    consume_attacks_against_advantage,
+    effective_armor_class,
+)
 from app.combat.parry import resolve_parry_hit
 from app.combat.range import resolve_attack_roll_mode
 from app.combat.rolls import roll_d20
@@ -63,6 +68,7 @@ def resolve_attack(
             attacker, ModifierKind.ATTACK_ROLL_BONUS_DIE,
             roll_d20(dice, attack.attack_bonus, mode), dice,
         )
+        consume_attacks_against_advantage(defender)
         extend_rage_from_attack(attacker, round_number)
         if spend_action:
             spend(attacker, "action")
