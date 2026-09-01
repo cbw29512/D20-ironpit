@@ -8,9 +8,9 @@ from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.spells import SpellSaveAction
 
 
-def _spell(spell_id: str, level: int, radius: int | None = None):
+def _spell(spell_id: str, level: int, radius: int | None = None, range_ft: int = 150):
     return SpellSaveAction(
-        id=spell_id, name=spell_id.title(), level=level, range_ft=150,
+        id=spell_id, name=spell_id.title(), level=level, range_ft=range_ft,
         area_radius_ft=radius, save_ability="dexterity", dc=12,
         damage_dice_count=1, damage_dice_size=6, damage_type="fire",
         success_damage="half",
@@ -25,7 +25,6 @@ def _caster(spells, slots):
 
 
 def _monster(index: int, position: int):
-    # Synthetic enemy uses Karnok's complete certified six-save profile. Spell tests must never infer a missing save bonus.
     return EncounterCombatant(
         combatant_id=f"monster-{index}", side="monsters", position_ft=position,
         state=build_combatant_state(build_karnok_stoneward()),
@@ -57,28 +56,38 @@ def test_highest_level_safe_spell_is_chosen_first() -> None:
     assert len(choice.target_ids) == 4
 
 
-def test_unsafe_high_level_aoe_falls_through_to_lower_spell() -> None:
+def test_point_aoe_edge_places_past_enemy_line_to_spare_adjacent_ally() -> None:
     caster = _caster([_spell("fireball", 3, 10), _spell("lower-bolt", 2)], {3: 1, 2: 1})
+    setup = _setup(caster, [_monster(0, 5), _monster(1, 5)], [_ally(1, 0)])
+    choice = choose_spell(caster, setup, "1:caster")
+    assert choice is not None
+    assert choice.action.id == "fireball"
+    assert choice.placement is not None
+    assert choice.placement.friendly_ids == ()
+
+
+def test_short_range_aoe_falls_through_when_safe_edge_placement_is_impossible() -> None:
+    caster = _caster([_spell("burst", 3, 10, range_ft=5), _spell("lower-bolt", 2)], {3: 1, 2: 1})
     setup = _setup(caster, [_monster(0, 5), _monster(1, 5)], [_ally(1, 0)])
     choice = choose_spell(caster, setup, "1:caster")
     assert choice is not None
     assert choice.action.id == "lower-bolt"
 
 
-def test_resolving_aoe_spends_one_slot_and_hits_friends_too() -> None:
+def test_resolving_aoe_spends_one_slot_and_uses_safe_enemy_only_placement() -> None:
     caster = _caster([_spell("fireball", 3, 20)], {3: 1})
     setup = _setup(caster, [_monster(i, 5) for i in range(3)])
     choice = choose_spell(caster, setup, "1:caster")
     assert choice is not None
     events, sequence = resolve_spell(
         1, 1, caster, setup, choice, "1:caster",
-        FixedDiceProvider([1, 6, 1, 6, 1, 6, 1, 6]),
+        FixedDiceProvider([1, 6, 1, 6, 1, 6]),
     )
-    assert sequence == 6
-    assert len(events) == 5
+    assert sequence == 5
+    assert len(events) == 4
     assert events[0].feature_id == "fireball"
-    assert "3 enemies and 1 unprotected allies" in events[0].description
-    assert {event.target_id for event in events[1:]} == {"caster", "monster-0", "monster-1", "monster-2"}
+    assert "3 enemies and 0 unprotected allies" in events[0].description
+    assert {event.target_id for event in events[1:]} == {"monster-0", "monster-1", "monster-2"}
     slot = next(item for item in caster.state.resources if item.id == "spell-slot-3")
     assert slot.current_uses == 0
     assert caster.state.action_available is False
