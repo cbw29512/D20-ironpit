@@ -41,9 +41,19 @@ jobs:
           name: canonical-heroes-${{ github.sha }}
           path: frontend/browser-heroes.js
           retention-days: 1
-      - name: Verify durable certification manifests
+      - name: Generate certification manifest candidates
+        run: python scripts/verify_certification_manifests.py --write
+      - name: Upload certification manifest candidates
+        uses: actions/upload-artifact@v4
+        with:
+          name: certification-manifests-${{ github.sha }}
+          path: |
+            data/hero_certification_manifest.json
+            data/monster_certification_manifest.json
+          retention-days: 1
+      - name: Enforce durable certification manifest parity
         run: |
-          python scripts/verify_certification_manifests.py
+          git diff --exit-code -- data/hero_certification_manifest.json data/monster_certification_manifest.json
           python scripts/report_certification_progress.py
       - name: Report zero-engine monster candidates
         run: python scripts/report_zero_engine_monsters.py
