@@ -44,10 +44,10 @@ def _scores(strength: int, dexterity: int, constitution: int, intelligence: int,
     )
 
 
-_ORC = _scores(17, 13, 15, 8, 12, 10)
-_SERAPHINE = _scores(12, 14, 14, 8, 17, 10)
-_SERAPHINE_L4 = _scores(12, 14, 14, 8, 19, 10)
-_ORC_L4 = _scores(18, 13, 16, 8, 12, 10)
+_ORC = _scores(17, 13, 15, 10, 10, 10)
+_SERAPHINE = _scores(10, 10, 10, 14, 17, 14)
+_SERAPHINE_L4 = _scores(10, 10, 10, 14, 19, 14)
+_ORC_L4 = _scores(18, 13, 16, 10, 10, 10)
 _KARNOK_ATTACKS = (
     AttackExpectation("greatsword", "strength", 2, 6, "slashing"),
     AttackExpectation("shortbow", "dexterity", 1, 6, "piercing", normal_range_ft=80, long_range_ft=320),
@@ -99,20 +99,20 @@ def _seraphine_profile(level: int, hp: int, first_slots: int, channel: int = 0, 
         resources.append(("channel-divinity", channel))
     resources.extend((("adrenaline-rush", 2), ("relentless-endurance", 1)))
     return PregenCombatProfile(
-        f"seraphine-dawnshield-l{level}", "Cleric", level, _SERAPHINE, ("wisdom", "charisma"), 17, hp, 30,
-        (("athletics", 1), ("acrobatics", 2), ("arcana", 1), ("history", 1), ("medicine", 5), ("persuasion", 2)),
+        f"seraphine-dawnshield-l{level}", "Cleric", level, _SERAPHINE, ("wisdom", "charisma"), 15, hp, 30,
+        (("athletics", 0), ("acrobatics", 0), ("arcana", 4), ("history", 4), ("medicine", 5), ("persuasion", 4)),
         (AttackExpectation("mace", "strength", 1, 6, "bludgeoning"),), (), tuple(resources),
     )
 
 
 def build_seraphine_dawnshield_level3_combat_profile() -> PregenCombatProfile:
-    return _seraphine_profile(3, 24, 4, 2, 2)
+    return _seraphine_profile(3, 18, 4, 2, 2)
 
 
 def build_seraphine_dawnshield_level4_combat_profile() -> PregenCombatProfile:
     return PregenCombatProfile(
-        "seraphine-dawnshield-l4", "Cleric", 4, _SERAPHINE_L4, ("wisdom", "charisma"), 17, 31, 30,
-        (("athletics", 1), ("acrobatics", 2), ("arcana", 1), ("history", 1), ("medicine", 6), ("persuasion", 2)),
+        "seraphine-dawnshield-l4", "Cleric", 4, _SERAPHINE_L4, ("wisdom", "charisma"), 15, 23, 30,
+        (("athletics", 0), ("acrobatics", 0), ("arcana", 4), ("history", 4), ("medicine", 6), ("persuasion", 4)),
         (AttackExpectation("mace", "strength", 1, 6, "bludgeoning"),), (),
         (("spell-slot-1", 4), ("spell-slot-2", 3), ("channel-divinity", 2),
          ("adrenaline-rush", 2), ("relentless-endurance", 1)),
@@ -138,7 +138,7 @@ def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
         ),
         build_karnok_stoneward_level4_combat_profile(), build_karnok_stoneward_level5_combat_profile(),
         _rokhan_profile(1, 14), _rokhan_profile(2, 23), _rokhan_profile(3, 32), _rokhan_profile(4, 45), _rokhan_profile(5, 55), _rokhan_profile(6, 65),
-        _seraphine_profile(1, 10, 2), _seraphine_profile(2, 17, 3, 2),
+        _seraphine_profile(1, 8, 2), _seraphine_profile(2, 13, 3, 2),
         build_seraphine_dawnshield_level3_combat_profile(), build_seraphine_dawnshield_level4_combat_profile(),
     ]
     return {profile.template_id: profile for profile in profiles}
