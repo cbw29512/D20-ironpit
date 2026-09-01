@@ -10,7 +10,7 @@ const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, 
 for (const file of [
   "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js",
   "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
-  "browser-grapple.js", "browser-timed-conditions.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
+  "browser-grapple.js", "browser-timed-conditions.js", "browser-barbarian2.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
   "browser-zero-hp.js", "browser-attack.js", "browser-healing.js", "browser-reactions.js", "browser-reaction-movement.js", "browser-saves.js",
   "browser-condition-lifecycle.js", "browser-charge.js", "browser-multiattack.js",
   "browser-spellcasting.js", "browser-condition-removal.js", "browser-support.js", "browser-turn.js",
@@ -106,4 +106,53 @@ function queuedDice(values, fallback = 10) {
   assert.equal(RAGE.active(hero.state), false);
 }
 
-console.log("Browser Rage regressions passed.");
+{
+  const template = structuredClone(window.IRON_PIT_BROWSER_HEROES["rokhan-stonefury-l2"]);
+  assert.ok(template, "Barbarian 2 must be generated as a browser-ready hero");
+  assert.equal(template.danger_sense, true);
+  assert.equal(template.reckless_attack, true);
+  assert.equal(template.attacks[0].attackAbility, "strength");
+
+  const bandit = structuredClone(window.IRON_PIT_BROWSER_MONSTERS["srd-bandit"]);
+  const hero = { combatant_id: "hero-1:rokhan-stonefury-l2", side: "heroes", position_ft: 5, state: window.IRON_PIT_BROWSER_STATE.buildState(template) };
+  const monster = { combatant_id: "monster-1:bandit", side: "monsters", position_ft: 10, state: window.IRON_PIT_BROWSER_STATE.buildState(bandit) };
+  monster.state.template.armor_class = 99;
+  window.IRON_PIT_BROWSER_STATE.beginTurn(hero.state);
+  window.IRON_PIT_DICE = queuedDice([2, 15]);
+  const reckless = window.IRON_PIT_BROWSER_ATTACK.resolveAttack(1, 1, hero, monster, template.attacks[0], 5, { setup: { heroes: [hero], monsters: [monster] } });
+  assert.equal(reckless.attack_roll.mode, "advantage");
+  assert.deepEqual(reckless.attack_roll.rolls, [2, 15]);
+  assert.equal(reckless.feature_id, "reckless-attack");
+  assert.match(reckless.description, /uses Reckless Attack/);
+  assert.equal(window.IRON_PIT_BROWSER_BARBARIAN2.active(hero.state), true);
+
+  hero.state.template.armor_class = 99;
+  window.IRON_PIT_DICE = queuedDice([3, 14]);
+  const scimitar = bandit.attacks.find((item) => item.id === "bandit-scimitar");
+  const counter = window.IRON_PIT_BROWSER_ATTACK.resolveAttack(2, 1, monster, hero, scimitar, 5);
+  assert.equal(counter.attack_roll.mode, "advantage", "attacks against a reckless Barbarian must have Advantage");
+  assert.deepEqual(counter.attack_roll.rolls, [3, 14]);
+
+  const setup = { heroes: [hero], monsters: [monster] };
+  const expired = window.IRON_PIT_BROWSER_CONDITION_LIFECYCLE.resolveSourceTiming(3, 2, hero, setup, "source_turn_start");
+  assert.equal(window.IRON_PIT_BROWSER_BARBARIAN2.active(hero.state), false, "Reckless exposure ends at the next turn start");
+  assert.ok(expired.events.some((event) => event.feature_id === "reckless-attack"));
+}
+
+{
+  const template = structuredClone(window.IRON_PIT_BROWSER_HEROES["rokhan-stonefury-l2"]);
+  const state = window.IRON_PIT_BROWSER_STATE.buildState(template);
+  window.IRON_PIT_DICE = queuedDice([2, 15]);
+  const save = window.IRON_PIT_BROWSER_SAVES.resolveSavingThrow(state, "dexterity", 12);
+  assert.equal(save.roll.mode, "advantage");
+  assert.deepEqual(save.roll.rolls, [2, 15]);
+  assert.equal(save.roll.selected_roll, 15);
+
+  state.active_effect_ids.push("restrained");
+  window.IRON_PIT_DICE = queuedDice([10]);
+  const cancelled = window.IRON_PIT_BROWSER_SAVES.resolveSavingThrow(state, "dexterity", 12);
+  assert.equal(cancelled.roll.mode, "normal", "Danger Sense Advantage and Restrained Disadvantage cancel");
+  assert.deepEqual(cancelled.roll.rolls, [10]);
+}
+
+console.log("Browser Rage and Barbarian 2 regressions passed.");
