@@ -5,12 +5,8 @@
   const SM = () => window.IRON_PIT_BROWSER_SPELL_MODIFIERS;
 
   function slotChoice(member, spell) {
-    const levels = Object.entries(member.state.resources || {})
-      .filter(([id, uses]) => id.startsWith("spell-slot-") && uses > 0)
-      .map(([id]) => Number(id.replace("spell-slot-", "")))
-      .filter((level) => Number.isInteger(level) && level >= spell.level)
-      .sort((a, b) => a - b);
-    return levels.length ? levels[0] : null;
+    const resourceId = `spell-slot-${spell.level}`;
+    return (member.state.resources?.[resourceId] || 0) > 0 ? spell.level : null;
   }
 
   function choose(member) {
@@ -26,9 +22,10 @@
   }
 
   function selectTargets(member, setup, spell, slotLevel) {
+    if (slotLevel !== spell.level) throw new Error("Spell upcasting is not certified; use the spell's printed slot level.");
     if ((spell.targetPolicy || "self") === "self") return [member];
     const side = member.side === "heroes" ? setup.heroes : setup.monsters;
-    const count = (spell.targetCount || 1) + Math.max(0, slotLevel - spell.level) * (spell.targetCountPerSlotAbove || 0);
+    const count = spell.targetCount || 1;
     return side.filter((target) => target.state.is_alive && !target.state.is_dead
         && Math.abs(member.position_ft - target.position_ft) <= (spell.range || 0))
       .sort((a, b) => Number(a !== member) - Number(b !== member)
@@ -45,13 +42,13 @@
   }
 
   function resolve(sequence, member, targets, spell, slotLevel, states = [member.state]) {
+    if (slotLevel !== spell.level) throw new Error("Spell upcasting is not certified; use the spell's printed slot level.");
     if (spell.concentration && ((spell.temporaryHp || 0) || spell.damageResistances?.length)) throw new Error("Concentration defenses require source-owned modifier effects.");
     if (!targets.length) throw new Error(`${spell.name} has no legal precombat targets.`);
     const resourceId = `spell-slot-${slotLevel}`;
     if (!(member.state.resources?.[resourceId] > 0)) throw new Error(`No level ${slotLevel} spell slot remains for ${spell.name}.`);
     member.state.resources[resourceId] -= 1;
-    const extra = Math.max(0, slotLevel - spell.level);
-    const tempHp = (spell.temporaryHp || 0) + extra * (spell.temporaryHpPerSlotAbove || 0);
+    const tempHp = spell.temporaryHp || 0;
     for (const target of targets) {
       S().grantTemporaryHp(target.state, tempHp);
       for (const type of spell.damageResistances || []) if (!target.state.temporary_damage_resistances.includes(type)) target.state.temporary_damage_resistances.push(type);
