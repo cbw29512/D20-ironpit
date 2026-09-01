@@ -1,10 +1,14 @@
 from __future__ import annotations
 
+from typing import Literal
+
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName, ConditionTiming, GrappleSource
 from app.domain.combatants import CombatantTemplate, DamageType
 from app.domain.modifiers import CombatModifier, ConcentrationState
+
+TimedTurnBehavior = Literal["normal", "forced_retreat"]
 
 
 class ResourceState(BaseModel):
@@ -25,6 +29,7 @@ class TimedEffect(BaseModel):
     repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
     repeat_save_timing: ConditionTiming | None = None
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
+    turn_behavior: TimedTurnBehavior = "normal"
 
     @model_validator(mode="after")
     def validate_lifecycle(self) -> "TimedEffect":
