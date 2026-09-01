@@ -56,7 +56,6 @@ _KARNOK_ATTACKS = (
 
 
 def build_karnok_stoneward_level4_combat_profile() -> PregenCombatProfile:
-    """Return the Fighter 4 candidate fingerprint without exposing it in the live arena registry."""
     return PregenCombatProfile(
         "karnok-stoneward-l4", "Fighter", 4, _KARNOK_L4, ("strength", "constitution"), 17, 40, 30,
         (("athletics", 6), ("acrobatics", 1)), _KARNOK_ATTACKS,
@@ -88,6 +87,7 @@ def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
             (("second-wind", 2), ("action-surge", 1), ("adrenaline-rush", 2), ("relentless-endurance", 1)),
             "Defense",
         ),
+        build_karnok_stoneward_level4_combat_profile(),
         PregenCombatProfile(
             "rokhan-stonefury-l1", "Barbarian", 1, _ORC, ("strength", "constitution"), 13, 14, 30,
             (("athletics", 5), ("acrobatics", 1)),
