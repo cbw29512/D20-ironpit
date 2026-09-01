@@ -11,29 +11,17 @@ vm.runInThisContext(fs.readFileSync(path.join(__dirname, "battle-lab.js"), "utf8
 const lab = window.IRON_PIT_BATTLE_LAB;
 
 {
-  const first = lab.createSeededDice("smoke-1");
-  const second = lab.createSeededDice("smoke-1");
-  const different = lab.createSeededDice("smoke-2");
-  const a = Array.from({ length: 20 }, () => first.roll(20));
-  const b = Array.from({ length: 20 }, () => second.roll(20));
-  const c = Array.from({ length: 20 }, () => different.roll(20));
-  assert.deepEqual(a, b, "the same seed must reproduce the same dice sequence");
-  assert.notDeepEqual(a, c, "different seeds should not collapse to the same test sequence");
-  assert.ok(a.every((value) => value >= 1 && value <= 20));
-}
-
-{
-  const dice = lab.createSeededDice("pool");
-  assert.equal(dice.rollMany(4, 6).length, 4);
-  assert.throws(() => dice.roll(1), /Die sides/);
-  assert.throws(() => dice.rollMany(0, 6), /Dice count/);
+  const rolls = [{ sides: 20, value: 17 }, { sides: 6, value: 4 }, { sides: 8, value: 7 }];
+  const first = lab.diagnosticId(["hero-a"], ["monster-a"], rolls);
+  const second = lab.diagnosticId(["hero-a"], ["monster-a"], structuredClone(rolls));
+  assert.equal(first, second, "the same real roll tape must produce the same diagnostic ID");
+  assert.notEqual(first, lab.diagnosticId(["hero-a"], ["monster-a"], [...rolls, { sides: 4, value: 2 }]));
+  assert.match(first, /^[0-9a-f]{8}$/);
 }
 
 {
   const battle = {
-    battle_id: "ignored",
-    outcome: "heroes_win",
-    rounds: 2,
+    battle_id: "ignored", outcome: "heroes_win", rounds: 2,
     initiative: { turn_order: ["hero-1:test", "monster-1:test"] },
     setup: {
       heroes: [{ combatant_id: "hero-1:test", state: { current_hp: 5, temporary_hp: 0, is_alive: true, is_dead: false, is_stable: false, death_save_successes: 0, death_save_failures: 0 } }],
@@ -45,8 +33,9 @@ const lab = window.IRON_PIT_BATTLE_LAB;
     ],
   };
   const same = structuredClone(battle); same.battle_id = "different-id";
-  assert.equal(lab.fingerprint(battle), lab.fingerprint(same), "non-mechanical battle IDs must not affect replay comparison");
-  assert.match(lab.summary(battle, "smoke-1", "exact replay reproduced"), /Seed smoke-1 · 2 rounds · 1 attacks · 1 criticals · 0 heals · exact replay reproduced/);
+  assert.equal(lab.fingerprint(battle), lab.fingerprint(same), "non-mechanical battle IDs must not affect fingerprints");
+  assert.match(lab.summary(battle, [{ sides: 20, value: 20 }], "abc12345"), /Battle abc12345 · 1 secure dice rolls · 2 rounds · 1 attacks · 1 criticals · 0 heals/);
 }
 
-console.log("battle lab deterministic utilities passed");
+assert.equal("createSeededDice" in lab, false, "Battle Lab must never expose an alternate seeded combat RNG");
+console.log("battle lab production-path diagnostics passed");
