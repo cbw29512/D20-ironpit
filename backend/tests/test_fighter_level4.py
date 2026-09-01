@@ -3,6 +3,8 @@ import pytest
 from app.content.build_audit import assert_character_build_raw_ready, audit_character_build
 from app.content.fighter_progression import build_karnok_stoneward_level
 from app.content.fighter_progression_profile import build_karnok_stoneward_level4_profile
+from app.content.pregen_combat_audit import assert_pregen_combat_stats, audit_pregen_combat_stats
+from app.content.pregen_combat_profiles import build_pregen_combat_profiles
 
 
 def test_fighter_level_four_snapshot_has_raw_advancement() -> None:
@@ -42,6 +44,14 @@ def test_fighter_level_four_profile_declares_split_asi_and_passes_structural_aud
     assert profile.weapon_masteries == template.weapon_masteries
     assert audit_character_build(profile, template) == []
     assert_character_build_raw_ready(profile, template)
+
+
+def test_fighter_level_four_runtime_matches_combat_fingerprint() -> None:
+    template = build_karnok_stoneward_level(4)
+    combat_profile = build_pregen_combat_profiles()[template.id]
+
+    assert audit_pregen_combat_stats(template, combat_profile) == []
+    assert_pregen_combat_stats(template, combat_profile)
 
 
 def test_fighter_progression_still_fails_closed_above_certified_level() -> None:
