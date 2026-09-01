@@ -4,6 +4,7 @@ import logging
 
 from app.combat.action_economy import is_available, spend
 from app.combat.encounter_targeting import combatant_distance
+from app.combat.modifier_stack import effective_speed
 from app.domain.encounters import EncounterCombatant
 from app.domain.models import BattleEvent
 
@@ -61,8 +62,9 @@ def take_encounter_dash(
         if not is_available(mover.state, "action"):
             raise ValueError("Action is not available for Dash.")
         before = combatant_distance(mover, target)
+        speed = effective_speed(mover.state)
         spend(mover.state, "action")
-        mover.state.movement_remaining_ft += mover.state.template.speed_ft
+        mover.state.movement_remaining_ft += speed
         return BattleEvent(
             sequence=sequence,
             round_number=round_number,
@@ -73,7 +75,7 @@ def take_encounter_dash(
             target_name=target.state.template.name,
             distance_before_ft=before,
             distance_after_ft=before,
-            movement_ft=mover.state.template.speed_ft,
+            movement_ft=speed,
             animation="dash",
             description=f"{mover.state.template.name} takes the Dash action.",
         )
