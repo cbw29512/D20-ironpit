@@ -12,7 +12,6 @@ BLESS = DefensiveSpellAction(
     duration_minutes=1,
     target_policy="friendly",
     target_count=3,
-    target_count_per_slot_above=1,
     modifier_effects=[
         SpellModifierEffect(kind="attack-roll-bonus-die", dice_count=1, dice_size=4),
         SpellModifierEffect(kind="saving-throw-bonus-die", dice_count=1, dice_size=4),
