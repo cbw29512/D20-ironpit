@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from app.combat.barbarian import rage_active
-from app.combat.barbarian_level2 import danger_sense_advantage
 from app.combat.condition_rules import automatically_fails_strength_dexterity_save
+from app.combat.danger_sense import danger_sense_advantage
 from app.combat.dice import DiceProvider
 from app.combat.grapple import RESTRAINED_EFFECT_ID
 from app.combat.modifier_stack import apply_d20_bonus_dice
