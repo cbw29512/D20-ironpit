@@ -5,6 +5,7 @@
   const nodes = new Map();
   const reduced = () => window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, reduced() ? Math.min(ms, 70) : ms));
+  const conditionLabel = (id) => id === "frightened" ? "😱 FEAR" : id.replaceAll("_", " ").toUpperCase();
 
   function bindBattle(battle, slotMap) {
     nodes.clear();
@@ -34,7 +35,8 @@
       const badge = document.createElement("span");
       badge.className = `condition-badge condition-${id}`;
       badge.dataset.condition = id;
-      badge.textContent = id.replaceAll("_", " ").toUpperCase();
+      badge.textContent = conditionLabel(id);
+      badge.setAttribute("aria-label", id === "frightened" ? "Frightened" : conditionLabel(id));
       return badge;
     });
     rack.replaceChildren(...badges);
@@ -96,5 +98,6 @@
     syncFinal(battle); return battle;
   }
 
+  window.IRON_PIT_BATTLEFIELD_REPLAY = { conditionLabel };
   window.playIronPitBattle = play;
 })();
