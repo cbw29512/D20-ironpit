@@ -1,14 +1,21 @@
 (() => {
   "use strict";
 
+  const sourceLabel = (id) => String(id || "bonus").split("-").map((part) => part ? part[0].toUpperCase() + part.slice(1) : "").join(" ");
+
   function rollLabel(roll) {
     if (!roll) return "no roll";
     const natural = roll.selected_roll;
     const mode = roll.mode === "advantage" ? "ADV" : roll.mode === "disadvantage" ? "DIS" : "d20";
-    const pool = roll.rolls?.length > 1 ? ` [${roll.rolls.join(", ")}]` : "";
+    const d20Count = roll.mode === "normal" || !roll.mode ? 1 : 2;
+    const d20Rolls = (roll.rolls || []).slice(0, d20Count);
+    const pool = d20Rolls.length > 1 ? ` [${d20Rolls.join(", ")}]` : "";
     const modifier = Number(roll.modifier || 0);
     const signed = modifier >= 0 ? `+${modifier}` : String(modifier);
-    return `${mode}${pool} ${natural} ${signed} = ${roll.total}`;
+    const bonuses = (roll.bonus_dice || []).map((bonus) =>
+      ` + ${sourceLabel(bonus.source_effect_id)} ${bonus.notation} [${bonus.rolls.join(", ")}]`,
+    ).join("");
+    return `${mode}${pool} ${natural} ${signed}${bonuses} = ${roll.total}`;
   }
 
   function damageLabel(event) {
@@ -28,13 +35,17 @@
   function formatAttack(event) {
     const natural = event.attack_roll?.selected_roll;
     const result = natural === 1 ? "NAT 1 · MISS" : event.critical ? "CRITICAL HIT" : event.hit ? "HIT" : "MISS";
-    const pieces = [`${event.actor_name} → ${event.target_name}: ${result} with ${event.attack_name || event.weapon_id || "attack"}`];
+    const attackName = event.attack_name || event.weapon_name || event.weapon_id || event.feature_id || "attack";
+    const pieces = [`${event.actor_name} → ${event.target_name}: ${result} with ${attackName}`];
     if (event.attack_roll) {
       const defense = event.target_ac == null ? "" : ` vs AC ${event.target_ac}`;
       pieces.push(`${rollLabel(event.attack_roll)}${defense}`);
     }
     const damage = damageLabel(event);
     if (damage) pieces.push(damage);
+    if (event.temporary_hp_before != null && event.temporary_hp_after != null && event.temporary_hp_before !== event.temporary_hp_after) {
+      pieces.push(`Temp HP ${event.temporary_hp_before}→${event.temporary_hp_after}`);
+    }
     if (event.hp_before != null && event.hp_after != null && event.hit) pieces.push(`HP ${event.hp_before}→${event.hp_after}`);
     const death = attackDeathLabel(event);
     if (death) pieces.push(death);
