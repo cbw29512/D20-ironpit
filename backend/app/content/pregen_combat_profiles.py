@@ -47,7 +47,7 @@ def _scores(strength: int, dexterity: int, constitution: int, intelligence: int,
 _ORC = _scores(17, 13, 15, 8, 12, 10)
 _SERAPHINE = _scores(12, 14, 14, 8, 17, 10)
 _SERAPHINE_L4 = _scores(12, 14, 14, 8, 19, 10)
-_KARNOK_L4 = _scores(18, 13, 16, 8, 12, 10)
+_ORC_L4 = _scores(18, 13, 16, 8, 12, 10)
 _KARNOK_ATTACKS = (
     AttackExpectation("greatsword", "strength", 2, 6, "slashing"),
     AttackExpectation("shortbow", "dexterity", 1, 6, "piercing", normal_range_ft=80, long_range_ft=320),
@@ -60,7 +60,7 @@ _ROKHAN_ATTACKS = (
 
 def build_karnok_stoneward_level4_combat_profile() -> PregenCombatProfile:
     return PregenCombatProfile(
-        "karnok-stoneward-l4", "Fighter", 4, _KARNOK_L4, ("strength", "constitution"), 17, 40, 30,
+        "karnok-stoneward-l4", "Fighter", 4, _ORC_L4, ("strength", "constitution"), 17, 40, 30,
         (("athletics", 6), ("acrobatics", 1)), _KARNOK_ATTACKS,
         ("flail", "javelin", "spear", "longsword"),
         (("second-wind", 3), ("action-surge", 1), ("adrenaline-rush", 2), ("relentless-endurance", 1)),
@@ -70,7 +70,7 @@ def build_karnok_stoneward_level4_combat_profile() -> PregenCombatProfile:
 
 def build_karnok_stoneward_level5_combat_profile() -> PregenCombatProfile:
     return PregenCombatProfile(
-        "karnok-stoneward-l5", "Fighter", 5, _KARNOK_L4, ("strength", "constitution"), 17, 49, 30,
+        "karnok-stoneward-l5", "Fighter", 5, _ORC_L4, ("strength", "constitution"), 17, 49, 30,
         (("athletics", 7), ("acrobatics", 1)), _KARNOK_ATTACKS,
         ("flail", "javelin", "spear", "longsword"),
         (("second-wind", 3), ("action-surge", 1), ("adrenaline-rush", 3), ("relentless-endurance", 1)),
@@ -79,9 +79,13 @@ def build_karnok_stoneward_level5_combat_profile() -> PregenCombatProfile:
 
 
 def _rokhan_profile(level: int, hp: int) -> PregenCombatProfile:
+    advanced = level >= 4
+    abilities = _ORC_L4 if advanced else _ORC
+    skills = (("athletics", 6), ("acrobatics", 1)) if advanced else (("athletics", 5), ("acrobatics", 1))
+    masteries = ("flail", "pike", "longsword") if advanced else ("flail", "pike")
     return PregenCombatProfile(
-        f"rokhan-stonefury-l{level}", "Barbarian", level, _ORC, ("strength", "constitution"), 13, hp, 30,
-        (("athletics", 5), ("acrobatics", 1)), _ROKHAN_ATTACKS, ("flail", "pike"),
+        f"rokhan-stonefury-l{level}", "Barbarian", level, abilities, ("strength", "constitution"), 14 if advanced else 13, hp, 30,
+        skills, _ROKHAN_ATTACKS, masteries,
         (("rage", 3 if level >= 3 else 2), ("adrenaline-rush", 2), ("relentless-endurance", 1)), rage_damage_bonus=2,
     )
 
@@ -132,7 +136,7 @@ def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
             (("second-wind", 2), ("action-surge", 1), ("adrenaline-rush", 2), ("relentless-endurance", 1)), "Defense",
         ),
         build_karnok_stoneward_level4_combat_profile(), build_karnok_stoneward_level5_combat_profile(),
-        _rokhan_profile(1, 14), _rokhan_profile(2, 23), _rokhan_profile(3, 32),
+        _rokhan_profile(1, 14), _rokhan_profile(2, 23), _rokhan_profile(3, 32), _rokhan_profile(4, 45),
         _seraphine_profile(1, 10, 2), _seraphine_profile(2, 17, 3, 2),
         build_seraphine_dawnshield_level3_combat_profile(), build_seraphine_dawnshield_level4_combat_profile(),
     ]
