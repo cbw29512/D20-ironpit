@@ -32,6 +32,8 @@ def _progression_features(level: int) -> dict[str, object]:
         )
     if level >= 5:
         features["tactical_shift_fraction"] = 0.5
+    if level >= 7:
+        features["great_weapon_fighting"] = True
     return features
 
 
@@ -85,11 +87,18 @@ def _apply_level_six_advancement(data: dict[str, object]) -> None:
     skills["athletics"] = 8
 
 
+def _apply_level_seven_style(data: dict[str, object]) -> None:
+    weapon_attack = data["weapon_attack"]
+    if not isinstance(weapon_attack, dict) or weapon_attack.get("id") != "karnok-greatsword":
+        raise ValueError("Karnok Fighter 7 requires the audited Greatsword primary attack.")
+    weapon_attack["damage_die_minimum"] = 3
+
+
 def build_karnok_stoneward_level(level: int) -> CombatantTemplate:
     """Level the same canonical Fighter one step at a time; unsupported levels fail closed."""
     if level == 1:
         return build_karnok_stoneward()
-    if level not in (2, 3, 4, 5, 6):
+    if level not in (2, 3, 4, 5, 6, 7):
         raise ValueError(f"Karnok Fighter level {level} is not certified yet.")
 
     previous = build_karnok_stoneward_level(level - 1)
@@ -101,6 +110,7 @@ def build_karnok_stoneward_level(level: int) -> CombatantTemplate:
         4: "D&D Beyond Basic Rules 2024: Fighter 4 Ability Score Improvement, Second Wind, Weapon Mastery, Champion, Orc, Soldier, Savage Attacker, Equipment",
         5: "D&D Beyond Basic Rules 2024: Fighter 5 Extra Attack and Tactical Shift, Champion, Orc, Soldier, Savage Attacker, Equipment",
         6: "D&D Beyond Basic Rules 2024: Fighter 6 Ability Score Improvement, Champion, Orc, Soldier, Savage Attacker, Equipment",
+        7: "D&D Beyond Basic Rules 2024: Fighter 7 Champion Additional Fighting Style, Great Weapon Fighting, Orc, Soldier, Savage Attacker, Equipment",
     }
     data.update(
         max_hp=fixed_class_hit_points(level, 10, constitution_modifier),
@@ -114,4 +124,6 @@ def build_karnok_stoneward_level(level: int) -> CombatantTemplate:
         _apply_level_five_scaling(data)
     if level == 6:
         _apply_level_six_advancement(data)
+    if level == 7:
+        _apply_level_seven_style(data)
     return CombatantTemplate.model_validate(data)
