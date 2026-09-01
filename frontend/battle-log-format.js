@@ -44,6 +44,11 @@
     if (event.is_dead) pieces.push("DEAD");
   }
 
+  function formatInitiative(event) {
+    const description = event.description || `${event.actor_name || "Combatant"} rolls initiative.`;
+    return event.attack_roll ? `${description} · ${rollLabel(event.attack_roll)}` : description;
+  }
+
   function formatAttack(event) {
     const natural = event.attack_roll?.selected_roll;
     const result = natural === 1 ? "NAT 1 · MISS" : event.critical ? "CRITICAL HIT" : event.hit ? "HIT" : "MISS";
@@ -85,6 +90,7 @@
   }
 
   function format(event) {
+    if (event.event_type === "initiative") return formatInitiative(event);
     if (event.event_type === "attack") return formatAttack(event);
     if (event.event_type === "saving_throw") return formatSave(event);
     if (event.event_type === "death_save") return formatDeathSave(event);
@@ -92,5 +98,5 @@
     return event.description || `${event.actor_name || "Arena"}: ${event.event_type}`;
   }
 
-  window.IRON_PIT_BATTLE_LOG = { format, formatAttack, formatDeathSave, formatSave, rollLabel };
+  window.IRON_PIT_BATTLE_LOG = { format, formatAttack, formatDeathSave, formatInitiative, formatSave, rollLabel };
 })();
