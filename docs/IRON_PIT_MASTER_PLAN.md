@@ -36,7 +36,7 @@ The master program is complete only when all of these generated, independently v
 
 ### Capability registry
 
-`backend/app/content/data/combatant_capabilities_v1.json` is the production monster behavior registry. `backend/app/content/capability_registry.py` compiles those definitions into the same `CombatantTemplate` runtime used by Python and browser export. `backend/app/content/legacy_monster_roster.py` exists only as a migration/parity oracle. `scripts/export_runtime_monster_capabilities.py --check` and permanent CI prevent registry drift or a return to production `monster_*`/`monsters_*` builder imports.
+`backend/app/content/data/combatant_capabilities_v1.json` is the generated legacy compatibility snapshot. Native data-first additions live in `backend/app/content/data/native_combatant_capabilities_v1.json`. `backend/app/content/capability_registry.py` merges those layers with duplicate-ID fail-closed protection and compiles definitions into the same `CombatantTemplate` runtime used by Python and browser export. `backend/app/content/legacy_monster_roster.py` exists only as a migration/parity oracle. `scripts/export_runtime_monster_capabilities.py --check` and permanent CI prevent generated-registry drift or a return to production `monster_*`/`monsters_*` builder imports.
 
 ### Commands
 
@@ -94,23 +94,57 @@ The compatibility path is also preserved:
 
 `legacy runtime template -> capability definition -> compiler -> equivalent template`
 
-The entire current runtime monster corpus is used as the compatibility oracle. The tests require exact roster identity/order, semantic template equivalence, and source-audit result parity, so intentionally blocked candidates remain blocked rather than being silently promoted. Production `roster.py` consumes only the compiled capability registry.
+The entire migrated runtime monster corpus is used as the compatibility oracle. Tests require legacy-order semantic equivalence and source-audit result parity, so intentionally blocked candidates remain blocked rather than being silently promoted. Production `roster.py` consumes only compiled capability definitions.
 
 The v1 grammar already carries existing runtime structures for attacks, damage, save actions, conditions/control, traits, reactions, resources, Multiattack, movement, defenses, spells, and lifecycle metadata. New shared mechanics should extend this grammar/compiler and browser/Python behavior once, then unlock matching monsters through data rather than adding another production monster builder.
 
+## First native data-only monster checkpoint
+
+The first production monsters added without a bespoke monster builder are:
+
+- Swarm of Insects;
+- Swarm of Venomous Snakes.
+
+They live in the native declarative capability layer and reuse existing shared mechanics: Swarm behavior, bloodied replacement damage, movement/defense/source fingerprints, and ordinary on-hit poison damage. Cross-layer duplicate IDs fail closed.
+
+Promotion gate run `33462673589` certified the complete tranche before persistence:
+
+- 429 Python tests passed;
+- generated browser monster regression passed with 101 RAW-certified templates;
+- browser Swarm HP/Temporary-HP behavior passed;
+- certification manifests matched authoritative runtime/source/browser/catalog state;
+- generated capability snapshot remained deterministic;
+- 102 explicit reviewed figure profiles were exported, covering all 101 RAW-ready monsters plus the intentionally blocked Commoner profile;
+- generated progress reported Fighter 5/20, 6/240 certified hero snapshots, Monsters 101/330, Blocked 229.
+
+Promotion persisted as commit `2775103b6fdbf55b469dd2d8ad7090d1a68048c7`. As with every bot-authored promotion commit, it is not a final immutable checkpoint until a subsequent normal connector commit triggers and passes permanent exact-head CI.
+
+Current top monster blocker families after the 101-monster promotion are:
+
+- save-or-complex-action: 122;
+- condition-or-control: 115;
+- limited-use: 113;
+- trait: 111;
+- spellcasting: 66;
+- bonus-action: 57;
+- legendary: 30;
+- reaction: 16;
+- unsupported-action-rider: 15;
+- trait-parse: 10.
+
 ## Priority queue
 
-### Goal 1 — Certify Karnok Fighter 6
+### Goal 1 — High-yield capability blocker tranche
 
-Stopping condition: derive Fighter 6 from the certified Fighter 5 snapshot; source-audit every new level-6 class/subclass/resource/action-economy/scaling rule; preserve Fighter 1-5 behavior; promote only after structural audit, combat/resource fingerprints, generated-card parity, public readiness, permanent regressions, and exact-head CI pass.
+Use the 330-monster blocker analyzer to select a shared mechanic with the largest safe certification yield. Prefer a capability that can be expressed once in schema/compiler/Python/browser and reused across many monsters. Implement source-audit support and deterministic regressions, rerun all 330 records, then certify every newly unlocked monster as one bounded batch. Do not add a bespoke production monster builder to increase the count.
 
-### Goal 2 — High-yield capability blocker tranche
+### Goal 2 — Zero-engine/native data tranche
 
-Use the 330-monster blocker analyzer to select a shared mechanic that unlocks many monsters. Implement it in the universal capability schema/compiler and Python/browser runtime, add source audits and regressions, rerun all records, then certify every newly unlocked monster as a batch. Current high-yield families include save/complex actions, conditions/control, limited-use/recharge, traits, spellcasting, Bonus Actions, legendary actions, reactions, and attack riders.
+After each shared capability improvement, review monsters whose remaining outcome-changing mechanics are already represented. Onboard those as native declarative definitions only, with full SRD source reconciliation and generated browser parity. Native entries must extend—not reorder or mutate—the generated legacy compatibility snapshot.
 
-### Goal 3 — Zero-engine monster tranche
+### Goal 3 — Certify Karnok Fighter 6
 
-Review the currently reported zero-engine candidates first. If a monster already has every outcome-changing mechanic represented by existing capabilities, onboarding should be data/source-audit work only. Do not write a bespoke production builder merely to increase the monster count.
+Resume Fighter progression only after the capability-engine tranche reaches a stable exact-head checkpoint. Derive Fighter 6 from the certified Fighter 5 snapshot; source-audit every new level-6 class/subclass/resource/action-economy/scaling rule; preserve Fighter 1-5 behavior; promote only after structural audit, combat/resource fingerprints, generated-card parity, public readiness, permanent regressions, and exact-head CI pass.
 
 ### Goal 4 — Continue Karnok in finite progression tranches
 
