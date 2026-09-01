@@ -8,6 +8,7 @@
   const G = () => window.IRON_PIT_BROWSER_RAGE;
   const J = () => window.IRON_PIT_BROWSER_ACTION_SURGE;
   const P = () => window.IRON_PIT_BROWSER_SUPPORT;
+  const T = () => window.IRON_PIT_BROWSER_TACTICAL_SHIFT;
   const Y = () => window.IRON_PIT_BROWSER_SPELL_POLICY;
   const Z = () => window.IRON_PIT_BROWSER_SPELL_RESOLUTION;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
@@ -117,7 +118,11 @@
     const turnKey = `${round}:${member.combatant_id}`;
     const support = P()?.resolve(sequence, round, member, setup, turnKey); if (support) { events.push(...support.events); sequence = support.sequence; }
     const rage = G()?.enter(sequence, round, member); if (rage) { events.push(rage); sequence += 1; }
-    const wind = P()?.secondWind(sequence, round, member); if (wind) { events.push(wind); sequence += 1; }
+    const wind = P()?.secondWind(sequence, round, member);
+    if (wind) {
+      events.push(wind); sequence += 1;
+      const shift = T()?.resolve(sequence, round, member, setup); if (shift) { events.push(shift); sequence += 1; }
+    }
     if (H().shouldEscape(member.state)) { events.push(H().escape(sequence++, round, member)); return finalize(events, sequence, round, member, setup, turnKey); }
     const rush = P()?.adrenaline(sequence, round, member); if (rush) { events.push(rush); sequence += 1; }
     const spell = Y()?.choose(member, setup, turnKey); if (spell) { const cast = Z().resolve(sequence, round, member, setup, spell, turnKey); events.push(...cast.events); sequence = cast.sequence; if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey); }
