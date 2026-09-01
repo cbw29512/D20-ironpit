@@ -118,6 +118,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "initiative_advantage": progression.initiative_advantage,
         "athletics_advantage": progression.athletics_advantage,
         "critical_move_fraction": progression.critical_move_fraction,
+        "tactical_shift_fraction": progression.tactical_shift_fraction,
         "visual": {"armor": template.visual.armor, "main_hand": template.visual.main_hand,
                    "off_hand": template.visual.off_hand, "body_style": template.visual.body_style,
                    "figure_form": template.visual.body_style, "role": template.archetype.lower()},
