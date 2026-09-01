@@ -26,7 +26,6 @@
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const BRAWL_DISTANCE = 5;
   const attacks = (member) => member.state.template.attacks || [];
-
   function legalAttack(member, distance) {
     const profiles = attacks(member), melee = profiles.find((a) => a.kind === "melee" && distance <= (a.reach || 5));
     return melee || profiles.find((a) => a.kind === "ranged" && distance <= a.long) || null;
