@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.content.canonical_hero_policy import canonical_template_id
 from app.content.certified_heroes import build_certified_hero_registry
 from app.content.hero_progressions import CANONICAL_BUILD_ID, CANONICAL_BUILD_NAME, CANONICAL_HEROES
 from app.domain.catalog import CoverageStatus, HeroCatalogCard
@@ -25,6 +26,12 @@ def _hero_card(hero, level: int, ready_builds: dict[tuple[str, int, str], tuple[
         name, template_id = ready
         if name != hero.hero_name:
             raise ValueError(f"Certified {hero.class_id} hero name drifted: {name} != {hero.hero_name}.")
+        expected_template_id = canonical_template_id(hero.class_id, level)
+        if template_id != expected_template_id:
+            raise ValueError(
+                f"Certified {hero.class_id} level {level} runtime identity drifted: "
+                f"{template_id} != {expected_template_id}."
+            )
         return HeroCatalogCard(
             **common, coverage_status=CoverageStatus.RAW_READY, runnable_template_id=template_id,
         )
