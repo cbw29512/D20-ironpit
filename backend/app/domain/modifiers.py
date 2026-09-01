@@ -27,6 +27,8 @@ class CombatModifier(BaseModel):
     damage_type: DamageType | None = None
     target_id: str | None = None
     concentration_required: bool = False
+    consume_on_attack_against: bool = False
+    expires_source_turn_end_round: int | None = Field(default=None, ge=1)
 
     @model_validator(mode="after")
     def validate_payload(self) -> "CombatModifier":
@@ -45,6 +47,8 @@ class CombatModifier(BaseModel):
             raise ValueError(f"{self.kind.value} does not accept a damage type.")
         if self.kind is ModifierKind.ATTACKS_AGAINST_ADVANTAGE and self.flat_bonus:
             raise ValueError("Attack-advantage modifiers do not accept a flat bonus.")
+        if self.consume_on_attack_against and self.kind is not ModifierKind.ATTACKS_AGAINST_ADVANTAGE:
+            raise ValueError("Only attack-advantage modifiers can be consumed by the next attack.")
         return self
 
 
