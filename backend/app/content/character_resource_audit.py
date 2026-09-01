@@ -6,6 +6,7 @@ from app.content.level_resources import (
     barbarian_rage_uses,
     cleric_channel_divinity_uses,
     fighter_action_surge_uses,
+    fighter_indomitable_uses,
     fighter_second_wind_uses,
     orc_adrenaline_rush_uses,
 )
@@ -24,6 +25,7 @@ _CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
     "fighter": (
         ("second-wind", "Second Wind", fighter_second_wind_uses),
         ("action-surge", "Action Surge", fighter_action_surge_uses),
+        ("indomitable", "Indomitable", fighter_indomitable_uses),
     ),
 }
 _SPECIES_RULES: dict[str, tuple[ResourceRule, ...]] = {
