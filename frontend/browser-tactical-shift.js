@@ -2,11 +2,12 @@
   "use strict";
 
   const S = () => window.IRON_PIT_BROWSER_STATE;
+  const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
 
   function resolve(sequence, round, member, setup) {
     try {
       const fraction = member.state.template.tactical_shift_fraction || 0;
-      if (!(fraction > 0) || member.state.is_dead || member.state.is_unconscious) return null;
+      if (!(fraction > 0) || member.state.is_dead || member.state.is_unconscious || G()?.speedIsZero(member.state)) return null;
       const target = S().nearestTarget(member, setup);
       if (!target) return null;
       const before = S().distance(member, target);
