@@ -1,4 +1,5 @@
 from app.main import get_arena_roster
+from app.content.certified_heroes import build_certified_hero_templates
 from app.content.pregens import build_brom_ironmark, build_mara_quickstep, build_selene_asharrow
 from app.domain.models import ArenaRoster, DamageType, WeaponAttackKind
 from app.domain.traits import CombatTrait
@@ -12,12 +13,7 @@ def test_arena_roster_exposes_canonical_template_batch() -> None:
     roster = get_arena_roster()
 
     assert isinstance(roster, ArenaRoster)
-    assert [item.id for item in roster.characters] == [
-        "karnok-stoneward-l1", "karnok-stoneward-l2", "karnok-stoneward-l3",
-        "karnok-stoneward-l4", "karnok-stoneward-l5", "rokhan-stonefury-l1", "rokhan-stonefury-l2",
-        "rokhan-stonefury-l3", "rokhan-stonefury-l4", "rokhan-stonefury-l5", "seraphine-dawnshield-l1",
-        "seraphine-dawnshield-l2", "seraphine-dawnshield-l3", "seraphine-dawnshield-l4",
-    ]
+    assert [item.id for item in roster.characters] == [item.id for item in build_certified_hero_templates()]
     assert [item.id for item in roster.monsters] == [
         "srd-goblin-warrior", "srd-goblin-minion", "srd-hobgoblin-warrior", "srd-kobold-warrior",
         "srd-goblin-boss", "srd-bandit", "srd-commoner", "srd-guard", "srd-giant-rat", "srd-giant-weasel",
