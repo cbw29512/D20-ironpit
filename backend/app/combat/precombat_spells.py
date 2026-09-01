@@ -2,10 +2,11 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 
+from app.combat.friendly_buff_targeting import select_friendly_buff_targets
 from app.combat.spell_modifiers import apply_spell_modifiers
 from app.combat.temporary_hp import grant_temporary_hit_points
 from app.domain.encounters import EncounterCombatant, EncounterSetup
-from app.domain.models import BattleEvent, DamageType, WeaponAttackKind
+from app.domain.models import BattleEvent, DamageType
 from app.domain.runtime import CombatantState
 from app.domain.spells import DefensiveSpellAction, SpellModifierEffect
 
@@ -27,33 +28,6 @@ def choose_defensive_spell(member: EncounterCombatant):
     return None
 
 
-def _nearest_enemy_distance(target: EncounterCombatant, setup: EncounterSetup) -> int:
-    enemies = setup.monsters if target.side == "heroes" else setup.heroes
-    living = [enemy for enemy in enemies if enemy.state.is_alive and not enemy.state.is_dead]
-    return min((abs(target.position_ft - enemy.position_ft) for enemy in living), default=10**9)
-
-
-def _friendly_buff_priority(
-    caster: EncounterCombatant,
-    target: EncounterCombatant,
-    setup: EncounterSetup,
-) -> tuple[int, int, int, str]:
-    """Prefer melee line-holders, then the caster, then remaining back-line allies."""
-    is_melee = target.state.template.weapon_attack.weapon.attack_kind is WeaponAttackKind.MELEE
-    if target is not caster and is_melee:
-        group = 0
-    elif target is caster:
-        group = 1
-    else:
-        group = 2
-    return (
-        group,
-        _nearest_enemy_distance(target, setup),
-        abs(caster.position_ft - target.position_ft),
-        target.combatant_id,
-    )
-
-
 def select_defensive_targets(
     member: EncounterCombatant,
     setup: EncounterSetup,
@@ -64,14 +38,7 @@ def select_defensive_targets(
         raise ValueError("Spell upcasting is not certified; use the spell's printed slot level.")
     if spell.target_policy == "self":
         return [member]
-    side = setup.heroes if member.side == "heroes" else setup.monsters
-    legal = [
-        target for target in side
-        if target.state.is_alive and not target.state.is_dead
-        and abs(member.position_ft - target.position_ft) <= spell.range_ft
-    ]
-    legal.sort(key=lambda target: _friendly_buff_priority(member, target, setup))
-    return legal[:spell.target_count]
+    return select_friendly_buff_targets(member, setup, spell.range_ft, spell.target_count)
 
 
 def _modifier_detail(effect: SpellModifierEffect) -> str:
