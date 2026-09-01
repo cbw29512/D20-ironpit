@@ -7,7 +7,7 @@ from app.domain.models import EncounterSelection, RollMode, WeaponAttackKind
 
 
 def _setup(two_heroes: bool = False):
-    hero_ids = ["aldric-vane-l1", "brom-ironmark-l1"] if two_heroes else ["aldric-vane-l1"]
+    hero_ids = ["karnok-stoneward-l1", "rokhan-stonefury-l1"] if two_heroes else ["karnok-stoneward-l1"]
     setup = build_encounter_setup(EncounterSelection(
         hero_ids=hero_ids, monster_ids=["srd-scout"],
     ))
