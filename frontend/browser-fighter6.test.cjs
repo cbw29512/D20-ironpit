@@ -40,3 +40,4 @@ assert.deepEqual(fighter.attack_action.slots, [
 ]);
 
 console.log("Generated browser Fighter 6 ASI regression passed.");
+require("./browser-fighter7.test.cjs");
