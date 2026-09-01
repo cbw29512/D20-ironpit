@@ -9,7 +9,10 @@ from app.content.audited_fighter_profile import build_karnok_stoneward_profile
 from app.content.build_audit import assert_character_build_raw_ready
 from app.content.character_resource_audit import assert_character_resources_raw_ready
 from app.content.fighter_progression import build_karnok_stoneward_level
-from app.content.fighter_progression_profile import build_karnok_stoneward_level2_profile
+from app.content.fighter_progression_profile import (
+    build_karnok_stoneward_level2_profile,
+    build_karnok_stoneward_level3_profile,
+)
 from app.content.hero_progressions import CANONICAL_BUILD_ID
 from app.content.pregen_combat_audit import assert_pregen_combat_stats
 from app.content.pregen_combat_profiles import build_pregen_combat_profiles
@@ -42,6 +45,7 @@ def build_certified_hero_entries() -> list[tuple[HeroBuildKey, CombatantTemplate
     return [
         _validated(build_karnok_stoneward, build_karnok_stoneward_profile),
         _validated(lambda: build_karnok_stoneward_level(2), build_karnok_stoneward_level2_profile),
+        _validated(lambda: build_karnok_stoneward_level(3), build_karnok_stoneward_level3_profile),
         _validated(build_rokhan_stonefury, build_rokhan_stonefury_profile),
     ]
 
