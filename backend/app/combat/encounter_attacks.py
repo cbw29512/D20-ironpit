@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.attacks import resolve_attack
+from app.combat.barbarian_level2 import activate_reckless_attack
 from app.combat.champion import apply_critical_closing_move
 from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
@@ -27,7 +28,11 @@ def resolve_encounter_attack(
     turn_key: str | None = None,
     bonus_damage: BonusDamageSpec | None = None,
     close_enemy_active: bool | None = None,
+    allow_reckless: bool = False,
 ) -> BattleEvent:
+    reckless_started = allow_reckless and activate_reckless_attack(
+        attacker.state, attack, attacker.combatant_id, round_number,
+    )
     redirect = select_redirect_ally(target, setup) if setup is not None else None
     close_enemy = close_enemy_active
     if close_enemy is None:
@@ -43,6 +48,10 @@ def resolve_encounter_attack(
         redirect_target_event_id=redirect.combatant_id if redirect is not None else None,
         affected_states=affected_states,
     )
+    if reckless_started:
+        event.description += f" {attacker.state.template.name} uses Reckless Attack."
+        if event.feature_id is None:
+            event.feature_id = "reckless-attack"
     if redirect is not None and event.target_id == redirect.combatant_id:
         swap_redirect_positions(target, redirect)
     return apply_critical_closing_move(attacker, setup, event)
