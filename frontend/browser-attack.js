@@ -5,26 +5,27 @@
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
   const T = () => window.IRON_PIT_BROWSER_TIMED;
   const Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
+  const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
+  const C = () => window.IRON_PIT_BROWSER_CONCENTRATION;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || {
-    attackAdvantage: (state) => state.is_unconscious,
-    autoCritical: (state) => state.is_unconscious,
-    has: (state, id) => state.active_effect_ids.includes(id),
-    incapacitated: (state) => state.is_unconscious,
+    attackAdvantage: (state) => state.is_unconscious, autoCritical: (state) => state.is_unconscious,
+    has: (state, id) => state.active_effect_ids.includes(id), incapacitated: (state) => state.is_unconscious,
   };
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
     available: (state, cost) => cost === "action" && state.action_available,
     spend: (state) => { state.action_available = false; },
   };
+  const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
   function conditionSources(attacker, defender, distance, targetId) {
-    let advantage = 0, disadvantage = 0;
+    let advantage = M().attacksAgainstAdvantage(defender), disadvantage = 0;
     if (Q().has(attacker, "blinded")) disadvantage += 1;
     if (attacker.active_effect_ids.includes("prone")) disadvantage += 1;
     if (attacker.active_effect_ids.includes("restrained")) disadvantage += 1;
     if (attacker.active_effect_ids.includes("poisoned")) disadvantage += 1;
     disadvantage += G()?.attackDisadvantage(attacker, targetId) || 0;
     if (defender.active_effect_ids.includes("dodge") && !Q().incapacitated(defender)
-        && defender.template.speed_ft > 0 && !G()?.speedIsZero(defender)) disadvantage += 1;
+        && M().effectiveSpeed(defender) > 0 && !G()?.speedIsZero(defender)) disadvantage += 1;
     if (Q().attackAdvantage(defender)) advantage += 1;
     if (defender.active_effect_ids.includes("restrained")) advantage += 1;
     if (defender.active_effect_ids.includes("prone")) distance <= 5 ? advantage += 1 : disadvantage += 1;
@@ -46,10 +47,10 @@
     if (target.template.damage_vulnerabilities?.includes(type)) value *= 2;
     return value;
   }
-  function applyDamage(state, amount, critical = false, damageTypes = []) {
+  function applyDamage(state, amount, critical = false, damageTypes = [], affectedStates = []) {
     const lifecycle = Z();
     if (!lifecycle) throw new Error("Browser zero-HP runtime is not loaded.");
-    return lifecycle.applyDamage(state, amount, critical, damageTypes);
+    return lifecycle.applyDamage(state, amount, critical, damageTypes, affectedStates);
   }
   function resolveAttack(sequence, round, attacker, target, attack, distance, extra = {}) {
     const spendAction = extra.spendAction !== false;
@@ -58,27 +59,26 @@
     const advantage = (extra.advantage || 0) + conditions.advantage + bloodiedFury(attacker.state, attack);
     const closeThreat = attack.kind === "ranged" && rangedCloseThreat(attacker, target, distance, extra.setup);
     const mode = R().attackMode(attack, distance, advantage, conditions.disadvantage, closeThreat);
-    const attackRoll = R().d20(attack.bonus, mode);
+    const attackRoll = M().applyD20Bonus(attacker.state, "attack-roll-bonus-die", R().d20(attack.bonus, mode));
     window.IRON_PIT_BROWSER_RAGE?.extendFromAttack(attacker.state, round);
     if (spendAction) E().spend(attacker.state, "action");
     const redirected = window.IRON_PIT_BROWSER_REACTIONS?.redirectAttack?.(target, extra.setup) || null;
     const actualTarget = redirected || target;
     const natural = attackRoll.selected_roll, naturalTwenty = natural === 20;
-    const initialHit = natural !== 1 && (naturalTwenty || attackRoll.total >= actualTarget.state.template.armor_class);
+    const initialHit = natural !== 1 && (naturalTwenty || attackRoll.total >= M().effectiveArmorClass(actualTarget.state));
     const parry = window.IRON_PIT_BROWSER_REACTIONS?.parryHit?.(actualTarget.state, attack, attackRoll, initialHit) || { hit: initialHit, used: false }, hit = parry.hit;
     const expandedCritical = natural >= (attacker.state.template.critical_hit_minimum || 20);
     const critical = Boolean(hit && (expandedCritical || (Q().autoCritical(actualTarget.state) && distance <= 5)));
     const hpBefore = actualTarget.state.current_hp, temporaryHpBefore = actualTarget.state.temporary_hp;
     let damageRoll = null, damageComponents = [], damageOutcome = null; const applied = [];
     if (hit) {
-      const damage = R().weaponDamage(
-        attacker.state, attack, critical, mode, `${round}:${attacker.combatant_id}`,
-        extra.bonusDamage || null, actualTarget.state,
-      );
+      const damage = R().weaponDamage(attacker.state, attack, critical, mode, `${round}:${attacker.combatant_id}`,
+        extra.bonusDamage || null, actualTarget.state);
       damageComponents = damage.components.map((part) => ({ ...part, applied_total: adjustedDamage(actualTarget.state, part.total, part.damage_type) }));
       damageRoll = { ...damage.roll, total: damageComponents.reduce((sum, part) => sum + part.applied_total, 0) };
       const appliedTypes = [...new Set(damageComponents.filter((part) => part.applied_total > 0).map((part) => part.damage_type))];
-      damageOutcome = applyDamage(actualTarget.state, damageRoll.total, critical, appliedTypes);
+      const affectedStates = states(extra.setup);
+      damageOutcome = applyDamage(actualTarget.state, damageRoll.total, critical, appliedTypes, affectedStates);
       const living = actualTarget.state.is_alive && !actualTarget.state.is_dead;
       const proneMax = extra.proneMaxSize || attack.proneMaxSize;
       if (living && S().canProne(actualTarget, proneMax) && !I().immune(actualTarget.state, "prone")) {
@@ -98,6 +98,7 @@
         if (timed) applied.push(timed);
       }
       window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(actualTarget.state);
+      C()?.endIfIncapacitated(actualTarget.state, affectedStates);
     }
     let description = `${attacker.state.template.name}: ${critical ? "CRITICAL HIT" : hit ? "HIT" : "MISS"} with ${attack.name}.`;
     if (redirected) description += ` ${target.state.template.name} uses Redirect Attack; ${actualTarget.state.template.name} becomes the target.`;
