@@ -37,13 +37,14 @@ def _mechanics(template: Any) -> list[str]:
     }
     if template.attack_action is not None:
         mechanics.add("multiattack-or-extra-attack")
-    if template.critical_hit_minimum < 20:
+    features = template.progression_features
+    if features.critical_hit_minimum < 20:
         mechanics.add("expanded-critical-range")
-    if template.initiative_advantage:
+    if features.initiative_advantage:
         mechanics.add("initiative-advantage")
-    if template.athletics_advantage:
+    if features.athletics_advantage:
         mechanics.add("athletics-advantage")
-    if template.critical_move_fraction:
+    if features.critical_move_fraction:
         mechanics.add("post-critical-movement")
     return sorted(mechanics)
 
