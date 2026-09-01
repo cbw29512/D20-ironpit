@@ -55,6 +55,7 @@ def _hold_backline(
     target: EncounterCombatant,
     dice: DiceProvider,
     setup: EncounterSetup,
+    turn_key: str | None,
 ) -> tuple[list[BattleEvent], int, bool] | None:
     if not backline_holds_position(attacker, setup):
         return None
@@ -63,7 +64,8 @@ def _hold_backline(
     if ranged is not None and is_available(attacker.state, "action"):
         events.append(resolve_encounter_attack(
             sequence, round_number, attacker, target, ranged,
-            combatant_distance(attacker, target), dice, setup, allow_reckless=True,
+            combatant_distance(attacker, target), dice, setup,
+            allow_reckless=True, turn_key=turn_key,
         ))
         sequence += 1
     elif is_available(attacker.state, "action"):
@@ -79,6 +81,7 @@ def resolve_simple_closing(
     target: EncounterCombatant,
     dice: DiceProvider,
     setup: EncounterSetup | None = None,
+    turn_key: str | None = None,
 ) -> tuple[list[BattleEvent], int, bool]:
     """Reach melee when arena policy allows; backliners hold while an allied frontline is active."""
     distance = combatant_distance(attacker, target)
@@ -90,7 +93,7 @@ def resolve_simple_closing(
     if distance <= MELEE_BRAWL_DISTANCE_FT:
         return [], sequence, False
     if setup is not None:
-        held = _hold_backline(sequence, round_number, attacker, target, dice, setup)
+        held = _hold_backline(sequence, round_number, attacker, target, dice, setup, turn_key)
         if held is not None:
             return held
     if attacker.state.template.attack_action is not None:
@@ -111,7 +114,8 @@ def resolve_simple_closing(
     if ranged is not None and is_available(attacker.state, "action"):
         events.append(resolve_encounter_attack(
             sequence, round_number, attacker, target, ranged,
-            combatant_distance(attacker, target), dice, setup, allow_reckless=True,
+            combatant_distance(attacker, target), dice, setup,
+            allow_reckless=True, turn_key=turn_key,
         ))
         sequence += 1
     elif is_available(attacker.state, "action"):
