@@ -12,6 +12,7 @@ from app.combat.encounter_initiative import roll_encounter_initiative
 from app.combat.encounter_outcome import resolve_encounter_outcome
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.encounter_targeting import select_nearest_target
+from app.combat.modifier_stack import expire_source_turn_modifiers
 from app.combat.precombat_spells import prepare_defenses
 from app.combat.state import refresh_reaction
 from app.combat.timed_conditions import expire_start_of_turn_conditions
@@ -49,6 +50,11 @@ def _end_turn_lifecycle(sequence, round_number, member, setup, dice):
         sequence, round_number, member, setup, "source_turn_end",
     )
     events.extend(source_events)
+    expire_source_turn_modifiers(
+        [entry.state for entry in [*setup.heroes, *setup.monsters]],
+        member.combatant_id,
+        round_number,
+    )
     return events, sequence
 
 
