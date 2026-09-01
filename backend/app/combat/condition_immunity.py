@@ -7,4 +7,10 @@ def condition_is_immune(state: CombatantState, condition_id: str) -> bool:
     """Return static and condition-granted 2024 condition immunities."""
     if condition_id in state.template.condition_immunities:
         return True
+    if (
+        state.template.progression_features.mindless_rage
+        and "rage" in state.active_effect_ids
+        and condition_id in {"charmed", "frightened"}
+    ):
+        return True
     return condition_id == "poisoned" and "petrified" in state.active_effect_ids
