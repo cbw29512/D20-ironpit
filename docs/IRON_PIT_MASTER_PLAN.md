@@ -9,6 +9,7 @@ This document is durable program memory for finite Codex goals. Machine-readable
 3. PR #32 stays draft and unmerged. Its base remains `feat/browser-combat-engine` unless the user explicitly changes it.
 4. Unsupported outcome-changing mechanics remain fail-closed.
 5. Netlify is reserved for deliberate release/checkpoint hosting validation.
+6. Production monster onboarding is data-first through the Universal Combat Capability registry; bespoke monster builders are migration/parity oracles, not the production roster source.
 
 ## Completion model
 
@@ -33,10 +34,15 @@ The master program is complete only when all of these generated, independently v
 
 `data/monster_certification_manifest.json` is generated from all 330 canonical SRD rows, runtime/source audit readiness, blocker analysis, and the generated browser monster artifact. Each record contains source/page, runtime template candidate, detected/supported/unsupported mechanics, Python/browser/generated/public status, and blockers.
 
+### Capability registry
+
+`backend/app/content/data/combatant_capabilities_v1.json` is the production monster behavior registry. `backend/app/content/capability_registry.py` compiles those definitions into the same `CombatantTemplate` runtime used by Python and browser export. `backend/app/content/legacy_monster_roster.py` exists only as a migration/parity oracle. `scripts/export_runtime_monster_capabilities.py --check` and permanent CI prevent registry drift or a return to production `monster_*`/`monsters_*` builder imports.
+
 ### Commands
 
 ```text
 python scripts/prepare_static_site.py
+python scripts/export_runtime_monster_capabilities.py --check
 python scripts/verify_certification_manifests.py --write
 python scripts/verify_certification_manifests.py
 python scripts/report_certification_progress.py
@@ -51,52 +57,68 @@ Baseline source head before this control-file tranche: `db4fe6bff688827a67b7322e
 - GitHub PR #32 was verified open, draft, unmerged, and based on `feat/browser-combat-engine`.
 - GitHub Actions CI run 2599 completed successfully on that exact source head.
 - Local permanent baseline passed: production source limits, clean generated-static parity, 396 Python tests, JavaScript syntax, and every checked-in browser regression.
-- The generated manifests establish the exact current hero and monster certification counts. Use the report command for the values; do not copy them into future task prompts as authority.
+- The generated manifests establish exact current hero and monster certification counts. Use the report command as authority.
 - Netlify was not invoked and is not required for routine development certification.
 
-The Codex-readiness commit that adds this plan must receive its own exact-head CI success before it becomes the new certified checkpoint.
+## Fighter 5 / Champion checkpoint
 
-## Fighter 4 / Champion checkpoint
-
-Karnok Stoneward is now promoted through Fighter 4 using finite, fail-closed progression snapshots.
+Karnok Stoneward is promoted through Fighter 5 using finite, fail-closed progression snapshots.
 
 Certified progression behavior includes:
 
-- Fighter 1 baseline, Fighter 2 Action Surge/Tactical Mind, and Fighter 3 Champion behavior inherited by later snapshots;
+- Fighter 1 baseline, Fighter 2 Action Surge/Tactical Mind, Fighter 3 Champion behavior, and Fighter 4 explicit Ability Score Improvement inheritance;
 - Champion Improved Critical at 19-20 without turning a natural 19 into an automatic hit;
 - Remarkable Athlete Initiative Advantage and Athletics Advantage;
-- post-critical half-Speed movement that closes toward the target, does not provoke Opportunity Attacks, and cannot be used to kite or retreat;
-- Fighter 4 Ability Score Improvement represented as explicit advancement data rather than mutating background ability increases;
-- the selected Fighter 4 split increase of +1 Strength and +1 Constitution, producing Strength 18 and Constitution 16;
-- resulting Fighter 4 runtime scaling: 40 HP, Greatsword +6 to hit / +4 damage, Strength save +6, Constitution save +5, Athletics +6, and three Second Wind uses;
-- four selected Weapon Masteries at Fighter 4. The fourth selection is Longsword; the standard arena Greatsword/Shortbow loadout intentionally does not invoke unsupported mastery effects;
-- structural build audit, combat fingerprint audit, resource audit, deterministic Python tests, public readiness, generated browser-card parity, and browser behavior tests.
+- post-critical half-Speed closing that does not provoke Opportunity Attacks and is not used to kite or retreat;
+- Fighter 4 split advancement of +1 Strength and +1 Constitution, producing Strength 18 and Constitution 16;
+- Fighter 5 proficiency-bonus scaling to +3, producing 49 HP, Greatsword +7 to hit / +4 damage, Shortbow +4 / +1, Strength save +7, Constitution save +6, and Athletics +7;
+- Fighter 5 Extra Attack represented by the generic two-slot Attack action; Action Surge reuses the same Attack action and therefore grants another two attacks rather than a special-cased Fighter path;
+- Fighter 5 Tactical Shift: activating Second Wind with a Bonus Action can provide up to half-Speed extra movement. Iron Pit AI uses that movement only to close toward the nearest enemy, does not spend normal movement, and does not provoke Opportunity Attacks. Effective Speed 0 correctly yields no Tactical Shift movement;
+- three Second Wind uses, one Action Surge, three Adrenaline Rush uses, and one Relentless Endurance use at the certified level-5 snapshot;
+- four selected Weapon Masteries: Flail, Javelin, Spear, and Longsword. The standard Greatsword/Shortbow arena loadout intentionally does not invoke unsupported selected mastery effects;
+- structural build audit, combat fingerprint audit, resource audit, public readiness, generated browser-card parity, deterministic Python behavior, and generated-card browser behavior.
 
-A production-parity hole found during Fighter 4 work was also fixed: the generated browser hero exporter had not serialized Champion progression fields. The exporter now carries critical threshold, Initiative Advantage, Athletics Advantage, critical movement fraction, Fighting Style, and Weapon Masteries from the authoritative Python template. A permanent browser regression loads the real generated Fighter 3 and Fighter 4 cards so future generated-data drift is caught rather than hidden by hand-built test fixtures.
+Permanent browser certification loads the real generated Fighter 5 card and checks Second Wind `1d10+5`, 15-foot Tactical Shift, no Opportunity Attack/reaction spend, no normal-movement spend, speed-zero denial, two normal Attack-action attacks, and two additional Action Surge attacks.
 
-Do not regress this checkpoint by weakening generated-static parity or by adding a mastery effect, feat, or progression feature that the runtime/browser paths do not actually support.
+Exact-head permanent CI run 2775 on `3e9c703361d40b905da82759967d4e38b61686e4` passed all production gates with 423 Python tests. The generated status report at that checkpoint was Fighter 5/20, 6/240 certified hero snapshots, and 99/330 certified monsters.
+
+Do not regress this checkpoint by weakening generated-static parity, capability-registry parity, source audits, or by adding a mastery/feature effect that the runtime and browser paths do not actually support.
+
+## Universal Combat Capability Engine v1 checkpoint
+
+Production monsters now follow:
+
+`declarative combat data -> universal capability compiler -> CombatantTemplate -> Python/browser runtime`
+
+The compatibility path is also preserved:
+
+`legacy runtime template -> capability definition -> compiler -> equivalent template`
+
+The entire current runtime monster corpus is used as the compatibility oracle. The tests require exact roster identity/order, semantic template equivalence, and source-audit result parity, so intentionally blocked candidates remain blocked rather than being silently promoted. Production `roster.py` consumes only the compiled capability registry.
+
+The v1 grammar already carries existing runtime structures for attacks, damage, save actions, conditions/control, traits, reactions, resources, Multiattack, movement, defenses, spells, and lifecycle metadata. New shared mechanics should extend this grammar/compiler and browser/Python behavior once, then unlock matching monsters through data rather than adding another production monster builder.
 
 ## Priority queue
 
-### Goal 1 — Certify Karnok Fighter 5
+### Goal 1 — Certify Karnok Fighter 6
 
-Stopping condition: derive Fighter 5 from the certified Fighter 4 snapshot; source-audit every new level-5 class/subclass/resource/action-economy/scaling rule; implement Python and browser behavior where outcome-changing; preserve all Fighter 1-4 behavior; promote only after structural audit, combat/resource fingerprints, generated-card parity, public readiness, permanent regressions, and exact-head CI pass.
+Stopping condition: derive Fighter 6 from the certified Fighter 5 snapshot; source-audit every new level-6 class/subclass/resource/action-economy/scaling rule; preserve Fighter 1-5 behavior; promote only after structural audit, combat/resource fingerprints, generated-card parity, public readiness, permanent regressions, and exact-head CI pass.
 
-### Goal 2 — Continue Karnok in finite progression tranches
+### Goal 2 — High-yield capability blocker tranche
 
-Advance through coherent Fighter milestones rather than claiming levels 6-20 at once. Each goal must explicitly cover all new class/subclass/feat/resource/action-economy/scaling rules introduced by its selected level range and preserve all previously certified Fighter levels. Ability-score/feat advancements must remain explicit audit data rather than hidden stat mutations.
+Use the 330-monster blocker analyzer to select a shared mechanic that unlocks many monsters. Implement it in the universal capability schema/compiler and Python/browser runtime, add source audits and regressions, rerun all records, then certify every newly unlocked monster as a batch. Current high-yield families include save/complex actions, conditions/control, limited-use/recharge, traits, spellcasting, Bonus Actions, legendary actions, reactions, and attack riders.
 
 ### Goal 3 — Zero-engine monster tranche
 
-Run the full blocker analyzer, review monsters with no unsupported outcome-changing mechanics, implement only necessary source-derived runtime templates, then certify Python/browser/generated/public parity as a batch.
+Review the currently reported zero-engine candidates first. If a monster already has every outcome-changing mechanic represented by existing capabilities, onboarding should be data/source-audit work only. Do not write a bespoke production builder merely to increase the monster count.
 
-### Goal 4 — Shared monster capability
+### Goal 4 — Continue Karnok in finite progression tranches
 
-Select one high-yield blocker family. Implement exact reusable RAW mechanics in Python and browser engines, add source audits and regressions, rerun all 330 records, and certify every newly unlocked monster. Initial blocker families are reported dynamically; likely high-yield areas include save/complex actions, conditions/control, limited-use/recharge, traits, spellcasting, Bonus Actions, legendary actions, reactions, and attack riders.
+Advance through coherent Fighter milestones rather than claiming levels 7-20 at once. Each goal must explicitly cover all new class/subclass/feat/resource/action-economy/scaling rules introduced by its selected level range and preserve all previously certified Fighter levels. Ability-score/feat advancements remain explicit audit data rather than hidden stat mutations.
 
 ### Goal 5 — Next canonical hero
 
-After Fighter progression is complete or reaches a genuine prerequisite decision, complete one other canonical hero progression in finite, level-bounded goals. Preserve the one-identity-per-class architecture and derive every level from canonical progression data.
+After Fighter progression is complete or reaches a genuine prerequisite decision, complete one other canonical hero progression in finite, level-bounded goals. Preserve the one-identity-per-class architecture and derive every level from canonical progression data. Reuse the same declarative capability concepts where they improve hero progression without weakening class-specific source audits.
 
 ## Checkpoint record format
 
