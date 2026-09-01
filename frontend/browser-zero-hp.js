@@ -5,12 +5,13 @@
   const U = () => window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const B = () => window.IRON_PIT_BROWSER_SOURCE_BOUND_EFFECTS;
+  const S = () => window.IRON_PIT_BROWSER_STATE;
   const DODGE = "dodge";
   const PRONE = "prone";
 
   function useRelentless(state, remaining) {
     if (!state.template.traits?.includes("relentless-endurance")) return false;
-    if ((state.resources["relentless-endurance"] || 0) < 1 || remaining >= state.template.max_hp) return false;
+    if ((state.resources["relentless-endurance"] || 0) < 1 || remaining >= S().effectiveMaxHp(state)) return false;
     state.resources["relentless-endurance"] -= 1;
     state.current_hp = 1;
     state.is_alive = true;
@@ -60,7 +61,7 @@
     state.temporary_hp -= absorbed;
     amount -= absorbed;
     if (state.current_hp === 0) {
-      if (state.template.kind === "monster" || incoming >= state.template.max_hp) {
+      if (state.template.kind === "monster" || incoming >= S().effectiveMaxHp(state)) {
         markDead(state); return finish(state, "dead", incoming, affectedStates);
       }
       state.is_stable = false;
@@ -75,7 +76,7 @@
     if (useUndeadFortitude(state, incoming, damageTypes, critical)) return finish(state, "undead_fortitude", incoming, affectedStates);
     if (state.template.kind === "monster") { markDead(state); return finish(state, "dead", incoming, affectedStates); }
     const remaining = Math.max(0, amount - before);
-    if (remaining >= state.template.max_hp) { markDead(state); return finish(state, "dead", incoming, affectedStates); }
+    if (remaining >= S().effectiveMaxHp(state)) { markDead(state); return finish(state, "dead", incoming, affectedStates); }
     if (useRelentless(state, remaining)) return finish(state, "relentless_endurance", incoming, affectedStates);
     markUnconscious(state);
     return finish(state, "unconscious", incoming, affectedStates);
