@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.content.audited_fighter import build_karnok_stoneward
+from app.content.canonical_hero_policy import canonical_template_id
 from app.content.level_resources import (
     fighter_action_surge_uses,
     fighter_second_wind_uses,
@@ -88,7 +89,7 @@ def build_karnok_stoneward_level(level: int) -> CombatantTemplate:
         5: "D&D Beyond Basic Rules 2024: Fighter 5 Extra Attack and Tactical Shift, Champion, Orc, Soldier, Savage Attacker, Equipment",
     }
     data.update(
-        id=f"karnok-stoneward-l{level}",
+        id=canonical_template_id("fighter", level),
         level=level,
         max_hp=fixed_class_hit_points(level, 10, constitution_modifier),
         resources=[item.model_dump() for item in _resources(level)],
