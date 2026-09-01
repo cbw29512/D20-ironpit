@@ -1,0 +1,41 @@
+name: One-time canonical roster migration
+
+on:
+  push:
+    branches:
+      - audit/raw-combat-log-figures-20260830
+    paths:
+      - scripts/one_time_migrate_canonical_roster_tests.py
+      - .github/workflows/one-time-canonical-roster-migration.yml
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/raw-combat-log-figures-20260830
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Python rules reference
+        run: pip install -e './backend[dev]'
+      - name: Apply scoped roster-test migration
+        run: python scripts/one_time_migrate_canonical_roster_tests.py
+      - name: Certify roster and canonical progression tests
+        run: |
+          python scripts/check_source_limits.py
+          cd backend
+          pytest -q tests/test_arena_roster.py tests/test_roster.py tests/test_canonical_hero_policy.py tests/test_canonical_progression.py
+      - name: Persist only intended migration
+        run: |
+          test -z "$(git status --porcelain --untracked-files=all | grep -v '^ M backend/tests/test_arena_roster.py$')"
+          git diff --check
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add backend/tests/test_arena_roster.py
+          git commit -m 'test: isolate legacy pregens from production roster'
+          git push origin HEAD:audit/raw-combat-log-figures-20260830
