@@ -1,0 +1,81 @@
+name: One-time Fighter 3 certification sync
+
+on:
+  push:
+    branches:
+      - audit/raw-combat-log-figures-20260830
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/raw-combat-log-figures-20260830
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Patch exact Fighter 3 certification contracts
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('backend/tests/test_full_content_catalog.py')
+          text = path.read_text()
+          old = '        ("fighter", 2, "canonical", "Karnok Stoneward", "karnok-stoneward-l2"),\n'
+          new = old + '        ("fighter", 3, "canonical", "Karnok Stoneward", "karnok-stoneward-l3"),\n'
+          if new not in text:
+              if old not in text:
+                  raise SystemExit('full catalog Fighter 2 anchor missing')
+              text = text.replace(old, new, 1)
+              path.write_text(text)
+
+          path = Path('backend/tests/test_arena_roster.py')
+          text = path.read_text()
+          old = '        "karnok-stoneward-l1", "karnok-stoneward-l2", "rokhan-stonefury-l1", "aldric-vane-l1",\n'
+          new = '        "karnok-stoneward-l1", "karnok-stoneward-l2", "karnok-stoneward-l3", "rokhan-stonefury-l1",\n        "aldric-vane-l1",\n'
+          if new not in text:
+              if old not in text:
+                  raise SystemExit('arena roster Fighter 2 anchor missing')
+              path.write_text(text.replace(old, new, 1))
+
+          plan = Path('docs/IRON_PIT_MASTER_PLAN.md')
+          text = plan.read_text()
+          text = text.replace(
+              '- Fighter 3 / Champion has partial Python/browser engine scaffolding, but remains fail-closed and uncertified.',
+              '- Fighter 3 / Champion is RAW-certified with Improved Critical and Remarkable Athlete Python/browser parity.',
+          )
+          text = text.replace(
+              '1. Certify Karnok Fighter 3 from the current Champion scaffolding without weakening any permanent gate.',
+              '1. Certify Karnok Fighter 4 with an explicit canonical level-4 ASI/feat choice and complete resulting combat scaling; keep it fail-closed until certified.',
+          )
+          plan.write_text(text)
+          PY
+      - name: Install Python rules reference
+        working-directory: backend
+        run: pip install -e '.[dev]'
+      - name: Regenerate static runtime and certification manifests
+        run: |
+          python scripts/prepare_static_site.py
+          python scripts/verify_certification_manifests.py --write
+          python scripts/verify_certification_manifests.py
+          python scripts/report_certification_progress.py
+      - name: Run targeted Fighter 3 certification
+        working-directory: backend
+        run: pytest -q tests/test_fighter_progression.py tests/test_champion_fighter.py tests/test_hero_progressions.py tests/test_public_readiness.py tests/test_full_content_catalog.py tests/test_arena_roster.py
+      - name: Run browser Champion certification
+        run: node frontend/browser-champion.test.cjs
+      - name: Commit generated Fighter 3 checkpoint
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add backend/tests/test_full_content_catalog.py backend/tests/test_arena_roster.py \
+            frontend/browser-heroes.js data/hero_certification_manifest.json data/monster_certification_manifest.json \
+            docs/IRON_PIT_MASTER_PLAN.md
+          git diff --cached --quiet && exit 0
+          git commit -m "build: sync Fighter 3 certification checkpoint"
+          git push origin HEAD:audit/raw-combat-log-figures-20260830
