@@ -44,4 +44,5 @@ def test_only_certified_canonical_levels_are_runnable() -> None:
         ("Seraphine Dawnshield", 1, "seraphine-dawnshield-l1"),
         ("Seraphine Dawnshield", 2, "seraphine-dawnshield-l2"),
         ("Seraphine Dawnshield", 3, "seraphine-dawnshield-l3"),
+        ("Seraphine Dawnshield", 4, "seraphine-dawnshield-l4"),
     }
