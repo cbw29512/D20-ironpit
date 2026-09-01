@@ -56,6 +56,8 @@ class DefensiveSpellAction(BaseModel):
     target_count_per_slot_above: int = Field(default=0, ge=0, le=20)
     temporary_hp: int = Field(default=0, ge=0)
     temporary_hp_per_slot_above: int = Field(default=0, ge=0)
+    max_hp_increase: int = Field(default=0, ge=0)
+    current_hp_increase: int = Field(default=0, ge=0)
     damage_resistances: list[DamageTypeName] = Field(default_factory=list)
     modifier_effects: list[SpellModifierEffect] = Field(default_factory=list)
     concentration: bool = False
@@ -65,11 +67,10 @@ class DefensiveSpellAction(BaseModel):
 
     @model_validator(mode="after")
     def validate_defense(self) -> "DefensiveSpellAction":
-        if self.action_cost == "reaction":
-            raise ValueError("Reaction spells cannot be pre-cast without their trigger.")
-        if not self.temporary_hp and not self.damage_resistances and not self.modifier_effects:
+        direct_hp = self.temporary_hp or self.max_hp_increase or self.current_hp_increase
+        if not direct_hp and not self.damage_resistances and not self.modifier_effects:
             raise ValueError("Certified defensive spell must define an implemented defensive effect.")
-        if self.concentration and (self.temporary_hp or self.damage_resistances):
+        if self.concentration and (direct_hp or self.damage_resistances):
             raise ValueError("Concentration defenses require source-owned modifier effects.")
         if self.target_policy == "self" and (self.target_count != 1 or self.target_count_per_slot_above):
             raise ValueError("Self-target policy supports exactly one target.")
