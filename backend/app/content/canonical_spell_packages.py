@@ -32,11 +32,21 @@ def _cantrip(spell_id: str, name: str, role: str, *capabilities: str) -> Canonic
     )
 
 
+def _later_cantrip(
+    spell_id: str, name: str, role: str, min_character_level: int, *capabilities: str,
+) -> CanonicalSpellChoice:
+    return CanonicalSpellChoice(
+        id=spell_id, name=name, spell_level=0, min_character_level=min_character_level,
+        role=role, required_capabilities=list(capabilities),
+    )
+
+
 CANONICAL_CANTRIPS: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
     "cleric": (
         _cantrip("sacred-flame", "Sacred Flame", "damage", "save-damage", "cantrip-scaling"),
         _cantrip("light", "Light", "utility", "arena-out-of-scope"),
         _cantrip("thaumaturgy", "Thaumaturgy", "utility", "arena-out-of-scope"),
+        _later_cantrip("mending", "Mending", "utility", 4, "arena-out-of-scope"),
     ),
 }
 
@@ -57,6 +67,7 @@ CANONICAL_SPELLS: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
         _later_spell("detect-magic", "Detect Magic", 1, "utility", 3, "arena-out-of-scope"),
         _later_spell("create-or-destroy-water", "Create or Destroy Water", 1, "utility", 3, "arena-out-of-scope"),
         _later_spell("augury", "Augury", 2, "utility", 3, "arena-out-of-scope"),
+        _later_spell("inflict-wounds", "Inflict Wounds", 1, "damage", 4, "save-damage"),
         _later_spell("aid", "Aid", 2, "buff", 3, "max-hp-increase", always_prepared_from_level=3),
         _later_spell(
             "lesser-restoration", "Lesser Restoration", 2, "healing", 3,
@@ -111,9 +122,17 @@ def build_class_spell_package(class_id: CasterClassId, character_level: int) -> 
             f"{class_id} level {character_level} canonical package is incomplete: "
             f"needs {expected} prepared spells, has {len(prepared)}."
         )
-    cantrips = list(CANONICAL_CANTRIPS.get(class_id, ()))
-    if class_id == "cleric" and character_level <= 3 and len(cantrips) != 3:
-        raise ValueError("Cleric levels 1-3 canonical package must retain exactly three chosen cantrips.")
+    cantrips = [
+        spell for spell in CANONICAL_CANTRIPS.get(class_id, ())
+        if spell.min_character_level <= character_level
+    ]
+    if class_id == "cleric":
+        expected_cantrips = 3 + int(character_level >= 4) + int(character_level >= 10)
+        if len(cantrips) != expected_cantrips:
+            raise ValueError(
+                f"Cleric level {character_level} canonical package needs {expected_cantrips} cantrips, "
+                f"has {len(cantrips)}."
+            )
     return ClassSpellPackage(
         class_id=class_id, casting_ability=CASTING_ABILITIES[class_id],
         cantrips=cantrips, spells=prepared[:expected], always_prepared_spells=always_prepared,
