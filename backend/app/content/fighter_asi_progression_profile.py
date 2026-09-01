@@ -34,3 +34,36 @@ def build_karnok_stoneward_level6_profile() -> CharacterBuildProfile:
         ],
     )
     return CharacterBuildProfile.model_validate(data)
+
+
+def build_karnok_stoneward_level8_profile() -> CharacterBuildProfile:
+    from app.content.fighter_champion_progression_profile import build_karnok_stoneward_level7_profile
+
+    previous = build_karnok_stoneward_level7_profile()
+    data = advance_profile_data(previous, 8)
+    feature = FeatureAudit(
+        feature_id="ability-score-improvement-l8",
+        feature_name="Ability Score Improvement",
+        source_reference="D&D Beyond Basic Rules 2024: Fighter Level 8; Feats — Ability Score Improvement",
+        category="feat",
+        combat_relevant=True,
+        automated=True,
+        notes=("Strength is already 20, so the deterministic next combat priority is +2 Constitution, CON 16→18. "
+               "Maximum HP is recalculated for all eight Fighter levels and the Constitution save increases by 1."),
+    )
+    data.update(
+        advancement_increases=[
+            *data["advancement_increases"],
+            AbilityIncrease(ability="constitution", amount=2).model_dump(),
+        ],
+        final_ability_scores=AbilityScores(
+            strength=20, dexterity=13, constitution=18, intelligence=10, wisdom=10, charisma=10,
+        ).model_dump(),
+        feature_audits=[*data["feature_audits"], feature.model_dump()],
+        source_references=[
+            *data["source_references"],
+            "Basic Rules 2024: Fighter — Level 8 Ability Score Improvement",
+            "Basic Rules 2024: Feats — Ability Score Improvement (+2 Constitution)",
+        ],
+    )
+    return CharacterBuildProfile.model_validate(data)
