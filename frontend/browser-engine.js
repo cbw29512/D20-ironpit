@@ -107,6 +107,10 @@
   function lifecycle(sequence, round, member, setup, targetTiming, sourceTiming) {
     const target = L().resolveTargetTiming(sequence, round, member, targetTiming);
     const source = L().resolveSourceTiming(target.sequence, round, member, setup, sourceTiming);
+    if (sourceTiming === "source_turn_end") {
+      const states = [...setup.heroes, ...setup.monsters].map((entry) => entry.state);
+      window.IRON_PIT_BROWSER_MODIFIERS?.expireSourceTurn(states, member.combatant_id, round);
+    }
     return { events: [...target.events, ...source.events], sequence: source.sequence };
   }
 
