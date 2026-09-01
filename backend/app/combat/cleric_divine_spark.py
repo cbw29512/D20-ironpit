@@ -16,6 +16,12 @@ def _damage_type(target: EncounterCombatant) -> DamageType:
     return DamageType.RADIANT if radiant >= necrotic else DamageType.NECROTIC
 
 
+def _wisdom_modifier(cleric: EncounterCombatant, save_dc: int) -> int:
+    level = cleric.state.template.level or 1
+    proficiency = 2 + (level - 1) // 4
+    return save_dc - 8 - proficiency
+
+
 def resolve_divine_spark(
     sequence: int,
     round_number: int,
@@ -31,8 +37,9 @@ def resolve_divine_spark(
     if target.combatant_id == cleric.combatant_id or abs(cleric.position_ft - target.position_ft) > 30:
         raise ValueError("Divine Spark requires another creature within 30 feet.")
     roll = dice.roll(8)
-    total = roll + 3
-    notation = "1d8+3"
+    modifier = _wisdom_modifier(cleric, save_dc)
+    total = roll + modifier
+    notation = f"1d8+{modifier}"
     if healing:
         before = target.state.current_hp
         healed = restore_hit_points(target.state, total)
@@ -40,7 +47,7 @@ def resolve_divine_spark(
             sequence=sequence, round_number=round_number, event_type="healing",
             actor_id=cleric.combatant_id, actor_name=cleric.state.template.name,
             target_id=target.combatant_id, target_name=target.state.template.name,
-            healing_roll=DiceRoll(notation=notation, rolls=[roll], modifier=3, total=total),
+            healing_roll=DiceRoll(notation=notation, rolls=[roll], modifier=modifier, total=total),
             hp_before=before, hp_after=target.state.current_hp, feature_id=DIVINE_SPARK,
             resource_remaining=resource_remaining, animation="divine-spark",
             description=f"{cleric.state.template.name} restores {healed} HP with Divine Spark.",
@@ -48,7 +55,7 @@ def resolve_divine_spark(
     save, succeeded = resolve_saving_throw(target.state, "constitution", save_dc, dice)
     damage_type = _damage_type(target)
     component = DamageRollComponent(
-        source="Divine Spark", notation=notation, rolls=[roll], modifier=3,
+        source="Divine Spark", notation=notation, rolls=[roll], modifier=modifier,
         damage_type=damage_type, total=total // 2 if succeeded else total,
     )
     applied_total, components = apply_damage_defenses(target.state, [component])
@@ -61,7 +68,7 @@ def resolve_divine_spark(
         actor_id=cleric.combatant_id, actor_name=cleric.state.template.name,
         target_id=target.combatant_id, target_name=target.state.template.name,
         saving_throw_roll=save, save_ability="constitution", save_dc=save_dc, save_succeeded=succeeded,
-        damage_roll=DiceRoll(notation=notation, rolls=[roll], modifier=3, total=applied_total),
+        damage_roll=DiceRoll(notation=notation, rolls=[roll], modifier=modifier, total=applied_total),
         damage_components=components, hp_before=before, hp_after=target.state.current_hp,
         feature_id=DIVINE_SPARK, resource_remaining=resource_remaining, animation="divine-spark",
         description=f"{target.state.template.name} takes {applied_total} {damage_type.value} damage from Divine Spark.",
