@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 def _initiative_mode(member: EncounterCombatant) -> RollMode:
-    advantage = member.state.template.initiative_advantage
+    advantage = member.state.template.progression_features.initiative_advantage
     disadvantage = is_incapacitated(member.state)
     if advantage == disadvantage:
         return RollMode.NORMAL
