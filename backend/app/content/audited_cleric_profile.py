@@ -1,8 +1,12 @@
 from __future__ import annotations
 
+from app.content.canonical_combat_build_policy import (
+    canonical_background_increases,
+    canonical_base_ability_scores,
+)
 from app.content.canonical_hero_policy import canonical_template_id
 from app.content.hero_progressions import HERO_BY_CLASS
-from app.domain.character_builds import AbilityIncrease, AbilityScores, CharacterBuildProfile, FeatureAudit
+from app.domain.character_builds import CharacterBuildProfile, FeatureAudit
 
 
 def _feature(
@@ -29,6 +33,10 @@ def _feature(
 
 def build_seraphine_dawnshield_profile() -> CharacterBuildProfile:
     hero = HERO_BY_CLASS["cleric"]
+    base_scores = canonical_base_ability_scores("cleric")
+    background_allowed = ["constitution", "intelligence", "wisdom"]
+    background_increases = canonical_background_increases("cleric", background_allowed)
+    final_scores = base_scores.model_copy(update={"wisdom": 17, "intelligence": 14})
     return CharacterBuildProfile(
         id="build-seraphine-dawnshield-l1",
         template_id=canonical_template_id("cleric", 1),
@@ -42,19 +50,10 @@ def build_seraphine_dawnshield_profile() -> CharacterBuildProfile:
         background_name="Sage",
         origin_feat_id="magic-initiate-wizard",
         origin_feat_name="Magic Initiate (Wizard)",
-        base_ability_scores=AbilityScores(
-            strength=12, dexterity=14, constitution=13,
-            intelligence=8, wisdom=15, charisma=10,
-        ),
-        background_allowed_abilities=["constitution", "intelligence", "wisdom"],
-        background_increases=[
-            AbilityIncrease(ability="wisdom", amount=2),
-            AbilityIncrease(ability="constitution", amount=1),
-        ],
-        final_ability_scores=AbilityScores(
-            strength=12, dexterity=14, constitution=14,
-            intelligence=8, wisdom=17, charisma=10,
-        ),
+        base_ability_scores=base_scores,
+        background_allowed_abilities=background_allowed,
+        background_increases=background_increases,
+        final_ability_scores=final_scores,
         class_equipment_option="package",
         class_equipment=["Chain Shirt", "Shield", "Mace", "Holy Symbol", "Priest's Pack", "7 GP"],
         background_equipment_option="package",
@@ -95,7 +94,7 @@ def build_seraphine_dawnshield_profile() -> CharacterBuildProfile:
             _feature("chain-shirt-shield", "Chain Shirt and Shield", "equipment", combat_relevant=True, automated=True),
         ],
         source_references=[
-            "Basic Rules 2024: Creating a Character — Standard Array",
+            "Basic Rules 2024: Creating a Character — Point Buy",
             "Basic Rules 2024: Cleric — Core Traits, Spellcasting, Divine Order",
             "Basic Rules 2024: Character Origins — Sage and Orc",
             "Basic Rules 2024: Feats — Magic Initiate",
