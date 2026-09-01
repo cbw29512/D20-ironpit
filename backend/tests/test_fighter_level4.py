@@ -56,5 +56,5 @@ def test_fighter_level_four_runtime_matches_candidate_combat_fingerprint() -> No
 
 
 def test_fighter_progression_still_fails_closed_above_certified_frontier() -> None:
-    with pytest.raises(ValueError, match="level 7 is not certified yet"):
-        build_karnok_stoneward_level(7)
+    with pytest.raises(ValueError, match="level 8 is not certified yet"):
+        build_karnok_stoneward_level(8)
