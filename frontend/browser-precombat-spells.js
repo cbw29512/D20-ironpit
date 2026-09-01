@@ -9,12 +9,20 @@
     return (member.state.resources?.[resourceId] || 0) > 0 ? spell.level : null;
   }
 
-  function choose(member) {
+  function active(member, setup, spell) {
+    if (member.state.concentration?.effect_id === spell.id) return true;
+    const side = member.side === "heroes" ? setup.heroes : setup.monsters;
+    return side.some((target) => target.state.active_buff_effect_ids?.includes(spell.id)
+      || target.state.active_modifiers?.some((modifier) => modifier.source_effect_id === spell.id));
+  }
+
+  function choose(member, setup = null) {
     const spells = (member.state.template.defensive_spell_actions || [])
       .map((spell, index) => ({ spell, index }))
       .sort((a, b) => (b.spell.priority || 0) - (a.spell.priority || 0)
         || a.spell.level - b.spell.level || a.index - b.index);
     for (const { spell } of spells) {
+      if (setup && active(member, setup, spell)) continue;
       const slotLevel = slotChoice(member, spell);
       if (slotLevel != null) return { spell, slotLevel };
     }
@@ -70,6 +78,10 @@
     const directHp = (spell.temporaryHp || 0) || (spell.maxHpIncrease || 0) || (spell.currentHpIncrease || 0);
     if (spell.concentration && (directHp || spell.damageResistances?.length)) throw new Error("Concentration defenses require source-owned modifier effects.");
     if (!targets.length) throw new Error(`${spell.name} has no legal precombat targets.`);
+    if (targets.some((target) => target.state.active_buff_effect_ids?.includes(spell.id)
+      || target.state.active_modifiers?.some((modifier) => modifier.source_effect_id === spell.id))) {
+      throw new Error(`${spell.name} is already active on a selected target.`);
+    }
     const resourceId = `spell-slot-${slotLevel}`;
     if (!(member.state.resources?.[resourceId] > 0)) throw new Error(`No level ${slotLevel} spell slot remains for ${spell.name}.`);
     member.state.resources[resourceId] -= 1;
@@ -81,6 +93,7 @@
       target.state.max_hp_bonus += spell.maxHpIncrease || 0;
       target.state.current_hp += spell.currentHpIncrease || 0;
       for (const type of spell.damageResistances || []) if (!target.state.temporary_damage_resistances.includes(type)) target.state.temporary_damage_resistances.push(type);
+      if (!spell.concentration && !target.state.active_buff_effect_ids.includes(spell.id)) target.state.active_buff_effect_ids.push(spell.id);
     }
     if (spell.concentration || spell.modifierEffects?.length) {
       if (!SM()) throw new Error("Browser spell-modifier runtime is not loaded.");
@@ -102,12 +115,12 @@
   function prepare(setup, sequence = 1) {
     const events = [], members = [...setup.heroes, ...setup.monsters], states = members.map((member) => member.state);
     for (const member of members) {
-      const choice = choose(member); if (!choice) continue;
+      const choice = choose(member, setup); if (!choice) continue;
       const targets = selectTargets(member, setup, choice.spell, choice.slotLevel);
       events.push(resolve(sequence++, member, targets, choice.spell, choice.slotLevel, states));
     }
     return { events, sequence };
   }
 
-  window.IRON_PIT_BROWSER_PRECOMBAT_SPELLS = { choose, prepare, resolve, selectTargets, slotChoice };
+  window.IRON_PIT_BROWSER_PRECOMBAT_SPELLS = { active, choose, prepare, resolve, selectTargets, slotChoice };
 })();
