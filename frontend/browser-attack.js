@@ -62,7 +62,7 @@
   function resolveAttack(sequence, round, attacker, target, attack, distance, extra = {}) {
     const spendAction = extra.spendAction !== false;
     if (spendAction && !E().available(attacker.state, "action")) throw new Error("Action is unavailable for attack.");
-    const recklessStarted = B2().activate(attacker, attack, round);
+    const recklessStarted = extra.allowReckless === true && B2().activate(attacker, attack, round);
     const conditions = conditionSources(attacker.state, target.state, distance, target.combatant_id);
     const advantage = (extra.advantage || 0) + conditions.advantage + bloodiedFury(attacker.state, attack)
       + B2().attackAdvantage(attacker.state, attack);
