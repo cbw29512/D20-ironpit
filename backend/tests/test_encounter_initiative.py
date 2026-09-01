@@ -10,7 +10,7 @@ def _setup(heroes: list[str], monsters: list[str]):
 
 
 def test_identical_monsters_share_one_raw_initiative_roll() -> None:
-    setup = _setup(["aldric-vane-l1"], ["srd-goblin-warrior", "srd-goblin-warrior"])
+    setup = _setup(["karnok-stoneward-l1"], ["srd-goblin-warrior", "srd-goblin-warrior"])
     initiative = roll_encounter_initiative(setup, FixedDiceProvider([10, 15]))
 
     goblins = initiative.groups[0]
@@ -25,17 +25,17 @@ def test_identical_monsters_share_one_raw_initiative_roll() -> None:
 
 
 def test_tied_heroes_keep_selected_party_order() -> None:
-    setup = _setup(["aldric-vane-l1", "brom-ironmark-l1"], ["srd-commoner"])
+    setup = _setup(["karnok-stoneward-l1", "rokhan-stonefury-l1"], ["srd-commoner"])
     initiative = roll_encounter_initiative(setup, FixedDiceProvider([10, 10, 1]))
 
     assert initiative.turn_order[:2] == [
-        "hero-1:aldric-vane-l1",
-        "hero-2:brom-ironmark-l1",
+        "hero-1:karnok-stoneward-l1",
+        "hero-2:rokhan-stonefury-l1",
     ]
 
 
 def test_cross_side_tie_uses_explicit_arena_gm_tiebreak() -> None:
-    setup = _setup(["aldric-vane-l1"], ["srd-commoner"])
+    setup = _setup(["karnok-stoneward-l1"], ["srd-commoner"])
     initiative = roll_encounter_initiative(setup, FixedDiceProvider([10, 11, 17]))
 
     assert initiative.groups[0].side == "heroes"
@@ -45,7 +45,10 @@ def test_cross_side_tie_uses_explicit_arena_gm_tiebreak() -> None:
 
 
 def test_encounter_outcome_requires_an_entire_side_down() -> None:
-    setup = _setup(["aldric-vane-l1", "mara-quickstep-l1"], ["srd-commoner", "srd-bandit"])
+    setup = _setup(
+        ["karnok-stoneward-l1", "rokhan-stonefury-l1"],
+        ["srd-commoner", "srd-bandit"],
+    )
     assert resolve_encounter_outcome(setup) == "active"
 
     setup.monsters[0].state.current_hp = 0
@@ -58,7 +61,7 @@ def test_encounter_outcome_requires_an_entire_side_down() -> None:
 
 
 def test_simultaneous_side_defeat_is_a_draw() -> None:
-    setup = _setup(["aldric-vane-l1"], ["srd-commoner"])
+    setup = _setup(["karnok-stoneward-l1"], ["srd-commoner"])
     setup.heroes[0].state.current_hp = 0
     setup.heroes[0].state.is_alive = False
     setup.monsters[0].state.current_hp = 0
