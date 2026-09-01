@@ -14,7 +14,7 @@ class MaxDiceProvider:
 
 def _extra_attack_setup():
     setup = build_encounter_setup(EncounterSelection(
-        hero_ids=["aldric-vane-l1"], monster_ids=["srd-commoner", "srd-commoner"],
+        hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-commoner", "srd-commoner"],
     ))
     attacker = setup.heroes[0]
     attacker.position_ft = 0
@@ -24,8 +24,8 @@ def _extra_attack_setup():
         id="fighter-extra-attack",
         name="Extra Attack",
         slots=[
-            AttackActionSlot(attack_ids=["aldric-longsword"]),
-            AttackActionSlot(attack_ids=["aldric-longsword"]),
+            AttackActionSlot(attack_ids=["karnok-greatsword"]),
+            AttackActionSlot(attack_ids=["karnok-greatsword"]),
         ],
     )
     begin_turn(attacker.state)
@@ -34,7 +34,7 @@ def _extra_attack_setup():
 
 def _mixed_attack_setup(distance_ft: int):
     setup = build_encounter_setup(EncounterSelection(
-        hero_ids=["aldric-vane-l1"], monster_ids=["srd-bandit"],
+        hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-bandit"],
     ))
     attacker = setup.monsters[0]
     setup.heroes[0].position_ft = 0
@@ -176,7 +176,7 @@ def test_attack_action_fails_closed_on_unknown_attack_id() -> None:
         name="Bad Action",
         slots=[
             AttackActionSlot(attack_ids=["not-real"]),
-            AttackActionSlot(attack_ids=["aldric-longsword"]),
+            AttackActionSlot(attack_ids=["karnok-greatsword"]),
         ],
     )
 
