@@ -45,6 +45,7 @@ def _scores(strength: int, dexterity: int, constitution: int, intelligence: int,
 
 
 _ORC = _scores(17, 13, 15, 8, 12, 10)
+_SERAPHINE = _scores(12, 14, 14, 8, 17, 10)
 _KARNOK_L4 = _scores(18, 13, 16, 8, 12, 10)
 _KARNOK_ATTACKS = (
     AttackExpectation("greatsword", "strength", 2, 6, "slashing"),
@@ -103,6 +104,12 @@ def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
              AttackExpectation("handaxe", "strength", 1, 6, "slashing", normal_range_ft=20, long_range_ft=60)),
             ("flail", "pike"), (("rage", 2), ("adrenaline-rush", 2), ("relentless-endurance", 1)),
             rage_damage_bonus=2,
+        ),
+        PregenCombatProfile(
+            "seraphine-dawnshield-l1", "Cleric", 1, _SERAPHINE, ("wisdom", "charisma"), 17, 10, 30,
+            (("arcana", 1), ("history", 1), ("medicine", 5), ("persuasion", 2)),
+            (AttackExpectation("mace", "strength", 1, 6, "bludgeoning"),), (),
+            (("spell-slot-1", 2), ("adrenaline-rush", 2), ("relentless-endurance", 1)),
         ),
     ]
     return {profile.template_id: profile for profile in profiles}
