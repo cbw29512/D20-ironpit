@@ -46,6 +46,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("athletics-advantage")
     if features.critical_move_fraction:
         mechanics.add("post-critical-movement")
+    if features.tactical_shift_fraction:
+        mechanics.add("tactical-shift")
     return sorted(mechanics)
 
 

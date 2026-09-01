@@ -12,7 +12,7 @@ def test_arena_roster_exposes_canonical_template_batch() -> None:
 
     assert isinstance(roster, ArenaRoster)
     assert [item.id for item in roster.characters] == [
-        "karnok-stoneward-l1", "karnok-stoneward-l2", "karnok-stoneward-l3", "karnok-stoneward-l4", "rokhan-stonefury-l1",
+        "karnok-stoneward-l1", "karnok-stoneward-l2", "karnok-stoneward-l3", "karnok-stoneward-l4", "karnok-stoneward-l5", "rokhan-stonefury-l1",
         "aldric-vane-l1",
         "brom-ironmark-l1", "selene-asharrow-l1", "mara-quickstep-l1",
     ]
