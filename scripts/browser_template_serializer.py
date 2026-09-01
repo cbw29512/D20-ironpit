@@ -130,7 +130,9 @@ def _spell(action: Any) -> dict[str, Any]:
 def defense_row(action: Any) -> dict[str, Any]:
     row = {
         "id": action.id, "name": action.name, "level": action.level, "actionCost": action.action_cost,
-        "range": action.range_ft, "durationMinutes": action.duration_minutes, "temporaryHp": action.temporary_hp,
+        "range": action.range_ft, "durationMinutes": action.duration_minutes,
+        "targetPolicy": action.target_policy, "targetCount": action.target_count,
+        "temporaryHp": action.temporary_hp,
         "temporaryHpPerSlotAbove": action.temporary_hp_per_slot_above,
         "damageResistances": list(action.damage_resistances),
         "modifierEffects": [
