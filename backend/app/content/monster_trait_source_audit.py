@@ -14,6 +14,7 @@ _MODELED_TRAITS = {
     "Pack Tactics": CombatTrait.PACK_TACTICS,
     "Bloodied Fury": CombatTrait.BLOODIED_FURY,
     "Swarm": CombatTrait.SWARM,
+    "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
 }
 _ARENA_NEUTRAL_TRAITS = frozenset({
     "Agile", "Amphibious", "Beast of Burden", "False Appearance", "Flyby", "Hold Breath",
