@@ -82,7 +82,7 @@ def _rokhan_profile(level: int, hp: int) -> PregenCombatProfile:
     return PregenCombatProfile(
         f"rokhan-stonefury-l{level}", "Barbarian", level, _ORC, ("strength", "constitution"), 13, hp, 30,
         (("athletics", 5), ("acrobatics", 1)), _ROKHAN_ATTACKS, ("flail", "pike"),
-        (("rage", 2), ("adrenaline-rush", 2), ("relentless-endurance", 1)), rage_damage_bonus=2,
+        (("rage", 3 if level >= 3 else 2), ("adrenaline-rush", 2), ("relentless-endurance", 1)), rage_damage_bonus=2,
     )
 
 
@@ -132,7 +132,7 @@ def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
             (("second-wind", 2), ("action-surge", 1), ("adrenaline-rush", 2), ("relentless-endurance", 1)), "Defense",
         ),
         build_karnok_stoneward_level4_combat_profile(), build_karnok_stoneward_level5_combat_profile(),
-        _rokhan_profile(1, 14), _rokhan_profile(2, 23),
+        _rokhan_profile(1, 14), _rokhan_profile(2, 23), _rokhan_profile(3, 32),
         _seraphine_profile(1, 10, 2), _seraphine_profile(2, 17, 3, 2),
         build_seraphine_dawnshield_level3_combat_profile(), build_seraphine_dawnshield_level4_combat_profile(),
     ]
