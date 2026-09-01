@@ -19,7 +19,7 @@ from app.combat.grapple import cleanup_grapples, resolve_escape_grapple, should_
 from app.combat.healing import choose_healing_action, resolve_healing
 from app.combat.ongoing_spell_control import build_forced_retreat_event, forced_retreat_active
 from app.combat.opening_burst import opening_feature_id
-from app.combat.orc import use_adrenaline_rush
+from app.combat.orc import should_use_adrenaline_rush, use_adrenaline_rush
 from app.combat.policy import should_use_second_wind
 from app.combat.reaction_movement import move_toward_with_reactions
 from app.combat.saving_throws import legal_save_action, resolve_save_action
@@ -99,9 +99,10 @@ def resolve_combat_turn(
     if should_escape_grapple(attacker.state):
         events.append(resolve_escape_grapple(sequence, round_number, attacker.combatant_id, attacker.state, dice)); sequence += 1
         return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-    adrenaline_event = use_adrenaline_rush(sequence, round_number, attacker.state, attacker.combatant_id)
-    if adrenaline_event is not None:
-        events.append(adrenaline_event); sequence += 1
+    if should_use_adrenaline_rush(attacker.state):
+        adrenaline_event = use_adrenaline_rush(sequence, round_number, attacker.state, attacker.combatant_id)
+        if adrenaline_event is not None:
+            events.append(adrenaline_event); sequence += 1
     attack_spell = choose_spell_attack(attacker, setup, turn_key)
     if attack_spell is not None:
         events.append(resolve_spell_attack(
