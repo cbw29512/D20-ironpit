@@ -64,11 +64,10 @@ def _source_attack_mode_count(actions: str) -> int:
 
 
 def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
-    """Reconcile a RAW-ready runtime monster against its vendored SRD 5.2.1 record."""
+    """Reconcile combat semantics against the vendored SRD 5.2.1 record before source metadata enrichment."""
     try:
         checks = (
             (template.name == str(row["name"]), "name-mismatch"),
-            (template.creature_type == str(row["type"]), "creature-type-mismatch"),
             (_size_matches(template.size.value, row["size"]), "size-mismatch"),
             (template.armor_class == _first_int(row["armorClass"]), "armor-class-mismatch"),
             (template.max_hp == _first_int(row["hitPoints"]), "hit-points-mismatch"),
