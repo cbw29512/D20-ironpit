@@ -8,8 +8,8 @@ from app.combat.rolls import resolve_roll_mode
 from app.combat.saving_throw_rolls import saving_throw_mode
 from app.domain.combatants import DamageType
 from app.domain.encounters import EncounterCombatant, EncounterSetup
+from app.domain.models import RollMode
 from app.domain.modifiers import ModifierKind
-from app.domain.rolls import RollMode
 from app.domain.spells import SpellAttackAction, SpellSaveAction
 
 
