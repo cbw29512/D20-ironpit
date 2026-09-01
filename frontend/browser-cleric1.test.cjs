@@ -24,10 +24,10 @@ assert.ok(cleric, "Seraphine must exist in generated browser heroes.");
 
 assert.equal(cleric.class_id, "cleric");
 assert.equal(cleric.level, 1);
-assert.equal(cleric.armor_class, 17);
-assert.equal(cleric.max_hp, 10);
+assert.equal(cleric.armor_class, 15);
+assert.equal(cleric.max_hp, 8);
 assert.equal(cleric.saving_throw_bonuses.wisdom, 5);
-assert.equal(cleric.saving_throw_bonuses.charisma, 2);
+assert.equal(cleric.saving_throw_bonuses.charisma, 4);
 assert.deepEqual(cleric.resources, {
   "adrenaline-rush": 2,
   "relentless-endurance": 1,
