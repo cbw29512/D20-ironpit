@@ -16,6 +16,7 @@ const P = window.IRON_PIT_BROWSER_PRECOMBAT_SPELLS;
 const base = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"];
 const defense = (id, level, priority = 0) => ({
   id, name: id, level, actionCost: "action", range: 0, durationMinutes: 60,
+  targetPolicy: "self", targetCount: 1,
   temporaryHp: 5, temporaryHpPerSlotAbove: 5, damageResistances: [], modifierEffects: [],
   concentration: false, priority, animation: "precombat-defense",
 });
@@ -40,10 +41,12 @@ const enemy = () => ({ combatant_id: "enemy", side: "monsters", position_ft: 30,
 }
 
 {
-  const c = caster([defense("upcast-defense", 1)], { 3: 1 });
-  P.prepare({ heroes: [c], monsters: [enemy()] });
-  assert.equal(c.state.temporary_hp, 15);
-  assert.equal(c.state.resources["spell-slot-3"], 0);
+  const c = caster([defense("no-upcast", 1)], { 3: 1 });
+  const result = P.prepare({ heroes: [c], monsters: [enemy()] });
+  assert.equal(result.events.length, 0);
+  assert.equal(c.state.temporary_hp, 0);
+  assert.equal(c.state.resources["spell-slot-3"], 1);
+  assert.equal(P.choose(c), null);
 }
 
 {
