@@ -74,3 +74,4 @@ function setDice(values) {
 }
 
 console.log("Generated browser Fighter 7 Great Weapon Fighting regressions passed.");
+require("./browser-fighter8.test.cjs");
