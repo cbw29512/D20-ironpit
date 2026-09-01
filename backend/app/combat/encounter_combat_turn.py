@@ -5,6 +5,7 @@ from app.combat.ally_context import pack_tactics_active
 from app.combat.arena_closing import MELEE_BRAWL_DISTANCE_FT, resolve_simple_closing
 from app.combat.attack_actions import resolve_attack_action
 from app.combat.barbarian import enter_rage, finalize_rage_turn
+from app.combat.cleric_channel_support import resolve_channel_support
 from app.combat.condition_removal import choose_condition_removal_action, resolve_condition_removal
 from app.combat.condition_rules import is_incapacitated
 from app.combat.dice import DiceProvider
@@ -30,7 +31,6 @@ from app.combat.state import begin_turn
 from app.combat.tactical_shift import resolve_tactical_shift
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
-
 def _close_after_action(sequence, round_number, attacker, setup, dice):
     if is_incapacitated(attacker.state) or backline_holds_position(attacker, setup):
         return [], sequence
@@ -53,8 +53,6 @@ def _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key
     if rage_event is not None:
         events.append(rage_event)
     return events, sequence
-
-
 def _resolve_support_actions(sequence, round_number, member, setup, dice, turn_key):
     """Rescue 0-HP allies first, then clear urgent removable debuffs, then consider ordinary healing."""
     events: list[BattleEvent] = []
@@ -70,6 +68,7 @@ def _resolve_support_actions(sequence, round_number, member, setup, dice, turn_k
     if healing_choice is not None:
         action, target = healing_choice
         events.append(resolve_healing(sequence, round_number, member, target, action, dice, turn_key)); sequence += 1
+    channel_events, sequence = resolve_channel_support(sequence, round_number, member, setup, dice); events.extend(channel_events)
     return events, sequence
 
 
