@@ -1,13 +1,12 @@
 from __future__ import annotations
 
+from app.content.canonical_combat_build_policy import (
+    canonical_background_increases,
+    canonical_base_ability_scores,
+)
 from app.content.canonical_hero_policy import canonical_template_id
 from app.content.hero_progressions import HERO_BY_CLASS
-from app.domain.character_builds import (
-    AbilityIncrease,
-    AbilityScores,
-    CharacterBuildProfile,
-    FeatureAudit,
-)
+from app.domain.character_builds import CharacterBuildProfile, FeatureAudit
 
 
 def _feature(
@@ -34,6 +33,10 @@ def _feature(
 
 def build_karnok_stoneward_profile() -> CharacterBuildProfile:
     hero = HERO_BY_CLASS["fighter"]
+    base_scores = canonical_base_ability_scores("fighter")
+    background_allowed = ["strength", "dexterity", "constitution"]
+    background_increases = canonical_background_increases("fighter", background_allowed)
+    final_scores = base_scores.model_copy(update={"strength": 17, "constitution": 15})
     return CharacterBuildProfile(
         id="build-karnok-stoneward-l1",
         template_id=canonical_template_id("fighter", 1),
@@ -47,27 +50,10 @@ def build_karnok_stoneward_profile() -> CharacterBuildProfile:
         background_name="Soldier",
         origin_feat_id="savage-attacker",
         origin_feat_name="Savage Attacker",
-        base_ability_scores=AbilityScores(
-            strength=15,
-            dexterity=13,
-            constitution=14,
-            intelligence=8,
-            wisdom=12,
-            charisma=10,
-        ),
-        background_allowed_abilities=["strength", "dexterity", "constitution"],
-        background_increases=[
-            AbilityIncrease(ability="strength", amount=2),
-            AbilityIncrease(ability="constitution", amount=1),
-        ],
-        final_ability_scores=AbilityScores(
-            strength=17,
-            dexterity=13,
-            constitution=15,
-            intelligence=8,
-            wisdom=12,
-            charisma=10,
-        ),
+        base_ability_scores=base_scores,
+        background_allowed_abilities=background_allowed,
+        background_increases=background_increases,
+        final_ability_scores=final_scores,
         class_equipment_option="package",
         class_equipment=[
             "Chain Mail",
@@ -134,7 +120,7 @@ def build_karnok_stoneward_profile() -> CharacterBuildProfile:
             ),
         ],
         source_references=[
-            "Basic Rules 2024: Creating a Character — Standard Array",
+            "Basic Rules 2024: Creating a Character — Point Buy",
             "Basic Rules 2024: Fighter — Core Traits and Level 1 Features",
             "Basic Rules 2024: Character Origins — Soldier and Orc",
             "Basic Rules 2024: Feats — Savage Attacker and Defense",
