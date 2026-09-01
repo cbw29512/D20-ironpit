@@ -94,7 +94,6 @@ class ResourceDefinition(BaseModel):
     name: str
     max_uses: int = Field(ge=0)
 
-
 class CombatantTemplate(BaseModel):
     id: str
     name: str
@@ -102,6 +101,7 @@ class CombatantTemplate(BaseModel):
     level: int | None = Field(default=None, ge=1, le=20)
     challenge_rating: str | None = None
     kind: Literal["character", "monster"]
+    creature_type: str | None = None
     size: CreatureSize = CreatureSize.MEDIUM
     armor_class: int = Field(ge=1)
     max_hp: int = Field(ge=1)
