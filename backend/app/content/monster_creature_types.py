@@ -35,13 +35,20 @@ def is_creature_type(template: CombatantTemplate, expected: str) -> bool:
     return base_creature_type(template.creature_type) == expected.strip().casefold()
 
 
+def creature_type_matches_source(template: CombatantTemplate) -> bool:
+    return template.kind != "monster" or template.creature_type == source_creature_type(template.name)
+
+
 def complete_monster_creature_types(templates: list[CombatantTemplate]) -> list[CombatantTemplate]:
     try:
-        return [
+        completed = [
             template.model_copy(update={"creature_type": source_creature_type(template.name)})
             if template.kind == "monster" else template
             for template in templates
         ]
+        if not all(creature_type_matches_source(template) for template in completed):
+            raise RuntimeError("Runtime monster creature type drifted from canonical SRD source.")
+        return completed
     except Exception:
         logger.exception("Failed to derive canonical monster creature types from SRD source.")
         raise
