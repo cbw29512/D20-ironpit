@@ -184,6 +184,7 @@ jobs:
           grep -q 'browser-undead-fortitude.js' index.html
           grep -q 'browser-zero-hp.js' index.html
           grep -q 'browser-timed-conditions.js' index.html
+          grep -q 'browser-barbarian2.js' index.html
           grep -q 'browser-source-bound-effects.js' index.html
           grep -q 'browser-ongoing-spell-control.js' index.html
           grep -q 'browser-modifiers.js' index.html
@@ -239,6 +240,7 @@ jobs:
           grep -q 'browser-undead-fortitude.js' frontend/index.html
           grep -q 'browser-zero-hp.js' frontend/index.html
           grep -q 'browser-timed-conditions.js' frontend/index.html
+          grep -q 'browser-barbarian2.js' frontend/index.html
           grep -q 'browser-source-bound-effects.js' frontend/index.html
           grep -q 'browser-ongoing-spell-control.js' frontend/index.html
           grep -q 'browser-modifiers.js' frontend/index.html
