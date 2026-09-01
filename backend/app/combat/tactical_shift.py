@@ -4,6 +4,7 @@ import logging
 
 from app.combat.encounter_targeting import combatant_distance, select_nearest_target
 from app.combat.grapple import speed_is_zero
+from app.combat.modifier_stack import effective_speed
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 
@@ -25,7 +26,7 @@ def resolve_tactical_shift(
         if target is None:
             return None
         before = combatant_distance(fighter, target)
-        allowance = int(fighter.state.template.speed_ft * fraction)
+        allowance = int(effective_speed(fighter.state) * fraction)
         moved = min(max(0, before - 5), allowance)
         if moved <= 0:
             return None
