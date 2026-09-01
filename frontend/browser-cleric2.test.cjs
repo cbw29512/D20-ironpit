@@ -85,6 +85,7 @@ const fixedDice = (values) => {
 
 {
   const { cleric, skeleton, setup } = makeSetup();
+  setup.monsters = [skeleton];
   fixedDice([1]); C.resolve(1, 1, cleric, setup);
   A.applyDamage(skeleton.state, 1, false, ["bludgeoning"], [cleric.state, skeleton.state]);
   assert.equal(skeleton.state.timed_effects.length, 0, "Any damage must end the whole Turn Undead effect group.");
@@ -113,7 +114,9 @@ const fixedDice = (values) => {
 }
 
 {
-  const { cleric, skeleton, setup } = makeSetup();
+  const { cleric, setup } = makeSetup();
+  const goblin = member(M["srd-goblin-warrior"], "goblin", "monsters", 10);
+  setup.monsters = [goblin];
   cleric.state.resources["spell-slot-1"] = 0;
   fixedDice([8, 20]);
   const result = C.resolve(1, 1, cleric, setup);
