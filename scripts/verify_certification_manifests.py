@@ -47,6 +47,10 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("initiative-advantage")
     if features.athletics_advantage:
         mechanics.add("athletics-advantage")
+    if features.danger_sense:
+        mechanics.add("danger-sense")
+    if features.reckless_attack:
+        mechanics.add("reckless-attack")
     if features.critical_move_fraction:
         mechanics.add("post-critical-movement")
     if features.tactical_shift_fraction:
