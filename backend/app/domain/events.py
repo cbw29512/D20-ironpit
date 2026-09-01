@@ -38,21 +38,15 @@ class BattleEvent(BaseModel):
     sequence: int
     round_number: int
     event_type: Literal[
-        "initiative",
-        "movement",
-        "dash",
-        "attack",
-        "saving_throw",
-        "healing",
-        "feature",
-        "death_save",
-        "victory",
-        "draw",
+        "initiative", "movement", "dash", "attack", "saving_throw", "healing",
+        "feature", "death_save", "victory", "draw",
     ]
     actor_id: str
     actor_name: str
     target_id: str | None = None
     target_name: str | None = None
+    attack_name: str | None = None
+    target_ac: int | None = Field(default=None, ge=0)
     attack_roll: DiceRoll | None = None
     saving_throw_roll: DiceRoll | None = None
     save_ability: str | None = None
@@ -72,6 +66,10 @@ class BattleEvent(BaseModel):
     critical: bool = False
     hp_before: int | None = None
     hp_after: int | None = None
+    temporary_hp_before: int | None = Field(default=None, ge=0)
+    temporary_hp_after: int | None = Field(default=None, ge=0)
+    death_save_successes_before: int | None = Field(default=None, ge=0, le=3)
+    death_save_failures_before: int | None = Field(default=None, ge=0, le=3)
     death_save_successes: int | None = Field(default=None, ge=0, le=3)
     death_save_failures: int | None = Field(default=None, ge=0, le=3)
     is_stable: bool | None = None
