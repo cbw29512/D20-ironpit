@@ -4,7 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from app.domain.events import BattleEvent
+from app.domain.events import BattleEvent, DiceRoll
 from app.domain.runtime import CombatantState
 
 
@@ -37,6 +37,7 @@ class InitiativeGroup(BaseModel):
     side: EncounterSide
     template_id: str
     combatant_ids: list[str] = Field(min_length=1, max_length=6)
+    initiative_roll: DiceRoll
     natural_roll: int = Field(ge=1, le=20)
     initiative_bonus: int
     initiative_count: int
