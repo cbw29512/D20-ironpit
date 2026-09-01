@@ -58,8 +58,7 @@
       const state = group.members[0].state, advantage = Boolean(state.template.initiative_advantage), disadvantage = Q().incapacitated(state);
       const mode = advantage === disadvantage ? "normal" : advantage ? "advantage" : "disadvantage";
       const roll = R().d20(state.template.initiative_bonus, mode);
-      group.initiative_roll = roll;
-      group.natural_roll = roll.selected_roll;
+      group.initiative_roll = roll; group.natural_roll = roll.selected_roll;
       group.initiative_bonus = state.template.initiative_bonus;
       group.initiative_count = roll.total;
       group.tie_break_roll = null;
