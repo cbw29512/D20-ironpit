@@ -3,6 +3,7 @@
 
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
+  const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { effectiveSpeed: (state) => state.template.speed_ft };
 
   function resolve(sequence, round, member, setup) {
     try {
@@ -11,7 +12,7 @@
       const target = S().nearestTarget(member, setup);
       if (!target) return null;
       const before = S().distance(member, target);
-      const allowance = Math.floor(member.state.template.speed_ft * fraction);
+      const allowance = Math.floor(M().effectiveSpeed(member.state) * fraction);
       const moved = Math.min(Math.max(0, before - 5), allowance);
       if (!(moved > 0)) return null;
       member.position_ft += (member.position_ft < target.position_ft ? 1 : -1) * moved;
