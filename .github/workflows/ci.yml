@@ -124,6 +124,7 @@ jobs:
           node frontend/browser-spell-attack-turn.test.cjs
           node frontend/browser-shield-of-faith.test.cjs
           node frontend/browser-bless.test.cjs
+          node frontend/browser-cleric1.test.cjs
           node frontend/battle-log-format.test.cjs
           node frontend/figure-visuals.test.cjs
           node frontend/figure-portraits.test.cjs
