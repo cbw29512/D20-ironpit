@@ -1,0 +1,12 @@
+from __future__ import annotations
+
+from pydantic import BaseModel, Field
+
+
+class ProgressionCombatFeatures(BaseModel):
+    """Level/subclass combat flags that should stay out of core stat-block shape."""
+
+    critical_hit_minimum: int = Field(default=20, ge=2, le=20)
+    initiative_advantage: bool = False
+    athletics_advantage: bool = False
+    critical_move_fraction: float = Field(default=0.0, ge=0.0, le=1.0)
