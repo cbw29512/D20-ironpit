@@ -5,7 +5,7 @@ from app.domain.models import EncounterSelection
 
 def _setup(condition: str):
     setup = build_encounter_setup(EncounterSelection(
-        hero_ids=["aldric-vane-l1", "brom-ironmark-l1"],
+        hero_ids=["karnok-stoneward-l1", "rokhan-stonefury-l1"],
         monster_ids=["srd-commoner"],
     ))
     disabled, active = setup.heroes
