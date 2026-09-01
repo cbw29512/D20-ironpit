@@ -6,6 +6,7 @@ from app.domain.models import CombatantTemplate
 def semantic_template_dump(template: CombatantTemplate) -> dict[str, object]:
     """Normalize representation-only fields that cannot affect combat outcomes."""
     data = template.model_dump(mode="json")
+    data.pop("creature_type", None)
     attacks = [data["weapon_attack"], *data["alternate_weapon_attacks"]]
     for attack in attacks:
         if attack["fixed_damage"] is not None:
