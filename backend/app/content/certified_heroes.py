@@ -1,40 +1,9 @@
 from __future__ import annotations
 
-from collections.abc import Callable
-
-from app.content.audited_barbarian import build_rokhan_stonefury
-from app.content.audited_barbarian_profile import build_rokhan_stonefury_profile
-from app.content.audited_cleric import (
-    build_seraphine_dawnshield,
-    build_seraphine_dawnshield_level_four,
-    build_seraphine_dawnshield_level_three,
-    build_seraphine_dawnshield_level_two,
-)
-from app.content.audited_cleric_life_profile import (
-    build_seraphine_dawnshield_level3_profile,
-    build_seraphine_dawnshield_level4_profile,
-)
-from app.content.audited_cleric_profile import build_seraphine_dawnshield_level2_profile, build_seraphine_dawnshield_profile
-from app.content.audited_fighter import build_karnok_stoneward
-from app.content.audited_fighter_profile import build_karnok_stoneward_profile
-from app.content.barbarian_berserker_progression_profile import build_rokhan_stonefury_level6_profile
-from app.content.barbarian_progression import build_rokhan_stonefury_level
-from app.content.barbarian_progression_profile import (
-    build_rokhan_stonefury_level2_profile,
-    build_rokhan_stonefury_level3_profile,
-    build_rokhan_stonefury_level4_profile,
-    build_rokhan_stonefury_level5_profile,
-)
 from app.content.build_audit import assert_character_build_raw_ready
 from app.content.canonical_hero_policy import assert_canonical_profile_policy
+from app.content.certified_hero_progressions import iter_certified_progression_levels
 from app.content.character_resource_audit import assert_character_resources_raw_ready
-from app.content.fighter_progression import build_karnok_stoneward_level
-from app.content.fighter_progression_profile import (
-    build_karnok_stoneward_level2_profile,
-    build_karnok_stoneward_level3_profile,
-    build_karnok_stoneward_level4_profile,
-    build_karnok_stoneward_level5_profile,
-)
 from app.content.hero_progressions import CANONICAL_BUILD_ID
 from app.content.pregen_combat_audit import assert_pregen_combat_stats
 from app.content.pregen_combat_profiles import build_pregen_combat_profiles
@@ -47,11 +16,9 @@ HeroCatalogReady = tuple[str, str]
 
 
 def _validated(
-    template_builder: Callable[[], CombatantTemplate],
-    profile_builder: Callable[[], CharacterBuildProfile],
+    template: CombatantTemplate,
+    profile: CharacterBuildProfile,
 ) -> tuple[HeroBuildKey, CombatantTemplate]:
-    template = template_builder()
-    profile = profile_builder()
     assert_canonical_profile_policy(profile)
     assert_character_build_raw_ready(profile, template)
     combat_profile = build_pregen_combat_profiles().get(template.id)
@@ -64,23 +31,10 @@ def _validated(
 
 
 def build_certified_hero_entries() -> list[tuple[HeroBuildKey, CombatantTemplate]]:
-    """Return only canonical hero levels that pass every RAW certification gate."""
+    """Validate every contiguous level registered by each canonical progression."""
     return [
-        _validated(build_karnok_stoneward, build_karnok_stoneward_profile),
-        _validated(lambda: build_karnok_stoneward_level(2), build_karnok_stoneward_level2_profile),
-        _validated(lambda: build_karnok_stoneward_level(3), build_karnok_stoneward_level3_profile),
-        _validated(lambda: build_karnok_stoneward_level(4), build_karnok_stoneward_level4_profile),
-        _validated(lambda: build_karnok_stoneward_level(5), build_karnok_stoneward_level5_profile),
-        _validated(build_rokhan_stonefury, build_rokhan_stonefury_profile),
-        _validated(lambda: build_rokhan_stonefury_level(2), build_rokhan_stonefury_level2_profile),
-        _validated(lambda: build_rokhan_stonefury_level(3), build_rokhan_stonefury_level3_profile),
-        _validated(lambda: build_rokhan_stonefury_level(4), build_rokhan_stonefury_level4_profile),
-        _validated(lambda: build_rokhan_stonefury_level(5), build_rokhan_stonefury_level5_profile),
-        _validated(lambda: build_rokhan_stonefury_level(6), build_rokhan_stonefury_level6_profile),
-        _validated(build_seraphine_dawnshield, build_seraphine_dawnshield_profile),
-        _validated(build_seraphine_dawnshield_level_two, build_seraphine_dawnshield_level2_profile),
-        _validated(build_seraphine_dawnshield_level_three, build_seraphine_dawnshield_level3_profile),
-        _validated(build_seraphine_dawnshield_level_four, build_seraphine_dawnshield_level4_profile),
+        _validated(progression.template_builder(level), progression.profile(level))
+        for progression, level in iter_certified_progression_levels()
     ]
 
 
