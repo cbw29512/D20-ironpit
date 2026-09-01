@@ -1,6 +1,6 @@
 # D20 Iron Pit repository instructions
 
-Read this file, `docs/IRON_PIT_MASTER_PLAN.md`, and the structured certification manifests before changing code. The repository and its permanent tests are authoritative; prompts and historical counts are not. Where an older master-plan checkpoint conflicts with a later explicit policy in this file, this file controls until the master-plan text is reconciled.
+Read this file, `docs/IRON_PIT_MASTER_PLAN.md`, `docs/CANONICAL_COMBAT_BUILD_POLICY.md`, and the structured certification manifests before changing code. The repository and its permanent tests are authoritative; prompts and historical counts are not. Where an older master-plan checkpoint conflicts with a later explicit policy in this file or `docs/CANONICAL_COMBAT_BUILD_POLICY.md`, the later explicit policy controls until the master-plan text is reconciled.
 
 ## Product and RAW rules
 
@@ -29,14 +29,22 @@ Iron Pit simplifies battlefield formation without changing RAW combat mechanics.
 
 ## Canonical hero architecture
 
+`docs/CANONICAL_COMBAT_BUILD_POLICY.md` is authoritative for canonical hero construction and mass production.
+
 The product contains 12 persistent named canonical heroes, one per core class, across levels 1 through 20: exactly 240 hero level snapshots. The user selects `Hero -> Level -> Fight`; identity persists across progression.
 
 - Each class has exactly one canonical progression identity. Leveling never swaps to a different same-class build, spellbook, subclass, or combat concept unless the user explicitly authorizes a new architecture.
-- Each level must derive from the previous certified canonical progression rather than duplicating a whole character by hand.
+- Each level must derive from the previous certified canonical progression by applying only that level's RAW combat delta. Do not hand-build 20 separate versions of the same hero.
+- The universal legal base array is the 27-point-buy `15 / 14 / 13 / 10 / 10 / 10` before legal Background increases and later feats/ASIs.
+- Strength-primary melee defaults to STR 15 / CON 14 / DEX 13 with INT/WIS/CHA 10. Dexterity-primary melee/ranged defaults to DEX 15 / CON 14 / STR 13 with INT/WIS/CHA 10.
+- Primary casters keep STR/DEX/CON at 10 and assign 15/14/13 to mental abilities by the deterministic class priorities in `docs/CANONICAL_COMBAT_BUILD_POLICY.md`.
+- Use only legal 2024 Background ability increases. Prefer +2 to the canonical primary ability and +1 to the highest-ranked other allowed canonical ability. Never invent species ability-score bonuses.
+- Existing certified hero profiles that predate the canonical array are migration debt and must be migrated to this policy before extending that progression further.
 - Iron Pit runtime scope is combat-only. Noncombat features may remain in source/legal-build metadata, but they do not require runtime implementation and must not block combat certification unless they can change a combat outcome.
+- Legal noncombat choices that cannot affect Iron Pit may be chosen deterministically or randomized among equivalent class-relevant options; do not add custom combat-engine logic for them.
 - Progression must update every applicable combat datum: level, proficiency bonus, HP, ability score improvements or feats, subclass, AC, attacks, attack and damage bonuses, saves, equipment, weapon masteries, resources, species resources, action economy, Extra Attack, spellcasting and slots, concentration, reactions, Bonus Actions, conditions, movement, class and subclass combat features, and scaling.
 - Only explicitly certified levels may be selectable or runnable.
-- Preserve already-certified levels while extending a progression.
+- Preserve already-certified reusable mechanics while migrating duplicated build data to the canonical pipeline.
 - Karnok Stoneward is the Fighter progression. Rokhan Stonefury is the Barbarian progression. The remaining identities are defined by `backend/app/content/hero_progressions.py`.
 - Caster classes reuse one deterministic canonical class spell package. Character level controls prepared/known count, available spell levels, and slots; a new level extends the same package instead of creating a new caster-specific spellbook.
 - Every caster level must receive its full class-appropriate prepared/known spell count and full spell-slot allotment before that level can be promoted. A level-20 caster is not flattened to a low-level package; higher-level spells and slots remain required progression work.
@@ -45,6 +53,8 @@ The product contains 12 persistent named canonical heroes, one per core class, a
 - Generic friendly multi-target buffs prioritize non-caster melee/front-line allies first, then the caster, then remaining ranged/back-line allies. Range and legal-target checks always apply; ties among line-holders use deterministic battlefield position and stable IDs rather than spell-specific branches.
 - Spell packages favor combat-relevant spells. Healing classes retain healing plus damage/support options. Unsupported spell mechanics remain listed with explicit capability requirements and fail closed until the shared engine supports them.
 - Melee loadouts use one repeatable policy: DEX-primary favors dual wielding; STR-primary with shield training favors one-hander plus shield; STR power builds favor a two-hander. Do not invent bespoke loadout logic per hero level.
+- Hero and monster behavior must reuse the same Universal Combat Capability whenever their RAW behavior is equivalent. If a capability already exists, a new hero level should be data plus generated certification rather than new bespoke resolver code.
+- One authoritative canonical definition should generate runtime/browser/catalog/certification state wherever practical. Repeated hand-authored ready lists and duplicated level facts are migration debt, not a desired architecture.
 - Certification is derived from audited build/profile data, runtime templates, Python gates, browser-generated parity, and public catalog readiness. Never certify by editing a manifest alone.
 
 ## Monster architecture
@@ -57,6 +67,7 @@ The canonical SRD 5.2.1 catalog contains exactly 330 monsters. Treat certificati
 - A monster with an unsupported outcome-changing mechanic remains blocked with explicit machine-readable blockers.
 - After adding a shared mechanic, rerun analysis for all 330 monsters and identify everything newly unlocked.
 - Prefer capability tranches such as recharge, spellcasting families, conditions/control, save actions, reactions, Bonus Actions, legendary actions, limited-use abilities, attack riders, and traits.
+- Monster runtime data should contain only combat-relevant stats, attacks, defenses, resources, spells, and capability IDs needed to resolve an Iron Pit fight. Noncombat-only stat-block text does not need an engine implementation.
 
 ## Durable certification state
 
