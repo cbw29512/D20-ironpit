@@ -8,6 +8,7 @@ from app.combat.grapple import (
     grapple_attack_disadvantage,
     speed_is_zero,
 )
+from app.combat.modifier_stack import effective_speed
 from app.combat.timed_conditions import apply_timed_condition
 from app.domain.models import CombatantState, WeaponAttack
 from app.domain.size import size_at_most
@@ -31,7 +32,6 @@ def attack_roll_condition_sources(
     if has_condition(attacker, BLINDED_EFFECT_ID):
         disadvantage += 1
     if has_condition(attacker, FRIGHTENED_EFFECT_ID):
-        # Standard Iron Pit encounters are unobstructed, so an active fear source is in line of sight.
         disadvantage += 1
     if PRONE_EFFECT_ID in attacker.active_effect_ids:
         disadvantage += 1
@@ -45,7 +45,7 @@ def attack_roll_condition_sources(
         DODGE_EFFECT_ID in defender.active_effect_ids
         and not attacks_have_advantage_against(defender)
         and not speed_is_zero(defender)
-        and defender.template.speed_ft > 0
+        and effective_speed(defender) > 0
     ):
         disadvantage += 1
     if attacks_have_advantage_against(defender):
@@ -109,10 +109,11 @@ def apply_hit_conditions(
 
 
 def stand_from_prone(state: CombatantState) -> int:
-    """Spend half Speed at turn start to end Prone when standing is possible."""
-    if PRONE_EFFECT_ID not in state.active_effect_ids or state.template.speed_ft <= 0 or speed_is_zero(state):
+    """Spend half effective Speed at turn start to end Prone when standing is possible."""
+    speed = effective_speed(state)
+    if PRONE_EFFECT_ID not in state.active_effect_ids or speed <= 0 or speed_is_zero(state):
         return 0
-    movement_cost = state.template.speed_ft // 2
+    movement_cost = speed // 2
     state.movement_remaining_ft = max(0, state.movement_remaining_ft - movement_cost)
     state.active_effect_ids.remove(PRONE_EFFECT_ID)
     return movement_cost
