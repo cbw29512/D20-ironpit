@@ -19,27 +19,6 @@ def saving_throw_mode(state: CombatantState, ability: str) -> RollMode:
     return RollMode.ADVANTAGE if advantage else RollMode.DISADVANTAGE
 
 
-def _indomitable_resource(state: CombatantState):
-    return next((resource for resource in state.resources if resource.id == "indomitable"), None)
-
-
-def _save_bonus_dice_max(state: CombatantState) -> int:
-    return sum(
-        item.dice_count * item.dice_size
-        for item in state.active_modifiers
-        if item.kind is ModifierKind.SAVING_THROW_BONUS_DIE
-    )
-
-
-def _roll_save(state: CombatantState, ability: str, modifier: int, dice: DiceProvider) -> DiceRoll:
-    return apply_d20_bonus_dice(
-        state,
-        ModifierKind.SAVING_THROW_BONUS_DIE,
-        roll_d20(dice, modifier, saving_throw_mode(state, ability)),
-        dice,
-    )
-
-
 def resolve_saving_throw(
     state: CombatantState,
     ability: str,
@@ -50,18 +29,10 @@ def resolve_saving_throw(
         return None, False
     if ability not in state.template.saving_throw_bonuses:
         raise ValueError(f"{state.template.name} lacks a certified {ability.title()} saving throw bonus.")
-    base_bonus = state.template.saving_throw_bonuses[ability]
-    roll = _roll_save(state, ability, base_bonus, dice)
-    if roll.total >= dc:
-        return roll, True
-
-    indomitable_bonus = state.template.progression_features.indomitable_bonus
-    resource = _indomitable_resource(state)
-    maximum = 20 + base_bonus + indomitable_bonus + _save_bonus_dice_max(state)
-    if indomitable_bonus <= 0 or resource is None or resource.current_uses <= 0 or maximum < dc:
-        return roll, False
-
-    resource.current_uses -= 1
-    reroll = _roll_save(state, ability, base_bonus + indomitable_bonus, dice)
-    reroll = reroll.model_copy(update={"notation": f"{reroll.notation} [Indomitable +{indomitable_bonus}]"})
-    return reroll, reroll.total >= dc
+    roll = apply_d20_bonus_dice(
+        state,
+        ModifierKind.SAVING_THROW_BONUS_DIE,
+        roll_d20(dice, state.template.saving_throw_bonuses[ability], saving_throw_mode(state, ability)),
+        dice,
+    )
+    return roll, roll.total >= dc
