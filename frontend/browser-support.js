@@ -14,16 +14,16 @@
     // RAW does not impose this priority; this is Iron Pit's deterministic support AI.
     // A dying ally is rescued first, then debilitating removable conditions are cleared,
     // then ordinary healing can use any remaining Action/Bonus Action economy.
-    let healing = H()?.chooseAction(member, setup);
+    let healing = H()?.chooseAction(member, setup, turnKey);
     if (healing?.target.state.current_hp === 0) {
-      events.push(H().resolve(sequence++, round, member, healing.target, healing.action));
+      events.push(H().resolve(sequence++, round, member, healing.target, healing.action, turnKey));
     }
     const removal = C()?.chooseAction(member, setup, turnKey);
     if (removal) {
       events.push(C().resolve(sequence++, round, member, removal.target, removal.action, removal.conditions, turnKey));
     }
-    healing = H()?.chooseAction(member, setup);
-    if (healing) events.push(H().resolve(sequence++, round, member, healing.target, healing.action));
+    healing = H()?.chooseAction(member, setup, turnKey);
+    if (healing) events.push(H().resolve(sequence++, round, member, healing.target, healing.action, turnKey));
     return { events, sequence };
   }
 
