@@ -28,7 +28,8 @@
 
   function candidate(attack, critical) {
     const count = attack.diceCount * (critical ? 2 : 1);
-    const rolls = dice().rollMany(count, attack.diceSize);
+    const rawRolls = dice().rollMany(count, attack.diceSize);
+    const rolls = attack.damageDieMinimum ? rawRolls.map((roll) => Math.max(roll, attack.damageDieMinimum)) : rawRolls;
     return {
       notation: `${count}d${attack.diceSize}+${attack.damageBonus}`,
       rolls,
