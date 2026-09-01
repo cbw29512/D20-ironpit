@@ -4,7 +4,6 @@ import logging
 
 from app.combat.action_economy import is_available, spend
 from app.combat.barbarian import end_rage_if_incapacitated, extend_rage_from_attack
-from app.combat.barbarian_level2 import attacks_against_reckless_advantage, reckless_attack_advantage
 from app.combat.bloodied import bloodied_fury_advantage
 from app.combat.condition_rules import close_hit_is_automatic_critical
 from app.combat.conditions import apply_hit_conditions, attack_roll_condition_sources
@@ -14,6 +13,7 @@ from app.combat.dice import DiceProvider
 from app.combat.modifier_stack import apply_d20_bonus_dice, attacks_against_advantage_sources, consume_attacks_against_advantage, effective_armor_class
 from app.combat.parry import resolve_parry_hit
 from app.combat.range import resolve_attack_roll_mode
+from app.combat.reckless_attack import attacks_against_reckless_advantage, reckless_attack_advantage
 from app.combat.rolls import roll_d20
 from app.combat.zero_hp import apply_damage
 from app.domain.models import BattleEvent, CombatantState, WeaponAttack
