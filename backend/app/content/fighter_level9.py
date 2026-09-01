@@ -18,4 +18,4 @@ def apply_fighter_level9(data: dict[str, object]) -> None:
     saving_throws["strength"] = 9
     saving_throws["constitution"] = 8
     skills["athletics"] = 9
-    data["weapon_masteries"] = ["greatsword", "shortbow", "javelin", "spear"]
+    data["weapon_masteries"] = ["flail", "javelin", "spear", "greatsword"]
