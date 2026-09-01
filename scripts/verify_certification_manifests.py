@@ -59,6 +59,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("mindless-rage")
     if features.instinctive_pounce_fraction:
         mechanics.add("instinctive-pounce")
+    if features.great_weapon_fighting:
+        mechanics.add("great-weapon-fighting")
     if features.critical_move_fraction:
         mechanics.add("post-critical-movement")
     if features.tactical_shift_fraction:
