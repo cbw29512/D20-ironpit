@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from app.content.audited_fighter import build_karnok_stoneward
-from app.content.canonical_hero_policy import canonical_template_id
+from app.content.canonical_progression import advance_template_data
 from app.content.level_resources import (
     fighter_action_surge_uses,
     fighter_second_wind_uses,
@@ -74,13 +74,14 @@ def _apply_level_five_scaling(data: dict[str, object]) -> None:
 
 
 def build_karnok_stoneward_level(level: int) -> CombatantTemplate:
-    """Return currently certified Karnok progression snapshots; unsupported levels fail closed."""
+    """Level the same canonical Fighter one step at a time; unsupported levels fail closed."""
     if level == 1:
         return build_karnok_stoneward()
     if level not in (2, 3, 4, 5):
         raise ValueError(f"Karnok Fighter level {level} is not certified yet.")
 
-    data = build_karnok_stoneward().model_dump()
+    previous = build_karnok_stoneward_level(level - 1)
+    data = advance_template_data(previous, "fighter", level)
     constitution_modifier = 3 if level >= 4 else 2
     source_by_level = {
         2: "D&D Beyond Basic Rules 2024: Fighter 2, Orc, Soldier, Savage Attacker, Equipment",
@@ -89,15 +90,13 @@ def build_karnok_stoneward_level(level: int) -> CombatantTemplate:
         5: "D&D Beyond Basic Rules 2024: Fighter 5 Extra Attack and Tactical Shift, Champion, Orc, Soldier, Savage Attacker, Equipment",
     }
     data.update(
-        id=canonical_template_id("fighter", level),
-        level=level,
         max_hp=fixed_class_hit_points(level, 10, constitution_modifier),
         resources=[item.model_dump() for item in _resources(level)],
         source=source_by_level[level],
         progression_features=_progression_features(level),
     )
-    if level >= 4:
+    if level == 4:
         _apply_level_four_advancement(data)
-    if level >= 5:
+    if level == 5:
         _apply_level_five_scaling(data)
     return CombatantTemplate.model_validate(data)
