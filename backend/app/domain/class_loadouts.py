@@ -8,7 +8,8 @@ CasterClassId = Literal[
     "bard", "cleric", "druid", "paladin", "ranger", "sorcerer", "warlock", "wizard",
 ]
 SpellRole = Literal["damage", "healing", "buff", "debuff", "control", "utility", "mixed"]
-MeleeLoadoutKind = Literal["one-hander-shield", "two-handed", "dual-wield"]
+CombatMode = Literal["melee", "caster", "hybrid"]
+MeleeLoadoutKind = Literal["one-hander-shield", "two-handed", "dual-wield", "unarmed"]
 
 
 class CanonicalSpellChoice(BaseModel):
@@ -41,3 +42,12 @@ class ClassSpellPackage(BaseModel):
 class MeleeLoadoutSelection(BaseModel):
     kind: MeleeLoadoutKind
     primary_ability: Literal["strength", "dexterity"]
+
+
+class CanonicalCombatPlan(BaseModel):
+    class_id: str
+    mode: CombatMode
+    shield_trained: bool = False
+    power_build: bool = False
+    dual_wield_trained: bool = True
+    forced_melee_kind: MeleeLoadoutKind | None = None
