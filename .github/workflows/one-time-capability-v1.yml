@@ -6,7 +6,7 @@ on:
       - audit/raw-combat-log-figures-20260830
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: capability-v1-${{ github.ref_name }}
@@ -25,6 +25,8 @@ jobs:
       - name: Install Python rules reference
         working-directory: backend
         run: pip install -e '.[dev]'
+      - name: Export complete runtime monster corpus
+        run: python scripts/export_runtime_monster_capabilities.py
       - name: Enforce source limits
         run: python scripts/check_source_limits.py
       - name: Certify declarative capability layer
@@ -41,3 +43,14 @@ jobs:
         run: |
           node frontend/browser-generated-monsters.test.cjs
           node frontend/browser-mixed-multiattack.test.cjs
+      - name: Persist deterministic capability registry
+        run: |
+          git add backend/app/content/data/combatant_capabilities_v1.json
+          if git diff --cached --quiet; then
+            echo "Capability registry already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "data: migrate runtime monsters to capability registry"
+          git push origin HEAD:${GITHUB_REF_NAME}
