@@ -19,13 +19,18 @@
     };
   }
 
-  function apply(owner, target, sourceId, targetId, spell, roundNumber, states = []) {
-    const modifiers = (spell.modifierEffects || []).map((effect, index) => build(sourceId, targetId, spell, effect, index));
+  function apply(owner, targets, sourceId, spell, roundNumber, states = []) {
+    const modifiers = targets.flatMap(({ targetId }) => (spell.modifierEffects || [])
+      .map((effect, index) => build(sourceId, targetId, spell, effect, index)));
     if (spell.concentration) {
       if (!C()) throw new Error("Browser Concentration runtime is not loaded.");
-      C().start(owner, sourceId, spell.id, roundNumber, states);
+      const durationRounds = spell.durationMinutes * 10;
+      const expiresRound = roundNumber + durationRounds + (roundNumber === 0 ? 1 : 0);
+      C().start(owner, sourceId, spell.id, roundNumber, states, expiresRound);
     }
-    for (const modifier of modifiers) M().add(target, modifier);
+    for (const { targetId, state } of targets) {
+      (spell.modifierEffects || []).forEach((effect, index) => M().add(state, build(sourceId, targetId, spell, effect, index)));
+    }
     return modifiers;
   }
 
