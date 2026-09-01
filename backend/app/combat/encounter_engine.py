@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.concentration import end_concentration_if_expired
 from app.combat.condition_lifecycle import resolve_source_condition_timing, resolve_target_condition_timing
 from app.combat.death_saves import resolve_death_save
 from app.combat.dice import DiceProvider
@@ -57,7 +58,9 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
         setup = build_encounter_setup(selection)
         events, sequence = prepare_defenses(setup, 1)
         initiative = roll_encounter_initiative(setup, dice)
-        by_id = _combatant_index([*setup.heroes, *setup.monsters])
+        combatants = [*setup.heroes, *setup.monsters]
+        by_id = _combatant_index(combatants)
+        affected_states = [member.state for member in combatants]
         initiative_events, sequence = build_initiative_events(initiative, sequence)
         events.extend(initiative_events)
 
@@ -70,6 +73,7 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
 
                 member = by_id[combatant_id]
                 refresh_reaction(member.state)
+                end_concentration_if_expired(member.state, round_number, affected_states)
                 expiry_events, sequence = expire_start_of_turn_conditions(
                     sequence, round_number, member, setup,
                 )
