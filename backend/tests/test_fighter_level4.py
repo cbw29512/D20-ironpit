@@ -4,7 +4,7 @@ from app.content.build_audit import assert_character_build_raw_ready, audit_char
 from app.content.fighter_progression import build_karnok_stoneward_level
 from app.content.fighter_progression_profile import build_karnok_stoneward_level4_profile
 from app.content.pregen_combat_audit import assert_pregen_combat_stats, audit_pregen_combat_stats
-from app.content.pregen_combat_profiles import build_pregen_combat_profiles
+from app.content.pregen_combat_profiles import build_karnok_stoneward_level4_combat_profile
 
 
 def test_fighter_level_four_snapshot_has_raw_advancement() -> None:
@@ -14,6 +14,7 @@ def test_fighter_level_four_snapshot_has_raw_advancement() -> None:
     assert (karnok.id, karnok.level, karnok.max_hp) == ("karnok-stoneward-l4", 4, 40)
     assert (karnok.weapon_attack.attack_bonus, karnok.weapon_attack.damage_bonus) == (6, 4)
     assert karnok.saving_throw_bonuses["strength"] == 6
+    assert karnok.saving_throw_bonuses["constitution"] == 5
     assert karnok.skill_bonuses["athletics"] == 6
     assert resources["second-wind"] == 3
     assert resources["action-surge"] == 1
@@ -46,9 +47,9 @@ def test_fighter_level_four_profile_declares_split_asi_and_passes_structural_aud
     assert_character_build_raw_ready(profile, template)
 
 
-def test_fighter_level_four_runtime_matches_combat_fingerprint() -> None:
+def test_fighter_level_four_runtime_matches_candidate_combat_fingerprint() -> None:
     template = build_karnok_stoneward_level(4)
-    combat_profile = build_pregen_combat_profiles()[template.id]
+    combat_profile = build_karnok_stoneward_level4_combat_profile()
 
     assert audit_pregen_combat_stats(template, combat_profile) == []
     assert_pregen_combat_stats(template, combat_profile)
