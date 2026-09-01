@@ -58,10 +58,12 @@ jobs:
       - name: Regenerate declarative runtime and static artifacts
         run: |
           python scripts/export_runtime_monster_capabilities.py
-          python scripts/verify_certification_manifests.py --write
           python scripts/prepare_static_site.py
-      - name: Prove generated registry is deterministic
-        run: python scripts/export_runtime_monster_capabilities.py --check
+          python scripts/verify_certification_manifests.py --write
+      - name: Prove generated artifacts are deterministic
+        run: |
+          python scripts/export_runtime_monster_capabilities.py --check
+          python scripts/verify_certification_manifests.py
       - name: Certify full Python rules reference
         working-directory: backend
         run: pytest -q
