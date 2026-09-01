@@ -5,7 +5,7 @@ from app.content.cleric_life_domain import AID, LESSER_RESTORATION, disciple_of_
 from app.content.healing_spell_effects import build_cure_wounds, build_healing_word
 from app.content.hero_progressions import HERO_BY_CLASS
 from app.content.level_resources import cleric_channel_divinity_uses, orc_adrenaline_rush_uses
-from app.content.offensive_spell_effects import build_guiding_bolt, build_sacred_flame
+from app.content.offensive_spell_effects import build_guiding_bolt, build_inflict_wounds, build_sacred_flame
 from app.content.spell_effects import BLESS, SHIELD_OF_FAITH
 from app.content.spell_slot_progression import spell_slot_resources
 from app.domain.models import (
@@ -49,16 +49,22 @@ def _resources(level: int) -> list[ResourceDefinition]:
 
 
 def _build_seraphine(level: int) -> CombatantTemplate:
-    if level not in {1, 2, 3}:
-        raise ValueError("Seraphine is certified only at Cleric levels 1-3 in this builder.")
+    if level not in {1, 2, 3, 4}:
+        raise ValueError("Seraphine is certified only at Cleric levels 1-4 in this builder.")
     hero = HERO_BY_CLASS["cleric"]
+    wisdom_modifier = 4 if level >= 4 else 3
+    save_dc = 14 if level >= 4 else 13
+    spell_attack_bonus = 6 if level >= 4 else 5
     life_bonus = disciple_of_life_bonus(1) if level >= 3 else 0
-    healing = [build_cure_wounds(3, life_bonus)]
+    healing = [build_cure_wounds(wisdom_modifier, life_bonus)]
     if level >= 2:
-        healing.append(build_healing_word(3, life_bonus))
+        healing.append(build_healing_word(wisdom_modifier, life_bonus))
     defenses = [BLESS.model_copy(deep=True), SHIELD_OF_FAITH.model_copy(deep=True)]
     if level >= 3:
         defenses.insert(0, AID.model_copy(deep=True))
+    save_spells = [build_sacred_flame(save_dc, level)]
+    if level >= 4:
+        save_spells.append(build_inflict_wounds(save_dc))
     traits = [CombatTrait.ADRENALINE_RUSH, CombatTrait.RELENTLESS_ENDURANCE]
     if level >= 3:
         traits.append(CombatTrait.LIFE_DOMAIN)
@@ -66,18 +72,18 @@ def _build_seraphine(level: int) -> CombatantTemplate:
         id=canonical_template_id("cleric", level), name=hero.hero_name, archetype=hero.class_name,
         level=level, kind="character", armor_class=17, max_hp=10 + 7 * (level - 1),
         speed_ft=30, initiative_bonus=2, weapon_attack=_mace_attack(),
-        spell_save_actions=[build_sacred_flame(13, level)],
-        spell_attack_actions=[build_guiding_bolt(5)],
+        spell_save_actions=save_spells,
+        spell_attack_actions=[build_guiding_bolt(spell_attack_bonus)],
         defensive_spell_actions=defenses,
         healing_actions=healing,
         condition_removal_actions=[LESSER_RESTORATION.model_copy(deep=True)] if level >= 3 else [],
         saving_throw_bonuses={
             "strength": 1, "dexterity": 2, "constitution": 2,
-            "intelligence": -1, "wisdom": 5, "charisma": 2,
+            "intelligence": -1, "wisdom": 6 if level >= 4 else 5, "charisma": 2,
         },
         skill_bonuses={
             "athletics": 1, "acrobatics": 2, "arcana": 1,
-            "history": 1, "medicine": 5, "persuasion": 2,
+            "history": 1, "medicine": 6 if level >= 4 else 5, "persuasion": 2,
         },
         combat_traits=traits,
         visual=VisualLoadout(armor="chain-shirt", main_hand="mace", off_hand="shield", body_style="humanoid"),
@@ -87,6 +93,7 @@ def _build_seraphine(level: int) -> CombatantTemplate:
             "Sacred Flame, Bless, Cure Wounds, Guiding Bolt, Shield of Faith, "
             + ("Healing Word, Channel Divinity, " if level >= 2 else "")
             + ("Life Domain, Aid, Lesser Restoration, Disciple of Life, " if level >= 3 else "")
+            + ("Ability Score Improvement, Mending, Inflict Wounds, " if level >= 4 else "")
             + "Equipment"
         ),
     )
@@ -105,3 +112,8 @@ def build_seraphine_dawnshield_level_two() -> CombatantTemplate:
 def build_seraphine_dawnshield_level_three() -> CombatantTemplate:
     """Level-3 Life Cleric with domain spells, Disciple of Life, and Preserve Life support."""
     return _build_seraphine(3)
+
+
+def build_seraphine_dawnshield_level_four() -> CombatantTemplate:
+    """Level-4 Life Cleric with WIS 19, a fourth cantrip, and Inflict Wounds offense."""
+    return _build_seraphine(4)
