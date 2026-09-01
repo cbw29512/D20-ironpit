@@ -99,6 +99,24 @@ const attack = { id: "test-blade", name: "Test Blade", kind: "melee", reach: 5, 
   assert.equal(caster.state.concentration, null); assert.equal(ally.state.active_modifiers.length, 0);
 }
 
+{
+  const attacker = member("attacker"), caster = member("caster", "monsters"), setup = { heroes: [attacker], monsters: [caster] };
+  C.start(caster.state, "caster", "bless", 1, [attacker.state, caster.state]);
+  dice([15, 1, 1]);
+  const event = A.resolveAttack(1, 1, attacker, caster, attack, 5, { setup });
+  assert.equal(event.hit, true); assert.equal(event.concentration_ended_effect_id, "bless"); assert.equal(caster.state.concentration, null);
+}
+
+{
+  const attacker = member("attacker"), caster = member("caster", "monsters"), setup = { heroes: [attacker], monsters: [caster] };
+  C.start(caster.state, "caster", "bless", 1, [attacker.state, caster.state]);
+  const saveAction = { id: "spark", name: "Spark", saveAbility: "dexterity", dc: 20, range: 30,
+    damageDiceCount: 1, damageDiceSize: 4, damageBonus: 0, damageType: "fire", successDamage: "none" };
+  dice([1, 1, 1]);
+  const event = V.resolveAction(1, 1, attacker, caster, saveAction, 5, { setup });
+  assert.equal(event.save_succeeded, false); assert.equal(event.concentration_ended_effect_id, "bless"); assert.equal(caster.state.concentration, null);
+}
+
 assert.equal(C.concentrationDc(19), 10);
 assert.equal(C.concentrationDc(20), 10);
 assert.equal(C.concentrationDc(61), 30);
