@@ -22,6 +22,13 @@ def test_native_monsters_are_not_legacy_builder_outputs() -> None:
     assert set(NATIVE).isdisjoint(legacy_ids)
 
 
+def test_native_definitions_extend_production_roster_without_replacing_legacy_ids() -> None:
+    legacy = build_legacy_monster_templates()
+    production = build_arena_roster().monsters
+    assert len(production) == len(legacy) + len(NATIVE)
+    assert [monster.id for monster in production[-len(NATIVE):]] == list(NATIVE)
+
+
 def test_native_registry_rejects_cross_layer_duplicate_ids() -> None:
     definition = get_capability_definition("srd-swarm-of-insects")
     with pytest.raises(ValueError, match="ids overlap"):
