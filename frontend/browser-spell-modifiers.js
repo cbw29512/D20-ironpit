@@ -4,7 +4,12 @@
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION;
 
-  function build(sourceId, targetId, spell, effect, index) {
+  function build(sourceId, targetId, spell, effect, index, roundNumber = null) {
+    let expiry = null;
+    if (effect.expiresAfterSourceTurns != null) {
+      if (roundNumber == null) throw new Error("Source-turn modifier expiry requires the application round.");
+      expiry = roundNumber + effect.expiresAfterSourceTurns;
+    }
     return {
       id: `${sourceId}:${spell.id}:${targetId}:${index}`,
       source_id: sourceId,
@@ -16,12 +21,14 @@
       damage_type: effect.damageType || null,
       target_id: targetId,
       concentration_required: Boolean(spell.concentration),
+      consume_on_attack_against: Boolean(effect.consumeOnAttackAgainst),
+      expires_source_turn_end_round: expiry,
     };
   }
 
   function apply(owner, targets, sourceId, spell, roundNumber, states = []) {
     const modifiers = targets.flatMap(({ targetId }) => (spell.modifierEffects || [])
-      .map((effect, index) => build(sourceId, targetId, spell, effect, index)));
+      .map((effect, index) => build(sourceId, targetId, spell, effect, index, roundNumber)));
     if (spell.concentration) {
       if (!C()) throw new Error("Browser Concentration runtime is not loaded.");
       const durationRounds = spell.durationMinutes * 10;
@@ -29,7 +36,7 @@
       C().start(owner, sourceId, spell.id, roundNumber, states, expiresRound);
     }
     for (const { targetId, state } of targets) {
-      (spell.modifierEffects || []).forEach((effect, index) => M().add(state, build(sourceId, targetId, spell, effect, index)));
+      (spell.modifierEffects || []).forEach((effect, index) => M().add(state, build(sourceId, targetId, spell, effect, index, roundNumber)));
     }
     return modifiers;
   }
