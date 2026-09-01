@@ -52,3 +52,4 @@ class ConcentrationState(BaseModel):
     source_id: str
     effect_id: str
     started_round: int = Field(ge=0)
+    expires_round: int | None = Field(default=None, ge=1)
