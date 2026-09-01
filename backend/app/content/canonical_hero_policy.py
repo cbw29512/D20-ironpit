@@ -2,6 +2,10 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 
+from app.content.canonical_combat_build_policy import (
+    assert_canonical_base_array,
+    canonical_background_increases,
+)
 from app.content.canonical_spell_packages import build_class_spell_package
 from app.content.hero_progressions import COMBAT_PLAN_BY_CLASS, HERO_BY_CLASS
 from app.content.melee_loadout_policy import choose_melee_loadout
@@ -91,6 +95,17 @@ def assert_canonical_profile_policy(profile: CharacterBuildProfile) -> None:
         raise ValueError(
             f"{profile.class_id} level {profile.level} canonical template drifted: "
             f"{profile.template_id} != {expected_template_id}."
+        )
+
+    assert_canonical_base_array(profile.class_id, profile.base_ability_scores)
+    expected_background = canonical_background_increases(
+        profile.class_id,
+        profile.background_allowed_abilities,
+    )
+    if profile.background_increases != expected_background:
+        raise ValueError(
+            f"{profile.class_id} level {profile.level} canonical Background increases drifted: "
+            f"{profile.background_increases} != {expected_background}."
         )
 
     plan = canonical_combat_plan(profile.class_id)
