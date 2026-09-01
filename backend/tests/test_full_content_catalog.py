@@ -78,6 +78,7 @@ def test_current_audited_heroes_are_raw_ready() -> None:
         ("cleric", 1, "canonical", "Seraphine Dawnshield", "seraphine-dawnshield-l1"),
         ("cleric", 2, "canonical", "Seraphine Dawnshield", "seraphine-dawnshield-l2"),
         ("cleric", 3, "canonical", "Seraphine Dawnshield", "seraphine-dawnshield-l3"),
+        ("cleric", 4, "canonical", "Seraphine Dawnshield", "seraphine-dawnshield-l4"),
         ("fighter", 1, "canonical", "Karnok Stoneward", "karnok-stoneward-l1"),
         ("fighter", 2, "canonical", "Karnok Stoneward", "karnok-stoneward-l2"),
         ("fighter", 3, "canonical", "Karnok Stoneward", "karnok-stoneward-l3"),
