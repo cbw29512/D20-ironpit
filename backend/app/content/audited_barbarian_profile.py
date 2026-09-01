@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from app.content.canonical_hero_policy import canonical_template_id
+from app.content.hero_progressions import HERO_BY_CLASS
 from app.domain.character_builds import AbilityIncrease, AbilityScores, CharacterBuildProfile, FeatureAudit
 
 
@@ -26,12 +28,13 @@ def _feature(
 
 
 def build_rokhan_stonefury_profile() -> CharacterBuildProfile:
+    hero = HERO_BY_CLASS["barbarian"]
     return CharacterBuildProfile(
         id="build-rokhan-stonefury-l1",
-        template_id="rokhan-stonefury-l1",
-        character_name="Rokhan Stonefury",
+        template_id=canonical_template_id("barbarian", 1),
+        character_name=hero.hero_name,
         class_id="barbarian",
-        class_name="Barbarian",
+        class_name=hero.class_name,
         level=1,
         species_id="orc",
         species_name="Orc",
