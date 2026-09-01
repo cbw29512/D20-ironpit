@@ -14,6 +14,7 @@ def apply_timed_condition(
     *,
     source_effect_id: str | None = None,
     applied_round: int | None = None,
+    expires_round: int | None = None,
     expires_at_start_of_source_turn: bool = True,
     expiry_timing: ConditionTiming | None = None,
     repeat_save_ability: AbilityName | None = None,
@@ -22,6 +23,9 @@ def apply_timed_condition(
     allowed_removal_action_ids: list[str] | None = None,
     affected_states: list[CombatantState] | None = None,
     turn_behavior: TimedTurnBehavior = "normal",
+    ends_on_damage: bool = False,
+    ends_if_source_incapacitated: bool = False,
+    ends_if_source_dead: bool = False,
 ) -> str | None:
     if condition_is_immune(state, effect_id):
         return None
@@ -38,6 +42,7 @@ def apply_timed_condition(
         source_id=source_id,
         source_effect_id=source_effect_id,
         applied_round=applied_round,
+        expires_round=expires_round,
         expires_at_start_of_source_turn=expires_at_start_of_source_turn,
         expiry_timing=expiry_timing,
         repeat_save_ability=repeat_save_ability,
@@ -45,6 +50,9 @@ def apply_timed_condition(
         repeat_save_timing=repeat_save_timing,
         allowed_removal_action_ids=allowed_removal_action_ids or [],
         turn_behavior=turn_behavior,
+        ends_on_damage=ends_on_damage,
+        ends_if_source_incapacitated=ends_if_source_incapacitated,
+        ends_if_source_dead=ends_if_source_dead,
     ))
     if effect_id not in state.active_effect_ids:
         state.active_effect_ids.append(effect_id)
@@ -61,6 +69,25 @@ def remove_effect_instance(state: CombatantState, effect: TimedEffect) -> bool:
     return not still_active
 
 
+def remove_effect_group(state: CombatantState, effect: TimedEffect) -> list[str]:
+    if effect.source_effect_id is None:
+        return [effect.effect_id] if remove_effect_instance(state, effect) else []
+    grouped = [
+        item for item in list(state.timed_effects)
+        if item.source_id == effect.source_id and item.source_effect_id == effect.source_effect_id
+    ]
+    removed: list[str] = []
+    for item in grouped:
+        if remove_effect_instance(state, item):
+            removed.append(item.effect_id)
+    return removed
+
+
+def _source_start_expired(effect: TimedEffect, round_number: int) -> bool:
+    source_start = effect.expiry_timing == "source_turn_start" or effect.expires_at_start_of_source_turn
+    return source_start and (effect.expires_round is None or round_number >= effect.expires_round)
+
+
 def expire_start_of_turn_conditions(
     sequence: int,
     round_number: int,
@@ -71,11 +98,10 @@ def expire_start_of_turn_conditions(
     for target in [*setup.heroes, *setup.monsters]:
         expiring = [
             effect for effect in target.state.timed_effects
-            if effect.source_id == source.combatant_id
-            and (effect.expiry_timing == "source_turn_start" or effect.expires_at_start_of_source_turn)
+            if effect.source_id == source.combatant_id and _source_start_expired(effect, round_number)
         ]
         for effect in expiring:
-            removed = remove_effect_instance(target.state, effect)
+            removed = remove_effect_group(target.state, effect)
             if not removed:
                 continue
             events.append(BattleEvent(
@@ -86,10 +112,10 @@ def expire_start_of_turn_conditions(
                 actor_name=source.state.template.name,
                 target_id=target.combatant_id,
                 target_name=target.state.template.name,
-                removed_condition_ids=[effect.effect_id],
-                feature_id="condition-ended",
+                removed_condition_ids=removed,
+                feature_id=effect.source_effect_id or "condition-ended",
                 animation="condition-ended",
-                description=f"{target.state.template.name} is no longer {effect.effect_id.title()}.",
+                description=f"{target.state.template.name} is no longer affected by {effect.source_effect_id or effect.effect_id}.",
             ))
             sequence += 1
     return events, sequence
