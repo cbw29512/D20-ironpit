@@ -73,6 +73,7 @@ class WeaponAttack(BaseModel):
     weapon: Weapon
     attack_bonus: int
     damage_bonus: int
+    damage_die_minimum: int | None = Field(default=None, ge=2, le=100)
     attack_ability: AbilityName | None = None
     fixed_damage: int | None = Field(default=None, ge=0)
     conditional_damage: list[ConditionalDamage] = Field(default_factory=list)
@@ -81,8 +82,6 @@ class WeaponAttack(BaseModel):
     knocks_prone_max_size: CreatureSize | None = None
     control_effect: HitControlEffect | None = None
     forbid_target_grappled_by_self: bool = False
-
-
 class VisualLoadout(BaseModel):
     armor: str
     main_hand: str
