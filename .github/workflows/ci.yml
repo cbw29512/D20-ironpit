@@ -125,6 +125,10 @@ jobs:
           node frontend/browser-shield-of-faith.test.cjs
           node frontend/browser-bless.test.cjs
           node frontend/browser-cleric1.test.cjs
+          node frontend/browser-spell-slot-healing.test.cjs
+          node frontend/browser-ongoing-spell-control.test.cjs
+          node frontend/browser-forced-retreat-turn.test.cjs
+          node frontend/browser-fear-ui.test.cjs
           node frontend/battle-log-format.test.cjs
           node frontend/figure-visuals.test.cjs
           node frontend/figure-portraits.test.cjs
@@ -162,6 +166,8 @@ jobs:
           grep -q 'browser-tactical-shift.js' index.html
           grep -q 'browser-undead-fortitude.js' index.html
           grep -q 'browser-zero-hp.js' index.html
+          grep -q 'browser-timed-conditions.js' index.html
+          grep -q 'browser-ongoing-spell-control.js' index.html
           grep -q 'browser-modifiers.js' index.html
           grep -q 'browser-concentration.js' index.html
           grep -q 'browser-spell-effects.js' index.html
@@ -207,6 +213,7 @@ jobs:
           grep -q 'browser-undead-fortitude.js' frontend/index.html
           grep -q 'browser-zero-hp.js' frontend/index.html
           grep -q 'browser-timed-conditions.js' frontend/index.html
+          grep -q 'browser-ongoing-spell-control.js' frontend/index.html
           grep -q 'browser-modifiers.js' frontend/index.html
           grep -q 'browser-saves.js' frontend/index.html
           grep -q 'browser-concentration.js' frontend/index.html
