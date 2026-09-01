@@ -27,6 +27,8 @@ jobs:
       - name: Install Python rules reference
         working-directory: backend
         run: pip install -e '.[dev]'
+      - name: Restore install-only metadata
+        run: git restore --worktree -- backend/iron_pit_backend.egg-info
       - name: Generate authoritative hero artifacts
         run: |
           python scripts/export_browser_heroes.py
