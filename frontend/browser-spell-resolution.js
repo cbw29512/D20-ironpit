@@ -8,11 +8,11 @@
 
   function saveAction(choice) {
     const spell = choice.action;
-    const extra = Math.max(0, choice.slotLevel - spell.level);
+    if (choice.slotLevel !== spell.level) throw new Error("Spell upcasting is not certified; use the spell's printed slot level.");
     return {
       id: spell.id, name: spell.name, saveAbility: spell.saveAbility, dc: spell.dc,
       range: spell.range + (spell.areaRadius || 0),
-      damageDiceCount: spell.damageDiceCount + extra * (spell.upcastDicePerLevel || 0),
+      damageDiceCount: spell.damageDiceCount,
       damageDiceSize: spell.damageDiceSize, damageBonus: spell.damageBonus || 0,
       damageType: spell.damageType, successDamage: spell.successDamage || "none",
       animation: spell.animation || "spell-save",
@@ -22,6 +22,7 @@
   function resolve(sequence, round, caster, setup, choice, turnKey) {
     const spell = choice.action;
     if (spell.actionCost === "reaction") throw new Error("Reaction spells require their trigger window.");
+    if (choice.slotLevel !== spell.level) throw new Error("Spell upcasting is not certified; use the spell's printed slot level.");
     if (!E().available(caster.state, spell.actionCost)) throw new Error(`${spell.actionCost} is unavailable for ${spell.name}.`);
 
     let remaining = null;
