@@ -61,6 +61,10 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("instinctive-pounce")
     if features.great_weapon_fighting:
         mechanics.add("great-weapon-fighting")
+    if features.indomitable_bonus:
+        mechanics.add("indomitable")
+    if features.tactical_master_sap:
+        mechanics.add("tactical-master-sap")
     if features.critical_move_fraction:
         mechanics.add("post-critical-movement")
     if features.tactical_shift_fraction:
