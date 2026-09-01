@@ -101,7 +101,11 @@ load("browser-engine.js");
 {
   const battle = window.IRON_PIT_BROWSER_ENGINE.runEncounter({ hero_ids: ["champion"], monster_ids: ["target"] });
   const heroGroup = battle.initiative.groups.find((group) => group.side === "heroes");
+  const heroEvent = battle.events.find((event) => event.event_type === "initiative" && event.actor_id.startsWith("hero-"));
   assert.equal(heroGroup.natural_roll, 17); assert.equal(heroGroup.initiative_count, 18);
+  assert.equal(heroGroup.initiative_roll.mode, "advantage"); assert.deepEqual(heroGroup.initiative_roll.rolls, [4, 17]);
+  assert.equal(heroGroup.initiative_roll.selected_roll, 17); assert.equal(heroGroup.initiative_roll.modifier, 1);
+  assert.deepEqual(heroEvent.attack_roll, heroGroup.initiative_roll, "initiative event must own the historical roll snapshot");
 }
 
 for (const htmlName of ["index.html", path.join("..", "index.html")]) {
