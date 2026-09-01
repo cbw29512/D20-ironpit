@@ -73,11 +73,23 @@ def _apply_level_five_scaling(data: dict[str, object]) -> None:
     }
 
 
+def _apply_level_six_advancement(data: dict[str, object]) -> None:
+    weapon_attack = data["weapon_attack"]
+    saving_throws = data["saving_throw_bonuses"]
+    skills = data["skill_bonuses"]
+    if not isinstance(weapon_attack, dict) or not isinstance(saving_throws, dict) or not isinstance(skills, dict):
+        raise ValueError("Karnok Fighter 6 base snapshot has an unexpected schema.")
+    weapon_attack["attack_bonus"] = 8
+    weapon_attack["damage_bonus"] = 5
+    saving_throws["strength"] = 8
+    skills["athletics"] = 8
+
+
 def build_karnok_stoneward_level(level: int) -> CombatantTemplate:
     """Level the same canonical Fighter one step at a time; unsupported levels fail closed."""
     if level == 1:
         return build_karnok_stoneward()
-    if level not in (2, 3, 4, 5):
+    if level not in (2, 3, 4, 5, 6):
         raise ValueError(f"Karnok Fighter level {level} is not certified yet.")
 
     previous = build_karnok_stoneward_level(level - 1)
@@ -88,6 +100,7 @@ def build_karnok_stoneward_level(level: int) -> CombatantTemplate:
         3: "D&D Beyond Basic Rules 2024: Fighter 3 Champion, Orc, Soldier, Savage Attacker, Equipment",
         4: "D&D Beyond Basic Rules 2024: Fighter 4 Ability Score Improvement, Second Wind, Weapon Mastery, Champion, Orc, Soldier, Savage Attacker, Equipment",
         5: "D&D Beyond Basic Rules 2024: Fighter 5 Extra Attack and Tactical Shift, Champion, Orc, Soldier, Savage Attacker, Equipment",
+        6: "D&D Beyond Basic Rules 2024: Fighter 6 Ability Score Improvement, Champion, Orc, Soldier, Savage Attacker, Equipment",
     }
     data.update(
         max_hp=fixed_class_hit_points(level, 10, constitution_modifier),
@@ -99,4 +112,6 @@ def build_karnok_stoneward_level(level: int) -> CombatantTemplate:
         _apply_level_four_advancement(data)
     if level == 5:
         _apply_level_five_scaling(data)
+    if level == 6:
+        _apply_level_six_advancement(data)
     return CombatantTemplate.model_validate(data)
