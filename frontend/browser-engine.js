@@ -5,7 +5,7 @@
   const T = () => window.IRON_PIT_BROWSER_TURN;
   const L = () => window.IRON_PIT_BROWSER_CONDITION_LIFECYCLE;
   const P = () => window.IRON_PIT_BROWSER_PRECOMBAT_SPELLS;
-  const C = () => window.IRON_PIT_BROWSER_CONCENTRATION;
+  const C = () => window.IRON_PIT_BROWSER_CONCENTRATION, B = () => window.IRON_PIT_BROWSER_SOURCE_BOUND_EFFECTS;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { incapacitated: (state) => state.is_unconscious };
   const heroes = () => window.IRON_PIT_BROWSER_HEROES;
@@ -126,7 +126,7 @@
       for (const id of init.turn_order) {
         const current = outcome(setup); if (current !== "active") return finish(setup, init, events, current, round, sequence);
         const member = byId.get(id);
-        S().refreshReaction(member.state); C()?.endIfExpired(member.state, round, states);
+        B()?.cleanupDisabledSources(setup); S().refreshReaction(member.state); C()?.endIfExpired(member.state, round, states);
         const start = lifecycle(sequence, round, member, setup, "target_turn_start", "source_turn_start");
         events.push(...start.events); sequence = start.sequence;
         if (member.state.template.kind === "character" && member.state.current_hp === 0 && !member.state.is_dead && !member.state.is_stable) events.push(T().deathSave(sequence++, round, member));
