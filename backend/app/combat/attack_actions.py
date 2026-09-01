@@ -104,6 +104,7 @@ def resolve_attack_action(
 
         spend(attacker.state, "action")
         opening_feature = opening_feature_id(round_number, attacker, setup)
+        affected_states = [member.state for member in [*setup.heroes, *setup.monsters]]
         for slot in definition.slots:
             if attacker.state.is_dead or attacker.state.is_unconscious:
                 break
@@ -131,6 +132,7 @@ def resolve_attack_action(
                 events.append(resolve_save_action(
                     sequence, round_number, attacker, target, save_action,
                     combatant_distance(attacker, target), dice, spend_action=False,
+                    affected_states=affected_states,
                 ))
                 sequence += 1
         return events, sequence
