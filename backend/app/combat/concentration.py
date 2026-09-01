@@ -57,14 +57,18 @@ def start_concentration(
     effect_id: str,
     round_number: int,
     affected_states: Iterable[CombatantState] | None = None,
+    expires_round: int | None = None,
 ) -> ConcentrationState:
     if owner.is_dead or is_incapacitated(owner):
         raise ValueError("An Incapacitated or dead creature cannot start Concentration.")
+    if expires_round is not None and expires_round <= round_number:
+        raise ValueError("Concentration expiry must be after the start round.")
     end_concentration(owner, affected_states)
     owner.concentration = ConcentrationState(
         source_id=source_id,
         effect_id=effect_id,
         started_round=round_number,
+        expires_round=expires_round,
     )
     return owner.concentration
 
@@ -74,6 +78,17 @@ def end_concentration_if_incapacitated(
     affected_states: Iterable[CombatantState] | None = None,
 ) -> bool:
     if owner.concentration is None or (not owner.is_dead and not is_incapacitated(owner)):
+        return False
+    return end_concentration(owner, affected_states)
+
+
+def end_concentration_if_expired(
+    owner: CombatantState,
+    round_number: int,
+    affected_states: Iterable[CombatantState] | None = None,
+) -> bool:
+    current = owner.concentration
+    if current is None or current.expires_round is None or round_number < current.expires_round:
         return False
     return end_concentration(owner, affected_states)
 
