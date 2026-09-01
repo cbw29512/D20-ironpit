@@ -67,7 +67,8 @@
 
   function resolve(sequence, member, targets, spell, slotLevel, states = [member.state]) {
     if (slotLevel !== spell.level) throw new Error("Spell upcasting is not certified; use the spell's printed slot level.");
-    if (spell.concentration && ((spell.temporaryHp || 0) || spell.damageResistances?.length)) throw new Error("Concentration defenses require source-owned modifier effects.");
+    const directHp = (spell.temporaryHp || 0) || (spell.maxHpIncrease || 0) || (spell.currentHpIncrease || 0);
+    if (spell.concentration && (directHp || spell.damageResistances?.length)) throw new Error("Concentration defenses require source-owned modifier effects.");
     if (!targets.length) throw new Error(`${spell.name} has no legal precombat targets.`);
     const resourceId = `spell-slot-${slotLevel}`;
     if (!(member.state.resources?.[resourceId] > 0)) throw new Error(`No level ${slotLevel} spell slot remains for ${spell.name}.`);
@@ -77,6 +78,8 @@
       const before = target.state.temporary_hp;
       const after = S().grantTemporaryHp(target.state, spell.temporaryHp || 0);
       if (after > before) tempHpDetails.push(`${target.state.template.name} ${after} Temporary HP`);
+      target.state.max_hp_bonus += spell.maxHpIncrease || 0;
+      target.state.current_hp += spell.currentHpIncrease || 0;
       for (const type of spell.damageResistances || []) if (!target.state.temporary_damage_resistances.includes(type)) target.state.temporary_damage_resistances.push(type);
     }
     if (spell.concentration || spell.modifierEffects?.length) {
@@ -84,6 +87,8 @@
       SM().apply(member.state, targets.map((target) => ({ targetId: target.combatant_id, state: target.state })), member.combatant_id, spell, 0, states);
     }
     const details = [...tempHpDetails];
+    if (spell.maxHpIncrease) details.push(`+${spell.maxHpIncrease} Hit Point maximum`);
+    if (spell.currentHpIncrease) details.push(`+${spell.currentHpIncrease} current Hit Points`);
     if (spell.damageResistances?.length) details.push(`resistance to ${spell.damageResistances.join(", ")}`);
     details.push(...(spell.modifierEffects || []).map(modifierDetail));
     if (spell.concentration) details.push("Concentration");
