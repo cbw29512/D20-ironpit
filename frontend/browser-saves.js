@@ -5,6 +5,7 @@
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
   const S = () => window.IRON_PIT_BROWSER_STATE;
+  const B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2 || { dangerSenseAdvantage: () => 0 };
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { applyD20Bonus: (_state, _kind, roll) => roll };
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION;
   const D = () => window.IRON_PIT_DICE;
@@ -16,7 +17,8 @@
   const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
 
   function saveMode(state, ability) {
-    const advantage = ability === "strength" && state.active_effect_ids.includes("rage") ? 1 : 0;
+    const advantage = (ability === "strength" && state.active_effect_ids.includes("rage") ? 1 : 0)
+      + B2().dangerSenseAdvantage(state, ability);
     const disadvantage = ability === "dexterity" && state.active_effect_ids.includes("restrained") ? 1 : 0;
     return R().modeFromSources(advantage, disadvantage);
   }
