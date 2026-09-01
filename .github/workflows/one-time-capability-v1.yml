@@ -1,0 +1,43 @@
+name: One-time combat capability v1 gate
+
+on:
+  push:
+    branches:
+      - audit/raw-combat-log-figures-20260830
+
+permissions:
+  contents: read
+
+concurrency:
+  group: capability-v1-${{ github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  capability:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Python rules reference
+        working-directory: backend
+        run: pip install -e '.[dev]'
+      - name: Enforce source limits
+        run: python scripts/check_source_limits.py
+      - name: Certify declarative capability layer
+        working-directory: backend
+        run: pytest -q tests/test_capability_compiler.py tests/test_capability_registry.py
+      - name: Run full Python regression suite
+        working-directory: backend
+        run: pytest -q
+      - name: Prove migrated monster static parity
+        run: |
+          python scripts/prepare_static_site.py
+          git diff --exit-code -- frontend/browser-monsters-generated.js frontend/data/srd_5_2_1_monsters.json
+      - name: Prove migrated browser behavior
+        run: |
+          node frontend/browser-generated-monsters.test.cjs
+          node frontend/browser-mixed-multiattack.test.cjs
