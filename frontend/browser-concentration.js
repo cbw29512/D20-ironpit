@@ -24,15 +24,22 @@
     return true;
   }
 
-  function start(owner, sourceId, effectId, roundNumber, states = []) {
+  function start(owner, sourceId, effectId, roundNumber, states = [], expiresRound = null) {
     if (owner.is_dead || Q().incapacitated(owner)) throw new Error("An Incapacitated or dead creature cannot start Concentration.");
+    if (expiresRound != null && (!Number.isInteger(expiresRound) || expiresRound <= roundNumber)) throw new Error("Concentration expiry must be after the start round.");
     end(owner, states);
-    owner.concentration = { source_id: sourceId, effect_id: effectId, started_round: roundNumber };
+    owner.concentration = { source_id: sourceId, effect_id: effectId, started_round: roundNumber, expires_round: expiresRound };
     return owner.concentration;
   }
 
   function endIfIncapacitated(owner, states = []) {
     if (!owner.concentration || (!owner.is_dead && !Q().incapacitated(owner))) return false;
+    return end(owner, states);
+  }
+
+  function endIfExpired(owner, roundNumber, states = []) {
+    const current = owner.concentration;
+    if (!current || current.expires_round == null || roundNumber < current.expires_round) return false;
     return end(owner, states);
   }
 
@@ -50,5 +57,5 @@
     return { dc, roll: save.roll, succeeded: save.succeeded, ended: !save.succeeded, reason: "damage" };
   }
 
-  window.IRON_PIT_BROWSER_CONCENTRATION = { concentrationDc, end, endIfIncapacitated, resolveDamage, start };
+  window.IRON_PIT_BROWSER_CONCENTRATION = { concentrationDc, end, endIfExpired, endIfIncapacitated, resolveDamage, start };
 })();
