@@ -75,6 +75,7 @@ def test_current_audited_heroes_are_raw_ready() -> None:
         for card in ready_heroes
     } == {
         ("barbarian", 1, "canonical", "Rokhan Stonefury", "rokhan-stonefury-l1"),
+        ("barbarian", 2, "canonical", "Rokhan Stonefury", "rokhan-stonefury-l2"),
         ("cleric", 1, "canonical", "Seraphine Dawnshield", "seraphine-dawnshield-l1"),
         ("cleric", 2, "canonical", "Seraphine Dawnshield", "seraphine-dawnshield-l2"),
         ("cleric", 3, "canonical", "Seraphine Dawnshield", "seraphine-dawnshield-l3"),
