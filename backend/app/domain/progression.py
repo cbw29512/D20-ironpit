@@ -13,5 +13,6 @@ class ProgressionCombatFeatures(BaseModel):
     reckless_attack: bool = False
     frenzy: bool = False
     fast_movement_bonus_ft: int = Field(default=0, ge=0)
+    mindless_rage: bool = False
     critical_move_fraction: float = Field(default=0.0, ge=0.0, le=1.0)
     tactical_shift_fraction: float = Field(default=0.0, ge=0.0, le=1.0)
