@@ -41,7 +41,7 @@ const L = window.IRON_PIT_BATTLE_LOG;
   });
   assert.match(text, /d20 19 \+5 \+ Bless 1d4 \[3\] = 27/);
   assert.match(text, /27 vs AC 13/);
-  assert.match(text, /8 radiant \(16 rolled → 8 after defenses\)/);
+  assert.match(text, /8 radiant \(16 before defenses → 8 after defenses\)/);
   assert.match(text, /Concentration ended: Shield Of Faith/);
 }
 
