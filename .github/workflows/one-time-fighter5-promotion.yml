@@ -1,0 +1,88 @@
+name: One-time Fighter 5 promotion
+
+on:
+  push:
+    branches:
+      - audit/raw-combat-log-figures-20260830
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fighter5-promotion-${{ github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Python rules reference
+        working-directory: backend
+        run: pip install -e '.[dev]'
+      - name: Promote Fighter 5 expected-ready sets
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          replacements = {
+              Path("backend/tests/test_arena_roster.py"): [
+                  (
+                      '"karnok-stoneward-l1", "karnok-stoneward-l2", "karnok-stoneward-l3", "karnok-stoneward-l4", "rokhan-stonefury-l1",',
+                      '"karnok-stoneward-l1", "karnok-stoneward-l2", "karnok-stoneward-l3", "karnok-stoneward-l4", "karnok-stoneward-l5", "rokhan-stonefury-l1",',
+                  ),
+              ],
+              Path("backend/tests/test_full_content_catalog.py"): [
+                  (
+                      '("fighter", 4, "canonical", "Karnok Stoneward", "karnok-stoneward-l4"),',
+                      '("fighter", 4, "canonical", "Karnok Stoneward", "karnok-stoneward-l4"),\n        ("fighter", 5, "canonical", "Karnok Stoneward", "karnok-stoneward-l5"),',
+                  ),
+              ],
+              Path("scripts/verify_certification_manifests.py"): [
+                  (
+                      '    if features.critical_move_fraction:\n        mechanics.add("post-critical-movement")\n',
+                      '    if features.critical_move_fraction:\n        mechanics.add("post-critical-movement")\n    if features.tactical_shift_fraction:\n        mechanics.add("tactical-shift")\n',
+                  ),
+              ],
+          }
+          for path, edits in replacements.items():
+              text = path.read_text(encoding="utf-8")
+              for old, new in edits:
+                  if new in text:
+                      continue
+                  if old not in text:
+                      raise RuntimeError(f"Expected promotion marker missing from {path}: {old!r}")
+                  text = text.replace(old, new, 1)
+              path.write_text(text, encoding="utf-8")
+          PY
+      - name: Regenerate certified browser heroes
+        run: python scripts/export_browser_heroes.py
+      - name: Regenerate durable certification manifests
+        run: python scripts/verify_certification_manifests.py --write
+      - name: Enforce source limits and capability source of truth
+        run: |
+          python scripts/check_source_limits.py
+          python scripts/export_runtime_monster_capabilities.py --check
+      - name: Certify full Python rules reference
+        working-directory: backend
+        run: pytest -q
+      - name: Certify Fighter 5 generated browser behavior
+        run: node frontend/browser-fighter5.test.cjs
+      - name: Reverify generated manifests
+        run: python scripts/verify_certification_manifests.py
+      - name: Persist Fighter 5 promotion artifacts
+        run: |
+          git add backend/tests/test_arena_roster.py backend/tests/test_full_content_catalog.py scripts/verify_certification_manifests.py frontend/browser-heroes.js data/hero_certification_manifest.json data/monster_certification_manifest.json
+          if git diff --cached --quiet; then
+            echo "Fighter 5 promotion artifacts already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "feat: certify Fighter 5 Champion runtime"
+          git push origin HEAD:${GITHUB_REF_NAME}
