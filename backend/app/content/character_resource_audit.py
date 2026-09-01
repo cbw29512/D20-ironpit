@@ -4,6 +4,7 @@ from collections.abc import Callable
 
 from app.content.level_resources import (
     barbarian_rage_uses,
+    cleric_channel_divinity_uses,
     fighter_action_surge_uses,
     fighter_second_wind_uses,
     orc_adrenaline_rush_uses,
@@ -19,7 +20,7 @@ ResourceRule = tuple[str, str, Callable[[int], int]]
 # resource rules are considered independently audited for RAW certification.
 _CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
     "barbarian": (("rage", "Rage", barbarian_rage_uses),),
-    "cleric": (),
+    "cleric": (("channel-divinity", "Channel Divinity", cleric_channel_divinity_uses),),
     "fighter": (
         ("second-wind", "Second Wind", fighter_second_wind_uses),
         ("action-surge", "Action Surge", fighter_action_surge_uses),
