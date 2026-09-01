@@ -7,14 +7,8 @@ from app.combat.dice import DiceProvider
 from app.combat.grapple import apply_grapple
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.zero_hp import apply_damage
-from app.domain.models import (
-    BattleEvent,
-    DamageRollComponent,
-    DamageType,
-    DiceRoll,
-    EncounterCombatant,
-    SavingThrowAction,
-)
+from app.domain.models import BattleEvent, DamageRollComponent, DamageType, DiceRoll, EncounterCombatant, SavingThrowAction
+from app.domain.runtime import CombatantState
 from app.domain.size import size_at_most
 
 
@@ -77,6 +71,7 @@ def resolve_save_action(
     *,
     spend_action: bool = True,
     shared_damage_rolls: list[int] | None = None,
+    affected_states: list[CombatantState] | None = None,
 ) -> BattleEvent:
     if spend_action and not is_available(actor.state, "action"):
         raise ValueError("Action is not available for a saving throw action.")
@@ -100,7 +95,9 @@ def resolve_save_action(
         )
     if applied_total:
         applied_types = {part.damage_type for part in damage_components if part.applied_total > 0}
-        damage_outcome = apply_damage(target.state, applied_total, damage_types=applied_types, dice=dice)
+        damage_outcome = apply_damage(
+            target.state, applied_total, damage_types=applied_types, dice=dice, affected_states=affected_states,
+        )
         end_rage_if_incapacitated(target.state)
     applied_conditions: list[str] = []
     if not succeeded and target.state.is_alive and not target.state.is_dead and action.grapple_escape_dc is not None:
