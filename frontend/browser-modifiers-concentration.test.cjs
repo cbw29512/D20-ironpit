@@ -11,9 +11,11 @@ for (const file of [
   "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-grapple.js", "browser-modifiers.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
   "browser-undead-fortitude.js", "browser-zero-hp.js", "browser-attack.js", "browser-saves.js", "browser-concentration.js",
+  "browser-support.js", "browser-tactical-shift.js",
 ]) load(file);
 const M = window.IRON_PIT_BROWSER_MODIFIERS, S = window.IRON_PIT_BROWSER_STATE;
 const A = window.IRON_PIT_BROWSER_ATTACK, V = window.IRON_PIT_BROWSER_SAVES, C = window.IRON_PIT_BROWSER_CONCENTRATION;
+const P = window.IRON_PIT_BROWSER_SUPPORT, TS = window.IRON_PIT_BROWSER_TACTICAL_SHIFT;
 const base = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"];
 function dice(values) {
   const rolls = [...values];
@@ -61,6 +63,22 @@ const attack = { id: "test-blade", name: "Test Blade", kind: "melee", reach: 5, 
   M.add(target.state, modifier("slow", "enemy", "slow", "speed", { flat_bonus: -10 }));
   target.state.active_effect_ids.push("prone"); S.beginTurn(target.state);
   assert.equal(M.effectiveSpeed(target.state), 20); assert.equal(target.state.movement_remaining_ft, 10);
+}
+
+{
+  const hero = member("hero");
+  M.add(hero.state, modifier("slow-rush", "enemy", "slow", "speed", { flat_bonus: -10 }));
+  S.beginTurn(hero.state);
+  const event = P.adrenaline(1, 1, hero);
+  assert.ok(event); assert.equal(event.movement_ft, 20); assert.equal(hero.state.movement_remaining_ft, 40);
+}
+
+{
+  const hero = member("fighter"), target = member("monster", "monsters"); target.position_ft = 35;
+  hero.state.template.tactical_shift_fraction = 0.5;
+  M.add(hero.state, modifier("slow-shift", "enemy", "slow", "speed", { flat_bonus: -10 }));
+  const event = TS.resolve(1, 1, hero, { heroes: [hero], monsters: [target] });
+  assert.ok(event); assert.equal(event.movement_ft, 10); assert.equal(hero.position_ft, 10);
 }
 
 {
