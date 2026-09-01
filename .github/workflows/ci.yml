@@ -64,6 +64,7 @@ jobs:
           node frontend/browser-swarm.test.cjs
           node frontend/browser-rage.test.cjs
           node frontend/browser-champion.test.cjs
+          node frontend/browser-fighter4.test.cjs
           node frontend/browser-beast2.test.cjs
           node frontend/browser-batch3.test.cjs
           node frontend/browser-deathmatch.test.cjs
