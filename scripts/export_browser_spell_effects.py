@@ -4,7 +4,7 @@ import json
 import logging
 from pathlib import Path
 
-from app.content.spell_effects import SHIELD_OF_FAITH
+from app.content.spell_effects import BLESS, SHIELD_OF_FAITH
 from browser_template_serializer import defense_row
 
 logger = logging.getLogger(__name__)
@@ -13,7 +13,7 @@ DESTINATION = ROOT / "frontend" / "browser-spell-effects.js"
 
 
 def render() -> str:
-    rows = [defense_row(SHIELD_OF_FAITH)]
+    rows = [defense_row(BLESS), defense_row(SHIELD_OF_FAITH)]
     payload = json.dumps(rows, separators=(",", ":"), sort_keys=True)
     return (
         "/* GENERATED from canonical Python certified spell effects. Do not hand-edit. */\n"
