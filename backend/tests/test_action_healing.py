@@ -41,6 +41,8 @@ def test_bonus_action_heal_rescues_downed_ally_before_self_and_preserves_action(
     setup = _setup()
     healer, ally = setup.heroes
     healer.state.current_hp = healer.state.template.max_hp // 2
+    relentless = next(item for item in ally.state.resources if item.id == "relentless-endurance")
+    relentless.current_uses = 0
     apply_damage(ally.state, ally.state.current_hp)
     ally.state.death_save_failures = 2
     action = HealingAction(
