@@ -31,11 +31,16 @@ Iron Pit simplifies battlefield formation without changing RAW combat mechanics.
 
 The product contains 12 persistent named canonical heroes, one per core class, across levels 1 through 20: exactly 240 hero level snapshots. The user selects `Hero -> Level -> Fight`; identity persists across progression.
 
-- Each level must derive from canonical progression rather than duplicating a whole character by hand.
-- Progression must update every applicable combat datum: level, proficiency bonus, HP, ability score improvements or feats, subclass, AC, attacks, attack and damage bonuses, saves, skills, equipment, weapon masteries, resources, species resources, action economy, Extra Attack, spellcasting and slots, concentration, reactions, Bonus Actions, conditions, movement, class and subclass features, and scaling.
+- Each class has exactly one canonical progression identity. Leveling never swaps to a different same-class build, spellbook, subclass, or combat concept unless the user explicitly authorizes a new architecture.
+- Each level must derive from the previous certified canonical progression rather than duplicating a whole character by hand.
+- Iron Pit runtime scope is combat-only. Noncombat features may remain in source/legal-build metadata, but they do not require runtime implementation and must not block combat certification unless they can change a combat outcome.
+- Progression must update every applicable combat datum: level, proficiency bonus, HP, ability score improvements or feats, subclass, AC, attacks, attack and damage bonuses, saves, equipment, weapon masteries, resources, species resources, action economy, Extra Attack, spellcasting and slots, concentration, reactions, Bonus Actions, conditions, movement, class and subclass combat features, and scaling.
 - Only explicitly certified levels may be selectable or runnable.
 - Preserve already-certified levels while extending a progression.
 - Karnok Stoneward is the Fighter progression. Rokhan Stonefury is the Barbarian progression. The remaining identities are defined by `backend/app/content/hero_progressions.py`.
+- Caster classes reuse one deterministic canonical class spell package. Character level controls prepared/known count, available spell levels, and slots; a new level extends the same package instead of creating a new caster-specific spellbook.
+- Spell packages favor combat-relevant spells. Healing classes retain healing plus damage/support options. Unsupported spell mechanics remain listed with explicit capability requirements and fail closed until the shared engine supports them.
+- Melee loadouts use one repeatable policy: DEX-primary favors dual wielding; STR-primary with shield training favors one-hander plus shield; STR power builds favor a two-hander. Do not invent bespoke loadout logic per hero level.
 - Certification is derived from audited build/profile data, runtime templates, Python gates, browser-generated parity, and public catalog readiness. Never certify by editing a manifest alone.
 
 ## Monster architecture
