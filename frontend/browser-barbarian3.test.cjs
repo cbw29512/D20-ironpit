@@ -179,3 +179,4 @@ function rage(hero) {
 }
 
 console.log("Browser Barbarian 3-5 Frenzy/Extra Attack regressions passed.");
+require("./browser-barbarian6.test.cjs");
