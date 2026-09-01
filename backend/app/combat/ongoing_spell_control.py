@@ -2,12 +2,22 @@ from __future__ import annotations
 
 from app.combat.timed_conditions import apply_timed_condition
 from app.domain.actions import AbilityName, ConditionTiming
-from app.domain.models import CombatantState
+from app.domain.models import BattleEvent, CombatantState
 from app.domain.runtime import TimedTurnBehavior
 
 
 def forced_retreat_active(state: CombatantState) -> bool:
     return any(effect.turn_behavior == "forced_retreat" for effect in state.timed_effects)
+
+
+def build_forced_retreat_event(sequence: int, round_number: int, combatant_id: str, state: CombatantState) -> BattleEvent:
+    return BattleEvent(
+        sequence=sequence, round_number=round_number, event_type="feature",
+        actor_id=combatant_id, actor_name=state.template.name,
+        target_id=combatant_id, target_name=state.template.name,
+        feature_id="forced-retreat", animation="forced-retreat",
+        description=f"{state.template.name} spends the turn fleeing; Iron Pit keeps the card in its formation slot.",
+    )
 
 
 def apply_ongoing_spell_condition(
