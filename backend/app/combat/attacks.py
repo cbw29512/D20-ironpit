@@ -70,13 +70,11 @@ def resolve_attack(
             actual_event_id = redirect_target_event_id or redirect_target.template.id
             redirect_used = True
         natural = attack_roll.selected_roll or 0
-        natural_twenty = natural == 20
-        hit = natural != 1 and (natural_twenty or attack_roll.total >= actual_defender.template.armor_class)
+        natural_20 = natural == 20
+        expanded_critical = natural >= attacker.template.progression_features.critical_hit_minimum
+        hit = natural != 1 and (natural_20 or attack_roll.total >= actual_defender.template.armor_class)
         hit, parry_used = resolve_parry_hit(actual_defender, attack, attack_roll.total, natural, hit)
-        expanded_critical = natural >= attacker.template.critical_hit_minimum
-        critical = bool(hit and (
-            expanded_critical or (close_hit_is_automatic_critical(actual_defender) and distance_ft <= 5)
-        ))
+        critical = bool(hit and (expanded_critical or (close_hit_is_automatic_critical(actual_defender) and distance_ft <= 5)))
         hp_before = actual_defender.current_hp
         damage_roll = None
         damage_components = []
