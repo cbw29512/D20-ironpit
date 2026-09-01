@@ -72,6 +72,8 @@ def build_rokhan_stonefury_level(level: int) -> CombatantTemplate:
         features.update(danger_sense=True, reckless_attack=True)
     if level == 3:
         features.update(frenzy=True)
+    if level == 5:
+        features.update(fast_movement_bonus_ft=10)
     constitution_modifier = 3 if level >= 4 else 2
     data.update(
         max_hp=fixed_class_hit_points(level, 12, constitution_modifier),
