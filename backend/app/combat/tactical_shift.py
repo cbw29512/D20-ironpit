@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.encounter_targeting import combatant_distance, select_nearest_target
+from app.combat.grapple import speed_is_zero
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 
@@ -18,7 +19,7 @@ def resolve_tactical_shift(
     """Use Fighter 5 Tactical Shift as OA-free bonus movement after Second Wind."""
     try:
         fraction = fighter.state.template.progression_features.tactical_shift_fraction
-        if fraction <= 0 or fighter.state.is_dead or fighter.state.is_unconscious:
+        if fraction <= 0 or fighter.state.is_dead or fighter.state.is_unconscious or speed_is_zero(fighter.state):
             return None
         target = select_nearest_target(fighter, setup)
         if target is None:
