@@ -19,12 +19,18 @@ def _at_distance(setup, distance_ft: int):
     return hero, monster
 
 
+def _disable_adrenaline_rush(hero) -> None:
+    resource = next(item for item in hero.state.resources if item.id == "adrenaline-rush")
+    resource.current_uses = 0
+
+
 def test_melee_only_creature_dodges_and_moves_when_melee_is_unreachable_this_turn() -> None:
     setup = build_encounter_setup(EncounterSelection(
         hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-giant-lizard"],
     ))
     hero, monster = _at_distance(setup, 60)
     hero.state.template.alternate_weapon_attacks = []
+    _disable_adrenaline_rush(hero)
 
     events, _ = resolve_combat_turn(1, 1, hero, monster, setup, FixedDiceProvider([10]))
 
@@ -41,9 +47,10 @@ def test_ranged_option_closes_until_melee_can_be_reached_then_moves_and_attacks(
         hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-giant-lizard"],
     ))
     hero, monster = _at_distance(setup, 60)
+    _disable_adrenaline_rush(hero)
 
     events, sequence = resolve_combat_turn(
-        1, 1, hero, monster, setup, FixedDiceProvider([10, 1])
+        1, 1, hero, monster, setup, FixedDiceProvider([10, 1, 1])
     )
     first_attack = next(event for event in events if event.event_type == "attack")
     first_move = next(event for event in events if event.event_type == "movement")
@@ -51,7 +58,7 @@ def test_ranged_option_closes_until_melee_can_be_reached_then_moves_and_attacks(
     assert first_move.distance_after_ft == 30
 
     second_events, _ = resolve_combat_turn(
-        sequence, 2, hero, monster, setup, FixedDiceProvider([10, 1, 1])
+        sequence, 2, hero, monster, setup, FixedDiceProvider([10, 1, 1, 1, 1])
     )
     second_move = next(event for event in second_events if event.event_type == "movement")
     second_attack = next(event for event in second_events if event.event_type == "attack")
@@ -66,8 +73,9 @@ def test_melee_one_card_behind_backline_moves_and_attacks_same_turn() -> None:
         hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-giant-lizard"],
     ))
     hero, monster = _at_distance(setup, 10)
+    _disable_adrenaline_rush(hero)
 
-    events, _ = resolve_combat_turn(1, 1, hero, monster, setup, FixedDiceProvider([10, 4, 4]))
+    events, _ = resolve_combat_turn(1, 1, hero, monster, setup, FixedDiceProvider([10, 4, 4, 4, 4]))
 
     assert [event.event_type for event in events] == ["movement", "attack"]
     assert events[0].movement_ft == 5
