@@ -73,6 +73,10 @@ def resolve_defensive_spell(
         after = grant_temporary_hit_points(target.state, spell.temporary_hp)
         if after > before:
             temp_hp_details.append(f"{target.state.template.name} {after} Temporary HP")
+        if spell.max_hp_increase:
+            target.state.max_hp_bonus += spell.max_hp_increase
+        if spell.current_hp_increase:
+            target.state.current_hp += spell.current_hp_increase
         for damage_type in spell.damage_resistances:
             typed = DamageType(damage_type)
             if typed not in target.state.temporary_damage_resistances:
@@ -83,6 +87,10 @@ def resolve_defensive_spell(
         member.combatant_id, spell, 0, affected_states,
     )
     details = [*temp_hp_details]
+    if spell.max_hp_increase:
+        details.append(f"+{spell.max_hp_increase} Hit Point maximum")
+    if spell.current_hp_increase:
+        details.append(f"+{spell.current_hp_increase} current Hit Points")
     if spell.damage_resistances:
         details.append("resistance to " + ", ".join(spell.damage_resistances))
     details.extend(_modifier_detail(effect) for effect in spell.modifier_effects)
