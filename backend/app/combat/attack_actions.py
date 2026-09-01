@@ -105,6 +105,7 @@ def resolve_attack_action(
         spend(attacker.state, "action")
         opening_feature = opening_feature_id(round_number, attacker, setup)
         affected_states = [member.state for member in [*setup.heroes, *setup.monsters]]
+        turn_key = f"{round_number}:{attacker.combatant_id}"
         for slot in definition.slots:
             if attacker.state.is_dead or attacker.state.is_unconscious:
                 break
@@ -125,6 +126,7 @@ def resolve_attack_action(
                     sequence, round_number, attacker, target, attack,
                     combatant_distance(attacker, target), dice, setup,
                     spend_action=False, advantage_sources=1 if pack else 0, feature_id=feature_id,
+                    turn_key=turn_key, allow_reckless=True,
                 ))
                 opening_feature = None
                 sequence += 1
