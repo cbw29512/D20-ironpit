@@ -51,6 +51,25 @@ function rage(hero) {
 }
 
 {
+  const template = structuredClone(window.IRON_PIT_BROWSER_HEROES["rokhan-stonefury-l4"]);
+  assert.ok(template, "Barbarian 4 must be generated as a browser-ready hero");
+  assert.equal(template.level, 4);
+  assert.equal(template.armor_class, 14);
+  assert.equal(template.max_hp, 45);
+  assert.equal(template.resources.rage, 3);
+  assert.equal(template.danger_sense, true);
+  assert.equal(template.reckless_attack, true);
+  assert.equal(template.frenzy, true);
+  assert.equal(template.saving_throw_bonuses.strength, 6);
+  assert.equal(template.saving_throw_bonuses.constitution, 5);
+  assert.equal(template.skill_bonuses.athletics, 6);
+  assert.equal(template.attacks[0].bonus, 6);
+  assert.equal(template.attacks[0].damageBonus, 4);
+  assert.equal(template.attacks[1].bonus, 6);
+  assert.equal(template.attacks[1].damageBonus, 4);
+}
+
+{
   const { template, hero, monster, setup: arena } = setup();
   rage(hero);
   window.IRON_PIT_DICE = queuedDice([2, 15, 4, 8, 3, 5]);
@@ -114,4 +133,4 @@ function rage(hero) {
   assert.ok(noTurn.damage_components.every((part) => part.source !== "Frenzy"), "Frenzy must fail closed without own-turn identity");
 }
 
-console.log("Browser Barbarian 3 Frenzy regressions passed.");
+console.log("Browser Barbarian 3-4 Frenzy regressions passed.");
