@@ -34,6 +34,21 @@ def _affected(owner: CombatantState, states: Iterable[CombatantState] | None) ->
     return affected
 
 
+def _remove_source_timed_effects(states: Iterable[CombatantState], source_id: str, effect_id: str) -> None:
+    for state in states:
+        removed_ids = {
+            effect.effect_id for effect in state.timed_effects
+            if effect.source_id == source_id and effect.source_effect_id == effect_id
+        }
+        state.timed_effects = [
+            effect for effect in state.timed_effects
+            if not (effect.source_id == source_id and effect.source_effect_id == effect_id)
+        ]
+        for condition_id in removed_ids:
+            if not any(effect.effect_id == condition_id for effect in state.timed_effects):
+                state.active_effect_ids = [item for item in state.active_effect_ids if item != condition_id]
+
+
 def end_concentration(
     owner: CombatantState,
     affected_states: Iterable[CombatantState] | None = None,
@@ -41,12 +56,9 @@ def end_concentration(
     current = owner.concentration
     if current is None:
         return False
-    remove_source_modifiers(
-        _affected(owner, affected_states),
-        current.source_id,
-        current.effect_id,
-        concentration_only=True,
-    )
+    states = _affected(owner, affected_states)
+    remove_source_modifiers(states, current.source_id, current.effect_id, concentration_only=True)
+    _remove_source_timed_effects(states, current.source_id, current.effect_id)
     owner.concentration = None
     return True
 
