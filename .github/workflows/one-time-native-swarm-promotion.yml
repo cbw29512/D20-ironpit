@@ -50,10 +50,13 @@ jobs:
         run: |
           git add \
             backend/tests/test_arena_roster.py \
+            backend/tests/test_figure_profiles.py \
             backend/tests/test_full_content_catalog.py \
+            backend/tests/test_monster_source_audit.py \
             frontend/browser-generated-monsters.test.cjs \
             frontend/browser-monsters-generated.js \
             frontend/data/srd_5_2_1_monsters.json \
+            frontend/figure-profiles.js \
             data/hero_certification_manifest.json \
             data/monster_certification_manifest.json
           if git diff --cached --quiet; then
