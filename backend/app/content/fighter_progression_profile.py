@@ -108,7 +108,7 @@ def build_karnok_stoneward_level4_profile() -> CharacterBuildProfile:
             AbilityIncrease(ability="constitution", amount=1).model_dump(),
         ],
         final_ability_scores=AbilityScores(
-            strength=18, dexterity=13, constitution=16, intelligence=8, wisdom=12, charisma=10,
+            strength=18, dexterity=13, constitution=16, intelligence=10, wisdom=10, charisma=10,
         ).model_dump(),
         weapon_masteries=[*data["weapon_masteries"], "longsword"],
         feature_audits=_level_four_feature_audits(data),
