@@ -1,6 +1,7 @@
 (() => {
   "use strict";
 
+  const C = () => window.IRON_PIT_BROWSER_CONCENTRATION;
   const U = () => window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const DODGE = "dodge";
@@ -24,9 +25,7 @@
     return resolver.resolve(state, incoming, damageTypes, critical);
   }
 
-  function endDodge(state) {
-    state.active_effect_ids = state.active_effect_ids.filter((id) => id !== DODGE);
-  }
+  function endDodge(state) { state.active_effect_ids = state.active_effect_ids.filter((id) => id !== DODGE); }
 
   function markUnconscious(state) {
     state.is_alive = true;
@@ -45,7 +44,14 @@
     endDodge(state);
   }
 
-  function applyDamage(state, amount, critical = false, damageTypes = []) {
+  function finish(state, outcome, incoming, affectedStates) {
+    if (!state.concentration) return outcome;
+    if (!C()) throw new Error("Browser concentration runtime is not loaded.");
+    C().resolveDamage(state, incoming, affectedStates);
+    return outcome;
+  }
+
+  function applyDamage(state, amount, critical = false, damageTypes = [], affectedStates = []) {
     const incoming = amount;
     if (!incoming || state.is_dead) return "damaged";
     const absorbed = Math.min(state.temporary_hp, amount);
@@ -53,24 +59,24 @@
     amount -= absorbed;
     if (state.current_hp === 0) {
       if (state.template.kind === "monster" || incoming >= state.template.max_hp) {
-        markDead(state); return "dead";
+        markDead(state); return finish(state, "dead", incoming, affectedStates);
       }
       state.is_stable = false;
       state.death_save_failures = Math.min(3, state.death_save_failures + (critical ? 2 : 1));
-      if (state.death_save_failures >= 3) { markDead(state); return "dead"; }
-      markUnconscious(state); return "unconscious";
+      if (state.death_save_failures >= 3) { markDead(state); return finish(state, "dead", incoming, affectedStates); }
+      markUnconscious(state); return finish(state, "unconscious", incoming, affectedStates);
     }
-    if (!amount) return "damaged";
+    if (!amount) return finish(state, "damaged", incoming, affectedStates);
     const before = state.current_hp;
     state.current_hp = Math.max(0, before - amount);
-    if (state.current_hp > 0) return "damaged";
-    if (useUndeadFortitude(state, incoming, damageTypes, critical)) return "undead_fortitude";
-    if (state.template.kind === "monster") { markDead(state); return "dead"; }
+    if (state.current_hp > 0) return finish(state, "damaged", incoming, affectedStates);
+    if (useUndeadFortitude(state, incoming, damageTypes, critical)) return finish(state, "undead_fortitude", incoming, affectedStates);
+    if (state.template.kind === "monster") { markDead(state); return finish(state, "dead", incoming, affectedStates); }
     const remaining = Math.max(0, amount - before);
-    if (remaining >= state.template.max_hp) { markDead(state); return "dead"; }
-    if (useRelentless(state, remaining)) return "relentless_endurance";
+    if (remaining >= state.template.max_hp) { markDead(state); return finish(state, "dead", incoming, affectedStates); }
+    if (useRelentless(state, remaining)) return finish(state, "relentless_endurance", incoming, affectedStates);
     markUnconscious(state);
-    return "unconscious";
+    return finish(state, "unconscious", incoming, affectedStates);
   }
 
   window.IRON_PIT_BROWSER_ZERO_HP = { applyDamage };
