@@ -72,17 +72,18 @@
     const resourceId = `spell-slot-${slotLevel}`;
     if (!(member.state.resources?.[resourceId] > 0)) throw new Error(`No level ${slotLevel} spell slot remains for ${spell.name}.`);
     member.state.resources[resourceId] -= 1;
-    const tempHp = spell.temporaryHp || 0;
+    const tempHpDetails = [];
     for (const target of targets) {
-      S().grantTemporaryHp(target.state, tempHp);
+      const before = target.state.temporary_hp;
+      const after = S().grantTemporaryHp(target.state, spell.temporaryHp || 0);
+      if (after > before) tempHpDetails.push(`${target.state.template.name} ${after} Temporary HP`);
       for (const type of spell.damageResistances || []) if (!target.state.temporary_damage_resistances.includes(type)) target.state.temporary_damage_resistances.push(type);
     }
     if (spell.concentration || spell.modifierEffects?.length) {
       if (!SM()) throw new Error("Browser spell-modifier runtime is not loaded.");
       SM().apply(member.state, targets.map((target) => ({ targetId: target.combatant_id, state: target.state })), member.combatant_id, spell, 0, states);
     }
-    const details = [];
-    if (tempHp) details.push(`${tempHp} Temporary HP`);
+    const details = [...tempHpDetails];
     if (spell.damageResistances?.length) details.push(`resistance to ${spell.damageResistances.join(", ")}`);
     details.push(...(spell.modifierEffects || []).map(modifierDetail));
     if (spell.concentration) details.push("Concentration");
