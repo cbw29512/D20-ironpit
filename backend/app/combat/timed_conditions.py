@@ -4,6 +4,7 @@ from app.combat.concentration import end_concentration_if_incapacitated
 from app.combat.condition_immunity import condition_is_immune
 from app.domain.actions import AbilityName, ConditionTiming
 from app.domain.models import BattleEvent, CombatantState, EncounterCombatant, EncounterSetup, TimedEffect
+from app.domain.runtime import TimedTurnBehavior
 
 
 def apply_timed_condition(
@@ -20,6 +21,7 @@ def apply_timed_condition(
     repeat_save_timing: ConditionTiming | None = None,
     allowed_removal_action_ids: list[str] | None = None,
     affected_states: list[CombatantState] | None = None,
+    turn_behavior: TimedTurnBehavior = "normal",
 ) -> str | None:
     if condition_is_immune(state, effect_id):
         return None
@@ -42,6 +44,7 @@ def apply_timed_condition(
         repeat_save_dc=repeat_save_dc,
         repeat_save_timing=repeat_save_timing,
         allowed_removal_action_ids=allowed_removal_action_ids or [],
+        turn_behavior=turn_behavior,
     ))
     if effect_id not in state.active_effect_ids:
         state.active_effect_ids.append(effect_id)
