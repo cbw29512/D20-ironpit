@@ -103,6 +103,8 @@
     if (conditional?.mode === "add" && conditionalActive(conditional, attacker, target, mode)) {
       components.push(damageComponent({ ...conditional, source: "Conditional bonus damage" }, critical));
     }
+    const frenzy = window.IRON_PIT_BROWSER_BARBARIAN3?.bonusDamage(attacker, attack, turnKey);
+    if (frenzy) components.push(bonusComponent(frenzy, critical));
     if (bonusDamage) components.push(bonusComponent(bonusDamage, critical));
     const total = components.reduce((sum, item) => sum + item.total, 0);
     return {
