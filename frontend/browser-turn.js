@@ -9,6 +9,7 @@
   const J = () => window.IRON_PIT_BROWSER_ACTION_SURGE;
   const P = () => window.IRON_PIT_BROWSER_SUPPORT;
   const T = () => window.IRON_PIT_BROWSER_TACTICAL_SHIFT;
+  const O = () => window.IRON_PIT_BROWSER_ONGOING_SPELL_CONTROL;
   const X = () => window.IRON_PIT_BROWSER_SPELL_ATTACK_POLICY, K = () => window.IRON_PIT_BROWSER_SPELL_ATTACK;
   const Y = () => window.IRON_PIT_BROWSER_SPELL_POLICY;
   const Z = () => window.IRON_PIT_BROWSER_SPELL_RESOLUTION;
@@ -108,8 +109,8 @@
       death_save_successes: state.death_save_successes, death_save_failures: state.death_save_failures,
       is_stable: state.is_stable, is_dead: state.is_dead, animation: "death-save", description: `${state.template.name} makes a Death Save: ${result}.` };
   }
-  function finalize(events, sequence, round, member, setup, turnKey) {
-    const surge = J()?.resolveAttack(sequence, round, member, setup, turnKey);
+  function finalize(events, sequence, round, member, setup, turnKey, allowSurge = true) {
+    const surge = allowSurge ? J()?.resolveAttack(sequence, round, member, setup, turnKey) : null;
     if (surge) { events.push(...surge.events); sequence = surge.sequence; }
     const rage = G()?.finalize(sequence, round, member); if (rage?.event) events.push(rage.event);
     return { events, sequence: rage?.sequence ?? sequence };
@@ -117,6 +118,7 @@
   function resolveTurn(sequence, round, member, setup) {
     const events = []; H().cleanup(setup); S().beginTurn(member.state);
     const turnKey = `${round}:${member.combatant_id}`;
+    if (O()?.forcedRetreatActive(member.state)) { events.push(O().event(sequence++, round, member)); return finalize(events, sequence, round, member, setup, turnKey, false); }
     const support = P()?.resolve(sequence, round, member, setup, turnKey); if (support) { events.push(...support.events); sequence = support.sequence; }
     const rage = G()?.enter(sequence, round, member); if (rage) { events.push(rage); sequence += 1; }
     const wind = P()?.secondWind(sequence, round, member);
