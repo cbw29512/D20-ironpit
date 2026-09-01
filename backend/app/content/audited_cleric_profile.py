@@ -103,3 +103,24 @@ def build_seraphine_dawnshield_profile() -> CharacterBuildProfile:
             "Basic Rules 2024: Spells — Sacred Flame, Bless, Cure Wounds, Guiding Bolt, Shield of Faith",
         ],
     )
+
+
+def build_seraphine_dawnshield_level2_profile() -> CharacterBuildProfile:
+    base = build_seraphine_dawnshield_profile()
+    additions = [
+        _feature("healing-word", "Healing Word", "class", combat_relevant=True, automated=True),
+        _feature("channel-divinity", "Channel Divinity", "class", combat_relevant=True, automated=True),
+        _feature("divine-spark", "Divine Spark", "class", combat_relevant=True, automated=True),
+        _feature("turn-undead", "Turn Undead", "class", combat_relevant=True, automated=True),
+    ]
+    return base.model_copy(update={
+        "id": "build-seraphine-dawnshield-l2",
+        "template_id": canonical_template_id("cleric", 2),
+        "level": 2,
+        "feature_audits": [*base.feature_audits, *additions],
+        "source_references": [
+            *base.source_references,
+            "Basic Rules 2024: Cleric level 2 — Channel Divinity, Divine Spark, Turn Undead",
+            "Basic Rules 2024: Spells — Healing Word",
+        ],
+    })
