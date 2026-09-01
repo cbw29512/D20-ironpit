@@ -88,7 +88,10 @@ def resolve_attack(
             )
             applied_total, damage_components = apply_damage_defenses(actual_defender, rolled_components)
             damage_roll.total = applied_total
-            damage_outcome = apply_damage(actual_defender, applied_total, critical=critical)
+            applied_types = {part.damage_type for part in damage_components if part.applied_total > 0}
+            damage_outcome = apply_damage(
+                actual_defender, applied_total, critical=critical, damage_types=applied_types, dice=dice,
+            )
             applied_conditions = apply_hit_conditions(attack, actual_defender, attacker_event_id, round_number)
             end_rage_if_incapacitated(actual_defender)
         outcome = "CRITICAL HIT" if critical else ("HIT" if hit else "MISS")
@@ -99,6 +102,8 @@ def resolve_attack(
             description += f" {actual_defender.template.name} uses Parry."
         if damage_outcome == "relentless_endurance":
             description += f" {actual_defender.template.name} uses Relentless Endurance and remains at 1 HP."
+        if damage_outcome == "undead_fortitude":
+            description += f" {actual_defender.template.name} succeeds on Undead Fortitude and remains at 1 HP."
         if "prone" in applied_conditions:
             description += f" {actual_defender.template.name} is knocked Prone."
         if "grappled" in applied_conditions:
