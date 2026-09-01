@@ -74,6 +74,7 @@ def resolve_save_action(
     rolled_components = _damage_components(action, dice, succeeded)
     applied_total, damage_components = apply_damage_defenses(target.state, rolled_components)
     damage_roll = None
+    damage_outcome = None
     if rolled_components:
         damage_roll = DiceRoll(
             notation=" + ".join(component.notation for component in rolled_components),
@@ -82,7 +83,8 @@ def resolve_save_action(
             total=applied_total,
         )
     if applied_total:
-        apply_damage(target.state, applied_total)
+        applied_types = {part.damage_type for part in damage_components if part.applied_total > 0}
+        damage_outcome = apply_damage(target.state, applied_total, damage_types=applied_types, dice=dice)
         end_rage_if_incapacitated(target.state)
 
     applied_conditions: list[str] = []
@@ -100,6 +102,8 @@ def resolve_save_action(
         f"{target.state.template.name} {outcome} a DC {action.dc} "
         f"{action.save_ability.title()} save against {actor.state.template.name}'s {action.name}."
     )
+    if damage_outcome == "undead_fortitude":
+        description += f" {target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP."
     if "grappled" in applied_conditions:
         description += f" {target.state.template.name} is Grappled."
     if "restrained" in applied_conditions:
