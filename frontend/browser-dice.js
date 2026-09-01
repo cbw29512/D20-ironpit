@@ -2,6 +2,7 @@
   "use strict";
 
   const UINT32_RANGE = 0x100000000;
+  const history = [];
 
   function roll(sides) {
     try {
@@ -16,7 +17,9 @@
         globalThis.crypto.getRandomValues(buffer);
         value = buffer[0];
       } while (value >= limit);
-      return (value % sides) + 1;
+      const result = (value % sides) + 1;
+      history.push({ sides, value: result });
+      return result;
     } catch (error) {
       console.error(`Secure d${sides} roll failed`, error);
       throw error;
@@ -33,5 +36,8 @@
     }
   }
 
-  window.IRON_PIT_DICE = { roll, rollMany };
+  function clearHistory() { history.length = 0; }
+  function getHistory() { return history.map((item) => ({ ...item })); }
+
+  window.IRON_PIT_DICE = { roll, rollMany, clearHistory, getHistory };
 })();
