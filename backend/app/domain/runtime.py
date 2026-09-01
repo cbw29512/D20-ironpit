@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName, ConditionTiming, GrappleSource
 from app.domain.combatants import CombatantTemplate, DamageType
+from app.domain.modifiers import CombatModifier, ConcentrationState
 
 
 class ResourceState(BaseModel):
@@ -65,6 +66,8 @@ class CombatantState(BaseModel):
     active_effect_ids: list[str] = Field(default_factory=list)
     grapple_sources: list[GrappleSource] = Field(default_factory=list)
     timed_effects: list[TimedEffect] = Field(default_factory=list)
+    active_modifiers: list[CombatModifier] = Field(default_factory=list)
+    concentration: ConcentrationState | None = None
     feature_last_turn_keys: dict[str, str] = Field(default_factory=dict)
     spell_slot_expended_turn_key: str | None = None
     temporary_damage_resistances: list[DamageType] = Field(default_factory=list)
