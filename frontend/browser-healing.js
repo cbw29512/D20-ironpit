@@ -3,7 +3,8 @@
 
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
-  const bloodied = (state) => state.current_hp * 2 <= state.template.max_hp;
+  const S = () => window.IRON_PIT_BROWSER_STATE;
+  const bloodied = (state) => state.current_hp * 2 <= S().effectiveMaxHp(state);
   const distance = (a, b) => Math.abs(a.position_ft - b.position_ft);
   const swarm = (state) => state.template.traits?.includes("swarm");
   const slotHeal = (action) => Boolean(action.resourceId?.startsWith("spell-slot-"));
@@ -15,7 +16,7 @@
   }
 
   function targetAllowed(healer, target, action) {
-    if (target.state.is_dead || !target.state.is_alive || target.state.current_hp >= target.state.template.max_hp || swarm(target.state)) return false;
+    if (target.state.is_dead || !target.state.is_alive || target.state.current_hp >= S().effectiveMaxHp(target.state) || swarm(target.state)) return false;
     if (distance(healer, target) > (action.range || 5)) return false;
     if (action.targetMode === "self") return target.combatant_id === healer.combatant_id;
     if (action.targetMode === "ally") return target.combatant_id !== healer.combatant_id && target.side === healer.side;
@@ -26,7 +27,7 @@
   function selfWorthwhile(member, action) {
     if (!bloodied(member.state)) return false;
     if (action.actionCost === "bonus_action") return true;
-    if (action.actionCost === "action") return member.state.current_hp * 4 <= member.state.template.max_hp;
+    if (action.actionCost === "action") return member.state.current_hp * 4 <= S().effectiveMaxHp(member.state);
     return false;
   }
 
@@ -39,7 +40,7 @@
     const downed = others.filter((target) => target.state.current_hp === 0);
     if (downed.length) return downed.reduce((best, item) => item.state.death_save_failures > best.state.death_save_failures ? item : best);
     const hurt = others.filter((target) => bloodied(target.state));
-    if (hurt.length) return hurt.reduce((best, item) => item.state.current_hp / item.state.template.max_hp < best.state.current_hp / best.state.template.max_hp ? item : best);
+    if (hurt.length) return hurt.reduce((best, item) => item.state.current_hp / S().effectiveMaxHp(item.state) < best.state.current_hp / S().effectiveMaxHp(best.state) ? item : best);
     const self = legal.find((target) => target.combatant_id === healer.combatant_id);
     return self && selfWorthwhile(healer, action) ? self : null;
   }
@@ -48,7 +49,7 @@
     const ally = target.combatant_id !== healer.combatant_id;
     const urgency = ally && target.state.current_hp === 0 ? 0 : ally ? 1 : 2;
     const cost = action.actionCost === "bonus_action" ? 0 : 1;
-    return [urgency, cost, target.state.current_hp / target.state.template.max_hp];
+    return [urgency, cost, target.state.current_hp / S().effectiveMaxHp(target.state)];
   }
 
   function chooseAction(healer, setup, turnKey = null) {
@@ -63,7 +64,7 @@
   function restore(state, amount) {
     if (state.is_dead || amount <= 0 || swarm(state)) return 0;
     const before = state.current_hp;
-    state.current_hp = Math.min(state.template.max_hp, before + amount);
+    state.current_hp = Math.min(S().effectiveMaxHp(state), before + amount);
     const healed = state.current_hp - before;
     if (healed > 0) {
       state.is_alive = true; state.is_unconscious = false; state.is_stable = false;
