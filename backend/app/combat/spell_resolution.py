@@ -68,7 +68,9 @@ def resolve_spell(
     )]
     sequence += 1
 
-    by_id = {member.combatant_id: member for member in [*setup.heroes, *setup.monsters]}
+    members = [*setup.heroes, *setup.monsters]
+    by_id = {member.combatant_id: member for member in members}
+    affected_states = [member.state for member in members]
     save_action = _save_action(choice)
     shared_damage_rolls: list[int] | None = None
     for target_id in choice.target_ids:
@@ -76,7 +78,7 @@ def resolve_spell(
         event = resolve_save_action(
             sequence, round_number, caster, target, save_action,
             abs(caster.position_ft - target.position_ft), dice, spend_action=False,
-            shared_damage_rolls=shared_damage_rolls,
+            shared_damage_rolls=shared_damage_rolls, affected_states=affected_states,
         )
         events.append(event)
         if shared_damage_rolls is None and event.damage_components:
