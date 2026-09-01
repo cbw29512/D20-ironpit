@@ -5,6 +5,7 @@ import logging
 from app.combat.condition_rules import is_incapacitated
 from app.combat.conditions import DODGE_EFFECT_ID, stand_from_prone
 from app.combat.grapple import speed_is_zero
+from app.combat.modifier_stack import effective_speed
 from app.domain.models import CombatantState, CombatantTemplate, ResourceState
 
 logger = logging.getLogger(__name__)
@@ -37,7 +38,8 @@ def begin_turn(state: CombatantState) -> None:
         state.action_available = not incapacitated
         state.bonus_action_available = not incapacitated
         refresh_reaction(state)
-        state.movement_remaining_ft = 0 if speed_is_zero(state) else state.template.speed_ft
+        speed = effective_speed(state)
+        state.movement_remaining_ft = 0 if speed_is_zero(state) else speed
         if DODGE_EFFECT_ID in state.active_effect_ids:
             state.active_effect_ids.remove(DODGE_EFFECT_ID)
         stand_from_prone(state)
