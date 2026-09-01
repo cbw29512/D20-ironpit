@@ -16,10 +16,22 @@
     return result;
   }
 
+  function removeTimed(states, sourceId, effectId) {
+    for (const state of states) {
+      const removed = new Set(state.timed_effects.filter((effect) => effect.source_id === sourceId && effect.source_effect_id === effectId).map((effect) => effect.effect_id));
+      state.timed_effects = state.timed_effects.filter((effect) => !(effect.source_id === sourceId && effect.source_effect_id === effectId));
+      for (const conditionId of removed) {
+        if (!state.timed_effects.some((effect) => effect.effect_id === conditionId)) state.active_effect_ids = state.active_effect_ids.filter((id) => id !== conditionId);
+      }
+    }
+  }
+
   function end(owner, states = []) {
     const current = owner.concentration;
     if (!current) return false;
-    M().removeSource(affected(owner, states), current.source_id, current.effect_id, true);
+    const all = affected(owner, states);
+    M().removeSource(all, current.source_id, current.effect_id, true);
+    removeTimed(all, current.source_id, current.effect_id);
     owner.concentration = null;
     return true;
   }
