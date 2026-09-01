@@ -1,5 +1,6 @@
 from collections import Counter
 
+from app.content.certified_heroes import build_certified_hero_registry
 from app.content.hero_catalog import build_hero_catalog
 from app.content.hero_progressions import CANONICAL_BUILD_ID, CANONICAL_HEROES
 from app.domain.catalog import CoverageStatus
@@ -34,20 +35,8 @@ def test_subclass_identity_appears_at_level_three() -> None:
 
 def test_only_certified_canonical_levels_are_runnable() -> None:
     ready = [card for card in build_hero_catalog() if card.coverage_status is CoverageStatus.RAW_READY]
-    assert {(card.name, card.level, card.runnable_template_id) for card in ready} == {
-        ("Karnok Stoneward", 1, "karnok-stoneward-l1"),
-        ("Karnok Stoneward", 2, "karnok-stoneward-l2"),
-        ("Karnok Stoneward", 3, "karnok-stoneward-l3"),
-        ("Karnok Stoneward", 4, "karnok-stoneward-l4"),
-        ("Karnok Stoneward", 5, "karnok-stoneward-l5"),
-        ("Rokhan Stonefury", 1, "rokhan-stonefury-l1"),
-        ("Rokhan Stonefury", 2, "rokhan-stonefury-l2"),
-        ("Rokhan Stonefury", 3, "rokhan-stonefury-l3"),
-        ("Rokhan Stonefury", 4, "rokhan-stonefury-l4"),
-        ("Rokhan Stonefury", 5, "rokhan-stonefury-l5"),
-        ("Rokhan Stonefury", 6, "rokhan-stonefury-l6"),
-        ("Seraphine Dawnshield", 1, "seraphine-dawnshield-l1"),
-        ("Seraphine Dawnshield", 2, "seraphine-dawnshield-l2"),
-        ("Seraphine Dawnshield", 3, "seraphine-dawnshield-l3"),
-        ("Seraphine Dawnshield", 4, "seraphine-dawnshield-l4"),
+    actual = {
+        (card.class_id, card.level, card.build_id): (card.name, card.runnable_template_id)
+        for card in ready
     }
+    assert actual == build_certified_hero_registry()
