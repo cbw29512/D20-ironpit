@@ -128,13 +128,21 @@ def _spell(action: Any) -> dict[str, Any]:
 
 
 def _defense(action: Any) -> dict[str, Any]:
-    return {
+    row = {
         "id": action.id, "name": action.name, "level": action.level, "actionCost": action.action_cost,
-        "durationMinutes": action.duration_minutes, "temporaryHp": action.temporary_hp,
+        "range": action.range_ft, "durationMinutes": action.duration_minutes, "temporaryHp": action.temporary_hp,
         "temporaryHpPerSlotAbove": action.temporary_hp_per_slot_above,
-        "damageResistances": list(action.damage_resistances), "concentration": action.concentration,
-        "priority": action.priority, "animation": action.animation,
+        "damageResistances": list(action.damage_resistances),
+        "modifierEffects": [
+            {"kind": effect.kind, "flatBonus": effect.flat_bonus, "diceCount": effect.dice_count,
+             "diceSize": effect.dice_size, "damageType": effect.damage_type}
+            for effect in action.modifier_effects
+        ],
+        "concentration": action.concentration, "priority": action.priority, "animation": action.animation,
     }
+    if action.source:
+        row["source"] = action.source
+    return row
 
 
 def _removal(action: Any) -> dict[str, Any]:
