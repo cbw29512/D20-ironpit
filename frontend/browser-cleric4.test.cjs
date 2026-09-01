@@ -23,7 +23,8 @@ const cleric = H["seraphine-dawnshield-l4"];
 assert.ok(cleric, "Seraphine Cleric 4 must exist in generated browser heroes.");
 
 assert.equal(cleric.level, 4);
-assert.equal(cleric.max_hp, 31);
+assert.equal(cleric.armor_class, 15);
+assert.equal(cleric.max_hp, 23);
 assert.equal(cleric.saving_throw_bonuses.wisdom, 6);
 assert.equal(cleric.skill_bonuses.medicine, 6);
 assert.deepEqual(cleric.resources, {
