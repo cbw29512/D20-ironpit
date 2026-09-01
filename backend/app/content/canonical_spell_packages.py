@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from app.content.class_spell_progression import CASTING_ABILITIES, prepared_spell_count
+from app.content.class_spell_progression import CASTING_ABILITIES, max_spell_level, prepared_spell_count
 from app.domain.class_loadouts import CanonicalSpellChoice, CasterClassId, ClassSpellPackage
 
 
@@ -20,7 +20,7 @@ def _spell(
     )
 
 
-LEVEL_ONE_PACKAGES: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
+CANONICAL_SPELLS: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
     "bard": (
         _spell("charm-person", "Charm Person", "control", "charmed"),
         _spell("color-spray", "Color Spray", "control", "blinded"),
@@ -64,13 +64,24 @@ LEVEL_ONE_PACKAGES: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
 }
 
 
-def build_level_one_package(class_id: CasterClassId) -> ClassSpellPackage:
-    spells = list(LEVEL_ONE_PACKAGES[class_id])
-    expected = prepared_spell_count(class_id, 1)
-    if len(spells) != expected:
-        raise ValueError(f"{class_id} level-1 package must contain exactly {expected} prepared spells.")
+def build_class_spell_package(class_id: CasterClassId, character_level: int) -> ClassSpellPackage:
+    expected = prepared_spell_count(class_id, character_level)
+    maximum = max_spell_level(class_id, character_level)
+    spells = [
+        spell for spell in CANONICAL_SPELLS[class_id]
+        if spell.min_character_level <= character_level and spell.spell_level <= maximum
+    ]
+    if len(spells) < expected:
+        raise ValueError(
+            f"{class_id} level {character_level} canonical package is incomplete: "
+            f"needs {expected} prepared spells, has {len(spells)}."
+        )
     return ClassSpellPackage(
         class_id=class_id,
         casting_ability=CASTING_ABILITIES[class_id],
-        spells=spells,
+        spells=spells[:expected],
     )
+
+
+def build_level_one_package(class_id: CasterClassId) -> ClassSpellPackage:
+    return build_class_spell_package(class_id, 1)
