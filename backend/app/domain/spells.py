@@ -6,6 +6,36 @@ from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName, ActionCost, DamageTypeName
 
+SpellModifierKind = Literal[
+    "armor-class", "attack-roll-bonus-die", "saving-throw-bonus-die",
+    "attacks-against-advantage", "bonus-damage", "speed",
+]
+
+
+class SpellModifierEffect(BaseModel):
+    """Source-neutral modifier data converted to a runtime CombatModifier when a spell resolves."""
+
+    kind: SpellModifierKind
+    flat_bonus: int = 0
+    dice_count: int = Field(default=0, ge=0, le=20)
+    dice_size: int = Field(default=0, ge=0, le=100)
+    damage_type: DamageTypeName | None = None
+
+    @model_validator(mode="after")
+    def validate_payload(self) -> "SpellModifierEffect":
+        die_kind = self.kind in {"attack-roll-bonus-die", "saving-throw-bonus-die", "bonus-damage"}
+        if die_kind and (self.dice_count < 1 or self.dice_size < 2):
+            raise ValueError(f"{self.kind} requires certified dice.")
+        if not die_kind and (self.dice_count or self.dice_size):
+            raise ValueError(f"{self.kind} does not accept dice.")
+        if self.kind == "bonus-damage" and self.damage_type is None:
+            raise ValueError("Bonus damage requires a damage type.")
+        if self.kind != "bonus-damage" and self.damage_type is not None:
+            raise ValueError(f"{self.kind} does not accept a damage type.")
+        if self.kind == "attacks-against-advantage" and self.flat_bonus:
+            raise ValueError("Attack-advantage modifiers do not accept a flat bonus.")
+        return self
+
 
 class DefensiveSpellAction(BaseModel):
     """A long-duration self-defense spell eligible for Iron Pit precombat preparation."""
@@ -14,20 +44,25 @@ class DefensiveSpellAction(BaseModel):
     name: str
     level: int = Field(ge=1, le=9)
     action_cost: ActionCost = "action"
+    range_ft: int = Field(default=0, ge=0)
     duration_minutes: int = Field(ge=10)
     temporary_hp: int = Field(default=0, ge=0)
     temporary_hp_per_slot_above: int = Field(default=0, ge=0)
     damage_resistances: list[DamageTypeName] = Field(default_factory=list)
+    modifier_effects: list[SpellModifierEffect] = Field(default_factory=list)
     concentration: bool = False
     priority: int = 0
     animation: str = "precombat-defense"
+    source: str | None = None
 
     @model_validator(mode="after")
     def validate_defense(self) -> "DefensiveSpellAction":
         if self.action_cost == "reaction":
             raise ValueError("Reaction spells cannot be pre-cast without their trigger.")
-        if not self.temporary_hp and not self.damage_resistances:
+        if not self.temporary_hp and not self.damage_resistances and not self.modifier_effects:
             raise ValueError("Certified defensive spell must define an implemented defensive effect.")
+        if self.concentration and (self.temporary_hp or self.damage_resistances):
+            raise ValueError("Concentration defenses require source-owned modifier effects.")
         return self
 
 
