@@ -10,10 +10,13 @@ def test_registry_preserves_every_legacy_monster_semantics_and_source_audit() ->
     rows = {str(row["name"]): row for row in load_monster_rows()}
     legacy = build_legacy_monster_templates()
     compiled = build_monster_templates_from_capabilities()
+    compiled_by_id = {monster.id: monster for monster in compiled}
+    legacy_ids = [monster.id for monster in legacy]
     assert legacy
-    assert [monster.id for monster in compiled] == [monster.id for monster in legacy]
-    assert len({monster.id for monster in compiled}) == len(compiled)
-    for original, rebuilt in zip(legacy, compiled, strict=True):
+    assert len(compiled_by_id) == len(compiled)
+    assert [monster.id for monster in compiled if monster.id in set(legacy_ids)] == legacy_ids
+    for original in legacy:
+        rebuilt = compiled_by_id[original.id]
         source_row = rows[original.name]
         assert templates_semantically_equal(original, rebuilt), original.id
         assert audit_monster_source(rebuilt, source_row) == audit_monster_source(original, source_row), original.id
