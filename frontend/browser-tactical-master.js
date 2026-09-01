@@ -7,7 +7,8 @@
 
   function eligible(state, attack) {
     return Boolean(state.template.tactical_master_sap)
-      && (state.template.weapon_masteries || []).includes(attack.weaponId || attack.weapon_id || attack.id.replace(/^karnok-/, ""));
+      && Boolean(attack.weaponId)
+      && (state.template.weapon_masteries || []).includes(attack.weaponId);
   }
 
   function apply(attacker, target, attack, round) {
