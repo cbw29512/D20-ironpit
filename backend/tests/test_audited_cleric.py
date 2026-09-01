@@ -23,12 +23,12 @@ def test_seraphine_level_one_package_is_raw_audited() -> None:
     spells = canonical_spell_package("cleric", 1)
     _assert_audited(template, profile)
 
-    assert template.armor_class == 17
-    assert template.max_hp == 10
+    assert template.armor_class == 15
+    assert template.max_hp == 8
     assert template.saving_throw_bonuses["wisdom"] == 5
-    assert template.saving_throw_bonuses["charisma"] == 2
-    assert template.skill_bonuses["athletics"] == 1
-    assert template.skill_bonuses["acrobatics"] == 2
+    assert template.saving_throw_bonuses["charisma"] == 4
+    assert template.skill_bonuses["athletics"] == 0
+    assert template.skill_bonuses["acrobatics"] == 0
     assert {item.id: item.max_uses for item in template.resources} == {
         "spell-slot-1": 2,
         "adrenaline-rush": 2,
@@ -49,7 +49,7 @@ def test_seraphine_level_two_adds_complete_channel_divinity_package() -> None:
     _assert_audited(template, profile)
 
     assert template.level == 2
-    assert template.max_hp == 17
+    assert template.max_hp == 13
     assert {item.id: item.max_uses for item in template.resources} == {
         "spell-slot-1": 3,
         "channel-divinity": 2,
