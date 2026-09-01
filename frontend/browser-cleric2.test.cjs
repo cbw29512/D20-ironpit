@@ -25,7 +25,8 @@ const A = window.IRON_PIT_BROWSER_ATTACK;
 const clericTemplate = H["seraphine-dawnshield-l2"];
 assert.ok(clericTemplate, "Seraphine Cleric 2 must exist in the generated browser roster.");
 assert.equal(clericTemplate.level, 2);
-assert.equal(clericTemplate.max_hp, 17);
+assert.equal(clericTemplate.armor_class, 15);
+assert.equal(clericTemplate.max_hp, 13);
 assert.deepEqual(clericTemplate.resources, {
   "adrenaline-rush": 2,
   "channel-divinity": 2,
