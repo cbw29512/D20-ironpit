@@ -24,13 +24,19 @@ class CanonicalSpellChoice(BaseModel):
 class ClassSpellPackage(BaseModel):
     class_id: CasterClassId
     casting_ability: Literal["intelligence", "wisdom", "charisma"]
+    cantrips: list[CanonicalSpellChoice] = Field(default_factory=list)
     spells: list[CanonicalSpellChoice] = Field(min_length=1)
 
     @model_validator(mode="after")
     def unique_spells(self) -> "ClassSpellPackage":
-        ids = [spell.id for spell in self.spells]
+        choices = [*self.cantrips, *self.spells]
+        ids = [spell.id for spell in choices]
         if len(ids) != len(set(ids)):
             raise ValueError(f"{self.class_id} canonical spell IDs must be unique.")
+        if any(spell.spell_level != 0 for spell in self.cantrips):
+            raise ValueError("Canonical cantrips must be level 0.")
+        if any(spell.spell_level == 0 for spell in self.spells):
+            raise ValueError("Prepared/known level 1+ spells cannot contain cantrips.")
         return self
 
     def unlocked(self, character_level: int) -> list[CanonicalSpellChoice]:
