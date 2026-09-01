@@ -32,6 +32,11 @@ def adrenaline_rush_available(state: CombatantState) -> bool:
     )
 
 
+def should_use_adrenaline_rush(state: CombatantState) -> bool:
+    """Arena AI spends Adrenaline Rush only when its temporary HP improves the state."""
+    return adrenaline_rush_available(state) and state.temporary_hp < proficiency_bonus(state)
+
+
 def use_adrenaline_rush(
     sequence: int,
     round_number: int,
