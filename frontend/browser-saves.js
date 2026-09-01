@@ -5,7 +5,7 @@
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
   const S = () => window.IRON_PIT_BROWSER_STATE;
-  const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
+  const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { applyD20Bonus: (_state, _kind, roll) => roll };
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION;
   const D = () => window.IRON_PIT_DICE;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
