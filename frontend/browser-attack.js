@@ -4,6 +4,7 @@
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
   const T = () => window.IRON_PIT_BROWSER_TIMED;
+  const U = () => window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || {
     attackAdvantage: (state) => state.is_unconscious,
@@ -51,6 +52,12 @@
     state.resources["relentless-endurance"] -= 1; state.current_hp = 1;
     state.is_alive = true; state.is_unconscious = false; state.is_stable = false; return true;
   }
+  function useUndeadFortitude(state, incoming, damageTypes, critical) {
+    if (!state.template.traits?.includes("undead-fortitude")) return false;
+    const resolver = U();
+    if (!resolver) throw new Error("Undead Fortitude runtime is not loaded.");
+    return resolver.resolve(state, incoming, damageTypes, critical);
+  }
   const endDodge = (state) => { state.active_effect_ids = state.active_effect_ids.filter((id) => id !== "dodge"); };
   function markUnconscious(state) {
     state.is_alive = true; state.is_unconscious = true; state.is_stable = false; endDodge(state);
@@ -60,7 +67,7 @@
     state.current_hp = 0; state.is_alive = false; state.is_dead = true;
     state.is_unconscious = false; state.is_stable = false; endDodge(state);
   }
-  function applyDamage(state, amount, critical) {
+  function applyDamage(state, amount, critical = false, damageTypes = []) {
     const incoming = amount;
     if (!incoming || state.is_dead) return "damaged";
     const absorbed = Math.min(state.temporary_hp, amount); state.temporary_hp -= absorbed; amount -= absorbed;
@@ -74,6 +81,7 @@
     if (!amount) return "damaged";
     const before = state.current_hp; state.current_hp = Math.max(0, before - amount);
     if (state.current_hp > 0) return "damaged";
+    if (useUndeadFortitude(state, incoming, damageTypes, critical)) return "undead_fortitude";
     if (state.template.kind === "monster") { markDead(state); return "dead"; }
     const remaining = Math.max(0, amount - before);
     if (remaining >= state.template.max_hp) { markDead(state); return "dead"; }
@@ -106,7 +114,8 @@
       );
       damageComponents = damage.components.map((part) => ({ ...part, applied_total: adjustedDamage(actualTarget.state, part.total, part.damage_type) }));
       damageRoll = { ...damage.roll, total: damageComponents.reduce((sum, part) => sum + part.applied_total, 0) };
-      damageOutcome = applyDamage(actualTarget.state, damageRoll.total, critical);
+      const appliedTypes = [...new Set(damageComponents.filter((part) => part.applied_total > 0).map((part) => part.damage_type))];
+      damageOutcome = applyDamage(actualTarget.state, damageRoll.total, critical, appliedTypes);
       const living = actualTarget.state.is_alive && !actualTarget.state.is_dead;
       const proneMax = extra.proneMaxSize || attack.proneMaxSize;
       if (living && S().canProne(actualTarget, proneMax) && !I().immune(actualTarget.state, "prone")) {
@@ -131,6 +140,7 @@
     if (redirected) description += ` ${target.state.template.name} uses Redirect Attack; ${actualTarget.state.template.name} becomes the target.`;
     if (parry.used) description += ` ${actualTarget.state.template.name} uses Parry.`;
     if (damageOutcome === "relentless_endurance") description += ` ${actualTarget.state.template.name} uses Relentless Endurance and remains at 1 HP.`;
+    if (damageOutcome === "undead_fortitude") description += ` ${actualTarget.state.template.name} succeeds on Undead Fortitude and remains at 1 HP.`;
     if (applied.includes("prone")) description += ` ${actualTarget.state.template.name} is knocked Prone.`;
     if (applied.includes("grappled")) description += ` ${actualTarget.state.template.name} is Grappled.`;
     if (applied.includes("restrained")) description += ` ${actualTarget.state.template.name} is Restrained while Grappled.`;
