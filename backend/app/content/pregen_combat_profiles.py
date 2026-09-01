@@ -73,6 +73,18 @@ def build_karnok_stoneward_level5_combat_profile() -> PregenCombatProfile:
     )
 
 
+def _seraphine_profile(level: int, hp: int, slots: int, channel: int = 0) -> PregenCombatProfile:
+    resources = [("spell-slot-1", slots)]
+    if channel:
+        resources.append(("channel-divinity", channel))
+    resources.extend((("adrenaline-rush", 2), ("relentless-endurance", 1)))
+    return PregenCombatProfile(
+        f"seraphine-dawnshield-l{level}", "Cleric", level, _SERAPHINE, ("wisdom", "charisma"), 17, hp, 30,
+        (("athletics", 1), ("acrobatics", 2), ("arcana", 1), ("history", 1), ("medicine", 5), ("persuasion", 2)),
+        (AttackExpectation("mace", "strength", 1, 6, "bludgeoning"),), (), tuple(resources),
+    )
+
+
 def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
     profiles = [
         PregenCombatProfile(
@@ -105,11 +117,7 @@ def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
             ("flail", "pike"), (("rage", 2), ("adrenaline-rush", 2), ("relentless-endurance", 1)),
             rage_damage_bonus=2,
         ),
-        PregenCombatProfile(
-            "seraphine-dawnshield-l1", "Cleric", 1, _SERAPHINE, ("wisdom", "charisma"), 17, 10, 30,
-            (("athletics", 1), ("acrobatics", 2), ("arcana", 1), ("history", 1), ("medicine", 5), ("persuasion", 2)),
-            (AttackExpectation("mace", "strength", 1, 6, "bludgeoning"),), (),
-            (("spell-slot-1", 2), ("adrenaline-rush", 2), ("relentless-endurance", 1)),
-        ),
+        _seraphine_profile(1, 10, 2),
+        _seraphine_profile(2, 17, 3, 2),
     ]
     return {profile.template_id: profile for profile in profiles}
