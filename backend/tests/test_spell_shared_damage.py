@@ -19,6 +19,8 @@ def _member(side: str, index: int, position: int) -> EncounterCombatant:
 def test_simultaneous_save_spell_rolls_damage_once_for_all_targets() -> None:
     caster = _member("heroes", 0, 0)
     monsters = [_member("monsters", index, 30) for index in range(2)]
+    for monster in monsters:
+        monster.state.template.saving_throw_bonuses["dexterity"] = 0
     setup = EncounterSetup(
         heroes=[caster], monsters=monsters, hero_total_levels=1,
         monster_total_cr="1/2", starting_distance_ft=30,
