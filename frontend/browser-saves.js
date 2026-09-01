@@ -40,7 +40,7 @@
     const save = resolveSavingThrow(target.state, action.saveAbility, action.dc);
     if (spendAction) E().spend(actor.state, "action");
     const hpBefore = target.state.current_hp;
-    let damageRoll = null, damageComponents = [];
+    let damageRoll = null, damageComponents = [], damageOutcome = null;
     const count = action.damageDiceCount || 0;
     if (count && !(save.succeeded && action.successDamage === "none")) {
       if (!action.damageType) throw new Error(`${action.name} has damage dice but no damage type.`);
@@ -52,13 +52,17 @@
         rolls, modifier: action.damageBonus || 0, damage_type: action.damageType,
         total: Math.max(0, total), applied_total: applied }];
       damageRoll = { notation: damageComponents[0].notation, rolls, modifier: action.damageBonus || 0, total: applied };
-      if (applied) { A().applyDamage(target.state, applied, false); window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(target.state); }
+      if (applied) {
+        damageOutcome = A().applyDamage(target.state, applied, false, [action.damageType]);
+        window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(target.state);
+      }
     }
     let appliedConditions = [];
     if (!save.succeeded && target.state.is_alive && !target.state.is_dead && action.grappleEscapeDc) {
       appliedConditions = G().apply(target.state, actor.combatant_id, action.grappleEscapeDc, action.range, Boolean(action.restrainsWhileGrappled));
     }
     let description = `${target.state.template.name} ${save.succeeded ? "SUCCEEDS" : "FAILS"} a DC ${action.dc} ${action.saveAbility} save against ${actor.state.template.name}'s ${action.name}.`;
+    if (damageOutcome === "undead_fortitude") description += ` ${target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP.`;
     if (appliedConditions.includes("grappled")) description += ` ${target.state.template.name} is Grappled.`;
     if (appliedConditions.includes("restrained")) description += ` ${target.state.template.name} is Restrained while Grappled.`;
     return { sequence, round_number: round, event_type: "saving_throw", actor_id: actor.combatant_id,
