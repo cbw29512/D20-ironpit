@@ -63,6 +63,7 @@
     const spendAction = extra.spendAction !== false;
     if (spendAction && !E().available(attacker.state, "action")) throw new Error("Action is unavailable for attack.");
     const recklessStarted = extra.allowReckless === true && B2().activate(attacker, attack, round);
+    if (recklessStarted) window.IRON_PIT_BROWSER_BARBARIAN3?.markRecklessUse(attacker.state, extra.turnKey);
     const conditions = conditionSources(attacker.state, target.state, distance, target.combatant_id);
     const advantage = (extra.advantage || 0) + conditions.advantage + bloodiedFury(attacker.state, attack)
       + B2().attackAdvantage(attacker.state, attack);
@@ -85,7 +86,7 @@
     const concentrationBefore = actualTarget.state.concentration?.effect_id || null;
     let damageRoll = null, damageComponents = [], damageOutcome = null; const applied = [];
     if (hit) {
-      const damage = R().weaponDamage(attacker.state, attack, critical, mode, `${round}:${attacker.combatant_id}`,
+      const damage = R().weaponDamage(attacker.state, attack, critical, mode, extra.turnKey || `${round}:${attacker.combatant_id}`,
         extra.bonusDamage || null, actualTarget.state);
       damageComponents = damage.components.map((part) => ({ ...part, applied_total: adjustedDamage(actualTarget.state, part.total, part.damage_type) }));
       damageRoll = { ...damage.roll, total: damageComponents.reduce((sum, part) => sum + part.applied_total, 0) };
