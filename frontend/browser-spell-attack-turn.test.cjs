@@ -11,8 +11,8 @@ for (const file of [
   "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-grapple.js", "browser-modifiers.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
   "browser-undead-fortitude.js", "browser-zero-hp.js", "browser-attack.js", "browser-saves.js",
-  "browser-spellcasting.js", "browser-spell-modifiers.js", "browser-spell-attack-policy.js", "browser-spell-attack.js",
-  "browser-turn.js",
+  "browser-offense-value.js", "browser-spellcasting.js", "browser-spell-modifiers.js",
+  "browser-spell-attack-policy.js", "browser-spell-attack.js", "browser-spell-offense.js", "browser-turn.js",
 ]) load(file);
 
 const S = window.IRON_PIT_BROWSER_STATE;
@@ -45,6 +45,7 @@ function member(id, side, position, options = {}) {
   template.id = `template-${id}`; template.name = id; template.armor_class = options.armorClass ?? 10;
   template.resources = options.caster ? { "spell-slot-1": 1 } : {};
   template.spell_attack_actions = options.caster ? [guidingBolt] : [];
+  template.spell_save_actions = [];
   return { combatant_id: id, side, position_ft: position, state: S.buildState(template) };
 }
 
@@ -63,4 +64,4 @@ assert.equal(caster.state.resources["spell-slot-1"], 0);
 assert.equal(caster.state.action_available, false);
 assert.equal(target.state.active_modifiers.length, 1);
 
-console.log("Browser live-turn spell attack dispatch regression passed.");
+console.log("Browser live-turn unified spell offense dispatch regression passed.");
