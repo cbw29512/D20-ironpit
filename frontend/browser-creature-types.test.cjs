@@ -18,7 +18,7 @@ for (const monster of Object.values(monsters)) {
 }
 assert.equal(monsters["srd-skeleton"].creature_type, "Undead");
 assert.equal(monsters["srd-ogre-zombie"].creature_type, "Undead");
-assert.equal(monsters["srd-goblin-warrior"].creature_type, "Humanoid");
+assert.equal(monsters["srd-goblin-warrior"].creature_type, "Fey (Goblinoid)");
 assert.notEqual(monsters["srd-goblin-warrior"].creature_type, "Undead");
 
 console.log("Generated browser monsters expose source-backed creature types for deterministic targeting.");
