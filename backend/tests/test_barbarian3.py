@@ -74,7 +74,7 @@ def test_frenzy_miss_does_not_consume_first_hit() -> None:
     enemy.state.template.armor_class = 10
     hit = resolve_encounter_attack(
         3, 1, hero, enemy, hero.state.template.weapon_attack, 5,
-        FixedDiceProvider([15, 4, 8, 2, 6]), setup,
+        FixedDiceProvider([15, 4, 8, 2, 6, 5]), setup,
         spend_action=False, allow_reckless=True, turn_key=turn_key,
     )
     assert hit.hit is True
@@ -87,12 +87,12 @@ def test_frenzy_is_first_hit_only_per_turn() -> None:
     turn_key = f"1:{hero.combatant_id}"
     first = resolve_encounter_attack(
         2, 1, hero, enemy, hero.state.template.weapon_attack, 5,
-        FixedDiceProvider([15, 4, 8, 2, 6]), setup,
+        FixedDiceProvider([15, 4, 8, 2, 6, 5]), setup,
         spend_action=False, allow_reckless=True, turn_key=turn_key,
     )
     second = resolve_encounter_attack(
         3, 1, hero, enemy, hero.state.template.weapon_attack, 5,
-        FixedDiceProvider([15, 7]), setup,
+        FixedDiceProvider([15, 7, 5]), setup,
         spend_action=False, allow_reckless=True, turn_key=turn_key,
     )
     assert any(part.source == "Frenzy" for part in first.damage_components)
@@ -104,7 +104,7 @@ def test_frenzy_requires_rage_reckless_strength_and_turn_identity() -> None:
     turn_key = f"1:{hero.combatant_id}"
     no_rage = resolve_encounter_attack(
         1, 1, hero, enemy, hero.state.template.weapon_attack, 5,
-        FixedDiceProvider([15, 4, 8]), setup,
+        FixedDiceProvider([15, 4, 8, 2]), setup,
         spend_action=False, allow_reckless=True, turn_key=turn_key,
     )
     assert all(part.source != "Frenzy" for part in no_rage.damage_components)
