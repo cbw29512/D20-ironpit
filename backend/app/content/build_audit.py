@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.content.canonical_hero_policy import combat_feature_audits
 from app.domain.character_builds import AbilityName, CharacterBuildProfile
 from app.domain.models import CombatantTemplate
 
@@ -71,8 +72,8 @@ def _audit_features(
         template.weapon_attack.weapon.id,
         *(attack.weapon.id for attack in template.alternate_weapon_attacks),
     }
-    for audit in profile.feature_audits:
-        if audit.combat_relevant and not audit.automated:
+    for audit in combat_feature_audits(profile.feature_audits):
+        if not audit.automated:
             issues.append(f"combat-feature-not-automated:{audit.feature_id}")
         required_weapon = audit.runtime_attack_weapon_id
         if required_weapon and required_weapon not in runtime_weapon_ids:
@@ -84,7 +85,7 @@ def audit_character_build(
     profile: CharacterBuildProfile,
     template: CombatantTemplate,
 ) -> list[str]:
-    """Return stable fail-closed blockers for a claimed legal 2024 character build."""
+    """Return fail-closed blockers for a legal build's combat-relevant runtime state."""
     issues: list[str] = []
     if template.kind != "character":
         issues.append("runtime-template-is-not-character")
