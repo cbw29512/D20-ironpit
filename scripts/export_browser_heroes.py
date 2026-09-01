@@ -45,6 +45,8 @@ def _attack(attack: WeaponAttack) -> dict[str, Any]:
         "damageBonus": attack.damage_bonus, "damageType": weapon.damage_type.value,
         "reach": weapon.reach_ft, "animation": weapon.animation,
     }
+    if attack.attack_ability is not None:
+        row["attackAbility"] = attack.attack_ability
     if weapon.normal_range_ft is not None:
         row.update(normal=weapon.normal_range_ft, long=weapon.long_range_ft, projectile=weapon.projectile)
     if attack.fixed_damage is not None:
@@ -181,6 +183,8 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "critical_hit_minimum": progression.critical_hit_minimum,
         "initiative_advantage": progression.initiative_advantage,
         "athletics_advantage": progression.athletics_advantage,
+        "danger_sense": progression.danger_sense,
+        "reckless_attack": progression.reckless_attack,
         "critical_move_fraction": progression.critical_move_fraction,
         "tactical_shift_fraction": progression.tactical_shift_fraction,
         "visual": {"armor": template.visual.armor, "main_hand": template.visual.main_hand,
