@@ -6,6 +6,7 @@
   const T = () => window.IRON_PIT_BROWSER_TURN;
   const L = () => window.IRON_PIT_BROWSER_CONDITION_LIFECYCLE;
   const P = () => window.IRON_PIT_BROWSER_PRECOMBAT_SPELLS;
+  const C = () => window.IRON_PIT_BROWSER_CONCENTRATION;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { incapacitated: (state) => state.is_unconscious };
   const heroes = () => window.IRON_PIT_BROWSER_HEROES;
@@ -114,14 +115,15 @@
     const setup = buildSetup(selection);
     const prep = P()?.prepare(setup, 1) || { events: [], sequence: 1 };
     const init = initiative(setup);
-    const byId = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));
+    const members = [...setup.heroes, ...setup.monsters], states = members.map((member) => member.state);
+    const byId = new Map(members.map((member) => [member.combatant_id, member]));
     const events = [...prep.events, ...initiativeEvents(init, setup, prep.sequence)]; let sequence = events.length + 1; let resolvedRound = 0;
     for (let round = 1; round <= 100; round += 1) {
       resolvedRound = round;
       for (const id of init.turn_order) {
         const current = outcome(setup); if (current !== "active") return finish(setup, init, events, current, round, sequence);
         const member = byId.get(id);
-        S().refreshReaction(member.state);
+        S().refreshReaction(member.state); C()?.endIfExpired(member.state, round, states);
         const start = lifecycle(sequence, round, member, setup, "target_turn_start", "source_turn_start");
         events.push(...start.events); sequence = start.sequence;
         if (member.state.template.kind === "character" && member.state.current_hp === 0 && !member.state.is_dead && !member.state.is_stable) events.push(T().deathSave(sequence++, round, member));
