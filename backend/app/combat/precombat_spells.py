@@ -11,17 +11,11 @@ from app.domain.spells import DefensiveSpellAction, SpellModifierEffect
 
 
 def _slot_resource(member: EncounterCombatant, spell: DefensiveSpellAction):
-    candidates = []
-    for resource in member.state.resources:
-        if not resource.id.startswith("spell-slot-") or resource.current_uses < 1:
-            continue
-        try:
-            level = int(resource.id.removeprefix("spell-slot-"))
-        except ValueError:
-            continue
-        if level >= spell.level:
-            candidates.append((level, resource))
-    return min(candidates, key=lambda item: item[0], default=None)
+    resource_id = f"spell-slot-{spell.level}"
+    resource = next((item for item in member.state.resources if item.id == resource_id), None)
+    if resource is None or resource.current_uses < 1:
+        return None
+    return spell.level, resource
 
 
 def choose_defensive_spell(member: EncounterCombatant):
@@ -39,10 +33,11 @@ def select_defensive_targets(
     spell: DefensiveSpellAction,
     slot_level: int,
 ) -> list[EncounterCombatant]:
+    if slot_level != spell.level:
+        raise ValueError("Spell upcasting is not certified; use the spell's printed slot level.")
     if spell.target_policy == "self":
         return [member]
     side = setup.heroes if member.side == "heroes" else setup.monsters
-    count = spell.target_count + max(0, slot_level - spell.level) * spell.target_count_per_slot_above
     legal = [
         target for target in side
         if target.state.is_alive and not target.state.is_dead
@@ -53,7 +48,7 @@ def select_defensive_targets(
         abs(member.position_ft - target.position_ft),
         target.combatant_id,
     ))
-    return legal[:count]
+    return legal[:spell.target_count]
 
 
 def _modifier_detail(effect: SpellModifierEffect) -> str:
@@ -75,13 +70,14 @@ def resolve_defensive_spell(
     resource,
     affected_states: Iterable[CombatantState] | None = None,
 ) -> BattleEvent:
+    if slot_level != spell.level:
+        raise ValueError("Spell upcasting is not certified; use the spell's printed slot level.")
     if resource.current_uses < 1:
         raise ValueError(f"No level {slot_level} spell slot remains for {spell.name}.")
     if not targets:
         raise ValueError(f"{spell.name} has no legal precombat targets.")
     resource.current_uses -= 1
-    extra_levels = max(0, slot_level - spell.level)
-    temporary_hp = spell.temporary_hp + extra_levels * spell.temporary_hp_per_slot_above
+    temporary_hp = spell.temporary_hp
     for target in targets:
         grant_temporary_hit_points(target.state, temporary_hp)
         for damage_type in spell.damage_resistances:
