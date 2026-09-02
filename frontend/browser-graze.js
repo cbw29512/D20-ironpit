@@ -1,9 +1,10 @@
 (() => {
   "use strict";
 
+  const W = () => window.IRON_PIT_BROWSER_WEAPON_MASTERY;
+
   function active(attacker, attack) {
-    return attack.masteryProperty === "Graze"
-      && (attacker.template.weapon_masteries || []).includes(attack.weaponId);
+    return W().active(attacker, attack, "Graze");
   }
 
   function rawDamage(attacker, attack) {
