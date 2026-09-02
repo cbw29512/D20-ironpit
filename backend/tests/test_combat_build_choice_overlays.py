@@ -37,7 +37,7 @@ def test_dual_wield_fighter_declares_nick_and_vex_as_shared_engine_requirements(
 
 def test_archer_does_not_turn_slow_into_an_arena_engine_requirement() -> None:
     archer = get_combat_build_choice_overlay("fighter", "archer")
-    assert "longbow-slow-mastery" in archer.arena_ignored
+    assert "slow-mastery" in archer.arena_ignored
     assert "slow-mastery" not in archer.required_capabilities
 
 
