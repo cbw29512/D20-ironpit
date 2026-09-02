@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 from app.content.audited_barbarian_profile import build_rokhan_stonefury_profile
+from app.content.barbarian_profile_from_levels import apply_barbarian_level_to_profile_data
 from app.content.canonical_progression import advance_profile_data
-from app.domain.character_builds import AbilityIncrease, AbilityScores, CharacterBuildProfile, FeatureAudit
+from app.domain.character_builds import CharacterBuildProfile, FeatureAudit
 
 
 def _level_two_features() -> list[FeatureAudit]:
@@ -34,8 +35,7 @@ def _level_three_features() -> list[FeatureAudit]:
         FeatureAudit(
             feature_id="primal-knowledge", feature_name="Primal Knowledge", source_reference=source,
             category="class", combat_relevant=False, automated=False,
-            notes=("RAW-valid randomized proficiency choice: Nature. Its Rage ability-substitution clause does not "
-                   "change Rokhan's certified arena outcomes because grapple escape already selects stronger Athletics."),
+            notes="Noncombat feature retained only in the character-build audit; it is omitted from Iron Pit runtime combat features.",
         ),
     ]
 
@@ -91,9 +91,8 @@ def build_rokhan_stonefury_level3_profile() -> CharacterBuildProfile:
     previous = build_rokhan_stonefury_level2_profile()
     data = advance_profile_data(previous, 3)
     data.update(
-        skill_proficiencies=[*data["skill_proficiencies"], "Nature"],
         feature_audits=[*data["feature_audits"], *(item.model_dump() for item in _level_three_features())],
-        source_references=[*data["source_references"], "Basic Rules 2024: Barbarian — Level 3 Path of the Berserker, Frenzy, and Primal Knowledge"],
+        source_references=[*data["source_references"], "Basic Rules 2024: Barbarian — Level 3 Path of the Berserker and Frenzy"],
     )
     return CharacterBuildProfile.model_validate(data)
 
@@ -101,15 +100,8 @@ def build_rokhan_stonefury_level3_profile() -> CharacterBuildProfile:
 def build_rokhan_stonefury_level4_profile() -> CharacterBuildProfile:
     previous = build_rokhan_stonefury_level3_profile()
     data = advance_profile_data(previous, 4)
+    apply_barbarian_level_to_profile_data(data, 4)
     data.update(
-        advancement_increases=[
-            AbilityIncrease(ability="strength", amount=1).model_dump(),
-            AbilityIncrease(ability="constitution", amount=1).model_dump(),
-        ],
-        final_ability_scores=AbilityScores(
-            strength=18, dexterity=13, constitution=16, intelligence=10, wisdom=10, charisma=10,
-        ).model_dump(),
-        weapon_masteries=[*data["weapon_masteries"], "longsword"],
         feature_audits=_level_four_feature_audits(data),
         source_references=[
             *data["source_references"],
