@@ -9,7 +9,7 @@ global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
   "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
-  "browser-grapple.js", "browser-state.js", "browser-formation.js", "browser-turn.js",
+  "browser-grapple.js", "browser-state.js", "browser-formation.js", "browser-standard-attack-action.js", "browser-turn.js",
 ]) load(file);
 
 const F = window.IRON_PIT_BROWSER_FORMATION;
