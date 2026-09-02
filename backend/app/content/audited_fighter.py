@@ -32,6 +32,8 @@ def _greatsword_attack() -> WeaponAttack:
         ),
         attack_bonus=5,
         damage_bonus=3,
+        attack_ability="strength",
+        attack_ability_modifier=3,
     )
 
 
@@ -41,6 +43,8 @@ def _shortbow_attack() -> WeaponAttack:
         weapon=build_shortbow(),
         attack_bonus=3,
         damage_bonus=1,
+        attack_ability="dexterity",
+        attack_ability_modifier=1,
     )
 
 
