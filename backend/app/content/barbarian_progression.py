@@ -1,94 +1,84 @@
 from __future__ import annotations
 
 from app.content.audited_barbarian import build_rokhan_stonefury
+from app.content.barbarian_combat_levels import BARBARIAN_COMBAT_LEVELS, barbarian_combat_features
 from app.content.canonical_progression import advance_template_data
-from app.content.level_resources import barbarian_rage_uses, fixed_class_hit_points, orc_adrenaline_rush_uses
+from app.content.hero_combat_feature_registry import (
+    compile_progression_feature_fields,
+    unsupported_hero_engine_features,
+)
 from app.domain.models import CombatantTemplate, ResourceDefinition
 
 
+def _modifier(score: int) -> int:
+    return (score - 10) // 2
+
+
 def _resources(level: int) -> list[ResourceDefinition]:
+    row = BARBARIAN_COMBAT_LEVELS[level]
     return [
-        ResourceDefinition(id="rage", name="Rage", max_uses=barbarian_rage_uses(level)),
-        ResourceDefinition(id="adrenaline-rush", name="Adrenaline Rush", max_uses=orc_adrenaline_rush_uses(level)),
+        ResourceDefinition(id="rage", name="Rage", max_uses=row.rage_uses),
+        ResourceDefinition(id="adrenaline-rush", name="Adrenaline Rush", max_uses=row.proficiency_bonus),
         ResourceDefinition(id="relentless-endurance", name="Relentless Endurance", max_uses=1),
     ]
 
 
-def _apply_level_four_advancement(data: dict[str, object]) -> None:
-    primary = data["weapon_attack"]
-    alternates = data["alternate_weapon_attacks"]
-    saves = data["saving_throw_bonuses"]
-    skills = data["skill_bonuses"]
-    masteries = data["weapon_masteries"]
-    if not isinstance(primary, dict) or not isinstance(alternates, list) or not isinstance(saves, dict) or not isinstance(skills, dict) or not isinstance(masteries, list):
-        raise ValueError("Rokhan Barbarian 4 base snapshot has an unexpected schema.")
-    strength_attacks = [primary, *(item for item in alternates if isinstance(item, dict) and item.get("attack_ability") == "strength")]
-    for attack in strength_attacks:
-        attack["attack_bonus"] = 6
-        attack["damage_bonus"] = 4
-    saves.update(strength=6, constitution=5)
-    skills["athletics"] = 6
-    masteries.append("longsword")
-    data["armor_class"] = 14
+def _apply_row(data: dict[str, object], level: int) -> None:
+    row = BARBARIAN_COMBAT_LEVELS[level]
+    features = barbarian_combat_features(level)
+    primary = data.get("weapon_attack")
+    alternates = data.get("alternate_weapon_attacks")
+    if not isinstance(primary, dict) or not isinstance(alternates, list):
+        raise ValueError("Rokhan Barbarian attack snapshot has an unexpected schema.")
+    handaxe = next((item for item in alternates if isinstance(item, dict) and item.get("id") == "rokhan-handaxe-thrown"), None)
+    if handaxe is None:
+        raise ValueError("Rokhan Barbarian requires the audited thrown Handaxe attack.")
 
-
-def _apply_level_five_scaling(data: dict[str, object]) -> None:
-    primary = data["weapon_attack"]
-    alternates = data["alternate_weapon_attacks"]
-    saves = data["saving_throw_bonuses"]
-    skills = data["skill_bonuses"]
-    if not isinstance(primary, dict) or not isinstance(alternates, list) or not isinstance(saves, dict) or not isinstance(skills, dict):
-        raise ValueError("Rokhan Barbarian 5 base snapshot has an unexpected schema.")
-    strength_attacks = [primary, *(item for item in alternates if isinstance(item, dict) and item.get("attack_ability") == "strength")]
-    for attack in strength_attacks:
-        attack["attack_bonus"] = 7
-    saves.update(strength=7, constitution=6)
-    skills["athletics"] = 7
-    data["speed_ft"] = 40
+    strength_mod = _modifier(row.strength)
+    dexterity_mod = _modifier(row.dexterity)
+    constitution_mod = _modifier(row.constitution)
+    for attack in (primary, handaxe):
+        attack.update(attack_bonus=row.proficiency_bonus + strength_mod, damage_bonus=strength_mod)
     attack_ids = ["rokhan-greataxe", "rokhan-handaxe-thrown"]
-    data["attack_action"] = {
-        "id": "extra-attack", "name": "Extra Attack",
-        "slots": [{"attack_ids": attack_ids}, {"attack_ids": attack_ids}],
-    }
+    attack_action = None
+    if row.attack_count > 1:
+        attack_action = {"id": "extra-attack", "name": "Extra Attack",
+                         "slots": [{"attack_ids": attack_ids} for _ in range(row.attack_count)]}
+    data.update(
+        armor_class=row.armor_class,
+        max_hp=row.max_hp,
+        speed_ft=row.speed_ft,
+        initiative_bonus=dexterity_mod,
+        attack_action=attack_action,
+        weapon_masteries=list(row.weapon_masteries),
+        saving_throw_bonuses={
+            "strength": row.proficiency_bonus + strength_mod,
+            "dexterity": dexterity_mod,
+            "constitution": row.proficiency_bonus + constitution_mod,
+            "intelligence": 0, "wisdom": 0, "charisma": 0,
+        },
+        skill_bonuses={"athletics": row.proficiency_bonus + strength_mod, "acrobatics": dexterity_mod},
+        progression_features=compile_progression_feature_fields(features, level),
+        resources=[item.model_dump() for item in _resources(level)],
+        rage_damage_bonus=row.rage_damage_bonus,
+        source=row.source,
+    )
+
+
+def unsupported_barbarian_engine_features(level: int) -> tuple[str, ...]:
+    return unsupported_hero_engine_features(barbarian_combat_features(level))
 
 
 def build_rokhan_stonefury_level(level: int) -> CombatantTemplate:
-    """Advance the canonical Barbarian one level at a time; only registered levels are public-certified."""
+    """Compile Rokhan from the complete 1-20 Barbarian combat table; missing mechanics fail closed."""
+    if level not in BARBARIAN_COMBAT_LEVELS:
+        raise ValueError(f"Rokhan Barbarian level {level} must be between 1 and 20.")
+    unsupported = unsupported_barbarian_engine_features(level)
+    if unsupported:
+        raise ValueError(f"Rokhan Barbarian level {level} awaits engine support for: {', '.join(unsupported)}")
     if level == 1:
         return build_rokhan_stonefury()
-    if level not in (2, 3, 4, 5, 6, 7):
-        raise ValueError(f"Rokhan Barbarian level {level} is not implemented yet.")
-
     previous = build_rokhan_stonefury_level(level - 1)
     data = advance_template_data(previous, "barbarian", level)
-    features = dict(data["progression_features"])
-    source_level = {
-        2: "Barbarian Level 2",
-        3: "Barbarian Level 3, Path of the Berserker",
-        4: "Barbarian Level 4 Ability Score Improvement",
-        5: "Barbarian Level 5 Extra Attack and Fast Movement",
-        6: "Barbarian Level 6 Path of the Berserker Mindless Rage",
-        7: "Barbarian Level 7 Feral Instinct and Instinctive Pounce",
-    }[level]
-    if level == 2:
-        features.update(danger_sense=True, reckless_attack=True)
-    if level == 3:
-        features.update(frenzy=True)
-    if level == 5:
-        features.update(fast_movement_bonus_ft=10)
-    if level == 6:
-        features.update(mindless_rage=True)
-    if level == 7:
-        features.update(initiative_advantage=True, instinctive_pounce_fraction=0.5)
-    constitution_modifier = 3 if level >= 4 else 2
-    data.update(
-        max_hp=fixed_class_hit_points(level, 12, constitution_modifier),
-        progression_features=features,
-        resources=[item.model_dump() for item in _resources(level)],
-        source=f"D&D Beyond Basic Rules 2024: {source_level}, Orc, Soldier, Savage Attacker, Equipment",
-    )
-    if level == 4:
-        _apply_level_four_advancement(data)
-    if level == 5:
-        _apply_level_five_scaling(data)
+    _apply_row(data, level)
     return CombatantTemplate.model_validate(data)
