@@ -40,7 +40,10 @@ def _build(
 
 
 _VARIANTS = (
-    _build("fighter", "great-weapon", "two-handed-striker", notes="Planned until Graze mastery has shared Python/browser support."),
+    _build(
+        "fighter", "great-weapon", "two-handed-striker", status="active",
+        notes="Great Weapon Fighting and Greatsword Graze are certified in shared Python/browser combat paths.",
+    ),
     _build("fighter", "sword-shield", "defender"),
     _build("fighter", "archer", "ranged-striker"),
     _build("fighter", "dual-wield", "dual-wield-striker"),
