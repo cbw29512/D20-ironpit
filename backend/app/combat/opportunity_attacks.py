@@ -28,9 +28,9 @@ def resolve_opportunity_attack(
     sequence: int, round_number: int, reactor: EncounterCombatant, mover: EncounterCombatant,
     setup: EncounterSetup, distance_before_ft: int, distance_after_ft: int,
     movement_source: MovementSource, dice: DiceProvider, *,
-    disengaged: bool = False, can_see: bool = True,
+    disengaged: bool = False, can_see: bool = True, turn_key: str | None = None,
 ) -> BattleEvent | None:
-    """Resolve a 2024 OA with a legal melee weapon or certified Unarmed Strike Damage option."""
+    """Resolve a 2024 OA on the mover's active turn with a legal melee option."""
     attack = opportunity_attack_weapon(
         reactor, mover, distance_before_ft, distance_after_ft, movement_source,
         disengaged=disengaged, can_see=can_see,
@@ -47,5 +47,5 @@ def resolve_opportunity_attack(
     return resolve_encounter_attack(
         sequence, round_number, reactor, mover, attack, distance_before_ft, dice, setup,
         spend_action=False, advantage_sources=1 if pack else 0,
-        feature_id="opportunity-attack", close_enemy_active=True,
+        feature_id="opportunity-attack", close_enemy_active=True, turn_key=turn_key,
     )
