@@ -4,13 +4,27 @@ This file is the authoritative mass-production policy for Iron Pit canonical her
 
 ## Core rule
 
-Iron Pit builds one persistent canonical combat character per class and advances that same character from level 1 through level 20. A level is a deterministic RAW combat delta, not a separately hand-built character.
+Iron Pit builds one persistent canonical class progression and advances it from level 1 through level 20. A level is a deterministic RAW combat delta, not a separately hand-built character.
 
 The intended pipeline is:
 
-`canonical class identity -> deterministic legal level-1 combat build -> level delta -> reusable combat capabilities -> generated runtime/browser data -> generated certification`
+`canonical class identity -> deterministic legal level-1 combat build -> level delta -> combat-build overlay -> reusable combat capabilities -> generated runtime/browser data -> generated certification`
 
 Do not duplicate complete hero definitions per level when the same result can be derived from the previous level plus the current level's RAW changes.
+
+### Multiple combat builds from one class spine
+
+A class may eventually expose more than one canonical combat build when the user intentionally wants materially different battle roles. These are overlays on one shared 1-20 class progression, not separate copies of the class table.
+
+A combat-build overlay may change only legal role-dependent choices such as subclass, spells, loadout, feats, masteries, Wild Shape package, or deterministic tactical policy. Shared class facts such as proficiency bonus, base class resources, class feature unlock levels, and spell-slot progression must continue to come from the same class spine.
+
+Druid is the first explicit multi-build target:
+
+- `land-damage`: caster-first damage/control Druid; current primary canonical Druid progression.
+- `healer`: future healing-first Druid build using the same Druid class spine and a deterministic combat-healing package.
+- `moon-melee`: future Circle of the Moon Wild Shape melee build using the same Druid class spine and a separately audited beast-form combat package.
+
+Planned overlays do not become runnable or certified merely because their IDs exist. Their subclass rules, spell packages, form packages, tactical policies, and every outcome-changing mechanic must pass the normal RAW/capability gates first.
 
 ## Legal deterministic base ability array
 
@@ -90,12 +104,13 @@ If RAW requires a noncombat choice that cannot affect the arena, choose a legal 
 ## Feat, ASI, spell, equipment, and subclass policy
 
 - Select legal combat-facing options deterministically for the canonical build.
-- Optimize for the character's established combat role without changing that role between levels.
+- Optimize for the character's established combat role without changing that role between levels unless a separate named combat-build overlay intentionally defines a different role.
 - Prefer reusable policies over hero- or level-specific branches.
 - A feat or ASI must update all derived combat values automatically.
 - A caster extends one deterministic class spell package as levels unlock more prepared/known spells and slots; do not create a new spellbook for each level.
+- Role variants may select different legal spell packages while sharing the same class slot progression.
 - Equipment changes only when a legal progression choice materially improves or is required by the canonical combat build.
-- Once a canonical subclass is selected, progression remains on that subclass through level 20 unless the user explicitly changes the project architecture.
+- Once a canonical subclass is selected for a named combat-build overlay, progression remains on that subclass through level 20 unless the user explicitly changes the project architecture.
 
 ## Universal Combat Capability rule
 
@@ -103,7 +118,7 @@ Hero and monster combat behavior must reuse the same shared engine capability wh
 
 A hero/monster record should primarily describe stats, attacks, resources, spells, defenses, and capability IDs. New custom resolver code is justified only when the source introduces a genuinely new outcome-changing RAW mechanic.
 
-If the capability already exists, adding a new hero level or monster should be data work plus generated certification, not a bespoke engine implementation.
+If the capability already exists, adding a new hero level, combat-build overlay, or monster should be data work plus generated certification, not a bespoke engine implementation.
 
 ## Fail-closed RAW rule
 
@@ -120,7 +135,7 @@ One authoritative canonical definition must drive runtime templates, browser her
 
 Do not maintain repeated hand-authored ready lists or duplicate level facts when they can be generated from canonical source data. Existing duplicated bookkeeping is migration debt and should be removed or replaced by equally strong generated assertions during the architecture cleanup.
 
-A level is certified only when its actual RAW combat capabilities are supported and the permanent Python/browser/generated/exact-head gates pass. Certification must never be created by manually editing generated manifests.
+A level or combat-build overlay is certified only when its actual RAW combat capabilities are supported and the permanent Python/browser/generated/exact-head gates pass. Certification must never be created by manually editing generated manifests.
 
 ## Migration rule
 
