@@ -27,7 +27,11 @@
     if ((ability === "strength" || ability === "dexterity") && Q().autoFailStrDex(state)) return { roll: null, succeeded: false };
     const bonus = state.template.saving_throw_bonuses?.[ability];
     if (bonus == null) throw new Error(`${state.template.name} lacks a certified ${ability} saving throw bonus.`);
-    const roll = M().applyD20Bonus(state, "saving-throw-bonus-die", R().d20(bonus, saveMode(state, ability)));
+    let roll = M().applyD20Bonus(state, "saving-throw-bonus-die", R().d20(bonus, saveMode(state, ability)));
+    if (roll.total < dc) {
+      const reroll = window.IRON_PIT_BROWSER_INDOMITABLE?.use(state, ability);
+      if (reroll) roll = reroll;
+    }
     return { roll, succeeded: roll.total >= dc };
   }
 
