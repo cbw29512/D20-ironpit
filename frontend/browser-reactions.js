@@ -64,7 +64,7 @@
     E().spend(reactor.state, "reaction");
     const pack = S().packTactics(reactor, setup);
     return A().resolveAttack(sequence, round, reactor, mover, attack, before, {
-      spendAction: false, advantage: pack ? 1 : 0, featureId: "opportunity-attack", setup,
+      spendAction: false, advantage: pack ? 1 : 0, featureId: "opportunity-attack", setup, turnKey: options.turnKey || null,
     });
   }
 
