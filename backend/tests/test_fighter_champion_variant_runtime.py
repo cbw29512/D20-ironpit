@@ -115,9 +115,8 @@ def test_attack_action_slot_count_comes_only_from_fighter_level() -> None:
             assert len(template.attack_action.slots) == count
 
 
-def test_high_level_character_truth_blocks_readiness_instead_of_dropping_features() -> None:
+def test_level_ten_keeps_tactical_master_automated_and_blocks_on_heroic_warrior() -> None:
     profile = build_fighter_champion_variant_profile("great-weapon", 10)
     template = compile_fighter_champion_variant("great-weapon", 10)
-    issues = audit_character_build(profile, template)
-    assert "combat-feature-not-automated:tactical-master" in issues
-    assert "combat-feature-not-automated:heroic-warrior" in issues
+    assert template.progression_features.tactical_master_sap_weapon_ids == ["greatsword"]
+    assert audit_character_build(profile, template) == ["combat-feature-not-automated:heroic-warrior"]
