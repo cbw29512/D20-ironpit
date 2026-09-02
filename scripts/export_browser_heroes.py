@@ -215,6 +215,8 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["tactical_master_sap_weapon_ids"] = list(progression.tactical_master_sap_weapon_ids)
     if progression.heroic_warrior:
         row["heroic_warrior"] = True
+    if progression.studied_attacks:
+        row["studied_attacks"] = True
     package = canonical_spell_package(class_id, level) if template.spell_save_actions or template.spell_attack_actions or template.defensive_spell_actions or template.healing_actions else None
     if package is not None:
         row["canonical_cantrips"] = [_spell_choice(item) for item in package.cantrips]
