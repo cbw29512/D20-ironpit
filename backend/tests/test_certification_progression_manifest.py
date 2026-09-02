@@ -62,8 +62,14 @@ def test_fighter_level_nine_candidate_cannot_leak_into_public_artifacts_before_p
     manifest = json.loads(HERO_MANIFEST.read_text(encoding="utf-8"))
     fighter = next(hero for hero in manifest["heroes"] if hero["class_id"] == "fighter")
     level_nine = next(level for level in fighter["levels"] if level["level"] == 9)
+    counted_ready = sum(
+        1
+        for hero in manifest["heroes"]
+        for level in hero["levels"]
+        if level["public_ready_status"] == "ready"
+    )
 
-    assert manifest["summary"]["public_ready"] == 18
+    assert manifest["summary"]["public_ready"] == counted_ready
     assert level_nine["runtime_template_id"] is None
     assert level_nine["public_ready_status"] == "blocked"
     assert "hero-level-not-certified" in level_nine["blockers"]
