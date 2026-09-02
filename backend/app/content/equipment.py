@@ -2,64 +2,42 @@ from __future__ import annotations
 
 import logging
 
-from app.domain.models import DamageType, VisualLoadout, Weapon, WeaponAttackKind
+from app.content.weapon_catalog import build_weapon
+from app.domain.models import VisualLoadout, Weapon
 
 logger = logging.getLogger(__name__)
 
 
-def build_longsword() -> Weapon:
+def _audited(weapon_id: str) -> Weapon:
     try:
-        return Weapon(
-            id="longsword",
-            name="Longsword",
-            attack_kind=WeaponAttackKind.MELEE,
-            dice_count=1,
-            dice_size=8,
-            damage_type=DamageType.SLASHING,
-            animation="slash",
-            reach_ft=5,
-        )
+        return build_weapon(weapon_id)
     except Exception as exc:
-        logger.exception("Failed to build longsword content record.")
-        raise RuntimeError("Longsword content could not be created.") from exc
+        logger.exception("Failed to build audited weapon %s.", weapon_id)
+        raise RuntimeError(f"Weapon {weapon_id} could not be created.") from exc
+
+
+def build_greatsword() -> Weapon:
+    return _audited("greatsword")
+
+
+def build_longsword() -> Weapon:
+    return _audited("longsword")
 
 
 def build_scimitar() -> Weapon:
-    try:
-        return Weapon(
-            id="scimitar",
-            name="Scimitar",
-            attack_kind=WeaponAttackKind.MELEE,
-            dice_count=1,
-            dice_size=6,
-            damage_type=DamageType.SLASHING,
-            animation="slash",
-            reach_ft=5,
-            mastery_property="Nick",
-            light=True,
-        )
-    except Exception as exc:
-        logger.exception("Failed to build scimitar content record.")
-        raise RuntimeError("Scimitar content could not be created.") from exc
+    return _audited("scimitar")
+
+
+def build_shortsword() -> Weapon:
+    return _audited("shortsword")
+
+
+def build_longbow() -> Weapon:
+    return _audited("longbow")
 
 
 def build_shortbow() -> Weapon:
-    try:
-        return Weapon(
-            id="shortbow",
-            name="Shortbow",
-            attack_kind=WeaponAttackKind.RANGED,
-            dice_count=1,
-            dice_size=6,
-            damage_type=DamageType.PIERCING,
-            animation="projectile",
-            normal_range_ft=80,
-            long_range_ft=320,
-            projectile="arrow",
-        )
-    except Exception as exc:
-        logger.exception("Failed to build shortbow content record.")
-        raise RuntimeError("Shortbow content could not be created.") from exc
+    return _audited("shortbow")
 
 
 def build_fighter_visual_loadout() -> VisualLoadout:
