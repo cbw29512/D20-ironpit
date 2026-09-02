@@ -99,6 +99,8 @@ def audit_character_build(
         issues.append("runtime-weapon-masteries-mismatch")
     if template.fighting_style != profile.fighting_style:
         issues.append("runtime-fighting-style-mismatch")
+    if template.fighting_styles != profile.fighting_styles:
+        issues.append("runtime-fighting-styles-mismatch")
 
     issues.extend(_audit_background_increases(profile))
     issues.extend(_audit_final_scores(profile))
