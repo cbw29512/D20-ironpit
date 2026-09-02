@@ -53,7 +53,7 @@ def build_mara_quickstep_level(level: int) -> CombatantTemplate:
             "wisdom": 0,
             "charisma": 0,
         },
-        skill_bonuses={"acrobatics": 5},
+        skill_bonuses={"athletics": 3, "acrobatics": 5},
         combat_traits=[
             CombatTrait.SAVAGE_ATTACKER,
             CombatTrait.ADRENALINE_RUSH,
