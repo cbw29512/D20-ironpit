@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from app.combat.damage import BonusDamageSpec
-from app.domain.models import CombatantState, RollMode, WeaponAttack
+from app.domain.models import CombatantState, DamageType, RollMode, WeaponAttack
 
 SNEAK_ATTACK_FEATURE_ID = "sneak-attack"
+SneakDamageSpec = tuple[str, int, int, DamageType]
 
 
 def sneak_attack_bonus_damage(
@@ -12,7 +12,7 @@ def sneak_attack_bonus_damage(
     attack_mode: RollMode,
     turn_key: str | None,
     ally_adjacent_to_target: bool,
-) -> BonusDamageSpec | None:
+) -> SneakDamageSpec | None:
     """Return and consume RAW Sneak Attack when this hit qualifies in Iron Pit."""
     dice_count = attacker.template.progression_features.sneak_attack_d6
     if dice_count <= 0 or not attack.sneak_attack_eligible:
