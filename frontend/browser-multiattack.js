@@ -4,6 +4,7 @@
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const C = () => window.IRON_PIT_BROWSER_CHARGE;
+  const R = () => window.IRON_PIT_BROWSER_LIGHT_ATTACK;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (s) => s.action_available, spend: (s) => { s.action_available = false; } };
   const W = () => window.IRON_PIT_BROWSER_REACTION_MOVEMENT || {
@@ -62,10 +63,10 @@
       animation: "advance", description: `${member.state.template.name} advances ${movement.moved} feet between Multiattack steps.` };
   }
   function resolveAttackAction(sequence, round, member, setup) {
-    const slots = member.state.template.attack_action?.slots;
+    const definition = member.state.template.attack_action, slots = definition?.slots;
     if (!slots?.length || !E().available(member.state, "action")) return { events: [], sequence };
     const events = []; E().spend(member.state, "action");
-    let openingFeature = C()?.openingFeature?.(round, member, setup) || null;
+    let openingFeature = C()?.openingFeature?.(round, member, setup) || null, lightTrigger = null;
     const turnKey = `${round}:${member.combatant_id}`;
     for (const slot of slots) {
       if (member.state.is_dead || member.state.is_unconscious) break;
@@ -79,14 +80,19 @@
         choice = slotChoice(member, target, slot);
       }
       if (choice.attack) {
-        const pack = S().packTactics(member, setup), featureId = openingFeature || (pack ? "pack-tactics" : member.state.template.attack_action.id);
+        const pack = S().packTactics(member, setup), featureId = openingFeature || (pack ? "pack-tactics" : definition.id);
         events.push(A().resolveAttack(sequence++, round, member, target, choice.attack, S().distance(member, target), {
           spendAction: false, advantage: pack ? 1 : 0, setup, featureId, turnKey, allowReckless: true,
         }));
+        if (definition.isAttackAction && !lightTrigger && choice.attack.light) lightTrigger = choice.attack;
         openingFeature = null;
       } else if (choice.save) {
         events.push(V().resolveAction(sequence++, round, member, target, choice.save, S().distance(member, target), { spendAction: false }));
       }
+    }
+    if (definition.isAttackAction && lightTrigger) {
+      const extra = R().resolve(sequence, round, member, setup, lightTrigger, turnKey);
+      events.push(...extra.events); sequence = extra.sequence;
     }
     return { events, sequence };
   }
