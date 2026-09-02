@@ -5,6 +5,7 @@
   const TACTICAL_EFFECT_ID = "tactical-master-sap";
   const SAP_EFFECT_IDS = new Set([WEAPON_EFFECT_ID, TACTICAL_EFFECT_ID]);
   const T = () => window.IRON_PIT_BROWSER_TIMED;
+  const W = () => window.IRON_PIT_BROWSER_WEAPON_MASTERY;
 
   function applyEffect(attackerId, target, round, effectId, sourceEffectId) {
     if (target.state.is_dead || target.state.current_hp <= 0) return false;
@@ -14,9 +15,7 @@
   }
 
   function weaponEligible(state, attack) {
-    return attack.masteryProperty === "Sap"
-      && Boolean(attack.weaponId)
-      && (state.template.weapon_masteries || []).includes(attack.weaponId);
+    return W().active(state, attack, "Sap");
   }
 
   function applyWeapon(attacker, target, attack, round) {
@@ -33,9 +32,7 @@
   }
 
   function tacticalEligible(state, attack) {
-    return Boolean(state.template.tactical_master_sap)
-      && Boolean(attack.weaponId)
-      && (state.template.weapon_masteries || []).includes(attack.weaponId);
+    return Boolean(state.template.tactical_master_sap) && W().mastered(state, attack);
   }
 
   function applyTactical(attacker, target, attack, round) {
