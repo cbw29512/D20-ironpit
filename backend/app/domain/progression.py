@@ -19,6 +19,7 @@ class ProgressionCombatFeatures(BaseModel):
     indomitable_bonus: int = Field(default=0, ge=0, le=20)
     tactical_master_sap_weapon_ids: list[str] = Field(default_factory=list)
     heroic_warrior: bool = False
+    studied_attacks: bool = False
     sneak_attack_d6: int = Field(default=0, ge=0, le=10)
     critical_move_fraction: float = Field(default=0.0, ge=0.0, le=1.0)
     tactical_shift_fraction: float = Field(default=0.0, ge=0.0, le=1.0)
