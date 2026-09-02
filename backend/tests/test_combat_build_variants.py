@@ -49,12 +49,15 @@ def test_every_build_reuses_its_single_class_progression_spine() -> None:
         assert variant.status in {"active", "planned"}
 
 
-def test_fighter_great_weapon_is_active_without_changing_public_build_identity() -> None:
+def test_certified_fighter_builds_are_active_without_changing_public_build_identity() -> None:
     great_weapon = get_combat_build_variant("fighter", "great-weapon")
+    sword_shield = get_combat_build_variant("fighter", "sword-shield")
     assert great_weapon.status == "active"
+    assert sword_shield.status == "active"
     assert "Graze" in great_weapon.notes
+    assert "Shield AC" in sword_shield.notes
     assert CANONICAL_BUILD_ID == "canonical"
-    assert great_weapon.id != CANONICAL_BUILD_ID
+    assert {great_weapon.id, sword_shield.id}.isdisjoint({CANONICAL_BUILD_ID})
 
 
 def test_subclass_specific_builds_are_explicit_without_redefining_the_class() -> None:
