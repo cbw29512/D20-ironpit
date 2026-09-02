@@ -108,7 +108,8 @@ def compile_fighter_champion_variant(build_id: str, level: int) -> CombatantTemp
         saving_throw_bonuses=saving_throw_bonuses(scores, level, ("strength", "constitution")),
         skill_bonuses={"athletics": athletics, "acrobatics": acrobatics},
         combat_traits=[CombatTrait.SAVAGE_ATTACKER, CombatTrait.ADRENALINE_RUSH, CombatTrait.RELENTLESS_ENDURANCE],
-        fighting_style=profile.fighting_style, weapon_masteries=profile.weapon_masteries,
+        fighting_style=profile.fighting_style, fighting_styles=profile.fighting_styles,
+        weapon_masteries=profile.weapon_masteries,
         visual=VisualLoadout(
             armor=spec.armor, main_hand=spec.primary_weapon,
             off_hand="shield" if spec.shield else (spec.secondary_weapons[0] if build_id == "dual-wield" else None),
