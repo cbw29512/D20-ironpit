@@ -52,7 +52,6 @@ class OnHitDamage(BaseModel):
     damage_bonus: int = 0
     damage_type: DamageType
 
-
 class Weapon(BaseModel):
     id: str
     name: str
