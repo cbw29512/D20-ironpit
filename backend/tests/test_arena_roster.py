@@ -76,8 +76,10 @@ def test_mara_quickstep_matches_level_one_rogue_loadout() -> None:
     assert mara.weapon_attack.weapon.name == "Shortsword"
     assert mara.alternate_weapon_attacks[0].weapon.name == "Shortbow"
     assert (mara.weapon_attack.attack_bonus, mara.weapon_attack.damage_bonus) == (5, 3)
-    assert mara.weapon_attack.conditional_damage[0].dice_size == 6
-    assert mara.weapon_attack.conditional_damage[0].trigger == "attack_advantage"
+    assert mara.progression_features.sneak_attack_d6 == 1
+    assert mara.weapon_attack.sneak_attack_eligible is True
+    assert mara.alternate_weapon_attacks[0].sneak_attack_eligible is True
+    assert not mara.weapon_attack.conditional_damage
 
 
 def test_srd_bandit_profile() -> None:
