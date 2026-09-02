@@ -63,6 +63,7 @@ def build_mara_quickstep_profile() -> CharacterBuildProfile:
         ],
         skill_proficiencies=["Athletics", "Intimidation", "Acrobatics", "Perception", "Sleight of Hand", "Stealth"],
         weapon_masteries=["shortsword", "shortbow"],
+        combat_loadout_kind="dual-wield",
         feature_audits=[
             _feature("sneak-attack", "Sneak Attack", "class", combat_relevant=True, automated=True),
             _feature(
