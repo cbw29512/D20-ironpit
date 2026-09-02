@@ -35,6 +35,8 @@ def build_scimitar() -> Weapon:
             damage_type=DamageType.SLASHING,
             animation="slash",
             reach_ft=5,
+            mastery_property="Nick",
+            light=True,
         )
     except Exception as exc:
         logger.exception("Failed to build scimitar content record.")
