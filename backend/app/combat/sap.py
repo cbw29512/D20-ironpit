@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.timed_conditions import apply_timed_condition, remove_effect_instance
+from app.combat.weapon_mastery import weapon_mastery_active
 from app.domain.models import CombatantState, WeaponAttack
 
 WEAPON_SAP_EFFECT_ID = "weapon-mastery-sap"
@@ -30,10 +31,7 @@ def apply_sap_effect(
 
 
 def weapon_sap_eligible(state: CombatantState, attack: WeaponAttack) -> bool:
-    return (
-        attack.weapon.mastery_property == "Sap"
-        and attack.weapon.id in state.template.weapon_masteries
-    )
+    return weapon_mastery_active(state, attack, "Sap")
 
 
 def apply_weapon_sap(
