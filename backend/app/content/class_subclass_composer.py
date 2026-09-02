@@ -17,15 +17,19 @@ def _level_row(rows: Mapping[int, Any], level: int) -> Any:
     return rows[level]
 
 
+def _items(row: Any, field: str) -> tuple[str, ...]:
+    return tuple(getattr(row, field, ()))
+
+
 def base_class_combat_features(class_id: str, level: int, rows: Mapping[int, Any]) -> tuple[str, ...]:
-    """Compile only universal class/build features, excluding every registered subclass overlay feature."""
+    """Compile universal class/build features only; subclass features are layered afterward."""
     _level_row(rows, level)
     subclass_ids = subclass_feature_ids_for_class(class_id)
     active: list[str] = []
     for current in range(1, level + 1):
         row = _level_row(rows, current)
-        removed = [feature for feature in row.features_removed if feature not in subclass_ids]
-        added = [feature for feature in row.features_added if feature not in subclass_ids]
+        removed = [feature for feature in _items(row, "features_removed") if feature not in subclass_ids]
+        added = [feature for feature in _items(row, "features_added") if feature not in subclass_ids]
         active = [feature for feature in active if feature not in removed]
         active.extend(feature for feature in added if feature not in active)
     return tuple(active)
@@ -55,7 +59,7 @@ def base_class_arena_ignored(class_id: str, level: int, rows: Mapping[int, Any])
     for current in range(1, level + 1):
         row = _level_row(rows, current)
         ignored.extend(
-            feature for feature in row.arena_ignored
+            feature for feature in _items(row, "arena_ignored")
             if feature not in subclass_ignored and feature not in ignored
         )
     return tuple(ignored)
