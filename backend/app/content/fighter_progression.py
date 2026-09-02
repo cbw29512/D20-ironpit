@@ -46,9 +46,17 @@ def _apply_row(data: dict[str, object], level: int) -> None:
     strength_mod = _modifier(row.strength)
     dexterity_mod = _modifier(row.dexterity)
     constitution_mod = _modifier(row.constitution)
-    primary.update(attack_bonus=row.proficiency_bonus + strength_mod, damage_bonus=strength_mod,
-                   damage_die_minimum=3 if "great-weapon-fighting" in features else None)
-    shortbow.update(attack_bonus=row.proficiency_bonus + dexterity_mod, damage_bonus=dexterity_mod)
+    primary.update(
+        attack_bonus=row.proficiency_bonus + strength_mod,
+        damage_bonus=strength_mod,
+        attack_ability_modifier=strength_mod,
+        damage_die_minimum=3 if "great-weapon-fighting" in features else None,
+    )
+    shortbow.update(
+        attack_bonus=row.proficiency_bonus + dexterity_mod,
+        damage_bonus=dexterity_mod,
+        attack_ability_modifier=dexterity_mod,
+    )
     ids = ["karnok-greatsword", "karnok-shortbow"]
     attack_action = None
     if row.attack_count > 1:
