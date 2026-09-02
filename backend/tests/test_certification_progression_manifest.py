@@ -58,30 +58,33 @@ def test_fighter_level_eight_manifest_preserves_gwf_and_extra_attack_without_blo
     assert level_eight["public_ready_status"] == "ready"
 
 
-def test_fighter_level_nine_is_public_and_level_ten_remains_blocked() -> None:
+def test_fighter_level_ten_is_public_and_level_eleven_remains_blocked() -> None:
     manifest = json.loads(HERO_MANIFEST.read_text(encoding="utf-8"))
     fighter = next(hero for hero in manifest["heroes"] if hero["class_id"] == "fighter")
-    level_nine = next(level for level in fighter["levels"] if level["level"] == 9)
     level_ten = next(level for level in fighter["levels"] if level["level"] == 10)
+    level_eleven = next(level for level in fighter["levels"] if level["level"] == 11)
     counted_ready = sum(
         1
         for hero in manifest["heroes"]
         for level in hero["levels"]
         if level["public_ready_status"] == "ready"
     )
-    required = {"indomitable", "tactical-master", "great-weapon-fighting", "multiattack-or-extra-attack"}
+    required = {
+        "heroic-warrior", "indomitable", "tactical-master",
+        "great-weapon-fighting", "multiattack-or-extra-attack",
+    }
     browser = BROWSER_HEROES.read_text(encoding="utf-8")
 
-    assert manifest["summary"]["public_ready"] == counted_ready == 20
-    assert level_nine["runtime_template_id"] == "karnok-stoneward-l9"
-    assert required <= set(level_nine["expected_combat_features"])
-    assert required <= set(level_nine["supported_mechanics"])
-    assert level_nine["unsupported_mechanics"] == []
-    assert level_nine["blockers"] == []
-    assert level_nine["public_ready_status"] == "ready"
-    assert "karnok-stoneward-l9" in browser
+    assert manifest["summary"]["public_ready"] == counted_ready == 21
+    assert level_ten["runtime_template_id"] == "karnok-stoneward-l10"
+    assert required <= set(level_ten["expected_combat_features"])
+    assert required <= set(level_ten["supported_mechanics"])
+    assert level_ten["unsupported_mechanics"] == []
+    assert level_ten["blockers"] == []
+    assert level_ten["public_ready_status"] == "ready"
+    assert "karnok-stoneward-l10" in browser
 
-    assert level_ten["runtime_template_id"] is None
-    assert level_ten["public_ready_status"] == "blocked"
-    assert "hero-level-not-certified" in level_ten["blockers"]
-    assert "karnok-stoneward-l10" not in browser
+    assert level_eleven["runtime_template_id"] is None
+    assert level_eleven["public_ready_status"] == "blocked"
+    assert "hero-level-not-certified" in level_eleven["blockers"]
+    assert "karnok-stoneward-l11" not in browser
