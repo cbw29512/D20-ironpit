@@ -100,14 +100,14 @@ def test_downed_test_fixture_makes_death_save_while_an_ally_is_still_fighting() 
 
 def test_downed_turn_refreshes_reaction_before_death_save(monkeypatch) -> None:
     refreshed_at_zero: list[bool] = []
-    original = encounter_engine.refresh_reaction
+    original = encounter_engine.refresh_start_of_turn
 
     def spy(state) -> None:
-        if state.current_hp == 0 and not state.is_dead:
-            refreshed_at_zero.append(True)
         original(state)
+        if state.current_hp == 0 and not state.is_dead and state.reaction_available:
+            refreshed_at_zero.append(True)
 
-    monkeypatch.setattr(encounter_engine, "refresh_reaction", spy)
+    monkeypatch.setattr(encounter_engine, "refresh_start_of_turn", spy)
     _downed_hero_result()
     assert refreshed_at_zero, "a 0-HP turn must still refresh the creature's Reaction"
 
