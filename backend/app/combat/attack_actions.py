@@ -4,7 +4,11 @@ import logging
 
 from app.combat.action_economy import is_available, spend
 from app.combat.ally_context import pack_tactics_active
-from app.combat.attack_action_rules import preferred_distance, slot_choice, validate_slots
+from app.combat.attack_action_rules import (
+    attack_action_slot_choice,
+    preferred_attack_action_distance,
+    validate_attack_action_slots,
+)
 from app.combat.attack_action_targeting import select_slot_target
 from app.combat.dice import DiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
@@ -23,19 +27,19 @@ logger = logging.getLogger(__name__)
 
 def _move_for_slot(sequence, round_number, attacker, target, slot, setup, dice, turn_key):
     events, sequence, _ = move_toward_with_reactions(
-        sequence, round_number, attacker, target, setup, preferred_distance(attacker, slot), dice,
-        turn_key=turn_key,
+        sequence, round_number, attacker, target, setup,
+        preferred_attack_action_distance(attacker, slot), dice, turn_key=turn_key,
     )
     return events, sequence
 
 
 def _prepare_first_slot(sequence, round_number, attacker, target, slot, setup, dice, turn_key):
-    if any(slot_choice(attacker, target, slot)):
+    if any(attack_action_slot_choice(attacker, target, slot)):
         return [], sequence, True
     events, sequence = _move_for_slot(sequence, round_number, attacker, target, slot, setup, dice, turn_key)
     if attacker.state.is_dead or attacker.state.is_unconscious:
         return events, sequence, False
-    if any(slot_choice(attacker, target, slot)):
+    if any(attack_action_slot_choice(attacker, target, slot)):
         return events, sequence, True
     if not is_available(attacker.state, "action"):
         return events, sequence, False
@@ -52,7 +56,7 @@ def resolve_attack_action(
 ) -> tuple[list[BattleEvent], int]:
     """Resolve an explicit Attack action or monster Multiattack with legal movement and retargeting."""
     try:
-        validate_slots(attacker)
+        validate_attack_action_slots(attacker)
         definition = attacker.state.template.attack_action
         if definition is None or not is_available(attacker.state, "action"):
             raise ValueError("Attack action or Multiattack is not available.")
@@ -76,13 +80,13 @@ def resolve_attack_action(
             target = select_slot_target(attacker, setup, slot)
             if target is None:
                 continue
-            attack, save_action = slot_choice(attacker, target, slot)
+            attack, save_action = attack_action_slot_choice(attacker, target, slot)
             if attack is None and save_action is None:
                 moved, sequence = _move_for_slot(sequence, round_number, attacker, target, slot, setup, dice, turn_key)
                 events.extend(moved)
                 if attacker.state.is_dead or attacker.state.is_unconscious:
                     break
-                attack, save_action = slot_choice(attacker, target, slot)
+                attack, save_action = attack_action_slot_choice(attacker, target, slot)
             if attack is not None:
                 pack = pack_tactics_active(attacker, target, setup)
                 feature_id = opening_feature or ("pack-tactics" if pack else definition.id)
