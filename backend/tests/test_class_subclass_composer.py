@@ -3,7 +3,10 @@ from app.content.canonical_class_combat_spines import (
     canonical_base_class_features,
     canonical_combat_features,
 )
+from app.content.core_subclass_overlay_data import CORE_SUBCLASS_DELTA_DATA
+from app.content.fighter_subclass_overlay_data import FIGHTER_SUBCLASS_DELTA_DATA
 from app.content.hero_progressions import HERO_BY_CLASS
+from app.content.hero_variant_policy import TARGET_SUBCLASSES
 from app.content.subclass_combat_overlays import SUBCLASS_COMBAT_OVERLAYS, subclass_combat_features
 
 
@@ -19,11 +22,22 @@ def _legacy_combined_features(class_id: str, level: int) -> tuple[str, ...]:
     return tuple(active)
 
 
-def test_every_canonical_subclass_is_a_sparse_overlay_on_its_base_class() -> None:
-    assert set(SUBCLASS_COMBAT_OVERLAYS) == {hero.subclass_id for hero in HERO_BY_CLASS.values()}
+def test_subclass_registry_is_derived_from_authoritative_overlay_data() -> None:
+    expected = set(CORE_SUBCLASS_DELTA_DATA) | set(FIGHTER_SUBCLASS_DELTA_DATA)
+    assert set(SUBCLASS_COMBAT_OVERLAYS) == expected
+
+
+def test_every_selected_canonical_subclass_is_registered_on_its_base_class() -> None:
+    for class_id, hero in HERO_BY_CLASS.items():
+        overlay = SUBCLASS_COMBAT_OVERLAYS[hero.subclass_id]
+        assert overlay.class_id == class_id
+
+
+def test_every_registered_subclass_is_a_sparse_overlay_in_its_target_family() -> None:
     for subclass_id, overlay in SUBCLASS_COMBAT_OVERLAYS.items():
         assert overlay.class_id in HERO_BY_CLASS
-        assert HERO_BY_CLASS[overlay.class_id].subclass_id == subclass_id
+        assert overlay.subclass_id == subclass_id
+        assert subclass_id in TARGET_SUBCLASSES[overlay.class_id]
         assert all(1 <= level <= 20 for level in overlay.deltas)
         assert len(overlay.deltas) < 20
 
