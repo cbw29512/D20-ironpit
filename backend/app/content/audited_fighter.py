@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.content.armor_class_rules import compile_armored_base_ac
 from app.content.canonical_hero_policy import canonical_template_id
 from app.content.equipment import build_shortbow
 from app.content.hero_progressions import HERO_BY_CLASS
@@ -52,13 +53,15 @@ def build_karnok_stoneward() -> CombatantTemplate:
     """Level-1 canonical Fighter derived from the 2024 Basic Rules."""
     level = 1
     hero = HERO_BY_CLASS["fighter"]
+    fighting_style = "Defense"
+    armor_class = compile_armored_base_ac(16, fighting_style, "heavy")
     return CombatantTemplate(
         id=canonical_template_id("fighter", level),
         name=hero.hero_name,
         archetype=hero.class_name,
         level=level,
         kind="character",
-        armor_class=17,
+        armor_class=armor_class,
         max_hp=12,
         speed_ft=30,
         initiative_bonus=1,
@@ -74,7 +77,7 @@ def build_karnok_stoneward() -> CombatantTemplate:
             CombatTrait.ADRENALINE_RUSH,
             CombatTrait.RELENTLESS_ENDURANCE,
         ],
-        fighting_style="Defense",
+        fighting_style=fighting_style,
         weapon_masteries=["flail", "javelin", "spear"],
         visual=VisualLoadout(
             armor="chain-mail",
