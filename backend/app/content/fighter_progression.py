@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 from app.content.audited_fighter import build_karnok_stoneward
+from app.content.canonical_class_combat_spines import canonical_combat_features
 from app.content.canonical_progression import advance_template_data
-from app.content.fighter_combat_levels import FIGHTER_COMBAT_LEVELS, fighter_combat_features
+from app.content.fighter_combat_levels import FIGHTER_COMBAT_LEVELS
 from app.content.hero_combat_feature_registry import (
     compile_progression_feature_fields,
     unsupported_hero_engine_features,
@@ -12,6 +13,10 @@ from app.domain.models import CombatantTemplate, ResourceDefinition
 
 def _modifier(score: int) -> int:
     return (score - 10) // 2
+
+
+def _features(level: int) -> tuple[str, ...]:
+    return canonical_combat_features("fighter", level, "champion")
 
 
 def _resources(level: int) -> list[ResourceDefinition]:
@@ -29,7 +34,7 @@ def _resources(level: int) -> list[ResourceDefinition]:
 
 def _apply_row(data: dict[str, object], level: int) -> None:
     row = FIGHTER_COMBAT_LEVELS[level]
-    features = fighter_combat_features(level)
+    features = _features(level)
     primary = data.get("weapon_attack")
     alternates = data.get("alternate_weapon_attacks")
     if not isinstance(primary, dict) or not isinstance(alternates, list):
@@ -69,11 +74,11 @@ def _apply_row(data: dict[str, object], level: int) -> None:
 
 
 def unsupported_fighter_engine_features(level: int) -> tuple[str, ...]:
-    return unsupported_hero_engine_features(fighter_combat_features(level))
+    return unsupported_hero_engine_features(_features(level))
 
 
 def build_karnok_stoneward_level(level: int) -> CombatantTemplate:
-    """Compile Karnok from the complete 1-20 Fighter combat table; unsupported mechanics fail closed."""
+    """Compile Karnok from Fighter base + Champion overlay; unsupported mechanics fail closed."""
     if level not in FIGHTER_COMBAT_LEVELS:
         raise ValueError(f"Karnok Fighter level {level} must be between 1 and 20.")
     unsupported = unsupported_fighter_engine_features(level)
