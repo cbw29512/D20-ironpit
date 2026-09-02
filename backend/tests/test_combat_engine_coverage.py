@@ -15,7 +15,7 @@ def _fighter_statuses() -> dict[str, str]:
         "vex-mastery": "supported",
         "nick-mastery": "blocked",
         "two-weapon-fighting": "blocked",
-        "longbow-slow-mastery": "arena_out_of_scope",
+        "slow-mastery": "arena_out_of_scope",
     }
 
 
@@ -77,10 +77,10 @@ def test_partial_status_is_not_valid_for_declared_build_requirement() -> None:
 
 def test_arena_ignored_capability_must_be_explicitly_out_of_scope() -> None:
     statuses = _fighter_statuses()
-    statuses["longbow-slow-mastery"] = "blocked"
+    statuses["slow-mastery"] = "blocked"
 
     issues = audit_build_capability_contract(
         FIGHTER_COMBAT_BUILD_CHOICES.values(), statuses, _fighter_build_statuses(),
     )
 
-    assert any("longbow-slow-mastery" in issue and "arena_out_of_scope" in issue for issue in issues)
+    assert any("slow-mastery" in issue and "arena_out_of_scope" in issue for issue in issues)
