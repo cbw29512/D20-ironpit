@@ -91,9 +91,9 @@ FIGHTER_CHAMPION_VARIANT_SPECS = {
     "dual-wield": _spec(
         build_id="dual-wield", primary_ability="dexterity", base_scores=_DEX_BASE,
         background_increases=_DEX_BG, fighting_styles=("Two-Weapon Fighting", "Defense"),
-        armor="studded-leather", shield=False, primary_weapon="scimitar",
-        secondary_weapons=("shortsword", "longbow"),
-        mastery_priority=("scimitar", "shortsword", "longbow", "javelin", "longsword", "greatsword"),
+        armor="studded-leather", shield=False, primary_weapon="shortsword",
+        secondary_weapons=("scimitar", "longbow"),
+        mastery_priority=("shortsword", "scimitar", "longbow", "javelin", "longsword", "greatsword"),
         class_equipment_option="package",
         class_equipment=("Studded Leather Armor", "Scimitar", "Shortsword", "Longbow", "20 Arrows", "Quiver", "Dungeoneer's Pack", "11 GP"),
         loadout_kind="dual-wield", asi_plan=_DEX_ASI, boon_ability="wisdom",
