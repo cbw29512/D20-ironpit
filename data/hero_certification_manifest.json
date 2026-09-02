@@ -5,7 +5,7 @@
   "summary": {
     "canonical_heroes": 12,
     "level_slots": 240,
-    "public_ready": 22
+    "public_ready": 23
   },
   "heroes": [
     {
@@ -2798,24 +2798,60 @@
             "id": "champion",
             "name": "Champion"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "karnok-stoneward-l12",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Fighter 12 Ability Score Improvement (+2 Constitution)"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "athletics-advantage",
+            "attack:karnok-greatsword",
+            "attack:karnok-shortbow",
+            "expanded-critical-range",
+            "great-weapon-fighting",
+            "heroic-warrior",
+            "indomitable",
+            "initiative-advantage",
+            "multiattack-or-extra-attack",
+            "post-critical-movement",
+            "resource:action-surge",
+            "resource:adrenaline-rush",
+            "resource:indomitable",
+            "resource:relentless-endurance",
+            "resource:second-wind",
+            "tactical-master",
+            "tactical-shift",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savage-attacker"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "athletics-advantage",
+            "attack:karnok-greatsword",
+            "attack:karnok-shortbow",
+            "expanded-critical-range",
+            "great-weapon-fighting",
+            "heroic-warrior",
+            "indomitable",
+            "initiative-advantage",
+            "multiattack-or-extra-attack",
+            "post-critical-movement",
+            "resource:action-surge",
+            "resource:adrenaline-rush",
+            "resource:indomitable",
+            "resource:relentless-endurance",
+            "resource:second-wind",
+            "tactical-master",
+            "tactical-shift",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savage-attacker"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 13,
