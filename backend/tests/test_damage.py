@@ -68,6 +68,22 @@ def test_longsword_has_no_goblin_advantage_bonus_damage() -> None:
     assert components[0].source == "Longsword"
 
 
+def test_great_weapon_fighting_floors_each_weapon_damage_die_to_three() -> None:
+    fighter = build_combatant_state(build_demo_fighter())
+    attack = fighter.template.weapon_attack.model_copy(update={"damage_die_minimum": 3})
+
+    total, components = resolve_weapon_damage(
+        fighter,
+        attack,
+        FixedDiceProvider([1]),
+        critical=False,
+        attack_mode=RollMode.NORMAL,
+    )
+
+    assert components[0].rolls == [3]
+    assert total.total == 3 + attack.damage_bonus
+
+
 def _replacement(trigger: str) -> ConditionalDamage:
     return ConditionalDamage(
         trigger=trigger,
