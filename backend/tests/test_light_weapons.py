@@ -45,6 +45,19 @@ def test_nick_moves_light_extra_attack_off_bonus_action_and_removes_positive_mod
     assert plan.feature_id == "weapon-mastery-nick"
 
 
+def test_two_weapon_fighting_restores_modifier_without_adding_another_attack() -> None:
+    state = _state()
+    state.template.fighting_style = "Defense"
+    state.template.fighting_styles = ["Defense", "Two-Weapon Fighting"]
+    plan = plan_light_extra_attack(state, state.template.weapon_attack, "1:hero")
+
+    assert plan is not None
+    assert plan.attack.weapon.id == "shortsword"
+    assert plan.attack.damage_bonus == 3
+    assert plan.uses_bonus_action is False
+    assert plan.feature_id == "weapon-mastery-nick"
+
+
 def test_unmastered_nick_uses_ordinary_light_bonus_action() -> None:
     state = _state(masteries=())
     plan = plan_light_extra_attack(state, state.template.weapon_attack, "1:hero")
