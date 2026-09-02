@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from app.content.audited_fighter_profile import build_karnok_stoneward_profile
 from app.content.canonical_progression import advance_profile_data
-from app.domain.character_builds import AbilityIncrease, AbilityScores, CharacterBuildProfile, FeatureAudit
+from app.content.fighter_profile_from_levels import apply_fighter_level_to_profile_data
+from app.domain.character_builds import CharacterBuildProfile, FeatureAudit
 
 
 def _level_two_features() -> list[FeatureAudit]:
@@ -102,15 +103,8 @@ def build_karnok_stoneward_level3_profile() -> CharacterBuildProfile:
 def build_karnok_stoneward_level4_profile() -> CharacterBuildProfile:
     previous = build_karnok_stoneward_level3_profile()
     data = advance_profile_data(previous, 4)
+    apply_fighter_level_to_profile_data(data, 4)
     data.update(
-        advancement_increases=[
-            AbilityIncrease(ability="strength", amount=1).model_dump(),
-            AbilityIncrease(ability="constitution", amount=1).model_dump(),
-        ],
-        final_ability_scores=AbilityScores(
-            strength=18, dexterity=13, constitution=16, intelligence=10, wisdom=10, charisma=10,
-        ).model_dump(),
-        weapon_masteries=[*data["weapon_masteries"], "longsword"],
         feature_audits=_level_four_feature_audits(data),
         source_references=[
             *data["source_references"],
