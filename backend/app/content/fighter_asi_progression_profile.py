@@ -56,3 +56,31 @@ def build_karnok_stoneward_level8_profile() -> CharacterBuildProfile:
         ],
     )
     return CharacterBuildProfile.model_validate(data)
+
+
+def build_karnok_stoneward_level12_profile() -> CharacterBuildProfile:
+    from app.content.fighter_level11_profile import build_karnok_stoneward_level11_profile
+
+    previous = build_karnok_stoneward_level11_profile()
+    data = advance_profile_data(previous, 12)
+    apply_fighter_level_to_profile_data(data, 12)
+    feature = FeatureAudit(
+        feature_id="ability-score-improvement-l12",
+        feature_name="Ability Score Improvement",
+        source_reference="D&D Beyond Basic Rules 2024: Fighter Level 12; Feats — Ability Score Improvement",
+        category="feat",
+        combat_relevant=True,
+        automated=True,
+        notes=("Deterministic durability choice: +2 Constitution, CON 18→20. The authoritative Fighter table "
+               "recalculates maximum HP to 136 and raises the Constitution saving throw while preserving the "
+               "already-certified three-attack Attack action."),
+    )
+    data.update(
+        feature_audits=[*data["feature_audits"], feature.model_dump()],
+        source_references=[
+            *data["source_references"],
+            "Basic Rules 2024: Fighter — Level 12 Ability Score Improvement",
+            "Basic Rules 2024: Feats — Ability Score Improvement (+2 Constitution)",
+        ],
+    )
+    return CharacterBuildProfile.model_validate(data)
