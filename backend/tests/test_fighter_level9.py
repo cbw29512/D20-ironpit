@@ -42,7 +42,7 @@ def test_fighter_level_nine_snapshot_is_derived_from_level_eight() -> None:
     assert karnok.attack_action is not None and len(karnok.attack_action.slots) == 2
 
 
-def test_fighter_level_nine_candidate_passes_build_fingerprint_and_resource_gates_but_is_not_public_ready() -> None:
+def test_fighter_level_nine_is_publicly_certified_after_all_gates_pass() -> None:
     template = build_karnok_stoneward_level(9)
     profile = build_karnok_stoneward_level9_profile()
     combat_profile = build_karnok_stoneward_level9_combat_profile()
@@ -53,7 +53,9 @@ def test_fighter_level_nine_candidate_passes_build_fingerprint_and_resource_gate
     assert audit_pregen_combat_stats(template, combat_profile) == []
     assert_pregen_combat_stats(template, combat_profile)
     assert_character_resources_raw_ready(template, profile, combat_profile)
-    assert ("fighter", 9, "canonical") not in build_certified_hero_registry()
+    assert build_certified_hero_registry()[("fighter", 9, "canonical")] == (
+        "Karnok Stoneward", "karnok-stoneward-l9",
+    )
 
 
 def test_indomitable_raw_reroll_adds_fighter_level_and_spends_exactly_one_use() -> None:
