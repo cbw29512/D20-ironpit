@@ -60,7 +60,7 @@ def _attack(attack: WeaponAttack) -> dict[str, object]:
         "reach_ft": weapon.reach_ft, "normal_range_ft": weapon.normal_range_ft,
         "long_range_ft": weapon.long_range_ft, "projectile": weapon.projectile,
         "mastery_property": weapon.mastery_property,
-        "light": weapon.light, "finesse": weapon.finesse,
+        "light": weapon.light, "finesse": weapon.finesse, "heavy": weapon.heavy,
         "two_handed": weapon.two_handed, "versatile": weapon.versatile,
         "attack_ability": attack.attack_ability,
         "attack_ability_modifier": attack.attack_ability_modifier,
