@@ -59,7 +59,12 @@ def _attack(attack: WeaponAttack) -> dict[str, object]:
         "damage_type": weapon.damage_type, "animation": weapon.animation,
         "reach_ft": weapon.reach_ft, "normal_range_ft": weapon.normal_range_ft,
         "long_range_ft": weapon.long_range_ft, "projectile": weapon.projectile,
-        "mastery_property": weapon.mastery_property, "rage_eligible": attack.rage_eligible,
+        "mastery_property": weapon.mastery_property,
+        "light": weapon.light, "finesse": weapon.finesse,
+        "two_handed": weapon.two_handed, "versatile": weapon.versatile,
+        "attack_ability": attack.attack_ability,
+        "attack_ability_modifier": attack.attack_ability_modifier,
+        "rage_eligible": attack.rage_eligible,
         "effects": effects, "forbid_target_grappled_by_self": attack.forbid_target_grappled_by_self,
     }
     if attack.fixed_damage is None:
@@ -97,6 +102,7 @@ def definition_from_template(template: CombatantTemplate) -> CombatantDefinition
     if template.attack_action is not None:
         data["attack_action"] = {
             "id": template.attack_action.id, "name": template.attack_action.name,
+            "is_attack_action": template.attack_action.is_attack_action,
             "slots": [slot.model_dump(mode="json") for slot in template.attack_action.slots],
         }
     return CombatantDefinition.model_validate(data)
