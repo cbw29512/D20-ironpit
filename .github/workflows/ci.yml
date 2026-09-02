@@ -99,6 +99,7 @@ jobs:
           node frontend/browser-sneak-attack.test.cjs
           node frontend/browser-vex.test.cjs
           node frontend/browser-graze.test.cjs
+          node frontend/browser-light-weapons.test.cjs
           node frontend/browser-defense-style.test.cjs
           node frontend/browser-fighter-progression.test.cjs
           node frontend/browser-fighter9.test.cjs
@@ -198,6 +199,9 @@ jobs:
           grep -q 'browser-sneak-attack.js' index.html
           grep -q 'browser-vex.js' index.html
           grep -q 'browser-graze.js' index.html
+          grep -q 'browser-light-weapons.js' index.html
+          grep -q 'browser-light-attack.js' index.html
+          grep -q 'browser-standard-attack-action.js' index.html
           grep -q 'browser-source-bound-effects.js' index.html
           grep -q 'browser-ongoing-spell-control.js' index.html
           grep -q 'browser-modifiers.js' index.html
@@ -258,6 +262,9 @@ jobs:
           grep -q 'browser-sneak-attack.js' frontend/index.html
           grep -q 'browser-vex.js' frontend/index.html
           grep -q 'browser-graze.js' frontend/index.html
+          grep -q 'browser-light-weapons.js' frontend/index.html
+          grep -q 'browser-light-attack.js' frontend/index.html
+          grep -q 'browser-standard-attack-action.js' frontend/index.html
           grep -q 'browser-source-bound-effects.js' frontend/index.html
           grep -q 'browser-ongoing-spell-control.js' frontend/index.html
           grep -q 'browser-modifiers.js' frontend/index.html
