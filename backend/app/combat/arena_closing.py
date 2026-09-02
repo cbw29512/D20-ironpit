@@ -103,6 +103,7 @@ def resolve_simple_closing(
     if melee_distance is not None:
         movement_events, sequence, movement = move_toward_with_reactions(
             sequence, round_number, attacker, target, setup, melee_distance, dice,
+            turn_key=turn_key,
         )
         if attacker.state.is_dead or attacker.state.is_unconscious:
             return movement_events, sequence, True
@@ -124,6 +125,7 @@ def resolve_simple_closing(
 
     movement_events, sequence, _ = move_toward_with_reactions(
         sequence, round_number, attacker, target, setup, MELEE_BRAWL_DISTANCE_FT, dice,
+        turn_key=turn_key,
     )
     events.extend(movement_events)
     return events, sequence, True
