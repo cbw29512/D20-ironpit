@@ -28,6 +28,38 @@ The engine must not infer a combat feature from a class name, hero name, monster
 
 Heroes and monsters converge on the same `CombatantTemplate` before combat begins. Once combat begins, shared RAW mechanics operate on combatant state and declared capabilities rather than on hero-vs-monster special cases.
 
+## Universal turn economy
+
+Every normal combatant begins a turn from the same action-economy baseline:
+
+- one Action;
+- one Bonus Action opportunity;
+- one Reaction availability, refreshed at the start of the creature's turn;
+- movement equal to its currently effective Speed.
+
+A feature does not create a different turn engine. It only modifies this baseline.
+
+Examples:
+
+- Extra Attack changes how many attacks the Attack action contains.
+- Action Surge grants an additional Action under its printed restrictions.
+- a monster Multiattack is one declared action containing its listed attacks/effects.
+- Nick changes the timing/cost of the existing Light-property extra attack.
+- a Bonus Action feature consumes the same universal Bonus Action resource.
+- a Reaction feature consumes the same universal Reaction resource.
+
+## Universal d20/save math
+
+Saving throws are shared math, not creature-specific code:
+
+`d20 + creature's save modifier + applicable shared modifiers vs effect DC`
+
+For characters, the save modifier should be derived from the character's ability scores, proficiency bonus, and save proficiencies wherever practical. Monster definitions may preserve printed stat-block save bonuses when the source explicitly supplies them.
+
+Features that alter a failed save act after the shared save result. For example, Legendary Resistance is a limited resource that changes an eligible failed saving throw into a success; it is not a second saving-throw engine.
+
+Attack rolls, ability checks, spell save DCs, and other d20 math should follow the same principle: store authoritative creature facts and run one shared resolver.
+
 ## Shared-fact rule
 
 Common D&D facts are modeled once and reused everywhere.
@@ -37,7 +69,7 @@ Examples:
 - HP is HP regardless of creature type.
 - AC is AC regardless of whether it came from armor, shield, natural armor, a style, or a temporary modifier.
 - ability scores/modifiers and saving throws are shared data.
-- weapon properties such as Light are weapon data.
+- weapon properties such as Light, Finesse, Two-Handed, and Versatile are weapon data.
 - a weapon's mastery property is weapon data.
 - the combatant's selected/known weapon masteries are combatant data.
 - action economy, resources, conditions, concentration, damage defenses, movement, attack rolls, and saves are universal mechanics.
@@ -62,6 +94,35 @@ Examples:
 - Nick: when the normal Light-property extra attack is available and Nick mastery is active for the relevant weapon, move that same extra attack into the Attack action instead of spending a Bonus Action. Nick does not create an additional Light extra attack.
 
 The Light-property rule is a shared weapon/action-economy rule. Nick only changes that rule's timing/cost.
+
+## Character progression and subclass branching
+
+Each core class begins with one persistent named base character identity. Build the base class first and level that same character rather than creating unrelated pregens at each level.
+
+- Levels 1-2 are the shared base-class character.
+- At level 3, create three optimized subclass branches of that same base character.
+- A subclass is a sparse delta applied to the shared class progression; do not duplicate the full class progression three times.
+- Weapon/loadout choice is an independent input from subclass choice. A subclass should not silently force a weapon package unless RAW requires it.
+- Leveling applies the class-level delta first, then the selected subclass delta, then legal build/loadout choices and derived statistics.
+
+This produces one maintained class spine plus small subclass and loadout overlays instead of dozens of handcrafted characters.
+
+### Fighter loadout dimension
+
+Fighter intentionally has four weapon/loadout packages because the class is designed around broad weapon specialization:
+
+1. **Dual Wield** — Dexterity-first Light weapons, using the shared Light/Nick/Vex/TWF rules when the compiled character actually has them.
+2. **Two-Handed** — Strength-first heavy/two-handed weapon package; the current internal `great-weapon` build id represents this loadout during migration.
+3. **Sword and Shield** — one-handed weapon + Shield, with permanent equipment/style AC compiled into base AC.
+4. **Ranged** — Dexterity-first ranged weapon package with Archery when selected.
+
+These four loadouts are independent of Fighter subclass. At level 3+, a Fighter runtime variant is composed as:
+
+`Fighter class spine + one of 3 subclass overlays + one of 4 loadout overlays`
+
+That means twelve combinations can be generated from shared data without maintaining twelve separate Fighter progressions.
+
+For the first three Fighter subclass branches, prefer mechanically distinct 2024 options so the shared engine is exercised broadly: Champion, Battle Master, and Eldritch Knight. Their detailed combat deltas must still be audited and implemented before those branches are certified.
 
 ## Player-build-first rule
 
@@ -142,21 +203,23 @@ If an overlay says `Nick` but the compiled combatant does not actually have the 
 
 - Keep the useful existing shared runtime mechanics.
 - Add universal helpers for repeated capability predicates, beginning with Weapon Mastery activation.
+- Make base action/Bonus Action/Reaction and d20/save math explicitly universal.
 - Remove class/name inference where the required fact can be explicit data.
 - Keep unsupported mechanics fail-closed.
 
 ### Phase B — compile real hero builds
 
 - Make the combat-build overlay an input to actual hero compilation, not metadata only.
-- Fighter is the first migration anchor because Great Weapon, Sword-Shield, Archer, and Dual-Wield exercise armor, shield, Fighting Style, weapon properties, masteries, ranged/melee attacks, and action economy.
-- Do not duplicate four Fighter progression tables; all builds share one Fighter 1-20 spine and apply only legal build choices.
-- Apply the same compiler pattern to the remaining eleven classes.
+- Fighter is the first migration anchor because its four loadouts exercise armor, shield, Fighting Style, weapon properties, masteries, ranged/melee attacks, and action economy.
+- Do not duplicate four Fighter progression tables; all builds share one Fighter 1-20 spine and apply only legal loadout choices.
+- At level 3, branch the same Fighter identity into three subclass overlays; do not duplicate the underlying class or loadout data.
+- Apply the same base-character -> level -> three-subclass pattern to the remaining eleven classes.
 
 ### Phase C — capability inventory
 
 Generate or derive the complete combat capability inventory from:
 
-- every compiled canonical hero/build/level intended for the product; and
+- every compiled canonical hero/build/subclass/level intended for the product; and
 - all 330 SRD monster definitions.
 
 Group missing support by shared mechanic rather than by creature. Implement the highest-yield shared mechanic once, then re-audit all combatants.
@@ -170,13 +233,15 @@ Group missing support by shared mechanic rather than by creature. Implement the 
 ## Immediate implementation order
 
 1. Universal Weapon Mastery predicate shared by Graze, Vex, Sap, Nick, and future masteries.
-2. Complete weapon facts in declarative schemas (`light`, mastery property, attack ability/modifier where required) and preserve them through compilation/export.
-3. Add an executable hero-build compiler contract and make build activation fail closed unless compiled runtime matches the overlay.
-4. Migrate Fighter build choices through that compiler.
-5. Re-implement/simplify Light + Nick on top of the compiled dual-wield data rather than teaching the turn engine about a Fighter build.
-6. Add Two-Weapon Fighting as the small shared damage-modifier rule it actually is.
-7. Re-audit Fighter builds, then expand the same compiler to the other classes.
-8. Re-audit all 330 monsters after each new shared mechanic.
+2. Complete weapon facts in declarative schemas (`light`, `finesse`, `two_handed`, `versatile`, mastery property, attack ability/modifier where required) and preserve them through compilation/export.
+3. Make universal action/Bonus Action/Reaction and save-math contracts explicit in tests and data.
+4. Add an executable hero-build compiler contract and make build activation fail closed unless compiled runtime matches the overlay.
+5. Migrate Fighter's four loadouts through that compiler.
+6. Add Fighter subclass branching as sparse level-3+ overlays; begin with Champion, Battle Master, and Eldritch Knight after each feature family is audited.
+7. Re-implement/simplify Light + Nick on top of the compiled dual-wield data rather than teaching the turn engine about a Fighter build.
+8. Add Two-Weapon Fighting as the small shared damage-modifier rule it actually is.
+9. Re-audit Fighter combinations, then expand the same compiler to the other classes.
+10. Re-audit all 330 monsters after each new shared mechanic.
 
 ## Non-negotiable invariants
 
