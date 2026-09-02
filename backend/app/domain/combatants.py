@@ -74,6 +74,7 @@ class CombatantTemplate(BaseModel):
     parry_reaction: ParryReaction | None = None
     redirect_attack_reaction: RedirectAttackReaction | None = None
     fighting_style: str | None = None
+    fighting_styles: list[str] = Field(default_factory=list)
     weapon_masteries: list[str] = Field(default_factory=list)
     damage_resistances: list[DamageType] = Field(default_factory=list)
     damage_vulnerabilities: list[DamageType] = Field(default_factory=list)
@@ -87,7 +88,18 @@ class CombatantTemplate(BaseModel):
 
     @model_validator(mode="before")
     @classmethod
-    def _default_movement_modes(cls, values: object) -> object:
-        if isinstance(values, dict) and "movement_modes" not in values and "speed_ft" in values:
-            return {**values, "movement_modes": {"walk_ft": values["speed_ft"]}}
-        return values
+    def _normalize_compatibility_fields(cls, values: object) -> object:
+        if not isinstance(values, dict):
+            return values
+        normalized = dict(values)
+        if "movement_modes" not in normalized and "speed_ft" in normalized:
+            normalized["movement_modes"] = {"walk_ft": normalized["speed_ft"]}
+        style = normalized.get("fighting_style")
+        styles = normalized.get("fighting_styles")
+        if styles is None:
+            styles = []
+        if not styles and style:
+            normalized["fighting_styles"] = [style]
+        elif styles and not style:
+            normalized["fighting_style"] = styles[0]
+        return normalized
