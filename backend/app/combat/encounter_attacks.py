@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.combat.ally_context import active_allies
 from app.combat.attacks import resolve_attack
 from app.combat.champion import apply_critical_closing_move
 from app.combat.damage import BonusDamageSpec
@@ -41,6 +42,7 @@ def resolve_encounter_attack(
     if close_enemy is None:
         close_enemy = close_ranged_threat_exists(attacker, setup) if setup is not None else True
     affected_states = [member.state for member in [*setup.heroes, *setup.monsters]] if setup is not None else None
+    sneak_ally = setup is not None and bool(active_allies(attacker, setup))
     event = resolve_attack(
         sequence, round_number, attacker.state, target.state, attack, distance_ft, dice,
         actor_event_id=attacker.combatant_id, target_event_id=target.combatant_id,
@@ -49,7 +51,7 @@ def resolve_encounter_attack(
         turn_key=turn_key, bonus_damage=bonus_damage, close_enemy_active=close_enemy,
         redirect_target=redirect.state if redirect is not None else None,
         redirect_target_event_id=redirect.combatant_id if redirect is not None else None,
-        affected_states=affected_states,
+        affected_states=affected_states, sneak_attack_ally_available=sneak_ally,
     )
     if reckless_started:
         event.description += f" {attacker.state.template.name} uses Reckless Attack."
