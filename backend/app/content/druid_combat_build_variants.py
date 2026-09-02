@@ -8,7 +8,7 @@ from app.content.combat_build_variants import (
     get_combat_build_variant,
 )
 
-DruidCombatRole = Literal["caster-damage", "healing-support", "wild-shape-melee"]
+DruidCombatRole = Literal["caster-damage", "healing", "wild-shape-melee"]
 DruidVariantStatus = Literal["active", "planned"]
 DruidCombatBuildVariant = CombatBuildVariant
 
