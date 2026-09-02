@@ -3,15 +3,11 @@ from __future__ import annotations
 from app.content.audited_fighter import build_karnok_stoneward
 from app.content.canonical_progression import advance_template_data
 from app.content.fighter_combat_levels import FIGHTER_COMBAT_LEVELS, fighter_combat_features
+from app.content.hero_combat_feature_registry import (
+    compile_progression_feature_fields,
+    unsupported_hero_engine_features,
+)
 from app.domain.models import CombatantTemplate, ResourceDefinition
-
-
-_SUPPORTED_ENGINE_FEATURES = {
-    "second-wind", "savage-attacker", "adrenaline-rush", "relentless-endurance",
-    "action-surge", "tactical-mind", "improved-critical", "remarkable-athlete",
-    "extra-attack", "tactical-shift", "great-weapon-fighting", "indomitable",
-    "tactical-master-sap",
-}
 
 
 def _modifier(score: int) -> int:
@@ -31,23 +27,9 @@ def _resources(level: int) -> list[ResourceDefinition]:
             for resource_id, name, uses in rows if uses > 0]
 
 
-def _progression_features(level: int, features: set[str]) -> dict[str, object]:
-    critical_minimum = 18 if "superior-critical" in features else 19 if "improved-critical" in features else 20
-    return {
-        "critical_hit_minimum": critical_minimum,
-        "initiative_advantage": "remarkable-athlete" in features,
-        "athletics_advantage": "remarkable-athlete" in features,
-        "critical_move_fraction": 0.5 if "remarkable-athlete" in features else 0.0,
-        "tactical_shift_fraction": 0.5 if "tactical-shift" in features else 0.0,
-        "great_weapon_fighting": "great-weapon-fighting" in features,
-        "indomitable_bonus": level if "indomitable" in features else 0,
-        "tactical_master_sap": "tactical-master-sap" in features,
-    }
-
-
 def _apply_row(data: dict[str, object], level: int) -> None:
     row = FIGHTER_COMBAT_LEVELS[level]
-    features = set(fighter_combat_features(level))
+    features = fighter_combat_features(level)
     primary = data.get("weapon_attack")
     alternates = data.get("alternate_weapon_attacks")
     if not isinstance(primary, dict) or not isinstance(alternates, list):
@@ -81,13 +63,13 @@ def _apply_row(data: dict[str, object], level: int) -> None:
             "intelligence": 0, "wisdom": 0, "charisma": 0,
         },
         skill_bonuses={"athletics": row.proficiency_bonus + strength_mod, "acrobatics": dexterity_mod},
-        progression_features=_progression_features(level, features),
+        progression_features=compile_progression_feature_fields(features, level),
         source=row.source,
     )
 
 
 def unsupported_fighter_engine_features(level: int) -> tuple[str, ...]:
-    return tuple(feature for feature in fighter_combat_features(level) if feature not in _SUPPORTED_ENGINE_FEATURES)
+    return unsupported_hero_engine_features(fighter_combat_features(level))
 
 
 def build_karnok_stoneward_level(level: int) -> CombatantTemplate:
