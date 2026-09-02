@@ -96,7 +96,7 @@ window.IRON_PIT_BROWSER_BARBARIAN2 = { activate: () => false, attackAdvantage: (
 window.IRON_PIT_BROWSER_CONDITION_IMMUNITY = { immune: () => false };
 window.IRON_PIT_BROWSER_CONCENTRATION = { endIfIncapacitated: () => {} };
 window.IRON_PIT_ACTION_ECONOMY = { available: () => true, spend: () => {} };
-window.IRON_PIT_BROWSER_RAGE = { extendFromAttack: () => {}, endIfIncapacitated: () => {} };
+window.IRON_PIT_BROWSER_RAGE = { damageBonus: () => 0, extendFromAttack: () => {}, endIfIncapacitated: () => {} };
 window.IRON_PIT_BROWSER_ZERO_HP = { applyDamage: (state, amount) => { state.current_hp = Math.max(0, state.current_hp - amount); return null; } };
 window.IRON_PIT_BROWSER_CHAMPION = { criticalMove: (_attacker, _setup, event) => event };
 load("browser-rolls.js");
