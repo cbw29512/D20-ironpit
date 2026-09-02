@@ -45,12 +45,13 @@ const shortsword = {
   bonus: 5, damageBonus: 3, attackAbilityModifier: 3, light: true, masteryProperty: "Vex",
 };
 
-function fighter(masteries = ["scimitar"], withAction = false) {
+function fighter(masteries = ["scimitar"], withAction = false, fightingStyles = []) {
   return {
     combatant_id: "hero-1", side: "heroes", position_ft: 0,
     state: {
       template: {
         kind: "character", name: "Nick Fighter", attacks: [scimitar, shortsword], weapon_masteries: masteries,
+        fighting_style: fightingStyles[0] || null, fighting_styles: fightingStyles,
         attack_action: withAction ? {
           id: "extra-attack", isAttackAction: true,
           slots: [{ attackIds: [scimitar.id] }, { attackIds: [scimitar.id] }],
@@ -82,6 +83,17 @@ const setup = { heroes: [], monsters: [target] };
   assert.ok(surge);
   assert.equal(surge.events.filter((event) => event.event_type === "attack").length, 1,
     "Action Surge cannot produce a second Nick attack in the same turn");
+}
+
+{
+  const member = fighter(["scimitar"], false, ["Defense", "Two-Weapon Fighting"]); setup.heroes = [member];
+  const result = window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION.resolve(
+    1, 1, member, target, scimitar, 5, setup, "1:hero-1",
+  );
+  assert.equal(result.events.length, 2);
+  assert.equal(result.events[1].feature_id, "weapon-mastery-nick");
+  assert.equal(result.events[1].damage_bonus, 3, "Two-Weapon Fighting restores the normal ability modifier");
+  assert.equal(member.state.bonus_action_available, true, "Two-Weapon Fighting does not change Nick action cost");
 }
 
 {
@@ -121,4 +133,4 @@ const setup = { heroes: [], monsters: [target] };
     "a different Light weapon is required");
 }
 
-console.log("Browser Light/Nick regressions passed.");
+console.log("Browser Light/Nick/Two-Weapon Fighting regressions passed.");
