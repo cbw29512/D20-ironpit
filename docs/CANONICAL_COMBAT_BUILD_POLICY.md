@@ -8,23 +8,36 @@ Iron Pit builds one persistent canonical class progression and advances it from 
 
 The intended pipeline is:
 
-`canonical class identity -> deterministic legal level-1 combat build -> level delta -> combat-build overlay -> reusable combat capabilities -> generated runtime/browser data -> generated certification`
+`base class 1-20 spine -> sparse subclass overlay -> combat-build overlay -> compiled combat character -> reusable combat capabilities -> generated runtime/browser data -> generated certification`
 
 Do not duplicate complete hero definitions per level when the same result can be derived from the previous level plus the current level's RAW changes.
 
 ### Multiple combat builds from one class spine
 
-A class may eventually expose more than one canonical combat build when the user intentionally wants materially different battle roles. These are overlays on one shared 1-20 class progression, not separate copies of the class table.
+Combat builds and subclasses are different layers. A subclass adds its RAW features only at its subclass levels. A combat build selects a battle role and the legal role-dependent choices that support it. Multiple builds can therefore share both the same class spine and the same subclass without duplicating either progression.
 
-A combat-build overlay may change only legal role-dependent choices such as subclass, spells, loadout, feats, masteries, Wild Shape package, or deterministic tactical policy. Shared class facts such as proficiency bonus, base class resources, class feature unlock levels, and spell-slot progression must continue to come from the same class spine.
+A combat-build overlay may change only legal role-dependent choices such as ability priorities allowed by the canonical policy, spells, loadout, Fighting Style, feats, masteries, Wild Shape package, or deterministic tactical policy. Shared class facts such as proficiency bonus, base class resources, class feature unlock levels, Sneak Attack/Rage scaling, and spell-slot progression must continue to come from the same class spine.
 
-Druid is the first explicit multi-build target:
+The initial build matrix is:
 
-- `land-damage`: caster-first damage/control Druid; current primary canonical Druid progression.
-- `healer`: future healing-first Druid build using the same Druid class spine and a deterministic combat-healing package.
-- `moon-melee`: future Circle of the Moon Wild Shape melee build using the same Druid class spine and a separately audited beast-form combat package.
+- Fighter: `great-weapon`, `sword-shield`, `archer`, `dual-wield`.
+- Barbarian: `great-weapon`, `weapon-shield`, `dual-wield`.
+- Monk: `unarmed-offense`, `weapon-monk`, `defensive-mobile`.
+- Paladin: `great-weapon`, `sword-shield`, `support-healer`.
+- Ranger: `archer`, `dual-wield`, `sword-shield`.
+- Rogue: `duelist`, `dual-wield`, `ranged`.
+- Wizard: `fire-damage`, `frost-control`, `mixed-arcane`.
+- Sorcerer: `fire-damage`, `frost-control`, `mixed-arcane`.
+- Warlock: `blaster`, `controller`, `blade-hybrid`.
+- Bard: `support-healer`, `controller`, `battle-bard`.
+- Cleric: `healer`, `war-priest`, `divine-offense`.
+- Druid: `land-damage`, `healer`, `moon-melee`.
 
-Planned overlays do not become runnable or certified merely because their IDs exist. Their subclass rules, spell packages, form packages, tactical policies, and every outcome-changing mechanic must pass the normal RAW/capability gates first.
+Three distinct combat roles are the minimum target per class; a class may have more when RAW supports another materially distinct useful role. Fighter intentionally begins with four.
+
+A build does not require a unique subclass. Where a build genuinely depends on a subclass, that dependency is explicit. `land-damage` requires Circle of the Land and `moon-melee` requires Circle of the Moon; the latter remains planned until its Wild Shape and beast-form rules are separately audited.
+
+Planned overlays do not become runnable or certified merely because their IDs exist. Their subclass rules, spell packages, form packages, equipment/mastery choices, tactical policies, and every outcome-changing mechanic must pass the normal RAW/capability gates first.
 
 ## Legal deterministic base ability array
 
@@ -110,7 +123,7 @@ If RAW requires a noncombat choice that cannot affect the arena, choose a legal 
 - A caster extends one deterministic class spell package as levels unlock more prepared/known spells and slots; do not create a new spellbook for each level.
 - Role variants may select different legal spell packages while sharing the same class slot progression.
 - Equipment changes only when a legal progression choice materially improves or is required by the canonical combat build.
-- Once a canonical subclass is selected for a named combat-build overlay, progression remains on that subclass through level 20 unless the user explicitly changes the project architecture.
+- Once a canonical subclass is selected for a compiled character track, progression remains on that subclass through level 20 unless the user explicitly changes the project architecture.
 
 ## Universal Combat Capability rule
 
