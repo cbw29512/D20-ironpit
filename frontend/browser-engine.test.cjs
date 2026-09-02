@@ -126,6 +126,7 @@ function fight(heroIds, monsterIds, dice = deterministicDice()) {
   hero.state.initiative_total = 10;
   boar.state.initiative_total = 20;
   const setup = { heroes: [hero], monsters: [boar] };
+  window.IRON_PIT_BROWSER_STATE.beginTurn(boar.state);
   window.IRON_PIT_DICE = deterministicDice(11);
   const charged = window.IRON_PIT_BROWSER_CHARGE.resolveClosing(1, 1, boar, hero, setup);
   assert.equal(charged.handled, true);
