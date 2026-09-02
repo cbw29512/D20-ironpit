@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.content.attack_bonus_rules import compile_weapon_attack_bonus
 from app.content.pregen_equipment import build_greataxe, build_longbow
 from app.domain.models import WeaponAttack
 
@@ -22,8 +23,11 @@ def _attack(attack_id: str, weapon, attack_bonus: int, damage_bonus: int) -> Wea
 
 
 def build_brom_greataxe_attack() -> WeaponAttack:
-    return _attack("brom-greataxe", build_greataxe(), 5, 3)
+    weapon = build_greataxe()
+    return _attack("brom-greataxe", weapon, 5, 3)
 
 
 def build_selene_longbow_attack() -> WeaponAttack:
-    return _attack("selene-longbow", build_longbow(), 7, 3)
+    weapon = build_longbow()
+    attack_bonus = compile_weapon_attack_bonus(5, "Archery", weapon.attack_kind)
+    return _attack("selene-longbow", weapon, attack_bonus, 3)
