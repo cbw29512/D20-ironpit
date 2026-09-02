@@ -41,6 +41,10 @@ def _attack_issues(template: CombatantTemplate, profile: PregenCombatProfile) ->
             issues.append(f"{prefix}:damage-bonus-mismatch")
         if attack.damage_die_minimum != expected.damage_die_minimum:
             issues.append(f"{prefix}:damage-die-minimum-mismatch")
+        if weapon.mastery_property != expected.mastery_property:
+            issues.append(f"{prefix}:mastery-property-mismatch")
+        if attack.sneak_attack_eligible != expected.sneak_attack_eligible:
+            issues.append(f"{prefix}:sneak-attack-eligibility-mismatch")
         if weapon.reach_ft != expected.reach_ft:
             issues.append(f"{prefix}:reach-mismatch")
         if (weapon.normal_range_ft, weapon.long_range_ft) != (expected.normal_range_ft, expected.long_range_ft):
@@ -75,6 +79,8 @@ def audit_pregen_combat_stats(template: CombatantTemplate, profile: PregenCombat
         issues.append("combat-skill-bonuses-mismatch")
     if sorted(template.weapon_masteries) != sorted(profile.weapon_masteries):
         issues.append("weapon-masteries-mismatch")
+    if template.progression_features.sneak_attack_d6 != profile.sneak_attack_d6:
+        issues.append("sneak-attack-scaling-mismatch")
     if template.fighting_style != profile.fighting_style:
         issues.append("fighting-style-mismatch")
     if template.rage_damage_bonus != profile.rage_damage_bonus:
