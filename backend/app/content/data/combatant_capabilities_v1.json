@@ -24,6 +24,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -176,6 +177,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -299,6 +301,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -437,6 +440,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -563,6 +567,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -742,6 +747,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -864,6 +870,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -961,6 +968,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -1082,6 +1090,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -1181,6 +1190,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -1276,6 +1286,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -1388,6 +1399,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -1483,6 +1495,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -1580,6 +1593,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -1684,6 +1698,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -1788,6 +1803,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -1902,6 +1918,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -2044,6 +2061,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -2143,6 +2161,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -2238,6 +2257,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -2335,6 +2355,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -2430,6 +2451,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -2527,6 +2549,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -2622,6 +2645,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -2722,6 +2746,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -2819,6 +2844,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -2919,6 +2945,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -3035,6 +3062,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -3130,6 +3158,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -3223,6 +3252,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -3314,6 +3344,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -3407,6 +3438,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -3500,6 +3532,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -3594,6 +3627,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -3685,6 +3719,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -3778,6 +3813,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -3871,6 +3907,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -3964,6 +4001,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -4057,6 +4095,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -4148,6 +4187,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -4243,6 +4283,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -4340,6 +4381,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -4437,6 +4479,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -4553,6 +4596,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -4648,6 +4692,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -4745,6 +4790,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -4840,6 +4886,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -4942,6 +4989,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -5041,6 +5089,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -5136,6 +5185,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -5233,6 +5283,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -5334,6 +5385,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -5433,6 +5485,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -5528,6 +5581,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -5628,6 +5682,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -5725,6 +5780,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -5822,6 +5878,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -5919,6 +5976,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -6062,6 +6120,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -6176,6 +6235,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -6294,6 +6354,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -6435,6 +6496,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -6559,6 +6621,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -6666,6 +6729,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -6773,6 +6837,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -6894,6 +6959,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -6999,6 +7065,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -7111,6 +7178,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -7224,6 +7292,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -7339,6 +7408,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -7455,6 +7525,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -7574,6 +7645,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -7704,6 +7776,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -7817,6 +7890,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -7970,6 +8044,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -8111,6 +8186,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -8262,6 +8338,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -8387,6 +8464,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -8493,6 +8571,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -8593,6 +8672,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -8699,6 +8779,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -8821,6 +8902,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -8929,6 +9011,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -9095,6 +9178,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -9211,6 +9295,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -9308,6 +9393,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -9456,6 +9542,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -9560,6 +9647,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -9668,6 +9756,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -9772,6 +9861,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -9899,6 +9989,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -10006,6 +10097,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -10130,6 +10222,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -10238,6 +10331,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -10357,6 +10451,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -10461,6 +10556,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -10586,6 +10682,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -10711,6 +10808,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -10846,6 +10944,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -10993,6 +11092,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -11168,6 +11268,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -11268,6 +11369,7 @@
       "initiative_advantage": false,
       "athletics_advantage": false,
       "heroic_warrior": false,
+      "studied_attacks": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
