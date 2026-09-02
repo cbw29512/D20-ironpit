@@ -69,6 +69,15 @@ def fighting_style_audit(style: str, *, additional: bool = False) -> FeatureAudi
     )
 
 
+def equipment_audit(build_id: str, weapon_id: str) -> FeatureAudit:
+    return FeatureAudit(
+        feature_id=f"equipment-{build_id}", feature_name=f"{build_id.replace('-', ' ').title()} Loadout",
+        source_reference="D&D Beyond Basic Rules 2024: Fighter Starting Equipment; Equipment",
+        category="equipment", combat_relevant=True, automated=True,
+        runtime_attack_weapon_id=weapon_id,
+    )
+
+
 def advancement_audit(level: int, description: str) -> FeatureAudit:
     name = "Boon of Combat Prowess" if level == 19 else "Ability Score Improvement"
     return FeatureAudit(
