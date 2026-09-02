@@ -38,8 +38,8 @@
       distance_after_ft: movement.after, movement_ft: movement.moved, animation: "advance",
       description: `${member.state.template.name} closes ${movement.moved} feet toward melee.` };
   }
-  function applyMove(sequence, round, member, target, setup, desired) {
-    const moved = W().moveToward(sequence, round, member, target, setup, desired), events = [...moved.events];
+  function applyMove(sequence, round, member, target, setup, desired, turnKey = null) {
+    const moved = W().moveToward(sequence, round, member, target, setup, desired, "speed", { turnKey }), events = [...moved.events];
     sequence = moved.sequence; if (moved.movement) events.push(moveEvent(sequence++, round, member, target, moved.movement));
     return { events, sequence, movement: moved.movement };
   }
@@ -65,7 +65,7 @@
     if (member.state.template.attack_action) return { events: [], sequence, handled: false };
     const melee = reachableMelee(member, distance);
     if (melee) {
-      const move = applyMove(sequence, round, member, target, setup, melee.reach || 5);
+      const move = applyMove(sequence, round, member, target, setup, melee.reach || 5, turnKey);
       if (member.state.is_dead || member.state.is_unconscious) return { events: move.events, sequence: move.sequence, handled: true };
       if (move.movement && S().distance(member, target) <= (melee.reach || 5)) return { events: move.events, sequence: move.sequence, handled: false };
     }
@@ -78,14 +78,14 @@
         actor_name: member.state.template.name, feature_id: "dodge", animation: "dodge",
         description: `${member.state.template.name} Dodges while closing to melee.` });
     }
-    const move = applyMove(sequence, round, member, target, setup, BRAWL_DISTANCE); events.push(...move.events);
+    const move = applyMove(sequence, round, member, target, setup, BRAWL_DISTANCE, turnKey); events.push(...move.events);
     return { events, sequence: move.sequence, handled: true };
   }
-  function closeAfterAction(sequence, round, member, setup) {
+  function closeAfterAction(sequence, round, member, setup, turnKey) {
     if (F()?.backlineHoldsPosition(member, setup)) return { events: [], sequence };
     const target = S().nearestTarget(member, setup);
     if (!target || S().distance(member, target) <= BRAWL_DISTANCE) return { events: [], sequence };
-    const moved = applyMove(sequence, round, member, target, setup, BRAWL_DISTANCE);
+    const moved = applyMove(sequence, round, member, target, setup, BRAWL_DISTANCE, turnKey);
     return { events: moved.events, sequence: moved.sequence };
   }
   function deathSave(sequence, round, member) {
@@ -132,7 +132,7 @@
     const distance = S().distance(member, target);
     if (member.state.template.attack_action) {
       const multi = M().resolveAttackAction(sequence, round, member, setup); events.push(...multi.events); sequence = multi.sequence;
-      const approach = closeAfterAction(sequence, round, member, setup); events.push(...approach.events);
+      const approach = closeAfterAction(sequence, round, member, setup, turnKey); events.push(...approach.events);
       return finalize(events, approach.sequence, round, member, setup, turnKey);
     }
     const saveAction = member.state.template.saving_throw_actions?.find((a) => V().legalAction(a, target, distance));
