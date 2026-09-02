@@ -28,14 +28,33 @@ def test_old_champion_weapon_clones_are_rejected_by_subclass_contract() -> None:
             compose_character_combat_recipe("fighter", "champion", build_id, 8)
 
 
-def test_new_fighter_subclasses_remain_fail_closed_until_their_feature_overlays_are_audited() -> None:
+def test_new_fighter_subclasses_compose_from_one_class_spine_but_stay_planned() -> None:
+    expected_features = {
+        "battle-master": "battle-master-know-your-enemy",
+        "eldritch-knight": "eldritch-knight-war-magic",
+        "psi-warrior": "psi-warrior-telekinetic-adept",
+    }
     for subclass_id, build_id in (
         ("battle-master", "dual-wield"),
         ("eldritch-knight", "sword-shield"),
         ("psi-warrior", "archer"),
     ):
-        with pytest.raises(ValueError, match="Unknown combat subclass overlay"):
-            compose_character_combat_recipe("fighter", subclass_id, build_id, 8)
+        recipe = compose_character_combat_recipe("fighter", subclass_id, build_id, 8)
+        assert recipe.shared_progression_id == "fighter-1-20"
+        assert recipe.build_status == "planned"
+        assert expected_features[subclass_id] in recipe.combat_features
+        assert recipe.build_choices is not None
+
+
+def test_fighter_subclass_specializations_keep_their_declared_weapons() -> None:
+    battle_master = compose_character_combat_recipe("fighter", "battle-master", "dual-wield", 8)
+    eldritch_knight = compose_character_combat_recipe("fighter", "eldritch-knight", "sword-shield", 8)
+    psi = compose_character_combat_recipe("fighter", "psi-warrior", "archer", 8)
+    assert battle_master.build_choices.primary_weapon == "shortsword"
+    assert battle_master.build_choices.secondary_weapons[0] == "scimitar"
+    assert eldritch_knight.build_choices.primary_weapon == "longsword"
+    assert eldritch_knight.build_choices.shield is True
+    assert psi.build_choices.primary_weapon == "longbow"
 
 
 def test_rogue_base_and_thief_overlay_are_independent_of_legacy_role_record() -> None:
