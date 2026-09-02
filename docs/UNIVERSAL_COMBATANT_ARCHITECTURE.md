@@ -58,7 +58,7 @@ For characters, the save modifier should be derived from the character's ability
 
 Features that alter a failed save act after the shared save result. For example, Legendary Resistance is a limited resource that changes an eligible failed saving throw into a success; it is not a second saving-throw engine.
 
-Attack rolls, ability checks, spell save DCs, and other d20 math should follow the same principle: store authoritative creature facts and run one shared resolver.
+Attack rolls, ability checks, spell save DCs, and other d20 math follow the same principle: store authoritative creature facts and run one shared resolver.
 
 ## Shared-fact rule
 
@@ -84,7 +84,7 @@ Weapon Mastery activation is universal:
 
 No Fighter, Rogue, Ranger, Barbarian, hero-name, monster-name, or weapon-name branch belongs in the activation check.
 
-The individual mastery handler should contain only its RAW effect and trigger.
+The individual mastery handler contains only its RAW effect and trigger.
 
 Examples:
 
@@ -95,50 +95,59 @@ Examples:
 
 The Light-property rule is a shared weapon/action-economy rule. Nick only changes that rule's timing/cost.
 
-## Character progression and subclass branching
+## Hero progression and optimized clone families
 
-Each core class begins with one persistent named base character identity. Build the base class first and level that same character rather than creating unrelated pregens at each level.
+Each class begins with one persistent named base character identity. Build and level that same character instead of creating unrelated pregens at every level.
 
 - Levels 1-2 are the shared base-class character.
-- At level 3, create three optimized subclass branches of that same base character.
-- A subclass is a sparse delta applied to the shared class progression; do not duplicate the full class progression three times.
-- Weapon/loadout choice is an independent input from subclass choice. A subclass should not silently force a weapon package unless RAW requires it.
-- Leveling applies the class-level delta first, then the selected subclass delta, then legal build/loadout choices and derived statistics.
+- At level 3 the class takes its canonical audited subclass.
+- From that point, generate optimized variants that remain the same character/class/subclass progression but make legal build choices appropriate to a different combat role, weapon package, spell emphasis, or equipment package.
+- "Clone" means a derived variant, not a byte-for-byte copy: class/subclass features remain shared, while ability advancement, fighting style, weapon mastery choices, equipment, feats, prepared/known spells, and similar legal selections may differ when optimization requires it.
+- Do not duplicate the class/subclass progression logic for each variant. Apply a small variant overlay to the shared progression.
 
-This produces one maintained class spine plus small subclass and loadout overlays instead of dozens of handcrafted characters.
+### Variant counts
 
-### Fighter loadout dimension
+- Fighter: four optimized variants.
+- Every other core class: three optimized variants.
+- The current build registry already has this exact shape: 37 named variants total (4 Fighter + 3 × 11 other classes).
 
-Fighter intentionally has four weapon/loadout packages because the class is designed around broad weapon specialization:
+### Fighter Champion family
 
-1. **Dual Wield** — Dexterity-first Light weapons, using the shared Light/Nick/Vex/TWF rules when the compiled character actually has them.
-2. **Two-Handed** — Strength-first heavy/two-handed weapon package; the current internal `great-weapon` build id represents this loadout during migration.
-3. **Sword and Shield** — one-handed weapon + Shield, with permanent equipment/style AC compiled into base AC.
-4. **Ranged** — Dexterity-first ranged weapon package with Archery when selected.
+Karnok Stoneward follows one Fighter progression through level 3, takes Champion, then produces four optimized Champion variants that each continue to level 20:
 
-These four loadouts are independent of Fighter subclass. At level 3+, a Fighter runtime variant is composed as:
+1. **Dual Wield** — Dexterity-first Light weapon package; uses shared Light/Nick/Vex/Two-Weapon Fighting rules only when the compiled character actually has those facts.
+2. **Two-Handed** — Strength-first two-handed weapon package; the current internal `great-weapon` build id represents this variant during migration.
+3. **Sword and Shield** — one-handed weapon + Shield with a defensively sensible Fighting Style/mastery package.
+4. **Ranged** — Dexterity-first ranged weapon package with Archery and appropriate ranged masteries.
 
-`Fighter class spine + one of 3 subclass overlays + one of 4 loadout overlays`
+All four variants share Fighter and Champion progression. Optimization may change legal ASI/feat choices, weapon masteries, fighting-style selections, and equipment where appropriate to the weapon package.
 
-That means twelve combinations can be generated from shared data without maintaining twelve separate Fighter progressions.
+### Other class families
 
-For the first three Fighter subclass branches, prefer mechanically distinct 2024 options so the shared engine is exercised broadly: Champion, Battle Master, and Eldritch Knight. Their detailed combat deltas must still be audited and implemented before those branches are certified.
+For each of the other eleven classes:
+
+1. build the named base character through levels 1-2;
+2. apply the class's canonical audited subclass at level 3;
+3. generate three optimized variants from that same class/subclass character;
+4. continue each variant through level 20 using the same shared class/subclass feature progression plus small optimization overlays.
+
+A caster variant may differ mainly by spell selection or combat role rather than by weapon. A martial/hybrid variant may differ by weapon, fighting style, feat/ASI path, armor/shield choice, or spell package. The optimization must remain RAW and legal at the level where the choice is made.
 
 ## Player-build-first rule
 
 A combat-build overlay is not runnable merely because its metadata exists.
 
-For each hero build:
+For each hero variant:
 
-1. Start with the legal class progression and level facts.
-2. Apply legal ability/background/feat choices.
-3. Apply equipment, armor, shield, fighting style, weapons, and weapon-masteries selections.
-4. Apply class, subclass, species, and spell/resource facts.
+1. Start with the legal base character progression.
+2. Apply the canonical subclass at the legal level.
+3. Apply the chosen optimization overlay (abilities/ASIs, equipment, armor, shield, fighting style, weapons, masteries, feats, spells, and other legal choices).
+4. Derive HP, AC, initiative, attack bonuses, damage modifiers, save bonuses, skill bonuses, spell DCs, resources, and action options from the resulting character facts.
 5. Compile the resulting definition to the same runtime shape used by monsters.
-6. Audit that the compiled runtime actually matches the declared build.
-7. Only then may the build be marked active/runnable.
+6. Audit that the compiled runtime actually matches the declared variant.
+7. Only then may the variant be marked active/runnable.
 
-An active build must therefore have an executable compiled combatant, not only a `CombatBuildChoiceOverlay`.
+An active variant must therefore have an executable compiled combatant, not only metadata.
 
 ## Monster rule
 
@@ -186,7 +195,7 @@ Do not begin by writing class-specific or monster-specific combat branches.
 
 Certification must prove the compiled creature, not declarations in isolation.
 
-A build/creature is runnable only when:
+A variant/creature is runnable only when:
 
 - its authoritative definition is legal/audited;
 - the compiler produces the expected runtime data;
@@ -195,31 +204,30 @@ A build/creature is runnable only when:
 - permanent tests cover the shared mechanic;
 - source-size, generated-static parity, manifests, and exact-head CI pass.
 
-If an overlay says `Nick` but the compiled combatant does not actually have the Light weapon, selected mastery, and runtime data necessary to use it, the build is not active.
+If an overlay says `Nick` but the compiled combatant does not actually have the Light weapon, selected mastery, and runtime data necessary to use it, the variant is not active.
 
 ## Migration plan
 
 ### Phase A — stabilize the contract
 
-- Keep the useful existing shared runtime mechanics.
-- Add universal helpers for repeated capability predicates, beginning with Weapon Mastery activation.
-- Make base action/Bonus Action/Reaction and d20/save math explicitly universal.
+- Keep useful existing shared runtime mechanics.
+- Centralize repeated capability predicates, beginning with Weapon Mastery activation.
+- Make base Action/Bonus Action/Reaction and d20/save math explicitly universal.
 - Remove class/name inference where the required fact can be explicit data.
 - Keep unsupported mechanics fail-closed.
 
-### Phase B — compile real hero builds
+### Phase B — compile real hero variants
 
-- Make the combat-build overlay an input to actual hero compilation, not metadata only.
-- Fighter is the first migration anchor because its four loadouts exercise armor, shield, Fighting Style, weapon properties, masteries, ranged/melee attacks, and action economy.
-- Do not duplicate four Fighter progression tables; all builds share one Fighter 1-20 spine and apply only legal loadout choices.
-- At level 3, branch the same Fighter identity into three subclass overlays; do not duplicate the underlying class or loadout data.
-- Apply the same base-character -> level -> three-subclass pattern to the remaining eleven classes.
+- Make the build overlay an input to actual hero compilation, not metadata only.
+- Fighter Champion is the first migration anchor because its four variants exercise armor, shield, Fighting Style, weapon properties, masteries, ranged/melee attacks, and action economy.
+- Build one Fighter/Champion progression and apply four optimized variant overlays rather than four progression tables.
+- Apply the same base character -> canonical subclass -> three optimized variants pattern to each remaining class.
 
 ### Phase C — capability inventory
 
 Generate or derive the complete combat capability inventory from:
 
-- every compiled canonical hero/build/subclass/level intended for the product; and
+- every compiled canonical hero/variant/level intended for the product; and
 - all 330 SRD monster definitions.
 
 Group missing support by shared mechanic rather than by creature. Implement the highest-yield shared mechanic once, then re-audit all combatants.
@@ -234,13 +242,13 @@ Group missing support by shared mechanic rather than by creature. Implement the 
 
 1. Universal Weapon Mastery predicate shared by Graze, Vex, Sap, Nick, and future masteries.
 2. Complete weapon facts in declarative schemas (`light`, `finesse`, `two_handed`, `versatile`, mastery property, attack ability/modifier where required) and preserve them through compilation/export.
-3. Make universal action/Bonus Action/Reaction and save-math contracts explicit in tests and data.
-4. Add an executable hero-build compiler contract and make build activation fail closed unless compiled runtime matches the overlay.
-5. Migrate Fighter's four loadouts through that compiler.
-6. Add Fighter subclass branching as sparse level-3+ overlays; begin with Champion, Battle Master, and Eldritch Knight after each feature family is audited.
-7. Re-implement/simplify Light + Nick on top of the compiled dual-wield data rather than teaching the turn engine about a Fighter build.
-8. Add Two-Weapon Fighting as the small shared damage-modifier rule it actually is.
-9. Re-audit Fighter combinations, then expand the same compiler to the other classes.
+3. Make universal Action/Bonus Action/Reaction and save-math contracts explicit in tests and data.
+4. Add an executable hero-variant compiler contract and make activation fail closed unless compiled runtime matches the variant overlay.
+5. Migrate Fighter Champion's four optimized variants through that compiler and level each to 20.
+6. Re-implement/simplify Light + Nick on top of the compiled dual-wield data rather than teaching the turn engine about a Fighter build.
+7. Add Two-Weapon Fighting as the small shared damage-modifier rule it actually is.
+8. Re-audit all four Fighter Champion variants.
+9. Repeat the same compiler pattern for the other eleven classes, three optimized variants each.
 10. Re-audit all 330 monsters after each new shared mechanic.
 
 ## Non-negotiable invariants
