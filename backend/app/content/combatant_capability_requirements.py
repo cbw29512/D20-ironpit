@@ -32,11 +32,19 @@ def combatant_capability_requirements(
     }
     if template.visual.off_hand == "shield":
         requirements.add("shield-ac")
+    progression = template.progression_features
+    replacements = set(progression.tactical_master_sap_weapon_ids)
+    if progression.indomitable_bonus:
+        requirements.add("indomitable")
+    if replacements:
+        requirements.add("tactical-master")
     attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
     mastered = set(template.weapon_masteries)
     for attack in attacks:
         weapon = attack.weapon
         if weapon.id not in mastered or weapon.mastery_property is None:
+            continue
+        if weapon.id in replacements:
             continue
         capability = _MASTERY_REQUIREMENTS.get(weapon.mastery_property)
         if capability is None:
