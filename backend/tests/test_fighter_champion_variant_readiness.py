@@ -30,11 +30,12 @@ def test_archer_is_not_ready_while_nick_on_its_actual_sheet_is_blocked() -> None
     assert issues == ["combat-capability-not-supported:nick-mastery:blocked"]
 
 
-def test_dual_wield_is_not_ready_while_twf_and_nick_are_blocked() -> None:
+def test_dual_wield_structure_is_clean_but_capabilities_still_fail_closed() -> None:
     issues = audit_fighter_champion_variant_readiness("dual-wield", 3, STATUSES)
-    assert "combat-feature-not-automated:fighting-style-two-weapon-fighting" in issues
-    assert "combat-capability-not-supported:nick-mastery:blocked" in issues
-    assert "combat-capability-not-supported:two-weapon-fighting:blocked" in issues
+    assert issues == [
+        "combat-capability-not-supported:nick-mastery:blocked",
+        "combat-capability-not-supported:two-weapon-fighting:blocked",
+    ]
 
 
 def test_level_nine_and_above_stay_blocked_by_explicit_unfinished_character_features() -> None:
