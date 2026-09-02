@@ -75,6 +75,7 @@ class WeaponAttack(BaseModel):
     damage_bonus: int
     damage_die_minimum: int | None = Field(default=None, ge=2, le=100)
     attack_ability: AbilityName | None = None
+    attack_ability_modifier: int | None = None
     fixed_damage: int | None = Field(default=None, ge=0)
     conditional_damage: list[ConditionalDamage] = Field(default_factory=list)
     on_hit_damage: list[OnHitDamage] = Field(default_factory=list)
