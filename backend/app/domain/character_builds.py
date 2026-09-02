@@ -55,6 +55,9 @@ class CharacterBuildProfile(BaseModel):
     class_id: str
     class_name: str
     level: int = Field(ge=1, le=20)
+    subclass_id: str | None = None
+    subclass_name: str | None = None
+    build_id: str | None = None
     species_id: str
     species_name: str
     background_id: str
