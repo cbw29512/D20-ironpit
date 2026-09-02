@@ -18,15 +18,15 @@ def test_build_recipe_reuses_one_class_and_subclass_feature_progression() -> Non
     assert archer.combat_features == expected
     assert great_weapon.build_id != archer.build_id
     assert great_weapon.role != archer.role
-    assert great_weapon.build_status == "active"
-    assert sword_shield.build_status == "active"
+    assert great_weapon.build_status == "planned"
+    assert sword_shield.build_status == "planned"
     assert archer.build_status == "planned"
 
 
-def test_active_fighter_great_weapon_recipe_has_only_certified_build_choices() -> None:
+def test_fighter_great_weapon_recipe_declares_build_choices_without_claiming_runtime_activation() -> None:
     great_weapon = compose_character_combat_recipe("fighter", "champion", "great-weapon", 8)
 
-    assert great_weapon.build_status == "active"
+    assert great_weapon.build_status == "planned"
     assert great_weapon.build_choices is not None
     assert great_weapon.build_choices.fighting_style == "Great Weapon Fighting"
     assert great_weapon.build_choices.primary_weapon == "greatsword"
@@ -37,10 +37,10 @@ def test_active_fighter_great_weapon_recipe_has_only_certified_build_choices() -
     assert great_weapon.build_choices.arena_ignored == ()
 
 
-def test_active_fighter_sword_shield_recipe_has_only_certified_build_choices() -> None:
+def test_fighter_sword_shield_recipe_declares_build_choices_without_claiming_runtime_activation() -> None:
     sword_shield = compose_character_combat_recipe("fighter", "champion", "sword-shield", 8)
 
-    assert sword_shield.build_status == "active"
+    assert sword_shield.build_status == "planned"
     assert sword_shield.build_choices is not None
     assert sword_shield.build_choices.fighting_style == "Defense"
     assert sword_shield.build_choices.armor == "chain-mail"
