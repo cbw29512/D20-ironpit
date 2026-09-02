@@ -10,6 +10,7 @@ from app.combat.conditions import apply_hit_conditions, attack_roll_condition_so
 from app.combat.damage import BonusDamageSpec, resolve_weapon_damage
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
+from app.combat.graze import resolve_graze_miss
 from app.combat.modifier_stack import (
     apply_d20_bonus_dice, attacks_against_advantage_sources, consume_attacks_against_advantage,
     consume_next_attack_against_advantage, effective_armor_class, next_attack_against_advantage_sources,
@@ -88,8 +89,15 @@ def resolve_attack(
                 tactical_sap_applied = apply_tactical_master_sap(attacker, attacker_event_id, actual_defender, attack, round_number)
             vex_applied = apply_vex_mastery(attacker, attacker_event_id, actual_event_id, attack, round_number, applied_total)
             end_rage_if_incapacitated(actual_defender)
+        else:
+            graze = resolve_graze_miss(attacker, actual_defender, attack, dice, affected_states)
+            if graze is not None:
+                damage_roll, damage_components, damage_outcome = graze
+                end_rage_if_incapacitated(actual_defender)
         outcome = "CRITICAL HIT" if critical else ("HIT" if hit else "MISS")
         description = f"{attacker.template.name}: {outcome} with {weapon.name}."
+        if not hit and damage_roll is not None:
+            description += f" Graze deals {damage_roll.total} {weapon.damage_type.value} damage."
         if redirect_used: description += f" {defender.template.name} uses Redirect Attack; {actual_defender.template.name} becomes the target."
         if parry_used: description += f" {actual_defender.template.name} uses Parry."
         if weapon_sap_applied: description += f" Sap mastery affects {actual_defender.template.name}."
