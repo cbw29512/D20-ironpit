@@ -2,20 +2,21 @@ from __future__ import annotations
 
 import logging
 
+from app.content.fighting_style_rules import FightingStyleSelection, has_fighting_style
 from app.domain.models import WeaponAttackKind
 
 logger = logging.getLogger(__name__)
 
 
 def archery_fighting_style_bonus(
-    fighting_style: str | None,
+    fighting_styles: FightingStyleSelection,
     weapon_kind: WeaponAttackKind,
 ) -> int:
     """Return the static 2024 Archery bonus for attacks made with Ranged weapons."""
     try:
         if not isinstance(weapon_kind, WeaponAttackKind):
             raise ValueError("Archery requires a typed weapon attack kind.")
-        return 2 if fighting_style == "Archery" and weapon_kind is WeaponAttackKind.RANGED else 0
+        return 2 if has_fighting_style(fighting_styles, "Archery") and weapon_kind is WeaponAttackKind.RANGED else 0
     except ValueError:
         raise
     except Exception as exc:
@@ -25,12 +26,12 @@ def archery_fighting_style_bonus(
 
 def compile_weapon_attack_bonus(
     base_attack_bonus: int,
-    fighting_style: str | None,
+    fighting_styles: FightingStyleSelection,
     weapon_kind: WeaponAttackKind,
 ) -> int:
     """Compile permanent weapon attack bonuses before combat-time roll modifiers."""
     try:
-        return base_attack_bonus + archery_fighting_style_bonus(fighting_style, weapon_kind)
+        return base_attack_bonus + archery_fighting_style_bonus(fighting_styles, weapon_kind)
     except ValueError:
         raise
     except Exception as exc:
