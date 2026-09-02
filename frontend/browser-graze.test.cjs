@@ -9,13 +9,16 @@ global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const htmlPath of [path.join(__dirname, "index.html"), path.join(__dirname, "..", "index.html")]) {
   const html = fs.readFileSync(htmlPath, "utf8");
+  assert.match(html, /browser-weapon-mastery\.js/, `${htmlPath} must load universal mastery rules`);
   assert.match(html, /browser-graze\.js/, `${htmlPath} must load shared Graze rules`);
+  assert.ok(html.indexOf("browser-weapon-mastery.js") < html.indexOf("browser-graze.js"));
   assert.ok(html.indexOf("browser-graze.js") < html.indexOf("browser-attack.js"));
 }
 for (const file of [
   "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-grapple.js", "browser-modifiers.js", "browser-state.js", "browser-rage.js", "browser-sneak-attack.js",
-  "browser-rolls.js", "browser-undead-fortitude.js", "browser-zero-hp.js", "browser-graze.js", "browser-attack.js",
+  "browser-rolls.js", "browser-undead-fortitude.js", "browser-zero-hp.js", "browser-weapon-mastery.js",
+  "browser-graze.js", "browser-attack.js",
 ]) load(file);
 
 const S = window.IRON_PIT_BROWSER_STATE;
