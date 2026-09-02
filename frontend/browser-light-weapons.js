@@ -1,15 +1,12 @@
 (() => {
   "use strict";
 
+  const W = () => window.IRON_PIT_BROWSER_WEAPON_MASTERY;
   const MARKER = "light-extra-attack";
   const NICK = "weapon-mastery-nick";
 
   function nickActive(state, attack) {
-    return Boolean(
-      attack?.light
-      && attack.masteryProperty === "Nick"
-      && state.template.weapon_masteries?.includes(attack.weaponId),
-    );
+    return Boolean(attack?.light && W().active(state, attack, "Nick"));
   }
 
   function used(state, turnKey) {
