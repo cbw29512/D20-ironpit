@@ -52,7 +52,7 @@ class CombatModifier(BaseModel):
         if self.kind is ModifierKind.NEXT_ATTACK_AGAINST_ADVANTAGE and self.target_id is None:
             raise ValueError("Target-scoped attack Advantage requires a target id.")
         if self.consume_on_attack_against and self.kind is not ModifierKind.ATTACKS_AGAINST_ADVANTAGE:
-            raise ValueError("Only defender-wide attack Advantage can use consume_on_attack_against.")
+            raise ValueError("Only attack-advantage defender modifiers can use consume_on_attack_against.")
         return self
 
 
