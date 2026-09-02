@@ -47,7 +47,7 @@ def plan_light_extra_attack(
     trigger_attack: WeaponAttack,
     turn_key: str,
 ) -> LightExtraAttackPlan | None:
-    """Plan the shared one-per-turn Light extra attack; Nick changes only its action cost."""
+    """Plan the shared one-per-turn Light extra attack; Nick applies only to the Nick weapon's extra attack."""
     try:
         if not trigger_attack.weapon.light or light_extra_attack_used(state, turn_key):
             return None
@@ -60,7 +60,7 @@ def plan_light_extra_attack(
             return None
         nick_candidate = next((attack for attack in candidates if nick_mastery_active(state, attack)), None)
         chosen = nick_candidate or candidates[0]
-        nick_active = nick_mastery_active(state, trigger_attack) or nick_mastery_active(state, chosen)
+        nick_active = nick_candidate is not None
         return LightExtraAttackPlan(
             attack=_extra_attack_profile(state, chosen),
             uses_bonus_action=not nick_active,
