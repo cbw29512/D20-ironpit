@@ -7,7 +7,8 @@
   }
 
   function active(state, attack, masteryProperty) {
-    return attack?.masteryProperty === masteryProperty && mastered(state, attack);
+    const replaced = window.IRON_PIT_BROWSER_TACTICAL_MASTER?.selected?.(state, attack) || false;
+    return attack?.masteryProperty === masteryProperty && mastered(state, attack) && !replaced;
   }
 
   window.IRON_PIT_BROWSER_WEAPON_MASTERY = { active, mastered };
