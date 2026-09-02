@@ -85,6 +85,7 @@ def _progression(level: int, styles: list[str], build_id: str) -> ProgressionCom
         tactical_master_sap_weapon_ids=(
             list(_TACTICAL_MASTER_SAP_WEAPONS[build_id]) if level >= 9 else []
         ),
+        heroic_warrior=level >= 10,
         critical_move_fraction=0.5,
         tactical_shift_fraction=0.5 if level >= 5 else 0.0,
     )
