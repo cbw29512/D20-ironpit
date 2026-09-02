@@ -79,7 +79,7 @@ _VARIANTS = (
         required_subclass_id="circle-land",
     ),
     _build(
-        "druid", "healer", "healing-support",
+        "druid", "healer", "healing",
         notes="Healing-first spell/loadout overlay; subclass remains independently selectable.",
     ),
     _build(
