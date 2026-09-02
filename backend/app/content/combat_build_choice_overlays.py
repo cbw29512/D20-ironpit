@@ -89,3 +89,11 @@ def get_combat_build_choice_overlay(class_id: str, build_id: str) -> CombatBuild
         except KeyError as exc:
             raise ValueError(f"Fighter combat build choices are not defined for {build_id}.") from exc
     raise ValueError(f"Combat build choices are not yet defined for class {class_id}.")
+
+
+def maybe_combat_build_choice_overlay(class_id: str, build_id: str) -> CombatBuildChoiceOverlay | None:
+    try:
+        return get_combat_build_choice_overlay(class_id, build_id)
+    except ValueError:
+        get_combat_build_variant(class_id, build_id)
+        return None
