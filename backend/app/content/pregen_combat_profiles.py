@@ -20,6 +20,8 @@ class AttackExpectation:
     long_range_ft: int | None = None
     style_attack_bonus: int = 0
     damage_die_minimum: int | None = None
+    mastery_property: str | None = None
+    sneak_attack_eligible: bool = False
     conditional_damage: tuple[tuple[int, int, str], ...] = ()
 
 
@@ -39,6 +41,7 @@ class PregenCombatProfile:
     resources: tuple[tuple[str, int], ...] = ()
     fighting_style: str | None = None
     rage_damage_bonus: int = 0
+    sneak_attack_d6: int = 0
 
 
 def _scores(strength: int, dexterity: int, constitution: int, intelligence: int, wisdom: int, charisma: int) -> AbilityScores:
@@ -136,9 +139,11 @@ def build_seraphine_dawnshield_level4_combat_profile() -> PregenCombatProfile:
 
 
 def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
+    from app.content.rogue_combat_fingerprint import build_mara_quickstep_combat_profile
     profiles = [
         *(_karnok_profile(level) for level in range(1, 9)),
         *(_rokhan_profile(level) for level in range(1, 7)),
         *(_seraphine_profile(level) for level in range(1, 5)),
+        build_mara_quickstep_combat_profile(),
     ]
     return {profile.template_id: profile for profile in profiles}
