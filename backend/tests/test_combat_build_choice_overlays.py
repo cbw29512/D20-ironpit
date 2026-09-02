@@ -25,13 +25,14 @@ def test_fighter_builds_share_progression_but_make_distinct_role_choices() -> No
         "dexterity", "Archery", "longbow",
     )
     assert (dual.primary_ability, dual.fighting_style, dual.primary_weapon) == (
-        "dexterity", "Two-Weapon Fighting", "scimitar",
+        "dexterity", "Two-Weapon Fighting", "shortsword",
     )
 
 
 def test_dual_wield_fighter_declares_nick_and_vex_as_shared_engine_requirements() -> None:
     dual = get_combat_build_choice_overlay("fighter", "dual-wield")
-    assert dual.weapon_masteries[:2] == ("scimitar", "shortsword")
+    assert dual.weapon_masteries[:2] == ("shortsword", "scimitar")
+    assert dual.secondary_weapons[0] == "scimitar"
     assert {"nick-mastery", "vex-mastery"} <= set(dual.required_capabilities)
 
 
