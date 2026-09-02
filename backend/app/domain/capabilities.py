@@ -4,7 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
-from app.domain.actions import ConditionName, ConditionRemovalAction, HealingAction
+from app.domain.actions import AbilityName, ConditionName, ConditionRemovalAction, HealingAction
 from app.domain.capability_effects import AttackEffectDefinition, DiceSpec, GrappleEffectDefinition
 from app.domain.combatants import DamageType, ResourceDefinition, VisualLoadout, WeaponAttackKind
 from app.domain.movement import MovementModes
@@ -31,6 +31,9 @@ class AttackCapabilityDefinition(BaseModel):
     long_range_ft: int | None = Field(default=None, ge=1)
     projectile: str | None = None
     mastery_property: str | None = None
+    light: bool = False
+    attack_ability: AbilityName | None = None
+    attack_ability_modifier: int | None = None
     rage_eligible: bool = False
     effects: list[AttackEffectDefinition] = Field(default_factory=list)
     forbid_target_grappled_by_self: bool = False
@@ -43,6 +46,8 @@ class AttackCapabilityDefinition(BaseModel):
             self.normal_range_ft is None or self.long_range_ft is None
         ):
             raise ValueError("Ranged attack requires normal and long range.")
+        if self.attack_ability_modifier is not None and self.attack_ability is None:
+            raise ValueError("Attack ability modifier requires an explicit attack ability.")
         control_count = sum(effect.kind in {"grapple", "condition"} for effect in self.effects)
         if control_count > 1:
             raise ValueError("Current runtime supports one persistent control rider per attack.")
@@ -83,7 +88,8 @@ class CapabilityActionSlot(BaseModel):
 class MultiattackCapabilityDefinition(BaseModel):
     id: str
     name: str = "Multiattack"
-    slots: list[CapabilityActionSlot] = Field(min_length=2, max_length=8)
+    is_attack_action: bool = False
+    slots: list[CapabilityActionSlot] = Field(min_length=1, max_length=8)
 
 
 class CombatantDefinition(BaseModel):
