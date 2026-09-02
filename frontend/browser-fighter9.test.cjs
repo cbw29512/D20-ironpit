@@ -65,6 +65,7 @@ window.IRON_PIT_BROWSER_ZERO_HP = {
 
 load("browser-rolls.js");
 load("browser-timed-conditions.js");
+load("browser-weapon-mastery.js");
 load("browser-tactical-master.js");
 load("browser-modifiers.js");
 load("browser-attack.js");
@@ -165,6 +166,7 @@ function state(template, resources = {}) {
 
 for (const htmlName of ["index.html", path.join("..", "index.html")]) {
   const html = fs.readFileSync(path.join(__dirname, htmlName), "utf8");
+  assert.match(html, /browser-weapon-mastery\.js/);
   assert.match(html, /browser-tactical-master\.js/);
   assert.match(html, /browser-indomitable\.js/);
 }
