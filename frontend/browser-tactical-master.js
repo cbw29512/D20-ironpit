@@ -14,6 +14,11 @@
     }));
   }
 
+  function selected(state, attack) {
+    return W().mastered(state, attack)
+      && (state.template.tactical_master_sap_weapon_ids || []).includes(attack.weaponId);
+  }
+
   function weaponEligible(state, attack) {
     return W().active(state, attack, "Sap");
   }
@@ -31,15 +36,11 @@
     return effects.length;
   }
 
-  function tacticalEligible(state, attack) {
-    return Boolean(state.template.tactical_master_sap) && W().mastered(state, attack);
-  }
-
   function applyTactical(attacker, target, attack, round) {
-    if (!tacticalEligible(attacker.state, attack)) return false;
+    if (!selected(attacker.state, attack)) return false;
     return applyEffect(attacker.combatant_id, target, round, TACTICAL_EFFECT_ID, "tactical-master");
   }
 
   window.IRON_PIT_BROWSER_SAP = { applyEffect, applyWeapon, consume, disadvantage, weaponEligible };
-  window.IRON_PIT_BROWSER_TACTICAL_MASTER = { apply: applyTactical, eligible: tacticalEligible };
+  window.IRON_PIT_BROWSER_TACTICAL_MASTER = { apply: applyTactical, eligible: selected, selected };
 })();
