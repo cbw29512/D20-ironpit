@@ -6,7 +6,7 @@ from app.content.hero_combat_feature_registry import (
 
 def test_shared_feature_registry_compiles_reusable_fighter_and_barbarian_flags() -> None:
     fighter = compile_progression_feature_fields(
-        ("improved-critical", "remarkable-athlete", "great-weapon-fighting", "indomitable"), 9,
+        ("improved-critical", "remarkable-athlete", "great-weapon-fighting", "indomitable", "heroic-warrior"), 10,
     )
     assert fighter == {
         "critical_hit_minimum": 19,
@@ -14,7 +14,8 @@ def test_shared_feature_registry_compiles_reusable_fighter_and_barbarian_flags()
         "athletics_advantage": True,
         "critical_move_fraction": 0.5,
         "great_weapon_fighting": True,
-        "indomitable_bonus": 9,
+        "indomitable_bonus": 10,
+        "heroic_warrior": True,
     }
 
     barbarian = compile_progression_feature_fields(
@@ -32,7 +33,8 @@ def test_shared_feature_registry_compiles_reusable_fighter_and_barbarian_flags()
 
 def test_shared_feature_registry_fails_closed_for_unimplemented_combat_mechanics() -> None:
     assert unsupported_hero_engine_features(("rage", "frenzy")) == ()
+    assert unsupported_hero_engine_features(("heroic-warrior",)) == ()
     assert unsupported_hero_engine_features(("rage", "instinctive-pounce", "brutal-strike")) == (
         "instinctive-pounce", "brutal-strike",
     )
-    assert unsupported_hero_engine_features(("heroic-warrior",)) == ("heroic-warrior",)
+    assert unsupported_hero_engine_features(("heroic-warrior", "studied-attacks")) == ("studied-attacks",)
