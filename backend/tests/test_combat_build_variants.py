@@ -49,6 +49,14 @@ def test_every_build_reuses_its_single_class_progression_spine() -> None:
         assert variant.status in {"active", "planned"}
 
 
+def test_fighter_great_weapon_is_active_without_changing_public_build_identity() -> None:
+    great_weapon = get_combat_build_variant("fighter", "great-weapon")
+    assert great_weapon.status == "active"
+    assert "Graze" in great_weapon.notes
+    assert CANONICAL_BUILD_ID == "canonical"
+    assert great_weapon.id != CANONICAL_BUILD_ID
+
+
 def test_subclass_specific_builds_are_explicit_without_redefining_the_class() -> None:
     land = get_combat_build_variant("druid", "land-damage")
     moon = get_combat_build_variant("druid", "moon-melee")
