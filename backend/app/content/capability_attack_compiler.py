@@ -51,6 +51,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
         mastery_property=definition.mastery_property,
         light=definition.light,
         finesse=definition.finesse,
+        heavy=definition.heavy,
         two_handed=definition.two_handed,
         versatile=definition.versatile,
     )
