@@ -138,8 +138,7 @@ def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
     profiles = [
         _karnok_profile(1, 12), _karnok_profile(2, 20), _karnok_profile(3, 28),
         build_karnok_stoneward_level4_combat_profile(), build_karnok_stoneward_level5_combat_profile(),
-        build_karnok_stoneward_level6_combat_profile(), build_karnok_stoneward_level7_combat_profile(),
-        _karnok_profile(8, 84), _karnok_profile(9, 94),
+        build_karnok_stoneward_level6_combat_profile(), build_karnok_stoneward_level7_combat_profile(), _karnok_profile(8, 84),
         _rokhan_profile(1, 14), _rokhan_profile(2, 23), _rokhan_profile(3, 32), _rokhan_profile(4, 45),
         _rokhan_profile(5, 55), _rokhan_profile(6, 65),
         _seraphine_profile(1, 8, 2), _seraphine_profile(2, 13, 3, 2),
