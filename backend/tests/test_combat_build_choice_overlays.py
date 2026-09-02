@@ -3,6 +3,7 @@ from app.content.combat_build_choice_overlays import (
     COMBAT_BUILD_CHOICE_OVERLAYS,
     FIGHTER_COMBAT_BUILD_CHOICES,
     MONK_COMBAT_BUILD_CHOICES,
+    PALADIN_COMBAT_BUILD_CHOICES,
     get_combat_build_choice_overlay,
 )
 from app.content.combat_build_variants import get_combat_build_variant
@@ -68,7 +69,7 @@ def test_barbarian_subclass_specializations_generate_real_choice_overlays() -> N
 
 
 def test_all_current_choice_overlays_come_from_subclass_specializations() -> None:
-    assert len(COMBAT_BUILD_CHOICE_OVERLAYS) == 10
+    assert len(COMBAT_BUILD_CHOICE_OVERLAYS) == 13
     assert all("derived from" in overlay.notes for overlay in COMBAT_BUILD_CHOICE_OVERLAYS.values())
 
 
@@ -84,3 +85,25 @@ def test_monk_specializations_do_not_invent_weapon_mastery_or_fighting_styles() 
     assert elements.primary_weapon is None
     assert all(not item.weapon_masteries for item in MONK_COMBAT_BUILD_CHOICES.values())
     assert all(item.fighting_style is None for item in MONK_COMBAT_BUILD_CHOICES.values())
+
+
+def test_paladin_oaths_generate_distinct_loadouts_from_shared_rules() -> None:
+    assert set(PALADIN_COMBAT_BUILD_CHOICES) == {"great-weapon", "sword-shield", "support-healer"}
+    devotion = get_combat_build_choice_overlay("paladin", "sword-shield")
+    vengeance = get_combat_build_choice_overlay("paladin", "great-weapon")
+    ancients = get_combat_build_choice_overlay("paladin", "support-healer")
+    assert (devotion.primary_weapon, devotion.shield, devotion.fighting_style) == (
+        "longsword", True, "Defense",
+    )
+    assert (vengeance.primary_weapon, vengeance.shield, vengeance.fighting_style) == (
+        "greatsword", False, "Great Weapon Fighting",
+    )
+    assert (ancients.primary_weapon, ancients.shield, ancients.fighting_style) == (
+        "battleaxe", True, "Defense",
+    )
+    assert devotion.weapon_masteries == ("longsword", "battleaxe")
+    assert vengeance.weapon_masteries == ("greatsword", "longsword")
+    assert ancients.weapon_masteries == ("battleaxe", "longsword")
+    assert "sap-mastery" in devotion.required_capabilities
+    assert "graze-mastery" in vengeance.required_capabilities
+    assert "topple-mastery" in ancients.required_capabilities

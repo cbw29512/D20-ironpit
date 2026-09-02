@@ -4,6 +4,7 @@ from app.content.subclass_specializations import (
     BARBARIAN_SPECIALIZATIONS,
     FIGHTER_SPECIALIZATIONS,
     MONK_SPECIALIZATIONS,
+    PALADIN_SPECIALIZATIONS,
     SubclassSpecialization,
     specializations_for_class,
     subclass_specialization,
@@ -21,7 +22,7 @@ def test_fighter_has_one_coherent_specialization_per_subclass() -> None:
 
 
 def test_weapon_specializations_are_only_catalog_data_and_mastery_choices() -> None:
-    for spec in (*FIGHTER_SPECIALIZATIONS, *BARBARIAN_SPECIALIZATIONS):
+    for spec in (*FIGHTER_SPECIALIZATIONS, *BARBARIAN_SPECIALIZATIONS, *PALADIN_SPECIALIZATIONS):
         assert spec.primary_weapon is not None
         assert spec.source_reference
         weapon = build_weapon(spec.primary_weapon)
@@ -79,6 +80,26 @@ def test_monk_has_one_dexterity_specialization_per_target_subclass() -> None:
     assert (elements.role, elements.primary_weapon) == ("defensive-mobile", None)
     assert all(item.ability_priority[:2] == ("dexterity", "wisdom") for item in MONK_SPECIALIZATIONS)
     assert all(not item.mastery_priority for item in MONK_SPECIALIZATIONS)
+
+
+def test_paladin_has_one_strength_charisma_specialization_per_target_oath() -> None:
+    assert tuple(item.subclass_id for item in specializations_for_class("paladin")) == (
+        "oath-devotion", "oath-vengeance", "oath-ancients",
+    )
+    devotion, vengeance, ancients = PALADIN_SPECIALIZATIONS
+    assert (devotion.role, devotion.primary_weapon, devotion.shield) == (
+        "sword-shield", "longsword", True,
+    )
+    assert (vengeance.role, vengeance.primary_weapon, vengeance.shield) == (
+        "two-handed", "greatsword", False,
+    )
+    assert (ancients.role, ancients.primary_weapon, ancients.shield) == (
+        "support-healing", "battleaxe", True,
+    )
+    assert all(item.ability_priority[:2] == ("strength", "charisma") for item in PALADIN_SPECIALIZATIONS)
+    assert tuple(item.spell_package_id for item in PALADIN_SPECIALIZATIONS) == (
+        "oath-devotion", "oath-vengeance", "oath-ancients",
+    )
 
 
 def test_specialization_without_source_truth_fails_closed() -> None:

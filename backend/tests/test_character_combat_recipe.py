@@ -85,6 +85,21 @@ def test_monk_subclasses_compose_real_planned_roles_from_one_spine() -> None:
         assert not recipe.build_choices.weapon_masteries
 
 
+def test_paladin_oaths_compose_real_planned_loadouts_from_one_spine() -> None:
+    expected = {
+        ("oath-devotion", "sword-shield"): ("longsword", True),
+        ("oath-vengeance", "great-weapon"): ("greatsword", False),
+        ("oath-ancients", "support-healer"): ("battleaxe", True),
+    }
+    for (subclass_id, build_id), (weapon_id, shield) in expected.items():
+        recipe = compose_character_combat_recipe("paladin", subclass_id, build_id, 15)
+        assert recipe.shared_progression_id == "paladin-1-20"
+        assert recipe.build_status == "planned"
+        assert recipe.build_choices.primary_weapon == weapon_id
+        assert recipe.build_choices.shield is shield
+        assert "aura-of-protection" in recipe.combat_features
+
+
 def test_rogue_base_and_thief_overlay_are_independent_of_legacy_role_record() -> None:
     duelist = compose_character_combat_recipe("rogue", "thief", "duelist", 3)
     ranged = compose_character_combat_recipe("rogue", "thief", "ranged", 3)

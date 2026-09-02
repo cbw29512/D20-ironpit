@@ -33,7 +33,6 @@ def test_other_legacy_role_records_stay_planned_until_subclass_migration() -> No
     expected = {
         "barbarian": {"great-weapon", "weapon-shield", "dual-wield"},
         "monk": {"unarmed-offense", "weapon-monk", "defensive-mobile"},
-        "paladin": {"great-weapon", "sword-shield", "support-healer"},
         "ranger": {"archer", "dual-wield", "sword-shield"},
         "rogue": {"duelist", "dual-wield", "ranged"},
     }
@@ -60,6 +59,17 @@ def test_monk_roles_are_owned_by_real_subclasses() -> None:
         "unarmed-offense": "warrior-open-hand",
         "weapon-monk": "warrior-shadow",
         "defensive-mobile": "warrior-elements",
+    }
+
+
+def test_paladin_roles_are_owned_by_real_subclasses() -> None:
+    assert {
+        variant.id: variant.required_subclass_id
+        for variant in combat_build_variants_for("paladin")
+    } == {
+        "great-weapon": "oath-vengeance",
+        "sword-shield": "oath-devotion",
+        "support-healer": "oath-ancients",
     }
 
 

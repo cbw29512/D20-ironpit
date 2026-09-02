@@ -20,7 +20,7 @@ _MASTERY_CAPABILITY = {
     "Sap": "sap-mastery", "Slow": "slow-mastery", "Topple": "topple-mastery",
     "Vex": "vex-mastery",
 }
-_MASTERY_LIMIT = {"fighter": 3, "barbarian": 2, "monk": 0}
+_MASTERY_LIMIT = {"fighter": 3, "barbarian": 2, "monk": 0, "paladin": 2}
 
 
 @dataclass(frozen=True)
@@ -99,6 +99,11 @@ MONK_COMBAT_BUILD_CHOICES = {
     build_id: overlay
     for (class_id, build_id), overlay in COMBAT_BUILD_CHOICE_OVERLAYS.items()
     if class_id == "monk"
+}
+PALADIN_COMBAT_BUILD_CHOICES = {
+    build_id: overlay
+    for (class_id, build_id), overlay in COMBAT_BUILD_CHOICE_OVERLAYS.items()
+    if class_id == "paladin"
 }
 
 

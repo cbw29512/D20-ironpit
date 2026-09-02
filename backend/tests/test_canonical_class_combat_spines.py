@@ -33,13 +33,20 @@ def test_monk_base_numeric_progression_landmarks_exclude_subclass_features() -> 
     )
 
 
-def test_paladin_devotion_numeric_progression_landmarks() -> None:
+def test_paladin_base_numeric_progression_landmarks_exclude_subclass_features() -> None:
     assert PALADIN_COMBAT_LEVELS[1].lay_on_hands_pool == 5
     assert PALADIN_COMBAT_LEVELS[20].lay_on_hands_pool == 100
     assert PALADIN_COMBAT_LEVELS[3].channel_divinity_uses == 2
     assert PALADIN_COMBAT_LEVELS[11].channel_divinity_uses == 3
     assert PALADIN_COMBAT_LEVELS[17].spell_slots == (4, 3, 3, 3, 1)
     assert "faithful-steed" in PALADIN_COMBAT_LEVELS[5].features_added
+    subclass_features = {
+        "sacred-weapon", "aura-of-devotion", "smite-of-protection", "holy-nimbus",
+    }
+    assert all(
+        subclass_features.isdisjoint(row.features_added)
+        for row in PALADIN_COMBAT_LEVELS.values()
+    )
 
 
 def test_ranger_hunter_numeric_progression_landmarks() -> None:

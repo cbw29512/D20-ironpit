@@ -3,12 +3,18 @@ from __future__ import annotations
 from app.content.barbarian_subclass_specialization_data import BARBARIAN_SPECIALIZATIONS
 from app.content.fighter_subclass_specialization_data import FIGHTER_SPECIALIZATIONS
 from app.content.monk_subclass_specialization_data import MONK_SPECIALIZATIONS
+from app.content.paladin_subclass_specialization_data import PALADIN_SPECIALIZATIONS
 from app.content.subclass_specialization_schema import SubclassSpecialization
 
 
 def _specialization_registry() -> dict[str, SubclassSpecialization]:
     registry: dict[str, SubclassSpecialization] = {}
-    for item in (*FIGHTER_SPECIALIZATIONS, *BARBARIAN_SPECIALIZATIONS, *MONK_SPECIALIZATIONS):
+    for item in (
+        *FIGHTER_SPECIALIZATIONS,
+        *BARBARIAN_SPECIALIZATIONS,
+        *MONK_SPECIALIZATIONS,
+        *PALADIN_SPECIALIZATIONS,
+    ):
         if item.subclass_id in registry:
             raise ValueError(f"Duplicate subclass specialization: {item.subclass_id}.")
         registry[item.subclass_id] = item

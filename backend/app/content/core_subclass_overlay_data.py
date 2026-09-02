@@ -21,13 +21,6 @@ CORE_SUBCLASS_DELTA_DATA: dict[str, tuple[str, dict[int, dict[str, tuple[str, ..
         15: {"features_added": ("superior-critical",), "features_removed": ("improved-critical",)},
         18: {"features_added": ("survivor-defy-death", "survivor-heroic-rally")},
     }),
-    "oath-devotion": ("paladin", {
-        3: {"features_added": ("sacred-weapon", "devotion-combat-spells-1")},
-        5: {"features_added": ("devotion-combat-spells-2",)}, 7: {"features_added": ("aura-of-devotion",)},
-        9: {"features_added": ("devotion-combat-spells-3",)}, 13: {"features_added": ("devotion-combat-spells-4",)},
-        15: {"features_added": ("smite-of-protection",)}, 17: {"features_added": ("devotion-combat-spells-5",)},
-        20: {"features_added": ("holy-nimbus",)},
-    }),
     "hunter": ("ranger", {
         3: {"features_added": ("hunters-lore", "hunter-prey-colossus-slayer")},
         7: {"features_added": ("hunter-multiattack-defense",)},
