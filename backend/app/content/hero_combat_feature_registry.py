@@ -7,6 +7,7 @@ SUPPORTED_HERO_ENGINE_FEATURES = {
     "improved-critical", "remarkable-athlete", "tactical-shift", "great-weapon-fighting",
     "indomitable", "tactical-master-sap",
     "rage", "danger-sense", "reckless-attack", "frenzy", "fast-movement", "mindless-rage",
+    "feral-instinct",
 }
 
 _STATIC_PROGRESSION_FIELDS: dict[str, dict[str, object]] = {
@@ -25,6 +26,7 @@ _STATIC_PROGRESSION_FIELDS: dict[str, dict[str, object]] = {
     "frenzy": {"frenzy": True},
     "fast-movement": {"fast_movement_bonus_ft": 10},
     "mindless-rage": {"mindless_rage": True},
+    "feral-instinct": {"initiative_advantage": True},
     "instinctive-pounce": {"instinctive_pounce_fraction": 0.5},
 }
 
