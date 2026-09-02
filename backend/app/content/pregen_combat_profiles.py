@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, replace
 
+from app.content.fighter_combat_levels import FIGHTER_COMBAT_LEVELS, fighter_combat_features
 from app.domain.character_builds import AbilityScores
 
 
@@ -45,8 +46,6 @@ def _scores(strength: int, dexterity: int, constitution: int, intelligence: int,
 
 _ORC = _scores(17, 13, 15, 10, 10, 10)
 _ORC_L4 = _scores(18, 13, 16, 10, 10, 10)
-_ORC_L6 = _scores(20, 13, 16, 10, 10, 10)
-_ORC_L8 = _scores(20, 13, 18, 10, 10, 10)
 _SERAPHINE = _scores(10, 10, 10, 14, 17, 14)
 _SERAPHINE_L4 = _scores(10, 10, 10, 14, 19, 14)
 _KARNOK_ATTACKS = (
@@ -59,38 +58,43 @@ _ROKHAN_ATTACKS = (
 )
 
 
-def _karnok_profile(level: int, hp: int) -> PregenCombatProfile:
-    abilities = _ORC_L8 if level >= 8 else _ORC_L6 if level >= 6 else _ORC_L4 if level >= 4 else _ORC
-    athletics = 9 if level >= 9 else 8 if level >= 6 else 7 if level >= 5 else 6 if level >= 4 else 5
-    masteries = (("flail", "javelin", "spear", "greatsword") if level >= 9 else
-                 ("flail", "javelin", "spear", "longsword") if level >= 4 else ("flail", "javelin", "spear"))
-    resources = [("second-wind", 3 if level >= 4 else 2)]
-    if level >= 2:
-        resources.append(("action-surge", 1))
-    if level >= 9:
-        resources.append(("indomitable", 1))
-    resources.extend((("adrenaline-rush", 4 if level >= 9 else 3 if level >= 5 else 2), ("relentless-endurance", 1)))
-    attacks = (replace(_KARNOK_ATTACKS[0], damage_die_minimum=3), _KARNOK_ATTACKS[1]) if level >= 7 else _KARNOK_ATTACKS
+def _modifier(score: int) -> int:
+    return (score - 10) // 2
+
+
+def _karnok_profile(level: int, _legacy_hp: int | None = None) -> PregenCombatProfile:
+    row = FIGHTER_COMBAT_LEVELS[level]
+    abilities = _scores(row.strength, row.dexterity, row.constitution, 10, 10, 10)
+    resources = [("second-wind", row.second_wind_uses)]
+    if row.action_surge_uses:
+        resources.append(("action-surge", row.action_surge_uses))
+    if row.indomitable_uses:
+        resources.append(("indomitable", row.indomitable_uses))
+    resources.extend((("adrenaline-rush", row.proficiency_bonus), ("relentless-endurance", 1)))
+    features = fighter_combat_features(level)
+    attacks = (replace(_KARNOK_ATTACKS[0], damage_die_minimum=3), _KARNOK_ATTACKS[1]) if "great-weapon-fighting" in features else _KARNOK_ATTACKS
     return PregenCombatProfile(
-        f"karnok-stoneward-l{level}", "Fighter", level, abilities, ("strength", "constitution"), 17, hp, 30,
-        (("athletics", athletics), ("acrobatics", 1)), attacks, masteries, tuple(resources), "Defense",
+        f"karnok-stoneward-l{level}", "Fighter", level, abilities, ("strength", "constitution"),
+        row.armor_class, row.max_hp, 30,
+        (("athletics", row.proficiency_bonus + _modifier(row.strength)), ("acrobatics", _modifier(row.dexterity))),
+        attacks, row.weapon_masteries, tuple(resources), "Defense",
     )
 
 
 def build_karnok_stoneward_level4_combat_profile() -> PregenCombatProfile:
-    return _karnok_profile(4, 40)
+    return _karnok_profile(4)
 
 
 def build_karnok_stoneward_level5_combat_profile() -> PregenCombatProfile:
-    return _karnok_profile(5, 49)
+    return _karnok_profile(5)
 
 
 def build_karnok_stoneward_level6_combat_profile() -> PregenCombatProfile:
-    return _karnok_profile(6, 58)
+    return _karnok_profile(6)
 
 
 def build_karnok_stoneward_level7_combat_profile() -> PregenCombatProfile:
-    return _karnok_profile(7, 67)
+    return _karnok_profile(7)
 
 
 def _rokhan_profile(level: int, hp: int) -> PregenCombatProfile:
@@ -136,9 +140,7 @@ def build_seraphine_dawnshield_level4_combat_profile() -> PregenCombatProfile:
 
 def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
     profiles = [
-        _karnok_profile(1, 12), _karnok_profile(2, 20), _karnok_profile(3, 28),
-        build_karnok_stoneward_level4_combat_profile(), build_karnok_stoneward_level5_combat_profile(),
-        build_karnok_stoneward_level6_combat_profile(), build_karnok_stoneward_level7_combat_profile(), _karnok_profile(8, 84),
+        *(_karnok_profile(level) for level in range(1, 9)),
         _rokhan_profile(1, 14), _rokhan_profile(2, 23), _rokhan_profile(3, 32), _rokhan_profile(4, 45),
         _rokhan_profile(5, 55), _rokhan_profile(6, 65),
         _seraphine_profile(1, 8, 2), _seraphine_profile(2, 13, 3, 2),
