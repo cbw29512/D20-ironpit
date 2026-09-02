@@ -40,11 +40,13 @@ def _attack(attack: WeaponAttack) -> dict[str, Any]:
         raise ValueError(f"Browser hero exporter has no certified conditional-damage mapping for {attack.id}.")
     weapon = attack.weapon
     row: dict[str, Any] = {
-        "id": attack.id, "name": weapon.name, "kind": weapon.attack_kind.value,
+        "id": attack.id, "weaponId": weapon.id, "name": weapon.name, "kind": weapon.attack_kind.value,
         "bonus": attack.attack_bonus, "diceCount": weapon.dice_count, "diceSize": weapon.dice_size,
         "damageBonus": attack.damage_bonus, "damageType": weapon.damage_type.value,
         "reach": weapon.reach_ft, "animation": weapon.animation,
     }
+    if weapon.mastery_property is not None:
+        row["masteryProperty"] = weapon.mastery_property
     if attack.damage_die_minimum is not None:
         row["damageDieMinimum"] = attack.damage_die_minimum
     if attack.attack_ability is not None:
