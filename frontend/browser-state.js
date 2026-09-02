@@ -13,7 +13,7 @@
       is_unconscious: false, is_stable: false, is_dead: false,
       death_save_successes: 0, death_save_failures: 0,
       action_available: true, bonus_action_available: true, reaction_available: true,
-      movement_remaining_ft: 0, resources: { ...(template.resources || {}) },
+      movement_remaining_ft: 0, resources: { ...(template.resources || {}) }, heroic_inspiration: false,
       active_effect_ids: [], active_buff_effect_ids: [], opening_buff_spell_id: null,
       grapple_sources: [], timed_effects: [], active_modifiers: [], concentration: null,
       feature_last_turn_keys: {}, spell_slot_expended_turn_key: null,
@@ -29,12 +29,16 @@
   }
 
   function refreshReaction(state) { state.reaction_available = true; }
+  function refreshStartOfTurn(state) {
+    refreshReaction(state);
+    window.IRON_PIT_BROWSER_HEROIC_INSPIRATION?.grant(state);
+  }
 
   function beginTurn(state) {
     const incapacitated = Q().incapacitated(state);
     state.action_available = !incapacitated;
     state.bonus_action_available = !incapacitated;
-    refreshReaction(state);
+    refreshStartOfTurn(state);
     const speedZero = G()?.speedIsZero(state) || false;
     const speed = M().effectiveSpeed(state);
     state.movement_remaining_ft = speedZero ? 0 : speed;
@@ -97,6 +101,6 @@
   const canProne = (target, maxSize) => sizeAtMost(target, maxSize);
   window.IRON_PIT_BROWSER_STATE = {
     active, beginTurn, buildState, canProne, distance, downedCharacter, effectiveMaxHp, grantTemporaryHp, hasActiveAlly,
-    moveToward, nearestTarget, packTactics, refreshReaction, sizeAtMost, targetPriority,
+    moveToward, nearestTarget, packTactics, refreshReaction, refreshStartOfTurn, sizeAtMost, targetPriority,
   };
 })();
