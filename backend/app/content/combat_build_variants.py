@@ -23,7 +23,6 @@ class CombatBuildVariant:
 
     @property
     def subclass_id(self) -> str | None:
-        """Compatibility alias; non-None means this build requires that subclass."""
         return self.required_subclass_id
 
 
@@ -41,15 +40,21 @@ def _build(
 
 _VARIANTS = (
     _build(
-        "fighter", "great-weapon", "two-handed-striker",
-        notes="Shared GWF and Graze mechanics are supported; activation awaits a compiled build matching this overlay.",
+        "fighter", "great-weapon", "two-handed-striker", required_subclass_id="champion",
+        notes="Champion specialization: Greatsword + Great Weapon Fighting; shared mechanics stay generic.",
     ),
     _build(
-        "fighter", "sword-shield", "defender",
-        notes="Shared Defense, Shield AC, and Sap mechanics are supported; activation awaits a compiled build matching this overlay.",
+        "fighter", "sword-shield", "defender", required_subclass_id="eldritch-knight",
+        notes="Eldritch Knight specialization: Longsword + Shield; activation awaits audited subclass/spells.",
     ),
-    _build("fighter", "archer", "ranged-striker"),
-    _build("fighter", "dual-wield", "dual-wield-striker"),
+    _build(
+        "fighter", "archer", "ranged-striker", required_subclass_id="psi-warrior",
+        notes="Psi Warrior specialization: ranged weapon + Archery; activation awaits audited subclass features.",
+    ),
+    _build(
+        "fighter", "dual-wield", "dual-wield-striker", required_subclass_id="battle-master",
+        notes="Battle Master specialization: Shortsword + Scimitar + Two-Weapon Fighting; maneuvers remain fail-closed.",
+    ),
     _build("barbarian", "great-weapon", "two-handed-striker"),
     _build("barbarian", "weapon-shield", "durable-melee"),
     _build("barbarian", "dual-wield", "dual-wield-striker"),
@@ -81,8 +86,7 @@ _VARIANTS = (
     _build("cleric", "war-priest", "frontline-support"),
     _build("cleric", "divine-offense", "radiant-control"),
     _build(
-        "druid", "land-damage", "caster-damage",
-        required_subclass_id="circle-land",
+        "druid", "land-damage", "caster-damage", required_subclass_id="circle-land",
         notes="Canonical Land Druid progression is separate; named build activation awaits a compiled build overlay.",
     ),
     _build(
