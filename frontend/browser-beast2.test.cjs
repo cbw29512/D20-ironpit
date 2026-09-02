@@ -9,8 +9,10 @@ global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
   "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js", "browser-monsters-beast2.js",
-  "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js", "browser-attack.js",
-  "browser-charge.js", "browser-multiattack.js", "browser-turn.js", "browser-engine.js",
+  "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js",
+  "browser-weapon-mastery.js", "browser-attack.js", "browser-charge.js",
+  "browser-light-weapons.js", "browser-light-attack.js", "browser-standard-attack-action.js",
+  "browser-multiattack.js", "browser-turn.js", "browser-engine.js",
 ]) load(file);
 
 function queuedDice(values, fallback = 10) {
