@@ -1,6 +1,6 @@
 from app.combat.attacks import resolve_attack
 from app.combat.dice import FixedDiceProvider
-from app.combat.saving_throw_rolls import resolve_saving_throw
+from app.combat.indomitable import use_indomitable
 from app.combat.state import build_combatant_state
 from app.content.build_audit import assert_character_build_raw_ready, audit_character_build
 from app.content.canonical_hero_policy import assert_canonical_profile_policy
@@ -51,25 +51,16 @@ def test_fighter_level_nine_candidate_passes_build_fingerprint_and_resource_gate
     assert ("fighter", 9, "canonical") not in build_certified_hero_registry()
 
 
-def test_indomitable_rerolls_failed_save_with_level_bonus_and_spends_one_use() -> None:
+def test_indomitable_raw_reroll_adds_fighter_level_and_spends_exactly_one_use() -> None:
     state = build_combatant_state(build_karnok_stoneward_level(9))
-    roll, succeeded = resolve_saving_throw(state, "wisdom", 15, FixedDiceProvider([5, 10]))
+    roll = use_indomitable(state, "wisdom", FixedDiceProvider([10]))
 
-    assert succeeded is True
     assert roll is not None
     assert roll.selected_roll == 10
     assert roll.total == 19
     assert "Indomitable +9" in roll.notation
     assert next(item for item in state.resources if item.id == "indomitable").current_uses == 0
-
-
-def test_indomitable_is_not_wasted_when_even_natural_twenty_cannot_succeed() -> None:
-    state = build_combatant_state(build_karnok_stoneward_level(9))
-    roll, succeeded = resolve_saving_throw(state, "wisdom", 30, FixedDiceProvider([5]))
-
-    assert succeeded is False
-    assert roll is not None and roll.selected_roll == 5
-    assert next(item for item in state.resources if item.id == "indomitable").current_uses == 1
+    assert use_indomitable(state, "wisdom", FixedDiceProvider([10])) is None
 
 
 def test_tactical_master_sap_applies_to_mastered_hit_then_disadvantages_and_is_consumed() -> None:
