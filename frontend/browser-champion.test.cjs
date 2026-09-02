@@ -93,8 +93,12 @@ window.IRON_PIT_BROWSER_TURN = { resolveTurn: (sequence, _round, _member, setup)
   return { events: [], sequence };
 } };
 window.IRON_PIT_BROWSER_STATE.buildState = (template) => ({ template, current_hp: 10, is_alive: true, is_dead: false,
-  is_unconscious: false, is_stable: false, active_effect_ids: [], reaction_available: true });
+  is_unconscious: false, is_stable: false, active_effect_ids: [], reaction_available: true, heroic_inspiration: false });
 window.IRON_PIT_BROWSER_STATE.refreshReaction = (s) => { s.reaction_available = true; };
+window.IRON_PIT_BROWSER_STATE.refreshStartOfTurn = (s) => {
+  window.IRON_PIT_BROWSER_STATE.refreshReaction(s);
+  if (s.template.heroic_warrior && !s.heroic_inspiration) s.heroic_inspiration = true;
+};
 setDice([4, 17, 10]);
 load("browser-engine.js");
 {
