@@ -12,8 +12,8 @@ logger = logging.getLogger(__name__)
 _OUTPUT = Path("backend/app/content/data/combatant_capabilities_v1.json")
 _HERO_ONLY_PROGRESSION_FIELDS = {
     "danger_sense", "reckless_attack", "frenzy", "fast_movement_bonus_ft", "mindless_rage",
-    "instinctive_pounce_fraction", "great_weapon_fighting", "indomitable_bonus", "tactical_master_sap",
-    "sneak_attack_d6",
+    "instinctive_pounce_fraction", "great_weapon_fighting", "indomitable_bonus",
+    "tactical_master_sap_weapon_ids", "sneak_attack_d6",
 }
 
 
