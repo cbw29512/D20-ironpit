@@ -12,10 +12,11 @@ for (const file of [
   "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js",
   "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-grapple.js", "browser-timed-conditions.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
-  "browser-zero-hp.js", "browser-attack.js", "browser-reactions.js", "browser-reaction-movement.js", "browser-saves.js",
-  "browser-condition-lifecycle.js", "browser-charge.js", "browser-multiattack.js", "browser-healing.js",
-  "browser-spellcasting.js", "browser-condition-removal.js", "browser-support.js", "browser-turn.js",
-  "browser-formation.js", "browser-engine.js",
+  "browser-zero-hp.js", "browser-weapon-mastery.js", "browser-graze.js", "browser-vex.js", "browser-attack.js",
+  "browser-reactions.js", "browser-reaction-movement.js", "browser-saves.js", "browser-condition-lifecycle.js",
+  "browser-charge.js", "browser-light-weapons.js", "browser-light-attack.js", "browser-standard-attack-action.js",
+  "browser-multiattack.js", "browser-healing.js", "browser-spellcasting.js", "browser-condition-removal.js",
+  "browser-support.js", "browser-turn.js", "browser-formation.js", "browser-engine.js",
 ]) load(file);
 
 function deterministicDice(seed = 12345) {
@@ -125,8 +126,7 @@ function fight(heroIds, monsterIds, dice = deterministicDice()) {
   hero.state.initiative_total = 10;
   boar.state.initiative_total = 20;
   const setup = { heroes: [hero], monsters: [boar] };
-  window.IRON_PIT_BROWSER_STATE.beginTurn(boar.state);
-  window.IRON_PIT_DICE = queuedDice([15, 2, 3]);
+  window.IRON_PIT_DICE = deterministicDice(11);
   const charged = window.IRON_PIT_BROWSER_CHARGE.resolveClosing(1, 1, boar, hero, setup);
   assert.equal(charged.handled, true);
   assert.equal(charged.events[0].movement_ft, 25);
