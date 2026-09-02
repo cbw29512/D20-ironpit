@@ -1,9 +1,7 @@
 (() => {
   "use strict";
-  const S = () => window.IRON_PIT_BROWSER_STATE;
-  const A = () => window.IRON_PIT_BROWSER_ATTACK;
-  const C = () => window.IRON_PIT_BROWSER_CHARGE;
-  const M = () => window.IRON_PIT_BROWSER_MULTIATTACK;
+  const S = () => window.IRON_PIT_BROWSER_STATE, A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const C = () => window.IRON_PIT_BROWSER_CHARGE, M = () => window.IRON_PIT_BROWSER_MULTIATTACK;
   const G = () => window.IRON_PIT_BROWSER_RAGE;
   const J = () => window.IRON_PIT_BROWSER_ACTION_SURGE;
   const P = () => window.IRON_PIT_BROWSER_SUPPORT;
