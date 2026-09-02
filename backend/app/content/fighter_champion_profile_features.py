@@ -28,7 +28,7 @@ _FEATURES = (
     ProfileFeature(5, "tactical-shift", "Tactical Shift", "class", True),
     ProfileFeature(9, "indomitable", "Indomitable", "class", True),
     ProfileFeature(9, "tactical-master", "Tactical Master", "class", True),
-    ProfileFeature(10, "heroic-warrior", "Heroic Warrior", "subclass", False),
+    ProfileFeature(10, "heroic-warrior", "Heroic Warrior", "subclass", True),
     ProfileFeature(11, "two-extra-attacks", "Two Extra Attacks", "class", True),
     ProfileFeature(13, "studied-attacks", "Studied Attacks", "class", False),
     ProfileFeature(15, "superior-critical", "Superior Critical", "subclass", False),
