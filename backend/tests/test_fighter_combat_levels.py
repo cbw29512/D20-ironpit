@@ -52,7 +52,7 @@ def test_fighter_features_accumulate_and_replacements_are_explicit() -> None:
 
 
 def test_existing_fighter_runtime_levels_are_compiled_from_the_table() -> None:
-    for level in range(1, 10):
+    for level in range(1, 13):
         row = FIGHTER_COMBAT_LEVELS[level]
         template = build_karnok_stoneward_level(level)
         strength_mod = _modifier(row.strength)
@@ -78,7 +78,10 @@ def test_existing_fighter_runtime_levels_are_compiled_from_the_table() -> None:
 
 def test_complete_table_can_outrun_engine_without_silently_running_unsupported_rules() -> None:
     assert unsupported_fighter_engine_features(9) == ()
-    assert unsupported_fighter_engine_features(10) == ("heroic-warrior",)
+    assert unsupported_fighter_engine_features(10) == ()
+    assert unsupported_fighter_engine_features(12) == ()
+    assert unsupported_fighter_engine_features(13) == ("studied-attacks",)
     assert FIGHTER_COMBAT_LEVELS[10].max_hp == 104
-    with pytest.raises(ValueError, match="heroic-warrior"):
-        build_karnok_stoneward_level(10)
+    assert FIGHTER_COMBAT_LEVELS[12].max_hp == 136
+    with pytest.raises(ValueError, match="studied-attacks"):
+        build_karnok_stoneward_level(13)
