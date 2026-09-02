@@ -44,7 +44,10 @@ _VARIANTS = (
         "fighter", "great-weapon", "two-handed-striker", status="active",
         notes="Great Weapon Fighting and Greatsword Graze are certified in shared Python/browser combat paths.",
     ),
-    _build("fighter", "sword-shield", "defender"),
+    _build(
+        "fighter", "sword-shield", "defender", status="active",
+        notes="Defense, trained Shield AC, and Sap are certified in shared content/runtime paths.",
+    ),
     _build("fighter", "archer", "ranged-striker"),
     _build("fighter", "dual-wield", "dual-wield-striker"),
     _build("barbarian", "great-weapon", "two-handed-striker", status="active"),
