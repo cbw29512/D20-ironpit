@@ -12,30 +12,28 @@ STATUSES = {
     "defense-style": "supported",
     "shield-ac": "supported",
     "archery-style": "supported",
-    "nick-mastery": "blocked",
-    "two-weapon-fighting": "blocked",
+    "nick-mastery": "supported",
+    "two-weapon-fighting": "supported",
     "slow-mastery": "arena_out_of_scope",
 }
 
 
-def test_supported_low_level_great_weapon_and_sword_shield_snapshots_are_clean() -> None:
-    assert audit_fighter_champion_variant_readiness("great-weapon", 3, STATUSES) == []
-    assert audit_fighter_champion_variant_readiness("sword-shield", 3, STATUSES) == []
-    assert audit_fighter_champion_variant_readiness("great-weapon", 8, STATUSES) == []
-    assert audit_fighter_champion_variant_readiness("sword-shield", 8, STATUSES) == []
+def test_all_four_champion_variants_are_clean_through_level_eight() -> None:
+    for build_id in ("great-weapon", "sword-shield", "archer", "dual-wield"):
+        assert audit_fighter_champion_variant_readiness(build_id, 3, STATUSES) == []
+        assert audit_fighter_champion_variant_readiness(build_id, 8, STATUSES) == []
 
 
-def test_archer_is_not_ready_while_nick_on_its_actual_sheet_is_blocked() -> None:
-    issues = audit_fighter_champion_variant_readiness("archer", 3, STATUSES)
-    assert issues == ["combat-capability-not-supported:nick-mastery:blocked"]
-
-
-def test_dual_wield_structure_is_clean_but_capabilities_still_fail_closed() -> None:
-    issues = audit_fighter_champion_variant_readiness("dual-wield", 3, STATUSES)
-    assert issues == [
+def test_nick_and_twf_are_required_from_actual_archer_and_dual_wield_sheets() -> None:
+    nick_blocked = {**STATUSES, "nick-mastery": "blocked"}
+    assert audit_fighter_champion_variant_readiness("archer", 3, nick_blocked) == [
         "combat-capability-not-supported:nick-mastery:blocked",
-        "combat-capability-not-supported:two-weapon-fighting:blocked",
     ]
+    dual_issues = audit_fighter_champion_variant_readiness(
+        "dual-wield", 3, {**nick_blocked, "two-weapon-fighting": "blocked"},
+    )
+    assert "combat-capability-not-supported:nick-mastery:blocked" in dual_issues
+    assert "combat-capability-not-supported:two-weapon-fighting:blocked" in dual_issues
 
 
 def test_level_nine_and_above_stay_blocked_by_explicit_unfinished_character_features() -> None:
