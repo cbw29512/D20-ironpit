@@ -8,6 +8,8 @@ SUPPORTED_HERO_ENGINE_FEATURES = {
     "indomitable", "tactical-master-sap",
     "rage", "danger-sense", "reckless-attack", "frenzy", "fast-movement", "mindless-rage",
     "feral-instinct",
+    "cleric-spellcasting", "divine-order-protector", "divine-spark", "turn-undead",
+    "disciple-of-life", "preserve-life",
 }
 
 _STATIC_PROGRESSION_FIELDS: dict[str, dict[str, object]] = {
