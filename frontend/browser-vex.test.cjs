@@ -108,3 +108,4 @@ function attack(attacker, target, values, sequence = 1) {
 }
 
 console.log("Browser Vex weapon mastery regressions passed.");
+require("./browser-studied-attacks.test.cjs");
