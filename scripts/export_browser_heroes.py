@@ -209,6 +209,10 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
                    "figure_form": template.visual.body_style, "role": template.archetype.lower()},
         "source": template.source,
     }
+    if progression.indomitable_bonus:
+        row["indomitable_bonus"] = progression.indomitable_bonus
+    if progression.tactical_master_sap_weapon_ids:
+        row["tactical_master_sap_weapon_ids"] = list(progression.tactical_master_sap_weapon_ids)
     package = canonical_spell_package(class_id, level) if template.spell_save_actions or template.spell_attack_actions or template.defensive_spell_actions or template.healing_actions else None
     if package is not None:
         row["canonical_cantrips"] = [_spell_choice(item) for item in package.cantrips]
