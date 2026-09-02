@@ -62,6 +62,7 @@ class Weapon(BaseModel):
     mastery_property: str | None = None
     light: bool = False
     finesse: bool = False
+    heavy: bool = False
     two_handed: bool = False
     versatile: bool = False
 
