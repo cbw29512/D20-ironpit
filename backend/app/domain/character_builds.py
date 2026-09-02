@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from app.domain.class_loadouts import MeleeLoadoutKind
 
@@ -80,3 +80,17 @@ class CharacterBuildProfile(BaseModel):
     combat_loadout_kind: MeleeLoadoutKind | None = None
     feature_audits: list[FeatureAudit] = Field(min_length=1)
     source_references: list[str] = Field(min_length=1)
+
+    @model_validator(mode="before")
+    @classmethod
+    def normalize_fighting_styles(cls, values: object) -> object:
+        if not isinstance(values, dict):
+            return values
+        normalized = dict(values)
+        style = normalized.get("fighting_style")
+        styles = normalized.get("fighting_styles") or []
+        if not styles and style:
+            normalized["fighting_styles"] = [style]
+        elif styles and not style:
+            normalized["fighting_style"] = styles[0]
+        return normalized
