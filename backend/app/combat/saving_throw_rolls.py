@@ -35,4 +35,10 @@ def resolve_saving_throw(
         roll_d20(dice, state.template.saving_throw_bonuses[ability], saving_throw_mode(state, ability)),
         dice,
     )
+    if roll.total < dc:
+        from app.combat.indomitable import use_indomitable
+
+        reroll = use_indomitable(state, ability, dice)
+        if reroll is not None:
+            roll = reroll
     return roll, roll.total >= dc
