@@ -4,6 +4,7 @@ import logging
 
 from app.combat.damage_defenses import adjusted_damage_amount
 from app.combat.dice import DiceProvider
+from app.combat.weapon_mastery import weapon_mastery_active
 from app.combat.zero_hp import ZeroHpOutcome, apply_damage
 from app.domain.models import CombatantState, DamageRollComponent, DiceRoll, WeaponAttack
 
@@ -12,10 +13,7 @@ GrazeResolution = tuple[DiceRoll, list[DamageRollComponent], ZeroHpOutcome]
 
 
 def graze_mastery_active(attacker: CombatantState, attack: WeaponAttack) -> bool:
-    return (
-        attack.weapon.mastery_property == "Graze"
-        and attack.weapon.id in attacker.template.weapon_masteries
-    )
+    return weapon_mastery_active(attacker, attack, "Graze")
 
 
 def resolve_graze_miss(
