@@ -28,7 +28,7 @@ from app.combat.state import begin_turn
 from app.combat.tactical_shift import resolve_tactical_shift
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
-def _close_after_action(sequence, round_number, attacker, setup, dice):
+def _close_after_action(sequence, round_number, attacker, setup, dice, turn_key):
     if is_incapacitated(attacker.state) or backline_holds_position(attacker, setup):
         return [], sequence
     target = select_nearest_target(attacker, setup)
@@ -36,6 +36,7 @@ def _close_after_action(sequence, round_number, attacker, setup, dice):
         return [], sequence
     events, sequence, _ = move_toward_with_reactions(
         sequence, round_number, attacker, target, setup, MELEE_BRAWL_DISTANCE_FT, dice,
+        turn_key=turn_key,
     )
     return events, sequence
 
@@ -114,7 +115,7 @@ def resolve_combat_turn(
     if not handled and attacker.state.template.attack_action is not None:
         action_events, sequence = resolve_attack_action(sequence, round_number, attacker, setup, dice)
         events.extend(action_events)
-        moved, sequence = _close_after_action(sequence, round_number, attacker, setup, dice); events.extend(moved)
+        moved, sequence = _close_after_action(sequence, round_number, attacker, setup, dice, turn_key); events.extend(moved)
     elif not handled and save_action is not None and is_available(attacker.state, "action"):
         affected = [member.state for member in [*setup.heroes, *setup.monsters]]
         events.append(resolve_save_action(
