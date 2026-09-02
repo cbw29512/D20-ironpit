@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 from app.content.audited_barbarian import build_rokhan_stonefury
-from app.content.barbarian_combat_levels import BARBARIAN_COMBAT_LEVELS, barbarian_combat_features
+from app.content.barbarian_combat_levels import BARBARIAN_COMBAT_LEVELS
+from app.content.canonical_class_combat_spines import canonical_combat_features
 from app.content.canonical_progression import advance_template_data
 from app.content.hero_combat_feature_registry import (
     compile_progression_feature_fields,
@@ -12,6 +13,10 @@ from app.domain.models import CombatantTemplate, ResourceDefinition
 
 def _modifier(score: int) -> int:
     return (score - 10) // 2
+
+
+def _features(level: int) -> tuple[str, ...]:
+    return canonical_combat_features("barbarian", level, "path-berserker")
 
 
 def _resources(level: int) -> list[ResourceDefinition]:
@@ -25,7 +30,7 @@ def _resources(level: int) -> list[ResourceDefinition]:
 
 def _apply_row(data: dict[str, object], level: int) -> None:
     row = BARBARIAN_COMBAT_LEVELS[level]
-    features = barbarian_combat_features(level)
+    features = _features(level)
     primary = data.get("weapon_attack")
     alternates = data.get("alternate_weapon_attacks")
     if not isinstance(primary, dict) or not isinstance(alternates, list):
@@ -66,11 +71,11 @@ def _apply_row(data: dict[str, object], level: int) -> None:
 
 
 def unsupported_barbarian_engine_features(level: int) -> tuple[str, ...]:
-    return unsupported_hero_engine_features(barbarian_combat_features(level))
+    return unsupported_hero_engine_features(_features(level))
 
 
 def build_rokhan_stonefury_level(level: int) -> CombatantTemplate:
-    """Compile a runnable Rokhan level; any missing outcome-changing mechanic fails closed."""
+    """Compile Rokhan from Barbarian base + Berserker overlay; missing mechanics fail closed."""
     if level not in BARBARIAN_COMBAT_LEVELS:
         raise ValueError(f"Rokhan Barbarian level {level} must be between 1 and 20.")
     unsupported = unsupported_barbarian_engine_features(level)
