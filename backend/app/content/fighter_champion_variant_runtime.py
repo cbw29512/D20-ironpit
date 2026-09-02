@@ -13,6 +13,13 @@ from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoado
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.traits import CombatTrait
 
+_TACTICAL_MASTER_SAP_WEAPONS = {
+    "great-weapon": ("greatsword",),
+    "sword-shield": (),
+    "archer": ("longbow",),
+    "dual-wield": ("longbow",),
+}
+
 
 def _attack_count(level: int) -> int:
     return 1 if level < 5 else 2 if level < 11 else 3 if level < 20 else 4
@@ -68,14 +75,16 @@ def _attack(profile, spec, weapon_id: str) -> WeaponAttack:
     )
 
 
-def _progression(level: int, styles: list[str]) -> ProgressionCombatFeatures:
+def _progression(level: int, styles: list[str], build_id: str) -> ProgressionCombatFeatures:
     return ProgressionCombatFeatures(
         critical_hit_minimum=18 if level >= 15 else 19,
         initiative_advantage=True,
         athletics_advantage=True,
         great_weapon_fighting=has_fighting_style(styles, "Great Weapon Fighting"),
         indomitable_bonus=level if level >= 9 else 0,
-        tactical_master_sap=level >= 9,
+        tactical_master_sap_weapon_ids=(
+            list(_TACTICAL_MASTER_SAP_WEAPONS[build_id]) if level >= 9 else []
+        ),
         critical_move_fraction=0.5,
         tactical_shift_fraction=0.5 if level >= 5 else 0.0,
     )
@@ -115,6 +124,6 @@ def compile_fighter_champion_variant(build_id: str, level: int) -> CombatantTemp
             off_hand="shield" if spec.shield else (spec.secondary_weapons[0] if build_id == "dual-wield" else None),
             body_style="humanoid",
         ),
-        resources=_resources(level), progression_features=_progression(level, profile.fighting_styles),
+        resources=_resources(level), progression_features=_progression(level, profile.fighting_styles, build_id),
         source="; ".join(profile.source_references),
     )
