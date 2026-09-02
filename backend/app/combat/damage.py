@@ -7,6 +7,7 @@ from app.combat.conditional_damage import active_replacement_damage, conditional
 from app.combat.dice import DiceProvider
 from app.combat.frenzy import frenzy_bonus_damage
 from app.combat.savage_attacker import roll_weapon_component
+from app.combat.sneak_attack import sneak_attack_bonus_damage
 from app.domain.models import CombatantState, DamageRollComponent, DamageType, DiceRoll, RollMode, WeaponAttack
 
 logger = logging.getLogger(__name__)
@@ -67,6 +68,7 @@ def resolve_weapon_damage(
     turn_key: str | None = None,
     bonus_damage: BonusDamageSpec | None = None,
     target: CombatantState | None = None,
+    sneak_attack_ally_available: bool = False,
 ) -> tuple[DiceRoll, list[DamageRollComponent]]:
     """Resolve weapon dice or fixed damage plus certified hit-specific riders."""
     try:
@@ -105,6 +107,16 @@ def resolve_weapon_damage(
                 modifier=conditional.damage_bonus,
                 damage_type=conditional.damage_type,
                 critical=critical,
+            ))
+
+        sneak_damage = sneak_attack_bonus_damage(
+            attacker, attack, attack_mode, turn_key, sneak_attack_ally_available,
+        )
+        if sneak_damage is not None:
+            source, dice_count, dice_size, damage_type = sneak_damage
+            components.append(roll_damage_component(
+                dice=dice, source=source, dice_count=dice_count, dice_size=dice_size,
+                modifier=0, damage_type=damage_type, critical=critical,
             ))
 
         frenzy_damage = frenzy_bonus_damage(attacker, attack, turn_key)
