@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from app.content.fighter_subclass_overlay_data import FIGHTER_SUBCLASS_DELTA_DATA
+
 
 @dataclass(frozen=True)
 class SubclassCombatDelta:
@@ -98,6 +100,17 @@ SUBCLASS_COMBAT_OVERLAYS: dict[str, SubclassCombatOverlay] = {
         14: SubclassCombatDelta(14, ("overchannel",)),
     }),
 }
+
+for _subclass_id, _rows in FIGHTER_SUBCLASS_DELTA_DATA.items():
+    SUBCLASS_COMBAT_OVERLAYS[_subclass_id] = SubclassCombatOverlay("fighter", _subclass_id, {
+        level: SubclassCombatDelta(
+            level,
+            tuple(data.get("features_added", ())),
+            tuple(data.get("features_removed", ())),
+            tuple(data.get("arena_ignored", ())),
+        )
+        for level, data in _rows.items()
+    })
 
 
 def subclass_overlay(subclass_id: str) -> SubclassCombatOverlay:
