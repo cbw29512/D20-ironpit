@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass
 
+from app.combat.weapon_mastery import weapon_mastery_active
 from app.domain.models import CombatantState, WeaponAttack
 
 logger = logging.getLogger(__name__)
@@ -18,11 +19,7 @@ class LightExtraAttackPlan:
 
 
 def nick_mastery_active(state: CombatantState, attack: WeaponAttack) -> bool:
-    return (
-        attack.weapon.light
-        and attack.weapon.mastery_property == "Nick"
-        and attack.weapon.id in state.template.weapon_masteries
-    )
+    return attack.weapon.light and weapon_mastery_active(state, attack, "Nick")
 
 
 def light_extra_attack_used(state: CombatantState, turn_key: str) -> bool:
@@ -39,8 +36,7 @@ def _extra_attack_profile(attack: WeaponAttack) -> WeaponAttack:
         raise ValueError(
             f"Light extra attack {attack.id!r} requires an explicit attack ability modifier."
         )
-    adjusted_bonus = attack.damage_bonus - max(0, modifier)
-    return attack.model_copy(update={"damage_bonus": adjusted_bonus})
+    return attack.model_copy(update={"damage_bonus": attack.damage_bonus - max(0, modifier)})
 
 
 def plan_light_extra_attack(
@@ -48,7 +44,7 @@ def plan_light_extra_attack(
     trigger_attack: WeaponAttack,
     turn_key: str,
 ) -> LightExtraAttackPlan | None:
-    """Plan the one-per-turn Light extra attack from a different Light weapon."""
+    """Plan the shared one-per-turn Light extra attack; Nick changes only its action cost."""
     try:
         if not trigger_attack.weapon.light or light_extra_attack_used(state, turn_key):
             return None
@@ -59,10 +55,7 @@ def plan_light_extra_attack(
         ]
         if not candidates:
             return None
-        nick_candidate = next(
-            (attack for attack in candidates if nick_mastery_active(state, attack)),
-            None,
-        )
+        nick_candidate = next((attack for attack in candidates if nick_mastery_active(state, attack)), None)
         chosen = nick_candidate or candidates[0]
         nick_active = nick_mastery_active(state, trigger_attack) or nick_mastery_active(state, chosen)
         return LightExtraAttackPlan(
