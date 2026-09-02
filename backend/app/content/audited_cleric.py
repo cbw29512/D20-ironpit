@@ -1,7 +1,8 @@
 from __future__ import annotations
 
+from app.content.canonical_class_combat_spines import canonical_combat_features
 from app.content.canonical_hero_policy import canonical_template_id
-from app.content.cleric_combat_levels import CLERIC_COMBAT_LEVELS, cleric_combat_features
+from app.content.cleric_combat_levels import CLERIC_COMBAT_LEVELS
 from app.content.cleric_life_domain import AID, LESSER_RESTORATION, disciple_of_life_bonus
 from app.content.healing_spell_effects import build_cure_wounds, build_healing_word
 from app.content.hero_combat_feature_registry import unsupported_hero_engine_features
@@ -17,6 +18,10 @@ from app.domain.traits import CombatTrait
 
 def _modifier(score: int) -> int:
     return (score - 10) // 2
+
+
+def _features(level: int) -> tuple[str, ...]:
+    return canonical_combat_features("cleric", level, "life-domain")
 
 
 def _mace_attack(attack_bonus: int) -> WeaponAttack:
@@ -59,7 +64,8 @@ def _source(level: int) -> str:
 def _build_seraphine(level: int) -> CombatantTemplate:
     if level not in CLERIC_COMBAT_LEVELS:
         raise ValueError(f"Seraphine Cleric level {level} must be between 1 and 20.")
-    unsupported = unsupported_hero_engine_features(cleric_combat_features(level))
+    features = _features(level)
+    unsupported = unsupported_hero_engine_features(features)
     if unsupported:
         raise ValueError(f"Seraphine Cleric level {level} awaits combat support for: {', '.join(unsupported)}")
     row = CLERIC_COMBAT_LEVELS[level]
@@ -69,7 +75,7 @@ def _build_seraphine(level: int) -> CombatantTemplate:
     charisma_modifier = _modifier(row.charisma)
     save_dc = 8 + row.proficiency_bonus + wisdom_modifier
     spell_attack_bonus = row.proficiency_bonus + wisdom_modifier
-    life_bonus = disciple_of_life_bonus(1) if level >= 3 else 0
+    life_bonus = disciple_of_life_bonus(1) if "disciple-of-life" in features else 0
     healing = [build_cure_wounds(wisdom_modifier, life_bonus)]
     if level >= 2:
         healing.append(build_healing_word(wisdom_modifier, life_bonus))
@@ -80,7 +86,7 @@ def _build_seraphine(level: int) -> CombatantTemplate:
     if level >= 4:
         save_spells.append(build_inflict_wounds(save_dc))
     traits = [CombatTrait.ADRENALINE_RUSH, CombatTrait.RELENTLESS_ENDURANCE]
-    if level >= 3:
+    if "disciple-of-life" in features:
         traits.append(CombatTrait.LIFE_DOMAIN)
     return CombatantTemplate(
         id=canonical_template_id("cleric", level), name=hero.hero_name, archetype=hero.class_name,
@@ -108,7 +114,7 @@ def _build_seraphine(level: int) -> CombatantTemplate:
 
 
 def build_seraphine_dawnshield_level(level: int) -> CombatantTemplate:
-    """Compile Seraphine from the complete 1-20 Cleric table; missing combat content fails closed."""
+    """Compile Seraphine from Cleric base + Life Domain overlay; missing combat content fails closed."""
     return _build_seraphine(level)
 
 
