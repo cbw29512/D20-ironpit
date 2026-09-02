@@ -69,6 +69,7 @@ def move_toward_with_reactions(
     *,
     movement_source: MovementSource = "speed",
     disengaged: bool = False,
+    turn_key: str | None = None,
 ) -> tuple[list[BattleEvent], int, BattleEvent | None]:
     """Open departure Reaction windows, then apply the intended move if it can continue."""
     proposed_position, moved = _proposed_position(mover, target, desired_distance_ft)
@@ -84,7 +85,7 @@ def move_toward_with_reactions(
             after = abs(reactor.position_ft - proposed_position)
             event = resolve_opportunity_attack(
                 sequence, round_number, reactor, mover, setup, before, after,
-                movement_source, dice, disengaged=disengaged,
+                movement_source, dice, disengaged=disengaged, turn_key=turn_key,
             )
             if event is None:
                 continue
