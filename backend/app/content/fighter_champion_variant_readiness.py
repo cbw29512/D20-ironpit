@@ -4,7 +4,10 @@ from collections.abc import Mapping
 
 from app.content.build_audit import audit_character_build
 from app.content.combat_build_choice_overlays import get_combat_build_choice_overlay
-from app.content.combatant_capability_requirements import audit_combatant_capability_support
+from app.content.combatant_capability_requirements import (
+    audit_combatant_capability_support,
+    combatant_capability_requirements,
+)
 from app.content.fighter_champion_variant_profiles import build_fighter_champion_variant_profile
 from app.content.fighter_champion_variant_runtime import compile_fighter_champion_variant
 
@@ -18,13 +21,15 @@ def audit_fighter_champion_variant_readiness(
     profile = build_fighter_champion_variant_profile(build_id, level)
     template = compile_fighter_champion_variant(build_id, level)
     overlay = get_combat_build_choice_overlay("fighter", build_id)
+    requirements = combatant_capability_requirements(profile, template)
+    arena_ignored = frozenset(overlay.arena_ignored) & requirements
     return [
         *audit_character_build(profile, template),
         *audit_combatant_capability_support(
             profile,
             template,
             capability_statuses,
-            arena_ignored=frozenset(overlay.arena_ignored),
+            arena_ignored=arena_ignored,
         ),
     ]
 
