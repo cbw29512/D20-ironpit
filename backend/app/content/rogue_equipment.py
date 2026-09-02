@@ -26,6 +26,7 @@ def build_shortsword() -> Weapon:
         damage_type=DamageType.PIERCING,
         animation="thrust",
         mastery_property="Vex",
+        light=True,
     )
 
 
