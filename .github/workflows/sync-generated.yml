@@ -31,12 +31,13 @@ jobs:
         run: rm -rf backend/iron_pit_backend.egg-info
       - name: Generate authoritative certification artifacts
         run: |
+          python scripts/export_runtime_monster_capabilities.py
           python scripts/export_browser_heroes.py
           python scripts/export_browser_monsters.py
           python scripts/verify_certification_manifests.py --write
       - name: Refuse unexpected generator drift
         run: |
-          unexpected="$(git status --porcelain --untracked-files=all | awk '{print $2}' | grep -Ev '^(frontend/browser-heroes.js|frontend/browser-monsters-generated.js|data/hero_certification_manifest.json|data/monster_certification_manifest.json)$' || true)"
+          unexpected="$(git status --porcelain --untracked-files=all | awk '{print $2}' | grep -Ev '^(backend/app/content/data/combatant_capabilities_v1.json|frontend/browser-heroes.js|frontend/browser-monsters-generated.js|data/hero_certification_manifest.json|data/monster_certification_manifest.json)$' || true)"
           if [ -n "$unexpected" ]; then
             echo "Generator modified files outside its owned outputs:"
             echo "$unexpected"
@@ -44,7 +45,7 @@ jobs:
           fi
       - name: Commit only generator-owned outputs
         run: |
-          outputs="frontend/browser-heroes.js frontend/browser-monsters-generated.js data/hero_certification_manifest.json data/monster_certification_manifest.json"
+          outputs="backend/app/content/data/combatant_capabilities_v1.json frontend/browser-heroes.js frontend/browser-monsters-generated.js data/hero_certification_manifest.json data/monster_certification_manifest.json"
           if git diff --quiet -- $outputs; then
             echo "Generated artifacts already current."
             exit 0
