@@ -81,7 +81,7 @@ function grappleCheck(d10) {
     roll: () => queue.shift(),
     rollMany: (count) => Array.from({ length: count }, () => queue.shift()),
   };
-  const attacker = { template: { traits: [] }, feature_last_turn_keys: {} };
+  const attacker = { template: { traits: [] }, active_effect_ids: [], feature_last_turn_keys: {} };
   const attack = {
     name: "Greatsword", diceCount: 2, diceSize: 6, damageBonus: 4,
     damageType: "slashing", damageDieMinimum: 3, onHitDamage: [],
