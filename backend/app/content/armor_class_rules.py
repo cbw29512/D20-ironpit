@@ -23,12 +23,25 @@ def defense_fighting_style_bonus(
         raise RuntimeError("Defense Fighting Style AC could not be compiled.") from exc
 
 
+def shield_armor_class_bonus(*, wielding_shield: bool, shield_trained: bool) -> int:
+    """Return the static Shield AC bonus; an untrained shield grants no AC bonus."""
+    try:
+        if not isinstance(wielding_shield, bool) or not isinstance(shield_trained, bool):
+            raise ValueError("Shield AC flags must be booleans.")
+        return 2 if wielding_shield and shield_trained else 0
+    except ValueError:
+        raise
+    except Exception as exc:
+        logger.exception("Shield AC compilation failed.")
+        raise RuntimeError("Shield AC could not be compiled.") from exc
+
+
 def compile_armored_base_ac(
     armor_base_ac: int,
     fighting_style: str | None,
     armor_category: ArmorCategory,
 ) -> int:
-    """Compile permanent equipment/style AC before temporary combat modifiers."""
+    """Compile permanent armor/style AC before temporary combat modifiers."""
     try:
         if armor_base_ac < 0:
             raise ValueError("Armor base AC cannot be negative.")
@@ -38,3 +51,28 @@ def compile_armored_base_ac(
     except Exception as exc:
         logger.exception("Armored base AC compilation failed.")
         raise RuntimeError("Armored base AC could not be compiled.") from exc
+
+
+def compile_equipped_base_ac(
+    armor_base_ac: int,
+    fighting_style: str | None,
+    armor_category: ArmorCategory,
+    *,
+    wielding_shield: bool,
+    shield_trained: bool,
+) -> int:
+    """Compile permanent armor, fighting-style, and shield AC into the template base AC."""
+    try:
+        return compile_armored_base_ac(
+            armor_base_ac,
+            fighting_style,
+            armor_category,
+        ) + shield_armor_class_bonus(
+            wielding_shield=wielding_shield,
+            shield_trained=shield_trained,
+        )
+    except ValueError:
+        raise
+    except Exception as exc:
+        logger.exception("Equipped base AC compilation failed.")
+        raise RuntimeError("Equipped base AC could not be compiled.") from exc
