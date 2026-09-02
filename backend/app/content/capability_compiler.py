@@ -50,6 +50,7 @@ def _compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
         long_range_ft=definition.long_range_ft,
         projectile=definition.projectile,
         mastery_property=definition.mastery_property,
+        light=definition.light,
     )
     on_hit: list[OnHitDamage] = []
     conditional: list[ConditionalDamage] = []
@@ -85,6 +86,8 @@ def _compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
         weapon=weapon,
         attack_bonus=definition.attack_bonus,
         damage_bonus=damage_bonus,
+        attack_ability=definition.attack_ability,
+        attack_ability_modifier=definition.attack_ability_modifier,
         rage_eligible=definition.rage_eligible,
         fixed_damage=definition.fixed_damage,
         conditional_damage=conditional,
@@ -130,6 +133,7 @@ def compile_combatant(definition: CombatantDefinition) -> CombatantTemplate:
             attack_action = AttackActionDefinition(
                 id=definition.attack_action.id,
                 name=definition.attack_action.name,
+                is_attack_action=definition.attack_action.is_attack_action,
                 slots=[AttackActionSlot(attack_ids=slot.attack_ids, save_action_ids=slot.save_action_ids)
                        for slot in definition.attack_action.slots],
             )
