@@ -100,7 +100,7 @@ def compile_fighter_champion_variant(build_id: str, level: int) -> CombatantTemp
     athletics = skill_bonus(scores, level, "strength", proficient="Athletics" in profile.skill_proficiencies)
     acrobatics = skill_bonus(scores, level, "dexterity", proficient="Acrobatics" in profile.skill_proficiencies)
     return CombatantTemplate(
-        id=profile.template_id, name=profile.character_name, archetype="Fighter — Champion",
+        id=profile.template_id, name=profile.character_name, archetype=profile.class_name,
         level=level, kind="character", armor_class=armor_class,
         max_hp=fixed_hit_points(level, 10, scores.modifier("constitution")), speed_ft=30,
         initiative_bonus=scores.modifier("dexterity"), ability_scores=scores,
