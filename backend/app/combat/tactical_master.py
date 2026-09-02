@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.sap import TACTICAL_MASTER_SAP_EFFECT_ID, apply_sap_effect
+from app.combat.tactical_master_policy import tactical_master_sap_selected
 from app.combat.timed_conditions import remove_effect_instance
 from app.domain.models import CombatantState, WeaponAttack
 
@@ -9,10 +10,7 @@ SOURCE_EFFECT_ID = "tactical-master"
 
 
 def tactical_master_sap_eligible(state: CombatantState, attack: WeaponAttack) -> bool:
-    return (
-        state.template.progression_features.tactical_master_sap
-        and attack.weapon.id in state.template.weapon_masteries
-    )
+    return tactical_master_sap_selected(state, attack)
 
 
 def apply_tactical_master_sap(
