@@ -47,8 +47,10 @@ def _apply_row(data: dict[str, object], level: int) -> None:
     attack_ids = ["rokhan-greataxe", "rokhan-handaxe-thrown"]
     attack_action = None
     if row.attack_count > 1:
-        attack_action = {"id": "extra-attack", "name": "Extra Attack",
-                         "slots": [{"attack_ids": attack_ids} for _ in range(row.attack_count)]}
+        attack_action = {
+            "id": "extra-attack", "name": "Extra Attack", "is_attack_action": True,
+            "slots": [{"attack_ids": attack_ids} for _ in range(row.attack_count)],
+        }
     data.update(
         armor_class=row.armor_class,
         max_hp=row.max_hp,
