@@ -15,13 +15,16 @@ STATUSES = {
     "nick-mastery": "supported",
     "two-weapon-fighting": "supported",
     "slow-mastery": "arena_out_of_scope",
+    "indomitable": "supported",
+    "tactical-master": "supported",
 }
 
 
-def test_all_four_champion_variants_are_clean_through_level_eight() -> None:
+def test_all_four_champion_variants_are_clean_through_level_nine() -> None:
     for build_id in ("great-weapon", "sword-shield", "archer", "dual-wield"):
         assert audit_fighter_champion_variant_readiness(build_id, 3, STATUSES) == []
         assert audit_fighter_champion_variant_readiness(build_id, 8, STATUSES) == []
+        assert audit_fighter_champion_variant_readiness(build_id, 9, STATUSES) == []
 
 
 def test_nick_and_twf_are_required_from_actual_archer_and_dual_wield_sheets() -> None:
@@ -36,9 +39,17 @@ def test_nick_and_twf_are_required_from_actual_archer_and_dual_wield_sheets() ->
     assert "combat-capability-not-supported:two-weapon-fighting:blocked" in dual_issues
 
 
-def test_level_nine_and_above_stay_blocked_by_explicit_unfinished_character_features() -> None:
-    issues = audit_fighter_champion_variant_readiness("great-weapon", 9, STATUSES)
-    assert "combat-feature-not-automated:tactical-master" in issues
+def test_fighter_nine_features_fail_closed_when_downgraded() -> None:
+    issues = audit_fighter_champion_variant_readiness(
+        "great-weapon", 9, {**STATUSES, "indomitable": "blocked", "tactical-master": "blocked"},
+    )
+    assert "combat-capability-not-supported:indomitable:blocked" in issues
+    assert "combat-capability-not-supported:tactical-master:blocked" in issues
+
+
+def test_level_ten_is_next_explicit_champion_blocker() -> None:
+    issues = audit_fighter_champion_variant_readiness("great-weapon", 10, STATUSES)
+    assert "combat-feature-not-automated:heroic-warrior" in issues
 
 
 def test_no_full_champion_family_can_be_called_active_yet() -> None:
