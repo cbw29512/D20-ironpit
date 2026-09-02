@@ -1,11 +1,10 @@
 from __future__ import annotations
 
-from enum import StrEnum
 from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
-from app.domain.actions import AbilityName, AttackActionDefinition, ConditionName, ConditionRemovalAction, HealingAction, HitControlEffect, SavingThrowAction
+from app.domain.actions import AttackActionDefinition, ConditionName, ConditionRemovalAction, HealingAction, SavingThrowAction
 from app.domain.movement import MovementModes
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.reactions import ParryReaction, RedirectAttackReaction
@@ -13,76 +12,16 @@ from app.domain.size import CreatureSize
 from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellSaveAction
 from app.domain.traits import CombatTrait
 from app.domain.unarmed import UnarmedStrikeDamage
+from app.domain.weapons import (
+    ConditionalDamage,
+    DamageType,
+    OnHitDamage,
+    Weapon,
+    WeaponAttack,
+    WeaponAttackKind,
+)
 
 
-class DamageType(StrEnum):
-    ACID = "acid"
-    BLUDGEONING = "bludgeoning"
-    COLD = "cold"
-    FIRE = "fire"
-    FORCE = "force"
-    LIGHTNING = "lightning"
-    NECROTIC = "necrotic"
-    PIERCING = "piercing"
-    POISON = "poison"
-    PSYCHIC = "psychic"
-    RADIANT = "radiant"
-    SLASHING = "slashing"
-    THUNDER = "thunder"
-
-
-class WeaponAttackKind(StrEnum):
-    MELEE = "melee"
-    RANGED = "ranged"
-
-
-class ConditionalDamage(BaseModel):
-    trigger: Literal["attack_advantage", "attacker_bloodied", "target_bloodied"]
-    mode: Literal["add", "replace_weapon"] = "add"
-    dice_count: int = Field(ge=1, le=20)
-    dice_size: int = Field(ge=2, le=100)
-    damage_bonus: int = 0
-    damage_type: DamageType
-
-
-class OnHitDamage(BaseModel):
-    source: str
-    dice_count: int = Field(ge=1, le=40)
-    dice_size: int = Field(ge=2, le=100)
-    damage_bonus: int = 0
-    damage_type: DamageType
-
-class Weapon(BaseModel):
-    id: str
-    name: str
-    attack_kind: WeaponAttackKind
-    dice_count: int = Field(ge=0, le=20)
-    dice_size: int = Field(ge=2, le=100)
-    damage_type: DamageType
-    animation: str
-    reach_ft: int = Field(default=5, ge=0)
-    normal_range_ft: int | None = Field(default=None, ge=1)
-    long_range_ft: int | None = Field(default=None, ge=1)
-    projectile: str | None = None
-    mastery_property: str | None = None
-
-
-class WeaponAttack(BaseModel):
-    id: str
-    weapon: Weapon
-    attack_bonus: int
-    damage_bonus: int
-    damage_die_minimum: int | None = Field(default=None, ge=2, le=100)
-    attack_ability: AbilityName | None = None
-    attack_ability_modifier: int | None = None
-    fixed_damage: int | None = Field(default=None, ge=0)
-    conditional_damage: list[ConditionalDamage] = Field(default_factory=list)
-    on_hit_damage: list[OnHitDamage] = Field(default_factory=list)
-    rage_eligible: bool = False
-    sneak_attack_eligible: bool = False
-    knocks_prone_max_size: CreatureSize | None = None
-    control_effect: HitControlEffect | None = None
-    forbid_target_grappled_by_self: bool = False
 class VisualLoadout(BaseModel):
     armor: str
     main_hand: str
@@ -94,6 +33,8 @@ class ResourceDefinition(BaseModel):
     id: str
     name: str
     max_uses: int = Field(ge=0)
+
+
 class CombatantTemplate(BaseModel):
     id: str
     name: str
