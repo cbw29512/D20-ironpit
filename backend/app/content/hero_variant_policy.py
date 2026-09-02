@@ -2,41 +2,34 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from app.content.combat_build_variants import combat_build_variants_for
 from app.content.hero_progressions import HERO_BY_CLASS
+from app.content.subclass_specializations import specializations_for_class
 
 
 @dataclass(frozen=True)
-class HeroVariantFamily:
+class HeroSubclassFamily:
     class_id: str
     hero_name: str
-    subclass_id: str
-    subclass_name: str
-    variant_ids: tuple[str, ...]
+    subclass_ids: tuple[str, ...]
+    target_subclass_count: int
     branch_level: int = 3
 
     @property
-    def expected_variant_count(self) -> int:
-        return 4 if self.class_id == "fighter" else 3
+    def migration_complete(self) -> bool:
+        return len(self.subclass_ids) == self.target_subclass_count
 
 
-def hero_variant_family(class_id: str) -> HeroVariantFamily:
+def hero_subclass_family(class_id: str) -> HeroSubclassFamily:
     hero = HERO_BY_CLASS[class_id]
-    variants = combat_build_variants_for(class_id)
-    family = HeroVariantFamily(
+    specializations = specializations_for_class(class_id)
+    subclass_ids = tuple(item.subclass_id for item in specializations) or (hero.subclass_id,)
+    return HeroSubclassFamily(
         class_id=class_id,
         hero_name=hero.hero_name,
-        subclass_id=hero.subclass_id,
-        subclass_name=hero.subclass_name,
-        variant_ids=tuple(variant.id for variant in variants),
+        subclass_ids=subclass_ids,
+        target_subclass_count=4 if class_id == "fighter" else 3,
     )
-    if len(family.variant_ids) != family.expected_variant_count:
-        raise RuntimeError(
-            f"{class_id} requires {family.expected_variant_count} optimized variants; "
-            f"found {len(family.variant_ids)}."
-        )
-    return family
 
 
-def all_hero_variant_families() -> tuple[HeroVariantFamily, ...]:
-    return tuple(hero_variant_family(class_id) for class_id in HERO_BY_CLASS)
+def all_hero_subclass_families() -> tuple[HeroSubclassFamily, ...]:
+    return tuple(hero_subclass_family(class_id) for class_id in HERO_BY_CLASS)
