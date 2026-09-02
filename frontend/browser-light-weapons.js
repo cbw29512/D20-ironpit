@@ -41,7 +41,7 @@
     if (!candidates.length) return null;
     const nickCandidate = candidates.find((attack) => nickActive(state, attack));
     const chosen = nickCandidate || candidates[0];
-    const nick = nickActive(state, triggerAttack) || nickActive(state, chosen);
+    const nick = Boolean(nickCandidate);
     return {
       attack: adjustedProfile(state, chosen),
       usesBonusAction: !nick,
