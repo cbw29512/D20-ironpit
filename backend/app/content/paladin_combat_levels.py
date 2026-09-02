@@ -24,7 +24,7 @@ _ROWS = {
     2: (2, 0, 3, _slots(2), ("fighting-style", "paladins-smite"), ()),
     3: (2, 2, 4, _slots(3), ("channel-divinity", "sacred-weapon", "devotion-combat-spells-1"), ()),
     4: (2, 2, 5, _slots(3), (), ()),
-    5: (3, 2, 6, _slots(4, 2), ("extra-attack", "devotion-combat-spells-2"), ("faithful-steed",)),
+    5: (3, 2, 6, _slots(4, 2), ("extra-attack", "faithful-steed", "devotion-combat-spells-2"), ()),
     6: (3, 2, 6, _slots(4, 2), ("aura-of-protection",), ()),
     7: (3, 2, 7, _slots(4, 3), ("aura-of-devotion",), ()),
     8: (3, 2, 7, _slots(4, 3), (), ()),
