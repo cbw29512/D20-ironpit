@@ -28,34 +28,61 @@ def _attack(attack_id, weapon, modifier=3):
 
 def _state(masteries=("scimitar",), modifier=3):
     template = build_karnok_stoneward().model_copy(deep=True)
-    template.weapon_attack = _attack("test-scimitar", build_scimitar(), modifier)
-    template.alternate_weapon_attacks = [_attack("test-shortsword", build_shortsword(), modifier)]
+    template.weapon_attack = _attack("test-shortsword", build_shortsword(), modifier)
+    template.alternate_weapon_attacks = [_attack("test-scimitar", build_scimitar(), modifier)]
     template.weapon_masteries = list(masteries)
     return build_combatant_state(template)
 
 
-def test_nick_moves_light_extra_attack_off_bonus_action_and_removes_positive_modifier() -> None:
+def test_nick_moves_nick_weapons_light_extra_attack_off_bonus_action() -> None:
     state = _state()
     plan = plan_light_extra_attack(state, state.template.weapon_attack, "1:hero")
 
     assert plan is not None
-    assert plan.attack.weapon.id == "shortsword"
+    assert plan.attack.weapon.id == "scimitar"
     assert plan.attack.damage_bonus == 0
     assert plan.uses_bonus_action is False
     assert plan.feature_id == "weapon-mastery-nick"
 
 
-def test_two_weapon_fighting_restores_modifier_without_adding_another_attack() -> None:
+def test_nick_does_not_apply_when_nick_weapon_is_only_the_trigger_attack() -> None:
+    state = _state()
+    scimitar = state.template.alternate_weapon_attacks[0]
+    shortsword = state.template.weapon_attack
+    state.template.weapon_attack = scimitar
+    state.template.alternate_weapon_attacks = [shortsword]
+
+    plan = plan_light_extra_attack(state, scimitar, "1:hero")
+
+    assert plan is not None
+    assert plan.attack.weapon.id == "shortsword"
+    assert plan.uses_bonus_action is True
+    assert plan.feature_id == "light-extra-attack"
+
+
+def test_two_weapon_fighting_restores_modifier_on_nick_extra_attack() -> None:
     state = _state()
     state.template.fighting_style = "Defense"
     state.template.fighting_styles = ["Defense", "Two-Weapon Fighting"]
     plan = plan_light_extra_attack(state, state.template.weapon_attack, "1:hero")
 
     assert plan is not None
-    assert plan.attack.weapon.id == "shortsword"
+    assert plan.attack.weapon.id == "scimitar"
     assert plan.attack.damage_bonus == 3
     assert plan.uses_bonus_action is False
     assert plan.feature_id == "weapon-mastery-nick"
+
+
+def test_two_weapon_fighting_restores_modifier_without_nick_or_extra_attack_count() -> None:
+    state = _state(masteries=())
+    state.template.fighting_styles = ["Two-Weapon Fighting"]
+    plan = plan_light_extra_attack(state, state.template.weapon_attack, "1:hero")
+
+    assert plan is not None
+    assert plan.attack.weapon.id == "scimitar"
+    assert plan.attack.damage_bonus == 3
+    assert plan.uses_bonus_action is True
+    assert plan.feature_id == "light-extra-attack"
 
 
 def test_unmastered_nick_uses_ordinary_light_bonus_action() -> None:
@@ -63,6 +90,7 @@ def test_unmastered_nick_uses_ordinary_light_bonus_action() -> None:
     plan = plan_light_extra_attack(state, state.template.weapon_attack, "1:hero")
 
     assert plan is not None
+    assert plan.attack.damage_bonus == 0
     assert plan.uses_bonus_action is True
     assert plan.feature_id == "light-extra-attack"
 
@@ -102,18 +130,18 @@ def _nick_extra_attack_setup(is_attack_action=True):
     attacker = setup.heroes[0]
     attacker.position_ft = 0
     setup.monsters[0].position_ft = 5
-    scimitar = _attack("test-scimitar", build_scimitar())
     shortsword = _attack("test-shortsword", build_shortsword())
-    attacker.state.template.weapon_attack = scimitar
-    attacker.state.template.alternate_weapon_attacks = [shortsword]
+    scimitar = _attack("test-scimitar", build_scimitar())
+    attacker.state.template.weapon_attack = shortsword
+    attacker.state.template.alternate_weapon_attacks = [scimitar]
     attacker.state.template.weapon_masteries = ["scimitar"]
     attacker.state.template.attack_action = AttackActionDefinition(
         id="fighter-extra-attack",
         name="Extra Attack",
         is_attack_action=is_attack_action,
         slots=[
-            AttackActionSlot(attack_ids=[scimitar.id]),
-            AttackActionSlot(attack_ids=[scimitar.id]),
+            AttackActionSlot(attack_ids=[shortsword.id]),
+            AttackActionSlot(attack_ids=[shortsword.id]),
         ],
     )
     begin_turn(attacker.state)
@@ -127,6 +155,7 @@ def test_nick_adds_exactly_one_attack_and_action_surge_cannot_add_another() -> N
 
     assert len(attacks) == 3
     assert attacks[-1].feature_id == "weapon-mastery-nick"
+    assert attacks[-1].weapon_id == "scimitar"
     assert attacker.state.bonus_action_available is True
 
     attacker.state.action_available = True
