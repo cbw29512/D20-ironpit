@@ -12,6 +12,7 @@ class ModifierKind(StrEnum):
     ATTACK_ROLL_BONUS_DIE = "attack-roll-bonus-die"
     SAVING_THROW_BONUS_DIE = "saving-throw-bonus-die"
     ATTACKS_AGAINST_ADVANTAGE = "attacks-against-advantage"
+    NEXT_ATTACK_AGAINST_ADVANTAGE = "next-attack-against-advantage"
     BONUS_DAMAGE = "bonus-damage"
     SPEED = "speed"
 
@@ -45,10 +46,13 @@ class CombatModifier(BaseModel):
             raise ValueError("Bonus damage requires a damage type.")
         if self.kind is not ModifierKind.BONUS_DAMAGE and self.damage_type is not None:
             raise ValueError(f"{self.kind.value} does not accept a damage type.")
-        if self.kind is ModifierKind.ATTACKS_AGAINST_ADVANTAGE and self.flat_bonus:
+        advantage_kinds = {ModifierKind.ATTACKS_AGAINST_ADVANTAGE, ModifierKind.NEXT_ATTACK_AGAINST_ADVANTAGE}
+        if self.kind in advantage_kinds and self.flat_bonus:
             raise ValueError("Attack-advantage modifiers do not accept a flat bonus.")
+        if self.kind is ModifierKind.NEXT_ATTACK_AGAINST_ADVANTAGE and self.target_id is None:
+            raise ValueError("Target-scoped attack Advantage requires a target id.")
         if self.consume_on_attack_against and self.kind is not ModifierKind.ATTACKS_AGAINST_ADVANTAGE:
-            raise ValueError("Only attack-advantage modifiers can be consumed by the next attack.")
+            raise ValueError("Only defender-wide attack Advantage can use consume_on_attack_against.")
         return self
 
 
