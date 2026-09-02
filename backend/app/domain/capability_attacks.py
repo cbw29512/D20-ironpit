@@ -26,6 +26,9 @@ class AttackCapabilityDefinition(BaseModel):
     projectile: str | None = None
     mastery_property: str | None = None
     light: bool = False
+    finesse: bool = False
+    two_handed: bool = False
+    versatile: bool = False
     attack_ability: AbilityName | None = None
     attack_ability_modifier: int | None = None
     rage_eligible: bool = False
