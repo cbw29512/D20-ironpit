@@ -40,7 +40,7 @@ def _build(
 
 
 _VARIANTS = (
-    _build("fighter", "great-weapon", "two-handed-striker", status="active"),
+    _build("fighter", "great-weapon", "two-handed-striker", notes="Planned until Graze mastery has shared Python/browser support."),
     _build("fighter", "sword-shield", "defender"),
     _build("fighter", "archer", "ranged-striker"),
     _build("fighter", "dual-wield", "dual-wield-striker"),
