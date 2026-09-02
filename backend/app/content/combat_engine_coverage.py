@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 from collections.abc import Iterable, Mapping
 
-from app.content.combat_build_choice_overlays import CombatBuildChoiceOverlay, FIGHTER_COMBAT_BUILD_CHOICES
+from app.content.combat_build_choice_overlays import COMBAT_BUILD_CHOICE_OVERLAYS, CombatBuildChoiceOverlay
 from app.content.combat_build_variants import get_combat_build_variant
 
 logger = logging.getLogger(__name__)
@@ -63,7 +63,7 @@ def audit_build_capability_contract(
 def audit_current_build_capabilities(capability_statuses: Mapping[str, str]) -> list[str]:
     """Audit every build overlay currently declared by the production content layer."""
     try:
-        overlays = tuple(FIGHTER_COMBAT_BUILD_CHOICES.values())
+        overlays = tuple(COMBAT_BUILD_CHOICE_OVERLAYS.values())
         build_statuses = {
             (overlay.class_id, overlay.build_id): get_combat_build_variant(overlay.class_id, overlay.build_id).status
             for overlay in overlays

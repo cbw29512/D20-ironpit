@@ -57,6 +57,20 @@ def test_fighter_subclass_specializations_keep_their_declared_weapons() -> None:
     assert psi.build_choices.primary_weapon == "longbow"
 
 
+def test_barbarian_subclasses_compose_real_planned_loadouts_from_one_spine() -> None:
+    expected = {
+        ("path-berserker", "great-weapon"): ("greataxe", False),
+        ("path-wild-heart", "weapon-shield"): ("battleaxe", True),
+        ("path-zealot", "dual-wield"): ("shortsword", False),
+    }
+    for (subclass_id, build_id), (weapon_id, shield) in expected.items():
+        recipe = compose_character_combat_recipe("barbarian", subclass_id, build_id, 8)
+        assert recipe.shared_progression_id == "barbarian-1-20"
+        assert recipe.build_status == "planned"
+        assert recipe.build_choices.primary_weapon == weapon_id
+        assert recipe.build_choices.shield is shield
+
+
 def test_rogue_base_and_thief_overlay_are_independent_of_legacy_role_record() -> None:
     duelist = compose_character_combat_recipe("rogue", "thief", "duelist", 3)
     ranged = compose_character_combat_recipe("rogue", "thief", "ranged", 3)

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from app.content.barbarian_subclass_overlay_data import BARBARIAN_SUBCLASS_DELTA_DATA
 from app.content.core_subclass_overlay_data import CORE_SUBCLASS_DELTA_DATA
 from app.content.fighter_subclass_overlay_data import FIGHTER_SUBCLASS_DELTA_DATA
 
@@ -37,10 +38,14 @@ SUBCLASS_COMBAT_OVERLAYS = {
     subclass_id: _overlay(class_id, subclass_id, rows)
     for subclass_id, (class_id, rows) in CORE_SUBCLASS_DELTA_DATA.items()
 }
-SUBCLASS_COMBAT_OVERLAYS.update({
-    subclass_id: _overlay("fighter", subclass_id, rows)
-    for subclass_id, rows in FIGHTER_SUBCLASS_DELTA_DATA.items()
-})
+for _class_id, _source in (
+    ("barbarian", BARBARIAN_SUBCLASS_DELTA_DATA),
+    ("fighter", FIGHTER_SUBCLASS_DELTA_DATA),
+):
+    for _subclass_id, _rows in _source.items():
+        if _subclass_id in SUBCLASS_COMBAT_OVERLAYS:
+            raise ValueError(f"Duplicate subclass combat overlay: {_subclass_id}.")
+        SUBCLASS_COMBAT_OVERLAYS[_subclass_id] = _overlay(_class_id, _subclass_id, _rows)
 
 
 def subclass_overlay(subclass_id: str) -> SubclassCombatOverlay:

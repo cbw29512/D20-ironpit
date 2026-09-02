@@ -2,10 +2,6 @@ from __future__ import annotations
 
 
 CORE_SUBCLASS_DELTA_DATA: dict[str, tuple[str, dict[int, dict[str, tuple[str, ...]]]]] = {
-    "path-berserker": ("barbarian", {
-        3: {"features_added": ("frenzy",)}, 6: {"features_added": ("mindless-rage",)},
-        10: {"features_added": ("retaliation",)}, 14: {"features_added": ("intimidating-presence",)},
-    }),
     "college-lore": ("bard", {
         3: {"features_added": ("cutting-words",), "arena_ignored": ("lore-bonus-proficiencies",)},
         6: {"features_added": ("magical-discoveries",)}, 14: {"features_added": ("peerless-skill",)},

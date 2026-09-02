@@ -16,15 +16,20 @@ _STYLE_CAPABILITY = {
     "Two-Weapon Fighting": "two-weapon-fighting",
 }
 _MASTERY_CAPABILITY = {
-    "Graze": "graze-mastery", "Nick": "nick-mastery", "Sap": "sap-mastery",
-    "Slow": "slow-mastery", "Vex": "vex-mastery",
+    "Cleave": "cleave-mastery", "Graze": "graze-mastery", "Nick": "nick-mastery",
+    "Sap": "sap-mastery", "Slow": "slow-mastery", "Topple": "topple-mastery",
+    "Vex": "vex-mastery",
 }
 _BUILD_TO_SUBCLASS = {
-    "great-weapon": "champion",
-    "dual-wield": "battle-master",
-    "sword-shield": "eldritch-knight",
-    "archer": "psi-warrior",
+    ("fighter", "great-weapon"): "champion",
+    ("fighter", "dual-wield"): "battle-master",
+    ("fighter", "sword-shield"): "eldritch-knight",
+    ("fighter", "archer"): "psi-warrior",
+    ("barbarian", "great-weapon"): "path-berserker",
+    ("barbarian", "weapon-shield"): "path-wild-heart",
+    ("barbarian", "dual-wield"): "path-zealot",
 }
+_MASTERY_LIMIT = {"fighter": 3, "barbarian": 2}
 
 
 @dataclass(frozen=True)
@@ -46,9 +51,9 @@ class CombatBuildChoiceOverlay:
         get_combat_build_variant(self.class_id, self.build_id)
 
 
-def _fighter_overlay(build_id: str) -> CombatBuildChoiceOverlay:
-    spec = subclass_specialization(_BUILD_TO_SUBCLASS[build_id])
-    masteries = spec.mastery_priority[:3]
+def _build_overlay(class_id: str, build_id: str) -> CombatBuildChoiceOverlay:
+    spec = subclass_specialization(_BUILD_TO_SUBCLASS[(class_id, build_id)])
+    masteries = spec.mastery_priority[:_MASTERY_LIMIT[class_id]]
     required: list[str] = []
     ignored: list[str] = []
     if spec.fighting_style_priority:
@@ -62,13 +67,16 @@ def _fighter_overlay(build_id: str) -> CombatBuildChoiceOverlay:
             continue
         mastery = build_weapon(weapon_id).mastery_property
         capability = _MASTERY_CAPABILITY.get(mastery or "")
+        if capability is None:
+            raise ValueError(f"No shared capability maps weapon mastery {mastery!r}.")
         if capability == "slow-mastery":
             ignored.append(capability)
-        elif capability and capability not in required:
+        elif capability not in required:
             required.append(capability)
     return CombatBuildChoiceOverlay(
-        class_id="fighter", build_id=build_id,
-        primary_ability=spec.ability_priority[0], fighting_style=spec.fighting_style_priority[0] if spec.fighting_style_priority else None,
+        class_id=class_id, build_id=build_id,
+        primary_ability=spec.ability_priority[0],
+        fighting_style=spec.fighting_style_priority[0] if spec.fighting_style_priority else None,
         armor=spec.armor, shield=spec.shield, primary_weapon=spec.primary_weapon,
         secondary_weapons=spec.secondary_weapons, weapon_masteries=masteries,
         required_capabilities=tuple(required), arena_ignored=tuple(ignored),
@@ -76,16 +84,27 @@ def _fighter_overlay(build_id: str) -> CombatBuildChoiceOverlay:
     )
 
 
-FIGHTER_COMBAT_BUILD_CHOICES = {build_id: _fighter_overlay(build_id) for build_id in _BUILD_TO_SUBCLASS}
+COMBAT_BUILD_CHOICE_OVERLAYS = {
+    key: _build_overlay(*key)
+    for key in _BUILD_TO_SUBCLASS
+}
+FIGHTER_COMBAT_BUILD_CHOICES = {
+    build_id: overlay
+    for (class_id, build_id), overlay in COMBAT_BUILD_CHOICE_OVERLAYS.items()
+    if class_id == "fighter"
+}
+BARBARIAN_COMBAT_BUILD_CHOICES = {
+    build_id: overlay
+    for (class_id, build_id), overlay in COMBAT_BUILD_CHOICE_OVERLAYS.items()
+    if class_id == "barbarian"
+}
 
 
 def get_combat_build_choice_overlay(class_id: str, build_id: str) -> CombatBuildChoiceOverlay:
-    if class_id == "fighter":
-        try:
-            return FIGHTER_COMBAT_BUILD_CHOICES[build_id]
-        except KeyError as exc:
-            raise ValueError(f"Fighter combat build choices are not defined for {build_id}.") from exc
-    raise ValueError(f"Combat build choices are not yet defined for class {class_id}.")
+    try:
+        return COMBAT_BUILD_CHOICE_OVERLAYS[(class_id, build_id)]
+    except KeyError as exc:
+        raise ValueError(f"Combat build choices are not defined for {class_id}/{build_id}.") from exc
 
 
 def maybe_combat_build_choice_overlay(class_id: str, build_id: str) -> CombatBuildChoiceOverlay | None:

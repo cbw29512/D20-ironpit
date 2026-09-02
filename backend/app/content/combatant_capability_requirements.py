@@ -12,10 +12,12 @@ _STYLE_REQUIREMENTS = {
     "Two-Weapon Fighting": "two-weapon-fighting",
 }
 _MASTERY_REQUIREMENTS = {
+    "Cleave": "cleave-mastery",
     "Graze": "graze-mastery",
     "Nick": "nick-mastery",
     "Sap": "sap-mastery",
     "Slow": "slow-mastery",
+    "Topple": "topple-mastery",
     "Vex": "vex-mastery",
 }
 

@@ -1,4 +1,6 @@
 from app.content.combat_build_choice_overlays import (
+    BARBARIAN_COMBAT_BUILD_CHOICES,
+    COMBAT_BUILD_CHOICE_OVERLAYS,
     FIGHTER_COMBAT_BUILD_CHOICES,
     get_combat_build_choice_overlay,
 )
@@ -48,3 +50,22 @@ def test_sword_and_shield_is_a_real_distinct_defender_overlay() -> None:
     assert shield.shield is True
     assert shield.fighting_style == "Defense"
     assert "sap-mastery" in shield.required_capabilities
+
+
+def test_barbarian_subclass_specializations_generate_real_choice_overlays() -> None:
+    assert set(BARBARIAN_COMBAT_BUILD_CHOICES) == {"great-weapon", "weapon-shield", "dual-wield"}
+    berserker = get_combat_build_choice_overlay("barbarian", "great-weapon")
+    wild_heart = get_combat_build_choice_overlay("barbarian", "weapon-shield")
+    zealot = get_combat_build_choice_overlay("barbarian", "dual-wield")
+    assert (berserker.primary_weapon, berserker.weapon_masteries[:2]) == (
+        "greataxe", ("greataxe", "battleaxe"),
+    )
+    assert wild_heart.primary_weapon == "battleaxe" and wild_heart.shield is True
+    assert zealot.primary_ability == "strength"
+    assert zealot.secondary_weapons[0] == "scimitar"
+    assert {"vex-mastery", "nick-mastery"} <= set(zealot.required_capabilities)
+
+
+def test_all_current_choice_overlays_come_from_subclass_specializations() -> None:
+    assert len(COMBAT_BUILD_CHOICE_OVERLAYS) == 7
+    assert all("derived from" in overlay.notes for overlay in COMBAT_BUILD_CHOICE_OVERLAYS.values())

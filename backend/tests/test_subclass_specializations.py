@@ -1,4 +1,12 @@
-from app.content.subclass_specializations import FIGHTER_SPECIALIZATIONS, subclass_specialization
+import pytest
+
+from app.content.subclass_specializations import (
+    BARBARIAN_SPECIALIZATIONS,
+    FIGHTER_SPECIALIZATIONS,
+    SubclassSpecialization,
+    specializations_for_class,
+    subclass_specialization,
+)
 from app.content.weapon_catalog import build_weapon
 
 
@@ -12,8 +20,9 @@ def test_fighter_has_one_coherent_specialization_per_subclass() -> None:
 
 
 def test_weapon_specializations_are_only_catalog_data_and_mastery_choices() -> None:
-    for spec in FIGHTER_SPECIALIZATIONS:
+    for spec in (*FIGHTER_SPECIALIZATIONS, *BARBARIAN_SPECIALIZATIONS):
         assert spec.primary_weapon is not None
+        assert spec.source_reference
         weapon = build_weapon(spec.primary_weapon)
         assert weapon.id == spec.primary_weapon
         assert spec.primary_weapon in spec.mastery_priority
@@ -33,3 +42,36 @@ def test_eldritch_knight_is_sword_shield_with_spell_package_pointer() -> None:
     assert (spec.primary_weapon, spec.shield, spec.spell_package_id) == (
         "longsword", True, "eldritch-knight",
     )
+
+
+def test_barbarian_has_one_strength_specialization_per_target_subclass() -> None:
+    assert tuple(item.subclass_id for item in specializations_for_class("barbarian")) == (
+        "path-berserker", "path-wild-heart", "path-zealot",
+    )
+    berserker, wild_heart, zealot = BARBARIAN_SPECIALIZATIONS
+    assert (berserker.role, berserker.primary_weapon) == ("two-handed", "greataxe")
+    assert (wild_heart.role, wild_heart.primary_weapon, wild_heart.shield) == (
+        "weapon-shield", "battleaxe", True,
+    )
+    assert (zealot.role, zealot.primary_weapon, zealot.secondary_weapons[0]) == (
+        "dual-wield", "shortsword", "scimitar",
+    )
+    assert all(item.ability_priority[0] == "strength" for item in BARBARIAN_SPECIALIZATIONS)
+
+
+def test_barbarian_subclass_choices_are_explicit_specialization_data() -> None:
+    wild_heart = subclass_specialization("path-wild-heart")
+    zealot = subclass_specialization("path-zealot")
+    assert wild_heart.feature_choice_ids == (
+        "wild-heart-rage-bear", "wild-heart-aspect-elephant-athletics", "wild-heart-power-lion",
+    )
+    assert zealot.feature_choice_ids == ("zealot-divine-fury-radiant",)
+
+
+def test_specialization_without_source_truth_fails_closed() -> None:
+    with pytest.raises(ValueError, match="requires a source reference"):
+        SubclassSpecialization(
+            class_id="barbarian", subclass_id="invalid", subclass_name="Invalid",
+            role="two-handed", ability_priority=("strength",), armor=None, shield=False,
+            primary_weapon="greataxe", source_reference="",
+        )

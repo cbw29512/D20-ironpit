@@ -41,6 +41,17 @@ def test_other_legacy_role_records_stay_planned_until_subclass_migration() -> No
         assert {variant.id for variant in combat_build_variants_for(class_id)} == build_ids
 
 
+def test_barbarian_weapon_roles_are_owned_by_real_subclasses() -> None:
+    assert {
+        variant.id: variant.required_subclass_id
+        for variant in combat_build_variants_for("barbarian")
+    } == {
+        "great-weapon": "path-berserker",
+        "weapon-shield": "path-wild-heart",
+        "dual-wield": "path-zealot",
+    }
+
+
 def test_legacy_caster_role_records_remain_migration_inputs_not_subclass_clones() -> None:
     expected = {
         "wizard": {"fire-damage", "frost-control", "mixed-arcane"},

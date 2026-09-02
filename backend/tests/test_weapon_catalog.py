@@ -4,6 +4,8 @@ from app.content.weapon_catalog import audited_weapon_ids, build_weapon
 
 
 def test_audited_weapon_catalog_preserves_shared_properties_and_masteries() -> None:
+    greataxe = build_weapon("greataxe")
+    battleaxe = build_weapon("battleaxe")
     greatsword = build_weapon("greatsword")
     longsword = build_weapon("longsword")
     scimitar = build_weapon("scimitar")
@@ -11,6 +13,8 @@ def test_audited_weapon_catalog_preserves_shared_properties_and_masteries() -> N
     longbow = build_weapon("longbow")
     shortbow = build_weapon("shortbow")
 
+    assert (greataxe.mastery_property, greataxe.heavy, greataxe.two_handed) == ("Cleave", True, True)
+    assert (battleaxe.mastery_property, battleaxe.versatile) == ("Topple", True)
     assert (greatsword.mastery_property, greatsword.heavy, greatsword.two_handed) == ("Graze", True, True)
     assert (longsword.mastery_property, longsword.versatile) == ("Sap", True)
     assert (scimitar.mastery_property, scimitar.finesse, scimitar.light) == ("Nick", True, True)
@@ -18,7 +22,8 @@ def test_audited_weapon_catalog_preserves_shared_properties_and_masteries() -> N
     assert (longbow.mastery_property, longbow.heavy, longbow.two_handed) == ("Slow", True, True)
     assert (shortbow.mastery_property, shortbow.two_handed) == ("Vex", True)
     assert audited_weapon_ids() == (
-        "greatsword", "longsword", "scimitar", "shortsword", "longbow", "shortbow",
+        "greataxe", "battleaxe", "greatsword", "longsword", "scimitar", "shortsword",
+        "longbow", "shortbow",
     )
 
 

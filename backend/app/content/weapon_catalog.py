@@ -52,6 +52,14 @@ def _ranged(
 
 
 _WEAPONS = {
+    "greataxe": _melee(
+        "greataxe", "Greataxe", 1, 12, DamageType.SLASHING, "Cleave",
+        heavy=True, two_handed=True,
+    ),
+    "battleaxe": _melee(
+        "battleaxe", "Battleaxe", 1, 8, DamageType.SLASHING, "Topple",
+        versatile=True,
+    ),
     "greatsword": _melee(
         "greatsword", "Greatsword", 2, 6, DamageType.SLASHING, "Graze",
         heavy=True, two_handed=True,
