@@ -51,6 +51,9 @@ def _compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
         projectile=definition.projectile,
         mastery_property=definition.mastery_property,
         light=definition.light,
+        finesse=definition.finesse,
+        two_handed=definition.two_handed,
+        versatile=definition.versatile,
     )
     on_hit: list[OnHitDamage] = []
     conditional: list[ConditionalDamage] = []
