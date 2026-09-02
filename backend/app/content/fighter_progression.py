@@ -64,6 +64,9 @@ def _apply_row(data: dict[str, object], level: int) -> None:
             "id": "extra-attack", "name": "Extra Attack", "is_attack_action": True,
             "slots": [{"attack_ids": ids} for _ in range(row.attack_count)],
         }
+    progression = compile_progression_feature_fields(features, level)
+    if level >= 9:
+        progression["tactical_master_sap_weapon_ids"] = ["greatsword"]
     data.update(
         ability_scores={
             "strength": row.strength, "dexterity": row.dexterity,
@@ -83,7 +86,7 @@ def _apply_row(data: dict[str, object], level: int) -> None:
             "intelligence": 0, "wisdom": 0, "charisma": 0,
         },
         skill_bonuses={"athletics": row.proficiency_bonus + strength_mod, "acrobatics": dexterity_mod},
-        progression_features=compile_progression_feature_fields(features, level),
+        progression_features=progression,
         source=row.source,
     )
 
