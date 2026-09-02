@@ -47,6 +47,8 @@ def _attack(attack: WeaponAttack) -> dict[str, Any]:
     }
     if weapon.mastery_property is not None:
         row["masteryProperty"] = weapon.mastery_property
+    if weapon.light:
+        row["light"] = True
     if attack.damage_die_minimum is not None:
         row["damageDieMinimum"] = attack.damage_die_minimum
     if attack.attack_ability is not None:
