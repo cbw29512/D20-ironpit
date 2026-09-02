@@ -2,7 +2,7 @@ from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_initiative import roll_encounter_initiative
 from app.combat.state import build_combatant_state
 from app.content.audited_fighter import build_karnok_stoneward
-from app.content.barbarian_progression import build_rokhan_stonefury_level
+from app.content.barbarian_progression import build_rokhan_stonefury_level7_candidate
 from app.content.certified_heroes import build_certified_hero_registry
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import RollMode
@@ -18,7 +18,7 @@ def _member(template, combatant_id: str, side: str) -> EncounterCombatant:
 
 
 def test_barbarian_seven_candidate_has_deterministic_raw_progression_without_public_promotion() -> None:
-    template = build_rokhan_stonefury_level(7)
+    template = build_rokhan_stonefury_level7_candidate()
     assert (template.id, template.level, template.max_hp, template.armor_class, template.speed_ft) == (
         "rokhan-stonefury-l7", 7, 75, 14, 40,
     )
@@ -34,8 +34,8 @@ def test_barbarian_seven_candidate_has_deterministic_raw_progression_without_pub
     assert ("barbarian", 7, "canonical") not in build_certified_hero_registry()
 
 
-def test_feral_instinct_reuses_shared_initiative_advantage_engine() -> None:
-    rokhan = _member(build_rokhan_stonefury_level(7), "rokhan", "heroes")
+def test_feral_instinct_reuses_shared_initiative_advantage_engine_without_approving_pounce_policy() -> None:
+    rokhan = _member(build_rokhan_stonefury_level7_candidate(), "rokhan", "heroes")
     opponent = _member(build_karnok_stoneward(), "opponent", "monsters")
     setup = EncounterSetup(
         heroes=[rokhan], monsters=[opponent], hero_total_levels=7, monster_total_cr="1",
