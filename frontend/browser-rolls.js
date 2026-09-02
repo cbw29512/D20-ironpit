@@ -71,7 +71,7 @@
     throw new Error(`Unsupported conditional damage trigger: ${spec.trigger}`);
   }
 
-  function weaponDamage(attacker, attack, critical, mode, turnKey, bonusDamage = null, target = null) {
+  function weaponDamage(attacker, attack, critical, mode, turnKey, bonusDamage = null, target = null, sneakAllyAvailable = false) {
     const conditional = attack.conditionalDamage || null;
     const replacement = conditional?.mode === "replace_weapon" && conditionalActive(conditional, attacker, target, mode)
       ? conditional : null;
@@ -104,6 +104,8 @@
     if (conditional?.mode === "add" && conditionalActive(conditional, attacker, target, mode)) {
       components.push(damageComponent({ ...conditional, source: "Conditional bonus damage" }, critical));
     }
+    const sneak = window.IRON_PIT_BROWSER_SNEAK_ATTACK?.bonusDamage(attacker, attack, mode, turnKey, sneakAllyAvailable);
+    if (sneak) components.push(bonusComponent(sneak, critical));
     const frenzy = window.IRON_PIT_BROWSER_BARBARIAN3?.bonusDamage(attacker, attack, turnKey);
     if (frenzy) components.push(bonusComponent(frenzy, critical));
     if (bonusDamage) components.push(bonusComponent(bonusDamage, critical));
