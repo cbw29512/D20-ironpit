@@ -3,7 +3,8 @@ from __future__ import annotations
 from app.content.audited_cleric_profile import build_seraphine_dawnshield_level2_profile
 from app.content.canonical_hero_policy import canonical_template_id
 from app.content.canonical_progression import advance_profile_data
-from app.domain.character_builds import AbilityIncrease, AbilityScores, CharacterBuildProfile, FeatureAudit
+from app.content.cleric_profile_from_levels import apply_cleric_level_to_profile_data
+from app.domain.character_builds import CharacterBuildProfile, FeatureAudit
 
 
 def _class_feature(feature_id: str, name: str, *, combat: bool = True, notes: str | None = None) -> FeatureAudit:
@@ -47,6 +48,7 @@ def build_seraphine_dawnshield_level3_profile() -> CharacterBuildProfile:
 def build_seraphine_dawnshield_level4_profile() -> CharacterBuildProfile:
     base = build_seraphine_dawnshield_level3_profile()
     data = advance_profile_data(base, 4)
+    apply_cleric_level_to_profile_data(data, 4)
     additions = [
         FeatureAudit(
             feature_id="ability-score-improvement-l4",
@@ -73,14 +75,10 @@ def build_seraphine_dawnshield_level4_profile() -> CharacterBuildProfile:
             category="class",
             combat_relevant=False,
             automated=False,
-            notes="Fourth Cleric cantrip at level 4; arena-irrelevant utility choice.",
+            notes="Fourth Cleric cantrip at level 4; arena-irrelevant utility choice and omitted from runtime combat features.",
         ),
     ]
     data.update(
-        advancement_increases=[AbilityIncrease(ability="wisdom", amount=2).model_dump()],
-        final_ability_scores=AbilityScores(
-            strength=10, dexterity=10, constitution=10, intelligence=14, wisdom=19, charisma=14,
-        ).model_dump(),
         feature_audits=[*data["feature_audits"], *(feature.model_dump() for feature in additions)],
         source_references=[
             *data["source_references"],
