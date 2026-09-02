@@ -41,12 +41,12 @@ def _build(
 
 _VARIANTS = (
     _build(
-        "fighter", "great-weapon", "two-handed-striker", status="active",
-        notes="Great Weapon Fighting and Greatsword Graze are certified in shared Python/browser combat paths.",
+        "fighter", "great-weapon", "two-handed-striker",
+        notes="Shared GWF and Graze mechanics are supported; activation awaits a compiled build matching this overlay.",
     ),
     _build(
-        "fighter", "sword-shield", "defender", status="active",
-        notes="Defense, trained Shield AC, and Sap are certified in shared content/runtime paths.",
+        "fighter", "sword-shield", "defender",
+        notes="Shared Defense, Shield AC, and Sap mechanics are supported; activation awaits a compiled build matching this overlay.",
     ),
     _build("fighter", "archer", "ranged-striker"),
     _build("fighter", "dual-wield", "dual-wield-striker"),
