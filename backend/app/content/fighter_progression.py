@@ -65,6 +65,11 @@ def _apply_row(data: dict[str, object], level: int) -> None:
             "slots": [{"attack_ids": ids} for _ in range(row.attack_count)],
         }
     data.update(
+        ability_scores={
+            "strength": row.strength, "dexterity": row.dexterity,
+            "constitution": row.constitution, "intelligence": 10,
+            "wisdom": 10, "charisma": 10,
+        },
         armor_class=row.armor_class,
         max_hp=row.max_hp,
         initiative_bonus=dexterity_mod,
