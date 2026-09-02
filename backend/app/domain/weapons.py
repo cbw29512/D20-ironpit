@@ -61,6 +61,9 @@ class Weapon(BaseModel):
     projectile: str | None = None
     mastery_property: str | None = None
     light: bool = False
+    finesse: bool = False
+    two_handed: bool = False
+    versatile: bool = False
 
 
 class WeaponAttack(BaseModel):
