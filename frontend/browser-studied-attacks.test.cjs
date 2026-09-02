@@ -34,6 +34,7 @@ function member(id, side, options = {}) {
   const template = structuredClone(base);
   Object.assign(template, { id: `template-${id}`, name: id, armor_class: options.armorClass ?? 18,
     studied_attacks: options.studied !== false, traits: [] });
+  if (options.nativeGraze) template.tactical_master_sap_weapon_ids = [];
   return { combatant_id: id, side, position_ft: options.position ?? 0, state: S.buildState(template) };
 }
 function attack(attacker, target, values, sequence = 1) {
@@ -43,12 +44,12 @@ function attack(attacker, target, values, sequence = 1) {
 }
 
 {
-  const fighter = member("fighter", "heroes"), target = member("target", "monsters", { position: 5, armorClass: 30 });
+  const fighter = member("fighter", "heroes", { nativeGraze: true }), target = member("target", "monsters", { position: 5, armorClass: 30 });
   const first = attack(fighter, target, [2]);
   assert.equal(first.hit, false); assert.match(first.description, /Graze deals/); assert.match(first.description, /Studied Attacks primes/);
   assert.equal(M.nextAttackAgainstAdvantage(fighter.state, target.combatant_id), 1);
   target.state.template.armor_class = 18;
-  const second = attack(fighter, target, [3, 18, 4, 4], 2);
+  const second = attack(fighter, target, [3, 18, 4, 4, 5, 5], 2);
   assert.equal(second.attack_roll.mode, "advantage"); assert.equal(second.hit, true);
   assert.equal(M.nextAttackAgainstAdvantage(fighter.state, target.combatant_id), 0);
 }
@@ -56,7 +57,7 @@ function attack(attacker, target, values, sequence = 1) {
 {
   const fighter = member("fighter", "heroes"), a = member("a", "monsters", { position: 5, armorClass: 30 }), b = member("b", "monsters", { position: 5, armorClass: 10 });
   attack(fighter, a, [2]);
-  const other = attack(fighter, b, [15, 4, 4], 2);
+  const other = attack(fighter, b, [15, 4, 4, 5, 5], 2);
   assert.equal(other.attack_roll.mode, "normal");
   assert.equal(M.nextAttackAgainstAdvantage(fighter.state, a.combatant_id), 1, "study is target-scoped");
 }
@@ -70,7 +71,7 @@ function attack(attacker, target, values, sequence = 1) {
 {
   const fighter = member("fighter", "heroes"), target = member("target", "monsters", { position: 5, armorClass: 18 });
   fighter.state.heroic_inspiration = true;
-  const event = attack(fighter, target, [2, 20, 4, 4]);
+  const event = attack(fighter, target, [2, 15, 4, 4, 5, 5]);
   assert.equal(event.hit, true); assert.match(event.description, /Heroic Inspiration rerolls/);
   assert.doesNotMatch(event.description, /Studied Attacks primes/);
   assert.equal(M.nextAttackAgainstAdvantage(fighter.state, target.combatant_id), 0);
