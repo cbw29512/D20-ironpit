@@ -65,6 +65,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("indomitable")
     if features.tactical_master_sap:
         mechanics.add("tactical-master-sap")
+    if features.sneak_attack_d6:
+        mechanics.add("sneak-attack")
     if features.critical_move_fraction:
         mechanics.add("post-critical-movement")
     if features.tactical_shift_fraction:
