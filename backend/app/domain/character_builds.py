@@ -76,6 +76,7 @@ class CharacterBuildProfile(BaseModel):
     skill_proficiencies: list[str] = Field(default_factory=list)
     weapon_masteries: list[str] = Field(default_factory=list)
     fighting_style: str | None = None
+    fighting_styles: list[str] = Field(default_factory=list)
     combat_loadout_kind: MeleeLoadoutKind | None = None
     feature_audits: list[FeatureAudit] = Field(min_length=1)
     source_references: list[str] = Field(min_length=1)
