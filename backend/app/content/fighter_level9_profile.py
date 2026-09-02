@@ -17,8 +17,9 @@ def build_karnok_stoneward_level9_profile() -> CharacterBuildProfile:
             category="class",
             combat_relevant=True,
             automated=True,
-            notes=("After a failed combat saving throw, reroll with +9 and use the new roll. Iron Pit spends the "
-                   "single use only when the reroll can mathematically succeed."),
+            notes=("The RAW reroll is implemented: after policy chooses to use Indomitable, reroll the failed save "
+                   "with +9 and spend one use. Automatic spend timing is intentionally not wired until the arena "
+                   "policy is explicitly approved, so Fighter 9 remains outside the certified registry."),
         ),
         FeatureAudit(
             feature_id="tactical-master-sap",
