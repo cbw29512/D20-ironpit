@@ -2,35 +2,18 @@ from __future__ import annotations
 
 from app.content.armor_class_rules import compile_armored_base_ac
 from app.content.canonical_hero_policy import canonical_template_id
-from app.content.equipment import build_shortbow
+from app.content.equipment import build_greatsword, build_shortbow
 from app.content.hero_progressions import HERO_BY_CLASS
 from app.content.level_resources import fighter_second_wind_uses, orc_adrenaline_rush_uses
-from app.domain.models import (
-    CombatantTemplate,
-    DamageType,
-    ResourceDefinition,
-    VisualLoadout,
-    Weapon,
-    WeaponAttack,
-    WeaponAttackKind,
-)
+from app.domain.character_builds import AbilityScores
+from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
 from app.domain.traits import CombatTrait
 
 
 def _greatsword_attack() -> WeaponAttack:
     return WeaponAttack(
         id="karnok-greatsword",
-        weapon=Weapon(
-            id="greatsword",
-            name="Greatsword",
-            attack_kind=WeaponAttackKind.MELEE,
-            dice_count=2,
-            dice_size=6,
-            damage_type=DamageType.SLASHING,
-            animation="heavy-slash",
-            reach_ft=5,
-            mastery_property="Graze",
-        ),
+        weapon=build_greatsword(),
         attack_bonus=5,
         damage_bonus=3,
         attack_ability="strength",
@@ -61,6 +44,10 @@ def build_karnok_stoneward() -> CombatantTemplate:
         archetype=hero.class_name,
         level=level,
         kind="character",
+        ability_scores=AbilityScores(
+            strength=17, dexterity=13, constitution=15,
+            intelligence=10, wisdom=10, charisma=10,
+        ),
         armor_class=armor_class,
         max_hp=12,
         speed_ft=30,
