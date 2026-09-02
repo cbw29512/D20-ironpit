@@ -120,7 +120,7 @@ class SavingThrowAction(BaseModel):
 
 
 class AttackActionSlot(BaseModel):
-    """One ordered Multiattack step; listed weapon/save IDs are legal choices for that step."""
+    """One ordered weapon/save step inside an Attack action or Multiattack."""
 
     attack_ids: list[str] = Field(default_factory=list, max_length=16)
     save_action_ids: list[str] = Field(default_factory=list, max_length=16)
@@ -133,8 +133,9 @@ class AttackActionSlot(BaseModel):
 
 
 class AttackActionDefinition(BaseModel):
-    """The ordered strikes/effects a combatant resolves when it uses Multiattack."""
+    """Ordered strikes/effects; only real Attack actions can trigger Light/Nick."""
 
     id: str
     name: str
     slots: list[AttackActionSlot] = Field(min_length=2, max_length=8)
+    is_attack_action: bool = False
