@@ -72,12 +72,12 @@ FIGHTER_COMBAT_BUILD_CHOICES: dict[str, CombatBuildChoiceOverlay] = {
         primary_ability="dexterity",
         fighting_style="Two-Weapon Fighting",
         armor="studded-leather",
-        primary_weapon="scimitar",
-        secondary_weapons=("shortsword", "longbow"),
-        weapon_masteries=("scimitar", "shortsword", "longbow"),
+        primary_weapon="shortsword",
+        secondary_weapons=("scimitar", "longbow"),
+        weapon_masteries=("shortsword", "scimitar", "longbow"),
         required_capabilities=("two-weapon-fighting", "nick-mastery", "vex-mastery"),
         arena_ignored=("slow-mastery",),
-        notes="Nick + Vex dual-wield package from the legal Fighter starting-equipment option B.",
+        notes="Vex Shortsword into Nick Scimitar dual-wield package from the legal Fighter starting-equipment option B.",
     ),
 }
 
