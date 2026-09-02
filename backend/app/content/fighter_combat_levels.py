@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from app.content.armor_class_rules import compile_armored_base_ac
+
 
 @dataclass(frozen=True)
 class FighterCombatLevel:
@@ -28,13 +30,14 @@ _M4 = (*_M3, "longsword")
 _M4_GS = (*_M3, "greatsword")
 _M5 = (*_M4_GS, "shortbow")
 _M6 = (*_M5, "longsword")
+_DEFENSE_AC = compile_armored_base_ac(16, "Defense", "heavy")
 
 
 def _r(level: int, pb: int, hp: int, strength: int, dexterity: int, constitution: int,
        attacks: int, masteries: tuple[str, ...], second_wind: int, action_surge: int,
        indomitable: int, *, add: tuple[str, ...] = (), remove: tuple[str, ...] = (),
        ignored: tuple[str, ...] = (), source: str = "") -> FighterCombatLevel:
-    return FighterCombatLevel(level, pb, 17, hp, strength, dexterity, constitution, attacks,
+    return FighterCombatLevel(level, pb, _DEFENSE_AC, hp, strength, dexterity, constitution, attacks,
                               masteries, second_wind, action_surge, indomitable, add, remove,
                               ignored, source)
 
