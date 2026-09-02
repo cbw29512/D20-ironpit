@@ -10,7 +10,6 @@ from app.combat.condition_removal import choose_condition_removal_action, resolv
 from app.combat.condition_rules import is_incapacitated
 from app.combat.dice import DiceProvider
 from app.combat.encounter_action_surge import resolve_action_surge_attack
-from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.encounter_targeting import combatant_distance, select_nearest_target
 from app.combat.encounter_turns import prepare_encounter_attack
 from app.combat.fighter import use_second_wind
@@ -24,10 +23,13 @@ from app.combat.policy import should_use_second_wind
 from app.combat.reaction_movement import move_toward_with_reactions
 from app.combat.saving_throws import legal_save_action, resolve_save_action
 from app.combat.spell_offense import resolve_best_spell_offense
+from app.combat.standard_attack_action import resolve_standard_attack_action
 from app.combat.state import begin_turn
 from app.combat.tactical_shift import resolve_tactical_shift
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
+
+
 def _close_after_action(sequence, round_number, attacker, setup, dice, turn_key):
     if is_incapacitated(attacker.state) or backline_holds_position(attacker, setup):
         return [], sequence
@@ -51,6 +53,8 @@ def _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key
     if rage_event is not None:
         events.append(rage_event)
     return events, sequence
+
+
 def _resolve_support_actions(sequence, round_number, member, setup, dice, turn_key):
     """Rescue 0-HP allies first, then clear urgent removable debuffs, then consider ordinary healing."""
     events: list[BattleEvent] = []
@@ -127,8 +131,10 @@ def resolve_combat_turn(
         if attack is not None and is_available(attacker.state, "action"):
             pack = pack_tactics_active(attacker, target, setup)
             feature = opening_feature_id(round_number, attacker, setup) or ("pack-tactics" if pack else None)
-            events.append(resolve_encounter_attack(
-                sequence, round_number, attacker, target, attack, combatant_distance(attacker, target), dice, setup,
-                advantage_sources=1 if pack else 0, feature_id=feature, turn_key=turn_key, allow_reckless=True,
-            )); sequence += 1
+            more, sequence = resolve_standard_attack_action(
+                sequence, round_number, attacker, target, attack,
+                combatant_distance(attacker, target), dice, setup, turn_key,
+                advantage_sources=1 if pack else 0, feature_id=feature,
+            )
+            events.extend(more)
     return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
