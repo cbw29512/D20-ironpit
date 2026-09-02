@@ -79,7 +79,6 @@ function state(name, kind, hp = 100) {
   assert.equal(event.hit, false); assert.equal(event.critical, false, "natural 19 is not an automatic hit");
 }
 
-// Prove engine initiative uses Champion Advantage without requiring a full combat turn.
 window.IRON_PIT_BROWSER_HEROES = { champion: { name: "Karnok", kind: "character", level: 3, speed_ft: 30,
   initiative_bonus: 1, initiative_advantage: true, attacks: [greatsword], primary_attack_id: "greatsword" } };
 window.IRON_PIT_BROWSER_MONSTERS = { target: { name: "Target", kind: "monster", challenge_rating: "0", speed_ft: 30,
@@ -114,3 +113,4 @@ for (const htmlName of ["index.html", path.join("..", "index.html")]) {
 }
 
 console.log("Browser Champion Fighter 3 regressions passed.");
+require("./browser-fighter9.test.cjs");
