@@ -9,6 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 BACKEND = ROOT / "backend"
 MATRIX = ROOT / "data" / "combat_engine_coverage_v1.json"
+CI_WORKFLOW = ROOT / ".github" / "workflows" / "ci.yml"
 VALID_STATUSES = {"supported", "blocked", "partial", "unsupported", "arena_out_of_scope"}
 
 sys.path.insert(0, str(BACKEND))
@@ -23,7 +24,20 @@ def _require_file(path: str, capability_id: str) -> None:
         raise ValueError(f"Combat coverage {capability_id!r} cites missing evidence: {path}")
 
 
-def _validate_matrix(payload: object) -> tuple[list[dict[str, object]], Counter[str], dict[str, str]]:
+def _require_permanent_browser_test(path: str, capability_id: str, ci_text: str) -> None:
+    if not path.startswith("frontend/") or not path.endswith(".test.cjs"):
+        return
+    if f"node {path}" not in ci_text:
+        raise ValueError(
+            f"Supported capability {capability_id!r} cites browser test {path!r} "
+            "that permanent CI does not execute."
+        )
+
+
+def _validate_matrix(
+    payload: object,
+    ci_text: str,
+) -> tuple[list[dict[str, object]], Counter[str], dict[str, str]]:
     if not isinstance(payload, dict):
         raise ValueError("Combat coverage matrix root must be an object.")
     capabilities = payload.get("capabilities")
@@ -53,7 +67,10 @@ def _validate_matrix(payload: object) -> tuple[list[dict[str, object]], Counter[
                 if not isinstance(evidence, list) or not evidence:
                     raise ValueError(f"Supported capability {capability_id!r} lacks {field} evidence.")
                 for path in evidence:
-                    _require_file(str(path), capability_id)
+                    evidence_path = str(path)
+                    _require_file(evidence_path, capability_id)
+                    if field == "tests":
+                        _require_permanent_browser_test(evidence_path, capability_id, ci_text)
         elif not str(item.get("blocker", "")).strip():
             raise ValueError(f"Non-supported capability {capability_id!r} must name its blocker or scope reason.")
     return capabilities, statuses, status_by_id
@@ -62,7 +79,8 @@ def _validate_matrix(payload: object) -> tuple[list[dict[str, object]], Counter[
 def main() -> int:
     try:
         payload = json.loads(MATRIX.read_text(encoding="utf-8"))
-        capabilities, statuses, status_by_id = _validate_matrix(payload)
+        ci_text = CI_WORKFLOW.read_text(encoding="utf-8")
+        capabilities, statuses, status_by_id = _validate_matrix(payload, ci_text)
         if isinstance(payload, dict) and payload.get("build_contract_version") == 1:
             build_issues = audit_current_build_capabilities(status_by_id)
             if build_issues:
