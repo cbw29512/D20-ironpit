@@ -4,7 +4,12 @@ import pytest
 
 from app.combat.modifier_stack import add_modifier, effective_armor_class
 from app.combat.state import build_combatant_state
-from app.content.armor_class_rules import compile_armored_base_ac, defense_fighting_style_bonus
+from app.content.armor_class_rules import (
+    compile_armored_base_ac,
+    compile_equipped_base_ac,
+    defense_fighting_style_bonus,
+    shield_armor_class_bonus,
+)
 from app.content.audited_fighter import build_karnok_stoneward
 from app.content.fighter_progression import build_karnok_stoneward_level
 from app.domain.modifiers import CombatModifier, ModifierKind
@@ -26,6 +31,22 @@ def test_chain_mail_plus_defense_compiles_to_seventeen_ac() -> None:
     assert fighter.armor_class == 17
 
 
+def test_trained_wielded_shield_adds_two_ac_and_untrained_shield_adds_none() -> None:
+    assert shield_armor_class_bonus(wielding_shield=True, shield_trained=True) == 2
+    assert shield_armor_class_bonus(wielding_shield=True, shield_trained=False) == 0
+    assert shield_armor_class_bonus(wielding_shield=False, shield_trained=True) == 0
+
+
+def test_chain_mail_defense_and_trained_shield_compile_to_nineteen_ac() -> None:
+    assert compile_equipped_base_ac(
+        16,
+        "Defense",
+        "heavy",
+        wielding_shield=True,
+        shield_trained=True,
+    ) == 19
+
+
 def test_fighter_progression_retains_compiled_defense_ac() -> None:
     assert all(build_karnok_stoneward_level(level).armor_class == 17 for level in range(1, 10))
 
@@ -43,8 +64,32 @@ def test_runtime_effective_ac_starts_from_compiled_defense_ac_then_adds_temporar
     assert effective_armor_class(state) == 19
 
 
-def test_invalid_armor_inputs_fail_closed() -> None:
+def test_compiled_shield_ac_is_base_ac_before_temporary_modifiers() -> None:
+    template = build_karnok_stoneward().model_copy(update={
+        "armor_class": compile_equipped_base_ac(
+            16,
+            "Defense",
+            "heavy",
+            wielding_shield=True,
+            shield_trained=True,
+        ),
+    })
+    state = build_combatant_state(template)
+    assert effective_armor_class(state) == 19
+    add_modifier(state, CombatModifier(
+        id="test:shield-of-faith",
+        source_id="cleric",
+        source_effect_id="shield-of-faith",
+        kind=ModifierKind.ARMOR_CLASS,
+        flat_bonus=2,
+    ))
+    assert effective_armor_class(state) == 21
+
+
+def test_invalid_armor_and_shield_inputs_fail_closed() -> None:
     with pytest.raises(ValueError, match="Unsupported armor category"):
         defense_fighting_style_bonus("Defense", "plate-ish")  # type: ignore[arg-type]
     with pytest.raises(ValueError, match="cannot be negative"):
         compile_armored_base_ac(-1, "Defense", "heavy")
+    with pytest.raises(ValueError, match="must be booleans"):
+        shield_armor_class_bonus(wielding_shield=1, shield_trained=True)  # type: ignore[arg-type]
