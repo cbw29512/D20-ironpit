@@ -25,7 +25,7 @@ def _enter_rage(hero: EncounterCombatant) -> None:
     assert enter_rage(1, 1, hero.state, hero.combatant_id) is not None
 
 
-def test_barbarian3_snapshot_and_noncombat_choice_are_exact() -> None:
+def test_barbarian3_snapshot_keeps_noncombat_primal_knowledge_out_of_combat_progression() -> None:
     template = build_rokhan_stonefury_level(3)
     profile = build_rokhan_stonefury_level3_profile()
     rage = next(resource for resource in template.resources if resource.id == "rage")
@@ -38,7 +38,7 @@ def test_barbarian3_snapshot_and_noncombat_choice_are_exact() -> None:
     assert template.progression_features.frenzy is True
     assert template.weapon_attack.attack_ability == "strength"
     assert template.alternate_weapon_attacks[0].attack_ability == "strength"
-    assert "Nature" in profile.skill_proficiencies
+    assert "Nature" not in profile.skill_proficiencies
     assert "Animal Handling" not in profile.skill_proficiencies
 
 
