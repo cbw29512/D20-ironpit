@@ -3,20 +3,9 @@ from __future__ import annotations
 import logging
 
 from app.content.rogue_equipment import build_shortbow, build_shortsword
-from app.domain.models import ConditionalDamage, DamageType, WeaponAttack
+from app.domain.models import WeaponAttack
 
 logger = logging.getLogger(__name__)
-
-
-def _sneak_attack() -> list[ConditionalDamage]:
-    return [
-        ConditionalDamage(
-            trigger="attack_advantage",
-            dice_count=1,
-            dice_size=6,
-            damage_type=DamageType.PIERCING,
-        )
-    ]
 
 
 def _attack(attack_id: str, weapon) -> WeaponAttack:
@@ -26,7 +15,7 @@ def _attack(attack_id: str, weapon) -> WeaponAttack:
             weapon=weapon,
             attack_bonus=5,
             damage_bonus=3,
-            conditional_damage=_sneak_attack(),
+            sneak_attack_eligible=True,
         )
     except Exception as exc:
         logger.exception("Failed to build Rogue attack %s.", attack_id)
