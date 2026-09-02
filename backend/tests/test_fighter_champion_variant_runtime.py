@@ -74,7 +74,7 @@ def test_archer_level_seven_additional_defense_changes_studded_leather_ac() -> N
     assert template.fighting_styles == ["Archery", "Defense"]
 
 
-def test_dual_wield_sheet_is_complete_but_runtime_readiness_fails_on_twf_support() -> None:
+def test_dual_wield_sheet_and_runtime_structure_are_complete() -> None:
     profile = build_fighter_champion_variant_profile("dual-wield", 3)
     template = compile_fighter_champion_variant("dual-wield", 3)
     assert template.armor_class == 15
@@ -84,8 +84,7 @@ def test_dual_wield_sheet_is_complete_but_runtime_readiness_fails_on_twf_support
     assert template.fighting_styles == ["Two-Weapon Fighting"]
     assert "scimitar" in template.weapon_masteries
     assert "shortsword" in template.weapon_masteries
-    issues = audit_character_build(profile, template)
-    assert "combat-feature-not-automated:fighting-style-two-weapon-fighting" in issues
+    assert audit_character_build(profile, template) == []
 
 
 def test_dual_wield_level_seven_preserves_additional_defense_style() -> None:
