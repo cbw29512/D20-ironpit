@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from app.content.fighter_champion_profile_features import (
     advancement_audit,
+    equipment_audit,
     fighting_style_audit,
     shared_fighter_champion_feature_audits,
 )
@@ -85,6 +86,7 @@ def build_fighter_champion_variant_profile(build_id: str, level: int) -> Charact
     audits = [
         *shared_fighter_champion_feature_audits(level),
         *_style_audits(spec, level),
+        equipment_audit(spec.build_id, spec.primary_weapon),
         *_advancement_audits(spec, level),
     ]
     return CharacterBuildProfile(
