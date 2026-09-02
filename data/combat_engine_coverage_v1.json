@@ -1,7 +1,8 @@
 {
   "version": 1,
+  "build_contract_version": 1,
   "ruleset": "D&D 5e 2024 / SRD 5.2.1",
-  "policy": "A capability is supported only when Python, browser, and permanent regression evidence exist. Partial or unsupported mechanics must fail closed for public certification.",
+  "policy": "A capability is supported only when Python, browser, and permanent regression evidence exist. Declared build requirements must be explicitly supported or blocked; active builds may require only supported capabilities. Arena exceptions must be explicitly arena_out_of_scope. Partial or unsupported mechanics fail closed for public certification.",
   "capabilities": [
     {"id":"action-economy","status":"supported","python":["backend/app/combat/action_economy.py"],"browser":["frontend/browser-action-economy.js"],"tests":["backend/tests/test_action_condition_economy.py","frontend/browser-action-condition.test.cjs"]},
     {"id":"attack-roll-advantage-disadvantage","status":"supported","python":["backend/app/combat/rolls.py","backend/app/combat/attacks.py"],"browser":["frontend/browser-rolls.js","frontend/browser-attack.js"],"tests":["backend/tests/test_rolls.py","frontend/browser-engine.test.cjs"]},
@@ -29,8 +30,19 @@
     {"id":"area-target-placement","status":"supported","python":["backend/app/combat/spell_area.py"],"browser":["frontend/browser-spell-area.js"],"tests":["backend/tests/test_spell_area.py","frontend/browser-spell-area.test.cjs"]},
     {"id":"undead-fortitude","status":"supported","python":["backend/app/combat/undead_fortitude.py"],"browser":["frontend/browser-undead-fortitude.js"],"tests":["backend/tests/test_undead_fortitude.py","frontend/browser-undead-fortitude.test.cjs"]},
 
-    {"id":"generic-buff-debuff-modifier-stack","status":"unsupported","blocker":"No first-class typed modifier stack yet for AC, attacks, saves, checks, damage, speed, next-roll effects, or stacking/expiry."},
-    {"id":"concentration","status":"unsupported","blocker":"Spell definitions expose concentration, but ownership, damage checks, replacement, incapacitation/death breakage, and effect cleanup are not certified."},
+    {"id":"great-weapon-fighting","status":"supported","python":["backend/app/content/fighter_progression.py","backend/app/combat/damage.py","backend/app/combat/savage_attacker.py"],"browser":["frontend/browser-rolls.js"],"tests":["backend/tests/test_damage.py","backend/tests/test_fighter_progression.py","frontend/browser-fighter-progression.test.cjs"]},
+    {"id":"sap-mastery","status":"supported","python":["backend/app/combat/sap.py","backend/app/combat/attacks.py","backend/app/combat/tactical_master.py"],"browser":["frontend/browser-tactical-master.js","frontend/browser-attack.js"],"tests":["backend/tests/test_fighter_level9.py","frontend/browser-fighter9.test.cjs"]},
+    {"id":"vex-mastery","status":"supported","python":["backend/app/combat/vex.py","backend/app/combat/attacks.py"],"browser":["frontend/browser-vex.js","frontend/browser-attack.js"],"tests":["backend/tests/test_vex.py","frontend/browser-vex.test.cjs"]},
+    {"id":"graze-mastery","status":"blocked","blocker":"No shared RAW Graze-on-miss damage implementation is certified in both Python and browser engines yet."},
+    {"id":"defense-style","status":"blocked","blocker":"Defense Fighting Style has not yet been audited end to end against effective AC in Python, browser, generated hero data, and regression tests."},
+    {"id":"shield-ac","status":"blocked","blocker":"Shield loadout AC integration has not yet been audited end to end across canonical build generation and both combat engines."},
+    {"id":"archery-style","status":"blocked","blocker":"Archery Fighting Style attack-bonus integration has not yet been audited end to end across canonical build generation and both combat engines."},
+    {"id":"nick-mastery","status":"blocked","blocker":"No shared RAW Nick attack-economy implementation is certified in both Python and browser engines yet."},
+    {"id":"two-weapon-fighting","status":"blocked","blocker":"Two-Weapon Fighting damage-modifier and Light-weapon attack integration have not yet been audited end to end in both engines."},
+    {"id":"longbow-slow-mastery","status":"arena_out_of_scope","blocker":"The current card-v-card arena does not use tactical retreat or kiting outputs where Longbow Slow can change the declared combat result."},
+
+    {"id":"generic-buff-debuff-modifier-stack","status":"partial","blocker":"Shared typed modifiers now cover AC, speed, attack/save bonus dice, bonus damage, defender-wide and target-scoped attack Advantage, source cleanup, and expiry. A universal ability-check modifier path and every stacking interaction are not yet certified.","python":["backend/app/combat/modifier_stack.py"],"browser":["frontend/browser-modifiers.js"],"tests":["backend/tests/test_concentration_modifiers.py","frontend/browser-modifiers-concentration.test.cjs"]},
+    {"id":"concentration","status":"supported","python":["backend/app/combat/concentration.py","backend/app/combat/zero_hp.py"],"browser":["frontend/browser-concentration.js","frontend/browser-attack.js","frontend/browser-saves.js"],"tests":["backend/tests/test_concentration_modifiers.py","frontend/browser-modifiers-concentration.test.cjs"]},
     {"id":"multiple-persistent-riders-on-one-attack","status":"unsupported","blocker":"Declarative attack schema intentionally fails closed when more than one persistent grapple/condition rider is present."},
     {"id":"complete-condition-semantics","status":"partial","blocker":"Several conditions are modeled, but Charmed, Frightened, Invisible, Exhaustion, and every cross-condition interaction are not yet universally certified."},
     {"id":"forced-movement-push-pull-teleport","status":"partial","blocker":"Feature-specific movement exists; a universal forced-movement effect with collision, trigger, and OA semantics is not certified."},
