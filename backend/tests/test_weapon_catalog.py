@@ -1,0 +1,34 @@
+import pytest
+
+from app.content.weapon_catalog import audited_weapon_ids, build_weapon
+
+
+def test_audited_weapon_catalog_preserves_shared_properties_and_masteries() -> None:
+    greatsword = build_weapon("greatsword")
+    longsword = build_weapon("longsword")
+    scimitar = build_weapon("scimitar")
+    shortsword = build_weapon("shortsword")
+    longbow = build_weapon("longbow")
+    shortbow = build_weapon("shortbow")
+
+    assert (greatsword.mastery_property, greatsword.heavy, greatsword.two_handed) == ("Graze", True, True)
+    assert (longsword.mastery_property, longsword.versatile) == ("Sap", True)
+    assert (scimitar.mastery_property, scimitar.finesse, scimitar.light) == ("Nick", True, True)
+    assert (shortsword.mastery_property, shortsword.finesse, shortsword.light) == ("Vex", True, True)
+    assert (longbow.mastery_property, longbow.heavy, longbow.two_handed) == ("Slow", True, True)
+    assert (shortbow.mastery_property, shortbow.two_handed) == ("Vex", True)
+    assert audited_weapon_ids() == (
+        "greatsword", "longsword", "scimitar", "shortsword", "longbow", "shortbow",
+    )
+
+
+def test_weapon_catalog_returns_independent_records() -> None:
+    first = build_weapon("scimitar")
+    second = build_weapon("scimitar")
+    first.name = "Changed"
+    assert second.name == "Scimitar"
+
+
+def test_unknown_weapon_fails_closed() -> None:
+    with pytest.raises(ValueError, match="Unknown audited weapon"):
+        build_weapon("not-a-weapon")
