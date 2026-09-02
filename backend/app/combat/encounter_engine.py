@@ -15,7 +15,7 @@ from app.combat.encounter_targeting import select_nearest_target
 from app.combat.modifier_stack import expire_source_turn_modifiers
 from app.combat.precombat_spells import prepare_defenses
 from app.combat.source_bound_effects import cleanup_disabled_source_effects
-from app.combat.state import refresh_reaction
+from app.combat.state import refresh_start_of_turn
 from app.combat.timed_conditions import expire_start_of_turn_conditions
 from app.domain.encounters import EncounterBattleResult, EncounterCombatant, EncounterSelection
 from app.domain.models import BattleEvent
@@ -80,7 +80,7 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
 
                 member = by_id[combatant_id]
                 cleanup_disabled_source_effects(setup)
-                refresh_reaction(member.state)
+                refresh_start_of_turn(member.state)
                 end_concentration_if_expired(member.state, round_number, affected_states)
                 expiry_events, sequence = expire_start_of_turn_conditions(
                     sequence, round_number, member, setup,
