@@ -42,9 +42,10 @@ def test_vex_hit_primes_only_the_same_target_and_next_roll_consumes_it() -> None
 def test_vex_chains_when_the_advantaged_attack_hits_and_deals_damage() -> None:
     mara = _mara(); brom = _state(build_brom_ironmark())
     resolve_attack(1, 1, mara, brom, mara.template.weapon_attack, 5, FixedDiceProvider([15, 4]), spend_action=False)
-    chained = resolve_attack(2, 1, mara, brom, mara.template.weapon_attack, 5, FixedDiceProvider([3, 18, 5]), spend_action=False)
+    chained = resolve_attack(2, 1, mara, brom, mara.template.weapon_attack, 5, FixedDiceProvider([3, 18, 5, 4]), spend_action=False)
     assert chained.hit and chained.attack_roll.mode is RollMode.ADVANTAGE
     assert next_attack_against_advantage_sources(mara, brom.template.id) == 1
+    assert any(part.source == "Sneak Attack" for part in chained.damage_components), "Vex Advantage must correctly enable Sneak Attack"
 
 
 def test_vex_does_not_trigger_when_defenses_reduce_damage_to_zero() -> None:
