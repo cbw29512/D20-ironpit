@@ -8,7 +8,7 @@ SUPPORTED_HERO_ENGINE_FEATURES = {
     "indomitable", "tactical-master-sap",
     "rage", "danger-sense", "reckless-attack", "frenzy", "fast-movement", "mindless-rage",
     "feral-instinct",
-    "sneak-attack",
+    "sneak-attack", "weapon-mastery",
     "cleric-spellcasting", "divine-order-protector", "divine-spark", "turn-undead",
     "disciple-of-life", "preserve-life",
 }
@@ -44,4 +44,6 @@ def compile_progression_feature_fields(features: tuple[str, ...] | list[str], le
         fields.update(_STATIC_PROGRESSION_FIELDS.get(feature, {}))
     if "indomitable" in features:
         fields["indomitable_bonus"] = level
+    if "sneak-attack" in features:
+        fields["sneak_attack_d6"] = (level + 1) // 2
     return fields
