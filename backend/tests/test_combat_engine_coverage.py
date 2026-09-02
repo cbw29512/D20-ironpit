@@ -11,7 +11,7 @@ def _fighter_statuses() -> dict[str, str]:
         "sap-mastery": "supported",
         "defense-style": "supported",
         "shield-ac": "supported",
-        "archery-style": "blocked",
+        "archery-style": "supported",
         "vex-mastery": "supported",
         "nick-mastery": "blocked",
         "two-weapon-fighting": "blocked",
