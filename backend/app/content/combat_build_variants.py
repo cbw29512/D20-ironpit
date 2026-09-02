@@ -21,6 +21,11 @@ class CombatBuildVariant:
     def shared_progression_id(self) -> str:
         return f"{self.class_id}-1-20"
 
+    @property
+    def subclass_id(self) -> str | None:
+        """Compatibility alias; non-None means this build requires that subclass."""
+        return self.required_subclass_id
+
 
 def _build(
     class_id: str,
