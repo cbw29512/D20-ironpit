@@ -56,10 +56,11 @@ def test_level_nineteen_is_epic_boon_not_an_ordinary_asi() -> None:
     assert "Peerless Aim remains runtime-blocked" in (audits["boon-combat-prowess"].notes or "")
 
 
-def test_high_level_unsupported_features_remain_explicit_on_character_truth() -> None:
+def test_high_level_character_truth_marks_only_certified_features_automated() -> None:
     profile = build_fighter_champion_variant_profile("archer", 20)
     audits = {audit.feature_id: audit for audit in profile.feature_audits}
-    for feature_id in ("tactical-master", "heroic-warrior", "studied-attacks", "superior-critical", "survivor"):
+    assert audits["tactical-master"].automated is True
+    for feature_id in ("heroic-warrior", "studied-attacks", "superior-critical", "survivor"):
         assert feature_id in audits
         assert audits[feature_id].automated is False
 
