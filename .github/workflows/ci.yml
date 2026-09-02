@@ -99,6 +99,9 @@ jobs:
           node frontend/browser-sneak-attack.test.cjs
           node frontend/browser-vex.test.cjs
           node frontend/browser-graze.test.cjs
+          node frontend/browser-defense-style.test.cjs
+          node frontend/browser-fighter-progression.test.cjs
+          node frontend/browser-fighter9.test.cjs
           node frontend/browser-champion.test.cjs
           node frontend/browser-fighter4.test.cjs
           node frontend/browser-fighter5.test.cjs
@@ -119,6 +122,8 @@ jobs:
           node frontend/browser-condition-immunity.test.cjs
           node frontend/browser-action-healing.test.cjs
           node frontend/browser-action-condition.test.cjs
+          node frontend/browser-condition-lifecycle.test.cjs
+          node frontend/browser-condition-removal.test.cjs
           node frontend/browser-reactions.test.cjs
           node frontend/browser-parry-effective-ac.test.cjs
           node frontend/browser-reaction-movement.test.cjs
