@@ -48,6 +48,52 @@ def test_compiler_maps_composable_attack_effects() -> None:
     assert template.movement_modes.walk_ft == 30
 
 
+def test_compiler_preserves_weapon_property_mastery_and_ability_facts() -> None:
+    definition = _definition(
+        attacks=[{
+            "id": "contract-scimitar",
+            "name": "Scimitar",
+            "weapon_id": "scimitar",
+            "attack_kind": "melee",
+            "attack_bonus": 5,
+            "damage": {"count": 1, "size": 6, "bonus": 3},
+            "damage_type": "slashing",
+            "animation": "slash",
+            "mastery_property": "Nick",
+            "light": True,
+            "attack_ability": "dexterity",
+            "attack_ability_modifier": 3,
+        }],
+        primary_attack_id="contract-scimitar",
+        weapon_masteries=["scimitar"],
+        attack_action={
+            "id": "attack",
+            "name": "Attack",
+            "is_attack_action": True,
+            "slots": [{"attack_ids": ["contract-scimitar"]}],
+        },
+    )
+    template = compile_combatant(definition)
+    attack = template.weapon_attack
+    assert attack.weapon.id == "scimitar"
+    assert attack.weapon.light is True
+    assert attack.weapon.mastery_property == "Nick"
+    assert attack.attack_ability == "dexterity"
+    assert attack.attack_ability_modifier == 3
+    assert template.weapon_masteries == ["scimitar"]
+    assert template.attack_action is not None
+    assert template.attack_action.is_attack_action is True
+
+
+def test_attack_ability_modifier_requires_declared_ability() -> None:
+    with pytest.raises(ValueError, match="requires an explicit attack ability"):
+        _definition(attacks=[{
+            "id": "bad-attack", "name": "Bad", "attack_kind": "melee", "attack_bonus": 4,
+            "damage": {"count": 1, "size": 6, "bonus": 2}, "damage_type": "slashing",
+            "animation": "slash", "attack_ability_modifier": 2,
+        }], primary_attack_id="bad-attack")
+
+
 def test_compiler_fails_closed_for_declared_unsupported_capability() -> None:
     definition = _definition(unsupported_capabilities=["recharge:5-6"])
     with pytest.raises(UnsupportedCapabilityError, match="recharge:5-6"):
