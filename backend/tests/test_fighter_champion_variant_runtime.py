@@ -115,8 +115,9 @@ def test_attack_action_slot_count_comes_only_from_fighter_level() -> None:
             assert len(template.attack_action.slots) == count
 
 
-def test_level_ten_keeps_tactical_master_automated_and_blocks_on_heroic_warrior() -> None:
+def test_level_ten_keeps_tactical_master_and_adds_heroic_warrior() -> None:
     profile = build_fighter_champion_variant_profile("great-weapon", 10)
     template = compile_fighter_champion_variant("great-weapon", 10)
     assert template.progression_features.tactical_master_sap_weapon_ids == ["greatsword"]
-    assert audit_character_build(profile, template) == ["combat-feature-not-automated:heroic-warrior"]
+    assert template.progression_features.heroic_warrior is True
+    assert audit_character_build(profile, template) == []
