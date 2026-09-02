@@ -70,7 +70,7 @@ def unsupported_barbarian_engine_features(level: int) -> tuple[str, ...]:
 
 
 def build_rokhan_stonefury_level(level: int) -> CombatantTemplate:
-    """Compile Rokhan from the complete 1-20 Barbarian combat table; missing mechanics fail closed."""
+    """Compile a runnable Rokhan level; any missing outcome-changing mechanic fails closed."""
     if level not in BARBARIAN_COMBAT_LEVELS:
         raise ValueError(f"Rokhan Barbarian level {level} must be between 1 and 20.")
     unsupported = unsupported_barbarian_engine_features(level)
@@ -81,4 +81,12 @@ def build_rokhan_stonefury_level(level: int) -> CombatantTemplate:
     previous = build_rokhan_stonefury_level(level - 1)
     data = advance_template_data(previous, "barbarian", level)
     _apply_row(data, level)
+    return CombatantTemplate.model_validate(data)
+
+
+def build_rokhan_stonefury_level7_candidate() -> CombatantTemplate:
+    """Build L7 audit data without approving an automatic Instinctive Pounce combat policy."""
+    previous = build_rokhan_stonefury_level(6)
+    data = advance_template_data(previous, "barbarian", 7)
+    _apply_row(data, 7)
     return CombatantTemplate.model_validate(data)
