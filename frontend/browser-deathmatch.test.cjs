@@ -11,9 +11,11 @@ for (const file of [
   "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js", "browser-monsters-beast2.js",
   "browser-monsters-batch3.js", "browser-condition-immunity.js", "browser-condition-rules.js",
   "browser-action-economy.js", "browser-grapple.js", "browser-timed-conditions.js", "browser-state.js",
-  "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js", "browser-attack.js", "browser-reactions.js",
+  "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js", "browser-weapon-mastery.js",
+  "browser-graze.js", "browser-vex.js", "browser-attack.js", "browser-reactions.js",
   "browser-reaction-movement.js", "browser-saves.js", "browser-condition-lifecycle.js", "browser-charge.js",
-  "browser-multiattack.js", "browser-healing.js", "browser-spellcasting.js", "browser-condition-removal.js",
+  "browser-light-weapons.js", "browser-light-attack.js", "browser-standard-attack-action.js", "browser-multiattack.js",
+  "browser-healing.js", "browser-spellcasting.js", "browser-condition-removal.js",
   "browser-support.js", "browser-turn.js", "browser-formation.js", "browser-engine.js",
 ]) load(file);
 
