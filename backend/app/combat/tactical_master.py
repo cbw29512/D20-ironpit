@@ -1,9 +1,10 @@
 from __future__ import annotations
 
-from app.combat.timed_conditions import apply_timed_condition, remove_effect_instance
+from app.combat.sap import TACTICAL_MASTER_SAP_EFFECT_ID, apply_sap_effect
+from app.combat.timed_conditions import remove_effect_instance
 from app.domain.models import CombatantState, WeaponAttack
 
-SAPPED_EFFECT_ID = "tactical-master-sap"
+SAPPED_EFFECT_ID = TACTICAL_MASTER_SAP_EFFECT_ID
 SOURCE_EFFECT_ID = "tactical-master"
 
 
@@ -21,17 +22,15 @@ def apply_tactical_master_sap(
     attack: WeaponAttack,
     round_number: int,
 ) -> bool:
-    if not tactical_master_sap_eligible(attacker, attack) or target.is_dead or target.current_hp <= 0:
+    if not tactical_master_sap_eligible(attacker, attack):
         return False
-    return apply_timed_condition(
-        target,
-        SAPPED_EFFECT_ID,
+    return apply_sap_effect(
         attacker_id,
+        target,
+        round_number,
+        effect_id=SAPPED_EFFECT_ID,
         source_effect_id=SOURCE_EFFECT_ID,
-        applied_round=round_number,
-        expires_round=round_number + 1,
-        expiry_timing="source_turn_start",
-    ) is not None
+    )
 
 
 def tactical_master_sap_disadvantage(state: CombatantState) -> int:
