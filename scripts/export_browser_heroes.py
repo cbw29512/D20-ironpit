@@ -221,9 +221,15 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
     if template.condition_removal_actions:
         row["condition_removal_actions"] = [_removal(item) for item in template.condition_removal_actions]
     if template.attack_action:
-        row["attack_action"] = {"id": template.attack_action.id, "name": template.attack_action.name, "slots": [
-            {"attackIds": slot.attack_ids, "saveActionIds": slot.save_action_ids} for slot in template.attack_action.slots
-        ]}
+        row["attack_action"] = {
+            "id": template.attack_action.id,
+            "name": template.attack_action.name,
+            "isAttackAction": template.attack_action.is_attack_action,
+            "slots": [
+                {"attackIds": slot.attack_ids, "saveActionIds": slot.save_action_ids}
+                for slot in template.attack_action.slots
+            ],
+        }
     return row
 
 
