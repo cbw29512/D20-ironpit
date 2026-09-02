@@ -4,8 +4,27 @@ from dataclasses import dataclass
 from typing import Literal
 
 from app.content.combat_build_variants import get_combat_build_variant
+from app.content.subclass_specializations import subclass_specialization
+from app.content.weapon_catalog import build_weapon
 
 AbilityFocus = Literal["strength", "dexterity", "wisdom", "intelligence", "charisma"]
+
+_STYLE_CAPABILITY = {
+    "Archery": "archery-style",
+    "Defense": "defense-style",
+    "Great Weapon Fighting": "great-weapon-fighting",
+    "Two-Weapon Fighting": "two-weapon-fighting",
+}
+_MASTERY_CAPABILITY = {
+    "Graze": "graze-mastery", "Nick": "nick-mastery", "Sap": "sap-mastery",
+    "Slow": "slow-mastery", "Vex": "vex-mastery",
+}
+_BUILD_TO_SUBCLASS = {
+    "great-weapon": "champion",
+    "dual-wield": "battle-master",
+    "sword-shield": "eldritch-knight",
+    "archer": "psi-warrior",
+}
 
 
 @dataclass(frozen=True)
@@ -27,59 +46,37 @@ class CombatBuildChoiceOverlay:
         get_combat_build_variant(self.class_id, self.build_id)
 
 
-FIGHTER_COMBAT_BUILD_CHOICES: dict[str, CombatBuildChoiceOverlay] = {
-    "great-weapon": CombatBuildChoiceOverlay(
-        class_id="fighter",
-        build_id="great-weapon",
-        primary_ability="strength",
-        fighting_style="Great Weapon Fighting",
-        armor="chain-mail",
-        primary_weapon="greatsword",
-        secondary_weapons=("shortbow",),
-        weapon_masteries=("greatsword", "javelin", "flail"),
-        required_capabilities=("great-weapon-fighting", "graze-mastery"),
-        notes="Damage-first two-handed Fighter. Uses the shared Fighter/Champion progression.",
-    ),
-    "sword-shield": CombatBuildChoiceOverlay(
-        class_id="fighter",
-        build_id="sword-shield",
-        primary_ability="strength",
-        fighting_style="Defense",
-        armor="chain-mail",
-        shield=True,
-        primary_weapon="longsword",
-        secondary_weapons=("shortbow",),
-        weapon_masteries=("longsword", "javelin", "flail"),
-        required_capabilities=("defense-style", "shield-ac", "sap-mastery"),
-        notes="Durable defender bought from the Fighter gold option; no separate Fighter progression.",
-    ),
-    "archer": CombatBuildChoiceOverlay(
-        class_id="fighter",
-        build_id="archer",
-        primary_ability="dexterity",
-        fighting_style="Archery",
-        armor="studded-leather",
-        primary_weapon="longbow",
-        secondary_weapons=("shortsword", "scimitar"),
-        weapon_masteries=("longbow", "shortsword", "scimitar"),
-        required_capabilities=("archery-style", "vex-mastery", "nick-mastery"),
-        arena_ignored=("slow-mastery",),
-        notes="Ranged-first Fighter; Slow is explicitly ignored when it cannot change an Iron Pit outcome.",
-    ),
-    "dual-wield": CombatBuildChoiceOverlay(
-        class_id="fighter",
-        build_id="dual-wield",
-        primary_ability="dexterity",
-        fighting_style="Two-Weapon Fighting",
-        armor="studded-leather",
-        primary_weapon="shortsword",
-        secondary_weapons=("scimitar", "longbow"),
-        weapon_masteries=("shortsword", "scimitar", "longbow"),
-        required_capabilities=("two-weapon-fighting", "nick-mastery", "vex-mastery"),
-        arena_ignored=("slow-mastery",),
-        notes="Vex Shortsword into Nick Scimitar dual-wield package from the legal Fighter starting-equipment option B.",
-    ),
-}
+def _fighter_overlay(build_id: str) -> CombatBuildChoiceOverlay:
+    spec = subclass_specialization(_BUILD_TO_SUBCLASS[build_id])
+    masteries = spec.mastery_priority[:3]
+    required: list[str] = []
+    ignored: list[str] = []
+    if spec.fighting_style_priority:
+        capability = _STYLE_CAPABILITY.get(spec.fighting_style_priority[0])
+        if capability:
+            required.append(capability)
+    if spec.shield:
+        required.append("shield-ac")
+    for weapon_id in (spec.primary_weapon, *spec.secondary_weapons):
+        if weapon_id is None or weapon_id not in masteries:
+            continue
+        mastery = build_weapon(weapon_id).mastery_property
+        capability = _MASTERY_CAPABILITY.get(mastery or "")
+        if capability == "slow-mastery":
+            ignored.append(capability)
+        elif capability and capability not in required:
+            required.append(capability)
+    return CombatBuildChoiceOverlay(
+        class_id="fighter", build_id=build_id,
+        primary_ability=spec.ability_priority[0], fighting_style=spec.fighting_style_priority[0] if spec.fighting_style_priority else None,
+        armor=spec.armor, shield=spec.shield, primary_weapon=spec.primary_weapon,
+        secondary_weapons=spec.secondary_weapons, weapon_masteries=masteries,
+        required_capabilities=tuple(required), arena_ignored=tuple(ignored),
+        notes=f"Compatibility view derived from {spec.subclass_name} specialization data.",
+    )
+
+
+FIGHTER_COMBAT_BUILD_CHOICES = {build_id: _fighter_overlay(build_id) for build_id in _BUILD_TO_SUBCLASS}
 
 
 def get_combat_build_choice_overlay(class_id: str, build_id: str) -> CombatBuildChoiceOverlay:
