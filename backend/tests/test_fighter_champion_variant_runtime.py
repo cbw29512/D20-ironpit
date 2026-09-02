@@ -79,10 +79,14 @@ def test_archer_level_seven_additional_defense_changes_studded_leather_ac() -> N
 def test_dual_wield_sheet_and_runtime_structure_are_complete() -> None:
     profile = build_fighter_champion_variant_profile("dual-wield", 3)
     template = compile_fighter_champion_variant("dual-wield", 3)
+    scimitar = _attack(template, "scimitar")
+    shortsword = _attack(template, "shortsword")
     assert template.armor_class == 15
-    assert template.visual.main_hand == "scimitar"
-    assert template.visual.off_hand == "shortsword"
-    assert template.weapon_attack.weapon.light is True
+    assert template.visual.main_hand == "shortsword"
+    assert template.visual.off_hand == "scimitar"
+    assert template.weapon_attack.weapon.id == "shortsword"
+    assert shortsword.weapon.mastery_property == "Vex"
+    assert scimitar.weapon.mastery_property == "Nick"
     assert template.fighting_styles == ["Two-Weapon Fighting"]
     assert "scimitar" in template.weapon_masteries
     assert "shortsword" in template.weapon_masteries
