@@ -56,5 +56,6 @@ def test_fighter_level_four_runtime_matches_candidate_combat_fingerprint() -> No
 
 
 def test_fighter_candidate_progression_fails_closed_on_first_missing_engine_feature() -> None:
-    with pytest.raises(ValueError, match="level 10 awaits engine support for: heroic-warrior"):
-        build_karnok_stoneward_level(10)
+    assert build_karnok_stoneward_level(12).level == 12
+    with pytest.raises(ValueError, match="level 13 awaits engine support for: studied-attacks"):
+        build_karnok_stoneward_level(13)
