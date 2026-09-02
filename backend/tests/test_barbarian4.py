@@ -38,7 +38,7 @@ def test_barbarian4_split_asi_updates_every_combat_derived_value() -> None:
     assert profile.final_ability_scores.strength == 18
     assert profile.final_ability_scores.constitution == 16
     assert [(item.ability, item.amount) for item in profile.advancement_increases] == [("strength", 1), ("constitution", 1)]
-    assert "Nature" in profile.skill_proficiencies
+    assert "Nature" not in profile.skill_proficiencies
 
 
 def test_barbarian4_frenzy_still_applies_two_d6_with_improved_strength_math() -> None:
