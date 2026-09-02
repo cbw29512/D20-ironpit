@@ -7,6 +7,7 @@ from app.content.fighter_level10_combat_profile import build_karnok_stoneward_le
 from app.content.fighter_level10_profile import build_karnok_stoneward_level10_profile
 from app.content.fighter_progression import build_karnok_stoneward_level
 from app.content.pregen_combat_audit import assert_pregen_combat_stats, audit_pregen_combat_stats
+from app.content.pregen_combat_profiles import build_pregen_combat_profiles
 
 
 def test_fighter_level_ten_snapshot_is_derived_from_level_nine() -> None:
@@ -38,7 +39,9 @@ def test_fighter_level_ten_passes_build_fingerprint_resource_and_public_registry
     template = build_karnok_stoneward_level(10)
     profile = build_karnok_stoneward_level10_profile()
     combat_profile = build_karnok_stoneward_level10_combat_profile()
+    registered_profile = build_pregen_combat_profiles()[template.id]
 
+    assert registered_profile == combat_profile
     assert_canonical_profile_policy(profile)
     assert audit_character_build(profile, template) == []
     assert_character_build_raw_ready(profile, template)
