@@ -58,19 +58,30 @@ def test_fighter_level_eight_manifest_preserves_gwf_and_extra_attack_without_blo
     assert level_eight["public_ready_status"] == "ready"
 
 
-def test_fighter_level_nine_candidate_cannot_leak_into_public_artifacts_before_policy_approval() -> None:
+def test_fighter_level_nine_is_public_and_level_ten_remains_blocked() -> None:
     manifest = json.loads(HERO_MANIFEST.read_text(encoding="utf-8"))
     fighter = next(hero for hero in manifest["heroes"] if hero["class_id"] == "fighter")
     level_nine = next(level for level in fighter["levels"] if level["level"] == 9)
+    level_ten = next(level for level in fighter["levels"] if level["level"] == 10)
     counted_ready = sum(
         1
         for hero in manifest["heroes"]
         for level in hero["levels"]
         if level["public_ready_status"] == "ready"
     )
+    required = {"indomitable", "tactical-master", "great-weapon-fighting", "multiattack-or-extra-attack"}
+    browser = BROWSER_HEROES.read_text(encoding="utf-8")
 
-    assert manifest["summary"]["public_ready"] == counted_ready
-    assert level_nine["runtime_template_id"] is None
-    assert level_nine["public_ready_status"] == "blocked"
-    assert "hero-level-not-certified" in level_nine["blockers"]
-    assert "karnok-stoneward-l9" not in BROWSER_HEROES.read_text(encoding="utf-8")
+    assert manifest["summary"]["public_ready"] == counted_ready == 20
+    assert level_nine["runtime_template_id"] == "karnok-stoneward-l9"
+    assert required <= set(level_nine["expected_combat_features"])
+    assert required <= set(level_nine["supported_mechanics"])
+    assert level_nine["unsupported_mechanics"] == []
+    assert level_nine["blockers"] == []
+    assert level_nine["public_ready_status"] == "ready"
+    assert "karnok-stoneward-l9" in browser
+
+    assert level_ten["runtime_template_id"] is None
+    assert level_ten["public_ready_status"] == "blocked"
+    assert "hero-level-not-certified" in level_ten["blockers"]
+    assert "karnok-stoneward-l10" not in browser
