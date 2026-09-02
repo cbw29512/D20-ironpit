@@ -1,4 +1,6 @@
 from app.content.build_audit import assert_character_build_raw_ready, audit_character_build
+from app.content.capability_compiler import compile_combatant
+from app.content.capability_from_template import definition_from_template
 from app.content.fighter_champion_variant_profiles import build_fighter_champion_variant_profile
 from app.content.fighter_champion_variant_runtime import compile_fighter_champion_variant
 
@@ -91,6 +93,13 @@ def test_dual_wield_level_seven_preserves_additional_defense_style() -> None:
     template = compile_fighter_champion_variant("dual-wield", 7)
     assert template.fighting_styles == ["Two-Weapon Fighting", "Defense"]
     assert template.armor_class == 18
+
+
+def test_capability_round_trip_preserves_all_champion_fighting_styles() -> None:
+    template = compile_fighter_champion_variant("dual-wield", 7)
+    rebuilt = compile_combatant(definition_from_template(template))
+    assert rebuilt.fighting_style == "Two-Weapon Fighting"
+    assert rebuilt.fighting_styles == ["Two-Weapon Fighting", "Defense"]
 
 
 def test_attack_action_slot_count_comes_only_from_fighter_level() -> None:
