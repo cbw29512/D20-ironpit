@@ -11,6 +11,7 @@ from app.content.fighter_level9_combat_profile import build_karnok_stoneward_lev
 from app.content.fighter_level9_profile import build_karnok_stoneward_level9_profile
 from app.content.fighter_progression import build_karnok_stoneward_level
 from app.content.pregen_combat_audit import assert_pregen_combat_stats, audit_pregen_combat_stats
+from app.content.pregen_combat_profiles import build_pregen_combat_profiles
 from app.domain.models import RollMode
 
 
@@ -46,13 +47,15 @@ def test_fighter_level_nine_is_publicly_certified_after_all_gates_pass() -> None
     template = build_karnok_stoneward_level(9)
     profile = build_karnok_stoneward_level9_profile()
     combat_profile = build_karnok_stoneward_level9_combat_profile()
+    registered_profile = build_pregen_combat_profiles()[template.id]
 
+    assert registered_profile == combat_profile
     assert_canonical_profile_policy(profile)
     assert audit_character_build(profile, template) == []
     assert_character_build_raw_ready(profile, template)
-    assert audit_pregen_combat_stats(template, combat_profile) == []
-    assert_pregen_combat_stats(template, combat_profile)
-    assert_character_resources_raw_ready(template, profile, combat_profile)
+    assert audit_pregen_combat_stats(template, registered_profile) == []
+    assert_pregen_combat_stats(template, registered_profile)
+    assert_character_resources_raw_ready(template, profile, registered_profile)
     assert build_certified_hero_registry()[("fighter", 9, "canonical")] == (
         "Karnok Stoneward", "karnok-stoneward-l9",
     )
