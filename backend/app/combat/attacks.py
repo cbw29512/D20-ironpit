@@ -18,7 +18,8 @@ from app.combat.parry import resolve_parry_hit
 from app.combat.range import resolve_attack_roll_mode
 from app.combat.reckless_attack import attacks_against_reckless_advantage, reckless_attack_advantage
 from app.combat.rolls import roll_d20
-from app.combat.tactical_master import apply_tactical_master_sap, consume_tactical_master_sap, tactical_master_sap_disadvantage
+from app.combat.sap import apply_weapon_sap, consume_sap, sap_disadvantage
+from app.combat.tactical_master import apply_tactical_master_sap
 from app.combat.vex import apply_vex_mastery
 from app.combat.zero_hp import apply_damage
 from app.domain.models import BattleEvent, CombatantState, WeaponAttack
@@ -49,12 +50,11 @@ def resolve_attack(
                                + attacks_against_advantage_sources(defender) + attacks_against_reckless_advantage(defender)
                                + reckless_attack_advantage(attacker, attack)
                                + next_attack_against_advantage_sources(attacker, defender_event_id)),
-            other_disadvantage_sources=(other_disadvantage_sources + condition_disadvantage
-                                        + tactical_master_sap_disadvantage(attacker)),
+            other_disadvantage_sources=other_disadvantage_sources + condition_disadvantage + sap_disadvantage(attacker),
             close_enemy_active=close_enemy_active,
         )
         attack_roll = apply_d20_bonus_dice(attacker, ModifierKind.ATTACK_ROLL_BONUS_DIE, roll_d20(dice, attack.attack_bonus, mode), dice)
-        consume_next_attack_against_advantage(attacker, defender_event_id); consume_tactical_master_sap(attacker)
+        consume_next_attack_against_advantage(attacker, defender_event_id); consume_sap(attacker)
         consume_attacks_against_advantage(defender); extend_rage_from_attack(attacker, round_number)
         if spend_action: spend(attacker, "action")
         actual_defender, actual_event_id, redirect_used = defender, defender_event_id, False
@@ -71,7 +71,8 @@ def resolve_attack(
         hp_before = actual_defender.current_hp; temporary_hp_before = actual_defender.temporary_hp
         death_success_before = actual_defender.death_save_successes; death_failure_before = actual_defender.death_save_failures
         concentration_before = actual_defender.concentration.effect_id if actual_defender.concentration else None
-        damage_roll = None; damage_components = []; damage_outcome = None; applied_conditions: list[str] = []; sap_applied = False; vex_applied = False
+        damage_roll = None; damage_components = []; damage_outcome = None; applied_conditions: list[str] = []
+        weapon_sap_applied = False; tactical_sap_applied = False; vex_applied = False
         if hit:
             active_turn_key = turn_key or f"{round_number}:{attacker_event_id}"
             damage_roll, rolled_components = resolve_weapon_damage(
@@ -82,14 +83,17 @@ def resolve_attack(
             applied_types = {part.damage_type for part in damage_components if part.applied_total > 0}
             damage_outcome = apply_damage(actual_defender, applied_total, critical=critical, damage_types=applied_types, dice=dice, affected_states=affected_states)
             applied_conditions = apply_hit_conditions(attack, actual_defender, attacker_event_id, round_number, affected_states)
-            sap_applied = apply_tactical_master_sap(attacker, attacker_event_id, actual_defender, attack, round_number)
+            weapon_sap_applied = apply_weapon_sap(attacker, attacker_event_id, actual_defender, attack, round_number)
+            if not weapon_sap_applied:
+                tactical_sap_applied = apply_tactical_master_sap(attacker, attacker_event_id, actual_defender, attack, round_number)
             vex_applied = apply_vex_mastery(attacker, attacker_event_id, actual_event_id, attack, round_number, applied_total)
             end_rage_if_incapacitated(actual_defender)
         outcome = "CRITICAL HIT" if critical else ("HIT" if hit else "MISS")
         description = f"{attacker.template.name}: {outcome} with {weapon.name}."
         if redirect_used: description += f" {defender.template.name} uses Redirect Attack; {actual_defender.template.name} becomes the target."
         if parry_used: description += f" {actual_defender.template.name} uses Parry."
-        if sap_applied: description += f" Tactical Master applies Sap to {actual_defender.template.name}."
+        if weapon_sap_applied: description += f" Sap mastery affects {actual_defender.template.name}."
+        if tactical_sap_applied: description += f" Tactical Master applies Sap to {actual_defender.template.name}."
         if vex_applied: description += f" Vex primes the next attack against {actual_defender.template.name}."
         if damage_outcome == "relentless_endurance": description += f" {actual_defender.template.name} uses Relentless Endurance and remains at 1 HP."
         if damage_outcome == "undead_fortitude": description += f" {actual_defender.template.name} succeeds on Undead Fortitude and remains at 1 HP."
