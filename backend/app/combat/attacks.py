@@ -21,6 +21,7 @@ from app.combat.range import resolve_attack_roll_mode
 from app.combat.reckless_attack import attacks_against_reckless_advantage, reckless_attack_advantage
 from app.combat.rolls import roll_d20
 from app.combat.sap import apply_weapon_sap, consume_sap, sap_disadvantage
+from app.combat.studied_attacks import apply_studied_attack_miss
 from app.combat.tactical_master import apply_tactical_master_sap
 from app.combat.vex import apply_vex_mastery
 from app.combat.zero_hp import apply_damage
@@ -78,7 +79,7 @@ def resolve_attack(
         death_success_before = actual_defender.death_save_successes; death_failure_before = actual_defender.death_save_failures
         concentration_before = actual_defender.concentration.effect_id if actual_defender.concentration else None
         damage_roll = None; damage_components = []; damage_outcome = None; applied_conditions: list[str] = []
-        weapon_sap_applied = False; tactical_sap_applied = False; vex_applied = False
+        weapon_sap_applied = False; tactical_sap_applied = False; vex_applied = False; studied_applied = False
         if hit:
             active_turn_key = turn_key or f"{round_number}:{attacker_event_id}"
             damage_roll, rolled_components = resolve_weapon_damage(
@@ -99,11 +100,13 @@ def resolve_attack(
             if graze is not None:
                 damage_roll, damage_components, damage_outcome = graze
                 end_rage_if_incapacitated(actual_defender)
+            studied_applied = apply_studied_attack_miss(attacker, attacker_event_id, defender_event_id, round_number)
         outcome = "CRITICAL HIT" if critical else ("HIT" if hit else "MISS")
         description = f"{attacker.template.name}: {outcome} with {weapon.name}."
         if heroic_reroll: description += " Heroic Inspiration rerolls one d20."
         if not hit and damage_roll is not None:
             description += f" Graze deals {damage_roll.total} {weapon.damage_type.value} damage."
+        if studied_applied: description += f" Studied Attacks primes the next attack against {defender.template.name}."
         if redirect_used: description += f" {defender.template.name} uses Redirect Attack; {actual_defender.template.name} becomes the target."
         if parry_used: description += f" {actual_defender.template.name} uses Parry."
         if weapon_sap_applied: description += f" Sap mastery affects {actual_defender.template.name}."
