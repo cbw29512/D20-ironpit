@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, replace
 
+from app.content.barbarian_combat_levels import BARBARIAN_COMBAT_LEVELS
 from app.content.fighter_combat_levels import FIGHTER_COMBAT_LEVELS, fighter_combat_features
 from app.domain.character_builds import AbilityScores
 
@@ -44,8 +45,6 @@ def _scores(strength: int, dexterity: int, constitution: int, intelligence: int,
                          intelligence=intelligence, wisdom=wisdom, charisma=charisma)
 
 
-_ORC = _scores(17, 13, 15, 10, 10, 10)
-_ORC_L4 = _scores(18, 13, 16, 10, 10, 10)
 _SERAPHINE = _scores(10, 10, 10, 14, 17, 14)
 _SERAPHINE_L4 = _scores(10, 10, 10, 14, 19, 14)
 _KARNOK_ATTACKS = (
@@ -97,16 +96,16 @@ def build_karnok_stoneward_level7_combat_profile() -> PregenCombatProfile:
     return _karnok_profile(7)
 
 
-def _rokhan_profile(level: int, hp: int) -> PregenCombatProfile:
-    advanced = level >= 4
-    abilities = _ORC_L4 if advanced else _ORC
-    athletics = 7 if level >= 5 else 6 if advanced else 5
-    masteries = ("flail", "pike", "longsword") if advanced else ("flail", "pike")
-    rage_uses = 4 if level >= 6 else 3 if level >= 3 else 2
+def _rokhan_profile(level: int, _legacy_hp: int | None = None) -> PregenCombatProfile:
+    row = BARBARIAN_COMBAT_LEVELS[level]
+    abilities = _scores(row.strength, row.dexterity, row.constitution, 10, 10, 10)
     return PregenCombatProfile(
-        f"rokhan-stonefury-l{level}", "Barbarian", level, abilities, ("strength", "constitution"), 14 if advanced else 13, hp, 40 if level >= 5 else 30,
-        (("athletics", athletics), ("acrobatics", 1)), _ROKHAN_ATTACKS, masteries,
-        (("rage", rage_uses), ("adrenaline-rush", 3 if level >= 5 else 2), ("relentless-endurance", 1)), rage_damage_bonus=2,
+        f"rokhan-stonefury-l{level}", "Barbarian", level, abilities, ("strength", "constitution"),
+        row.armor_class, row.max_hp, row.speed_ft,
+        (("athletics", row.proficiency_bonus + _modifier(row.strength)), ("acrobatics", _modifier(row.dexterity))),
+        _ROKHAN_ATTACKS, row.weapon_masteries,
+        (("rage", row.rage_uses), ("adrenaline-rush", row.proficiency_bonus), ("relentless-endurance", 1)),
+        rage_damage_bonus=row.rage_damage_bonus,
     )
 
 
@@ -141,8 +140,7 @@ def build_seraphine_dawnshield_level4_combat_profile() -> PregenCombatProfile:
 def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
     profiles = [
         *(_karnok_profile(level) for level in range(1, 9)),
-        _rokhan_profile(1, 14), _rokhan_profile(2, 23), _rokhan_profile(3, 32), _rokhan_profile(4, 45),
-        _rokhan_profile(5, 55), _rokhan_profile(6, 65),
+        *(_rokhan_profile(level) for level in range(1, 7)),
         _seraphine_profile(1, 8, 2), _seraphine_profile(2, 13, 3, 2),
         build_seraphine_dawnshield_level3_combat_profile(), build_seraphine_dawnshield_level4_combat_profile(),
     ]
