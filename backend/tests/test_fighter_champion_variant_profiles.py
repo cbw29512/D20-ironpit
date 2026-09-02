@@ -61,7 +61,8 @@ def test_high_level_character_truth_marks_only_certified_features_automated() ->
     audits = {audit.feature_id: audit for audit in profile.feature_audits}
     assert audits["tactical-master"].automated is True
     assert audits["heroic-warrior"].automated is True
-    for feature_id in ("studied-attacks", "superior-critical", "survivor"):
+    assert audits["studied-attacks"].automated is True
+    for feature_id in ("superior-critical", "survivor"):
         assert feature_id in audits
         assert audits[feature_id].automated is False
 
