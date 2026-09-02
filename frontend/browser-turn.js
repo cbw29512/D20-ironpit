@@ -10,6 +10,7 @@
   const T = () => window.IRON_PIT_BROWSER_TACTICAL_SHIFT;
   const O = () => window.IRON_PIT_BROWSER_ONGOING_SPELL_CONTROL;
   const L = () => window.IRON_PIT_BROWSER_SPELL_OFFENSE;
+  const U = () => window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
     available: (s, c) => c === "action" ? s.action_available : s.bonus_action_available,
     spend: (s, c) => { if (c === "action") s.action_available = false; else s.bonus_action_available = false; },
@@ -140,7 +141,10 @@
     const attack = legalAttack(member, distance);
     if (attack && E().available(member.state, "action")) {
       const pack = S().packTactics(member, setup), opener = C()?.openingFeature?.(round, member, setup) || null;
-      events.push(A().resolveAttack(sequence++, round, member, target, attack, distance, { advantage: pack ? 1 : 0, featureId: opener || (pack ? "pack-tactics" : null), setup, allowReckless: true, turnKey }));
+      const standard = U().resolve(sequence, round, member, target, attack, distance, setup, turnKey, {
+        advantage: pack ? 1 : 0, featureId: opener || (pack ? "pack-tactics" : null),
+      });
+      events.push(...standard.events); sequence = standard.sequence;
     }
     return finalize(events, sequence, round, member, setup, turnKey);
   }
