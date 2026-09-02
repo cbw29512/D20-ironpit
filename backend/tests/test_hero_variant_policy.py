@@ -17,6 +17,13 @@ def test_barbarian_branches_once_into_three_subclass_specializations() -> None:
     assert family.migration_complete is True
 
 
+def test_monk_branches_once_into_three_subclass_specializations() -> None:
+    family = hero_subclass_family("monk")
+    assert family.target_subclass_ids == ("warrior-open-hand", "warrior-shadow", "warrior-elements")
+    assert family.audited_subclass_ids == family.target_subclass_ids
+    assert family.migration_complete is True
+
+
 def test_remaining_classes_have_three_named_subclass_targets_without_fake_completion() -> None:
     families = all_hero_subclass_families()
     assert len(families) == 12
@@ -25,7 +32,7 @@ def test_remaining_classes_have_three_named_subclass_targets_without_fake_comple
         assert family.branch_level == 3
         assert family.target_subclass_ids
         assert family.audited_subclass_ids
-        if family.class_id not in {"fighter", "barbarian"}:
+        if family.class_id not in {"fighter", "barbarian", "monk"}:
             assert len(family.target_subclass_ids) == 3
             assert family.migration_complete is False
 

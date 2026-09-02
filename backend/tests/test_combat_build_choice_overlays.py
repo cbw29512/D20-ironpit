@@ -2,6 +2,7 @@ from app.content.combat_build_choice_overlays import (
     BARBARIAN_COMBAT_BUILD_CHOICES,
     COMBAT_BUILD_CHOICE_OVERLAYS,
     FIGHTER_COMBAT_BUILD_CHOICES,
+    MONK_COMBAT_BUILD_CHOICES,
     get_combat_build_choice_overlay,
 )
 from app.content.combat_build_variants import get_combat_build_variant
@@ -67,5 +68,19 @@ def test_barbarian_subclass_specializations_generate_real_choice_overlays() -> N
 
 
 def test_all_current_choice_overlays_come_from_subclass_specializations() -> None:
-    assert len(COMBAT_BUILD_CHOICE_OVERLAYS) == 7
+    assert len(COMBAT_BUILD_CHOICE_OVERLAYS) == 10
     assert all("derived from" in overlay.notes for overlay in COMBAT_BUILD_CHOICE_OVERLAYS.values())
+
+
+def test_monk_specializations_do_not_invent_weapon_mastery_or_fighting_styles() -> None:
+    assert set(MONK_COMBAT_BUILD_CHOICES) == {
+        "unarmed-offense", "weapon-monk", "defensive-mobile",
+    }
+    open_hand = get_combat_build_choice_overlay("monk", "unarmed-offense")
+    shadow = get_combat_build_choice_overlay("monk", "weapon-monk")
+    elements = get_combat_build_choice_overlay("monk", "defensive-mobile")
+    assert open_hand.primary_weapon is None
+    assert shadow.primary_weapon == "shortsword"
+    assert elements.primary_weapon is None
+    assert all(not item.weapon_masteries for item in MONK_COMBAT_BUILD_CHOICES.values())
+    assert all(item.fighting_style is None for item in MONK_COMBAT_BUILD_CHOICES.values())

@@ -71,6 +71,20 @@ def test_barbarian_subclasses_compose_real_planned_loadouts_from_one_spine() -> 
         assert recipe.build_choices.shield is shield
 
 
+def test_monk_subclasses_compose_real_planned_roles_from_one_spine() -> None:
+    expected = {
+        ("warrior-open-hand", "unarmed-offense"): None,
+        ("warrior-shadow", "weapon-monk"): "shortsword",
+        ("warrior-elements", "defensive-mobile"): None,
+    }
+    for (subclass_id, build_id), weapon_id in expected.items():
+        recipe = compose_character_combat_recipe("monk", subclass_id, build_id, 11)
+        assert recipe.shared_progression_id == "monk-1-20"
+        assert recipe.build_status == "planned"
+        assert recipe.build_choices.primary_weapon == weapon_id
+        assert not recipe.build_choices.weapon_masteries
+
+
 def test_rogue_base_and_thief_overlay_are_independent_of_legacy_role_record() -> None:
     duelist = compose_character_combat_recipe("rogue", "thief", "duelist", 3)
     ranged = compose_character_combat_recipe("rogue", "thief", "ranged", 3)

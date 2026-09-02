@@ -8,6 +8,7 @@ from app.content.core_subclass_overlay_data import CORE_SUBCLASS_DELTA_DATA
 from app.content.fighter_subclass_overlay_data import FIGHTER_SUBCLASS_DELTA_DATA
 from app.content.hero_progressions import HERO_BY_CLASS
 from app.content.hero_variant_policy import TARGET_SUBCLASSES
+from app.content.monk_subclass_overlay_data import MONK_SUBCLASS_DELTA_DATA
 from app.content.subclass_combat_overlays import SUBCLASS_COMBAT_OVERLAYS, subclass_combat_features
 
 
@@ -28,6 +29,7 @@ def test_subclass_registry_is_derived_from_authoritative_overlay_data() -> None:
         set(BARBARIAN_SUBCLASS_DELTA_DATA)
         | set(CORE_SUBCLASS_DELTA_DATA)
         | set(FIGHTER_SUBCLASS_DELTA_DATA)
+        | set(MONK_SUBCLASS_DELTA_DATA)
     )
     assert set(SUBCLASS_COMBAT_OVERLAYS) == expected
 
@@ -47,13 +49,24 @@ def test_every_registered_subclass_is_a_sparse_overlay_in_its_target_family() ->
         assert len(overlay.deltas) < 20
 
 
-def test_base_plus_subclass_reproduces_every_researched_level_feature_set() -> None:
+def test_base_plus_selected_subclass_preserves_every_researched_feature_set() -> None:
     for class_id in CANONICAL_CLASS_COMBAT_SPINES:
         for level in range(1, 21):
-            legacy = _legacy_combined_features(class_id, level)
+            expected = set(_legacy_combined_features(class_id, level))
+            expected.update(subclass_combat_features(HERO_BY_CLASS[class_id].subclass_id, level))
             composed = canonical_combat_features(class_id, level)
             assert len(composed) == len(set(composed)), (class_id, level)
-            assert set(composed) == set(legacy), (class_id, level, composed, legacy)
+            assert set(composed) == expected, (class_id, level, composed, expected)
+
+
+def test_monk_base_spine_contains_no_open_hand_subclass_features() -> None:
+    subclass_features = {
+        feature
+        for level in range(1, 21)
+        for feature in subclass_combat_features("warrior-open-hand", level)
+    }
+    assert subclass_features
+    assert subclass_features.isdisjoint(canonical_base_class_features("monk", 20))
 
 
 def test_fighter_base_never_gets_champion_features_without_champion_overlay() -> None:

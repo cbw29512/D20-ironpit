@@ -21,12 +21,16 @@ def test_all_twelve_canonical_classes_have_exactly_twenty_contiguous_rows() -> N
         assert all(getattr(row, "level") == level for level, row in spine.items()), class_id
 
 
-def test_monk_open_hand_numeric_progression_landmarks() -> None:
+def test_monk_base_numeric_progression_landmarks_exclude_subclass_features() -> None:
     assert (MONK_COMBAT_LEVELS[1].martial_arts_die, MONK_COMBAT_LEVELS[1].focus_points) == (6, 0)
     assert (MONK_COMBAT_LEVELS[5].martial_arts_die, MONK_COMBAT_LEVELS[5].focus_points) == (8, 5)
     assert MONK_COMBAT_LEVELS[11].martial_arts_die == 10
     assert (MONK_COMBAT_LEVELS[20].martial_arts_die, MONK_COMBAT_LEVELS[20].focus_points) == (12, 20)
-    assert "quivering-palm" in MONK_COMBAT_LEVELS[17].features_added
+    subclass_features = {"open-hand-technique", "wholeness-of-body", "fleet-step", "quivering-palm"}
+    assert all(
+        subclass_features.isdisjoint(row.features_added)
+        for row in MONK_COMBAT_LEVELS.values()
+    )
 
 
 def test_paladin_devotion_numeric_progression_landmarks() -> None:

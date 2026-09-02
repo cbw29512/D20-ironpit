@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Literal
 
-from app.content.combat_build_variants import get_combat_build_variant
+from app.content.combat_build_variants import combat_build_variants_for, get_combat_build_variant
 from app.content.subclass_specializations import subclass_specialization
 from app.content.weapon_catalog import build_weapon
 
@@ -20,16 +20,7 @@ _MASTERY_CAPABILITY = {
     "Sap": "sap-mastery", "Slow": "slow-mastery", "Topple": "topple-mastery",
     "Vex": "vex-mastery",
 }
-_BUILD_TO_SUBCLASS = {
-    ("fighter", "great-weapon"): "champion",
-    ("fighter", "dual-wield"): "battle-master",
-    ("fighter", "sword-shield"): "eldritch-knight",
-    ("fighter", "archer"): "psi-warrior",
-    ("barbarian", "great-weapon"): "path-berserker",
-    ("barbarian", "weapon-shield"): "path-wild-heart",
-    ("barbarian", "dual-wield"): "path-zealot",
-}
-_MASTERY_LIMIT = {"fighter": 3, "barbarian": 2}
+_MASTERY_LIMIT = {"fighter": 3, "barbarian": 2, "monk": 0}
 
 
 @dataclass(frozen=True)
@@ -52,7 +43,12 @@ class CombatBuildChoiceOverlay:
 
 
 def _build_overlay(class_id: str, build_id: str) -> CombatBuildChoiceOverlay:
-    spec = subclass_specialization(_BUILD_TO_SUBCLASS[(class_id, build_id)])
+    variant = get_combat_build_variant(class_id, build_id)
+    if variant.required_subclass_id is None:
+        raise ValueError(f"Specialized build {class_id}/{build_id} requires a subclass owner.")
+    spec = subclass_specialization(variant.required_subclass_id)
+    if spec.class_id != class_id:
+        raise ValueError(f"Build {class_id}/{build_id} points to a {spec.class_id} specialization.")
     masteries = spec.mastery_priority[:_MASTERY_LIMIT[class_id]]
     required: list[str] = []
     ignored: list[str] = []
@@ -85,8 +81,9 @@ def _build_overlay(class_id: str, build_id: str) -> CombatBuildChoiceOverlay:
 
 
 COMBAT_BUILD_CHOICE_OVERLAYS = {
-    key: _build_overlay(*key)
-    for key in _BUILD_TO_SUBCLASS
+    (class_id, variant.id): _build_overlay(class_id, variant.id)
+    for class_id in _MASTERY_LIMIT
+    for variant in combat_build_variants_for(class_id)
 }
 FIGHTER_COMBAT_BUILD_CHOICES = {
     build_id: overlay
@@ -97,6 +94,11 @@ BARBARIAN_COMBAT_BUILD_CHOICES = {
     build_id: overlay
     for (class_id, build_id), overlay in COMBAT_BUILD_CHOICE_OVERLAYS.items()
     if class_id == "barbarian"
+}
+MONK_COMBAT_BUILD_CHOICES = {
+    build_id: overlay
+    for (class_id, build_id), overlay in COMBAT_BUILD_CHOICE_OVERLAYS.items()
+    if class_id == "monk"
 }
 
 

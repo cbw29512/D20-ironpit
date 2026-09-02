@@ -3,6 +3,7 @@ import pytest
 from app.content.subclass_specializations import (
     BARBARIAN_SPECIALIZATIONS,
     FIGHTER_SPECIALIZATIONS,
+    MONK_SPECIALIZATIONS,
     SubclassSpecialization,
     specializations_for_class,
     subclass_specialization,
@@ -66,6 +67,18 @@ def test_barbarian_subclass_choices_are_explicit_specialization_data() -> None:
         "wild-heart-rage-bear", "wild-heart-aspect-elephant-athletics", "wild-heart-power-lion",
     )
     assert zealot.feature_choice_ids == ("zealot-divine-fury-radiant",)
+
+
+def test_monk_has_one_dexterity_specialization_per_target_subclass() -> None:
+    assert tuple(item.subclass_id for item in specializations_for_class("monk")) == (
+        "warrior-open-hand", "warrior-shadow", "warrior-elements",
+    )
+    open_hand, shadow, elements = MONK_SPECIALIZATIONS
+    assert (open_hand.role, open_hand.primary_weapon) == ("unarmed-offense", None)
+    assert (shadow.role, shadow.primary_weapon) == ("weapon-monk", "shortsword")
+    assert (elements.role, elements.primary_weapon) == ("defensive-mobile", None)
+    assert all(item.ability_priority[:2] == ("dexterity", "wisdom") for item in MONK_SPECIALIZATIONS)
+    assert all(not item.mastery_priority for item in MONK_SPECIALIZATIONS)
 
 
 def test_specialization_without_source_truth_fails_closed() -> None:

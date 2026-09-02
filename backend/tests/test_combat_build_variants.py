@@ -52,6 +52,17 @@ def test_barbarian_weapon_roles_are_owned_by_real_subclasses() -> None:
     }
 
 
+def test_monk_roles_are_owned_by_real_subclasses() -> None:
+    assert {
+        variant.id: variant.required_subclass_id
+        for variant in combat_build_variants_for("monk")
+    } == {
+        "unarmed-offense": "warrior-open-hand",
+        "weapon-monk": "warrior-shadow",
+        "defensive-mobile": "warrior-elements",
+    }
+
+
 def test_legacy_caster_role_records_remain_migration_inputs_not_subclass_clones() -> None:
     expected = {
         "wizard": {"fire-damage", "frost-control", "mixed-arcane"},
