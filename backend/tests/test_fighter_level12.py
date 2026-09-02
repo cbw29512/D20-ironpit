@@ -16,7 +16,7 @@ def test_fighter_level_twelve_snapshot_applies_constitution_asi() -> None:
     assert (karnok.id, karnok.level, karnok.max_hp, karnok.armor_class) == (
         "karnok-stoneward-l12", 12, 136, 17,
     )
-    assert karnok.ability_scores["constitution"] == 20
+    assert karnok.ability_scores.constitution == 20
     assert karnok.weapon_attack.attack_bonus == 9
     assert karnok.weapon_attack.damage_bonus == 5
     assert karnok.weapon_attack.damage_die_minimum == 3
