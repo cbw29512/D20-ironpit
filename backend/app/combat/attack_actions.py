@@ -59,17 +59,18 @@ def _preferred_distance(attacker: EncounterCombatant, slot: AttackActionSlot) ->
     return max(ranges)
 
 
-def _move_for_slot(sequence, round_number, attacker, target, slot, setup, dice):
+def _move_for_slot(sequence, round_number, attacker, target, slot, setup, dice, turn_key):
     events, sequence, _ = move_toward_with_reactions(
         sequence, round_number, attacker, target, setup, _preferred_distance(attacker, slot), dice,
+        turn_key=turn_key,
     )
     return events, sequence
 
 
-def _prepare_first_slot(sequence, round_number, attacker, target, slot, setup, dice):
+def _prepare_first_slot(sequence, round_number, attacker, target, slot, setup, dice, turn_key):
     if any(_slot_choice(attacker, target, slot)):
         return [], sequence, True
-    events, sequence = _move_for_slot(sequence, round_number, attacker, target, slot, setup, dice)
+    events, sequence = _move_for_slot(sequence, round_number, attacker, target, slot, setup, dice, turn_key)
     if attacker.state.is_dead or attacker.state.is_unconscious:
         return events, sequence, False
     if any(_slot_choice(attacker, target, slot)):
@@ -78,7 +79,7 @@ def _prepare_first_slot(sequence, round_number, attacker, target, slot, setup, d
         return events, sequence, False
     events.append(take_encounter_dash(sequence, round_number, attacker, target))
     sequence += 1
-    more, sequence = _move_for_slot(sequence, round_number, attacker, target, slot, setup, dice)
+    more, sequence = _move_for_slot(sequence, round_number, attacker, target, slot, setup, dice, turn_key)
     events.extend(more)
     return events, sequence, False
 
@@ -93,11 +94,12 @@ def resolve_attack_action(
         definition = attacker.state.template.attack_action
         if definition is None or not is_available(attacker.state, "action"):
             raise ValueError("Multiattack action is not available.")
+        turn_key = f"{round_number}:{attacker.combatant_id}"
         target = select_slot_target(attacker, setup, definition.slots[0])
         if target is None:
             return [], sequence
         events, sequence, ready = _prepare_first_slot(
-            sequence, round_number, attacker, target, definition.slots[0], setup, dice,
+            sequence, round_number, attacker, target, definition.slots[0], setup, dice, turn_key,
         )
         if not ready:
             return events, sequence
@@ -105,7 +107,6 @@ def resolve_attack_action(
         spend(attacker.state, "action")
         opening_feature = opening_feature_id(round_number, attacker, setup)
         affected_states = [member.state for member in [*setup.heroes, *setup.monsters]]
-        turn_key = f"{round_number}:{attacker.combatant_id}"
         for slot in definition.slots:
             if attacker.state.is_dead or attacker.state.is_unconscious:
                 break
@@ -114,7 +115,7 @@ def resolve_attack_action(
                 continue
             attack, save_action = _slot_choice(attacker, target, slot)
             if attack is None and save_action is None:
-                moved, sequence = _move_for_slot(sequence, round_number, attacker, target, slot, setup, dice)
+                moved, sequence = _move_for_slot(sequence, round_number, attacker, target, slot, setup, dice, turn_key)
                 events.extend(moved)
                 if attacker.state.is_dead or attacker.state.is_unconscious:
                     break
