@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.modifier_stack import add_modifier
+from app.combat.weapon_mastery import weapon_mastery_active
 from app.domain.models import CombatantState, WeaponAttack
 from app.domain.modifiers import CombatModifier, ModifierKind
 
@@ -8,10 +9,7 @@ VEX_EFFECT_ID = "weapon-mastery-vex"
 
 
 def vex_mastery_active(attacker: CombatantState, attack: WeaponAttack) -> bool:
-    return (
-        attack.weapon.mastery_property == "Vex"
-        and attack.weapon.id in attacker.template.weapon_masteries
-    )
+    return weapon_mastery_active(attacker, attack, "Vex")
 
 
 def apply_vex_mastery(
