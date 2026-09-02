@@ -126,7 +126,7 @@
       for (const id of init.turn_order) {
         const current = outcome(setup); if (current !== "active") return finish(setup, init, events, current, round, sequence);
         const member = byId.get(id);
-        B()?.cleanupDisabledSources(setup); S().refreshReaction(member.state); C()?.endIfExpired(member.state, round, states);
+        B()?.cleanupDisabledSources(setup); S().refreshStartOfTurn(member.state); C()?.endIfExpired(member.state, round, states);
         const start = lifecycle(sequence, round, member, setup, "target_turn_start", "source_turn_start");
         events.push(...start.events); sequence = start.sequence;
         if (member.state.template.kind === "character" && member.state.current_hp === 0 && !member.state.is_dead && !member.state.is_stable) events.push(T().deathSave(sequence++, round, member));
