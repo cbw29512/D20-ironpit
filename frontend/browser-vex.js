@@ -2,11 +2,11 @@
   "use strict";
 
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
+  const W = () => window.IRON_PIT_BROWSER_WEAPON_MASTERY;
   const EFFECT_ID = "weapon-mastery-vex";
 
   function active(attacker, attack) {
-    return attack.masteryProperty === "Vex"
-      && (attacker.template.weapon_masteries || []).includes(attack.weaponId);
+    return W().active(attacker, attack, "Vex");
   }
 
   function apply(attacker, attackerId, targetId, attack, round, damageDealt) {
