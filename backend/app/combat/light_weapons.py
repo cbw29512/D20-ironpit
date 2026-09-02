@@ -4,6 +4,7 @@ import logging
 from dataclasses import dataclass
 
 from app.combat.weapon_mastery import weapon_mastery_active
+from app.content.fighting_style_rules import has_fighting_style
 from app.domain.models import CombatantState, WeaponAttack
 
 logger = logging.getLogger(__name__)
@@ -30,12 +31,14 @@ def mark_light_extra_attack_used(state: CombatantState, turn_key: str) -> None:
     state.feature_last_turn_keys[LIGHT_EXTRA_ATTACK_MARKER] = turn_key
 
 
-def _extra_attack_profile(attack: WeaponAttack) -> WeaponAttack:
+def _extra_attack_profile(state: CombatantState, attack: WeaponAttack) -> WeaponAttack:
     modifier = attack.attack_ability_modifier
     if modifier is None:
         raise ValueError(
             f"Light extra attack {attack.id!r} requires an explicit attack ability modifier."
         )
+    if has_fighting_style(state.template.fighting_styles, "Two-Weapon Fighting"):
+        return attack.model_copy(deep=True)
     return attack.model_copy(update={"damage_bonus": attack.damage_bonus - max(0, modifier)})
 
 
@@ -59,7 +62,7 @@ def plan_light_extra_attack(
         chosen = nick_candidate or candidates[0]
         nick_active = nick_mastery_active(state, trigger_attack) or nick_mastery_active(state, chosen)
         return LightExtraAttackPlan(
-            attack=_extra_attack_profile(chosen),
+            attack=_extra_attack_profile(state, chosen),
             uses_bonus_action=not nick_active,
             feature_id=NICK_FEATURE_ID if nick_active else LIGHT_EXTRA_ATTACK_MARKER,
         )
