@@ -9,6 +9,7 @@ from app.domain.progression import ProgressionCombatFeatures
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST_SCRIPT = ROOT / "scripts" / "verify_certification_manifests.py"
 HERO_MANIFEST = ROOT / "data" / "hero_certification_manifest.json"
+BROWSER_HEROES = ROOT / "frontend" / "browser-heroes.js"
 
 
 def test_manifest_generator_accounts_for_every_progression_combat_field() -> None:
@@ -55,3 +56,15 @@ def test_fighter_level_eight_manifest_preserves_gwf_and_extra_attack_without_blo
     assert level_eight["unsupported_mechanics"] == []
     assert level_eight["blockers"] == []
     assert level_eight["public_ready_status"] == "ready"
+
+
+def test_fighter_level_nine_candidate_cannot_leak_into_public_artifacts_before_policy_approval() -> None:
+    manifest = json.loads(HERO_MANIFEST.read_text(encoding="utf-8"))
+    fighter = next(hero for hero in manifest["heroes"] if hero["class_id"] == "fighter")
+    level_nine = next(level for level in fighter["levels"] if level["level"] == 9)
+
+    assert manifest["summary"]["public_ready"] == 18
+    assert level_nine["runtime_template_id"] is None
+    assert level_nine["public_ready_status"] == "blocked"
+    assert "hero-level-not-certified" in level_nine["blockers"]
+    assert "karnok-stoneward-l9" not in BROWSER_HEROES.read_text(encoding="utf-8")
