@@ -69,11 +69,11 @@ def fighting_style_audit(style: str, *, additional: bool = False) -> FeatureAudi
     )
 
 
-def equipment_attack_audit(weapon_id: str, weapon_name: str) -> FeatureAudit:
+def equipment_audit(build_id: str, weapon_id: str) -> FeatureAudit:
     return FeatureAudit(
-        feature_id=f"equipped-{weapon_id}",
-        feature_name=f"Equipped {weapon_name}",
-        source_reference="D&D Beyond Basic Rules 2024: Equipment",
+        feature_id=f"equipment-{build_id}",
+        feature_name=f"{build_id.replace('-', ' ').title()} Loadout",
+        source_reference="D&D Beyond Basic Rules 2024: Fighter Starting Equipment; Equipment",
         category="equipment",
         combat_relevant=True,
         automated=True,
