@@ -74,6 +74,23 @@ function grappleCheck(d10) {
   assert.equal(state.grapple_sources.length, 1);
 }
 
+// Great Weapon Fighting must floor each weapon damage die independently, not the final total.
+{
+  const queue = [1, 2];
+  window.IRON_PIT_DICE = {
+    roll: () => queue.shift(),
+    rollMany: (count) => Array.from({ length: count }, () => queue.shift()),
+  };
+  const attacker = { template: { traits: [] }, feature_last_turn_keys: {} };
+  const attack = {
+    name: "Greatsword", diceCount: 2, diceSize: 6, damageBonus: 4,
+    damageType: "slashing", damageDieMinimum: 3, onHitDamage: [],
+  };
+  const damage = window.IRON_PIT_BROWSER_ROLLS.weaponDamage(attacker, attack, false, "normal", "1:hero-1");
+  assert.deepEqual(damage.roll.rolls, [3, 3]);
+  assert.equal(damage.roll.total, 10);
+}
+
 // Prove the canonical turn finisher actually converts a spent Action into a second Attack.
 window.IRON_PIT_BROWSER_STATE = {
   beginTurn: (state) => { state.action_available = true; state.bonus_action_available = true; state.movement_remaining_ft = 30; },
