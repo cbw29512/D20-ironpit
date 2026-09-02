@@ -17,7 +17,7 @@ def build_mara_quickstep_combat_profile() -> PregenCombatProfile:
         armor_class=14,
         max_hp=10,
         speed_ft=30,
-        skill_bonuses=(("acrobatics", 5),),
+        skill_bonuses=(("athletics", 3), ("acrobatics", 5)),
         attacks=(
             AttackExpectation(
                 "shortsword", "dexterity", 1, 6, "piercing",
