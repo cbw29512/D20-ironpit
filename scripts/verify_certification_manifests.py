@@ -67,6 +67,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("tactical-master")
     if features.heroic_warrior:
         mechanics.add("heroic-warrior")
+    if features.studied_attacks:
+        mechanics.add("studied-attacks")
     if features.sneak_attack_d6:
         mechanics.add("sneak-attack")
     if features.critical_move_fraction:
