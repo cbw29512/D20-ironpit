@@ -17,6 +17,7 @@ def test_level_three_great_weapon_compiles_from_character_truth() -> None:
     assert (template.armor_class, template.max_hp) == (16, 28)
     assert template.ability_scores == profile.final_ability_scores
     assert template.weapon_masteries == profile.weapon_masteries
+    assert template.fighting_styles == profile.fighting_styles == ["Great Weapon Fighting"]
     assert greatsword.weapon.id == "greatsword"
     assert (greatsword.weapon.mastery_property, greatsword.weapon.heavy, greatsword.weapon.two_handed) == ("Graze", True, True)
     assert (greatsword.attack_bonus, greatsword.damage_bonus, greatsword.damage_die_minimum) == (5, 3, 3)
@@ -28,6 +29,7 @@ def test_level_three_great_weapon_compiles_from_character_truth() -> None:
 def test_champion_level_seven_additional_defense_changes_great_weapon_ac() -> None:
     template = compile_fighter_champion_variant("great-weapon", 7)
     assert template.armor_class == 17
+    assert template.fighting_styles == ["Great Weapon Fighting", "Defense"]
     assert template.progression_features.great_weapon_fighting is True
 
 
@@ -47,6 +49,7 @@ def test_sword_shield_level_seven_archery_style_applies_to_ranged_backup_only() 
     template = compile_fighter_champion_variant("sword-shield", 7)
     longsword = _attack(template, "longsword")
     shortbow = _attack(template, "shortbow")
+    assert template.fighting_styles == ["Defense", "Archery"]
     assert longsword.attack_bonus == 8
     assert shortbow.attack_bonus == 6
     assert shortbow.attack_bonus - (3 + 1) == 2
@@ -68,6 +71,7 @@ def test_archer_level_seven_additional_defense_changes_studded_leather_ac() -> N
     template = compile_fighter_champion_variant("archer", 7)
     assert template.armor_class == 18
     assert template.ability_scores.dexterity == 20
+    assert template.fighting_styles == ["Archery", "Defense"]
 
 
 def test_dual_wield_sheet_is_complete_but_runtime_readiness_fails_on_twf_support() -> None:
@@ -77,10 +81,17 @@ def test_dual_wield_sheet_is_complete_but_runtime_readiness_fails_on_twf_support
     assert template.visual.main_hand == "scimitar"
     assert template.visual.off_hand == "shortsword"
     assert template.weapon_attack.weapon.light is True
+    assert template.fighting_styles == ["Two-Weapon Fighting"]
     assert "scimitar" in template.weapon_masteries
     assert "shortsword" in template.weapon_masteries
     issues = audit_character_build(profile, template)
     assert "combat-feature-not-automated:fighting-style-two-weapon-fighting" in issues
+
+
+def test_dual_wield_level_seven_preserves_additional_defense_style() -> None:
+    template = compile_fighter_champion_variant("dual-wield", 7)
+    assert template.fighting_styles == ["Two-Weapon Fighting", "Defense"]
+    assert template.armor_class == 18
 
 
 def test_attack_action_slot_count_comes_only_from_fighter_level() -> None:
