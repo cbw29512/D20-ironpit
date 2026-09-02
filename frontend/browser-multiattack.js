@@ -72,7 +72,7 @@
       const target = slotTarget(member, setup, slot); if (!target) continue;
       let choice = slotChoice(member, target, slot);
       if (!choice.attack && !choice.save) {
-        const moved = W().moveToward(sequence, round, member, target, setup, desiredDistance(member, choice.data));
+        const moved = W().moveToward(sequence, round, member, target, setup, desiredDistance(member, choice.data), "speed", { turnKey });
         events.push(...moved.events); sequence = moved.sequence;
         if (moved.movement) events.push(movementEvent(sequence++, round, member, target, moved.movement));
         if (member.state.is_dead || member.state.is_unconscious) break;
