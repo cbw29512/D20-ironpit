@@ -7,7 +7,7 @@ from app.content.combat_engine_coverage import audit_build_capability_contract, 
 def _fighter_statuses() -> dict[str, str]:
     return {
         "great-weapon-fighting": "supported",
-        "graze-mastery": "blocked",
+        "graze-mastery": "supported",
         "sap-mastery": "supported",
         "defense-style": "blocked",
         "shield-ac": "blocked",
@@ -20,7 +20,10 @@ def _fighter_statuses() -> dict[str, str]:
 
 
 def _fighter_build_statuses() -> dict[tuple[str, str], str]:
-    return {("fighter", build_id): "planned" for build_id in FIGHTER_COMBAT_BUILD_CHOICES}
+    return {
+        ("fighter", build_id): "active" if build_id == "great-weapon" else "planned"
+        for build_id in FIGHTER_COMBAT_BUILD_CHOICES
+    }
 
 
 def test_current_fighter_overlays_accept_explicit_supported_blocked_and_arena_statuses() -> None:
@@ -39,11 +42,11 @@ def test_missing_required_capability_fails_closed() -> None:
 
 
 def test_active_build_cannot_depend_on_blocked_capability() -> None:
-    build_statuses = _fighter_build_statuses()
-    build_statuses[("fighter", "great-weapon")] = "active"
+    statuses = _fighter_statuses()
+    statuses["graze-mastery"] = "blocked"
 
     issues = audit_build_capability_contract(
-        FIGHTER_COMBAT_BUILD_CHOICES.values(), _fighter_statuses(), build_statuses,
+        FIGHTER_COMBAT_BUILD_CHOICES.values(), statuses, _fighter_build_statuses(),
     )
 
     assert any("active build requires 'graze-mastery'" in issue for issue in issues)
