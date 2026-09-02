@@ -12,8 +12,10 @@ def adjusted_damage_amount(
     amount: int,
     damage_type: DamageType,
     target: CombatantState,
+    *,
+    allow_vulnerability: bool = True,
 ) -> int:
-    """Apply SRD 5.2.1 immunity, resistance, then vulnerability to one damage type."""
+    """Apply immunity/resistance and, when allowed, vulnerability to one damage type."""
     try:
         if amount < 0:
             raise ValueError("Damage cannot be negative.")
@@ -28,7 +30,7 @@ def adjusted_damage_amount(
         }
         if damage_type in resistances or has_condition(target, "petrified"):
             adjusted //= 2
-        if damage_type in template.damage_vulnerabilities:
+        if allow_vulnerability and damage_type in template.damage_vulnerabilities:
             adjusted *= 2
         return adjusted
     except ValueError:
