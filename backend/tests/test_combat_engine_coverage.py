@@ -20,8 +20,9 @@ def _fighter_statuses() -> dict[str, str]:
 
 
 def _fighter_build_statuses() -> dict[tuple[str, str], str]:
+    active = {"great-weapon", "sword-shield"}
     return {
-        ("fighter", build_id): "active" if build_id == "great-weapon" else "planned"
+        ("fighter", build_id): "active" if build_id in active else "planned"
         for build_id in FIGHTER_COMBAT_BUILD_CHOICES
     }
 
@@ -50,6 +51,17 @@ def test_active_build_cannot_depend_on_blocked_capability() -> None:
     )
 
     assert any("active build requires 'graze-mastery'" in issue for issue in issues)
+
+
+def test_active_sword_shield_cannot_depend_on_blocked_shield_ac() -> None:
+    statuses = _fighter_statuses()
+    statuses["shield-ac"] = "blocked"
+
+    issues = audit_build_capability_contract(
+        FIGHTER_COMBAT_BUILD_CHOICES.values(), statuses, _fighter_build_statuses(),
+    )
+
+    assert any("active build requires 'shield-ac'" in issue for issue in issues)
 
 
 def test_partial_status_is_not_valid_for_declared_build_requirement() -> None:
