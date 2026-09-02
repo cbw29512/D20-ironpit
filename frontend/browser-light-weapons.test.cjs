@@ -32,8 +32,8 @@ window.IRON_PIT_BROWSER_ATTACK = {
 };
 
 for (const file of [
-  "browser-light-weapons.js", "browser-light-attack.js", "browser-standard-attack-action.js",
-  "browser-multiattack.js", "browser-action-surge.js",
+  "browser-weapon-mastery.js", "browser-light-weapons.js", "browser-light-attack.js",
+  "browser-standard-attack-action.js", "browser-multiattack.js", "browser-action-surge.js",
 ]) load(file);
 
 const scimitar = {
