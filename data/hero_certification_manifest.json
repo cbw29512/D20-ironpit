@@ -54,7 +54,7 @@
           "subclass": null,
           "runtime_template_id": "rokhan-stonefury-l2",
           "source_references": [
-            "D&D Beyond Basic Rules 2024: Barbarian Level 2, Orc, Soldier, Savage Attacker, Equipment"
+            "D&D Beyond Basic Rules 2024: Barbarian 2, Orc, Soldier, Savage Attacker, Equipment"
           ],
           "expected_combat_features": [
             "attack:rokhan-greataxe",
@@ -95,7 +95,7 @@
           },
           "runtime_template_id": "rokhan-stonefury-l3",
           "source_references": [
-            "D&D Beyond Basic Rules 2024: Barbarian Level 3, Path of the Berserker, Orc, Soldier, Savage Attacker, Equipment"
+            "D&D Beyond Basic Rules 2024: Barbarian 3 Path of the Berserker, Orc, Soldier, Savage Attacker, Equipment"
           ],
           "expected_combat_features": [
             "attack:rokhan-greataxe",
@@ -138,7 +138,7 @@
           },
           "runtime_template_id": "rokhan-stonefury-l4",
           "source_references": [
-            "D&D Beyond Basic Rules 2024: Barbarian Level 4 Ability Score Improvement, Orc, Soldier, Savage Attacker, Equipment"
+            "D&D Beyond Basic Rules 2024: Barbarian 4 Ability Score Improvement, Orc, Soldier, Savage Attacker, Equipment"
           ],
           "expected_combat_features": [
             "attack:rokhan-greataxe",
@@ -181,7 +181,7 @@
           },
           "runtime_template_id": "rokhan-stonefury-l5",
           "source_references": [
-            "D&D Beyond Basic Rules 2024: Barbarian Level 5 Extra Attack and Fast Movement, Orc, Soldier, Savage Attacker, Equipment"
+            "D&D Beyond Basic Rules 2024: Barbarian 5 Extra Attack and Fast Movement, Orc, Soldier, Savage Attacker, Equipment"
           ],
           "expected_combat_features": [
             "attack:rokhan-greataxe",
@@ -228,7 +228,7 @@
           },
           "runtime_template_id": "rokhan-stonefury-l6",
           "source_references": [
-            "D&D Beyond Basic Rules 2024: Barbarian Level 6 Path of the Berserker Mindless Rage, Orc, Soldier, Savage Attacker, Equipment"
+            "D&D Beyond Basic Rules 2024: Barbarian 6 Path of the Berserker Mindless Rage, Orc, Soldier, Savage Attacker, Equipment"
           ],
           "expected_combat_features": [
             "attack:rokhan-greataxe",
