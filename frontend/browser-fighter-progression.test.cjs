@@ -20,8 +20,8 @@ function fighterState(actionSurge = 1) {
   return {
     template: {
       name: "Karnok Stoneward", archetype: "Fighter", level: 2, speed_ft: 30,
-      skill_bonuses: { athletics: 5, acrobatics: 1 },
-      attacks: [{ id: "greatsword", name: "Greatsword", kind: "melee", reach: 5 }],
+      skill_bonuses: { athletics: 5, acrobatics: 1 }, weapon_masteries: [],
+      attacks: [{ id: "greatsword", weaponId: "greatsword", name: "Greatsword", kind: "melee", reach: 5, light: false }],
     },
     current_hp: 20, is_dead: false, is_unconscious: false, is_alive: true,
     action_available: true, bonus_action_available: true, reaction_available: true,
@@ -127,6 +127,9 @@ window.IRON_PIT_BROWSER_ATTACK = {
       target_id: target.combatant_id, weapon_id: attack.id, feature_id: extra.featureId || null };
   },
 };
+for (const file of [
+  "browser-weapon-mastery.js", "browser-light-weapons.js", "browser-light-attack.js", "browser-standard-attack-action.js",
+]) load(file);
 load("browser-turn.js");
 {
   const hero = { combatant_id: "hero-1", side: "heroes", position_ft: 0, state: fighterState() };
