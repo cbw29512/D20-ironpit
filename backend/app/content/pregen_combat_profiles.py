@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass, replace
 
 from app.content.barbarian_combat_levels import BARBARIAN_COMBAT_LEVELS
+from app.content.cleric_combat_levels import CLERIC_COMBAT_LEVELS
 from app.content.fighter_combat_levels import FIGHTER_COMBAT_LEVELS, fighter_combat_features
 from app.domain.character_builds import AbilityScores
 
@@ -45,8 +46,6 @@ def _scores(strength: int, dexterity: int, constitution: int, intelligence: int,
                          intelligence=intelligence, wisdom=wisdom, charisma=charisma)
 
 
-_SERAPHINE = _scores(10, 10, 10, 14, 17, 14)
-_SERAPHINE_L4 = _scores(10, 10, 10, 14, 19, 14)
 _KARNOK_ATTACKS = (
     AttackExpectation("greatsword", "strength", 2, 6, "slashing"),
     AttackExpectation("shortbow", "dexterity", 1, 6, "piercing", normal_range_ft=80, long_range_ft=320),
@@ -109,39 +108,37 @@ def _rokhan_profile(level: int, _legacy_hp: int | None = None) -> PregenCombatPr
     )
 
 
-def _seraphine_profile(level: int, hp: int, first_slots: int, channel: int = 0, second_slots: int = 0) -> PregenCombatProfile:
-    resources = [("spell-slot-1", first_slots)]
-    if second_slots:
-        resources.append(("spell-slot-2", second_slots))
-    if channel:
-        resources.append(("channel-divinity", channel))
-    resources.extend((("adrenaline-rush", 2), ("relentless-endurance", 1)))
+def _seraphine_profile(level: int, *_legacy: int) -> PregenCombatProfile:
+    row = CLERIC_COMBAT_LEVELS[level]
+    abilities = _scores(10, 10, 10, 14, row.wisdom, row.charisma)
+    resources = [(f"spell-slot-{spell_level}", uses)
+                 for spell_level, uses in enumerate(row.spell_slots, start=1) if uses]
+    if row.channel_divinity_uses:
+        resources.append(("channel-divinity", row.channel_divinity_uses))
+    resources.extend((("adrenaline-rush", row.proficiency_bonus), ("relentless-endurance", 1)))
     return PregenCombatProfile(
-        f"seraphine-dawnshield-l{level}", "Cleric", level, _SERAPHINE, ("wisdom", "charisma"), 15, hp, 30,
-        (("athletics", 0), ("acrobatics", 0), ("arcana", 4), ("history", 4), ("medicine", 5), ("persuasion", 4)),
+        f"seraphine-dawnshield-l{level}", "Cleric", level, abilities, ("wisdom", "charisma"),
+        row.armor_class, row.max_hp, 30,
+        (("athletics", 0), ("acrobatics", 0),
+         ("arcana", row.proficiency_bonus + 2), ("history", row.proficiency_bonus + 2),
+         ("medicine", row.proficiency_bonus + _modifier(row.wisdom)),
+         ("persuasion", row.proficiency_bonus + _modifier(row.charisma))),
         (AttackExpectation("mace", "strength", 1, 6, "bludgeoning"),), (), tuple(resources),
     )
 
 
 def build_seraphine_dawnshield_level3_combat_profile() -> PregenCombatProfile:
-    return _seraphine_profile(3, 18, 4, 2, 2)
+    return _seraphine_profile(3)
 
 
 def build_seraphine_dawnshield_level4_combat_profile() -> PregenCombatProfile:
-    return PregenCombatProfile(
-        "seraphine-dawnshield-l4", "Cleric", 4, _SERAPHINE_L4, ("wisdom", "charisma"), 15, 23, 30,
-        (("athletics", 0), ("acrobatics", 0), ("arcana", 4), ("history", 4), ("medicine", 6), ("persuasion", 4)),
-        (AttackExpectation("mace", "strength", 1, 6, "bludgeoning"),), (),
-        (("spell-slot-1", 4), ("spell-slot-2", 3), ("channel-divinity", 2),
-         ("adrenaline-rush", 2), ("relentless-endurance", 1)),
-    )
+    return _seraphine_profile(4)
 
 
 def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
     profiles = [
         *(_karnok_profile(level) for level in range(1, 9)),
         *(_rokhan_profile(level) for level in range(1, 7)),
-        _seraphine_profile(1, 8, 2), _seraphine_profile(2, 13, 3, 2),
-        build_seraphine_dawnshield_level3_combat_profile(), build_seraphine_dawnshield_level4_combat_profile(),
+        *(_seraphine_profile(level) for level in range(1, 5)),
     ]
     return {profile.template_id: profile for profile in profiles}
