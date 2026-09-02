@@ -15,7 +15,22 @@ def test_build_recipe_reuses_one_class_and_subclass_feature_progression() -> Non
     assert archer.combat_features == expected
     assert great_weapon.build_id != archer.build_id
     assert great_weapon.role != archer.role
+    assert great_weapon.build_status == "active"
     assert archer.build_status == "planned"
+
+
+def test_active_fighter_great_weapon_recipe_has_only_certified_build_choices() -> None:
+    great_weapon = compose_character_combat_recipe("fighter", "champion", "great-weapon", 8)
+
+    assert great_weapon.build_status == "active"
+    assert great_weapon.build_choices is not None
+    assert great_weapon.build_choices.fighting_style == "Great Weapon Fighting"
+    assert great_weapon.build_choices.primary_weapon == "greatsword"
+    assert great_weapon.build_choices.weapon_masteries[0] == "greatsword"
+    assert great_weapon.build_choices.required_capabilities == (
+        "great-weapon-fighting", "graze-mastery",
+    )
+    assert great_weapon.build_choices.arena_ignored == ()
 
 
 def test_fighter_recipe_composes_the_role_choice_overlay_too() -> None:
