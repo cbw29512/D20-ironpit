@@ -38,6 +38,8 @@ def test_fighter_level_twelve_passes_profile_fingerprint_and_registry_gates() ->
     audits = {item.feature_id: item for item in profile.feature_audits}
     registry = build_certified_hero_registry()
 
+    assert profile.final_ability_scores.constitution == 20
+    assert combat_profile.abilities.constitution == 20
     assert registered_profile == combat_profile
     assert audits["ability-score-improvement-l12"].automated is True
     assert_canonical_profile_policy(profile)
