@@ -61,7 +61,8 @@ def test_fighter_recipe_composes_the_role_choice_overlay_too() -> None:
     assert archer.build_choices.primary_weapon == "longbow"
     assert archer.build_choices.fighting_style == "Archery"
     assert dual.build_choices is not None
-    assert dual.build_choices.weapon_masteries[:2] == ("scimitar", "shortsword")
+    assert dual.build_choices.primary_weapon == "shortsword"
+    assert dual.build_choices.weapon_masteries[:2] == ("shortsword", "scimitar")
     assert "nick-mastery" in dual.build_choices.required_capabilities
 
 
