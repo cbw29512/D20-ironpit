@@ -42,7 +42,8 @@ def test_fighter_table_encodes_logical_stat_progression_not_twenty_bespoke_build
 
 def test_fighter_features_accumulate_and_replacements_are_explicit() -> None:
     level_nine = fighter_combat_features(9)
-    assert {"action-surge", "extra-attack", "great-weapon-fighting", "indomitable", "tactical-master-sap"} <= set(level_nine)
+    assert {"action-surge", "extra-attack", "great-weapon-fighting", "indomitable", "tactical-master"} <= set(level_nine)
+    assert "tactical-master-sap" not in level_nine
     level_twenty = fighter_combat_features(20)
     assert "improved-critical" not in level_twenty
     assert {"superior-critical", "heroic-warrior", "studied-attacks", "survivor-defy-death",
