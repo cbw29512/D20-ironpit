@@ -49,15 +49,13 @@ def test_every_build_reuses_its_single_class_progression_spine() -> None:
         assert variant.status in {"active", "planned"}
 
 
-def test_certified_fighter_builds_are_active_without_changing_public_build_identity() -> None:
+def test_named_builds_fail_closed_until_an_executable_compiler_promotes_them() -> None:
+    assert all(variant.status == "planned" for variant in COMBAT_BUILD_VARIANTS.values())
     great_weapon = get_combat_build_variant("fighter", "great-weapon")
     sword_shield = get_combat_build_variant("fighter", "sword-shield")
-    assert great_weapon.status == "active"
-    assert sword_shield.status == "active"
-    assert "Graze" in great_weapon.notes
-    assert "Shield AC" in sword_shield.notes
+    assert "compiled build" in great_weapon.notes
+    assert "compiled build" in sword_shield.notes
     assert CANONICAL_BUILD_ID == "canonical"
-    assert {great_weapon.id, sword_shield.id}.isdisjoint({CANONICAL_BUILD_ID})
 
 
 def test_subclass_specific_builds_are_explicit_without_redefining_the_class() -> None:
@@ -65,6 +63,7 @@ def test_subclass_specific_builds_are_explicit_without_redefining_the_class() ->
     moon = get_combat_build_variant("druid", "moon-melee")
     assert land.required_subclass_id == "circle-land"
     assert moon.required_subclass_id == "circle-moon"
+    assert land.status == "planned"
     assert moon.status == "planned"
     assert "RAW audit" in moon.notes
 
