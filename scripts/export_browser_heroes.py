@@ -55,6 +55,8 @@ def _attack(attack: WeaponAttack) -> dict[str, Any]:
         row["fixedDamage"] = attack.fixed_damage
     if attack.rage_eligible:
         row["rageEligible"] = True
+    if attack.sneak_attack_eligible:
+        row["sneakAttackEligible"] = True
     if attack.knocks_prone_max_size is not None:
         row["proneMaxSize"] = attack.knocks_prone_max_size.value
     if attack.on_hit_damage:
@@ -192,6 +194,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "mindless_rage": progression.mindless_rage,
         "instinctive_pounce_fraction": progression.instinctive_pounce_fraction,
         "great_weapon_fighting": progression.great_weapon_fighting,
+        "sneak_attack_d6": progression.sneak_attack_d6,
         "critical_move_fraction": progression.critical_move_fraction,
         "tactical_shift_fraction": progression.tactical_shift_fraction,
         "visual": {"armor": template.visual.armor, "main_hand": template.visual.main_hand,
