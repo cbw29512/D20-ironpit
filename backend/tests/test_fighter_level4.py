@@ -56,6 +56,7 @@ def test_fighter_level_four_runtime_matches_candidate_combat_fingerprint() -> No
 
 
 def test_fighter_candidate_progression_fails_closed_on_first_missing_engine_feature() -> None:
-    assert build_karnok_stoneward_level(12).level == 12
-    with pytest.raises(ValueError, match="level 13 awaits engine support for: studied-attacks"):
-        build_karnok_stoneward_level(13)
+    assert build_karnok_stoneward_level(13).progression_features.studied_attacks is True
+    assert build_karnok_stoneward_level(14).level == 14
+    with pytest.raises(ValueError, match="level 15 awaits engine support for: superior-critical"):
+        build_karnok_stoneward_level(15)
