@@ -51,7 +51,7 @@ FIGHTER_COMBAT_LEVELS: dict[int, FighterCombatLevel] = {
     6: _r(6, 3, 58, 20, 13, 16, 2, _M4, 3, 1, 0, source="D&D Beyond Basic Rules 2024: Fighter 6 Ability Score Improvement, Champion, Orc, Soldier, Savage Attacker, Equipment"),
     7: _r(7, 3, 67, 20, 13, 16, 2, _M4, 3, 1, 0, add=("great-weapon-fighting",), source="D&D Beyond Basic Rules 2024: Fighter 7 Champion Additional Fighting Style, Great Weapon Fighting, Orc, Soldier, Savage Attacker, Equipment"),
     8: _r(8, 3, 84, 20, 13, 18, 2, _M4, 3, 1, 0, source="D&D Beyond Basic Rules 2024: Fighter 8 Ability Score Improvement, Champion, Great Weapon Fighting, Orc, Soldier, Savage Attacker, Equipment"),
-    9: _r(9, 4, 94, 20, 13, 18, 2, _M4_GS, 3, 1, 1, add=("indomitable", "tactical-master-sap"), ignored=("tactical-master-push", "tactical-master-slow"), source="D&D Beyond Basic Rules 2024: Fighter 9 Indomitable and Tactical Master, Champion, Great Weapon Fighting, Orc, Soldier, Savage Attacker, Equipment"),
+    9: _r(9, 4, 94, 20, 13, 18, 2, _M4_GS, 3, 1, 1, add=("indomitable", "tactical-master"), ignored=("tactical-master-push", "tactical-master-slow"), source="D&D Beyond Basic Rules 2024: Fighter 9 Indomitable and Tactical Master, Champion, Great Weapon Fighting, Orc, Soldier, Savage Attacker, Equipment"),
     10: _r(10, 4, 104, 20, 13, 18, 2, _M5, 4, 1, 1, add=("heroic-warrior",), source="D&D Beyond Basic Rules 2024: Fighter 10 Champion Heroic Warrior"),
     11: _r(11, 4, 114, 20, 13, 18, 3, _M5, 4, 1, 1, source="D&D Beyond Basic Rules 2024: Fighter 11 Two Extra Attacks"),
     12: _r(12, 4, 136, 20, 13, 20, 3, _M5, 4, 1, 1, source="D&D Beyond Basic Rules 2024: Fighter 12 Ability Score Improvement (+2 Constitution)"),
