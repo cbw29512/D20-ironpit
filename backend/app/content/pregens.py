@@ -97,6 +97,7 @@ def build_mara_quickstep() -> CombatantTemplate:
             max_hp=10,
             speed_ft=30,
             initiative_bonus=3,
+            progression_features={"sneak_attack_d6": 1},
             weapon_attack=build_mara_shortsword_attack(),
             alternate_weapon_attacks=[build_mara_shortbow_attack()],
             saving_throw_bonuses={
