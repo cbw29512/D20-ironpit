@@ -24,6 +24,7 @@ const base = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"];
 const vexAttack = {
   id: "mara-shortsword", weaponId: "shortsword", masteryProperty: "Vex", name: "Shortsword", kind: "melee",
   bonus: 5, diceCount: 1, diceSize: 6, damageBonus: 3, damageType: "piercing", reach: 5, animation: "thrust",
+  sneakAttackEligible: true,
 };
 
 function dice(values) {
@@ -37,7 +38,7 @@ function member(id, side, options = {}) {
   const template = structuredClone(base);
   Object.assign(template, { id: `template-${id}`, name: id, armor_class: options.armorClass ?? 10,
     attacks: [structuredClone(vexAttack)], primary_attack_id: vexAttack.id, weapon_masteries: options.mastered === false ? [] : ["shortsword"],
-    sneak_attack_d6: 0, damage_immunities: options.immune ? ["piercing"] : [] });
+    traits: [], sneak_attack_d6: options.sneakAttackD6 ?? 0, damage_immunities: options.immune ? ["piercing"] : [] });
   return { combatant_id: id, side, position_ft: options.position ?? 0, state: S.buildState(template) };
 }
 function attack(attacker, target, values, sequence = 1) {
@@ -70,6 +71,15 @@ function attack(attacker, target, values, sequence = 1) {
   const chained = attack(rogue, target, [3, 18, 5], 2);
   assert.equal(chained.attack_roll.mode, "advantage"); assert.equal(chained.hit, true);
   assert.equal(M.nextAttackAgainstAdvantage(rogue.state, target.combatant_id), 1, "a damaging Vex hit refreshes the window");
+}
+
+{
+  const rogue = member("rogue", "heroes", { sneakAttackD6: 1 }), target = member("target", "monsters", { position: 5 });
+  attack(rogue, target, [15, 4]);
+  const advantaged = attack(rogue, target, [3, 18, 5, 6], 2);
+  assert.equal(advantaged.attack_roll.mode, "advantage");
+  assert.equal(advantaged.damage_components[1].source, "Sneak Attack");
+  assert.deepEqual(advantaged.damage_components[1].rolls, [6], "Vex Advantage enables the Rogue base-class Sneak Attack path");
 }
 
 {
