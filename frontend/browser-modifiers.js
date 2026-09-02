@@ -2,7 +2,7 @@
   "use strict";
 
   const DIE_KINDS = new Set(["attack-roll-bonus-die", "saving-throw-bonus-die", "bonus-damage"]);
-  const KINDS = new Set(["armor-class", ...DIE_KINDS, "attacks-against-advantage", "speed"]);
+  const KINDS = new Set(["armor-class", ...DIE_KINDS, "attacks-against-advantage", "next-attack-against-advantage", "speed"]);
   const D = () => window.IRON_PIT_DICE;
 
   function validate(item) {
@@ -10,8 +10,9 @@
     const count = item.dice_count || 0, sides = item.dice_size || 0;
     if (DIE_KINDS.has(item.kind) ? count < 1 || sides < 2 : count || sides) throw new Error(`Invalid dice for ${item.kind}.`);
     if (item.kind === "bonus-damage" ? !item.damage_type : item.damage_type) throw new Error(`Invalid damage type for ${item.kind}.`);
-    if (item.kind === "attacks-against-advantage" && (item.flat_bonus || 0)) throw new Error("Attack Advantage does not accept a flat bonus.");
-    if (item.consume_on_attack_against && item.kind !== "attacks-against-advantage") throw new Error("Only attack Advantage can be consumed by the next attack.");
+    if (new Set(["attacks-against-advantage", "next-attack-against-advantage"]).has(item.kind) && (item.flat_bonus || 0)) throw new Error("Attack Advantage does not accept a flat bonus.");
+    if (item.kind === "next-attack-against-advantage" && !item.target_id) throw new Error("Target-scoped attack Advantage requires a target id.");
+    if (item.consume_on_attack_against && item.kind !== "attacks-against-advantage") throw new Error("Only defender-wide attack Advantage can use consume_on_attack_against.");
     if (item.expires_source_turn_end_round != null && item.expires_source_turn_end_round < 1) throw new Error("Modifier expiry round must be positive.");
     return item;
   }
@@ -53,10 +54,18 @@
   const effectiveArmorClass = (state) => Math.max(0, state.template.armor_class + flat(state, "armor-class"));
   const effectiveSpeed = (state) => Math.max(0, state.template.speed_ft + flat(state, "speed"));
   const attacksAgainstAdvantage = (state) => (state.active_modifiers || []).filter((item) => item.kind === "attacks-against-advantage").length;
+  const nextAttackAgainstAdvantage = (state, targetId) => (state.active_modifiers || [])
+    .filter((item) => item.kind === "next-attack-against-advantage" && item.target_id === targetId).length;
 
   function consumeAttacksAgainstAdvantage(state) {
     const before = state.active_modifiers.length;
     state.active_modifiers = state.active_modifiers.filter((item) => !(item.kind === "attacks-against-advantage" && item.consume_on_attack_against));
+    return before - state.active_modifiers.length;
+  }
+
+  function consumeNextAttackAgainstAdvantage(state, targetId) {
+    const before = state.active_modifiers.length;
+    state.active_modifiers = state.active_modifiers.filter((item) => !(item.kind === "next-attack-against-advantage" && item.target_id === targetId));
     return before - state.active_modifiers.length;
   }
 
@@ -81,6 +90,7 @@
 
   window.IRON_PIT_BROWSER_MODIFIERS = {
     add, applyD20Bonus, attacksAgainstAdvantage, bonusDamage, consumeAttacksAgainstAdvantage,
-    effectiveArmorClass, effectiveSpeed, expireSourceTurn, removeSource, validate,
+    consumeNextAttackAgainstAdvantage, effectiveArmorClass, effectiveSpeed, expireSourceTurn,
+    nextAttackAgainstAdvantage, removeSource, validate,
   };
 })();
