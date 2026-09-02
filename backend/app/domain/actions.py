@@ -128,14 +128,14 @@ class AttackActionSlot(BaseModel):
     @model_validator(mode="after")
     def require_choice(self) -> "AttackActionSlot":
         if not self.attack_ids and not self.save_action_ids:
-            raise ValueError("Multiattack slot must contain a weapon attack or saving-throw action.")
+            raise ValueError("Attack-action slot must contain a weapon attack or saving-throw action.")
         return self
 
 
 class AttackActionDefinition(BaseModel):
-    """Ordered strikes/effects; only real Attack actions can trigger Light/Nick."""
+    """One or more ordered strikes/effects; only real Attack actions can trigger Light/Nick."""
 
     id: str
     name: str
-    slots: list[AttackActionSlot] = Field(min_length=2, max_length=8)
+    slots: list[AttackActionSlot] = Field(min_length=1, max_length=8)
     is_attack_action: bool = False
