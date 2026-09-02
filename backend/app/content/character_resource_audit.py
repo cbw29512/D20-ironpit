@@ -27,6 +27,7 @@ _CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
         ("action-surge", "Action Surge", fighter_action_surge_uses),
         ("indomitable", "Indomitable", fighter_indomitable_uses),
     ),
+    "rogue": (),
 }
 _SPECIES_RULES: dict[str, tuple[ResourceRule, ...]] = {
     "orc": (
