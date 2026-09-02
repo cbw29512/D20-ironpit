@@ -5,7 +5,8 @@
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
   const T = () => window.IRON_PIT_BROWSER_TIMED;
   const Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
-  const TM = () => window.IRON_PIT_BROWSER_TACTICAL_MASTER || { apply: () => false, consume: () => 0, disadvantage: () => 0 };
+  const SAP = () => window.IRON_PIT_BROWSER_SAP || { applyWeapon: () => false, consume: () => 0, disadvantage: () => 0 };
+  const TM = () => window.IRON_PIT_BROWSER_TACTICAL_MASTER || { apply: () => false };
   const B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2 || { activate: () => false, attackAdvantage: () => 0, attacksAgainstAdvantage: () => 0 };
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || {
     attacksAgainstAdvantage: () => 0, consumeAttacksAgainstAdvantage: () => 0, nextAttackAgainstAdvantage: () => 0,
@@ -60,9 +61,9 @@
     const advantage = (extra.advantage || 0) + conditions.advantage + bloodiedFury(attacker.state, attack)
       + B2().attackAdvantage(attacker.state, attack) + M().nextAttackAgainstAdvantage(attacker.state, target.combatant_id);
     const closeThreat = attack.kind === "ranged" && rangedCloseThreat(attacker, target, distance, extra.setup);
-    const mode = R().attackMode(attack, distance, advantage, conditions.disadvantage + TM().disadvantage(attacker.state), closeThreat);
+    const mode = R().attackMode(attack, distance, advantage, conditions.disadvantage + SAP().disadvantage(attacker.state), closeThreat);
     const attackRoll = M().applyD20Bonus(attacker.state, "attack-roll-bonus-die", R().d20(attack.bonus, mode));
-    M().consumeNextAttackAgainstAdvantage(attacker.state, target.combatant_id); TM().consume(attacker.state);
+    M().consumeNextAttackAgainstAdvantage(attacker.state, target.combatant_id); SAP().consume(attacker.state);
     M().consumeAttacksAgainstAdvantage(target.state); window.IRON_PIT_BROWSER_RAGE?.extendFromAttack(attacker.state, round);
     if (spendAction) E().spend(attacker.state, "action");
     const redirected = window.IRON_PIT_BROWSER_REACTIONS?.redirectAttack?.(target, extra.setup) || null, actualTarget = redirected || target;
@@ -75,7 +76,7 @@
     const hpBefore = actualTarget.state.current_hp, temporaryHpBefore = actualTarget.state.temporary_hp;
     const deathSuccessBefore = actualTarget.state.death_save_successes, deathFailureBefore = actualTarget.state.death_save_failures;
     const concentrationBefore = actualTarget.state.concentration?.effect_id || null;
-    let damageRoll = null, damageComponents = [], damageOutcome = null, sapApplied = false, vexApplied = false; const applied = [];
+    let damageRoll = null, damageComponents = [], damageOutcome = null, sapApplied = "", vexApplied = false; const applied = [];
     if (hit) {
       const damage = R().weaponDamage(attacker.state, attack, critical, mode, extra.turnKey || `${round}:${attacker.combatant_id}`,
         extra.bonusDamage || null, actualTarget.state, window.IRON_PIT_BROWSER_SNEAK_ATTACK?.allyAvailable(attacker, extra.setup) || false);
@@ -94,7 +95,7 @@
           repeatSaveTiming: control.repeatSaveTiming || null, allowedRemovalActionIds: control.allowedRemovalActionIds || [] });
         if (timed) applied.push(timed);
       }
-      if (living) sapApplied = TM().apply(attacker, actualTarget, attack, round);
+      if (living) sapApplied = SAP().applyWeapon(attacker, actualTarget, attack, round) ? "weapon" : TM().apply(attacker, actualTarget, attack, round) ? "tactical" : "";
       vexApplied = window.IRON_PIT_BROWSER_VEX?.apply(attacker.state, attacker.combatant_id, actualTarget.combatant_id, attack, round, damageRoll.total) || false;
       window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(actualTarget.state); C()?.endIfIncapacitated(actualTarget.state, affectedStates);
     }
@@ -102,7 +103,8 @@
     if (recklessStarted) description += ` ${attacker.state.template.name} uses Reckless Attack.`;
     if (redirected) description += ` ${target.state.template.name} uses Redirect Attack; ${actualTarget.state.template.name} becomes the target.`;
     if (parry.used) description += ` ${actualTarget.state.template.name} uses Parry.`;
-    if (sapApplied) description += ` Tactical Master applies Sap to ${actualTarget.state.template.name}.`;
+    if (sapApplied === "weapon") description += ` Sap mastery affects ${actualTarget.state.template.name}.`;
+    if (sapApplied === "tactical") description += ` Tactical Master applies Sap to ${actualTarget.state.template.name}.`;
     if (vexApplied) description += ` Vex primes the next attack against ${actualTarget.state.template.name}.`;
     if (damageOutcome === "relentless_endurance") description += ` ${actualTarget.state.template.name} uses Relentless Endurance and remains at 1 HP.`;
     if (damageOutcome === "undead_fortitude") description += ` ${actualTarget.state.template.name} succeeds on Undead Fortitude and remains at 1 HP.`;
