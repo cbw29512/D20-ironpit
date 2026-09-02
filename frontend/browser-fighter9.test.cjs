@@ -67,6 +67,7 @@ load("browser-rolls.js");
 load("browser-timed-conditions.js");
 load("browser-weapon-mastery.js");
 load("browser-tactical-master.js");
+load("browser-graze.js");
 load("browser-modifiers.js");
 load("browser-attack.js");
 load("browser-saves.js");
@@ -75,24 +76,24 @@ load("browser-indomitable.js");
 const greatsword = {
   id: "karnok-greatsword", weaponId: "greatsword", name: "Greatsword", kind: "melee", bonus: 9,
   diceCount: 2, diceSize: 6, damageBonus: 5, damageType: "slashing", reach: 5, animation: "heavy-slash",
-  damageDieMinimum: 3,
+  damageDieMinimum: 3, masteryProperty: "Graze", attackAbilityModifier: 5,
 };
 const shortbow = {
   id: "karnok-shortbow", weaponId: "shortbow", name: "Shortbow", kind: "ranged", bonus: 5,
   diceCount: 1, diceSize: 6, damageBonus: 1, damageType: "piercing", normal: 80, long: 320,
-  reach: 5, animation: "projectile",
+  reach: 5, animation: "projectile", masteryProperty: "Vex", attackAbilityModifier: 1,
 };
 const fighterTemplate = {
   name: "Karnok Stoneward", kind: "character", armor_class: 17, max_hp: 94, speed_ft: 30, size: "medium",
   traits: [], damage_immunities: [], damage_resistances: [], damage_vulnerabilities: [],
-  critical_hit_minimum: 19, tactical_master_sap: true, indomitable_bonus: 9,
+  critical_hit_minimum: 19, tactical_master_sap_weapon_ids: ["greatsword"], indomitable_bonus: 9,
   weapon_masteries: ["flail", "javelin", "spear", "greatsword"],
   saving_throw_bonuses: { strength: 9, dexterity: 1, constitution: 8, intelligence: 0, wisdom: 0, charisma: 0 },
 };
 const targetTemplate = {
   name: "Target", kind: "monster", armor_class: 17, max_hp: 100, speed_ft: 30, size: "medium",
   traits: [], damage_immunities: [], damage_resistances: [], damage_vulnerabilities: [],
-  critical_hit_minimum: 20, tactical_master_sap: false, weapon_masteries: [],
+  critical_hit_minimum: 20, tactical_master_sap_weapon_ids: [], weapon_masteries: [],
   saving_throw_bonuses: { strength: 2, dexterity: 2, constitution: 2, intelligence: 0, wisdom: 0, charisma: 0 },
 };
 
@@ -110,6 +111,8 @@ function state(template, resources = {}) {
   const hero = { combatant_id: "hero-1", side: "heroes", position_ft: 5, state: state(fighterTemplate, { indomitable: 1 }) };
   const target = { combatant_id: "monster-1", side: "monsters", position_ft: 10, state: state(targetTemplate) };
   const setup = { heroes: [hero], monsters: [target] };
+  assert.equal(window.IRON_PIT_BROWSER_TACTICAL_MASTER.selected(hero.state, greatsword), true);
+  assert.equal(window.IRON_PIT_BROWSER_WEAPON_MASTERY.active(hero.state, greatsword, "Graze"), false);
   setDice([10, 3, 3]);
   const hit = window.IRON_PIT_BROWSER_ATTACK.resolveAttack(1, 1, hero, target, greatsword, 5, { setup, spendAction: false });
   assert.equal(hit.hit, true);
@@ -118,15 +121,24 @@ function state(template, resources = {}) {
 
   setDice([18, 2]);
   const reply = window.IRON_PIT_BROWSER_ATTACK.resolveAttack(2, 1, target, hero, {
-    ...greatsword, id: "target-sword", weaponId: "longsword", bonus: 5, damageDieMinimum: undefined,
+    ...greatsword, id: "target-sword", weaponId: "longsword", bonus: 5, damageDieMinimum: undefined, masteryProperty: undefined,
   }, 5, { setup, spendAction: false });
   assert.equal(reply.attack_roll.mode, "disadvantage");
   assert.deepEqual(reply.attack_roll.rolls, [18, 2]);
   assert.equal(target.state.timed_effects.some((effect) => effect.effect_id === "tactical-master-sap"), false);
+
+  const missHero = { combatant_id: "hero-miss", side: "heroes", position_ft: 5, state: state(fighterTemplate) };
+  const missTarget = { combatant_id: "monster-miss", side: "monsters", position_ft: 10, state: state(targetTemplate) };
+  const hpBefore = missTarget.state.current_hp;
+  setDice([1]);
+  const miss = window.IRON_PIT_BROWSER_ATTACK.resolveAttack(3, 2, missHero, missTarget, greatsword, 5, { spendAction: false });
+  assert.equal(miss.hit, false);
+  assert.equal(miss.damage_roll, null);
+  assert.equal(missTarget.state.current_hp, hpBefore);
 }
 
 {
-  const sapTemplate = { ...fighterTemplate, name: "Sap Master", tactical_master_sap: false, weapon_masteries: ["longsword"] };
+  const sapTemplate = { ...fighterTemplate, name: "Sap Master", tactical_master_sap_weapon_ids: [], weapon_masteries: ["longsword"] };
   const sapSword = {
     id: "sap-longsword", weaponId: "longsword", name: "Longsword", kind: "melee", bonus: 9,
     diceCount: 1, diceSize: 8, damageBonus: 4, damageType: "slashing", reach: 5, masteryProperty: "Sap",
@@ -136,14 +148,14 @@ function state(template, resources = {}) {
   const setup = { heroes: [hero], monsters: [target] };
   assert.equal(window.IRON_PIT_BROWSER_SAP.weaponEligible(hero.state, sapSword), true);
   setDice([10, 4]);
-  const hit = window.IRON_PIT_BROWSER_ATTACK.resolveAttack(3, 1, hero, target, sapSword, 5, { setup, spendAction: false });
+  const hit = window.IRON_PIT_BROWSER_ATTACK.resolveAttack(4, 1, hero, target, sapSword, 5, { setup, spendAction: false });
   assert.equal(hit.hit, true);
   assert.match(hit.description, /Sap mastery affects Target/);
   assert.doesNotMatch(hit.description, /Tactical Master applies Sap/);
   assert.equal(target.state.timed_effects.some((effect) => effect.effect_id === "weapon-mastery-sap"), true);
 
   setDice([18, 2]);
-  const reply = window.IRON_PIT_BROWSER_ATTACK.resolveAttack(4, 1, target, hero, {
+  const reply = window.IRON_PIT_BROWSER_ATTACK.resolveAttack(5, 1, target, hero, {
     ...sapSword, id: "reply-sword", weaponId: "unmastered-longsword", bonus: 5, masteryProperty: undefined,
   }, 5, { setup, spendAction: false });
   assert.equal(reply.attack_roll.mode, "disadvantage");
@@ -152,16 +164,23 @@ function state(template, resources = {}) {
 }
 
 {
-  const heroState = state(fighterTemplate, { indomitable: 1 });
-  assert.equal(window.IRON_PIT_BROWSER_TACTICAL_MASTER.eligible(heroState, greatsword), true);
-  assert.equal(window.IRON_PIT_BROWSER_TACTICAL_MASTER.eligible(heroState, shortbow), false);
-  setDice([10]);
-  const reroll = window.IRON_PIT_BROWSER_INDOMITABLE.use(heroState, "wisdom");
-  assert.equal(reroll.selected_roll, 10);
-  assert.equal(reroll.total, 19);
-  assert.match(reroll.notation, /Indomitable \+9/);
-  assert.equal(heroState.resources.indomitable, 0);
-  assert.equal(window.IRON_PIT_BROWSER_INDOMITABLE.use(heroState, "wisdom"), null);
+  const failedState = state(fighterTemplate, { indomitable: 1 });
+  assert.equal(window.IRON_PIT_BROWSER_TACTICAL_MASTER.eligible(failedState, greatsword), true);
+  assert.equal(window.IRON_PIT_BROWSER_TACTICAL_MASTER.eligible(failedState, shortbow), false);
+  setDice([2, 10]);
+  const failedThenRerolled = window.IRON_PIT_BROWSER_SAVES.resolveSavingThrow(failedState, "wisdom", 15);
+  assert.equal(failedThenRerolled.succeeded, true);
+  assert.equal(failedThenRerolled.roll.selected_roll, 10);
+  assert.equal(failedThenRerolled.roll.total, 19);
+  assert.match(failedThenRerolled.roll.notation, /Indomitable \+9/);
+  assert.equal(failedState.resources.indomitable, 0);
+
+  const successState = state(fighterTemplate, { indomitable: 1 });
+  setDice([15]);
+  const success = window.IRON_PIT_BROWSER_SAVES.resolveSavingThrow(successState, "wisdom", 15);
+  assert.equal(success.succeeded, true);
+  assert.equal(success.roll.total, 15);
+  assert.equal(successState.resources.indomitable, 1);
 }
 
 for (const htmlName of ["index.html", path.join("..", "index.html")]) {
@@ -171,4 +190,4 @@ for (const htmlName of ["index.html", path.join("..", "index.html")]) {
   assert.match(html, /browser-indomitable\.js/);
 }
 
-console.log("Browser Fighter 9 candidate and ordinary Sap mechanic regressions passed.");
+console.log("Browser Fighter 9 Tactical Master replacement and automatic Indomitable regressions passed.");
