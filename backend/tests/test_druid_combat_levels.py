@@ -39,7 +39,7 @@ def test_druid_role_variants_share_one_class_spine_and_do_not_overclaim_readines
     assert set(DRUID_COMBAT_BUILD_VARIANTS) == {"land-damage", "healer", "moon-melee"}
     variants = tuple(DRUID_COMBAT_BUILD_VARIANTS.values())
     assert {variant.shared_progression_id for variant in variants} == {"druid-1-20"}
-    assert DRUID_COMBAT_BUILD_VARIANTS["land-damage"].status == "active"
+    assert DRUID_COMBAT_BUILD_VARIANTS["land-damage"].status == "planned"
     assert DRUID_COMBAT_BUILD_VARIANTS["healer"].status == "planned"
     assert DRUID_COMBAT_BUILD_VARIANTS["healer"].subclass_id is None
     assert DRUID_COMBAT_BUILD_VARIANTS["moon-melee"].status == "planned"
