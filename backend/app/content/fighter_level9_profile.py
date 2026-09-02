@@ -2,12 +2,14 @@ from __future__ import annotations
 
 from app.content.canonical_progression import advance_profile_data
 from app.content.fighter_asi_progression_profile import build_karnok_stoneward_level8_profile
+from app.content.fighter_profile_from_levels import apply_fighter_level_to_profile_data
 from app.domain.character_builds import CharacterBuildProfile, FeatureAudit
 
 
 def build_karnok_stoneward_level9_profile() -> CharacterBuildProfile:
     previous = build_karnok_stoneward_level8_profile()
     data = advance_profile_data(previous, 9)
+    apply_fighter_level_to_profile_data(data, 9)
     source = "D&D Beyond Basic Rules 2024: Fighter Level 9"
     features = [
         FeatureAudit(
@@ -35,7 +37,6 @@ def build_karnok_stoneward_level9_profile() -> CharacterBuildProfile:
         ),
     ]
     data.update(
-        weapon_masteries=["flail", "javelin", "spear", "greatsword"],
         feature_audits=[*data["feature_audits"], *(item.model_dump() for item in features)],
         source_references=[
             *data["source_references"],
