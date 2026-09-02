@@ -41,6 +41,11 @@
         "damage_type": "slashing",
         "animation": "slash",
         "reach_ft": 5,
+        "mastery_property": "Nick",
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [
           {
@@ -75,6 +80,10 @@
         "normal_range_ft": 80,
         "long_range_ft": 320,
         "projectile": "arrow",
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [
           {
@@ -179,6 +188,10 @@
         "damage_type": "piercing",
         "animation": "slash",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -200,6 +213,10 @@
         "normal_range_ft": 20,
         "long_range_ft": 60,
         "projectile": "dagger",
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -290,6 +307,10 @@
         "damage_type": "slashing",
         "animation": "slash",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -311,6 +332,10 @@
         "normal_range_ft": 150,
         "long_range_ft": 600,
         "projectile": "arrow",
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [
           {
@@ -416,6 +441,10 @@
         "damage_type": "piercing",
         "animation": "slash",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -437,6 +466,10 @@
         "normal_range_ft": 20,
         "long_range_ft": 60,
         "projectile": "dagger",
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -530,6 +563,11 @@
         "damage_type": "slashing",
         "animation": "slash",
         "reach_ft": 5,
+        "mastery_property": "Nick",
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [
           {
@@ -564,6 +602,10 @@
         "normal_range_ft": 80,
         "long_range_ft": 320,
         "projectile": "arrow",
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [
           {
@@ -590,6 +632,7 @@
     "attack_action": {
       "id": "goblin-boss-multiattack",
       "name": "Multiattack",
+      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -694,6 +737,11 @@
         "damage_type": "slashing",
         "animation": "slash",
         "reach_ft": 5,
+        "mastery_property": "Nick",
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -715,6 +763,10 @@
         "normal_range_ft": 80,
         "long_range_ft": 320,
         "projectile": "bolt",
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -803,6 +855,10 @@
         "damage_type": "bludgeoning",
         "animation": "bludgeon",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -893,6 +949,10 @@
         "damage_type": "piercing",
         "animation": "thrust",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -914,6 +974,10 @@
         "normal_range_ft": 20,
         "long_range_ft": 60,
         "projectile": "spear",
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -1002,6 +1066,10 @@
         "damage_type": "piercing",
         "animation": "bite",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -1094,6 +1162,10 @@
         "damage_type": "piercing",
         "animation": "bite",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -1182,6 +1254,10 @@
         "damage_type": "piercing",
         "animation": "bite",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [
           {
@@ -1287,6 +1363,10 @@
         "damage_type": "slashing",
         "animation": "bite",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -1375,6 +1455,10 @@
         "damage_type": "piercing",
         "animation": "bite",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -1465,6 +1549,10 @@
         "damage_type": "piercing",
         "animation": "bite",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [
           {
@@ -1562,6 +1650,10 @@
         "damage_type": "piercing",
         "animation": "bite",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [
           {
@@ -1659,6 +1751,10 @@
         "damage_type": "slashing",
         "animation": "heavy-slash",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -1672,6 +1768,7 @@
     "attack_action": {
       "id": "black-bear-multiattack",
       "name": "Multiattack",
+      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -1765,6 +1862,10 @@
         "damage_type": "piercing",
         "animation": "bite",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -1783,6 +1884,10 @@
         "damage_type": "slashing",
         "animation": "heavy-slash",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [
           {
@@ -1801,6 +1906,7 @@
     "attack_action": {
       "id": "brown-bear-multiattack",
       "name": "Multiattack",
+      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -1894,6 +2000,10 @@
         "damage_type": "piercing",
         "animation": "bite",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -1986,6 +2096,10 @@
         "damage_type": "bludgeoning",
         "animation": "bite",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -2074,6 +2188,10 @@
         "damage_type": "bludgeoning",
         "animation": "heavy-strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -2164,6 +2282,10 @@
         "damage_type": "bludgeoning",
         "animation": "heavy-strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -2252,6 +2374,10 @@
         "damage_type": "piercing",
         "animation": "bite",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -2342,6 +2468,10 @@
         "damage_type": "piercing",
         "animation": "bite",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -2430,6 +2560,10 @@
         "damage_type": "piercing",
         "animation": "heavy-strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -2523,6 +2657,10 @@
         "damage_type": "bludgeoning",
         "animation": "heavy-strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -2613,6 +2751,10 @@
         "damage_type": "piercing",
         "animation": "heavy-strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -2706,6 +2848,10 @@
         "damage_type": "slashing",
         "animation": "claw",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -2719,6 +2865,7 @@
     "attack_action": {
       "id": "hippogriff-multiattack",
       "name": "Multiattack",
+      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -2810,6 +2957,10 @@
         "damage_type": "slashing",
         "animation": "heavy-slash",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -2898,6 +3049,10 @@
         "damage_type": "piercing",
         "animation": "bite",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -2984,6 +3139,10 @@
         "damage_type": "piercing",
         "animation": "bite",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -3068,6 +3227,10 @@
         "damage_type": "slashing",
         "animation": "slash",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -3154,6 +3317,10 @@
         "damage_type": "bludgeoning",
         "animation": "heavy-strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -3240,6 +3407,10 @@
         "damage_type": "piercing",
         "animation": "bite",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -3327,6 +3498,10 @@
         "damage_type": "slashing",
         "animation": "slash",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -3411,6 +3586,10 @@
         "damage_type": "piercing",
         "animation": "bite",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -3497,6 +3676,10 @@
         "damage_type": "slashing",
         "animation": "slash",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -3583,6 +3766,10 @@
         "damage_type": "piercing",
         "animation": "bite",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -3669,6 +3856,10 @@
         "damage_type": "piercing",
         "animation": "bite",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -3755,6 +3946,10 @@
         "damage_type": "piercing",
         "animation": "bite",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -3843,6 +4038,10 @@
         "damage_type": "slashing",
         "animation": "heavy-strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -3931,6 +4130,10 @@
         "damage_type": "slashing",
         "animation": "heavy-strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -4021,6 +4224,10 @@
         "damage_type": "piercing",
         "animation": "bite",
         "reach_ft": 10,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -4111,6 +4318,10 @@
         "damage_type": "slashing",
         "animation": "heavy-strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -4124,6 +4335,7 @@
     "attack_action": {
       "id": "srd-polar-bear-multiattack",
       "name": "Multiattack",
+      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -4219,6 +4431,10 @@
         "damage_type": "bludgeoning",
         "animation": "heavy-strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -4307,6 +4523,10 @@
         "damage_type": "piercing",
         "animation": "bite",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -4397,6 +4617,10 @@
         "damage_type": "bludgeoning",
         "animation": "heavy-strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -4485,6 +4709,10 @@
         "damage_type": "slashing",
         "animation": "heavy-strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [
           {
@@ -4580,6 +4808,10 @@
         "damage_type": "piercing",
         "animation": "heavy-strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -4668,6 +4900,10 @@
         "damage_type": "fire",
         "animation": "bite",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -4760,6 +4996,10 @@
         "damage_type": "bludgeoning",
         "animation": "heavy-strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -4850,6 +5090,10 @@
         "damage_type": "slashing",
         "animation": "heavy-strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -4944,6 +5188,10 @@
         "damage_type": "piercing",
         "animation": "bite",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -5036,6 +5284,10 @@
         "damage_type": "piercing",
         "animation": "bite",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -5124,6 +5376,10 @@
         "damage_type": "piercing",
         "animation": "bite",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [
           {
@@ -5217,6 +5473,10 @@
         "damage_type": "bludgeoning",
         "animation": "heavy-strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -5307,6 +5567,10 @@
         "damage_type": "piercing",
         "animation": "heavy-strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -5397,6 +5661,10 @@
         "damage_type": "bludgeoning",
         "animation": "heavy-strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -5487,6 +5755,10 @@
         "damage_type": "bludgeoning",
         "animation": "heavy-strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -5505,6 +5777,10 @@
         "damage_type": "piercing",
         "animation": "heavy-strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -5525,6 +5801,10 @@
         "reach_ft": 0,
         "normal_range_ft": 30,
         "long_range_ft": 120,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -5613,6 +5893,10 @@
         "damage_type": "slashing",
         "animation": "heavy-strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -5626,6 +5910,7 @@
     "attack_action": {
       "id": "owlbear-multiattack",
       "name": "Multiattack",
+      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -5719,6 +6004,10 @@
         "damage_type": "slashing",
         "animation": "heavy-strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -5732,6 +6021,7 @@
     "attack_action": {
       "id": "saber-toothed-tiger-multiattack",
       "name": "Multiattack",
+      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -5831,6 +6121,10 @@
         "reach_ft": 0,
         "normal_range_ft": 150,
         "long_range_ft": 600,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -5849,6 +6143,10 @@
         "damage_type": "piercing",
         "animation": "heavy-strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -5862,6 +6160,7 @@
     "attack_action": {
       "id": "scout-multiattack",
       "name": "Multiattack",
+      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -5957,6 +6256,10 @@
         "damage_type": "piercing",
         "animation": "heavy-strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -5977,6 +6280,10 @@
         "reach_ft": 0,
         "normal_range_ft": 20,
         "long_range_ft": 60,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -6069,6 +6376,10 @@
         "damage_type": "piercing",
         "animation": "bite",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [
           {
@@ -6169,6 +6480,10 @@
         "damage_type": "bludgeoning",
         "animation": "claw",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [
           {
@@ -6269,6 +6584,10 @@
         "damage_type": "piercing",
         "animation": "bite",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -6383,6 +6702,10 @@
         "damage_type": "piercing",
         "animation": "bite",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [
           {
@@ -6481,6 +6804,10 @@
         "damage_type": "piercing",
         "animation": "bite",
         "reach_ft": 10,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [
           {
@@ -6586,6 +6913,10 @@
         "damage_type": "piercing",
         "animation": "sting",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [
           {
@@ -6692,6 +7023,10 @@
         "damage_type": "piercing",
         "animation": "bite",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [
           {
@@ -6800,6 +7135,10 @@
         "damage_type": "piercing",
         "animation": "bite",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -6813,6 +7152,7 @@
     "attack_action": {
       "id": "archelon-multiattack",
       "name": "Multiattack",
+      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -6908,6 +7248,10 @@
         "damage_type": "bludgeoning",
         "animation": "heavy-strike",
         "reach_ft": 10,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [
           {
@@ -6926,6 +7270,7 @@
     "attack_action": {
       "id": "ankylosaurus-multiattack",
       "name": "Multiattack",
+      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -7019,6 +7364,10 @@
         "damage_type": "slashing",
         "animation": "heavy-strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [
           {
@@ -7045,6 +7394,7 @@
     "attack_action": {
       "id": "giant-eagle-multiattack",
       "name": "Multiattack",
+      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -7141,6 +7491,10 @@
         "damage_type": "bludgeoning",
         "animation": "heavy-strike",
         "reach_ft": 10,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [
           {
@@ -7247,6 +7601,10 @@
         "damage_type": "piercing",
         "animation": "bite",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [
           {
@@ -7272,6 +7630,10 @@
         "damage_type": "bludgeoning",
         "animation": "heavy-strike",
         "reach_ft": 10,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [
           {
@@ -7290,6 +7652,7 @@
     "attack_action": {
       "id": "giant-crocodile-multiattack",
       "name": "Multiattack",
+      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -7387,6 +7750,10 @@
         "damage_type": "piercing",
         "animation": "bite",
         "reach_ft": 10,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -7400,6 +7767,7 @@
     "attack_action": {
       "id": "giant-constrictor-snake-multiattack",
       "name": "Multiattack",
+      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -7520,6 +7888,10 @@
         "damage_type": "piercing",
         "animation": "bite",
         "reach_ft": 10,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [
           {
@@ -7545,6 +7917,10 @@
         "damage_type": "bludgeoning",
         "animation": "heavy-strike",
         "reach_ft": 15,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [
           {
@@ -7563,6 +7939,7 @@
     "attack_action": {
       "id": "tyrannosaurus-rex-multiattack",
       "name": "Multiattack",
+      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -7658,6 +8035,10 @@
         "damage_type": "bludgeoning",
         "animation": "strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -7671,6 +8052,7 @@
     "attack_action": {
       "id": "srd-animated-armor-multiattack",
       "name": "Multiattack",
+      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -7775,6 +8157,10 @@
         "damage_type": "slashing",
         "animation": "strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -7874,6 +8260,10 @@
         "damage_type": "bludgeoning",
         "animation": "strike",
         "reach_ft": 10,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -7963,6 +8353,10 @@
         "damage_type": "piercing",
         "animation": "strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [
           {
@@ -8066,6 +8460,10 @@
         "damage_type": "slashing",
         "animation": "strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -8079,6 +8477,7 @@
     "attack_action": {
       "id": "srd-gargoyle-multiattack",
       "name": "Multiattack",
+      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -8180,6 +8579,10 @@
         "damage_type": "bludgeoning",
         "animation": "strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [
           {
@@ -8281,6 +8684,10 @@
         "damage_type": "piercing",
         "animation": "strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -8301,6 +8708,10 @@
         "reach_ft": 5,
         "normal_range_ft": 30,
         "long_range_ft": 120,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -8319,6 +8730,10 @@
         "damage_type": "slashing",
         "animation": "strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -8332,6 +8747,7 @@
     "attack_action": {
       "id": "srd-guard-captain-multiattack",
       "name": "Multiattack",
+      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -8429,6 +8845,10 @@
         "damage_type": "piercing",
         "animation": "strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -8442,6 +8862,7 @@
     "attack_action": {
       "id": "srd-hippopotamus-multiattack",
       "name": "Multiattack",
+      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -8537,6 +8958,10 @@
         "damage_type": "piercing",
         "animation": "strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -8627,6 +9052,10 @@
         "damage_type": "slashing",
         "animation": "strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -8647,6 +9076,10 @@
         "reach_ft": 5,
         "normal_range_ft": 100,
         "long_range_ft": 200,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -8660,6 +9093,7 @@
     "attack_action": {
       "id": "srd-manticore-multiattack",
       "name": "Multiattack",
+      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -8762,6 +9196,10 @@
         "damage_type": "bludgeoning",
         "animation": "strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -8859,6 +9297,10 @@
         "damage_type": "bludgeoning",
         "animation": "strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [
           {
@@ -8956,6 +9398,10 @@
         "damage_type": "piercing",
         "animation": "strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [
           {
@@ -9057,6 +9503,10 @@
         "damage_type": "piercing",
         "animation": "strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -9077,6 +9527,10 @@
         "reach_ft": 5,
         "normal_range_ft": 80,
         "long_range_ft": 320,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -9168,6 +9622,10 @@
         "damage_type": "piercing",
         "animation": "strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [
           {
@@ -9272,6 +9730,10 @@
         "damage_type": "bludgeoning",
         "animation": "strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -9292,6 +9754,10 @@
         "reach_ft": 5,
         "normal_range_ft": 100,
         "long_range_ft": 400,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -9384,6 +9850,10 @@
         "damage_type": "piercing",
         "animation": "strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [
           {
@@ -9485,6 +9955,10 @@
         "damage_type": "necrotic",
         "animation": "strike",
         "reach_ft": 10,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -9498,6 +9972,7 @@
     "attack_action": {
       "id": "srd-violet-fungus-multiattack",
       "name": "Multiattack",
+      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -9596,6 +10071,10 @@
         "damage_type": "bludgeoning",
         "animation": "strike",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -9693,6 +10172,10 @@
         "damage_type": "piercing",
         "animation": "swarm",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [
           {
@@ -9811,6 +10294,10 @@
         "damage_type": "piercing",
         "animation": "swarm",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [
           {
@@ -9929,6 +10416,10 @@
         "damage_type": "necrotic",
         "animation": "swarm",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [
           {
@@ -10057,6 +10548,10 @@
         "damage_type": "slashing",
         "animation": "slash",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -10078,6 +10573,10 @@
         "normal_range_ft": 30,
         "long_range_ft": 90,
         "projectile": "bullet",
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -10091,6 +10590,7 @@
     "attack_action": {
       "id": "srd-bandit-captain-multiattack",
       "name": "Multiattack",
+      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -10191,6 +10691,10 @@
         "damage_type": "slashing",
         "animation": "slash",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [
           {
@@ -10225,6 +10729,10 @@
         "normal_range_ft": 100,
         "long_range_ft": 400,
         "projectile": "bolt",
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [
           {
@@ -10251,6 +10759,7 @@
     "attack_action": {
       "id": "srd-knight-multiattack",
       "name": "Multiattack",
+      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -10353,6 +10862,10 @@
         "damage_type": "piercing",
         "animation": "slash",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -10446,6 +10959,10 @@
         "damage_type": "slashing",
         "animation": "slash",
         "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -10467,6 +10984,10 @@
         "normal_range_ft": 100,
         "long_range_ft": 400,
         "projectile": "bolt",
+        "light": false,
+        "finesse": false,
+        "two_handed": false,
+        "versatile": false,
         "rage_eligible": false,
         "effects": [],
         "forbid_target_grappled_by_self": false
@@ -10480,6 +11001,7 @@
     "attack_action": {
       "id": "srd-warrior-veteran-multiattack",
       "name": "Multiattack",
+      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
