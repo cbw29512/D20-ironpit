@@ -48,7 +48,7 @@ def plan_light_extra_attack(
     trigger_attack: WeaponAttack,
     turn_key: str,
 ) -> LightExtraAttackPlan | None:
-    """Plan the one-per-turn Light extra attack, preferring a mastered Nick weapon."""
+    """Plan the one-per-turn Light extra attack from a different Light weapon."""
     try:
         if not trigger_attack.weapon.light or light_extra_attack_used(state, turn_key):
             return None
@@ -59,12 +59,16 @@ def plan_light_extra_attack(
         ]
         if not candidates:
             return None
-        nick = next((attack for attack in candidates if nick_mastery_active(state, attack)), None)
-        chosen = nick or candidates[0]
+        nick_candidate = next(
+            (attack for attack in candidates if nick_mastery_active(state, attack)),
+            None,
+        )
+        chosen = nick_candidate or candidates[0]
+        nick_active = nick_mastery_active(state, trigger_attack) or nick_mastery_active(state, chosen)
         return LightExtraAttackPlan(
             attack=_extra_attack_profile(chosen),
-            uses_bonus_action=nick is None,
-            feature_id=NICK_FEATURE_ID if nick is not None else LIGHT_EXTRA_ATTACK_MARKER,
+            uses_bonus_action=not nick_active,
+            feature_id=NICK_FEATURE_ID if nick_active else LIGHT_EXTRA_ATTACK_MARKER,
         )
     except ValueError:
         raise
