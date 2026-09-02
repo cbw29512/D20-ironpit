@@ -91,6 +91,20 @@ function grappleCheck(d10) {
   assert.equal(damage.roll.total, 10);
 }
 
+// Browser attack rolls consume the compiled Archery bonus exactly once.
+{
+  const queue = [10, 10];
+  window.IRON_PIT_DICE = {
+    roll: () => queue.shift(),
+    rollMany: (count) => Array.from({ length: count }, () => queue.shift()),
+  };
+  const baseRanged = window.IRON_PIT_BROWSER_ROLLS.d20(5, "normal");
+  const archeryRanged = window.IRON_PIT_BROWSER_ROLLS.d20(7, "normal");
+  assert.equal(baseRanged.total, 15);
+  assert.equal(archeryRanged.total, 17);
+  assert.equal(archeryRanged.modifier - baseRanged.modifier, 2);
+}
+
 // Prove the canonical turn finisher actually converts a spent Action into a second Attack.
 window.IRON_PIT_BROWSER_STATE = {
   beginTurn: (state) => { state.action_available = true; state.bonus_action_available = true; state.movement_remaining_ft = 30; },
