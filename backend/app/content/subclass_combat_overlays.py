@@ -128,10 +128,12 @@ def subclass_ignored_ids_for_class(class_id: str) -> set[str]:
     return ids
 
 
-def subclass_combat_features(subclass_id: str, level: int) -> tuple[str, ...]:
+def subclass_combat_features(subclass_id: str, character_level: int) -> tuple[str, ...]:
     overlay = subclass_overlay(subclass_id)
+    if not 1 <= character_level <= 20:
+        raise ValueError("Character level must be between 1 and 20.")
     active: list[str] = []
-    for current in sorted(level for level in overlay.deltas if level <= level):
+    for current in sorted(delta_level for delta_level in overlay.deltas if delta_level <= character_level):
         delta = overlay.deltas[current]
         active = [feature for feature in active if feature not in delta.features_removed]
         active.extend(feature for feature in delta.features_added if feature not in active)
