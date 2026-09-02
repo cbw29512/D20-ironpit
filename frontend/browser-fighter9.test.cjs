@@ -125,6 +125,32 @@ function state(template, resources = {}) {
 }
 
 {
+  const sapTemplate = { ...fighterTemplate, name: "Sap Master", tactical_master_sap: false, weapon_masteries: ["longsword"] };
+  const sapSword = {
+    id: "sap-longsword", weaponId: "longsword", name: "Longsword", kind: "melee", bonus: 9,
+    diceCount: 1, diceSize: 8, damageBonus: 4, damageType: "slashing", reach: 5, masteryProperty: "Sap",
+  };
+  const hero = { combatant_id: "hero-sap", side: "heroes", position_ft: 5, state: state(sapTemplate) };
+  const target = { combatant_id: "monster-sap", side: "monsters", position_ft: 10, state: state(targetTemplate) };
+  const setup = { heroes: [hero], monsters: [target] };
+  assert.equal(window.IRON_PIT_BROWSER_SAP.weaponEligible(hero.state, sapSword), true);
+  setDice([10, 4]);
+  const hit = window.IRON_PIT_BROWSER_ATTACK.resolveAttack(3, 1, hero, target, sapSword, 5, { setup, spendAction: false });
+  assert.equal(hit.hit, true);
+  assert.match(hit.description, /Sap mastery affects Target/);
+  assert.doesNotMatch(hit.description, /Tactical Master applies Sap/);
+  assert.equal(target.state.timed_effects.some((effect) => effect.effect_id === "weapon-mastery-sap"), true);
+
+  setDice([18, 2]);
+  const reply = window.IRON_PIT_BROWSER_ATTACK.resolveAttack(4, 1, target, hero, {
+    ...sapSword, id: "reply-sword", weaponId: "unmastered-longsword", bonus: 5, masteryProperty: undefined,
+  }, 5, { setup, spendAction: false });
+  assert.equal(reply.attack_roll.mode, "disadvantage");
+  assert.deepEqual(reply.attack_roll.rolls, [18, 2]);
+  assert.equal(target.state.timed_effects.some((effect) => effect.effect_id === "weapon-mastery-sap"), false);
+}
+
+{
   const heroState = state(fighterTemplate, { indomitable: 1 });
   assert.equal(window.IRON_PIT_BROWSER_TACTICAL_MASTER.eligible(heroState, greatsword), true);
   assert.equal(window.IRON_PIT_BROWSER_TACTICAL_MASTER.eligible(heroState, shortbow), false);
@@ -143,4 +169,4 @@ for (const htmlName of ["index.html", path.join("..", "index.html")]) {
   assert.match(html, /browser-indomitable\.js/);
 }
 
-console.log("Browser Fighter 9 candidate mechanic regressions passed.");
+console.log("Browser Fighter 9 candidate and ordinary Sap mechanic regressions passed.");
