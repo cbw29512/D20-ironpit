@@ -47,7 +47,7 @@ def test_sword_shield_level_seven_archery_style_applies_to_ranged_backup_only() 
     template = compile_fighter_champion_variant("sword-shield", 7)
     longsword = _attack(template, "longsword")
     shortbow = _attack(template, "shortbow")
-    assert longsword.attack_bonus == 6
+    assert longsword.attack_bonus == 8
     assert shortbow.attack_bonus == 6
     assert shortbow.attack_bonus - (3 + 1) == 2
 
@@ -66,7 +66,8 @@ def test_level_three_archer_uses_dexterity_longbow_and_light_backup_truth() -> N
 
 def test_archer_level_seven_additional_defense_changes_studded_leather_ac() -> None:
     template = compile_fighter_champion_variant("archer", 7)
-    assert template.armor_class == 16
+    assert template.armor_class == 18
+    assert template.ability_scores.dexterity == 20
 
 
 def test_dual_wield_sheet_is_complete_but_runtime_readiness_fails_on_twf_support() -> None:
