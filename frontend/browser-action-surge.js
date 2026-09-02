@@ -1,9 +1,9 @@
 (() => {
   "use strict";
 
-  const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const M = () => window.IRON_PIT_BROWSER_MULTIATTACK;
   const S = () => window.IRON_PIT_BROWSER_STATE;
+  const U = () => window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION;
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { incapacitated: (state) => state.is_unconscious };
 
   function available(state, turnKey) {
@@ -47,10 +47,11 @@
       return { events, sequence: multi.sequence };
     }
     const pack = S().packTactics(member, setup);
-    events.push(A().resolveAttack(sequence++, round, member, target, attack, distance, {
-      advantage: pack ? 1 : 0, featureId: "action-surge", setup,
-    }));
-    return { events, sequence };
+    const standard = U().resolve(sequence, round, member, target, attack, distance, setup, turnKey, {
+      advantage: pack ? 1 : 0, featureId: "action-surge",
+    });
+    events.push(...standard.events);
+    return { events, sequence: standard.sequence };
   }
 
   window.IRON_PIT_BROWSER_ACTION_SURGE = { available, resolveAttack, use };
