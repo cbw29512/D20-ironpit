@@ -78,6 +78,22 @@ def consume_attacks_against_advantage(state: CombatantState) -> int:
     return before - len(state.active_modifiers)
 
 
+def next_attack_against_advantage_sources(state: CombatantState, target_id: str) -> int:
+    return sum(
+        1 for item in state.active_modifiers
+        if item.kind is ModifierKind.NEXT_ATTACK_AGAINST_ADVANTAGE and item.target_id == target_id
+    )
+
+
+def consume_next_attack_against_advantage(state: CombatantState, target_id: str) -> int:
+    before = len(state.active_modifiers)
+    state.active_modifiers = [
+        item for item in state.active_modifiers
+        if not (item.kind is ModifierKind.NEXT_ATTACK_AGAINST_ADVANTAGE and item.target_id == target_id)
+    ]
+    return before - len(state.active_modifiers)
+
+
 def _die_modifiers(state: CombatantState, kind: ModifierKind) -> list[CombatModifier]:
     if kind not in {ModifierKind.ATTACK_ROLL_BONUS_DIE, ModifierKind.SAVING_THROW_BONUS_DIE}:
         raise ValueError(f"{kind.value} is not a D20 bonus-die modifier.")
