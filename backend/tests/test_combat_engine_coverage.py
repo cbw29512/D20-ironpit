@@ -13,8 +13,8 @@ def _fighter_statuses() -> dict[str, str]:
         "shield-ac": "supported",
         "archery-style": "supported",
         "vex-mastery": "supported",
-        "nick-mastery": "blocked",
-        "two-weapon-fighting": "blocked",
+        "nick-mastery": "supported",
+        "two-weapon-fighting": "supported",
         "slow-mastery": "arena_out_of_scope",
     }
 
@@ -27,7 +27,7 @@ def _fighter_build_statuses() -> dict[tuple[str, str], str]:
     }
 
 
-def test_current_fighter_overlays_accept_explicit_supported_blocked_and_arena_statuses() -> None:
+def test_current_fighter_overlays_accept_explicit_supported_and_arena_statuses() -> None:
     assert audit_current_build_capabilities(_fighter_statuses()) == []
 
 
@@ -62,6 +62,21 @@ def test_active_sword_shield_cannot_depend_on_blocked_shield_ac() -> None:
     )
 
     assert any("active build requires 'shield-ac'" in issue for issue in issues)
+
+
+def test_supported_nick_and_twf_can_still_be_downgraded_fail_closed() -> None:
+    statuses = _fighter_statuses()
+    statuses["nick-mastery"] = "blocked"
+    statuses["two-weapon-fighting"] = "blocked"
+    build_statuses = _fighter_build_statuses()
+    build_statuses[("fighter", "dual-wield")] = "active"
+
+    issues = audit_build_capability_contract(
+        FIGHTER_COMBAT_BUILD_CHOICES.values(), statuses, build_statuses,
+    )
+
+    assert any("active build requires 'nick-mastery'" in issue for issue in issues)
+    assert any("active build requires 'two-weapon-fighting'" in issue for issue in issues)
 
 
 def test_partial_status_is_not_valid_for_declared_build_requirement() -> None:
