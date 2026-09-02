@@ -5,6 +5,7 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AttackActionDefinition, ConditionName, ConditionRemovalAction, HealingAction, SavingThrowAction
+from app.domain.character_builds import AbilityScores
 from app.domain.movement import MovementModes
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.reactions import ParryReaction, RedirectAttackReaction
@@ -44,6 +45,7 @@ class CombatantTemplate(BaseModel):
     kind: Literal["character", "monster"]
     creature_type: str | None = None
     size: CreatureSize = CreatureSize.MEDIUM
+    ability_scores: AbilityScores | None = None
     armor_class: int = Field(ge=1)
     max_hp: int = Field(ge=1)
     speed_ft: int = Field(ge=0)
