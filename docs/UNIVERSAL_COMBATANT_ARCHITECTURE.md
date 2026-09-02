@@ -1,263 +1,265 @@
 # Universal Combatant Architecture
 
-This document is the durable implementation plan for D20 Iron Pit combat architecture. It applies to heroes, monsters, generated browser data, Python reference behavior, certification, and future combat capabilities.
+This is the durable implementation contract for D20 Iron Pit.
 
-## Core principle
+## KISS principle
 
-Build the combatant first. Resolve mechanics second.
+Build the character or monster first. Combat reads that finished creature.
 
-A hero or monster is primarily data:
+Do not build separate combat systems for classes, subclasses, weapon styles, heroes, or monsters. A combatant is data plus a small set of shared capabilities.
 
-- identity, class/level or monster source identity;
+`RAW source -> class/monster data -> subclass specialization -> finished combatant -> shared engine`
+
+## Combatant truth
+
+A finished combatant owns the facts needed by combat:
+
 - ability scores and derived modifiers;
-- Armor Class, Hit Points, Speed, initiative, saves, and relevant skills;
-- equipment and weapon properties;
-- attacks and damage profiles;
-- weapon masteries actually known by that combatant;
-- fighting styles, feats, class/subclass/species traits, monster traits;
-- resources and limited uses;
-- spells and spell resources;
-- resistances, vulnerabilities, immunities, and conditions;
-- action, Bonus Action, Reaction, and other timing facts required by RAW.
+- HP, AC, Speed, initiative, saves, and relevant skills;
+- Action, Bonus Action, Reaction, movement, and limited resources;
+- armor, shield, weapons, weapon properties, and selected Weapon Masteries;
+- Fighting Styles and combat-relevant feats/features;
+- spells, spell slots/resources, and spellcasting numbers;
+- resistances, vulnerabilities, immunities, conditions, and concentration;
+- declared attacks/actions and any other RAW outcome-changing fact.
 
-The engine must not infer a combat feature from a class name, hero name, monster name, or weapon name when the same fact can be declared explicitly in combatant data.
+The engine does not infer rules from a class name, subclass name, hero name, monster name, or display text when the needed fact can be stored directly.
 
-## Required pipeline
+## One universal combat engine
 
-`RAW source -> legal hero build / monster stat block -> declarative combatant definition -> universal compiler -> CombatantTemplate -> generic combat engine -> generated browser parity -> certification`
-
-Heroes and monsters converge on the same `CombatantTemplate` before combat begins. Once combat begins, shared RAW mechanics operate on combatant state and declared capabilities rather than on hero-vs-monster special cases.
-
-## Universal turn economy
-
-Every normal combatant begins a turn from the same action-economy baseline:
+Every normal combatant uses the same baseline:
 
 - one Action;
 - one Bonus Action opportunity;
-- one Reaction availability, refreshed at the start of the creature's turn;
-- movement equal to its currently effective Speed.
+- one Reaction, refreshed at the normal time;
+- movement equal to effective Speed.
 
-A feature does not create a different turn engine. It only modifies this baseline.
-
-Examples:
-
-- Extra Attack changes how many attacks the Attack action contains.
-- Action Surge grants an additional Action under its printed restrictions.
-- a monster Multiattack is one declared action containing its listed attacks/effects.
-- Nick changes the timing/cost of the existing Light-property extra attack.
-- a Bonus Action feature consumes the same universal Bonus Action resource.
-- a Reaction feature consumes the same universal Reaction resource.
-
-## Universal d20/save math
-
-Saving throws are shared math, not creature-specific code:
-
-`d20 + creature's save modifier + applicable shared modifiers vs effect DC`
-
-For characters, the save modifier should be derived from the character's ability scores, proficiency bonus, and save proficiencies wherever practical. Monster definitions may preserve printed stat-block save bonuses when the source explicitly supplies them.
-
-Features that alter a failed save act after the shared save result. For example, Legendary Resistance is a limited resource that changes an eligible failed saving throw into a success; it is not a second saving-throw engine.
-
-Attack rolls, ability checks, spell save DCs, and other d20 math follow the same principle: store authoritative creature facts and run one shared resolver.
-
-## Shared-fact rule
-
-Common D&D facts are modeled once and reused everywhere.
+Features modify that baseline; they do not create another turn engine.
 
 Examples:
 
-- HP is HP regardless of creature type.
-- AC is AC regardless of whether it came from armor, shield, natural armor, a style, or a temporary modifier.
-- ability scores/modifiers and saving throws are shared data.
-- weapon properties such as Light, Finesse, Two-Handed, and Versatile are weapon data.
-- a weapon's mastery property is weapon data.
-- the combatant's selected/known weapon masteries are combatant data.
-- action economy, resources, conditions, concentration, damage defenses, movement, attack rolls, and saves are universal mechanics.
+- Extra Attack changes the number of attacks in the Attack action.
+- Action Surge grants another eligible Action.
+- Multiattack is a declared monster action containing its attacks/effects.
+- Nick changes the timing/cost of the normal Light extra attack.
+- Legendary Resistance changes an eligible failed save into success using a resource.
 
-A class feature or monster trait should add data or a reusable capability. It should not create a parallel combat engine.
+Saving throws are always shared math:
 
-## Weapon Mastery contract
+`d20 + creature save modifier + shared modifiers vs DC`
 
-Weapon Mastery activation is universal:
+Attack rolls, ability checks, AC, damage defenses, conditions, concentration, and movement follow the same rule: one resolver, different creature data.
 
-`mastery active = weapon has mastery property AND weapon id is present in combatant.weapon_masteries`
+## Class -> subclass -> specialization
 
-No Fighter, Rogue, Ranger, Barbarian, hero-name, monster-name, or weapon-name branch belongs in the activation check.
+A class is built once through the levels before subclass choice.
 
-The individual mastery handler contains only its RAW effect and trigger.
+At the subclass level, each chosen subclass gets one coherent combat specialization that makes sense for that subclass. Do not create several weapon clones inside one subclass just to exercise different weapons.
 
-Examples:
+For a martial/hybrid specialization the data is intentionally small:
 
-- Graze: on a miss with an active Graze mastery, deal the attack ability modifier as Graze damage under the audited damage-defense rules.
-- Vex: on a qualifying hit with active Vex, grant the next-attack advantage effect against that target.
-- Sap: on a qualifying hit with active Sap, apply the next-attack disadvantage effect.
-- Nick: when the normal Light-property extra attack is available and Nick mastery is active for the relevant weapon, move that same extra attack into the Attack action instead of spending a Bonus Action. Nick does not create an additional Light extra attack.
+- subclass id;
+- role;
+- ability priority;
+- armor and shield;
+- primary weapon and a few backups;
+- Fighting Style priority when the class grants one;
+- Weapon Mastery priority when the class grants mastery;
+- optional spell package for hybrids.
 
-The Light-property rule is a shared weapon/action-economy rule. Nick only changes that rule's timing/cost.
+The specialization does **not** contain Nick, Graze, Vex, Sap, or similar rule implementations. It only selects weapons/masteries/styles. The weapon catalog and shared mechanics do the rest.
 
-## Hero progression and optimized clone families
+### Fighter target
 
-Each class begins with one persistent named base character identity. Build and level that same character instead of creating unrelated pregens at every level.
+The 2024 Fighter branches into four Player's Handbook subclasses, with one arena specialization each:
 
-- Levels 1-2 are the shared base-class character.
-- At level 3 the class takes its canonical audited subclass.
-- From that point, generate optimized variants that remain the same character/class/subclass progression but make legal build choices appropriate to a different combat role, weapon package, spell emphasis, or equipment package.
-- "Clone" means a derived variant, not a byte-for-byte copy: class/subclass features remain shared, while ability advancement, fighting style, weapon mastery choices, equipment, feats, prepared/known spells, and similar legal selections may differ when optimization requires it.
-- Do not duplicate the class/subclass progression logic for each variant. Apply a small variant overlay to the shared progression.
+1. **Champion -> two-handed**: Greatsword, Strength, Great Weapon Fighting; Champion's later second Fighting Style is another data choice.
+2. **Battle Master -> dual wield**: Shortsword + Scimitar, Dexterity, Two-Weapon Fighting; Vex/Nick come from those weapons when mastered.
+3. **Eldritch Knight -> sword and shield**: Longsword + Shield, Strength/Intelligence emphasis, defensive Fighting Style, plus its legal spell package.
+4. **Psi Warrior -> ranged**: Longbow, Dexterity/Intelligence emphasis, Archery, and appropriate ranged mastery choices.
 
-### Variant counts
+The exact equipment/feat/spell choices remain auditable data and may be improved when a more legal/effective option is proven. Changing a loadout must not require a new combat engine.
 
-- Fighter: four optimized variants.
-- Every other core class: three optimized variants.
-- The current build registry already has this exact shape: 37 named variants total (4 Fighter + 3 × 11 other classes).
+### Other classes
 
-### Fighter Champion family
+For every other class:
 
-Karnok Stoneward follows one Fighter progression through level 3, takes Champion, then produces four optimized Champion variants that each continue to level 20:
+1. build one base character through levels 1-2;
+2. choose three useful, distinct subclasses at level 3;
+3. give each subclass one coherent specialization;
+4. level each subclass specialization through 20 using the same class progression table plus the subclass's feature table.
 
-1. **Dual Wield** — Dexterity-first Light weapon package; uses shared Light/Nick/Vex/Two-Weapon Fighting rules only when the compiled character actually has those facts.
-2. **Two-Handed** — Strength-first two-handed weapon package; the current internal `great-weapon` build id represents this variant during migration.
-3. **Sword and Shield** — one-handed weapon + Shield with a defensively sensible Fighting Style/mastery package.
-4. **Ranged** — Dexterity-first ranged weapon package with Archery and appropriate ranged masteries.
+Do not invent three artificial variants of the same subclass.
 
-All four variants share Fighter and Champion progression. Optimization may change legal ASI/feat choices, weapon masteries, fighting-style selections, and equipment where appropriate to the weapon package.
+## Weapon specialization contract
 
-### Other class families
+Weapon specialization is data.
 
-For each of the other eleven classes:
+Example:
 
-1. build the named base character through levels 1-2;
-2. apply the class's canonical audited subclass at level 3;
-3. generate three optimized variants from that same class/subclass character;
-4. continue each variant through level 20 using the same shared class/subclass feature progression plus small optimization overlays.
+```text
+Battle Master
+primary weapon = Shortsword
+secondary weapon = Scimitar
+style = Two-Weapon Fighting
+mastered weapons include Shortsword and Scimitar
+```
 
-A caster variant may differ mainly by spell selection or combat role rather than by weapon. A martial/hybrid variant may differ by weapon, fighting style, feat/ASI path, armor/shield choice, or spell package. The optimization must remain RAW and legal at the level where the choice is made.
+The catalog already says:
 
-## Player-build-first rule
+```text
+Shortsword: Light, Finesse, Vex
+Scimitar: Light, Finesse, Nick
+```
 
-A combat-build overlay is not runnable merely because its metadata exists.
+The engine asks only:
 
-For each hero variant:
+`mastery active = weapon has mastery property AND weapon id is in combatant.weapon_masteries`
 
-1. Start with the legal base character progression.
-2. Apply the canonical subclass at the legal level.
-3. Apply the chosen optimization overlay (abilities/ASIs, equipment, armor, shield, fighting style, weapons, masteries, feats, spells, and other legal choices).
-4. Derive HP, AC, initiative, attack bonuses, damage modifiers, save bonuses, skill bonuses, spell DCs, resources, and action options from the resulting character facts.
-5. Compile the resulting definition to the same runtime shape used by monsters.
-6. Audit that the compiled runtime actually matches the declared variant.
-7. Only then may the variant be marked active/runnable.
+Then it dispatches the tiny shared handler:
 
-An active variant must therefore have an executable compiled combatant, not only metadata.
+- Graze -> miss effect;
+- Vex -> target-scoped next-attack Advantage after the qualifying hit;
+- Sap -> next qualifying attack Disadvantage;
+- Nick -> move the existing Light extra attack into the Attack action.
 
-## Monster rule
+No Fighter/Battle Master/Champion/Rogue/Ranger name check belongs in those handlers.
 
-Monster onboarding remains data-first:
+If the weapon or mastery is absent, skip the mastery code path entirely.
 
-`SRD source -> declarative combatant definition -> universal compiler -> shared runtime`
+## Caster specialization contract
 
-If a monster uses an already-supported mechanic, onboarding should normally be data plus certification. New resolver code is justified only when the source introduces a genuinely new outcome-changing RAW mechanic.
+Casters use the same idea, with spell packages doing most of the specialization work.
 
-## Turn-engine boundary
+A caster specialization declares:
 
-The turn engine chooses and sequences legal actions. It must not contain class-feature implementations.
+- subclass/theme;
+- casting ability priority;
+- focus/weapon or magic-item slot;
+- legal cantrip/spell package;
+- optional precombat buff priorities;
+- deterministic combat priority.
 
-Good responsibilities for turn/AI code:
+Examples of useful themes, when supported by the actual subclass/spell list:
 
-- choose a legal target;
-- choose a legal attack/action from the combatant's compiled options;
-- spend movement/action resources through shared action-economy services;
-- invoke a shared attack/action resolver;
-- apply deterministic arena policy where a tactical choice is required.
+- fire-focused damage;
+- cold/frost-focused damage/control;
+- elemental/generalist damage and control;
+- enchantment/mind-control;
+- healing/support;
+- summoning or battlefield control.
 
-Bad responsibilities for turn/AI code:
+The spell package contains desired spells, but the level compiler exposes only spells the character can legally know/prepare/cast at that level.
 
-- checking `class_id == fighter`;
-- checking a hero/monster name to grant a feature;
-- implementing Graze/Vex/Sap/Nick directly;
-- inventing an extra attack because a particular build is expected to dual wield;
-- duplicating the same RAW mechanic separately for heroes and monsters.
+Arena AI is deterministic policy, not a new rule system. A simple default is:
 
-## Capability implementation pattern
+1. apply worthwhile legal precombat buffs that fit the arena;
+2. prefer the highest-value legal spell the package can currently cast;
+3. spend higher-level slots before lower-value attacks when sensible;
+4. fall back through the package;
+5. use cantrips when appropriate;
+6. use a weapon only when spellcasting is unavailable or the weapon is the better legal action.
 
-For a new mechanic:
+RAW determines what the caster **can** do. Arena policy determines which legal option it **chooses**.
 
-1. Identify the minimal authoritative data needed to know whether the capability exists.
-2. Add that data to the shared schema/compiler if it is not already represented.
-3. Write one small reusable predicate/handler for the RAW trigger/effect.
-4. Call it from the generic resolution point where that trigger naturally occurs.
-5. Add Python and browser parity tests.
-6. Add permanent CI coverage.
-7. Re-audit all heroes and all 330 monsters for newly unlocked definitions.
+## Leveling contract
 
-Do not begin by writing class-specific or monster-specific combat branches.
+Levels should be data rows, not twenty bespoke implementations.
 
-## Certification contract
+A class progression row changes only what that level changes, for example:
 
-Certification must prove the compiled creature, not declarations in isolation.
+- proficiency bonus;
+- HP from the class Hit Die/Constitution progression;
+- resource counts;
+- ASI/feat/boon choices;
+- Extra Attack count;
+- new class features;
+- new subclass features;
+- new spell slots/spell access;
+- new mastery count.
 
-A variant/creature is runnable only when:
+The compiler derives AC, attacks, damage modifiers, saves, spell DCs, resources, and legal actions from the finished level snapshot.
 
-- its authoritative definition is legal/audited;
-- the compiler produces the expected runtime data;
-- every outcome-changing capability on that runtime is supported or explicitly arena-out-of-scope;
-- Python and browser consume the same generated facts;
-- permanent tests cover the shared mechanic;
-- source-size, generated-static parity, manifests, and exact-head CI pass.
+A new level that only changes numbers should normally require no new combat mechanic.
 
-If an overlay says `Nick` but the compiled combatant does not actually have the Light weapon, selected mastery, and runtime data necessary to use it, the variant is not active.
+## Combat-relevant-only runtime
 
-## Migration plan
+Keep full character truth where useful, but do not implement noncombat text in the arena engine unless it can change an Iron Pit outcome.
 
-### Phase A — stabilize the contract
+For every feature:
 
-- Keep useful existing shared runtime mechanics.
-- Centralize repeated capability predicates, beginning with Weapon Mastery activation.
-- Make base Action/Bonus Action/Reaction and d20/save math explicitly universal.
-- Remove class/name inference where the required fact can be explicit data.
-- Keep unsupported mechanics fail-closed.
+```text
+Can this feature alter an Iron Pit combat result?
+NO  -> retain as profile/source data if desired; no runtime combat handler.
+YES -> represent the needed fact and use/add one shared mechanic.
+```
 
-### Phase B — compile real hero variants
+Arena-out-of-scope is a deliberate product-scope classification, never a substitute for an outcome-changing RAW rule.
 
-- Make the build overlay an input to actual hero compilation, not metadata only.
-- Fighter Champion is the first migration anchor because its four variants exercise armor, shield, Fighting Style, weapon properties, masteries, ranged/melee attacks, and action economy.
-- Build one Fighter/Champion progression and apply four optimized variant overlays rather than four progression tables.
-- Apply the same base character -> canonical subclass -> three optimized variants pattern to each remaining class.
+## Shared capability pattern
 
-### Phase C — capability inventory
+For any new combat mechanic:
 
-Generate or derive the complete combat capability inventory from:
+1. identify the minimum facts that prove the creature has it;
+2. store those facts in character/monster data;
+3. add one small generic predicate/handler;
+4. call it from the natural shared resolution point;
+5. test Python and browser parity;
+6. make CI execute that regression permanently;
+7. re-audit all heroes and monsters that now meet the same conditions.
 
-- every compiled canonical hero/variant/level intended for the product; and
-- all 330 SRD monster definitions.
+Do not begin with class-specific turn logic.
 
-Group missing support by shared mechanic rather than by creature. Implement the highest-yield shared mechanic once, then re-audit all combatants.
+## Monsters
 
-### Phase D — simplify orchestration
+Monsters follow the same model:
 
-- Keep turn/AI modules focused on legal choice and sequencing.
-- Move feature effects to shared capability modules.
-- Delete obsolete hero/monster-specific branches only after equivalent generated/runtime assertions replace them.
+`stat block -> declarative combatant -> shared runtime`
 
-## Immediate implementation order
+If a monster already uses supported mechanics, adding it should mostly be data and certification. A genuinely new outcome-changing trait justifies one new shared handler.
 
-1. Universal Weapon Mastery predicate shared by Graze, Vex, Sap, Nick, and future masteries.
-2. Complete weapon facts in declarative schemas (`light`, `finesse`, `two_handed`, `versatile`, mastery property, attack ability/modifier where required) and preserve them through compilation/export.
-3. Make universal Action/Bonus Action/Reaction and save-math contracts explicit in tests and data.
-4. Add an executable hero-variant compiler contract and make activation fail closed unless compiled runtime matches the variant overlay.
-5. Migrate Fighter Champion's four optimized variants through that compiler and level each to 20.
-6. Re-implement/simplify Light + Nick on top of the compiled dual-wield data rather than teaching the turn engine about a Fighter build.
-7. Add Two-Weapon Fighting as the small shared damage-modifier rule it actually is.
-8. Re-audit all four Fighter Champion variants.
-9. Repeat the same compiler pattern for the other eleven classes, three optimized variants each.
-10. Re-audit all 330 monsters after each new shared mechanic.
+## Certification
+
+A combatant is runnable only when:
+
+- its source data/build is legal and audited;
+- the compiled runtime matches the declared creature;
+- every combat-relevant capability present on that creature is supported or explicitly arena-out-of-scope;
+- Python and browser consume equivalent facts;
+- permanent regression evidence exists;
+- generated artifacts/manifests match;
+- exact-head CI is green.
+
+An incomplete subclass, spell package, weapon property, or feature stays blocked. Never approximate it just to increase the ready count.
+
+## Migration from the older variant model
+
+The older `four Champion variants / three variants per canonical subclass` structure is migration scaffolding, not the target architecture.
+
+Migration order:
+
+1. preserve already-certified shared mechanics;
+2. make subclass specialization records authoritative;
+3. map Champion to the two-handed Fighter specialization first;
+4. add audited Battle Master, Eldritch Knight, and Psi Warrior subclass progression data;
+5. compile each Fighter subclass specialization through 20 from the one Fighter class table;
+6. retire the old multi-variant Champion files after equivalent tests/certification no longer depend on them;
+7. research and select three coherent subclasses for each remaining class;
+8. give each one a single weapon/spell specialization record;
+9. compile all levels from class + subclass + specialization data;
+10. keep reusing the shared mechanics inventory across heroes and monsters.
 
 ## Non-negotiable invariants
 
-- RAW outcome-changing rules are never approximated.
-- The same mechanic is not reimplemented for different classes or creature types.
-- Data is authoritative; names are display text, not rule switches.
+- KISS: specialization is mostly data.
+- Characters and monsters are the source of combat truth.
+- Names are not rule switches.
+- The same mechanic is implemented once.
+- Weapon mastery requires both the weapon mastery property and the combatant's mastery of that weapon.
+- Casters receive only spells legal for their level/build.
+- Noncombat rules do not bloat the arena engine.
+- Unsupported outcome-changing mechanics fail closed.
+- Python/browser parity stays mandatory.
+- Production source-size limits stay enforced.
 - Active means executable and certified.
-- Python/browser behavior remains equivalent.
-- Permanent CI must execute the cited regression evidence.
-- Production source-size limits remain enforced.
-- PR #32 remains draft and unmerged until the user explicitly changes that instruction.
+- PR #32 remains draft and unmerged until explicitly changed.
