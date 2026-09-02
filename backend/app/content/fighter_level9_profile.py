@@ -19,21 +19,19 @@ def build_karnok_stoneward_level9_profile() -> CharacterBuildProfile:
             category="class",
             combat_relevant=True,
             automated=True,
-            notes=("The RAW reroll is implemented: after policy chooses to use Indomitable, reroll the failed save "
-                   "with +9 and spend one use. Automatic spend timing is intentionally not wired until the arena "
-                   "policy is explicitly approved, so Fighter 9 remains outside the certified registry."),
+            notes=("After a rolled saving throw fails, the arena automatically spends one available Indomitable use, "
+                   "rerolls the save, and adds the Fighter level to the reroll."),
         ),
         FeatureAudit(
-            feature_id="tactical-master-sap",
-            feature_name="Tactical Master — Sap",
+            feature_id="tactical-master",
+            feature_name="Tactical Master",
             source_reference=source,
             category="class",
             combat_relevant=True,
             automated=True,
             notes=("One legal Long-Rest Weapon Mastery swap changes Longsword to Greatsword, preserving Flail, "
-                   "Javelin, and Spear. Tactical Master replaces the mastered Greatsword's normal mastery with Sap. "
-                   "Slow is arena-out-of-scope; Push is not selected because extra separation does not improve "
-                   "Karnok's melee-closing combat outcome. The backup Shortbow remains unmastered."),
+                   "Javelin, and Spear. For Greatsword attacks the arena selects Sap as Tactical Master's replacement, "
+                   "so Graze is suppressed for that attack rather than stacked with Sap. The backup Shortbow remains unmastered."),
         ),
     ]
     data.update(
