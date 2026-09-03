@@ -11,6 +11,7 @@ SpellModifierKind = Literal[
     "attacks-against-advantage", "bonus-damage", "speed",
 ]
 SpellTargetPolicy = Literal["self", "friendly"]
+SpellAttackKind = Literal["melee", "ranged"]
 
 
 class SpellModifierEffect(BaseModel):
@@ -84,6 +85,7 @@ class SpellAttackAction(BaseModel):
     name: str
     level: int = Field(ge=0, le=9)
     action_cost: ActionCost = "action"
+    attack_kind: SpellAttackKind = "ranged"
     range_ft: int = Field(ge=0)
     attack_bonus: int
     damage_dice_count: int = Field(default=0, ge=0, le=40)

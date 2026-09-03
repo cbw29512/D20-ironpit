@@ -105,3 +105,4 @@ function setup(targetAc = 10) {
 }
 
 console.log("Browser Guiding Bolt spell-attack regressions passed.");
+require("./browser-spell-attack-context.test.cjs");

@@ -9,6 +9,8 @@
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const SM = () => window.IRON_PIT_BROWSER_SPELL_MODIFIERS;
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES;
+  const SAP = () => window.IRON_PIT_BROWSER_SAP || { consume: () => 0, disadvantage: () => 0 };
+  const HI = () => window.IRON_PIT_BROWSER_HEROIC_INSPIRATION || { rerollFailedAttack: (_state, roll) => ({ roll, used: false }) };
 
   function slotResource(caster, spell, turnKey) {
     if (spell.level === 0 || !C().slotSpellAvailable(caster.state, turnKey)) return null;
@@ -24,13 +26,17 @@
     const resourceId = slotResource(caster, spell, turnKey);
     if (spell.level > 0 && !resourceId) throw new Error(`No level ${spell.level} spell slot remains for ${spell.name}.`);
     const conditions = A().conditionSources(caster.state, target.state, distance, target.combatant_id);
-    const closeThreat = A().rangedCloseThreat(caster, target, distance, setup);
-    const mode = R().modeFromSources(conditions.advantage, conditions.disadvantage + (closeThreat ? 1 : 0));
-    const attackRoll = M().applyD20Bonus(caster.state, "attack-roll-bonus-die", R().d20(spell.attackBonus, mode));
-    M().consumeAttacksAgainstAdvantage(target.state);
+    const advantage = conditions.advantage + M().nextAttackAgainstAdvantage(caster.state, target.combatant_id);
+    const closeThreat = (spell.attackKind || "ranged") === "ranged" && A().rangedCloseThreat(caster, target, distance, setup);
+    const mode = R().modeFromSources(advantage, conditions.disadvantage + SAP().disadvantage(caster.state) + (closeThreat ? 1 : 0));
+    const targetAc = M().effectiveArmorClass(target.state);
+    const heroic = HI().rerollFailedAttack(caster.state, R().d20(spell.attackBonus, mode), targetAc);
+    const attackRoll = M().applyD20Bonus(caster.state, "attack-roll-bonus-die", heroic.roll);
+    M().consumeNextAttackAgainstAdvantage(caster.state, target.combatant_id);
+    SAP().consume(caster.state); M().consumeAttacksAgainstAdvantage(target.state);
     if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; }
     E().spend(caster.state, spell.actionCost);
-    const natural = attackRoll.selected_roll, targetAc = M().effectiveArmorClass(target.state);
+    const natural = attackRoll.selected_roll;
     const hit = natural !== 1 && (natural === 20 || attackRoll.total >= targetAc);
     const critical = Boolean(hit && (natural === 20 || (Q().autoCritical(target.state) && distance <= 5)));
     const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
@@ -51,6 +57,8 @@
       });
     }
     const outcome = critical ? "CRITICAL HIT" : hit ? "HIT" : "MISS";
+    let description = `${caster.state.template.name}: ${outcome} with ${spell.name}.`;
+    if (heroic.used) description += " Heroic Inspiration rerolls one d20.";
     return {
       sequence, round_number: round, event_type: "attack", actor_id: caster.combatant_id, actor_name: caster.state.template.name,
       target_id: target.combatant_id, target_name: target.state.template.name, attack_name: spell.name, target_ac: targetAc,
@@ -61,7 +69,7 @@
       is_stable: target.state.is_stable, is_dead: target.state.is_dead, weapon_id: null, projectile: null, feature_id: spell.id,
       concentration_ended_effect_id: concentrationBefore && !target.state.concentration ? concentrationBefore : null,
       resource_remaining: resourceId ? caster.state.resources[resourceId] : null, animation: spell.animation || "spell-attack",
-      description: `${caster.state.template.name}: ${outcome} with ${spell.name}.`,
+      description,
     };
   }
 
