@@ -128,6 +128,7 @@ def test_current_certified_monsters_are_linked_to_runtime_templates() -> None:
         "Tiger": "srd-tiger", "Tough": "srd-tough", "Triceratops": "srd-triceratops",
         "Tyrannosaurus Rex": "srd-tyrannosaurus-rex", "Venomous Snake": "srd-venomous-snake",
         "Violet Fungus": "srd-violet-fungus", "Vulture": "srd-vulture", "Warhorse": "srd-warhorse",
+        "Warhorse Skeleton": "srd-warhorse-skeleton",
         "Warrior Infantry": "srd-warrior-infantry", "Warrior Veteran": "srd-warrior-veteran",
         "Weasel": "srd-weasel", "Wolf": "srd-wolf", "Zombie": "srd-zombie",
     }

@@ -86,11 +86,17 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
         if CombatTrait.CHARGE.value in traits:
             profile = charge_profile_for_attack_id(attack.id)
             if profile:
-                row["charge"] = {
-                    "minimumMove": profile.minimum_move_ft, "diceCount": profile.dice_count,
-                    "diceSize": profile.dice_size, "damageType": profile.damage_type.value,
+                charge = {
+                    "minimumMove": profile.minimum_move_ft,
                     "proneMaxSize": profile.max_target_size.value,
                 }
+                if profile.bonus_damage is not None:
+                    charge.update(
+                        diceCount=profile.bonus_damage.dice_count,
+                        diceSize=profile.bonus_damage.dice_size,
+                        damageType=profile.bonus_damage.damage_type.value,
+                    )
+                row["charge"] = charge
         return row
     except Exception:
         logger.exception("Failed to serialize attack %s for browser runtime.", attack.id)

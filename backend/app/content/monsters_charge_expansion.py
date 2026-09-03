@@ -87,5 +87,28 @@ def build_triceratops() -> CombatantTemplate:
     )
 
 
+def build_warhorse_skeleton() -> CombatantTemplate:
+    hooves = _attack("warhorse-skeleton-hooves", "Hooves", 6, 1, 6, 4, DamageType.BLUDGEONING)
+    return CombatantTemplate(
+        id="srd-warhorse-skeleton",
+        name="Warhorse Skeleton",
+        archetype="Warhorse Skeleton",
+        challenge_rating="1/2",
+        kind="monster",
+        size=CreatureSize.LARGE,
+        armor_class=13,
+        max_hp=22,
+        speed_ft=60,
+        initiative_bonus=1,
+        weapon_attack=hooves,
+        combat_traits=[CombatTrait.CHARGE],
+        damage_vulnerabilities=[DamageType.BLUDGEONING],
+        damage_immunities=[DamageType.POISON],
+        condition_immunities=["exhaustion", "poisoned"],
+        visual=build_monster_visual("bones", "hooves", "warhorse-skeleton"),
+        source="SRD 5.2.1 Warhorse Skeleton p. 326",
+    )
+
+
 def build_charge_expansion() -> list[CombatantTemplate]:
-    return [build_minotaur_skeleton(), build_triceratops()]
+    return [build_minotaur_skeleton(), build_triceratops(), build_warhorse_skeleton()]

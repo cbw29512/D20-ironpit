@@ -40,10 +40,12 @@
       if (!moved.movement) return { events, sequence, handled: events.length > 0 };
       events.push(movementEvent(sequence++, round, member, target, moved.movement));
     }
-    events.push(A().resolveAttack(sequence++, round, member, target, attack, S().distance(member, target), {
-      featureId: "charge", bonusDamage: { source: "Charge", diceCount: profile.diceCount,
-        diceSize: profile.diceSize, damageType: profile.damageType }, proneMaxSize: profile.proneMaxSize,
-    }));
+    const options = { featureId: "charge", proneMaxSize: profile.proneMaxSize };
+    if (Number.isInteger(profile.diceCount) && Number.isInteger(profile.diceSize) && profile.damageType) {
+      options.bonusDamage = { source: "Charge", diceCount: profile.diceCount,
+        diceSize: profile.diceSize, damageType: profile.damageType };
+    }
+    events.push(A().resolveAttack(sequence++, round, member, target, attack, S().distance(member, target), options));
     return { events, sequence, handled: true };
   }
   window.IRON_PIT_BROWSER_CHARGE = { openingEligible, openingFeature, resolveClosing };

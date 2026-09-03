@@ -19,10 +19,10 @@ load("browser-monsters-generated.js");
 const generated = window.IRON_PIT_BROWSER_MONSTERS;
 assert.equal(window.IRON_PIT_CANONICAL_MONSTERS_READY, true, "Canonical generated monster bundle must mark itself ready");
 assert.equal(Object.keys(manual).length, 67, "Legacy fragments remain a 67-monster compatibility subset");
-assert.equal(Object.keys(generated).length, 105, "Generated runtime must expose only currently RAW-certified monsters");
+assert.equal(Object.keys(generated).length, 106, "Generated runtime must expose only currently RAW-certified monsters");
 for (const id of [
   "srd-jackal", "srd-archelon", "srd-ankylosaurus", "srd-giant-eagle", "srd-giant-elk", "srd-giant-crocodile",
-  "srd-minotaur-skeleton", "srd-triceratops",
+  "srd-minotaur-skeleton", "srd-triceratops", "srd-warhorse-skeleton",
   "srd-animated-armor", "srd-animated-flying-sword", "srd-awakened-tree", "srd-flying-snake",
   "srd-gargoyle", "srd-grimlock", "srd-guard-captain", "srd-hippopotamus",
   "srd-killer-whale", "srd-manticore", "srd-ogre-zombie", "srd-pegasus", "srd-scorpion", "srd-skeleton", "srd-spider",
@@ -113,6 +113,10 @@ assert.deepEqual(triceratops.attacks.find((item) => item.id === "triceratops-gor
 assert.deepEqual(triceratops.attack_action.slots.map((slot) => slot.attackIds), [
   ["triceratops-gore"], ["triceratops-gore"],
 ]);
+const warhorseSkeleton = generated["srd-warhorse-skeleton"];
+assert.deepEqual(warhorseSkeleton.attacks.find((item) => item.id === "warhorse-skeleton-hooves").charge, {
+  minimumMove: 20, proneMaxSize: "large",
+});
 
 const slots = (action) => (action?.slots || []).map((slot) => Array.isArray(slot)
   ? { attackIds: slot, saveActionIds: [] }
@@ -159,17 +163,38 @@ assert.equal(tail.proneMaxSize, "huge");
 for (const file of [
   "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-grapple.js", "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-timed-conditions.js",
-  "browser-zero-hp.js", "browser-attack.js", "browser-saves.js", "browser-multiattack.js",
+  "browser-zero-hp.js", "browser-attack.js", "browser-charge.js", "browser-saves.js", "browser-multiattack.js",
 ]) load(file);
 window.IRON_PIT_DICE = {
   roll: (sides) => sides === 20 ? 10 : 1,
   rollMany: (count, sides) => Array.from({ length: count }, () => sides === 20 ? 10 : 1),
 };
 const S = window.IRON_PIT_BROWSER_STATE;
+const C = window.IRON_PIT_BROWSER_CHARGE;
 const M = window.IRON_PIT_BROWSER_MULTIATTACK;
 const combatant = (id, side, position, template) => ({
   combatant_id: id, side, position_ft: position, state: S.buildState(structuredClone(template)),
 });
+
+const chargeHorse = combatant("monster-1:srd-warhorse-skeleton", "monsters", 5, warhorseSkeleton);
+const chargeHero = combatant("hero-charge:karnok-stoneward-l1", "heroes", 0, window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"]);
+chargeHorse.state.initiative_total = 20;
+chargeHero.state.initiative_total = 10;
+S.beginTurn(chargeHorse.state);
+window.IRON_PIT_DICE = {
+  roll: (sides) => sides === 20 ? 15 : 1,
+  rollMany: (count, sides) => Array.from({ length: count }, () => sides === 20 ? 15 : 1),
+};
+const chargeResult = C.resolveClosing(1, 1, chargeHorse, chargeHero, { heroes: [chargeHero], monsters: [chargeHorse] });
+const chargeAttack = chargeResult.events.at(-1);
+assert.equal(chargeResult.handled, true);
+assert.equal(chargeAttack.damage_roll.notation, "1d6+4", "Prone-only Charge must not manufacture bonus damage");
+assert.ok(chargeAttack.applied_condition_ids.includes("prone"));
+
+window.IRON_PIT_DICE = {
+  roll: (sides) => sides === 20 ? 10 : 1,
+  rollMany: (count, sides) => Array.from({ length: count }, () => sides === 20 ? 10 : 1),
+};
 const rexMember = combatant("monster-1:srd-tyrannosaurus-rex", "monsters", 10, rex);
 const heroOne = combatant("hero-1:karnok-stoneward-l1", "heroes", 0, window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"]);
 const heroTwo = combatant("hero-2:rokhan-stonefury-l1", "heroes", 0, window.IRON_PIT_BROWSER_HEROES["rokhan-stonefury-l1"]);
@@ -184,4 +209,4 @@ assert.ok(heroOne.state.active_effect_ids.includes("grappled"));
 assert.ok(heroOne.state.active_effect_ids.includes("restrained"));
 assert.ok(heroTwo.state.active_effect_ids.includes("prone"));
 
-console.log("Generated monster runtime contains 105 RAW-certified templates, including native data-only swarms, Charge riders, conditional damage, Redirect Attack, and T. rex retargeting.");
+console.log("Generated monster runtime contains 106 RAW-certified templates, including native data-only swarms, Charge riders, Prone-only Charge, conditional damage, Redirect Attack, and T. rex retargeting.");

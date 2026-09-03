@@ -15,27 +15,51 @@ from app.domain.traits import CombatTrait
 
 
 @dataclass(frozen=True)
-class ChargeProfile:
-    attack_id: str
-    minimum_move_ft: int
+class ChargeDamage:
     dice_count: int
     dice_size: int
     damage_type: DamageType
+
+
+@dataclass(frozen=True)
+class ChargeProfile:
+    attack_id: str
+    minimum_move_ft: int
     max_target_size: CreatureSize
+    bonus_damage: ChargeDamage | None = None
 
 
 _PROFILES = {
-    "boar-gore": ChargeProfile("boar-gore", 20, 1, 6, DamageType.PIERCING, CreatureSize.MEDIUM),
-    "elk-ram": ChargeProfile("elk-ram", 20, 1, 6, DamageType.BLUDGEONING, CreatureSize.LARGE),
-    "giant-boar-gore": ChargeProfile("giant-boar-gore", 20, 2, 6, DamageType.PIERCING, CreatureSize.LARGE),
-    "giant-elk-ram": ChargeProfile("giant-elk-ram", 20, 2, 4, DamageType.BLUDGEONING, CreatureSize.HUGE),
-    "giant-goat-ram": ChargeProfile("giant-goat-ram", 20, 2, 4, DamageType.BLUDGEONING, CreatureSize.LARGE),
-    "minotaur-skeleton-gore": ChargeProfile(
-        "minotaur-skeleton-gore", 20, 2, 8, DamageType.PIERCING, CreatureSize.LARGE,
+    "boar-gore": ChargeProfile(
+        "boar-gore", 20, CreatureSize.MEDIUM, ChargeDamage(1, 6, DamageType.PIERCING),
     ),
-    "rhinoceros-gore": ChargeProfile("rhinoceros-gore", 20, 2, 8, DamageType.PIERCING, CreatureSize.LARGE),
-    "triceratops-gore": ChargeProfile("triceratops-gore", 20, 2, 8, DamageType.PIERCING, CreatureSize.HUGE),
-    "warhorse-hooves": ChargeProfile("warhorse-hooves", 20, 2, 4, DamageType.BLUDGEONING, CreatureSize.LARGE),
+    "elk-ram": ChargeProfile(
+        "elk-ram", 20, CreatureSize.LARGE, ChargeDamage(1, 6, DamageType.BLUDGEONING),
+    ),
+    "giant-boar-gore": ChargeProfile(
+        "giant-boar-gore", 20, CreatureSize.LARGE, ChargeDamage(2, 6, DamageType.PIERCING),
+    ),
+    "giant-elk-ram": ChargeProfile(
+        "giant-elk-ram", 20, CreatureSize.HUGE, ChargeDamage(2, 4, DamageType.BLUDGEONING),
+    ),
+    "giant-goat-ram": ChargeProfile(
+        "giant-goat-ram", 20, CreatureSize.LARGE, ChargeDamage(2, 4, DamageType.BLUDGEONING),
+    ),
+    "minotaur-skeleton-gore": ChargeProfile(
+        "minotaur-skeleton-gore", 20, CreatureSize.LARGE, ChargeDamage(2, 8, DamageType.PIERCING),
+    ),
+    "rhinoceros-gore": ChargeProfile(
+        "rhinoceros-gore", 20, CreatureSize.LARGE, ChargeDamage(2, 8, DamageType.PIERCING),
+    ),
+    "triceratops-gore": ChargeProfile(
+        "triceratops-gore", 20, CreatureSize.HUGE, ChargeDamage(2, 8, DamageType.PIERCING),
+    ),
+    "warhorse-hooves": ChargeProfile(
+        "warhorse-hooves", 20, CreatureSize.LARGE, ChargeDamage(2, 4, DamageType.BLUDGEONING),
+    ),
+    "warhorse-skeleton-hooves": ChargeProfile(
+        "warhorse-skeleton-hooves", 20, CreatureSize.LARGE,
+    ),
 }
 
 
@@ -104,10 +128,13 @@ def resolve_charge_closing(
         return move_events, sequence, bool(move_events)
 
     charged_attack = attack.model_copy(update={"knocks_prone_max_size": profile.max_target_size})
+    bonus_damage = None
+    if profile.bonus_damage is not None:
+        rider = profile.bonus_damage
+        bonus_damage = ("Charge", rider.dice_count, rider.dice_size, rider.damage_type)
     event = resolve_encounter_attack(
         sequence, round_number, attacker, target, charged_attack,
         combatant_distance(attacker, target), dice, setup,
-        feature_id="charge",
-        bonus_damage=("Charge", profile.dice_count, profile.dice_size, profile.damage_type),
+        feature_id="charge", bonus_damage=bonus_damage,
     )
     return [*move_events, event], sequence + 1, True
