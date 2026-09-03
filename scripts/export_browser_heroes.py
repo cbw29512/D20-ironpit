@@ -117,7 +117,7 @@ def _modifier_effect(effect: Any) -> dict[str, Any]:
 def _spell_attack(action: Any) -> dict[str, Any]:
     row = {
         "id": action.id, "name": action.name, "level": action.level, "actionCost": action.action_cost,
-        "range": action.range_ft, "attackBonus": action.attack_bonus,
+        "attackKind": action.attack_kind, "range": action.range_ft, "attackBonus": action.attack_bonus,
         "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
         "damageBonus": action.damage_bonus, "damageType": action.damage_type,
         "onHitModifierEffects": [_modifier_effect(effect) for effect in action.on_hit_modifier_effects],

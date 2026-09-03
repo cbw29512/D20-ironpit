@@ -52,7 +52,7 @@
     {"id":"forced-movement-push-pull-teleport","status":"partial","blocker":"Feature-specific movement exists; a universal forced-movement effect with collision, trigger, and OA semantics is not certified."},
     {"id":"recharge","status":"unsupported","blocker":"No universal recharge state/roll primitive is certified."},
     {"id":"generic-limited-use-resources","status":"partial","blocker":"Resources exist, but arbitrary SRD limited-use actions are not universally compiled and refreshed."},
-    {"id":"spell-attack-rolls","status":"unsupported","blocker":"Certified spell path is save-based; universal spell attack-roll actions are not yet implemented."},
+    {"id":"spell-attack-rolls","status":"supported","python":["backend/app/combat/spell_attack_resolution.py","backend/app/domain/spells.py"],"browser":["frontend/browser-spell-attack.js"],"tests":["backend/tests/test_guiding_bolt.py","backend/tests/test_spell_attack_context.py","frontend/browser-guiding-bolt.test.cjs"]},
     {"id":"generic-reaction-trigger-grammar","status":"partial","blocker":"Opportunity Attack, Parry, Redirect Attack, and selected reactions exist, but arbitrary trigger/response composition is not universal."},
     {"id":"legendary-actions","status":"unsupported","blocker":"Legendary action pools and after-turn timing are not certified."},
     {"id":"legendary-resistance","status":"unsupported","blocker":"Save replacement with limited-use legendary resistance is not certified."},

@@ -50,6 +50,7 @@ def build_guiding_bolt(attack_bonus: int) -> SpellAttackAction:
         name="Guiding Bolt",
         level=1,
         action_cost="action",
+        attack_kind="ranged",
         range_ft=120,
         attack_bonus=attack_bonus,
         damage_dice_count=4,
