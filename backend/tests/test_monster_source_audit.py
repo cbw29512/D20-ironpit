@@ -104,9 +104,9 @@ def test_raw_ready_monsters_are_audited_runtime_subset() -> None:
     }
     runtime_ids = {template.id for template in build_arena_roster().monsters}
     assert ready_ids <= runtime_ids
-    commoner = next(card for card in cards if card.name == "Commoner")
-    assert commoner.runnable_template_id is None
-    assert "uncertified-trait:training" in commoner.blockers
+    berserker = next(card for card in cards if card.name == "Berserker")
+    assert berserker.runnable_template_id is None
+    assert "uncertified-trait:bloodied-frenzy" in berserker.blockers
 
 
 def test_raw_ready_monsters_have_precise_srd_page_references() -> None:

@@ -53,6 +53,15 @@ def test_constrictor_snake_source_correction_removes_neighbor_bleed() -> None:
     assert "Crocodile Large Beast" not in str(row["rawText"])
 
 
+def test_arena_neutral_source_traits_are_raw_ready() -> None:
+    catalog = build_full_content_catalog()
+    for name in ("Commoner", "Lemure"):
+        card = next(monster for monster in catalog.monsters if monster.name == name)
+        assert card.coverage_status is CoverageStatus.RAW_READY
+        assert card.runnable_template_id is not None
+        assert card.blockers == []
+
+
 def test_uncertified_cards_fail_closed_in_catalog() -> None:
     catalog = build_full_content_catalog()
     barbarian_20 = next(
@@ -63,10 +72,10 @@ def test_uncertified_cards_fail_closed_in_catalog() -> None:
     assert barbarian_20.runnable_template_id is None
     assert barbarian_20.blockers
 
-    commoner = next(monster for monster in catalog.monsters if monster.name == "Commoner")
-    assert commoner.coverage_status is CoverageStatus.BLOCKED
-    assert commoner.runnable_template_id is None
-    assert "uncertified-trait:training" in commoner.blockers
+    berserker = next(monster for monster in catalog.monsters if monster.name == "Berserker")
+    assert berserker.coverage_status is CoverageStatus.BLOCKED
+    assert berserker.runnable_template_id is None
+    assert "uncertified-trait:bloodied-frenzy" in berserker.blockers
 
 
 def test_current_audited_heroes_are_raw_ready() -> None:
