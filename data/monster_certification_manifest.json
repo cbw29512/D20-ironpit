@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 103,
-    "blocked": 227
+    "public_ready": 105,
+    "blocked": 225
   },
   "monsters": [
     {
@@ -6158,7 +6158,7 @@
       "monster_name": "Minotaur Skeleton",
       "srd_source_page": 326,
       "srd_source_reference": "SRD 5.2.1 p. 326",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-minotaur-skeleton",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -6166,19 +6166,15 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "damage-or-condition-defense"
       ],
-      "unsupported_mechanics": [
-        "condition-or-control"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "condition-or-control",
-        "monster-combat-mechanics-not-certified"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-minotaur-of-baphomet",
@@ -8759,7 +8755,7 @@
       "monster_name": "Triceratops",
       "srd_source_page": 363,
       "srd_source_reference": "SRD 5.2.1 p. 363",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-triceratops",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -8767,19 +8763,15 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "multiattack"
       ],
-      "unsupported_mechanics": [
-        "condition-or-control"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "condition-or-control",
-        "monster-combat-mechanics-not-certified"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-troll",

@@ -2922,6 +2922,251 @@
   },
   {
     "schema_version": 1,
+    "id": "srd-minotaur-skeleton",
+    "name": "Minotaur Skeleton",
+    "archetype": "Minotaur Skeleton",
+    "challenge_rating": "2",
+    "kind": "monster",
+    "size": "large",
+    "armor_class": 12,
+    "max_hp": 45,
+    "speed_ft": 40,
+    "movement_modes": {
+      "walk_ft": 40,
+      "fly_ft": 0,
+      "climb_ft": 0,
+      "swim_ft": 0,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": 0,
+    "progression_features": {
+      "critical_hit_minimum": 20,
+      "initiative_advantage": false,
+      "athletics_advantage": false,
+      "heroic_warrior": false,
+      "studied_attacks": false,
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
+    },
+    "attacks": [
+      {
+        "id": "minotaur-skeleton-gore",
+        "name": "Gore",
+        "weapon_id": "minotaur-skeleton-gore-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 6,
+        "damage": {
+          "count": 2,
+          "size": 6,
+          "bonus": 4
+        },
+        "damage_type": "piercing",
+        "animation": "heavy-strike",
+        "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "effects": [],
+        "forbid_target_grappled_by_self": false
+      },
+      {
+        "id": "minotaur-skeleton-slam",
+        "name": "Slam",
+        "weapon_id": "minotaur-skeleton-slam-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 6,
+        "damage": {
+          "count": 2,
+          "size": 10,
+          "bonus": 4
+        },
+        "damage_type": "bludgeoning",
+        "animation": "heavy-strike",
+        "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "effects": [],
+        "forbid_target_grappled_by_self": false
+      }
+    ],
+    "primary_attack_id": "minotaur-skeleton-gore",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 6,
+      "damage": 5
+    },
+    "save_actions": [],
+    "spell_save_actions": [],
+    "defensive_spell_actions": [],
+    "healing_actions": [],
+    "condition_removal_actions": [],
+    "saving_throw_bonuses": {
+      "strength": 4,
+      "dexterity": 0,
+      "constitution": 2,
+      "intelligence": -2,
+      "wisdom": -1,
+      "charisma": -3
+    },
+    "skill_bonuses": {},
+    "combat_traits": [
+      "charge"
+    ],
+    "source_trait_names": [],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [],
+    "source_limited_use_names": [],
+    "source_legendary_action_names": [],
+    "fighting_styles": [],
+    "weapon_masteries": [],
+    "damage_resistances": [],
+    "damage_vulnerabilities": [
+      "bludgeoning"
+    ],
+    "damage_immunities": [
+      "poison"
+    ],
+    "condition_immunities": [
+      "exhaustion",
+      "poisoned"
+    ],
+    "wearing_heavy_armor": false,
+    "rage_damage_bonus": 0,
+    "resources": [],
+    "visual": {
+      "armor": "bones",
+      "main_hand": "horns",
+      "body_style": "minotaur-skeleton"
+    },
+    "source": "SRD 5.2.1 Minotaur Skeleton p. 326",
+    "unsupported_capabilities": []
+  },
+  {
+    "schema_version": 1,
+    "id": "srd-triceratops",
+    "name": "Triceratops",
+    "archetype": "Triceratops",
+    "challenge_rating": "5",
+    "kind": "monster",
+    "size": "huge",
+    "armor_class": 14,
+    "max_hp": 114,
+    "speed_ft": 50,
+    "movement_modes": {
+      "walk_ft": 50,
+      "fly_ft": 0,
+      "climb_ft": 0,
+      "swim_ft": 0,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": -1,
+    "progression_features": {
+      "critical_hit_minimum": 20,
+      "initiative_advantage": false,
+      "athletics_advantage": false,
+      "heroic_warrior": false,
+      "studied_attacks": false,
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
+    },
+    "attacks": [
+      {
+        "id": "triceratops-gore",
+        "name": "Gore",
+        "weapon_id": "triceratops-gore-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 9,
+        "damage": {
+          "count": 2,
+          "size": 12,
+          "bonus": 6
+        },
+        "damage_type": "piercing",
+        "animation": "heavy-strike",
+        "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "effects": [],
+        "forbid_target_grappled_by_self": false
+      }
+    ],
+    "primary_attack_id": "triceratops-gore",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 9,
+      "damage": 7
+    },
+    "attack_action": {
+      "id": "triceratops-multiattack",
+      "name": "Multiattack",
+      "is_attack_action": false,
+      "slots": [
+        {
+          "attack_ids": [
+            "triceratops-gore"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "triceratops-gore"
+          ],
+          "save_action_ids": []
+        }
+      ]
+    },
+    "save_actions": [],
+    "spell_save_actions": [],
+    "defensive_spell_actions": [],
+    "healing_actions": [],
+    "condition_removal_actions": [],
+    "saving_throw_bonuses": {
+      "strength": 6,
+      "dexterity": -1,
+      "constitution": 3,
+      "intelligence": -4,
+      "wisdom": 0,
+      "charisma": -3
+    },
+    "skill_bonuses": {},
+    "combat_traits": [
+      "charge"
+    ],
+    "source_trait_names": [],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [],
+    "source_limited_use_names": [],
+    "source_legendary_action_names": [],
+    "fighting_styles": [],
+    "weapon_masteries": [],
+    "damage_resistances": [],
+    "damage_vulnerabilities": [],
+    "damage_immunities": [],
+    "condition_immunities": [],
+    "wearing_heavy_armor": false,
+    "rage_damage_bonus": 0,
+    "resources": [],
+    "visual": {
+      "armor": "hide",
+      "main_hand": "horns",
+      "body_style": "triceratops"
+    },
+    "source": "SRD 5.2.1 Triceratops p. 363",
+    "unsupported_capabilities": []
+  },
+  {
+    "schema_version": 1,
     "id": "srd-hippogriff",
     "name": "Hippogriff",
     "archetype": "Hippogriff",
