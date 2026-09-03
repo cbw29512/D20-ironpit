@@ -77,7 +77,7 @@ assert.equal(Object.keys(monsters).length, 111, "canonical runtime must contain 
     expiryTiming: "source_turn_start",
   });
 
-  const source = member("monster-1:wyvern", "monsters", vultureTemplate, 10);
+  const source = member("monster-1:wyvern", "monsters", wyvernTemplate, 10);
   const target = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"], 0);
   const setup = { heroes: [target], monsters: [source] };
   setD20(15);
