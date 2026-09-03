@@ -92,3 +92,4 @@ assert.equal(Object.keys(monsters).length, 59, "poison batch must bring browser 
 }
 
 console.log("Browser Poisoned and timed-condition regressions passed.");
+require("./browser-poison-expansion.test.cjs");

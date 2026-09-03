@@ -65,6 +65,7 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Giant Owl": _p("bird", "owl"),
     "Giant Rat": _p("quadruped", "rodent"),
     "Giant Venomous Snake": _p("snake", "snake"),
+    "Giant Vulture": _p("bird", "vulture"),
     "Giant Wasp": _p("winged-insect", "wasp"),
     "Giant Weasel": _p("quadruped", "mustelid"),
     "Giant Wolf Spider": _p("spider", "spider"),
@@ -126,5 +127,6 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Warrior Veteran": _p("humanoid", "veteran"),
     "Weasel": _p("quadruped", "mustelid"),
     "Wolf": _p("quadruped", "canine"),
+    "Wyvern": _p("reptile", "wyvern"),
     "Zombie": _p("humanoid", "zombie"),
 }

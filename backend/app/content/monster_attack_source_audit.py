@@ -53,6 +53,31 @@ def _max_size_rider_present(actions: str, size: Any, condition: str) -> bool:
     )
 
 
+def _condition_timing_present(actions: str, control: Any) -> bool:
+    condition = control.condition_id
+    if condition is None:
+        return True
+    if not re.search(rf"\b{re.escape(condition)}\s+condition\b", actions, re.IGNORECASE):
+        return False
+    timing = control.expiry_timing
+    if timing is None and control.expires_at_start_of_source_turn:
+        timing = "source_turn_start"
+    target = {
+        "target_turn_start": r"until\s+the\s+start\s+of\s+its\s+next\s+turn",
+        "target_turn_end": r"until\s+the\s+end\s+of\s+its\s+next\s+turn",
+    }.get(timing)
+    if target:
+        return bool(re.search(target, actions, re.IGNORECASE))
+    source = {
+        "source_turn_start": "start",
+        "source_turn_end": "end",
+    }.get(timing)
+    if source:
+        pattern = rf"until\s+the\s+{source}\s+of\s+the\s+[^.]+?[’']s\s+next\s+turn"
+        return bool(re.search(pattern, actions, re.IGNORECASE))
+    return True
+
+
 def attack_issues(attack: WeaponAttack, actions: str) -> list[str]:
     issues: list[str] = []
     weapon = attack.weapon
@@ -95,6 +120,8 @@ def attack_issues(attack: WeaponAttack, actions: str) -> list[str]:
             issues.append(f"grapple-size-mismatch:{attack.id}")
         if control.restrains_while_grappled and "restrained" not in actions:
             issues.append(f"restrained-rider-mismatch:{attack.id}")
+    if control and control.condition_id is not None and not _condition_timing_present(actions, control):
+        issues.append(f"condition-rider-mismatch:{attack.id}:{control.condition_id}")
     return issues
 
 
