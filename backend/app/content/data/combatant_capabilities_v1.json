@@ -3489,6 +3489,170 @@
   },
   {
     "schema_version": 1,
+    "id": "srd-merfolk-skirmisher",
+    "name": "Merfolk Skirmisher",
+    "archetype": "source-certified aquatic skirmisher",
+    "challenge_rating": "1/8",
+    "kind": "monster",
+    "size": "medium",
+    "armor_class": 11,
+    "max_hp": 11,
+    "speed_ft": 10,
+    "movement_modes": {
+      "walk_ft": 10,
+      "fly_ft": 0,
+      "climb_ft": 0,
+      "swim_ft": 40,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": 1,
+    "progression_features": {
+      "critical_hit_minimum": 20,
+      "initiative_advantage": false,
+      "athletics_advantage": false,
+      "heroic_warrior": false,
+      "studied_attacks": false,
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
+    },
+    "attacks": [
+      {
+        "id": "merfolk-skirmisher-ocean-spear-ranged",
+        "name": "Ocean Spear",
+        "weapon_id": "merfolk-skirmisher-ocean-spear-ranged-weapon",
+        "attack_kind": "ranged",
+        "attack_bonus": 2,
+        "damage": {
+          "count": 1,
+          "size": 6,
+          "bonus": 0
+        },
+        "damage_type": "piercing",
+        "animation": "projectile",
+        "reach_ft": 5,
+        "normal_range_ft": 20,
+        "long_range_ft": 60,
+        "projectile": "spear",
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "effects": [
+          {
+            "kind": "damage",
+            "source": "Cold",
+            "dice": {
+              "count": 1,
+              "size": 4,
+              "bonus": 0
+            },
+            "damage_type": "cold",
+            "trigger": "on_hit",
+            "mode": "add"
+          },
+          {
+            "kind": "speed",
+            "flat_bonus": -10,
+            "consume_on_attack_against": false,
+            "expires_at_start_of_source_turn": false,
+            "expires_at_end_of_target_turn": true
+          }
+        ],
+        "forbid_target_grappled_by_self": false
+      },
+      {
+        "id": "merfolk-skirmisher-ocean-spear-melee",
+        "name": "Ocean Spear",
+        "weapon_id": "merfolk-skirmisher-ocean-spear-melee-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 2,
+        "damage": {
+          "count": 1,
+          "size": 6,
+          "bonus": 0
+        },
+        "damage_type": "piercing",
+        "animation": "thrust",
+        "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "effects": [
+          {
+            "kind": "damage",
+            "source": "Cold",
+            "dice": {
+              "count": 1,
+              "size": 4,
+              "bonus": 0
+            },
+            "damage_type": "cold",
+            "trigger": "on_hit",
+            "mode": "add"
+          },
+          {
+            "kind": "speed",
+            "flat_bonus": -10,
+            "consume_on_attack_against": false,
+            "expires_at_start_of_source_turn": false,
+            "expires_at_end_of_target_turn": true
+          }
+        ],
+        "forbid_target_grappled_by_self": false
+      }
+    ],
+    "primary_attack_id": "merfolk-skirmisher-ocean-spear-ranged",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 2,
+      "damage": 1
+    },
+    "save_actions": [],
+    "spell_save_actions": [],
+    "defensive_spell_actions": [],
+    "healing_actions": [],
+    "condition_removal_actions": [],
+    "saving_throw_bonuses": {
+      "strength": 0,
+      "dexterity": 1,
+      "constitution": 1,
+      "intelligence": 0,
+      "wisdom": 2,
+      "charisma": 1
+    },
+    "skill_bonuses": {},
+    "combat_traits": [],
+    "source_trait_names": [
+      "Amphibious"
+    ],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [],
+    "source_limited_use_names": [],
+    "source_legendary_action_names": [],
+    "fighting_styles": [],
+    "weapon_masteries": [],
+    "damage_resistances": [],
+    "damage_vulnerabilities": [],
+    "damage_immunities": [],
+    "condition_immunities": [],
+    "wearing_heavy_armor": false,
+    "rage_damage_bonus": 0,
+    "resources": [],
+    "visual": {
+      "armor": "natural",
+      "main_hand": "spear",
+      "body_style": "merfolk-skirmisher"
+    },
+    "source": "SRD 5.2.1 p. 308",
+    "unsupported_capabilities": []
+  },
+  {
+    "schema_version": 1,
     "id": "srd-hippogriff",
     "name": "Hippogriff",
     "archetype": "Hippogriff",
@@ -11877,8 +12041,10 @@
         "effects": [
           {
             "kind": "attacks-against-advantage",
+            "flat_bonus": 0,
             "consume_on_attack_against": true,
-            "expires_at_start_of_source_turn": true
+            "expires_at_start_of_source_turn": true,
+            "expires_at_end_of_target_turn": false
           }
         ],
         "forbid_target_grappled_by_self": false
