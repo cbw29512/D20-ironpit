@@ -106,7 +106,7 @@ def test_raw_ready_monsters_are_audited_runtime_subset() -> None:
     assert ready_ids <= runtime_ids
     berserker = next(card for card in cards if card.name == "Berserker")
     assert berserker.runnable_template_id is None
-    assert "uncertified-trait:bloodied-frenzy" in berserker.blockers
+    assert berserker.blockers == ["monster-combat-mechanics-not-certified"]
 
 
 def test_raw_ready_monsters_have_precise_srd_page_references() -> None:

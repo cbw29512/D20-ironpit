@@ -75,7 +75,7 @@ def test_uncertified_cards_fail_closed_in_catalog() -> None:
     berserker = next(monster for monster in catalog.monsters if monster.name == "Berserker")
     assert berserker.coverage_status is CoverageStatus.BLOCKED
     assert berserker.runnable_template_id is None
-    assert "uncertified-trait:bloodied-frenzy" in berserker.blockers
+    assert berserker.blockers == ["monster-combat-mechanics-not-certified"]
 
 
 def test_current_audited_heroes_are_raw_ready() -> None:
