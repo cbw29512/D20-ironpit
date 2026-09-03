@@ -56,17 +56,15 @@ def test_fighter_level_five_profile_and_candidate_fingerprint_pass_audits() -> N
     assert_pregen_combat_stats(template, combat_profile)
 
 
-def test_tactical_shift_moves_half_speed_without_spending_normal_movement() -> None:
+def test_tactical_shift_movement_is_arena_neutral_under_fixed_formation() -> None:
     hero, monster, setup = _setup(distance=35)
     hero.state.movement_remaining_ft = 30
+    before = hero.position_ft
 
     event = resolve_tactical_shift(1, 1, hero, setup)
 
-    assert event is not None
-    assert event.feature_id == "tactical-shift"
-    assert event.movement_ft == 15
-    assert (event.distance_before_ft, event.distance_after_ft) == (35, 20)
-    assert hero.position_ft == 15
+    assert event is None
+    assert hero.position_ft == before
     assert hero.state.movement_remaining_ft == 30
     assert monster.state.reaction_available is True
 

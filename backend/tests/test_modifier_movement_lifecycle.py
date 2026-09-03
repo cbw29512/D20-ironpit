@@ -47,23 +47,29 @@ def test_dash_paths_add_effective_speed_not_base_speed() -> None:
     assert mover.state.movement_remaining_ft == 40
 
 
-def test_adrenaline_rush_adds_effective_speed() -> None:
+def test_adrenaline_rush_keeps_resource_and_temp_hp_but_abstracts_dash_movement() -> None:
     state = build_combatant_state(build_karnok_stoneward())
     add_modifier(state, _speed_modifier())
     begin_turn(state)
+    movement_before = state.movement_remaining_ft
+
     event = use_adrenaline_rush(1, 1, state, "hero-1")
-    assert event is not None and event.movement_ft == 20
-    assert state.movement_remaining_ft == 40
+
+    assert event is not None and event.movement_ft == 0
+    assert state.movement_remaining_ft == movement_before
+    assert state.temporary_hp == 2
 
 
-def test_tactical_shift_uses_half_effective_speed() -> None:
+def test_tactical_shift_is_arena_neutral_under_fixed_formation() -> None:
     hero = _member("hero-1", "heroes", 0, build_karnok_stoneward_level(5))
     monster = _member("monster-1", "monsters", 35, build_goblin_warrior())
     setup = EncounterSetup(heroes=[hero], monsters=[monster], hero_total_levels=5, monster_total_cr="1/4")
     add_modifier(hero.state, _speed_modifier())
+
     event = resolve_tactical_shift(1, 1, hero, setup)
-    assert event is not None and event.movement_ft == 10
-    assert hero.position_ft == 10
+
+    assert event is None
+    assert hero.position_ft == 0
 
 
 def test_failed_concentration_save_from_encounter_attack_cleans_ally_modifier() -> None:
