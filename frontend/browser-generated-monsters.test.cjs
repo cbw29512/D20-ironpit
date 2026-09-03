@@ -14,12 +14,22 @@ const manualFiles = [
 ];
 for (const file of manualFiles) load(file);
 const manual = structuredClone(window.IRON_PIT_BROWSER_MONSTERS);
+const certificationManifest = JSON.parse(fs.readFileSync(
+  path.join(__dirname, "..", "data", "monster_certification_manifest.json"), "utf8",
+));
+const expectedReadyIds = certificationManifest.monsters
+  .filter((monster) => monster.public_ready_status === "ready")
+  .map((monster) => monster.runtime_template_id)
+  .filter(Boolean)
+  .sort();
 
 load("browser-monsters-generated.js");
 const generated = window.IRON_PIT_BROWSER_MONSTERS;
+const generatedIds = Object.keys(generated).sort();
 assert.equal(window.IRON_PIT_CANONICAL_MONSTERS_READY, true, "Canonical generated monster bundle must mark itself ready");
 assert.equal(Object.keys(manual).length, 67, "Legacy fragments remain a 67-monster compatibility subset");
-assert.equal(Object.keys(generated).length, 115, "Generated runtime must expose only currently RAW-certified monsters");
+assert.equal(certificationManifest.summary.public_ready, expectedReadyIds.length, "Manifest ready summary must match its ready runtime IDs");
+assert.deepEqual(generatedIds, expectedReadyIds, "Generated runtime IDs must exactly match the durable RAW-ready certification manifest");
 for (const id of [
   "srd-jackal", "srd-archelon", "srd-ankylosaurus", "srd-giant-eagle", "srd-giant-elk", "srd-giant-crocodile",
   "srd-allosaurus", "srd-minotaur-skeleton", "srd-triceratops", "srd-warhorse-skeleton",
@@ -34,7 +44,8 @@ for (const id of [
   assert.ok(generated[id], `${id} must be present in generated runtime`);
 }
 assert.ok(generated["srd-tyrannosaurus-rex"]);
-assert.equal(generated["srd-commoner"], undefined, "Blocked Commoner must not leak into the browser runtime");
+assert.ok(generated["srd-commoner"], "Certified Commoner must be present in the browser runtime");
+assert.ok(generated["srd-lemure"], "Certified Lemure must be present in the browser runtime");
 assert.equal(generated["srd-killer-whale"], undefined, "Aquatic-only Killer Whale must remain deferred from the standard arena");
 assert.deepEqual(generated["srd-cultist"].attacks[0].onHitDamage, [
   { source: "Necrotic", diceCount: 0, diceSize: 2, damageBonus: 1, damageType: "necrotic" },
@@ -311,4 +322,4 @@ assert.ok(heroOne.state.active_effect_ids.includes("grappled"));
 assert.ok(heroOne.state.active_effect_ids.includes("restrained"));
 assert.ok(heroTwo.state.active_effect_ids.includes("prone"));
 
-console.log("Generated monster runtime contains 115 RAW-certified templates, including timed on-hit Speed modifiers, Charge damage replacement, fixed typed hit riders, and source-turn on-hit Advantage modifiers, with aquatic-only Killer Whale deferred, shared grapple-control monsters, Allosaurus Charge follow-up Bite, native data-only swarms, Charge riders, Prone-only Charge, conditional damage, Redirect Attack, and T. rex retargeting.");
+console.log(`Generated monster runtime contains ${generatedIds.length} manifest-certified templates, including Commoner and Lemure, timed on-hit Speed modifiers, Charge damage replacement, fixed typed hit riders, and source-turn on-hit Advantage modifiers, with aquatic-only Killer Whale deferred, shared grapple-control monsters, Allosaurus Charge follow-up Bite, native data-only swarms, Charge riders, Prone-only Charge, conditional damage, Redirect Attack, and T. rex retargeting.`);
