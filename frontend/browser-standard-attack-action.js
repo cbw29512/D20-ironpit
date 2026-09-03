@@ -3,7 +3,9 @@
 
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const L = () => window.IRON_PIT_BROWSER_LIGHT_ATTACK;
-  const W = () => window.IRON_PIT_BROWSER_WEAPON_MASTERY;
+  const W = () => window.IRON_PIT_BROWSER_WEAPON_MASTERY || {
+    resolveCleave: (sequence) => ({ events: [], sequence }),
+  };
 
   function resolve(sequence, round, member, target, attack, distance, setup, turnKey, options = {}) {
     const event = A().resolveAttack(sequence++, round, member, target, attack, distance, {

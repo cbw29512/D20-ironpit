@@ -6,7 +6,9 @@
   const C = () => window.IRON_PIT_BROWSER_CHARGE;
   const R = () => window.IRON_PIT_BROWSER_LIGHT_ATTACK;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
-  const WM = () => window.IRON_PIT_BROWSER_WEAPON_MASTERY;
+  const WM = () => window.IRON_PIT_BROWSER_WEAPON_MASTERY || {
+    resolveCleave: (sequence) => ({ events: [], sequence }),
+  };
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (s) => s.action_available, spend: (s) => { s.action_available = false; } };
   const W = () => window.IRON_PIT_BROWSER_REACTION_MOVEMENT || {
     moveToward: (q, r, m, t, _s, d) => ({ events: [], sequence: q, movement: S().moveToward(m, t, d) }),
