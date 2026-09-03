@@ -41,6 +41,19 @@ const L = window.IRON_PIT_BATTLE_LOG;
 
 {
   const text = L.format({
+    event_type: "attack", actor_name: "Fighter", target_name: "Ogre", attack_name: "Battleaxe",
+    target_ac: 11, hit: true, critical: false,
+    attack_roll: { selected_roll: 15, rolls: [15], modifier: 5, total: 20, mode: "normal" },
+    save_ability: "constitution", save_dc: 13, save_succeeded: false,
+    saving_throw_roll: { selected_roll: 5, rolls: [5], modifier: 2, total: 7, mode: "normal" },
+    damage_roll: { total: 7 }, damage_components: [{ total: 7, applied_total: 7, damage_type: "slashing" }],
+    hp_before: 30, hp_after: 23, applied_condition_ids: ["prone"], is_dead: false,
+  });
+  assert.match(text, /Ogre FAILS CONSTITUTION save/); assert.match(text, /d20 5 \+2 = 7 vs DC 13/); assert.match(text, /PRONE/);
+}
+
+{
+  const text = L.format({
     event_type: "attack", actor_name: "Cleric", target_name: "Ogre", attack_name: "Guiding Bolt",
     target_ac: 13, hit: true, critical: false,
     attack_roll: { selected_roll: 19, rolls: [19, 3], modifier: 5, total: 27, mode: "normal",

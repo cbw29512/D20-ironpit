@@ -55,6 +55,7 @@
     const attackName = event.attack_name || event.weapon_name || event.weapon_id || event.feature_id || "attack";
     const pieces = [`${event.actor_name} → ${event.target_name}: ${result} with ${attackName}`];
     if (event.attack_roll) pieces.push(`${rollLabel(event.attack_roll)}${event.target_ac == null ? "" : ` vs AC ${event.target_ac}`}`);
+    if (event.save_dc != null) pieces.push(`${event.target_name} ${event.save_succeeded ? "SUCCEEDS" : "FAILS"} ${String(event.save_ability || "save").toUpperCase()} save: ${rollLabel(event.saving_throw_roll)} vs DC ${event.save_dc}`);
     const damage = damageLabel(event); if (damage) pieces.push(damage);
     appendState(pieces, event, Boolean(event.hit));
     const death = attackDeathLabel(event); if (death) pieces.push(death);

@@ -23,6 +23,7 @@ from app.combat.rolls import roll_d20
 from app.combat.sap import apply_weapon_sap, consume_sap, sap_disadvantage
 from app.combat.studied_attacks import apply_studied_attack_miss
 from app.combat.tactical_master import apply_tactical_master_sap
+from app.combat.topple import resolve_topple_hit
 from app.combat.vex import apply_vex_mastery
 from app.combat.zero_hp import apply_damage
 from app.domain.models import BattleEvent, CombatantState, WeaponAttack
@@ -57,9 +58,7 @@ def resolve_attack(
             close_enemy_active=close_enemy_active,
         )
         base_roll = roll_d20(dice, attack.attack_bonus, mode)
-        base_roll, heroic_reroll = reroll_failed_attack_with_heroic_inspiration(
-            attacker, base_roll, effective_armor_class(defender), dice,
-        )
+        base_roll, heroic_reroll = reroll_failed_attack_with_heroic_inspiration(attacker, base_roll, effective_armor_class(defender), dice)
         attack_roll = apply_d20_bonus_dice(attacker, ModifierKind.ATTACK_ROLL_BONUS_DIE, base_roll, dice)
         consume_next_attack_against_advantage(attacker, defender_event_id); consume_sap(attacker)
         consume_attacks_against_advantage(defender); extend_rage_from_attack(attacker, round_number)
@@ -78,7 +77,7 @@ def resolve_attack(
         hp_before = actual_defender.current_hp; temporary_hp_before = actual_defender.temporary_hp
         death_success_before = actual_defender.death_save_successes; death_failure_before = actual_defender.death_save_failures
         concentration_before = actual_defender.concentration.effect_id if actual_defender.concentration else None
-        damage_roll = None; damage_components = []; damage_outcome = None; applied_conditions: list[str] = []
+        damage_roll = None; damage_components = []; damage_outcome = None; applied_conditions: list[str] = []; topple = None
         weapon_sap_applied = False; tactical_sap_applied = False; vex_applied = False; studied_applied = False
         if hit:
             active_turn_key = turn_key or f"{round_number}:{attacker_event_id}"
@@ -90,9 +89,10 @@ def resolve_attack(
             applied_types = {part.damage_type for part in damage_components if part.applied_total > 0}
             damage_outcome = apply_damage(actual_defender, applied_total, critical=critical, damage_types=applied_types, dice=dice, affected_states=affected_states)
             applied_conditions = apply_hit_conditions(attack, actual_defender, attacker_event_id, round_number, affected_states)
+            topple = resolve_topple_hit(attacker, actual_defender, attack, dice)
+            if topple.applied and "prone" not in applied_conditions: applied_conditions.append("prone")
             weapon_sap_applied = apply_weapon_sap(attacker, attacker_event_id, actual_defender, attack, round_number)
-            if not weapon_sap_applied:
-                tactical_sap_applied = apply_tactical_master_sap(attacker, attacker_event_id, actual_defender, attack, round_number)
+            if not weapon_sap_applied: tactical_sap_applied = apply_tactical_master_sap(attacker, attacker_event_id, actual_defender, attack, round_number)
             vex_applied = apply_vex_mastery(attacker, attacker_event_id, actual_event_id, attack, round_number, applied_total)
             end_rage_if_incapacitated(actual_defender)
         else:
@@ -104,14 +104,14 @@ def resolve_attack(
         outcome = "CRITICAL HIT" if critical else ("HIT" if hit else "MISS")
         description = f"{attacker.template.name}: {outcome} with {weapon.name}."
         if heroic_reroll: description += " Heroic Inspiration rerolls one d20."
-        if not hit and damage_roll is not None:
-            description += f" Graze deals {damage_roll.total} {weapon.damage_type.value} damage."
+        if not hit and damage_roll is not None: description += f" Graze deals {damage_roll.total} {weapon.damage_type.value} damage."
         if studied_applied: description += f" Studied Attacks primes the next attack against {defender.template.name}."
         if redirect_used: description += f" {defender.template.name} uses Redirect Attack; {actual_defender.template.name} becomes the target."
         if parry_used: description += f" {actual_defender.template.name} uses Parry."
         if weapon_sap_applied: description += f" Sap mastery affects {actual_defender.template.name}."
         if tactical_sap_applied: description += f" Tactical Master applies Sap to {actual_defender.template.name}."
         if vex_applied: description += f" Vex primes the next attack against {actual_defender.template.name}."
+        if topple and topple.save_dc is not None: description += f" Topple save DC {topple.save_dc}: {actual_defender.template.name} {'succeeds' if topple.save_succeeded else 'fails'}."
         if damage_outcome == "relentless_endurance": description += f" {actual_defender.template.name} uses Relentless Endurance and remains at 1 HP."
         if damage_outcome == "undead_fortitude": description += f" {actual_defender.template.name} succeeds on Undead Fortitude and remains at 1 HP."
         if "prone" in applied_conditions: description += f" {actual_defender.template.name} is knocked Prone."
@@ -121,7 +121,8 @@ def resolve_attack(
         return BattleEvent(
             sequence=sequence, round_number=round_number, event_type="attack", actor_id=attacker_event_id, actor_name=attacker.template.name,
             target_id=actual_event_id, target_name=actual_defender.template.name, attack_name=weapon.name, target_ac=target_ac,
-            attack_roll=attack_roll, damage_roll=damage_roll, damage_components=damage_components, applied_condition_ids=applied_conditions,
+            attack_roll=attack_roll, saving_throw_roll=topple.save_roll if topple else None, save_ability="constitution" if topple and topple.save_dc is not None else None, save_dc=topple.save_dc if topple else None, save_succeeded=topple.save_succeeded if topple else None,
+            damage_roll=damage_roll, damage_components=damage_components, applied_condition_ids=applied_conditions,
             hit=hit, critical=critical, hp_before=hp_before, hp_after=actual_defender.current_hp,
             temporary_hp_before=temporary_hp_before, temporary_hp_after=actual_defender.temporary_hp,
             death_save_successes_before=death_success_before, death_save_failures_before=death_failure_before,
