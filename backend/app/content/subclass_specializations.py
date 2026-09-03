@@ -3,6 +3,7 @@ from __future__ import annotations
 from app.content.barbarian_subclass_specialization_data import BARBARIAN_SPECIALIZATIONS
 from app.content.bard_subclass_specialization_data import BARD_SPECIALIZATIONS
 from app.content.cleric_subclass_specialization_data import CLERIC_SPECIALIZATIONS
+from app.content.druid_subclass_specialization_data import DRUID_SPECIALIZATIONS
 from app.content.fighter_subclass_specialization_data import FIGHTER_SPECIALIZATIONS
 from app.content.monk_subclass_specialization_data import MONK_SPECIALIZATIONS
 from app.content.paladin_subclass_specialization_data import PALADIN_SPECIALIZATIONS
@@ -21,6 +22,7 @@ def _specialization_registry() -> dict[str, SubclassSpecialization]:
         *BARBARIAN_SPECIALIZATIONS,
         *BARD_SPECIALIZATIONS,
         *CLERIC_SPECIALIZATIONS,
+        *DRUID_SPECIALIZATIONS,
         *MONK_SPECIALIZATIONS,
         *PALADIN_SPECIALIZATIONS,
         *RANGER_SPECIALIZATIONS,

@@ -87,15 +87,15 @@ _VARIANTS = (
     _build("cleric", "divine-offense", "radiant-control", required_subclass_id="light-domain"),
     _build(
         "druid", "land-damage", "caster-damage", required_subclass_id="circle-land",
-        notes="Canonical Land Druid progression is separate; named build activation awaits a compiled build overlay.",
+        notes="Compatibility view for the deterministic Arid Land specialization.",
     ),
     _build(
-        "druid", "healer", "healing",
-        notes="Healing-first spell/loadout overlay; subclass remains independently selectable.",
+        "druid", "healer", "storm-controller", required_subclass_id="circle-sea",
+        notes="Legacy build id retained as a compatibility alias for the Circle of the Sea specialization.",
     ),
     _build(
         "druid", "moon-melee", "wild-shape-melee", required_subclass_id="circle-moon",
-        notes="Requires a dedicated 2024 Wild Shape, beast-form, and tactical-form RAW audit before activation.",
+        notes="Specialization selects a form package; shared Wild Shape mechanics remain fail-closed.",
     ),
 )
 

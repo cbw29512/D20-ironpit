@@ -4,7 +4,9 @@ from app.content.subclass_combat_overlays import subclass_combat_features
 
 
 def test_fighter_subclasses_are_five_sparse_rows_not_copied_class_progressions() -> None:
-    assert set(FIGHTER_SUBCLASS_DELTA_DATA) == {"battle-master", "eldritch-knight", "psi-warrior"}
+    assert set(FIGHTER_SUBCLASS_DELTA_DATA) == {
+        "champion", "battle-master", "eldritch-knight", "psi-warrior",
+    }
     for rows in FIGHTER_SUBCLASS_DELTA_DATA.values():
         assert tuple(rows) == (3, 7, 10, 15, 18)
 

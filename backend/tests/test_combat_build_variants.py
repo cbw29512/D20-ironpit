@@ -180,9 +180,11 @@ def test_fighter_specialization_records_are_fail_closed_until_subclass_compilers
 def test_subclass_specific_druid_records_remain_explicit() -> None:
     land = get_combat_build_variant("druid", "land-damage")
     moon = get_combat_build_variant("druid", "moon-melee")
+    sea = get_combat_build_variant("druid", "healer")
     assert land.required_subclass_id == "circle-land"
     assert moon.required_subclass_id == "circle-moon"
-    assert "RAW audit" in moon.notes
+    assert sea.required_subclass_id == "circle-sea"
+    assert "form package" in moon.notes
 
 
 def test_druid_compatibility_view_has_one_shared_source_of_truth() -> None:

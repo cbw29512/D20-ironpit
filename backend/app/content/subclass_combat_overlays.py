@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from app.content.barbarian_subclass_overlay_data import BARBARIAN_SUBCLASS_DELTA_DATA
 from app.content.bard_subclass_overlay_data import BARD_SUBCLASS_DELTA_DATA
 from app.content.cleric_subclass_overlay_data import CLERIC_SUBCLASS_DELTA_DATA
-from app.content.core_subclass_overlay_data import CORE_SUBCLASS_DELTA_DATA
+from app.content.druid_subclass_overlay_data import DRUID_SUBCLASS_DELTA_DATA
 from app.content.fighter_subclass_overlay_data import FIGHTER_SUBCLASS_DELTA_DATA
 from app.content.monk_subclass_overlay_data import MONK_SUBCLASS_DELTA_DATA
 from app.content.paladin_subclass_overlay_data import PALADIN_SUBCLASS_DELTA_DATA
@@ -43,14 +43,12 @@ def _overlay(class_id: str, subclass_id: str, rows: dict[int, dict[str, tuple[st
     })
 
 
-SUBCLASS_COMBAT_OVERLAYS = {
-    subclass_id: _overlay(class_id, subclass_id, rows)
-    for subclass_id, (class_id, rows) in CORE_SUBCLASS_DELTA_DATA.items()
-}
+SUBCLASS_COMBAT_OVERLAYS: dict[str, SubclassCombatOverlay] = {}
 for _class_id, _source in (
     ("barbarian", BARBARIAN_SUBCLASS_DELTA_DATA),
     ("bard", BARD_SUBCLASS_DELTA_DATA),
     ("cleric", CLERIC_SUBCLASS_DELTA_DATA),
+    ("druid", DRUID_SUBCLASS_DELTA_DATA),
     ("fighter", FIGHTER_SUBCLASS_DELTA_DATA),
     ("monk", MONK_SUBCLASS_DELTA_DATA),
     ("paladin", PALADIN_SUBCLASS_DELTA_DATA),

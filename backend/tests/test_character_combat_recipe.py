@@ -199,9 +199,26 @@ def test_cleric_domain_specializations_compose_from_one_cleric_spine() -> None:
         assert "cleric-spellcasting" in recipe.combat_features
 
 
+def test_druid_circle_specializations_compose_from_one_druid_spine() -> None:
+    expected = {
+        ("circle-land", "land-damage"): "circle-land-arid",
+        ("circle-moon", "moon-melee"): "circle-moon",
+        ("circle-sea", "healer"): "circle-sea",
+    }
+    for (subclass_id, build_id), spell_package_id in expected.items():
+        recipe = compose_character_combat_recipe("druid", subclass_id, build_id, 14)
+        assert recipe.shared_progression_id == "druid-1-20"
+        assert recipe.build_choices.spell_package_id == spell_package_id
+        assert recipe.build_choices.primary_weapon == "scimitar"
+        assert "druid-spellcasting" in recipe.combat_features
+
+
 def test_subclass_specific_build_fails_closed_on_the_wrong_subclass() -> None:
     with pytest.raises(ValueError, match="requires subclass circle-moon"):
         compose_character_combat_recipe("druid", "circle-land", "moon-melee", 3)
+
+    with pytest.raises(ValueError, match="requires subclass circle-sea"):
+        compose_character_combat_recipe("druid", "circle-land", "healer", 3)
 
 
 def test_build_cannot_be_borrowed_by_another_class() -> None:

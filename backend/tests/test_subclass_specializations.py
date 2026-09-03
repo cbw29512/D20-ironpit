@@ -4,6 +4,7 @@ from app.content.subclass_specializations import (
     BARBARIAN_SPECIALIZATIONS,
     BARD_SPECIALIZATIONS,
     CLERIC_SPECIALIZATIONS,
+    DRUID_SPECIALIZATIONS,
     FIGHTER_SPECIALIZATIONS,
     MONK_SPECIALIZATIONS,
     PALADIN_SPECIALIZATIONS,
@@ -32,15 +33,26 @@ def test_weapon_specializations_are_only_catalog_data_and_mastery_choices() -> N
     for spec in (
         *FIGHTER_SPECIALIZATIONS,
         *BARBARIAN_SPECIALIZATIONS,
+        *BARD_SPECIALIZATIONS,
+        *CLERIC_SPECIALIZATIONS,
+        *DRUID_SPECIALIZATIONS,
+        *MONK_SPECIALIZATIONS,
         *PALADIN_SPECIALIZATIONS,
         *RANGER_SPECIALIZATIONS,
         *ROGUE_SPECIALIZATIONS,
+        *SORCERER_SPECIALIZATIONS,
+        *WARLOCK_SPECIALIZATIONS,
+        *WIZARD_SPECIALIZATIONS,
     ):
-        assert spec.primary_weapon is not None
         assert spec.source_reference
+        if spec.primary_weapon is None:
+            assert not spec.secondary_weapons
+            assert not spec.mastery_priority
+            continue
         weapon = build_weapon(spec.primary_weapon)
         assert weapon.id == spec.primary_weapon
-        assert spec.primary_weapon in spec.mastery_priority
+        if spec.mastery_priority:
+            assert spec.primary_weapon in spec.mastery_priority
         for weapon_id in spec.secondary_weapons:
             assert build_weapon(weapon_id).id == weapon_id
 
@@ -211,6 +223,22 @@ def test_cleric_has_one_wisdom_specialization_per_target_domain() -> None:
     assert (war.role, war.primary_weapon, war.shield) == ("frontline-support", "longsword", True)
     assert all(item.ability_priority[0] == "wisdom" for item in CLERIC_SPECIALIZATIONS)
     assert war.feature_choice_ids == ("blessed-strikes-divine-strike-radiant",)
+
+
+def test_druid_has_one_wisdom_specialization_per_target_circle() -> None:
+    assert tuple(item.subclass_id for item in specializations_for_class("druid")) == (
+        "circle-land", "circle-moon", "circle-sea",
+    )
+    land, moon, sea = DRUID_SPECIALIZATIONS
+    assert (land.role, land.spell_package_id) == ("fire-caster", "circle-land-arid")
+    assert (moon.role, moon.spell_package_id) == ("wild-shape-melee", "circle-moon")
+    assert (sea.role, sea.spell_package_id) == ("storm-controller", "circle-sea")
+    assert all(item.ability_priority[0] == "wisdom" for item in DRUID_SPECIALIZATIONS)
+    assert all((item.armor, item.primary_weapon, item.shield) == ("scale-mail", "scimitar", True)
+               for item in DRUID_SPECIALIZATIONS)
+    assert moon.feature_choice_ids == (
+        "moon-beast-form-package", "elemental-fury-primal-strike-cold",
+    )
 
 
 def test_specialization_without_source_truth_fails_closed() -> None:

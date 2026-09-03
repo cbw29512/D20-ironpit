@@ -6,7 +6,7 @@ from app.content.canonical_class_combat_spines import (
 from app.content.barbarian_subclass_overlay_data import BARBARIAN_SUBCLASS_DELTA_DATA
 from app.content.bard_subclass_overlay_data import BARD_SUBCLASS_DELTA_DATA
 from app.content.cleric_subclass_overlay_data import CLERIC_SUBCLASS_DELTA_DATA
-from app.content.core_subclass_overlay_data import CORE_SUBCLASS_DELTA_DATA
+from app.content.druid_subclass_overlay_data import DRUID_SUBCLASS_DELTA_DATA
 from app.content.fighter_subclass_overlay_data import FIGHTER_SUBCLASS_DELTA_DATA
 from app.content.hero_progressions import HERO_BY_CLASS
 from app.content.hero_variant_policy import TARGET_SUBCLASSES
@@ -37,7 +37,7 @@ def test_subclass_registry_is_derived_from_authoritative_overlay_data() -> None:
         set(BARBARIAN_SUBCLASS_DELTA_DATA)
         | set(BARD_SUBCLASS_DELTA_DATA)
         | set(CLERIC_SUBCLASS_DELTA_DATA)
-        | set(CORE_SUBCLASS_DELTA_DATA)
+        | set(DRUID_SUBCLASS_DELTA_DATA)
         | set(FIGHTER_SUBCLASS_DELTA_DATA)
         | set(MONK_SUBCLASS_DELTA_DATA)
         | set(PALADIN_SUBCLASS_DELTA_DATA)
@@ -185,6 +185,16 @@ def test_druid_base_is_shared_before_land_or_future_moon_builds() -> None:
     assert "land-arid-spells" not in base_three
     assert "lands-aid" in land_three
     assert "land-arid-spells" in land_three
+
+
+def test_druid_base_spine_contains_no_land_subclass_features() -> None:
+    subclass_features = {
+        feature
+        for level in range(1, 21)
+        for feature in subclass_combat_features("circle-land", level)
+    }
+    assert subclass_features
+    assert subclass_features.isdisjoint(canonical_base_class_features("druid", 20))
 
 
 def test_subclass_feature_accumulator_respects_feature_replacement() -> None:

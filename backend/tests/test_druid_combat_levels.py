@@ -1,5 +1,6 @@
 from app.content.druid_combat_build_variants import DRUID_COMBAT_BUILD_VARIANTS
 from app.content.druid_combat_levels import DRUID_COMBAT_LEVELS, druid_arena_ignored, druid_combat_features
+from app.content.canonical_class_combat_spines import canonical_combat_features
 
 
 def test_druid_combat_spine_is_complete_and_contiguous() -> None:
@@ -22,10 +23,9 @@ def test_druid_official_resource_and_slot_landmarks_are_locked() -> None:
 def test_land_damage_features_accumulate_without_rebuilding_levels() -> None:
     level_ten = druid_combat_features(10)
     assert "druid-spellcasting" in level_ten
-    assert "land-arid-spells" in level_ten
-    assert "lands-aid" in level_ten
-    assert "natural-recovery" in level_ten
-    assert "natures-ward-fire" in level_ten
+    assert {"land-arid-spells", "lands-aid", "natural-recovery", "natures-ward-fire"}.isdisjoint(level_ten)
+    land_ten = canonical_combat_features("druid", 10, "circle-land")
+    assert {"land-arid-spells", "lands-aid", "natural-recovery", "natures-ward-fire"} <= set(land_ten)
 
 
 def test_noncombat_druid_features_stay_out_of_arena_runtime() -> None:
@@ -41,6 +41,6 @@ def test_druid_role_variants_share_one_class_spine_and_do_not_overclaim_readines
     assert {variant.shared_progression_id for variant in variants} == {"druid-1-20"}
     assert DRUID_COMBAT_BUILD_VARIANTS["land-damage"].status == "planned"
     assert DRUID_COMBAT_BUILD_VARIANTS["healer"].status == "planned"
-    assert DRUID_COMBAT_BUILD_VARIANTS["healer"].subclass_id is None
+    assert DRUID_COMBAT_BUILD_VARIANTS["healer"].subclass_id == "circle-sea"
     assert DRUID_COMBAT_BUILD_VARIANTS["moon-melee"].status == "planned"
     assert DRUID_COMBAT_BUILD_VARIANTS["moon-melee"].subclass_id == "circle-moon"

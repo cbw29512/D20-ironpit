@@ -84,7 +84,14 @@ def test_cleric_branches_once_into_three_domain_specializations() -> None:
     assert family.migration_complete is True
 
 
-def test_remaining_classes_have_three_named_subclass_targets_without_fake_completion() -> None:
+def test_druid_branches_once_into_three_circle_specializations() -> None:
+    family = hero_subclass_family("druid")
+    assert family.target_subclass_ids == ("circle-land", "circle-moon", "circle-sea")
+    assert family.audited_subclass_ids == family.target_subclass_ids
+    assert family.migration_complete is True
+
+
+def test_every_roster_class_has_its_complete_named_subclass_family() -> None:
     families = all_hero_subclass_families()
     assert len(families) == 12
     assert set(TARGET_SUBCLASSES) == {family.class_id for family in families}
@@ -92,13 +99,8 @@ def test_remaining_classes_have_three_named_subclass_targets_without_fake_comple
         assert family.branch_level == 3
         assert family.target_subclass_ids
         assert family.audited_subclass_ids
-        if family.class_id not in {
-            "fighter", "barbarian", "monk", "paladin", "ranger", "rogue", "wizard", "sorcerer",
-            "warlock",
-            "bard", "cleric",
-        }:
-            assert len(family.target_subclass_ids) == 3
-            assert family.migration_complete is False
+        assert len(family.target_subclass_ids) == (4 if family.class_id == "fighter" else 3)
+        assert family.migration_complete is True
 
 
 def test_caster_targets_are_subclasses_not_fake_fire_frost_build_clones() -> None:

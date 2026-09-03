@@ -15,6 +15,7 @@ class ArmorRecord:
 
 ARMOR_CATALOG = {
     "chain-mail": ArmorRecord("chain-mail", "Chain Mail", "heavy", 16),
+    "scale-mail": ArmorRecord("scale-mail", "Scale Mail", "medium", 14),
     "studded-leather": ArmorRecord("studded-leather", "Studded Leather Armor", "light", 12),
 }
 

@@ -2,6 +2,7 @@ from app.content.combat_build_choice_overlays import (
     BARBARIAN_COMBAT_BUILD_CHOICES,
     BARD_COMBAT_BUILD_CHOICES,
     CLERIC_COMBAT_BUILD_CHOICES,
+    DRUID_COMBAT_BUILD_CHOICES,
     COMBAT_BUILD_CHOICE_OVERLAYS,
     FIGHTER_COMBAT_BUILD_CHOICES,
     MONK_COMBAT_BUILD_CHOICES,
@@ -76,7 +77,7 @@ def test_barbarian_subclass_specializations_generate_real_choice_overlays() -> N
 
 
 def test_all_current_choice_overlays_come_from_subclass_specializations() -> None:
-    assert len(COMBAT_BUILD_CHOICE_OVERLAYS) == 34
+    assert len(COMBAT_BUILD_CHOICE_OVERLAYS) == 37
     assert all("derived from" in overlay.notes for overlay in COMBAT_BUILD_CHOICE_OVERLAYS.values())
 
 
@@ -195,3 +196,16 @@ def test_cleric_domains_generate_distinct_compatibility_views() -> None:
     assert (war.spell_package_id, war.primary_weapon, war.shield) == ("war-domain", "longsword", True)
     assert not any(item.weapon_masteries for item in CLERIC_COMBAT_BUILD_CHOICES.values())
     assert war.feature_choice_ids == ("blessed-strikes-divine-strike-radiant",)
+
+
+def test_druid_circles_generate_distinct_compatibility_views() -> None:
+    assert set(DRUID_COMBAT_BUILD_CHOICES) == {"land-damage", "healer", "moon-melee"}
+    land = get_combat_build_choice_overlay("druid", "land-damage")
+    moon = get_combat_build_choice_overlay("druid", "moon-melee")
+    sea = get_combat_build_choice_overlay("druid", "healer")
+    assert land.spell_package_id == "circle-land-arid"
+    assert moon.spell_package_id == "circle-moon"
+    assert sea.spell_package_id == "circle-sea"
+    assert all((item.armor, item.primary_weapon, item.shield) == ("scale-mail", "scimitar", True)
+               for item in DRUID_COMBAT_BUILD_CHOICES.values())
+    assert not any(item.weapon_masteries for item in DRUID_COMBAT_BUILD_CHOICES.values())
