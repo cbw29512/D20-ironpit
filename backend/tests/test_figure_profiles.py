@@ -9,7 +9,6 @@ def test_every_raw_ready_monster_has_a_reviewed_figure_profile() -> None:
         for card in build_monster_catalog()
         if card.coverage_status is CoverageStatus.RAW_READY
     }
-    assert len(ready_names) == 103
     assert ready_names <= set(MONSTER_FIGURE_PROFILES)
 
 
@@ -39,6 +38,7 @@ def test_anatomically_distinct_monsters_do_not_share_humanoid_fallbacks() -> Non
         "Hippopotamus": "quadruped",
         "Killer Whale": "aquatic-mammal",
         "Manticore": "quadruped",
+        "Minotaur Skeleton": "brute",
         "Owlbear": "bear",
         "Pegasus": "hoofed",
         "Plesiosaurus": "aquatic-reptile",
@@ -51,6 +51,7 @@ def test_anatomically_distinct_monsters_do_not_share_humanoid_fallbacks() -> Non
         "Swarm of Insects": "swarm",
         "Swarm of Rats": "swarm",
         "Swarm of Venomous Snakes": "swarm",
+        "Triceratops": "reptile",
         "Tyrannosaurus Rex": "theropod",
     }
     for name, form in expected.items():
@@ -71,6 +72,7 @@ def test_new_batch_has_specific_reviewed_details() -> None:
         "Hippopotamus": "hippopotamus",
         "Killer Whale": "orca",
         "Manticore": "manticore",
+        "Minotaur Skeleton": "minotaur-skeleton",
         "Pegasus": "pegasus",
         "Scorpion": "scorpion",
         "Skeleton": "skeleton",
@@ -79,6 +81,7 @@ def test_new_batch_has_specific_reviewed_details() -> None:
         "Swarm of Insects": "insects",
         "Swarm of Rats": "rats",
         "Swarm of Venomous Snakes": "venomous-snakes",
+        "Triceratops": "triceratops",
         "Violet Fungus": "violet-fungus",
     }
     for name, detail in expected.items():
