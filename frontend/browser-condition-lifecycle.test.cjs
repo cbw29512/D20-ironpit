@@ -26,21 +26,27 @@ window.IRON_PIT_DICE = {
 };
 
 {
-  const target = member("repeat-save-target");
+  const target = member("poison-recovery-target");
   T.apply(target.state, "poisoned", "venom-source", {
     sourceEffectId: "venom-rider",
+    appliedRound: 2,
     repeatSaveAbility: "constitution",
     repeatSaveDc: 15,
     repeatSaveTiming: "target_turn_end",
   });
+
+  const sameRound = L.resolveTargetTiming(1, 2, target, "target_turn_start");
+  assert.equal(sameRound.events.length, 0, "Poisoned must last through the round in which it is applied");
+  assert.equal(target.state.active_effect_ids.includes("poisoned"), true);
+
   d20 = 1;
-  const failed = L.resolveTargetTiming(1, 2, target, "target_turn_end");
+  const failed = L.resolveTargetTiming(sameRound.sequence, 3, target, "target_turn_start");
   assert.equal(failed.events.length, 1);
   assert.equal(failed.events[0].save_succeeded, false);
   assert.equal(target.state.active_effect_ids.includes("poisoned"), true);
 
   d20 = 20;
-  const passed = L.resolveTargetTiming(failed.sequence, 3, target, "target_turn_end");
+  const passed = L.resolveTargetTiming(failed.sequence, 4, target, "target_turn_start");
   assert.equal(passed.events.length, 1);
   assert.equal(passed.events[0].save_succeeded, true);
   assert.deepEqual(passed.events[0].removed_condition_ids, ["poisoned"]);
@@ -63,15 +69,15 @@ window.IRON_PIT_DICE = {
 
 {
   const sourceA = member("source-a"), sourceB = member("source-b"), target = member("multi-source-target");
-  T.apply(target.state, "poisoned", sourceA.combatant_id, { sourceEffectId: "poison-a", expiryTiming: "source_turn_start" });
-  T.apply(target.state, "poisoned", sourceB.combatant_id, { sourceEffectId: "poison-b", expiryTiming: "source_turn_start" });
+  T.apply(target.state, "frightened", sourceA.combatant_id, { sourceEffectId: "fear-a", expiryTiming: "source_turn_start" });
+  T.apply(target.state, "frightened", sourceB.combatant_id, { sourceEffectId: "fear-b", expiryTiming: "source_turn_start" });
   const setup = { heroes: [sourceA, sourceB, target], monsters: [] };
   const first = L.resolveSourceTiming(1, 5, sourceA, setup, "source_turn_start");
   assert.equal(first.events.length, 0, "One source ending must not clear a condition still supplied by another source");
-  assert.equal(target.state.active_effect_ids.includes("poisoned"), true);
+  assert.equal(target.state.active_effect_ids.includes("frightened"), true);
   const second = L.resolveSourceTiming(first.sequence, 5, sourceB, setup, "source_turn_start");
   assert.equal(second.events.length, 1);
-  assert.equal(target.state.active_effect_ids.includes("poisoned"), false);
+  assert.equal(target.state.active_effect_ids.includes("frightened"), false);
 }
 
 console.log("Browser condition lifecycle regressions passed.");

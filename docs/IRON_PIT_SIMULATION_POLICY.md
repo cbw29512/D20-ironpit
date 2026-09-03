@@ -7,7 +7,7 @@ Iron Pit is a D&D 5e (2024) / SRD 5.2.1-compatible combat simulator, not an exac
 1. Implement a shared combat mechanic once.
 2. Keep monster and pregen definitions declarative: statistics, attacks, spells, defenses, and printed riders.
 3. Certify compatible creatures/builds in batches.
-4. Treat non-combat rules as arena-neutral.
+4. Treat non-combat rules as arena-neutral only when doing so does not expand the simulator into a deferred environment system.
 5. Add a true exception only when no reusable mechanic can represent a combat-relevant rule.
 
 ## Arena decision order
@@ -48,9 +48,17 @@ Iron Pit uses one Poisoned lifecycle regardless of source wording while preservi
 - Success ends Poisoned. Failure leaves it active until the next start-of-turn recovery save.
 - Poison damage remains source-specific and is resolved normally through universal resistance/immunity/vulnerability rules.
 
-## Arena-neutral examples
+## Deferred environmental scope
 
-Rules with no meaningful effect on a card-v-card combat outcome should be source-audited but require no runtime behavior. Examples include Water Breathing and similar environmental-only capabilities.
+Environmental simulation is intentionally deferred. Do not certify creatures that require an aquatic-only or other environment-dependent arena to function as intended solely by declaring their environmental traits neutral.
+
+For the current arena scope:
+
+- do not add aquatic-only creatures as combat-ready roster entries;
+- do not add underwater combat, currents, drowning/suffocation, water-depth, or environmental-hazard systems;
+- retain printed swim, climb, fly, breathing, and similar source fingerprints for audit fidelity without inventing tactical geometry;
+- a land-capable creature may still be certified when its normal arena combat works without requiring the deferred environmental systems;
+- Water Breathing or a similar trait must not be reclassified merely to unlock an aquatic-only monster batch.
 
 ## Data ownership
 
