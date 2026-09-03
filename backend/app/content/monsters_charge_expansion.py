@@ -19,7 +19,7 @@ def _attack(
     return WeaponAttack(
         id=attack_id,
         weapon=Weapon(
-            id=f"{attack_id}-weapon",
+            id=attack_id,
             name=name,
             attack_kind=WeaponAttackKind.MELEE,
             dice_count=dice_count,
