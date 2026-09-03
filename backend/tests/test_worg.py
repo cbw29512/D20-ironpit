@@ -32,7 +32,6 @@ def test_worg_bite_and_advantage_rider_match_srd() -> None:
 def test_worg_hit_primes_exactly_one_attack_against_target() -> None:
     worg = build_combatant_state(_worg())
     target = build_combatant_state(build_karnok_stoneward().model_copy(deep=True))
-    target.template.armor_class = 30
     event = resolve_attack(
         1, 1, worg, target, worg.template.weapon_attack, 5,
         FixedDiceProvider([15, 1]), actor_event_id="worg", target_event_id="target", spend_action=False,
@@ -45,6 +44,7 @@ def test_worg_hit_primes_exactly_one_attack_against_target() -> None:
     assert modifier.consume_on_attack_against is True
     assert modifier.expires_at_start_of_source_turn is True
 
+    target.template.armor_class = 30
     attacker = build_combatant_state(build_karnok_stoneward().model_copy(deep=True))
     follow_up = resolve_attack(
         2, 1, attacker, target, attacker.template.weapon_attack, 5,
