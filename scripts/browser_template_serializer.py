@@ -39,6 +39,19 @@ def _control(effect: Any) -> dict[str, Any] | None:
     return row or None
 
 
+def _hit_modifier(effect: Any) -> dict[str, Any]:
+    row: dict[str, Any] = {"kind": effect.kind}
+    if effect.flat_bonus:
+        row["flatBonus"] = effect.flat_bonus
+    if effect.consume_on_attack_against:
+        row["consumeOnAttackAgainst"] = True
+    if effect.expires_at_start_of_source_turn:
+        row["expiresAtStartOfSourceTurn"] = True
+    if effect.expires_at_end_of_target_turn:
+        row["expiresAtEndOfTargetTurn"] = True
+    return row
+
+
 def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
     try:
         weapon = attack.weapon
@@ -65,11 +78,7 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
                 for part in attack.on_hit_damage
             ]
         if attack.on_hit_modifier_effects:
-            row["onHitModifiers"] = [
-                {"kind": effect.kind, "consumeOnAttackAgainst": effect.consume_on_attack_against,
-                 "expiresAtStartOfSourceTurn": effect.expires_at_start_of_source_turn}
-                for effect in attack.on_hit_modifier_effects
-            ]
+            row["onHitModifiers"] = [_hit_modifier(effect) for effect in attack.on_hit_modifier_effects]
         if attack.conditional_damage:
             if len(attack.conditional_damage) != 1:
                 raise ValueError(f"Browser supports one conditional damage rider on {attack.id}.")

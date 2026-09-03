@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.modifier_stack import expire_target_turn_modifiers
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.timed_conditions import remove_effect_group
 from app.domain.actions import ConditionTiming
@@ -87,6 +88,8 @@ def resolve_target_condition_timing(
                         description=f"{_condition_name(effect.source_effect_id or effect.effect_id)} ends on {target.state.template.name}.",
                     ))
                     sequence += 1
+        if timing == "target_turn_end":
+            expire_target_turn_modifiers(target.state)
         return events, sequence
     except (TypeError, ValueError):
         raise
@@ -132,5 +135,5 @@ def resolve_source_condition_timing(
                 sequence += 1
         return events, sequence
     except Exception as exc:
-        logger.exception("Source condition lifecycle failed for %s at %s.", source.combatant_id, timing)
+        logger.exception("Source condition lifecycle failed for %s.", source.combatant_id)
         raise RuntimeError("Source condition lifecycle could not be resolved.") from exc

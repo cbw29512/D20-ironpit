@@ -19,7 +19,7 @@ load("browser-monsters-generated.js");
 const generated = window.IRON_PIT_BROWSER_MONSTERS;
 assert.equal(window.IRON_PIT_CANONICAL_MONSTERS_READY, true, "Canonical generated monster bundle must mark itself ready");
 assert.equal(Object.keys(manual).length, 67, "Legacy fragments remain a 67-monster compatibility subset");
-assert.equal(Object.keys(generated).length, 114, "Generated runtime must expose only currently RAW-certified monsters");
+assert.equal(Object.keys(generated).length, 115, "Generated runtime must expose only currently RAW-certified monsters");
 for (const id of [
   "srd-jackal", "srd-archelon", "srd-ankylosaurus", "srd-giant-eagle", "srd-giant-elk", "srd-giant-crocodile",
   "srd-allosaurus", "srd-minotaur-skeleton", "srd-triceratops", "srd-warhorse-skeleton",
@@ -29,7 +29,7 @@ for (const id of [
   "srd-tough", "srd-venomous-snake", "srd-violet-fungus", "srd-bandit-captain", "srd-knight",
   "srd-noble", "srd-warrior-veteran", "srd-goblin-boss", "srd-blood-hawk",
   "srd-swarm-of-bats", "srd-swarm-of-rats", "srd-swarm-of-crawling-claws",
-  "srd-swarm-of-insects", "srd-swarm-of-venomous-snakes", "srd-goat", "srd-worg", "srd-zombie",
+  "srd-swarm-of-insects", "srd-swarm-of-venomous-snakes", "srd-goat", "srd-merfolk-skirmisher", "srd-worg", "srd-zombie",
 ]) {
   assert.ok(generated[id], `${id} must be present in generated runtime`);
 }
@@ -48,6 +48,17 @@ assert.deepEqual(goatTemplate.attacks[0].charge, {
   minimumMove: 20,
   replacementDamage: { diceCount: 1, diceSize: 4, damageBonus: 0, damageType: "bludgeoning" },
 });
+const merfolkTemplate = generated["srd-merfolk-skirmisher"];
+assert.equal(merfolkTemplate.primary_attack_id, "merfolk-skirmisher-ocean-spear-ranged");
+assert.deepEqual(merfolkTemplate.attacks.map((item) => item.kind), ["ranged", "melee"]);
+assert.deepEqual(merfolkTemplate.attacks[0].onHitDamage, [
+  { source: "Cold", diceCount: 1, diceSize: 4, damageBonus: 0, damageType: "cold" },
+]);
+assert.deepEqual(merfolkTemplate.attacks[0].onHitModifiers, [
+  { kind: "speed", flatBonus: -10, expiresAtEndOfTargetTurn: true },
+]);
+assert.deepEqual(merfolkTemplate.attacks[1].onHitModifiers, merfolkTemplate.attacks[0].onHitModifiers);
+assert.deepEqual(merfolkTemplate.source_trait_names, ["Amphibious"]);
 
 const movementKeys = ["burrow_ft", "climb_ft", "fly_ft", "hover", "swim_ft", "walk_ft"];
 for (const monster of Object.values(generated)) {
@@ -64,6 +75,9 @@ assert.deepEqual(generated["srd-bat"].movement_modes, {
 });
 assert.deepEqual(generated["srd-animated-flying-sword"].movement_modes, {
   walk_ft: 5, fly_ft: 50, climb_ft: 0, swim_ft: 0, burrow_ft: 0, hover: true,
+});
+assert.deepEqual(merfolkTemplate.movement_modes, {
+  walk_ft: 10, fly_ft: 0, climb_ft: 0, swim_ft: 40, burrow_ft: 0, hover: false,
 });
 assert.deepEqual(generated["srd-wolf"].source_trait_names, ["Pack Tactics"]);
 assert.deepEqual(generated["srd-tough"].source_trait_names, ["Pack Tactics"]);
@@ -190,8 +204,8 @@ assert.equal(tail.proneMaxSize, "huge");
 
 for (const file of [
   "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
-  "browser-grapple.js", "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-timed-conditions.js",
-  "browser-zero-hp.js", "browser-attack.js", "browser-charge.js", "browser-saves.js", "browser-multiattack.js",
+  "browser-grapple.js", "browser-modifiers.js", "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-timed-conditions.js",
+  "browser-zero-hp.js", "browser-attack.js", "browser-charge.js", "browser-saves.js", "browser-condition-lifecycle.js", "browser-multiattack.js",
 ]) load(file);
 window.IRON_PIT_DICE = {
   roll: (sides) => sides === 20 ? 10 : 1,
@@ -200,9 +214,21 @@ window.IRON_PIT_DICE = {
 const S = window.IRON_PIT_BROWSER_STATE;
 const C = window.IRON_PIT_BROWSER_CHARGE;
 const M = window.IRON_PIT_BROWSER_MULTIATTACK;
+const MOD = window.IRON_PIT_BROWSER_MODIFIERS;
+const LIFE = window.IRON_PIT_BROWSER_CONDITION_LIFECYCLE;
 const combatant = (id, side, position, template) => ({
   combatant_id: id, side, position_ft: position, state: S.buildState(structuredClone(template)),
 });
+
+const merfolkSlowTarget = combatant("hero-slow:karnok-stoneward-l1", "heroes", 0, window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"]);
+MOD.applyHitEffects(merfolkSlowTarget.state, "merfolk", merfolkTemplate.attacks[0]);
+assert.equal(MOD.effectiveSpeed(merfolkSlowTarget.state), 20);
+S.beginTurn(merfolkSlowTarget.state);
+assert.equal(merfolkSlowTarget.state.movement_remaining_ft, 20);
+const slowExpiry = LIFE.resolveTargetTiming(1, 1, merfolkSlowTarget, "target_turn_end");
+assert.deepEqual(slowExpiry.events, []);
+assert.equal(MOD.effectiveSpeed(merfolkSlowTarget.state), 30);
+assert.deepEqual(merfolkSlowTarget.state.active_modifiers, []);
 
 const goatMember = combatant("monster-goat:srd-goat", "monsters", 5, goatTemplate);
 const goatTarget = combatant("hero-goat:karnok-stoneward-l1", "heroes", 0, window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"]);
@@ -285,4 +311,4 @@ assert.ok(heroOne.state.active_effect_ids.includes("grappled"));
 assert.ok(heroOne.state.active_effect_ids.includes("restrained"));
 assert.ok(heroTwo.state.active_effect_ids.includes("prone"));
 
-console.log("Generated monster runtime contains 114 RAW-certified templates, including Charge damage replacement, fixed typed hit riders, and source-turn on-hit Advantage modifiers, with aquatic-only Killer Whale deferred, shared grapple-control monsters, Allosaurus Charge follow-up Bite, native data-only swarms, Charge riders, Prone-only Charge, conditional damage, Redirect Attack, and T. rex retargeting.");
+console.log("Generated monster runtime contains 115 RAW-certified templates, including timed on-hit Speed modifiers, Charge damage replacement, fixed typed hit riders, and source-turn on-hit Advantage modifiers, with aquatic-only Killer Whale deferred, shared grapple-control monsters, Allosaurus Charge follow-up Bite, native data-only swarms, Charge riders, Prone-only Charge, conditional damage, Redirect Attack, and T. rex retargeting.");

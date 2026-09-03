@@ -3,6 +3,7 @@
 
   const T = () => window.IRON_PIT_BROWSER_TIMED;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
+  const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
 
   const label = (id) => id.replaceAll("_", " ").replace(/\b\w/g, (char) => char.toUpperCase());
   function repeatSaveDue(effect, round, timing) {
@@ -40,6 +41,7 @@
         });
       }
     }
+    if (timing === "target_turn_end") M()?.expireTargetTurn(target.state);
     return { events, sequence };
   }
 

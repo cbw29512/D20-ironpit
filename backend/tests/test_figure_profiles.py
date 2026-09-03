@@ -75,6 +75,7 @@ def test_new_batch_has_specific_reviewed_details() -> None:
         "Hippopotamus": "hippopotamus",
         "Killer Whale": "orca",
         "Manticore": "manticore",
+        "Merfolk Skirmisher": "merfolk-skirmisher",
         "Minotaur Skeleton": "minotaur-skeleton",
         "Pegasus": "pegasus",
         "Scorpion": "scorpion",

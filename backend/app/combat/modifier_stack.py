@@ -53,6 +53,13 @@ def expire_source_turn_modifiers(
     return removed
 
 
+def expire_target_turn_modifiers(state: CombatantState) -> int:
+    """Expire modifiers whose duration ends at the end of the affected creature's turn."""
+    before = len(state.active_modifiers)
+    state.active_modifiers = [item for item in state.active_modifiers if not item.expires_at_end_of_target_turn]
+    return before - len(state.active_modifiers)
+
+
 def effective_armor_class(state: CombatantState) -> int:
     return max(0, state.template.armor_class + sum(
         item.flat_bonus for item in state.active_modifiers if item.kind is ModifierKind.ARMOR_CLASS

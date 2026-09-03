@@ -30,6 +30,7 @@ class CombatModifier(BaseModel):
     concentration_required: bool = False
     consume_on_attack_against: bool = False
     expires_at_start_of_source_turn: bool = False
+    expires_at_end_of_target_turn: bool = False
     expires_source_turn_end_round: int | None = Field(default=None, ge=1)
 
     @model_validator(mode="after")
@@ -50,6 +51,8 @@ class CombatModifier(BaseModel):
         advantage_kinds = {ModifierKind.ATTACKS_AGAINST_ADVANTAGE, ModifierKind.NEXT_ATTACK_AGAINST_ADVANTAGE}
         if self.kind in advantage_kinds and self.flat_bonus:
             raise ValueError("Attack-advantage modifiers do not accept a flat bonus.")
+        if self.kind is ModifierKind.SPEED and self.flat_bonus == 0:
+            raise ValueError("Speed modifiers require a nonzero flat bonus.")
         if self.kind is ModifierKind.NEXT_ATTACK_AGAINST_ADVANTAGE and self.target_id is None:
             raise ValueError("Target-scoped attack Advantage requires a target id.")
         if self.consume_on_attack_against and self.kind is not ModifierKind.ATTACKS_AGAINST_ADVANTAGE:

@@ -40,7 +40,7 @@ _READY_BY_NAME = {
     "Griffon": "srd-griffon", "Grimlock": "srd-grimlock", "Guard": "srd-guard", "Hawk": "srd-hawk",
     "Hippogriff": "srd-hippogriff", "Hobgoblin Warrior": "srd-hobgoblin-warrior", "Hyena": "srd-hyena",
     "Jackal": "srd-jackal", "Knight": "srd-knight", "Kobold Warrior": "srd-kobold-warrior", "Lizard": "srd-lizard",
-    "Mastiff": "srd-mastiff", "Minotaur Skeleton": "srd-minotaur-skeleton", "Mule": "srd-mule",
+    "Mastiff": "srd-mastiff", "Merfolk Skirmisher": "srd-merfolk-skirmisher", "Minotaur Skeleton": "srd-minotaur-skeleton", "Mule": "srd-mule",
     "Noble": "srd-noble", "Ogre": "srd-ogre", "Ogre Zombie": "srd-ogre-zombie", "Owl": "srd-owl",
     "Owlbear": "srd-owlbear", "Panther": "srd-panther", "Plesiosaurus": "srd-plesiosaurus",
     "Polar Bear": "srd-polar-bear", "Pony": "srd-pony", "Pteranodon": "srd-pteranodon",
