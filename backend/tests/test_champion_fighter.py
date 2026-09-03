@@ -68,7 +68,7 @@ def test_remarkable_athlete_grants_athletics_advantage_on_escape() -> None:
     assert not state.grapple_sources
 
 
-def test_remarkable_athlete_critical_move_closes_without_spending_enemy_reaction() -> None:
+def test_remarkable_athlete_critical_move_is_arena_neutral_in_fixed_pit() -> None:
     hero = _member(build_karnok_stoneward_level(3), "hero-1", "heroes", 0)
     monster = _member(build_commoner().model_copy(update={"max_hp": 100}), "monster-1", "monsters", 20)
     setup = EncounterSetup(heroes=[hero], monsters=[monster], hero_total_levels=3, monster_total_cr="0")
@@ -78,8 +78,8 @@ def test_remarkable_athlete_critical_move_closes_without_spending_enemy_reaction
         FixedDiceProvider([19, 1, 1, 1, 1]), setup,
     )
     assert event.critical is True
-    assert event.movement_ft == 15
-    assert hero.position_ft == 15
+    assert event.movement_ft is None
+    assert hero.position_ft == 0
     assert monster.state.reaction_available is True
 
 

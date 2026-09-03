@@ -33,7 +33,7 @@ def test_melee_only_creature_attacks_without_movement_or_dash() -> None:
     _disable_adrenaline_rush(hero)
     before = (hero.position_ft, monster.position_ft)
 
-    events, _ = resolve_combat_turn(1, 1, hero, monster, setup, FixedDiceProvider([10, 1, 1]))
+    events, _ = resolve_combat_turn(1, 1, hero, monster, setup, FixedDiceProvider([2]))
 
     assert any(event.event_type == "attack" for event in events)
     assert not any(event.event_type in {"movement", "dash"} for event in events)
@@ -47,7 +47,7 @@ def test_frontline_with_backup_range_prefers_melee_under_fixed_formation() -> No
     hero, monster = _at_distance(setup, 60)
     _disable_adrenaline_rush(hero)
 
-    events, _ = resolve_combat_turn(1, 1, hero, monster, setup, FixedDiceProvider([10, 1, 1]))
+    events, _ = resolve_combat_turn(1, 1, hero, monster, setup, FixedDiceProvider([2]))
 
     attack = next(event for event in events if event.event_type == "attack")
     assert attack.weapon_id == "greatsword"
@@ -74,7 +74,7 @@ def test_protected_ranged_primary_uses_range_without_close_combat_disadvantage()
 
     event = resolve_attack(
         1, 1, archer.state, target.state, attack, distance,
-        FixedDiceProvider([10, 1]), close_enemy_active=False,
+        FixedDiceProvider([2]), close_enemy_active=False,
     )
     assert event.attack_roll is not None
     assert event.attack_roll.mode is RollMode.NORMAL

@@ -56,18 +56,17 @@ def test_scout_and_infantry_match_srd_weapon_options() -> None:
     assert (infantry.alternate_weapon_attacks[0].weapon.normal_range_ft, infantry.alternate_weapon_attacks[0].weapon.long_range_ft) == (20, 60)
 
 
-def _scout_attack_ids(distance_ft: int) -> list[str]:
+def _scout_attack_ids(*, protected: bool) -> list[str]:
+    monster_ids = ["srd-scout", "srd-warrior-infantry"] if protected else ["srd-scout"]
     setup = build_encounter_setup(EncounterSelection(
-        hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-scout"],
+        hero_ids=["karnok-stoneward-l1"], monster_ids=monster_ids,
     ))
-    hero, scout = setup.heroes[0], setup.monsters[0]
-    hero.position_ft = 0
-    scout.position_ft = distance_ft
+    scout = next(member for member in setup.monsters if member.state.template.id == "srd-scout")
     begin_turn(scout.state)
     events, _ = resolve_attack_action(1, 1, scout, setup, FixedDiceProvider([10, 4, 10, 4]))
     return [event.weapon_id for event in events if event.event_type == "attack"]
 
 
-def test_scout_fires_at_range_and_switches_to_melee_when_engaged() -> None:
-    assert _scout_attack_ids(30) == ["scout-longbow", "scout-longbow"]
-    assert _scout_attack_ids(5) == ["scout-shortsword", "scout-shortsword"]
+def test_scout_stays_ranged_while_screened_and_switches_to_melee_when_exposed() -> None:
+    assert _scout_attack_ids(protected=True) == ["scout-longbow", "scout-longbow"]
+    assert _scout_attack_ids(protected=False) == ["scout-shortsword", "scout-shortsword"]

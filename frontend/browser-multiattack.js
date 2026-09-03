@@ -28,10 +28,15 @@
       const ranged = F().chooseAttack(member, setup, data.attackIds, "ranged", true);
       if (ranged) return ranged;
     }
+    if (F().isBackline(member) && F().alliedFrontlineActive(member, setup)) {
+      const ranged = F().chooseAttack(member, setup, data.attackIds, "ranged");
+      if (ranged) return ranged;
+    }
     return F().chooseAttack(member, setup, data.attackIds, "melee")
       || F().chooseAttack(member, setup, data.attackIds, "ranged");
   }
   function useRangedSplit(member, setup, slots) {
+    if (F().isBackline(member)) return false;
     if (!F().hasFrontlineTarget(member, setup) || !F().hasBacklineTarget(member, setup)) return false;
     if (!slots.slice(1).some((slot) => F().flexibleSlotHasBoth(member, slotData(slot).attackIds))) return false;
     return D().roll(100) >= 76;

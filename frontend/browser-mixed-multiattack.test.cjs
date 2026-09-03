@@ -71,6 +71,7 @@ const hybrid = {
     { attackIds: ["sword", "bow"], saveActionIds: [] },
   ] },
 };
+const rangedHybrid = { ...hybrid, id: "ranged-hybrid", name: "Ranged Hybrid", primary_attack_id: "bow" };
 const frontTarget = {
   id: "front", name: "Front", kind: "character", size: "medium", armor_class: 12, max_hp: 30, speed_ft: 30,
   primary_attack_id: "front-sword", traits: [], resources: {}, saving_throw_actions: [],
@@ -84,12 +85,22 @@ const backTarget = {
     { id: "back-sword", name: "Sword", kind: "melee", bonus: 4, reach: 5, diceCount: 1, diceSize: 6, damageBonus: 2, damageType: "slashing" },
   ],
 };
+const monsterGuard = { ...frontTarget, id: "guard", name: "Guard", kind: "monster", primary_attack_id: "front-sword" };
 
 function hybridSetup() {
   const front = member("hero-front", "heroes", frontTarget, 5);
   const back = member("hero-back", "heroes", backTarget, 0);
   const attacker = member("monster-hybrid", "monsters", hybrid, 10);
   return { setup: { heroes: [front, back], monsters: [attacker] }, attacker, front, back };
+}
+function rangedHybridSetup(protectedByFrontline) {
+  const target = member("hero-front", "heroes", frontTarget, 5);
+  const attacker = member("monster-ranged", "monsters", rangedHybrid, 15);
+  const guard = member("monster-guard", "monsters", monsterGuard, 10);
+  return {
+    setup: { heroes: [target], monsters: protectedByFrontline ? [guard, attacker] : [attacker] },
+    attacker,
+  };
 }
 
 {
@@ -109,6 +120,22 @@ function hybridSetup() {
   const attacks = result.events.filter((event) => event.event_type === "attack");
   assert.deepEqual(attacks.map((event) => event.weapon_id), ["sword", "sword"]);
   assert.deepEqual(attacks.map((event) => event.target_id), [front.combatant_id, front.combatant_id]);
+}
+
+{
+  const { setup, attacker } = rangedHybridSetup(true);
+  window.IRON_PIT_DICE = queuedDice([15, 4, 15, 4]);
+  const result = T.resolveTurn(1, 1, attacker, setup);
+  const attacks = result.events.filter((event) => event.event_type === "attack");
+  assert.deepEqual(attacks.map((event) => event.weapon_id), ["bow", "bow"], "screened ranged Multiattack stays ranged");
+}
+
+{
+  const { setup, attacker } = rangedHybridSetup(false);
+  window.IRON_PIT_DICE = queuedDice([15, 4, 15, 4]);
+  const result = T.resolveTurn(1, 1, attacker, setup);
+  const attacks = result.events.filter((event) => event.event_type === "attack");
+  assert.deepEqual(attacks.map((event) => event.weapon_id), ["sword", "sword"], "exposed ranged Multiattack switches to melee");
 }
 
 console.log("Browser fixed-formation mixed Multiattack regressions passed.");

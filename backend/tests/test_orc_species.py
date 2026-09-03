@@ -28,7 +28,7 @@ def _orc_fighter_state():
     return build_combatant_state(template)
 
 
-def test_adrenaline_rush_uses_bonus_action_dashes_and_grants_proficiency_temp_hp() -> None:
+def test_adrenaline_rush_uses_bonus_action_and_grants_temp_hp_without_pit_movement() -> None:
     state = _orc_fighter_state()
     begin_turn(state)
 
@@ -36,7 +36,8 @@ def test_adrenaline_rush_uses_bonus_action_dashes_and_grants_proficiency_temp_hp
 
     assert event is not None
     assert state.bonus_action_available is False
-    assert state.movement_remaining_ft == 60
+    assert state.movement_remaining_ft == 30
+    assert event.movement_ft == 0
     assert state.temporary_hp == 2
     resource = next(item for item in state.resources if item.id == ADRENALINE_RESOURCE_ID)
     assert resource.current_uses == 1

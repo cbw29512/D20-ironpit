@@ -20,44 +20,48 @@ def _boar_fixture(distance_ft: int):
     return setup, hero, boar
 
 
-def test_boar_charges_when_it_sweeps_initiative_and_has_twenty_feet_of_runup() -> None:
+def test_boar_charges_when_it_sweeps_initiative_with_abstracted_runup() -> None:
     setup, hero, boar = _boar_fixture(30)
+    before = (hero.position_ft, boar.position_ft)
 
     events, _ = resolve_combat_turn(
         1, 1, boar, hero, setup, FixedDiceProvider([15, 2, 3])
     )
 
-    assert [event.event_type for event in events[:2]] == ["movement", "attack"]
-    assert events[0].movement_ft == 25
-    attack = events[1]
+    assert [event.event_type for event in events] == ["attack"]
+    attack = events[0]
     assert attack.feature_id == "charge"
     assert attack.hit is True
     assert attack.damage_roll is not None
     assert attack.damage_roll.notation == "1d6+1 + 1d6+0"
     assert attack.damage_roll.total == 6
     assert attack.applied_condition_ids == ["prone"]
+    assert (hero.position_ft, boar.position_ft) == before
     assert "dodge" not in boar.state.active_effect_ids
 
 
-def test_boar_that_does_not_win_initiative_uses_normal_melee_closing() -> None:
+def test_boar_that_does_not_win_initiative_uses_normal_melee_without_movement() -> None:
     setup, hero, boar = _boar_fixture(30)
     boar.state.initiative_total = hero.state.initiative_total
+    before = (hero.position_ft, boar.position_ft)
 
     events, _ = resolve_combat_turn(1, 1, boar, hero, setup, FixedDiceProvider([10, 3]))
 
-    assert [event.event_type for event in events] == ["movement", "attack"]
-    assert events[0].movement_ft == 25
-    assert events[1].feature_id != "charge"
-    assert events[1].weapon_id == "boar-gore-weapon"
+    assert [event.event_type for event in events] == ["attack"]
+    assert events[0].feature_id != "charge"
+    assert events[0].weapon_id == "boar-gore-weapon"
+    assert (hero.position_ft, boar.position_ft) == before
 
 
 def test_charge_is_not_reused_after_round_one() -> None:
     setup, hero, boar = _boar_fixture(30)
+    before = (hero.position_ft, boar.position_ft)
 
     events, _ = resolve_combat_turn(1, 2, boar, hero, setup, FixedDiceProvider([10, 3]))
 
-    assert [event.event_type for event in events] == ["movement", "attack"]
-    assert events[1].feature_id != "charge"
+    assert [event.event_type for event in events] == ["attack"]
+    assert events[0].feature_id != "charge"
+    assert (hero.position_ft, boar.position_ft) == before
 
 
 def test_initiative_sweep_assumes_precontact_charge_runup_from_melee_slot() -> None:
