@@ -157,6 +157,21 @@ def test_sorcerer_subclasses_compose_real_planned_spell_packages_from_one_spine(
         assert "sorcerer-spellcasting" in recipe.combat_features
 
 
+def test_warlock_patron_specializations_compose_from_one_pact_magic_spine() -> None:
+    expected = {
+        ("fiend-patron", "blaster"): ("fiend-patron", None),
+        ("great-old-one-patron", "controller"): ("great-old-one-patron", None),
+        ("celestial-patron", "blade-hybrid"): ("celestial-patron", "shortsword"),
+    }
+    for (subclass_id, build_id), (spell_package_id, weapon_id) in expected.items():
+        recipe = compose_character_combat_recipe("warlock", subclass_id, build_id, 14)
+        assert recipe.shared_progression_id == "warlock-1-20"
+        assert recipe.build_status == "planned"
+        assert recipe.build_choices.spell_package_id == spell_package_id
+        assert recipe.build_choices.primary_weapon == weapon_id
+        assert "pact-magic" in recipe.combat_features
+
+
 def test_subclass_specific_build_fails_closed_on_the_wrong_subclass() -> None:
     with pytest.raises(ValueError, match="requires subclass circle-moon"):
         compose_character_combat_recipe("druid", "circle-land", "moon-melee", 3)

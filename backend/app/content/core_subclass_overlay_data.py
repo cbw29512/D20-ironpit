@@ -21,10 +21,4 @@ CORE_SUBCLASS_DELTA_DATA: dict[str, tuple[str, dict[int, dict[str, tuple[str, ..
         15: {"features_added": ("superior-critical",), "features_removed": ("improved-critical",)},
         18: {"features_added": ("survivor-defy-death", "survivor-heroic-rally")},
     }),
-    "fiend-patron": ("warlock", {
-        3: {"features_added": ("dark-ones-blessing", "fiend-combat-spells-2")},
-        5: {"features_added": ("fiend-combat-spells-3",)}, 6: {"features_added": ("dark-ones-own-luck",)},
-        7: {"features_added": ("fiend-combat-spells-4",)}, 9: {"features_added": ("fiend-combat-spells-5",)},
-        10: {"features_added": ("fiendish-resilience",)}, 14: {"features_added": ("hurl-through-hell",)},
-    }),
 }

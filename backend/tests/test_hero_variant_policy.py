@@ -61,6 +61,15 @@ def test_sorcerer_branches_once_into_three_subclass_specializations() -> None:
     assert family.migration_complete is True
 
 
+def test_warlock_branches_once_into_three_patron_specializations() -> None:
+    family = hero_subclass_family("warlock")
+    assert family.target_subclass_ids == (
+        "fiend-patron", "great-old-one-patron", "celestial-patron",
+    )
+    assert family.audited_subclass_ids == family.target_subclass_ids
+    assert family.migration_complete is True
+
+
 def test_remaining_classes_have_three_named_subclass_targets_without_fake_completion() -> None:
     families = all_hero_subclass_families()
     assert len(families) == 12
@@ -71,6 +80,7 @@ def test_remaining_classes_have_three_named_subclass_targets_without_fake_comple
         assert family.audited_subclass_ids
         if family.class_id not in {
             "fighter", "barbarian", "monk", "paladin", "ranger", "rogue", "wizard", "sorcerer",
+            "warlock",
         }:
             assert len(family.target_subclass_ids) == 3
             assert family.migration_complete is False

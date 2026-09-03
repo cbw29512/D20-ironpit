@@ -11,6 +11,7 @@ from app.content.ranger_subclass_overlay_data import RANGER_SUBCLASS_DELTA_DATA
 from app.content.rogue_subclass_overlay_data import ROGUE_SUBCLASS_DELTA_DATA
 from app.content.sorcerer_subclass_overlay_data import SORCERER_SUBCLASS_DELTA_DATA
 from app.content.wizard_subclass_overlay_data import WIZARD_SUBCLASS_DELTA_DATA
+from app.content.warlock_subclass_overlay_data import WARLOCK_SUBCLASS_DELTA_DATA
 
 
 @dataclass(frozen=True)
@@ -53,6 +54,7 @@ for _class_id, _source in (
     ("rogue", ROGUE_SUBCLASS_DELTA_DATA),
     ("sorcerer", SORCERER_SUBCLASS_DELTA_DATA),
     ("wizard", WIZARD_SUBCLASS_DELTA_DATA),
+    ("warlock", WARLOCK_SUBCLASS_DELTA_DATA),
 ):
     for _subclass_id, _rows in _source.items():
         if _subclass_id in SUBCLASS_COMBAT_OVERLAYS:

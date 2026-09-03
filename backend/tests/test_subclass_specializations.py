@@ -9,6 +9,7 @@ from app.content.subclass_specializations import (
     ROGUE_SPECIALIZATIONS,
     SORCERER_SPECIALIZATIONS,
     WIZARD_SPECIALIZATIONS,
+    WARLOCK_SPECIALIZATIONS,
     SubclassSpecialization,
     specializations_for_class,
     subclass_specialization,
@@ -171,6 +172,19 @@ def test_sorcerer_has_one_charisma_spell_specialization_per_target_subclass() ->
     assert SORCERER_SPECIALIZATIONS[0].feature_choice_ids == (
         "draconic-ancestor-red", "elemental-affinity-fire",
     )
+
+
+def test_warlock_has_one_charisma_specialization_per_target_patron() -> None:
+    assert tuple(item.subclass_id for item in specializations_for_class("warlock")) == (
+        "fiend-patron", "great-old-one-patron", "celestial-patron",
+    )
+    fiend, great_old_one, celestial = WARLOCK_SPECIALIZATIONS
+    assert (fiend.role, great_old_one.role, celestial.role) == (
+        "eldritch-blaster", "control-caster", "weapon-caster-hybrid",
+    )
+    assert celestial.primary_weapon == "shortsword"
+    assert celestial.feature_choice_ids == ("pact-of-the-blade",)
+    assert all(item.ability_priority[0] == "charisma" for item in WARLOCK_SPECIALIZATIONS)
 
 
 def test_specialization_without_source_truth_fails_closed() -> None:

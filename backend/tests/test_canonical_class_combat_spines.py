@@ -104,3 +104,13 @@ def test_sorcerer_base_spine_excludes_draconic_features() -> None:
         subclass_features.isdisjoint(row.features_added)
         for row in SORCERER_COMBAT_LEVELS.values()
     )
+
+
+def test_warlock_base_spine_excludes_fiend_features() -> None:
+    subclass_features = {
+        "dark-ones-blessing", "dark-ones-own-luck", "fiendish-resilience", "hurl-through-hell",
+    }
+    assert all(
+        subclass_features.isdisjoint(row.features_added)
+        for row in WARLOCK_COMBAT_LEVELS.values()
+    )

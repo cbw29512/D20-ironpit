@@ -22,7 +22,7 @@ _MASTERY_CAPABILITY = {
 }
 _MASTERY_LIMIT = {
     "fighter": 3, "barbarian": 2, "monk": 0,
-    "paladin": 2, "ranger": 2, "rogue": 2, "wizard": 0, "sorcerer": 0,
+    "paladin": 2, "ranger": 2, "rogue": 2, "wizard": 0, "sorcerer": 0, "warlock": 0,
 }
 
 
@@ -91,46 +91,25 @@ COMBAT_BUILD_CHOICE_OVERLAYS = {
     for class_id in _MASTERY_LIMIT
     for variant in combat_build_variants_for(class_id)
 }
-FIGHTER_COMBAT_BUILD_CHOICES = {
-    build_id: overlay
-    for (class_id, build_id), overlay in COMBAT_BUILD_CHOICE_OVERLAYS.items()
-    if class_id == "fighter"
-}
-BARBARIAN_COMBAT_BUILD_CHOICES = {
-    build_id: overlay
-    for (class_id, build_id), overlay in COMBAT_BUILD_CHOICE_OVERLAYS.items()
-    if class_id == "barbarian"
-}
-MONK_COMBAT_BUILD_CHOICES = {
-    build_id: overlay
-    for (class_id, build_id), overlay in COMBAT_BUILD_CHOICE_OVERLAYS.items()
-    if class_id == "monk"
-}
-PALADIN_COMBAT_BUILD_CHOICES = {
-    build_id: overlay
-    for (class_id, build_id), overlay in COMBAT_BUILD_CHOICE_OVERLAYS.items()
-    if class_id == "paladin"
-}
-RANGER_COMBAT_BUILD_CHOICES = {
-    build_id: overlay
-    for (class_id, build_id), overlay in COMBAT_BUILD_CHOICE_OVERLAYS.items()
-    if class_id == "ranger"
-}
-ROGUE_COMBAT_BUILD_CHOICES = {
-    build_id: overlay
-    for (class_id, build_id), overlay in COMBAT_BUILD_CHOICE_OVERLAYS.items()
-    if class_id == "rogue"
-}
-WIZARD_COMBAT_BUILD_CHOICES = {
-    build_id: overlay
-    for (class_id, build_id), overlay in COMBAT_BUILD_CHOICE_OVERLAYS.items()
-    if class_id == "wizard"
-}
-SORCERER_COMBAT_BUILD_CHOICES = {
-    build_id: overlay
-    for (class_id, build_id), overlay in COMBAT_BUILD_CHOICE_OVERLAYS.items()
-    if class_id == "sorcerer"
-}
+
+
+def _choices_for_class(class_id: str) -> dict[str, CombatBuildChoiceOverlay]:
+    return {
+        build_id: overlay
+        for (owner_class_id, build_id), overlay in COMBAT_BUILD_CHOICE_OVERLAYS.items()
+        if owner_class_id == class_id
+    }
+
+
+FIGHTER_COMBAT_BUILD_CHOICES = _choices_for_class("fighter")
+BARBARIAN_COMBAT_BUILD_CHOICES = _choices_for_class("barbarian")
+MONK_COMBAT_BUILD_CHOICES = _choices_for_class("monk")
+PALADIN_COMBAT_BUILD_CHOICES = _choices_for_class("paladin")
+RANGER_COMBAT_BUILD_CHOICES = _choices_for_class("ranger")
+ROGUE_COMBAT_BUILD_CHOICES = _choices_for_class("rogue")
+WIZARD_COMBAT_BUILD_CHOICES = _choices_for_class("wizard")
+SORCERER_COMBAT_BUILD_CHOICES = _choices_for_class("sorcerer")
+WARLOCK_COMBAT_BUILD_CHOICES = _choices_for_class("warlock")
 
 
 def get_combat_build_choice_overlay(class_id: str, build_id: str) -> CombatBuildChoiceOverlay:

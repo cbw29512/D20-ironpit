@@ -14,6 +14,7 @@ from app.content.ranger_subclass_overlay_data import RANGER_SUBCLASS_DELTA_DATA
 from app.content.rogue_subclass_overlay_data import ROGUE_SUBCLASS_DELTA_DATA
 from app.content.sorcerer_subclass_overlay_data import SORCERER_SUBCLASS_DELTA_DATA
 from app.content.wizard_subclass_overlay_data import WIZARD_SUBCLASS_DELTA_DATA
+from app.content.warlock_subclass_overlay_data import WARLOCK_SUBCLASS_DELTA_DATA
 from app.content.subclass_combat_overlays import SUBCLASS_COMBAT_OVERLAYS, subclass_combat_features
 
 
@@ -40,6 +41,7 @@ def test_subclass_registry_is_derived_from_authoritative_overlay_data() -> None:
         | set(ROGUE_SUBCLASS_DELTA_DATA)
         | set(SORCERER_SUBCLASS_DELTA_DATA)
         | set(WIZARD_SUBCLASS_DELTA_DATA)
+        | set(WARLOCK_SUBCLASS_DELTA_DATA)
     )
     assert set(SUBCLASS_COMBAT_OVERLAYS) == expected
 
@@ -117,6 +119,16 @@ def test_sorcerer_base_spine_contains_no_draconic_subclass_features() -> None:
     }
     assert subclass_features
     assert subclass_features.isdisjoint(canonical_base_class_features("sorcerer", 20))
+
+
+def test_warlock_base_spine_contains_no_fiend_subclass_features() -> None:
+    subclass_features = {
+        feature
+        for level in range(1, 21)
+        for feature in subclass_combat_features("fiend-patron", level)
+    }
+    assert subclass_features
+    assert subclass_features.isdisjoint(canonical_base_class_features("warlock", 20))
 
 
 def test_fighter_base_never_gets_champion_features_without_champion_overlay() -> None:

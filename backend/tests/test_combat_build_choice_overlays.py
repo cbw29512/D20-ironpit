@@ -8,6 +8,7 @@ from app.content.combat_build_choice_overlays import (
     ROGUE_COMBAT_BUILD_CHOICES,
     SORCERER_COMBAT_BUILD_CHOICES,
     WIZARD_COMBAT_BUILD_CHOICES,
+    WARLOCK_COMBAT_BUILD_CHOICES,
     get_combat_build_choice_overlay,
 )
 from app.content.combat_build_variants import get_combat_build_variant
@@ -73,7 +74,7 @@ def test_barbarian_subclass_specializations_generate_real_choice_overlays() -> N
 
 
 def test_all_current_choice_overlays_come_from_subclass_specializations() -> None:
-    assert len(COMBAT_BUILD_CHOICE_OVERLAYS) == 25
+    assert len(COMBAT_BUILD_CHOICE_OVERLAYS) == 28
     assert all("derived from" in overlay.notes for overlay in COMBAT_BUILD_CHOICE_OVERLAYS.values())
 
 
@@ -161,3 +162,12 @@ def test_sorcerer_subclasses_generate_spell_package_compatibility_views() -> Non
     assert get_combat_build_choice_overlay("sorcerer", "frost-control").spell_package_id == "aberrant-sorcery"
     assert get_combat_build_choice_overlay("sorcerer", "mixed-arcane").spell_package_id == "clockwork-sorcery"
     assert all(item.focus_item == "arcane-focus" for item in SORCERER_COMBAT_BUILD_CHOICES.values())
+
+
+def test_warlock_patron_specializations_generate_distinct_compatibility_views() -> None:
+    assert set(WARLOCK_COMBAT_BUILD_CHOICES) == {"blaster", "controller", "blade-hybrid"}
+    assert get_combat_build_choice_overlay("warlock", "blaster").spell_package_id == "fiend-patron"
+    assert get_combat_build_choice_overlay("warlock", "controller").spell_package_id == "great-old-one-patron"
+    blade = get_combat_build_choice_overlay("warlock", "blade-hybrid")
+    assert (blade.spell_package_id, blade.primary_weapon) == ("celestial-patron", "shortsword")
+    assert not blade.weapon_masteries
