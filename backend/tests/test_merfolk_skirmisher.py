@@ -60,7 +60,7 @@ def test_merfolk_hit_slows_until_end_of_target_next_turn() -> None:
 
     member = EncounterCombatant(combatant_id="target", side="heroes", position_ft=0, state=target)
     events, sequence = resolve_target_condition_timing(
-        2, 1, member, "target_turn_end", FixedDiceProvider([]),
+        2, 1, member, "target_turn_end", FixedDiceProvider([1]),
     )
     assert events == [] and sequence == 2
     assert target.active_modifiers == []
