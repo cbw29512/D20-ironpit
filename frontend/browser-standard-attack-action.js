@@ -3,6 +3,7 @@
 
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const L = () => window.IRON_PIT_BROWSER_LIGHT_ATTACK;
+  const W = () => window.IRON_PIT_BROWSER_WEAPON_MASTERY;
 
   function resolve(sequence, round, member, target, attack, distance, setup, turnKey, options = {}) {
     const event = A().resolveAttack(sequence++, round, member, target, attack, distance, {
@@ -13,6 +14,8 @@
       turnKey,
     });
     const events = [event];
+    const cleave = W().resolveCleave(sequence, round, member, event, attack, setup, turnKey);
+    events.push(...cleave.events); sequence = cleave.sequence;
     if (member.state.template.kind !== "character" || !attack.light) return { events, sequence };
     const extra = L().resolve(sequence, round, member, setup, attack, turnKey);
     events.push(...extra.events);

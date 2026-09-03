@@ -14,7 +14,7 @@ window.IRON_PIT_ACTION_ECONOMY = {
 };
 window.IRON_PIT_BROWSER_STATE = {
   nearestTarget: (_member, setup) => setup.monsters[0],
-  distance: () => 5,
+  distance: (a, b) => Math.abs(a.position_ft - b.position_ft),
   packTactics: () => false,
   sizeAtMost: () => true,
 };
@@ -26,7 +26,8 @@ window.IRON_PIT_BROWSER_ATTACK = {
     return {
       sequence, round_number: round, event_type: "attack", actor_id: member.combatant_id,
       target_id: target.combatant_id, weapon_id: attack.weaponId, feature_id: options.featureId || null,
-      damage_bonus: attack.damageBonus,
+      damage_bonus: attack.damageBonus, hit: true,
+      description: `${member.state.template.name} hits ${target.state.template.name}.`,
     };
   },
 };
@@ -43,6 +44,10 @@ const scimitar = {
 const shortsword = {
   id: "shortsword-attack", weaponId: "shortsword", name: "Shortsword", kind: "melee", reach: 5,
   bonus: 5, damageBonus: 3, attackAbilityModifier: 3, light: true, masteryProperty: "Vex",
+};
+const greataxe = {
+  id: "greataxe-attack", weaponId: "greataxe", name: "Greataxe", kind: "melee", reach: 5,
+  bonus: 5, damageBonus: 5, attackAbilityModifier: 3, light: false, masteryProperty: "Cleave",
 };
 
 function fighter(masteries = ["scimitar"], withAction = false, fightingStyles = []) {
@@ -62,10 +67,13 @@ function fighter(masteries = ["scimitar"], withAction = false, fightingStyles = 
     },
   };
 }
-const target = {
-  combatant_id: "monster-1", side: "monsters", position_ft: 5,
-  state: { template: { kind: "monster", name: "Target" }, current_hp: 100, is_alive: true, is_dead: false, grapple_sources: [] },
-};
+function monster(id, position = 5) {
+  return {
+    combatant_id: id, side: "monsters", position_ft: position,
+    state: { template: { kind: "monster", name: id }, current_hp: 100, is_alive: true, is_dead: false, grapple_sources: [] },
+  };
+}
+const target = monster("monster-1");
 const setup = { heroes: [], monsters: [target] };
 
 {
@@ -161,4 +169,54 @@ const setup = { heroes: [], monsters: [target] };
     "a different Light weapon is required");
 }
 
-console.log("Browser Light/Nick/Two-Weapon Fighting regressions passed.");
+{
+  const member = fighter(["greataxe"]); member.state.template.name = "Cleave Fighter"; member.state.template.attacks = [greataxe];
+  const first = monster("cleave-first", 5), second = monster("cleave-second", 5);
+  const cleaveSetup = { heroes: [member], monsters: [first, second] };
+  const result = window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION.resolve(
+    1, 1, member, first, greataxe, 5, cleaveSetup, "1:hero-1",
+  );
+  assert.equal(result.events.length, 2);
+  assert.equal(result.events[1].target_id, "cleave-second");
+  assert.equal(result.events[1].feature_id, "weapon-mastery-cleave");
+  assert.equal(result.events[1].damage_bonus, 2, "Cleave removes only the positive ability modifier from damage");
+
+  member.state.action_available = true;
+  const again = window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION.resolve(
+    result.sequence, 1, member, first, greataxe, 5, cleaveSetup, "1:hero-1",
+  );
+  assert.equal(again.events.length, 1, "Cleave can occur only once per turn");
+}
+
+{
+  const member = fighter(["greataxe"], true); member.state.template.attacks = [greataxe];
+  member.state.template.attack_action = {
+    id: "extra-attack", isAttackAction: true,
+    slots: [{ attackIds: [greataxe.id] }, { attackIds: [greataxe.id] }],
+  };
+  const cleaveSetup = { heroes: [member], monsters: [monster("multi-first", 5), monster("multi-second", 5)] };
+  const result = window.IRON_PIT_BROWSER_MULTIATTACK.resolveAttackAction(1, 1, member, cleaveSetup);
+  const attacks = result.events.filter((event) => event.event_type === "attack");
+  assert.equal(attacks.length, 3, "two base attacks can produce only one Cleave attack");
+  assert.equal(attacks.filter((event) => event.feature_id === "weapon-mastery-cleave").length, 1);
+}
+
+{
+  const member = fighter(["greataxe"]); member.state.template.attacks = [greataxe];
+  const first = monster("far-first", 10), second = monster("far-second", 0);
+  const cleaveSetup = { heroes: [member], monsters: [first, second] };
+  const extended = { ...greataxe, reach: 10 };
+  assert.equal(window.IRON_PIT_BROWSER_WEAPON_MASTERY.cleaveTarget(member, first, extended, cleaveSetup), null,
+    "second target must be within 5 feet of the creature hit, not merely within attacker reach");
+  assert.equal(window.IRON_PIT_BROWSER_WEAPON_MASTERY.resolveCleave(
+    1, 1, member, { hit: false, target_id: first.combatant_id }, greataxe, cleaveSetup, "1:hero-1",
+  ).events.length, 0, "a miss cannot trigger Cleave");
+}
+
+{
+  const negative = { ...greataxe, damageBonus: -1, attackAbilityModifier: -1 };
+  assert.equal(window.IRON_PIT_BROWSER_WEAPON_MASTERY.cleaveAttack(negative).damageBonus, -1,
+    "negative ability modifiers remain in Cleave damage");
+}
+
+console.log("Browser Light/Nick/Two-Weapon Fighting/Cleave regressions passed.");

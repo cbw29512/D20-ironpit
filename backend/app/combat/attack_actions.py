@@ -10,6 +10,7 @@ from app.combat.attack_action_rules import (
     validate_attack_action_slots,
 )
 from app.combat.attack_action_targeting import select_slot_target
+from app.combat.cleave import resolve_cleave_extra_attack
 from app.combat.dice import DiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.encounter_movement import take_encounter_dash
@@ -90,16 +91,21 @@ def resolve_attack_action(
             if attack is not None:
                 pack = pack_tactics_active(attacker, target, setup)
                 feature_id = opening_feature or ("pack-tactics" if pack else definition.id)
-                events.append(resolve_encounter_attack(
+                event = resolve_encounter_attack(
                     sequence, round_number, attacker, target, attack,
                     combatant_distance(attacker, target), dice, setup,
                     spend_action=False, advantage_sources=1 if pack else 0, feature_id=feature_id,
                     turn_key=turn_key, allow_reckless=True,
-                ))
+                )
+                events.append(event)
+                sequence += 1
+                cleave, sequence = resolve_cleave_extra_attack(
+                    sequence, round_number, attacker, event, attack, setup, dice, turn_key,
+                )
+                events.extend(cleave)
                 if definition.is_attack_action and light_trigger is None and attack.weapon.light:
                     light_trigger = attack
                 opening_feature = None
-                sequence += 1
             elif save_action is not None:
                 events.append(resolve_save_action(
                     sequence, round_number, attacker, target, save_action,

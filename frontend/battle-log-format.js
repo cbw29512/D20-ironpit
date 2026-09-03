@@ -53,7 +53,8 @@
     const natural = event.attack_roll?.selected_roll;
     const result = natural === 1 ? "NAT 1 · MISS" : event.critical ? "CRITICAL HIT" : event.hit ? "HIT" : "MISS";
     const attackName = event.attack_name || event.weapon_name || event.weapon_id || event.feature_id || "attack";
-    const pieces = [`${event.actor_name} → ${event.target_name}: ${result} with ${attackName}`];
+    const mastery = event.feature_id === "weapon-mastery-cleave" ? " [CLEAVE]" : "";
+    const pieces = [`${event.actor_name} → ${event.target_name}: ${result} with ${attackName}${mastery}`];
     if (event.attack_roll) pieces.push(`${rollLabel(event.attack_roll)}${event.target_ac == null ? "" : ` vs AC ${event.target_ac}`}`);
     if (event.save_dc != null) pieces.push(`${event.target_name} ${event.save_succeeded ? "SUCCEEDS" : "FAILS"} ${String(event.save_ability || "save").toUpperCase()} save: ${rollLabel(event.saving_throw_roll)} vs DC ${event.save_dc}`);
     const damage = damageLabel(event); if (damage) pieces.push(damage);

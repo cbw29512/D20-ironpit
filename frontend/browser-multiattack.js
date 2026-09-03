@@ -6,6 +6,7 @@
   const C = () => window.IRON_PIT_BROWSER_CHARGE;
   const R = () => window.IRON_PIT_BROWSER_LIGHT_ATTACK;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
+  const WM = () => window.IRON_PIT_BROWSER_WEAPON_MASTERY;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (s) => s.action_available, spend: (s) => { s.action_available = false; } };
   const W = () => window.IRON_PIT_BROWSER_REACTION_MOVEMENT || {
     moveToward: (q, r, m, t, _s, d) => ({ events: [], sequence: q, movement: S().moveToward(m, t, d) }),
@@ -81,9 +82,12 @@
       }
       if (choice.attack) {
         const pack = S().packTactics(member, setup), featureId = openingFeature || (pack ? "pack-tactics" : definition.id);
-        events.push(A().resolveAttack(sequence++, round, member, target, choice.attack, S().distance(member, target), {
+        const event = A().resolveAttack(sequence++, round, member, target, choice.attack, S().distance(member, target), {
           spendAction: false, advantage: pack ? 1 : 0, setup, featureId, turnKey, allowReckless: true,
-        }));
+        });
+        events.push(event);
+        const cleave = WM().resolveCleave(sequence, round, member, event, choice.attack, setup, turnKey);
+        events.push(...cleave.events); sequence = cleave.sequence;
         if (definition.isAttackAction && !lightTrigger && choice.attack.light) lightTrigger = choice.attack;
         openingFeature = null;
       } else if (choice.save) {

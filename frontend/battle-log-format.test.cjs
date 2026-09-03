@@ -54,6 +54,17 @@ const L = window.IRON_PIT_BATTLE_LOG;
 
 {
   const text = L.format({
+    event_type: "attack", actor_name: "Fighter", target_name: "Goblin", attack_name: "Greataxe",
+    feature_id: "weapon-mastery-cleave", target_ac: 15, hit: true, critical: false,
+    attack_roll: { selected_roll: 14, rolls: [14], modifier: 5, total: 19, mode: "normal" },
+    damage_roll: { total: 6 }, damage_components: [{ total: 6, applied_total: 6, damage_type: "slashing" }],
+    hp_before: 12, hp_after: 6, applied_condition_ids: [], is_dead: false,
+  });
+  assert.match(text, /Greataxe \[CLEAVE\]/); assert.match(text, /19 vs AC 15/); assert.match(text, /6 slashing/);
+}
+
+{
+  const text = L.format({
     event_type: "attack", actor_name: "Cleric", target_name: "Ogre", attack_name: "Guiding Bolt",
     target_ac: 13, hit: true, critical: false,
     attack_roll: { selected_roll: 19, rolls: [19, 3], modifier: 5, total: 27, mode: "normal",
