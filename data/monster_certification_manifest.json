@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 109,
-    "blocked": 221
+    "public_ready": 111,
+    "blocked": 219
   },
   "monsters": [
     {
@@ -4070,7 +4070,7 @@
       "monster_name": "Giant Scorpion",
       "srd_source_page": 353,
       "srd_source_reference": "SRD 5.2.1 p. 353",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-giant-scorpion",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -4078,19 +4078,15 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "multiattack"
       ],
-      "unsupported_mechanics": [
-        "condition-or-control"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "condition-or-control",
-        "monster-combat-mechanics-not-certified"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-giant-seahorse",
@@ -4724,7 +4720,7 @@
       "monster_name": "Grick",
       "srd_source_page": 295,
       "srd_source_reference": "SRD 5.2.1 p. 295",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-grick",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -4732,26 +4728,22 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "multiattack"
       ],
-      "unsupported_mechanics": [
-        "condition-or-control"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "condition-or-control",
-        "monster-combat-mechanics-not-certified"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-griffon",
       "monster_name": "Griffon",
       "srd_source_page": 295,
       "srd_source_reference": "SRD 5.2.1 p. 295",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-griffon",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -4759,19 +4751,15 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "multiattack"
       ],
-      "unsupported_mechanics": [
-        "condition-or-control"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "condition-or-control",
-        "monster-combat-mechanics-not-certified"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-grimlock",
@@ -5549,12 +5537,17 @@
         "attack-roll",
         "trait"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "unsupported_mechanics": [
+        "deferred-environment:aquatic-only"
+      ],
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "deferred-environment:aquatic-only",
+        "missing-runtime-template"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-knight",
