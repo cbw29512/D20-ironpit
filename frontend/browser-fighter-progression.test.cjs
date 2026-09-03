@@ -116,7 +116,7 @@ window.IRON_PIT_BROWSER_RAGE = { enter: () => null, finalize: (sequence) => ({ e
 window.IRON_PIT_BROWSER_SPELL_POLICY = { choose: () => null };
 window.IRON_PIT_BROWSER_SPELL_RESOLUTION = { resolve: () => { throw new Error("Magic must not be used by this test."); } };
 window.IRON_PIT_BROWSER_CHARGE = { resolveClosing: (sequence) => ({ events: [], sequence, handled: false }), openingFeature: () => null };
-window.IRON_PIT_BROWSER_FORMATION = { backlineHoldsPosition: () => false };
+load("browser-formation.js");
 window.IRON_PIT_BROWSER_SAVES = { legalAction: () => false };
 window.IRON_PIT_BROWSER_MULTIATTACK = { resolveAttackAction: () => { throw new Error("No Multiattack at Fighter 2."); } };
 window.IRON_PIT_BROWSER_REACTION_MOVEMENT = { moveToward: (sequence) => ({ events: [], sequence, movement: null }) };
