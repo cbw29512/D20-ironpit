@@ -6,6 +6,7 @@ from app.content.combat_build_choice_overlays import (
     PALADIN_COMBAT_BUILD_CHOICES,
     RANGER_COMBAT_BUILD_CHOICES,
     ROGUE_COMBAT_BUILD_CHOICES,
+    SORCERER_COMBAT_BUILD_CHOICES,
     WIZARD_COMBAT_BUILD_CHOICES,
     get_combat_build_choice_overlay,
 )
@@ -72,7 +73,7 @@ def test_barbarian_subclass_specializations_generate_real_choice_overlays() -> N
 
 
 def test_all_current_choice_overlays_come_from_subclass_specializations() -> None:
-    assert len(COMBAT_BUILD_CHOICE_OVERLAYS) == 22
+    assert len(COMBAT_BUILD_CHOICE_OVERLAYS) == 25
     assert all("derived from" in overlay.notes for overlay in COMBAT_BUILD_CHOICE_OVERLAYS.values())
 
 
@@ -152,3 +153,11 @@ def test_wizard_subclasses_generate_spell_package_compatibility_views() -> None:
     assert abjurer.spell_package_id == "abjurer"
     assert all(item.focus_item == "arcane-focus" for item in WIZARD_COMBAT_BUILD_CHOICES.values())
     assert all(item.primary_weapon is None for item in WIZARD_COMBAT_BUILD_CHOICES.values())
+
+
+def test_sorcerer_subclasses_generate_spell_package_compatibility_views() -> None:
+    assert set(SORCERER_COMBAT_BUILD_CHOICES) == {"fire-damage", "frost-control", "mixed-arcane"}
+    assert get_combat_build_choice_overlay("sorcerer", "fire-damage").spell_package_id == "draconic-sorcery"
+    assert get_combat_build_choice_overlay("sorcerer", "frost-control").spell_package_id == "aberrant-sorcery"
+    assert get_combat_build_choice_overlay("sorcerer", "mixed-arcane").spell_package_id == "clockwork-sorcery"
+    assert all(item.focus_item == "arcane-focus" for item in SORCERER_COMBAT_BUILD_CHOICES.values())

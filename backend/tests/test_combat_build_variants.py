@@ -104,9 +104,19 @@ def test_wizard_roles_are_owned_by_real_subclasses() -> None:
     }
 
 
+def test_sorcerer_roles_are_owned_by_real_subclasses() -> None:
+    assert {
+        variant.id: variant.required_subclass_id
+        for variant in combat_build_variants_for("sorcerer")
+    } == {
+        "fire-damage": "draconic-sorcery",
+        "frost-control": "aberrant-sorcery",
+        "mixed-arcane": "clockwork-sorcery",
+    }
+
+
 def test_legacy_caster_role_records_remain_migration_inputs_not_subclass_clones() -> None:
     expected = {
-        "sorcerer": {"fire-damage", "frost-control", "mixed-arcane"},
         "warlock": {"blaster", "controller", "blade-hybrid"},
         "bard": {"support-healer", "controller", "battle-bard"},
         "cleric": {"healer", "war-priest", "divine-offense"},

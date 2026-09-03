@@ -7,6 +7,7 @@ from app.content.subclass_specializations import (
     PALADIN_SPECIALIZATIONS,
     RANGER_SPECIALIZATIONS,
     ROGUE_SPECIALIZATIONS,
+    SORCERER_SPECIALIZATIONS,
     WIZARD_SPECIALIZATIONS,
     SubclassSpecialization,
     specializations_for_class,
@@ -155,6 +156,20 @@ def test_wizard_has_one_intelligence_spell_specialization_per_target_subclass() 
     assert all(item.primary_weapon is None for item in WIZARD_SPECIALIZATIONS)
     assert tuple(item.spell_package_id for item in WIZARD_SPECIALIZATIONS) == (
         "evoker", "illusionist", "abjurer",
+    )
+
+
+def test_sorcerer_has_one_charisma_spell_specialization_per_target_subclass() -> None:
+    assert tuple(item.subclass_id for item in specializations_for_class("sorcerer")) == (
+        "draconic-sorcery", "aberrant-sorcery", "clockwork-sorcery",
+    )
+    assert all(item.ability_priority == ("charisma", "wisdom", "intelligence") for item in SORCERER_SPECIALIZATIONS)
+    assert all(item.primary_weapon is None for item in SORCERER_SPECIALIZATIONS)
+    assert tuple(item.spell_package_id for item in SORCERER_SPECIALIZATIONS) == (
+        "draconic-sorcery", "aberrant-sorcery", "clockwork-sorcery",
+    )
+    assert SORCERER_SPECIALIZATIONS[0].feature_choice_ids == (
+        "draconic-ancestor-red", "elemental-affinity-fire",
     )
 
 

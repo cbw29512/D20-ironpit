@@ -143,6 +143,20 @@ def test_wizard_subclasses_compose_real_planned_spell_packages_from_one_spine() 
         assert "wizard-spellcasting" in recipe.combat_features
 
 
+def test_sorcerer_subclasses_compose_real_planned_spell_packages_from_one_spine() -> None:
+    expected = {
+        ("draconic-sorcery", "fire-damage"): "draconic-sorcery",
+        ("aberrant-sorcery", "frost-control"): "aberrant-sorcery",
+        ("clockwork-sorcery", "mixed-arcane"): "clockwork-sorcery",
+    }
+    for (subclass_id, build_id), spell_package_id in expected.items():
+        recipe = compose_character_combat_recipe("sorcerer", subclass_id, build_id, 18)
+        assert recipe.shared_progression_id == "sorcerer-1-20"
+        assert recipe.build_status == "planned"
+        assert recipe.build_choices.spell_package_id == spell_package_id
+        assert "sorcerer-spellcasting" in recipe.combat_features
+
+
 def test_subclass_specific_build_fails_closed_on_the_wrong_subclass() -> None:
     with pytest.raises(ValueError, match="requires subclass circle-moon"):
         compose_character_combat_recipe("druid", "circle-land", "moon-melee", 3)

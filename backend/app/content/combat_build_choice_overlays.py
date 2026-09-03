@@ -22,7 +22,7 @@ _MASTERY_CAPABILITY = {
 }
 _MASTERY_LIMIT = {
     "fighter": 3, "barbarian": 2, "monk": 0,
-    "paladin": 2, "ranger": 2, "rogue": 2, "wizard": 0,
+    "paladin": 2, "ranger": 2, "rogue": 2, "wizard": 0, "sorcerer": 0,
 }
 
 
@@ -125,6 +125,11 @@ WIZARD_COMBAT_BUILD_CHOICES = {
     build_id: overlay
     for (class_id, build_id), overlay in COMBAT_BUILD_CHOICE_OVERLAYS.items()
     if class_id == "wizard"
+}
+SORCERER_COMBAT_BUILD_CHOICES = {
+    build_id: overlay
+    for (class_id, build_id), overlay in COMBAT_BUILD_CHOICE_OVERLAYS.items()
+    if class_id == "sorcerer"
 }
 
 

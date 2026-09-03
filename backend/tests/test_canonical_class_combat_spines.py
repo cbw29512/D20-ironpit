@@ -94,3 +94,13 @@ def test_wizard_base_spine_excludes_evoker_features() -> None:
         subclass_features.isdisjoint(row.features_added)
         for row in WIZARD_COMBAT_LEVELS.values()
     )
+
+
+def test_sorcerer_base_spine_excludes_draconic_features() -> None:
+    subclass_features = {
+        "draconic-resilience", "elemental-affinity-fire", "dragon-wings", "dragon-companion",
+    }
+    assert all(
+        subclass_features.isdisjoint(row.features_added)
+        for row in SORCERER_COMBAT_LEVELS.values()
+    )
