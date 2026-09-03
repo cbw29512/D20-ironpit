@@ -53,8 +53,8 @@ function state(name, kind, hp = 100) {
   setDice([19, 2, 3]);
   const event = window.IRON_PIT_BROWSER_ATTACK.resolveAttack(1, 1, hero, monster, shortbow, 20, { setup });
   assert.equal(event.hit, true); assert.equal(event.critical, true); assert.equal(event.attack_roll.selected_roll, 19);
-  assert.equal(event.movement_ft, 15); assert.equal(hero.position_ft, 15);
-  assert.equal(monster.state.reaction_available, true, "Remarkable Athlete movement provokes no OA");
+  assert.equal(event.movement_ft, undefined); assert.equal(hero.position_ft, 0, "fixed Pit makes post-critical closing movement arena-neutral");
+  assert.equal(monster.state.reaction_available, true);
 }
 {
   const hero = { combatant_id: "hero-1", side: "heroes", position_ft: 5, state: state("Karnok Stoneward", "character") };

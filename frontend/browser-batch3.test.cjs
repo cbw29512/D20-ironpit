@@ -11,7 +11,7 @@ for (const file of [
   "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js",
   "browser-monsters-beast2.js", "browser-monsters-batch3.js", "browser-state.js",
   "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js", "browser-attack.js", "browser-charge.js",
-  "browser-multiattack.js", "browser-turn.js", "browser-engine.js",
+  "browser-formation.js", "browser-multiattack.js", "browser-turn.js", "browser-engine.js",
 ]) load(file);
 
 function queuedDice(values, fallback = 10) {
@@ -29,18 +29,22 @@ assert.equal(Object.keys(monsters).length, 55, "browser runtime should expose ex
 
 function freshHero() {
   return {
-    combatant_id: "hero-1:karnok", side: "heroes", position_ft: 0,
+    combatant_id: "hero-1:karnok", side: "heroes", position_ft: 5,
     state: S.buildState(structuredClone(heroes["karnok-stoneward-l1"])),
   };
 }
 
-function multiattackIds(monsterId, distance) {
+function multiattackIds(monsterId, protectedByFrontline = false) {
   const attacker = {
-    combatant_id: `monster-1:${monsterId}`, side: "monsters", position_ft: distance,
+    combatant_id: `monster-1:${monsterId}`, side: "monsters", position_ft: 15,
     state: S.buildState(structuredClone(monsters[monsterId])),
   };
   const hero = freshHero();
-  const setup = { heroes: [hero], monsters: [attacker] };
+  const guard = {
+    combatant_id: "monster-2:guard", side: "monsters", position_ft: 10,
+    state: S.buildState(structuredClone(monsters["srd-warrior-infantry"])),
+  };
+  const setup = { heroes: [hero], monsters: protectedByFrontline ? [guard, attacker] : [attacker] };
   S.beginTurn(attacker.state);
   window.IRON_PIT_DICE = queuedDice([10, 1, 1, 10, 1, 1]);
   return M.resolveAttackAction(1, 1, attacker, setup).events
@@ -48,16 +52,16 @@ function multiattackIds(monsterId, distance) {
     .map((event) => event.weapon_id);
 }
 
-assert.deepEqual(multiattackIds("srd-owlbear", 5), ["owlbear-rend", "owlbear-rend"]);
-assert.deepEqual(multiattackIds("srd-saber-toothed-tiger", 5), [
+assert.deepEqual(multiattackIds("srd-owlbear"), ["owlbear-rend", "owlbear-rend"]);
+assert.deepEqual(multiattackIds("srd-saber-toothed-tiger"), [
   "saber-toothed-tiger-rend", "saber-toothed-tiger-rend",
 ]);
-assert.deepEqual(multiattackIds("srd-scout", 30), ["scout-longbow", "scout-longbow"]);
-assert.deepEqual(multiattackIds("srd-scout", 5), ["scout-shortsword", "scout-shortsword"]);
+assert.deepEqual(multiattackIds("srd-scout", true), ["scout-longbow", "scout-longbow"], "screened Scout stays ranged");
+assert.deepEqual(multiattackIds("srd-scout", false), ["scout-shortsword", "scout-shortsword"], "exposed Scout switches to melee");
 
 {
   const saber = {
-    combatant_id: "monster-1:saber-opener", side: "monsters", position_ft: 5,
+    combatant_id: "monster-1:saber-opener", side: "monsters", position_ft: 10,
     state: S.buildState(structuredClone(monsters["srd-saber-toothed-tiger"])),
   };
   const hero = freshHero(), setup = { heroes: [hero], monsters: [saber] };
@@ -78,11 +82,11 @@ assert.deepEqual(multiattackIds("srd-scout", 5), ["scout-shortsword", "scout-sho
 
 {
   const one = {
-    combatant_id: "monster-1:infantry", side: "monsters", position_ft: 5,
+    combatant_id: "monster-1:infantry", side: "monsters", position_ft: 10,
     state: S.buildState(structuredClone(monsters["srd-warrior-infantry"])),
   };
   const two = {
-    combatant_id: "monster-2:infantry", side: "monsters", position_ft: 5,
+    combatant_id: "monster-2:infantry", side: "monsters", position_ft: 10,
     state: S.buildState(structuredClone(monsters["srd-warrior-infantry"])),
   };
   assert.equal(S.packTactics(one, { heroes: [freshHero()], monsters: [one, two] }), true);

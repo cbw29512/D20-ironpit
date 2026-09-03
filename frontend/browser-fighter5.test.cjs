@@ -14,7 +14,7 @@ const load = (name) => vm.runInThisContext(
 for (const file of [
   "browser-heroes.js", "browser-action-economy.js", "browser-grapple.js", "browser-state.js",
   "browser-rolls.js", "browser-zero-hp.js", "browser-attack.js", "browser-saves.js", "browser-charge.js",
-  "browser-multiattack.js", "browser-action-surge.js", "browser-support.js", "browser-tactical-shift.js",
+  "browser-formation.js", "browser-multiattack.js", "browser-action-surge.js", "browser-support.js", "browser-tactical-shift.js",
 ]) load(file);
 
 const fighter = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l5"];
@@ -80,14 +80,10 @@ const targetTemplate = {
   assert.equal(hero.state.bonus_action_available, false);
 
   const shift = window.IRON_PIT_BROWSER_TACTICAL_SHIFT.resolve(2, 1, hero, setup);
-  assert.ok(shift);
-  assert.equal(shift.feature_id, "tactical-shift");
-  assert.equal(shift.movement_ft, 15);
-  assert.equal(shift.distance_before_ft, 35);
-  assert.equal(shift.distance_after_ft, 20);
-  assert.equal(hero.position_ft, 15);
-  assert.equal(hero.state.movement_remaining_ft, 30, "Tactical Shift must not spend normal movement");
-  assert.equal(target.state.reaction_available, true, "Tactical Shift must not provoke an OA");
+  assert.equal(shift, null, "Tactical Shift movement is arena-neutral in fixed Pit formation");
+  assert.equal(hero.position_ft, 0);
+  assert.equal(hero.state.movement_remaining_ft, 30);
+  assert.equal(target.state.reaction_available, true);
 }
 
 {
@@ -96,7 +92,7 @@ const targetTemplate = {
   const setup = { heroes: [hero], monsters: [target] };
   G.apply(hero.state, target.combatant_id, 12, 40);
   const shift = window.IRON_PIT_BROWSER_TACTICAL_SHIFT.resolve(1, 1, hero, setup);
-  assert.equal(shift, null, "Tactical Shift must be zero when effective Speed is zero");
+  assert.equal(shift, null, "Tactical Shift remains arena-neutral when effective Speed is zero");
   assert.equal(hero.position_ft, 0);
   assert.equal(target.state.reaction_available, true);
 }

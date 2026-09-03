@@ -12,7 +12,7 @@ for (const file of [
   "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js",
   "browser-weapon-mastery.js", "browser-attack.js", "browser-charge.js",
   "browser-light-weapons.js", "browser-light-attack.js", "browser-standard-attack-action.js",
-  "browser-multiattack.js", "browser-turn.js", "browser-engine.js",
+  "browser-formation.js", "browser-multiattack.js", "browser-turn.js", "browser-engine.js",
 ]) load(file);
 
 function queuedDice(values, fallback = 10) {
@@ -31,15 +31,15 @@ const heroes = window.IRON_PIT_BROWSER_HEROES;
 assert.equal(Object.keys(monsters).length, 50, "browser runtime should expose exactly 50 certified monsters");
 
 function freshHero() {
-  return { combatant_id: "hero-1:karnok", side: "heroes", position_ft: 0, state: S.buildState(structuredClone(heroes["karnok-stoneward-l1"])) };
+  return { combatant_id: "hero-1:karnok", side: "heroes", position_ft: 5, state: S.buildState(structuredClone(heroes["karnok-stoneward-l1"])) };
 }
 function openingSetup(attacker, hero, attackerInit = 20, heroInit = 10) {
   attacker.state.initiative_total = attackerInit; hero.state.initiative_total = heroInit;
-  return { heroes: [hero], monsters: [attacker], starting_distance_ft: 30 };
+  return { heroes: [hero], monsters: [attacker] };
 }
 
 {
-  const tiger = { combatant_id: "monster-1:tiger", side: "monsters", position_ft: 5, state: S.buildState(structuredClone(monsters["srd-tiger"])) };
+  const tiger = { combatant_id: "monster-1:tiger", side: "monsters", position_ft: 10, state: S.buildState(structuredClone(monsters["srd-tiger"])) };
   const hero = freshHero();
   S.beginTurn(tiger.state);
   window.IRON_PIT_DICE = queuedDice([15, 1, 1]);
@@ -49,9 +49,9 @@ function openingSetup(attacker, hero, attackerInit = 20, heroInit = 10) {
 }
 
 {
-  const bear = { combatant_id: "monster-1:polar", side: "monsters", position_ft: 5, state: S.buildState(structuredClone(monsters["srd-polar-bear"])) };
+  const bear = { combatant_id: "monster-1:polar", side: "monsters", position_ft: 10, state: S.buildState(structuredClone(monsters["srd-polar-bear"])) };
   const hero = freshHero();
-  const setup = { heroes: [hero], monsters: [bear], starting_distance_ft: 5 };
+  const setup = { heroes: [hero], monsters: [bear] };
   S.beginTurn(bear.state);
   window.IRON_PIT_DICE = queuedDice([15, 1, 15, 1]);
   const attacks = M.resolveAttackAction(1, 1, bear, setup).events.filter((event) => event.event_type === "attack");
@@ -60,7 +60,7 @@ function openingSetup(attacker, hero, attackerInit = 20, heroInit = 10) {
 }
 
 {
-  const beetle = { combatant_id: "monster-1:beetle", side: "monsters", position_ft: 5, state: S.buildState(structuredClone(monsters["srd-giant-fire-beetle"])) };
+  const beetle = { combatant_id: "monster-1:beetle", side: "monsters", position_ft: 10, state: S.buildState(structuredClone(monsters["srd-giant-fire-beetle"])) };
   const hero = freshHero();
   S.beginTurn(beetle.state);
   window.IRON_PIT_DICE = queuedDice([20]);
@@ -72,16 +72,19 @@ function openingSetup(attacker, hero, attackerInit = 20, heroInit = 10) {
 {
   const goat = { combatant_id: "monster-1:goat", side: "monsters", position_ft: 30, state: S.buildState(structuredClone(monsters["srd-giant-goat"])) };
   const hero = freshHero(), setup = openingSetup(goat, hero);
+  const before = [hero.position_ft, goat.position_ft];
   S.beginTurn(goat.state);
   window.IRON_PIT_DICE = queuedDice([15, 2, 3, 4]);
   const charged = C.resolveClosing(1, 1, goat, hero, setup);
   assert.equal(charged.handled, true);
-  assert.equal(charged.events[1].damage_roll.notation, "1d6+3 + 2d4+0");
-  assert.ok(charged.events[1].applied_condition_ids.includes("prone"));
+  assert.equal(charged.events.length, 1);
+  assert.equal(charged.events[0].damage_roll.notation, "1d6+3 + 2d4+0");
+  assert.ok(charged.events[0].applied_condition_ids.includes("prone"));
+  assert.deepEqual([hero.position_ft, goat.position_ft], before);
 }
 
 {
-  const goat = { combatant_id: "monster-1:goat-slot", side: "monsters", position_ft: 5, state: S.buildState(structuredClone(monsters["srd-giant-goat"])) };
+  const goat = { combatant_id: "monster-1:goat-slot", side: "monsters", position_ft: 10, state: S.buildState(structuredClone(monsters["srd-giant-goat"])) };
   const hero = freshHero(), setup = openingSetup(goat, hero);
   window.IRON_PIT_DICE = queuedDice([15, 2, 3, 4]);
   const turn = window.IRON_PIT_BROWSER_TURN.resolveTurn(1, 1, goat, setup);
@@ -99,7 +102,7 @@ function openingSetup(attacker, hero, attackerInit = 20, heroInit = 10) {
 }
 
 {
-  const mastiff = { combatant_id: "monster-1:mastiff", side: "monsters", position_ft: 5, state: S.buildState(structuredClone(monsters["srd-mastiff"])) };
+  const mastiff = { combatant_id: "monster-1:mastiff", side: "monsters", position_ft: 10, state: S.buildState(structuredClone(monsters["srd-mastiff"])) };
   const hero = freshHero();
   S.beginTurn(mastiff.state);
   window.IRON_PIT_DICE = queuedDice([15, 1]);
@@ -113,13 +116,15 @@ for (const [id, notation] of [
 ]) {
   const attacker = { combatant_id: `monster-1:${id}`, side: "monsters", position_ft: 30, state: S.buildState(structuredClone(monsters[id])) };
   const hero = freshHero(), setup = openingSetup(attacker, hero);
+  const before = [hero.position_ft, attacker.position_ft];
   S.beginTurn(attacker.state);
   window.IRON_PIT_DICE = queuedDice([15, 1, 1, 1, 1]);
   const charged = C.resolveClosing(1, 1, attacker, hero, setup);
-  assert.equal(charged.handled, true, `${id} should charge after an initiative sweep and 20+ foot close`);
-  assert.equal(charged.events[0].movement_ft, 25);
-  assert.equal(charged.events[1].damage_roll.notation, notation);
-  assert.ok(charged.events[1].applied_condition_ids.includes("prone"));
+  assert.equal(charged.handled, true, `${id} should charge after an initiative sweep using abstracted pre-contact run-up`);
+  assert.equal(charged.events.length, 1);
+  assert.equal(charged.events[0].damage_roll.notation, notation);
+  assert.ok(charged.events[0].applied_condition_ids.includes("prone"));
+  assert.deepEqual([hero.position_ft, attacker.position_ft], before);
 }
 
 assert.equal(monsters["srd-giant-bat"].speed_ft, 60);
@@ -127,8 +132,8 @@ assert.equal(monsters["srd-mule"].attacks[0].diceSize, 4);
 assert.deepEqual(monsters["srd-giant-owl"].damage_resistances, ["necrotic", "radiant"]);
 
 {
-  const one = { combatant_id: "monster-1:hyena", side: "monsters", position_ft: 5, state: S.buildState(structuredClone(monsters["srd-hyena"])) };
-  const two = { combatant_id: "monster-2:hyena", side: "monsters", position_ft: 5, state: S.buildState(structuredClone(monsters["srd-hyena"])) };
+  const one = { combatant_id: "monster-1:hyena", side: "monsters", position_ft: 10, state: S.buildState(structuredClone(monsters["srd-hyena"])) };
+  const two = { combatant_id: "monster-2:hyena", side: "monsters", position_ft: 10, state: S.buildState(structuredClone(monsters["srd-hyena"])) };
   assert.equal(S.packTactics(one, { heroes: [freshHero()], monsters: [one, two] }), true);
 }
 

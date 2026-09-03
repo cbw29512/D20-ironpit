@@ -99,9 +99,12 @@ function fight(heroIds, monsterIds, dice = deterministicDice()) {
   const hero = { combatant_id: "hero-1:karnok", side: "heroes", position_ft: 0, state: window.IRON_PIT_BROWSER_STATE.buildState(heroTemplate) };
   const axe = { combatant_id: "monster-1:axe", side: "monsters", position_ft: 90, state: window.IRON_PIT_BROWSER_STATE.buildState(axeTemplate) };
   const setup = { heroes: [hero], monsters: [axe] };
+  const before = [hero.position_ft, axe.position_ft];
   window.IRON_PIT_DICE = deterministicDice(11);
   const turn = window.IRON_PIT_BROWSER_TURN.resolveTurn(1, 1, axe, setup);
-  assert.ok(turn.events.some((event) => event.feature_id === "dodge"), "unreachable melee still Dodges while closing");
+  assert.ok(turn.events.some((event) => event.event_type === "attack"), "fixed Pit melee attacks without a closing turn");
+  assert.equal(turn.events.some((event) => event.event_type === "movement" || event.event_type === "dash" || event.feature_id === "dodge"), false);
+  assert.deepEqual([hero.position_ft, axe.position_ft], before, "fixed Pit combat never relocates cards for ordinary closing");
 }
 
 {
@@ -126,14 +129,16 @@ function fight(heroIds, monsterIds, dice = deterministicDice()) {
   hero.state.initiative_total = 10;
   boar.state.initiative_total = 20;
   const setup = { heroes: [hero], monsters: [boar] };
+  const before = [hero.position_ft, boar.position_ft];
   window.IRON_PIT_BROWSER_STATE.beginTurn(boar.state);
   window.IRON_PIT_DICE = deterministicDice(11);
   const charged = window.IRON_PIT_BROWSER_CHARGE.resolveClosing(1, 1, boar, hero, setup);
   assert.equal(charged.handled, true);
-  assert.equal(charged.events[0].movement_ft, 25);
-  assert.equal(charged.events[1].feature_id, "charge");
-  assert.equal(charged.events[1].damage_roll.notation, "1d6+1 + 1d6+0");
-  assert.ok(charged.events[1].applied_condition_ids.includes("prone"));
+  assert.equal(charged.events.length, 1, "Charge resolves from the pre-contact run-up without a movement event");
+  assert.equal(charged.events[0].feature_id, "charge");
+  assert.equal(charged.events[0].damage_roll.notation, "1d6+1 + 1d6+0");
+  assert.ok(charged.events[0].applied_condition_ids.includes("prone"));
+  assert.deepEqual([hero.position_ft, boar.position_ft], before);
 }
 
 {

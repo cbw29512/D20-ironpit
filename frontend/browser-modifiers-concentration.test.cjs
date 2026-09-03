@@ -70,7 +70,8 @@ const attack = { id: "test-blade", name: "Test Blade", kind: "melee", reach: 5, 
   M.add(hero.state, modifier("slow-rush", "enemy", "slow", "speed", { flat_bonus: -10 }));
   S.beginTurn(hero.state);
   const event = P.adrenaline(1, 1, hero);
-  assert.ok(event); assert.equal(event.movement_ft, 20); assert.equal(hero.state.movement_remaining_ft, 40);
+  assert.ok(event); assert.equal(event.movement_ft, 0); assert.equal(hero.state.movement_remaining_ft, 20,
+    "Adrenaline Rush keeps its resource/temp-HP effect but adds no Pit movement");
 }
 
 {
@@ -78,7 +79,8 @@ const attack = { id: "test-blade", name: "Test Blade", kind: "melee", reach: 5, 
   hero.state.template.tactical_shift_fraction = 0.5;
   M.add(hero.state, modifier("slow-shift", "enemy", "slow", "speed", { flat_bonus: -10 }));
   const event = TS.resolve(1, 1, hero, { heroes: [hero], monsters: [target] });
-  assert.ok(event); assert.equal(event.movement_ft, 10); assert.equal(hero.position_ft, 10);
+  assert.equal(event, null, "Tactical Shift movement is arena-neutral in fixed Pit formation");
+  assert.equal(hero.position_ft, 0);
 }
 
 {

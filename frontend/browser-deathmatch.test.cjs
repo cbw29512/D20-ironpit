@@ -113,7 +113,7 @@ function scoutAtFive() {
   const bow = scout.state.template.attacks.find((attack) => attack.kind === "ranged");
   window.IRON_PIT_DICE = queuedDice([18, 1, 1]);
   const event = A.resolveAttack(1, 1, scout, downed, bow, 5, { spendAction: false, setup });
-  assert.equal(event.attack_roll.mode, "normal", "a different non-Incapacitated adjacent enemy must still impose close-combat ranged Disadvantage");
+  assert.equal(event.attack_roll.mode, "normal", "low-level RAW resolver still combines adjacent threat with Advantage");
 }
 
 {
@@ -132,8 +132,9 @@ function scoutAtFive() {
   });
   const scoutAttacks = battle.events.filter((event) => event.event_type === "attack" && event.actor_id.startsWith("monster-1:"));
   const scoutMoves = battle.events.filter((event) => event.event_type === "movement" && event.actor_id.startsWith("monster-1:"));
-  assert.deepEqual(scoutAttacks.slice(0, 2).map((event) => event.weapon_id), ["scout-longbow", "scout-longbow"]);
-  assert.deepEqual(scoutMoves, [], "true ranged multiattack must hold range while its ranged offense is legal");
+  assert.deepEqual(scoutAttacks.slice(0, 2).map((event) => event.weapon_id), ["scout-shortsword", "scout-shortsword"],
+    "an exposed ranged Multiattack switches to melee instead of firing at Disadvantage");
+  assert.deepEqual(scoutMoves, [], "fixed Pit formation never spends a turn closing");
 }
 
-console.log("Browser melee deathmatch and simple ranged-hold regressions passed.");
+console.log("Browser melee deathmatch and fixed-formation ranged regressions passed.");
