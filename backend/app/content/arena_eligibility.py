@@ -15,7 +15,11 @@ def standard_arena_eligible(template: CombatantTemplate) -> bool:
     if template.kind != "monster":
         return True
     movement = template.movement_modes
-    return movement.walk_ft > 0 or movement.fly_ft > 0
+    if movement.fly_ft > 0:
+        return True
+    if movement.swim_ft > 0 and movement.walk_ft <= 5:
+        return False
+    return movement.walk_ft > 0
 
 
 def filter_standard_arena_eligible(templates: list[CombatantTemplate]) -> list[CombatantTemplate]:

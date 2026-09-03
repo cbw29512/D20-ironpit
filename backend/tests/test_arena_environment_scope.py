@@ -22,11 +22,21 @@ def test_standard_arena_eligibility_is_movement_driven() -> None:
         "name": "Synthetic Swimmer",
         "movement_modes": MovementModes(walk_ft=0, swim_ft=40),
     })
+    nominal_swimmer = whale.model_copy(update={
+        "name": "Synthetic Nominal Swimmer",
+        "movement_modes": MovementModes(walk_ft=5, swim_ft=40),
+    })
+    slow_land = whale.model_copy(update={
+        "name": "Synthetic Slow Land Creature",
+        "movement_modes": MovementModes(walk_ft=5),
+    })
     flyer = swimmer.model_copy(update={
         "name": "Synthetic Flyer",
         "movement_modes": MovementModes(walk_ft=0, fly_ft=40, swim_ft=40),
     })
     assert standard_arena_eligible(swimmer) is False
+    assert standard_arena_eligible(nominal_swimmer) is False
+    assert standard_arena_eligible(slow_land) is True
     assert standard_arena_eligible(flyer) is True
 
 
