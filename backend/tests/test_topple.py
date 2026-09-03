@@ -94,7 +94,7 @@ def test_topple_skips_save_for_prone_or_immune_target() -> None:
     prone = _target(); prone.active_effect_ids.append("prone")
     immune = _target(immune=True)
 
-    prone_event = _hit(attacker, prone, attack, [15, 4])
+    prone_event = _hit(attacker, prone, attack, [15, 14, 4])
     immune_event = _hit(attacker, immune, attack, [15, 4])
 
     assert prone_event.save_dc is None

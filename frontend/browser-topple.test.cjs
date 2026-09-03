@@ -79,7 +79,7 @@ function attack(attacker, target, values) {
   const fighter = member("fighter", "heroes"), immune = member("immune", "monsters", { position: 5, immune: true });
   const prone = member("prone", "monsters", { position: 5 }); prone.state.active_effect_ids.push("prone");
   assert.equal(attack(fighter, immune, [15, 4]).save_dc, null);
-  assert.equal(attack(member("fighter2", "heroes"), prone, [15, 4]).save_dc, null);
+  assert.equal(attack(member("fighter2", "heroes"), prone, [15, 14, 4]).save_dc, null);
 }
 
 {
