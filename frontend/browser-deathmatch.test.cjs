@@ -131,9 +131,9 @@ function scoutAtFive() {
     hero_ids: ["karnok-stoneward-l1"], monster_ids: ["srd-scout"],
   });
   const scoutAttacks = battle.events.filter((event) => event.event_type === "attack" && event.actor_id.startsWith("monster-1:"));
-  const scoutMove = battle.events.find((event) => event.event_type === "movement" && event.actor_id.startsWith("monster-1:"));
+  const scoutMoves = battle.events.filter((event) => event.event_type === "movement" && event.actor_id.startsWith("monster-1:"));
   assert.deepEqual(scoutAttacks.slice(0, 2).map((event) => event.weapon_id), ["scout-longbow", "scout-longbow"]);
-  assert.ok(scoutMove && scoutMove.movement_ft === 5 && scoutMove.distance_after_ft === 5, "back-line ranged multiattack must close one card-space after firing");
+  assert.deepEqual(scoutMoves, [], "true ranged multiattack must hold range while its ranged offense is legal");
 }
 
-console.log("Browser melee deathmatch regressions passed.");
+console.log("Browser melee deathmatch and simple ranged-hold regressions passed.");
