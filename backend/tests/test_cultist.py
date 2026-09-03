@@ -1,11 +1,13 @@
 from app.content.monster_catalog import load_monster_rows
+from app.content.monster_saving_throws import with_source_saving_throws
 from app.content.monster_source_audit import audit_monster_source
 from app.content.monsters_zero_engine import build_zero_engine_monsters
 from app.domain.models import DamageType
 
 
 def test_cultist_ritual_sickle_matches_srd_fixed_necrotic_rider() -> None:
-    cultist = next(template for template in build_zero_engine_monsters() if template.name == "Cultist")
+    raw = next(template for template in build_zero_engine_monsters() if template.name == "Cultist")
+    cultist = with_source_saving_throws(raw)
     attack = cultist.weapon_attack
     assert attack.weapon.name == "Ritual Sickle"
     assert (attack.attack_bonus, attack.weapon.dice_count, attack.weapon.dice_size, attack.damage_bonus) == (3, 1, 4, 1)
