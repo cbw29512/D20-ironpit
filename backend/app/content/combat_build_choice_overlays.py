@@ -22,7 +22,8 @@ _MASTERY_CAPABILITY = {
 }
 _MASTERY_LIMIT = {
     "fighter": 3, "barbarian": 2, "monk": 0,
-    "paladin": 2, "ranger": 2, "rogue": 2, "wizard": 0, "sorcerer": 0, "warlock": 0,
+    "paladin": 2, "ranger": 2, "rogue": 2, "wizard": 0,
+    "sorcerer": 0, "warlock": 0, "bard": 0,
 }
 
 
@@ -110,6 +111,7 @@ ROGUE_COMBAT_BUILD_CHOICES = _choices_for_class("rogue")
 WIZARD_COMBAT_BUILD_CHOICES = _choices_for_class("wizard")
 SORCERER_COMBAT_BUILD_CHOICES = _choices_for_class("sorcerer")
 WARLOCK_COMBAT_BUILD_CHOICES = _choices_for_class("warlock")
+BARD_COMBAT_BUILD_CHOICES = _choices_for_class("bard")
 
 
 def get_combat_build_choice_overlay(class_id: str, build_id: str) -> CombatBuildChoiceOverlay:

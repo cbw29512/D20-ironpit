@@ -1,4 +1,5 @@
 from app.content.bard_combat_levels import BARD_COMBAT_LEVELS, bard_arena_ignored, bard_combat_features
+from app.content.subclass_combat_overlays import subclass_combat_features, subclass_ignored_ids_for_class
 
 
 def test_bard_combat_table_covers_every_level_and_official_slot_progression() -> None:
@@ -26,14 +27,15 @@ def test_bard_uses_simple_caster_array_and_deterministic_mental_advancement() ->
         assert row.armor_class == 12
 
 
-def test_lore_bard_table_keeps_only_arena_relevant_features() -> None:
-    assert bard_arena_ignored(20) == (
-        "expertise", "jack-of-all-trades", "lore-bonus-proficiencies", "expertise-2",
-    )
+def test_bard_base_table_and_lore_overlay_keep_only_arena_relevant_features() -> None:
+    assert bard_arena_ignored(20) == ("expertise", "jack-of-all-trades", "expertise-2")
+    assert "lore-bonus-proficiencies" in subclass_ignored_ids_for_class("bard")
     level_seven = set(bard_combat_features(7))
-    assert {"bardic-inspiration", "cutting-words", "font-of-inspiration", "magical-discoveries", "countercharm"} <= level_seven
+    assert {"bardic-inspiration", "font-of-inspiration", "countercharm"} <= level_seven
+    assert {"cutting-words", "magical-discoveries"} <= set(subclass_combat_features("college-lore", 7))
     level_twenty = set(bard_combat_features(20))
-    assert {"peerless-skill", "superior-inspiration", "boon-spell-recall", "words-of-creation"} <= level_twenty
+    assert {"superior-inspiration", "boon-spell-recall", "words-of-creation"} <= level_twenty
+    assert "peerless-skill" in subclass_combat_features("college-lore", 20)
 
 
 def test_bardic_inspiration_uses_follow_charisma_modifier() -> None:

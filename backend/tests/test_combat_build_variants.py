@@ -126,9 +126,19 @@ def test_warlock_roles_are_owned_by_real_subclasses() -> None:
     }
 
 
+def test_bard_roles_are_owned_by_real_subclasses() -> None:
+    assert {
+        variant.id: variant.required_subclass_id
+        for variant in combat_build_variants_for("bard")
+    } == {
+        "support-healer": "college-lore",
+        "controller": "college-glamour",
+        "battle-bard": "college-valor",
+    }
+
+
 def test_legacy_caster_role_records_remain_migration_inputs_not_subclass_clones() -> None:
     expected = {
-        "bard": {"support-healer", "controller", "battle-bard"},
         "cleric": {"healer", "war-priest", "divine-offense"},
         "druid": {"land-damage", "healer", "moon-melee"},
     }

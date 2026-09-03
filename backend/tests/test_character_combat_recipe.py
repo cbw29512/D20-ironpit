@@ -172,6 +172,19 @@ def test_warlock_patron_specializations_compose_from_one_pact_magic_spine() -> N
         assert "pact-magic" in recipe.combat_features
 
 
+def test_bard_college_specializations_compose_from_one_bard_spine() -> None:
+    expected = {
+        ("college-lore", "support-healer"): ("college-lore", None),
+        ("college-glamour", "controller"): ("college-glamour", None),
+        ("college-valor", "battle-bard"): ("college-valor", "rapier"),
+    }
+    for (subclass_id, build_id), (spell_package_id, weapon_id) in expected.items():
+        recipe = compose_character_combat_recipe("bard", subclass_id, build_id, 14)
+        assert recipe.shared_progression_id == "bard-1-20"
+        assert recipe.build_choices.spell_package_id == spell_package_id
+        assert recipe.build_choices.primary_weapon == weapon_id
+
+
 def test_subclass_specific_build_fails_closed_on_the_wrong_subclass() -> None:
     with pytest.raises(ValueError, match="requires subclass circle-moon"):
         compose_character_combat_recipe("druid", "circle-land", "moon-melee", 3)

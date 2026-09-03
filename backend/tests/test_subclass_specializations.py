@@ -2,6 +2,7 @@ import pytest
 
 from app.content.subclass_specializations import (
     BARBARIAN_SPECIALIZATIONS,
+    BARD_SPECIALIZATIONS,
     FIGHTER_SPECIALIZATIONS,
     MONK_SPECIALIZATIONS,
     PALADIN_SPECIALIZATIONS,
@@ -185,6 +186,18 @@ def test_warlock_has_one_charisma_specialization_per_target_patron() -> None:
     assert celestial.primary_weapon == "shortsword"
     assert celestial.feature_choice_ids == ("pact-of-the-blade",)
     assert all(item.ability_priority[0] == "charisma" for item in WARLOCK_SPECIALIZATIONS)
+
+
+def test_bard_has_one_charisma_specialization_per_target_college() -> None:
+    assert tuple(item.subclass_id for item in specializations_for_class("bard")) == (
+        "college-lore", "college-valor", "college-glamour",
+    )
+    lore, valor, glamour = BARD_SPECIALIZATIONS
+    assert (lore.role, valor.role, glamour.role) == (
+        "support-healing", "weapon-caster-hybrid", "control-caster",
+    )
+    assert (valor.primary_weapon, valor.shield) == ("rapier", True)
+    assert all(item.ability_priority[0] == "charisma" for item in BARD_SPECIALIZATIONS)
 
 
 def test_specialization_without_source_truth_fails_closed() -> None:

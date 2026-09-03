@@ -1,5 +1,6 @@
 from app.content.combat_build_choice_overlays import (
     BARBARIAN_COMBAT_BUILD_CHOICES,
+    BARD_COMBAT_BUILD_CHOICES,
     COMBAT_BUILD_CHOICE_OVERLAYS,
     FIGHTER_COMBAT_BUILD_CHOICES,
     MONK_COMBAT_BUILD_CHOICES,
@@ -74,7 +75,7 @@ def test_barbarian_subclass_specializations_generate_real_choice_overlays() -> N
 
 
 def test_all_current_choice_overlays_come_from_subclass_specializations() -> None:
-    assert len(COMBAT_BUILD_CHOICE_OVERLAYS) == 28
+    assert len(COMBAT_BUILD_CHOICE_OVERLAYS) == 31
     assert all("derived from" in overlay.notes for overlay in COMBAT_BUILD_CHOICE_OVERLAYS.values())
 
 
@@ -171,3 +172,13 @@ def test_warlock_patron_specializations_generate_distinct_compatibility_views() 
     blade = get_combat_build_choice_overlay("warlock", "blade-hybrid")
     assert (blade.spell_package_id, blade.primary_weapon) == ("celestial-patron", "shortsword")
     assert not blade.weapon_masteries
+
+
+def test_bard_colleges_generate_distinct_compatibility_views() -> None:
+    assert set(BARD_COMBAT_BUILD_CHOICES) == {"support-healer", "controller", "battle-bard"}
+    assert get_combat_build_choice_overlay("bard", "support-healer").spell_package_id == "college-lore"
+    assert get_combat_build_choice_overlay("bard", "controller").spell_package_id == "college-glamour"
+    battle = get_combat_build_choice_overlay("bard", "battle-bard")
+    assert (battle.spell_package_id, battle.primary_weapon, battle.shield) == (
+        "college-valor", "rapier", True,
+    )

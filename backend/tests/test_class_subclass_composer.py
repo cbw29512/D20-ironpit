@@ -4,6 +4,7 @@ from app.content.canonical_class_combat_spines import (
     canonical_combat_features,
 )
 from app.content.barbarian_subclass_overlay_data import BARBARIAN_SUBCLASS_DELTA_DATA
+from app.content.bard_subclass_overlay_data import BARD_SUBCLASS_DELTA_DATA
 from app.content.core_subclass_overlay_data import CORE_SUBCLASS_DELTA_DATA
 from app.content.fighter_subclass_overlay_data import FIGHTER_SUBCLASS_DELTA_DATA
 from app.content.hero_progressions import HERO_BY_CLASS
@@ -33,6 +34,7 @@ def _legacy_combined_features(class_id: str, level: int) -> tuple[str, ...]:
 def test_subclass_registry_is_derived_from_authoritative_overlay_data() -> None:
     expected = (
         set(BARBARIAN_SUBCLASS_DELTA_DATA)
+        | set(BARD_SUBCLASS_DELTA_DATA)
         | set(CORE_SUBCLASS_DELTA_DATA)
         | set(FIGHTER_SUBCLASS_DELTA_DATA)
         | set(MONK_SUBCLASS_DELTA_DATA)
