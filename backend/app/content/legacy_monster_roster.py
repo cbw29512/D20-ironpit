@@ -18,6 +18,7 @@ from app.content.monsters_bears import build_black_bear, build_brown_bear
 from app.content.monsters_batch_three import build_monster_batch_three
 from app.content.monsters_beast_batch_two import build_beast_batch_two
 from app.content.monsters_charge import build_boar, build_elk, build_giant_boar
+from app.content.monsters_charge_expansion import build_charge_expansion
 from app.content.monsters_control import build_control_monsters
 from app.content.monsters_expansion_four import build_expansion_four
 from app.content.monsters_fixed_damage import build_fixed_damage_monsters
@@ -43,7 +44,7 @@ def build_legacy_monster_templates() -> list[CombatantTemplate]:
         build_bandit(), build_commoner(), build_guard(), build_giant_rat(), build_giant_weasel(), build_blood_hawk(),
         build_axe_beak(), build_giant_lizard(), build_wolf(), build_dire_wolf(), build_black_bear(), build_brown_bear(),
         build_baboon(), build_camel(), build_deer(), build_draft_horse(), build_giant_badger(), build_jackal(),
-        build_boar(), build_elk(), build_giant_boar(), build_hippogriff(), *build_fixed_damage_monsters(),
+        build_boar(), build_elk(), build_giant_boar(), *build_charge_expansion(), build_hippogriff(), *build_fixed_damage_monsters(),
         *build_beast_batch_two(), *build_monster_batch_three(), *build_control_monsters(), *build_poison_monsters(),
         *build_venom_monsters(), *build_expansion_four(), build_giant_crocodile(), build_giant_constrictor_snake(),
         build_tyrannosaurus_rex(), *build_zero_engine_monsters(), *build_swarm_candidates(), *build_parry_monsters(),

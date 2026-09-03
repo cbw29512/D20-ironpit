@@ -19,9 +19,10 @@ load("browser-monsters-generated.js");
 const generated = window.IRON_PIT_BROWSER_MONSTERS;
 assert.equal(window.IRON_PIT_CANONICAL_MONSTERS_READY, true, "Canonical generated monster bundle must mark itself ready");
 assert.equal(Object.keys(manual).length, 67, "Legacy fragments remain a 67-monster compatibility subset");
-assert.equal(Object.keys(generated).length, 103, "Generated runtime must expose only currently RAW-certified monsters");
+assert.equal(Object.keys(generated).length, 105, "Generated runtime must expose only currently RAW-certified monsters");
 for (const id of [
   "srd-jackal", "srd-archelon", "srd-ankylosaurus", "srd-giant-eagle", "srd-giant-elk", "srd-giant-crocodile",
+  "srd-minotaur-skeleton", "srd-triceratops",
   "srd-animated-armor", "srd-animated-flying-sword", "srd-awakened-tree", "srd-flying-snake",
   "srd-gargoyle", "srd-grimlock", "srd-guard-captain", "srd-hippopotamus",
   "srd-killer-whale", "srd-manticore", "srd-ogre-zombie", "srd-pegasus", "srd-scorpion", "srd-skeleton", "srd-spider",
@@ -101,6 +102,18 @@ assert.deepEqual(generated["srd-goblin-boss"].redirect_attack_reaction, {
   ally_max_size: "medium", ally_range_ft: 5,
 });
 
+const minotaurCharge = generated["srd-minotaur-skeleton"].attacks.find((item) => item.id === "minotaur-skeleton-gore").charge;
+assert.deepEqual(minotaurCharge, {
+  minimumMove: 20, diceCount: 2, diceSize: 8, damageType: "piercing", proneMaxSize: "large",
+});
+const triceratops = generated["srd-triceratops"];
+assert.deepEqual(triceratops.attacks.find((item) => item.id === "triceratops-gore").charge, {
+  minimumMove: 20, diceCount: 2, diceSize: 8, damageType: "piercing", proneMaxSize: "huge",
+});
+assert.deepEqual(triceratops.attack_action.slots.map((slot) => slot.attackIds), [
+  ["triceratops-gore"], ["triceratops-gore"],
+]);
+
 const slots = (action) => (action?.slots || []).map((slot) => Array.isArray(slot)
   ? { attackIds: slot, saveActionIds: [] }
   : { attackIds: slot.attackIds || [], saveActionIds: slot.saveActionIds || [] });
@@ -171,4 +184,4 @@ assert.ok(heroOne.state.active_effect_ids.includes("grappled"));
 assert.ok(heroOne.state.active_effect_ids.includes("restrained"));
 assert.ok(heroTwo.state.active_effect_ids.includes("prone"));
 
-console.log("Generated monster runtime contains 103 RAW-certified templates, including native data-only swarms, with conditional damage, Redirect Attack, and T. rex retargeting.");
+console.log("Generated monster runtime contains 105 RAW-certified templates, including native data-only swarms, Charge riders, conditional damage, Redirect Attack, and T. rex retargeting.");
