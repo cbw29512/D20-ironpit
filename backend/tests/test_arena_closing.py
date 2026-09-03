@@ -42,44 +42,34 @@ def test_melee_only_creature_dodges_and_moves_when_melee_is_unreachable_this_tur
     assert not any(event.event_type in {"attack", "dash"} for event in events)
 
 
-def test_ranged_option_closes_until_melee_can_be_reached_then_moves_and_attacks() -> None:
+def test_true_range_option_attacks_without_closing_while_separated() -> None:
     setup = build_encounter_setup(EncounterSelection(
         hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-giant-lizard"],
     ))
     hero, monster = _at_distance(setup, 60)
     _disable_adrenaline_rush(hero)
 
-    events, sequence = resolve_combat_turn(
-        1, 1, hero, monster, setup, FixedDiceProvider([10, 1, 1])
-    )
-    first_attack = next(event for event in events if event.event_type == "attack")
-    first_move = next(event for event in events if event.event_type == "movement")
-    assert first_attack.weapon_id == "shortbow"
-    assert first_move.distance_after_ft == 30
+    events, _ = resolve_combat_turn(1, 1, hero, monster, setup, FixedDiceProvider([10, 1, 1]))
 
-    second_events, _ = resolve_combat_turn(
-        sequence, 2, hero, monster, setup, FixedDiceProvider([10, 1, 1, 1, 1])
-    )
-    second_move = next(event for event in second_events if event.event_type == "movement")
-    second_attack = next(event for event in second_events if event.event_type == "attack")
-    assert second_move.distance_after_ft == 5
-    assert second_attack.weapon_id == "greatsword"
-    assert second_events.index(second_move) < second_events.index(second_attack)
-    assert abs(hero.position_ft - monster.position_ft) == 5
+    attacks = [event for event in events if event.event_type == "attack"]
+    assert len(attacks) == 1
+    assert attacks[0].weapon_id == "shortbow"
+    assert not any(event.event_type == "movement" for event in events)
+    assert abs(hero.position_ft - monster.position_ft) == 60
 
 
-def test_melee_one_card_behind_backline_moves_and_attacks_same_turn() -> None:
+def test_backup_ranged_option_is_used_until_enemy_reaches_melee() -> None:
     setup = build_encounter_setup(EncounterSelection(
         hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-giant-lizard"],
     ))
     hero, monster = _at_distance(setup, 10)
     _disable_adrenaline_rush(hero)
 
-    events, _ = resolve_combat_turn(1, 1, hero, monster, setup, FixedDiceProvider([10, 4, 4, 4, 4]))
+    events, _ = resolve_combat_turn(1, 1, hero, monster, setup, FixedDiceProvider([10, 4, 4]))
 
-    assert [event.event_type for event in events] == ["movement", "attack"]
-    assert events[0].movement_ft == 5
-    assert events[1].weapon_id == "greatsword"
+    assert [event.event_type for event in events] == ["attack"]
+    assert events[0].weapon_id == "shortbow"
+    assert abs(hero.position_ft - monster.position_ft) == 10
 
 
 def test_dodge_imposes_attack_disadvantage_until_dodgers_next_turn() -> None:

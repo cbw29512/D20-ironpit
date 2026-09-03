@@ -126,22 +126,23 @@ def test_zero_hp_canonical_character_does_not_end_deathmatch_until_dead() -> Non
     assert resolve_encounter_outcome(setup) == "monsters_win"
 
 
-def test_legacy_ranged_fixture_fires_while_closing_instead_of_holding_range() -> None:
+def test_true_ranged_fixture_fires_without_kiting_or_closing() -> None:
     selection = EncounterSelection(
         hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-commoner"],
     )
     setup = build_encounter_setup(selection)
     selene = build_selene_asharrow()
     _replace_hero(setup, 0, selene)
+    initial_position = setup.heroes[0].position_ft
     with patch.object(encounter_engine, "build_encounter_setup", return_value=setup):
         result = run_encounter(selection, MaxDiceProvider())
 
     assert result.outcome == "heroes_win"
     attack = next(event for event in result.events if event.event_type == "attack")
-    movement = next(
-        event for event in result.events
-        if event.event_type == "movement" and event.actor_id == "hero-1:selene-asharrow-l1"
-    )
     assert attack.actor_id == "hero-1:selene-asharrow-l1"
     assert attack.target_id == "monster-1:srd-commoner"
-    assert movement.distance_after_ft < movement.distance_before_ft
+    assert result.setup.heroes[0].position_ft == initial_position
+    assert not any(
+        event.event_type == "movement" and event.actor_id == "hero-1:selene-asharrow-l1"
+        for event in result.events
+    )

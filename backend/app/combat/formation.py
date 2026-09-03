@@ -9,7 +9,7 @@ MONSTER_BACKLINE_FT = 15
 
 
 def has_ranged_weapon_offense(template: CombatantTemplate) -> bool:
-    """Return whether the card has a real ranged weapon attack, not merely a support role."""
+    """Return whether the card owns any real ranged weapon attack."""
     return any(
         attack.weapon.attack_kind is WeaponAttackKind.RANGED
         and attack.weapon.long_range_ft is not None
@@ -18,19 +18,29 @@ def has_ranged_weapon_offense(template: CombatantTemplate) -> bool:
     )
 
 
-def has_true_range_offense(template: CombatantTemplate) -> bool:
-    """Classify backline starts from actual ranged offense only; buffs never create a backliner."""
-    if has_ranged_weapon_offense(template):
-        return True
-    if any(action.range_ft > 5 for action in template.saving_throw_actions):
-        return True
+def _primary_weapon_is_ranged(template: CombatantTemplate) -> bool:
+    weapon = template.weapon_attack.weapon
+    return (
+        weapon.attack_kind is WeaponAttackKind.RANGED
+        and weapon.long_range_ft is not None
+        and weapon.long_range_ft > 5
+    )
+
+
+def _has_ranged_spell_offense(template: CombatantTemplate) -> bool:
     if any(action.attack_kind == "ranged" and action.range_ft > 5 for action in template.spell_attack_actions):
         return True
     return any(action.range_ft > 5 for action in template.spell_save_actions)
 
 
+def has_true_range_offense(template: CombatantTemplate) -> bool:
+    """Return whether some supported attack/spell can deal damage beyond melee reach."""
+    return has_ranged_weapon_offense(template) or _has_ranged_spell_offense(template)
+
+
 def uses_backline(template: CombatantTemplate) -> bool:
-    return has_true_range_offense(template)
+    """Start back only when ranged combat is the primary plan; backup thrown/ranged attacks do not define formation."""
+    return _primary_weapon_is_ranged(template) or _has_ranged_spell_offense(template)
 
 
 def starting_position_ft(template: CombatantTemplate, side: str) -> int:
@@ -43,7 +53,7 @@ def starting_position_ft(template: CombatantTemplate, side: str) -> int:
 
 
 def backline_holds_position(member, setup) -> bool:
-    """Use a real ranged weapon while separated; switch to melee once an active enemy reaches 5 feet."""
+    """Use a legal ranged weapon while separated; switch to melee once an active enemy reaches 5 feet."""
     if not has_ranged_weapon_offense(member.state.template):
         return False
     enemies = setup.monsters if member.side == "heroes" else setup.heroes

@@ -57,7 +57,9 @@ assert.equal(Object.keys(monsters).length, 109, "canonical runtime must contain 
   assert.ok(event.applied_condition_ids.includes("poisoned"));
   assertArenaPoison(target);
   setD20(20);
-  const ended = L.resolveTargetTiming(2, 2, target, "target_turn_start");
+  const sameRound = L.resolveTargetTiming(2, 1, target, "target_turn_start");
+  assert.equal(sameRound.events.length, 0, "arena Poisoned must last through the round in which it was applied");
+  const ended = L.resolveTargetTiming(sameRound.sequence, 2, target, "target_turn_start");
   assert.equal(ended.events.length, 1);
   assert.deepEqual(ended.events[0].removed_condition_ids, ["poisoned"]);
 }
@@ -89,4 +91,4 @@ assert.equal(Object.keys(monsters).length, 109, "canonical runtime must contain 
   assert.deepEqual(ended.events[0].removed_condition_ids, ["poisoned"]);
 }
 
-console.log("Generated Giant Vulture/Wyvern source fidelity and arena Poisoned policy regressions passed.");
+console.log("Generated Giant Vulture/Wyvern source fidelity and next-round arena Poisoned policy regressions passed.");

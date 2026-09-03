@@ -44,7 +44,7 @@ Iron Pit uses one Poisoned lifecycle regardless of source wording while preservi
 - Poisoned does not stack.
 - Poisoned applies its normal Disadvantage effects.
 - poison condition immunity or Protection from Poison prevents application.
-- At the start of the poisoned creature's turn, it repeats the source-provided recovery save when one exists; otherwise Iron Pit uses DC 10 Constitution.
+- Poisoned lasts through the round in which it is applied. Starting on the poisoned creature's first turn in a later round, it repeats the source-provided recovery save when one exists; otherwise Iron Pit uses DC 10 Constitution.
 - Success ends Poisoned. Failure leaves it active until the next start-of-turn recovery save.
 - Poison damage remains source-specific and is resolved normally through universal resistance/immunity/vulnerability rules.
 

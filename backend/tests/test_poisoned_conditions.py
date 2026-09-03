@@ -75,12 +75,17 @@ def test_protection_from_poison_blocks_arena_poison() -> None:
     assert "poisoned" not in hero.state.active_effect_ids
 
 
-def test_poison_recovery_repeats_at_target_turn_start_until_success() -> None:
+def test_poison_recovery_starts_next_round_and_repeats_until_success() -> None:
     setup = _setup()
     hero, centipede = setup.heroes[0], setup.monsters[0]
-    apply_timed_condition(hero.state, "poisoned", centipede.combatant_id)
+    apply_timed_condition(hero.state, "poisoned", centipede.combatant_id, applied_round=1)
 
-    failed, sequence = resolve_target_condition_timing(1, 2, hero, "target_turn_start", FixedDiceProvider([1]))
+    same_round, sequence = resolve_target_condition_timing(1, 1, hero, "target_turn_start", FixedDiceProvider([20]))
+    assert same_round == []
+    assert sequence == 1
+    assert "poisoned" in hero.state.active_effect_ids
+
+    failed, sequence = resolve_target_condition_timing(sequence, 2, hero, "target_turn_start", FixedDiceProvider([1]))
     assert sequence == 2
     assert failed[0].save_succeeded is False
     assert "poisoned" in hero.state.active_effect_ids

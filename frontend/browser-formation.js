@@ -10,13 +10,16 @@
   function hasRangedWeaponOffense(template) {
     return attacks(template).some((attack) => attack.kind === "ranged" && Number.isFinite(attack.long) && attack.long > 5);
   }
-  function hasTrueRangeOffense(template) {
-    if (hasRangedWeaponOffense(template)) return true;
-    if ((template?.saving_throw_actions || []).some((action) => (action.range || action.range_ft || 0) > 5)) return true;
+  function primaryWeaponIsRanged(template) {
+    const primary = attacks(template).find((attack) => attack.id === template?.primary_attack_id) || attacks(template)[0];
+    return primary?.kind === "ranged" && Number.isFinite(primary.long) && primary.long > 5;
+  }
+  function hasRangedSpellOffense(template) {
     if ((template?.spell_attack_actions || []).some((action) => action.attackKind === "ranged" && (action.range || 0) > 5)) return true;
     return (template?.spell_save_actions || []).some((action) => (action.range || 0) > 5);
   }
-  function usesBackline(template) { return hasTrueRangeOffense(template); }
+  function hasTrueRangeOffense(template) { return hasRangedWeaponOffense(template) || hasRangedSpellOffense(template); }
+  function usesBackline(template) { return primaryWeaponIsRanged(template) || hasRangedSpellOffense(template); }
 
   function startingPosition(template, side) {
     const back = usesBackline(template);
@@ -33,10 +36,6 @@
   }
 
   window.IRON_PIT_BROWSER_FORMATION = {
-    hasRangedWeaponOffense,
-    hasTrueRangeOffense,
-    usesBackline,
-    startingPosition,
-    backlineHoldsPosition,
+    hasRangedWeaponOffense, hasTrueRangeOffense, usesBackline, startingPosition, backlineHoldsPosition,
   };
 })();
