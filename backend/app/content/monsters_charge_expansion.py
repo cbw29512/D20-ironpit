@@ -110,5 +110,28 @@ def build_warhorse_skeleton() -> CombatantTemplate:
     )
 
 
+def build_allosaurus() -> CombatantTemplate:
+    bite = _attack("allosaurus-bite", "Bite", 6, 2, 10, 4, DamageType.PIERCING)
+    claws = _attack("allosaurus-claws", "Claws", 6, 1, 8, 4, DamageType.SLASHING)
+    return CombatantTemplate(
+        id="srd-allosaurus",
+        name="Allosaurus",
+        archetype="Allosaurus",
+        challenge_rating="2",
+        kind="monster",
+        size=CreatureSize.LARGE,
+        armor_class=13,
+        max_hp=51,
+        speed_ft=60,
+        initiative_bonus=1,
+        skill_bonuses={"perception": 5},
+        weapon_attack=bite,
+        alternate_weapon_attacks=[claws],
+        combat_traits=[CombatTrait.CHARGE],
+        visual=build_monster_visual("hide", "claws", "allosaurus"),
+        source="SRD 5.2.1 Allosaurus p. 344",
+    )
+
+
 def build_charge_expansion() -> list[CombatantTemplate]:
-    return [build_minotaur_skeleton(), build_triceratops(), build_warhorse_skeleton()]
+    return [build_minotaur_skeleton(), build_triceratops(), build_warhorse_skeleton(), build_allosaurus()]

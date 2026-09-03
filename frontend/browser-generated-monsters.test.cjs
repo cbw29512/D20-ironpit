@@ -19,10 +19,10 @@ load("browser-monsters-generated.js");
 const generated = window.IRON_PIT_BROWSER_MONSTERS;
 assert.equal(window.IRON_PIT_CANONICAL_MONSTERS_READY, true, "Canonical generated monster bundle must mark itself ready");
 assert.equal(Object.keys(manual).length, 67, "Legacy fragments remain a 67-monster compatibility subset");
-assert.equal(Object.keys(generated).length, 106, "Generated runtime must expose only currently RAW-certified monsters");
+assert.equal(Object.keys(generated).length, 107, "Generated runtime must expose only currently RAW-certified monsters");
 for (const id of [
   "srd-jackal", "srd-archelon", "srd-ankylosaurus", "srd-giant-eagle", "srd-giant-elk", "srd-giant-crocodile",
-  "srd-minotaur-skeleton", "srd-triceratops", "srd-warhorse-skeleton",
+  "srd-allosaurus", "srd-minotaur-skeleton", "srd-triceratops", "srd-warhorse-skeleton",
   "srd-animated-armor", "srd-animated-flying-sword", "srd-awakened-tree", "srd-flying-snake",
   "srd-gargoyle", "srd-grimlock", "srd-guard-captain", "srd-hippopotamus",
   "srd-killer-whale", "srd-manticore", "srd-ogre-zombie", "srd-pegasus", "srd-scorpion", "srd-skeleton", "srd-spider",
@@ -117,6 +117,12 @@ const warhorseSkeleton = generated["srd-warhorse-skeleton"];
 assert.deepEqual(warhorseSkeleton.attacks.find((item) => item.id === "warhorse-skeleton-hooves").charge, {
   minimumMove: 20, proneMaxSize: "large",
 });
+const allosaurus = generated["srd-allosaurus"];
+assert.equal(allosaurus.primary_attack_id, "allosaurus-bite");
+assert.deepEqual(allosaurus.attacks.map((item) => item.id), ["allosaurus-bite", "allosaurus-claws"]);
+assert.deepEqual(allosaurus.attacks.find((item) => item.id === "allosaurus-claws").charge, {
+  minimumMove: 30, proneMaxSize: "large", followUpAttackId: "allosaurus-bite",
+});
 
 const slots = (action) => (action?.slots || []).map((slot) => Array.isArray(slot)
   ? { attackIds: slot, saveActionIds: [] }
@@ -191,6 +197,38 @@ assert.equal(chargeResult.handled, true);
 assert.equal(chargeAttack.damage_roll.notation, "1d6+4", "Prone-only Charge must not manufacture bonus damage");
 assert.ok(chargeAttack.applied_condition_ids.includes("prone"));
 
+const allosaurusMember = combatant("monster-1:srd-allosaurus", "monsters", 5, allosaurus);
+const allosaurusTarget = combatant("hero-allosaurus:karnok-stoneward-l1", "heroes", 0, window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"]);
+allosaurusMember.state.initiative_total = 20;
+allosaurusTarget.state.initiative_total = 10;
+S.beginTurn(allosaurusMember.state);
+window.IRON_PIT_DICE = {
+  roll: (sides) => sides === 20 ? 15 : 1,
+  rollMany: (count, sides) => Array.from({ length: count }, () => sides === 20 ? 15 : 1),
+};
+const allosaurusResult = C.resolveClosing(1, 1, allosaurusMember, allosaurusTarget, {
+  heroes: [allosaurusTarget], monsters: [allosaurusMember],
+});
+const allosaurusAttacks = allosaurusResult.events.filter((event) => event.event_type === "attack");
+assert.equal(allosaurusResult.handled, true);
+assert.deepEqual(allosaurusAttacks.map((event) => event.weapon_id), ["allosaurus-claws", "allosaurus-bite"]);
+assert.deepEqual(allosaurusAttacks.map((event) => event.feature_id), ["charge", "charge-follow-up"]);
+assert.equal(allosaurusAttacks[0].damage_roll.notation, "1d8+4");
+assert.ok(allosaurusAttacks[0].applied_condition_ids.includes("prone"));
+assert.equal(allosaurusAttacks[1].damage_roll.notation, "2d10+4");
+
+const missAllosaurus = combatant("monster-2:srd-allosaurus", "monsters", 5, allosaurus);
+const missTarget = combatant("hero-miss:karnok-stoneward-l1", "heroes", 0, window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"]);
+missAllosaurus.state.initiative_total = 20;
+missTarget.state.initiative_total = 10;
+S.beginTurn(missAllosaurus.state);
+window.IRON_PIT_DICE = {
+  roll: (sides) => sides === 20 ? 1 : 1,
+  rollMany: (count, sides) => Array.from({ length: count }, () => sides === 20 ? 1 : 1),
+};
+const missResult = C.resolveClosing(1, 1, missAllosaurus, missTarget, { heroes: [missTarget], monsters: [missAllosaurus] });
+assert.deepEqual(missResult.events.filter((event) => event.event_type === "attack").map((event) => event.weapon_id), ["allosaurus-claws"]);
+
 window.IRON_PIT_DICE = {
   roll: (sides) => sides === 20 ? 10 : 1,
   rollMany: (count, sides) => Array.from({ length: count }, () => sides === 20 ? 10 : 1),
@@ -209,4 +247,4 @@ assert.ok(heroOne.state.active_effect_ids.includes("grappled"));
 assert.ok(heroOne.state.active_effect_ids.includes("restrained"));
 assert.ok(heroTwo.state.active_effect_ids.includes("prone"));
 
-console.log("Generated monster runtime contains 106 RAW-certified templates, including native data-only swarms, Charge riders, Prone-only Charge, conditional damage, Redirect Attack, and T. rex retargeting.");
+console.log("Generated monster runtime contains 107 RAW-certified templates, including Allosaurus Charge follow-up Bite, native data-only swarms, Charge riders, Prone-only Charge, conditional damage, Redirect Attack, and T. rex retargeting.");

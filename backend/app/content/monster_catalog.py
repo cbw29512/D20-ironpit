@@ -20,7 +20,7 @@ _CORRECTIONS_PATH = _DATA_DIR / "srd_5_2_1_monster_corrections.json"
 # Candidate means combat mechanics are implemented. Final RAW READY status is
 # granted only after the runtime template passes the complete source audit.
 _READY_BY_NAME = {
-    "Ankylosaurus": "srd-ankylosaurus", "Archelon": "srd-archelon",
+    "Allosaurus": "srd-allosaurus", "Ankylosaurus": "srd-ankylosaurus", "Archelon": "srd-archelon",
     "Awakened Shrub": "srd-awakened-shrub", "Axe Beak": "srd-axe-beak", "Baboon": "srd-baboon",
     "Badger": "srd-badger", "Bandit": "srd-bandit", "Bandit Captain": "srd-bandit-captain",
     "Bat": "srd-bat", "Black Bear": "srd-black-bear", "Blood Hawk": "srd-blood-hawk", "Boar": "srd-boar", "Brown Bear": "srd-brown-bear",

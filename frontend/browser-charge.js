@@ -24,9 +24,22 @@
       distance_before_ft: movement.before, distance_after_ft: movement.after, movement_ft: movement.moved,
       animation: "advance", description: `${member.state.template.name} charges ${movement.moved} feet.` };
   }
+  function eventTarget(event, fallback, setup) {
+    return [...(setup?.heroes || []), ...(setup?.monsters || [])].find((member) => member.combatant_id === event.target_id) || fallback;
+  }
+  function followUp(sequence, round, member, target, profile, firstEvent, setup) {
+    if (!firstEvent.hit || !profile.followUpAttackId) return { events: [], sequence };
+    const actualTarget = eventTarget(firstEvent, target, setup);
+    if (!actualTarget.state.is_alive || actualTarget.state.is_dead || actualTarget.state.current_hp <= 0) return { events: [], sequence };
+    const attack = member.state.template.attacks.find((item) => item.id === profile.followUpAttackId);
+    if (!attack) throw new Error(`Charge follow-up attack ${profile.followUpAttackId} is missing from ${member.state.template.id}.`);
+    return { events: [A().resolveAttack(sequence++, round, member, actualTarget, attack, S().distance(member, actualTarget), {
+      spendAction: false, featureId: "charge-follow-up", setup,
+    })], sequence };
+  }
   function resolveClosing(sequence, round, member, target, setup = null) {
     if (!openingEligible(round, member, setup)) return { events: [], sequence, handled: false };
-    const attack = member.state.template.attacks.find((a) => a.id === member.state.template.primary_attack_id) || member.state.template.attacks[0];
+    const attack = member.state.template.attacks.find((item) => item.charge);
     const profile = attack?.charge;
     if (!profile || !E().available(member.state, "action") || !S().canProne(target, profile.proneMaxSize)) {
       return { events: [], sequence, handled: false };
@@ -40,13 +53,16 @@
       if (!moved.movement) return { events, sequence, handled: events.length > 0 };
       events.push(movementEvent(sequence++, round, member, target, moved.movement));
     }
-    const options = { featureId: "charge", proneMaxSize: profile.proneMaxSize };
+    const options = { featureId: "charge", proneMaxSize: profile.proneMaxSize, setup };
     if (Number.isInteger(profile.diceCount) && Number.isInteger(profile.diceSize) && profile.damageType) {
       options.bonusDamage = { source: "Charge", diceCount: profile.diceCount,
         diceSize: profile.diceSize, damageType: profile.damageType };
     }
-    events.push(A().resolveAttack(sequence++, round, member, target, attack, S().distance(member, target), options));
-    return { events, sequence, handled: true };
+    const firstEvent = A().resolveAttack(sequence++, round, member, target, attack, S().distance(member, target), options);
+    events.push(firstEvent);
+    const followed = followUp(sequence, round, member, target, profile, firstEvent, setup);
+    events.push(...followed.events);
+    return { events, sequence: followed.sequence, handled: true };
   }
   window.IRON_PIT_BROWSER_CHARGE = { openingEligible, openingFeature, resolveClosing };
 })();

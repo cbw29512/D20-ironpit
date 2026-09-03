@@ -19,6 +19,7 @@ def _p(form: FigureForm, detail: str) -> FigureProfile:
 
 
 MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
+    "Allosaurus": _p("theropod", "allosaurus"),
     "Animated Armor": _p("humanoid", "animated-armor"),
     "Animated Flying Sword": _p("weapon", "flying-sword"),
     "Ankylosaurus": _p("reptile", "ankylosaurus"),

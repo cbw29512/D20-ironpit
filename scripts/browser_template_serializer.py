@@ -96,6 +96,8 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
                         diceSize=profile.bonus_damage.dice_size,
                         damageType=profile.bonus_damage.damage_type.value,
                     )
+                if profile.follow_up_attack_id:
+                    charge["followUpAttackId"] = profile.follow_up_attack_id
                 row["charge"] = charge
         return row
     except Exception:

@@ -90,9 +90,10 @@ def test_current_certified_monsters_are_linked_to_runtime_templates() -> None:
         for monster in catalog.monsters if monster.coverage_status is CoverageStatus.RAW_READY
     }
     assert ready_monsters == {
-        "Animated Armor": "srd-animated-armor", "Animated Flying Sword": "srd-animated-flying-sword",
-        "Ankylosaurus": "srd-ankylosaurus", "Archelon": "srd-archelon",
-        "Awakened Shrub": "srd-awakened-shrub", "Awakened Tree": "srd-awakened-tree", "Axe Beak": "srd-axe-beak",
+        "Allosaurus": "srd-allosaurus", "Animated Armor": "srd-animated-armor",
+        "Animated Flying Sword": "srd-animated-flying-sword", "Ankylosaurus": "srd-ankylosaurus",
+        "Archelon": "srd-archelon", "Awakened Shrub": "srd-awakened-shrub",
+        "Awakened Tree": "srd-awakened-tree", "Axe Beak": "srd-axe-beak",
         "Baboon": "srd-baboon", "Badger": "srd-badger", "Bandit": "srd-bandit",
         "Bandit Captain": "srd-bandit-captain", "Bat": "srd-bat", "Black Bear": "srd-black-bear",
         "Blood Hawk": "srd-blood-hawk", "Boar": "srd-boar", "Brown Bear": "srd-brown-bear", "Camel": "srd-camel", "Cat": "srd-cat",

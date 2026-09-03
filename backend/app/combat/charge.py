@@ -1,70 +1,22 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
-
 from app.combat.action_economy import is_available
+from app.combat.charge_follow_up import resolve_charge_follow_up
+from app.combat.charge_profiles import ChargeDamage, ChargeProfile, charge_profile_for_attack_id
 from app.combat.dice import DiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.opening_burst import opening_burst_available
 from app.combat.reaction_movement import move_toward_with_reactions
 from app.domain.encounters import EncounterCombatant, EncounterSetup
-from app.domain.models import BattleEvent, CombatantState, DamageType, WeaponAttack
-from app.domain.size import CreatureSize, size_at_most
+from app.domain.models import BattleEvent, CombatantState, WeaponAttack
+from app.domain.size import size_at_most
 from app.domain.traits import CombatTrait
 
 
-@dataclass(frozen=True)
-class ChargeDamage:
-    dice_count: int
-    dice_size: int
-    damage_type: DamageType
-
-
-@dataclass(frozen=True)
-class ChargeProfile:
-    attack_id: str
-    minimum_move_ft: int
-    max_target_size: CreatureSize
-    bonus_damage: ChargeDamage | None = None
-
-
-_PROFILES = {
-    "boar-gore": ChargeProfile(
-        "boar-gore", 20, CreatureSize.MEDIUM, ChargeDamage(1, 6, DamageType.PIERCING),
-    ),
-    "elk-ram": ChargeProfile(
-        "elk-ram", 20, CreatureSize.LARGE, ChargeDamage(1, 6, DamageType.BLUDGEONING),
-    ),
-    "giant-boar-gore": ChargeProfile(
-        "giant-boar-gore", 20, CreatureSize.LARGE, ChargeDamage(2, 6, DamageType.PIERCING),
-    ),
-    "giant-elk-ram": ChargeProfile(
-        "giant-elk-ram", 20, CreatureSize.HUGE, ChargeDamage(2, 4, DamageType.BLUDGEONING),
-    ),
-    "giant-goat-ram": ChargeProfile(
-        "giant-goat-ram", 20, CreatureSize.LARGE, ChargeDamage(2, 4, DamageType.BLUDGEONING),
-    ),
-    "minotaur-skeleton-gore": ChargeProfile(
-        "minotaur-skeleton-gore", 20, CreatureSize.LARGE, ChargeDamage(2, 8, DamageType.PIERCING),
-    ),
-    "rhinoceros-gore": ChargeProfile(
-        "rhinoceros-gore", 20, CreatureSize.LARGE, ChargeDamage(2, 8, DamageType.PIERCING),
-    ),
-    "triceratops-gore": ChargeProfile(
-        "triceratops-gore", 20, CreatureSize.HUGE, ChargeDamage(2, 8, DamageType.PIERCING),
-    ),
-    "warhorse-hooves": ChargeProfile(
-        "warhorse-hooves", 20, CreatureSize.LARGE, ChargeDamage(2, 4, DamageType.BLUDGEONING),
-    ),
-    "warhorse-skeleton-hooves": ChargeProfile(
-        "warhorse-skeleton-hooves", 20, CreatureSize.LARGE,
-    ),
-}
-
-
-def charge_profile_for_attack_id(attack_id: str) -> ChargeProfile | None:
-    return _PROFILES.get(attack_id)
+def _charge_attack(attacker: CombatantState) -> WeaponAttack | None:
+    attacks = [attacker.template.weapon_attack, *attacker.template.alternate_weapon_attacks]
+    return next((attack for attack in attacks if charge_profile_for_attack_id(attack.id) is not None), None)
 
 
 def charge_profile(
@@ -94,6 +46,13 @@ def charge_can_close(
     )
 
 
+def _bonus_damage(profile: ChargeProfile):
+    if profile.bonus_damage is None:
+        return None
+    rider = profile.bonus_damage
+    return ("Charge", rider.dice_count, rider.dice_size, rider.damage_type)
+
+
 def resolve_charge_closing(
     sequence: int,
     round_number: int,
@@ -102,8 +61,8 @@ def resolve_charge_closing(
     dice: DiceProvider,
     setup: EncounterSetup | None = None,
 ) -> tuple[list[BattleEvent], int, bool]:
-    attack = attacker.state.template.weapon_attack
-    if not opening_burst_available(round_number, attacker, setup):
+    attack = _charge_attack(attacker.state)
+    if attack is None or not opening_burst_available(round_number, attacker, setup):
         return [], sequence, False
     if not charge_can_close(
         attacker.state, target.state, attack, combatant_distance(attacker, target),
@@ -128,13 +87,13 @@ def resolve_charge_closing(
         return move_events, sequence, bool(move_events)
 
     charged_attack = attack.model_copy(update={"knocks_prone_max_size": profile.max_target_size})
-    bonus_damage = None
-    if profile.bonus_damage is not None:
-        rider = profile.bonus_damage
-        bonus_damage = ("Charge", rider.dice_count, rider.dice_size, rider.damage_type)
     event = resolve_encounter_attack(
         sequence, round_number, attacker, target, charged_attack,
         combatant_distance(attacker, target), dice, setup,
-        feature_id="charge", bonus_damage=bonus_damage,
+        feature_id="charge", bonus_damage=_bonus_damage(profile),
     )
-    return [*move_events, event], sequence + 1, True
+    sequence += 1
+    follow_events, sequence = resolve_charge_follow_up(
+        sequence, round_number, attacker, target, profile, event, dice, setup,
+    )
+    return [*move_events, event, *follow_events], sequence, True
