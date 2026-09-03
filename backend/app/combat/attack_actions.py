@@ -11,10 +11,12 @@ from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.light_attack_resolution import resolve_light_extra_attack
 from app.combat.opening_burst import opening_feature_id
 from app.combat.pit_policy import (
+    allied_frontline_active,
     choose_attack,
     flexible_slot_has_both,
     has_backline_target,
     has_frontline_target,
+    is_backline,
     save_distance,
     target_order,
 )
@@ -45,6 +47,10 @@ def _attack_choice(attacker, setup, slot, *, ranged_backline: bool = False):
         )
         if choice is not None:
             return choice
+    if is_backline(attacker) and allied_frontline_active(attacker, setup):
+        ranged = choose_attack(attacker, setup, slot.attack_ids, kind=WeaponAttackKind.RANGED)
+        if ranged is not None:
+            return ranged
     melee = choose_attack(attacker, setup, slot.attack_ids, kind=WeaponAttackKind.MELEE)
     if melee is not None:
         return melee
@@ -52,7 +58,9 @@ def _attack_choice(attacker, setup, slot, *, ranged_backline: bool = False):
 
 
 def _use_ranged_split(attacker, setup, slots, dice: DiceProvider) -> bool:
-    """Iron Pit tactic: 25% chance for exactly one post-opening flexible slot to shoot the enemy backline."""
+    """Frontline mixed attackers have a 25% chance for one later shot at the enemy backline."""
+    if is_backline(attacker):
+        return False
     if not has_frontline_target(attacker, setup) or not has_backline_target(attacker, setup):
         return False
     if not any(flexible_slot_has_both(attacker, slot.attack_ids) for slot in slots[1:]):
@@ -64,7 +72,7 @@ def resolve_attack_action(
     sequence: int, round_number: int, attacker: EncounterCombatant,
     setup: EncounterSetup, dice: DiceProvider,
 ) -> tuple[list[BattleEvent], int]:
-    """Resolve Multiattack/Extra Attack in fixed Pit formation with melee-first targeting."""
+    """Resolve Multiattack/Extra Attack in fixed Pit formation with role-aware targeting."""
     try:
         validate_attack_action_slots(attacker)
         definition = attacker.state.template.attack_action
