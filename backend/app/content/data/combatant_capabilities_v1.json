@@ -11732,6 +11732,110 @@
   },
   {
     "schema_version": 1,
+    "id": "srd-worg",
+    "name": "Worg",
+    "archetype": "source-certified pack predator",
+    "challenge_rating": "1/2",
+    "kind": "monster",
+    "size": "large",
+    "armor_class": 13,
+    "max_hp": 26,
+    "speed_ft": 50,
+    "movement_modes": {
+      "walk_ft": 50,
+      "fly_ft": 0,
+      "climb_ft": 0,
+      "swim_ft": 0,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": 1,
+    "progression_features": {
+      "critical_hit_minimum": 20,
+      "initiative_advantage": false,
+      "athletics_advantage": false,
+      "heroic_warrior": false,
+      "studied_attacks": false,
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
+    },
+    "attacks": [
+      {
+        "id": "srd-worg-bite",
+        "name": "Bite",
+        "weapon_id": "srd-worg-bite-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 5,
+        "damage": {
+          "count": 1,
+          "size": 8,
+          "bonus": 3
+        },
+        "damage_type": "piercing",
+        "animation": "bite",
+        "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "effects": [
+          {
+            "kind": "attacks-against-advantage",
+            "consume_on_attack_against": true,
+            "expires_at_start_of_source_turn": true
+          }
+        ],
+        "forbid_target_grappled_by_self": false
+      }
+    ],
+    "primary_attack_id": "srd-worg-bite",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 5,
+      "damage": 4
+    },
+    "save_actions": [],
+    "spell_save_actions": [],
+    "defensive_spell_actions": [],
+    "healing_actions": [],
+    "condition_removal_actions": [],
+    "saving_throw_bonuses": {
+      "strength": 3,
+      "dexterity": 1,
+      "constitution": 1,
+      "intelligence": -2,
+      "wisdom": 0,
+      "charisma": -1
+    },
+    "skill_bonuses": {
+      "perception": 4
+    },
+    "combat_traits": [],
+    "source_trait_names": [],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [],
+    "source_limited_use_names": [],
+    "source_legendary_action_names": [],
+    "fighting_styles": [],
+    "weapon_masteries": [],
+    "damage_resistances": [],
+    "damage_vulnerabilities": [],
+    "damage_immunities": [],
+    "condition_immunities": [],
+    "wearing_heavy_armor": false,
+    "rage_damage_bonus": 0,
+    "resources": [],
+    "visual": {
+      "armor": "fur",
+      "main_hand": "bite",
+      "body_style": "worg"
+    },
+    "source": "SRD 5.2.1 p. 342",
+    "unsupported_capabilities": []
+  },
+  {
+    "schema_version": 1,
     "id": "srd-swarm-of-bats",
     "name": "Swarm of Bats",
     "archetype": "source-certified swarm candidate",
