@@ -1,106 +1,86 @@
 (() => {
   "use strict";
 
-  const S = () => window.IRON_PIT_BROWSER_STATE;
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const C = () => window.IRON_PIT_BROWSER_CHARGE;
+  const D = () => window.IRON_PIT_DICE;
+  const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const R = () => window.IRON_PIT_BROWSER_LIGHT_ATTACK;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
-  const WM = () => window.IRON_PIT_BROWSER_WEAPON_MASTERY || {
-    resolveCleave: (sequence) => ({ events: [], sequence }),
-  };
+  const WM = () => window.IRON_PIT_BROWSER_WEAPON_MASTERY || { resolveCleave: (sequence) => ({ events: [], sequence }) };
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (s) => s.action_available, spend: (s) => { s.action_available = false; } };
-  const W = () => window.IRON_PIT_BROWSER_REACTION_MOVEMENT || {
-    moveToward: (q, r, m, t, _s, d) => ({ events: [], sequence: q, movement: S().moveToward(m, t, d) }),
-  };
   const slotData = (slot) => Array.isArray(slot) ? { attackIds: slot, saveActionIds: [] }
     : { attackIds: slot.attackIds || [], saveActionIds: slot.saveActionIds || [] };
 
-  function targetAllowed(member, target, attack) {
-    if (!attack.forbidSelfGrappledTarget) return true;
-    return !target.state.grapple_sources.some((source) => source.source_id === member.combatant_id);
-  }
-  function allowedAttack(member, target, ids, distance) {
-    const allowed = new Set(ids), profiles = member.state.template.attacks.filter((a) => allowed.has(a.id) && targetAllowed(member, target, a));
-    return profiles.find((a) => a.kind === "melee" && distance <= (a.reach || 5))
-      || profiles.find((a) => a.kind === "ranged" && distance <= a.long) || null;
-  }
-  function slotChoice(member, target, slot) {
-    const data = slotData(slot), distance = S().distance(member, target), attack = allowedAttack(member, target, data.attackIds, distance);
+  function saveChoice(member, setup, data) {
     const allowed = new Set(data.saveActionIds);
-    const save = attack ? null : member.state.template.saving_throw_actions?.find((a) => allowed.has(a.id) && V().legalAction(a, target, distance)) || null;
-    return { attack, save, data };
-  }
-  function staticSlotAllows(member, target, data) {
-    const attacks = member.state.template.attacks.filter((a) => data.attackIds.includes(a.id) && targetAllowed(member, target, a));
-    if (attacks.length) return true;
-    return (member.state.template.saving_throw_actions || []).some((action) =>
-      data.saveActionIds.includes(action.id) && (!action.targetMaxSize || S().sizeAtMost(target, action.targetMaxSize)),
-    );
-  }
-  function slotTarget(member, setup, slot) {
-    const data = slotData(slot), preferred = S().nearestTarget(member, setup);
-    const enemies = member.side === "heroes" ? setup.monsters : setup.heroes;
-    let eligible = enemies.filter((target) => target.state.is_alive && !target.state.is_dead && target.state.current_hp > 0);
-    if (!eligible.length) eligible = enemies.filter((target) => target.state.template.kind === "character"
-      && target.state.is_alive && !target.state.is_dead && target.state.current_hp === 0);
-    eligible.sort((a, b) => S().distance(member, a) - S().distance(member, b));
-    const ordered = preferred ? [preferred, ...eligible.filter((target) => target !== preferred)] : eligible;
-    return ordered.find((target) => staticSlotAllows(member, target, data)) || null;
-  }
-  function desiredDistance(member, data) {
-    if (data.attackIds.length) {
-      const profiles = member.state.template.attacks.filter((a) => data.attackIds.includes(a.id));
-      const melee = profiles.filter((a) => a.kind === "melee").map((a) => a.reach || 5);
-      if (melee.length) return Math.max(...melee);
-      const ranged = profiles.map((a) => a.normal).filter(Number.isFinite); if (ranged.length) return Math.max(...ranged);
+    for (const target of F().targetOrder(member, setup)) {
+      const action = (member.state.template.saving_throw_actions || []).find((item) => {
+        const distance = F().saveDistance(member, target, item.range);
+        return allowed.has(item.id) && V().legalAction(item, target, distance);
+      });
+      if (action) return { target, save: action, distance: F().saveDistance(member, target, action.range) };
     }
-    const saves = member.state.template.saving_throw_actions?.filter((a) => data.saveActionIds.includes(a.id)) || [];
-    if (saves.length) return Math.max(...saves.map((a) => a.range));
-    throw new Error(`Unknown Multiattack slot on ${member.state.template.name}.`);
+    return null;
   }
-  function movementEvent(sequence, round, member, target, movement) {
-    return { sequence, round_number: round, event_type: "movement", actor_id: member.combatant_id,
-      actor_name: member.state.template.name, target_id: target.combatant_id, target_name: target.state.template.name,
-      distance_before_ft: movement.before, distance_after_ft: movement.after, movement_ft: movement.moved,
-      animation: "advance", description: `${member.state.template.name} advances ${movement.moved} feet between Multiattack steps.` };
+  function attackChoice(member, setup, data, rangedBackline = false) {
+    if (rangedBackline) {
+      const ranged = F().chooseAttack(member, setup, data.attackIds, "ranged", true);
+      if (ranged) return ranged;
+    }
+    return F().chooseAttack(member, setup, data.attackIds, "melee")
+      || F().chooseAttack(member, setup, data.attackIds, "ranged");
   }
+  function useRangedSplit(member, setup, slots) {
+    if (!F().hasFrontlineTarget(member, setup) || !F().hasBacklineTarget(member, setup)) return false;
+    if (!slots.slice(1).some((slot) => F().flexibleSlotHasBoth(member, slotData(slot).attackIds))) return false;
+    return D().roll(100) >= 76;
+  }
+
   function resolveAttackAction(sequence, round, member, setup) {
     const definition = member.state.template.attack_action, slots = definition?.slots;
-    if (!slots?.length || !E().available(member.state, "action")) return { events: [], sequence };
-    const events = []; E().spend(member.state, "action");
-    let openingFeature = C()?.openingFeature?.(round, member, setup) || null, lightTrigger = null;
+    if (!slots?.length || !E().available(member.state, "action") || !F().targetOrder(member, setup).length) {
+      return { events: [], sequence };
+    }
+    const events = [];
+    E().spend(member.state, "action");
+    let openingFeature = C()?.openingFeature?.(round, member, setup) || null;
+    let lightTrigger = null, rangedSplitUsed = false;
+    const rangedSplit = useRangedSplit(member, setup, slots);
     const turnKey = `${round}:${member.combatant_id}`;
-    for (const slot of slots) {
-      if (member.state.is_dead || member.state.is_unconscious) break;
-      const target = slotTarget(member, setup, slot); if (!target) continue;
-      let choice = slotChoice(member, target, slot);
-      if (!choice.attack && !choice.save) {
-        const moved = W().moveToward(sequence, round, member, target, setup, desiredDistance(member, choice.data), "speed", { turnKey });
-        events.push(...moved.events); sequence = moved.sequence;
-        if (moved.movement) events.push(movementEvent(sequence++, round, member, target, moved.movement));
-        if (member.state.is_dead || member.state.is_unconscious) break;
-        choice = slotChoice(member, target, slot);
-      }
-      if (choice.attack) {
-        const pack = S().packTactics(member, setup), featureId = openingFeature || (pack ? "pack-tactics" : definition.id);
-        const event = A().resolveAttack(sequence++, round, member, target, choice.attack, S().distance(member, target), {
-          spendAction: false, advantage: pack ? 1 : 0, setup, featureId, turnKey, allowReckless: true,
+
+    slots.forEach((slot, index) => {
+      if (member.state.is_dead || member.state.is_unconscious) return;
+      const data = slotData(slot);
+      const splitThis = index > 0 && rangedSplit && !rangedSplitUsed && F().flexibleSlotHasBoth(member, data.attackIds);
+      const choice = attackChoice(member, setup, data, splitThis);
+      if (choice) {
+        if (splitThis && choice.attack.kind === "ranged") rangedSplitUsed = true;
+        const pack = window.IRON_PIT_BROWSER_STATE.packTactics(member, setup);
+        const featureId = openingFeature || (pack ? "pack-tactics" : definition.id);
+        const event = A().resolveAttack(sequence++, round, member, choice.target, choice.attack, choice.distance, {
+          spendAction: false, advantage: pack ? 1 : 0, setup, featureId, turnKey,
+          allowReckless: true, ignoreCloseThreat: true,
         });
         events.push(event);
         const cleave = WM().resolveCleave(sequence, round, member, event, choice.attack, setup, turnKey);
         events.push(...cleave.events); sequence = cleave.sequence;
         if (definition.isAttackAction && !lightTrigger && choice.attack.light) lightTrigger = choice.attack;
         openingFeature = null;
-      } else if (choice.save) {
-        events.push(V().resolveAction(sequence++, round, member, target, choice.save, S().distance(member, target), { spendAction: false }));
+        return;
       }
-    }
+      const saved = saveChoice(member, setup, data);
+      if (saved) {
+        events.push(V().resolveAction(sequence++, round, member, saved.target, saved.save, saved.distance, { spendAction: false }));
+      }
+    });
+
     if (definition.isAttackAction && lightTrigger) {
       const extra = R().resolve(sequence, round, member, setup, lightTrigger, turnKey);
       events.push(...extra.events); sequence = extra.sequence;
     }
     return { events, sequence };
   }
-  window.IRON_PIT_BROWSER_MULTIATTACK = { resolveAttackAction, slotTarget, targetAllowed };
+
+  window.IRON_PIT_BROWSER_MULTIATTACK = { resolveAttackAction };
 })();

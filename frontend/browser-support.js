@@ -6,9 +6,7 @@
   const K = () => window.IRON_PIT_BROWSER_CLERIC_CHANNEL;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const D = () => window.IRON_PIT_DICE;
-  const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
   const S = () => window.IRON_PIT_BROWSER_STATE;
-  const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { effectiveSpeed: (state) => state.template.speed_ft };
 
   function resolve(sequence, round, member, setup, turnKey) {
     const events = [];
@@ -44,12 +42,11 @@
     const state = member.state, pb = 2 + Math.floor((state.template.level - 1) / 4);
     if (!state.template.traits?.includes("adrenaline-rush") || !E().available(state, "bonus_action")
         || !(state.resources["adrenaline-rush"] > 0) || state.temporary_hp >= pb) return null;
-    const movement = G().speedIsZero(state) ? 0 : M().effectiveSpeed(state);
-    state.resources["adrenaline-rush"] -= 1; E().spend(state, "bonus_action"); state.movement_remaining_ft += movement;
+    state.resources["adrenaline-rush"] -= 1; E().spend(state, "bonus_action");
     S().grantTemporaryHp(state, pb);
     return { sequence, round_number: round, event_type: "feature", actor_id: member.combatant_id, actor_name: state.template.name,
-      feature_id: "adrenaline-rush", resource_remaining: state.resources["adrenaline-rush"], movement_ft: movement,
-      animation: "dash", description: `${state.template.name} uses Adrenaline Rush.` };
+      feature_id: "adrenaline-rush", resource_remaining: state.resources["adrenaline-rush"], movement_ft: 0,
+      animation: "dash", description: `${state.template.name} uses Adrenaline Rush; Dash movement is abstracted by fixed Pit formation.` };
   }
 
   window.IRON_PIT_BROWSER_SUPPORT = { adrenaline, resolve, secondWind };

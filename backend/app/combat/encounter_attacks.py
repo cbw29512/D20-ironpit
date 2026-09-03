@@ -5,7 +5,6 @@ from app.combat.attacks import resolve_attack
 from app.combat.champion import apply_critical_closing_move
 from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
-from app.combat.encounter_targeting import close_ranged_threat_exists
 from app.combat.frenzy import mark_reckless_use_while_raging
 from app.combat.reckless_attack import activate_reckless_attack
 from app.combat.redirect_attack import select_redirect_ally, swap_redirect_positions
@@ -40,7 +39,7 @@ def resolve_encounter_attack(
     redirect = select_redirect_ally(target, setup) if setup is not None else None
     close_enemy = close_enemy_active
     if close_enemy is None:
-        close_enemy = close_ranged_threat_exists(attacker, setup) if setup is not None else True
+        close_enemy = False if setup is not None else True
     affected_states = [member.state for member in [*setup.heroes, *setup.monsters]] if setup is not None else None
     sneak_ally = setup is not None and bool(active_allies(attacker, setup))
     event = resolve_attack(

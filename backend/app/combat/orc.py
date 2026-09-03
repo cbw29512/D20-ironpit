@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 from app.combat.action_economy import is_available, spend
-from app.combat.grapple import speed_is_zero
-from app.combat.modifier_stack import effective_speed
 from app.combat.temporary_hp import grant_temporary_hit_points
 from app.domain.models import BattleEvent, CombatantState
 from app.domain.traits import CombatTrait
@@ -49,8 +47,6 @@ def use_adrenaline_rush(
     assert resource is not None
     resource.current_uses -= 1
     spend(state, "bonus_action")
-    movement = 0 if speed_is_zero(state) else effective_speed(state)
-    state.movement_remaining_ft += movement
     grant_temporary_hit_points(state, proficiency_bonus(state))
     return BattleEvent(
         sequence=sequence,
@@ -60,9 +56,9 @@ def use_adrenaline_rush(
         actor_name=state.template.name,
         feature_id=ADRENALINE_RESOURCE_ID,
         resource_remaining=resource.current_uses,
-        movement_ft=movement,
+        movement_ft=0,
         animation="dash",
-        description=f"{state.template.name} uses Adrenaline Rush.",
+        description=f"{state.template.name} uses Adrenaline Rush; its Dash movement is abstracted by fixed Pit formation.",
     )
 
 

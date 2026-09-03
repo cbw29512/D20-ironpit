@@ -36,7 +36,7 @@ def select_cleave_target(
     attack: WeaponAttack,
     setup: EncounterSetup,
 ) -> EncounterCombatant | None:
-    """Choose a deterministic legal enemy for Cleave's second attack."""
+    """Choose a deterministic legal enemy adjacent to the first target; ordinary closing is abstracted."""
     try:
         opponents = setup.monsters if attacker.side == "heroes" else setup.heroes
         others = [member for member in opponents if member.combatant_id != first_target.combatant_id]
@@ -46,11 +46,9 @@ def select_cleave_target(
             if member.state.template.kind == "character" and member.state.is_alive
             and not member.state.is_dead and member.state.current_hp == 0
         ]
-        candidates = active or downed
         candidates = [
-            member for member in candidates
+            member for member in (active or downed)
             if combatant_distance(first_target, member) <= 5
-            and combatant_distance(attacker, member) <= attack.weapon.reach_ft
         ]
         return min(candidates, key=lambda member: (combatant_distance(attacker, member), member.combatant_id), default=None)
     except Exception as exc:
@@ -68,7 +66,7 @@ def resolve_cleave_extra_attack(
     dice: DiceProvider,
     turn_key: str,
 ) -> tuple[list[BattleEvent], int]:
-    """Resolve the optional Cleave attack when the arena has a legal second enemy."""
+    """Resolve the optional Cleave attack when the fixed formation has a legal adjacent second enemy."""
     try:
         if not triggering_event.hit or attack.weapon.attack_kind != WeaponAttackKind.MELEE:
             return [], sequence
@@ -87,7 +85,7 @@ def resolve_cleave_extra_attack(
         cleave_attack = cleave_attack_profile(attack)
         event = resolve_encounter_attack(
             sequence, round_number, attacker, second_target, cleave_attack,
-            combatant_distance(attacker, second_target), dice, setup,
+            attack.weapon.reach_ft, dice, setup,
             spend_action=False, feature_id=CLEAVE_FEATURE_ID, turn_key=turn_key, allow_reckless=False,
         )
         event.description += " Cleave makes the once-per-turn extra attack."

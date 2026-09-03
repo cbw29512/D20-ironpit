@@ -4,7 +4,7 @@ from app.combat.attack_actions import resolve_attack_action
 from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.state import begin_turn
-from app.domain.models import AttackActionDefinition, AttackActionSlot, EncounterSelection
+from app.domain.models import AttackActionDefinition, AttackActionSlot, EncounterSelection, RollMode, WeaponAttackKind
 
 
 class MaxDiceProvider:
@@ -65,61 +65,116 @@ def test_one_attack_action_pays_for_two_strikes_and_retargets() -> None:
     assert all(monster.state.current_hp == 0 for monster in setup.monsters)
 
 
-def test_attack_action_can_spend_remaining_movement_between_attacks() -> None:
+def test_attack_action_abstracts_distance_without_movement_events() -> None:
     setup, attacker = _extra_attack_setup()
-    setup.monsters[1].position_ft = 35
+    setup.monsters[1].position_ft = 100
+    before = [member.position_ft for member in [attacker, *setup.monsters]]
 
     events, _ = resolve_attack_action(1, 1, attacker, setup, MaxDiceProvider())
 
-    movements = [event for event in events if event.event_type == "movement"]
     attacks = [event for event in events if event.event_type == "attack"]
-    assert [event.movement_ft for event in movements] == [25, 5]
     assert len(attacks) == 2
-    assert attacker.state.movement_remaining_ft == 0
+    assert not any(event.event_type in {"movement", "dash"} for event in events)
+    assert [member.position_ft for member in [attacker, *setup.monsters]] == before
 
 
-def test_unreachable_first_attack_dashes_instead_of_half_using_attack_action() -> None:
+def test_distant_melee_multiattack_never_spends_action_on_dash() -> None:
     setup, attacker = _extra_attack_setup()
     setup.monsters[0].position_ft = 100
     setup.monsters[1].position_ft = 100
 
     events, _ = resolve_attack_action(1, 1, attacker, setup, MaxDiceProvider())
 
-    assert any(event.event_type == "dash" for event in events)
-    assert not any(event.event_type == "attack" for event in events)
+    assert len([event for event in events if event.event_type == "attack"]) == 2
+    assert not any(event.event_type in {"movement", "dash"} for event in events)
     assert attacker.state.action_available is False
 
 
-def test_dash_that_reaches_melee_still_cannot_multiattack_same_turn() -> None:
-    setup, attacker = _extra_attack_setup()
-    setup.monsters[0].position_ft = 50
-    setup.monsters[1].position_ft = 50
-
-    events, _ = resolve_attack_action(1, 1, attacker, setup, MaxDiceProvider())
-
-    assert [event.event_type for event in events] == ["movement", "dash", "movement"]
-    assert events[-1].distance_after_ft == 5
-    assert not any(event.event_type == "attack" for event in events)
-    assert attacker.state.action_available is False
-
-
-def test_mixed_multiattack_uses_ranged_option_when_fixture_starts_outside_melee() -> None:
+def test_mixed_multiattack_prefers_melee_even_when_fixture_positions_are_separated() -> None:
     setup, attacker = _mixed_attack_setup(30)
     events, _ = resolve_attack_action(1, 1, attacker, setup, FixedDiceProvider([10, 4, 10, 4]))
 
     attacks = [event for event in events if event.event_type == "attack"]
     assert len(attacks) == 2
-    assert [event.weapon_id for event in attacks] == ["light-crossbow", "light-crossbow"]
-    assert not any(event.event_type == "movement" for event in events)
+    assert [event.weapon_id for event in attacks] == ["scimitar", "scimitar"]
+    assert not any(event.event_type in {"movement", "dash"} for event in events)
 
 
-def test_mixed_multiattack_switches_to_melee_when_engaged() -> None:
+def test_mixed_multiattack_stays_melee_when_engaged() -> None:
     setup, attacker = _mixed_attack_setup(5)
     events, _ = resolve_attack_action(1, 1, attacker, setup, FixedDiceProvider([10, 4, 10, 4]))
 
     attacks = [event for event in events if event.event_type == "attack"]
     assert len(attacks) == 2
     assert [event.weapon_id for event in attacks] == ["scimitar", "scimitar"]
+
+
+def test_mixed_multiattack_uses_one_ranged_backline_shot_on_76_to_100() -> None:
+    setup = build_encounter_setup(EncounterSelection(
+        hero_ids=["karnok-stoneward-l1", "mara-quickstep-l1"], monster_ids=["srd-bandit"],
+    ))
+    attacker = setup.monsters[0]
+    backline = setup.heroes[1]
+    ranged = next(
+        attack for attack in [backline.state.template.weapon_attack, *backline.state.template.alternate_weapon_attacks]
+        if attack.weapon.attack_kind is WeaponAttackKind.RANGED
+    )
+    current_primary = backline.state.template.weapon_attack
+    backline.state.template.weapon_attack = ranged
+    backline.state.template.alternate_weapon_attacks = [
+        attack for attack in [current_primary, *backline.state.template.alternate_weapon_attacks]
+        if attack.id != ranged.id
+    ]
+    attacker.state.template.attack_action = AttackActionDefinition(
+        id="mixed-multiattack",
+        name="Mixed Multiattack",
+        slots=[
+            AttackActionSlot(attack_ids=["bandit-scimitar", "bandit-light-crossbow"]),
+            AttackActionSlot(attack_ids=["bandit-scimitar", "bandit-light-crossbow"]),
+        ],
+    )
+    begin_turn(attacker.state)
+
+    events, _ = resolve_attack_action(
+        1, 1, attacker, setup, FixedDiceProvider([76, 12, 4, 12, 4]),
+    )
+    attacks = [event for event in events if event.event_type == "attack"]
+
+    assert [event.weapon_id for event in attacks] == ["scimitar", "light-crossbow"]
+    assert attacks[0].target_id == setup.heroes[0].combatant_id
+    assert attacks[1].target_id == backline.combatant_id
+    assert attacks[1].attack_roll is not None
+    assert attacks[1].attack_roll.mode is RollMode.NORMAL
+
+
+def test_mixed_multiattack_keeps_all_attacks_melee_on_1_to_75() -> None:
+    setup = build_encounter_setup(EncounterSelection(
+        hero_ids=["karnok-stoneward-l1", "mara-quickstep-l1"], monster_ids=["srd-bandit"],
+    ))
+    attacker = setup.monsters[0]
+    backline = setup.heroes[1]
+    ranged = next(
+        attack for attack in [backline.state.template.weapon_attack, *backline.state.template.alternate_weapon_attacks]
+        if attack.weapon.attack_kind is WeaponAttackKind.RANGED
+    )
+    backline.state.template.weapon_attack = ranged
+    attacker.state.template.attack_action = AttackActionDefinition(
+        id="mixed-multiattack",
+        name="Mixed Multiattack",
+        slots=[
+            AttackActionSlot(attack_ids=["bandit-scimitar", "bandit-light-crossbow"]),
+            AttackActionSlot(attack_ids=["bandit-scimitar", "bandit-light-crossbow"]),
+        ],
+    )
+    begin_turn(attacker.state)
+
+    events, _ = resolve_attack_action(
+        1, 1, attacker, setup, FixedDiceProvider([75, 12, 4, 12, 4]),
+    )
+    attacks = [event for event in events if event.event_type == "attack"]
+
+    assert [event.weapon_id for event in attacks] == ["scimitar", "scimitar"]
+    assert all(event.target_id == setup.heroes[0].combatant_id for event in attacks)
 
 
 def test_giant_constrictor_snake_multiattack_is_bite_then_constrict() -> None:

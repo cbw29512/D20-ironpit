@@ -4,8 +4,7 @@ from app.combat.action_surge import action_surge_available, use_action_surge
 from app.combat.ally_context import pack_tactics_active
 from app.combat.attack_actions import resolve_attack_action
 from app.combat.dice import DiceProvider
-from app.combat.encounter_targeting import combatant_distance, select_nearest_target
-from app.combat.policy import select_weapon_attack
+from app.combat.pit_policy import choose_standard_attack, target_order
 from app.combat.standard_attack_action import resolve_standard_attack_action
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
@@ -19,15 +18,16 @@ def resolve_action_surge_attack(
     dice: DiceProvider,
     turn_key: str,
 ) -> tuple[list[BattleEvent], int]:
-    """Iron Pit policy: spend Action Surge only when its extra Action can immediately Attack."""
+    """Iron Pit policy: spend Action Surge only when its extra Action can immediately attack."""
     if not action_surge_available(attacker.state, turn_key):
         return [], sequence
-    target = select_nearest_target(attacker, setup)
-    if target is None:
-        return [], sequence
-    distance = combatant_distance(attacker, target)
-    attack = select_weapon_attack(attacker.state, distance)
-    if attack is None:
+
+    choice = None
+    if attacker.state.template.attack_action is None:
+        choice = choose_standard_attack(attacker, setup)
+        if choice is None:
+            return [], sequence
+    elif not target_order(attacker, setup):
         return [], sequence
 
     events = [use_action_surge(sequence, round_number, attacker.combatant_id, attacker.state, turn_key)]
@@ -37,6 +37,8 @@ def resolve_action_surge_attack(
         events.extend(more)
         return events, sequence
 
+    assert choice is not None
+    target, attack, distance = choice
     pack = pack_tactics_active(attacker, target, setup)
     more, sequence = resolve_standard_attack_action(
         sequence, round_number, attacker, target, attack, distance, dice, setup, turn_key,

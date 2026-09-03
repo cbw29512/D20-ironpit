@@ -2,14 +2,14 @@ from app.combat.attacks import resolve_attack
 from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_combat_turn import resolve_combat_turn
 from app.combat.encounter_setup import build_encounter_setup
-from app.combat.policy import select_weapon_attack
+from app.combat.pit_policy import choose_standard_attack
 from app.combat.state import begin_turn, build_combatant_state
 from app.content.audited_fighter import build_karnok_stoneward
 from app.content.monster_attacks import build_giant_lizard_attack
 from app.content.monsters import build_giant_lizard
 from app.content.pregens import build_mara_quickstep
-from app.content.rogue_attacks import build_mara_shortbow_attack, build_mara_shortsword_attack
-from app.domain.models import EncounterSelection, RollMode
+from app.content.rogue_attacks import build_mara_shortbow_attack
+from app.domain.models import EncounterSelection, RollMode, WeaponAttackKind
 
 
 def _at_distance(setup, distance_ft: int):
@@ -24,25 +24,23 @@ def _disable_adrenaline_rush(hero) -> None:
     resource.current_uses = 0
 
 
-def test_melee_only_creature_dodges_and_moves_when_melee_is_unreachable_this_turn() -> None:
+def test_melee_only_creature_attacks_without_movement_or_dash() -> None:
     setup = build_encounter_setup(EncounterSelection(
         hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-giant-lizard"],
     ))
     hero, monster = _at_distance(setup, 60)
     hero.state.template.alternate_weapon_attacks = []
     _disable_adrenaline_rush(hero)
+    before = (hero.position_ft, monster.position_ft)
 
-    events, _ = resolve_combat_turn(1, 1, hero, monster, setup, FixedDiceProvider([10]))
+    events, _ = resolve_combat_turn(1, 1, hero, monster, setup, FixedDiceProvider([10, 1, 1]))
 
-    assert [event.event_type for event in events] == ["feature", "movement"]
-    assert events[0].feature_id == "dodge"
-    assert events[1].distance_after_ft == 30
-    assert hero.state.action_available is False
-    assert "dodge" in hero.state.active_effect_ids
-    assert not any(event.event_type in {"attack", "dash"} for event in events)
+    assert any(event.event_type == "attack" for event in events)
+    assert not any(event.event_type in {"movement", "dash"} for event in events)
+    assert (hero.position_ft, monster.position_ft) == before
 
 
-def test_true_range_option_attacks_without_closing_while_separated() -> None:
+def test_frontline_with_backup_range_prefers_melee_under_fixed_formation() -> None:
     setup = build_encounter_setup(EncounterSelection(
         hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-giant-lizard"],
     ))
@@ -51,54 +49,68 @@ def test_true_range_option_attacks_without_closing_while_separated() -> None:
 
     events, _ = resolve_combat_turn(1, 1, hero, monster, setup, FixedDiceProvider([10, 1, 1]))
 
-    attacks = [event for event in events if event.event_type == "attack"]
-    assert len(attacks) == 1
-    assert attacks[0].weapon_id == "shortbow"
-    assert not any(event.event_type == "movement" for event in events)
-    assert abs(hero.position_ft - monster.position_ft) == 60
+    attack = next(event for event in events if event.event_type == "attack")
+    assert attack.weapon_id == "greatsword"
+    assert not any(event.event_type in {"movement", "dash"} for event in events)
 
 
-def test_backup_ranged_option_is_used_until_enemy_reaches_melee() -> None:
+def test_protected_ranged_primary_uses_range_without_close_combat_disadvantage() -> None:
     setup = build_encounter_setup(EncounterSelection(
-        hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-giant-lizard"],
+        hero_ids=["karnok-stoneward-l1", "mara-quickstep-l1"],
+        monster_ids=["srd-giant-lizard"],
     ))
-    hero, monster = _at_distance(setup, 10)
-    _disable_adrenaline_rush(hero)
+    archer = setup.heroes[1]
+    ranged = next(
+        attack for attack in [archer.state.template.weapon_attack, *archer.state.template.alternate_weapon_attacks]
+        if attack.weapon.attack_kind is WeaponAttackKind.RANGED
+    )
+    archer.state.template.weapon_attack = ranged
+    begin_turn(archer.state)
 
-    events, _ = resolve_combat_turn(1, 1, hero, monster, setup, FixedDiceProvider([10, 4, 4]))
-
-    assert [event.event_type for event in events] == ["attack"]
-    assert events[0].weapon_id == "shortbow"
-    assert abs(hero.position_ft - monster.position_ft) == 10
-
-
-def test_dodge_imposes_attack_disadvantage_until_dodgers_next_turn() -> None:
-    defender = build_combatant_state(build_karnok_stoneward())
-    attacker = build_combatant_state(build_giant_lizard())
-    defender.active_effect_ids.append("dodge")
+    choice = choose_standard_attack(archer, setup)
+    assert choice is not None
+    target, attack, distance = choice
+    assert attack.weapon.attack_kind is WeaponAttackKind.RANGED
 
     event = resolve_attack(
-        1, 1, attacker, defender, build_giant_lizard_attack(), 5,
-        FixedDiceProvider([15, 2]),
+        1, 1, archer.state, target.state, attack, distance,
+        FixedDiceProvider([10, 1]), close_enemy_active=False,
+    )
+    assert event.attack_roll is not None
+    assert event.attack_roll.mode is RollMode.NORMAL
+
+
+def test_exposed_ranged_primary_switches_to_melee_when_it_has_a_melee_option() -> None:
+    setup = build_encounter_setup(EncounterSelection(
+        hero_ids=["mara-quickstep-l1"], monster_ids=["srd-giant-lizard"],
+    ))
+    archer = setup.heroes[0]
+    ranged = next(
+        attack for attack in [archer.state.template.weapon_attack, *archer.state.template.alternate_weapon_attacks]
+        if attack.weapon.attack_kind is WeaponAttackKind.RANGED
+    )
+    melee = next(
+        attack for attack in [archer.state.template.weapon_attack, *archer.state.template.alternate_weapon_attacks]
+        if attack.weapon.attack_kind is WeaponAttackKind.MELEE
+    )
+    archer.state.template.weapon_attack = ranged
+    archer.state.template.alternate_weapon_attacks = [melee]
+
+    choice = choose_standard_attack(archer, setup)
+
+    assert choice is not None
+    assert choice[1].weapon.attack_kind is WeaponAttackKind.MELEE
+
+
+def test_low_level_raw_close_ranged_penalty_remains_available_outside_pit_policy() -> None:
+    attacker = build_combatant_state(build_mara_quickstep())
+    defender = build_combatant_state(build_giant_lizard())
+
+    event = resolve_attack(
+        1, 1, attacker, defender, build_mara_shortbow_attack(), 5,
+        FixedDiceProvider([15, 2]), close_enemy_active=True,
     )
 
     assert event.attack_roll is not None
     assert event.attack_roll.mode is RollMode.DISADVANTAGE
     assert event.attack_roll.selected_roll == 2
-    assert event.hit is False
-
-    begin_turn(defender)
-    assert "dodge" not in defender.active_effect_ids
-
-
-def test_ranged_primary_uses_melee_option_once_enemy_is_adjacent() -> None:
-    template = build_mara_quickstep().model_copy(update={
-        "weapon_attack": build_mara_shortbow_attack(),
-        "alternate_weapon_attacks": [build_mara_shortsword_attack()],
-    })
-    state = build_combatant_state(template)
-
-    attack = select_weapon_attack(state, 5)
-
-    assert attack is not None
-    assert attack.weapon.name == "Shortsword"

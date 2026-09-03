@@ -4,98 +4,105 @@ import logging
 
 from app.combat.action_economy import is_available, spend
 from app.combat.ally_context import pack_tactics_active
-from app.combat.attack_action_rules import (
-    attack_action_slot_choice,
-    preferred_attack_action_distance,
-    validate_attack_action_slots,
-)
-from app.combat.attack_action_targeting import select_slot_target
+from app.combat.attack_action_rules import validate_attack_action_slots
 from app.combat.cleave import resolve_cleave_extra_attack
 from app.combat.dice import DiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
-from app.combat.encounter_movement import take_encounter_dash
-from app.combat.encounter_targeting import combatant_distance
 from app.combat.light_attack_resolution import resolve_light_extra_attack
 from app.combat.opening_burst import opening_feature_id
-from app.combat.reaction_movement import move_toward_with_reactions
-from app.combat.saving_throws import resolve_save_action
-from app.domain.actions import AttackActionSlot
+from app.combat.pit_policy import (
+    choose_attack,
+    flexible_slot_has_both,
+    has_backline_target,
+    has_frontline_target,
+    save_distance,
+    target_order,
+)
+from app.combat.saving_throws import legal_save_action, resolve_save_action
 from app.domain.encounters import EncounterCombatant, EncounterSetup
-from app.domain.models import BattleEvent, WeaponAttack
+from app.domain.models import BattleEvent, WeaponAttack, WeaponAttackKind
 
 logger = logging.getLogger(__name__)
 
 
-def _move_for_slot(sequence, round_number, attacker, target, slot, setup, dice, turn_key):
-    events, sequence, _ = move_toward_with_reactions(
-        sequence, round_number, attacker, target, setup,
-        preferred_attack_action_distance(attacker, slot), dice, turn_key=turn_key,
-    )
-    return events, sequence
+def _save_choice(attacker, setup, slot):
+    allowed = set(slot.save_action_ids)
+    for target in target_order(attacker, setup):
+        for action in attacker.state.template.saving_throw_actions:
+            if action.id not in allowed:
+                continue
+            distance = save_distance(attacker, target, action.range_ft)
+            if legal_save_action(action, target, distance):
+                return target, action, distance
+    return None
 
 
-def _prepare_first_slot(sequence, round_number, attacker, target, slot, setup, dice, turn_key):
-    if any(attack_action_slot_choice(attacker, target, slot)):
-        return [], sequence, True
-    events, sequence = _move_for_slot(sequence, round_number, attacker, target, slot, setup, dice, turn_key)
-    if attacker.state.is_dead or attacker.state.is_unconscious:
-        return events, sequence, False
-    if any(attack_action_slot_choice(attacker, target, slot)):
-        return events, sequence, True
-    if not is_available(attacker.state, "action"):
-        return events, sequence, False
-    events.append(take_encounter_dash(sequence, round_number, attacker, target))
-    sequence += 1
-    more, sequence = _move_for_slot(sequence, round_number, attacker, target, slot, setup, dice, turn_key)
-    events.extend(more)
-    return events, sequence, False
+def _attack_choice(attacker, setup, slot, *, ranged_backline: bool = False):
+    if ranged_backline:
+        choice = choose_attack(
+            attacker, setup, slot.attack_ids,
+            kind=WeaponAttackKind.RANGED, prefer_backline=True,
+        )
+        if choice is not None:
+            return choice
+    melee = choose_attack(attacker, setup, slot.attack_ids, kind=WeaponAttackKind.MELEE)
+    if melee is not None:
+        return melee
+    return choose_attack(attacker, setup, slot.attack_ids, kind=WeaponAttackKind.RANGED)
+
+
+def _use_ranged_split(attacker, setup, slots, dice: DiceProvider) -> bool:
+    """Iron Pit tactic: 25% chance for exactly one post-opening flexible slot to shoot the enemy backline."""
+    if not has_frontline_target(attacker, setup) or not has_backline_target(attacker, setup):
+        return False
+    if not any(flexible_slot_has_both(attacker, slot.attack_ids) for slot in slots[1:]):
+        return False
+    return dice.roll(100) >= 76
 
 
 def resolve_attack_action(
     sequence: int, round_number: int, attacker: EncounterCombatant,
     setup: EncounterSetup, dice: DiceProvider,
 ) -> tuple[list[BattleEvent], int]:
-    """Resolve an explicit Attack action or monster Multiattack with legal movement and retargeting."""
+    """Resolve Multiattack/Extra Attack in fixed Pit formation with melee-first targeting."""
     try:
         validate_attack_action_slots(attacker)
         definition = attacker.state.template.attack_action
         if definition is None or not is_available(attacker.state, "action"):
             raise ValueError("Attack action or Multiattack is not available.")
-        turn_key = f"{round_number}:{attacker.combatant_id}"
-        target = select_slot_target(attacker, setup, definition.slots[0])
-        if target is None:
+        if not target_order(attacker, setup):
             return [], sequence
-        events, sequence, ready = _prepare_first_slot(
-            sequence, round_number, attacker, target, definition.slots[0], setup, dice, turn_key,
-        )
-        if not ready:
-            return events, sequence
 
         spend(attacker.state, "action")
+        events: list[BattleEvent] = []
         opening_feature = opening_feature_id(round_number, attacker, setup)
         affected_states = [member.state for member in [*setup.heroes, *setup.monsters]]
         light_trigger: WeaponAttack | None = None
-        for slot in definition.slots:
+        ranged_split = _use_ranged_split(attacker, setup, definition.slots, dice)
+        ranged_split_used = False
+        turn_key = f"{round_number}:{attacker.combatant_id}"
+
+        for index, slot in enumerate(definition.slots):
             if attacker.state.is_dead or attacker.state.is_unconscious:
                 break
-            target = select_slot_target(attacker, setup, slot)
-            if target is None:
-                continue
-            attack, save_action = attack_action_slot_choice(attacker, target, slot)
-            if attack is None and save_action is None:
-                moved, sequence = _move_for_slot(sequence, round_number, attacker, target, slot, setup, dice, turn_key)
-                events.extend(moved)
-                if attacker.state.is_dead or attacker.state.is_unconscious:
-                    break
-                attack, save_action = attack_action_slot_choice(attacker, target, slot)
-            if attack is not None:
+            split_this_slot = (
+                index > 0
+                and ranged_split
+                and not ranged_split_used
+                and flexible_slot_has_both(attacker, slot.attack_ids)
+            )
+            attack_choice = _attack_choice(attacker, setup, slot, ranged_backline=split_this_slot)
+            if attack_choice is not None:
+                target, attack, distance = attack_choice
+                if split_this_slot and attack.weapon.attack_kind is WeaponAttackKind.RANGED:
+                    ranged_split_used = True
                 pack = pack_tactics_active(attacker, target, setup)
                 feature_id = opening_feature or ("pack-tactics" if pack else definition.id)
                 event = resolve_encounter_attack(
-                    sequence, round_number, attacker, target, attack,
-                    combatant_distance(attacker, target), dice, setup,
-                    spend_action=False, advantage_sources=1 if pack else 0, feature_id=feature_id,
-                    turn_key=turn_key, allow_reckless=True,
+                    sequence, round_number, attacker, target, attack, distance, dice, setup,
+                    spend_action=False, advantage_sources=1 if pack else 0,
+                    feature_id=feature_id, turn_key=turn_key, allow_reckless=True,
+                    close_enemy_active=False,
                 )
                 events.append(event)
                 sequence += 1
@@ -106,13 +113,17 @@ def resolve_attack_action(
                 if definition.is_attack_action and light_trigger is None and attack.weapon.light:
                     light_trigger = attack
                 opening_feature = None
-            elif save_action is not None:
+                continue
+
+            save_choice = _save_choice(attacker, setup, slot)
+            if save_choice is not None:
+                target, save_action, distance = save_choice
                 events.append(resolve_save_action(
                     sequence, round_number, attacker, target, save_action,
-                    combatant_distance(attacker, target), dice, spend_action=False,
-                    affected_states=affected_states,
+                    distance, dice, spend_action=False, affected_states=affected_states,
                 ))
                 sequence += 1
+
         if definition.is_attack_action and light_trigger is not None:
             more, sequence = resolve_light_extra_attack(
                 sequence, round_number, attacker, setup, dice, light_trigger, turn_key,
