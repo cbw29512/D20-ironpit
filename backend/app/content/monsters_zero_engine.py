@@ -27,6 +27,7 @@ _ATTACKS = {
     ],
     "Hippopotamus": [("Bite", "melee", 7, 2, 10, 5, "piercing", None, 5, None, None, [])],
     "Killer Whale": [("Bite", "melee", 6, 5, 6, 4, "piercing", None, 5, None, None, [])],
+    "Lemure": [("Vile Slime", "melee", 2, 1, 4, 0, "poison", None, 5, None, None, [])],
     "Manticore": [
         ("Rend", "melee", 5, 1, 8, 3, "slashing", None, 5, None, None, []),
         ("Tail Spike", "ranged", 5, 1, 8, 3, "piercing", None, 5, 100, 200, []),
