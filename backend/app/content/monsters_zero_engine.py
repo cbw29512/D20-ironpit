@@ -16,6 +16,7 @@ _ATTACKS = {
     "Animated Armor": [("Slam", "melee", 4, 1, 6, 2, "bludgeoning", None, 5, None, None, [])],
     "Animated Flying Sword": [("Slash", "melee", 4, 1, 8, 2, "slashing", None, 5, None, None, [])],
     "Awakened Tree": [("Slam", "melee", 6, 3, 6, 4, "bludgeoning", None, 10, None, None, [])],
+    "Cultist": [("Ritual Sickle", "melee", 3, 1, 4, 1, "slashing", None, 5, None, None, [("Necrotic", 0, 2, 1, "necrotic")])],
     "Flying Snake": [("Bite", "melee", 4, 0, 2, 0, "piercing", 1, 5, None, None, [("Poison", 2, 4, 0, "poison")])],
     "Gargoyle": [("Claw", "melee", 4, 2, 4, 2, "slashing", None, 5, None, None, [])],
     "Grimlock": [("Bone Cudgel", "melee", 5, 1, 6, 3, "bludgeoning", None, 5, None, None, [("Psychic", 1, 4, 0, "psychic")])],

@@ -35,6 +35,23 @@ def _venom_bite() -> WeaponAttack:
     )
 
 
+def _ritual_sickle() -> WeaponAttack:
+    return WeaponAttack(
+        id="test-ritual-sickle",
+        weapon=Weapon(
+            id="test-ritual-sickle", name="Ritual Sickle", attack_kind=WeaponAttackKind.MELEE,
+            dice_count=1, dice_size=4, damage_type=DamageType.SLASHING,
+            animation="slash", reach_ft=5,
+        ),
+        attack_bonus=3,
+        damage_bonus=1,
+        on_hit_damage=[OnHitDamage(
+            source="Necrotic", dice_count=0, dice_size=2, damage_bonus=1,
+            damage_type=DamageType.NECROTIC,
+        )],
+    )
+
+
 def test_mixed_hit_keeps_piercing_and_poison_components_separate() -> None:
     setup = _setup()
     hero, commoner = setup.heroes[0], setup.monsters[0]
@@ -66,6 +83,21 @@ def test_critical_doubles_dice_for_every_on_hit_damage_component() -> None:
     assert [component.notation for component in event.damage_components] == ["2d4+4", "2d8+0"]
     assert [component.total for component in event.damage_components] == [9, 9]
     assert event.damage_roll is not None and event.damage_roll.total == 18
+
+
+def test_fixed_typed_on_hit_damage_does_not_double_on_critical() -> None:
+    setup = _setup()
+    hero, commoner = setup.heroes[0], setup.monsters[0]
+    event = resolve_attack(
+        1, 1, commoner.state, hero.state, _ritual_sickle(), 5,
+        FixedDiceProvider([20, 2, 3]),
+        actor_event_id=commoner.combatant_id, target_event_id=hero.combatant_id,
+    )
+
+    assert event.critical is True
+    assert [component.notation for component in event.damage_components] == ["2d4+1", "1"]
+    assert [component.total for component in event.damage_components] == [6, 1]
+    assert event.damage_roll is not None and event.damage_roll.total == 7
 
 
 def test_type_specific_defenses_apply_after_components_are_rolled() -> None:

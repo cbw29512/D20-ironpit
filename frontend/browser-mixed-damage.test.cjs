@@ -29,6 +29,11 @@ const venomBite = {
   diceCount: 1, diceSize: 4, damageBonus: 4, damageType: "piercing", reach: 5,
   animation: "bite", onHitDamage: [{ source: "Venom", diceCount: 1, diceSize: 8, damageBonus: 0, damageType: "poison" }],
 };
+const ritualSickle = {
+  id: "test-ritual-sickle", name: "Ritual Sickle", kind: "melee", bonus: 3,
+  diceCount: 1, diceSize: 4, damageBonus: 1, damageType: "slashing", reach: 5,
+  animation: "slash", onHitDamage: [{ source: "Necrotic", diceCount: 0, diceSize: 2, damageBonus: 1, damageType: "necrotic" }],
+};
 
 {
   const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
@@ -55,6 +60,17 @@ const venomBite = {
 {
   const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
   const commoner = member("monster-1:commoner", "monsters", monsters["srd-commoner"]);
+  window.IRON_PIT_DICE = queuedDice([20, 2, 3]);
+  const event = A.resolveAttack(1, 1, commoner, hero, ritualSickle, 5);
+  assert.equal(event.critical, true);
+  assert.deepEqual(event.damage_components.map((part) => part.notation), ["2d4+1", "1"]);
+  assert.deepEqual(event.damage_components.map((part) => part.total), [6, 1]);
+  assert.equal(event.damage_roll.total, 7);
+}
+
+{
+  const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
+  const commoner = member("monster-1:commoner", "monsters", monsters["srd-commoner"]);
   hero.state.template.damage_resistances = ["piercing"];
   hero.state.template.damage_immunities = ["poison"];
   window.IRON_PIT_DICE = queuedDice([15, 4, 8]);
@@ -64,4 +80,4 @@ const venomBite = {
   assert.equal(event.damage_roll.total, 4);
 }
 
-console.log("Browser mixed typed hit-damage regressions passed.");
+console.log("Browser mixed typed hit-damage regressions passed, including fixed typed riders.");

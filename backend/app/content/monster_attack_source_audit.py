@@ -99,7 +99,11 @@ def attack_issues(attack: WeaponAttack, actions: str) -> list[str]:
         if not re.search(ranged, actions, re.IGNORECASE):
             issues.append(f"ranged-range-mismatch:{attack.id}")
     for extra in attack.on_hit_damage:
-        if not _dice_pattern(extra.dice_count, extra.dice_size, extra.damage_bonus).search(actions):
+        if extra.dice_count == 0:
+            fixed = rf"\bplus\s+{extra.damage_bonus}\s+{extra.damage_type.value}\s+damage\b"
+            if not re.search(fixed, actions, re.IGNORECASE):
+                issues.append(f"on-hit-fixed-missing:{attack.id}:{extra.source}")
+        elif not _dice_pattern(extra.dice_count, extra.dice_size, extra.damage_bonus).search(actions):
             issues.append(f"on-hit-dice-missing:{attack.id}:{extra.source}")
         if extra.damage_type.value.lower() not in actions:
             issues.append(f"on-hit-type-missing:{attack.id}:{extra.source}")

@@ -91,9 +91,11 @@ def resolve_weapon_damage(
             )]
 
         for extra in attack.on_hit_damage:
+            if extra.dice_count == 0:
+                components.append(fixed_damage_component(extra.source, extra.damage_bonus, extra.damage_type))
+                continue
             components.append(roll_damage_component(
-                dice, extra.source, extra.dice_count, extra.dice_size,
-                extra.damage_bonus, extra.damage_type, critical,
+                dice, extra.source, extra.dice_count, extra.dice_size, extra.damage_bonus, extra.damage_type, critical,
             ))
 
         for conditional in attack.conditional_damage:

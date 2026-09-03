@@ -3,7 +3,7 @@ from __future__ import annotations
 from enum import StrEnum
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName, HitControlEffect
 from app.domain.size import CreatureSize
@@ -41,10 +41,16 @@ class ConditionalDamage(BaseModel):
 
 class OnHitDamage(BaseModel):
     source: str
-    dice_count: int = Field(ge=1, le=40)
+    dice_count: int = Field(ge=0, le=40)
     dice_size: int = Field(ge=2, le=100)
     damage_bonus: int = 0
     damage_type: DamageType
+
+    @model_validator(mode="after")
+    def _fixed_damage_requires_positive_amount(self) -> "OnHitDamage":
+        if self.dice_count == 0 and self.damage_bonus <= 0:
+            raise ValueError("A zero-die on-hit damage rider requires a positive fixed damage amount.")
+        return self
 
 
 class Weapon(BaseModel):

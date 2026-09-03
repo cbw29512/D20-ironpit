@@ -38,8 +38,6 @@ const assertArenaPoison = (target) => {
   assert.equal(poison.repeat_save_timing, "target_turn_start");
 };
 
-assert.equal(Object.keys(monsters).length, 111, "canonical runtime must contain 111 RAW-certified monsters");
-
 {
   const vultureTemplate = monsters["srd-giant-vulture"];
   assert.ok(vultureTemplate);
