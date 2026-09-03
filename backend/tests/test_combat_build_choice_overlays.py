@@ -1,6 +1,7 @@
 from app.content.combat_build_choice_overlays import (
     BARBARIAN_COMBAT_BUILD_CHOICES,
     BARD_COMBAT_BUILD_CHOICES,
+    CLERIC_COMBAT_BUILD_CHOICES,
     COMBAT_BUILD_CHOICE_OVERLAYS,
     FIGHTER_COMBAT_BUILD_CHOICES,
     MONK_COMBAT_BUILD_CHOICES,
@@ -75,7 +76,7 @@ def test_barbarian_subclass_specializations_generate_real_choice_overlays() -> N
 
 
 def test_all_current_choice_overlays_come_from_subclass_specializations() -> None:
-    assert len(COMBAT_BUILD_CHOICE_OVERLAYS) == 31
+    assert len(COMBAT_BUILD_CHOICE_OVERLAYS) == 34
     assert all("derived from" in overlay.notes for overlay in COMBAT_BUILD_CHOICE_OVERLAYS.values())
 
 
@@ -182,3 +183,15 @@ def test_bard_colleges_generate_distinct_compatibility_views() -> None:
     assert (battle.spell_package_id, battle.primary_weapon, battle.shield) == (
         "college-valor", "rapier", True,
     )
+
+
+def test_cleric_domains_generate_distinct_compatibility_views() -> None:
+    assert set(CLERIC_COMBAT_BUILD_CHOICES) == {"healer", "war-priest", "divine-offense"}
+    life = get_combat_build_choice_overlay("cleric", "healer")
+    light = get_combat_build_choice_overlay("cleric", "divine-offense")
+    war = get_combat_build_choice_overlay("cleric", "war-priest")
+    assert (life.spell_package_id, life.primary_weapon, life.shield) == ("life-domain", "mace", True)
+    assert (light.spell_package_id, light.primary_weapon) == ("light-domain", None)
+    assert (war.spell_package_id, war.primary_weapon, war.shield) == ("war-domain", "longsword", True)
+    assert not any(item.weapon_masteries for item in CLERIC_COMBAT_BUILD_CHOICES.values())
+    assert war.feature_choice_ids == ("blessed-strikes-divine-strike-radiant",)

@@ -6,6 +6,7 @@ from app.content.cleric_combat_levels import (
     cleric_arena_ignored,
     cleric_combat_features,
 )
+from app.content.canonical_class_combat_spines import canonical_combat_features
 from app.content.hero_combat_feature_registry import unsupported_hero_engine_features
 
 
@@ -38,10 +39,13 @@ def test_cleric_table_encodes_one_logical_caster_stat_progression() -> None:
 
 def test_cleric_features_only_track_combat_content_and_mending_is_ignored() -> None:
     level_four = set(cleric_combat_features(4))
-    assert {"cleric-spellcasting", "divine-spark", "turn-undead", "disciple-of-life", "preserve-life"} <= level_four
+    assert {"cleric-spellcasting", "divine-spark", "turn-undead"} <= level_four
+    assert {"disciple-of-life", "preserve-life"}.isdisjoint(level_four)
+    assert {"disciple-of-life", "preserve-life"} <= set(canonical_combat_features("cleric", 4))
     assert "mending" not in level_four
     assert cleric_arena_ignored(20) == ("mending",)
-    assert {"supreme-healing", "boon-of-fate", "greater-divine-intervention"} <= set(cleric_combat_features(20))
+    assert {"boon-of-fate", "greater-divine-intervention"} <= set(cleric_combat_features(20))
+    assert "supreme-healing" in canonical_combat_features("cleric", 20)
 
 
 def test_existing_cleric_runtime_levels_compile_from_table() -> None:

@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 from app.content.barbarian_subclass_overlay_data import BARBARIAN_SUBCLASS_DELTA_DATA
 from app.content.bard_subclass_overlay_data import BARD_SUBCLASS_DELTA_DATA
+from app.content.cleric_subclass_overlay_data import CLERIC_SUBCLASS_DELTA_DATA
 from app.content.core_subclass_overlay_data import CORE_SUBCLASS_DELTA_DATA
 from app.content.fighter_subclass_overlay_data import FIGHTER_SUBCLASS_DELTA_DATA
 from app.content.monk_subclass_overlay_data import MONK_SUBCLASS_DELTA_DATA
@@ -49,6 +50,7 @@ SUBCLASS_COMBAT_OVERLAYS = {
 for _class_id, _source in (
     ("barbarian", BARBARIAN_SUBCLASS_DELTA_DATA),
     ("bard", BARD_SUBCLASS_DELTA_DATA),
+    ("cleric", CLERIC_SUBCLASS_DELTA_DATA),
     ("fighter", FIGHTER_SUBCLASS_DELTA_DATA),
     ("monk", MONK_SUBCLASS_DELTA_DATA),
     ("paladin", PALADIN_SUBCLASS_DELTA_DATA),

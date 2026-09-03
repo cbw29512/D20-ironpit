@@ -23,7 +23,7 @@ _MASTERY_CAPABILITY = {
 _MASTERY_LIMIT = {
     "fighter": 3, "barbarian": 2, "monk": 0,
     "paladin": 2, "ranger": 2, "rogue": 2, "wizard": 0,
-    "sorcerer": 0, "warlock": 0, "bard": 0,
+    "sorcerer": 0, "warlock": 0, "bard": 0, "cleric": 0,
 }
 
 
@@ -42,6 +42,7 @@ class CombatBuildChoiceOverlay:
     arena_ignored: tuple[str, ...] = ()
     spell_package_id: str | None = None
     focus_item: str | None = None
+    feature_choice_ids: tuple[str, ...] = ()
     notes: str = ""
 
     def __post_init__(self) -> None:
@@ -84,6 +85,7 @@ def _build_overlay(class_id: str, build_id: str) -> CombatBuildChoiceOverlay:
         required_capabilities=tuple(required), arena_ignored=tuple(ignored),
         notes=f"Compatibility view derived from {spec.subclass_name} specialization data.",
         spell_package_id=spec.spell_package_id, focus_item=spec.focus_item,
+        feature_choice_ids=spec.feature_choice_ids,
     )
 
 
@@ -112,6 +114,7 @@ WIZARD_COMBAT_BUILD_CHOICES = _choices_for_class("wizard")
 SORCERER_COMBAT_BUILD_CHOICES = _choices_for_class("sorcerer")
 WARLOCK_COMBAT_BUILD_CHOICES = _choices_for_class("warlock")
 BARD_COMBAT_BUILD_CHOICES = _choices_for_class("bard")
+CLERIC_COMBAT_BUILD_CHOICES = _choices_for_class("cleric")
 
 
 def get_combat_build_choice_overlay(class_id: str, build_id: str) -> CombatBuildChoiceOverlay:

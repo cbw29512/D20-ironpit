@@ -185,6 +185,20 @@ def test_bard_college_specializations_compose_from_one_bard_spine() -> None:
         assert recipe.build_choices.primary_weapon == weapon_id
 
 
+def test_cleric_domain_specializations_compose_from_one_cleric_spine() -> None:
+    expected = {
+        ("life-domain", "healer"): ("life-domain", "mace"),
+        ("light-domain", "divine-offense"): ("light-domain", None),
+        ("war-domain", "war-priest"): ("war-domain", "longsword"),
+    }
+    for (subclass_id, build_id), (spell_package_id, weapon_id) in expected.items():
+        recipe = compose_character_combat_recipe("cleric", subclass_id, build_id, 17)
+        assert recipe.shared_progression_id == "cleric-1-20"
+        assert recipe.build_choices.spell_package_id == spell_package_id
+        assert recipe.build_choices.primary_weapon == weapon_id
+        assert "cleric-spellcasting" in recipe.combat_features
+
+
 def test_subclass_specific_build_fails_closed_on_the_wrong_subclass() -> None:
     with pytest.raises(ValueError, match="requires subclass circle-moon"):
         compose_character_combat_recipe("druid", "circle-land", "moon-melee", 3)

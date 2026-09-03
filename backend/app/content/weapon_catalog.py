@@ -68,6 +68,9 @@ _WEAPONS = {
         "longsword", "Longsword", 1, 8, DamageType.SLASHING, "Sap",
         versatile=True,
     ),
+    "mace": _melee(
+        "mace", "Mace", 1, 6, DamageType.BLUDGEONING, "Sap",
+    ),
     "scimitar": _melee(
         "scimitar", "Scimitar", 1, 6, DamageType.SLASHING, "Nick",
         finesse=True, light=True,

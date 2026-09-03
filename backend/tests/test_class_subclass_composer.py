@@ -5,6 +5,7 @@ from app.content.canonical_class_combat_spines import (
 )
 from app.content.barbarian_subclass_overlay_data import BARBARIAN_SUBCLASS_DELTA_DATA
 from app.content.bard_subclass_overlay_data import BARD_SUBCLASS_DELTA_DATA
+from app.content.cleric_subclass_overlay_data import CLERIC_SUBCLASS_DELTA_DATA
 from app.content.core_subclass_overlay_data import CORE_SUBCLASS_DELTA_DATA
 from app.content.fighter_subclass_overlay_data import FIGHTER_SUBCLASS_DELTA_DATA
 from app.content.hero_progressions import HERO_BY_CLASS
@@ -35,6 +36,7 @@ def test_subclass_registry_is_derived_from_authoritative_overlay_data() -> None:
     expected = (
         set(BARBARIAN_SUBCLASS_DELTA_DATA)
         | set(BARD_SUBCLASS_DELTA_DATA)
+        | set(CLERIC_SUBCLASS_DELTA_DATA)
         | set(CORE_SUBCLASS_DELTA_DATA)
         | set(FIGHTER_SUBCLASS_DELTA_DATA)
         | set(MONK_SUBCLASS_DELTA_DATA)
@@ -131,6 +133,16 @@ def test_warlock_base_spine_contains_no_fiend_subclass_features() -> None:
     }
     assert subclass_features
     assert subclass_features.isdisjoint(canonical_base_class_features("warlock", 20))
+
+
+def test_cleric_base_spine_contains_no_life_domain_subclass_features() -> None:
+    subclass_features = {
+        feature
+        for level in range(1, 21)
+        for feature in subclass_combat_features("life-domain", level)
+    }
+    assert subclass_features
+    assert subclass_features.isdisjoint(canonical_base_class_features("cleric", 20))
 
 
 def test_fighter_base_never_gets_champion_features_without_champion_overlay() -> None:

@@ -3,6 +3,7 @@ import pytest
 from app.content.subclass_specializations import (
     BARBARIAN_SPECIALIZATIONS,
     BARD_SPECIALIZATIONS,
+    CLERIC_SPECIALIZATIONS,
     FIGHTER_SPECIALIZATIONS,
     MONK_SPECIALIZATIONS,
     PALADIN_SPECIALIZATIONS,
@@ -198,6 +199,18 @@ def test_bard_has_one_charisma_specialization_per_target_college() -> None:
     )
     assert (valor.primary_weapon, valor.shield) == ("rapier", True)
     assert all(item.ability_priority[0] == "charisma" for item in BARD_SPECIALIZATIONS)
+
+
+def test_cleric_has_one_wisdom_specialization_per_target_domain() -> None:
+    assert tuple(item.subclass_id for item in specializations_for_class("cleric")) == (
+        "life-domain", "light-domain", "war-domain",
+    )
+    life, light, war = CLERIC_SPECIALIZATIONS
+    assert (life.role, life.primary_weapon, life.shield) == ("support-healing", "mace", True)
+    assert (light.role, light.primary_weapon, light.shield) == ("radiant-control", None, False)
+    assert (war.role, war.primary_weapon, war.shield) == ("frontline-support", "longsword", True)
+    assert all(item.ability_priority[0] == "wisdom" for item in CLERIC_SPECIALIZATIONS)
+    assert war.feature_choice_ids == ("blessed-strikes-divine-strike-radiant",)
 
 
 def test_specialization_without_source_truth_fails_closed() -> None:

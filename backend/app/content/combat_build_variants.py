@@ -82,9 +82,9 @@ _VARIANTS = (
     _build("bard", "support-healer", "support-healing", required_subclass_id="college-lore"),
     _build("bard", "controller", "control-caster", required_subclass_id="college-glamour"),
     _build("bard", "battle-bard", "weapon-caster-hybrid", required_subclass_id="college-valor"),
-    _build("cleric", "healer", "healing"),
-    _build("cleric", "war-priest", "frontline-support"),
-    _build("cleric", "divine-offense", "radiant-control"),
+    _build("cleric", "healer", "healing", required_subclass_id="life-domain"),
+    _build("cleric", "war-priest", "frontline-support", required_subclass_id="war-domain"),
+    _build("cleric", "divine-offense", "radiant-control", required_subclass_id="light-domain"),
     _build(
         "druid", "land-damage", "caster-damage", required_subclass_id="circle-land",
         notes="Canonical Land Druid progression is separate; named build activation awaits a compiled build overlay.",

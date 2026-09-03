@@ -2,10 +2,6 @@ from __future__ import annotations
 
 
 CORE_SUBCLASS_DELTA_DATA: dict[str, tuple[str, dict[int, dict[str, tuple[str, ...]]]]] = {
-    "life-domain": ("cleric", {
-        3: {"features_added": ("disciple-of-life", "preserve-life")},
-        6: {"features_added": ("blessed-healer",)}, 17: {"features_added": ("supreme-healing",)},
-    }),
     "circle-land": ("druid", {
         3: {"features_added": ("lands-aid", "land-arid-spells")},
         6: {"features_added": ("natural-recovery",)}, 10: {"features_added": ("natures-ward-fire",)},
