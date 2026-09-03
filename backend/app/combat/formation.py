@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from app.combat.condition_rules import is_incapacitated
 from app.domain.models import CombatantTemplate, WeaponAttackKind
 
 HERO_BACKLINE_FT = 0
@@ -9,13 +8,29 @@ MONSTER_FRONTLINE_FT = 10
 MONSTER_BACKLINE_FT = 15
 
 
+def has_ranged_weapon_offense(template: CombatantTemplate) -> bool:
+    """Return whether the card has a real ranged weapon attack, not merely a support role."""
+    return any(
+        attack.weapon.attack_kind is WeaponAttackKind.RANGED
+        and attack.weapon.long_range_ft is not None
+        and attack.weapon.long_range_ft > 5
+        for attack in [template.weapon_attack, *template.alternate_weapon_attacks]
+    )
+
+
+def has_true_range_offense(template: CombatantTemplate) -> bool:
+    """Classify backline starts from actual ranged offense only; buffs never create a backliner."""
+    if has_ranged_weapon_offense(template):
+        return True
+    if any(action.range_ft > 5 for action in template.saving_throw_actions):
+        return True
+    if any(action.attack_kind == "ranged" and action.range_ft > 5 for action in template.spell_attack_actions):
+        return True
+    return any(action.range_ft > 5 for action in template.spell_save_actions)
+
+
 def uses_backline(template: CombatantTemplate) -> bool:
-    """Put dedicated ranged characters/casters in back; primary-melee combatants start engaged in front."""
-    if template.weapon_attack.weapon.attack_kind is WeaponAttackKind.RANGED:
-        return True
-    if template.kind == "character" and (template.spell_save_actions or template.defensive_spell_actions):
-        return True
-    return False
+    return has_true_range_offense(template)
 
 
 def starting_position_ft(template: CombatantTemplate, side: str) -> int:
@@ -28,16 +43,12 @@ def starting_position_ft(template: CombatantTemplate, side: str) -> int:
 
 
 def backline_holds_position(member, setup) -> bool:
-    """Arena policy: dedicated backliners stay behind an active allied frontline."""
-    if not uses_backline(member.state.template):
+    """Use a real ranged weapon while separated; switch to melee once an active enemy reaches 5 feet."""
+    if not has_ranged_weapon_offense(member.state.template):
         return False
-    allies = setup.heroes if member.side == "heroes" else setup.monsters
-    return any(
-        ally.combatant_id != member.combatant_id
-        and not uses_backline(ally.state.template)
-        and ally.state.is_alive
-        and not ally.state.is_dead
-        and ally.state.current_hp > 0
-        and not is_incapacitated(ally.state)
-        for ally in allies
+    enemies = setup.monsters if member.side == "heroes" else setup.heroes
+    return not any(
+        enemy.state.is_alive and not enemy.state.is_dead and enemy.state.current_hp > 0
+        and abs(member.position_ft - enemy.position_ft) <= 5
+        for enemy in enemies
     )

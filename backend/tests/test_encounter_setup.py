@@ -31,39 +31,32 @@ def test_builds_full_party_from_canonical_cards() -> None:
     assert encounter.monsters[0].combatant_id != encounter.monsters[1].combatant_id
 
 
-def test_legacy_ranged_fixture_still_proves_backline_classification() -> None:
+def test_true_ranged_fixture_starts_backline() -> None:
     selene = build_selene_asharrow()
     assert starting_position_ft(selene, "heroes") == 0
 
 
-def test_backliner_holds_only_while_active_frontline_ally_exists() -> None:
+def test_ranged_weapon_user_holds_without_frontline_role_dependency() -> None:
     frontline = EncounterCombatant(
-        combatant_id="hero-1:karnok-stoneward-l1",
-        side="heroes",
-        position_ft=5,
+        combatant_id="hero-1:karnok-stoneward-l1", side="heroes", position_ft=5,
         state=build_combatant_state(build_karnok_stoneward()),
     )
-    backline = EncounterCombatant(
-        combatant_id="hero-2:selene-test-fixture",
-        side="heroes",
-        position_ft=0,
+    ranged = EncounterCombatant(
+        combatant_id="hero-2:selene-test-fixture", side="heroes", position_ft=0,
         state=build_combatant_state(build_selene_asharrow()),
     )
     monster = EncounterCombatant(
-        combatant_id="monster-1:srd-goblin-warrior",
-        side="monsters",
-        position_ft=10,
+        combatant_id="monster-1:srd-goblin-warrior", side="monsters", position_ft=10,
         state=build_combatant_state(build_goblin_warrior()),
     )
     encounter = EncounterSetup(
-        heroes=[frontline, backline], monsters=[monster],
-        hero_total_levels=2, monster_total_cr="1/4",
+        heroes=[frontline, ranged], monsters=[monster], hero_total_levels=2, monster_total_cr="1/4",
     )
-    assert backline_holds_position(backline, encounter) is True
+    assert backline_holds_position(ranged, encounter) is True
     frontline.state.current_hp = 0
     frontline.state.is_alive = False
     frontline.state.is_dead = True
-    assert backline_holds_position(backline, encounter) is False
+    assert backline_holds_position(ranged, encounter) is True
 
 
 def test_melee_front_lines_begin_engaged() -> None:
@@ -75,8 +68,7 @@ def test_melee_front_lines_begin_engaged() -> None:
 
 def test_duplicate_canonical_cards_receive_independent_runtime_state() -> None:
     encounter = build_encounter_setup(EncounterSelection(
-        hero_ids=["karnok-stoneward-l1", "karnok-stoneward-l1"],
-        monster_ids=["srd-goblin-warrior"],
+        hero_ids=["karnok-stoneward-l1", "karnok-stoneward-l1"], monster_ids=["srd-goblin-warrior"],
     ))
     first, second = encounter.heroes
     assert first.combatant_id != second.combatant_id

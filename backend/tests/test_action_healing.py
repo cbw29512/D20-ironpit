@@ -79,18 +79,19 @@ def test_bloodied_ally_is_healed_before_more_injured_self() -> None:
     assert choose_healing_target(healer, setup, action).combatant_id == ally.combatant_id
 
 
-def test_action_self_heal_is_conservative_but_bonus_action_self_heal_uses_bloodied_threshold() -> None:
+def test_action_and_bonus_action_self_heals_use_bloodied_threshold() -> None:
     setup = _setup()
     healer = setup.heroes[0]
     action_heal = HealingAction(id="action-heal", name="Action Heal", action_cost="action", target_mode="self", healing_bonus=5)
     bonus_heal = HealingAction(id="bonus-heal", name="Bonus Heal", action_cost="bonus_action", target_mode="self", healing_bonus=5)
 
     healer.state.current_hp = healer.state.template.max_hp // 2
-    assert choose_healing_target(healer, setup, action_heal) is None
+    assert choose_healing_target(healer, setup, action_heal) is healer
     assert choose_healing_target(healer, setup, bonus_heal) is healer
 
-    healer.state.current_hp = max(1, healer.state.template.max_hp // 4)
-    assert choose_healing_target(healer, setup, action_heal) is healer
+    healer.state.current_hp = healer.state.template.max_hp
+    assert choose_healing_target(healer, setup, action_heal) is None
+    assert choose_healing_target(healer, setup, bonus_heal) is None
 
 
 def test_reaction_heal_is_not_used_proactively_on_the_healers_turn() -> None:

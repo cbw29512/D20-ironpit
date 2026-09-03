@@ -59,17 +59,16 @@ def _hold_backline(
 ) -> tuple[list[BattleEvent], int, bool] | None:
     if not backline_holds_position(attacker, setup):
         return None
-    events: list[BattleEvent] = []
     ranged = _legal_ranged_attack(attacker, combatant_distance(attacker, target))
-    if ranged is not None and is_available(attacker.state, "action"):
+    if ranged is None:
+        return None
+    events: list[BattleEvent] = []
+    if is_available(attacker.state, "action"):
         events.append(resolve_encounter_attack(
             sequence, round_number, attacker, target, ranged,
             combatant_distance(attacker, target), dice, setup,
             allow_reckless=True, turn_key=turn_key,
         ))
-        sequence += 1
-    elif is_available(attacker.state, "action"):
-        events.append(_take_dodge(sequence, round_number, attacker))
         sequence += 1
     return events, sequence, True
 
@@ -83,7 +82,7 @@ def resolve_simple_closing(
     setup: EncounterSetup | None = None,
     turn_key: str | None = None,
 ) -> tuple[list[BattleEvent], int, bool]:
-    """Reach melee when arena policy allows; backliners hold while an allied frontline is active."""
+    """Use true range when legal; otherwise close toward melee through the shared arena policy."""
     distance = combatant_distance(attacker, target)
     charge_events, charge_sequence, charged = resolve_charge_closing(
         sequence, round_number, attacker, target, dice, setup,

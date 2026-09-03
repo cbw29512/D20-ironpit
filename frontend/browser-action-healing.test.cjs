@@ -59,10 +59,11 @@ const setup = (healer, ally) => ({ heroes: [healer, ally], monsters: [] });
   const bonusHeal = { id: "bonus-heal", name: "Bonus Heal", actionCost: "bonus_action", range: 5,
     targetMode: "self", diceCount: 0, diceSize: 6, healingBonus: 5 };
   healer.state.current_hp = Math.floor(healer.state.template.max_hp / 2);
-  assert.equal(H.chooseTarget(healer, fight, actionHeal), null);
-  assert.equal(H.chooseTarget(healer, fight, bonusHeal).combatant_id, healer.combatant_id);
-  healer.state.current_hp = Math.max(1, Math.floor(healer.state.template.max_hp / 4));
   assert.equal(H.chooseTarget(healer, fight, actionHeal).combatant_id, healer.combatant_id);
+  assert.equal(H.chooseTarget(healer, fight, bonusHeal).combatant_id, healer.combatant_id);
+  healer.state.current_hp = healer.state.template.max_hp;
+  assert.equal(H.chooseTarget(healer, fight, actionHeal), null);
+  assert.equal(H.chooseTarget(healer, fight, bonusHeal), null);
 }
 {
   const healer = member("hero-1"), ally = member("hero-2"); ally.state.current_hp = 1;
@@ -70,4 +71,4 @@ const setup = (healer, ally) => ({ heroes: [healer, ally], monsters: [] });
     targetMode: "ally", diceCount: 0, diceSize: 6, healingBonus: 5 }];
   assert.equal(H.chooseAction(healer, setup(healer, ally)), null);
 }
-console.log("Browser action economy and healing AI regressions passed.");
+console.log("Browser action economy and Bloodied healing policy regressions passed.");

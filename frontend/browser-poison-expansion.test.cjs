@@ -22,9 +22,20 @@ const heroes = window.IRON_PIT_BROWSER_HEROES;
 const member = (id, side, template, position) => ({
   combatant_id: id, side, position_ft: position, state: S.buildState(structuredClone(template)),
 });
-window.IRON_PIT_DICE = {
-  roll: (sides) => sides === 20 ? 15 : 1,
-  rollMany: (count, sides) => Array.from({ length: count }, () => sides === 20 ? 15 : 1),
+const setD20 = (value) => {
+  window.IRON_PIT_DICE = {
+    roll: (sides) => sides === 20 ? value : 1,
+    rollMany: (count, sides) => Array.from({ length: count }, () => sides === 20 ? value : 1),
+  };
+};
+const assertArenaPoison = (target) => {
+  const poison = target.state.timed_effects.find((effect) => effect.effect_id === "poisoned");
+  assert.ok(poison);
+  assert.equal(poison.expiry_timing, null);
+  assert.equal(poison.expires_at_start_of_source_turn, false);
+  assert.equal(poison.repeat_save_ability, "constitution");
+  assert.equal(poison.repeat_save_dc, 10);
+  assert.equal(poison.repeat_save_timing, "target_turn_start");
 };
 
 assert.equal(Object.keys(monsters).length, 109, "canonical runtime must contain 109 RAW-certified monsters");
@@ -40,10 +51,13 @@ assert.equal(Object.keys(monsters).length, 109, "canonical runtime must contain 
 
   const source = member("monster-1:vulture", "monsters", vultureTemplate, 5);
   const target = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"], 0);
+  setD20(15);
   const event = A.resolveAttack(1, 1, source, target, gouge, 5, { spendAction: false, setup: { heroes: [target], monsters: [source] } });
   assert.equal(event.hit, true);
   assert.ok(event.applied_condition_ids.includes("poisoned"));
-  const ended = L.resolveTargetTiming(2, 1, target, "target_turn_end");
+  assertArenaPoison(target);
+  setD20(20);
+  const ended = L.resolveTargetTiming(2, 2, target, "target_turn_start");
   assert.equal(ended.events.length, 1);
   assert.deepEqual(ended.events[0].removed_condition_ids, ["poisoned"]);
 }
@@ -64,12 +78,15 @@ assert.equal(Object.keys(monsters).length, 109, "canonical runtime must contain 
   const source = member("monster-1:wyvern", "monsters", wyvernTemplate, 10);
   const target = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"], 0);
   const setup = { heroes: [target], monsters: [source] };
+  setD20(15);
   const event = A.resolveAttack(1, 1, source, target, sting, 10, { spendAction: false, setup });
   assert.equal(event.hit, true);
   assert.ok(event.applied_condition_ids.includes("poisoned"));
-  const ended = L.resolveSourceTiming(2, 2, source, setup, "source_turn_start");
+  assertArenaPoison(target);
+  setD20(20);
+  const ended = L.resolveTargetTiming(2, 2, target, "target_turn_start");
   assert.equal(ended.events.length, 1);
   assert.deepEqual(ended.events[0].removed_condition_ids, ["poisoned"]);
 }
 
-console.log("Generated Giant Vulture/Wyvern Poisoned lifecycle regressions passed.");
+console.log("Generated Giant Vulture/Wyvern source fidelity and arena Poisoned policy regressions passed.");

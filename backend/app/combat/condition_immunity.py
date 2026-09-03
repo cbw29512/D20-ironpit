@@ -4,7 +4,7 @@ from app.domain.models import CombatantState
 
 
 def condition_is_immune(state: CombatantState, condition_id: str) -> bool:
-    """Return static and condition-granted 2024 condition immunities."""
+    """Return static and condition-granted 2024 condition immunities plus Iron Pit protections."""
     if condition_id in state.template.condition_immunities:
         return True
     if (
@@ -13,4 +13,7 @@ def condition_is_immune(state: CombatantState, condition_id: str) -> bool:
         and condition_id in {"charmed", "frightened"}
     ):
         return True
-    return condition_id == "poisoned" and "petrified" in state.active_effect_ids
+    if condition_id == "poisoned":
+        active = {*state.active_effect_ids, *state.active_buff_effect_ids}
+        return "petrified" in active or "protection-from-poison" in active
+    return False

@@ -45,14 +45,9 @@
   function holdBackline(sequence, round, member, target, setup, turnKey) {
     if (!F()?.backlineHoldsPosition(member, setup)) return null;
     const distance = S().distance(member, target), ranged = attacks(member).find((a) => a.kind === "ranged" && distance <= a.long);
-    if (ranged && E().available(member.state, "action")) {
-      return { events: [A().resolveAttack(sequence++, round, member, target, ranged, distance, { setup, allowReckless: true, turnKey })], sequence, handled: true };
-    }
+    if (!ranged) return null;
     if (E().available(member.state, "action")) {
-      E().spend(member.state, "action"); if (!member.state.active_effect_ids.includes("dodge")) member.state.active_effect_ids.push("dodge");
-      return { events: [{ sequence: sequence++, round_number: round, event_type: "feature", actor_id: member.combatant_id,
-        actor_name: member.state.template.name, feature_id: "dodge", animation: "dodge",
-        description: `${member.state.template.name} Dodges while holding the backline.` }], sequence, handled: true };
+      return { events: [A().resolveAttack(sequence++, round, member, target, ranged, distance, { setup, allowReckless: true, turnKey })], sequence, handled: true };
     }
     return { events: [], sequence, handled: true };
   }

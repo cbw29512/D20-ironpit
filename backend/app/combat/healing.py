@@ -43,20 +43,14 @@ def _target_allowed(healer: EncounterCombatant, target: EncounterCombatant, acti
 
 
 def _self_heal_worthwhile(member: EncounterCombatant, action: HealingAction) -> bool:
-    state = member.state
-    if not is_bloodied(state):
-        return False
-    if action.action_cost == "bonus_action":
-        return True
-    if action.action_cost == "action":
-        return state.current_hp * 4 <= effective_max_hp(state)
-    return False
+    """Iron Pit policy: any proactive Action/Bonus Action heal is worthwhile once Bloodied."""
+    return is_bloodied(member.state) and action.action_cost in {"action", "bonus_action"}
 
 
 def choose_healing_target(
     healer: EncounterCombatant, setup: EncounterSetup, action: HealingAction, turn_key: str | None = None,
 ) -> EncounterCombatant | None:
-    """Prefer a living 0-HP ally, then a Bloodied ally, then self; slot spells fail closed without a turn key."""
+    """Prefer a living 0-HP ally, then a Bloodied ally, then Bloodied self."""
     if action.action_cost == "reaction" or not is_available(healer.state, action.action_cost):
         return None
     if not _resource_available(healer, action, turn_key):

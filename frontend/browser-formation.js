@@ -6,12 +6,17 @@
   const MONSTER_FRONT = 10;
   const MONSTER_BACK = 15;
 
-  function usesBackline(template) {
-    const primary = template?.attacks?.find((attack) => attack.id === template.primary_attack_id) || template?.attacks?.[0];
-    if (primary?.kind === "ranged") return true;
-    if (template?.kind === "character" && (template.spell_save_actions?.length || template.defensive_spell_actions?.length)) return true;
-    return false;
+  const attacks = (template) => template?.attacks || [];
+  function hasRangedWeaponOffense(template) {
+    return attacks(template).some((attack) => attack.kind === "ranged" && Number.isFinite(attack.long) && attack.long > 5);
   }
+  function hasTrueRangeOffense(template) {
+    if (hasRangedWeaponOffense(template)) return true;
+    if ((template?.saving_throw_actions || []).some((action) => (action.range || action.range_ft || 0) > 5)) return true;
+    if ((template?.spell_attack_actions || []).some((action) => action.attackKind === "ranged" && (action.range || 0) > 5)) return true;
+    return (template?.spell_save_actions || []).some((action) => (action.range || 0) > 5);
+  }
+  function usesBackline(template) { return hasTrueRangeOffense(template); }
 
   function startingPosition(template, side) {
     const back = usesBackline(template);
@@ -21,16 +26,15 @@
   }
 
   function backlineHoldsPosition(member, setup) {
-    if (!usesBackline(member.state.template)) return false;
-    const allies = member.side === "heroes" ? setup.heroes : setup.monsters;
-    const incapacitated = window.IRON_PIT_BROWSER_CONDITION_RULES?.incapacitated || ((state) => state.is_unconscious);
-    return allies.some((ally) => ally.combatant_id !== member.combatant_id
-      && !usesBackline(ally.state.template)
-      && ally.state.is_alive && !ally.state.is_dead && ally.state.current_hp > 0
-      && !incapacitated(ally.state));
+    if (!hasRangedWeaponOffense(member.state.template)) return false;
+    const enemies = member.side === "heroes" ? setup.monsters : setup.heroes;
+    return !enemies.some((enemy) => enemy.state.is_alive && !enemy.state.is_dead && enemy.state.current_hp > 0
+      && Math.abs(member.position_ft - enemy.position_ft) <= 5);
   }
 
   window.IRON_PIT_BROWSER_FORMATION = {
+    hasRangedWeaponOffense,
+    hasTrueRangeOffense,
     usesBackline,
     startingPosition,
     backlineHoldsPosition,

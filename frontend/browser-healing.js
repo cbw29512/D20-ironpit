@@ -25,10 +25,7 @@
   }
 
   function selfWorthwhile(member, action) {
-    if (!bloodied(member.state)) return false;
-    if (action.actionCost === "bonus_action") return true;
-    if (action.actionCost === "action") return member.state.current_hp * 4 <= S().effectiveMaxHp(member.state);
-    return false;
+    return bloodied(member.state) && ["action", "bonus_action"].includes(action.actionCost);
   }
 
   function chooseTarget(healer, setup, action, turnKey = null) {
