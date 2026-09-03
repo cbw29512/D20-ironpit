@@ -39,6 +39,8 @@ def test_giant_eagle_and_elk_typed_damage_and_charge_are_exact() -> None:
     assert elk.weapon_attack.weapon.reach_ft == 10
     assert elk.weapon_attack.on_hit_damage[0].damage_type is DamageType.RADIANT
     profile = charge_profile_for_attack_id("giant-elk-ram")
-    assert profile is not None
-    assert (profile.minimum_move_ft, profile.dice_count, profile.dice_size) == (20, 2, 4)
+    assert profile is not None and profile.bonus_damage is not None
+    assert profile.minimum_move_ft == 20
+    assert (profile.bonus_damage.dice_count, profile.bonus_damage.dice_size) == (2, 4)
+    assert profile.bonus_damage.damage_type is DamageType.BLUDGEONING
     assert profile.max_target_size.value == "huge"
