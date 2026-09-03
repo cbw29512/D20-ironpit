@@ -131,6 +131,7 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Warrior Veteran": _p("humanoid", "veteran"),
     "Weasel": _p("quadruped", "mustelid"),
     "Wolf": _p("quadruped", "canine"),
+    "Worg": _p("quadruped", "canine"),
     "Wyvern": _p("reptile", "wyvern"),
     "Zombie": _p("humanoid", "zombie"),
 }

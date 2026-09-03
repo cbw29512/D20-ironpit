@@ -38,6 +38,16 @@
     return removed;
   }
 
+  function expireSourceTurnStart(states, sourceId) {
+    let removed = 0;
+    for (const state of states || []) {
+      const before = state.active_modifiers.length;
+      state.active_modifiers = state.active_modifiers.filter((item) => !(item.source_id === sourceId && item.expires_at_start_of_source_turn));
+      removed += before - state.active_modifiers.length;
+    }
+    return removed;
+  }
+
   function expireSourceTurn(states, sourceId, round) {
     let removed = 0;
     for (const state of states || []) {
@@ -47,6 +57,17 @@
       removed += before - state.active_modifiers.length;
     }
     return removed;
+  }
+
+  function applyHitEffects(state, sourceId, attack) {
+    for (const [index, effect] of (attack.onHitModifiers || []).entries()) {
+      if (effect.kind !== "attacks-against-advantage") throw new Error(`Unsupported on-hit modifier kind: ${effect.kind}.`);
+      add(state, {
+        id: `${sourceId}:${attack.id}:hit-modifier:${index}`, source_id: sourceId, source_effect_id: attack.id,
+        kind: effect.kind, consume_on_attack_against: Boolean(effect.consumeOnAttackAgainst),
+        expires_at_start_of_source_turn: Boolean(effect.expiresAtStartOfSourceTurn),
+      });
+    }
   }
 
   const flat = (state, kind) => (state.active_modifiers || []).filter((item) => item.kind === kind)
@@ -89,8 +110,8 @@
     && (!item.target_id || item.target_id === targetId));
 
   window.IRON_PIT_BROWSER_MODIFIERS = {
-    add, applyD20Bonus, attacksAgainstAdvantage, bonusDamage, consumeAttacksAgainstAdvantage,
-    consumeNextAttackAgainstAdvantage, effectiveArmorClass, effectiveSpeed, expireSourceTurn,
+    add, applyD20Bonus, applyHitEffects, attacksAgainstAdvantage, bonusDamage, consumeAttacksAgainstAdvantage,
+    consumeNextAttackAgainstAdvantage, effectiveArmorClass, effectiveSpeed, expireSourceTurn, expireSourceTurnStart,
     nextAttackAgainstAdvantage, removeSource, validate,
   };
 })();

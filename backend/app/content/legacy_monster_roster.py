@@ -14,6 +14,7 @@ from app.content.monster_saving_throws import complete_monster_saving_throws
 from app.content.monster_spellcasting_source_audit import complete_monster_spellcasting_fingerprints
 from app.content.monster_trait_source_audit import complete_monster_trait_fingerprints
 from app.content.monster_tyrannosaurus import build_tyrannosaurus_rex
+from app.content.monster_worg import build_worg
 from app.content.monsters import build_axe_beak, build_bandit, build_commoner, build_giant_lizard
 from app.content.monsters_bears import build_black_bear, build_brown_bear
 from app.content.monsters_batch_three import build_monster_batch_three
@@ -49,7 +50,7 @@ def build_legacy_monster_templates() -> list[CombatantTemplate]:
         build_boar(), build_elk(), build_giant_boar(), *build_charge_expansion(), build_hippogriff(), *build_fixed_damage_monsters(),
         *build_beast_batch_two(), *build_monster_batch_three(), *build_control_monsters(), *build_grapple_expansion(), *build_poison_monsters(),
         *build_venom_monsters(), *build_expansion_four(), build_giant_crocodile(), build_giant_constrictor_snake(),
-        build_tyrannosaurus_rex(), *build_zero_engine_monsters(), *build_swarm_candidates(), *build_parry_monsters(),
+        build_tyrannosaurus_rex(), *build_zero_engine_monsters(), build_worg(), *build_swarm_candidates(), *build_parry_monsters(),
     ]
     monsters = complete_monster_movement_modes(monsters)
     monsters = filter_standard_arena_eligible(monsters)

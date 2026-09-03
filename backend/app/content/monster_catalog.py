@@ -50,7 +50,7 @@ _READY_BY_NAME = {
     "Tyrannosaurus Rex": "srd-tyrannosaurus-rex",
     "Vulture": "srd-vulture", "Warhorse": "srd-warhorse", "Warhorse Skeleton": "srd-warhorse-skeleton",
     "Warrior Infantry": "srd-warrior-infantry", "Warrior Veteran": "srd-warrior-veteran",
-    "Weasel": "srd-weasel", "Wolf": "srd-wolf", "Wyvern": "srd-wyvern",
+    "Weasel": "srd-weasel", "Wolf": "srd-wolf", "Worg": "srd-worg", "Wyvern": "srd-wyvern",
     "Animated Armor": "srd-animated-armor", "Animated Flying Sword": "srd-animated-flying-sword",
     "Awakened Tree": "srd-awakened-tree", "Flying Snake": "srd-flying-snake",
     "Gargoyle": "srd-gargoyle", "Grimlock": "srd-grimlock", "Guard Captain": "srd-guard-captain",

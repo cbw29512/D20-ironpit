@@ -101,6 +101,7 @@
           repeatSaveTiming: control.repeatSaveTiming || null, allowedRemovalActionIds: control.allowedRemovalActionIds || [] });
         if (timed) applied.push(timed);
       }
+      if (living) M().applyHitEffects?.(actualTarget.state, attacker.combatant_id, attack);
       topple = TOP().resolve(attacker, actualTarget, attack); if (topple.applied && !applied.includes("prone")) applied.push("prone");
       if (living) sapApplied = SAP().applyWeapon(attacker, actualTarget, attack, round) ? "weapon" : TM().apply(attacker, actualTarget, attack, round) ? "tactical" : "";
       vexApplied = window.IRON_PIT_BROWSER_VEX?.apply(attacker.state, attacker.combatant_id, actualTarget.combatant_id, attack, round, damageRoll.total) || false;

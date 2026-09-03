@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 
 from app.domain.actions import AbilityName, ConditionName, ConditionTiming
 from app.domain.combatants import DamageType
+from app.domain.hit_modifiers import HitModifierEffect
 from app.domain.size import CreatureSize
 
 
@@ -49,6 +50,6 @@ class ConditionEffectDefinition(BaseModel):
 
 
 AttackEffectDefinition = Annotated[
-    DamageEffectDefinition | ProneEffectDefinition | GrappleEffectDefinition | ConditionEffectDefinition,
+    DamageEffectDefinition | ProneEffectDefinition | GrappleEffectDefinition | ConditionEffectDefinition | HitModifierEffect,
     Field(discriminator="kind"),
 ]

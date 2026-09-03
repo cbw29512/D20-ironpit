@@ -19,7 +19,7 @@ load("browser-monsters-generated.js");
 const generated = window.IRON_PIT_BROWSER_MONSTERS;
 assert.equal(window.IRON_PIT_CANONICAL_MONSTERS_READY, true, "Canonical generated monster bundle must mark itself ready");
 assert.equal(Object.keys(manual).length, 67, "Legacy fragments remain a 67-monster compatibility subset");
-assert.equal(Object.keys(generated).length, 112, "Generated runtime must expose only currently RAW-certified monsters");
+assert.equal(Object.keys(generated).length, 113, "Generated runtime must expose only currently RAW-certified monsters");
 for (const id of [
   "srd-jackal", "srd-archelon", "srd-ankylosaurus", "srd-giant-eagle", "srd-giant-elk", "srd-giant-crocodile",
   "srd-allosaurus", "srd-minotaur-skeleton", "srd-triceratops", "srd-warhorse-skeleton",
@@ -29,7 +29,7 @@ for (const id of [
   "srd-tough", "srd-venomous-snake", "srd-violet-fungus", "srd-bandit-captain", "srd-knight",
   "srd-noble", "srd-warrior-veteran", "srd-goblin-boss", "srd-blood-hawk",
   "srd-swarm-of-bats", "srd-swarm-of-rats", "srd-swarm-of-crawling-claws",
-  "srd-swarm-of-insects", "srd-swarm-of-venomous-snakes", "srd-zombie",
+  "srd-swarm-of-insects", "srd-swarm-of-venomous-snakes", "srd-worg", "srd-zombie",
 ]) {
   assert.ok(generated[id], `${id} must be present in generated runtime`);
 }
@@ -39,6 +39,9 @@ assert.equal(generated["srd-killer-whale"], undefined, "Aquatic-only Killer Whal
 assert.deepEqual(generated["srd-cultist"].attacks[0].onHitDamage, [
   { source: "Necrotic", diceCount: 0, diceSize: 2, damageBonus: 1, damageType: "necrotic" },
 ]);
+assert.deepEqual(generated["srd-worg"].attacks[0].onHitModifiers, [{
+  kind: "attacks-against-advantage", consumeOnAttackAgainst: true, expiresAtStartOfSourceTurn: true,
+}]);
 
 const movementKeys = ["burrow_ft", "climb_ft", "fly_ft", "hover", "swim_ft", "walk_ft"];
 for (const monster of Object.values(generated)) {
@@ -260,4 +263,4 @@ assert.ok(heroOne.state.active_effect_ids.includes("grappled"));
 assert.ok(heroOne.state.active_effect_ids.includes("restrained"));
 assert.ok(heroTwo.state.active_effect_ids.includes("prone"));
 
-console.log("Generated monster runtime contains 112 RAW-certified templates, including fixed typed hit riders, with aquatic-only Killer Whale deferred, shared grapple-control monsters, Allosaurus Charge follow-up Bite, native data-only swarms, Charge riders, Prone-only Charge, conditional damage, Redirect Attack, and T. rex retargeting.");
+console.log("Generated monster runtime contains 113 RAW-certified templates, including fixed typed hit riders and source-turn on-hit Advantage modifiers, with aquatic-only Killer Whale deferred, shared grapple-control monsters, Allosaurus Charge follow-up Bite, native data-only swarms, Charge riders, Prone-only Charge, conditional damage, Redirect Attack, and T. rex retargeting.");

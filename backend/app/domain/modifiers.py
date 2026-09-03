@@ -29,6 +29,7 @@ class CombatModifier(BaseModel):
     target_id: str | None = None
     concentration_required: bool = False
     consume_on_attack_against: bool = False
+    expires_at_start_of_source_turn: bool = False
     expires_source_turn_end_round: int | None = Field(default=None, ge=1)
 
     @model_validator(mode="after")

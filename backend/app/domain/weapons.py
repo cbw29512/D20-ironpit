@@ -6,6 +6,7 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName, HitControlEffect
+from app.domain.hit_modifiers import HitModifierEffect
 from app.domain.size import CreatureSize
 
 
@@ -84,6 +85,7 @@ class WeaponAttack(BaseModel):
     fixed_damage: int | None = Field(default=None, ge=0)
     conditional_damage: list[ConditionalDamage] = Field(default_factory=list)
     on_hit_damage: list[OnHitDamage] = Field(default_factory=list)
+    on_hit_modifier_effects: list[HitModifierEffect] = Field(default_factory=list)
     rage_eligible: bool = False
     sneak_attack_eligible: bool = False
     knocks_prone_max_size: CreatureSize | None = None

@@ -8,6 +8,7 @@ from app.domain.capability_effects import (
     GrappleEffectDefinition,
     ProneEffectDefinition,
 )
+from app.domain.hit_modifiers import HitModifierEffect
 from app.domain.models import ConditionalDamage, OnHitDamage, Weapon, WeaponAttack
 
 
@@ -56,6 +57,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
         versatile=definition.versatile,
     )
     on_hit: list[OnHitDamage] = []
+    on_hit_modifiers: list[HitModifierEffect] = []
     conditional: list[ConditionalDamage] = []
     prone_size = None
     control = None
@@ -80,6 +82,8 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
                 ))
         elif isinstance(effect, ProneEffectDefinition):
             prone_size = effect.max_target_size
+        elif isinstance(effect, HitModifierEffect):
+            on_hit_modifiers.append(effect)
         elif isinstance(effect, (GrappleEffectDefinition, ConditionEffectDefinition)):
             control = _compile_control(effect)
         else:
@@ -95,6 +99,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
         fixed_damage=definition.fixed_damage,
         conditional_damage=conditional,
         on_hit_damage=on_hit,
+        on_hit_modifier_effects=on_hit_modifiers,
         knocks_prone_max_size=prone_size,
         control_effect=control,
         forbid_target_grappled_by_self=definition.forbid_target_grappled_by_self,

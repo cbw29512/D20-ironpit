@@ -53,6 +53,7 @@ def test_anatomically_distinct_monsters_do_not_share_humanoid_fallbacks() -> Non
         "Swarm of Venomous Snakes": "swarm",
         "Triceratops": "reptile",
         "Tyrannosaurus Rex": "theropod",
+        "Worg": "quadruped",
     }
     for name, form in expected.items():
         assert MONSTER_FIGURE_PROFILES[name]["form"] == form
@@ -83,6 +84,7 @@ def test_new_batch_has_specific_reviewed_details() -> None:
         "Swarm of Venomous Snakes": "venomous-snakes",
         "Triceratops": "triceratops",
         "Violet Fungus": "violet-fungus",
+        "Worg": "canine",
     }
     for name, detail in expected.items():
         assert MONSTER_FIGURE_PROFILES[name]["detail"] == detail

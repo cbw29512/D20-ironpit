@@ -49,6 +49,7 @@ def _attack(attack: WeaponAttack) -> dict[str, object]:
         "dice": _dice(extra.dice_count, extra.dice_size, extra.damage_bonus),
         "damage_type": extra.damage_type, "trigger": extra.trigger, "mode": extra.mode,
     } for extra in attack.conditional_damage)
+    effects.extend(effect.model_dump(mode="json") for effect in attack.on_hit_modifier_effects)
     if attack.knocks_prone_max_size is not None:
         effects.append({"kind": "prone", "max_target_size": attack.knocks_prone_max_size})
     if attack.control_effect is not None:

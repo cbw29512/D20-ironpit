@@ -12,6 +12,7 @@ from app.combat.encounter_initiative import roll_encounter_initiative
 from app.combat.encounter_outcome import resolve_encounter_outcome
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.encounter_targeting import select_nearest_target
+from app.combat.hit_modifiers import expire_source_turn_start_modifiers
 from app.combat.modifier_stack import expire_source_turn_modifiers
 from app.combat.precombat_spells import prepare_defenses
 from app.combat.source_bound_effects import cleanup_disabled_source_effects
@@ -80,6 +81,7 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
 
                 member = by_id[combatant_id]
                 cleanup_disabled_source_effects(setup)
+                expire_source_turn_start_modifiers(affected_states, member.combatant_id)
                 refresh_start_of_turn(member.state)
                 end_concentration_if_expired(member.state, round_number, affected_states)
                 expiry_events, sequence = expire_start_of_turn_conditions(

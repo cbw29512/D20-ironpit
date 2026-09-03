@@ -8,6 +8,7 @@ from app.combat.grapple import (
     grapple_attack_disadvantage,
     speed_is_zero,
 )
+from app.combat.hit_modifiers import apply_hit_modifier_effects
 from app.combat.modifier_stack import effective_speed
 from app.combat.timed_conditions import apply_timed_condition
 from app.domain.models import CombatantState, WeaponAttack
@@ -67,9 +68,10 @@ def apply_hit_conditions(
     round_number: int | None = None,
     affected_states: list[CombatantState] | None = None,
 ) -> list[str]:
-    """Apply certified automatic conditions from a successful weapon hit."""
+    """Apply certified automatic conditions and modifiers from a successful weapon hit."""
     if defender.is_dead or not defender.is_alive:
         return []
+    apply_hit_modifier_effects(defender, source_id, attack)
     applied: list[str] = []
     maximum = attack.knocks_prone_max_size
     if (

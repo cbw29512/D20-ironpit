@@ -76,10 +76,23 @@ const nextAttack = (expires = 2) => ({
   assert.equal(target.state.active_modifiers.length, 0);
 }
 
+{
+  const target = member("target", "monsters", 5);
+  M.applyHitEffects(target.state, "worg", {
+    id: "srd-worg-bite", onHitModifiers: [{
+      kind: "attacks-against-advantage", consumeOnAttackAgainst: true, expiresAtStartOfSourceTurn: true,
+    }],
+  });
+  assert.equal(M.attacksAgainstAdvantage(target.state), 1);
+  assert.equal(M.expireSourceTurnStart([target.state], "other"), 0);
+  assert.equal(M.expireSourceTurnStart([target.state], "worg"), 1);
+  assert.equal(target.state.active_modifiers.length, 0);
+}
+
 assert.throws(() => M.validate({
   id: "bad", source_id: "caster", source_effect_id: "bad", kind: "speed",
   flat_bonus: 5, dice_count: 0, dice_size: 0, damage_type: null,
   consume_on_attack_against: true,
 }));
 
-console.log("Browser next-attack Advantage consumption and expiry regressions passed.");
+console.log("Browser next-attack Advantage consumption and source-turn expiry regressions passed.");
