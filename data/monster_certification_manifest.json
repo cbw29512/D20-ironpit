@@ -5545,8 +5545,7 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "deferred-environment:aquatic-only",
-        "missing-runtime-template"
+        "deferred-environment:aquatic-only"
       ]
     },
     {
