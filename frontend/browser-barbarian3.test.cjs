@@ -16,7 +16,7 @@ for (const file of [
   "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-grapple.js", "browser-timed-conditions.js", "browser-barbarian2.js", "browser-state.js",
   "browser-rage.js", "browser-barbarian3.js", "browser-rolls.js", "browser-zero-hp.js", "browser-attack.js",
-  "browser-multiattack.js",
+  "browser-formation.js", "browser-multiattack.js",
 ]) load(file);
 
 function queuedDice(values, fallback = 10) {
