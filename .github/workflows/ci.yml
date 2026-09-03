@@ -28,7 +28,9 @@ jobs:
       - name: Enforce production source limits
         run: python scripts/check_source_limits.py
       - name: Enforce combat capability coverage
-        run: python scripts/check_combat_engine_coverage.py
+        run: |
+          python scripts/check_combat_engine_coverage.py
+          python scripts/export_roster_mechanic_checklist.py --check
       - name: Enforce declarative monster source of truth
         run: |
           python scripts/export_runtime_monster_capabilities.py --check

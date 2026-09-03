@@ -9,6 +9,7 @@ from app.content.fighter_progression import (
     build_karnok_stoneward_level,
     unsupported_fighter_engine_features,
 )
+from app.content.canonical_class_combat_spines import canonical_combat_features
 
 
 def _modifier(score: int) -> int:
@@ -42,12 +43,17 @@ def test_fighter_table_encodes_logical_stat_progression_not_twenty_bespoke_build
 
 def test_fighter_features_accumulate_and_replacements_are_explicit() -> None:
     level_nine = fighter_combat_features(9)
-    assert {"action-surge", "extra-attack", "great-weapon-fighting", "indomitable", "tactical-master"} <= set(level_nine)
+    assert {"action-surge", "extra-attack", "indomitable", "tactical-master"} <= set(level_nine)
+    assert "great-weapon-fighting" not in level_nine
+    assert "great-weapon-fighting" in canonical_combat_features("fighter", 9, "champion")
     assert "tactical-master-sap" not in level_nine
     level_twenty = fighter_combat_features(20)
-    assert "improved-critical" not in level_twenty
-    assert {"superior-critical", "heroic-warrior", "studied-attacks", "survivor-defy-death",
-            "survivor-heroic-rally", "boon-combat-prowess"} <= set(level_twenty)
+    assert {"improved-critical", "superior-critical", "heroic-warrior",
+            "survivor-defy-death", "survivor-heroic-rally"}.isdisjoint(level_twenty)
+    assert {"studied-attacks", "boon-combat-prowess"} <= set(level_twenty)
+    champion_twenty = canonical_combat_features("fighter", 20, "champion")
+    assert {"superior-critical", "heroic-warrior", "survivor-defy-death",
+            "survivor-heroic-rally"} <= set(champion_twenty)
     assert fighter_arena_ignored(20) == ("tactical-master-push", "tactical-master-slow")
 
 

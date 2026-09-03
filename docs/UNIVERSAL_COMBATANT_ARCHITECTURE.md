@@ -249,6 +249,11 @@ Migration order:
 9. compile all levels from class + subclass + specialization data;
 10. keep reusing the shared mechanics inventory across heroes and monsters.
 
+The roster migration is complete: twelve class spines now branch into thirty-seven class-owned
+subclass specializations. `data/roster_combat_mechanics_v1.json` is the generated implementation
+checklist. It is derived from those class spines, sparse subclass rows, specialization choices,
+spell-package pointers, and loadout capabilities; CI rejects manual or stale checklist edits.
+
 ## Non-negotiable invariants
 
 - KISS: specialization is mostly data.

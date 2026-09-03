@@ -2317,7 +2317,7 @@
           },
           "runtime_template_id": "karnok-stoneward-l3",
           "source_references": [
-            "D&D Beyond Basic Rules 2024: Fighter 3 Champion, Orc, Soldier, Savage Attacker, Equipment"
+            "D&D Beyond Basic Rules 2024: Fighter 3 Fighter Subclass, Orc, Soldier, Savage Attacker, Equipment"
           ],
           "expected_combat_features": [
             "athletics-advantage",
@@ -2364,7 +2364,7 @@
           },
           "runtime_template_id": "karnok-stoneward-l4",
           "source_references": [
-            "D&D Beyond Basic Rules 2024: Fighter 4 Ability Score Improvement, Second Wind, Weapon Mastery, Champion, Orc, Soldier, Savage Attacker, Equipment"
+            "D&D Beyond Basic Rules 2024: Fighter 4 Ability Score Improvement, Second Wind, Weapon Mastery, Orc, Soldier, Savage Attacker, Equipment"
           ],
           "expected_combat_features": [
             "athletics-advantage",
@@ -2513,7 +2513,7 @@
           },
           "runtime_template_id": "karnok-stoneward-l7",
           "source_references": [
-            "D&D Beyond Basic Rules 2024: Fighter 7 Champion Additional Fighting Style, Great Weapon Fighting, Orc, Soldier, Savage Attacker, Equipment"
+            "D&D Beyond Basic Rules 2024: Fighter 7 Fighter Subclass, Orc, Soldier, Savage Attacker, Equipment"
           ],
           "expected_combat_features": [
             "athletics-advantage",
@@ -2566,7 +2566,7 @@
           },
           "runtime_template_id": "karnok-stoneward-l8",
           "source_references": [
-            "D&D Beyond Basic Rules 2024: Fighter 8 Ability Score Improvement, Champion, Great Weapon Fighting, Orc, Soldier, Savage Attacker, Equipment"
+            "D&D Beyond Basic Rules 2024: Fighter 8 Ability Score Improvement, Orc, Soldier, Savage Attacker, Equipment"
           ],
           "expected_combat_features": [
             "athletics-advantage",
@@ -2678,7 +2678,7 @@
           },
           "runtime_template_id": "karnok-stoneward-l10",
           "source_references": [
-            "D&D Beyond Basic Rules 2024: Fighter 10 Champion Heroic Warrior"
+            "D&D Beyond Basic Rules 2024: Fighter 10 Fighter Subclass"
           ],
           "expected_combat_features": [
             "athletics-advantage",

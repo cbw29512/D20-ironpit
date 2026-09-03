@@ -1,0 +1,4959 @@
+{
+  "mechanics": [
+    {
+      "demand_count": 1,
+      "id": "abjuration-savant",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "wizard/abjurer"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "abjure-foes",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "paladin/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "acrobatic-movement",
+      "kinds": [
+        "arena-ignored"
+      ],
+      "owners": [
+        "monk/base"
+      ],
+      "status": "arena_out_of_scope"
+    },
+    {
+      "demand_count": 1,
+      "id": "action-surge",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "fighter/base"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 2,
+      "id": "adrenaline-rush",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "barbarian/base",
+        "fighter/base"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 1,
+      "id": "ancients-combat-spells-1",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "paladin/oath-ancients"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "ancients-combat-spells-2",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "paladin/oath-ancients"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "ancients-combat-spells-3",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "paladin/oath-ancients"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "ancients-combat-spells-4",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "paladin/oath-ancients"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "ancients-combat-spells-5",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "paladin/oath-ancients"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "aquatic-affinity",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "druid/circle-sea"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "arcane-apotheosis",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "sorcerer/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "arcane-recovery",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "wizard/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "arcane-trickster-magical-ambush",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "rogue/arcane-trickster"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "arcane-trickster-spell-thief",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "rogue/arcane-trickster"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "arcane-trickster-spellcasting",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "rogue/arcane-trickster"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "arcane-trickster-versatile-trickster",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "rogue/arcane-trickster"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "arcane-ward",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "wizard/abjurer"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "archdruid",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "druid/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 2,
+      "id": "archery-style",
+      "kinds": [
+        "loadout-capability"
+      ],
+      "owners": [
+        "fighter/psi-warrior",
+        "ranger/gloom-stalker"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 1,
+      "id": "assassin-assassinate",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "rogue/assassin"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "assassin-death-strike",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "rogue/assassin"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "assassin-envenom-weapons",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "rogue/assassin"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "assassin-infiltration-expertise",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "rogue/assassin"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "assassin-tools",
+      "kinds": [
+        "arena-ignored"
+      ],
+      "owners": [
+        "rogue/assassin"
+      ],
+      "status": "arena_out_of_scope"
+    },
+    {
+      "demand_count": 1,
+      "id": "aura-expansion",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "paladin/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "aura-of-courage",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "paladin/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "aura-of-devotion",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "paladin/oath-devotion"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "aura-of-protection",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "paladin/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "aura-of-warding",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "paladin/oath-ancients"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "avatar-of-battle",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "cleric/war-domain"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "avenging-angel",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "paladin/oath-vengeance"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "awakened-mind",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "warlock/great-old-one-patron"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "bard-combat-spells-2",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "bard/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "bard-combat-spells-3",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "bard/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "bard-combat-spells-4",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "bard/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "bard-combat-spells-5",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "bard/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "bard-combat-spells-6",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "bard/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "bard-combat-spells-7",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "bard/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "bard-combat-spells-8",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "bard/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "bard-combat-spells-9",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "bard/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "bard-spellcasting",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "bard/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "bardic-inspiration",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "bard/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "bastion-of-law",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "sorcerer/clockwork-sorcery"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "battle-magic",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "bard/college-valor"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "battle-master-combat-superiority",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "fighter/battle-master"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "battle-master-improved-combat-superiority",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "fighter/battle-master"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "battle-master-know-your-enemy",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "fighter/battle-master"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "battle-master-relentless",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "fighter/battle-master"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "battle-master-student-of-war",
+      "kinds": [
+        "arena-ignored"
+      ],
+      "owners": [
+        "fighter/battle-master"
+      ],
+      "status": "arena_out_of_scope"
+    },
+    {
+      "demand_count": 1,
+      "id": "battle-master-ultimate-combat-superiority",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "fighter/battle-master"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "beast-spells",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "druid/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "beastmaster-bestial-fury",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "ranger/beastmaster"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "beastmaster-exceptional-training",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "ranger/beastmaster"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "beastmaster-primal-companion",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "ranger/beastmaster"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "beastmaster-share-spells",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "ranger/beastmaster"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "beguiling-magic",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "bard/college-glamour"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "blessed-healer",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "cleric/life-domain"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "blessed-strikes",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "cleric/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "body-and-mind",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "monk/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "boon-combat-prowess",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "fighter/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "boon-dimensional-travel",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "druid/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 2,
+      "id": "boon-irresistible-offense",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "barbarian/base",
+        "monk/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "boon-of-fate",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "cleric/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "boon-spell-recall",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "bard/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "brutal-strike",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "barbarian/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "brutal-strike-2d10",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "barbarian/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "celestial-combat-spells-2",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "warlock/celestial-patron"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "celestial-combat-spells-3",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "warlock/celestial-patron"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "celestial-combat-spells-4",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "warlock/celestial-patron"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "celestial-combat-spells-5",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "warlock/celestial-patron"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "celestial-resilience",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "warlock/celestial-patron"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "channel-divinity",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "paladin/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "circle-forms",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "druid/circle-moon"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "circle-moon-spells",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "druid/circle-moon"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "circle-sea-spells",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "druid/circle-sea"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "clairvoyant-combatant",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "warlock/great-old-one-patron"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "cleave-mastery",
+      "kinds": [
+        "loadout-capability"
+      ],
+      "owners": [
+        "barbarian/path-berserker"
+      ],
+      "status": "blocked"
+    },
+    {
+      "demand_count": 1,
+      "id": "cleric-combat-spells-3",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "cleric/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "cleric-combat-spells-4",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "cleric/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "cleric-combat-spells-5",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "cleric/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "cleric-combat-spells-6",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "cleric/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "cleric-combat-spells-7",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "cleric/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "cleric-combat-spells-8",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "cleric/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "cleric-combat-spells-9",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "cleric/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "cleric-spellcasting",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "cleric/base"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 1,
+      "id": "cloak-of-shadows",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "monk/warrior-shadow"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "clockwork-cavalcade",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "sorcerer/clockwork-sorcery"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "clockwork-spells",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "sorcerer/clockwork-sorcery"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "combat-inspiration",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "bard/college-valor"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "contact-patron",
+      "kinds": [
+        "arena-ignored"
+      ],
+      "owners": [
+        "warlock/base"
+      ],
+      "status": "arena_out_of_scope"
+    },
+    {
+      "demand_count": 1,
+      "id": "corona-of-light",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "cleric/light-domain"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "countercharm",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "bard/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "create-thrall",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "warlock/great-old-one-patron"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "cunning-action",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "rogue/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "cunning-strike",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "rogue/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "cutting-words",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "bard/college-lore"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "danger-sense",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "barbarian/base"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 1,
+      "id": "dark-ones-blessing",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "warlock/fiend-patron"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "dark-ones-own-luck",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "warlock/fiend-patron"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 4,
+      "id": "defense-style",
+      "kinds": [
+        "loadout-capability"
+      ],
+      "owners": [
+        "fighter/eldritch-knight",
+        "paladin/oath-ancients",
+        "paladin/oath-devotion",
+        "ranger/hunter"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 1,
+      "id": "deflect-attacks",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "monk/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "deflect-energy",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "monk/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "deft-explorer",
+      "kinds": [
+        "arena-ignored"
+      ],
+      "owners": [
+        "ranger/base"
+      ],
+      "status": "arena_out_of_scope"
+    },
+    {
+      "demand_count": 1,
+      "id": "devious-strikes",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "rogue/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "devotion-combat-spells-1",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "paladin/oath-devotion"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "devotion-combat-spells-2",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "paladin/oath-devotion"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "devotion-combat-spells-3",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "paladin/oath-devotion"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "devotion-combat-spells-4",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "paladin/oath-devotion"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "devotion-combat-spells-5",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "paladin/oath-devotion"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "disciple-of-life",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "cleric/life-domain"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 1,
+      "id": "disciplined-survivor",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "monk/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "divine-intervention",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "cleric/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "divine-order-protector",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "cleric/base"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 1,
+      "id": "divine-spark",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "cleric/base"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 1,
+      "id": "draconic-resilience",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "sorcerer/draconic-sorcery"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "draconic-spells",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "sorcerer/draconic-sorcery"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "dragon-companion",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "sorcerer/draconic-sorcery"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "dragon-wings",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "sorcerer/draconic-sorcery"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "druid-combat-spells-2",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "druid/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "druid-combat-spells-3",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "druid/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "druid-combat-spells-4",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "druid/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "druid-combat-spells-5",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "druid/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "druid-combat-spells-6",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "druid/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "druid-combat-spells-7",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "druid/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "druid-combat-spells-8",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "druid/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "druid-combat-spells-9",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "druid/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "druid-spellcasting",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "druid/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "druidic",
+      "kinds": [
+        "arena-ignored"
+      ],
+      "owners": [
+        "druid/base"
+      ],
+      "status": "arena_out_of_scope"
+    },
+    {
+      "demand_count": 1,
+      "id": "elder-champion",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "paladin/oath-ancients"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "eldritch-hex",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "warlock/great-old-one-patron"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "eldritch-invocations",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "warlock/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "eldritch-knight-arcane-charge",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "fighter/eldritch-knight"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "eldritch-knight-eldritch-strike",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "fighter/eldritch-knight"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "eldritch-knight-improved-war-magic",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "fighter/eldritch-knight"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "eldritch-knight-spellcasting",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "fighter/eldritch-knight"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "eldritch-knight-war-bond",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "fighter/eldritch-knight"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "eldritch-knight-war-magic",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "fighter/eldritch-knight"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "eldritch-master",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "warlock/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "elemental-affinity-fire",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "sorcerer/draconic-sorcery"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "elemental-attunement",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "monk/warrior-elements"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "elemental-burst",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "monk/warrior-elements"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "elemental-epitome",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "monk/warrior-elements"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "elemental-fury",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "druid/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "elusive",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "rogue/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "empowered-evocation",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "wizard/evoker"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "empowered-strikes",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "monk/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 2,
+      "id": "evasion",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "monk/base",
+        "rogue/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "evocation-savant",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "wizard/evoker"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 3,
+      "id": "expertise",
+      "kinds": [
+        "arena-ignored"
+      ],
+      "owners": [
+        "bard/base",
+        "ranger/base",
+        "rogue/base"
+      ],
+      "status": "arena_out_of_scope"
+    },
+    {
+      "demand_count": 1,
+      "id": "expertise-2",
+      "kinds": [
+        "arena-ignored"
+      ],
+      "owners": [
+        "bard/base"
+      ],
+      "status": "arena_out_of_scope"
+    },
+    {
+      "demand_count": 5,
+      "id": "extra-attack",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "barbarian/base",
+        "fighter/base",
+        "monk/base",
+        "paladin/base",
+        "ranger/base"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 1,
+      "id": "faithful-steed",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "paladin/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "fast-movement",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "barbarian/base"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 1,
+      "id": "feature-choice:beastmaster-beast-of-the-land",
+      "kinds": [
+        "feature-choice"
+      ],
+      "owners": [
+        "ranger/beastmaster"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "feature-choice:blessed-strikes-divine-strike-radiant",
+      "kinds": [
+        "feature-choice"
+      ],
+      "owners": [
+        "cleric/war-domain"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 2,
+      "id": "feature-choice:blessed-strikes-potent-spellcasting",
+      "kinds": [
+        "feature-choice"
+      ],
+      "owners": [
+        "cleric/life-domain",
+        "cleric/light-domain"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "feature-choice:circle-land-arid",
+      "kinds": [
+        "feature-choice"
+      ],
+      "owners": [
+        "druid/circle-land"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "feature-choice:draconic-ancestor-red",
+      "kinds": [
+        "feature-choice"
+      ],
+      "owners": [
+        "sorcerer/draconic-sorcery"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "feature-choice:elemental-affinity-fire",
+      "kinds": [
+        "feature-choice"
+      ],
+      "owners": [
+        "sorcerer/draconic-sorcery"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 2,
+      "id": "feature-choice:elemental-fury-potent-spellcasting",
+      "kinds": [
+        "feature-choice"
+      ],
+      "owners": [
+        "druid/circle-land",
+        "druid/circle-sea"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "feature-choice:elemental-fury-primal-strike-cold",
+      "kinds": [
+        "feature-choice"
+      ],
+      "owners": [
+        "druid/circle-moon"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "feature-choice:hunter-multiattack-defense",
+      "kinds": [
+        "feature-choice"
+      ],
+      "owners": [
+        "ranger/hunter"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "feature-choice:hunter-prey-colossus-slayer",
+      "kinds": [
+        "feature-choice"
+      ],
+      "owners": [
+        "ranger/hunter"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "feature-choice:moon-beast-form-package",
+      "kinds": [
+        "feature-choice"
+      ],
+      "owners": [
+        "druid/circle-moon"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "feature-choice:pact-of-the-blade",
+      "kinds": [
+        "feature-choice"
+      ],
+      "owners": [
+        "warlock/celestial-patron"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 2,
+      "id": "feature-choice:pact-of-the-tome",
+      "kinds": [
+        "feature-choice"
+      ],
+      "owners": [
+        "warlock/fiend-patron",
+        "warlock/great-old-one-patron"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "feature-choice:wild-heart-aspect-elephant-athletics",
+      "kinds": [
+        "feature-choice"
+      ],
+      "owners": [
+        "barbarian/path-wild-heart"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "feature-choice:wild-heart-power-lion",
+      "kinds": [
+        "feature-choice"
+      ],
+      "owners": [
+        "barbarian/path-wild-heart"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "feature-choice:wild-heart-rage-bear",
+      "kinds": [
+        "feature-choice"
+      ],
+      "owners": [
+        "barbarian/path-wild-heart"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "feature-choice:zealot-divine-fury-radiant",
+      "kinds": [
+        "feature-choice"
+      ],
+      "owners": [
+        "barbarian/path-zealot"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "feral-instinct",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "barbarian/base"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 1,
+      "id": "feral-senses",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "ranger/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "fiend-combat-spells-2",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "warlock/fiend-patron"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "fiend-combat-spells-3",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "warlock/fiend-patron"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "fiend-combat-spells-4",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "warlock/fiend-patron"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "fiend-combat-spells-5",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "warlock/fiend-patron"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "fiendish-resilience",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "warlock/fiend-patron"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 2,
+      "id": "fighting-style",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "paladin/base",
+        "ranger/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "fleet-step",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "monk/warrior-open-hand"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "foe-slayer",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "ranger/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "font-of-inspiration",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "bard/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "font-of-magic",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "sorcerer/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "frenzy",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "barbarian/path-berserker"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 1,
+      "id": "gloom-stalker-combat-spells-1",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "ranger/gloom-stalker"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "gloom-stalker-combat-spells-2",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "ranger/gloom-stalker"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "gloom-stalker-combat-spells-3",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "ranger/gloom-stalker"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "gloom-stalker-combat-spells-4",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "ranger/gloom-stalker"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "gloom-stalker-combat-spells-5",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "ranger/gloom-stalker"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "gloom-stalker-dread-ambusher",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "ranger/gloom-stalker"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "gloom-stalker-iron-mind",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "ranger/gloom-stalker"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "gloom-stalker-shadowy-dodge",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "ranger/gloom-stalker"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "gloom-stalker-stalkers-flurry",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "ranger/gloom-stalker"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "gloom-stalker-umbral-sight",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "ranger/gloom-stalker"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 2,
+      "id": "graze-mastery",
+      "kinds": [
+        "loadout-capability"
+      ],
+      "owners": [
+        "fighter/champion",
+        "paladin/oath-vengeance"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 1,
+      "id": "great-old-one-combat-spells-2",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "warlock/great-old-one-patron"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "great-old-one-combat-spells-3",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "warlock/great-old-one-patron"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "great-old-one-combat-spells-4",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "warlock/great-old-one-patron"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "great-old-one-combat-spells-5",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "warlock/great-old-one-patron"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 2,
+      "id": "great-weapon-fighting",
+      "kinds": [
+        "loadout-capability",
+        "subclass-feature"
+      ],
+      "owners": [
+        "fighter/champion",
+        "paladin/oath-vengeance"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 1,
+      "id": "greater-divine-intervention",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "cleric/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "guided-strike",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "cleric/war-domain"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "hamstring-blow",
+      "kinds": [
+        "arena-ignored"
+      ],
+      "owners": [
+        "barbarian/base"
+      ],
+      "status": "arena_out_of_scope"
+    },
+    {
+      "demand_count": 1,
+      "id": "healing-light",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "warlock/celestial-patron"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "heightened-focus",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "monk/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "heroic-warrior",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "fighter/champion"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 1,
+      "id": "holy-nimbus",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "paladin/oath-devotion"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "hunter-multiattack-defense",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "ranger/hunter"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "hunter-prey-colossus-slayer",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "ranger/hunter"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "hunters-lore",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "ranger/hunter"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "hunters-mark",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "ranger/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "hurl-through-hell",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "warlock/fiend-patron"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "illusion-savant",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "wizard/illusionist"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "illusory-reality",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "wizard/illusionist"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "illusory-self",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "wizard/illusionist"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "improved-blessed-strikes",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "cleric/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "improved-brutal-strike",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "barbarian/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "improved-circle-forms",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "druid/circle-moon"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "improved-critical",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "fighter/champion"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 1,
+      "id": "improved-cunning-strike",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "rogue/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "improved-elemental-fury",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "druid/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "improved-illusions",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "wizard/illusionist"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "improved-shadow-step",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "monk/warrior-shadow"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "improved-warding-flare",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "cleric/light-domain"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "indomitable",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "fighter/base"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 1,
+      "id": "indomitable-might",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "barbarian/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "innate-sorcery",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "sorcerer/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "instinctive-pounce",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "barbarian/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "intimidating-presence",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "barbarian/path-berserker"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "jack-of-all-trades",
+      "kinds": [
+        "arena-ignored"
+      ],
+      "owners": [
+        "bard/base"
+      ],
+      "status": "arena_out_of_scope"
+    },
+    {
+      "demand_count": 1,
+      "id": "land-arid-spells",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "druid/circle-land"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "lands-aid",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "druid/circle-land"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "lay-on-hands",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "paladin/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "lore-bonus-proficiencies",
+      "kinds": [
+        "arena-ignored"
+      ],
+      "owners": [
+        "bard/college-lore"
+      ],
+      "status": "arena_out_of_scope"
+    },
+    {
+      "demand_count": 1,
+      "id": "lunar-form",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "druid/circle-moon"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "mage-hand-legerdemain",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "rogue/arcane-trickster"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 2,
+      "id": "magic-initiate-cleric",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "bard/base",
+        "druid/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "magical-cunning",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "warlock/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "magical-discoveries",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "bard/college-lore"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "magical-secrets",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "bard/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "manipulate-elements",
+      "kinds": [
+        "arena-ignored"
+      ],
+      "owners": [
+        "monk/warrior-elements"
+      ],
+      "status": "arena_out_of_scope"
+    },
+    {
+      "demand_count": 1,
+      "id": "mantle-of-inspiration",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "bard/college-glamour"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "mantle-of-majesty",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "bard/college-glamour"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "martial-arts",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "monk/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "memorize-spell",
+      "kinds": [
+        "arena-ignored"
+      ],
+      "owners": [
+        "wizard/base"
+      ],
+      "status": "arena_out_of_scope"
+    },
+    {
+      "demand_count": 1,
+      "id": "mending",
+      "kinds": [
+        "arena-ignored"
+      ],
+      "owners": [
+        "cleric/base"
+      ],
+      "status": "arena_out_of_scope"
+    },
+    {
+      "demand_count": 1,
+      "id": "metamagic",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "sorcerer/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "metamagic-l10",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "sorcerer/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "metamagic-l17",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "sorcerer/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "mindless-rage",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "barbarian/path-berserker"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 1,
+      "id": "monks-focus",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "monk/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "moonlight-step",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "druid/circle-moon"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "mystic-arcanum-6",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "warlock/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "mystic-arcanum-7",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "warlock/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "mystic-arcanum-8",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "warlock/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "mystic-arcanum-9",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "warlock/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "natural-recovery",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "druid/circle-land"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "natures-sanctuary",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "druid/circle-land"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "natures-veil",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "ranger/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "natures-ward-fire",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "druid/circle-land"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "natures-wrath",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "paladin/oath-ancients"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 5,
+      "id": "nick-mastery",
+      "kinds": [
+        "loadout-capability"
+      ],
+      "owners": [
+        "barbarian/path-zealot",
+        "fighter/battle-master",
+        "fighter/psi-warrior",
+        "ranger/beastmaster",
+        "rogue/thief"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 1,
+      "id": "oceanic-gift",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "druid/circle-sea"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "open-hand-technique",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "monk/warrior-open-hand"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "overchannel",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "wizard/evoker"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "pact-magic",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "warlock/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "paladin-epic-boon",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "paladin/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "paladin-spellcasting",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "paladin/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "paladins-smite",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "paladin/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "peerless-skill",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "bard/college-lore"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "perfect-focus",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "monk/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "persistent-rage",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "barbarian/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "phantasmal-creatures",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "wizard/illusionist"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "potent-cantrip",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "wizard/evoker"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "precise-hunter",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "ranger/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "preserve-life",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "cleric/life-domain"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 1,
+      "id": "primal-champion",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "barbarian/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "primal-knowledge",
+      "kinds": [
+        "arena-ignored"
+      ],
+      "owners": [
+        "barbarian/base"
+      ],
+      "status": "arena_out_of_scope"
+    },
+    {
+      "demand_count": 1,
+      "id": "primal-order-warden",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "druid/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "projected-ward",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "wizard/abjurer"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "psi-warrior-bulwark-of-force",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "fighter/psi-warrior"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "psi-warrior-guarded-mind",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "fighter/psi-warrior"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "psi-warrior-psionic-power",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "fighter/psi-warrior"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "psi-warrior-telekinetic-adept",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "fighter/psi-warrior"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "psi-warrior-telekinetic-master",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "fighter/psi-warrior"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "psionic-sorcery",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "sorcerer/aberrant-sorcery"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "psionic-spells",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "sorcerer/aberrant-sorcery"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "psychic-defenses",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "sorcerer/aberrant-sorcery"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "quivering-palm",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "monk/warrior-open-hand"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "radiance-of-the-dawn",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "cleric/light-domain"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "radiant-soul",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "warlock/celestial-patron"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "radiant-strikes",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "paladin/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "rage",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "barbarian/base"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 1,
+      "id": "ranger-combat-spells-2",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "ranger/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "ranger-combat-spells-3",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "ranger/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "ranger-combat-spells-4",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "ranger/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "ranger-combat-spells-5",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "ranger/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "ranger-epic-boon",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "ranger/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "ranger-spellcasting",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "ranger/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "reckless-attack",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "barbarian/base"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 1,
+      "id": "relentless-avenger",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "paladin/oath-vengeance"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 2,
+      "id": "relentless-endurance",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "barbarian/base",
+        "fighter/base"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 1,
+      "id": "relentless-hunter",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "ranger/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "relentless-rage",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "barbarian/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "reliable-talent",
+      "kinds": [
+        "arena-ignored"
+      ],
+      "owners": [
+        "rogue/base"
+      ],
+      "status": "arena_out_of_scope"
+    },
+    {
+      "demand_count": 1,
+      "id": "remarkable-athlete",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "fighter/champion"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 1,
+      "id": "restore-balance",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "sorcerer/clockwork-sorcery"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "restoring-touch",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "paladin/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "retaliation",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "barbarian/path-berserker"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "revelation-in-flesh",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "sorcerer/aberrant-sorcery"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "ritual-adept",
+      "kinds": [
+        "arena-ignored"
+      ],
+      "owners": [
+        "wizard/base"
+      ],
+      "status": "arena_out_of_scope"
+    },
+    {
+      "demand_count": 1,
+      "id": "rogue-epic-boon",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "rogue/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "roving",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "ranger/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "sacred-weapon",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "paladin/oath-devotion"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 5,
+      "id": "sap-mastery",
+      "kinds": [
+        "loadout-capability"
+      ],
+      "owners": [
+        "barbarian/path-wild-heart",
+        "fighter/eldritch-knight",
+        "paladin/oath-ancients",
+        "paladin/oath-devotion",
+        "paladin/oath-vengeance"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 2,
+      "id": "savage-attacker",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "barbarian/base",
+        "fighter/base"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 1,
+      "id": "scholar",
+      "kinds": [
+        "arena-ignored"
+      ],
+      "owners": [
+        "wizard/base"
+      ],
+      "status": "arena_out_of_scope"
+    },
+    {
+      "demand_count": 1,
+      "id": "sculpt-spells",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "wizard/evoker"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "sear-undead",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "cleric/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "searing-vengeance",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "warlock/celestial-patron"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "second-wind",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "fighter/base"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 1,
+      "id": "self-restoration",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "monk/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "shadow-arts",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "monk/warrior-shadow"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "shadow-step",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "monk/warrior-shadow"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 11,
+      "id": "shield-ac",
+      "kinds": [
+        "loadout-capability"
+      ],
+      "owners": [
+        "barbarian/path-wild-heart",
+        "bard/college-valor",
+        "cleric/life-domain",
+        "cleric/war-domain",
+        "druid/circle-land",
+        "druid/circle-moon",
+        "druid/circle-sea",
+        "fighter/eldritch-knight",
+        "paladin/oath-ancients",
+        "paladin/oath-devotion",
+        "ranger/hunter"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 1,
+      "id": "signature-spells",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "wizard/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "slippery-mind",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "rogue/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "slow-fall",
+      "kinds": [
+        "arena-ignored"
+      ],
+      "owners": [
+        "monk/base"
+      ],
+      "status": "arena_out_of_scope"
+    },
+    {
+      "demand_count": 4,
+      "id": "slow-mastery",
+      "kinds": [
+        "arena-ignored"
+      ],
+      "owners": [
+        "fighter/battle-master",
+        "fighter/psi-warrior",
+        "ranger/gloom-stalker",
+        "ranger/hunter"
+      ],
+      "status": "arena_out_of_scope"
+    },
+    {
+      "demand_count": 1,
+      "id": "smite-of-protection",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "paladin/oath-devotion"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "sneak-attack",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "rogue/base"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 1,
+      "id": "sorcerer-epic-boon",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "sorcerer/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "sorcerer-spellcasting",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "sorcerer/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "sorcerous-restoration",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "sorcerer/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "sorcery-incarnate",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "sorcerer/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "soul-of-vengeance",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "paladin/oath-vengeance"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "speak-with-animals",
+      "kinds": [
+        "arena-ignored"
+      ],
+      "owners": [
+        "druid/base"
+      ],
+      "status": "arena_out_of_scope"
+    },
+    {
+      "demand_count": 1,
+      "id": "spell-breaker",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "wizard/abjurer"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "spell-mastery",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "wizard/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "spell-package:aberrant-sorcery",
+      "kinds": [
+        "spell-package"
+      ],
+      "owners": [
+        "sorcerer/aberrant-sorcery"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "spell-package:abjurer",
+      "kinds": [
+        "spell-package"
+      ],
+      "owners": [
+        "wizard/abjurer"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "spell-package:arcane-trickster",
+      "kinds": [
+        "spell-package"
+      ],
+      "owners": [
+        "rogue/arcane-trickster"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "spell-package:beastmaster",
+      "kinds": [
+        "spell-package"
+      ],
+      "owners": [
+        "ranger/beastmaster"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "spell-package:celestial-patron",
+      "kinds": [
+        "spell-package"
+      ],
+      "owners": [
+        "warlock/celestial-patron"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "spell-package:circle-land-arid",
+      "kinds": [
+        "spell-package"
+      ],
+      "owners": [
+        "druid/circle-land"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "spell-package:circle-moon",
+      "kinds": [
+        "spell-package"
+      ],
+      "owners": [
+        "druid/circle-moon"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "spell-package:circle-sea",
+      "kinds": [
+        "spell-package"
+      ],
+      "owners": [
+        "druid/circle-sea"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "spell-package:clockwork-sorcery",
+      "kinds": [
+        "spell-package"
+      ],
+      "owners": [
+        "sorcerer/clockwork-sorcery"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "spell-package:college-glamour",
+      "kinds": [
+        "spell-package"
+      ],
+      "owners": [
+        "bard/college-glamour"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "spell-package:college-lore",
+      "kinds": [
+        "spell-package"
+      ],
+      "owners": [
+        "bard/college-lore"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "spell-package:college-valor",
+      "kinds": [
+        "spell-package"
+      ],
+      "owners": [
+        "bard/college-valor"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "spell-package:draconic-sorcery",
+      "kinds": [
+        "spell-package"
+      ],
+      "owners": [
+        "sorcerer/draconic-sorcery"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "spell-package:eldritch-knight",
+      "kinds": [
+        "spell-package"
+      ],
+      "owners": [
+        "fighter/eldritch-knight"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "spell-package:evoker",
+      "kinds": [
+        "spell-package"
+      ],
+      "owners": [
+        "wizard/evoker"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "spell-package:fiend-patron",
+      "kinds": [
+        "spell-package"
+      ],
+      "owners": [
+        "warlock/fiend-patron"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "spell-package:gloom-stalker",
+      "kinds": [
+        "spell-package"
+      ],
+      "owners": [
+        "ranger/gloom-stalker"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "spell-package:great-old-one-patron",
+      "kinds": [
+        "spell-package"
+      ],
+      "owners": [
+        "warlock/great-old-one-patron"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "spell-package:hunter",
+      "kinds": [
+        "spell-package"
+      ],
+      "owners": [
+        "ranger/hunter"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "spell-package:illusionist",
+      "kinds": [
+        "spell-package"
+      ],
+      "owners": [
+        "wizard/illusionist"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "spell-package:life-domain",
+      "kinds": [
+        "spell-package"
+      ],
+      "owners": [
+        "cleric/life-domain"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "spell-package:light-domain",
+      "kinds": [
+        "spell-package"
+      ],
+      "owners": [
+        "cleric/light-domain"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "spell-package:oath-ancients",
+      "kinds": [
+        "spell-package"
+      ],
+      "owners": [
+        "paladin/oath-ancients"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "spell-package:oath-devotion",
+      "kinds": [
+        "spell-package"
+      ],
+      "owners": [
+        "paladin/oath-devotion"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "spell-package:oath-vengeance",
+      "kinds": [
+        "spell-package"
+      ],
+      "owners": [
+        "paladin/oath-vengeance"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "spell-package:war-domain",
+      "kinds": [
+        "spell-package"
+      ],
+      "owners": [
+        "cleric/war-domain"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "spell-resistance",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "wizard/abjurer"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "steady-aim",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "rogue/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "stormborn",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "druid/circle-sea"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "stride-of-the-elements",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "monk/warrior-elements"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "stroke-of-luck",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "rogue/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "studied-attacks",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "fighter/base"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 1,
+      "id": "stunning-strike",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "monk/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "superior-critical",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "fighter/champion"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "superior-defense",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "monk/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "superior-hunters-defense",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "ranger/hunter"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "superior-hunters-prey",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "ranger/hunter"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "superior-inspiration",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "bard/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "supreme-healing",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "cleric/life-domain"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "survivor-defy-death",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "fighter/champion"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "survivor-heroic-rally",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "fighter/champion"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "tactical-master",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "fighter/base"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 1,
+      "id": "tactical-master-push",
+      "kinds": [
+        "arena-ignored"
+      ],
+      "owners": [
+        "fighter/base"
+      ],
+      "status": "arena_out_of_scope"
+    },
+    {
+      "demand_count": 1,
+      "id": "tactical-master-slow",
+      "kinds": [
+        "arena-ignored"
+      ],
+      "owners": [
+        "fighter/base"
+      ],
+      "status": "arena_out_of_scope"
+    },
+    {
+      "demand_count": 1,
+      "id": "tactical-mind",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "fighter/base"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 1,
+      "id": "tactical-shift",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "fighter/base"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 1,
+      "id": "telepathic-speech",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "sorcerer/aberrant-sorcery"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "thief-fast-hands",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "rogue/thief"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "thief-second-story-work",
+      "kinds": [
+        "arena-ignored"
+      ],
+      "owners": [
+        "rogue/thief"
+      ],
+      "status": "arena_out_of_scope"
+    },
+    {
+      "demand_count": 1,
+      "id": "thief-supreme-sneak",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "rogue/thief"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "thief-use-magic-device",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "rogue/thief"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "thiefs-reflexes",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "rogue/thief"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "thieves-cant",
+      "kinds": [
+        "arena-ignored"
+      ],
+      "owners": [
+        "rogue/base"
+      ],
+      "status": "arena_out_of_scope"
+    },
+    {
+      "demand_count": 1,
+      "id": "tireless",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "ranger/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 4,
+      "id": "topple-mastery",
+      "kinds": [
+        "loadout-capability"
+      ],
+      "owners": [
+        "barbarian/path-berserker",
+        "barbarian/path-wild-heart",
+        "paladin/oath-ancients",
+        "paladin/oath-devotion"
+      ],
+      "status": "blocked"
+    },
+    {
+      "demand_count": 1,
+      "id": "trance-of-order",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "sorcerer/clockwork-sorcery"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "turn-undead",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "cleric/base"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 2,
+      "id": "two-weapon-fighting",
+      "kinds": [
+        "loadout-capability"
+      ],
+      "owners": [
+        "fighter/battle-master",
+        "ranger/beastmaster"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 1,
+      "id": "unarmored-defense",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "monk/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "unarmored-movement",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "monk/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "unbreakable-majesty",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "bard/college-glamour"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "uncanny-dodge",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "rogue/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "uncanny-metabolism",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "monk/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "undying-sentinel",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "paladin/oath-ancients"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "valor-extra-attack",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "bard/college-valor"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "valor-martial-training",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "bard/college-valor"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "vengeance-combat-spells-1",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "paladin/oath-vengeance"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "vengeance-combat-spells-2",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "paladin/oath-vengeance"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "vengeance-combat-spells-3",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "paladin/oath-vengeance"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "vengeance-combat-spells-4",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "paladin/oath-vengeance"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "vengeance-combat-spells-5",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "paladin/oath-vengeance"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 11,
+      "id": "vex-mastery",
+      "kinds": [
+        "loadout-capability"
+      ],
+      "owners": [
+        "barbarian/path-zealot",
+        "fighter/battle-master",
+        "fighter/champion",
+        "fighter/eldritch-knight",
+        "fighter/psi-warrior",
+        "ranger/beastmaster",
+        "ranger/gloom-stalker",
+        "ranger/hunter",
+        "rogue/arcane-trickster",
+        "rogue/assassin",
+        "rogue/thief"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 1,
+      "id": "vow-of-enmity",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "paladin/oath-vengeance"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "war-gods-blessing",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "cleric/war-domain"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "war-priest",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "cleric/war-domain"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "warding-flare",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "cleric/light-domain"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "warlock-epic-boon",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "warlock/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "warping-implosion",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "sorcerer/aberrant-sorcery"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 3,
+      "id": "weapon-mastery",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "paladin/base",
+        "ranger/base",
+        "rogue/base"
+      ],
+      "status": "supported"
+    },
+    {
+      "demand_count": 1,
+      "id": "wholeness-of-body",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "monk/warrior-open-hand"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "wild-companion",
+      "kinds": [
+        "arena-ignored"
+      ],
+      "owners": [
+        "druid/base"
+      ],
+      "status": "arena_out_of_scope"
+    },
+    {
+      "demand_count": 1,
+      "id": "wild-heart-animal-speaker",
+      "kinds": [
+        "arena-ignored"
+      ],
+      "owners": [
+        "barbarian/path-wild-heart"
+      ],
+      "status": "arena_out_of_scope"
+    },
+    {
+      "demand_count": 1,
+      "id": "wild-heart-aspect-of-the-wilds",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "barbarian/path-wild-heart"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "wild-heart-nature-speaker",
+      "kinds": [
+        "arena-ignored"
+      ],
+      "owners": [
+        "barbarian/path-wild-heart"
+      ],
+      "status": "arena_out_of_scope"
+    },
+    {
+      "demand_count": 1,
+      "id": "wild-heart-power-of-the-wilds",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "barbarian/path-wild-heart"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "wild-heart-rage-of-the-wilds",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "barbarian/path-wild-heart"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "wild-resurgence",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "druid/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "wild-shape",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "druid/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "wizard-combat-spells-2",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "wizard/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "wizard-combat-spells-3",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "wizard/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "wizard-combat-spells-4",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "wizard/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "wizard-combat-spells-5",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "wizard/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "wizard-combat-spells-6",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "wizard/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "wizard-combat-spells-7",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "wizard/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "wizard-combat-spells-8",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "wizard/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "wizard-combat-spells-9",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "wizard/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "wizard-epic-boon",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "wizard/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "wizard-spellcasting",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "wizard/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "words-of-creation",
+      "kinds": [
+        "base-feature"
+      ],
+      "owners": [
+        "bard/base"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "wrath-of-the-sea",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "druid/circle-sea"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "zealot-divine-fury",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "barbarian/path-zealot"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "zealot-fanatical-focus",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "barbarian/path-zealot"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "zealot-rage-of-the-gods",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "barbarian/path-zealot"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "zealot-warrior-of-the-gods",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "barbarian/path-zealot"
+      ],
+      "status": "planned"
+    },
+    {
+      "demand_count": 1,
+      "id": "zealot-zealous-presence",
+      "kinds": [
+        "subclass-feature"
+      ],
+      "owners": [
+        "barbarian/path-zealot"
+      ],
+      "status": "planned"
+    }
+  ],
+  "roster": {
+    "classes": 12,
+    "subclasses": 37
+  },
+  "schema_version": 1,
+  "summary": {
+    "arena_out_of_scope": 28,
+    "blocked": 2,
+    "planned": 376,
+    "supported": 38
+  }
+}
