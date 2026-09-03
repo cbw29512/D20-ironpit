@@ -129,6 +129,20 @@ def test_rogue_subclasses_compose_real_planned_loadouts_from_one_spine() -> None
         assert "sneak-attack" in recipe.combat_features
 
 
+def test_wizard_subclasses_compose_real_planned_spell_packages_from_one_spine() -> None:
+    expected = {
+        ("evoker", "fire-damage"): "evoker",
+        ("illusionist", "frost-control"): "illusionist",
+        ("abjurer", "mixed-arcane"): "abjurer",
+    }
+    for (subclass_id, build_id), spell_package_id in expected.items():
+        recipe = compose_character_combat_recipe("wizard", subclass_id, build_id, 14)
+        assert recipe.shared_progression_id == "wizard-1-20"
+        assert recipe.build_status == "planned"
+        assert recipe.build_choices.spell_package_id == spell_package_id
+        assert "wizard-spellcasting" in recipe.combat_features
+
+
 def test_subclass_specific_build_fails_closed_on_the_wrong_subclass() -> None:
     with pytest.raises(ValueError, match="requires subclass circle-moon"):
         compose_character_combat_recipe("druid", "circle-land", "moon-melee", 3)

@@ -22,7 +22,7 @@ _MASTERY_CAPABILITY = {
 }
 _MASTERY_LIMIT = {
     "fighter": 3, "barbarian": 2, "monk": 0,
-    "paladin": 2, "ranger": 2, "rogue": 2,
+    "paladin": 2, "ranger": 2, "rogue": 2, "wizard": 0,
 }
 
 
@@ -39,6 +39,8 @@ class CombatBuildChoiceOverlay:
     weapon_masteries: tuple[str, ...] = ()
     required_capabilities: tuple[str, ...] = ()
     arena_ignored: tuple[str, ...] = ()
+    spell_package_id: str | None = None
+    focus_item: str | None = None
     notes: str = ""
 
     def __post_init__(self) -> None:
@@ -80,6 +82,7 @@ def _build_overlay(class_id: str, build_id: str) -> CombatBuildChoiceOverlay:
         secondary_weapons=spec.secondary_weapons, weapon_masteries=masteries,
         required_capabilities=tuple(required), arena_ignored=tuple(ignored),
         notes=f"Compatibility view derived from {spec.subclass_name} specialization data.",
+        spell_package_id=spec.spell_package_id, focus_item=spec.focus_item,
     )
 
 
@@ -117,6 +120,11 @@ ROGUE_COMBAT_BUILD_CHOICES = {
     build_id: overlay
     for (class_id, build_id), overlay in COMBAT_BUILD_CHOICE_OVERLAYS.items()
     if class_id == "rogue"
+}
+WIZARD_COMBAT_BUILD_CHOICES = {
+    build_id: overlay
+    for (class_id, build_id), overlay in COMBAT_BUILD_CHOICE_OVERLAYS.items()
+    if class_id == "wizard"
 }
 
 

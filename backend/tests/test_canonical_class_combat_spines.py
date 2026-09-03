@@ -84,3 +84,13 @@ def test_full_caster_and_pact_magic_resource_landmarks() -> None:
     assert (WARLOCK_COMBAT_LEVELS[17].pact_slots, WARLOCK_COMBAT_LEVELS[17].pact_slot_level) == (4, 5)
     assert WIZARD_COMBAT_LEVELS[20].prepared_spells == 25
     assert WIZARD_COMBAT_LEVELS[20].spell_slots == (4, 3, 3, 3, 3, 2, 2, 1, 1)
+
+
+def test_wizard_base_spine_excludes_evoker_features() -> None:
+    subclass_features = {
+        "potent-cantrip", "evocation-savant", "sculpt-spells", "empowered-evocation", "overchannel",
+    }
+    assert all(
+        subclass_features.isdisjoint(row.features_added)
+        for row in WIZARD_COMBAT_LEVELS.values()
+    )

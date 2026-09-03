@@ -7,6 +7,7 @@ from app.content.subclass_specializations import (
     PALADIN_SPECIALIZATIONS,
     RANGER_SPECIALIZATIONS,
     ROGUE_SPECIALIZATIONS,
+    WIZARD_SPECIALIZATIONS,
     SubclassSpecialization,
     specializations_for_class,
     subclass_specialization,
@@ -141,6 +142,20 @@ def test_rogue_has_one_dexterity_specialization_per_target_subclass() -> None:
         "finesse-duelist", "rapier", "arcane-trickster",
     )
     assert all(item.ability_priority[0] == "dexterity" for item in ROGUE_SPECIALIZATIONS)
+
+
+def test_wizard_has_one_intelligence_spell_specialization_per_target_subclass() -> None:
+    assert tuple(item.subclass_id for item in specializations_for_class("wizard")) == (
+        "evoker", "illusionist", "abjurer",
+    )
+    assert tuple(item.role for item in WIZARD_SPECIALIZATIONS) == (
+        "fire-blaster", "control", "balanced-arcane",
+    )
+    assert all(item.ability_priority == ("intelligence", "wisdom", "charisma") for item in WIZARD_SPECIALIZATIONS)
+    assert all(item.primary_weapon is None for item in WIZARD_SPECIALIZATIONS)
+    assert tuple(item.spell_package_id for item in WIZARD_SPECIALIZATIONS) == (
+        "evoker", "illusionist", "abjurer",
+    )
 
 
 def test_specialization_without_source_truth_fails_closed() -> None:

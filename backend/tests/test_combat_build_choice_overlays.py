@@ -6,6 +6,7 @@ from app.content.combat_build_choice_overlays import (
     PALADIN_COMBAT_BUILD_CHOICES,
     RANGER_COMBAT_BUILD_CHOICES,
     ROGUE_COMBAT_BUILD_CHOICES,
+    WIZARD_COMBAT_BUILD_CHOICES,
     get_combat_build_choice_overlay,
 )
 from app.content.combat_build_variants import get_combat_build_variant
@@ -71,7 +72,7 @@ def test_barbarian_subclass_specializations_generate_real_choice_overlays() -> N
 
 
 def test_all_current_choice_overlays_come_from_subclass_specializations() -> None:
-    assert len(COMBAT_BUILD_CHOICE_OVERLAYS) == 19
+    assert len(COMBAT_BUILD_CHOICE_OVERLAYS) == 22
     assert all("derived from" in overlay.notes for overlay in COMBAT_BUILD_CHOICE_OVERLAYS.values())
 
 
@@ -139,3 +140,15 @@ def test_rogue_subclasses_generate_distinct_loadouts_from_shared_rules() -> None
     assert (assassin.primary_weapon, assassin.weapon_masteries) == (
         "shortbow", ("shortbow", "shortsword"),
     )
+
+
+def test_wizard_subclasses_generate_spell_package_compatibility_views() -> None:
+    assert set(WIZARD_COMBAT_BUILD_CHOICES) == {"fire-damage", "frost-control", "mixed-arcane"}
+    evoker = get_combat_build_choice_overlay("wizard", "fire-damage")
+    illusionist = get_combat_build_choice_overlay("wizard", "frost-control")
+    abjurer = get_combat_build_choice_overlay("wizard", "mixed-arcane")
+    assert (evoker.primary_ability, evoker.spell_package_id) == ("intelligence", "evoker")
+    assert illusionist.spell_package_id == "illusionist"
+    assert abjurer.spell_package_id == "abjurer"
+    assert all(item.focus_item == "arcane-focus" for item in WIZARD_COMBAT_BUILD_CHOICES.values())
+    assert all(item.primary_weapon is None for item in WIZARD_COMBAT_BUILD_CHOICES.values())

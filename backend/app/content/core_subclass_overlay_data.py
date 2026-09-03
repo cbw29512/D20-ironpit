@@ -31,9 +31,4 @@ CORE_SUBCLASS_DELTA_DATA: dict[str, tuple[str, dict[int, dict[str, tuple[str, ..
         7: {"features_added": ("fiend-combat-spells-4",)}, 9: {"features_added": ("fiend-combat-spells-5",)},
         10: {"features_added": ("fiendish-resilience",)}, 14: {"features_added": ("hurl-through-hell",)},
     }),
-    "evoker": ("wizard", {
-        3: {"features_added": ("potent-cantrip", "evocation-savant")},
-        6: {"features_added": ("sculpt-spells",)}, 10: {"features_added": ("empowered-evocation",)},
-        14: {"features_added": ("overchannel",)},
-    }),
 }
