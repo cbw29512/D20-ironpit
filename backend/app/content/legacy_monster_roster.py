@@ -51,8 +51,8 @@ def build_legacy_monster_templates() -> list[CombatantTemplate]:
         *build_venom_monsters(), *build_expansion_four(), build_giant_crocodile(), build_giant_constrictor_snake(),
         build_tyrannosaurus_rex(), *build_zero_engine_monsters(), *build_swarm_candidates(), *build_parry_monsters(),
     ]
-    monsters = filter_standard_arena_eligible(monsters)
     monsters = complete_monster_movement_modes(monsters)
+    monsters = filter_standard_arena_eligible(monsters)
     monsters = complete_monster_trait_fingerprints(monsters)
     monsters = complete_monster_reaction_fingerprints(monsters)
     monsters = complete_monster_bonus_action_fingerprints(monsters)

@@ -12,7 +12,10 @@ def deferred_environment_reason(name: str) -> str | None:
 
 
 def standard_arena_eligible(template: CombatantTemplate) -> bool:
-    return template.kind != "monster" or deferred_environment_reason(template.name) is None
+    if template.kind != "monster":
+        return True
+    movement = template.movement_modes
+    return movement.walk_ft > 0 or movement.fly_ft > 0
 
 
 def filter_standard_arena_eligible(templates: list[CombatantTemplate]) -> list[CombatantTemplate]:
