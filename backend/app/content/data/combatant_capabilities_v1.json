@@ -7461,7 +7461,7 @@
           {
             "kind": "condition",
             "condition": "poisoned",
-            "expires_at_start_of_source_turn": false,
+            "expires_at_start_of_source_turn": true,
             "expiry_timing": "source_turn_start",
             "allowed_removal_action_ids": []
           }
@@ -7715,7 +7715,7 @@
           {
             "kind": "condition",
             "condition": "poisoned",
-            "expires_at_start_of_source_turn": false,
+            "expires_at_start_of_source_turn": true,
             "expiry_timing": "source_turn_start",
             "allowed_removal_action_ids": []
           }
