@@ -100,6 +100,21 @@ def test_paladin_oaths_compose_real_planned_loadouts_from_one_spine() -> None:
         assert "aura-of-protection" in recipe.combat_features
 
 
+def test_ranger_subclasses_compose_real_planned_loadouts_from_one_spine() -> None:
+    expected = {
+        ("hunter", "sword-shield"): ("shortsword", True),
+        ("gloom-stalker", "archer"): ("longbow", False),
+        ("beastmaster", "dual-wield"): ("shortsword", False),
+    }
+    for (subclass_id, build_id), (weapon_id, shield) in expected.items():
+        recipe = compose_character_combat_recipe("ranger", subclass_id, build_id, 15)
+        assert recipe.shared_progression_id == "ranger-1-20"
+        assert recipe.build_status == "planned"
+        assert recipe.build_choices.primary_weapon == weapon_id
+        assert recipe.build_choices.shield is shield
+        assert "extra-attack" in recipe.combat_features
+
+
 def test_rogue_base_and_thief_overlay_are_independent_of_legacy_role_record() -> None:
     duelist = compose_character_combat_recipe("rogue", "thief", "duelist", 3)
     ranged = compose_character_combat_recipe("rogue", "thief", "ranged", 3)

@@ -10,6 +10,7 @@ from app.content.hero_progressions import HERO_BY_CLASS
 from app.content.hero_variant_policy import TARGET_SUBCLASSES
 from app.content.monk_subclass_overlay_data import MONK_SUBCLASS_DELTA_DATA
 from app.content.paladin_subclass_overlay_data import PALADIN_SUBCLASS_DELTA_DATA
+from app.content.ranger_subclass_overlay_data import RANGER_SUBCLASS_DELTA_DATA
 from app.content.subclass_combat_overlays import SUBCLASS_COMBAT_OVERLAYS, subclass_combat_features
 
 
@@ -32,6 +33,7 @@ def test_subclass_registry_is_derived_from_authoritative_overlay_data() -> None:
         | set(FIGHTER_SUBCLASS_DELTA_DATA)
         | set(MONK_SUBCLASS_DELTA_DATA)
         | set(PALADIN_SUBCLASS_DELTA_DATA)
+        | set(RANGER_SUBCLASS_DELTA_DATA)
     )
     assert set(SUBCLASS_COMBAT_OVERLAYS) == expected
 
@@ -79,6 +81,16 @@ def test_paladin_base_spine_contains_no_devotion_subclass_features() -> None:
     }
     assert subclass_features
     assert subclass_features.isdisjoint(canonical_base_class_features("paladin", 20))
+
+
+def test_ranger_base_spine_contains_no_hunter_subclass_features() -> None:
+    subclass_features = {
+        feature
+        for level in range(1, 21)
+        for feature in subclass_combat_features("hunter", level)
+    }
+    assert subclass_features
+    assert subclass_features.isdisjoint(canonical_base_class_features("ranger", 20))
 
 
 def test_fighter_base_never_gets_champion_features_without_champion_overlay() -> None:

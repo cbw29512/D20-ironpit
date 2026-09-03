@@ -49,13 +49,19 @@ def test_paladin_base_numeric_progression_landmarks_exclude_subclass_features() 
     )
 
 
-def test_ranger_hunter_numeric_progression_landmarks() -> None:
+def test_ranger_base_numeric_progression_landmarks_exclude_subclass_features() -> None:
     assert RANGER_COMBAT_LEVELS[1].favored_enemy_uses == 2
     assert RANGER_COMBAT_LEVELS[5].favored_enemy_uses == 3
     assert RANGER_COMBAT_LEVELS[17].favored_enemy_uses == 6
     assert RANGER_COMBAT_LEVELS[20].spell_slots == (4, 3, 3, 3, 2)
-    assert "hunter-prey-colossus-slayer" in RANGER_COMBAT_LEVELS[3].features_added
-    assert "hunter-multiattack-defense" in RANGER_COMBAT_LEVELS[7].features_added
+    subclass_features = {
+        "hunters-lore", "hunter-prey-colossus-slayer", "hunter-multiattack-defense",
+        "superior-hunters-prey", "superior-hunters-defense",
+    }
+    assert all(
+        subclass_features.isdisjoint(row.features_added)
+        for row in RANGER_COMBAT_LEVELS.values()
+    )
 
 
 def test_rogue_thief_sneak_attack_progression_landmarks() -> None:

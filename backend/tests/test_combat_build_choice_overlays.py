@@ -4,6 +4,7 @@ from app.content.combat_build_choice_overlays import (
     FIGHTER_COMBAT_BUILD_CHOICES,
     MONK_COMBAT_BUILD_CHOICES,
     PALADIN_COMBAT_BUILD_CHOICES,
+    RANGER_COMBAT_BUILD_CHOICES,
     get_combat_build_choice_overlay,
 )
 from app.content.combat_build_variants import get_combat_build_variant
@@ -69,7 +70,7 @@ def test_barbarian_subclass_specializations_generate_real_choice_overlays() -> N
 
 
 def test_all_current_choice_overlays_come_from_subclass_specializations() -> None:
-    assert len(COMBAT_BUILD_CHOICE_OVERLAYS) == 13
+    assert len(COMBAT_BUILD_CHOICE_OVERLAYS) == 16
     assert all("derived from" in overlay.notes for overlay in COMBAT_BUILD_CHOICE_OVERLAYS.values())
 
 
@@ -107,3 +108,18 @@ def test_paladin_oaths_generate_distinct_loadouts_from_shared_rules() -> None:
     assert "sap-mastery" in devotion.required_capabilities
     assert "graze-mastery" in vengeance.required_capabilities
     assert "topple-mastery" in ancients.required_capabilities
+
+
+def test_ranger_subclasses_generate_distinct_loadouts_from_shared_rules() -> None:
+    assert set(RANGER_COMBAT_BUILD_CHOICES) == {"archer", "dual-wield", "sword-shield"}
+    gloom = get_combat_build_choice_overlay("ranger", "archer")
+    beast = get_combat_build_choice_overlay("ranger", "dual-wield")
+    hunter = get_combat_build_choice_overlay("ranger", "sword-shield")
+    assert (gloom.primary_weapon, gloom.fighting_style) == ("longbow", "Archery")
+    assert "slow-mastery" in gloom.arena_ignored
+    assert (hunter.primary_weapon, hunter.shield, hunter.fighting_style) == (
+        "shortsword", True, "Defense",
+    )
+    assert beast.secondary_weapons[:2] == ("scimitar", "longbow")
+    assert beast.weapon_masteries == ("shortsword", "scimitar")
+    assert {"vex-mastery", "nick-mastery"} <= set(beast.required_capabilities)

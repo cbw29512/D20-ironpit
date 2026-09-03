@@ -21,11 +21,6 @@ CORE_SUBCLASS_DELTA_DATA: dict[str, tuple[str, dict[int, dict[str, tuple[str, ..
         15: {"features_added": ("superior-critical",), "features_removed": ("improved-critical",)},
         18: {"features_added": ("survivor-defy-death", "survivor-heroic-rally")},
     }),
-    "hunter": ("ranger", {
-        3: {"features_added": ("hunters-lore", "hunter-prey-colossus-slayer")},
-        7: {"features_added": ("hunter-multiattack-defense",)},
-        11: {"features_added": ("superior-hunters-prey",)}, 15: {"features_added": ("superior-hunters-defense",)},
-    }),
     "thief": ("rogue", {
         3: {"features_added": ("thief-fast-hands",), "arena_ignored": ("thief-second-story-work",)},
         9: {"features_added": ("thief-supreme-sneak",)}, 13: {"features_added": ("thief-use-magic-device",)},

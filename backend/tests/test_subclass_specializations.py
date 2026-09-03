@@ -5,6 +5,7 @@ from app.content.subclass_specializations import (
     FIGHTER_SPECIALIZATIONS,
     MONK_SPECIALIZATIONS,
     PALADIN_SPECIALIZATIONS,
+    RANGER_SPECIALIZATIONS,
     SubclassSpecialization,
     specializations_for_class,
     subclass_specialization,
@@ -22,7 +23,12 @@ def test_fighter_has_one_coherent_specialization_per_subclass() -> None:
 
 
 def test_weapon_specializations_are_only_catalog_data_and_mastery_choices() -> None:
-    for spec in (*FIGHTER_SPECIALIZATIONS, *BARBARIAN_SPECIALIZATIONS, *PALADIN_SPECIALIZATIONS):
+    for spec in (
+        *FIGHTER_SPECIALIZATIONS,
+        *BARBARIAN_SPECIALIZATIONS,
+        *PALADIN_SPECIALIZATIONS,
+        *RANGER_SPECIALIZATIONS,
+    ):
         assert spec.primary_weapon is not None
         assert spec.source_reference
         weapon = build_weapon(spec.primary_weapon)
@@ -100,6 +106,24 @@ def test_paladin_has_one_strength_charisma_specialization_per_target_oath() -> N
     assert tuple(item.spell_package_id for item in PALADIN_SPECIALIZATIONS) == (
         "oath-devotion", "oath-vengeance", "oath-ancients",
     )
+
+
+def test_ranger_has_one_dexterity_wisdom_specialization_per_target_subclass() -> None:
+    assert tuple(item.subclass_id for item in specializations_for_class("ranger")) == (
+        "hunter", "gloom-stalker", "beastmaster",
+    )
+    hunter, gloom, beast = RANGER_SPECIALIZATIONS
+    assert (hunter.role, hunter.primary_weapon, hunter.shield) == (
+        "durable-melee", "shortsword", True,
+    )
+    assert (gloom.role, gloom.primary_weapon, gloom.shield) == (
+        "ranged", "longbow", False,
+    )
+    assert (beast.role, beast.primary_weapon, beast.secondary_weapons[:2]) == (
+        "dual-wield", "shortsword", ("scimitar", "longbow"),
+    )
+    assert all(item.ability_priority[:2] == ("dexterity", "wisdom") for item in RANGER_SPECIALIZATIONS)
+    assert beast.feature_choice_ids == ("beastmaster-beast-of-the-land",)
 
 
 def test_specialization_without_source_truth_fails_closed() -> None:

@@ -31,6 +31,13 @@ def test_paladin_branches_once_into_three_oath_specializations() -> None:
     assert family.migration_complete is True
 
 
+def test_ranger_branches_once_into_three_subclass_specializations() -> None:
+    family = hero_subclass_family("ranger")
+    assert family.target_subclass_ids == ("hunter", "gloom-stalker", "beastmaster")
+    assert family.audited_subclass_ids == family.target_subclass_ids
+    assert family.migration_complete is True
+
+
 def test_remaining_classes_have_three_named_subclass_targets_without_fake_completion() -> None:
     families = all_hero_subclass_families()
     assert len(families) == 12
@@ -39,7 +46,7 @@ def test_remaining_classes_have_three_named_subclass_targets_without_fake_comple
         assert family.branch_level == 3
         assert family.target_subclass_ids
         assert family.audited_subclass_ids
-        if family.class_id not in {"fighter", "barbarian", "monk", "paladin"}:
+        if family.class_id not in {"fighter", "barbarian", "monk", "paladin", "ranger"}:
             assert len(family.target_subclass_ids) == 3
             assert family.migration_complete is False
 
