@@ -2953,7 +2953,7 @@
       {
         "id": "minotaur-skeleton-gore",
         "name": "Gore",
-        "weapon_id": "minotaur-skeleton-gore-weapon",
+        "weapon_id": "minotaur-skeleton-gore",
         "attack_kind": "melee",
         "attack_bonus": 6,
         "damage": {
@@ -2976,7 +2976,7 @@
       {
         "id": "minotaur-skeleton-slam",
         "name": "Slam",
-        "weapon_id": "minotaur-skeleton-slam-weapon",
+        "weapon_id": "minotaur-skeleton-slam",
         "attack_kind": "melee",
         "attack_bonus": 6,
         "damage": {
@@ -3081,7 +3081,7 @@
       {
         "id": "triceratops-gore",
         "name": "Gore",
-        "weapon_id": "triceratops-gore-weapon",
+        "weapon_id": "triceratops-gore",
         "attack_kind": "melee",
         "attack_bonus": 9,
         "damage": {
@@ -3198,7 +3198,7 @@
       {
         "id": "warhorse-skeleton-hooves",
         "name": "Hooves",
-        "weapon_id": "warhorse-skeleton-hooves-weapon",
+        "weapon_id": "warhorse-skeleton-hooves",
         "attack_kind": "melee",
         "attack_bonus": 6,
         "damage": {
@@ -3303,7 +3303,7 @@
       {
         "id": "allosaurus-bite",
         "name": "Bite",
-        "weapon_id": "allosaurus-bite-weapon",
+        "weapon_id": "allosaurus-bite",
         "attack_kind": "melee",
         "attack_bonus": 6,
         "damage": {
@@ -3326,7 +3326,7 @@
       {
         "id": "allosaurus-claws",
         "name": "Claws",
-        "weapon_id": "allosaurus-claws-weapon",
+        "weapon_id": "allosaurus-claws",
         "attack_kind": "melee",
         "attack_bonus": 6,
         "damage": {
