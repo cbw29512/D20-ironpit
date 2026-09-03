@@ -7,6 +7,7 @@
     animation: "bite", controlEffect: {
       conditionId: "poisoned",
       expiresAtStartOfSourceTurn: true,
+      expiryTiming: "source_turn_start",
     },
   };
   const centipede = {
