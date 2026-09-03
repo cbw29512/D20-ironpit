@@ -6,6 +6,7 @@ import json
 import logging
 from pathlib import Path
 
+from app.content.arena_eligibility import deferred_environment_reason
 from app.content.monster_neighbor_bleed_corrections import apply_neighbor_bleed_corrections
 from app.content.monster_neighbor_bleed_normalizer import normalize_neighbor_name_bleed
 from app.content.monster_section_heading_corrections import apply_section_heading_corrections
@@ -33,10 +34,10 @@ _READY_BY_NAME = {
     "Giant Eagle": "srd-giant-eagle", "Giant Elk": "srd-giant-elk",
     "Giant Fire Beetle": "srd-giant-fire-beetle", "Giant Goat": "srd-giant-goat",
     "Giant Lizard": "srd-giant-lizard", "Giant Owl": "srd-giant-owl", "Giant Rat": "srd-giant-rat",
-    "Giant Venomous Snake": "srd-giant-venomous-snake", "Giant Vulture": "srd-giant-vulture",
-    "Giant Wasp": "srd-giant-wasp", "Giant Weasel": "srd-giant-weasel",
-    "Giant Wolf Spider": "srd-giant-wolf-spider", "Goblin Boss": "srd-goblin-boss",
-    "Goblin Minion": "srd-goblin-minion", "Goblin Warrior": "srd-goblin-warrior", "Guard": "srd-guard", "Hawk": "srd-hawk",
+    "Giant Scorpion": "srd-giant-scorpion", "Giant Venomous Snake": "srd-giant-venomous-snake", "Giant Vulture": "srd-giant-vulture",
+    "Giant Wasp": "srd-giant-wasp", "Giant Weasel": "srd-giant-weasel", "Giant Wolf Spider": "srd-giant-wolf-spider",
+    "Goblin Boss": "srd-goblin-boss", "Goblin Minion": "srd-goblin-minion", "Goblin Warrior": "srd-goblin-warrior", "Grick": "srd-grick",
+    "Griffon": "srd-griffon", "Grimlock": "srd-grimlock", "Guard": "srd-guard", "Hawk": "srd-hawk",
     "Hippogriff": "srd-hippogriff", "Hobgoblin Warrior": "srd-hobgoblin-warrior", "Hyena": "srd-hyena",
     "Jackal": "srd-jackal", "Knight": "srd-knight", "Kobold Warrior": "srd-kobold-warrior", "Lizard": "srd-lizard",
     "Mastiff": "srd-mastiff", "Minotaur Skeleton": "srd-minotaur-skeleton", "Mule": "srd-mule",
@@ -111,8 +112,9 @@ def _runtime_monsters() -> dict[str, CombatantTemplate]:
 def _card(row: dict[str, object], runtime: dict[str, CombatantTemplate]) -> MonsterCatalogCard:
     name = str(row["name"])
     candidate_id = _READY_BY_NAME.get(name)
-    blockers = [] if candidate_id else ["monster-combat-mechanics-not-certified"]
-    if candidate_id:
+    deferred = deferred_environment_reason(name)
+    blockers = [f"deferred-environment:{deferred}"] if deferred else ([] if candidate_id else ["monster-combat-mechanics-not-certified"])
+    if candidate_id and not deferred:
         template = runtime.get(candidate_id)
         if template is None:
             blockers = ["missing-runtime-template"]

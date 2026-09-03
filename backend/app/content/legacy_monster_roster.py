@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.content.arena_eligibility import filter_standard_arena_eligible
 from app.content.demo import build_goblin_warrior
 from app.content.monster_blood_hawk import build_blood_hawk
 from app.content.monster_bonus_action_source_audit import complete_monster_bonus_action_fingerprints
@@ -22,6 +23,7 @@ from app.content.monsters_charge_expansion import build_charge_expansion
 from app.content.monsters_control import build_control_monsters
 from app.content.monsters_expansion_four import build_expansion_four
 from app.content.monsters_fixed_damage import build_fixed_damage_monsters
+from app.content.monsters_grapple_expansion import build_grapple_expansion
 from app.content.monsters_humanoid_expansion import build_goblin_minion, build_hobgoblin_warrior, build_kobold_warrior
 from app.content.monsters_low_cr import build_giant_rat, build_giant_weasel, build_guard
 from app.content.monsters_mixed_multiattack import build_giant_constrictor_snake
@@ -45,10 +47,11 @@ def build_legacy_monster_templates() -> list[CombatantTemplate]:
         build_axe_beak(), build_giant_lizard(), build_wolf(), build_dire_wolf(), build_black_bear(), build_brown_bear(),
         build_baboon(), build_camel(), build_deer(), build_draft_horse(), build_giant_badger(), build_jackal(),
         build_boar(), build_elk(), build_giant_boar(), *build_charge_expansion(), build_hippogriff(), *build_fixed_damage_monsters(),
-        *build_beast_batch_two(), *build_monster_batch_three(), *build_control_monsters(), *build_poison_monsters(),
+        *build_beast_batch_two(), *build_monster_batch_three(), *build_control_monsters(), *build_grapple_expansion(), *build_poison_monsters(),
         *build_venom_monsters(), *build_expansion_four(), build_giant_crocodile(), build_giant_constrictor_snake(),
         build_tyrannosaurus_rex(), *build_zero_engine_monsters(), *build_swarm_candidates(), *build_parry_monsters(),
     ]
+    monsters = filter_standard_arena_eligible(monsters)
     monsters = complete_monster_movement_modes(monsters)
     monsters = complete_monster_trait_fingerprints(monsters)
     monsters = complete_monster_reaction_fingerprints(monsters)

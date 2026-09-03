@@ -19,13 +19,13 @@ load("browser-monsters-generated.js");
 const generated = window.IRON_PIT_BROWSER_MONSTERS;
 assert.equal(window.IRON_PIT_CANONICAL_MONSTERS_READY, true, "Canonical generated monster bundle must mark itself ready");
 assert.equal(Object.keys(manual).length, 67, "Legacy fragments remain a 67-monster compatibility subset");
-assert.equal(Object.keys(generated).length, 109, "Generated runtime must expose only currently RAW-certified monsters");
+assert.equal(Object.keys(generated).length, 111, "Generated runtime must expose only currently RAW-certified monsters");
 for (const id of [
   "srd-jackal", "srd-archelon", "srd-ankylosaurus", "srd-giant-eagle", "srd-giant-elk", "srd-giant-crocodile",
   "srd-allosaurus", "srd-minotaur-skeleton", "srd-triceratops", "srd-warhorse-skeleton",
   "srd-animated-armor", "srd-animated-flying-sword", "srd-awakened-tree", "srd-flying-snake",
   "srd-gargoyle", "srd-grimlock", "srd-guard-captain", "srd-hippopotamus",
-  "srd-killer-whale", "srd-manticore", "srd-ogre-zombie", "srd-pegasus", "srd-scorpion", "srd-skeleton", "srd-spider",
+  "srd-giant-scorpion", "srd-grick", "srd-griffon", "srd-manticore", "srd-ogre-zombie", "srd-pegasus", "srd-scorpion", "srd-skeleton", "srd-spider",
   "srd-tough", "srd-venomous-snake", "srd-violet-fungus", "srd-bandit-captain", "srd-knight",
   "srd-noble", "srd-warrior-veteran", "srd-goblin-boss", "srd-blood-hawk",
   "srd-swarm-of-bats", "srd-swarm-of-rats", "srd-swarm-of-crawling-claws",
@@ -35,6 +35,7 @@ for (const id of [
 }
 assert.ok(generated["srd-tyrannosaurus-rex"]);
 assert.equal(generated["srd-commoner"], undefined, "Blocked Commoner must not leak into the browser runtime");
+assert.equal(generated["srd-killer-whale"], undefined, "Aquatic-only Killer Whale must remain deferred from the standard arena");
 
 const movementKeys = ["burrow_ft", "climb_ft", "fly_ft", "hover", "swim_ft", "walk_ft"];
 for (const monster of Object.values(generated)) {
@@ -123,6 +124,15 @@ assert.deepEqual(allosaurus.attacks.map((item) => item.id), ["allosaurus-bite", 
 assert.deepEqual(allosaurus.attacks.find((item) => item.id === "allosaurus-claws").charge, {
   minimumMove: 30, proneMaxSize: "large", followUpAttackId: "allosaurus-bite",
 });
+const grappleProfiles = [
+  ["srd-giant-scorpion", "srd-giant-scorpion-claw", "large", 13],
+  ["srd-grick", "srd-grick-tentacles", "medium", 12],
+  ["srd-griffon", "srd-griffon-rend", "medium", 14],
+];
+for (const [monsterId, attackId, maxTargetSize, grappleEscapeDc] of grappleProfiles) {
+  const grappleAttack = generated[monsterId].attacks.find((item) => item.id === attackId);
+  assert.deepEqual(grappleAttack.controlEffect, { maxTargetSize, grappleEscapeDc });
+}
 
 const slots = (action) => (action?.slots || []).map((slot) => Array.isArray(slot)
   ? { attackIds: slot, saveActionIds: [] }
@@ -247,4 +257,4 @@ assert.ok(heroOne.state.active_effect_ids.includes("grappled"));
 assert.ok(heroOne.state.active_effect_ids.includes("restrained"));
 assert.ok(heroTwo.state.active_effect_ids.includes("prone"));
 
-console.log("Generated monster runtime contains 109 RAW-certified templates, including Allosaurus Charge follow-up Bite, native data-only swarms, Charge riders, Prone-only Charge, conditional damage, Redirect Attack, and T. rex retargeting.");
+console.log("Generated monster runtime contains 111 RAW-certified templates, with aquatic-only Killer Whale deferred, shared grapple-control monsters, Allosaurus Charge follow-up Bite, native data-only swarms, Charge riders, Prone-only Charge, conditional damage, Redirect Attack, and T. rex retargeting.");
