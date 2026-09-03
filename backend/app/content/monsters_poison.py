@@ -15,7 +15,11 @@ def _attack(
     damage_type: DamageType, *, reach: int = 5, poison_dice: int = 0,
     poison_timing: str | None = None,
 ) -> WeaponAttack:
-    control = HitControlEffect(condition_id="poisoned", expiry_timing=poison_timing) if poison_timing else None
+    control = HitControlEffect(
+        condition_id="poisoned",
+        expires_at_start_of_source_turn=poison_timing == "source_turn_start",
+        expiry_timing=poison_timing,
+    ) if poison_timing else None
     extra = [OnHitDamage(
         source="Poison", dice_count=poison_dice, dice_size=6,
         damage_bonus=0, damage_type=DamageType.POISON,

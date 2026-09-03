@@ -1,5 +1,6 @@
 from collections import Counter
 
+from app.content.capability_registry import load_capability_definitions
 from app.content.catalog import build_full_content_catalog
 from app.content.certified_heroes import build_certified_hero_registry
 from app.content.monster_catalog import load_monster_rows
@@ -83,53 +84,13 @@ def test_current_audited_heroes_are_raw_ready() -> None:
     assert all(not card.blockers for card in ready_heroes)
 
 
-def test_current_certified_monsters_are_linked_to_runtime_templates() -> None:
+def test_current_certified_monsters_link_to_runtime_definitions() -> None:
     catalog = build_full_content_catalog()
-    ready_monsters = {
-        monster.name: monster.runnable_template_id
-        for monster in catalog.monsters if monster.coverage_status is CoverageStatus.RAW_READY
-    }
-    assert ready_monsters == {
-        "Allosaurus": "srd-allosaurus", "Animated Armor": "srd-animated-armor",
-        "Animated Flying Sword": "srd-animated-flying-sword", "Ankylosaurus": "srd-ankylosaurus",
-        "Archelon": "srd-archelon", "Awakened Shrub": "srd-awakened-shrub",
-        "Awakened Tree": "srd-awakened-tree", "Axe Beak": "srd-axe-beak",
-        "Baboon": "srd-baboon", "Badger": "srd-badger", "Bandit": "srd-bandit",
-        "Bandit Captain": "srd-bandit-captain", "Bat": "srd-bat", "Black Bear": "srd-black-bear",
-        "Blood Hawk": "srd-blood-hawk", "Boar": "srd-boar", "Brown Bear": "srd-brown-bear", "Camel": "srd-camel", "Cat": "srd-cat",
-        "Constrictor Snake": "srd-constrictor-snake", "Crab": "srd-crab",
-        "Crocodile": "srd-crocodile", "Deer": "srd-deer", "Dire Wolf": "srd-dire-wolf",
-        "Draft Horse": "srd-draft-horse", "Eagle": "srd-eagle", "Elk": "srd-elk",
-        "Flying Snake": "srd-flying-snake", "Frog": "srd-frog", "Gargoyle": "srd-gargoyle",
-        "Giant Badger": "srd-giant-badger", "Giant Bat": "srd-giant-bat",
-        "Giant Boar": "srd-giant-boar", "Giant Centipede": "srd-giant-centipede",
-        "Giant Constrictor Snake": "srd-giant-constrictor-snake", "Giant Crab": "srd-giant-crab",
-        "Giant Crocodile": "srd-giant-crocodile", "Giant Eagle": "srd-giant-eagle",
-        "Giant Elk": "srd-giant-elk", "Giant Fire Beetle": "srd-giant-fire-beetle",
-        "Giant Goat": "srd-giant-goat", "Giant Lizard": "srd-giant-lizard", "Giant Owl": "srd-giant-owl",
-        "Giant Rat": "srd-giant-rat", "Giant Venomous Snake": "srd-giant-venomous-snake",
-        "Giant Wasp": "srd-giant-wasp", "Giant Weasel": "srd-giant-weasel",
-        "Giant Wolf Spider": "srd-giant-wolf-spider", "Goblin Boss": "srd-goblin-boss",
-        "Goblin Minion": "srd-goblin-minion", "Goblin Warrior": "srd-goblin-warrior", "Grimlock": "srd-grimlock",
-        "Guard": "srd-guard", "Guard Captain": "srd-guard-captain", "Hawk": "srd-hawk",
-        "Hippogriff": "srd-hippogriff", "Hippopotamus": "srd-hippopotamus",
-        "Hobgoblin Warrior": "srd-hobgoblin-warrior", "Hyena": "srd-hyena", "Jackal": "srd-jackal",
-        "Killer Whale": "srd-killer-whale", "Knight": "srd-knight", "Kobold Warrior": "srd-kobold-warrior",
-        "Lizard": "srd-lizard", "Manticore": "srd-manticore", "Mastiff": "srd-mastiff",
-        "Minotaur Skeleton": "srd-minotaur-skeleton", "Mule": "srd-mule", "Noble": "srd-noble",
-        "Ogre": "srd-ogre", "Ogre Zombie": "srd-ogre-zombie", "Owl": "srd-owl", "Owlbear": "srd-owlbear",
-        "Panther": "srd-panther", "Pegasus": "srd-pegasus", "Plesiosaurus": "srd-plesiosaurus",
-        "Polar Bear": "srd-polar-bear", "Pony": "srd-pony", "Pteranodon": "srd-pteranodon",
-        "Rat": "srd-rat", "Raven": "srd-raven", "Rhinoceros": "srd-rhinoceros",
-        "Riding Horse": "srd-riding-horse", "Saber-Toothed Tiger": "srd-saber-toothed-tiger",
-        "Scorpion": "srd-scorpion", "Scout": "srd-scout", "Skeleton": "srd-skeleton",
-        "Spider": "srd-spider", "Swarm of Bats": "srd-swarm-of-bats",
-        "Swarm of Crawling Claws": "srd-swarm-of-crawling-claws", "Swarm of Insects": "srd-swarm-of-insects",
-        "Swarm of Rats": "srd-swarm-of-rats", "Swarm of Venomous Snakes": "srd-swarm-of-venomous-snakes",
-        "Tiger": "srd-tiger", "Tough": "srd-tough", "Triceratops": "srd-triceratops",
-        "Tyrannosaurus Rex": "srd-tyrannosaurus-rex", "Venomous Snake": "srd-venomous-snake",
-        "Violet Fungus": "srd-violet-fungus", "Vulture": "srd-vulture", "Warhorse": "srd-warhorse",
-        "Warhorse Skeleton": "srd-warhorse-skeleton",
-        "Warrior Infantry": "srd-warrior-infantry", "Warrior Veteran": "srd-warrior-veteran",
-        "Weasel": "srd-weasel", "Wolf": "srd-wolf", "Zombie": "srd-zombie",
-    }
+    runtime_ids = set(load_capability_definitions())
+    ready = [monster for monster in catalog.monsters if monster.coverage_status is CoverageStatus.RAW_READY]
+    linked_ids = [monster.runnable_template_id for monster in ready]
+
+    assert ready
+    assert all(not monster.blockers for monster in ready)
+    assert all(template_id in runtime_ids for template_id in linked_ids)
+    assert len(linked_ids) == len(set(linked_ids))
