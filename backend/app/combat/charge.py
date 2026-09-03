@@ -19,15 +19,19 @@ def _charge_attack(attacker: CombatantState) -> WeaponAttack | None:
     return next((attack for attack in attacks if charge_profile_for_attack_id(attack.id) is not None), None)
 
 
+def _target_size_allowed(defender: CombatantState, profile: ChargeProfile) -> bool:
+    return profile.max_target_size is None or size_at_most(defender.template.size, profile.max_target_size)
+
+
 def charge_profile(
     attacker: CombatantState, defender: CombatantState, attack: WeaponAttack, movement_ft: int,
 ) -> ChargeProfile | None:
     if CombatTrait.CHARGE not in attacker.template.combat_traits:
         return None
     profile = charge_profile_for_attack_id(attack.id)
-    if profile is None or movement_ft < profile.minimum_move_ft:
+    if profile is None or movement_ft < profile.minimum_move_ft or not _target_size_allowed(defender, profile):
         return None
-    return profile if size_at_most(defender.template.size, profile.max_target_size) else None
+    return profile
 
 
 def charge_can_close(
@@ -39,11 +43,7 @@ def charge_can_close(
         return False
     needed = max(0, distance_ft - attack.weapon.reach_ft)
     enough_runup = assume_precontact_runup or needed >= profile.minimum_move_ft
-    return (
-        enough_runup
-        and needed <= attacker.movement_remaining_ft
-        and size_at_most(defender.template.size, profile.max_target_size)
-    )
+    return enough_runup and needed <= attacker.movement_remaining_ft and _target_size_allowed(defender, profile)
 
 
 def _bonus_damage(profile: ChargeProfile):
@@ -51,6 +51,22 @@ def _bonus_damage(profile: ChargeProfile):
         return None
     rider = profile.bonus_damage
     return ("Charge", rider.dice_count, rider.dice_size, rider.damage_type)
+
+
+def _charged_attack(attack: WeaponAttack, profile: ChargeProfile) -> WeaponAttack:
+    updates: dict[str, object] = {}
+    if profile.prone_max_target_size is not None:
+        updates["knocks_prone_max_size"] = profile.prone_max_target_size
+    replacement = profile.replacement_damage
+    if replacement is not None:
+        updates["weapon"] = attack.weapon.model_copy(update={
+            "dice_count": replacement.dice_count,
+            "dice_size": replacement.dice_size,
+            "damage_type": replacement.damage_type,
+        })
+        updates["damage_bonus"] = replacement.damage_bonus
+        updates["fixed_damage"] = None
+    return attack.model_copy(update=updates)
 
 
 def resolve_charge_closing(
@@ -86,9 +102,8 @@ def resolve_charge_closing(
     if profile is None:
         return move_events, sequence, bool(move_events)
 
-    charged_attack = attack.model_copy(update={"knocks_prone_max_size": profile.max_target_size})
     event = resolve_encounter_attack(
-        sequence, round_number, attacker, target, charged_attack,
+        sequence, round_number, attacker, target, _charged_attack(attack, profile),
         combatant_distance(attacker, target), dice, setup,
         feature_id="charge", bonus_damage=_bonus_damage(profile),
     )

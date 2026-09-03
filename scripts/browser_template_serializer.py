@@ -92,16 +92,23 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
         if CombatTrait.CHARGE.value in traits:
             profile = charge_profile_for_attack_id(attack.id)
             if profile:
-                charge = {
-                    "minimumMove": profile.minimum_move_ft,
-                    "proneMaxSize": profile.max_target_size.value,
-                }
+                charge: dict[str, Any] = {"minimumMove": profile.minimum_move_ft}
+                if profile.prone_max_target_size is not None:
+                    charge["proneMaxSize"] = profile.prone_max_target_size.value
+                if profile.max_target_size is not None and profile.max_target_size != profile.prone_max_target_size:
+                    charge["targetMaxSize"] = profile.max_target_size.value
                 if profile.bonus_damage is not None:
                     charge.update(
                         diceCount=profile.bonus_damage.dice_count,
                         diceSize=profile.bonus_damage.dice_size,
                         damageType=profile.bonus_damage.damage_type.value,
                     )
+                if profile.replacement_damage is not None:
+                    replacement = profile.replacement_damage
+                    charge["replacementDamage"] = {
+                        "diceCount": replacement.dice_count, "diceSize": replacement.dice_size,
+                        "damageBonus": replacement.damage_bonus, "damageType": replacement.damage_type.value,
+                    }
                 if profile.follow_up_attack_id:
                     charge["followUpAttackId"] = profile.follow_up_attack_id
                 row["charge"] = charge

@@ -27,7 +27,7 @@ _READY_BY_NAME = {
     "Bat": "srd-bat", "Black Bear": "srd-black-bear", "Blood Hawk": "srd-blood-hawk", "Boar": "srd-boar", "Brown Bear": "srd-brown-bear",
     "Camel": "srd-camel", "Cat": "srd-cat", "Commoner": "srd-commoner", "Constrictor Snake": "srd-constrictor-snake",
     "Crab": "srd-crab", "Crocodile": "srd-crocodile", "Cultist": "srd-cultist", "Deer": "srd-deer", "Dire Wolf": "srd-dire-wolf",
-    "Draft Horse": "srd-draft-horse", "Eagle": "srd-eagle", "Elk": "srd-elk", "Frog": "srd-frog",
+    "Draft Horse": "srd-draft-horse", "Eagle": "srd-eagle", "Elk": "srd-elk", "Frog": "srd-frog", "Goat": "srd-goat",
     "Giant Badger": "srd-giant-badger", "Giant Bat": "srd-giant-bat", "Giant Boar": "srd-giant-boar",
     "Giant Centipede": "srd-giant-centipede", "Giant Constrictor Snake": "srd-giant-constrictor-snake",
     "Giant Crab": "srd-giant-crab", "Giant Crocodile": "srd-giant-crocodile",

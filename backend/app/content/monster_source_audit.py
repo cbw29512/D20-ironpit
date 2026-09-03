@@ -5,6 +5,7 @@ import re
 
 from app.content.monster_attack_source_audit import attack_issues, normalized, save_action_issues
 from app.content.monster_bonus_action_source_audit import bonus_action_issues
+from app.content.monster_charge_source_audit import charge_replacement_issues
 from app.content.monster_defense_source_audit import defense_issues
 from app.content.monster_legendary_source_audit import legendary_action_issues
 from app.content.monster_limited_use_source_audit import limited_use_issues
@@ -93,6 +94,7 @@ def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) ->
             issues.append("source-save-action-count-mismatch")
         for attack in runtime_attacks:
             issues.extend(attack_issues(attack, actions))
+        issues.extend(charge_replacement_issues(template, actions))
         for action in template.saving_throw_actions:
             issues.extend(save_action_issues(action, actions))
         if template.attack_action is not None and "multiattack" not in actions:

@@ -5,6 +5,7 @@ from app.content.demo import build_goblin_warrior
 from app.content.monster_blood_hawk import build_blood_hawk
 from app.content.monster_bonus_action_source_audit import complete_monster_bonus_action_fingerprints
 from app.content.monster_giant_crocodile import build_giant_crocodile
+from app.content.monster_goat import build_goat
 from app.content.monster_goblin_boss import build_goblin_boss
 from app.content.monster_hippogriff import build_hippogriff
 from app.content.monster_legendary_source_audit import complete_monster_legendary_fingerprints
@@ -47,7 +48,7 @@ def build_legacy_monster_templates() -> list[CombatantTemplate]:
         build_bandit(), build_commoner(), build_guard(), build_giant_rat(), build_giant_weasel(), build_blood_hawk(),
         build_axe_beak(), build_giant_lizard(), build_wolf(), build_dire_wolf(), build_black_bear(), build_brown_bear(),
         build_baboon(), build_camel(), build_deer(), build_draft_horse(), build_giant_badger(), build_jackal(),
-        build_boar(), build_elk(), build_giant_boar(), *build_charge_expansion(), build_hippogriff(), *build_fixed_damage_monsters(),
+        build_boar(), build_elk(), build_giant_boar(), *build_charge_expansion(), build_goat(), build_hippogriff(), *build_fixed_damage_monsters(),
         *build_beast_batch_two(), *build_monster_batch_three(), *build_control_monsters(), *build_grapple_expansion(), *build_poison_monsters(),
         *build_venom_monsters(), *build_expansion_four(), build_giant_crocodile(), build_giant_constrictor_snake(),
         build_tyrannosaurus_rex(), *build_zero_engine_monsters(), build_worg(), *build_swarm_candidates(), *build_parry_monsters(),

@@ -19,7 +19,7 @@ load("browser-monsters-generated.js");
 const generated = window.IRON_PIT_BROWSER_MONSTERS;
 assert.equal(window.IRON_PIT_CANONICAL_MONSTERS_READY, true, "Canonical generated monster bundle must mark itself ready");
 assert.equal(Object.keys(manual).length, 67, "Legacy fragments remain a 67-monster compatibility subset");
-assert.equal(Object.keys(generated).length, 113, "Generated runtime must expose only currently RAW-certified monsters");
+assert.equal(Object.keys(generated).length, 114, "Generated runtime must expose only currently RAW-certified monsters");
 for (const id of [
   "srd-jackal", "srd-archelon", "srd-ankylosaurus", "srd-giant-eagle", "srd-giant-elk", "srd-giant-crocodile",
   "srd-allosaurus", "srd-minotaur-skeleton", "srd-triceratops", "srd-warhorse-skeleton",
@@ -29,7 +29,7 @@ for (const id of [
   "srd-tough", "srd-venomous-snake", "srd-violet-fungus", "srd-bandit-captain", "srd-knight",
   "srd-noble", "srd-warrior-veteran", "srd-goblin-boss", "srd-blood-hawk",
   "srd-swarm-of-bats", "srd-swarm-of-rats", "srd-swarm-of-crawling-claws",
-  "srd-swarm-of-insects", "srd-swarm-of-venomous-snakes", "srd-worg", "srd-zombie",
+  "srd-swarm-of-insects", "srd-swarm-of-venomous-snakes", "srd-goat", "srd-worg", "srd-zombie",
 ]) {
   assert.ok(generated[id], `${id} must be present in generated runtime`);
 }
@@ -42,13 +42,19 @@ assert.deepEqual(generated["srd-cultist"].attacks[0].onHitDamage, [
 assert.deepEqual(generated["srd-worg"].attacks[0].onHitModifiers, [{
   kind: "attacks-against-advantage", consumeOnAttackAgainst: true, expiresAtStartOfSourceTurn: true,
 }]);
+const goatTemplate = generated["srd-goat"];
+assert.equal(goatTemplate.attacks[0].fixedDamage, 1);
+assert.deepEqual(goatTemplate.attacks[0].charge, {
+  minimumMove: 20,
+  replacementDamage: { diceCount: 1, diceSize: 4, damageBonus: 0, damageType: "bludgeoning" },
+});
 
 const movementKeys = ["burrow_ft", "climb_ft", "fly_ft", "hover", "swim_ft", "walk_ft"];
 for (const monster of Object.values(generated)) {
   assert.deepEqual(Object.keys(monster.movement_modes).sort(), movementKeys, `${monster.id} must export the full movement fingerprint`);
   assert.ok(Array.isArray(monster.source_trait_names), `${monster.id} must export its printed trait fingerprint`);
   assert.ok(Array.isArray(monster.source_reaction_names), `${monster.id} must export its printed reaction fingerprint`);
-  assert.ok(Array.isArray(monster.source_bonus_action_names), `${monster.id} must export its printed bonus-action fingerprint`);
+  assert.ok(Array.isArray(monster.source_bonus_action_names), `${monster.id} must export its bonus-action fingerprint`);
   assert.ok(Array.isArray(monster.source_limited_use_names), `${monster.id} must export its limited-use fingerprint`);
   assert.ok(Array.isArray(monster.source_legendary_action_names), `${monster.id} must export its legendary-action fingerprint`);
   assert.ok(monster.source_spellcasting_fingerprint === null || typeof monster.source_spellcasting_fingerprint === "string");
@@ -198,6 +204,22 @@ const combatant = (id, side, position, template) => ({
   combatant_id: id, side, position_ft: position, state: S.buildState(structuredClone(template)),
 });
 
+const goatMember = combatant("monster-goat:srd-goat", "monsters", 5, goatTemplate);
+const goatTarget = combatant("hero-goat:karnok-stoneward-l1", "heroes", 0, window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"]);
+goatMember.state.initiative_total = 20;
+goatTarget.state.initiative_total = 10;
+S.beginTurn(goatMember.state);
+window.IRON_PIT_DICE = {
+  roll: (sides) => sides === 20 ? 19 : 3,
+  rollMany: (count, sides) => Array.from({ length: count }, () => sides === 20 ? 19 : 3),
+};
+const goatResult = C.resolveClosing(1, 1, goatMember, goatTarget, { heroes: [goatTarget], monsters: [goatMember] });
+const goatAttack = goatResult.events.find((event) => event.event_type === "attack");
+assert.equal(goatResult.handled, true);
+assert.equal(goatAttack.damage_roll.notation, "1d4+0");
+assert.equal(goatAttack.damage_roll.total, 3);
+assert.equal(goatAttack.applied_condition_ids.includes("prone"), false);
+
 const chargeHorse = combatant("monster-1:srd-warhorse-skeleton", "monsters", 5, warhorseSkeleton);
 const chargeHero = combatant("hero-charge:karnok-stoneward-l1", "heroes", 0, window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"]);
 chargeHorse.state.initiative_total = 20;
@@ -263,4 +285,4 @@ assert.ok(heroOne.state.active_effect_ids.includes("grappled"));
 assert.ok(heroOne.state.active_effect_ids.includes("restrained"));
 assert.ok(heroTwo.state.active_effect_ids.includes("prone"));
 
-console.log("Generated monster runtime contains 113 RAW-certified templates, including fixed typed hit riders and source-turn on-hit Advantage modifiers, with aquatic-only Killer Whale deferred, shared grapple-control monsters, Allosaurus Charge follow-up Bite, native data-only swarms, Charge riders, Prone-only Charge, conditional damage, Redirect Attack, and T. rex retargeting.");
+console.log("Generated monster runtime contains 114 RAW-certified templates, including Charge damage replacement, fixed typed hit riders, and source-turn on-hit Advantage modifiers, with aquatic-only Killer Whale deferred, shared grapple-control monsters, Allosaurus Charge follow-up Bite, native data-only swarms, Charge riders, Prone-only Charge, conditional damage, Redirect Attack, and T. rex retargeting.");
