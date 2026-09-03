@@ -859,7 +859,7 @@
       "owners": [
         "barbarian/path-berserker"
       ],
-      "status": "blocked"
+      "status": "supported"
     },
     {
       "demand_count": 1,
@@ -4379,7 +4379,7 @@
         "paladin/oath-ancients",
         "paladin/oath-devotion"
       ],
-      "status": "blocked"
+      "status": "supported"
     },
     {
       "demand_count": 1,
@@ -4952,8 +4952,7 @@
   "schema_version": 1,
   "summary": {
     "arena_out_of_scope": 28,
-    "blocked": 2,
     "planned": 376,
-    "supported": 38
+    "supported": 40
   }
 }
