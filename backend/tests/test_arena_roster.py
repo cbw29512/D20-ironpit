@@ -1,6 +1,6 @@
 from app.main import get_arena_roster
+from app.content.capability_registry import load_capability_definitions
 from app.content.certified_heroes import build_certified_hero_templates
-from app.content.legacy_monster_roster import build_legacy_monster_templates
 from app.content.pregens import build_brom_ironmark, build_mara_quickstep, build_selene_asharrow
 from app.domain.models import ArenaRoster, WeaponAttackKind
 
@@ -9,12 +9,16 @@ def _by_id(items, item_id: str):
     return next(item for item in items if item.id == item_id)
 
 
-def test_arena_roster_matches_generated_monster_source() -> None:
+def test_arena_roster_matches_merged_capability_registry() -> None:
     roster = get_arena_roster()
     assert isinstance(roster, ArenaRoster)
     assert [item.id for item in roster.characters] == [item.id for item in build_certified_hero_templates()]
 
-    expected_monster_ids = [item.id for item in build_legacy_monster_templates()]
+    expected_monster_ids = [
+        definition.id
+        for definition in load_capability_definitions().values()
+        if definition.kind == "monster"
+    ]
     actual_monster_ids = [item.id for item in roster.monsters]
     assert actual_monster_ids == expected_monster_ids
     assert len(actual_monster_ids) == len(set(actual_monster_ids))
