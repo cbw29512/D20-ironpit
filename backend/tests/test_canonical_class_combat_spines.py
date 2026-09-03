@@ -64,11 +64,17 @@ def test_ranger_base_numeric_progression_landmarks_exclude_subclass_features() -
     )
 
 
-def test_rogue_thief_sneak_attack_progression_landmarks() -> None:
+def test_rogue_base_sneak_attack_progression_landmarks_exclude_subclass_features() -> None:
     assert ROGUE_COMBAT_LEVELS[1].sneak_attack_d6 == 1
     assert ROGUE_COMBAT_LEVELS[9].sneak_attack_d6 == 5
     assert ROGUE_COMBAT_LEVELS[20].sneak_attack_d6 == 10
-    assert "thiefs-reflexes" in ROGUE_COMBAT_LEVELS[17].features_added
+    subclass_features = {
+        "thief-fast-hands", "thief-supreme-sneak", "thief-use-magic-device", "thiefs-reflexes",
+    }
+    assert all(
+        subclass_features.isdisjoint(row.features_added)
+        for row in ROGUE_COMBAT_LEVELS.values()
+    )
 
 
 def test_full_caster_and_pact_magic_resource_landmarks() -> None:

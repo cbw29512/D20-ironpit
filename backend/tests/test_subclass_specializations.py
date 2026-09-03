@@ -6,6 +6,7 @@ from app.content.subclass_specializations import (
     MONK_SPECIALIZATIONS,
     PALADIN_SPECIALIZATIONS,
     RANGER_SPECIALIZATIONS,
+    ROGUE_SPECIALIZATIONS,
     SubclassSpecialization,
     specializations_for_class,
     subclass_specialization,
@@ -28,6 +29,7 @@ def test_weapon_specializations_are_only_catalog_data_and_mastery_choices() -> N
         *BARBARIAN_SPECIALIZATIONS,
         *PALADIN_SPECIALIZATIONS,
         *RANGER_SPECIALIZATIONS,
+        *ROGUE_SPECIALIZATIONS,
     ):
         assert spec.primary_weapon is not None
         assert spec.source_reference
@@ -124,6 +126,21 @@ def test_ranger_has_one_dexterity_wisdom_specialization_per_target_subclass() ->
     )
     assert all(item.ability_priority[:2] == ("dexterity", "wisdom") for item in RANGER_SPECIALIZATIONS)
     assert beast.feature_choice_ids == ("beastmaster-beast-of-the-land",)
+
+
+def test_rogue_has_one_dexterity_specialization_per_target_subclass() -> None:
+    assert tuple(item.subclass_id for item in specializations_for_class("rogue")) == (
+        "thief", "assassin", "arcane-trickster",
+    )
+    thief, assassin, trickster = ROGUE_SPECIALIZATIONS
+    assert (thief.role, thief.primary_weapon, thief.secondary_weapons[0]) == (
+        "dual-wield", "shortsword", "scimitar",
+    )
+    assert (assassin.role, assassin.primary_weapon) == ("ranged", "shortbow")
+    assert (trickster.role, trickster.primary_weapon, trickster.spell_package_id) == (
+        "finesse-duelist", "rapier", "arcane-trickster",
+    )
+    assert all(item.ability_priority[0] == "dexterity" for item in ROGUE_SPECIALIZATIONS)
 
 
 def test_specialization_without_source_truth_fails_closed() -> None:

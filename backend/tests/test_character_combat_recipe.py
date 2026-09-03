@@ -115,14 +115,18 @@ def test_ranger_subclasses_compose_real_planned_loadouts_from_one_spine() -> Non
         assert "extra-attack" in recipe.combat_features
 
 
-def test_rogue_base_and_thief_overlay_are_independent_of_legacy_role_record() -> None:
-    duelist = compose_character_combat_recipe("rogue", "thief", "duelist", 3)
-    ranged = compose_character_combat_recipe("rogue", "thief", "ranged", 3)
-    assert duelist.combat_features == ranged.combat_features
-    assert "sneak-attack" in duelist.combat_features
-    assert "thief-fast-hands" in duelist.combat_features
-    assert duelist.build_choices is None
-    assert ranged.build_choices is None
+def test_rogue_subclasses_compose_real_planned_loadouts_from_one_spine() -> None:
+    expected = {
+        ("thief", "dual-wield"): "shortsword",
+        ("assassin", "ranged"): "shortbow",
+        ("arcane-trickster", "duelist"): "rapier",
+    }
+    for (subclass_id, build_id), weapon_id in expected.items():
+        recipe = compose_character_combat_recipe("rogue", subclass_id, build_id, 17)
+        assert recipe.shared_progression_id == "rogue-1-20"
+        assert recipe.build_status == "planned"
+        assert recipe.build_choices.primary_weapon == weapon_id
+        assert "sneak-attack" in recipe.combat_features
 
 
 def test_subclass_specific_build_fails_closed_on_the_wrong_subclass() -> None:

@@ -11,6 +11,7 @@ from app.content.hero_variant_policy import TARGET_SUBCLASSES
 from app.content.monk_subclass_overlay_data import MONK_SUBCLASS_DELTA_DATA
 from app.content.paladin_subclass_overlay_data import PALADIN_SUBCLASS_DELTA_DATA
 from app.content.ranger_subclass_overlay_data import RANGER_SUBCLASS_DELTA_DATA
+from app.content.rogue_subclass_overlay_data import ROGUE_SUBCLASS_DELTA_DATA
 from app.content.subclass_combat_overlays import SUBCLASS_COMBAT_OVERLAYS, subclass_combat_features
 
 
@@ -34,6 +35,7 @@ def test_subclass_registry_is_derived_from_authoritative_overlay_data() -> None:
         | set(MONK_SUBCLASS_DELTA_DATA)
         | set(PALADIN_SUBCLASS_DELTA_DATA)
         | set(RANGER_SUBCLASS_DELTA_DATA)
+        | set(ROGUE_SUBCLASS_DELTA_DATA)
     )
     assert set(SUBCLASS_COMBAT_OVERLAYS) == expected
 
@@ -112,6 +114,16 @@ def test_rogue_base_and_thief_overlay_are_independent() -> None:
     assert "steady-aim" in base_three
     assert "thief-fast-hands" not in base_three
     assert "thief-fast-hands" in thief_three
+
+
+def test_rogue_base_spine_contains_no_thief_subclass_features() -> None:
+    subclass_features = {
+        feature
+        for level in range(1, 21)
+        for feature in subclass_combat_features("thief", level)
+    }
+    assert subclass_features
+    assert subclass_features.isdisjoint(canonical_base_class_features("rogue", 20))
 
 
 def test_druid_base_is_shared_before_land_or_future_moon_builds() -> None:

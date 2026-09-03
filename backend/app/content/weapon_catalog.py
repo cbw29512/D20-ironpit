@@ -76,6 +76,10 @@ _WEAPONS = {
         "shortsword", "Shortsword", 1, 6, DamageType.PIERCING, "Vex",
         finesse=True, light=True,
     ),
+    "rapier": _melee(
+        "rapier", "Rapier", 1, 8, DamageType.PIERCING, "Vex",
+        finesse=True,
+    ),
     "longbow": _ranged(
         "longbow", "Longbow", 8, 150, 600, "Slow",
         heavy=True, two_handed=True,

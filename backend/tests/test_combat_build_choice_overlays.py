@@ -5,6 +5,7 @@ from app.content.combat_build_choice_overlays import (
     MONK_COMBAT_BUILD_CHOICES,
     PALADIN_COMBAT_BUILD_CHOICES,
     RANGER_COMBAT_BUILD_CHOICES,
+    ROGUE_COMBAT_BUILD_CHOICES,
     get_combat_build_choice_overlay,
 )
 from app.content.combat_build_variants import get_combat_build_variant
@@ -70,7 +71,7 @@ def test_barbarian_subclass_specializations_generate_real_choice_overlays() -> N
 
 
 def test_all_current_choice_overlays_come_from_subclass_specializations() -> None:
-    assert len(COMBAT_BUILD_CHOICE_OVERLAYS) == 16
+    assert len(COMBAT_BUILD_CHOICE_OVERLAYS) == 19
     assert all("derived from" in overlay.notes for overlay in COMBAT_BUILD_CHOICE_OVERLAYS.values())
 
 
@@ -123,3 +124,18 @@ def test_ranger_subclasses_generate_distinct_loadouts_from_shared_rules() -> Non
     assert beast.secondary_weapons[:2] == ("scimitar", "longbow")
     assert beast.weapon_masteries == ("shortsword", "scimitar")
     assert {"vex-mastery", "nick-mastery"} <= set(beast.required_capabilities)
+
+
+def test_rogue_subclasses_generate_distinct_loadouts_from_shared_rules() -> None:
+    assert set(ROGUE_COMBAT_BUILD_CHOICES) == {"duelist", "dual-wield", "ranged"}
+    trickster = get_combat_build_choice_overlay("rogue", "duelist")
+    thief = get_combat_build_choice_overlay("rogue", "dual-wield")
+    assassin = get_combat_build_choice_overlay("rogue", "ranged")
+    assert (trickster.primary_weapon, trickster.weapon_masteries) == (
+        "rapier", ("rapier", "shortbow"),
+    )
+    assert thief.secondary_weapons[:2] == ("scimitar", "shortbow")
+    assert {"vex-mastery", "nick-mastery"} <= set(thief.required_capabilities)
+    assert (assassin.primary_weapon, assassin.weapon_masteries) == (
+        "shortbow", ("shortbow", "shortsword"),
+    )

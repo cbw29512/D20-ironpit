@@ -10,6 +10,7 @@ def test_audited_weapon_catalog_preserves_shared_properties_and_masteries() -> N
     longsword = build_weapon("longsword")
     scimitar = build_weapon("scimitar")
     shortsword = build_weapon("shortsword")
+    rapier = build_weapon("rapier")
     longbow = build_weapon("longbow")
     shortbow = build_weapon("shortbow")
 
@@ -19,11 +20,12 @@ def test_audited_weapon_catalog_preserves_shared_properties_and_masteries() -> N
     assert (longsword.mastery_property, longsword.versatile) == ("Sap", True)
     assert (scimitar.mastery_property, scimitar.finesse, scimitar.light) == ("Nick", True, True)
     assert (shortsword.mastery_property, shortsword.finesse, shortsword.light) == ("Vex", True, True)
+    assert (rapier.mastery_property, rapier.finesse, rapier.light) == ("Vex", True, False)
     assert (longbow.mastery_property, longbow.heavy, longbow.two_handed) == ("Slow", True, True)
     assert (shortbow.mastery_property, shortbow.two_handed) == ("Vex", True)
     assert audited_weapon_ids() == (
         "greataxe", "battleaxe", "greatsword", "longsword", "scimitar", "shortsword",
-        "longbow", "shortbow",
+        "rapier", "longbow", "shortbow",
     )
 
 

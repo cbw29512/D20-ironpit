@@ -33,7 +33,6 @@ def test_other_legacy_role_records_stay_planned_until_subclass_migration() -> No
     expected = {
         "barbarian": {"great-weapon", "weapon-shield", "dual-wield"},
         "monk": {"unarmed-offense", "weapon-monk", "defensive-mobile"},
-        "rogue": {"duelist", "dual-wield", "ranged"},
     }
     for class_id, build_ids in expected.items():
         assert {variant.id for variant in combat_build_variants_for(class_id)} == build_ids
@@ -80,6 +79,17 @@ def test_ranger_roles_are_owned_by_real_subclasses() -> None:
         "archer": "gloom-stalker",
         "dual-wield": "beastmaster",
         "sword-shield": "hunter",
+    }
+
+
+def test_rogue_roles_are_owned_by_real_subclasses() -> None:
+    assert {
+        variant.id: variant.required_subclass_id
+        for variant in combat_build_variants_for("rogue")
+    } == {
+        "duelist": "arcane-trickster",
+        "dual-wield": "thief",
+        "ranged": "assassin",
     }
 
 

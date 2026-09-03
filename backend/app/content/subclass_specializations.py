@@ -5,6 +5,7 @@ from app.content.fighter_subclass_specialization_data import FIGHTER_SPECIALIZAT
 from app.content.monk_subclass_specialization_data import MONK_SPECIALIZATIONS
 from app.content.paladin_subclass_specialization_data import PALADIN_SPECIALIZATIONS
 from app.content.ranger_subclass_specialization_data import RANGER_SPECIALIZATIONS
+from app.content.rogue_subclass_specialization_data import ROGUE_SPECIALIZATIONS
 from app.content.subclass_specialization_schema import SubclassSpecialization
 
 
@@ -16,6 +17,7 @@ def _specialization_registry() -> dict[str, SubclassSpecialization]:
         *MONK_SPECIALIZATIONS,
         *PALADIN_SPECIALIZATIONS,
         *RANGER_SPECIALIZATIONS,
+        *ROGUE_SPECIALIZATIONS,
     ):
         if item.subclass_id in registry:
             raise ValueError(f"Duplicate subclass specialization: {item.subclass_id}.")
