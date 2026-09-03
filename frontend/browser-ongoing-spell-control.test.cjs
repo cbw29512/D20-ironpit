@@ -10,6 +10,7 @@ const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, 
 load("browser-rolls.js");
 window.IRON_PIT_BROWSER_MODIFIERS = {
   applyD20Bonus: (_state, _kind, roll) => roll,
+  expireTargetTurn: () => 0,
   removeSource: () => {},
 };
 window.IRON_PIT_BROWSER_CONDITION_RULES = { autoFailStrDex: () => false, incapacitated: (state) => Boolean(state.is_unconscious) };
