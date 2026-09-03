@@ -55,7 +55,11 @@ assert.equal(Object.keys(monsters).length, 109, "canonical runtime must contain 
   assert.deepEqual(wyvernTemplate.attack_action.slots.map((slot) => slot.attackIds), [["wyvern-bite"], ["wyvern-sting"]]);
   const sting = wyvernTemplate.attacks.find((attack) => attack.id === "wyvern-sting");
   assert.deepEqual(sting.onHitDamage, [{ source: "Poison", diceCount: 7, diceSize: 6, damageBonus: 0, damageType: "poison" }]);
-  assert.deepEqual(sting.controlEffect, { conditionId: "poisoned", expiryTiming: "source_turn_start" });
+  assert.deepEqual(sting.controlEffect, {
+    conditionId: "poisoned",
+    expiresAtStartOfSourceTurn: true,
+    expiryTiming: "source_turn_start",
+  });
 
   const source = member("monster-1:wyvern", "monsters", wyvernTemplate, 10);
   const target = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"], 0);
