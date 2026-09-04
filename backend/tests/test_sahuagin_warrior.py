@@ -1,7 +1,7 @@
 import logging
 
 from app.combat.conditions import attack_roll_condition_sources
-from app.content.arena_eligibility import is_flat_standard_arena_eligible
+from app.content.arena_eligibility import standard_arena_eligible
 from app.content.capability_registry import build_combatant_from_capabilities
 from app.content.monster_catalog import load_monster_rows
 from app.content.monster_source_audit import audit_monster_source
@@ -37,7 +37,7 @@ def test_sahuagin_profile_is_exact_and_standard_arena_eligible() -> None:
     assert template.attack_action is not None
     assert len(template.attack_action.slots) == 2
     assert template.attack_roll_advantage_triggers == ["target_missing_hit_points"]
-    assert is_flat_standard_arena_eligible(template) is True
+    assert standard_arena_eligible(template) is True
 
 
 def test_sahuagin_profile_passes_full_srd_source_audit() -> None:
