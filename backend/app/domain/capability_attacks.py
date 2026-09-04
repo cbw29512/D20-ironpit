@@ -5,6 +5,7 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName
+from app.domain.areas import AreaGeometry
 from app.domain.capability_effects import AttackEffectDefinition, DiceSpec, GrappleEffectDefinition
 from app.domain.size import CreatureSize
 from app.domain.weapons import DamageType, WeaponAttackKind
@@ -59,10 +60,13 @@ class SaveCapabilityDefinition(BaseModel):
     dc: int = Field(ge=1, le=40)
     range_ft: int = Field(ge=0)
     target_max_size: CreatureSize | None = None
+    area: AreaGeometry | None = None
     damage: DiceSpec | None = None
     damage_type: DamageType | None = None
     success_damage: Literal["none", "half"] = "none"
     grapple: GrappleEffectDefinition | None = None
+    resource_id: str | None = None
+    resource_cost: int = Field(default=1, ge=1, le=20)
     animation: str = "save-effect"
 
     @model_validator(mode="after")
