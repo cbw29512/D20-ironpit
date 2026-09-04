@@ -11,6 +11,13 @@ def test_hit_point_maximum_reduction_fails_closed() -> None:
     ]
 
 
+def test_hit_point_maximum_reduction_tolerates_source_line_breaks() -> None:
+    actions = "The target’s Hit Point maximum\n\ndecreases by an amount equal to the Necrotic damage taken."
+    assert survival_action_issues(actions) == [
+        "unsupported-survival-rider:hit-point-maximum-reduction"
+    ]
+
+
 def test_combatant_creation_action_fails_closed() -> None:
     actions = (
         "Create Specter. The wraith targets a Humanoid corpse within 10 feet. "

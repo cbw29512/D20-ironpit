@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 
 _HP_MAX_REDUCTION = re.compile(
-    r"\bHit Point maximum (?:decreases|is reduced)\b",
+    r"\bHit Point maximum\s+(?:decreases|is reduced)\b",
     re.IGNORECASE,
 )
 _COMBATANT_CREATION = re.compile(
