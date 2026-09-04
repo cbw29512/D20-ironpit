@@ -89,10 +89,24 @@ const nextAttack = (expires = 2) => ({
   assert.equal(target.state.active_modifiers.length, 0);
 }
 
+{
+  const attacker = member("sahuagin", "monsters", 0), target = member("target", "heroes", 5);
+  attacker.state.template.attack_roll_advantage_triggers = ["target_missing_hit_points"];
+  let sources = A.conditionSources(attacker.state, target.state, 5, target.combatant_id);
+  assert.deepEqual(sources, { advantage: 0, disadvantage: 0 });
+  target.state.current_hp -= 1;
+  sources = A.conditionSources(attacker.state, target.state, 5, target.combatant_id);
+  assert.deepEqual(sources, { advantage: 1, disadvantage: 0 });
+  assert.ok(target.state.current_hp * 2 > target.state.template.max_hp, "missing HP must not be confused with Bloodied");
+  attacker.state.active_effect_ids.push("poisoned");
+  sources = A.conditionSources(attacker.state, target.state, 5, target.combatant_id);
+  assert.deepEqual(sources, { advantage: 1, disadvantage: 1 });
+}
+
 assert.throws(() => M.validate({
   id: "bad", source_id: "caster", source_effect_id: "bad", kind: "speed",
   flat_bonus: 5, dice_count: 0, dice_size: 0, damage_type: null,
   consume_on_attack_against: true,
 }));
 
-console.log("Browser next-attack Advantage consumption and source-turn expiry regressions passed.");
+console.log("Browser next-attack Advantage, missing-HP Advantage, and source-turn expiry regressions passed.");
