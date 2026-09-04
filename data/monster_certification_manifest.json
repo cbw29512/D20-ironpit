@@ -8853,7 +8853,8 @@
         "save-or-complex-action",
         "saving-throw-action",
         "spellcasting",
-        "trait"
+        "trait",
+        "unsupported-action-rider"
       ],
       "supported_mechanics": [
         "attack-roll",
@@ -8868,7 +8869,8 @@
         "limited-use",
         "save-or-complex-action",
         "spellcasting",
-        "trait"
+        "trait",
+        "unsupported-action-rider"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -8882,7 +8884,8 @@
         "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
         "spellcasting",
-        "trait"
+        "trait",
+        "unsupported-action-rider"
       ]
     },
     {
