@@ -3,6 +3,7 @@ import pytest
 from app.content.capability_registry import (
     build_combatant_from_capabilities,
     get_capability_definition,
+    load_capability_definitions,
     merge_capability_definitions,
 )
 from app.content.legacy_monster_roster import build_legacy_monster_templates
@@ -12,33 +13,27 @@ from app.content.monster_source_audit import audit_monster_source
 from app.content.roster import build_arena_roster
 from app.domain.traits import CombatTrait
 
-NATIVE = {
-    "srd-swarm-of-insects": "Swarm of Insects",
-    "srd-swarm-of-venomous-snakes": "Swarm of Venomous Snakes",
-    "srd-green-dragon-wyrmling": "Green Dragon Wyrmling",
-    "srd-black-dragon-wyrmling": "Black Dragon Wyrmling",
-    "srd-blue-dragon-wyrmling": "Blue Dragon Wyrmling",
-    "srd-red-dragon-wyrmling": "Red Dragon Wyrmling",
-    "srd-white-dragon-wyrmling": "White Dragon Wyrmling",
-    "srd-hell-hound": "Hell Hound",
-    "srd-young-black-dragon": "Young Black Dragon",
-    "srd-young-blue-dragon": "Young Blue Dragon",
-    "srd-young-green-dragon": "Young Green Dragon",
-    "srd-young-red-dragon": "Young Red Dragon",
-    "srd-young-white-dragon": "Young White Dragon",
-}
+
+def _native_monsters() -> dict[str, str]:
+    legacy_ids = {monster.id for monster in build_legacy_monster_templates()}
+    return {
+        definition.id: definition.name
+        for definition in load_capability_definitions().values()
+        if definition.kind == "monster" and definition.id not in legacy_ids
+    }
 
 
 def test_native_monsters_are_not_legacy_builder_outputs() -> None:
     legacy_ids = {monster.id for monster in build_legacy_monster_templates()}
-    assert set(NATIVE).isdisjoint(legacy_ids)
+    assert set(_native_monsters()).isdisjoint(legacy_ids)
 
 
 def test_native_definitions_extend_production_roster_without_replacing_legacy_ids() -> None:
     legacy = build_legacy_monster_templates()
+    native = _native_monsters()
     production = build_arena_roster().monsters
-    assert len(production) == len(legacy) + len(NATIVE)
-    assert [monster.id for monster in production[-len(NATIVE):]] == list(NATIVE)
+    assert len(production) == len(legacy) + len(native)
+    assert [monster.id for monster in production[-len(native):]] == list(native)
 
 
 def test_native_registry_rejects_cross_layer_duplicate_ids() -> None:
@@ -50,7 +45,7 @@ def test_native_registry_rejects_cross_layer_duplicate_ids() -> None:
 def test_native_monsters_compile_and_pass_full_srd_source_audit() -> None:
     rows = {str(row["name"]): row for row in load_monster_rows()}
     runtime = {monster.id: monster for monster in build_arena_roster().monsters}
-    for template_id, source_name in NATIVE.items():
+    for template_id, source_name in _native_monsters().items():
         assert get_capability_definition(template_id).kind == "monster"
         assert audit_monster_source(runtime[template_id], rows[source_name]) == []
 
