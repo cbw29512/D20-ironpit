@@ -70,14 +70,14 @@
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "legendary",
         "limited-use",
         "save-or-complex-action",
-        "spellcasting"
+        "spellcasting",
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -88,7 +88,8 @@
         "limited-use",
         "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "spellcasting"
+        "spellcasting",
+        "trait"
       ]
     },
     {
@@ -106,22 +107,20 @@
         "save-or-complex-action",
         "saving-throw-action",
         "spellcasting",
-        "trait",
-        "trait-parse"
+        "trait"
       ],
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "legendary",
         "limited-use",
         "save-or-complex-action",
         "spellcasting",
-        "trait-parse"
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -133,7 +132,7 @@
         "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
         "spellcasting",
-        "trait-parse"
+        "trait"
       ]
     },
     {
@@ -152,15 +151,13 @@
         "save-or-complex-action",
         "saving-throw-action",
         "spellcasting",
-        "trait",
-        "trait-parse"
+        "trait"
       ],
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "condition-or-control",
@@ -168,7 +165,7 @@
         "limited-use",
         "save-or-complex-action",
         "spellcasting",
-        "trait-parse"
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -181,7 +178,7 @@
         "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
         "spellcasting",
-        "trait-parse"
+        "trait"
       ]
     },
     {
@@ -206,15 +203,15 @@
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "condition-or-control",
         "legendary",
         "limited-use",
         "save-or-complex-action",
-        "spellcasting"
+        "spellcasting",
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -226,7 +223,8 @@
         "limited-use",
         "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "spellcasting"
+        "spellcasting",
+        "trait"
       ]
     },
     {
@@ -244,22 +242,20 @@
         "save-or-complex-action",
         "saving-throw-action",
         "spellcasting",
-        "trait",
-        "trait-parse"
+        "trait"
       ],
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "legendary",
         "limited-use",
         "save-or-complex-action",
         "spellcasting",
-        "trait-parse"
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -271,7 +267,7 @@
         "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
         "spellcasting",
-        "trait-parse"
+        "trait"
       ]
     },
     {
@@ -295,14 +291,14 @@
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "legendary",
         "limited-use",
         "save-or-complex-action",
-        "spellcasting"
+        "spellcasting",
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -313,7 +309,8 @@
         "limited-use",
         "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "spellcasting"
+        "spellcasting",
+        "trait"
       ]
     },
     {
@@ -337,14 +334,14 @@
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "legendary",
         "limited-use",
         "save-or-complex-action",
-        "spellcasting"
+        "spellcasting",
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -355,7 +352,8 @@
         "limited-use",
         "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "spellcasting"
+        "spellcasting",
+        "trait"
       ]
     },
     {
@@ -373,22 +371,20 @@
         "save-or-complex-action",
         "saving-throw-action",
         "spellcasting",
-        "trait",
-        "trait-parse"
+        "trait"
       ],
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "legendary",
         "limited-use",
         "save-or-complex-action",
         "spellcasting",
-        "trait-parse"
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -400,7 +396,7 @@
         "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
         "spellcasting",
-        "trait-parse"
+        "trait"
       ]
     },
     {
@@ -419,15 +415,13 @@
         "save-or-complex-action",
         "saving-throw-action",
         "spellcasting",
-        "trait",
-        "trait-parse"
+        "trait"
       ],
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "condition-or-control",
@@ -435,7 +429,7 @@
         "limited-use",
         "save-or-complex-action",
         "spellcasting",
-        "trait-parse"
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -448,7 +442,7 @@
         "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
         "spellcasting",
-        "trait-parse"
+        "trait"
       ]
     },
     {
@@ -471,13 +465,13 @@
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "legendary",
         "limited-use",
-        "save-or-complex-action"
+        "save-or-complex-action",
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -487,7 +481,8 @@
         "legendary",
         "limited-use",
         "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
+        "save-or-complex-action",
+        "trait"
       ]
     },
     {
@@ -572,14 +567,14 @@
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "legendary",
         "limited-use",
         "save-or-complex-action",
-        "spellcasting"
+        "spellcasting",
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -590,7 +585,8 @@
         "limited-use",
         "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "spellcasting"
+        "spellcasting",
+        "trait"
       ]
     },
     {
@@ -608,22 +604,20 @@
         "save-or-complex-action",
         "saving-throw-action",
         "spellcasting",
-        "trait",
-        "trait-parse"
+        "trait"
       ],
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "legendary",
         "limited-use",
         "save-or-complex-action",
         "spellcasting",
-        "trait-parse"
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -635,7 +629,7 @@
         "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
         "spellcasting",
-        "trait-parse"
+        "trait"
       ]
     },
     {
@@ -654,15 +648,13 @@
         "save-or-complex-action",
         "saving-throw-action",
         "spellcasting",
-        "trait",
-        "trait-parse"
+        "trait"
       ],
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "condition-or-control",
@@ -670,7 +662,7 @@
         "limited-use",
         "save-or-complex-action",
         "spellcasting",
-        "trait-parse"
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -683,7 +675,7 @@
         "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
         "spellcasting",
-        "trait-parse"
+        "trait"
       ]
     },
     {
@@ -708,15 +700,15 @@
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "condition-or-control",
         "legendary",
         "limited-use",
         "save-or-complex-action",
-        "spellcasting"
+        "spellcasting",
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -728,7 +720,8 @@
         "limited-use",
         "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "spellcasting"
+        "spellcasting",
+        "trait"
       ]
     },
     {
@@ -746,22 +739,20 @@
         "save-or-complex-action",
         "saving-throw-action",
         "spellcasting",
-        "trait",
-        "trait-parse"
+        "trait"
       ],
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "legendary",
         "limited-use",
         "save-or-complex-action",
         "spellcasting",
-        "trait-parse"
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -773,7 +764,7 @@
         "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
         "spellcasting",
-        "trait-parse"
+        "trait"
       ]
     },
     {
@@ -797,14 +788,14 @@
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "legendary",
         "limited-use",
         "save-or-complex-action",
-        "spellcasting"
+        "spellcasting",
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -815,7 +806,8 @@
         "limited-use",
         "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "spellcasting"
+        "spellcasting",
+        "trait"
       ]
     },
     {
@@ -839,14 +831,14 @@
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "legendary",
         "limited-use",
         "save-or-complex-action",
-        "spellcasting"
+        "spellcasting",
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -857,7 +849,8 @@
         "limited-use",
         "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "spellcasting"
+        "spellcasting",
+        "trait"
       ]
     },
     {
@@ -875,22 +868,20 @@
         "save-or-complex-action",
         "saving-throw-action",
         "spellcasting",
-        "trait",
-        "trait-parse"
+        "trait"
       ],
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "legendary",
         "limited-use",
         "save-or-complex-action",
         "spellcasting",
-        "trait-parse"
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -902,7 +893,7 @@
         "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
         "spellcasting",
-        "trait-parse"
+        "trait"
       ]
     },
     {
@@ -921,15 +912,13 @@
         "save-or-complex-action",
         "saving-throw-action",
         "spellcasting",
-        "trait",
-        "trait-parse"
+        "trait"
       ],
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "condition-or-control",
@@ -937,7 +926,7 @@
         "limited-use",
         "save-or-complex-action",
         "spellcasting",
-        "trait-parse"
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -950,7 +939,7 @@
         "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
         "spellcasting",
-        "trait-parse"
+        "trait"
       ]
     },
     {
@@ -973,13 +962,13 @@
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "legendary",
         "limited-use",
-        "save-or-complex-action"
+        "save-or-complex-action",
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -989,7 +978,8 @@
         "legendary",
         "limited-use",
         "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
+        "save-or-complex-action",
+        "trait"
       ]
     },
     {
