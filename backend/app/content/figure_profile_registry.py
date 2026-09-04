@@ -3,6 +3,7 @@ from __future__ import annotations
 from app.content.figure_profiles import FigureProfile, MONSTER_FIGURE_PROFILES
 
 _NATIVE_FIGURE_PROFILES: dict[str, FigureProfile] = {
+    "Ape": {"form": "primate", "detail": "ape"},
     "Black Dragon Wyrmling": {"form": "reptile", "detail": "black-dragon-wyrmling"},
     "Blue Dragon Wyrmling": {"form": "reptile", "detail": "blue-dragon-wyrmling"},
     "Green Dragon Wyrmling": {"form": "reptile", "detail": "green-dragon-wyrmling"},

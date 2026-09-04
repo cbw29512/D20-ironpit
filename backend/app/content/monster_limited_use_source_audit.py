@@ -45,31 +45,44 @@ def parse_limited_use_names(row: dict[str, object]) -> list[str]:
     return names
 
 
-def _recharge_save_supported(template: CombatantTemplate, fingerprint: str) -> bool:
-    section, _, heading = fingerprint.partition(":")
+def _recharge_matches(template: CombatantTemplate, resource_id: str | None, resource_cost: int, heading: str) -> bool:
     match = _RECHARGE.search(heading)
-    if section != "actions" or not match:
+    if not match or not resource_id or resource_cost != 1:
         return False
-    action_name = re.sub(r"\s*\([^)]*\)$", "", heading).strip()
-    action = next((item for item in template.saving_throw_actions if item.name == action_name), None)
-    if action is None or not action.resource_id or action.resource_cost != 1:
-        return False
-    resource = next((item for item in template.resources if item.id == action.resource_id), None)
+    resource = next((item for item in template.resources if item.id == resource_id), None)
     if resource is None or resource.max_uses != 1 or resource.recharge is None:
         return False
-    minimum = int(match.group(1))
-    maximum = int(match.group(2) or match.group(1))
+    minimum = int(match.group(1)); maximum = int(match.group(2) or match.group(1))
     return resource.recharge.minimum == minimum and resource.recharge.maximum == maximum and resource.recharge.die_size == 6
 
 
+def _recharge_save_supported(template: CombatantTemplate, fingerprint: str) -> bool:
+    section, _, heading = fingerprint.partition(":")
+    if section != "actions":
+        return False
+    action_name = re.sub(r"\s*\([^)]*\)$", "", heading).strip()
+    action = next((item for item in template.saving_throw_actions if item.name == action_name), None)
+    return action is not None and _recharge_matches(template, action.resource_id, action.resource_cost, heading)
+
+
+def _recharge_attack_supported(template: CombatantTemplate, fingerprint: str) -> bool:
+    section, _, heading = fingerprint.partition(":")
+    if section != "actions":
+        return False
+    action_name = re.sub(r"\s*\([^)]*\)$", "", heading).strip()
+    attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
+    attack = next((item for item in attacks if item.weapon.name == action_name), None)
+    return attack is not None and _recharge_matches(template, attack.resource_id, attack.resource_cost, heading)
+
+
 def limited_use_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
-    """Certify modeled Recharge save actions; keep all other limited-use families fail-closed."""
+    """Certify modeled Recharge actions; keep all other limited-use families fail-closed."""
     expected = parse_limited_use_names(row)
     issues: list[str] = []
     if template.source_limited_use_names != expected:
         issues.append("source-limited-use-fingerprint-mismatch")
     for name in expected:
-        if _recharge_save_supported(template, name):
+        if _recharge_save_supported(template, name) or _recharge_attack_supported(template, name):
             continue
         slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
         issues.append(f"uncertified-limited-use:{slug}")

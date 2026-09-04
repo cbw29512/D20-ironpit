@@ -76,8 +76,16 @@
     const charged = C()?.resolveClosing(sequence, round, member, targets[0], setup);
     if (charged?.handled) { events.push(...charged.events); return finalize(events, charged.sequence, round, member, setup, turnKey); }
 
-    const limited = V().resolveTurnAction(sequence, round, member, setup, true);
-    if (limited.used) { events.push(...limited.events); return finalize(events, limited.sequence, round, member, setup, turnKey); }
+    const resourceAttack = F().chooseResourceBackedAttack?.(member, setup) || null;
+    if (resourceAttack) {
+      const limited = U().resolve(sequence, round, member, resourceAttack.target, resourceAttack.attack, resourceAttack.distance, setup, turnKey, {
+        featureId: resourceAttack.attack.resourceId,
+      });
+      events.push(...limited.events); return finalize(events, limited.sequence, round, member, setup, turnKey);
+    }
+
+    const limitedSave = V().resolveTurnAction(sequence, round, member, setup, true);
+    if (limitedSave.used) { events.push(...limitedSave.events); return finalize(events, limitedSave.sequence, round, member, setup, turnKey); }
     if (member.state.template.attack_action) {
       const multi = M().resolveAttackAction(sequence, round, member, setup); events.push(...multi.events);
       return finalize(events, multi.sequence, round, member, setup, turnKey);

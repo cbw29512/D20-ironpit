@@ -16,6 +16,7 @@ _GENERATED_PATH = _DATA_DIR / "combatant_capabilities_v1.json"
 _NATIVE_PATHS = (
     _DATA_DIR / "combatant_capabilities_native_v1.json",
     _DATA_DIR / "combatant_capabilities_native_dragons_v1.json",
+    _DATA_DIR / "combatant_capabilities_native_low_cr_v1.json",
 )
 
 

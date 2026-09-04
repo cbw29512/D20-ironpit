@@ -10,8 +10,10 @@ from app.combat.condition_removal import choose_condition_removal_action, resolv
 from app.combat.condition_rules import is_incapacitated
 from app.combat.dice import DiceProvider
 from app.combat.encounter_action_surge import resolve_action_surge_attack
+from app.combat.fighter import use_second_wind
 from app.combat.grapple import cleanup_grapples, resolve_escape_grapple, should_escape_grapple
 from app.combat.healing import choose_healing_action, resolve_healing
+from app.combat.limited_attack_turn import resolve_resource_backed_attack_turn
 from app.combat.ongoing_spell_control import build_forced_retreat_event, forced_retreat_active
 from app.combat.opening_burst import opening_feature_id
 from app.combat.orc import should_use_adrenaline_rush, use_adrenaline_rush
@@ -22,7 +24,6 @@ from app.combat.spell_offense import resolve_best_spell_offense
 from app.combat.standard_attack_action import resolve_standard_attack_action
 from app.combat.state import begin_turn
 from app.combat.tactical_shift import resolve_tactical_shift
-from app.combat.fighter import use_second_wind
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 
@@ -101,6 +102,13 @@ def resolve_combat_turn(
     charge_events, sequence, charged = resolve_charge_closing(sequence, round_number, attacker, targets[0], dice, setup)
     events.extend(charge_events)
     if charged or attacker.state.is_dead or attacker.state.is_unconscious:
+        return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
+
+    limited_events, sequence, used_limited = resolve_resource_backed_attack_turn(
+        sequence, round_number, attacker, setup, dice, turn_key,
+    )
+    if used_limited:
+        events.extend(limited_events)
         return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
     save_events, sequence, used_save = resolve_save_action_turn(

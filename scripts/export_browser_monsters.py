@@ -40,12 +40,25 @@ def _add_save_area_metadata(row, template) -> None:
         item["area"] = area
 
 
+def _add_attack_resource_metadata(row, template) -> None:
+    attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
+    serialized = row.get("attacks", [])
+    if len(serialized) != len(attacks):
+        raise RuntimeError(f"Attack serialization count drift for {template.id}.")
+    for item, attack in zip(serialized, attacks, strict=True):
+        if attack.resource_id is None:
+            continue
+        item["resourceId"] = attack.resource_id
+        item["resourceCost"] = attack.resource_cost
+
+
 def render() -> str:
     try:
         rows = []
         for template in _certified_monsters():
             row = template_row(template)
             _add_save_area_metadata(row, template)
+            _add_attack_resource_metadata(row, template)
             row["creature_type"] = template.creature_type
             rows.append(row)
         ids = {row["id"] for row in rows}
