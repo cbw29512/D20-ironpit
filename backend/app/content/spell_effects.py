@@ -33,7 +33,7 @@ SHIELD_OF_FAITH = DefensiveSpellAction(
     concentration=True,
     priority=20,
     animation="shield-of-faith",
-    source="SRD 5.2.1 Shield of Faith",
+    source="SRD 5.2.1 p.162",
 )
 
 AID = DefensiveSpellAction(
@@ -47,9 +47,9 @@ AID = DefensiveSpellAction(
     target_count=3,
     max_hp_increase=5,
     current_hp_increase=5,
-    priority=25,
+    priority=40,
     animation="aid",
-    source="SRD 5.2.1 Aid",
+    source="D&D Beyond Basic Rules 2024: Aid",
 )
 
 
