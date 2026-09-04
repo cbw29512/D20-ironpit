@@ -226,6 +226,7 @@
       }
     ],
     "primary_attack_id": "srd-berserker-greataxe",
+    "unarmed_opportunity_attack": {"attack_bonus": 5, "damage": 4},
     "saving_throw_bonuses": {
       "strength": 3,
       "dexterity": 1,
