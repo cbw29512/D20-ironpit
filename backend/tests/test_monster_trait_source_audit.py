@@ -34,6 +34,12 @@ def test_arena_neutral_trait_remains_fingerprinted() -> None:
     assert trait_issues(deer, _row("Deer")) == []
 
 
+def test_xorn_environment_traits_are_arena_neutral_but_fingerprinted() -> None:
+    xorn = _monster("Xorn")
+    assert xorn.source_trait_names == ["Earth Glide", "Treasure Sense"]
+    assert trait_issues(xorn, _row("Xorn")) == []
+
+
 def test_unknown_outcome_changing_trait_fails_closed() -> None:
     wolf = _monster("Wolf")
     row = dict(_row("Wolf"))

@@ -18,10 +18,10 @@ _MODELED_TRAITS = {
 }
 _MODELED_ROLL_ADVANTAGE_TRAITS = frozenset({"Blood Frenzy", "Bloodied Frenzy"})
 _ARENA_NEUTRAL_TRAITS = frozenset({
-    "Agile", "Amphibious", "Beast of Burden", "False Appearance", "Flyby", "Hellish Restoration",
+    "Agile", "Amphibious", "Beast of Burden", "Earth Glide", "False Appearance", "Flyby", "Hellish Restoration",
     "Hold Breath", "Ice Walk", "Illumination", "Jumper", "Keen Hearing", "Keen Hearing and Sight",
     "Keen Hearing and Smell", "Keen Sight", "Keen Smell", "Limited Amphibiousness", "Mimicry", "Running Leap",
-    "Shark Telepathy", "Spider Climb", "Standing Leap", "Sunlight Sensitivity", "Training", "Web Walker",
+    "Shark Telepathy", "Spider Climb", "Standing Leap", "Sunlight Sensitivity", "Training", "Treasure Sense", "Web Walker",
 })
 
 
