@@ -5,12 +5,15 @@ from typing import Any
 
 
 def _area_pattern(shape: str, size_ft: int, width_ft: int | None) -> re.Pattern[str]:
-    foot = rf"{size_ft}\s*[-–]?\s*foot"
+    foot = rf"{size_ft}\s*[-–]?\s*foot(?:-long)?"
     if shape in {"cone", "cube"}:
         return re.compile(rf"\b{foot}\s+{shape}\b", re.IGNORECASE)
     if shape == "line":
-        width = rf"{width_ft}\s*[-–]?\s*foot" if width_ft else r"\d+\s*[-–]?\s*foot"
-        return re.compile(rf"\b{foot}[^.]*\bline\b[^.]*\b{width}\b|\b{width}[^.]*\bline\b[^.]*\b{foot}\b", re.IGNORECASE)
+        width = rf"{width_ft}\s*[-–]?\s*foot(?:-wide)?" if width_ft else r"\d+\s*[-–]?\s*foot(?:-wide)?"
+        return re.compile(
+            rf"(?=[^.]*\b{foot}\b)(?=[^.]*\b{width}\b)(?=[^.]*\bline\b)[^.]+",
+            re.IGNORECASE,
+        )
     return re.compile(rf"\b{foot}[^.]*\bradius\b|\b{size_ft}\s*[-–]?\s*foot-radius\b", re.IGNORECASE)
 
 
