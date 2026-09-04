@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import re
 
+from app.content.monster_action_boundary_audit import unmodeled_combat_math_riders
 from app.content.monster_bonus_action_source_audit import (
     _ARENA_NEUTRAL_BONUS_ACTIONS,
     _base_name,
@@ -67,7 +68,7 @@ def _reaction_is_modeled(row: dict[str, object], reactions: list[str]) -> bool:
 
 def _unmodeled_action_rider(actions: str) -> bool:
     sanitized = _SUPPORTED_BLOODIED_REPLACEMENT.sub("damage", actions)
-    return bool(_HIDDEN_RIDER.search(sanitized))
+    return bool(_HIDDEN_RIDER.search(sanitized) or unmodeled_combat_math_riders(actions))
 
 
 def _source_blockers(row: dict[str, object], monster_names: set[str]) -> list[str]:

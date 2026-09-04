@@ -1,3 +1,4 @@
+from app.content.monster_action_boundary_audit import unmodeled_combat_math_riders
 from app.content.monster_catalog import build_monster_catalog, load_monster_rows
 from app.content.monster_defense_source_audit import parse_defense_profile
 from app.content.monster_source_audit import audit_monster_source
@@ -93,6 +94,23 @@ def test_srd_defense_parser_distinguishes_damage_and_condition_defenses() -> Non
         "exhaustion", "grappled", "paralyzed", "petrified", "poisoned", "prone",
         "restrained", "unconscious",
     }
+
+
+def test_action_boundary_finds_hidden_combat_math_in_srd_rows() -> None:
+    rows = _rows_by_name()
+    assert unmodeled_combat_math_riders(rows["Specter"]["actions"]) == ["hit-point-maximum-decrease"]
+    assert set(unmodeled_combat_math_riders(rows["Wraith"]["actions"])) == {
+        "hit-point-maximum-decrease", "created-combatant",
+    }
+
+
+def test_source_audit_fails_closed_on_unmodeled_hit_point_maximum_rider() -> None:
+    rows = _rows_by_name()
+    commoner = next(template for template in build_arena_roster().monsters if template.name == "Commoner")
+    source = dict(rows["Commoner"])
+    source["actions"] = str(source["actions"]) + " The target's Hit Point maximum decreases by the damage taken."
+    issues = audit_monster_source(commoner, source)
+    assert "unsupported-action-rider:hit-point-maximum-decrease" in issues
 
 
 def test_raw_ready_monsters_are_audited_runtime_subset() -> None:
