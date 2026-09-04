@@ -4111,7 +4111,7 @@
       "public_ready_status": "blocked",
       "blockers": [
         "bonus-action",
-        "monster-combat-mechanics-not-certified",
+        "deferred-environment:aquatic-only",
         "trait",
         "unsupported-action-rider"
       ]
@@ -4139,7 +4139,7 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-certified",
+        "deferred-environment:aquatic-only",
         "trait"
       ]
     },
@@ -5218,7 +5218,7 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-certified",
+        "deferred-environment:aquatic-only",
         "trait"
       ]
     },
@@ -6468,8 +6468,8 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
+        "deferred-environment:aquatic-only",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "reaction",
         "trait"
       ]
@@ -6725,7 +6725,7 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-certified",
+        "deferred-environment:aquatic-only",
         "trait"
       ]
     },
@@ -7277,7 +7277,7 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-certified",
+        "deferred-environment:aquatic-only",
         "trait"
       ]
     },
@@ -7675,7 +7675,7 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-certified",
+        "deferred-environment:aquatic-only",
         "no-attack-roll",
         "trait"
       ]
@@ -8495,7 +8495,7 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-certified",
+        "deferred-environment:aquatic-only",
         "trait"
       ]
     },
