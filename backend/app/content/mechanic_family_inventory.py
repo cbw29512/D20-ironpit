@@ -29,12 +29,17 @@ _ACTION_PATTERNS = {
     "recurring-turn-damage": re.compile(r"\btakes?\s+\d+\s*\([^)]*\)\s+\w+\s+damage\s+at\s+the\s+(?:start|end)\s+of\b", re.I),
     "next-attack-advantage": re.compile(r"\bAdvantage on the next attack roll\b|\bnext attack roll[^.]*Advantage\b", re.I),
     "next-attack-disadvantage": re.compile(r"\bDisadvantage on the next attack roll\b|\bnext attack roll[^.]*Disadvantage\b", re.I),
+    "injured-target-advantage": re.compile(
+        r"\bAdvantage\b[^.]*\btarget\b[^.]*\bdoesn[’']t have all (?:of )?its Hit Points\b",
+        re.I,
+    ),
     "damage-reduction": re.compile(r"\breduces?\s+the\s+damage\b", re.I),
     "multiattack": re.compile(r"\bMultiattack\.\b", re.I),
 }
 
 _TRAIT_FAMILIES = {
     "Pack Tactics": "pack-tactics",
+    "Blood Frenzy": "injured-target-advantage",
     "Regeneration": "regeneration",
     "Undead Fortitude": "undead-fortitude",
     "Magic Resistance": "magic-resistance",

@@ -19,6 +19,16 @@ def test_mechanic_family_inventory_groups_repeated_monster_math() -> None:
     assert "Stirge" in families["recurring-turn-damage"]
 
 
+def test_injured_target_advantage_is_one_cross_source_family() -> None:
+    assert _families()["injured-target-advantage"] == {
+        "Giant Shark",
+        "Hunter Shark",
+        "Piranha",
+        "Sahuagin Warrior",
+        "Swarm of Piranhas",
+    }
+
+
 def test_mechanic_family_inventory_exposes_cross_class_hero_demand() -> None:
     demand = build_hero_mechanic_demand()
     owners = {owner for class_owners in demand.values() for owner in class_owners}
