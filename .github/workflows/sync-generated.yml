@@ -3,7 +3,7 @@ name: Sync Generated Certification Artifacts
 on:
   push:
     branches:
-      - feat/target-missing-hp-attack-advantage
+      - audit/raw-combat-log-figures-20260830
 
 permissions:
   contents: write
