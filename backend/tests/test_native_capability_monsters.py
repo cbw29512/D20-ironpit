@@ -15,6 +15,11 @@ NATIVE = {
     "srd-swarm-of-insects": "Swarm of Insects",
     "srd-swarm-of-venomous-snakes": "Swarm of Venomous Snakes",
     "srd-green-dragon-wyrmling": "Green Dragon Wyrmling",
+    "srd-black-dragon-wyrmling": "Black Dragon Wyrmling",
+    "srd-blue-dragon-wyrmling": "Blue Dragon Wyrmling",
+    "srd-red-dragon-wyrmling": "Red Dragon Wyrmling",
+    "srd-white-dragon-wyrmling": "White Dragon Wyrmling",
+    "srd-hell-hound": "Hell Hound",
 }
 
 
@@ -42,6 +47,34 @@ def test_native_monsters_compile_and_pass_full_srd_source_audit() -> None:
     for template_id, source_name in NATIVE.items():
         assert get_capability_definition(template_id).kind == "monster"
         assert audit_monster_source(runtime[template_id], rows[source_name]) == []
+
+
+def test_recharge_breath_family_uses_shared_resource_and_area_primitives() -> None:
+    expected = {
+        "srd-green-dragon-wyrmling": ("cone", 15, None, "constitution", 11, 6, 6, "poison"),
+        "srd-black-dragon-wyrmling": ("line", 15, 5, "dexterity", 11, 5, 8, "acid"),
+        "srd-blue-dragon-wyrmling": ("line", 30, 5, "dexterity", 12, 6, 6, "lightning"),
+        "srd-red-dragon-wyrmling": ("cone", 15, None, "dexterity", 13, 7, 6, "fire"),
+        "srd-white-dragon-wyrmling": ("cone", 15, None, "constitution", 12, 5, 8, "cold"),
+        "srd-hell-hound": ("cone", 15, None, "dexterity", 12, 5, 6, "fire"),
+    }
+    for template_id, values in expected.items():
+        monster = build_combatant_from_capabilities(template_id)
+        action = monster.saving_throw_actions[0]
+        resource = monster.resources[0]
+        shape, size_ft, width_ft, ability, dc, count, die, damage_type = values
+        assert (action.area.shape, action.area.size_ft, action.area.width_ft) == (shape, size_ft, width_ft)
+        assert (action.save_ability, action.dc) == (ability, dc)
+        assert (action.damage_dice_count, action.damage_dice_size, action.damage_type) == (count, die, damage_type)
+        assert action.success_damage == "half"
+        assert action.resource_id == resource.id
+        assert (resource.max_uses, resource.recharge.minimum, resource.recharge.maximum) == (1, 5, 6)
+
+
+def test_hell_hound_uses_existing_pack_tactics_trait() -> None:
+    hound = build_combatant_from_capabilities("srd-hell-hound")
+    assert hound.combat_traits == [CombatTrait.PACK_TACTICS]
+    assert hound.source_trait_names == ["Pack Tactics"]
 
 
 def test_swarm_of_insects_uses_existing_swarm_and_bloodied_capabilities() -> None:
