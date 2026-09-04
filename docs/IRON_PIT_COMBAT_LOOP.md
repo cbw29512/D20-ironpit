@@ -11,13 +11,24 @@ Iron Pit is a deterministic card-vs-card damage simulator. Heroes and monsters u
 3. Roll Initiative for every combatant and establish initiative order.
 4. Determine whether the initiative winner qualifies for an opening special such as Charge, Pounce, or another printed first-contact damage ability. These specials use their own legal conditions; Iron Pit never invents extra damage.
 
+## Stacked formation and movement abstraction
+
+The Pit is a card-vs-card formation, not a free-movement battlefield. Frontline melee cards begin effectively engaged with the opposing frontline, while ranged combatants and casters are stacked immediately behind them.
+
+- Ordinary Walk, Fly, Swim, Burrow, and Climb rates do not determine normal action legality or certification.
+- Movement-only buffs, debuffs, pushes, pulls, dragging, and pathfinding are ignored unless another supported combat-math consequence depends on them.
+- A source creature with no usable movement mode at all may be deferred as an eligibility edge case.
+- A temporary runtime Speed of 0 never removes a creature from combat and never changes roster eligibility.
+- Grappled therefore remains a combat condition without treating its Speed 0 consequence as removal: attacks against the grappler are normal absent other sources, while attacks against another creature have Disadvantage.
+- Charge/Pounce and similar opening effects retain their printed attack/save/damage consequences through the dedicated opening abstraction rather than literal movement geometry.
+
 ## Turn loop
 
 At the start of each combatant's turn:
 
 1. Resolve mandatory ongoing damage, condition consequences that directly alter legal damage resolution, resource refresh/recharge timing, and death/incapacitation state.
 2. Check survival actions. If a legal healing ability/spell is configured for the combatant and the configured threshold is met (normally Bloodied or an ally at 0 HP), resolve the healing according to its action economy and resource cost.
-3. Check an eligible opening special such as Charge/Pounce when its initiative/round/position requirements are satisfied.
+3. Check an eligible opening special such as Charge/Pounce when its initiative/round requirements are satisfied.
 4. Choose the combat mode from the card data:
    - melee attacker;
    - ranged attacker;
@@ -26,27 +37,23 @@ At the start of each combatant's turn:
 
 ### Melee
 
-If a legal melee target is reachable/in range:
-
-1. Select the configured melee attack or Attack/Multiattack sequence.
+1. Select the configured melee attack or Attack/Multiattack sequence against a legal frontline target.
 2. Roll to hit when the action uses an attack roll.
 3. On a hit, roll and apply all damage components.
 4. Apply any special weapon/mastery/feature damage component whose printed conditions are satisfied.
 5. Spend action/resources and continue any legal Extra Attack/Multiattack sequence.
 
-If not yet in melee range, close toward the target. Iron Pit does not kite or voluntarily retreat.
+Ordinary closing movement is not simulated; melee contact is part of the stacked formation abstraction.
 
 ### Ranged
 
-If the target is in legal range and the combatant is not committed to a superior melee option:
-
-1. Use the configured ranged attack.
+1. Use the configured ranged attack against a legal target in the stacked formation.
 2. Roll to hit when required.
 3. On a hit, roll and apply all damage components.
 4. Apply any conditional special damage rider whose printed conditions are satisfied.
 5. Spend action/resources and continue any legal Extra Attack/Multiattack sequence.
 
-Ranged combatants use range while it remains legal/useful. Iron Pit does not create kiting behavior.
+Ranged combatants stay behind their frontline and continue using legal ranged options. Iron Pit does not create kiting or retreat behavior.
 
 ### Caster
 
