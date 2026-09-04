@@ -21,6 +21,11 @@ NATIVE = {
     "srd-red-dragon-wyrmling": "Red Dragon Wyrmling",
     "srd-white-dragon-wyrmling": "White Dragon Wyrmling",
     "srd-hell-hound": "Hell Hound",
+    "srd-young-black-dragon": "Young Black Dragon",
+    "srd-young-blue-dragon": "Young Blue Dragon",
+    "srd-young-green-dragon": "Young Green Dragon",
+    "srd-young-red-dragon": "Young Red Dragon",
+    "srd-young-white-dragon": "Young White Dragon",
 }
 
 
@@ -55,6 +60,8 @@ def test_srd_long_wide_line_wording_matches_shared_area_audit() -> None:
     for template_id, source_name in {
         "srd-black-dragon-wyrmling": "Black Dragon Wyrmling",
         "srd-blue-dragon-wyrmling": "Blue Dragon Wyrmling",
+        "srd-young-black-dragon": "Young Black Dragon",
+        "srd-young-blue-dragon": "Young Blue Dragon",
     }.items():
         monster = build_combatant_from_capabilities(template_id)
         action = monster.saving_throw_actions[0]
@@ -69,6 +76,11 @@ def test_recharge_breath_family_uses_shared_resource_and_area_primitives() -> No
         "srd-red-dragon-wyrmling": ("cone", 15, None, "dexterity", 13, 7, 6, "fire"),
         "srd-white-dragon-wyrmling": ("cone", 15, None, "constitution", 12, 5, 8, "cold"),
         "srd-hell-hound": ("cone", 15, None, "dexterity", 12, 5, 6, "fire"),
+        "srd-young-black-dragon": ("line", 30, 5, "dexterity", 14, 14, 6, "acid"),
+        "srd-young-blue-dragon": ("line", 60, 5, "dexterity", 16, 10, 10, "lightning"),
+        "srd-young-green-dragon": ("cone", 30, None, "constitution", 14, 12, 6, "poison"),
+        "srd-young-red-dragon": ("cone", 30, None, "dexterity", 17, 16, 6, "fire"),
+        "srd-young-white-dragon": ("cone", 30, None, "constitution", 15, 9, 8, "cold"),
     }
     for template_id, values in expected.items():
         monster = build_combatant_from_capabilities(template_id)
@@ -81,6 +93,17 @@ def test_recharge_breath_family_uses_shared_resource_and_area_primitives() -> No
         assert action.success_damage == "half"
         assert action.resource_id == resource.id
         assert (resource.max_uses, resource.recharge.minimum, resource.recharge.maximum) == (1, 5, 6)
+
+
+def test_young_chromatic_dragons_use_three_rend_slots() -> None:
+    for template_id in (
+        "srd-young-black-dragon", "srd-young-blue-dragon", "srd-young-green-dragon",
+        "srd-young-red-dragon", "srd-young-white-dragon",
+    ):
+        dragon = build_combatant_from_capabilities(template_id)
+        assert dragon.attack_action is not None
+        assert len(dragon.attack_action.slots) == 3
+        assert all(slot.attack_ids == [dragon.weapon_attack.id] for slot in dragon.attack_action.slots)
 
 
 def test_hell_hound_uses_existing_pack_tactics_trait() -> None:

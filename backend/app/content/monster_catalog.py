@@ -10,6 +10,7 @@ from app.content.arena_eligibility import deferred_environment_reason
 from app.content.monster_neighbor_bleed_corrections import apply_neighbor_bleed_corrections
 from app.content.monster_neighbor_bleed_normalizer import normalize_neighbor_name_bleed
 from app.content.monster_section_heading_corrections import apply_section_heading_corrections
+from app.content.native_monster_candidates import candidate_id
 from app.domain.catalog import CoverageStatus, MonsterCatalogCard
 from app.domain.models import CombatantTemplate
 
@@ -111,11 +112,11 @@ def _runtime_monsters() -> dict[str, CombatantTemplate]:
 
 def _card(row: dict[str, object], runtime: dict[str, CombatantTemplate]) -> MonsterCatalogCard:
     name = str(row["name"])
-    candidate_id = _READY_BY_NAME.get(name)
+    candidate = candidate_id(name, _READY_BY_NAME)
     deferred = deferred_environment_reason(name)
-    blockers = [f"deferred-environment:{deferred}"] if deferred else ([] if candidate_id else ["monster-combat-mechanics-not-certified"])
-    if candidate_id and not deferred:
-        template = runtime.get(candidate_id)
+    blockers = [f"deferred-environment:{deferred}"] if deferred else ([] if candidate else ["monster-combat-mechanics-not-certified"])
+    if candidate and not deferred:
+        template = runtime.get(candidate)
         if template is None:
             blockers = ["missing-runtime-template"]
         else:
@@ -126,13 +127,13 @@ def _card(row: dict[str, object], runtime: dict[str, CombatantTemplate]) -> Mons
             except Exception:
                 logger.exception("Full SRD certification failed for %s.", name)
                 blockers = ["monster-source-audit-failed"]
-    raw_ready = bool(candidate_id and not blockers)
+    raw_ready = bool(candidate and not blockers)
     return MonsterCatalogCard(
         id=str(row["id"]), name=name, challenge_rating=str(row["challenge"]), monster_type=str(row["type"]),
         armor_class=str(row["armorClass"]), hit_points=str(row["hitPoints"]), speed=str(row["speed"]),
         source_page=int(row["sourcePage"]), source_reference=str(row["sourceReference"]),
         coverage_status=CoverageStatus.RAW_READY if raw_ready else CoverageStatus.BLOCKED,
-        runnable_template_id=candidate_id if raw_ready else None,
+        runnable_template_id=candidate if raw_ready else None,
         blockers=blockers,
     )
 
