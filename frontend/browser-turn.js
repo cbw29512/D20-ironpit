@@ -7,7 +7,7 @@
   const L = () => window.IRON_PIT_BROWSER_SPELL_OFFENSE, U = () => window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const NO_SAVE = { resolveTurnAction: (sequence) => ({ events: [], sequence, used: false }) };
-  const V = () => window.IRON_PIT_BROWSER_SAVES || NO_SAVE;
+  const V = () => window.IRON_PIT_BROWSER_SAVES?.resolveTurnAction ? window.IRON_PIT_BROWSER_SAVES : NO_SAVE;
   const D = () => window.IRON_PIT_DICE;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (s, c) => c === "action" ? s.action_available : s.bonus_action_available };
   const NO_CONTROL = { cleanup: () => {}, shouldEscape: () => false };
