@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Literal
 
 from app.domain.actions import AbilityName, DamageTypeName
 from app.domain.spells import SpellSaveAction
@@ -16,7 +17,7 @@ class SaveDamageSpellSpec:
     dice_count: int
     dice_size: int
     damage_type: DamageTypeName
-    success_damage: str = "half"
+    success_damage: Literal["none", "half"] = "half"
     area_radius_ft: int | None = None
     damage_bonus: int = 0
     upcast_dice_per_level: int = 0
@@ -34,6 +35,14 @@ SIMPLE_SAVE_DAMAGE_SPELLS = {
     "blight": SaveDamageSpellSpec(
         "blight", "Blight", 4, 30, "constitution", 8, 8, "necrotic",
         upcast_dice_per_level=1,
+    ),
+    "circle-of-death": SaveDamageSpellSpec(
+        "circle-of-death", "Circle of Death", 6, 150, "constitution", 8, 8, "necrotic",
+        area_radius_ft=60, upcast_dice_per_level=2,
+    ),
+    "disintegrate": SaveDamageSpellSpec(
+        "disintegrate", "Disintegrate", 6, 60, "dexterity", 10, 6, "force",
+        success_damage="none", damage_bonus=40,
     ),
     "finger-of-death": SaveDamageSpellSpec(
         "finger-of-death", "Finger of Death", 7, 60, "constitution", 7, 8, "necrotic",
