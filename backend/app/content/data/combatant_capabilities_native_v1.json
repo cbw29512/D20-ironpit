@@ -130,5 +130,64 @@
     ],
     "visual": {"armor": "none", "main_hand": "Bites", "body_style": "swarm"},
     "source": "SRD 5.2.1 p. 362"
+  },
+  {
+    "schema_version": 1,
+    "id": "srd-sahuagin-warrior",
+    "name": "Sahuagin Warrior",
+    "archetype": "source-certified aquatic warrior",
+    "challenge_rating": "1/2",
+    "kind": "monster",
+    "size": "medium",
+    "armor_class": 12,
+    "max_hp": 22,
+    "speed_ft": 30,
+    "movement_modes": {
+      "walk_ft": 30,
+      "fly_ft": 0,
+      "climb_ft": 0,
+      "swim_ft": 40,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": 0,
+    "attack_roll_advantage_triggers": ["target_missing_hit_points"],
+    "attacks": [
+      {
+        "id": "sahuagin-warrior-claw",
+        "name": "Claw",
+        "weapon_id": "sahuagin-warrior-claw-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 3,
+        "damage": {"count": 1, "size": 6, "bonus": 1},
+        "damage_type": "slashing",
+        "animation": "slash",
+        "reach_ft": 5
+      }
+    ],
+    "primary_attack_id": "sahuagin-warrior-claw",
+    "unarmed_opportunity_attack": {"attack_bonus": 3, "damage": 2},
+    "attack_action": {
+      "id": "sahuagin-warrior-multiattack",
+      "name": "Multiattack",
+      "slots": [
+        {"attack_ids": ["sahuagin-warrior-claw"]},
+        {"attack_ids": ["sahuagin-warrior-claw"]}
+      ]
+    },
+    "saving_throw_bonuses": {
+      "strength": 1,
+      "dexterity": 0,
+      "constitution": 1,
+      "intelligence": 1,
+      "wisdom": 1,
+      "charisma": -1
+    },
+    "skill_bonuses": {"perception": 5},
+    "source_trait_names": ["Blood Frenzy", "Limited Amphibiousness", "Shark Telepathy"],
+    "source_bonus_action_names": ["Aquatic Charge"],
+    "damage_resistances": ["acid", "cold"],
+    "visual": {"armor": "natural", "main_hand": "claws", "body_style": "sahuagin-warrior"},
+    "source": "SRD 5.2.1 p. 321"
   }
 ]
