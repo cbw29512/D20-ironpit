@@ -3,6 +3,7 @@ from __future__ import annotations
 import re
 from collections import defaultdict
 
+from app.content.arena_eligibility import deferred_environment_reason
 from app.content.blocker_yield import build_blocker_signatures, single_family_yields
 from app.content.monster_catalog import build_monster_catalog, load_monster_rows
 from app.content.monster_trait_source_audit import parse_trait_names
@@ -97,15 +98,21 @@ def main() -> None:
     rows = load_monster_rows()
     rows_by_name = {str(row["name"]): row for row in rows}
     monster_names = set(rows_by_name)
+    cards = build_monster_catalog()
     ready_names = {
         card.name
-        for card in build_monster_catalog()
+        for card in cards
         if card.coverage_status is CoverageStatus.RAW_READY
     }
+    catalog_blocked = sum(card.coverage_status is not CoverageStatus.RAW_READY for card in cards)
     blockers_by_name: dict[str, list[str]] = {}
+    deferred_names: list[str] = []
     for row in rows:
         name = str(row["name"])
         if name in ready_names:
+            continue
+        if deferred_environment_reason(name) is not None:
+            deferred_names.append(name)
             continue
         blockers = _source_blockers(row, monster_names)
         blockers_by_name[name] = blockers or ["unclassified-source-audit-gap"]
@@ -116,8 +123,12 @@ def main() -> None:
     control_only = singles.get("condition-or-control", [])
     print(
         "CAPABILITY_YIELD_BASELINE"
-        f"\tready={len(ready_names)}\tblocked={len(blockers_by_name)}\tsignatures={len(signatures)}"
+        f"\tready={len(ready_names)}\tblocked={catalog_blocked}"
+        f"\tactionable_blocked={len(blockers_by_name)}\tdeferred={len(deferred_names)}"
+        f"\tsignatures={len(signatures)}"
     )
+    if deferred_names:
+        print("CAPABILITY_DEFERRED_ENVIRONMENT\t" + " | ".join(sorted(deferred_names)))
     for blocker, names in sorted(singles.items(), key=lambda item: (-len(item[1]), item[0])):
         print(f"CAPABILITY_SINGLE_FAMILY\t{blocker}\t{len(names)}\t" + " | ".join(names))
     for signature, names in _control_signatures(rows_by_name, control_only).items():
