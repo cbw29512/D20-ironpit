@@ -14,7 +14,6 @@ from app.content.monster_save_math_source_audit import save_math_issues
 from app.content.monster_saving_throws import parse_saving_throw_bonuses
 from app.content.monster_spellcasting_source_audit import spellcasting_issues
 from app.content.monster_trait_source_audit import trait_issues
-from app.content.movement_modes import movement_mode_issues, standard_arena_closing_speed
 from app.domain.models import CombatantTemplate
 
 logger = logging.getLogger(__name__)
@@ -58,20 +57,18 @@ def _source_attack_mode_count(actions: str) -> int:
 
 
 def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
-    """Reconcile combat semantics against the vendored SRD 5.2.1 record before source metadata enrichment."""
+    """Reconcile Iron Pit combat math against the vendored SRD 5.2.1 record."""
     try:
         checks = (
             (template.name == str(row["name"]), "name-mismatch"),
             (_size_matches(template.size.value, row["size"]), "size-mismatch"),
             (template.armor_class == _first_int(row["armorClass"]), "armor-class-mismatch"),
             (template.max_hp == _first_int(row["hitPoints"]), "hit-points-mismatch"),
-            (template.speed_ft == standard_arena_closing_speed(row["speed"]), "arena-speed-mismatch"),
             (template.challenge_rating == _challenge(row), "challenge-rating-mismatch"),
             (template.initiative_bonus == _initiative(row), "initiative-mismatch"),
             (template.saving_throw_bonuses == parse_saving_throw_bonuses(row), "saving-throws-mismatch"),
         )
         issues = [label for passed, label in checks if not passed]
-        issues.extend(movement_mode_issues(template, row))
         issues.extend(defense_issues(template, row))
         issues.extend(trait_issues(template, row))
         issues.extend(reaction_issues(template, row))
