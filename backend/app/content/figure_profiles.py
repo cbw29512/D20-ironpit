@@ -32,6 +32,7 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Bandit": _p("humanoid", "bandit"),
     "Bandit Captain": _p("humanoid", "bandit-captain"),
     "Bat": _p("bat", "bat"),
+    "Berserker": _p("humanoid", "berserker"),
     "Black Bear": _p("bear", "bear"),
     "Blood Hawk": _p("bird", "blood-hawk"),
     "Boar": _p("quadruped", "tusks"),

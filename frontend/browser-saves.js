@@ -18,7 +18,8 @@
 
   function saveMode(state, ability) {
     const advantage = (ability === "strength" && state.active_effect_ids.includes("rage") ? 1 : 0)
-      + B2().dangerSenseAdvantage(state, ability);
+      + B2().dangerSenseAdvantage(state, ability)
+      + (state.template.saving_throw_advantage_triggers?.includes("attacker_bloodied") && state.current_hp * 2 <= S().effectiveMaxHp(state) ? 1 : 0);
     const disadvantage = ability === "dexterity" && state.active_effect_ids.includes("restrained") ? 1 : 0;
     return R().modeFromSources(advantage, disadvantage);
   }

@@ -189,5 +189,53 @@
     "damage_resistances": ["acid", "cold"],
     "visual": {"armor": "natural", "main_hand": "claws", "body_style": "sahuagin-warrior"},
     "source": "SRD 5.2.1 p. 321"
+  },
+  {
+    "schema_version": 1,
+    "id": "srd-berserker",
+    "name": "Berserker",
+    "archetype": "source-certified bloodied combatant",
+    "challenge_rating": "2",
+    "kind": "monster",
+    "size": "medium",
+    "armor_class": 13,
+    "max_hp": 67,
+    "speed_ft": 30,
+    "movement_modes": {
+      "walk_ft": 30,
+      "fly_ft": 0,
+      "climb_ft": 0,
+      "swim_ft": 0,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": 1,
+    "attack_roll_advantage_triggers": ["attacker_bloodied"],
+    "saving_throw_advantage_triggers": ["attacker_bloodied"],
+    "attacks": [
+      {
+        "id": "srd-berserker-greataxe",
+        "name": "Greataxe",
+        "weapon_id": "srd-berserker-greataxe-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 5,
+        "damage": {"count": 1, "size": 12, "bonus": 3},
+        "damage_type": "slashing",
+        "animation": "heavy-strike",
+        "reach_ft": 5
+      }
+    ],
+    "primary_attack_id": "srd-berserker-greataxe",
+    "saving_throw_bonuses": {
+      "strength": 3,
+      "dexterity": 1,
+      "constitution": 3,
+      "intelligence": -1,
+      "wisdom": 0,
+      "charisma": -1
+    },
+    "source_trait_names": ["Bloodied Frenzy"],
+    "visual": {"armor": "hide", "main_hand": "greataxe", "body_style": "humanoid"},
+    "source": "SRD 5.2.1 p. 263"
   }
 ]

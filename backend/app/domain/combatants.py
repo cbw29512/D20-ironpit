@@ -22,7 +22,8 @@ from app.domain.weapons import (
     WeaponAttackKind,
 )
 
-AttackRollAdvantageTrigger = Literal["target_missing_hit_points"]
+AttackRollAdvantageTrigger = Literal["target_missing_hit_points", "attacker_bloodied"]
+SavingThrowAdvantageTrigger = Literal["attacker_bloodied"]
 
 
 class VisualLoadout(BaseModel):
@@ -55,6 +56,7 @@ class CombatantTemplate(BaseModel):
     initiative_bonus: int
     progression_features: ProgressionCombatFeatures = Field(default_factory=ProgressionCombatFeatures)
     attack_roll_advantage_triggers: list[AttackRollAdvantageTrigger] = Field(default_factory=list)
+    saving_throw_advantage_triggers: list[SavingThrowAdvantageTrigger] = Field(default_factory=list)
     weapon_attack: WeaponAttack
     alternate_weapon_attacks: list[WeaponAttack] = Field(default_factory=list)
     unarmed_opportunity_attack: UnarmedStrikeDamage | None = None

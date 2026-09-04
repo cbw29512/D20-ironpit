@@ -27,7 +27,7 @@
   const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
   function conditionSources(attacker, defender, distance, targetId) {
     let advantage = M().attacksAgainstAdvantage(defender) + B2().attacksAgainstAdvantage(defender), disadvantage = 0;
-    if (attacker.template.attack_roll_advantage_triggers?.includes("target_missing_hit_points") && defender.current_hp < defender.template.max_hp) advantage += 1;
+    if ((attacker.template.attack_roll_advantage_triggers?.includes("target_missing_hit_points") && defender.current_hp < defender.template.max_hp) || (attacker.template.attack_roll_advantage_triggers?.includes("attacker_bloodied") && attacker.current_hp * 2 <= S().effectiveMaxHp(attacker))) advantage += 1;
     if (Q().has(attacker, "blinded")) disadvantage += 1;
     if (attacker.active_effect_ids.includes("prone")) disadvantage += 1;
     if (attacker.active_effect_ids.includes("restrained")) disadvantage += 1;
@@ -45,7 +45,7 @@
     const enemies = attacker.side === "heroes" ? setup.monsters : setup.heroes;
     return enemies.some((enemy) => enemy.state.is_alive && !enemy.state.is_dead && enemy.state.current_hp > 0 && !Q().incapacitated(enemy.state) && S().distance(attacker, enemy) <= 5);
   }
-  const bloodiedFury = (state, attack) => state.template.traits?.includes("bloodied-fury") && attack.kind === "melee" && state.current_hp * 2 <= state.template.max_hp ? 1 : 0;
+  const bloodiedFury = (state, attack) => state.template.traits?.includes("bloodied-fury") && attack.kind === "melee" && state.current_hp * 2 <= S().effectiveMaxHp(state) ? 1 : 0;
   function adjustedDamage(target, amount, type, allowVulnerability = true) {
     if (target.template.damage_immunities?.includes(type)) return 0;
     let value = amount;

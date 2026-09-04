@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.barbarian import rage_active
+from app.combat.bloodied import is_bloodied
 from app.combat.condition_rules import automatically_fails_strength_dexterity_save
 from app.combat.danger_sense import danger_sense_advantage
 from app.combat.dice import DiceProvider
@@ -11,8 +12,12 @@ from app.domain.models import CombatantState, DiceRoll, RollMode
 from app.domain.modifiers import ModifierKind
 
 
+def saving_throw_advantage_sources(state: CombatantState) -> int:
+    return int("attacker_bloodied" in state.template.saving_throw_advantage_triggers and is_bloodied(state))
+
+
 def saving_throw_mode(state: CombatantState, ability: str) -> RollMode:
-    advantage = int(ability == "strength" and rage_active(state)) + danger_sense_advantage(state, ability)
+    advantage = saving_throw_advantage_sources(state) + int(ability == "strength" and rage_active(state)) + danger_sense_advantage(state, ability)
     disadvantage = 1 if ability == "dexterity" and RESTRAINED_EFFECT_ID in state.active_effect_ids else 0
     if (advantage > 0) == (disadvantage > 0):
         return RollMode.NORMAL

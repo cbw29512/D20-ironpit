@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.combat.bloodied import is_bloodied
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.condition_rules import attacks_have_advantage_against, has_condition
 from app.combat.grapple import (
@@ -20,6 +21,7 @@ FRIGHTENED_EFFECT_ID = "frightened"
 POISONED_EFFECT_ID = "poisoned"
 PRONE_EFFECT_ID = "prone"
 _TARGET_MISSING_HP_ADVANTAGE = "target_missing_hit_points"
+_ATTACKER_BLOODIED_ADVANTAGE = "attacker_bloodied"
 
 
 def attack_roll_condition_sources(
@@ -35,6 +37,8 @@ def attack_roll_condition_sources(
         _TARGET_MISSING_HP_ADVANTAGE in attacker.template.attack_roll_advantage_triggers
         and defender.current_hp < defender.template.max_hp
     ):
+        advantage += 1
+    if _ATTACKER_BLOODIED_ADVANTAGE in attacker.template.attack_roll_advantage_triggers and is_bloodied(attacker):
         advantage += 1
     if has_condition(attacker, BLINDED_EFFECT_ID):
         disadvantage += 1

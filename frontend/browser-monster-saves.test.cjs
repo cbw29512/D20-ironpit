@@ -6,7 +6,12 @@ const path = require("node:path");
 const vm = require("node:vm");
 
 global.window = globalThis;
-vm.runInThisContext(fs.readFileSync(path.join(__dirname, "browser-monsters-generated.js"), "utf8"));
+const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
+load("browser-monsters-generated.js");
+load("browser-rolls.js");
+load("browser-state.js");
+load("browser-attack.js");
+load("browser-saves.js");
 const expected = ["charisma", "constitution", "dexterity", "intelligence", "strength", "wisdom"];
 const monsters = Object.values(window.IRON_PIT_BROWSER_MONSTERS);
 assert.deepEqual(window.IRON_PIT_BROWSER_MONSTERS["srd-commoner"].saving_throw_bonuses, {
@@ -21,4 +26,21 @@ for (const monster of monsters) {
   assert.deepEqual(Object.keys(monster.saving_throw_bonuses || {}).sort(), expected, `${monster.name} must expose all six certified saves`);
   for (const value of Object.values(monster.saving_throw_bonuses)) assert.equal(Number.isInteger(value), true, `${monster.name} saves must be integers`);
 }
-console.log("Generated RAW-certified browser monsters expose all six SRD saving throws.");
+const berserker = window.IRON_PIT_BROWSER_MONSTERS["srd-berserker"];
+assert.ok(berserker, "Berserker must be present in the generated RAW-certified browser roster");
+assert.deepEqual(berserker.attack_roll_advantage_triggers, ["attacker_bloodied"]);
+assert.deepEqual(berserker.saving_throw_advantage_triggers, ["attacker_bloodied"]);
+const state = window.IRON_PIT_BROWSER_STATE.buildState(berserker);
+const defender = window.IRON_PIT_BROWSER_STATE.buildState(window.IRON_PIT_BROWSER_MONSTERS["srd-commoner"]);
+assert.deepEqual(window.IRON_PIT_BROWSER_ATTACK.conditionSources(state, defender, 5, "defender"), { advantage: 0, disadvantage: 0 });
+assert.equal(window.IRON_PIT_BROWSER_SAVES.saveMode(state, "wisdom"), "normal");
+state.current_hp = 33;
+assert.equal(window.IRON_PIT_BROWSER_ATTACK.conditionSources(state, defender, 5, "defender").advantage, 1);
+assert.equal(window.IRON_PIT_BROWSER_SAVES.saveMode(state, "wisdom"), "advantage");
+state.max_hp_bonus = 5;
+state.current_hp = 35;
+assert.equal(window.IRON_PIT_BROWSER_ATTACK.conditionSources(state, defender, 5, "defender").advantage, 1, "Bloodied must use effective Max HP");
+assert.equal(window.IRON_PIT_BROWSER_SAVES.saveMode(state, "wisdom"), "advantage", "Save trigger must use effective Max HP");
+state.active_effect_ids.push("restrained");
+assert.equal(window.IRON_PIT_BROWSER_SAVES.saveMode(state, "dexterity"), "normal", "Bloodied Advantage and Restrained Disadvantage must cancel");
+console.log("Generated RAW-certified browser monsters expose all six SRD saves and Bloodied Frenzy parity.");

@@ -12,7 +12,7 @@ from app.domain.capability_attacks import (
     SaveCapabilityDefinition,
 )
 from app.domain.character_builds import AbilityScores
-from app.domain.combatants import AttackRollAdvantageTrigger, ResourceDefinition, VisualLoadout
+from app.domain.combatants import AttackRollAdvantageTrigger, ResourceDefinition, SavingThrowAdvantageTrigger, VisualLoadout
 from app.domain.movement import MovementModes
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.reactions import ParryReaction, RedirectAttackReaction
@@ -40,6 +40,7 @@ class CombatantDefinition(BaseModel):
     initiative_bonus: int
     progression_features: ProgressionCombatFeatures = Field(default_factory=ProgressionCombatFeatures)
     attack_roll_advantage_triggers: list[AttackRollAdvantageTrigger] = Field(default_factory=list)
+    saving_throw_advantage_triggers: list[SavingThrowAdvantageTrigger] = Field(default_factory=list)
     attacks: list[AttackCapabilityDefinition] = Field(min_length=1)
     primary_attack_id: str
     unarmed_opportunity_attack: UnarmedStrikeDamage | None = None
