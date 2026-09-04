@@ -1,0 +1,90 @@
+[
+  {
+    "schema_version": 1,
+    "id": "srd-spy",
+    "name": "Spy",
+    "archetype": "source-certified covert skirmisher",
+    "challenge_rating": "1",
+    "kind": "monster",
+    "size": "medium",
+    "armor_class": 12,
+    "max_hp": 27,
+    "speed_ft": 30,
+    "movement_modes": {
+      "walk_ft": 30,
+      "fly_ft": 0,
+      "climb_ft": 30,
+      "swim_ft": 0,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": 4,
+    "attacks": [
+      {
+        "id": "srd-spy-shortsword",
+        "name": "Shortsword",
+        "weapon_id": "srd-spy-shortsword-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 4,
+        "damage": {"count": 1, "size": 6, "bonus": 2},
+        "damage_type": "piercing",
+        "animation": "slash",
+        "reach_ft": 5,
+        "effects": [
+          {
+            "kind": "damage",
+            "source": "Spy Poison",
+            "dice": {"count": 2, "size": 6, "bonus": 0},
+            "damage_type": "poison"
+          }
+        ]
+      },
+      {
+        "id": "srd-spy-hand-crossbow",
+        "name": "Hand Crossbow",
+        "weapon_id": "srd-spy-hand-crossbow-weapon",
+        "attack_kind": "ranged",
+        "attack_bonus": 4,
+        "damage": {"count": 1, "size": 6, "bonus": 2},
+        "damage_type": "piercing",
+        "animation": "projectile",
+        "normal_range_ft": 30,
+        "long_range_ft": 120,
+        "projectile": "bolt",
+        "effects": [
+          {
+            "kind": "damage",
+            "source": "Spy Poison",
+            "dice": {"count": 2, "size": 6, "bonus": 0},
+            "damage_type": "poison"
+          }
+        ]
+      }
+    ],
+    "primary_attack_id": "srd-spy-shortsword",
+    "saving_throw_bonuses": {
+      "strength": 0,
+      "dexterity": 2,
+      "constitution": 0,
+      "intelligence": 1,
+      "wisdom": 2,
+      "charisma": 3
+    },
+    "skill_bonuses": {
+      "deception": 5,
+      "insight": 4,
+      "investigation": 5,
+      "perception": 6,
+      "sleight_of_hand": 4,
+      "stealth": 6
+    },
+    "source_bonus_action_names": ["Cunning Action"],
+    "visual": {
+      "armor": "leather",
+      "main_hand": "shortsword",
+      "off_hand": "hand crossbow",
+      "body_style": "humanoid"
+    },
+    "source": "SRD 5.2.1 p. 329"
+  }
+]
