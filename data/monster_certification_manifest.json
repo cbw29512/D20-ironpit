@@ -2506,12 +2506,10 @@
       "srd_source_reference": "SRD 5.2.1 p. 278",
       "runtime_template_id": "srd-cultist",
       "detected_combat_mechanics": [
-        "attack-roll",
-        "unsupported-action-rider"
+        "attack-roll"
       ],
       "supported_mechanics": [
-        "attack-roll",
-        "unsupported-action-rider"
+        "attack-roll"
       ],
       "unsupported_mechanics": [],
       "python_certification_status": "certified",
