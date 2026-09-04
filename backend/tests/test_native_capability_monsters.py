@@ -7,6 +7,7 @@ from app.content.capability_registry import (
 )
 from app.content.legacy_monster_roster import build_legacy_monster_templates
 from app.content.monster_catalog import load_monster_rows
+from app.content.monster_save_math_source_audit import save_math_issues
 from app.content.monster_source_audit import audit_monster_source
 from app.content.roster import build_arena_roster
 from app.domain.traits import CombatTrait
@@ -47,6 +48,17 @@ def test_native_monsters_compile_and_pass_full_srd_source_audit() -> None:
     for template_id, source_name in NATIVE.items():
         assert get_capability_definition(template_id).kind == "monster"
         assert audit_monster_source(runtime[template_id], rows[source_name]) == []
+
+
+def test_srd_long_wide_line_wording_matches_shared_area_audit() -> None:
+    rows = {str(row["name"]): row for row in load_monster_rows()}
+    for template_id, source_name in {
+        "srd-black-dragon-wyrmling": "Black Dragon Wyrmling",
+        "srd-blue-dragon-wyrmling": "Blue Dragon Wyrmling",
+    }.items():
+        monster = build_combatant_from_capabilities(template_id)
+        action = monster.saving_throw_actions[0]
+        assert save_math_issues(action, str(rows[source_name]["actions"])) == []
 
 
 def test_recharge_breath_family_uses_shared_resource_and_area_primitives() -> None:
