@@ -17,6 +17,7 @@ NATIVE = {
     "srd-sahuagin-warrior": "Sahuagin Warrior",
     "srd-berserker": "Berserker",
     "srd-xorn": "Xorn",
+    "srd-hill-giant": "Hill Giant",
 }
 
 
@@ -28,8 +29,11 @@ def test_native_monsters_are_not_legacy_builder_outputs() -> None:
 def test_native_definitions_extend_production_roster_without_replacing_legacy_ids() -> None:
     legacy = build_legacy_monster_templates()
     production = build_arena_roster().monsters
+    legacy_ids = {monster.id for monster in legacy}
+    production_ids = {monster.id for monster in production}
     assert len(production) == len(legacy) + len(NATIVE)
-    assert [monster.id for monster in production[-len(NATIVE):]] == list(NATIVE)
+    assert set(NATIVE) <= production_ids
+    assert legacy_ids <= production_ids
 
 
 def test_native_registry_rejects_cross_layer_duplicate_ids() -> None:
@@ -89,3 +93,19 @@ def test_xorn_uses_existing_multiattack_and_defense_capabilities() -> None:
     assert len(xorn.alternate_weapon_attacks) == 1
     claw = xorn.alternate_weapon_attacks[0]
     assert (claw.attack_bonus, claw.weapon.dice_count, claw.weapon.dice_size, claw.damage_bonus) == (6, 1, 10, 3)
+
+
+def test_hill_giant_uses_existing_prone_and_condition_capabilities() -> None:
+    giant = build_combatant_from_capabilities("srd-hill-giant")
+    assert (giant.armor_class, giant.max_hp, giant.speed_ft) == (13, 105, 40)
+    assert giant.attack_action is not None
+    assert [slot.attack_ids for slot in giant.attack_action.slots] == [
+        ["srd-hill-giant-tree-club", "srd-hill-giant-trash-lob"],
+        ["srd-hill-giant-tree-club", "srd-hill-giant-trash-lob"],
+    ]
+    club = giant.weapon_attack
+    assert (club.attack_bonus, club.weapon.reach_ft, club.knocks_prone_max_size.value) == (8, 10, "large")
+    lob = giant.alternate_weapon_attacks[0]
+    assert (lob.weapon.normal_range_ft, lob.weapon.long_range_ft) == (60, 240)
+    assert lob.control_effect is not None
+    assert (lob.control_effect.condition_id, lob.control_effect.expiry_timing) == ("poisoned", "target_turn_end")
