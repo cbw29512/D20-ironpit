@@ -24,7 +24,7 @@
       }
     },
     "cleric": {
-      "cantrips": ["sacred-flame", "toll-the-dead", "word-of-radiance"],
+      "cantrips": ["guidance", "resistance", "sacred-flame"],
       "levels": {
         "1": ["bless", "cure-wounds", "guiding-bolt", "healing-word"],
         "2": ["aid", "blindness-deafness", "spiritual-weapon"],
@@ -38,7 +38,7 @@
       }
     },
     "druid": {
-      "cantrips": ["produce-flame", "shillelagh", "thorn-whip"],
+      "cantrips": ["poison-spray", "produce-flame", "starry-wisp", "thunderclap"],
       "levels": {
         "1": ["cure-wounds", "faerie-fire", "healing-word", "thunderwave"],
         "2": ["hold-person", "lesser-restoration", "moonbeam"],
@@ -89,10 +89,10 @@
       "cantrips": ["eldritch-blast", "mind-sliver", "poison-spray", "true-strike"],
       "levels": {
         "1": ["armor-of-agathys", "hellish-rebuke", "hex"],
-        "2": ["hold-person", "mind-spike", "scorching-ray"],
-        "3": ["counterspell", "fear", "fireball"],
-        "4": ["banishment", "blight", "fire-shield"],
-        "5": ["hold-monster", "insect-plague", "synaptic-static"],
+        "2": ["hold-person", "mind-spike", "mirror-image"],
+        "3": ["counterspell", "fear", "vampiric-touch"],
+        "4": ["banishment", "blight", "charm-monster"],
+        "5": ["hold-monster", "jallarzis-storm-of-radiance", "synaptic-static"],
         "6": ["circle-of-death"],
         "7": ["finger-of-death"],
         "8": ["power-word-stun"],
