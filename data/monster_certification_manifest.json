@@ -9685,7 +9685,7 @@
       "monster_name": "Xorn",
       "srd_source_page": 343,
       "srd_source_reference": "SRD 5.2.1 p. 343",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-xorn",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -9707,8 +9707,9 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-certified",
-        "trait"
+        "trait",
+        "uncertified-trait:earth-glide",
+        "uncertified-trait:treasure-sense"
       ]
     },
     {
