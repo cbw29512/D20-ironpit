@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 117,
-    "blocked": 213
+    "public_ready": 118,
+    "blocked": 212
   },
   "monsters": [
     {
@@ -7471,7 +7471,7 @@
       "monster_name": "Sahuagin Warrior",
       "srd_source_page": 321,
       "srd_source_reference": "SRD 5.2.1 p. 321",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-sahuagin-warrior",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -7483,19 +7483,15 @@
         "attack-roll",
         "bonus-action",
         "damage-or-condition-defense",
-        "multiattack"
-      ],
-      "unsupported_mechanics": [
+        "multiattack",
         "trait"
       ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "monster-combat-mechanics-not-certified",
-        "trait"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-salamander",

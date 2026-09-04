@@ -28,6 +28,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "goblin-scimitar",
@@ -181,6 +182,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "goblin-minion-dagger-melee",
@@ -305,6 +307,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "hobgoblin-longsword",
@@ -444,6 +447,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "kobold-warrior-dagger-melee",
@@ -571,6 +575,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "goblin-boss-scimitar",
@@ -751,6 +756,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "bandit-scimitar",
@@ -874,6 +880,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "commoner-club",
@@ -972,6 +979,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "guard-spear-melee",
@@ -1094,6 +1102,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "giant-rat-bite",
@@ -1194,6 +1203,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "giant-weasel-bite",
@@ -1290,6 +1300,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "srd-blood-hawk-beak",
@@ -1403,6 +1414,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "axe-beak-beak",
@@ -1499,6 +1511,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "giant-lizard-bite",
@@ -1597,6 +1610,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "wolf-bite",
@@ -1702,6 +1716,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "dire-wolf-bite",
@@ -1807,6 +1822,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "black-bear-rend",
@@ -1922,6 +1938,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "brown-bear-bite",
@@ -2065,6 +2082,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "baboon-bite",
@@ -2165,6 +2183,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "camel-bite",
@@ -2261,6 +2280,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "deer-ram",
@@ -2359,6 +2379,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "draft-horse-hooves",
@@ -2455,6 +2476,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "giant-badger-bite",
@@ -2553,6 +2575,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "jackal-bite",
@@ -2649,6 +2672,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "boar-gore",
@@ -2750,6 +2774,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "elk-ram",
@@ -2848,6 +2873,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "giant-boar-gore",
@@ -2949,6 +2975,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "minotaur-skeleton-gore",
@@ -3077,6 +3104,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "triceratops-gore",
@@ -3194,6 +3222,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "warhorse-skeleton-hooves",
@@ -3299,6 +3328,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "allosaurus-bite",
@@ -3422,6 +3452,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "goat-ram",
@@ -3516,6 +3547,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "merfolk-skirmisher-ocean-spear-ranged",
@@ -3680,6 +3712,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "hippogriff-rend",
@@ -3797,6 +3830,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "awakened-shrub-rake",
@@ -3893,6 +3927,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "badger-bite",
@@ -3987,6 +4022,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "bat-bite",
@@ -4079,6 +4115,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "cat-scratch",
@@ -4173,6 +4210,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "crab-claw",
@@ -4267,6 +4305,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "frog-bite",
@@ -4362,6 +4401,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "hawk-talons",
@@ -4454,6 +4494,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "lizard-bite",
@@ -4548,6 +4589,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "owl-talons",
@@ -4642,6 +4684,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "rat-bite",
@@ -4736,6 +4779,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "raven-beak",
@@ -4830,6 +4874,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "weasel-bite",
@@ -4922,6 +4967,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "eagle-talons",
@@ -5018,6 +5064,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "panther-rend",
@@ -5116,6 +5163,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "plesiosaurus-bite",
@@ -5214,6 +5262,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "polar-bear-rend",
@@ -5331,6 +5380,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "pony-hooves",
@@ -5427,6 +5477,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "pteranodon-bite",
@@ -5525,6 +5576,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "riding-horse-hooves",
@@ -5621,6 +5673,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "tiger-rend",
@@ -5724,6 +5777,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "vulture-beak",
@@ -5824,6 +5878,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "giant-fire-beetle-bite",
@@ -5920,6 +5975,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "giant-goat-ram",
@@ -6018,6 +6074,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "giant-owl-talons",
@@ -6120,6 +6177,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "hyena-bite",
@@ -6220,6 +6278,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "giant-bat-bite",
@@ -6316,6 +6375,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "mastiff-bite",
@@ -6417,6 +6477,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "mule-hooves",
@@ -6515,6 +6576,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "rhinoceros-gore",
@@ -6613,6 +6675,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "warhorse-hooves",
@@ -6711,6 +6774,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "ogre-greatclub",
@@ -6855,6 +6919,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "owlbear-rend",
@@ -6970,6 +7035,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "saber-toothed-tiger-rend",
@@ -7089,6 +7155,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "scout-longbow",
@@ -7231,6 +7298,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "warrior-infantry-spear-melee",
@@ -7356,6 +7424,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "crocodile-bite",
@@ -7464,6 +7533,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "giant-crab-claw",
@@ -7572,6 +7642,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "constrictor-snake-bite",
@@ -7694,6 +7765,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "srd-giant-scorpion-claw",
@@ -7861,6 +7933,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "srd-grick-beak",
@@ -8010,6 +8083,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "srd-griffon-rend",
@@ -8136,6 +8210,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "giant-centipede-bite",
@@ -8243,6 +8318,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "giant-vulture-gouge",
@@ -8355,6 +8431,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "wyvern-bite",
@@ -8515,6 +8592,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "giant-venomous-snake-bite",
@@ -8628,6 +8706,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "giant-wasp-sting",
@@ -8742,6 +8821,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "giant-wolf-spider-bite",
@@ -8858,6 +8938,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "archelon-bite",
@@ -8975,6 +9056,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "ankylosaurus-tail",
@@ -9095,6 +9177,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "giant-eagle-rend",
@@ -9226,6 +9309,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "giant-elk-ram",
@@ -9340,6 +9424,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "giant-crocodile-bite",
@@ -9494,6 +9579,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "giant-constrictor-snake-bite",
@@ -9636,6 +9722,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "tyrannosaurus-rex-bite",
@@ -9788,6 +9875,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "srd-animated-armor-slam",
@@ -9914,6 +10002,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "srd-animated-flying-sword-slash",
@@ -10021,6 +10110,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "srd-awakened-tree-slam",
@@ -10122,6 +10212,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "srd-cultist-ritual-sickle",
@@ -10231,6 +10322,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "srd-flying-snake-bite",
@@ -10338,6 +10430,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "srd-gargoyle-claw",
@@ -10461,6 +10554,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "srd-grimlock-bone-cudgel",
@@ -10570,6 +10664,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "srd-guard-captain-javelin-melee",
@@ -10737,6 +10832,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "srd-hippopotamus-bite",
@@ -10854,6 +10950,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "srd-lemure-vile-slime",
@@ -10961,6 +11058,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "srd-manticore-rend",
@@ -11110,6 +11208,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "srd-ogre-zombie-slam",
@@ -11215,6 +11314,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "srd-pegasus-hooves",
@@ -11324,6 +11424,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "srd-scorpion-sting",
@@ -11429,6 +11530,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "srd-skeleton-shortsword",
@@ -11557,6 +11659,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "srd-spider-bite",
@@ -11665,6 +11768,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "srd-tough-mace",
@@ -11790,6 +11894,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "srd-venomous-snake-bite",
@@ -11899,6 +12004,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "srd-violet-fungus-rotting-touch",
@@ -12019,6 +12125,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "srd-zombie-slam",
@@ -12124,6 +12231,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "srd-worg-bite",
@@ -12230,6 +12338,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "srd-swarm-of-bats-bites",
@@ -12356,6 +12465,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "srd-swarm-of-rats-bites",
@@ -12482,6 +12592,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "srd-swarm-of-crawling-claws-swarm-of-grasping-hands",
@@ -12618,6 +12729,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "srd-bandit-captain-scimitar",
@@ -12766,6 +12878,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "srd-knight-greatsword",
@@ -12942,6 +13055,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "srd-noble-rapier",
@@ -13043,6 +13157,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "attack_roll_advantage_triggers": [],
     "attacks": [
       {
         "id": "srd-warrior-veteran-greatsword",
