@@ -59,7 +59,7 @@ def test_missing_hp_advantage_cancels_attack_disadvantage_normally() -> None:
 
     event = resolve_attack(
         1, 1, wolf.state, hero.state, wolf.state.template.weapon_attack, 5,
-        FixedDiceProvider([12, 18, 3]),
+        FixedDiceProvider([1]),
         actor_event_id=wolf.combatant_id,
         target_event_id=hero.combatant_id,
     )
