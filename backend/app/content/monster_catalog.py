@@ -46,7 +46,7 @@ _READY_BY_NAME = {
     "Polar Bear": "srd-polar-bear", "Pony": "srd-pony", "Pteranodon": "srd-pteranodon",
     "Rat": "srd-rat", "Raven": "srd-raven", "Rhinoceros": "srd-rhinoceros",
     "Riding Horse": "srd-riding-horse", "Saber-Toothed Tiger": "srd-saber-toothed-tiger",
-    "Scout": "srd-scout", "Tiger": "srd-tiger", "Triceratops": "srd-triceratops",
+    "Sahuagin Warrior": "srd-sahuagin-warrior", "Scout": "srd-scout", "Tiger": "srd-tiger", "Triceratops": "srd-triceratops",
     "Tyrannosaurus Rex": "srd-tyrannosaurus-rex",
     "Vulture": "srd-vulture", "Warhorse": "srd-warhorse", "Warhorse Skeleton": "srd-warhorse-skeleton",
     "Warrior Infantry": "srd-warrior-infantry", "Warrior Veteran": "srd-warrior-veteran",
