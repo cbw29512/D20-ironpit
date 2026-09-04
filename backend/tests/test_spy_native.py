@@ -23,6 +23,8 @@ def test_spy_native_profile_matches_complete_srd_source() -> None:
     assert spy.movement_modes.walk_ft == 30
     assert spy.movement_modes.climb_ft == 30
     assert spy.source_bonus_action_names == ["Cunning Action"]
+    assert spy.unarmed_opportunity_attack is not None
+    assert (spy.unarmed_opportunity_attack.attack_bonus, spy.unarmed_opportunity_attack.damage) == (2, 1)
     assert bonus_action_issues(spy, row) == []
     assert audit_monster_source(spy, row) == []
 

@@ -62,6 +62,7 @@
       }
     ],
     "primary_attack_id": "srd-spy-shortsword",
+    "unarmed_opportunity_attack": {"attack_bonus": 2, "damage": 1},
     "saving_throw_bonuses": {
       "strength": 0,
       "dexterity": 2,

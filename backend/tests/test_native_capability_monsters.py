@@ -18,6 +18,7 @@ NATIVE = {
     "srd-berserker": "Berserker",
     "srd-xorn": "Xorn",
     "srd-hill-giant": "Hill Giant",
+    "srd-spy": "Spy",
 }
 
 
