@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 123,
-    "blocked": 207
+    "public_ready": 128,
+    "blocked": 202
   },
   "monsters": [
     {
@@ -9637,7 +9637,7 @@
       "monster_name": "Young Black Dragon",
       "srd_source_page": 264,
       "srd_source_reference": "SRD 5.2.1 p. 264",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-young-black-dragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -9650,30 +9650,25 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
+        "limited-use",
         "multiattack",
+        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "limited-use",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-young-blue-dragon",
       "monster_name": "Young Blue Dragon",
       "srd_source_page": 266,
       "srd_source_reference": "SRD 5.2.1 p. 266",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-young-blue-dragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -9685,22 +9680,17 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
+        "limited-use",
         "multiattack",
+        "save-or-complex-action",
         "saving-throw-action"
       ],
-      "unsupported_mechanics": [
-        "limited-use",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-young-brass-dragon",
@@ -9853,7 +9843,7 @@
       "monster_name": "Young Green Dragon",
       "srd_source_page": 293,
       "srd_source_reference": "SRD 5.2.1 p. 293",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-young-green-dragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -9866,30 +9856,25 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
+        "limited-use",
         "multiattack",
+        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "limited-use",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-young-red-dragon",
       "monster_name": "Young Red Dragon",
       "srd_source_page": 318,
       "srd_source_reference": "SRD 5.2.1 p. 318",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-young-red-dragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -9901,22 +9886,17 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
+        "limited-use",
         "multiattack",
+        "save-or-complex-action",
         "saving-throw-action"
       ],
-      "unsupported_mechanics": [
-        "limited-use",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-young-silver-dragon",
@@ -9960,7 +9940,7 @@
       "monster_name": "Young White Dragon",
       "srd_source_page": 340,
       "srd_source_reference": "SRD 5.2.1 p. 340",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-young-white-dragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -9973,23 +9953,18 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
+        "limited-use",
         "multiattack",
+        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "limited-use",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-zombie",
