@@ -113,7 +113,7 @@ def _runtime_monsters() -> dict[str, CombatantTemplate]:
 def _card(row: dict[str, object], runtime: dict[str, CombatantTemplate]) -> MonsterCatalogCard:
     name = str(row["name"])
     candidate_id = NATIVE_READY_BY_NAME.get(name) or _READY_BY_NAME.get(name)
-    deferred = deferred_environment_reason(name)
+    deferred = deferred_environment_reason(name, str(row.get("speed", "")))
     blockers = [f"deferred-environment:{deferred}"] if deferred else ([] if candidate_id else ["monster-combat-mechanics-not-certified"])
     if candidate_id and not deferred:
         template = runtime.get(candidate_id)

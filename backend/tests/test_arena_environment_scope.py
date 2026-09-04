@@ -1,4 +1,4 @@
-from app.content.arena_eligibility import standard_arena_eligible
+from app.content.arena_eligibility import source_environment_reason, standard_arena_eligible
 from app.content.legacy_monster_roster import build_legacy_monster_templates
 from app.content.monster_catalog import build_monster_catalog
 from app.content.monsters_zero_engine import build_zero_engine_monsters
@@ -6,14 +6,27 @@ from app.domain.catalog import CoverageStatus
 from app.domain.movement import MovementModes
 
 
-def test_aquatic_only_killer_whale_is_deferred_from_standard_arena() -> None:
-    templates = build_legacy_monster_templates()
-    assert all(template.name != "Killer Whale" for template in templates)
+def test_source_speed_classification_matches_standard_arena_policy() -> None:
+    assert source_environment_reason("5 ft., Swim 30 ft.") == "aquatic-only"
+    assert source_environment_reason("0 ft., Swim 50 ft.") == "aquatic-only"
+    assert source_environment_reason("10 ft., Swim 40 ft.") is None
+    assert source_environment_reason("30 ft., Swim 40 ft.") is None
+    assert source_environment_reason("0 ft., Fly 40 ft., Swim 40 ft.") is None
 
-    card = next(card for card in build_monster_catalog() if card.name == "Killer Whale")
-    assert card.coverage_status is CoverageStatus.BLOCKED
-    assert card.runnable_template_id is None
-    assert card.blockers == ["deferred-environment:aquatic-only"]
+
+def test_swim_only_srd_monsters_are_deferred_from_standard_arena() -> None:
+    cards = {card.name: card for card in build_monster_catalog()}
+    aquatic_only = {
+        "Giant Shark", "Hunter Shark", "Killer Whale", "Piranha", "Reef Shark", "Swarm of Piranhas",
+    }
+    for name in aquatic_only:
+        card = cards[name]
+        assert card.coverage_status is CoverageStatus.BLOCKED
+        assert card.runnable_template_id is None
+        assert card.blockers == ["deferred-environment:aquatic-only"]
+
+    for name in {"Archelon", "Merrow", "Sahuagin Warrior"}:
+        assert cards[name].blockers != ["deferred-environment:aquatic-only"]
 
 
 def test_standard_arena_eligibility_is_movement_driven() -> None:

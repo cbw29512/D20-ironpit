@@ -97,15 +97,17 @@ def main() -> None:
     rows = load_monster_rows()
     rows_by_name = {str(row["name"]): row for row in rows}
     monster_names = set(rows_by_name)
-    ready_names = {
+    cards = build_monster_catalog()
+    ready_names = {card.name for card in cards if card.coverage_status is CoverageStatus.RAW_READY}
+    deferred_names = {
         card.name
-        for card in build_monster_catalog()
-        if card.coverage_status is CoverageStatus.RAW_READY
+        for card in cards
+        if any(blocker.startswith("deferred-environment:") for blocker in card.blockers)
     }
     blockers_by_name: dict[str, list[str]] = {}
     for row in rows:
         name = str(row["name"])
-        if name in ready_names:
+        if name in ready_names or name in deferred_names:
             continue
         blockers = _source_blockers(row, monster_names)
         blockers_by_name[name] = blockers or ["unclassified-source-audit-gap"]
@@ -116,7 +118,8 @@ def main() -> None:
     control_only = singles.get("condition-or-control", [])
     print(
         "CAPABILITY_YIELD_BASELINE"
-        f"\tready={len(ready_names)}\tblocked={len(blockers_by_name)}\tsignatures={len(signatures)}"
+        f"\tready={len(ready_names)}\tdeferred={len(deferred_names)}"
+        f"\tblocked={len(blockers_by_name)}\tsignatures={len(signatures)}"
     )
     for blocker, names in sorted(singles.items(), key=lambda item: (-len(item[1]), item[0])):
         print(f"CAPABILITY_SINGLE_FAMILY\t{blocker}\t{len(names)}\t" + " | ".join(names))
