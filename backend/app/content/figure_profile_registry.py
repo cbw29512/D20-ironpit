@@ -10,6 +10,7 @@ _NATIVE_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Hell Hound": {"form": "quadruped", "detail": "hell-hound"},
     "Red Dragon Wyrmling": {"form": "reptile", "detail": "red-dragon-wyrmling"},
     "White Dragon Wyrmling": {"form": "reptile", "detail": "white-dragon-wyrmling"},
+    "Winter Wolf": {"form": "quadruped", "detail": "winter-wolf"},
     "Young Black Dragon": {"form": "reptile", "detail": "young-black-dragon"},
     "Young Blue Dragon": {"form": "reptile", "detail": "young-blue-dragon"},
     "Young Green Dragon": {"form": "reptile", "detail": "young-green-dragon"},
