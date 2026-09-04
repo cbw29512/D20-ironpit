@@ -33,6 +33,7 @@ _ACTION_PATTERNS = {
         r"\bAdvantage\b[^.]*\btarget\b[^.]*\bdoesn[’']t have all (?:of )?its Hit Points\b",
         re.I,
     ),
+    "hit-point-maximum-reduction": re.compile(r"\bHit Point maximum (?:decreases|is reduced)\b", re.I),
     "damage-reduction": re.compile(r"\breduces?\s+the\s+damage\b", re.I),
     "multiattack": re.compile(r"\bMultiattack\.\b", re.I),
 }
