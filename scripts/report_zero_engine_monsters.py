@@ -19,7 +19,7 @@ from app.content.monster_reaction_source_audit import (
 from app.content.monster_spellcasting_source_audit import arena_neutral_spellcasting, spellcasting_fingerprint
 from app.content.monster_trait_source_audit import (
     _ARENA_NEUTRAL_TRAITS,
-    _MODELED_ATTACK_ADVANTAGE_TRAITS,
+    _MODELED_ROLL_ADVANTAGE_TRAITS,
     _MODELED_TRAITS,
     parse_trait_names,
 )
@@ -45,7 +45,7 @@ _HIDDEN_RIDER = re.compile(
     re.I,
 )
 _ATTACK_ROLL = re.compile(r"\b(?:Melee|Ranged|Melee or Ranged)\s+Attack Roll:", re.I)
-_ALLOWED_TRAITS = set(_ARENA_NEUTRAL_TRAITS) | set(_MODELED_TRAITS) | set(_MODELED_ATTACK_ADVANTAGE_TRAITS)
+_ALLOWED_TRAITS = set(_ARENA_NEUTRAL_TRAITS) | set(_MODELED_TRAITS) | set(_MODELED_ROLL_ADVANTAGE_TRAITS)
 _DETAIL_FIELDS = ("name", "size", "armorClass", "hitPoints", "speed", "challenge", "traits", "actions")
 _DETAIL_BLOCKER_LIMIT = 30
 
