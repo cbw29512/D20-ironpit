@@ -6,7 +6,6 @@ from app.combat.dice import FixedDiceProvider
 from app.combat.saving_throws import resolve_save_action, save_action_resource_available
 from app.combat.state import build_combatant_state
 from app.content.audited_fighter import build_karnok_stoneward
-from app.content.demo import build_goblin_warrior
 from app.domain.combatants import ResourceDefinition
 from app.domain.encounters import EncounterCombatant
 from app.domain.models import SavingThrowAction
@@ -20,8 +19,8 @@ def _members():
         state=build_combatant_state(actor_template),
     )
     target = EncounterCombatant(
-        combatant_id="monster-1:goblin", side="monsters", position_ft=10,
-        state=build_combatant_state(build_goblin_warrior()),
+        combatant_id="monster-1:target", side="monsters", position_ft=10,
+        state=build_combatant_state(build_karnok_stoneward()),
     )
     return actor, target
 
