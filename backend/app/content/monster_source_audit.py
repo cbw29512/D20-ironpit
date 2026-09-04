@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 import re
 
+from app.content.monster_attack_advantage_source_audit import attack_advantage_issues
 from app.content.monster_attack_source_audit import attack_issues, normalized, save_action_issues
 from app.content.monster_bonus_action_source_audit import bonus_action_issues
 from app.content.monster_charge_source_audit import charge_replacement_issues
@@ -81,6 +82,7 @@ def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) ->
         issues.extend(movement_mode_issues(template, row))
         issues.extend(defense_issues(template, row))
         issues.extend(trait_issues(template, row))
+        issues.extend(attack_advantage_issues(template, row))
         issues.extend(reaction_issues(template, row))
         issues.extend(bonus_action_issues(template, row))
         issues.extend(limited_use_issues(template, row))
