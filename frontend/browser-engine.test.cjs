@@ -53,6 +53,22 @@ function fight(heroIds, monsterIds, dice = deterministicDice()) {
 }
 
 {
+  const source = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"];
+  const originalAc = source.armor_class;
+  const originalAttackName = source.attacks[0].name;
+  const first = window.IRON_PIT_BROWSER_STATE.buildState(source);
+  first.current_hp = 1;
+  first.template.armor_class += 10;
+  first.template.attacks[0].name = "runtime-only";
+  const second = window.IRON_PIT_BROWSER_STATE.buildState(source);
+  assert.notEqual(first.template, source, "fight state must not retain the source card object");
+  assert.equal(source.armor_class, originalAc, "runtime AC changes must not mutate the source card");
+  assert.equal(source.attacks[0].name, originalAttackName, "nested runtime changes must not mutate the source card");
+  assert.equal(second.current_hp, source.max_hp, "a new fight must start from source HP");
+  assert.equal(second.template.armor_class, originalAc, "a new fight must not inherit prior runtime modifiers");
+}
+
+{
   const batTemplate = structuredClone(window.IRON_PIT_BROWSER_MONSTERS["srd-bat"]);
   const heroTemplate = structuredClone(window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"]);
   const bat = { combatant_id: "monster-1:bat", side: "monsters", position_ft: 5, state: window.IRON_PIT_BROWSER_STATE.buildState(batTemplate) };
