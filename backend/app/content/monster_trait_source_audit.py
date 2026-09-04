@@ -16,11 +16,12 @@ _MODELED_TRAITS = {
     "Swarm": CombatTrait.SWARM,
     "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
 }
+_MODELED_ATTACK_ADVANTAGE_TRAITS = frozenset({"Blood Frenzy"})
 _ARENA_NEUTRAL_TRAITS = frozenset({
     "Agile", "Amphibious", "Beast of Burden", "False Appearance", "Flyby", "Hellish Restoration",
     "Hold Breath", "Ice Walk", "Illumination", "Jumper", "Keen Hearing", "Keen Hearing and Sight",
-    "Keen Hearing and Smell", "Keen Sight", "Keen Smell", "Mimicry", "Running Leap", "Spider Climb",
-    "Standing Leap", "Sunlight Sensitivity", "Training", "Web Walker",
+    "Keen Hearing and Smell", "Keen Sight", "Keen Smell", "Limited Amphibiousness", "Mimicry", "Running Leap",
+    "Shark Telepathy", "Spider Climb", "Standing Leap", "Sunlight Sensitivity", "Training", "Web Walker",
 })
 
 
@@ -65,7 +66,7 @@ def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[st
             issues.append(f"trait-runtime-missing:{runtime_trait.value}")
         elif runtime_has and not source_has:
             issues.append(f"trait-source-missing:{runtime_trait.value}")
-    certified = set(_MODELED_TRAITS) | set(_ARENA_NEUTRAL_TRAITS)
+    certified = set(_MODELED_TRAITS) | set(_MODELED_ATTACK_ADVANTAGE_TRAITS) | set(_ARENA_NEUTRAL_TRAITS)
     for name in expected:
         if name not in certified:
             slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
