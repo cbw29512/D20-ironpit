@@ -29,12 +29,21 @@ def test_injured_target_advantage_is_one_cross_source_family() -> None:
     }
 
 
-def test_hit_point_maximum_reduction_is_shared_survival_math() -> None:
-    expected = {
-        "Clay Golem", "Death Dog", "Mummy", "Mummy Lord", "Night Hag", "Otyugh",
-        "Specter", "Succubus", "Vampire", "Vampire Spawn", "Wight", "Wraith",
+def test_hit_point_maximum_reduction_is_one_shared_survival_family() -> None:
+    assert _families()["hit-point-maximum-reduction"] == {
+        "Clay Golem",
+        "Death Dog",
+        "Mummy",
+        "Mummy Lord",
+        "Night Hag",
+        "Otyugh",
+        "Specter",
+        "Succubus",
+        "Vampire",
+        "Vampire Spawn",
+        "Wight",
+        "Wraith",
     }
-    assert expected <= _families()["hit-point-maximum-reduction"]
 
 
 def test_mechanic_family_inventory_exposes_cross_class_hero_demand() -> None:
