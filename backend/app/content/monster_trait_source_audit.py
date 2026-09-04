@@ -25,9 +25,11 @@ _ARENA_NEUTRAL_TRAITS = frozenset({
 
 
 def _is_heading(value: str) -> bool:
-    if not value or len(value) > 80 or any(mark in value for mark in ",:;!?"):
+    if not value or len(value) > 80:
         return False
     plain = re.sub(r"\s*\([^)]*\)$", "", value).strip()
+    if any(mark in plain for mark in ",:;!?"):
+        return False
     words = plain.split()
     if not words:
         return False
@@ -47,7 +49,7 @@ def parse_trait_names(source_traits: object) -> list[str]:
     for sentence in re.split(r"(?<=\.)\s+", text):
         candidate = sentence[:-1].strip() if sentence.endswith(".") else ""
         if _is_heading(candidate):
-            names.append(candidate)
+            names.append(re.sub(r"\s*\([^)]*\)$", "", candidate).strip())
     if not names:
         raise ValueError(f"SRD trait headings could not be parsed from: {text!r}")
     return names

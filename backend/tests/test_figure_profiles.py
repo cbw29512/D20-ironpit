@@ -32,8 +32,8 @@ def test_anatomically_distinct_monsters_do_not_share_humanoid_fallbacks() -> Non
         "Green Dragon Wyrmling": "reptile", "Hippogriff": "hippogriff", "Hippopotamus": "quadruped",
         "Killer Whale": "aquatic-mammal", "Lemure": "brute", "Manticore": "quadruped",
         "Minotaur Skeleton": "brute", "Owlbear": "bear", "Pegasus": "hoofed",
-        "Plesiosaurus": "aquatic-reptile", "Pteranodon": "pterosaur", "Rhinoceros": "hoofed",
-        "Scorpion": "scorpion", "Spider": "spider", "Swarm of Bats": "swarm",
+        "Plesiosaurus": "aquatic-reptile", "Pteranodon": "pterosaur", "Reef Shark": "aquatic-fish",
+        "Rhinoceros": "hoofed", "Scorpion": "scorpion", "Spider": "spider", "Swarm of Bats": "swarm",
         "Swarm of Crawling Claws": "swarm", "Swarm of Insects": "swarm", "Swarm of Rats": "swarm",
         "Swarm of Venomous Snakes": "swarm", "Triceratops": "reptile",
         "Tyrannosaurus Rex": "theropod", "Worg": "quadruped",
@@ -51,9 +51,9 @@ def test_new_batch_has_specific_reviewed_details() -> None:
         "Grimlock": "grimlock", "Guard Captain": "guard-captain", "Hippopotamus": "hippopotamus",
         "Killer Whale": "orca", "Lemure": "lemure", "Manticore": "manticore",
         "Merfolk Skirmisher": "merfolk-skirmisher", "Minotaur Skeleton": "minotaur-skeleton",
-        "Pegasus": "pegasus", "Scorpion": "scorpion", "Skeleton": "skeleton", "Swarm of Bats": "bats",
-        "Swarm of Crawling Claws": "crawling-claws", "Swarm of Insects": "insects", "Swarm of Rats": "rats",
-        "Swarm of Venomous Snakes": "venomous-snakes", "Triceratops": "triceratops",
+        "Pegasus": "pegasus", "Reef Shark": "shark", "Scorpion": "scorpion", "Skeleton": "skeleton",
+        "Swarm of Bats": "bats", "Swarm of Crawling Claws": "crawling-claws", "Swarm of Insects": "insects",
+        "Swarm of Rats": "rats", "Swarm of Venomous Snakes": "venomous-snakes", "Triceratops": "triceratops",
         "Violet Fungus": "violet-fungus", "Worg": "canine",
     }
     profiles = _profiles()
