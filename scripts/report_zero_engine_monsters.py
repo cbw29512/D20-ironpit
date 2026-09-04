@@ -33,6 +33,10 @@ _SUPPORTED_BLOODIED_REPLACEMENT = re.compile(
     rf"(?:{_DAMAGE_TYPES})\s+damage\s+if\s+the\s+[a-z][a-z -]*\s+is\s+Bloodied\b",
     re.I,
 )
+_SUPPORTED_FIXED_ON_HIT = re.compile(
+    rf"\bplus\s+\d+\s+(?:{_DAMAGE_TYPES})\s+damage\b",
+    re.I,
+)
 _HIDDEN_RIDER = re.compile(
     r"\b(?:Speed decreases|attaches?|detaches?|next attack roll|Hit or Miss:)\b"
     r"|\bdamage,?\s+or\s+\d+\s*\([^)]*\)\s+\w+\s+damage\s+if\b"
@@ -62,6 +66,7 @@ def _reaction_is_modeled(row: dict[str, object], reactions: list[str]) -> bool:
 
 def _unmodeled_action_rider(actions: str) -> bool:
     sanitized = _SUPPORTED_BLOODIED_REPLACEMENT.sub("damage", actions)
+    sanitized = _SUPPORTED_FIXED_ON_HIT.sub("damage", sanitized)
     return bool(_HIDDEN_RIDER.search(sanitized))
 
 
