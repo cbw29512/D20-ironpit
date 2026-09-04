@@ -11,6 +11,13 @@ _UNMODELED_COMBAT_MATH_RIDERS = (
         re.compile(r"\bHit Point maximum decreases\b", re.IGNORECASE),
     ),
     (
+        "ability-score-decrease",
+        re.compile(
+            r"\b(?:Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma)\s+score\s+decreases\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
         "created-combatant",
         re.compile(
             r"\b(?:spirit|corpse|creature)\b[^.]{0,100}\b(?:rises|appears)\s+as\b"
