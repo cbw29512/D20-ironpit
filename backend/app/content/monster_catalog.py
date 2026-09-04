@@ -18,8 +18,6 @@ _DATA_DIR = Path(__file__).with_name("data")
 _DATA_PATH = _DATA_DIR / "srd_5_2_1_monsters.json"
 _CORRECTIONS_PATH = _DATA_DIR / "srd_5_2_1_monster_corrections.json"
 
-# Candidate means combat mechanics are implemented. Final RAW READY status is
-# granted only after the runtime template passes the complete source audit.
 _READY_BY_NAME = {
     "Allosaurus": "srd-allosaurus", "Ankylosaurus": "srd-ankylosaurus", "Archelon": "srd-archelon",
     "Awakened Shrub": "srd-awakened-shrub", "Axe Beak": "srd-axe-beak", "Baboon": "srd-baboon",
@@ -28,6 +26,7 @@ _READY_BY_NAME = {
     "Camel": "srd-camel", "Cat": "srd-cat", "Commoner": "srd-commoner", "Constrictor Snake": "srd-constrictor-snake",
     "Crab": "srd-crab", "Crocodile": "srd-crocodile", "Cultist": "srd-cultist", "Deer": "srd-deer", "Dire Wolf": "srd-dire-wolf",
     "Draft Horse": "srd-draft-horse", "Eagle": "srd-eagle", "Elk": "srd-elk", "Frog": "srd-frog", "Goat": "srd-goat",
+    "Green Dragon Wyrmling": "srd-green-dragon-wyrmling",
     "Giant Badger": "srd-giant-badger", "Giant Bat": "srd-giant-bat", "Giant Boar": "srd-giant-boar",
     "Giant Centipede": "srd-giant-centipede", "Giant Constrictor Snake": "srd-giant-constrictor-snake",
     "Giant Crab": "srd-giant-crab", "Giant Crocodile": "srd-giant-crocodile",
@@ -95,7 +94,6 @@ def _canonical_monster_rows() -> tuple[dict[str, object], ...]:
 
 
 def load_monster_rows() -> list[dict[str, object]]:
-    """Return mutation-safe copies of the once-validated canonical SRD catalog."""
     return deepcopy(list(_canonical_monster_rows()))
 
 

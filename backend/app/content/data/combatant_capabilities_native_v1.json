@@ -10,14 +10,7 @@
     "armor_class": 11,
     "max_hp": 19,
     "speed_ft": 20,
-    "movement_modes": {
-      "walk_ft": 20,
-      "fly_ft": 20,
-      "climb_ft": 0,
-      "swim_ft": 0,
-      "burrow_ft": 0,
-      "hover": false
-    },
+    "movement_modes": {"walk_ft": 20, "fly_ft": 20, "climb_ft": 0, "swim_ft": 0, "burrow_ft": 0, "hover": false},
     "initiative_bonus": 1,
     "attacks": [
       {
@@ -31,33 +24,17 @@
         "animation": "swarm",
         "reach_ft": 5,
         "effects": [
-          {
-            "kind": "damage",
-            "source": "conditional:attacker_bloodied",
-            "dice": {"count": 1, "size": 4, "bonus": 1},
-            "damage_type": "poison",
-            "trigger": "attacker_bloodied",
-            "mode": "replace_weapon"
-          }
+          {"kind": "damage", "source": "conditional:attacker_bloodied", "dice": {"count": 1, "size": 4, "bonus": 1}, "damage_type": "poison", "trigger": "attacker_bloodied", "mode": "replace_weapon"}
         ]
       }
     ],
     "primary_attack_id": "srd-swarm-of-insects-bites",
     "unarmed_opportunity_attack": {"attack_bonus": -2, "damage": 0},
-    "saving_throw_bonuses": {
-      "strength": -4,
-      "dexterity": 1,
-      "constitution": 2,
-      "intelligence": -5,
-      "wisdom": -2,
-      "charisma": -5
-    },
+    "saving_throw_bonuses": {"strength": -4, "dexterity": 1, "constitution": 2, "intelligence": -5, "wisdom": -2, "charisma": -5},
     "combat_traits": ["swarm"],
     "source_trait_names": ["Spider Climb", "Swarm"],
     "damage_resistances": ["bludgeoning", "piercing", "slashing"],
-    "condition_immunities": [
-      "charmed", "frightened", "grappled", "paralyzed", "petrified", "prone", "restrained", "stunned"
-    ],
+    "condition_immunities": ["charmed", "frightened", "grappled", "paralyzed", "petrified", "prone", "restrained", "stunned"],
     "visual": {"armor": "none", "main_hand": "Bites", "body_style": "swarm"},
     "source": "SRD 5.2.1 p. 361"
   },
@@ -72,14 +49,7 @@
     "armor_class": 14,
     "max_hp": 36,
     "speed_ft": 30,
-    "movement_modes": {
-      "walk_ft": 30,
-      "fly_ft": 0,
-      "climb_ft": 0,
-      "swim_ft": 30,
-      "burrow_ft": 0,
-      "hover": false
-    },
+    "movement_modes": {"walk_ft": 30, "fly_ft": 0, "climb_ft": 0, "swim_ft": 30, "burrow_ft": 0, "hover": false},
     "initiative_bonus": 4,
     "attacks": [
       {
@@ -93,42 +63,85 @@
         "animation": "swarm",
         "reach_ft": 5,
         "effects": [
-          {
-            "kind": "damage",
-            "source": "Poison",
-            "dice": {"count": 3, "size": 6, "bonus": 0},
-            "damage_type": "poison",
-            "trigger": "on_hit",
-            "mode": "add"
-          },
-          {
-            "kind": "damage",
-            "source": "conditional:attacker_bloodied",
-            "dice": {"count": 1, "size": 4, "bonus": 4},
-            "damage_type": "piercing",
-            "trigger": "attacker_bloodied",
-            "mode": "replace_weapon"
-          }
+          {"kind": "damage", "source": "Poison", "dice": {"count": 3, "size": 6, "bonus": 0}, "damage_type": "poison", "trigger": "on_hit", "mode": "add"},
+          {"kind": "damage", "source": "conditional:attacker_bloodied", "dice": {"count": 1, "size": 4, "bonus": 4}, "damage_type": "piercing", "trigger": "attacker_bloodied", "mode": "replace_weapon"}
         ]
       }
     ],
     "primary_attack_id": "srd-swarm-of-venomous-snakes-bites",
     "unarmed_opportunity_attack": {"attack_bonus": 1, "damage": 0},
-    "saving_throw_bonuses": {
-      "strength": -1,
-      "dexterity": 4,
-      "constitution": 0,
-      "intelligence": -5,
-      "wisdom": 0,
-      "charisma": -4
-    },
+    "saving_throw_bonuses": {"strength": -1, "dexterity": 4, "constitution": 0, "intelligence": -5, "wisdom": 0, "charisma": -4},
     "combat_traits": ["swarm"],
     "source_trait_names": ["Swarm"],
     "damage_resistances": ["bludgeoning", "piercing", "slashing"],
-    "condition_immunities": [
-      "charmed", "frightened", "grappled", "paralyzed", "petrified", "prone", "restrained", "stunned"
-    ],
+    "condition_immunities": ["charmed", "frightened", "grappled", "paralyzed", "petrified", "prone", "restrained", "stunned"],
     "visual": {"armor": "none", "main_hand": "Bites", "body_style": "swarm"},
     "source": "SRD 5.2.1 p. 362"
+  },
+  {
+    "schema_version": 1,
+    "id": "srd-green-dragon-wyrmling",
+    "name": "Green Dragon Wyrmling",
+    "archetype": "source-certified dragon",
+    "challenge_rating": "2",
+    "kind": "monster",
+    "size": "medium",
+    "armor_class": 17,
+    "max_hp": 38,
+    "speed_ft": 30,
+    "movement_modes": {"walk_ft": 30, "fly_ft": 60, "climb_ft": 0, "swim_ft": 30, "burrow_ft": 0, "hover": false},
+    "initiative_bonus": 3,
+    "attacks": [
+      {
+        "id": "srd-green-dragon-wyrmling-rend",
+        "name": "Rend",
+        "weapon_id": "srd-green-dragon-wyrmling-rend-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 4,
+        "damage": {"count": 1, "size": 10, "bonus": 2},
+        "damage_type": "slashing",
+        "animation": "claw",
+        "reach_ft": 5,
+        "effects": [
+          {"kind": "damage", "source": "Poison", "dice": {"count": 1, "size": 6, "bonus": 0}, "damage_type": "poison", "trigger": "on_hit", "mode": "add"}
+        ]
+      }
+    ],
+    "primary_attack_id": "srd-green-dragon-wyrmling-rend",
+    "attack_action": {
+      "id": "srd-green-dragon-wyrmling-multiattack",
+      "name": "Multiattack",
+      "is_attack_action": false,
+      "slots": [
+        {"attack_ids": ["srd-green-dragon-wyrmling-rend"]},
+        {"attack_ids": ["srd-green-dragon-wyrmling-rend"]}
+      ]
+    },
+    "save_actions": [
+      {
+        "id": "srd-green-dragon-wyrmling-poison-breath",
+        "name": "Poison Breath",
+        "save_ability": "constitution",
+        "dc": 11,
+        "range_ft": 15,
+        "area": {"shape": "cone", "size_ft": 15},
+        "damage": {"count": 6, "size": 6, "bonus": 0},
+        "damage_type": "poison",
+        "success_damage": "half",
+        "resource_id": "srd-green-dragon-wyrmling-poison-breath-recharge",
+        "resource_cost": 1,
+        "animation": "breath"
+      }
+    ],
+    "saving_throw_bonuses": {"strength": 2, "dexterity": 3, "constitution": 1, "intelligence": 2, "wisdom": 2, "charisma": 1},
+    "source_trait_names": ["Amphibious"],
+    "source_limited_use_names": ["actions:Poison Breath (Recharge 5–6)"],
+    "damage_immunities": ["poison"],
+    "condition_immunities": ["poisoned"],
+    "resources": [
+      {"id": "srd-green-dragon-wyrmling-poison-breath-recharge", "name": "Poison Breath", "max_uses": 1, "recharge": {"minimum": 5, "maximum": 6, "die_size": 6}}
+    ],
+    "visual": {"armor": "natural", "main_hand": "Rend", "body_style": "dragon"},
+    "source": "SRD 5.2.1 p. 293"
   }
 ]
