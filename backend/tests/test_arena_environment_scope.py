@@ -16,24 +16,12 @@ def test_aquatic_only_killer_whale_is_deferred_from_standard_arena() -> None:
     assert card.blockers == ["deferred-environment:aquatic-only"]
 
 
-def test_standard_arena_eligibility_ignores_movement_rate_but_rejects_mv_zero() -> None:
+def test_standard_arena_eligibility_ignores_movement_rate_but_rejects_source_mv_zero() -> None:
     whale = next(template for template in build_zero_engine_monsters() if template.name == "Killer Whale")
-    swimmer = whale.model_copy(update={
-        "name": "Synthetic Swimmer",
-        "movement_modes": MovementModes(walk_ft=0, swim_ft=40),
-    })
-    slow_land = whale.model_copy(update={
-        "name": "Synthetic Slow Land Creature",
-        "movement_modes": MovementModes(walk_ft=5),
-    })
-    flyer = whale.model_copy(update={
-        "name": "Synthetic Flyer",
-        "movement_modes": MovementModes(walk_ft=0, fly_ft=40),
-    })
-    immobile = whale.model_copy(update={
-        "name": "Synthetic MV0 Creature",
-        "movement_modes": MovementModes(),
-    })
+    swimmer = whale.model_copy(update={"name": "Synthetic Swimmer", "movement_modes": MovementModes(walk_ft=0, swim_ft=40)})
+    slow_land = whale.model_copy(update={"name": "Synthetic Slow Land Creature", "movement_modes": MovementModes(walk_ft=5)})
+    flyer = whale.model_copy(update={"name": "Synthetic Flyer", "movement_modes": MovementModes(walk_ft=0, fly_ft=40)})
+    immobile = whale.model_copy(update={"name": "Synthetic MV0 Creature", "movement_modes": MovementModes(walk_ft=0)})
     assert standard_arena_eligible(swimmer) is True
     assert standard_arena_eligible(slow_land) is True
     assert standard_arena_eligible(flyer) is True

@@ -14,6 +14,7 @@ from app.domain.traits import CombatTrait
 NATIVE = {
     "srd-swarm-of-insects": "Swarm of Insects",
     "srd-swarm-of-venomous-snakes": "Swarm of Venomous Snakes",
+    "srd-green-dragon-wyrmling": "Green Dragon Wyrmling",
 }
 
 
@@ -35,7 +36,7 @@ def test_native_registry_rejects_cross_layer_duplicate_ids() -> None:
         merge_capability_definitions({definition.id: definition}, {definition.id: definition})
 
 
-def test_native_swarms_compile_and_pass_full_srd_source_audit() -> None:
+def test_native_monsters_compile_and_pass_full_srd_source_audit() -> None:
     rows = {str(row["name"]): row for row in load_monster_rows()}
     runtime = {monster.id: monster for monster in build_arena_roster().monsters}
     for template_id, source_name in NATIVE.items():
