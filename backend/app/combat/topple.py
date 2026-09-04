@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass
 
+from app.combat.condition_immunity import condition_is_immune
 from app.combat.conditions import PRONE_EFFECT_ID, apply_condition
 from app.combat.dice import DiceProvider
 from app.combat.saving_throw_rolls import resolve_saving_throw
@@ -33,7 +34,7 @@ def resolve_topple_hit(
             return ToppleResolution()
         if defender.is_dead or not defender.is_alive:
             return ToppleResolution()
-        if PRONE_EFFECT_ID in defender.active_effect_ids:
+        if PRONE_EFFECT_ID in defender.active_effect_ids or condition_is_immune(defender, PRONE_EFFECT_ID):
             return ToppleResolution()
         modifier = attack.attack_ability_modifier
         if modifier is None:

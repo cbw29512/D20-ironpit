@@ -23,11 +23,11 @@ def test_shared_resource_pool_fails_closed_for_missing_or_exhausted_resource() -
     state = _state()
     with pytest.raises(ValueError, match="missing"):
         spend_resource(state, "not-a-resource")
-    item = get_resource(state, "action-surge")
+    item = get_resource(state, "second-wind")
     assert item is not None
     item.current_uses = 0
     with pytest.raises(ValueError, match="insufficient"):
-        spend_resource(state, "action-surge")
+        spend_resource(state, "second-wind")
 
 
 def test_shared_resource_pool_restore_caps_at_maximum() -> None:
