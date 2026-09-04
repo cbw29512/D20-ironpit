@@ -20,8 +20,25 @@ def test_winter_wolf_composes_existing_shared_primitives() -> None:
     assert (resource.recharge.minimum, resource.recharge.maximum) == (5, 6)
 
 
+def test_reef_shark_reuses_pack_tactics_and_ignores_environment_only_breathing() -> None:
+    shark = build_combatant_from_capabilities("srd-reef-shark")
+    bite = shark.weapon_attack
+
+    assert shark.combat_traits == [CombatTrait.PACK_TACTICS]
+    assert shark.source_trait_names == ["Pack Tactics", "Water Breathing"]
+    assert (bite.attack_bonus, bite.weapon.dice_count, bite.weapon.dice_size, bite.damage_bonus) == (4, 2, 4, 2)
+    assert bite.weapon.damage_type.value == "piercing"
+
+
 def test_winter_wolf_is_raw_ready_after_shared_composition() -> None:
     card = next(card for card in build_monster_catalog() if card.name == "Winter Wolf")
     assert card.coverage_status == CoverageStatus.RAW_READY
     assert card.runnable_template_id == "srd-winter-wolf"
+    assert card.blockers == []
+
+
+def test_reef_shark_is_raw_ready_after_shared_composition() -> None:
+    card = next(card for card in build_monster_catalog() if card.name == "Reef Shark")
+    assert card.coverage_status == CoverageStatus.RAW_READY
+    assert card.runnable_template_id == "srd-reef-shark"
     assert card.blockers == []
