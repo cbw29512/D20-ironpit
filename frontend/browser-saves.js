@@ -63,7 +63,7 @@
       damageRoll = { notation: damageComponents[0].notation, rolls, modifier: action.damageBonus || 0, total: applied };
       if (applied) {
         const affectedStates = states(options.setup); damageOutcome = A().applyDamage(target.state, applied, false, [action.damageType], affectedStates);
-        window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(target.state); C()?.endIfIncapacitated(target.state, affectedStates);
+        window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated?.(target.state); C()?.endIfIncapacitated?.(target.state, affectedStates);
       }
     }
     let appliedConditions = [];
