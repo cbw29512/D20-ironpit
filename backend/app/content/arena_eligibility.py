@@ -12,9 +12,11 @@ def deferred_environment_reason(name: str) -> str | None:
 
 
 def standard_arena_eligible(template: CombatantTemplate) -> bool:
-    """Iron Pit ignores movement math; only fully immobile monsters are excluded."""
+    """Ignore movement rate; defer environment-only and source-MV0 monsters."""
     if template.kind != "monster":
         return True
+    if deferred_environment_reason(template.name) is not None:
+        return False
     movement = template.movement_modes
     return any((
         movement.walk_ft > 0,
