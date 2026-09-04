@@ -40,6 +40,9 @@ _SUPPORTED_FIXED_ON_HIT = re.compile(
 )
 _HIDDEN_RIDER = re.compile(
     r"\b(?:Speed decreases|attaches?|detaches?|next attack roll|Hit or Miss:)\b"
+    r"|\bHit Point maximum (?:decreases|is reduced)\b"
+    r"|\b(?:summons?|creates?)\b[^.]{0,100}\b(?:creature|monster|specter|zombie|skeleton)\b"
+    r"|\brises(?:\s+\d+\s+hours?\s+later)?\s+as\s+(?:a|an)\s+[A-Za-z’'\-]+\b"
     r"|\bdamage,?\s+or\s+\d+\s*\([^)]*\)\s+\w+\s+damage\s+if\b"
     rf"|\bplus\s+\d+\s+(?:{_DAMAGE_TYPES})\s+damage\b",
     re.I,
