@@ -11,7 +11,7 @@ const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, 
 for (const file of [
   "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js",
   "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
-  "browser-grapple.js", "browser-timed-conditions.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
+  "browser-grapple.js", "browser-timed-conditions.js", "browser-state.js", "browser-resources.js", "browser-recharge.js", "browser-rage.js", "browser-rolls.js",
   "browser-zero-hp.js", "browser-weapon-mastery.js", "browser-graze.js", "browser-vex.js", "browser-attack.js",
   "browser-reactions.js", "browser-reaction-movement.js", "browser-saves.js", "browser-condition-lifecycle.js",
   "browser-charge.js", "browser-light-weapons.js", "browser-light-attack.js", "browser-standard-attack-action.js",
@@ -176,6 +176,42 @@ function fight(heroIds, monsterIds, dice = deterministicDice()) {
   assert.ok(rage, "audited Barbarian should Rage in combat");
   assert.equal(attack?.weapon_id, "rokhan-greataxe");
   assert.equal(attack?.damage_roll?.modifier, 5, "Rokhan should add +3 Strength and +2 Rage damage");
+}
+
+{
+  const state = {
+    template: { resources: { breath: 1 } }, resources: { breath: 1 }, action_available: true,
+    is_dead: false, is_unconscious: false, active_effect_ids: [],
+  };
+  const target = {
+    combatant_id: "hero-1:target", state: {
+      template: { name: "Target", saving_throw_bonuses: { dexterity: 0 } }, active_effect_ids: [],
+      current_hp: 20, temporary_hp: 0, death_save_successes: 0, death_save_failures: 0,
+      is_alive: true, is_dead: false, is_unconscious: false, concentration: null,
+    },
+  };
+  const actor = { combatant_id: "monster-1:dragon", state: { ...state, template: { ...state.template, name: "Test Dragon" } } };
+  const action = { id: "breath", name: "Test Breath", saveAbility: "dexterity", dc: 12, range: 15,
+    damageDiceCount: 0, damageDiceSize: 6, damageBonus: 0, successDamage: "none", resourceId: "breath", resourceCost: 1 };
+  window.IRON_PIT_DICE = queuedDice([10]);
+  const event = window.IRON_PIT_BROWSER_SAVES.resolveAction(1, 1, actor, target, action, 5);
+  assert.equal(event.resource_remaining, 0, "save action spends its shared resource exactly once");
+  assert.equal(window.IRON_PIT_BROWSER_SAVES.resourceAvailable(actor.state, action), false);
+  assert.throws(() => window.IRON_PIT_BROWSER_SAVES.resolveAction(2, 2, actor, target, action, 5), /resource is unavailable/);
+}
+
+{
+  const member = { combatant_id: "monster-1:dragon", state: {
+    template: { name: "Test Dragon", resources: { breath: 1 }, resource_recharges: {
+      breath: { name: "Test Breath", minimum: 5, maximum: 6, dieSize: 6 },
+    } }, resources: { breath: 0 },
+  } };
+  window.IRON_PIT_DICE = queuedDice([5]);
+  const recharge = window.IRON_PIT_BROWSER_RECHARGE.resolve(7, 2, member);
+  assert.equal(recharge.sequence, 8);
+  assert.equal(member.state.resources.breath, 1);
+  assert.equal(recharge.events[0].resource_remaining, 1);
+  assert.match(recharge.events[0].description, /Test Breath/);
 }
 
 {

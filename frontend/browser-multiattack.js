@@ -17,7 +17,7 @@
     for (const target of F().targetOrder(member, setup)) {
       const action = (member.state.template.saving_throw_actions || []).find((item) => {
         const distance = F().saveDistance(member, target, item.range);
-        return allowed.has(item.id) && V().legalAction(item, target, distance);
+        return allowed.has(item.id) && V().resourceAvailable(member.state, item) && V().legalAction(item, target, distance);
       });
       if (action) return { target, save: action, distance: F().saveDistance(member, target, action.range) };
     }

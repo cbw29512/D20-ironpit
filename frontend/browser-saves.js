@@ -5,6 +5,7 @@
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
   const S = () => window.IRON_PIT_BROWSER_STATE;
+  const X = () => window.IRON_PIT_BROWSER_RESOURCES;
   const B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2 || { dangerSenseAdvantage: () => 0 };
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { applyD20Bonus: (_state, _kind, roll) => roll };
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION;
@@ -35,6 +36,10 @@
     return { roll, succeeded: roll.total >= dc };
   }
 
+  function resourceAvailable(state, action) {
+    return !action.resourceId || X().available(state, action.resourceId, action.resourceCost || 1);
+  }
+
   function legalAction(action, target, distance) {
     if (distance > action.range) return false;
     return !action.targetMaxSize || S().sizeAtMost(target, action.targetMaxSize);
@@ -48,11 +53,13 @@
   }
 
   function resolveAction(sequence, round, actor, target, action, distance, options = {}) {
-    const spendAction = options.spendAction !== false;
+    const spendAction = options.spendAction !== false, spendResource = options.spendResource !== false;
     if (spendAction && !E().available(actor.state, "action")) throw new Error("Action is unavailable for saving throw action.");
+    if (!resourceAvailable(actor.state, action)) throw new Error(`${action.name} resource is unavailable.`);
     if (!legalAction(action, target, distance)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
     const save = resolveSavingThrow(target.state, action.saveAbility, action.dc);
     if (spendAction) E().spend(actor.state, "action");
+    if (spendResource && action.resourceId) X().spend(actor.state, action.resourceId, action.resourceCost || 1);
     const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
     const deathSuccessBefore = target.state.death_save_successes, deathFailureBefore = target.state.death_save_failures;
     const concentrationBefore = target.state.concentration?.effect_id || null;
@@ -89,9 +96,10 @@
       death_save_successes_before: deathSuccessBefore, death_save_failures_before: deathFailureBefore,
       death_save_successes: target.state.death_save_successes, death_save_failures: target.state.death_save_failures,
       is_stable: target.state.is_stable, is_dead: target.state.is_dead, feature_id: action.id,
+      resource_remaining: action.resourceId ? X().uses(actor.state, action.resourceId) : null,
       concentration_ended_effect_id: concentrationBefore && !target.state.concentration ? concentrationBefore : null,
       animation: action.animation || "save-effect", description };
   }
 
-  window.IRON_PIT_BROWSER_SAVES = { legalAction, resolveAction, resolveSavingThrow, saveMode };
+  window.IRON_PIT_BROWSER_SAVES = { legalAction, resourceAvailable, resolveAction, resolveSavingThrow, saveMode };
 })();

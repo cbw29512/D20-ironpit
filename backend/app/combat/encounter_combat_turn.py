@@ -17,7 +17,7 @@ from app.combat.opening_burst import opening_feature_id
 from app.combat.orc import should_use_adrenaline_rush, use_adrenaline_rush
 from app.combat.pit_policy import choose_standard_attack, save_distance, target_order
 from app.combat.policy import should_use_second_wind
-from app.combat.saving_throws import legal_save_action, resolve_save_action
+from app.combat.saving_throws import legal_save_action, resolve_save_action, save_action_resource_available
 from app.combat.spell_offense import resolve_best_spell_offense
 from app.combat.standard_attack_action import resolve_standard_attack_action
 from app.combat.state import begin_turn
@@ -61,6 +61,8 @@ def _resolve_support_actions(sequence, round_number, member, setup, dice, turn_k
 def _save_choice(attacker: EncounterCombatant, setup: EncounterSetup):
     for target in target_order(attacker, setup):
         for action in attacker.state.template.saving_throw_actions:
+            if not save_action_resource_available(attacker.state, action):
+                continue
             distance = save_distance(attacker, target, action.range_ft)
             if legal_save_action(action, target, distance):
                 return target, action, distance

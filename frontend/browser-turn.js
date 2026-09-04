@@ -62,7 +62,7 @@
     for (const target of F().targetOrder(member, setup)) {
       for (const action of member.state.template.saving_throw_actions || []) {
         const distance = F().saveDistance(member, target, action.range);
-        if (V().legalAction(action, target, distance)) return { target, action, distance };
+        if (V().resourceAvailable(member.state, action) && V().legalAction(action, target, distance)) return { target, action, distance };
       }
     }
     return null;
