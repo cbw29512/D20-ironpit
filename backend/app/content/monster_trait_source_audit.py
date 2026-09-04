@@ -24,10 +24,14 @@ _ARENA_NEUTRAL_TRAITS = frozenset({
 })
 
 
+def _normalized_heading(value: str) -> str:
+    return re.sub(r"\s*\([^)]*\)$", "", value).strip()
+
+
 def _is_heading(value: str) -> bool:
     if not value or len(value) > 80:
         return False
-    plain = re.sub(r"\s*\([^)]*\)$", "", value).strip()
+    plain = _normalized_heading(value)
     if any(mark in plain for mark in ",:;!?"):
         return False
     words = plain.split()
@@ -41,7 +45,7 @@ def _is_heading(value: str) -> bool:
     return True
 
 
-def parse_trait_names(source_traits: object) -> list[str]:
+def parse_trait_names(source_traits: object, *, preserve_annotations: bool = False) -> list[str]:
     text = str(source_traits or "").strip()
     if not text:
         return []
@@ -49,7 +53,7 @@ def parse_trait_names(source_traits: object) -> list[str]:
     for sentence in re.split(r"(?<=\.)\s+", text):
         candidate = sentence[:-1].strip() if sentence.endswith(".") else ""
         if _is_heading(candidate):
-            names.append(re.sub(r"\s*\([^)]*\)$", "", candidate).strip())
+            names.append(candidate if preserve_annotations else _normalized_heading(candidate))
     if not names:
         raise ValueError(f"SRD trait headings could not be parsed from: {text!r}")
     return names
