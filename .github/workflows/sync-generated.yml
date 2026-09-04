@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - audit/raw-combat-log-figures-20260830
+      - feat/target-missing-hp-attack-advantage
 
 permissions:
   contents: write
@@ -34,12 +35,13 @@ jobs:
           python scripts/export_runtime_monster_capabilities.py
           python scripts/export_browser_heroes.py
           python scripts/export_browser_monsters.py
+          python scripts/export_browser_unarmed_opportunity.py
           python scripts/export_figure_profiles.py
           python scripts/verify_certification_manifests.py --write
           python scripts/export_roster_mechanic_checklist.py
       - name: Refuse unexpected generator drift
         run: |
-          unexpected="$(git status --porcelain --untracked-files=all | awk '{print $2}' | grep -Ev '^(backend/app/content/data/combatant_capabilities_v1.json|frontend/browser-heroes.js|frontend/browser-monsters-generated.js|frontend/figure-profiles.js|data/hero_certification_manifest.json|data/monster_certification_manifest.json|data/roster_combat_mechanics_v1.json)$' || true)"
+          unexpected="$(git status --porcelain --untracked-files=all | awk '{print $2}' | grep -Ev '^(backend/app/content/data/combatant_capabilities_v1.json|frontend/browser-heroes.js|frontend/browser-monsters-generated.js|frontend/browser-unarmed-opportunity.js|frontend/figure-profiles.js|data/hero_certification_manifest.json|data/monster_certification_manifest.json|data/roster_combat_mechanics_v1.json)$' || true)"
           if [ -n "$unexpected" ]; then
             echo "Generator modified files outside its owned outputs:"
             echo "$unexpected"
@@ -47,7 +49,7 @@ jobs:
           fi
       - name: Commit only generator-owned outputs
         run: |
-          outputs="backend/app/content/data/combatant_capabilities_v1.json frontend/browser-heroes.js frontend/browser-monsters-generated.js frontend/figure-profiles.js data/hero_certification_manifest.json data/monster_certification_manifest.json data/roster_combat_mechanics_v1.json"
+          outputs="backend/app/content/data/combatant_capabilities_v1.json frontend/browser-heroes.js frontend/browser-monsters-generated.js frontend/browser-unarmed-opportunity.js frontend/figure-profiles.js data/hero_certification_manifest.json data/monster_certification_manifest.json data/roster_combat_mechanics_v1.json"
           if git diff --quiet -- $outputs; then
             echo "Generated artifacts already current."
             exit 0
