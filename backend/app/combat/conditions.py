@@ -19,6 +19,7 @@ DODGE_EFFECT_ID = "dodge"
 FRIGHTENED_EFFECT_ID = "frightened"
 POISONED_EFFECT_ID = "poisoned"
 PRONE_EFFECT_ID = "prone"
+_TARGET_MISSING_HP_ADVANTAGE = "target_missing_hit_points"
 
 
 def attack_roll_condition_sources(
@@ -27,9 +28,14 @@ def attack_roll_condition_sources(
     distance_ft: int,
     target_id: str | None = None,
 ) -> tuple[int, int]:
-    """Return Advantage and Disadvantage sources from supported conditions."""
+    """Return Advantage and Disadvantage sources from supported attack-state rules."""
     advantage = 0
     disadvantage = 0
+    if (
+        _TARGET_MISSING_HP_ADVANTAGE in attacker.template.attack_roll_advantage_triggers
+        and defender.current_hp < defender.template.max_hp
+    ):
+        advantage += 1
     if has_condition(attacker, BLINDED_EFFECT_ID):
         disadvantage += 1
     if has_condition(attacker, FRIGHTENED_EFFECT_ID):
