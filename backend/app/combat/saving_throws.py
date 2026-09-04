@@ -47,7 +47,7 @@ def resolve_save_action(
     affected_states: list[CombatantState] | None = None,
 ) -> BattleEvent:
     if spend_action and not is_available(actor.state, "action"): raise ValueError("Action is not available for a saving throw action.")
-    if not save_action_resource_available(actor.state, action): raise ValueError(f"{action.name} resource is unavailable.")
+    if spend_resource_cost and not save_action_resource_available(actor.state, action): raise ValueError(f"{action.name} resource is unavailable.")
     if not legal_save_action(action, target, distance_ft): raise ValueError(f"{action.name} has no legal target at {distance_ft} feet.")
     save_roll, succeeded = resolve_saving_throw(target.state, action.save_ability, action.dc, dice)
     if spend_action: spend(actor.state, "action")
