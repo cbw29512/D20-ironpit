@@ -88,7 +88,7 @@
     "size": "medium",
     "armor_class": 17,
     "max_hp": 38,
-    "speed_ft": 30,
+    "speed_ft": 60,
     "movement_modes": {"walk_ft": 30, "fly_ft": 60, "climb_ft": 0, "swim_ft": 30, "burrow_ft": 0, "hover": false},
     "initiative_bonus": 3,
     "attacks": [
@@ -135,7 +135,7 @@
     ],
     "saving_throw_bonuses": {"strength": 2, "dexterity": 3, "constitution": 1, "intelligence": 2, "wisdom": 2, "charisma": 1},
     "source_trait_names": ["Amphibious"],
-    "source_limited_use_names": ["actions:Poison Breath (Recharge 5–6)"],
+    "source_limited_use_names": ["actions:Poison Breath (Recharge 5-6)"],
     "damage_immunities": ["poison"],
     "condition_immunities": ["poisoned"],
     "resources": [
