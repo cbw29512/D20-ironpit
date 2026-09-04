@@ -25,7 +25,7 @@ def _slug(name: str) -> str:
 
 
 def parse_bonus_action_names(source_bonus_actions: object) -> list[str]:
-    return parse_trait_names(source_bonus_actions)
+    return parse_trait_names(source_bonus_actions, preserve_annotations=True)
 
 
 def bonus_action_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
