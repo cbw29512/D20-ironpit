@@ -197,7 +197,7 @@ function fight(heroIds, monsterIds, dice = deterministicDice()) {
   const event = window.IRON_PIT_BROWSER_SAVES.resolveAction(1, 1, actor, target, action, 5);
   assert.equal(event.resource_remaining, 0, "save action spends its shared resource exactly once");
   assert.equal(window.IRON_PIT_BROWSER_SAVES.resourceAvailable(actor.state, action), false);
-  assert.throws(() => window.IRON_PIT_BROWSER_SAVES.resolveAction(2, 2, actor, target, action, 5), /resource is unavailable/);
+  assert.throws(() => window.IRON_PIT_BROWSER_SAVES.resolveAction(2, 2, actor, target, action, 5, { spendAction: false }), /resource is unavailable/);
 }
 
 {
