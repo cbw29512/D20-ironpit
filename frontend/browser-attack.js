@@ -27,8 +27,7 @@
   const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
   function conditionSources(attacker, defender, distance, targetId) {
     let advantage = M().attacksAgainstAdvantage(defender) + B2().attacksAgainstAdvantage(defender), disadvantage = 0;
-    if (attacker.template.attack_roll_advantage_triggers?.includes("target_missing_hit_points")
-        && defender.current_hp < defender.template.max_hp) advantage += 1;
+    if (attacker.template.attack_roll_advantage_triggers?.includes("target_missing_hit_points") && defender.current_hp < defender.template.max_hp) advantage += 1;
     if (Q().has(attacker, "blinded")) disadvantage += 1;
     if (attacker.active_effect_ids.includes("prone")) disadvantage += 1;
     if (attacker.active_effect_ids.includes("restrained")) disadvantage += 1;
