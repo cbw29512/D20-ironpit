@@ -1,0 +1,74 @@
+[
+  {
+    "schema_version": 1,
+    "id": "srd-xorn",
+    "name": "Xorn",
+    "archetype": "source-certified earth elemental",
+    "challenge_rating": "5",
+    "kind": "monster",
+    "size": "medium",
+    "armor_class": 19,
+    "max_hp": 84,
+    "speed_ft": 20,
+    "movement_modes": {
+      "walk_ft": 20,
+      "fly_ft": 0,
+      "climb_ft": 0,
+      "swim_ft": 0,
+      "burrow_ft": 20,
+      "hover": false
+    },
+    "initiative_bonus": 0,
+    "attacks": [
+      {
+        "id": "srd-xorn-bite",
+        "name": "Bite",
+        "weapon_id": "srd-xorn-bite-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 6,
+        "damage": {"count": 4, "size": 6, "bonus": 3},
+        "damage_type": "piercing",
+        "animation": "bite",
+        "reach_ft": 5
+      },
+      {
+        "id": "srd-xorn-claw",
+        "name": "Claw",
+        "weapon_id": "srd-xorn-claw-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 6,
+        "damage": {"count": 1, "size": 10, "bonus": 3},
+        "damage_type": "slashing",
+        "animation": "slash",
+        "reach_ft": 5
+      }
+    ],
+    "primary_attack_id": "srd-xorn-bite",
+    "unarmed_opportunity_attack": {"attack_bonus": 6, "damage": 4},
+    "attack_action": {
+      "id": "srd-xorn-multiattack",
+      "name": "Multiattack",
+      "slots": [
+        {"attack_ids": ["srd-xorn-bite"]},
+        {"attack_ids": ["srd-xorn-claw"]},
+        {"attack_ids": ["srd-xorn-claw"]},
+        {"attack_ids": ["srd-xorn-claw"]}
+      ]
+    },
+    "saving_throw_bonuses": {
+      "strength": 3,
+      "dexterity": 0,
+      "constitution": 6,
+      "intelligence": 0,
+      "wisdom": 0,
+      "charisma": 0
+    },
+    "skill_bonuses": {"perception": 6, "stealth": 6},
+    "source_trait_names": ["Earth Glide", "Treasure Sense"],
+    "source_bonus_action_names": ["Charge"],
+    "damage_immunities": ["poison"],
+    "condition_immunities": ["paralyzed", "petrified", "poisoned"],
+    "visual": {"armor": "natural", "main_hand": "claws", "body_style": "xorn"},
+    "source": "SRD 5.2.1 p. 343"
+  }
+]

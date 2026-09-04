@@ -16,6 +16,7 @@ NATIVE = {
     "srd-swarm-of-venomous-snakes": "Swarm of Venomous Snakes",
     "srd-sahuagin-warrior": "Sahuagin Warrior",
     "srd-berserker": "Berserker",
+    "srd-xorn": "Xorn",
 }
 
 
@@ -72,3 +73,19 @@ def test_swarm_of_venomous_snakes_preserves_poison_when_bloodied() -> None:
     bloodied = attack.conditional_damage[0]
     assert (bloodied.trigger, bloodied.mode) == ("attacker_bloodied", "replace_weapon")
     assert (bloodied.dice_count, bloodied.dice_size, bloodied.damage_bonus) == (1, 4, 4)
+
+
+def test_xorn_uses_existing_multiattack_and_defense_capabilities() -> None:
+    xorn = build_combatant_from_capabilities("srd-xorn")
+    assert (xorn.armor_class, xorn.max_hp, xorn.speed_ft) == (19, 84, 20)
+    assert xorn.movement_modes.burrow_ft == 20
+    assert xorn.source_trait_names == ["Earth Glide", "Treasure Sense"]
+    assert xorn.source_bonus_action_names == ["Charge"]
+    assert xorn.attack_action is not None
+    assert [slot.attack_ids for slot in xorn.attack_action.slots] == [
+        ["srd-xorn-bite"], ["srd-xorn-claw"], ["srd-xorn-claw"], ["srd-xorn-claw"]
+    ]
+    assert (xorn.weapon_attack.attack_bonus, xorn.weapon_attack.weapon.dice_count, xorn.weapon_attack.weapon.dice_size) == (6, 4, 6)
+    assert len(xorn.alternate_weapon_attacks) == 1
+    claw = xorn.alternate_weapon_attacks[0]
+    assert (claw.attack_bonus, claw.weapon.dice_count, claw.weapon.dice_size, claw.damage_bonus) == (6, 1, 10, 3)
