@@ -63,6 +63,7 @@ class HealingAction(BaseModel):
     dice_count: int = Field(default=0, ge=0, le=40)
     dice_size: int = Field(default=6, ge=2, le=100)
     healing_bonus: int = Field(default=0, ge=0)
+    removable_conditions: list[ConditionName] = Field(default_factory=list)
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
     animation: str = "healing"
