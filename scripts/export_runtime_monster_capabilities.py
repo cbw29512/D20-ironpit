@@ -7,6 +7,7 @@ from pathlib import Path
 
 from app.content.capability_from_template import definition_from_template
 from app.content.legacy_monster_roster import build_legacy_monster_templates
+from app.domain.capabilities import CombatantDefinition
 
 logger = logging.getLogger(__name__)
 _OUTPUT = Path("backend/app/content/data/combatant_capabilities_v1.json")
@@ -17,20 +18,29 @@ _HERO_ONLY_PROGRESSION_FIELDS = {
 }
 
 
+def _definition_payload(definition: CombatantDefinition) -> dict[str, object]:
+    """Serialize one legacy definition without emitting empty optional capability families."""
+    try:
+        payload = definition.model_dump(
+            mode="json",
+            exclude_none=True,
+            exclude={"progression_features": _HERO_ONLY_PROGRESSION_FIELDS},
+        )
+        if not definition.attack_roll_advantage_triggers:
+            payload.pop("attack_roll_advantage_triggers", None)
+        return payload
+    except Exception:
+        logger.exception("Failed to serialize legacy capability definition %s.", definition.id)
+        raise
+
+
 def render_registry() -> str:
     monsters = build_legacy_monster_templates()
     definitions = [definition_from_template(monster) for monster in monsters]
     ids = [definition.id for definition in definitions]
     if len(ids) != len(set(ids)):
         raise RuntimeError("Legacy runtime monster ids must be unique before capability export.")
-    payload = [
-        definition.model_dump(
-            mode="json",
-            exclude_none=True,
-            exclude={"progression_features": _HERO_ONLY_PROGRESSION_FIELDS},
-        )
-        for definition in definitions
-    ]
+    payload = [_definition_payload(definition) for definition in definitions]
     return json.dumps(payload, indent=2, sort_keys=False) + "\n"
 
 
