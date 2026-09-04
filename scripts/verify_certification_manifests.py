@@ -173,7 +173,7 @@ def build_monster_manifest() -> dict[str, Any]:
         runtime_template_id = card.runnable_template_id or _READY_BY_NAME.get(name)
         runtime_present = runtime_template_id is not None and runtime_template_id in runtime
         ready = catalog_ready and runtime_present
-        if catalog_ready and not runtime_present:
+        if runtime_template_id is not None and not runtime_present:
             blockers = sorted(set([*blockers, "missing-runtime-template"]))
         monsters.append({
             "monster_id": str(row["id"]),
