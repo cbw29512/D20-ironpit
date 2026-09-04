@@ -107,7 +107,7 @@ def test_heal_builder_and_condition_cleansing_are_raw() -> None:
     ally.state.active_effect_ids.extend(["poisoned", "frightened"])
     cleanse = action.model_copy(update={"resource_id": None})
     assert choose_healing_target(healer, setup, cleanse) is ally
-    event = resolve_healing(1, 1, healer, ally, cleanse, FixedDiceProvider([]))
+    event = resolve_healing(1, 1, healer, ally, cleanse, FixedDiceProvider([1]))
     assert event.hp_after == ally.state.template.max_hp
     assert event.removed_condition_ids == ["poisoned"]
     assert "poisoned" not in ally.state.active_effect_ids
