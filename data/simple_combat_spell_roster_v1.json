@@ -1,7 +1,7 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "ruleset": "D&D 2024 Free Rules / SRD 5.2.1",
-  "policy": "Use only enough legal combat, buff, debuff, and healing spells to fill canonical level-20 packages. Prefer reusable engine primitives over spell-specific logic; exclude noncombat and high-complexity battlefield spells unless needed.",
+  "policy": "Keep the Iron Pit caster surface minimal: one legal combat-relevant spell per spell level available to each canonical caster. Prefer existing generic primitives and defer complex spells unless a level has no simpler viable choice.",
   "preferred_primitives": [
     "auto-hit-damage",
     "save-half-damage",
@@ -11,95 +11,100 @@
     "simple-condition",
     "next-hit-rider"
   ],
-  "easy_first": [
-    "magic-missile",
-    "guiding-bolt",
-    "cure-wounds",
-    "healing-word",
-    "fireball",
-    "blight",
-    "ice-storm",
-    "cone-of-cold",
-    "flame-strike",
-    "mass-healing-word",
-    "mass-cure-wounds",
-    "harm",
-    "heal",
-    "conjure-barrage",
-    "conjure-volley",
-    "synaptic-static",
-    "chain-lightning",
-    "meteor-swarm"
-  ],
-  "level20_required_prepared_counts": {
-    "bard": 22,
-    "cleric": 22,
-    "druid": 22,
-    "paladin": 15,
-    "ranger": 15,
-    "sorcerer": 22,
-    "warlock": 15,
-    "wizard": 25
-  },
   "classes": {
-    "bard": [
-      "cure-wounds", "healing-word", "dissonant-whispers", "faerie-fire", "thunderwave",
-      "aid", "blindness-deafness", "hold-person", "lesser-restoration", "shatter",
-      "dispel-magic", "mass-healing-word", "slow", "greater-invisibility", "hold-monster",
-      "mass-cure-wounds", "synaptic-static", "power-word-fortify", "regenerate",
-      "power-word-stun", "power-word-heal", "power-word-kill"
-    ],
-    "cleric": [
-      "bane", "bless", "command", "cure-wounds", "guiding-bolt", "healing-word",
-      "inflict-wounds", "shield-of-faith", "aid", "blindness-deafness", "hold-person",
-      "lesser-restoration", "spiritual-weapon", "mass-healing-word", "spirit-guardians",
-      "death-ward", "guardian-of-faith", "flame-strike", "mass-cure-wounds", "harm",
-      "heal", "sunbeam"
-    ],
-    "druid": [
-      "animal-friendship", "cure-wounds", "faerie-fire", "healing-word", "ice-knife",
-      "thunderwave", "aid", "hold-person", "lesser-restoration", "moonbeam",
-      "call-lightning", "dispel-magic", "protection-from-energy", "blight", "ice-storm",
-      "freedom-of-movement", "cone-of-cold", "mass-cure-wounds", "heal", "sunbeam",
-      "fire-storm", "sunburst"
-    ],
-    "paladin": [
-      "bless", "cure-wounds", "divine-favor", "divine-smite", "heroism",
-      "shield-of-faith", "aid", "lesser-restoration", "magic-weapon", "blinding-smite",
-      "elemental-weapon", "death-ward", "banishing-smite", "destructive-wave",
-      "greater-restoration"
-    ],
-    "ranger": [
-      "cure-wounds", "ensnaring-strike", "hail-of-thorns", "hunters-mark", "longstrider",
-      "aid", "barkskin", "lesser-restoration", "magic-weapon", "conjure-barrage",
-      "elemental-weapon", "lightning-arrow", "protection-from-energy", "conjure-volley",
-      "greater-restoration"
-    ],
-    "sorcerer": [
-      "burning-hands", "chromatic-orb", "magic-missile", "shield", "scorching-ray",
-      "shatter", "hold-person", "fireball", "lightning-bolt", "haste", "slow", "blight",
-      "ice-storm", "fire-shield", "cone-of-cold", "synaptic-static", "chain-lightning",
-      "disintegrate", "fire-storm", "finger-of-death", "sunburst", "meteor-swarm"
-    ],
-    "warlock": [
-      "armor-of-agathys", "hellish-rebuke", "hex", "witch-bolt", "hold-person",
-      "mind-spike", "misty-step", "darkness", "mirror-image", "counterspell",
-      "vampiric-touch", "banishment", "blight", "hold-monster", "synaptic-static"
-    ],
-    "wizard": [
-      "mage-armor", "magic-missile", "shield", "burning-hands", "chromatic-orb",
-      "scorching-ray", "misty-step", "fireball", "lightning-bolt", "counterspell", "fly",
-      "blight", "ice-storm", "cone-of-cold", "hold-monster", "synaptic-static",
-      "chain-lightning", "disintegrate", "delayed-blast-fireball", "finger-of-death",
-      "incendiary-cloud", "power-word-stun", "sunburst", "meteor-swarm", "power-word-kill"
-    ]
+    "bard": {
+      "1": "healing-word",
+      "2": "shatter",
+      "3": "slow",
+      "4": "greater-invisibility",
+      "5": "synaptic-static",
+      "6": "eyebite",
+      "7": "regenerate",
+      "8": "power-word-stun",
+      "9": "power-word-kill"
+    },
+    "cleric": {
+      "1": "guiding-bolt",
+      "2": "spiritual-weapon",
+      "3": "spirit-guardians",
+      "4": "guardian-of-faith",
+      "5": "flame-strike",
+      "6": "harm",
+      "7": "regenerate",
+      "8": "holy-aura",
+      "9": "mass-heal"
+    },
+    "druid": {
+      "1": "thunderwave",
+      "2": "moonbeam",
+      "3": "call-lightning",
+      "4": "blight",
+      "5": "mass-cure-wounds",
+      "6": "sunbeam",
+      "7": "fire-storm",
+      "8": "sunburst",
+      "9": "foresight"
+    },
+    "paladin": {
+      "1": "cure-wounds",
+      "2": "aid",
+      "3": "blinding-smite",
+      "4": "death-ward",
+      "5": "banishing-smite"
+    },
+    "ranger": {
+      "1": "hunters-mark",
+      "2": "magic-weapon",
+      "3": "lightning-arrow",
+      "4": "freedom-of-movement",
+      "5": "conjure-volley"
+    },
+    "sorcerer": {
+      "1": "magic-missile",
+      "2": "shatter",
+      "3": "fireball",
+      "4": "blight",
+      "5": "cone-of-cold",
+      "6": "chain-lightning",
+      "7": "finger-of-death",
+      "8": "sunburst",
+      "9": "meteor-swarm"
+    },
+    "warlock": {
+      "1": "hex",
+      "2": "hold-person",
+      "3": "counterspell",
+      "4": "blight",
+      "5": "hold-monster",
+      "6": "circle-of-death",
+      "7": "finger-of-death",
+      "8": "power-word-stun",
+      "9": "power-word-kill"
+    },
+    "wizard": {
+      "1": "magic-missile",
+      "2": "shatter",
+      "3": "fireball",
+      "4": "blight",
+      "5": "cone-of-cold",
+      "6": "chain-lightning",
+      "7": "finger-of-death",
+      "8": "sunburst",
+      "9": "meteor-swarm"
+    }
   },
-  "warlock_mystic_arcanum_easy_targets": [
-    "circle-of-death", "finger-of-death", "power-word-stun", "power-word-kill"
-  ],
   "defer_complex_examples": [
-    "animate-objects", "conjure-fey", "forcecage", "maze", "prismatic-wall",
-    "shapechange", "simulacrum", "summon-celestial", "summon-elemental", "time-stop",
-    "true-polymorph", "wish"
+    "animate-objects",
+    "conjure-fey",
+    "forcecage",
+    "maze",
+    "prismatic-wall",
+    "shapechange",
+    "simulacrum",
+    "summon-celestial",
+    "summon-elemental",
+    "time-stop",
+    "true-polymorph",
+    "wish"
   ]
 }
