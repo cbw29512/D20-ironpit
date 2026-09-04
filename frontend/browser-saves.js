@@ -14,6 +14,7 @@
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (state, cost) => cost === "action" && state.action_available, spend: (state) => { state.action_available = false; } };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { autoFailStrDex: (state) => state.is_unconscious };
   const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
+  const BOARD_COLUMNS = 3, MAX_BOARD_SLOTS = 6;
 
   function saveMode(state, ability) {
     const advantage = (ability === "strength" && state.active_effect_ids.includes("rage") ? 1 : 0) + B2().dangerSenseAdvantage(state, ability);
@@ -86,23 +87,38 @@
   const living = (member) => member.state.is_alive && !member.state.is_dead && member.state.current_hp > 0;
   const rows = (actor, setup) => actor.side === "heroes" ? [setup.monsters, setup.heroes] : [setup.heroes, setup.monsters];
   const forward = (actor, member) => (actor.side === "heroes" ? 1 : -1) * (member.position_ft - actor.position_ft);
+  const columnFor = (index) => { if (index < 0 || index >= MAX_BOARD_SLOTS) throw new Error("board slot index out of range"); return index % BOARD_COLUMNS; };
+  function lineTargets(actor, setup, action, enemies, friends, order) {
+    if (action.area.widthFt !== 5) throw new Error(`${action.name} Line widths above 5 feet are not runtime-certified.`);
+    const actorIndex = friends.findIndex((member) => member.combatant_id === actor.combatant_id);
+    const column = columnFor(actorIndex);
+    const exposed = friends.some((member, index) => member.combatant_id !== actor.combatant_id && columnFor(index) === column
+      && living(member) && forward(actor, member) > 0 && forward(actor, member) <= action.area.sizeFt);
+    if (exposed) return [];
+    return enemies.filter((member, index) => columnFor(index) === column && living(member)
+      && forward(actor, member) > 0 && forward(actor, member) <= action.area.sizeFt
+      && legalAction(action, member, F().saveDistance(actor, member, action.range)))
+      .sort((a, b) => (order[a.combatant_id] ?? MAX_BOARD_SLOTS) - (order[b.combatant_id] ?? MAX_BOARD_SLOTS));
+  }
   function targetsFor(actor, setup, action) {
     if (!action.area) {
       for (const target of F().targetOrder(actor, setup)) if (legalAction(action, target, F().saveDistance(actor, target, action.range))) return [target];
       return [];
     }
     if (!['cone', 'line'].includes(action.area.shape)) throw new Error(`${action.name} area shape is not runtime-certified.`);
-    const width = action.area.shape === 'line' ? action.area.widthFt : action.area.sizeFt;
-    if (!width || width % 5) throw new Error(`${action.name} area width must use 5-foot card increments.`);
-    const slotCount = Math.min(6, Math.max(1, width / 5)), [enemies, friends] = rows(actor, setup), candidates = [];
+    const [enemies, friends] = rows(actor, setup);
     const order = Object.fromEntries(F().targetOrder(actor, setup).map((member, index) => [member.combatant_id, index]));
-    for (let start = 0; start <= 6 - slotCount; start += 1) {
+    if (action.area.shape === 'line') return lineTargets(actor, setup, action, enemies, friends, order);
+    const width = action.area.sizeFt;
+    if (!width || width % 5) throw new Error(`${action.name} area width must use 5-foot card increments.`);
+    const slotCount = Math.min(MAX_BOARD_SLOTS, Math.max(1, width / 5)), candidates = [];
+    for (let start = 0; start <= MAX_BOARD_SLOTS - slotCount; start += 1) {
       const targets = enemies.filter((member, index) => start <= index && index < start + slotCount && living(member)
         && forward(actor, member) > 0 && forward(actor, member) <= action.area.sizeFt
         && legalAction(action, member, F().saveDistance(actor, member, action.range)));
       const exposed = friends.some((member, index) => member.combatant_id !== actor.combatant_id && start <= index && index < start + slotCount
         && living(member) && forward(actor, member) > 0 && forward(actor, member) <= action.area.sizeFt);
-      if (targets.length && !exposed) candidates.push({ start, targets: targets.sort((a, b) => (order[a.combatant_id] ?? 6) - (order[b.combatant_id] ?? 6)) });
+      if (targets.length && !exposed) candidates.push({ start, targets: targets.sort((a, b) => (order[a.combatant_id] ?? MAX_BOARD_SLOTS) - (order[b.combatant_id] ?? MAX_BOARD_SLOTS)) });
     }
     candidates.sort((a, b) => b.targets.length - a.targets.length || a.start - b.start);
     return candidates[0]?.targets || [];
