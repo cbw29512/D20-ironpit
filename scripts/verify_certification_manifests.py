@@ -164,14 +164,16 @@ def build_monster_manifest() -> dict[str, Any]:
     for row in rows:
         name = str(row["name"])
         card = cards[name]
-        ready = card.coverage_status is CoverageStatus.RAW_READY
+        catalog_ready = card.coverage_status is CoverageStatus.RAW_READY
         source_blockers = _source_blockers(row, monster_names)
-        blockers = [] if ready else sorted(set([*card.blockers, *source_blockers]))
+        blockers = [] if catalog_ready else sorted(set([*card.blockers, *source_blockers]))
         detected = _detected_monster_mechanics(row, source_blockers)
-        unsupported = [] if ready else sorted(set(source_blockers or card.blockers))
-        supported = detected if ready else sorted(set(detected) - set(unsupported))
+        unsupported = [] if catalog_ready else sorted(set(source_blockers or card.blockers))
+        supported = detected if catalog_ready else sorted(set(detected) - set(unsupported))
         runtime_template_id = card.runnable_template_id or _READY_BY_NAME.get(name)
-        if runtime_template_id is not None and runtime_template_id not in runtime:
+        runtime_present = runtime_template_id is not None and runtime_template_id in runtime
+        ready = catalog_ready and runtime_present
+        if catalog_ready and not runtime_present:
             blockers = sorted(set([*blockers, "missing-runtime-template"]))
         monsters.append({
             "monster_id": str(row["id"]),
@@ -233,6 +235,11 @@ def _validate_invariants(hero_manifest: dict[str, Any], monster_manifest: dict[s
         refs = row.get("source_references", [row.get("srd_source_reference")])
         if row["public_ready_status"] == "ready" and (not refs or not refs[0]):
             raise RuntimeError("Every certified manifest entry must have a source reference.")
+        if row["public_ready_status"] == "ready" and row.get("blockers"):
+            raise RuntimeError("Public-ready manifest entries cannot retain blockers.")
+    for row in monsters:
+        if row["public_ready_status"] == "ready" and not row.get("runtime_template_id"):
+            raise RuntimeError("Public-ready monsters must have a standard-arena runtime template.")
     blocker_counts = Counter(blocker for row in monsters for blocker in row["blockers"])
     if monster_manifest["summary"]["blocked"] and not blocker_counts:
         raise RuntimeError("Blocked monsters must expose machine-readable blocker families.")
