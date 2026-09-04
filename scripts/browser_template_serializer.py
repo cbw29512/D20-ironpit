@@ -262,6 +262,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                        "off_hand": template.visual.off_hand, "body_style": template.visual.body_style},
             "source": template.source, **_progression_features(template),
         }
+        if template.attack_roll_advantage_triggers:
+            row["attack_roll_advantage_triggers"] = list(template.attack_roll_advantage_triggers)
         if template.kind == "monster":
             row["source_trait_names"] = list(template.source_trait_names)
             row["source_reaction_names"] = list(template.source_reaction_names)
