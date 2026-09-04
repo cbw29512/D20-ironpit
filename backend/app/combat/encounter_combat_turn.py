@@ -15,9 +15,9 @@ from app.combat.healing import choose_healing_action, resolve_healing
 from app.combat.ongoing_spell_control import build_forced_retreat_event, forced_retreat_active
 from app.combat.opening_burst import opening_feature_id
 from app.combat.orc import should_use_adrenaline_rush, use_adrenaline_rush
-from app.combat.pit_policy import choose_standard_attack, save_distance, target_order
+from app.combat.pit_policy import choose_standard_attack, target_order
 from app.combat.policy import should_use_second_wind
-from app.combat.saving_throws import legal_save_action, resolve_save_action, save_action_resource_available
+from app.combat.save_action_turn import resolve_save_action_turn
 from app.combat.spell_offense import resolve_best_spell_offense
 from app.combat.standard_attack_action import resolve_standard_attack_action
 from app.combat.state import begin_turn
@@ -29,9 +29,7 @@ from app.domain.models import BattleEvent
 
 def _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key, allow_surge=True):
     if allow_surge:
-        surge_events, sequence = resolve_action_surge_attack(
-            sequence, round_number, attacker, setup, dice, turn_key,
-        )
+        surge_events, sequence = resolve_action_surge_attack(sequence, round_number, attacker, setup, dice, turn_key)
         events.extend(surge_events)
     rage_event, sequence = finalize_rage_turn(sequence, round_number, attacker.state, attacker.combatant_id)
     if rage_event is not None:
@@ -56,17 +54,6 @@ def _resolve_support_actions(sequence, round_number, member, setup, dice, turn_k
     channel_events, sequence = resolve_channel_support(sequence, round_number, member, setup, dice)
     events.extend(channel_events)
     return events, sequence
-
-
-def _save_choice(attacker: EncounterCombatant, setup: EncounterSetup):
-    for target in target_order(attacker, setup):
-        for action in attacker.state.template.saving_throw_actions:
-            if not save_action_resource_available(attacker.state, action):
-                continue
-            distance = save_distance(attacker, target, action.range_ft)
-            if legal_save_action(action, target, distance):
-                return target, action, distance
-    return None
 
 
 def resolve_combat_turn(
@@ -111,11 +98,16 @@ def resolve_combat_turn(
     targets = target_order(attacker, setup)
     if not targets:
         return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-    charge_events, sequence, charged = resolve_charge_closing(
-        sequence, round_number, attacker, targets[0], dice, setup,
-    )
+    charge_events, sequence, charged = resolve_charge_closing(sequence, round_number, attacker, targets[0], dice, setup)
     events.extend(charge_events)
     if charged or attacker.state.is_dead or attacker.state.is_unconscious:
+        return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
+
+    save_events, sequence, used_save = resolve_save_action_turn(
+        sequence, round_number, attacker, setup, dice, resource_backed_only=True,
+    )
+    if used_save:
+        events.extend(save_events)
         return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
     if attacker.state.template.attack_action is not None:
@@ -123,14 +115,11 @@ def resolve_combat_turn(
         events.extend(action_events)
         return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
-    save_choice = _save_choice(attacker, setup)
-    if save_choice is not None and is_available(attacker.state, "action"):
-        save_target, save_action, distance = save_choice
-        affected = [member.state for member in [*setup.heroes, *setup.monsters]]
-        events.append(resolve_save_action(
-            sequence, round_number, attacker, save_target, save_action, distance, dice,
-            affected_states=affected,
-        )); sequence += 1
+    save_events, sequence, used_save = resolve_save_action_turn(
+        sequence, round_number, attacker, setup, dice, resource_backed_only=False,
+    )
+    if used_save:
+        events.extend(save_events)
         return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
     attack_choice = choose_standard_attack(attacker, setup)
