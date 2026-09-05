@@ -13,6 +13,24 @@
   const NO_CONTROL = { cleanup: () => {}, shouldEscape: () => false };
   const H = () => window.IRON_PIT_BROWSER_GRAPPLE || NO_CONTROL;
 
+  function requireSaveService(member, capability) {
+    const service = V();
+    if (!service) throw new Error(`Browser save-action service is required for ${member.state.template.name} ${capability}.`);
+    return service;
+  }
+  function rechargeStart(member) {
+    if (!Object.keys(member.state.template.resource_recharge || {}).length) return;
+    const service = requireSaveService(member, "recharge resources");
+    if (!service.rechargeStart) throw new Error("Browser action-resource recharge service is not loaded.");
+    service.rechargeStart(member.state);
+  }
+  function chooseSave(member, setup, priorityOnly = false) {
+    if (!(member.state.template.saving_throw_actions || []).length) return null;
+    const service = requireSaveService(member, "saving throw actions");
+    if (!service.chooseAction) throw new Error("Browser save-action selection service is not loaded.");
+    return service.chooseAction(member, setup, priorityOnly);
+  }
+
   function enablePitRangePolicy() {
     const rolls = window.IRON_PIT_BROWSER_ROLLS;
     if (!rolls || rolls.fixedFormationActive) return;
@@ -60,7 +78,7 @@
 
   function resolveTurn(sequence, round, member, setup) {
     enablePitRangePolicy();
-    const events = []; H().cleanup(setup); V().rechargeStart(member.state); S().beginTurn(member.state);
+    const events = []; H().cleanup(setup); rechargeStart(member); S().beginTurn(member.state);
     const turnKey = `${round}:${member.combatant_id}`;
     if (O()?.forcedRetreatActive(member.state)) {
       events.push(O().event(sequence++, round, member));
@@ -91,7 +109,7 @@
       return finalize(events, charged.sequence, round, member, setup, turnKey);
     }
 
-    const prioritySave = V().chooseAction(member, setup, true);
+    const prioritySave = chooseSave(member, setup, true);
     if (prioritySave) {
       const saved = V().resolveChoice(sequence, round, member, setup, prioritySave);
       events.push(...saved.events);
@@ -102,7 +120,7 @@
       events.push(...multi.events);
       return finalize(events, multi.sequence, round, member, setup, turnKey);
     }
-    const saveChoice = V().chooseAction(member, setup);
+    const saveChoice = chooseSave(member, setup);
     if (saveChoice && E().available(member.state, "action")) {
       const saved = V().resolveChoice(sequence, round, member, setup, saveChoice);
       events.push(...saved.events);

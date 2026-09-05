@@ -11,23 +11,46 @@
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (s) => s.action_available, spend: (s) => { s.action_available = false; } };
   const slotData = (slot) => Array.isArray(slot) ? { attackIds: slot, saveActionIds: [] } : { attackIds: slot.attackIds || [], saveActionIds: slot.saveActionIds || [] };
 
+  function resourceAvailable(state, action) {
+    if (!action.resourceId) return true;
+    const service = V();
+    if (!service?.resourceAvailable) throw new Error("Browser action-resource service is not loaded.");
+    return service.resourceAvailable(state, action);
+  }
+  function consumeResource(state, action) {
+    if (!action.resourceId) return null;
+    const service = V();
+    if (!service?.consumeResource) throw new Error("Browser action-resource service is not loaded.");
+    return service.consumeResource(state, action);
+  }
+  function availableAttackIds(member, ids) {
+    const profiles = member.state.template.attacks || [];
+    return ids.filter((id) => {
+      const attack = profiles.find((item) => item.id === id);
+      return attack && resourceAvailable(member.state, attack);
+    });
+  }
   function saveChoice(member, setup, data) {
+    if (!data.saveActionIds.length) return null;
+    const service = V();
+    if (!service?.resourceAvailable || !service?.legalAction) throw new Error("Browser save-action service is not loaded.");
     const allowed = new Set(data.saveActionIds);
     for (const target of F().targetOrder(member, setup)) {
       const action = (member.state.template.saving_throw_actions || []).find((item) => {
         const distance = F().saveDistance(member, target, item.range);
-        return allowed.has(item.id) && V().resourceAvailable(member.state, item) && V().legalAction(item, target, distance);
+        return allowed.has(item.id) && service.resourceAvailable(member.state, item) && service.legalAction(item, target, distance);
       });
       if (action) return { target, save: action, distance: F().saveDistance(member, target, action.range) };
     }
     return null;
   }
   function attackChoice(member, setup, data, rangedBackline = false) {
-    if (rangedBackline) { const ranged = F().chooseAttack(member, setup, data.attackIds, "ranged", true); if (ranged) return ranged; }
+    const ids = availableAttackIds(member, data.attackIds);
+    if (rangedBackline) { const ranged = F().chooseAttack(member, setup, ids, "ranged", true); if (ranged) return ranged; }
     if (F().isBackline(member) && F().alliedFrontlineActive(member, setup)) {
-      const ranged = F().chooseAttack(member, setup, data.attackIds, "ranged"); if (ranged) return ranged;
+      const ranged = F().chooseAttack(member, setup, ids, "ranged"); if (ranged) return ranged;
     }
-    return F().chooseAttack(member, setup, data.attackIds, "melee") || F().chooseAttack(member, setup, data.attackIds, "ranged");
+    return F().chooseAttack(member, setup, ids, "melee") || F().chooseAttack(member, setup, ids, "ranged");
   }
   function useRangedSplit(member, setup, slots) {
     if (F().isBackline(member)) return false;
@@ -54,7 +77,7 @@
         const event = A().resolveAttack(sequence++, round, member, choice.target, choice.attack, choice.distance, {
           spendAction: false, advantage: pack ? 1 : 0, setup, featureId, turnKey, allowReckless: true, ignoreCloseThreat: true,
         });
-        V().consumeResource(member.state, choice.attack); events.push(event);
+        consumeResource(member.state, choice.attack); events.push(event);
         const cleave = WM().resolveCleave(sequence, round, member, event, choice.attack, setup, turnKey);
         events.push(...cleave.events); sequence = cleave.sequence;
         if (definition.isAttackAction && !lightTrigger && choice.attack.light) lightTrigger = choice.attack;
