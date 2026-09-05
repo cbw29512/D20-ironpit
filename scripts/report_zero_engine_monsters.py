@@ -9,7 +9,7 @@ from app.content.monster_bonus_action_source_audit import (
     _base_name,
     parse_bonus_action_names,
 )
-from app.content.monster_catalog import _READY_BY_NAME, load_monster_rows
+from app.content.monster_catalog import build_monster_catalog, load_monster_rows
 from app.content.monster_defense_source_audit import parse_defense_profile
 from app.content.monster_limited_use_source_audit import parse_limited_use_names
 from app.content.monster_reaction_source_audit import (
@@ -19,6 +19,7 @@ from app.content.monster_reaction_source_audit import (
 )
 from app.content.monster_spellcasting_source_audit import arena_neutral_spellcasting, spellcasting_fingerprint
 from app.content.monster_trait_source_audit import _ARENA_NEUTRAL_TRAITS, _MODELED_TRAITS, parse_trait_names
+from app.domain.catalog import CoverageStatus
 
 _CONDITION_OR_CONTROL = re.compile(
     r"\b(blinded|charmed|deafened|frightened|grappled|incapacitated|paralyzed|petrified|poisoned|prone|restrained|stunned|unconscious|push(?:es|ed)?|pull(?:s|ed)?|swallow(?:s|ed)?)\b",
@@ -121,9 +122,19 @@ def _source_blockers(row: dict[str, object], monster_names: set[str]) -> list[st
     return blockers
 
 
+def _ready_names() -> set[str]:
+    """Use the authoritative catalog result rather than the private candidate map."""
+    return {
+        card.name
+        for card in build_monster_catalog()
+        if card.coverage_status is CoverageStatus.RAW_READY
+    }
+
+
 def main() -> None:
     rows = load_monster_rows()
     monster_names = {str(row["name"]) for row in rows}
+    ready_names = _ready_names()
     safe: list[dict[str, object]] = []
     already_ready: list[str] = []
     deferred: list[str] = []
@@ -133,7 +144,7 @@ def main() -> None:
     rider_details: list[dict[str, object]] = []
     for row in rows:
         name = str(row["name"])
-        if deferred_environment_reason(name) is not None:
+        if deferred_environment_reason(row["speed"]) is not None:
             deferred.append(name)
             continue
         blockers = _source_blockers(row, monster_names)
@@ -154,7 +165,7 @@ def main() -> None:
             })
         if blockers:
             continue
-        if name in _READY_BY_NAME:
+        if name in ready_names:
             already_ready.append(name)
         else:
             safe.append(row)
