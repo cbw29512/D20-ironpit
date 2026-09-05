@@ -1,5 +1,6 @@
 from app.combat.auras import resolve_end_turn_aura
 from app.combat.dice import FixedDiceProvider
+from app.combat.encounter_combat_turn import resolve_combat_turn
 from app.combat.state import build_combatant_state
 from app.content.capability_registry import build_combatant_from_capabilities
 from app.content.monster_aura_source_audit import parse_fire_aura
@@ -34,6 +35,16 @@ def test_fire_aura_uses_one_roll_and_independent_defenses():
     events, sequence = resolve_end_turn_aura(1, 1, source, _setup([normal, half], [source, ally]), FixedDiceProvider([7]))
     assert sequence == 3 and [event.damage_roll.total for event in events] == [7, 3]
     assert normal.state.current_hp == target.max_hp - 7 and half.state.current_hp == target.max_hp - 3 and ally.state.current_hp == target.max_hp
+
+
+def test_live_turn_emits_fire_aura_after_azer_attack():
+    azer = build_combatant_from_capabilities("srd-azer-sentinel"); target = build_combatant_from_capabilities("srd-sahuagin-warrior")
+    source = _member("m1", "monsters", azer, 5); victim = _member("h1", "heroes", target, 0); setup = _setup([victim], [source])
+    events, sequence = resolve_combat_turn(1, 1, source, victim, setup, FixedDiceProvider([10, 5, 3, 7]))
+    assert sequence == 3
+    assert [event.event_type for event in events] == ["attack", "feature"]
+    assert events[-1].feature_id == "end-turn-damage-aura" and events[-1].damage_roll.total == 7
+    assert victim.state.current_hp == target.max_hp - 11 - 7
 
 
 def test_azer_aura_is_disabled_while_incapacitated():
