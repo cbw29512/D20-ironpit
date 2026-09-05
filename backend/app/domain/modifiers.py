@@ -22,6 +22,7 @@ class CombatModifier(BaseModel):
     id: str
     source_id: str
     source_effect_id: str
+    source_name: str | None = None
     kind: ModifierKind
     flat_bonus: int = 0
     dice_count: int = Field(default=0, ge=0, le=20)
