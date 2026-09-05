@@ -131,7 +131,7 @@ def _card(
                 blockers = ["monster-source-audit-failed"]
     raw_ready = bool(candidate_id and not blockers)
     return MonsterCatalogCard(
-        id=str(row["id"]), name=name, challenge_rating=str(row["challenge"]), monster_type=str(row["type"]),
+        id=str(row["id"]), name=name, challenge_rating=str(row["challenge"]), monster_type=str(row["type"]), size=str(row["size"]),
         armor_class=str(row["armorClass"]), hit_points=str(row["hitPoints"]), speed=str(row["speed"]),
         source_page=int(row["sourcePage"]), source_reference=str(row["sourceReference"]),
         coverage_status=CoverageStatus.RAW_READY if raw_ready else CoverageStatus.BLOCKED,

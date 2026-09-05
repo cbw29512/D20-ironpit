@@ -50,7 +50,7 @@
   function readyMonsterCards() {
     return Object.values(window.IRON_PIT_BROWSER_MONSTERS).map((monster) => ({
       id: `catalog-${monster.id}`, name: monster.name, challenge_rating: monster.challenge_rating,
-      monster_type: monster.archetype, coverage_status: "raw_ready", runnable_template_id: monster.id, blockers: [],
+      monster_type: monster.archetype, size: monster.size, coverage_status: "raw_ready", runnable_template_id: monster.id, blockers: [],
     }));
   }
 
@@ -64,7 +64,7 @@
       return rows.map((row) => {
         const templateId = ready.get(row.name) || null;
         return {
-          id: row.id, name: row.name, challenge_rating: String(row.challenge).split(" ")[0], monster_type: row.type,
+          id: row.id, name: row.name, challenge_rating: String(row.challenge).split(" ")[0], monster_type: row.type, size: row.size,
           armor_class: row.armorClass, hit_points: row.hitPoints, speed: row.speed,
           coverage_status: templateId ? "raw_ready" : "blocked", runnable_template_id: templateId,
           blockers: templateId ? [] : ["monster-combat-mechanics-not-certified"],

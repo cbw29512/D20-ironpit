@@ -30,7 +30,7 @@
     node.type = "button"; node.className = `battle-card occupied ${side}`; node.dataset.slotIndex = String(index);
     node.innerHTML = `<span class="slot-number">${index + 1}</span><span class="initiative-badge" aria-label="Initiative">—</span><strong class="card-name"></strong><small class="card-meta"></small>${figureMarkup(template)}<div class="card-status-lanes"><div class="card-status-lane card-status-buffs" aria-label="Buffs"><small>BUFFS</small><div class="card-concentration" hidden></div><div class="card-buffs"></div></div><div class="card-status-lane card-status-debuffs" aria-label="Debuffs"><small>DEBUFFS</small><div class="card-debuffs"></div></div></div><div class="card-hp"><span></span></div><small class="hp-text"></small><span class="death-stamp">✕ DEAD</span>`;
     node.querySelector(".card-name").textContent = card.name;
-    node.querySelector(".card-meta").textContent = side === "heroes" ? `${card.class_name} · Level ${card.level} · ${card.build_name}` : `${card.monster_type} · CR ${card.challenge_rating}`;
+    node.querySelector(".card-meta").textContent = side === "heroes" ? `${card.class_name} · Level ${card.level} · ${card.build_name}` : `${card.monster_type} · ${card.size || template?.size || "medium"} · CR ${card.challenge_rating}`;
     const hp = Number(template?.max_hp || card.hit_points || 0);
     node.dataset.maxHp = String(hp); node.dataset.currentHp = String(hp); node.querySelector(".hp-text").textContent = `${hp} / ${hp} HP`;
     node.querySelector(".card-hp span").style.width = "100%"; if (template) V()?.decorate(node, template);

@@ -55,8 +55,8 @@
     });
     groups.push(...byTemplate.values());
     for (const group of groups) {
-      const state = group.members[0].state, advantage = Boolean(state.template.initiative_advantage), disadvantage = Q().incapacitated(state);
-      const mode = advantage === disadvantage ? "normal" : advantage ? "advantage" : "disadvantage";
+      const state = group.members[0].state;
+      const mode = R().modeFromSources(Number(Boolean(state.template.initiative_advantage)), Number(Q().incapacitated(state)));
       const roll = R().d20(state.template.initiative_bonus, mode);
       group.initiative_roll = roll; group.natural_roll = roll.selected_roll;
       group.initiative_bonus = state.template.initiative_bonus;

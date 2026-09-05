@@ -31,6 +31,7 @@ class MonsterCatalogCard(BaseModel):
     name: str
     challenge_rating: str
     monster_type: str
+    size: str
     armor_class: str
     hit_points: str
     speed: str
