@@ -73,7 +73,7 @@
       if (!HIT_KINDS.has(effect.kind)) throw new Error(`Unsupported on-hit modifier kind: ${effect.kind}.`);
       add(state, {
         id: `${sourceId}:${attack.id}:hit-modifier:${index}`, source_id: sourceId, source_effect_id: attack.id,
-        kind: effect.kind, flat_bonus: effect.flatBonus || 0,
+        source_name: attack.name, kind: effect.kind, flat_bonus: effect.flatBonus || 0,
         consume_on_attack_against: Boolean(effect.consumeOnAttackAgainst),
         expires_at_start_of_source_turn: Boolean(effect.expiresAtStartOfSourceTurn),
         expires_at_end_of_target_turn: Boolean(effect.expiresAtEndOfTargetTurn),
