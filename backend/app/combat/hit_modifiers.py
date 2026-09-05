@@ -9,6 +9,7 @@ from app.domain.weapons import WeaponAttack
 
 _SUPPORTED_HIT_MODIFIERS = {
     ModifierKind.ATTACKS_AGAINST_ADVANTAGE,
+    ModifierKind.NEXT_ATTACK_DISADVANTAGE,
     ModifierKind.SPEED,
 }
 
