@@ -5,6 +5,7 @@
   const C = () => window.IRON_PIT_BROWSER_CHARGE;
   const D = () => window.IRON_PIT_DICE;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
+  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { incapacitated: (state) => state.is_unconscious };
   const R = () => window.IRON_PIT_BROWSER_LIGHT_ATTACK;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const WM = () => window.IRON_PIT_BROWSER_WEAPON_MASTERY || { resolveCleave: (sequence) => ({ events: [], sequence }) };
@@ -67,7 +68,7 @@
     const rangedSplit = useRangedSplit(member, setup, slots), turnKey = `${round}:${member.combatant_id}`;
 
     slots.forEach((slot, index) => {
-      if (member.state.is_dead || member.state.is_unconscious) return;
+      if (member.state.is_dead || Q().incapacitated(member.state)) return;
       const data = slotData(slot), splitThis = index > 0 && rangedSplit && !rangedSplitUsed && F().flexibleSlotHasBoth(member, data.attackIds);
       const choice = attackChoice(member, setup, data, splitThis);
       if (choice) {

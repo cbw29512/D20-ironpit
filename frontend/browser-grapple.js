@@ -3,7 +3,9 @@
 
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
-  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { speedZero: (state) => state.active_effect_ids.includes("restrained") };
+  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { has: (state, id) => state.active_effect_ids.includes(id), incapacitated: (state) => state.is_unconscious, speedZero: (state) => state.active_effect_ids.includes("restrained") };
+  const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { effectiveSpeed: (state) => state.template.speed_ft };
+  const S = () => window.IRON_PIT_BROWSER_STATE;
   const T = () => window.IRON_PIT_BROWSER_TACTICAL_MIND;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
     available: (state, cost) => cost === "action" && state.action_available,
@@ -46,8 +48,8 @@
     for (const target of members.values()) {
       target.state.grapple_sources = target.state.grapple_sources.filter((source) => {
         const grappler = members.get(source.source_id);
-        if (!grappler || grappler.state.is_dead || grappler.state.is_unconscious) return false;
-        return Math.abs(grappler.position_ft - target.position_ft) <= source.range_ft;
+        if (!grappler || grappler.state.is_dead || Q().incapacitated(grappler.state)) return false;
+        return S().distance(grappler, target) <= source.range_ft;
       });
       sync(target.state);
     }
@@ -63,8 +65,8 @@
     if (athletics == null && acrobatics == null) throw new Error(`${state.template.name} lacks certified grapple escape bonuses.`);
     const useAthletics = athletics != null && (acrobatics == null || athletics >= acrobatics);
     const bonus = useAthletics ? athletics : acrobatics;
-    const advantage = useAthletics && (state.active_effect_ids.includes("rage") || state.template.athletics_advantage) ? 1 : 0;
-    const disadvantage = state.active_effect_ids.includes("poisoned") || state.active_effect_ids.includes("frightened") ? 1 : 0;
+    const advantage = useAthletics && (Q().has(state, "rage") || state.template.athletics_advantage) ? 1 : 0;
+    const disadvantage = Q().has(state, "poisoned") || Q().has(state, "frightened") ? 1 : 0;
     let roll = R().d20(bonus, R().modeFromSources(advantage, disadvantage));
     let success = roll.total >= source.escape_dc, tactical = null;
     if (!success && T()) {
@@ -74,7 +76,7 @@
     E().spend(state, "action");
     if (success) {
       release(state, source.source_id);
-      if (!speedIsZero(state)) state.movement_remaining_ft = Math.max(state.movement_remaining_ft, state.template.speed_ft);
+      if (!speedIsZero(state)) state.movement_remaining_ft = Math.max(state.movement_remaining_ft, M().effectiveSpeed(state));
     }
     const check = useAthletics ? "strength (athletics)" : "dexterity (acrobatics)";
     return {

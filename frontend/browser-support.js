@@ -27,9 +27,9 @@
 
   function secondWind(sequence, round, member) {
     const state = member.state, uses = state.resources["second-wind"] || 0;
-    if (!uses || !E().available(state, "bonus_action") || state.current_hp <= 0 || state.current_hp > Math.floor(state.template.max_hp / 2)) return null;
+    if (!uses || !E().available(state, "bonus_action") || state.current_hp <= 0 || !S().isBloodied(state)) return null;
     const die = D().roll(10), total = die + state.template.level, before = state.current_hp;
-    state.current_hp = Math.min(state.template.max_hp, state.current_hp + total);
+    state.current_hp = Math.min(S().effectiveMaxHp(state), state.current_hp + total);
     state.resources["second-wind"] -= 1; E().spend(state, "bonus_action");
     return { sequence, round_number: round, event_type: "healing", actor_id: member.combatant_id, actor_name: state.template.name,
       target_id: member.combatant_id, target_name: state.template.name, hp_before: before, hp_after: state.current_hp,

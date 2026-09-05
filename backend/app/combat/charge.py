@@ -5,6 +5,7 @@ from app.combat.charge_follow_up import resolve_charge_follow_up
 from app.combat.charge_profiles import ChargeProfile, charge_profile_for_attack_id
 from app.combat.dice import DiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
+from app.combat.modifier_stack import effective_speed
 from app.combat.opening_burst import opening_burst_available
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, CombatantState, WeaponAttack
@@ -40,7 +41,7 @@ def charge_can_close(
     if not is_available(attacker, "action") or CombatTrait.CHARGE not in attacker.template.combat_traits or profile is None:
         return False
     enough_runup = assume_precontact_runup or distance_ft >= profile.minimum_move_ft
-    return enough_runup and attacker.template.speed_ft >= profile.minimum_move_ft and _target_size_allowed(defender, profile)
+    return enough_runup and effective_speed(attacker) >= profile.minimum_move_ft and _target_size_allowed(defender, profile)
 
 
 def _bonus_damage(profile: ChargeProfile):

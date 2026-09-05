@@ -10,6 +10,7 @@ from app.combat.grapple import (
     speed_is_zero,
 )
 from app.combat.hit_modifiers import apply_hit_modifier_effects
+from app.combat.hit_points import effective_max_hp
 from app.combat.modifier_stack import effective_speed
 from app.combat.timed_conditions import apply_timed_condition
 from app.domain.models import CombatantState, WeaponAttack
@@ -35,7 +36,7 @@ def attack_roll_condition_sources(
     disadvantage = 0
     if (
         _TARGET_MISSING_HP_ADVANTAGE in attacker.template.attack_roll_advantage_triggers
-        and defender.current_hp < defender.template.max_hp
+        and defender.current_hp < effective_max_hp(defender)
     ):
         advantage += 1
     if _ATTACKER_BLOODIED_ADVANTAGE in attacker.template.attack_roll_advantage_triggers and is_bloodied(attacker):
@@ -44,16 +45,16 @@ def attack_roll_condition_sources(
         disadvantage += 1
     if has_condition(attacker, FRIGHTENED_EFFECT_ID):
         disadvantage += 1
-    if PRONE_EFFECT_ID in attacker.active_effect_ids:
+    if has_condition(attacker, PRONE_EFFECT_ID):
         disadvantage += 1
-    if RESTRAINED_EFFECT_ID in attacker.active_effect_ids:
+    if has_condition(attacker, RESTRAINED_EFFECT_ID):
         disadvantage += 1
-    if POISONED_EFFECT_ID in attacker.active_effect_ids:
+    if has_condition(attacker, POISONED_EFFECT_ID):
         disadvantage += 1
     if target_id is not None:
         disadvantage += grapple_attack_disadvantage(attacker, target_id)
     if (
-        DODGE_EFFECT_ID in defender.active_effect_ids
+        has_condition(defender, DODGE_EFFECT_ID)
         and not attacks_have_advantage_against(defender)
         and not speed_is_zero(defender)
         and effective_speed(defender) > 0
@@ -61,9 +62,9 @@ def attack_roll_condition_sources(
         disadvantage += 1
     if attacks_have_advantage_against(defender):
         advantage += 1
-    if RESTRAINED_EFFECT_ID in defender.active_effect_ids:
+    if has_condition(defender, RESTRAINED_EFFECT_ID):
         advantage += 1
-    if PRONE_EFFECT_ID in defender.active_effect_ids:
+    if has_condition(defender, PRONE_EFFECT_ID):
         if distance_ft <= 5:
             advantage += 1
         else:
@@ -125,7 +126,7 @@ def apply_hit_conditions(
 def stand_from_prone(state: CombatantState) -> int:
     """Spend half effective Speed at turn start to end Prone when standing is possible."""
     speed = effective_speed(state)
-    if PRONE_EFFECT_ID not in state.active_effect_ids or speed <= 0 or speed_is_zero(state):
+    if not has_condition(state, PRONE_EFFECT_ID) or speed <= 0 or speed_is_zero(state):
         return 0
     movement_cost = speed // 2
     state.movement_remaining_ft = max(0, state.movement_remaining_ft - movement_cost)

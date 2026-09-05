@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from app.combat.barbarian import rage_active
 from app.combat.bloodied import is_bloodied
-from app.combat.condition_rules import automatically_fails_strength_dexterity_save
+from app.combat.condition_rules import automatically_fails_strength_dexterity_save, has_condition
 from app.combat.danger_sense import danger_sense_advantage
 from app.combat.dice import DiceProvider
 from app.combat.grapple import RESTRAINED_EFFECT_ID
@@ -26,7 +26,7 @@ def saving_throw_mode(
         + int(ability == "strength" and rage_active(state))
         + danger_sense_advantage(state, ability)
     )
-    disadvantage = int(ability == "dexterity" and RESTRAINED_EFFECT_ID in state.active_effect_ids)
+    disadvantage = int(ability == "dexterity" and has_condition(state, RESTRAINED_EFFECT_ID))
     return resolve_roll_mode(advantage, disadvantage)
 
 

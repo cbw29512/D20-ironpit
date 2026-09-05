@@ -2,7 +2,8 @@
   "use strict";
 
   const dice = () => window.IRON_PIT_DICE;
-  const bloodied = (state) => state.current_hp * 2 <= state.template.max_hp;
+  const S = () => window.IRON_PIT_BROWSER_STATE;
+  const bloodied = (state) => S().isBloodied(state);
 
   function modeFromSources(advantage = 0, disadvantage = 0) {
     if ((advantage > 0) === (disadvantage > 0)) return "normal";

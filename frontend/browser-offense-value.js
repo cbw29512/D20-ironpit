@@ -38,12 +38,8 @@
   }
 
   function damageFactor(state, type) {
-    if (!type || state.template.damage_immunities?.includes(type)) return 0;
-    let factor = 1;
-    if (state.template.damage_resistances?.includes(type) || state.temporary_damage_resistances?.includes(type)
-      || state.active_effect_ids.includes("petrified")) factor *= 0.5;
-    if (state.template.damage_vulnerabilities?.includes(type)) factor *= 2;
-    return factor;
+    if (!type) return 0;
+    return A().adjustedDamage(state, 2, type) / 2;
   }
 
   const meanDamage = (count, size, bonus = 0) => count * (size + 1) / 2 + bonus;

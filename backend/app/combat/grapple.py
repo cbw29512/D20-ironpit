@@ -3,8 +3,9 @@ from __future__ import annotations
 from app.combat.action_economy import is_available, spend
 from app.combat.barbarian import rage_active
 from app.combat.condition_immunity import condition_is_immune
-from app.combat.condition_rules import condition_speed_is_zero, has_condition
+from app.combat.condition_rules import condition_speed_is_zero, has_condition, is_incapacitated
 from app.combat.dice import DiceProvider
+from app.combat.modifier_stack import effective_speed
 from app.combat.rolls import resolve_roll_mode, roll_d20
 from app.combat.tactical_mind import apply_tactical_mind
 from app.domain.models import BattleEvent, CombatantState, EncounterSetup, GrappleSource, RollMode
@@ -65,7 +66,7 @@ def cleanup_grapples(setup: EncounterSetup) -> None:
         retained: list[GrappleSource] = []
         for source in target.state.grapple_sources:
             grappler = members.get(source.source_id)
-            if grappler is None or grappler.state.is_dead or grappler.state.is_unconscious:
+            if grappler is None or grappler.state.is_dead or is_incapacitated(grappler.state):
                 continue
             if abs(grappler.position_ft - target.position_ft) > source.range_ft:
                 continue
@@ -112,7 +113,7 @@ def resolve_escape_grapple(
     if success:
         release_grapple(state, source.source_id)
         if not speed_is_zero(state):
-            state.movement_remaining_ft = max(state.movement_remaining_ft, state.template.speed_ft)
+            state.movement_remaining_ft = max(state.movement_remaining_ft, effective_speed(state))
     second_wind = next((item for item in state.resources if item.id == "second-wind"), None)
     tactical = " after using Tactical Mind" if tactical_used else ""
     return BattleEvent(

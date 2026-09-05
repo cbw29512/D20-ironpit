@@ -8,11 +8,13 @@ Read this file, `docs/IRON_PIT_MASTER_PLAN.md`, `docs/CANONICAL_COMBAT_BUILD_POL
 - Every exposed combat mechanic must be rules-as-written (RAW).
 - Unsupported outcome-changing mechanics must fail closed.
 - Never approximate, silently ignore, invent, or hand-wave a combat-relevant rule to make a hero or monster runnable.
+- **Reuse-first gate:** before adding any combat handler, search the existing shared engine for an equivalent primitive/resolver. If the mechanic already exists, the new feature must reference that primitive and supply only its trigger, scope, duration/range, target rules, values, and source name.
+- A feature, spell, trait, mastery, class, monster, or aura name is source/logging metadata, not permission to create another implementation of an existing mechanic. Advantage is Advantage, Disadvantage is Disadvantage, Resistance is Resistance, Immunity is Immunity, and the shared resolver remains authoritative regardless of the named source.
+- New mechanic code is justified only when no existing primitive can represent an outcome-changing RAW effect. When a new primitive is genuinely required, implement it once at the natural shared resolution point and re-audit every hero and monster that can use it.
 - Prefer reusable engine mechanics over hero-, monster-, or level-specific hacks.
 - Keep the Python reference engine and browser production engine behaviorally equivalent.
 - Preserve deterministic combat regression coverage, source auditing and references, generated-static parity, exact-head CI certification, and repository-enforced production source-size limits.
 - Never weaken, delete, bypass, or rewrite a test merely to make CI green. Fix the underlying defect. If an assertion is genuinely obsolete after an intentional architecture change, replace it with an equally strong assertion for the new contract.
-- PR #32 must remain a draft and unmerged. Do not merge it, merge to `main`, or change its base branch without explicit user authorization.
 
 ## Arena policy
 

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from app.combat.condition_rules import automatically_fails_strength_dexterity_save, close_hit_is_automatic_critical
 from app.combat.conditions import attack_roll_condition_sources
+from app.combat.damage_defenses import adjusted_damage_amount
 from app.combat.encounter_targeting import close_ranged_threat_exists, combatant_distance
 from app.combat.modifier_stack import attacks_against_advantage_sources, effective_armor_class
 from app.combat.rolls import resolve_roll_mode
@@ -39,14 +40,7 @@ def _bonus_distribution(state, kind: ModifierKind) -> dict[int, float]:
 def _damage_factor(target, damage_type: DamageType | None) -> float:
     if damage_type is None:
         return 0.0
-    if damage_type in target.template.damage_immunities:
-        return 0.0
-    factor = 1.0
-    if damage_type in {*target.template.damage_resistances, *target.temporary_damage_resistances} or "petrified" in target.active_effect_ids:
-        factor *= 0.5
-    if damage_type in target.template.damage_vulnerabilities:
-        factor *= 2.0
-    return factor
+    return adjusted_damage_amount(2, damage_type, target) / 2
 
 
 def _mean_damage(count: int, size: int, bonus: int = 0) -> float:

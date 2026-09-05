@@ -3,6 +3,7 @@
 
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (s) => s.action_available };
+  const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { effectiveSpeed: (state) => state.template.speed_ft };
 
   function openingEligible(round, member, setup) {
     if (round !== 1 || !setup || !Number.isInteger(member.state.initiative_total)) return false;
@@ -44,7 +45,7 @@
     if (!profile || !E().available(member.state, "action") || !targetSizeAllowed(target, profile)) {
       return { events: [], sequence, handled: false };
     }
-    if ((member.state.template.speed_ft || 0) < (profile.minimumMove || 0)) {
+    if (M().effectiveSpeed(member.state) < (profile.minimumMove || 0)) {
       return { events: [], sequence, handled: false };
     }
     const options = { featureId: "charge", proneMaxSize: profile.proneMaxSize, setup, ignoreCloseThreat: true };

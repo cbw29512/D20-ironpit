@@ -6,6 +6,7 @@ from app.combat.action_economy import is_available, spend
 from app.combat.ally_context import pack_tactics_active
 from app.combat.attack_action_rules import validate_attack_action_slots
 from app.combat.cleave import resolve_cleave_extra_attack
+from app.combat.condition_rules import is_incapacitated
 from app.combat.dice import DiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.light_attack_resolution import resolve_light_extra_attack
@@ -91,7 +92,7 @@ def resolve_attack_action(
         turn_key = f"{round_number}:{attacker.combatant_id}"
 
         for index, slot in enumerate(definition.slots):
-            if attacker.state.is_dead or attacker.state.is_unconscious:
+            if attacker.state.is_dead or is_incapacitated(attacker.state):
                 break
             split_this_slot = (
                 index > 0

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.bloodied import is_bloodied
 from app.combat.range import resolve_attack_roll_mode
 from app.domain.models import CombatantState, WeaponAttack, WeaponAttackKind
 
@@ -16,7 +17,8 @@ def should_use_second_wind(state: CombatantState) -> bool:
             resource
             and resource.current_uses > 0
             and state.bonus_action_available
-            and 0 < state.current_hp <= state.template.max_hp // 2
+            and state.current_hp > 0
+            and is_bloodied(state)
         )
     except Exception as exc:
         logger.exception("Failed to evaluate Second Wind policy for %s.", state.template.name)
