@@ -12,6 +12,7 @@ from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
 from app.combat.graze import resolve_graze_miss
 from app.combat.heroic_inspiration import reroll_failed_attack_with_heroic_inspiration
+from app.combat.max_hp import apply_attack_max_hp_reduction
 from app.combat.modifier_stack import (
     apply_d20_bonus_dice, attacks_against_advantage_sources, consume_attacks_against_advantage,
     consume_next_attack_against_advantage, effective_armor_class, next_attack_against_advantage_sources,
@@ -88,6 +89,7 @@ def resolve_attack(
             applied_total, damage_components = apply_damage_defenses(actual_defender, rolled_components); damage_roll.total = applied_total
             applied_types = {part.damage_type for part in damage_components if part.applied_total > 0}
             damage_outcome = apply_damage(actual_defender, applied_total, critical=critical, damage_types=applied_types, dice=dice, affected_states=affected_states)
+            apply_attack_max_hp_reduction(actual_defender, attack, damage_components)
             applied_conditions = apply_hit_conditions(attack, actual_defender, attacker_event_id, round_number, affected_states)
             topple = resolve_topple_hit(attacker, actual_defender, attack, dice)
             if topple.applied and "prone" not in applied_conditions: applied_conditions.append("prone")
