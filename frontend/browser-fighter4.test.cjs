@@ -13,6 +13,7 @@ const load = (name) => vm.runInThisContext(
 
 load("browser-heroes.js");
 load("browser-action-economy.js");
+load("browser-state.js");
 load("browser-support.js");
 
 const fighter3 = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l3"];
