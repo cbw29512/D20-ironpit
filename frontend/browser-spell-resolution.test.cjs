@@ -26,7 +26,7 @@ window.IRON_PIT_BROWSER_STATE = {
   distance: (a, b) => Math.abs(a.position_ft - b.position_ft),
   sizeAtMost: () => true,
 };
-window.IRON_PIT_BROWSER_CONDITION_RULES = { autoFailStrDex: () => false };
+window.IRON_PIT_BROWSER_CONDITION_RULES = { autoFailStrDex: () => false, has: () => false };
 window.IRON_PIT_ACTION_ECONOMY = {
   available: (state, cost) => Boolean(state[`${cost}_available`]),
   spend: (state, cost) => { state[`${cost}_available`] = false; },
