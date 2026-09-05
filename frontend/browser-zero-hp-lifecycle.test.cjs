@@ -14,6 +14,7 @@ for (const file of [
 
 const S = window.IRON_PIT_BROWSER_STATE;
 const A = window.IRON_PIT_BROWSER_ATTACK;
+const Z = window.IRON_PIT_BROWSER_ZERO_HP;
 const E = window.IRON_PIT_ACTION_ECONOMY;
 const heroTemplate = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"];
 
@@ -49,6 +50,18 @@ function downedHero() {
 }
 
 {
+  const state = S.buildState(structuredClone(heroTemplate));
+  state.max_hp_bonus = 5;
+  state.current_hp = S.effectiveMaxHp(state);
+  assert.equal(Z.applyMaxHpReduction(state, 3), 3);
+  assert.equal(S.effectiveMaxHp(state), state.template.max_hp + 2);
+  assert.equal(state.current_hp, S.effectiveMaxHp(state));
+  Z.applyMaxHpReduction(state, state.template.max_hp + 100);
+  assert.equal(S.effectiveMaxHp(state), 0);
+  assert.equal(state.is_dead, true, "maximum HP reduced to zero is lethal");
+}
+
+{
   const state = downedHero();
   state.reaction_available = false;
   S.refreshReaction(state);
@@ -59,4 +72,4 @@ function downedHero() {
   assert.equal(E.available(state, "reaction"), true, "after healing, the already-refreshed Reaction is usable before the next turn");
 }
 
-console.log("Browser zero-HP and start-turn lifecycle regressions passed.");
+console.log("Browser zero-HP, maximum-HP reduction, and start-turn lifecycle regressions passed.");

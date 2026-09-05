@@ -46,6 +46,17 @@
     endDodge(state);
   }
 
+  function applyMaxHpReduction(state, amount) {
+    if (amount < 0) throw new Error("Maximum-HP reduction cannot be negative.");
+    if (!amount || state.is_dead) return 0;
+    const before = S().effectiveMaxHp(state);
+    state.max_hp_reduction = Math.min(state.template.max_hp + (state.max_hp_bonus || 0), (state.max_hp_reduction || 0) + amount);
+    const after = S().effectiveMaxHp(state);
+    state.current_hp = Math.min(state.current_hp, after);
+    if (!after) markDead(state);
+    return before - after;
+  }
+
   function finish(state, outcome, incoming, affectedStates) {
     B()?.endDamageSensitive(state);
     if (!state.concentration) return outcome;
@@ -82,5 +93,5 @@
     return finish(state, "unconscious", incoming, affectedStates);
   }
 
-  window.IRON_PIT_BROWSER_ZERO_HP = { applyDamage };
+  window.IRON_PIT_BROWSER_ZERO_HP = { applyDamage, applyMaxHpReduction };
 })();
