@@ -10,6 +10,7 @@ from app.content.monster_source_audit import audit_monster_source
 from app.content.monster_source_definition import slug, source_definition_fields
 from app.domain.capabilities import CombatantDefinition
 from app.domain.catalog import CoverageStatus
+from report_zero_engine_monsters import _source_blockers
 
 
 def _simple_definition(row: dict[str, object], *, recharge: bool) -> CombatantDefinition:
@@ -34,30 +35,56 @@ def _simple_definition(row: dict[str, object], *, recharge: bool) -> CombatantDe
     return CombatantDefinition.model_validate(payload)
 
 
-def _passes(row: dict[str, object], recharge: bool) -> bool:
-    try:
-        definition = _simple_definition(row, recharge=recharge)
-        template = complete_monster_creature_types([compile_combatant(definition)])[0]
-        return audit_monster_source(template, row) == []
-    except (ValueError, RuntimeError):
-        return False
+def _parser_family(row: dict[str, object]) -> str | None:
+    for family, recharge in (("single-attack+recharge-area-save", True), ("single-attack", False)):
+        try:
+            definition = _simple_definition(row, recharge=recharge)
+            template = complete_monster_creature_types([compile_combatant(definition)])[0]
+            if audit_monster_source(template, row) == []:
+                return family
+        except (ValueError, RuntimeError):
+            continue
+    return None
 
 
 def main() -> None:
-    ready = {card.name for card in build_monster_catalog() if card.coverage_status is CoverageStatus.RAW_READY}
-    families: dict[str, list[str]] = defaultdict(list)
-    for row in load_monster_rows():
+    rows = load_monster_rows(); monster_names = {str(row["name"]) for row in rows}
+    cards = build_monster_catalog()
+    ready = {card.name for card in cards if card.coverage_status is CoverageStatus.RAW_READY}
+    deferred = {
+        card.name for card in cards
+        if any(blocker.startswith("deferred-environment:") for blocker in card.blockers)
+    }
+    safe: dict[str, list[str]] = defaultdict(list)
+    semantic_blocked: dict[str, list[str]] = defaultdict(list)
+    parser_clean_deferred: list[str] = []
+    for row in rows:
         name = str(row["name"])
         if name in ready:
             continue
-        if _passes(row, recharge=True):
-            families["single-attack+recharge-area-save"].append(name)
-        elif _passes(row, recharge=False):
-            families["single-attack"].append(name)
-    total = sum(len(names) for names in families.values())
+        family = _parser_family(row)
+        if family is None:
+            continue
+        if name in deferred:
+            parser_clean_deferred.append(name)
+            continue
+        blockers = _source_blockers(row, monster_names)
+        if blockers:
+            semantic_blocked["+".join(sorted(set(blockers)))].append(name)
+            continue
+        safe[family].append(name)
+    total = sum(len(names) for names in safe.values())
+    blocked_total = sum(len(names) for names in semantic_blocked.values())
     print(f"SOURCE_DERIVED_CANDIDATES total={total}")
-    for family, names in sorted(families.items()):
+    for family, names in sorted(safe.items()):
         print(f"SOURCE_DERIVED_FAMILY family={family} count={len(names)} names={';'.join(sorted(names))}")
+    print(f"SOURCE_DERIVED_PARSER_CLEAN_BLOCKED total={blocked_total}")
+    for signature, names in sorted(semantic_blocked.items(), key=lambda item: (-len(item[1]), item[0])):
+        print(f"SOURCE_DERIVED_BLOCKED blockers={signature} count={len(names)} names={';'.join(sorted(names))}")
+    print(
+        "SOURCE_DERIVED_PARSER_CLEAN_DEFERRED "
+        f"total={len(parser_clean_deferred)} names={';'.join(sorted(parser_clean_deferred))}"
+    )
 
 
 if __name__ == "__main__":
