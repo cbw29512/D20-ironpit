@@ -2,28 +2,36 @@ from __future__ import annotations
 
 import re
 
-from app.content.movement_modes import parse_movement_profile, source_movement_modes
 from app.domain.models import CombatantTemplate
 from app.domain.movement import MovementModes
 
-_SPEED_TEXT = re.compile(r"\d+\s*ft\b", re.IGNORECASE)
+_BASE_WALK = re.compile(r"^\s*(\d+)\s*ft\b", re.IGNORECASE)
+_FLY = re.compile(r"\bfly\s+(\d+)\s*ft\b", re.IGNORECASE)
+_SWIM = re.compile(r"\bswim\s+(\d+)\s*ft\b", re.IGNORECASE)
 
 
-def _environment_movement(source: object | MovementModes) -> MovementModes:
-    if isinstance(source, MovementModes):
-        return source
-    text = str(source).strip()
-    if _SPEED_TEXT.search(text):
-        return parse_movement_profile(text)
-    return source_movement_modes(text)
+def _source_environment_speeds(source_speed: object) -> tuple[int, int, int]:
+    """Read only walk/fly/swim facts needed for standard-arena eligibility."""
+    text = str(source_speed or "").strip()
+    walk = _BASE_WALK.search(text)
+    fly = _FLY.search(text)
+    swim = _SWIM.search(text)
+    return (
+        int(walk.group(1)) if walk else 0,
+        int(fly.group(1)) if fly else 0,
+        int(swim.group(1)) if swim else 0,
+    )
 
 
 def deferred_environment_reason(source: object | MovementModes) -> str | None:
-    """Return standard-Iron-Pit environment blockers from movement mechanics, never names."""
-    movement = _environment_movement(source)
-    if movement.fly_ft > 0:
+    """Return environment blockers without invoking the stricter runtime movement parser."""
+    if isinstance(source, MovementModes):
+        walk_ft, fly_ft, swim_ft = source.walk_ft, source.fly_ft, source.swim_ft
+    else:
+        walk_ft, fly_ft, swim_ft = _source_environment_speeds(source)
+    if fly_ft > 0:
         return None
-    if movement.swim_ft > 0 and movement.walk_ft <= 5:
+    if swim_ft > 0 and walk_ft <= 5:
         return "aquatic-only"
     return None
 
