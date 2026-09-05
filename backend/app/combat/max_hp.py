@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from app.combat.hit_points import effective_max_hp
 from app.combat.zero_hp import _mark_dead
-from app.domain.models import CombatantState
+from app.domain.models import CombatantState, DamageRollComponent, WeaponAttack
 
 
 def apply_max_hp_reduction(state: CombatantState, amount: int) -> int:
@@ -18,3 +18,18 @@ def apply_max_hp_reduction(state: CombatantState, amount: int) -> int:
     if after == 0:
         _mark_dead(state)
     return before - after
+
+
+def apply_attack_max_hp_reduction(
+    state: CombatantState, attack: WeaponAttack, damage_components: list[DamageRollComponent],
+) -> int:
+    """Apply an attack drain from post-defense damage, optionally scoped to one damage type."""
+    rider = attack.max_hp_reduction
+    if rider is None:
+        return 0
+    amount = sum(
+        part.applied_total or 0
+        for part in damage_components
+        if rider.damage_type is None or part.damage_type == rider.damage_type
+    )
+    return apply_max_hp_reduction(state, amount)
