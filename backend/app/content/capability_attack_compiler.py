@@ -6,10 +6,11 @@ from app.domain.capability_effects import (
     ConditionEffectDefinition,
     DamageEffectDefinition,
     GrappleEffectDefinition,
+    MaxHpReductionEffectDefinition,
     ProneEffectDefinition,
 )
 from app.domain.hit_modifiers import HitModifierEffect
-from app.domain.models import ConditionalDamage, OnHitDamage, Weapon, WeaponAttack
+from app.domain.models import ConditionalDamage, MaxHpReductionRider, OnHitDamage, Weapon, WeaponAttack
 
 
 class UnsupportedCapabilityError(ValueError):
@@ -59,6 +60,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
     on_hit: list[OnHitDamage] = []
     on_hit_modifiers: list[HitModifierEffect] = []
     conditional: list[ConditionalDamage] = []
+    max_hp_reduction = None
     prone_size = None
     control = None
     for effect in definition.effects:
@@ -80,6 +82,10 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
                     damage_bonus=effect.dice.bonus,
                     damage_type=effect.damage_type,
                 ))
+        elif isinstance(effect, MaxHpReductionEffectDefinition):
+            if max_hp_reduction is not None:
+                raise UnsupportedCapabilityError("An attack can have only one maximum-HP reduction rider.")
+            max_hp_reduction = MaxHpReductionRider(damage_type=effect.damage_type)
         elif isinstance(effect, ProneEffectDefinition):
             prone_size = effect.max_target_size
         elif isinstance(effect, HitModifierEffect):
@@ -100,6 +106,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
         conditional_damage=conditional,
         on_hit_damage=on_hit,
         on_hit_modifier_effects=on_hit_modifiers,
+        max_hp_reduction=max_hp_reduction,
         knocks_prone_max_size=prone_size,
         control_effect=control,
         forbid_target_grappled_by_self=definition.forbid_target_grappled_by_self,

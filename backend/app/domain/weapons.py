@@ -54,6 +54,10 @@ class OnHitDamage(BaseModel):
         return self
 
 
+class MaxHpReductionRider(BaseModel):
+    damage_type: DamageType | None = None
+
+
 class Weapon(BaseModel):
     id: str
     name: str
@@ -86,6 +90,7 @@ class WeaponAttack(BaseModel):
     conditional_damage: list[ConditionalDamage] = Field(default_factory=list)
     on_hit_damage: list[OnHitDamage] = Field(default_factory=list)
     on_hit_modifier_effects: list[HitModifierEffect] = Field(default_factory=list)
+    max_hp_reduction: MaxHpReductionRider | None = None
     rage_eligible: bool = False
     sneak_attack_eligible: bool = False
     knocks_prone_max_size: CreatureSize | None = None
