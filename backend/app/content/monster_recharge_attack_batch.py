@@ -1,22 +1,42 @@
 from __future__ import annotations
 
+from app.content.monster_catalog import load_monster_rows
 from app.content.monster_simple_actions import parse_attack_rolls, parse_uniform_multiattack_count
-from app.content.monster_source_definition import slug, source_definition_fields, source_row
+from app.content.monster_source_definition import slug, source_definition_fields
 from app.domain.capabilities import CombatantDefinition
 
-_RECHARGE_ATTACK_MONSTERS = ("Ape",)
+
+def _family_parts(row: dict[str, object]):
+    attacks, resources = parse_attack_rolls(row)
+    unlimited = [attack for attack in attacks if not attack.get("resource_id")]
+    limited = [attack for attack in attacks if attack.get("resource_id")]
+    if len(unlimited) != 1 or len(limited) != 1 or len(resources) != 1:
+        return None
+    try:
+        count = parse_uniform_multiattack_count(row, str(unlimited[0]["name"]))
+    except ValueError:
+        return None
+    return attacks, resources, unlimited[0], count
+
+
+def discover_recharge_attack_names() -> tuple[str, ...]:
+    """Discover strict SRD rows whose combat shape is one normal Multiattack plus one recharge attack roll."""
+    return tuple(
+        str(row["name"])
+        for row in load_monster_rows()
+        if _family_parts(row) is not None
+    )
 
 
 def build_recharge_attack_monster_definitions() -> dict[str, CombatantDefinition]:
-    """Compile strict source-driven monsters with one normal Multiattack and one recharge attack roll."""
+    """Compile every strict source-derived recharge-attack family member; full source audit decides readiness."""
     definitions: dict[str, CombatantDefinition] = {}
-    for name in _RECHARGE_ATTACK_MONSTERS:
-        row = source_row(name); attacks, resources = parse_attack_rolls(row)
-        unlimited = [attack for attack in attacks if not attack.get("resource_id")]
-        limited = [attack for attack in attacks if attack.get("resource_id")]
-        if len(unlimited) != 1 or len(limited) != 1 or len(resources) != 1:
-            raise ValueError(f"Recharge attack family shape changed for {name!r}.")
-        primary = unlimited[0]; count = parse_uniform_multiattack_count(row, str(primary["name"]))
+    rows = {str(row["name"]): row for row in load_monster_rows()}
+    for name in discover_recharge_attack_names():
+        row = rows[name]; parts = _family_parts(row)
+        if parts is None:
+            raise RuntimeError(f"Discovered recharge attack family member {name!r} no longer matches its source shape.")
+        attacks, resources, primary, count = parts
         monster_id = f"srd-{slug(name)}"; payload = source_definition_fields(name)
         payload.update({
             "archetype": "source-derived recharge attacker", "attacks": attacks,

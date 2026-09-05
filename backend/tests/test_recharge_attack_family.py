@@ -1,9 +1,13 @@
 from app.combat.action_resources import consume_resource, recharge_start_of_turn, resource_available
 from app.content.capability_compiler import compile_combatant
-from app.content.monster_recharge_attack_batch import build_recharge_attack_monster_definitions
+from app.content.monster_catalog import load_monster_rows
+from app.content.monster_recharge_attack_batch import (
+    build_recharge_attack_monster_definitions,
+    discover_recharge_attack_names,
+)
 from app.content.monster_source_audit import audit_monster_source
 from app.content.monster_source_definition import source_row
-from app.domain.runtime import CombatantState, RuntimeResource
+from app.domain.runtime import CombatantState
 
 
 class FixedDice:
@@ -11,6 +15,13 @@ class FixedDice:
     def roll(self, sides: int) -> int:
         assert sides == 6
         return self.value
+
+
+def test_recharge_attack_family_is_discovered_from_srd_not_a_manual_name_list() -> None:
+    names = discover_recharge_attack_names()
+    source_order = [str(row["name"]) for row in load_monster_rows()]
+    assert "Ape" in names
+    assert list(names) == [name for name in source_order if name in set(names)]
 
 
 def test_ape_is_source_derived_recharge_attack_monster() -> None:
