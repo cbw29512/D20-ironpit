@@ -4,6 +4,7 @@ import logging
 import re
 from functools import lru_cache
 
+from app.content.monster_combat_scope import combat_math_relevant, feature_blocks
 from app.content.monster_catalog import load_monster_rows
 from app.domain.models import CombatantTemplate
 
@@ -23,12 +24,6 @@ _REDIRECT_ATTACK = re.compile(
     r"\bRedirect Attack\.\s+Trigger:\s+A creature the goblin can see makes an attack roll against it\.\s+"
     r"Response:\s+The goblin chooses a Small or Medium ally within (?P<range>\d+) feet of itself\.\s+"
     r"The goblin and that ally swap places, and the ally becomes the target of the attack instead\.",
-    re.IGNORECASE,
-)
-_AUDIBLE_ONLY_REACTION = re.compile(
-    r"^[^.]+\.\s+Trigger:\s+[^.]+\.\s+Response:\s+"
-    r"The [^.]+ emits? (?:a|an) [^.]+ audible within \d+ feet of itself "
-    r"for \d+ minutes? or until the [^.]+ dies\.$",
     re.IGNORECASE,
 )
 
@@ -58,9 +53,12 @@ def parse_reaction_names(source_reactions: object) -> list[str]:
 
 
 def arena_neutral_reaction_source(source_reactions: object) -> bool:
-    """Recognize reviewed reactions whose entire response is non-math sensory output."""
-    text = str(source_reactions or "").strip()
-    return bool(text and _AUDIBLE_ONLY_REACTION.fullmatch(text))
+    """True when every printed reaction is movement/sensory/presentation-only in Iron Pit."""
+    names = parse_reaction_names(source_reactions)
+    if not names:
+        return True
+    blocks = feature_blocks(source_reactions, names)
+    return all(not combat_math_relevant(blocks[name]) for name in names)
 
 
 def parse_parry_ac_bonus(source_reactions: object) -> int | None:
@@ -86,7 +84,7 @@ def _redirect_matches(template: CombatantTemplate, source: object) -> bool:
 
 
 def reaction_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
-    """Certify reviewed reaction semantics; fail closed on every other printed reaction."""
+    """Certify outcome-changing reactions; ignore reaction text outside Iron Pit combat scope."""
     source = row.get("reactions", "")
     expected = parse_reaction_names(source)
     issues: list[str] = []
@@ -96,12 +94,15 @@ def reaction_issues(template: CombatantTemplate, row: dict[str, object]) -> list
         issues.append("unexpected-parry-reaction")
     if template.redirect_attack_reaction is not None and "Redirect Attack" not in expected:
         issues.append("unexpected-redirect-attack-reaction")
-    if expected and arena_neutral_reaction_source(source):
+    if not expected:
         return issues
+    blocks = feature_blocks(source, expected)
     for name in expected:
         if name == "Parry" and _parry_matches(template, source):
             continue
         if name == "Redirect Attack" and _redirect_matches(template, source):
+            continue
+        if not combat_math_relevant(blocks[name]):
             continue
         if name == "Parry":
             issues.append("parry-source-mismatch")

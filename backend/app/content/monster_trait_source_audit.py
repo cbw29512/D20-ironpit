@@ -4,6 +4,7 @@ import logging
 import re
 from functools import lru_cache
 
+from app.content.monster_combat_scope import combat_math_relevant, feature_blocks
 from app.content.monster_catalog import load_monster_rows
 from app.domain.models import CombatantTemplate
 from app.domain.traits import CombatTrait
@@ -59,6 +60,17 @@ def parse_trait_names(source_traits: object, *, preserve_annotations: bool = Fal
     return names
 
 
+def combat_relevant_trait_names(source_traits: object) -> set[str]:
+    """Return unmodeled trait headings whose prose can change Iron Pit combat math."""
+    annotated = parse_trait_names(source_traits, preserve_annotations=True)
+    blocks = feature_blocks(source_traits, annotated)
+    return {
+        _normalized_heading(name)
+        for name in annotated
+        if combat_math_relevant(blocks[name])
+    }
+
+
 def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
     expected = parse_trait_names(row.get("traits", ""))
     issues: list[str] = []
@@ -72,10 +84,12 @@ def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[st
         elif runtime_has and not source_has:
             issues.append(f"trait-source-missing:{runtime_trait.value}")
     certified = set(_MODELED_TRAITS) | set(_ARENA_NEUTRAL_TRAITS)
+    relevant = combat_relevant_trait_names(row.get("traits", ""))
     for name in expected:
-        if name not in certified:
-            slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
-            issues.append(f"uncertified-trait:{slug}")
+        if name in certified or name not in relevant:
+            continue
+        slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
+        issues.append(f"uncertified-trait:{slug}")
     return issues
 
 

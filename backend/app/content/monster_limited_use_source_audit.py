@@ -4,7 +4,9 @@ import logging
 import re
 from functools import lru_cache
 
+from app.content.monster_combat_scope import combat_math_relevant, feature_blocks
 from app.content.monster_catalog import load_monster_rows
+from app.content.monster_trait_source_audit import parse_trait_names
 from app.domain.models import CombatantTemplate
 
 logger = logging.getLogger(__name__)
@@ -75,14 +77,24 @@ def _recharge_attack_supported(template: CombatantTemplate, fingerprint: str) ->
     return attack is not None and _recharge_matches(template, attack.resource_id, attack.resource_cost, heading)
 
 
+def limited_use_source_relevant(row: dict[str, object], fingerprint: str) -> bool:
+    section, _, heading = fingerprint.partition(":")
+    source = row.get(section, "")
+    headings = parse_trait_names(source, preserve_annotations=True)
+    blocks = feature_blocks(source, headings)
+    return combat_math_relevant(blocks[heading])
+
+
 def limited_use_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
-    """Certify modeled Recharge actions; keep all other limited-use families fail-closed."""
+    """Certify modeled limited-use math; ignore limited movement/sensory/presentation features."""
     expected = parse_limited_use_names(row)
     issues: list[str] = []
     if template.source_limited_use_names != expected:
         issues.append("source-limited-use-fingerprint-mismatch")
     for name in expected:
         if _recharge_save_supported(template, name) or _recharge_attack_supported(template, name):
+            continue
+        if not limited_use_source_relevant(row, name):
             continue
         slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
         issues.append(f"uncertified-limited-use:{slug}")
