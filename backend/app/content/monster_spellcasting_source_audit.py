@@ -6,6 +6,7 @@ import re
 from functools import lru_cache
 
 from app.content.monster_catalog import load_monster_rows
+from app.content.monster_trait_source_audit import parse_trait_names
 from app.domain.models import CombatantTemplate
 
 logger = logging.getLogger(__name__)
@@ -14,11 +15,6 @@ _CASTING = re.compile(r"\bSpellcasting\b|\bcast(?:s|ing)?\b", re.IGNORECASE)
 _SPELL_GROUP = re.compile(
     r"\b(?:At Will|\d+/Day(?: Each)?):\s*(.*?)(?=\s+(?:At Will|\d+/Day(?: Each)?):|$)",
     re.IGNORECASE,
-)
-_NEXT_ACTION_FEATURE = re.compile(
-    r"\s+[A-Z][A-Za-z’' -]{1,80}\.\s+"
-    r"(?:(?:Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma)\s+Saving Throw:"
-    r"|(?:Melee|Ranged|Melee or Ranged)\s+Attack Roll:|Trigger:|Response:)",
 )
 # Explicitly certified as irrelevant to the standard flat/open Iron Pit outcome.
 # These spells are never selected as combat actions; unknown additions fail closed.
@@ -44,8 +40,9 @@ def spellcasting_fingerprint(row: dict[str, object]) -> str | None:
     return hashlib.sha256(text.encode("utf-8")).hexdigest() if text else None
 
 
-def _outside_parentheses_prefix(text: str) -> str:
-    """Bound a printed spell list before punctuation or the next action feature."""
+def _outside_parentheses_prefix(text: str, headings: list[str]) -> str:
+    """Bound a spell list before the next parsed feature or free prose sentence."""
+    markers = tuple(f" {heading}." for heading in headings)
     depth = 0
     for index, char in enumerate(text):
         if char == "(":
@@ -56,7 +53,7 @@ def _outside_parentheses_prefix(text: str) -> str:
             continue
         if depth:
             continue
-        if _NEXT_ACTION_FEATURE.match(text, index):
+        if any(text.startswith(marker, index) for marker in markers):
             return text[:index]
         if char == ".":
             return text[:index]
@@ -81,12 +78,16 @@ def _split_outside_parentheses(text: str) -> list[str]:
 
 
 def printed_spell_names(row: dict[str, object]) -> set[str]:
-    """Extract only spell-list entries; never consume prose from the next feature."""
-    text = spellcasting_source_text(row)
+    """Extract only spell-list entries; exact parsed headings stop flattened source bleed."""
     spells: set[str] = set()
-    for group in _SPELL_GROUP.findall(text):
-        bounded = _outside_parentheses_prefix(group)
-        spells.update(_split_outside_parentheses(bounded))
+    for field in _FIELDS:
+        text = _normalized(row.get(field, ""))
+        if not text or not _CASTING.search(text):
+            continue
+        headings = parse_trait_names(text, preserve_annotations=True)
+        for group in _SPELL_GROUP.findall(text):
+            bounded = _outside_parentheses_prefix(group, headings)
+            spells.update(_split_outside_parentheses(bounded))
     return spells
 
 
