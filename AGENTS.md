@@ -1,44 +1,110 @@
 # D20 Iron Pit repository instructions
 
-Read this file, `docs/IRON_PIT_MASTER_PLAN.md`, `docs/CANONICAL_COMBAT_BUILD_POLICY.md`, `docs/IRON_PIT_DAMAGE_SCOPE.md`, and the structured certification manifests before changing code. The repository and its permanent tests are authoritative; prompts and historical counts are not. Where an older master-plan checkpoint conflicts with a later explicit policy in this file, `docs/IRON_PIT_DAMAGE_SCOPE.md`, or `docs/CANONICAL_COMBAT_BUILD_POLICY.md`, the later explicit policy controls until the master-plan text is reconciled.
+Before changing combat code, read these in order:
+
+1. `docs/IRON_PIT_UNIVERSAL_COMBAT_DOCTRINE.md`
+2. `docs/IRON_PIT_DAMAGE_SCOPE.md`
+3. `docs/ARENA_POLICY.md`
+4. `docs/IRON_PIT_MASTER_PLAN.md`
+5. `docs/CANONICAL_COMBAT_BUILD_POLICY.md`
+6. the structured certification manifests
+
+`docs/IRON_PIT_UNIVERSAL_COMBAT_DOCTRINE.md` is the highest-authority combat architecture and scope document. If an older master-plan checkpoint, implementation shortcut, test assumption, historical certification rule, or other document conflicts with that doctrine, the doctrine controls until the older material is reconciled. Only a later explicit user decision may change it.
+
+The repository, source records, permanent tests, and generated certification state are authoritative for current implementation state. Historical counts and chat checkpoints are not substitutes for exact-head repository evidence.
 
 ## Product and RAW rules
 
-- D20 Iron Pit is a D&D 2024 / SRD 5.2.1 rules-first card-vs-card combat simulator.
-- Every exposed combat mechanic must be rules-as-written (RAW) within the deliberately reduced Iron Pit scope.
-- Unsupported **damage-affecting** mechanics must fail closed.
-- Unsupported **non-damage secondary riders** are intentionally out of scope and do not block spell/ability certification.
-- Never approximate, silently invent, or hand-wave damage math to make a hero or monster runnable.
-- Prefer reusable engine mechanics over hero-, monster-, or level-specific hacks.
+- D20 Iron Pit is a D&D 2024 / SRD 5.2.1 rules-first card-vs-card combat-math simulator.
+- It is intentionally not a complete tactical virtual tabletop yet.
+- Every exposed in-scope combat mechanic must be RAW within the deliberately simplified Pit abstraction.
+- Unsupported **in-scope combat-math consequences** must fail closed.
+- Deliberately out-of-scope consequences must be ignored explicitly rather than approximated and must not block certification.
+- Never approximate, silently invent, or hand-wave combat math to make a hero or monster runnable.
+- Prefer reusable universal engine mechanics over hero-, monster-, ability-, spell-, condition-, or level-specific hacks.
 - Keep the Python reference engine and browser production engine behaviorally equivalent.
 - Preserve deterministic combat regression coverage, source auditing and references, generated-static parity, exact-head CI certification, and repository-enforced production source-size limits.
 - Never weaken, delete, bypass, or rewrite a test merely to make CI green. Fix the underlying defect. If an assertion is genuinely obsolete after an intentional architecture change, replace it with an equally strong assertion for the new contract.
-- PR #32 must remain a draft and unmerged. Do not merge it, merge to `main`, or change its base branch without explicit user authorization.
+- PR #32 must remain draft and unmerged. Do not merge it, merge to `main`, or change its base branch without explicit user authorization.
 
-## Damage-only spell and ability scope
+## Universal combat-capability rule
 
-`docs/IRON_PIT_DAMAGE_SCOPE.md` is authoritative.
+The permanent architecture rule is:
 
-- For spells, class abilities, subclass abilities, feats, and similar combat features, implement the parts required to determine damage accurately: attack/save resolution, damage dice, flat damage, damage types, critical interaction, target/area count where needed, scaling, and per-type defenses.
-- Healing, Temporary HP, resistance, immunity, and damage reduction are in scope only when the selected combat package intentionally uses them for survival/damage math.
-- Secondary riders do **not** block certification when they are not required to determine damage. Ignore conditions, speed changes, forced movement, visibility, object/environment effects, terrain, exploration utility, summons, social effects, and similar rider text unless the rider directly determines damage.
-- Example: Ray of Frost needs its ranged spell attack and cold damage; its Speed reduction is intentionally out of scope.
-- Example: Fireball needs its Dexterity save, fire damage, and half-on-success damage; object ignition is intentionally out of scope.
-- A class/subclass ability that adds damage dice or flat damage must implement that damage; a separate push, prone, fear, charm, speed, or movement rider does not block the damaging component.
-- Do not spend deadline time building secondary-effect machinery merely to reproduce a printed rider that Iron Pit does not need.
+> Same combat outcome -> same engine primitive. Preserve the exact source ability/condition/spell/trait name separately for logs and audit.
+
+Examples:
+
+- Disadvantage is one universal mechanic regardless of whether its source is Prone, Poisoned, Frightened, a spell, a monster ability, a pregen feature, or homebrew.
+- Advantage is one universal mechanic regardless of source.
+- AC modifiers, attack/save modifiers, typed damage, healing, Temporary HP, resistance, immunity, vulnerability, action loss, resource use, recharge, and similar outcomes each use shared primitives.
+- Different triggers, durations, targets, expiry rules, resources, or source names are metadata around the same outcome primitive; they do not justify duplicate math engines.
+- A named ability may contain several consequences. Decompose it and classify each consequence independently.
+- Never create a named resolver when an existing universal capability can express the mathematical outcome.
+
+The combat log must retain the accurate source name. Engine identity and source identity are separate concepts.
+
+Before adding code for any named feature, ask:
+
+> If another monster, pregen, or homebrew feature had a different name but produced this exact same mathematical outcome, would it use this exact same primitive?
+
+If not, generalize before certification.
+
+## Combat-math scope
+
+`docs/IRON_PIT_UNIVERSAL_COMBAT_DOCTRINE.md` and `docs/IRON_PIT_DAMAGE_SCOPE.md` are authoritative.
+
+Model consequences that change supported Pit math, including:
+
+- attack/save probability, Advantage/Disadvantage, AC, save DC, and roll modifiers;
+- damage dice, flat damage, type, critical interaction, recurring damage, target count, and area damage;
+- resistance, immunity, vulnerability, reduction, prevention;
+- HP, max HP, healing, regeneration, Temporary HP;
+- Action, Bonus Action, Reaction, Extra Attack, Multiattack, Legendary Action, and other supported action-economy opportunities;
+- spell slots, recharge, limited uses, and resources that constrain legal combat output;
+- conditions through their supported mathematical consequences;
+- range, reach, adjacency, and target legality needed to determine whether a selected action can resolve.
+
+Do not classify a whole feature by its name or by one harmless rider. Resolve mixed abilities component by component.
+
+Examples:
+
+- `Prone + Speed effect`: preserve Prone's attack-math consequences; ignore the movement-only part.
+- `Push 10 feet + 2d6 damage`: resolve the damage; ignore the push unless another supported consequence depends on it.
+- `Speed -10 + attack Disadvantage`: ignore Speed; apply universal Disadvantage.
+- Ray of Frost: resolve spell attack and cold damage; ignore Speed reduction.
+- Fireball: resolve target legality, Dexterity save, fire damage, and half damage on success; ignore object ignition.
+
+Conditions are bundles of universal consequences, not separate private math systems. Prone, for example, contributes universal Advantage/Disadvantage effects while its current movement/standing-cost component is outside the simplified movement policy.
 
 ## Arena policy
 
-Iron Pit simplifies battlefield formation without changing RAW damage mechanics. `docs/ARENA_POLICY.md` is authoritative.
+`docs/ARENA_POLICY.md` is authoritative.
 
-- There is no public user-selected starting-distance control.
-- Frontline/melee combatants begin engaged at the standard Pit melee distance.
-- Dedicated ranged/support combatants begin behind their allied frontline and hold that rear position while an active allied frontline remains.
-- Once the frontline is gone, exposed backliners use the existing RAW movement and range rules.
-- If an enemy reaches a ranged combatant, normal RAW close-combat ranged Disadvantage applies.
-- There is no kiting AI or voluntary retreat behavior.
-- Do not alter weapon reach or range, movement speed, Opportunity Attacks, forced movement, conditions, action economy, reactions, or any other RAW mechanic to implement formation.
-- Low-level tests may explicitly position combatants to test RAW geometry, range, movement, and reactions. Do not reintroduce a public starting-distance selector.
+The standard Pit is fixed at **3 columns x 4 rows = 12 combat slots**:
+
+- 6 monster slots;
+- 6 pregen/hero slots.
+
+It is a slug-fest board used to make engagement, range, reach, adjacency, targeting, area effects, and simple closing deterministic. It is not a full tactical movement simulator.
+
+- Combatants are autonomous pawns compelled to fight until one side is dead.
+- There is no voluntary retreat, fleeing, kiting, or keep-away AI.
+- When comparing legal offensive options, prefer highest expected damage after hit/save probability, Advantage/Disadvantage, target count, resource legality, and known defenses.
+- Do not hoard limited-use or recharge offense for a later encounter.
+- If no damaging action is legal only because engagement has not occurred, close or Dash toward the fight.
+- Base range, reach, adjacency, and target legality remain real.
+- Movement-only Speed changes, forced movement, dragging, pushing, pulling, pathfinding, and similar tactical movement consequences do not block certification by themselves.
+- If a mixed ability also changes supported combat math, model the supported component and ignore only movement.
+- Existing D&D five-foot-square conventions remain the working distance convention unless explicitly changed later.
+
+Aquatic-only creatures that cannot participate meaningfully in the standard land Pit are environment-deferred, not current universal-engine implementation debt. Mark them explicitly, e.g. `deferred-environment:aquatic-only`.
+
+## Immutable card rule
+
+Monster, pregen, and homebrew definitions are immutable source cards/templates.
+
+Combat creates disposable runtime state. Current HP, Temporary HP, conditions, buffs/debuffs, effective modifiers, Concentration, resources, recharge state, and other temporary values may change during a fight but must never permanently rewrite the source definition. Every new fight starts from the original card.
 
 ## Canonical hero architecture
 
@@ -46,44 +112,43 @@ Iron Pit simplifies battlefield formation without changing RAW damage mechanics.
 
 The product contains 12 persistent named canonical heroes, one per core class, across levels 1 through 20: exactly 240 hero level snapshots. The user selects `Hero -> Level -> Fight`; identity persists across progression.
 
-- Each class has exactly one canonical progression identity. Leveling never swaps to a different same-class build, spellbook, subclass, or combat concept unless the user explicitly authorizes a new architecture.
-- Each level must derive from the previous certified canonical progression by applying only that level's RAW combat delta. Do not hand-build 20 separate versions of the same hero.
-- Per-level research is a delta triage, not a full rebuild: identify only what the class/subclass/feat/resource tables add or scale at the new level, then ask whether each change affects Iron Pit damage/survival math under the reduced scope.
-- If a new or scaled feature changes attack rolls, damage, saves needed for damage, AC/HP, resources that constrain damage output, healing, defenses, or other direct damage/survival math, it is in scope and must be implemented or remain an explicit certification blocker.
-- Secondary conditions, movement, utility, and other non-damage riders are out of scope unless directly required to determine damage.
+- Each class has exactly one canonical progression identity unless the user explicitly authorizes a new architecture.
+- Each level derives from the previous certified level by applying only that level's RAW combat delta. Do not hand-build 20 separate versions of one hero.
+- Per-level research is delta triage, not a rebuild.
+- Any new/scaled feature that changes supported Pit combat math must be modeled or remain an explicit blocker.
+- Legal noncombat choices with no Pit consequence may be chosen deterministically without custom engine logic.
 - The universal legal base array is the 27-point-buy `15 / 14 / 13 / 10 / 10 / 10` before legal Background increases and later feats/ASIs.
-- Strength-primary melee defaults to STR 15 / CON 14 / DEX 13 with INT/WIS/CHA 10. Dexterity-primary melee/ranged defaults to DEX 15 / CON 14 / STR 13 with INT/WIS/CHA 10.
-- Primary casters keep STR/DEX/CON at 10 and assign 15/14/13 to mental abilities by the deterministic class priorities in `docs/CANONICAL_COMBAT_BUILD_POLICY.md`.
-- Use only legal 2024 Background ability increases. Prefer +2 to the canonical primary ability and +1 to the highest-ranked other allowed canonical ability. Never invent species ability-score bonuses.
-- Existing certified hero profiles that predate the canonical array are migration debt and must be migrated to this policy before extending that progression further.
-- Iron Pit runtime scope is combat-only and damage-focused. Noncombat features and non-damage secondary riders may remain in source/legal-build metadata but do not require runtime implementation and must not block certification.
-- Legal noncombat choices that cannot affect Iron Pit damage/survival math may be chosen deterministically or randomized among equivalent class-relevant options; do not add custom combat-engine logic for them.
-- Progression must update every applicable in-scope combat datum: level, proficiency bonus, HP, ability score improvements or feats, subclass, AC, attacks, attack and damage bonuses, saves needed for damage, equipment, weapon masteries that affect damage, resources, species resources, action economy that constrains damage output, Extra Attack, spellcasting and slots, healing/defenses, class and subclass damaging features, and scaling.
+- Strength-primary melee defaults to STR 15 / CON 14 / DEX 13 with INT/WIS/CHA 10.
+- Dexterity-primary melee/ranged defaults to DEX 15 / CON 14 / STR 13 with INT/WIS/CHA 10.
+- Primary casters keep STR/DEX/CON at 10 and assign 15/14/13 to mental abilities using deterministic class priorities in `docs/CANONICAL_COMBAT_BUILD_POLICY.md`.
+- Use only legal 2024 Background ability increases. Never invent species ability-score bonuses.
+- Existing profiles that predate canonical build policy are migration debt and must be reconciled before extending that progression.
+- Progression must update every applicable in-scope combat datum: level, proficiency, HP, ASIs/feats, subclass, AC, attacks, attack/damage bonuses, relevant saves, equipment, weapon masteries, resources, action economy, Extra Attack, spellcasting/slots, healing/defenses, class/subclass effects, and scaling.
 - Only explicitly certified levels may be selectable or runnable.
-- Preserve already-certified reusable mechanics while migrating duplicated build data to the canonical pipeline.
-- Karnok Stoneward is the Fighter progression. Rokhan Stonefury is the Barbarian progression. The remaining identities are defined by `backend/app/content/hero_progressions.py`.
-- Caster classes reuse one deterministic canonical class spell package. Character level controls prepared/known count, available spell levels, and slots; a new level extends the same package instead of creating a new caster-specific spellbook.
-- Every caster level must receive its full class-appropriate prepared/known damage-capable package target and full spell-slot allotment before that level can be promoted. A level-20 caster is not flattened to a low-level package; higher-level damaging spells and slots remain required progression work.
-- Spell upcasting is deliberately deferred. Until explicitly reactivated and separately certified, a leveled spell may consume only a slot of its printed spell level and resolves only its printed/base-level damage effect. A higher-level slot must not increase targets, damage, healing, duration, or any other spell outcome and must not be spent as a substitute slot for a lower-level spell.
-- Cantrip scaling by character level is separate from slot upcasting and remains required wherever the cantrip's RAW damage progression scales.
-- Spell packages favor damaging combat-relevant spells, with healing/defense retained only where intentionally selected for survival math. Unsupported non-damage riders do not block otherwise accurate damage certification.
-- Melee loadouts use one repeatable policy: DEX-primary favors dual wielding; STR-primary with shield training favors one-hander plus shield; STR power builds favor a two-hander. Do not invent bespoke loadout logic per hero level.
-- Hero and monster behavior must reuse the same Universal Combat Capability whenever their in-scope RAW behavior is equivalent. If a capability already exists, a new hero level should be data plus generated certification rather than new bespoke resolver code.
-- One authoritative canonical definition should generate runtime/browser/catalog/certification state wherever practical. Repeated hand-authored ready lists and duplicated level facts are migration debt, not a desired architecture.
+- Karnok Stoneward is the Fighter progression. Rokhan Stonefury is the Barbarian progression. Remaining identities are defined by `backend/app/content/hero_progressions.py`.
+- Caster classes reuse one deterministic canonical class spell package. A new level extends the same package rather than inventing a new spellbook.
+- Every caster level must receive its full class-appropriate prepared/known damaging package target and spell-slot allotment before promotion.
+- Spell upcasting remains deliberately deferred until explicitly reactivated and separately certified.
+- Cantrip scaling by character level remains required.
+- Melee loadouts follow one repeatable policy: DEX-primary favors dual wielding; STR-primary with shield training favors one-hander + shield; STR power builds favor a two-hander.
+- Hero and monster behavior must reuse the same Universal Combat Capability whenever their in-scope RAW behavior is mathematically equivalent.
+- One authoritative canonical definition should generate runtime/browser/catalog/certification state wherever practical. Repeated hand-authored ready lists and duplicated facts are migration debt.
 - Certification is derived from audited build/profile data, runtime templates, Python gates, browser-generated parity, and public catalog readiness. Never certify by editing a manifest alone.
 
-## Monster architecture
+## Monster and homebrew architecture
 
 The canonical SRD 5.2.1 catalog contains exactly 330 monsters. Treat certification as a source-driven capability pipeline, not 330 unrelated handcrafted projects:
 
-`SRD source -> parser/audit -> supported-mechanics analysis -> runtime template -> Python certification -> browser parity -> generated assets -> public readiness -> exact-head CI`
+`source -> parse/normalize -> decompose named abilities into consequences -> map consequences to universal capabilities -> runtime template -> Python certification -> browser parity -> generated assets -> public readiness -> exact-head CI`
 
-- A monster using only already-supported in-scope mechanics should require minimal bespoke implementation.
-- A monster with an unsupported damage-affecting mechanic remains blocked with explicit machine-readable blockers.
-- Non-damage secondary riders do not block damage certification unless they directly determine damage.
-- After adding a shared damage/survival mechanic, rerun analysis for all 330 monsters and identify everything newly unlocked.
-- Prefer capability tranches that maximize damage-certification yield: save damage, limited-use damaging actions, spell damage, bonus-action damage, reactions that change damage, attack riders that add damage, damage defenses, and damaging traits.
-- Monster runtime data should contain only combat-relevant stats, attacks, defenses, resources, spells, and capability IDs needed to resolve Iron Pit damage/survival math. Noncombat-only and non-damage rider text does not need engine implementation.
+This exact lifecycle also applies to future pregens and homebrew.
+
+- A card using only already-supported in-scope primitives should require mostly data, not new resolver code.
+- A card with a genuinely unsupported combat-math consequence remains blocked with explicit machine-readable blockers.
+- Out-of-scope riders do not block otherwise accurate capability certification.
+- After adding a shared primitive, re-audit all relevant monsters/pregens because many may unlock at once.
+- Prefer capability tranches that maximize reuse rather than implementing one named monster at a time.
+- Runtime data should contain source identity plus combat-relevant stats, attacks, defenses, resources, spells, conditions/effects, and universal capability IDs required to resolve the current Pit abstraction.
 
 ## Durable certification state
 
@@ -120,12 +185,13 @@ Do not hammer Netlify.
 
 ## Goal-mode policy
 
-The full 240-hero/330-monster program is an open-ended master program, not one `/goal`. Use `docs/IRON_PIT_MASTER_PLAN.md` as durable program memory and choose finite goals with verifiable stopping conditions. A normal sequence is:
+The full 240-hero/330-monster program is an open-ended master program, not one `/goal`. Use `docs/IRON_PIT_MASTER_PLAN.md` as durable program memory and choose finite goals with verifiable stopping conditions.
 
-1. Complete one canonical hero progression tranche.
-2. Implement one reusable damage/survival engine capability.
-3. Re-audit canonical pregens and certify everything that capability unlocks.
-4. After pregens reach the target, apply the same capabilities to monsters.
-5. Continue until the master program criteria are satisfied.
+A normal sequence is:
 
-Stop only for a genuine RAW damage ambiguity, security/permission issue, usage limit, or a decision that materially requires human input.
+1. Implement or refine one reusable universal combat capability.
+2. Re-audit every pregen/monster/homebrew candidate affected by that capability.
+3. Certify everything whose in-scope blockers reach zero.
+4. Continue by highest shared-capability yield rather than by one-off named-card fixes.
+
+Stop only for a genuine RAW/combat-scope ambiguity, security/permission issue, usage limit, or a decision that materially requires human input.
