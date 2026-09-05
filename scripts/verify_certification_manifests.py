@@ -12,6 +12,7 @@ from typing import Any
 from app.content.certified_heroes import build_certified_hero_entries
 from app.content.hero_catalog import build_hero_catalog
 from app.content.hero_progressions import CANONICAL_HEROES
+from app.content.iron_pit_mvp_scope import affects_mvp_combat_math, source_feature_blocks
 from app.content.monster_catalog import _READY_BY_NAME, build_monster_catalog, load_monster_rows
 from app.content.roster import build_arena_roster
 from app.domain.catalog import CoverageStatus
@@ -24,6 +25,7 @@ HERO_MANIFEST = ROOT / "data" / "hero_certification_manifest.json"
 MONSTER_MANIFEST = ROOT / "data" / "monster_certification_manifest.json"
 HERO_BROWSER_ARTIFACT = ROOT / "frontend" / "browser-heroes.js"
 MONSTER_BROWSER_ARTIFACT = ROOT / "frontend" / "browser-monsters-generated.js"
+_SAVING_THROW = re.compile(r"\b(?:Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma)\s+Saving Throw:", re.I)
 
 
 def _mechanics(template: Any) -> list[str]:
@@ -132,6 +134,18 @@ def build_hero_manifest() -> dict[str, Any]:
     }
 
 
+def _section_has_mvp_math(value: object) -> bool:
+    return any(affects_mvp_combat_math(block) for _, block in source_feature_blocks(value))
+
+
+def _has_in_scope_save(actions: object) -> bool:
+    for _, block in source_feature_blocks(actions):
+        for match in _SAVING_THROW.finditer(block):
+            if affects_mvp_combat_math(block[match.start():]):
+                return True
+    return False
+
+
 def _detected_monster_mechanics(row: dict[str, object], source_blockers: list[str]) -> list[str]:
     actions = str(row.get("actions", ""))
     detected = set(source_blockers)
@@ -139,16 +153,14 @@ def _detected_monster_mechanics(row: dict[str, object], source_blockers: list[st
         detected.add("attack-roll")
     if re.search(r"\bMultiattack\b", actions, re.I):
         detected.add("multiattack")
-    if re.search(r"\bSaving Throw:", actions, re.I):
+    if _has_in_scope_save(actions):
         detected.add("saving-throw-action")
-    if str(row.get("traits", "")).strip():
-        detected.add("trait")
-    if str(row.get("bonusActions", "")).strip():
-        detected.add("bonus-action")
-    if str(row.get("reactions", "")).strip():
-        detected.add("reaction")
-    if str(row.get("legendaryActions", "")).strip():
-        detected.add("legendary")
+    for field, label in (
+        ("traits", "trait"), ("bonusActions", "bonus-action"),
+        ("reactions", "reaction"), ("legendaryActions", "legendary"),
+    ):
+        if _section_has_mvp_math(row.get(field, "")):
+            detected.add(label)
     if re.search(r"\b(?:Vulnerabilities|Resistances|Immunities)\b", str(row.get("rawText", "")), re.I):
         detected.add("damage-or-condition-defense")
     return sorted(detected)

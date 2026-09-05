@@ -42,11 +42,6 @@ def _feature_is_direct(source: object, heading: str) -> bool:
     return not block or affects_mvp_combat_math(block) or bool(re.search(r"\bcasts?\b", block, re.I))
 
 
-def _limited_use_is_direct(row: dict[str, object], fingerprint: str) -> bool:
-    section, heading = fingerprint.split(":", 1)
-    return _feature_is_direct(row.get(section, ""), heading)
-
-
 def _has_in_scope_save(actions: object) -> bool:
     for _, block in source_feature_blocks(actions):
         for match in _SAVING_THROW.finditer(block):
@@ -73,7 +68,9 @@ def _source_blockers(row: dict[str, object], monster_names: set[str]) -> list[st
         if any(_base_name(name) not in _ARENA_NEUTRAL_BONUS_ACTIONS and _feature_is_direct(source, name) for name in bonus): blockers.append("bonus-action")
     except ValueError: blockers.append("bonus-action-parse")
     try:
-        if any(_limited_use_is_direct(row, name) for name in parse_limited_use_names(row)): blockers.append("limited-use")
+        # Recharge/N-per-Day is a shared resource wrapper, not a separate effect family.
+        # Runtime source audit still validates the exact resource wiring fail-closed.
+        parse_limited_use_names(row)
     except ValueError: blockers.append("limited-use-parse")
     if str(row.get("legendaryActions", "")).strip(): blockers.append("legendary")
     if spellcasting_fingerprint(row) is not None and not arena_neutral_spellcasting(row): blockers.append("spellcasting")
@@ -94,14 +91,16 @@ def main() -> None:
     blocker_counts: dict[str, int] = {}; blocker_names: dict[str, list[str]] = {}; reaction_details = []; rider_details = []
     for row in rows:
         name = str(row["name"])
+        if name in ready_names:
+            already_ready.append(name)
+            continue
         if deferred_environment_reason(name) is not None: deferred.append(name); continue
         blockers = _source_blockers(row, monster_names)
         for blocker in set(blockers):
             blocker_counts[blocker] = blocker_counts.get(blocker, 0) + 1; blocker_names.setdefault(blocker, []).append(name)
         if "reaction" in blockers: reaction_details.append({"name": name, "blockers": blockers, "reactions": str(row.get("reactions", ""))})
         if "unsupported-action-rider" in blockers: rider_details.append({"name": name, "blockers": blockers, "actions": str(row.get("actions", ""))})
-        if blockers: continue
-        (already_ready if name in ready_names else safe).append(name if name in ready_names else row)
+        if not blockers: safe.append(row)
     print(f"ZERO_ENGINE_BASELINE existing={len(already_ready)} missing={len(safe)} deferred={len(deferred)}")
     if deferred: print("ZERO_ENGINE_DEFERRED_ENVIRONMENT\t" + " | ".join(sorted(deferred)))
     for row in safe:
