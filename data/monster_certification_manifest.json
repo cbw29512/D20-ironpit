@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 132,
-    "blocked": 198
+    "public_ready": 133,
+    "blocked": 197
   },
   "monsters": [
     {
@@ -4933,7 +4933,7 @@
       "monster_name": "Hell Hound",
       "srd_source_page": 297,
       "srd_source_reference": "SRD 5.2.1 p. 297",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-hell-hound",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -4946,23 +4946,18 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
+        "limited-use",
         "multiattack",
+        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "limited-use",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "limited-use",
-        "save-or-complex-action",
-        "trait-runtime-missing:pack-tactics"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-hezrou",
