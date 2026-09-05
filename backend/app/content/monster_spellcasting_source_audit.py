@@ -15,6 +15,11 @@ _SPELL_GROUP = re.compile(
     r"\b(?:At Will|\d+/Day(?: Each)?):\s*(.*?)(?=\s+(?:At Will|\d+/Day(?: Each)?):|$)",
     re.IGNORECASE,
 )
+_NEXT_ACTION_FEATURE = re.compile(
+    r"\s+[A-Z][A-Za-z’' -]{1,80}\.\s+"
+    r"(?:(?:Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma)\s+Saving Throw:"
+    r"|(?:Melee|Ranged|Melee or Ranged)\s+Attack Roll:|Trigger:|Response:)",
+)
 # Explicitly certified as irrelevant to the standard flat/open Iron Pit outcome.
 # These spells are never selected as combat actions; unknown additions fail closed.
 _ARENA_NEUTRAL_SPELLS = frozenset({"Detect Evil and Good", "Detect Magic", "Clairvoyance"})
@@ -40,14 +45,20 @@ def spellcasting_fingerprint(row: dict[str, object]) -> str | None:
 
 
 def _outside_parentheses_prefix(text: str) -> str:
-    """Bound a printed spell list before the next stat-block feature heading."""
+    """Bound a printed spell list before punctuation or the next action feature."""
     depth = 0
     for index, char in enumerate(text):
         if char == "(":
             depth += 1
-        elif char == ")" and depth:
+            continue
+        if char == ")" and depth:
             depth -= 1
-        elif char == "." and depth == 0:
+            continue
+        if depth:
+            continue
+        if _NEXT_ACTION_FEATURE.match(text, index):
+            return text[:index]
+        if char == ".":
             return text[:index]
     return text
 
