@@ -37,8 +37,8 @@ def test_winter_wolf_is_raw_ready_after_shared_composition() -> None:
     assert card.blockers == []
 
 
-def test_reef_shark_is_raw_ready_after_shared_composition() -> None:
+def test_reef_shark_stays_deferred_from_the_standard_land_arena() -> None:
     card = next(card for card in build_monster_catalog() if card.name == "Reef Shark")
-    assert card.coverage_status == CoverageStatus.RAW_READY
-    assert card.runnable_template_id == "srd-reef-shark"
-    assert card.blockers == []
+    assert card.coverage_status == CoverageStatus.BLOCKED
+    assert card.runnable_template_id is None
+    assert card.blockers == ["deferred-environment:aquatic-only"]
