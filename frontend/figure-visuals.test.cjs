@@ -14,9 +14,10 @@ const registry = window.IRON_PIT_MONSTER_FIGURE_PROFILES;
 const runnable = Object.values(window.IRON_PIT_BROWSER_MONSTERS);
 const monster = (name, size = "medium") => V.profile({ name, size, kind: "monster", attacks: [{ name: "Bite" }] });
 
-assert.ok(Object.keys(registry).length >= runnable.length, "reviewed figure registry may include blocked monsters but cannot omit runnable monsters");
 for (const template of runnable) {
-  assert.ok(registry[template.name], `${template.name} needs a reviewed figure profile before becoming runnable`);
+  const info = V.profile(template);
+  assert.equal(info.certified, true, `${template.name} needs a reviewed or source-backed figure profile`);
+  assert.notEqual(info.form, "unknown", `${template.name} must not render as an unknown creature`);
 }
 for (const name of Object.keys(registry)) {
   const info = monster(name);
@@ -64,9 +65,22 @@ assert.deepEqual({ form: monster("Swarm of Bats").form, detail: monster("Swarm o
 assert.deepEqual({ form: monster("Swarm of Rats").form, detail: monster("Swarm of Rats").detail }, { form: "swarm", detail: "rats" });
 assert.deepEqual({ form: monster("Swarm of Crawling Claws").form, detail: monster("Swarm of Crawling Claws").detail }, { form: "swarm", detail: "crawling-claws" });
 
+const sourceDragon = V.profile({
+  name: "Future Source Dragon", kind: "monster", size: "large", creature_type: "Dragon (Chromatic)",
+  visual: { body_style: "dragon", main_hand: "rend" }, attacks: [{ name: "Rend" }],
+});
+assert.equal(sourceDragon.certified, true);
+assert.deepEqual({ form: sourceDragon.form, detail: sourceDragon.detail }, { form: "reptile", detail: "dragon" });
+const sourceFiend = V.profile({
+  name: "Future Source Fiend", kind: "monster", size: "medium", creature_type: "Fiend",
+  visual: { body_style: "monster", main_hand: "claw" }, attacks: [{ name: "Claw" }],
+});
+assert.equal(sourceFiend.certified, true);
+assert.equal(sourceFiend.form, "brute");
+
 const unknown = monster("Future Unreviewed Monster");
 assert.equal(unknown.certified, false);
-assert.equal(unknown.form, "unknown", "uncertified monsters must fail visually closed rather than guessing anatomy");
+assert.equal(unknown.form, "unknown", "monsters without reviewed or source identity must still fail visually closed");
 
 const hero = V.profile({
   name: "Audited Guardian", kind: "character", size: "medium", archetype: "Paladin",
@@ -77,4 +91,4 @@ assert.equal(hero.weapon, "longsword");
 assert.equal(hero.offHand, "shield");
 assert.equal(hero.role, "paladin");
 
-console.log("Reviewed monster and hero figure identity regressions passed.");
+console.log("Reviewed and source-backed monster figure identity regressions passed.");

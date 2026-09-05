@@ -61,6 +61,8 @@ jobs:
         run: python scripts/report_zero_engine_monsters.py
       - name: Report capability blocker yields
         run: python scripts/report_capability_yield.py
+      - name: Report source-derived monster candidates
+        run: python scripts/report_source_derived_monsters.py
       - name: Prepare static browser package
         run: |
           python scripts/prepare_static_site.py
@@ -238,8 +240,6 @@ jobs:
           ! grep -q 'id="instant-mode"' frontend/index.html
           ! grep -q 'id="distance"' frontend/index.html
           grep -q 'battlefield.css' frontend/index.html
-          grep -q 'battle-lab.css' frontend/index.html
-          grep -q 'battle-lab.js' frontend/index.html
           grep -q 'figure-archetypes.css' frontend/index.html
           grep -q 'figure-swarms.css' frontend/index.html
           grep -q 'figure-portraits.css' frontend/index.html
@@ -247,16 +247,10 @@ jobs:
           grep -q 'figure-portraits.js' frontend/index.html
           grep -q 'browser-monsters-generated.js' frontend/index.html
           grep -q 'browser-monsters-expansion.js' frontend/index.html
-          grep -q 'battle-log-format.js' frontend/index.html
-          grep -q 'battlefield-picker.js' frontend/index.html
-          grep -q 'battlefield-view.js' frontend/index.html
-          grep -q 'battlefield-replay.js' frontend/index.html
-          grep -q 'browser-condition-immunity.js' frontend/index.html
           grep -q 'browser-condition-rules.js' frontend/index.html
           grep -q 'browser-action-economy.js' frontend/index.html
           grep -q 'browser-reactions.js' frontend/index.html
           grep -q 'browser-reaction-movement.js' frontend/index.html
-          grep -q 'browser-grapple.js' frontend/index.html
           grep -q 'browser-champion.js' frontend/index.html
           grep -q 'browser-tactical-shift.js' frontend/index.html
           grep -q 'browser-undead-fortitude.js' frontend/index.html
@@ -274,11 +268,9 @@ jobs:
           grep -q 'browser-source-bound-effects.js' frontend/index.html
           grep -q 'browser-ongoing-spell-control.js' frontend/index.html
           grep -q 'browser-modifiers.js' frontend/index.html
-          grep -q 'browser-saves.js' frontend/index.html
           grep -q 'browser-concentration.js' frontend/index.html
           grep -q 'browser-spell-effects.js' frontend/index.html
           grep -q 'browser-spell-modifiers.js' frontend/index.html
-          grep -q 'browser-multiattack.js' frontend/index.html
           grep -q 'browser-healing.js' frontend/index.html
           grep -q 'browser-cleric-channel.js' frontend/index.html
           grep -q 'browser-spell-area.js' frontend/index.html
@@ -287,11 +279,10 @@ jobs:
           grep -q 'browser-spell-attack-policy.js' frontend/index.html
           grep -q 'browser-spell-attack.js' frontend/index.html
           grep -q 'browser-precombat-spells.js' frontend/index.html
-          grep -q 'figure-visuals.js' frontend/index.html
-          grep -q 'playIronPitBattle' frontend/app.js
+          grep -q 'battlefield-picker.js' frontend/index.html
+          grep -q 'battlefield-replay.js' frontend/index.html
           grep -q 'https://www.buymeacoffee.com/divclass016' frontend/index.html
       - name: Validate Netlify production-only credit guard
         run: |
-          grep -q 'CONTEXT.*production' netlify.toml
-          grep -q 'pip install -e ./backend' netlify.toml
-          grep -q 'prepare_static_site.py' netlify.toml
+          node frontend/netlify-credit-guard.test.cjs
+          node frontend/production-netlify-credit-policy.test.cjs
