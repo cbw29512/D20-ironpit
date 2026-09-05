@@ -6,7 +6,9 @@ const path = require("node:path");
 const vm = require("node:vm");
 
 global.window = globalThis;
-vm.runInThisContext(fs.readFileSync(path.join(__dirname, "browser-rolls.js"), "utf8"));
+const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
+load("browser-state.js");
+load("browser-rolls.js");
 
 function fixedDice(values) {
   const queue = [...values];
@@ -18,6 +20,7 @@ function fixedDice(values) {
 
 const state = (hp, maxHp = 10) => ({
   current_hp: hp,
+  max_hp_bonus: 0,
   template: { max_hp: maxHp, traits: [] },
   feature_last_turn_keys: {},
 });
