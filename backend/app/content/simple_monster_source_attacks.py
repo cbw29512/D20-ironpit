@@ -79,12 +79,12 @@ def _parse_multiattack(row: dict[str, object], source: str | None, by_name: dict
     if source is None:
         return None
     declared = re.search(rf"\bmakes\s+({_COUNT})\s+attacks?\b", source, re.I)
-    if declared is None:
-        raise ValueError(f"Unrecognized Multiattack count for {row['name']!r}: {source!r}")
-    total = _number(declared.group(1))
     choice = re.search(r"\busing\s+(.+?)\s+in\s+any\s+combination\b", source, re.I)
     slots: list[dict[str, list[str]]] = []
     if choice:
+        if declared is None:
+            raise ValueError(f"Unrecognized Multiattack count for {row['name']!r}: {source!r}")
+        total = _number(declared.group(1))
         names = [item.strip() for item in re.split(r"\s+or\s+|,", choice.group(1)) if item.strip()]
         ids = [by_name[name] for name in names if name in by_name]
         if len(ids) != len(names):
@@ -96,6 +96,7 @@ def _parse_multiattack(row: dict[str, object], source: str | None, by_name: dict
             if name not in by_name:
                 continue
             slots.extend({"attack_ids": [by_name[name]]} for _ in range(_number(count)))
-        if len(slots) != total:
+        total = _number(declared.group(1)) if declared is not None else sum(_number(count) for count, name in parts if name in by_name)
+        if not total or len(slots) != total:
             raise ValueError(f"Unrecognized fixed Multiattack sequence for {row['name']!r}: {source!r}")
     return {"id": f"srd-{_slug(str(row['name']))}-multiattack", "name": "Multiattack", "is_attack_action": False, "slots": slots}
