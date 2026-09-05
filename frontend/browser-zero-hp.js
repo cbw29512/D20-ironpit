@@ -46,6 +46,22 @@
     endDodge(state);
   }
 
+  function restoreHitPoints(state, amount) {
+    if (amount < 0) throw new Error("Healing cannot be negative.");
+    if (state.is_dead || amount === 0 || state.template.traits?.includes("swarm")) return 0;
+    const before = state.current_hp;
+    state.current_hp = Math.min(S().effectiveMaxHp(state), before + amount);
+    const healed = state.current_hp - before;
+    if (healed > 0) {
+      state.is_alive = true;
+      state.is_unconscious = false;
+      state.is_stable = false;
+      state.death_save_successes = 0;
+      state.death_save_failures = 0;
+    }
+    return healed;
+  }
+
   function finish(state, outcome, incoming, affectedStates, advantageSources) {
     B()?.endDamageSensitive(state);
     if (!state.concentration) return outcome;
@@ -82,5 +98,5 @@
     return finish(state, "unconscious", incoming, affectedStates, savingThrowAdvantageSources);
   }
 
-  window.IRON_PIT_BROWSER_ZERO_HP = { applyDamage };
+  window.IRON_PIT_BROWSER_ZERO_HP = { applyDamage, restoreHitPoints };
 })();

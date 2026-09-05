@@ -14,6 +14,7 @@ for (const file of [
 
 const S = window.IRON_PIT_BROWSER_STATE;
 const A = window.IRON_PIT_BROWSER_ATTACK;
+const Z = window.IRON_PIT_BROWSER_ZERO_HP;
 const E = window.IRON_PIT_ACTION_ECONOMY;
 const heroTemplate = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"];
 
@@ -50,12 +51,24 @@ function downedHero() {
 
 {
   const state = downedHero();
+  state.death_save_successes = 2;
+  state.death_save_failures = 2;
+  assert.equal(Z.restoreHitPoints(state, 5), 5);
+  assert.equal(state.current_hp, 5);
+  assert.equal(state.is_alive, true);
+  assert.equal(state.is_unconscious, false);
+  assert.equal(state.is_stable, false);
+  assert.equal(state.death_save_successes, 0);
+  assert.equal(state.death_save_failures, 0);
+}
+
+{
+  const state = downedHero();
   state.reaction_available = false;
   S.refreshReaction(state);
   assert.equal(state.reaction_available, true, "Reaction refresh occurs at start of turn regardless of HP");
   assert.equal(E.available(state, "reaction"), false, "Incapacitated creature still cannot use the refreshed Reaction");
-  state.current_hp = 1;
-  state.is_unconscious = false;
+  Z.restoreHitPoints(state, 1);
   assert.equal(E.available(state, "reaction"), true, "after healing, the already-refreshed Reaction is usable before the next turn");
 }
 

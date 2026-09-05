@@ -14,7 +14,11 @@ _LEGACY_PATHS = (
     PY_COMBAT / "encounter_turns.py",
 )
 _PY_DIRECT_D20_ALLOWED = {"rolls.py", "death_saves.py", "heroic_inspiration.py", "encounter_initiative.py"}
-_BROWSER_DIRECT_D20_ALLOWED = {"browser-rolls.js"}
+_BROWSER_DIRECT_D20_ALLOWED = {
+    "browser-rolls.js",             # canonical d20 roller
+    "browser-heroic-inspiration.js",# rerolls the actual failed d20
+    "browser-engine.js",            # shared cross-side initiative tie-break die
+}
 
 
 def _production_files(root: Path, suffix: str):

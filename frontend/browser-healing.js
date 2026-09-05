@@ -4,6 +4,7 @@
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const S = () => window.IRON_PIT_BROWSER_STATE;
+  const Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
   const bloodied = (state) => S().isBloodied(state);
   const swarm = (state) => state.template.traits?.includes("swarm");
   const slotHeal = (action) => Boolean(action.resourceId?.startsWith("spell-slot-"));
@@ -58,15 +59,8 @@
   }
 
   function restore(state, amount) {
-    if (state.is_dead || amount <= 0 || swarm(state)) return 0;
-    const before = state.current_hp;
-    state.current_hp = Math.min(S().effectiveMaxHp(state), before + amount);
-    const healed = state.current_hp - before;
-    if (healed > 0) {
-      state.is_alive = true; state.is_unconscious = false; state.is_stable = false;
-      state.death_save_successes = 0; state.death_save_failures = 0;
-    }
-    return healed;
+    if (!Z()) throw new Error("Browser zero-HP runtime is not loaded.");
+    return Z().restoreHitPoints(state, amount);
   }
 
   function resolve(sequence, round, healer, target, action, turnKey = null) {
