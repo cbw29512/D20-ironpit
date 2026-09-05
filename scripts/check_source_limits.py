@@ -3,6 +3,8 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 
+from check_shared_primitive_reuse import main as check_shared_primitive_reuse
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 MAX_LINES = 150
@@ -31,8 +33,9 @@ def main() -> None:
         if offenders:
             details = ", ".join(f"{path} ({count})" for path, count in offenders)
             raise RuntimeError(f"Production files exceed {MAX_LINES} lines: {details}")
+        check_shared_primitive_reuse()
     except Exception:
-        logger.exception("Production source-size validation failed.")
+        logger.exception("Production source validation failed.")
         raise
 
 
