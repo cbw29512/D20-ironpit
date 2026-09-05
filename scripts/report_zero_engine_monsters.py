@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import re
 
+from app.content.arena_eligibility import deferred_environment_reason
 from app.content.monster_action_boundary_audit import unmodeled_combat_math_riders
 from app.content.monster_bonus_action_source_audit import (
     _ARENA_NEUTRAL_BONUS_ACTIONS,
@@ -41,6 +42,9 @@ _SUPPORTED_BLOODIED_REPLACEMENT = re.compile(
 )
 _HIDDEN_RIDER = re.compile(
     r"\b(?:Speed decreases|attaches?|detaches?|next attack roll|Hit or Miss:)\b"
+    r"|\bHit Point maximum\s+(?:decreases|is reduced)\b"
+    r"|\b(?:summons?|creates?)\b[^.]{0,100}\b(?:creature|monster|specter|zombie|skeleton)\b"
+    r"|\brises(?:\s+\d+\s+hours?\s+later)?\s+as\s+(?:a|an)\s+[A-Za-z’'\-]+\b"
     r"|\bdamage,?\s+or\s+\d+\s*\([^)]*\)\s+\w+\s+damage\s+if\b"
     rf"|\bplus\s+\d+\s+(?:{_DAMAGE_TYPES})\s+damage\b",
     re.I,
@@ -123,12 +127,16 @@ def main() -> None:
     monster_names = {str(row["name"]) for row in rows}
     safe: list[dict[str, object]] = []
     already_ready: list[str] = []
+    deferred: list[str] = []
     blocker_counts: dict[str, int] = {}
     blocker_names: dict[str, list[str]] = {}
     reaction_details: list[dict[str, object]] = []
     rider_details: list[dict[str, object]] = []
     for row in rows:
         name = str(row["name"])
+        if deferred_environment_reason(name) is not None:
+            deferred.append(name)
+            continue
         blockers = _source_blockers(row, monster_names)
         for blocker in set(blockers):
             blocker_counts[blocker] = blocker_counts.get(blocker, 0) + 1
@@ -151,7 +159,9 @@ def main() -> None:
             already_ready.append(name)
         else:
             safe.append(row)
-    print(f"ZERO_ENGINE_BASELINE existing={len(already_ready)} missing={len(safe)}")
+    print(f"ZERO_ENGINE_BASELINE existing={len(already_ready)} missing={len(safe)} deferred={len(deferred)}")
+    if deferred:
+        print("ZERO_ENGINE_DEFERRED_ENVIRONMENT\t" + " | ".join(sorted(deferred)))
     for row in safe:
         detail = {field: row.get(field, "") for field in _DETAIL_FIELDS}
         raw = str(row.get("rawText", ""))
