@@ -6,6 +6,7 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName, HitControlEffect
+from app.domain.forced_movement import ForcedMovement
 from app.domain.hit_modifiers import HitModifierEffect
 from app.domain.size import CreatureSize
 
@@ -90,6 +91,7 @@ class WeaponAttack(BaseModel):
     sneak_attack_eligible: bool = False
     knocks_prone_max_size: CreatureSize | None = None
     control_effect: HitControlEffect | None = None
+    forced_movement: ForcedMovement | None = None
     forbid_target_grappled_by_self: bool = False
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)

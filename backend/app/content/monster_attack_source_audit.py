@@ -4,6 +4,7 @@ import re
 from typing import Any
 
 from app.content.monster_attack_modifier_source_audit import hit_modifier_issues
+from app.content.monster_forced_movement_source_audit import forced_movement_issues
 from app.domain.models import WeaponAttack
 
 
@@ -111,7 +112,7 @@ def attack_issues(attack: WeaponAttack, actions: str) -> list[str]:
     for conditional in attack.conditional_damage:
         if not _conditional_clause_pattern(conditional).search(actions):
             issues.append(f"conditional-damage-mismatch:{attack.id}:{conditional.trigger}")
-    issues.extend(hit_modifier_issues(attack, actions))
+    issues.extend(hit_modifier_issues(attack, actions)); issues.extend(forced_movement_issues(attack, actions))
     if attack.knocks_prone_max_size is not None and not _max_size_rider_present(actions, attack.knocks_prone_max_size, "prone"):
         issues.append(f"prone-rider-mismatch:{attack.id}")
     if attack.forbid_target_grappled_by_self:

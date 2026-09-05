@@ -1,0 +1,91 @@
+[
+  {
+    "schema_version": 1,
+    "id": "srd-tough-boss",
+    "name": "Tough Boss",
+    "archetype": "source-certified enforcer",
+    "challenge_rating": "4",
+    "kind": "monster",
+    "size": "medium",
+    "armor_class": 16,
+    "max_hp": 82,
+    "speed_ft": 30,
+    "movement_modes": {"walk_ft": 30, "fly_ft": 0, "climb_ft": 0, "swim_ft": 0, "burrow_ft": 0, "hover": false},
+    "initiative_bonus": 2,
+    "attacks": [
+      {
+        "id": "srd-tough-boss-warhammer", "name": "Warhammer", "attack_kind": "melee", "attack_bonus": 5,
+        "damage": {"count": 2, "size": 8, "bonus": 3}, "damage_type": "bludgeoning", "animation": "heavy-strike", "reach_ft": 5,
+        "effects": [{"kind": "forced_movement", "direction": "push", "distance_ft": 10, "max_target_size": "large"}]
+      },
+      {
+        "id": "srd-tough-boss-heavy-crossbow", "name": "Heavy Crossbow", "attack_kind": "ranged", "attack_bonus": 4,
+        "damage": {"count": 2, "size": 10, "bonus": 2}, "damage_type": "piercing", "animation": "projectile",
+        "normal_range_ft": 100, "long_range_ft": 400, "projectile": "bolt"
+      }
+    ],
+    "primary_attack_id": "srd-tough-boss-warhammer",
+    "unarmed_opportunity_attack": {"attack_bonus": 5, "damage": 4},
+    "attack_action": {
+      "id": "srd-tough-boss-multiattack", "name": "Multiattack",
+      "slots": [
+        {"attack_ids": ["srd-tough-boss-warhammer", "srd-tough-boss-heavy-crossbow"]},
+        {"attack_ids": ["srd-tough-boss-warhammer", "srd-tough-boss-heavy-crossbow"]}
+      ]
+    },
+    "saving_throw_bonuses": {"strength": 5, "dexterity": 2, "constitution": 5, "intelligence": 0, "wisdom": 0, "charisma": 2},
+    "combat_traits": ["pack-tactics"],
+    "source_trait_names": ["Pack Tactics"],
+    "visual": {"armor": "chain mail", "main_hand": "warhammer", "off_hand": "heavy crossbow", "body_style": "tough-boss"},
+    "source": "SRD 5.2.1 p. 332"
+  },
+  {
+    "schema_version": 1,
+    "id": "srd-merrow",
+    "name": "Merrow",
+    "archetype": "source-certified aquatic harpooner",
+    "challenge_rating": "2",
+    "kind": "monster",
+    "size": "large",
+    "armor_class": 13,
+    "max_hp": 45,
+    "speed_ft": 10,
+    "movement_modes": {"walk_ft": 10, "fly_ft": 0, "climb_ft": 0, "swim_ft": 40, "burrow_ft": 0, "hover": false},
+    "initiative_bonus": 2,
+    "attacks": [
+      {
+        "id": "srd-merrow-bite", "name": "Bite", "attack_kind": "melee", "attack_bonus": 6,
+        "damage": {"count": 1, "size": 4, "bonus": 4}, "damage_type": "piercing", "animation": "bite", "reach_ft": 5,
+        "effects": [{"kind": "condition", "condition": "poisoned", "expiry_timing": "source_turn_end"}]
+      },
+      {
+        "id": "srd-merrow-claw", "name": "Claw", "attack_kind": "melee", "attack_bonus": 6,
+        "damage": {"count": 2, "size": 4, "bonus": 4}, "damage_type": "slashing", "animation": "claw", "reach_ft": 5
+      },
+      {
+        "id": "srd-merrow-harpoon-melee", "name": "Harpoon", "attack_kind": "melee", "attack_bonus": 6,
+        "damage": {"count": 2, "size": 6, "bonus": 4}, "damage_type": "piercing", "animation": "thrust", "reach_ft": 5,
+        "effects": [{"kind": "forced_movement", "direction": "pull", "distance_ft": 15, "max_target_size": "large"}]
+      },
+      {
+        "id": "srd-merrow-harpoon-ranged", "name": "Harpoon", "attack_kind": "ranged", "attack_bonus": 6,
+        "damage": {"count": 2, "size": 6, "bonus": 4}, "damage_type": "piercing", "animation": "projectile",
+        "normal_range_ft": 20, "long_range_ft": 60, "projectile": "harpoon",
+        "effects": [{"kind": "forced_movement", "direction": "pull", "distance_ft": 15, "max_target_size": "large"}]
+      }
+    ],
+    "primary_attack_id": "srd-merrow-bite",
+    "unarmed_opportunity_attack": {"attack_bonus": 6, "damage": 5},
+    "attack_action": {
+      "id": "srd-merrow-multiattack", "name": "Multiattack",
+      "slots": [
+        {"attack_ids": ["srd-merrow-bite", "srd-merrow-claw", "srd-merrow-harpoon-melee", "srd-merrow-harpoon-ranged"]},
+        {"attack_ids": ["srd-merrow-bite", "srd-merrow-claw", "srd-merrow-harpoon-melee", "srd-merrow-harpoon-ranged"]}
+      ]
+    },
+    "saving_throw_bonuses": {"strength": 4, "dexterity": 2, "constitution": 2, "intelligence": -1, "wisdom": 0, "charisma": -1},
+    "source_trait_names": ["Amphibious"],
+    "visual": {"armor": "natural", "main_hand": "harpoon", "off_hand": "claw", "body_style": "merrow"},
+    "source": "SRD 5.2.1 p. 308"
+  }
+]

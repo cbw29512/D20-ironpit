@@ -5,9 +5,11 @@ from app.domain.capabilities import AttackCapabilityDefinition
 from app.domain.capability_effects import (
     ConditionEffectDefinition,
     DamageEffectDefinition,
+    ForcedMovementEffectDefinition,
     GrappleEffectDefinition,
     ProneEffectDefinition,
 )
+from app.domain.forced_movement import ForcedMovement
 from app.domain.hit_modifiers import HitModifierEffect
 from app.domain.models import ConditionalDamage, OnHitDamage, Weapon, WeaponAttack
 
@@ -61,6 +63,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
     conditional: list[ConditionalDamage] = []
     prone_size = None
     control = None
+    forced_movement = None
     for effect in definition.effects:
         if isinstance(effect, DamageEffectDefinition):
             if effect.trigger == "on_hit":
@@ -82,6 +85,10 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
                 ))
         elif isinstance(effect, ProneEffectDefinition):
             prone_size = effect.max_target_size
+        elif isinstance(effect, ForcedMovementEffectDefinition):
+            forced_movement = ForcedMovement(
+                direction=effect.direction, distance_ft=effect.distance_ft, max_target_size=effect.max_target_size,
+            )
         elif isinstance(effect, HitModifierEffect):
             on_hit_modifiers.append(effect)
         elif isinstance(effect, (GrappleEffectDefinition, ConditionEffectDefinition)):
@@ -102,6 +109,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
         on_hit_modifier_effects=on_hit_modifiers,
         knocks_prone_max_size=prone_size,
         control_effect=control,
+        forced_movement=forced_movement,
         forbid_target_grappled_by_self=definition.forbid_target_grappled_by_self,
         resource_id=definition.resource_id,
         resource_cost=definition.resource_cost,

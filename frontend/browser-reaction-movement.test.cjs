@@ -11,11 +11,12 @@ for (const file of [
   "browser-heroes.js", "browser-monsters.js", "browser-monsters-control.js",
   "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-grapple.js", "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-timed-conditions.js",
-  "browser-zero-hp.js", "browser-attack.js", "browser-reactions.js", "browser-reaction-movement.js",
+  "browser-zero-hp.js", "browser-attack.js", "browser-forced-movement.js", "browser-reactions.js", "browser-reaction-movement.js",
 ]) load(file);
 
 const S = window.IRON_PIT_BROWSER_STATE;
 const W = window.IRON_PIT_BROWSER_REACTION_MOVEMENT;
+const F = window.IRON_PIT_BROWSER_FORCED_MOVEMENT;
 const member = (id, side, template, position) => ({ combatant_id: id, side, position_ft: position, state: S.buildState(structuredClone(template)) });
 const heroTemplate = () => window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"];
 const monsterTemplate = (id) => window.IRON_PIT_BROWSER_MONSTERS[id];
@@ -55,4 +56,13 @@ function threeWay(reactorId = "srd-commoner") {
   const result = W.moveToward(1, 1, mover, target, fight, 5, "forced");
   assert.equal(result.events.length, 0); assert.ok(result.movement); assert.equal(reactor.state.reaction_available, true);
 }
-console.log("Browser reaction-aware movement regressions passed.");
+{
+  const source = member("monster-1", "monsters", monsterTemplate("srd-commoner"), 10);
+  const target = member("hero-1", "heroes", heroTemplate(), 20); const fight = { heroes: [target], monsters: [source] };
+  const event = { hit: true, description: "Hit." };
+  assert.equal(F.apply(source, target, { direction: "pull", distance: 15, maxTargetSize: "large" }, event, fight), 10);
+  assert.equal(target.position_ft, source.position_ft); assert.equal(event.distance_after_ft, 0);
+  target.position_ft = 20; event.hit = false;
+  assert.equal(F.apply(source, target, { direction: "push", distance: 10 }, event, fight), 0); assert.equal(target.position_ft, 20);
+}
+console.log("Browser reaction-aware and forced-movement regressions passed.");

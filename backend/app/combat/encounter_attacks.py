@@ -7,6 +7,7 @@ from app.combat.auras import roll_advantage_sources
 from app.combat.champion import apply_critical_closing_move
 from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
+from app.combat.forced_movement import apply_forced_movement
 from app.combat.frenzy import mark_reckless_use_while_raging
 from app.combat.reckless_attack import activate_reckless_attack
 from app.combat.redirect_attack import select_redirect_ally, swap_redirect_positions
@@ -67,4 +68,6 @@ def resolve_encounter_attack(
             event.feature_id = "reckless-attack"
     if redirect is not None and event.target_id == redirect.combatant_id:
         swap_redirect_positions(target, redirect)
+    actual_target = redirect if redirect is not None and event.target_id == redirect.combatant_id else target
+    apply_forced_movement(attacker, actual_target, attack.forced_movement, event, setup)
     return apply_critical_closing_move(attacker, setup, event)

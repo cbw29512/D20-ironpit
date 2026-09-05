@@ -53,6 +53,9 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
         if attack.fixed_damage is not None: row["fixedDamage"] = attack.fixed_damage
         if attack.rage_eligible: row["rageEligible"] = True
         if attack.knocks_prone_max_size is not None: row["proneMaxSize"] = attack.knocks_prone_max_size.value
+        if attack.forced_movement is not None:
+            row["forcedMovement"] = {"direction": attack.forced_movement.direction, "distance": attack.forced_movement.distance_ft,
+                                     "maxTargetSize": _value(attack.forced_movement.max_target_size) if attack.forced_movement.max_target_size else None}
         if attack.forbid_target_grappled_by_self: row["forbidSelfGrappledTarget"] = True
         if attack.resource_id: row.update(resourceId=attack.resource_id, resourceCost=attack.resource_cost)
         if attack.on_hit_damage:
@@ -144,9 +147,9 @@ def defense_row(action: Any) -> dict[str, Any]:
 
 def _removal(action: Any) -> dict[str, Any]:
     row = {"id": action.id, "name": action.name, "actionCost": action.action_cost, "range": action.range_ft, "targetMode": action.target_mode,
-           "removableConditions": list(action.removable_conditions), "maxConditionsPerUse": action.max_conditions_per_use,
-           "resourceCosts": dict(action.resource_costs), "resourceCostsPerCondition": dict(action.resource_costs_per_condition),
-           "expendsSpellSlot": action.expends_spell_slot, "animation": action.animation}
+            "removableConditions": list(action.removable_conditions), "maxConditionsPerUse": action.max_conditions_per_use,
+            "resourceCosts": dict(action.resource_costs), "resourceCostsPerCondition": dict(action.resource_costs_per_condition),
+            "expendsSpellSlot": action.expends_spell_slot, "animation": action.animation}
     if action.reaction_trigger: row["reactionTrigger"] = action.reaction_trigger
     return row
 

@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 
 from app.domain.actions import AbilityName, ConditionName, ConditionTiming
 from app.domain.combatants import DamageType
+from app.domain.forced_movement import ForcedMovementDirection
 from app.domain.hit_modifiers import HitModifierEffect
 from app.domain.size import CreatureSize
 
@@ -49,7 +50,15 @@ class ConditionEffectDefinition(BaseModel):
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
 
 
+class ForcedMovementEffectDefinition(BaseModel):
+    kind: Literal["forced_movement"] = "forced_movement"
+    direction: ForcedMovementDirection
+    distance_ft: int = Field(gt=0, le=120)
+    max_target_size: CreatureSize | None = None
+
+
 AttackEffectDefinition = Annotated[
-    DamageEffectDefinition | ProneEffectDefinition | GrappleEffectDefinition | ConditionEffectDefinition | HitModifierEffect,
+    DamageEffectDefinition | ProneEffectDefinition | GrappleEffectDefinition | ConditionEffectDefinition
+    | ForcedMovementEffectDefinition | HitModifierEffect,
     Field(discriminator="kind"),
 ]
