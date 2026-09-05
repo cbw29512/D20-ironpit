@@ -25,6 +25,12 @@ _REDIRECT_ATTACK = re.compile(
     r"The goblin and that ally swap places, and the ally becomes the target of the attack instead\.",
     re.IGNORECASE,
 )
+_AUDIBLE_ONLY_REACTION = re.compile(
+    r"^[^.]+\.\s+Trigger:\s+[^.]+\.\s+Response:\s+"
+    r"The [^.]+ emits? (?:a|an) [^.]+ audible within \d+ feet of itself "
+    r"for \d+ minutes? or until the [^.]+ dies\.$",
+    re.IGNORECASE,
+)
 
 
 def _slug(name: str) -> str:
@@ -49,6 +55,12 @@ def parse_reaction_names(source_reactions: object) -> list[str]:
     if not names:
         raise ValueError(f"SRD reaction headings could not be parsed from: {text!r}")
     return names
+
+
+def arena_neutral_reaction_source(source_reactions: object) -> bool:
+    """Recognize reviewed reactions whose entire response is non-math sensory output."""
+    text = str(source_reactions or "").strip()
+    return bool(text and _AUDIBLE_ONLY_REACTION.fullmatch(text))
 
 
 def parse_parry_ac_bonus(source_reactions: object) -> int | None:
@@ -84,6 +96,8 @@ def reaction_issues(template: CombatantTemplate, row: dict[str, object]) -> list
         issues.append("unexpected-parry-reaction")
     if template.redirect_attack_reaction is not None and "Redirect Attack" not in expected:
         issues.append("unexpected-redirect-attack-reaction")
+    if expected and arena_neutral_reaction_source(source):
+        return issues
     for name in expected:
         if name == "Parry" and _parry_matches(template, source):
             continue
