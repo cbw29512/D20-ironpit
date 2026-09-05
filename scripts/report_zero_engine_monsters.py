@@ -13,6 +13,7 @@ from app.content.monster_catalog import build_monster_catalog, load_monster_rows
 from app.content.monster_defense_source_audit import parse_defense_profile
 from app.content.monster_limited_use_source_audit import parse_limited_use_names
 from app.content.monster_reaction_source_audit import (
+    arena_neutral_reaction_source,
     parse_parry_ac_bonus,
     parse_reaction_names,
     parse_redirect_attack_range,
@@ -62,6 +63,8 @@ def _has_neighbor_bleed(row: dict[str, object], monster_names: set[str]) -> bool
 
 def _reaction_is_modeled(row: dict[str, object], reactions: list[str]) -> bool:
     source = row.get("reactions", "")
+    if arena_neutral_reaction_source(source):
+        return True
     if reactions == ["Parry"]:
         return parse_parry_ac_bonus(source) is not None
     if reactions == ["Redirect Attack"]:
