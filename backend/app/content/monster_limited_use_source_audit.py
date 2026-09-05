@@ -4,6 +4,7 @@ import logging
 import re
 from functools import lru_cache
 
+from app.content.iron_pit_mvp_scope import affects_mvp_combat_math, feature_block
 from app.content.monster_catalog import load_monster_rows
 from app.domain.models import CombatantTemplate
 
@@ -76,14 +77,22 @@ def _recharge_attack_supported(template: CombatantTemplate, fingerprint: str) ->
     return bool(resource and resource.max_uses == 1 and resource.recharge_min_d6 == minimum)
 
 
+def _in_mvp_scope(row: dict[str, object], fingerprint: str) -> bool:
+    section, heading = fingerprint.split(":", 1)
+    block = feature_block(row.get(section, ""), heading)
+    return not block or affects_mvp_combat_math(block)
+
+
 def limited_use_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
-    """Certify shared recharge actions; fail closed on every other limited-use feature."""
+    """Certify in-scope shared recharge actions; defer movement/nonmath uses."""
     expected = parse_limited_use_names(row)
     issues: list[str] = []
     if template.source_limited_use_names != expected:
         issues.append("source-limited-use-fingerprint-mismatch")
     for name in expected:
         if _recharge_save_supported(template, name) or _recharge_attack_supported(template, name):
+            continue
+        if not _in_mvp_scope(row, name):
             continue
         slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
         issues.append(f"uncertified-limited-use:{slug}")

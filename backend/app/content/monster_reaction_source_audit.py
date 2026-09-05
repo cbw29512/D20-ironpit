@@ -4,6 +4,7 @@ import logging
 import re
 from functools import lru_cache
 
+from app.content.iron_pit_mvp_scope import affects_mvp_combat_math, feature_block
 from app.content.monster_catalog import load_monster_rows
 from app.domain.models import CombatantTemplate
 
@@ -25,6 +26,7 @@ _REDIRECT_ATTACK = re.compile(
     r"The goblin and that ally swap places, and the ally becomes the target of the attack instead\.",
     re.IGNORECASE,
 )
+_CASTS_SPELL = re.compile(r"\bcasts?\b", re.I)
 
 
 def _slug(name: str) -> str:
@@ -32,16 +34,11 @@ def _slug(name: str) -> str:
 
 
 def _reaction_heading_matches(text: str) -> list[tuple[int, str]]:
-    matches = [
-        (match.start(1), match.group(1).strip())
-        for pattern in (_TRIGGER_RESPONSE_HEADING, _SPELL_TRIGGER_HEADING)
-        for match in pattern.finditer(text)
-    ]
+    matches = [(match.start(1), match.group(1).strip()) for pattern in (_TRIGGER_RESPONSE_HEADING, _SPELL_TRIGGER_HEADING) for match in pattern.finditer(text)]
     return sorted(set(matches), key=lambda item: item[0])
 
 
 def parse_reaction_names(source_reactions: object) -> list[str]:
-    """Extract named SRD reactions from reviewed 2024 reaction prose shapes."""
     text = str(source_reactions or "").strip()
     if not text:
         return []
@@ -67,17 +64,13 @@ def _parry_matches(template: CombatantTemplate, source: object) -> bool:
 
 
 def _redirect_matches(template: CombatantTemplate, source: object) -> bool:
-    ally_range = parse_redirect_attack_range(source)
-    reaction = template.redirect_attack_reaction
-    return bool(ally_range is not None and reaction is not None and reaction.ally_range_ft == ally_range
-                and reaction.ally_max_size.value == "medium")
+    ally_range = parse_redirect_attack_range(source); reaction = template.redirect_attack_reaction
+    return bool(ally_range is not None and reaction is not None and reaction.ally_range_ft == ally_range and reaction.ally_max_size.value == "medium")
 
 
 def reaction_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
-    """Certify reviewed reaction semantics; fail closed on every other printed reaction."""
-    source = row.get("reactions", "")
-    expected = parse_reaction_names(source)
-    issues: list[str] = []
+    """Block only reactions that can change an Iron Pit MVP outcome."""
+    source = row.get("reactions", ""); expected = parse_reaction_names(source); issues: list[str] = []
     if template.source_reaction_names != expected:
         issues.append("source-reaction-fingerprint-mismatch")
     if template.parry_reaction is not None and "Parry" not in expected:
@@ -89,10 +82,11 @@ def reaction_issues(template: CombatantTemplate, row: dict[str, object]) -> list
             continue
         if name == "Redirect Attack" and _redirect_matches(template, source):
             continue
-        if name == "Parry":
-            issues.append("parry-source-mismatch")
-        elif name == "Redirect Attack":
-            issues.append("redirect-attack-source-mismatch")
+        block = feature_block(source, name)
+        if block and not affects_mvp_combat_math(block) and not _CASTS_SPELL.search(block):
+            continue
+        if name == "Parry": issues.append("parry-source-mismatch")
+        elif name == "Redirect Attack": issues.append("redirect-attack-source-mismatch")
         issues.append(f"uncertified-reaction:{_slug(name)}")
     return issues
 
@@ -104,18 +98,12 @@ def _rows_by_name() -> dict[str, dict[str, object]]:
 
 def source_reaction_names(name: str) -> list[str]:
     row = _rows_by_name().get(name)
-    if row is None:
-        raise ValueError(f"No SRD 5.2.1 source row for monster {name!r}.")
+    if row is None: raise ValueError(f"No SRD 5.2.1 source row for monster {name!r}.")
     return parse_reaction_names(row.get("reactions", ""))
 
 
 def complete_monster_reaction_fingerprints(templates: list[CombatantTemplate]) -> list[CombatantTemplate]:
     try:
-        return [
-            template.model_copy(update={"source_reaction_names": source_reaction_names(template.name)})
-            if template.kind == "monster" else template
-            for template in templates
-        ]
+        return [template.model_copy(update={"source_reaction_names": source_reaction_names(template.name)}) if template.kind == "monster" else template for template in templates]
     except Exception:
-        logger.exception("Failed to derive canonical monster reaction fingerprints from SRD source.")
-        raise
+        logger.exception("Failed to derive canonical monster reaction fingerprints from SRD source."); raise

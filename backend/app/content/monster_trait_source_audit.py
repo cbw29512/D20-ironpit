@@ -4,6 +4,7 @@ import logging
 import re
 from functools import lru_cache
 
+from app.content.iron_pit_mvp_scope import affects_mvp_combat_math, feature_block
 from app.content.monster_catalog import load_monster_rows
 from app.domain.models import CombatantTemplate
 from app.domain.traits import CombatTrait
@@ -61,7 +62,8 @@ def modeled_combat_traits(source_traits: object) -> list[CombatTrait]:
 
 
 def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
-    expected = parse_trait_names(row.get("traits", ""))
+    source = row.get("traits", "")
+    expected = parse_trait_names(source)
     issues: list[str] = []
     if template.source_trait_names != expected:
         issues.append("source-trait-fingerprint-mismatch")
@@ -74,9 +76,13 @@ def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[st
             issues.append(f"trait-source-missing:{runtime_trait.value}")
     certified = set(_MODELED_TRAITS) | set(_MODELED_ROLL_ADVANTAGE_TRAITS) | set(_MODELED_AURA_TRAITS) | set(_ARENA_NEUTRAL_TRAITS)
     for name in expected:
-        if name not in certified:
-            slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
-            issues.append(f"uncertified-trait:{slug}")
+        if name in certified:
+            continue
+        block = feature_block(source, name)
+        if block and not affects_mvp_combat_math(block):
+            continue
+        slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
+        issues.append(f"uncertified-trait:{slug}")
     return issues
 
 

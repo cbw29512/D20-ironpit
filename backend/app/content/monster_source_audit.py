@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 import re
 
+from app.content.iron_pit_mvp_scope import affects_mvp_combat_math, source_feature_blocks
 from app.content.monster_action_boundary_audit import action_boundary_issues
 from app.content.monster_attack_advantage_source_audit import attack_advantage_issues
 from app.content.monster_attack_source_audit import attack_issues, normalized, save_action_issues
@@ -17,28 +18,25 @@ from app.content.monster_saving_throws import parse_saving_throw_bonuses
 from app.content.monster_spellcasting_source_audit import spellcasting_issues
 from app.content.monster_survival_source_audit import survival_action_issues
 from app.content.monster_trait_source_audit import trait_issues
-from app.content.movement_modes import movement_mode_issues, standard_arena_closing_speed
 from app.domain.models import CombatantTemplate
 
 logger = logging.getLogger(__name__)
 _SIZE_NAMES = ("tiny", "small", "medium", "large", "huge", "gargantuan")
-_MELEE_ATTACK_ROLL = re.compile(r"\bMelee\s+Attack Roll:", re.IGNORECASE)
-_RANGED_ATTACK_ROLL = re.compile(r"\bRanged\s+Attack Roll:", re.IGNORECASE)
-_COMBINED_ATTACK_ROLL = re.compile(r"\bMelee\s+or\s+Ranged\s+Attack Roll:", re.IGNORECASE)
-_SAVING_THROW = re.compile(r"\b(?:Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma)\s+Saving Throw:", re.IGNORECASE)
+_MELEE_ATTACK_ROLL = re.compile(r"\bMelee\s+Attack Roll:", re.I)
+_RANGED_ATTACK_ROLL = re.compile(r"\bRanged\s+Attack Roll:", re.I)
+_COMBINED_ATTACK_ROLL = re.compile(r"\bMelee\s+or\s+Ranged\s+Attack Roll:", re.I)
+_SAVING_THROW = re.compile(r"\b(?:Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma)\s+Saving Throw:", re.I)
 
 
 def _first_int(value: object) -> int:
     match = re.search(r"-?\d+", str(value))
-    if not match:
-        raise ValueError(f"No integer found in SRD value: {value!r}")
+    if not match: raise ValueError(f"No integer found in SRD value: {value!r}")
     return int(match.group())
 
 
 def _initiative(row: dict[str, object]) -> int:
-    match = re.search(r"\bInitiative\s+([+-]?\d+)", str(row.get("rawText", "")), re.IGNORECASE)
-    if not match:
-        raise ValueError(f"SRD initiative could not be parsed for {row.get('name')!r}.")
+    match = re.search(r"\bInitiative\s+([+-]?\d+)", str(row.get("rawText", "")), re.I)
+    if not match: raise ValueError(f"SRD initiative could not be parsed for {row.get('name')!r}.")
     return int(match.group(1))
 
 
@@ -47,10 +45,8 @@ def _challenge(row: dict[str, object]) -> str:
 
 
 def _size_matches(runtime_size: str, source_size: object) -> bool:
-    text = str(source_size).lower()
-    allowed = {size for size in _SIZE_NAMES if re.search(rf"\b{size}\b", text)}
-    if not allowed:
-        raise ValueError(f"SRD size could not be parsed: {source_size!r}")
+    text = str(source_size).lower(); allowed = {size for size in _SIZE_NAMES if re.search(rf"\b{size}\b", text)}
+    if not allowed: raise ValueError(f"SRD size could not be parsed: {source_size!r}")
     return runtime_size.lower() in allowed
 
 
@@ -59,22 +55,33 @@ def _source_attack_mode_count(actions: str) -> int:
     return len(_MELEE_ATTACK_ROLL.findall(standalone)) + len(_RANGED_ATTACK_ROLL.findall(standalone)) + 2 * combined
 
 
+def _source_in_scope_save_count(actions: str) -> int:
+    count = 0
+    for _, block in source_feature_blocks(actions):
+        for match in _SAVING_THROW.finditer(block):
+            if affects_mvp_combat_math(block[match.start():]):
+                count += 1
+    return count
+
+
 def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
     try:
         checks = (
             (template.name == str(row["name"]), "name-mismatch"), (_size_matches(template.size.value, row["size"]), "size-mismatch"),
-            (template.armor_class == _first_int(row["armorClass"]), "armor-class-mismatch"), (template.max_hp == _first_int(row["hitPoints"]), "hit-points-mismatch"),
-            (template.speed_ft == standard_arena_closing_speed(row["speed"]), "arena-speed-mismatch"), (template.challenge_rating == _challenge(row), "challenge-rating-mismatch"),
-            (template.initiative_bonus == _initiative(row), "initiative-mismatch"), (template.saving_throw_bonuses == parse_saving_throw_bonuses(row), "saving-throws-mismatch"),
+            (template.armor_class == _first_int(row["armorClass"]), "armor-class-mismatch"),
+            (template.max_hp == _first_int(row["hitPoints"]), "hit-points-mismatch"),
+            (template.challenge_rating == _challenge(row), "challenge-rating-mismatch"),
+            (template.initiative_bonus == _initiative(row), "initiative-mismatch"),
+            (template.saving_throw_bonuses == parse_saving_throw_bonuses(row), "saving-throws-mismatch"),
         )
         issues = [label for passed, label in checks if not passed]
-        issues.extend(movement_mode_issues(template, row)); issues.extend(defense_issues(template, row)); issues.extend(trait_issues(template, row))
+        issues.extend(defense_issues(template, row)); issues.extend(trait_issues(template, row))
         issues.extend(attack_advantage_issues(template, row)); issues.extend(aura_issues(template, row)); issues.extend(reaction_issues(template, row))
         issues.extend(bonus_action_issues(template, row)); issues.extend(limited_use_issues(template, row)); issues.extend(legendary_action_issues(template, row))
         issues.extend(spellcasting_issues(template, row)); issues.extend(action_boundary_issues(row)); issues.extend(survival_action_issues(row.get("actions", "")))
         actions = normalized(row.get("actions", "")); runtime_attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
         if _source_attack_mode_count(actions) != len(runtime_attacks): issues.append("source-attack-count-mismatch")
-        if len(_SAVING_THROW.findall(actions)) != len(template.saving_throw_actions): issues.append("source-save-action-count-mismatch")
+        if _source_in_scope_save_count(actions) != len(template.saving_throw_actions): issues.append("source-save-action-count-mismatch")
         for attack in runtime_attacks: issues.extend(attack_issues(attack, actions))
         issues.extend(charge_replacement_issues(template, actions))
         for action in template.saving_throw_actions: issues.extend(save_action_issues(action, actions))

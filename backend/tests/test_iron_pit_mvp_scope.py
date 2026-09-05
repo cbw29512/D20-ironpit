@@ -1,7 +1,9 @@
 from app.content.iron_pit_mvp_scope import (
     affects_mvp_combat_math,
     direct_combat_math_reasons,
+    feature_block,
     movement_only_for_mvp,
+    source_feature_blocks,
 )
 
 
@@ -55,3 +57,11 @@ def test_direct_d20_hp_ac_action_and_condition_math_are_in_scope():
 def test_noncombat_advantage_does_not_become_combat_math():
     assert not affects_mvp_combat_math("The monster has Advantage on Wisdom (Perception) checks.")
     assert not affects_mvp_combat_math("The monster has Advantage on checks made to jump.")
+
+
+def test_source_feature_blocks_keep_movement_and_damage_traits_separate():
+    text = "Spider Climb. The spider can climb difficult surfaces. Venom. Hit: 7 Poison damage."
+    blocks = source_feature_blocks(text)
+    assert [name for name, _ in blocks] == ["Spider Climb", "Venom"]
+    assert not affects_mvp_combat_math(feature_block(text, "Spider Climb"))
+    assert affects_mvp_combat_math(feature_block(text, "Venom"))

@@ -4,13 +4,12 @@ import logging
 import re
 from functools import lru_cache
 
+from app.content.iron_pit_mvp_scope import affects_mvp_combat_math, feature_block
 from app.content.monster_catalog import load_monster_rows
 from app.content.monster_trait_source_audit import parse_trait_names
 from app.domain.models import CombatantTemplate
 
 logger = logging.getLogger(__name__)
-# These actions only Hide/Disengage or alter pre-contact movement under the
-# documented flat, no-Hide, no-kiting, initiative-opener arena abstraction.
 _ARENA_NEUTRAL_BONUS_ACTIONS = frozenset({
     "Aquatic Charge", "Charge", "Cunning Action", "Leap", "Nimble Escape", "Shadow Stealth",
 })
@@ -29,14 +28,19 @@ def parse_bonus_action_names(source_bonus_actions: object) -> list[str]:
 
 
 def bonus_action_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
-    """Fail closed when a printed outcome-changing bonus action lacks runtime semantics."""
-    expected = parse_bonus_action_names(row.get("bonusActions", ""))
+    """Block only printed Bonus Actions that change an Iron Pit MVP outcome."""
+    source = row.get("bonusActions", "")
+    expected = parse_bonus_action_names(source)
     issues: list[str] = []
     if template.source_bonus_action_names != expected:
         issues.append("source-bonus-action-fingerprint-mismatch")
     for name in expected:
-        if _base_name(name) not in _ARENA_NEUTRAL_BONUS_ACTIONS:
-            issues.append(f"uncertified-bonus-action:{_slug(name)}")
+        if _base_name(name) in _ARENA_NEUTRAL_BONUS_ACTIONS:
+            continue
+        block = feature_block(source, name)
+        if block and not affects_mvp_combat_math(block):
+            continue
+        issues.append(f"uncertified-bonus-action:{_slug(name)}")
     return issues
 
 
