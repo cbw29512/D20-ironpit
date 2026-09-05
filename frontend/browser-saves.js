@@ -14,15 +14,15 @@
     available: (state, cost) => cost === "action" && state.action_available,
     spend: (state) => { state.action_available = false; },
   };
-  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { autoFailStrDex: (state) => state.is_unconscious };
+  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { autoFailStrDex: (state) => state.is_unconscious, has: (state, id) => state.active_effect_ids.includes(id) };
   const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
 
   function saveMode(state, ability, magical = false) {
-    const advantage = (ability === "strength" && state.active_effect_ids.includes("rage") ? 1 : 0)
+    const advantage = (ability === "strength" && Q().has(state, "rage") ? 1 : 0)
       + B2().dangerSenseAdvantage(state, ability)
-      + (state.template.saving_throw_advantage_triggers?.includes("attacker_bloodied") && state.current_hp * 2 <= S().effectiveMaxHp(state) ? 1 : 0)
+      + (state.template.saving_throw_advantage_triggers?.includes("attacker_bloodied") && S().isBloodied(state) ? 1 : 0)
       + (magical && state.template.saving_throw_advantage_triggers?.includes("magical_effect") ? 1 : 0);
-    const disadvantage = ability === "dexterity" && state.active_effect_ids.includes("restrained") ? 1 : 0;
+    const disadvantage = ability === "dexterity" && Q().has(state, "restrained") ? 1 : 0;
     return R().modeFromSources(advantage, disadvantage);
   }
 

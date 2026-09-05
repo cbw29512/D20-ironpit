@@ -19,7 +19,7 @@ from app.combat.modifier_stack import (
 from app.combat.parry import resolve_parry_hit
 from app.combat.range import resolve_attack_roll_mode
 from app.combat.reckless_attack import attacks_against_reckless_advantage, reckless_attack_advantage
-from app.combat.rolls import roll_d20
+from app.combat.rolls import attack_roll_hits, roll_d20
 from app.combat.sap import apply_weapon_sap, consume_sap, sap_disadvantage
 from app.combat.studied_attacks import apply_studied_attack_miss
 from app.combat.tactical_master import apply_tactical_master_sap
@@ -67,10 +67,10 @@ def resolve_attack(
         if redirect_target is not None and redirect_target is not defender and defender.template.redirect_attack_reaction is not None and is_available(defender, "reaction"):
             spend(defender, "reaction"); actual_defender = redirect_target
             actual_event_id = redirect_target_event_id or redirect_target.template.id; redirect_used = True
-        natural = attack_roll.selected_roll or 0; natural_20 = natural == 20
+        natural = attack_roll.selected_roll or 0
         expanded_critical = natural >= attacker.template.progression_features.critical_hit_minimum
         target_ac = effective_armor_class(actual_defender)
-        hit = natural != 1 and (natural_20 or attack_roll.total >= target_ac)
+        hit = attack_roll_hits(natural, attack_roll.total, target_ac)
         hit, parry_used = resolve_parry_hit(actual_defender, attack, attack_roll.total, natural, hit)
         if parry_used: target_ac += actual_defender.template.parry_reaction.ac_bonus
         critical = bool(hit and (expanded_critical or (close_hit_is_automatic_critical(actual_defender) and distance_ft <= 5)))

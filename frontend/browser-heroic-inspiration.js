@@ -1,7 +1,8 @@
 (() => {
   "use strict";
 
-  const standaloneHit = (natural, modifier, targetAc) => natural !== 1 && (natural === 20 || natural + modifier >= targetAc);
+  const R = () => window.IRON_PIT_BROWSER_ROLLS;
+  const standaloneHit = (natural, modifier, targetAc) => R().attackHits(natural, natural + modifier, targetAc);
 
   function grant(state) {
     if (!state.template.heroic_warrior || state.heroic_inspiration) return false;

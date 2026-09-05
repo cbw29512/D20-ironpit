@@ -27,16 +27,16 @@
   const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
   function conditionSources(attacker, defender, distance, targetId) {
     let advantage = M().attacksAgainstAdvantage(defender) + B2().attacksAgainstAdvantage(defender), disadvantage = 0;
-    if ((attacker.template.attack_roll_advantage_triggers?.includes("target_missing_hit_points") && defender.current_hp < defender.template.max_hp) || (attacker.template.attack_roll_advantage_triggers?.includes("attacker_bloodied") && attacker.current_hp * 2 <= S().effectiveMaxHp(attacker))) advantage += 1;
+    if ((attacker.template.attack_roll_advantage_triggers?.includes("target_missing_hit_points") && defender.current_hp < S().effectiveMaxHp(defender)) || (attacker.template.attack_roll_advantage_triggers?.includes("attacker_bloodied") && S().isBloodied(attacker))) advantage += 1;
     if (Q().has(attacker, "blinded")) disadvantage += 1;
-    if (attacker.active_effect_ids.includes("prone")) disadvantage += 1;
-    if (attacker.active_effect_ids.includes("restrained")) disadvantage += 1;
-    if (attacker.active_effect_ids.includes("poisoned")) disadvantage += 1;
+    if (Q().has(attacker, "prone")) disadvantage += 1;
+    if (Q().has(attacker, "restrained")) disadvantage += 1;
+    if (Q().has(attacker, "poisoned")) disadvantage += 1;
     disadvantage += G()?.attackDisadvantage(attacker, targetId) || 0;
-    if (defender.active_effect_ids.includes("dodge") && !Q().incapacitated(defender) && M().effectiveSpeed(defender) > 0 && !G()?.speedIsZero(defender)) disadvantage += 1;
+    if (Q().has(defender, "dodge") && !Q().incapacitated(defender) && M().effectiveSpeed(defender) > 0 && !G()?.speedIsZero(defender)) disadvantage += 1;
     if (Q().attackAdvantage(defender)) advantage += 1;
-    if (defender.active_effect_ids.includes("restrained")) advantage += 1;
-    if (defender.active_effect_ids.includes("prone")) distance <= 5 ? advantage += 1 : disadvantage += 1;
+    if (Q().has(defender, "restrained")) advantage += 1;
+    if (Q().has(defender, "prone")) distance <= 5 ? advantage += 1 : disadvantage += 1;
     return { advantage, disadvantage };
   }
   function rangedCloseThreat(attacker, target, distance, setup) {
@@ -45,7 +45,7 @@
     const enemies = attacker.side === "heroes" ? setup.monsters : setup.heroes;
     return enemies.some((enemy) => enemy.state.is_alive && !enemy.state.is_dead && enemy.state.current_hp > 0 && !Q().incapacitated(enemy.state) && S().distance(attacker, enemy) <= 5);
   }
-  const bloodiedFury = (state, attack) => state.template.traits?.includes("bloodied-fury") && attack.kind === "melee" && state.current_hp * 2 <= S().effectiveMaxHp(state) ? 1 : 0;
+  const bloodiedFury = (state, attack) => state.template.traits?.includes("bloodied-fury") && attack.kind === "melee" && S().isBloodied(state) ? 1 : 0;
   function adjustedDamage(target, amount, type, allowVulnerability = true) {
     if (target.template.damage_immunities?.includes(type)) return 0;
     let value = amount;
@@ -73,8 +73,8 @@
     M().consumeAttacksAgainstAdvantage(target.state); window.IRON_PIT_BROWSER_RAGE?.extendFromAttack(attacker.state, round);
     if (spendAction) E().spend(attacker.state, "action");
     const redirected = window.IRON_PIT_BROWSER_REACTIONS?.redirectAttack?.(target, extra.setup) || null, actualTarget = redirected || target;
-    const natural = attackRoll.selected_roll, naturalTwenty = natural === 20, baseTargetAc = M().effectiveArmorClass(actualTarget.state);
-    const initialHit = natural !== 1 && (naturalTwenty || attackRoll.total >= baseTargetAc);
+    const natural = attackRoll.selected_roll, baseTargetAc = M().effectiveArmorClass(actualTarget.state);
+    const initialHit = R().attackHits(natural, attackRoll.total, baseTargetAc);
     const parry = window.IRON_PIT_BROWSER_REACTIONS?.parryHit?.(actualTarget.state, attack, attackRoll, initialHit, baseTargetAc) || { hit: initialHit, used: false };
     const hit = parry.hit, targetAc = baseTargetAc + (parry.used ? actualTarget.state.template.parry_reaction.ac_bonus : 0);
     const expandedCritical = natural >= (attacker.state.template.critical_hit_minimum || 20);

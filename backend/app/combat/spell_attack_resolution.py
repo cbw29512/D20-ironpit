@@ -14,7 +14,7 @@ from app.combat.modifier_stack import (
     effective_armor_class, next_attack_against_advantage_sources,
 )
 from app.combat.reckless_attack import attacks_against_reckless_advantage
-from app.combat.rolls import resolve_roll_mode, roll_d20
+from app.combat.rolls import attack_roll_hits, resolve_roll_mode, roll_d20
 from app.combat.sap import consume_sap, sap_disadvantage
 from app.combat.spell_modifiers import build_spell_modifier
 from app.combat.spellcasting import mark_slot_spell_cast, slot_spell_available
@@ -78,7 +78,7 @@ def resolve_spell_attack(
             mark_slot_spell_cast(caster.state, turn_key); resource.current_uses -= 1
         spend(caster.state, spell.action_cost)
         natural = attack_roll.selected_roll or 0
-        hit = natural != 1 and (natural == 20 or attack_roll.total >= target_ac)
+        hit = attack_roll_hits(natural, attack_roll.total, target_ac)
         critical = bool(hit and (natural == 20 or (close_hit_is_automatic_critical(target.state) and distance <= 5)))
         hp_before = target.state.current_hp; temporary_hp_before = target.state.temporary_hp
         death_success_before = target.state.death_save_successes; death_failure_before = target.state.death_save_failures

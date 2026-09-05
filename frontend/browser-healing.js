@@ -4,8 +4,7 @@
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const S = () => window.IRON_PIT_BROWSER_STATE;
-  const bloodied = (state) => state.current_hp * 2 <= S().effectiveMaxHp(state);
-  const distance = (a, b) => Math.abs(a.position_ft - b.position_ft);
+  const bloodied = (state) => S().isBloodied(state);
   const swarm = (state) => state.template.traits?.includes("swarm");
   const slotHeal = (action) => Boolean(action.resourceId?.startsWith("spell-slot-"));
 
@@ -17,7 +16,7 @@
 
   function targetAllowed(healer, target, action) {
     if (target.state.is_dead || !target.state.is_alive || target.state.current_hp >= S().effectiveMaxHp(target.state) || swarm(target.state)) return false;
-    if (distance(healer, target) > (action.range || 5)) return false;
+    if (S().distance(healer, target) > (action.range || 5)) return false;
     if (action.targetMode === "self") return target.combatant_id === healer.combatant_id;
     if (action.targetMode === "ally") return target.combatant_id !== healer.combatant_id && target.side === healer.side;
     if (action.targetMode === "other") return target.combatant_id !== healer.combatant_id;

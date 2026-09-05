@@ -21,6 +21,11 @@ def resolve_roll_mode(advantage_sources: int = 0, disadvantage_sources: int = 0)
         raise RuntimeError("D20 roll mode could not be resolved.") from exc
 
 
+def attack_roll_hits(natural: int, total: int, target_ac: int) -> bool:
+    """Resolve the universal attack-roll hit rule: natural 1 misses, natural 20 hits, otherwise total vs. AC."""
+    return natural != 1 and (natural == 20 or total >= target_ac)
+
+
 def roll_d20(dice: DiceProvider, modifier: int = 0, mode: RollMode = RollMode.NORMAL) -> DiceRoll:
     """Roll an auditable d20 check, preserving both dice when advantage/disadvantage applies."""
     try:

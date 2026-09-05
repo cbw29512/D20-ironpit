@@ -50,7 +50,7 @@
     for (const [natural, naturalProbability] of d20Distribution(mode)) {
       for (const [extra, extraProbability] of bonuses) {
         const probability = naturalProbability * extraProbability;
-        const succeeds = natural !== 1 && (natural === 20 || natural + bonus + extra >= armorClass);
+        const succeeds = R().attackHits(natural, natural + bonus + extra, armorClass);
         if (succeeds) {
           hit += probability;
           if (natural >= criticalMinimum) critical += probability;

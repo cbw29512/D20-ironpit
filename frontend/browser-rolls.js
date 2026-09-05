@@ -4,6 +4,7 @@
   const dice = () => window.IRON_PIT_DICE;
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const bloodied = (state) => S().isBloodied(state);
+  const attackHits = (natural, total, targetAc) => natural !== 1 && (natural === 20 || total >= targetAc);
 
   function modeFromSources(advantage = 0, disadvantage = 0) {
     if ((advantage > 0) === (disadvantage > 0)) return "normal";
@@ -125,5 +126,5 @@
     };
   }
 
-  window.IRON_PIT_BROWSER_ROLLS = { attackMode, d20, modeFromSources, weaponDamage };
+  window.IRON_PIT_BROWSER_ROLLS = { attackHits, attackMode, d20, modeFromSources, weaponDamage };
 })();

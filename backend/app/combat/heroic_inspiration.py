@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.dice import DiceProvider
+from app.combat.rolls import attack_roll_hits
 from app.domain.models import CombatantState, DiceRoll, RollMode
 
 logger = logging.getLogger(__name__)
@@ -21,7 +22,7 @@ def grant_heroic_warrior_inspiration(state: CombatantState) -> bool:
 
 
 def _standalone_hit(natural: int, modifier: int, target_ac: int) -> bool:
-    return natural != 1 and (natural == 20 or natural + modifier >= target_ac)
+    return attack_roll_hits(natural, natural + modifier, target_ac)
 
 
 def _reroll_index(roll: DiceRoll, target_ac: int) -> int | None:

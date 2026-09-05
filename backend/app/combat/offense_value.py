@@ -5,7 +5,7 @@ from app.combat.conditions import attack_roll_condition_sources
 from app.combat.damage_defenses import adjusted_damage_amount
 from app.combat.encounter_targeting import close_ranged_threat_exists, combatant_distance
 from app.combat.modifier_stack import attacks_against_advantage_sources, effective_armor_class
-from app.combat.rolls import resolve_roll_mode
+from app.combat.rolls import attack_roll_hits, resolve_roll_mode
 from app.combat.saving_throw_rolls import saving_throw_mode
 from app.domain.combatants import DamageType
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -53,7 +53,7 @@ def _attack_probabilities(state, bonus: int, armor_class: int, mode: RollMode, c
     for natural, natural_probability in _d20_distribution(mode).items():
         for extra, extra_probability in bonus_distribution.items():
             probability = natural_probability * extra_probability
-            succeeds = natural != 1 and (natural == 20 or natural + bonus + extra >= armor_class)
+            succeeds = attack_roll_hits(natural, natural + bonus + extra, armor_class)
             if succeeds:
                 hit += probability
                 if natural >= critical_minimum:

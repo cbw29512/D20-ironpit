@@ -20,6 +20,7 @@ const setDice = (values) => {
   };
 };
 
+load("browser-rolls.js");
 load("browser-heroic-inspiration.js");
 
 const template = { heroic_warrior: true, name: "Karnok", max_hp: 104, speed_ft: 30, traits: [] };
@@ -99,7 +100,6 @@ window.IRON_PIT_ACTION_ECONOMY = { available: () => true, spend: () => {} };
 window.IRON_PIT_BROWSER_RAGE = { damageBonus: () => 0, extendFromAttack: () => {}, endIfIncapacitated: () => {} };
 window.IRON_PIT_BROWSER_ZERO_HP = { applyDamage: (state, amount) => { state.current_hp = Math.max(0, state.current_hp - amount); return null; } };
 window.IRON_PIT_BROWSER_CHAMPION = { criticalMove: (_attacker, _setup, event) => event };
-load("browser-rolls.js");
 load("browser-attack.js");
 
 {
