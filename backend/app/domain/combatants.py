@@ -23,7 +23,7 @@ from app.domain.weapons import (
 )
 
 AttackRollAdvantageTrigger = Literal["target_missing_hit_points", "attacker_bloodied"]
-SavingThrowAdvantageTrigger = Literal["attacker_bloodied"]
+SavingThrowAdvantageTrigger = Literal["attacker_bloodied", "magical_effect"]
 
 
 class VisualLoadout(BaseModel):

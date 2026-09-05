@@ -44,6 +44,12 @@ assert.equal(window.IRON_PIT_BROWSER_SAVES.saveMode(state, "wisdom"), "advantage
 state.active_effect_ids.push("restrained");
 assert.equal(window.IRON_PIT_BROWSER_SAVES.saveMode(state, "dexterity"), "normal", "Bloodied Advantage and Restrained Disadvantage must cancel");
 
+const magicTemplate = structuredClone(window.IRON_PIT_BROWSER_MONSTERS["srd-commoner"]);
+magicTemplate.saving_throw_advantage_triggers = ["magical_effect"];
+const magicState = window.IRON_PIT_BROWSER_STATE.buildState(magicTemplate);
+assert.equal(window.IRON_PIT_BROWSER_SAVES.saveMode(magicState, "wisdom"), "normal", "Magic Resistance must not affect ordinary saves");
+assert.equal(window.IRON_PIT_BROWSER_SAVES.saveMode(magicState, "wisdom", true), "advantage", "Magic Resistance must affect spell and magical-effect saves");
+
 const hellHound = window.IRON_PIT_BROWSER_MONSTERS["srd-hell-hound"];
 assert.ok(hellHound, "Hell Hound must be present after recharge-family certification");
 const breath = hellHound.saving_throw_actions[0];
@@ -61,4 +67,4 @@ rechargeRoll = 5;
 window.IRON_PIT_BROWSER_SAVES.rechargeStart(breathState);
 assert.equal(breathState.resources[breath.resourceId], 1, "Recharge 5-6 must restore on 5");
 
-console.log("Generated RAW-certified browser monsters expose all six SRD saves, Bloodied Frenzy parity, and generic recharge saves.");
+console.log("Generated RAW-certified browser monsters expose all six SRD saves, generic save Advantage triggers, and recharge saves.");

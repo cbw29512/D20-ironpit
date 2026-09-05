@@ -78,11 +78,11 @@
     return Math.max(0, (probabilities.hit - probabilities.critical) * normal + probabilities.critical * critical);
   }
 
-  function saveSuccess(target, action) {
+  function saveSuccess(target, action, magical = false) {
     if ((action.saveAbility === "strength" || action.saveAbility === "dexterity") && Q().autoFailStrDex(target.state)) return 0;
     const bonus = target.state.template.saving_throw_bonuses?.[action.saveAbility];
     if (bonus == null) throw new Error(`${target.state.template.name} lacks a certified ${action.saveAbility} save.`);
-    const mode = V().saveMode(target.state, action.saveAbility);
+    const mode = V().saveMode(target.state, action.saveAbility, magical);
     const bonuses = bonusDistribution(target.state, "saving-throw-bonus-die");
     let success = 0;
     for (const [natural, naturalProbability] of d20Distribution(mode)) {
@@ -95,7 +95,7 @@
 
   function saveSpell(target, action) {
     if (!(action.damageDiceCount > 0) || !action.damageType) return 0;
-    const success = saveSuccess(target, action);
+    const success = saveSuccess(target, action, true);
     const full = meanDamage(action.damageDiceCount, action.damageDiceSize, action.damageBonus || 0) * damageFactor(target.state, action.damageType);
     const onSuccess = action.successDamage === "half" ? full * 0.5 : 0;
     return Math.max(0, (1 - success) * full + success * onSuccess);

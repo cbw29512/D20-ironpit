@@ -17,21 +17,22 @@
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { autoFailStrDex: (state) => state.is_unconscious };
   const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
 
-  function saveMode(state, ability) {
+  function saveMode(state, ability, magical = false) {
     const advantage = (ability === "strength" && state.active_effect_ids.includes("rage") ? 1 : 0)
       + B2().dangerSenseAdvantage(state, ability)
-      + (state.template.saving_throw_advantage_triggers?.includes("attacker_bloodied") && state.current_hp * 2 <= S().effectiveMaxHp(state) ? 1 : 0);
+      + (state.template.saving_throw_advantage_triggers?.includes("attacker_bloodied") && state.current_hp * 2 <= S().effectiveMaxHp(state) ? 1 : 0)
+      + (magical && state.template.saving_throw_advantage_triggers?.includes("magical_effect") ? 1 : 0);
     const disadvantage = ability === "dexterity" && state.active_effect_ids.includes("restrained") ? 1 : 0;
     return R().modeFromSources(advantage, disadvantage);
   }
 
-  function resolveSavingThrow(state, ability, dc) {
+  function resolveSavingThrow(state, ability, dc, magical = false) {
     if ((ability === "strength" || ability === "dexterity") && Q().autoFailStrDex(state)) return { roll: null, succeeded: false };
     const bonus = state.template.saving_throw_bonuses?.[ability];
     if (bonus == null) throw new Error(`${state.template.name} lacks a certified ${ability} saving throw bonus.`);
-    let roll = M().applyD20Bonus(state, "saving-throw-bonus-die", R().d20(bonus, saveMode(state, ability)));
+    let roll = M().applyD20Bonus(state, "saving-throw-bonus-die", R().d20(bonus, saveMode(state, ability, magical)));
     if (roll.total < dc) {
-      const reroll = window.IRON_PIT_BROWSER_INDOMITABLE?.use(state, ability);
+      const reroll = window.IRON_PIT_BROWSER_INDOMITABLE?.use(state, ability, magical);
       if (reroll) roll = reroll;
     }
     return { roll, succeeded: roll.total >= dc };
@@ -86,7 +87,7 @@
     if (spendAction && !E().available(actor.state, "action")) throw new Error("Action is unavailable for saving throw action.");
     if (!legalAction(action, target, distance)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
     if (spendResource && !resourceAvailable(actor.state, action)) throw new Error(`${action.name} has no remaining resource use.`);
-    const save = resolveSavingThrow(target.state, action.saveAbility, action.dc);
+    const save = resolveSavingThrow(target.state, action.saveAbility, action.dc, Boolean(action.magical));
     if (spendAction) E().spend(actor.state, "action");
     const resourceRemaining = spendResource ? consumeResource(actor.state, action) : null;
     const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;

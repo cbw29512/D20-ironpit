@@ -10,7 +10,7 @@
     const spell = choice.action;
     if (choice.slotLevel !== spell.level) throw new Error("Spell upcasting is not certified; use the spell's printed slot level.");
     return {
-      id: spell.id, name: spell.name, saveAbility: spell.saveAbility, dc: spell.dc,
+      id: spell.id, name: spell.name, saveAbility: spell.saveAbility, dc: spell.dc, magical: true,
       range: spell.range + (spell.areaRadius || 0),
       damageDiceCount: spell.damageDiceCount,
       damageDiceSize: spell.damageDiceSize, damageBonus: spell.damageBonus || 0,

@@ -88,7 +88,7 @@ def _save_success_probability(target, action: SpellSaveAction) -> float:
     if action.save_ability in {"strength", "dexterity"} and automatically_fails_strength_dexterity_save(target.state):
         return 0.0
     bonus = target.state.template.saving_throw_bonuses[action.save_ability]
-    mode = saving_throw_mode(target.state, action.save_ability)
+    mode = saving_throw_mode(target.state, action.save_ability, magical=True)
     bonus_distribution = _bonus_distribution(target.state, ModifierKind.SAVING_THROW_BONUS_DIE)
     success = 0.0
     for natural, natural_probability in _d20_distribution(mode).items():

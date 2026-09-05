@@ -140,6 +140,8 @@ def _save(action: Any) -> dict[str, Any]:
         row["grappleEscapeDc"] = action.grapple_escape_dc
     if action.restrains_while_grappled:
         row["restrainsWhileGrappled"] = True
+    if action.magical:
+        row["magical"] = True
     if action.resource_id:
         row["resourceId"] = action.resource_id
         row["resourceCost"] = action.resource_cost

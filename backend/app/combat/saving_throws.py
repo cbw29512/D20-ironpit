@@ -43,7 +43,7 @@ def resolve_save_action(
     if spend_action and not is_available(actor.state, "action"): raise ValueError("Action is not available for a saving throw action.")
     if not legal_save_action(action, target, distance_ft): raise ValueError(f"{action.name} has no legal target at {distance_ft} feet.")
     if spend_resource and not resource_available(actor.state, action): raise ValueError(f"{action.name} has no remaining resource use.")
-    save_roll, succeeded = resolve_saving_throw(target.state, action.save_ability, action.dc, dice)
+    save_roll, succeeded = resolve_saving_throw(target.state, action.save_ability, action.dc, dice, magical=action.magical)
     if spend_action: spend(actor.state, "action")
     remaining = consume_resource(actor.state, action) if spend_resource else None
     hp_before = target.state.current_hp; temporary_hp_before = target.state.temporary_hp

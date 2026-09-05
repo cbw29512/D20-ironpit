@@ -114,6 +114,7 @@ class SavingThrowAction(BaseModel):
     success_damage: Literal["none", "half"] = "none"
     grapple_escape_dc: int | None = Field(default=None, ge=1, le=40)
     restrains_while_grappled: bool = False
+    magical: bool = False
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
     area_slots: int = Field(default=1, ge=1, le=8)
