@@ -3,15 +3,18 @@
 
   const WEAPON_EFFECT_ID = "weapon-mastery-sap";
   const TACTICAL_EFFECT_ID = "tactical-master-sap";
-  const SAP_EFFECT_IDS = new Set([WEAPON_EFFECT_ID, TACTICAL_EFFECT_ID]);
-  const T = () => window.IRON_PIT_BROWSER_TIMED;
+  const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
   const W = () => window.IRON_PIT_BROWSER_WEAPON_MASTERY;
 
   function applyEffect(attackerId, target, round, effectId, sourceEffectId) {
+    void round; void sourceEffectId;
     if (target.state.is_dead || target.state.current_hp <= 0) return false;
-    return Boolean(T().apply(target.state, effectId, attackerId, {
-      sourceEffectId, appliedRound: round, expiresRound: round + 1, expiryTiming: "source_turn_start",
-    }));
+    const before = M().nextAttackDisadvantage(target.state);
+    M().add(target.state, {
+      id: `${attackerId}:${effectId}`, source_id: attackerId, source_effect_id: effectId,
+      kind: "next-attack-disadvantage", expires_at_start_of_source_turn: true,
+    });
+    return M().nextAttackDisadvantage(target.state) > before;
   }
 
   function selected(state, attack) {
@@ -28,13 +31,8 @@
     return applyEffect(attacker.combatant_id, target, round, WEAPON_EFFECT_ID, "weapon-mastery");
   }
 
-  const disadvantage = (state) => state.timed_effects.some((effect) => SAP_EFFECT_IDS.has(effect.effect_id)) ? 1 : 0;
-
-  function consume(state) {
-    const effects = state.timed_effects.filter((effect) => SAP_EFFECT_IDS.has(effect.effect_id));
-    for (const effect of [...effects]) T().removeEffect(state, effect);
-    return effects.length;
-  }
+  const disadvantage = (state) => M().nextAttackDisadvantage(state);
+  const consume = (state) => M().consumeNextAttackDisadvantage(state);
 
   function applyTactical(attacker, target, attack, round) {
     if (!selected(attacker.state, attack)) return false;
