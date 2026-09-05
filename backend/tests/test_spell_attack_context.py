@@ -1,14 +1,12 @@
 from __future__ import annotations
 
 from app.combat.dice import FixedDiceProvider
-from app.combat.modifier_stack import add_modifier, next_attack_against_advantage_sources
-from app.combat.sap import SAP_EFFECT_IDS, WEAPON_SAP_EFFECT_ID
+from app.combat.modifier_stack import add_modifier, next_attack_against_advantage_sources, next_attack_disadvantage_sources
 from app.combat.spell_attack_resolution import resolve_spell_attack
 from app.combat.state import build_combatant_state
 from app.content.audited_fighter import build_karnok_stoneward
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.modifiers import CombatModifier, ModifierKind
-from app.domain.runtime import TimedEffect
 from app.domain.spells import SpellAttackAction
 
 
@@ -58,13 +56,12 @@ def _study(caster: EncounterCombatant, target: EncounterCombatant) -> None:
 
 
 def _sap(caster: EncounterCombatant) -> None:
-    caster.state.timed_effects.append(TimedEffect(
-        effect_id=WEAPON_SAP_EFFECT_ID,
+    add_modifier(caster.state, CombatModifier(
+        id="enemy:weapon-mastery-sap",
         source_id="enemy",
-        source_effect_id="weapon-mastery",
-        applied_round=1,
-        expires_round=2,
-        expiry_timing="source_turn_start",
+        source_effect_id="weapon-mastery-sap",
+        kind=ModifierKind.NEXT_ATTACK_DISADVANTAGE,
+        expires_at_start_of_source_turn=True,
     ))
 
 
@@ -108,7 +105,7 @@ def test_spell_attack_sap_disadvantage_cancels_advantage_and_is_consumed() -> No
     assert event.attack_roll is not None and event.attack_roll.mode.value == "normal"
     assert event.hit is True
     assert next_attack_against_advantage_sources(caster.state, target.combatant_id) == 0
-    assert not any(effect.effect_id in SAP_EFFECT_IDS for effect in caster.state.timed_effects)
+    assert next_attack_disadvantage_sources(caster.state) == 0
 
 
 def test_spell_attack_heroic_inspiration_can_recover_a_miss() -> None:
