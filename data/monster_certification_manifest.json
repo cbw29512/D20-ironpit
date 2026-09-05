@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 136,
-    "blocked": 194
+    "public_ready": 138,
+    "blocked": 192
   },
   "monsters": [
     {
@@ -6025,7 +6025,7 @@
       "monster_name": "Merrow",
       "srd_source_page": 308,
       "srd_source_reference": "SRD 5.2.1 p. 308",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-merrow",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -6034,20 +6034,16 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "multiattack",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "condition-or-control"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "condition-or-control",
-        "monster-combat-mechanics-not-certified"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-mimic",
@@ -8626,7 +8622,7 @@
       "monster_name": "Tough Boss",
       "srd_source_page": 332,
       "srd_source_reference": "SRD 5.2.1 p. 332",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-tough-boss",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -8635,20 +8631,16 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "multiattack",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "condition-or-control"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "condition-or-control",
-        "monster-combat-mechanics-not-certified"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-treant",
