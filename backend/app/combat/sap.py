@@ -22,14 +22,14 @@ def apply_sap_effect(
     effect_id: str,
     source_effect_id: str,
 ) -> bool:
-    del round_number
+    del round_number, source_effect_id
     if target.is_dead or target.current_hp <= 0:
         return False
     before = next_attack_disadvantage_sources(target)
     add_modifier(target, CombatModifier(
         id=f"{attacker_id}:{effect_id}",
         source_id=attacker_id,
-        source_effect_id=source_effect_id,
+        source_effect_id=effect_id,
         kind=ModifierKind.NEXT_ATTACK_DISADVANTAGE,
         expires_at_start_of_source_turn=True,
     ))
