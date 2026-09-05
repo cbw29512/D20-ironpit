@@ -17,7 +17,7 @@ _MODELED_TRAITS = {
     "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
 }
 _MODELED_ROLL_ADVANTAGE_TRAITS = frozenset({"Blood Frenzy", "Bloodied Frenzy", "Magic Resistance"})
-_MODELED_AURA_TRAITS = frozenset({"Fire Aura"})
+_MODELED_AURA_TRAITS = frozenset({"Fire Aura", "Aura of Authority"})
 _ARENA_NEUTRAL_TRAITS = frozenset({
     "Agile", "Amphibious", "Beast of Burden", "Earth Glide", "False Appearance", "Flyby", "Hellish Restoration",
     "Hold Breath", "Ice Walk", "Illumination", "Jumper", "Keen Hearing", "Keen Hearing and Sight",
