@@ -143,6 +143,6 @@
   }
 
   window.IRON_PIT_BROWSER_SAVES = {
-    chooseAction, legalAction, rechargeStart, resolveAction, resolveChoice, resolveSavingThrow, resourceAvailable, saveMode,
+    chooseAction, consumeResource, legalAction, rechargeStart, resolveAction, resolveChoice, resolveSavingThrow, resourceAvailable, saveMode,
   };
 })();

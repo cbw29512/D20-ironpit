@@ -14,6 +14,7 @@ from app.content.monster_limited_use_source_audit import limited_use_issues
 from app.content.monster_reaction_source_audit import reaction_issues
 from app.content.monster_saving_throws import parse_saving_throw_bonuses
 from app.content.monster_spellcasting_source_audit import spellcasting_issues
+from app.content.monster_survival_source_audit import survival_action_issues
 from app.content.monster_trait_source_audit import trait_issues
 from app.content.movement_modes import movement_mode_issues, standard_arena_closing_speed
 from app.domain.models import CombatantTemplate
@@ -91,6 +92,7 @@ def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) ->
         issues.extend(spellcasting_issues(template, row))
         issues.extend(action_boundary_issues(row))
         actions = normalized(row.get("actions", ""))
+        issues.extend(survival_action_issues(row.get("actions", "")))
         runtime_attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
         if _source_attack_mode_count(actions) != len(runtime_attacks):
             issues.append("source-attack-count-mismatch")
