@@ -17,6 +17,7 @@ _MODELED_TRAITS = {
     "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
 }
 _MODELED_ROLL_ADVANTAGE_TRAITS = frozenset({"Blood Frenzy", "Bloodied Frenzy", "Magic Resistance"})
+_MODELED_AURA_TRAITS = frozenset({"Fire Aura"})
 _ARENA_NEUTRAL_TRAITS = frozenset({
     "Agile", "Amphibious", "Beast of Burden", "Earth Glide", "False Appearance", "Flyby", "Hellish Restoration",
     "Hold Breath", "Ice Walk", "Illumination", "Jumper", "Keen Hearing", "Keen Hearing and Sight",
@@ -55,7 +56,6 @@ def parse_trait_names(source_traits: object) -> list[str]:
 
 
 def modeled_combat_traits(source_traits: object) -> list[CombatTrait]:
-    """Map source headings to every shared CombatTrait already implemented by the engine."""
     names = set(parse_trait_names(source_traits))
     return [runtime_trait for source_name, runtime_trait in _MODELED_TRAITS.items() if source_name in names]
 
@@ -72,7 +72,7 @@ def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[st
             issues.append(f"trait-runtime-missing:{runtime_trait.value}")
         elif runtime_has and not source_has:
             issues.append(f"trait-source-missing:{runtime_trait.value}")
-    certified = set(_MODELED_TRAITS) | set(_MODELED_ROLL_ADVANTAGE_TRAITS) | set(_ARENA_NEUTRAL_TRAITS)
+    certified = set(_MODELED_TRAITS) | set(_MODELED_ROLL_ADVANTAGE_TRAITS) | set(_MODELED_AURA_TRAITS) | set(_ARENA_NEUTRAL_TRAITS)
     for name in expected:
         if name not in certified:
             slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")

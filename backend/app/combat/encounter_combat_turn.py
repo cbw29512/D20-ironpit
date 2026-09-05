@@ -3,6 +3,7 @@ from __future__ import annotations
 from app.combat.action_economy import is_available
 from app.combat.ally_context import pack_tactics_active
 from app.combat.attack_actions import resolve_attack_action
+from app.combat.auras import resolve_end_turn_aura
 from app.combat.barbarian import enter_rage, finalize_rage_turn
 from app.combat.charge import resolve_charge_closing
 from app.combat.cleric_channel_support import resolve_channel_support
@@ -30,13 +31,11 @@ from app.domain.models import BattleEvent
 
 def _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key, allow_surge=True):
     if allow_surge:
-        surge_events, sequence = resolve_action_surge_attack(
-            sequence, round_number, attacker, setup, dice, turn_key,
-        )
+        surge_events, sequence = resolve_action_surge_attack(sequence, round_number, attacker, setup, dice, turn_key)
         events.extend(surge_events)
     rage_event, sequence = finalize_rage_turn(sequence, round_number, attacker.state, attacker.combatant_id)
-    if rage_event is not None:
-        events.append(rage_event)
+    if rage_event is not None: events.append(rage_event)
+    aura_events, sequence = resolve_end_turn_aura(sequence, round_number, attacker, setup, dice); events.extend(aura_events)
     return events, sequence
 
 
@@ -54,86 +53,50 @@ def _resolve_support_actions(sequence, round_number, member, setup, dice, turn_k
     if healing_choice is not None:
         action, target = healing_choice
         events.append(resolve_healing(sequence, round_number, member, target, action, dice, turn_key)); sequence += 1
-    channel_events, sequence = resolve_channel_support(sequence, round_number, member, setup, dice)
-    events.extend(channel_events)
+    channel_events, sequence = resolve_channel_support(sequence, round_number, member, setup, dice); events.extend(channel_events)
     return events, sequence
 
 
-def resolve_combat_turn(
-    sequence: int, round_number: int, attacker: EncounterCombatant, target: EncounterCombatant,
-    setup: EncounterSetup, dice: DiceProvider,
-) -> tuple[list[BattleEvent], int]:
-    """Resolve a fixed-formation Iron Pit turn; ordinary movement is abstracted away."""
-    events: list[BattleEvent] = []
-    cleanup_grapples(setup)
-    recharge_start_of_turn(attacker.state, dice)
-    begin_turn(attacker.state)
+def resolve_combat_turn(sequence: int, round_number: int, attacker: EncounterCombatant, target: EncounterCombatant, setup: EncounterSetup, dice: DiceProvider) -> tuple[list[BattleEvent], int]:
+    events: list[BattleEvent] = []; cleanup_grapples(setup); recharge_start_of_turn(attacker.state, dice); begin_turn(attacker.state)
     turn_key = f"{round_number}:{attacker.combatant_id}"
     if forced_retreat_active(attacker.state):
         events.append(build_forced_retreat_event(sequence, round_number, attacker.combatant_id, attacker.state)); sequence += 1
         return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key, allow_surge=False)
-
-    support_events, sequence = _resolve_support_actions(sequence, round_number, attacker, setup, dice, turn_key)
-    events.extend(support_events)
-    if is_incapacitated(attacker.state):
-        return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-
+    support_events, sequence = _resolve_support_actions(sequence, round_number, attacker, setup, dice, turn_key); events.extend(support_events)
+    if is_incapacitated(attacker.state): return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
     rage_event = enter_rage(sequence, round_number, attacker.state, attacker.combatant_id)
-    if rage_event is not None:
-        events.append(rage_event); sequence += 1
+    if rage_event is not None: events.append(rage_event); sequence += 1
     if should_use_second_wind(attacker.state):
         events.append(use_second_wind(sequence, round_number, attacker.state, dice, attacker.combatant_id)); sequence += 1
         shift_event = resolve_tactical_shift(sequence, round_number, attacker, setup)
-        if shift_event is not None:
-            events.append(shift_event); sequence += 1
+        if shift_event is not None: events.append(shift_event); sequence += 1
     if should_escape_grapple(attacker.state):
         events.append(resolve_escape_grapple(sequence, round_number, attacker.combatant_id, attacker.state, dice)); sequence += 1
         return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
     if should_use_adrenaline_rush(attacker.state):
         adrenaline_event = use_adrenaline_rush(sequence, round_number, attacker.state, attacker.combatant_id)
-        if adrenaline_event is not None:
-            events.append(adrenaline_event); sequence += 1
-
-    spell_events, sequence = resolve_best_spell_offense(sequence, round_number, attacker, setup, turn_key, dice)
-    events.extend(spell_events)
-    if not is_available(attacker.state, "action"):
-        return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-
+        if adrenaline_event is not None: events.append(adrenaline_event); sequence += 1
+    spell_events, sequence = resolve_best_spell_offense(sequence, round_number, attacker, setup, turn_key, dice); events.extend(spell_events)
+    if not is_available(attacker.state, "action"): return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
     targets = target_order(attacker, setup)
-    if not targets:
-        return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-    charge_events, sequence, charged = resolve_charge_closing(
-        sequence, round_number, attacker, targets[0], dice, setup,
-    )
-    events.extend(charge_events)
-    if charged or attacker.state.is_dead or attacker.state.is_unconscious:
-        return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-
+    if not targets: return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
+    charge_events, sequence, charged = resolve_charge_closing(sequence, round_number, attacker, targets[0], dice, setup); events.extend(charge_events)
+    if charged or attacker.state.is_dead or attacker.state.is_unconscious: return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
     priority_save = choose_save_action(attacker, setup, priority_only=True)
     if priority_save is not None:
-        more, sequence = resolve_save_choice(sequence, round_number, attacker, setup, priority_save, dice)
-        events.extend(more)
+        more, sequence = resolve_save_choice(sequence, round_number, attacker, setup, priority_save, dice); events.extend(more)
         return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-
     if attacker.state.template.attack_action is not None:
-        action_events, sequence = resolve_attack_action(sequence, round_number, attacker, setup, dice)
-        events.extend(action_events)
+        action_events, sequence = resolve_attack_action(sequence, round_number, attacker, setup, dice); events.extend(action_events)
         return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-
     save_choice = choose_save_action(attacker, setup)
     if save_choice is not None and is_available(attacker.state, "action"):
-        more, sequence = resolve_save_choice(sequence, round_number, attacker, setup, save_choice, dice)
-        events.extend(more)
+        more, sequence = resolve_save_choice(sequence, round_number, attacker, setup, save_choice, dice); events.extend(more)
         return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-
     attack_choice = choose_standard_attack(attacker, setup)
     if attack_choice is not None and is_available(attacker.state, "action"):
-        attack_target, attack, distance = attack_choice
-        pack = pack_tactics_active(attacker, attack_target, setup)
+        attack_target, attack, distance = attack_choice; pack = pack_tactics_active(attacker, attack_target, setup)
         feature = opening_feature_id(round_number, attacker, setup) or ("pack-tactics" if pack else None)
-        more, sequence = resolve_standard_attack_action(
-            sequence, round_number, attacker, attack_target, attack, distance, dice, setup, turn_key,
-            advantage_sources=1 if pack else 0, feature_id=feature,
-        )
-        events.extend(more)
+        more, sequence = resolve_standard_attack_action(sequence, round_number, attacker, attack_target, attack, distance, dice, setup, turn_key, advantage_sources=1 if pack else 0, feature_id=feature); events.extend(more)
     return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
