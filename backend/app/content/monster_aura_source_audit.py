@@ -11,6 +11,16 @@ _FIRE_AURA = re.compile(
     r"(?:\s*(?P<sign>[+-])\s*(?P<bonus>\d+))?\) (?P<type>Acid|Bludgeoning|Cold|Fire|Force|Lightning|Necrotic|Piercing|Poison|Psychic|Radiant|Slashing|Thunder) damage"
     r"(?P<incap> unless the [a-z]+ has the Incapacitated condition)?\.", re.I,
 )
+_CONNECTORS = frozenset({"a", "an", "and", "of", "or", "the", "to"})
+
+
+def _starts_new_trait(tail: str) -> bool:
+    sentence = tail.split(". ", 1)[0].rstrip(".").strip()
+    words = sentence.split()
+    return bool(words) and all(
+        word.lower() in _CONNECTORS or re.fullmatch(r"[A-Z][A-Za-z’'\-]*", word)
+        for word in words
+    )
 
 
 def parse_fire_aura(source_traits: object) -> EndTurnDamageAura | None:
@@ -21,7 +31,7 @@ def parse_fire_aura(source_traits: object) -> EndTurnDamageAura | None:
     if match is None:
         raise ValueError("Fire Aura source text is outside the supported end-turn damage grammar.")
     tail = text[match.end():].lstrip()
-    if tail and not re.match(r"[A-Z][A-Za-z’' -]+\. ", tail):
+    if tail and not _starts_new_trait(tail):
         raise ValueError("Fire Aura has unsupported trailing semantics.")
     bonus = int(match.group("bonus") or 0) * (-1 if match.group("sign") == "-" else 1)
     return EndTurnDamageAura(
