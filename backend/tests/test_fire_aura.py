@@ -23,7 +23,7 @@ def _setup(heroes, monsters):
 
 def test_azer_fire_aura_is_source_exact_and_fully_audited():
     template = build_combatant_from_capabilities("srd-azer-sentinel")
-    assert template.creature_type == "elemental"
+    assert template.creature_type == "Elemental"
     assert template.end_turn_damage_aura == parse_fire_aura(_row("Azer Sentinel")["traits"])
     assert audit_monster_source(template, _row("Azer Sentinel")) == []
 
