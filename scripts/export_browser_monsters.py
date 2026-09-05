@@ -27,33 +27,12 @@ def _certified_monsters():
     return monsters
 
 
-def _enrich_save_runtime(row, template) -> None:
-    by_id = {item.id: item for item in template.saving_throw_actions}
-    for rendered in row["saving_throw_actions"]:
-        action = by_id[rendered["id"]]
-        if action.resource_id:
-            rendered["resourceId"] = action.resource_id
-            rendered["resourceCost"] = action.resource_cost
-        if action.area_slots != 1:
-            rendered["areaSlots"] = action.area_slots
-        if action.priority:
-            rendered["priority"] = action.priority
-    recharge = {
-        item.id: item.recharge_min_d6
-        for item in template.resources
-        if item.recharge_min_d6 is not None
-    }
-    if recharge:
-        row["resource_recharge"] = recharge
-
-
 def render() -> str:
     try:
         rows = []
         for template in _certified_monsters():
             row = template_row(template)
             row["creature_type"] = template.creature_type
-            _enrich_save_runtime(row, template)
             rows.append(row)
         ids = {row["id"] for row in rows}
         if len(rows) != len(ids):

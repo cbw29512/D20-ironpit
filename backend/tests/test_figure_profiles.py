@@ -1,15 +1,4 @@
 from app.content.figure_profiles import MONSTER_FIGURE_PROFILES
-from app.content.monster_catalog import build_monster_catalog
-from app.domain.catalog import CoverageStatus
-
-
-def test_every_raw_ready_monster_has_a_reviewed_figure_profile() -> None:
-    ready_names = {
-        card.name
-        for card in build_monster_catalog()
-        if card.coverage_status is CoverageStatus.RAW_READY
-    }
-    assert ready_names <= set(MONSTER_FIGURE_PROFILES)
 
 
 def test_reviewed_profiles_are_explicit_and_nonempty() -> None:

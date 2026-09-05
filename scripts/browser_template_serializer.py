@@ -140,6 +140,13 @@ def _save(action: Any) -> dict[str, Any]:
         row["grappleEscapeDc"] = action.grapple_escape_dc
     if action.restrains_while_grappled:
         row["restrainsWhileGrappled"] = True
+    if action.resource_id:
+        row["resourceId"] = action.resource_id
+        row["resourceCost"] = action.resource_cost
+    if action.area_slots != 1:
+        row["areaSlots"] = action.area_slots
+    if action.priority:
+        row["priority"] = action.priority
     return row
 
 
@@ -262,6 +269,9 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                        "off_hand": template.visual.off_hand, "body_style": template.visual.body_style},
             "source": template.source, **_progression_features(template),
         }
+        recharge = {item.id: item.recharge_min_d6 for item in template.resources if item.recharge_min_d6 is not None}
+        if recharge:
+            row["resource_recharge"] = recharge
         if template.attack_roll_advantage_triggers:
             row["attack_roll_advantage_triggers"] = list(template.attack_roll_advantage_triggers)
         if template.saving_throw_advantage_triggers:
