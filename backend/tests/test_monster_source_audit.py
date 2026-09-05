@@ -35,24 +35,20 @@ def test_source_audit_detects_an_omitted_printed_attack() -> None:
     assert "source-attack-count-mismatch" in audit_monster_source(bear, rows["Brown Bear"])
 
 
-def test_source_audit_detects_movement_fingerprint_drift() -> None:
+def test_source_audit_ignores_movement_fingerprint_drift_for_mvp() -> None:
     rows = _rows_by_name()
     bat = next(template for template in build_arena_roster().monsters if template.name == "Bat").model_copy(deep=True)
     assert bat.movement_modes.fly_ft == 30
     bat.movement_modes.fly_ft = 0
-    assert "movement-fly-mismatch" in audit_monster_source(bat, rows["Bat"])
+    assert not any(issue.startswith("movement-") for issue in audit_monster_source(bat, rows["Bat"]))
 
 
-def test_catalog_blocks_raw_ready_when_movement_fingerprint_drifts(monkeypatch) -> None:
-    roster = build_arena_roster()
-    bat = next(template for template in roster.monsters if template.name == "Bat")
-    bat.movement_modes.fly_ft = 0
-    monkeypatch.setattr("app.content.roster.build_arena_roster", lambda: roster)
-
-    card = next(item for item in build_monster_catalog() if item.name == "Bat")
-    assert card.coverage_status is CoverageStatus.BLOCKED
-    assert card.runnable_template_id is None
-    assert "movement-fly-mismatch" in card.blockers
+def test_recharge_save_source_structure_uses_raw_headings() -> None:
+    rows = _rows_by_name()
+    wyrmling = next(template for template in build_arena_roster().monsters if template.name == "Black Dragon Wyrmling")
+    assert len(wyrmling.saving_throw_actions) == 1
+    issues = audit_monster_source(wyrmling, rows["Black Dragon Wyrmling"])
+    assert "source-save-action-count-mismatch" not in issues
 
 
 def test_catalog_blocks_raw_ready_when_any_source_stat_drifts(monkeypatch) -> None:

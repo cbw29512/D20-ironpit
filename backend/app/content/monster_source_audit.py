@@ -79,9 +79,10 @@ def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) ->
         issues.extend(attack_advantage_issues(template, row)); issues.extend(aura_issues(template, row)); issues.extend(reaction_issues(template, row))
         issues.extend(bonus_action_issues(template, row)); issues.extend(limited_use_issues(template, row)); issues.extend(legendary_action_issues(template, row))
         issues.extend(spellcasting_issues(template, row)); issues.extend(action_boundary_issues(row)); issues.extend(survival_action_issues(row.get("actions", "")))
-        actions = normalized(row.get("actions", "")); runtime_attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
+        raw_actions = str(row.get("actions", "")); actions = normalized(raw_actions)
+        runtime_attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
         if _source_attack_mode_count(actions) != len(runtime_attacks): issues.append("source-attack-count-mismatch")
-        if _source_in_scope_save_count(actions) != len(template.saving_throw_actions): issues.append("source-save-action-count-mismatch")
+        if _source_in_scope_save_count(raw_actions) != len(template.saving_throw_actions): issues.append("source-save-action-count-mismatch")
         for attack in runtime_attacks: issues.extend(attack_issues(attack, actions))
         issues.extend(charge_replacement_issues(template, actions))
         for action in template.saving_throw_actions: issues.extend(save_action_issues(action, actions))
