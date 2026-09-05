@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from app.combat.condition_rules import is_incapacitated
 from app.combat.dice import DiceProvider
-from app.combat.rolls import roll_d20
+from app.combat.rolls import resolve_roll_mode, roll_d20
 from app.domain.encounters import EncounterCombatant, EncounterInitiative, EncounterSetup, InitiativeGroup
 from app.domain.models import RollMode
 
@@ -13,11 +13,10 @@ logger = logging.getLogger(__name__)
 
 
 def _initiative_mode(member: EncounterCombatant) -> RollMode:
-    advantage = member.state.template.progression_features.initiative_advantage
-    disadvantage = is_incapacitated(member.state)
-    if advantage == disadvantage:
-        return RollMode.NORMAL
-    return RollMode.ADVANTAGE if advantage else RollMode.DISADVANTAGE
+    return resolve_roll_mode(
+        int(member.state.template.progression_features.initiative_advantage),
+        int(is_incapacitated(member.state)),
+    )
 
 
 def _roll_group(members: list[EncounterCombatant], dice: DiceProvider) -> InitiativeGroup:

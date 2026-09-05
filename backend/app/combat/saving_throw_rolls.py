@@ -7,7 +7,7 @@ from app.combat.danger_sense import danger_sense_advantage
 from app.combat.dice import DiceProvider
 from app.combat.grapple import RESTRAINED_EFFECT_ID
 from app.combat.modifier_stack import apply_d20_bonus_dice
-from app.combat.rolls import roll_d20
+from app.combat.rolls import resolve_roll_mode, roll_d20
 from app.domain.models import CombatantState, DiceRoll, RollMode
 from app.domain.modifiers import ModifierKind
 
@@ -17,12 +17,17 @@ def saving_throw_advantage_sources(state: CombatantState, *, magical: bool = Fal
     return int("attacker_bloodied" in triggers and is_bloodied(state)) + int(magical and "magical_effect" in triggers)
 
 
-def saving_throw_mode(state: CombatantState, ability: str, *, magical: bool = False) -> RollMode:
-    advantage = saving_throw_advantage_sources(state, magical=magical) + int(ability == "strength" and rage_active(state)) + danger_sense_advantage(state, ability)
-    disadvantage = 1 if ability == "dexterity" and RESTRAINED_EFFECT_ID in state.active_effect_ids else 0
-    if (advantage > 0) == (disadvantage > 0):
-        return RollMode.NORMAL
-    return RollMode.ADVANTAGE if advantage else RollMode.DISADVANTAGE
+def saving_throw_mode(
+    state: CombatantState, ability: str, *, magical: bool = False, advantage_sources: int = 0,
+) -> RollMode:
+    advantage = (
+        advantage_sources
+        + saving_throw_advantage_sources(state, magical=magical)
+        + int(ability == "strength" and rage_active(state))
+        + danger_sense_advantage(state, ability)
+    )
+    disadvantage = int(ability == "dexterity" and RESTRAINED_EFFECT_ID in state.active_effect_ids)
+    return resolve_roll_mode(advantage, disadvantage)
 
 
 def resolve_saving_throw(
@@ -32,6 +37,7 @@ def resolve_saving_throw(
     dice: DiceProvider,
     *,
     magical: bool = False,
+    advantage_sources: int = 0,
 ) -> tuple[DiceRoll | None, bool]:
     if ability in {"strength", "dexterity"} and automatically_fails_strength_dexterity_save(state):
         return None, False
@@ -40,13 +46,19 @@ def resolve_saving_throw(
     roll = apply_d20_bonus_dice(
         state,
         ModifierKind.SAVING_THROW_BONUS_DIE,
-        roll_d20(dice, state.template.saving_throw_bonuses[ability], saving_throw_mode(state, ability, magical=magical)),
+        roll_d20(
+            dice,
+            state.template.saving_throw_bonuses[ability],
+            saving_throw_mode(state, ability, magical=magical, advantage_sources=advantage_sources),
+        ),
         dice,
     )
     if roll.total < dc:
         from app.combat.indomitable import use_indomitable
 
-        reroll = use_indomitable(state, ability, dice, magical=magical)
+        reroll = use_indomitable(
+            state, ability, dice, magical=magical, advantage_sources=advantage_sources,
+        )
         if reroll is not None:
             roll = reroll
     return roll, roll.total >= dc

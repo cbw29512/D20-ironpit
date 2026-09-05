@@ -5,7 +5,7 @@ from app.combat.barbarian import rage_active
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.condition_rules import condition_speed_is_zero, has_condition
 from app.combat.dice import DiceProvider
-from app.combat.rolls import roll_d20
+from app.combat.rolls import resolve_roll_mode, roll_d20
 from app.combat.tactical_mind import apply_tactical_mind
 from app.domain.models import BattleEvent, CombatantState, EncounterSetup, GrappleSource, RollMode
 
@@ -79,13 +79,11 @@ def should_escape_grapple(state: CombatantState) -> bool:
 
 
 def _check_mode(state: CombatantState, strength_check: bool) -> RollMode:
-    advantage = strength_check and (
+    advantage = int(strength_check and (
         rage_active(state) or state.template.progression_features.athletics_advantage
-    )
-    disadvantage = has_condition(state, POISONED_EFFECT_ID) or has_condition(state, FRIGHTENED_EFFECT_ID)
-    if advantage == disadvantage:
-        return RollMode.NORMAL
-    return RollMode.ADVANTAGE if advantage else RollMode.DISADVANTAGE
+    ))
+    disadvantage = int(has_condition(state, POISONED_EFFECT_ID) or has_condition(state, FRIGHTENED_EFFECT_ID))
+    return resolve_roll_mode(advantage, disadvantage)
 
 
 def _escape_choice(state: CombatantState) -> tuple[str, int, RollMode]:
