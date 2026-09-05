@@ -8,6 +8,7 @@ from pathlib import Path
 from app.content.capability_compiler import compile_combatant
 from app.content.monster_creature_types import complete_monster_creature_types
 from app.content.monster_source_metadata import complete_monster_source_metadata
+from app.content.simple_monster_source_definitions import build_simple_source_definitions
 from app.domain.capabilities import CombatantDefinition
 from app.domain.models import CombatantTemplate
 
@@ -64,7 +65,12 @@ def load_capability_definitions() -> dict[str, CombatantDefinition]:
     try:
         generated = _load_registry(_GENERATED_PATH)
         native = _load_native_registries()
-        return merge_capability_definitions(generated, native)
+        merged = merge_capability_definitions(generated, native)
+        source_simple = build_simple_source_definitions()
+        overlap = set(merged) & set(source_simple)
+        if overlap:
+            raise ValueError(f"Source-derived capability ids overlap existing registries: {', '.join(sorted(overlap))}.")
+        return {**merged, **source_simple}
     except Exception as exc:
         logger.exception("Failed to load declarative combat capability registries.")
         raise RuntimeError("Combat capability registry could not be loaded.") from exc
