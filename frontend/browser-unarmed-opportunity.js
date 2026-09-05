@@ -4,6 +4,7 @@
   window.IRON_PIT_UNARMED_OPPORTUNITY = {
     "srd-ankylosaurus": {"attack_bonus":6,"damage":5},
     "srd-awakened-tree": {"attack_bonus":6,"damage":5},
+    "srd-fire-giant": {"attack_bonus":11,"damage":8},
     "srd-giant-constrictor-snake": {"attack_bonus":6,"damage":5},
     "srd-giant-elk": {"attack_bonus":6,"damage":5},
     "srd-giant-venomous-snake": {"attack_bonus":2,"damage":1},

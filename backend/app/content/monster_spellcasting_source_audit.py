@@ -16,6 +16,14 @@ _SPELL_GROUP = re.compile(
     r"\b(?:At Will|\d+/Day(?: Each)?):\s*(.*?)(?=\s+(?:At Will|\d+/Day(?: Each)?):|$)",
     re.IGNORECASE,
 )
+# Reviewed source-extraction fixes only. These repair flattened SRD text boundaries;
+# they do not model monster mechanics or alter runtime behavior.
+_SOURCE_LIST_BOUNDARY_FIXES = {
+    "Adult Gold Dragon": (
+        "Zone of Truth Weakening Breath. Strength Saving Throw:",
+        "Zone of Truth. Weakening Breath. Strength Saving Throw:",
+    ),
+}
 # Explicitly certified as irrelevant to the standard flat/open Iron Pit outcome.
 # These spells are never selected as combat actions; unknown additions fail closed.
 _ARENA_NEUTRAL_SPELLS = frozenset({"Detect Evil and Good", "Detect Magic", "Clairvoyance"})
@@ -23,6 +31,16 @@ _ARENA_NEUTRAL_SPELLS = frozenset({"Detect Evil and Good", "Detect Magic", "Clai
 
 def _normalized(value: object) -> str:
     return re.sub(r"\s+", " ", str(value or "")).strip()
+
+
+def _corrected_spell_text(row: dict[str, object], field: str) -> str:
+    text = _normalized(row.get(field, ""))
+    fix = _SOURCE_LIST_BOUNDARY_FIXES.get(str(row.get("name", "")))
+    if fix is not None:
+        before, after = fix
+        if before in text:
+            text = text.replace(before, after, 1)
+    return text
 
 
 def spellcasting_source_text(row: dict[str, object]) -> str:
@@ -78,10 +96,10 @@ def _split_outside_parentheses(text: str) -> list[str]:
 
 
 def printed_spell_names(row: dict[str, object]) -> set[str]:
-    """Extract only spell-list entries; exact parsed headings stop flattened source bleed."""
+    """Extract only spell-list entries; reviewed source corrections stop flattened feature bleed."""
     spells: set[str] = set()
     for field in _FIELDS:
-        text = _normalized(row.get(field, ""))
+        text = _corrected_spell_text(row, field)
         if not text or not _CASTING.search(text):
             continue
         headings = parse_trait_names(text, preserve_annotations=True)
