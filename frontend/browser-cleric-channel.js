@@ -5,7 +5,7 @@
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const T = () => window.IRON_PIT_BROWSER_TIMED;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
-  const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const A = () => window.IRON_PIT_BROWSER_ATTACK, AU = () => window.IRON_PIT_BROWSER_AURA || { rollAdvantageSources: () => 0 };
   const H = () => window.IRON_PIT_BROWSER_HEALING;
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const D = () => window.IRON_PIT_DICE;
@@ -91,7 +91,7 @@
     if (!targets.length || targets.some((t) => distance(cleric, t) > 30 || baseType(t) !== "undead")) throw new Error("Turn Undead requires Undead targets within 30 feet.");
     const dc = saveDc(cleric), remaining = spend(cleric), events = [];
     for (const target of targets) {
-      const save = V().resolveSavingThrow(target.state, "wisdom", dc);
+      const save = V().resolveSavingThrow(target.state, "wisdom", dc, false, AU().rollAdvantageSources(target, setup, "saving_throw"));
       const applied = save.succeeded ? [] : turnEffects(cleric, target, round);
       events.push({ sequence: sequence++, round_number: round, event_type: "saving_throw", actor_id: cleric.combatant_id,
         actor_name: cleric.state.template.name, target_id: target.combatant_id, target_name: target.state.template.name,
@@ -112,10 +112,10 @@
         hp_before: before, hp_after: target.state.current_hp, feature_id: SPARK, resource_remaining: remaining, animation: SPARK,
         description: `${cleric.state.template.name} restores ${healed} HP with Divine Spark.` }], sequence: sequence + 1 };
     }
-    const dc = saveDc(cleric), save = V().resolveSavingThrow(target.state, "constitution", dc);
+    const dc = saveDc(cleric), saveAdvantage = AU().rollAdvantageSources(target, setup, "saving_throw"), save = V().resolveSavingThrow(target.state, "constitution", dc, false, saveAdvantage);
     const type = A().adjustedDamage(target.state, 2, "radiant") >= A().adjustedDamage(target.state, 2, "necrotic") ? "radiant" : "necrotic";
     const raw = save.succeeded ? Math.floor(total / 2) : total, applied = A().adjustedDamage(target.state, raw, type), before = target.state.current_hp;
-    if (applied) A().applyDamage(target.state, applied, false, [type], [...setup.heroes, ...setup.monsters].map((m) => m.state));
+    if (applied) A().applyDamage(target.state, applied, false, [type], [...setup.heroes, ...setup.monsters].map((m) => m.state), saveAdvantage);
     return { events: [{ sequence, round_number: round, event_type: "saving_throw", actor_id: cleric.combatant_id, actor_name: cleric.state.template.name,
       target_id: target.combatant_id, target_name: target.state.template.name, saving_throw_roll: save.roll, save_ability: "constitution", save_dc: dc,
       save_succeeded: save.succeeded, damage_roll: { notation, rolls: [die], modifier: mod, total: applied },

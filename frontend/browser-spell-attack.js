@@ -5,6 +5,7 @@
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const AU = () => window.IRON_PIT_BROWSER_AURA || { rollAdvantageSources: () => 0 };
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const SM = () => window.IRON_PIT_BROWSER_SPELL_MODIFIERS;
@@ -26,7 +27,7 @@
     const resourceId = slotResource(caster, spell, turnKey);
     if (spell.level > 0 && !resourceId) throw new Error(`No level ${spell.level} spell slot remains for ${spell.name}.`);
     const conditions = A().conditionSources(caster.state, target.state, distance, target.combatant_id);
-    const advantage = conditions.advantage + M().nextAttackAgainstAdvantage(caster.state, target.combatant_id);
+    const advantage = conditions.advantage + M().nextAttackAgainstAdvantage(caster.state, target.combatant_id) + AU().rollAdvantageSources(caster, setup, "attack_roll");
     const closeThreat = (spell.attackKind || "ranged") === "ranged" && A().rangedCloseThreat(caster, target, distance, setup);
     const mode = R().modeFromSources(advantage, conditions.disadvantage + SAP().disadvantage(caster.state) + (closeThreat ? 1 : 0));
     const targetAc = M().effectiveArmorClass(target.state);
@@ -51,7 +52,7 @@
       if (spell.damageType) damageComponents = [{ source: spell.name, notation: damageRoll.notation, rolls: [...rolls], modifier: spell.damageBonus || 0,
         damage_type: spell.damageType, total: raw, applied_total: applied }];
       const states = [...setup.heroes, ...setup.monsters].map((entry) => entry.state);
-      A().applyDamage(target.state, applied, critical, spell.damageType && applied > 0 ? [spell.damageType] : [], states);
+      A().applyDamage(target.state, applied, critical, spell.damageType && applied > 0 ? [spell.damageType] : [], states, AU().rollAdvantageSources(target, setup, "saving_throw"));
       if (target.state.is_alive && !target.state.is_dead) (spell.onHitModifierEffects || []).forEach((effect, index) => {
         M().add(target.state, SM().build(caster.combatant_id, target.combatant_id, spell, effect, index, round));
       });

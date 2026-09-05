@@ -4,6 +4,7 @@
   const T = () => window.IRON_PIT_BROWSER_TIMED;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
+  const A = () => window.IRON_PIT_BROWSER_AURA || { rollAdvantageSources: () => 0 };
 
   const label = (id) => id.replaceAll("_", " ").replace(/\b\w/g, (char) => char.toUpperCase());
   function repeatSaveDue(effect, round, timing) {
@@ -11,12 +12,12 @@
     return !(effect.effect_id === "poisoned" && effect.applied_round != null && round <= effect.applied_round);
   }
 
-  function resolveTargetTiming(sequence, round, target, timing) {
+  function resolveTargetTiming(sequence, round, target, timing, setup = null) {
     const events = [];
     for (const effect of [...target.state.timed_effects]) {
       if (!target.state.timed_effects.includes(effect)) continue;
       if (repeatSaveDue(effect, round, timing)) {
-        const save = V().resolveSavingThrow(target.state, effect.repeat_save_ability, effect.repeat_save_dc);
+        const save = V().resolveSavingThrow(target.state, effect.repeat_save_ability, effect.repeat_save_dc, false, A().rollAdvantageSources(target, setup, "saving_throw"));
         const removed = save.succeeded ? T().removeGroup(target.state, effect) : [];
         events.push({
           sequence: sequence++, round_number: round, event_type: "saving_throw",

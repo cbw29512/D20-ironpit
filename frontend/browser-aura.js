@@ -30,7 +30,7 @@
     for (const target of selected) {
       const hp = target.state.current_hp, temp = target.state.temporary_hp, ds = target.state.death_save_successes, df = target.state.death_save_failures;
       const applied = A().adjustedDamage(target.state, raw, aura.damageType);
-      A().applyDamage(target.state, applied, false, applied ? [aura.damageType] : [], affected);
+      A().applyDamage(target.state, applied, false, applied ? [aura.damageType] : [], affected, rollAdvantageSources(target, setup, "saving_throw"));
       events.push({ sequence: sequence++, round_number: round, event_type: "feature", actor_id: member.combatant_id, actor_name: member.state.template.name,
         target_id: target.combatant_id, target_name: target.state.template.name, damage_roll: { notation, rolls, modifier: aura.damageBonus || 0, selected_roll: null, mode: "normal", total: applied },
         damage_components: [{ source: aura.name, notation, rolls, modifier: aura.damageBonus || 0, damage_type: aura.damageType, total: raw, applied_total: applied }],

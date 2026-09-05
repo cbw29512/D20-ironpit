@@ -5,7 +5,7 @@
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { applyD20Bonus: (_state, _kind, roll) => roll };
   const S = () => window.IRON_PIT_BROWSER_SAVES;
 
-  function use(state, ability, magical = false) {
+  function use(state, ability, magical = false, advantageSources = 0) {
     const bonus = state.template.indomitable_bonus || 0;
     const uses = state.resources?.indomitable || 0;
     const saveBonus = state.template.saving_throw_bonuses?.[ability];
@@ -15,7 +15,7 @@
     const roll = M().applyD20Bonus(
       state,
       "saving-throw-bonus-die",
-      R().d20(saveBonus + bonus, S().saveMode(state, ability, magical)),
+      R().d20(saveBonus + bonus, S().saveMode(state, ability, magical, advantageSources)),
     );
     return { ...roll, notation: `${roll.notation} [Indomitable +${bonus}]` };
   }

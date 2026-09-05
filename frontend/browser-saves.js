@@ -8,8 +8,8 @@
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2 || { dangerSenseAdvantage: () => 0 };
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { applyD20Bonus: (_state, _kind, roll) => roll };
-  const C = () => window.IRON_PIT_BROWSER_CONCENTRATION;
-  const D = () => window.IRON_PIT_DICE;
+  const C = () => window.IRON_PIT_BROWSER_CONCENTRATION, D = () => window.IRON_PIT_DICE;
+  const AU = () => window.IRON_PIT_BROWSER_AURA || { rollAdvantageSources: () => 0 };
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
     available: (state, cost) => cost === "action" && state.action_available,
     spend: (state) => { state.action_available = false; },
@@ -17,8 +17,8 @@
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { autoFailStrDex: (state) => state.is_unconscious, has: (state, id) => state.active_effect_ids.includes(id) };
   const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
 
-  function saveMode(state, ability, magical = false) {
-    const advantage = (ability === "strength" && Q().has(state, "rage") ? 1 : 0)
+  function saveMode(state, ability, magical = false, advantageSources = 0) {
+    const advantage = advantageSources + (ability === "strength" && Q().has(state, "rage") ? 1 : 0)
       + B2().dangerSenseAdvantage(state, ability)
       + (state.template.saving_throw_advantage_triggers?.includes("attacker_bloodied") && S().isBloodied(state) ? 1 : 0)
       + (magical && state.template.saving_throw_advantage_triggers?.includes("magical_effect") ? 1 : 0);
@@ -26,13 +26,13 @@
     return R().modeFromSources(advantage, disadvantage);
   }
 
-  function resolveSavingThrow(state, ability, dc, magical = false) {
+  function resolveSavingThrow(state, ability, dc, magical = false, advantageSources = 0) {
     if ((ability === "strength" || ability === "dexterity") && Q().autoFailStrDex(state)) return { roll: null, succeeded: false };
     const bonus = state.template.saving_throw_bonuses?.[ability];
     if (bonus == null) throw new Error(`${state.template.name} lacks a certified ${ability} saving throw bonus.`);
-    let roll = M().applyD20Bonus(state, "saving-throw-bonus-die", R().d20(bonus, saveMode(state, ability, magical)));
+    let roll = M().applyD20Bonus(state, "saving-throw-bonus-die", R().d20(bonus, saveMode(state, ability, magical, advantageSources)));
     if (roll.total < dc) {
-      const reroll = window.IRON_PIT_BROWSER_INDOMITABLE?.use(state, ability, magical);
+      const reroll = window.IRON_PIT_BROWSER_INDOMITABLE?.use(state, ability, magical, advantageSources);
       if (reroll) roll = reroll;
     }
     return { roll, succeeded: roll.total >= dc };
@@ -87,7 +87,8 @@
     if (spendAction && !E().available(actor.state, "action")) throw new Error("Action is unavailable for saving throw action.");
     if (!legalAction(action, target, distance)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
     if (spendResource && !resourceAvailable(actor.state, action)) throw new Error(`${action.name} has no remaining resource use.`);
-    const save = resolveSavingThrow(target.state, action.saveAbility, action.dc, Boolean(action.magical));
+    const saveAdvantage = AU().rollAdvantageSources(target, options.setup, "saving_throw");
+    const save = resolveSavingThrow(target.state, action.saveAbility, action.dc, Boolean(action.magical), saveAdvantage);
     if (spendAction) E().spend(actor.state, "action");
     const resourceRemaining = spendResource ? consumeResource(actor.state, action) : null;
     const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
@@ -106,7 +107,7 @@
       damageRoll = { notation: damageComponents[0].notation, rolls, modifier: action.damageBonus || 0, total: applied };
       if (applied) {
         const affectedStates = states(options.setup);
-        damageOutcome = A().applyDamage(target.state, applied, false, [action.damageType], affectedStates);
+        damageOutcome = A().applyDamage(target.state, applied, false, [action.damageType], affectedStates, saveAdvantage);
         window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(target.state); C()?.endIfIncapacitated(target.state, affectedStates);
       }
     }

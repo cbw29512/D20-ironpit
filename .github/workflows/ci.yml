@@ -96,6 +96,8 @@ jobs:
           node frontend/browser-dice-recording.test.cjs
           node frontend/browser-engine.test.cjs
           node frontend/browser-formation.test.cjs
+          node frontend/browser-aura.test.cjs
+          node frontend/browser-generic-save-advantage.test.cjs
           node frontend/browser-conditional-damage.test.cjs
           node frontend/browser-swarm.test.cjs
           node frontend/browser-rage.test.cjs

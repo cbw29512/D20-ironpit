@@ -55,7 +55,7 @@
     return end(owner, states);
   }
 
-  function resolveDamage(owner, damageTaken, states = []) {
+  function resolveDamage(owner, damageTaken, states = [], advantageSources = 0) {
     if (!Number.isInteger(damageTaken) || damageTaken < 0) throw new Error("Concentration damage must be a nonnegative integer.");
     if (!owner.concentration || damageTaken === 0) return null;
     if (owner.is_dead || Q().incapacitated(owner)) {
@@ -64,7 +64,7 @@
     }
     if (!V()) throw new Error("Browser saving-throw runtime is not loaded.");
     const dc = concentrationDc(damageTaken);
-    const save = V().resolveSavingThrow(owner, "constitution", dc);
+    const save = V().resolveSavingThrow(owner, "constitution", dc, false, advantageSources);
     if (!save.succeeded) end(owner, states);
     return { dc, roll: save.roll, succeeded: save.succeeded, ended: !save.succeeded, reason: "damage" };
   }

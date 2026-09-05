@@ -54,7 +54,7 @@
       const target = members.get(targetId);
       const event = V().resolveAction(
         sequence++, round, caster, target, action, S().distance(caster, target),
-        { spendAction: false, sharedDamageRolls },
+        { spendAction: false, sharedDamageRolls, setup },
       );
       events.push(event);
       if (sharedDamageRolls == null && event.damage_components?.length) {

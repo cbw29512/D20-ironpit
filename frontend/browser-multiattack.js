@@ -85,7 +85,7 @@
         openingFeature = null; return;
       }
       const saved = saveChoice(member, setup, data);
-      if (saved) events.push(V().resolveAction(sequence++, round, member, saved.target, saved.save, saved.distance, { spendAction: false }));
+      if (saved) events.push(V().resolveAction(sequence++, round, member, saved.target, saved.save, saved.distance, { spendAction: false, setup }));
     });
 
     if (definition.isAttackAction && lightTrigger) {

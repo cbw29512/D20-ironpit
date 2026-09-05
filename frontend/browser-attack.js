@@ -4,7 +4,7 @@
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
   const T = () => window.IRON_PIT_BROWSER_TIMED;
-  const Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
+  const Z = () => window.IRON_PIT_BROWSER_ZERO_HP, AU = () => window.IRON_PIT_BROWSER_AURA || { rollAdvantageSources: () => 0 };
   const SAP = () => window.IRON_PIT_BROWSER_SAP || { applyWeapon: () => false, consume: () => 0, disadvantage: () => 0 };
   const TM = () => window.IRON_PIT_BROWSER_TACTICAL_MASTER || { apply: () => false };
   const GRZ = () => window.IRON_PIT_BROWSER_GRAZE || { rawDamage: () => null };
@@ -53,9 +53,9 @@
     if (allowVulnerability && target.template.damage_vulnerabilities?.includes(type)) value *= 2;
     return value;
   }
-  function applyDamage(state, amount, critical = false, damageTypes = [], affectedStates = []) {
+  function applyDamage(state, amount, critical = false, damageTypes = [], affectedStates = [], savingThrowAdvantageSources = 0) {
     const lifecycle = Z(); if (!lifecycle) throw new Error("Browser zero-HP runtime is not loaded.");
-    return lifecycle.applyDamage(state, amount, critical, damageTypes, affectedStates);
+    return lifecycle.applyDamage(state, amount, critical, damageTypes, affectedStates, savingThrowAdvantageSources);
   }
   function resolveAttack(sequence, round, attacker, target, attack, distance, extra = {}) {
     const spendAction = extra.spendAction !== false;
@@ -64,7 +64,7 @@
     if (recklessStarted) window.IRON_PIT_BROWSER_BARBARIAN3?.markRecklessUse(attacker.state, extra.turnKey);
     const conditions = conditionSources(attacker.state, target.state, distance, target.combatant_id);
     const advantage = (extra.advantage || 0) + conditions.advantage + bloodiedFury(attacker.state, attack)
-      + B2().attackAdvantage(attacker.state, attack) + M().nextAttackAgainstAdvantage(attacker.state, target.combatant_id);
+      + B2().attackAdvantage(attacker.state, attack) + M().nextAttackAgainstAdvantage(attacker.state, target.combatant_id) + AU().rollAdvantageSources(attacker, extra.setup, "attack_roll");
     const closeThreat = attack.kind === "ranged" && rangedCloseThreat(attacker, target, distance, extra.setup);
     const mode = R().attackMode(attack, distance, advantage, conditions.disadvantage + SAP().disadvantage(attacker.state), closeThreat);
     const heroic = HI().rerollFailedAttack(attacker.state, R().d20(attack.bonus, mode), M().effectiveArmorClass(target.state));
@@ -73,7 +73,7 @@
     M().consumeAttacksAgainstAdvantage(target.state); window.IRON_PIT_BROWSER_RAGE?.extendFromAttack(attacker.state, round);
     if (spendAction) E().spend(attacker.state, "action");
     const redirected = window.IRON_PIT_BROWSER_REACTIONS?.redirectAttack?.(target, extra.setup) || null, actualTarget = redirected || target;
-    const natural = attackRoll.selected_roll, baseTargetAc = M().effectiveArmorClass(actualTarget.state);
+    const natural = attackRoll.selected_roll, baseTargetAc = M().effectiveArmorClass(actualTarget.state), saveAdvantage = AU().rollAdvantageSources(actualTarget, extra.setup, "saving_throw");
     const initialHit = R().attackHits(natural, attackRoll.total, baseTargetAc);
     const parry = window.IRON_PIT_BROWSER_REACTIONS?.parryHit?.(actualTarget.state, attack, attackRoll, initialHit, baseTargetAc) || { hit: initialHit, used: false };
     const hit = parry.hit, targetAc = baseTargetAc + (parry.used ? actualTarget.state.template.parry_reaction.ac_bonus : 0);
@@ -90,7 +90,7 @@
       damageComponents = damage.components.map((part) => ({ ...part, applied_total: adjustedDamage(actualTarget.state, part.total, part.damage_type) }));
       damageRoll = { ...damage.roll, total: damageComponents.reduce((sum, part) => sum + part.applied_total, 0) };
       const appliedTypes = [...new Set(damageComponents.filter((part) => part.applied_total > 0).map((part) => part.damage_type))], affectedStates = states(extra.setup);
-      damageOutcome = applyDamage(actualTarget.state, damageRoll.total, critical, appliedTypes, affectedStates);
+      damageOutcome = applyDamage(actualTarget.state, damageRoll.total, critical, appliedTypes, affectedStates, saveAdvantage);
       const living = actualTarget.state.is_alive && !actualTarget.state.is_dead, proneMax = extra.proneMaxSize || attack.proneMaxSize;
       if (living && S().canProne(actualTarget, proneMax) && !I().immune(actualTarget.state, "prone")) { if (!actualTarget.state.active_effect_ids.includes("prone")) actualTarget.state.active_effect_ids.push("prone"); applied.push("prone"); }
       const control = attack.controlEffect;
@@ -103,7 +103,7 @@
         if (timed) applied.push(timed);
       }
       if (living) M().applyHitEffects?.(actualTarget.state, attacker.combatant_id, attack);
-      topple = TOP().resolve(attacker, actualTarget, attack); if (topple.applied && !applied.includes("prone")) applied.push("prone");
+      topple = TOP().resolve(attacker, actualTarget, attack, saveAdvantage); if (topple.applied && !applied.includes("prone")) applied.push("prone");
       if (living) sapApplied = SAP().applyWeapon(attacker, actualTarget, attack, round) ? "weapon" : TM().apply(attacker, actualTarget, attack, round) ? "tactical" : "";
       vexApplied = window.IRON_PIT_BROWSER_VEX?.apply(attacker.state, attacker.combatant_id, actualTarget.combatant_id, attack, round, damageRoll.total) || false;
       window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(actualTarget.state); C()?.endIfIncapacitated(actualTarget.state, affectedStates);
@@ -115,7 +115,7 @@
           damage_type: attack.damageType, total: rawGraze, applied_total: appliedTotal }];
         damageRoll = { notation: String(rawGraze), rolls: [], modifier: 0, selected_roll: null, mode: "normal", total: appliedTotal };
         const affectedStates = states(extra.setup), appliedTypes = appliedTotal > 0 ? [attack.damageType] : [];
-        damageOutcome = applyDamage(actualTarget.state, appliedTotal, false, appliedTypes, affectedStates);
+        damageOutcome = applyDamage(actualTarget.state, appliedTotal, false, appliedTypes, affectedStates, saveAdvantage);
         window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(actualTarget.state); C()?.endIfIncapacitated(actualTarget.state, affectedStates);
       }
       studiedApplied = STUDY().apply(attacker.state, attacker.combatant_id, target.combatant_id, round);

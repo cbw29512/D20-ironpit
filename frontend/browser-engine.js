@@ -104,7 +104,7 @@
   }
 
   function lifecycle(sequence, round, member, setup, targetTiming, sourceTiming) {
-    const target = L().resolveTargetTiming(sequence, round, member, targetTiming);
+    const target = L().resolveTargetTiming(sequence, round, member, targetTiming, setup);
     const source = L().resolveSourceTiming(target.sequence, round, member, setup, sourceTiming);
     if (sourceTiming === "source_turn_end") {
       const states = [...setup.heroes, ...setup.monsters].map((entry) => entry.state);
@@ -129,7 +129,7 @@
         B()?.cleanupDisabledSources(setup); window.IRON_PIT_BROWSER_MODIFIERS?.expireSourceTurnStart(states, member.combatant_id); S().refreshStartOfTurn(member.state); C()?.endIfExpired(member.state, round, states);
         const start = lifecycle(sequence, round, member, setup, "target_turn_start", "source_turn_start");
         events.push(...start.events); sequence = start.sequence;
-        if (member.state.template.kind === "character" && member.state.current_hp === 0 && !member.state.is_dead && !member.state.is_stable) events.push(T().deathSave(sequence++, round, member));
+        if (member.state.template.kind === "character" && member.state.current_hp === 0 && !member.state.is_dead && !member.state.is_stable) events.push(T().deathSave(sequence++, round, member, window.IRON_PIT_BROWSER_AURA?.rollAdvantageSources(member, setup, "saving_throw") || 0));
         if (member.state.current_hp > 0 && !member.state.is_dead) {
           const turn = T().resolveTurn(sequence, round, member, setup); events.push(...turn.events); sequence = turn.sequence;
         }
