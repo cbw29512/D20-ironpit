@@ -7694,6 +7694,7 @@
           "max_target_size": "medium",
           "restrains": false
         },
+        "magical": false,
         "resource_cost": 1,
         "area_slots": 1,
         "priority": 0,
@@ -9653,6 +9654,7 @@
           "max_target_size": "large",
           "restrains": false
         },
+        "magical": false,
         "resource_cost": 1,
         "area_slots": 1,
         "priority": 0,
