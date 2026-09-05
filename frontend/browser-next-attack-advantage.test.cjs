@@ -9,7 +9,7 @@ global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
   "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
-  "browser-grapple.js", "browser-modifiers.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
+  "browser-grapple.js", "browser-modifiers.js", "browser-tactical-master.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
   "browser-undead-fortitude.js", "browser-zero-hp.js", "browser-attack.js",
 ]) load(file);
 
@@ -90,6 +90,19 @@ const nextAttack = (expires = 2) => ({
 }
 
 {
+  const attacker = member("attacker", "heroes", 0), target = member("target", "monsters", 5);
+  const attack = attacker.state.template.attacks.find((item) => item.id === attacker.state.template.primary_attack_id);
+  M.applyHitEffects(attacker.state, "ettin", {
+    id: "srd-ettin-morningstar", onHitModifiers: [{ kind: "next-attack-disadvantage", expiresAtEndOfTargetTurn: true }],
+  });
+  assert.equal(M.nextAttackDisadvantage(attacker.state), 1);
+  dice([5, 15]);
+  const event = A.resolveAttack(1, 1, attacker, target, attack, 5, { spendAction: false });
+  assert.equal(event.attack_roll.mode, "disadvantage");
+  assert.equal(M.nextAttackDisadvantage(attacker.state), 0);
+}
+
+{
   const attacker = member("sahuagin", "monsters", 0), target = member("target", "heroes", 5);
   attacker.state.template.attack_roll_advantage_triggers = ["target_missing_hit_points"];
   let sources = A.conditionSources(attacker.state, target.state, 5, target.combatant_id);
@@ -109,4 +122,4 @@ assert.throws(() => M.validate({
   consume_on_attack_against: true,
 }));
 
-console.log("Browser next-attack Advantage, missing-HP Advantage, and source-turn expiry regressions passed.");
+console.log("Browser next-attack Advantage/Disadvantage, missing-HP Advantage, and expiry regressions passed.");

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.combat.modifier_stack import consume_next_attack_disadvantage, next_attack_disadvantage_sources
 from app.combat.timed_conditions import apply_timed_condition, remove_effect_instance
 from app.combat.weapon_mastery import weapon_mastery_active
 from app.domain.models import CombatantState, WeaponAttack
@@ -53,11 +54,12 @@ def apply_weapon_sap(
 
 
 def sap_disadvantage(state: CombatantState) -> int:
-    return int(any(effect.effect_id in SAP_EFFECT_IDS for effect in state.timed_effects))
+    sap = int(any(effect.effect_id in SAP_EFFECT_IDS for effect in state.timed_effects))
+    return sap + next_attack_disadvantage_sources(state)
 
 
 def consume_sap(state: CombatantState) -> int:
     effects = [effect for effect in list(state.timed_effects) if effect.effect_id in SAP_EFFECT_IDS]
     for effect in effects:
         remove_effect_instance(state, effect)
-    return len(effects)
+    return len(effects) + consume_next_attack_disadvantage(state)

@@ -18,21 +18,32 @@ def _attack_segment(attack: WeaponAttack, actions: str) -> str:
     return match.group(1) if match else ""
 
 
-def _source_effect(attack: WeaponAttack, actions: str) -> tuple[str, int, CreatureSize] | None:
+def _source_effect(attack: WeaponAttack, actions: str) -> tuple[str, int, CreatureSize | None] | None:
     segment = _attack_segment(attack, actions)
-    match = re.search(
+    conditional = re.search(
         r"if the target is a?\s*(tiny|small|medium|large|huge|gargantuan) or smaller creature,\s+"
         r"the [a-z][a-z -]* (pushes|pulls) the target up to (\d+) feet straight (away from|toward) itself",
         segment,
         re.IGNORECASE,
     )
-    if not match:
+    if conditional:
+        direction = "push" if conditional.group(2).lower().startswith("push") else "pull"
+        relation = conditional.group(4).lower()
+        if (direction == "push") != relation.startswith("away"):
+            raise ValueError(f"Forced movement direction grammar disagrees for {attack.id}.")
+        return direction, int(conditional.group(3)), _SIZE[conditional.group(1).lower()]
+    passive = re.search(
+        r"\bthe target is (pushed|pulled) up to (\d+) feet straight (away from|toward) the [a-z][a-z -]*",
+        segment,
+        re.IGNORECASE,
+    )
+    if not passive:
         return None
-    direction = "push" if match.group(2).lower().startswith("push") else "pull"
-    relation = match.group(4).lower()
+    direction = "push" if passive.group(1).lower().startswith("push") else "pull"
+    relation = passive.group(3).lower()
     if (direction == "push") != relation.startswith("away"):
         raise ValueError(f"Forced movement direction grammar disagrees for {attack.id}.")
-    return direction, int(match.group(3)), _SIZE[match.group(1).lower()]
+    return direction, int(passive.group(2)), None
 
 
 def forced_movement_issues(attack: WeaponAttack, actions: str) -> list[str]:
@@ -44,7 +55,6 @@ def forced_movement_issues(attack: WeaponAttack, actions: str) -> list[str]:
         return [f"forced-movement-source-missing:{attack.id}"]
     if actual is None:
         return [f"forced-movement-runtime-missing:{attack.id}"]
-    direction, distance, maximum = expected
-    if (actual.direction, actual.distance_ft, actual.max_target_size) != (direction, distance, maximum):
+    if (actual.direction, actual.distance_ft, actual.max_target_size) != expected:
         return [f"forced-movement-mismatch:{attack.id}"]
     return []

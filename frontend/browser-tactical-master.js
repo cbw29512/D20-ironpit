@@ -6,6 +6,7 @@
   const SAP_EFFECT_IDS = new Set([WEAPON_EFFECT_ID, TACTICAL_EFFECT_ID]);
   const T = () => window.IRON_PIT_BROWSER_TIMED;
   const W = () => window.IRON_PIT_BROWSER_WEAPON_MASTERY;
+  const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { nextAttackDisadvantage: () => 0, consumeNextAttackDisadvantage: () => 0 };
 
   function applyEffect(attackerId, target, round, effectId, sourceEffectId) {
     if (target.state.is_dead || target.state.current_hp <= 0) return false;
@@ -28,12 +29,12 @@
     return applyEffect(attacker.combatant_id, target, round, WEAPON_EFFECT_ID, "weapon-mastery");
   }
 
-  const disadvantage = (state) => state.timed_effects.some((effect) => SAP_EFFECT_IDS.has(effect.effect_id)) ? 1 : 0;
+  const disadvantage = (state) => (state.timed_effects.some((effect) => SAP_EFFECT_IDS.has(effect.effect_id)) ? 1 : 0) + M().nextAttackDisadvantage(state);
 
   function consume(state) {
     const effects = state.timed_effects.filter((effect) => SAP_EFFECT_IDS.has(effect.effect_id));
     for (const effect of [...effects]) T().removeEffect(state, effect);
-    return effects.length;
+    return effects.length + M().consumeNextAttackDisadvantage(state);
   }
 
   function applyTactical(attacker, target, attack, round) {
