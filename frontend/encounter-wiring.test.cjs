@@ -31,6 +31,7 @@ assert.match(html, /<button id="quick-test" type="button">LOAD SAMPLE<\/button>/
 assert.match(html, /Production combat path · secure Web Crypto dice/);
 assert.match(html, /browser-offense-value\.js/);
 assert.match(html, /browser-spell-offense\.js/);
+assert.match(html, /browser-aura\.js/);
 
 const view = fs.readFileSync(path.join(root, "battlefield-view.js"), "utf8");
 const replay = fs.readFileSync(path.join(root, "battlefield-replay.js"), "utf8");
@@ -55,11 +56,13 @@ assert.match(css, /\.battle-card\.turn-active/); assert.match(css, /card-turn-sh
 assert.ok(html.indexOf("browser-tactical-mind.js") < html.indexOf("browser-grapple.js"));
 assert.ok(html.indexOf("browser-offense-value.js") < html.indexOf("browser-spell-offense.js"));
 assert.ok(html.indexOf("browser-spell-offense.js") < html.indexOf("browser-turn.js"));
-assert.ok(html.indexOf("browser-action-surge.js") < html.indexOf("browser-turn.js"));
+assert.ok(html.indexOf("browser-action-surge.js") < html.indexOf("browser-aura.js"));
+assert.ok(html.indexOf("browser-aura.js") < html.indexOf("browser-turn.js"));
 assert.ok(html.indexOf("browser-formation.js") < html.indexOf("browser-engine.js"), "formation must load before the combat engine");
 assert.ok(html.indexOf("battlefield-picker.js") < html.indexOf("app.js"));
 assert.ok(html.indexOf("battlefield-view.js") < html.indexOf("app.js"));
 assert.ok(html.indexOf("battlefield-replay.js") < html.indexOf("battle-lab.js"));
 assert.ok(html.indexOf("battle-lab.js") < html.indexOf("app.js"));
 
+require("./browser-aura.test.cjs");
 console.log("production-path six-slot battlefield wiring regression passed");
