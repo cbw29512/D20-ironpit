@@ -19,7 +19,7 @@ _HERO_ONLY_PROGRESSION_FIELDS = {
 
 
 def _definition_payload(definition: CombatantDefinition) -> dict[str, object]:
-    """Serialize one legacy definition without emitting empty optional capability families."""
+    """Serialize one legacy definition without emitting empty/default optional capability families."""
     try:
         payload = definition.model_dump(
             mode="json",
@@ -28,6 +28,11 @@ def _definition_payload(definition: CombatantDefinition) -> dict[str, object]:
         )
         if not definition.attack_roll_advantage_triggers:
             payload.pop("attack_roll_advantage_triggers", None)
+        if not definition.saving_throw_advantage_triggers:
+            payload.pop("saving_throw_advantage_triggers", None)
+        for action in payload.get("save_actions", []):
+            if isinstance(action, dict) and not action.get("magical"):
+                action.pop("magical", None)
         return payload
     except Exception:
         logger.exception("Failed to serialize legacy capability definition %s.", definition.id)
