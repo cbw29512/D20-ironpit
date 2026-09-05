@@ -5,6 +5,7 @@ from app.combat.modifier_stack import (
     consume_next_attack_disadvantage,
     next_attack_disadvantage_sources,
 )
+from app.combat.timed_conditions import apply_timed_condition, remove_effect_instance
 from app.combat.weapon_mastery import weapon_mastery_active
 from app.domain.models import CombatantState, WeaponAttack
 from app.domain.modifiers import CombatModifier, ModifierKind
@@ -22,7 +23,7 @@ def apply_sap_effect(
     effect_id: str,
     source_effect_id: str,
 ) -> bool:
-    del round_number, source_effect_id
+    del source_effect_id
     if target.is_dead or target.current_hp <= 0:
         return False
     before = next_attack_disadvantage_sources(target)
@@ -33,7 +34,16 @@ def apply_sap_effect(
         kind=ModifierKind.NEXT_ATTACK_DISADVANTAGE,
         expires_at_start_of_source_turn=True,
     ))
-    return next_attack_disadvantage_sources(target) > before
+    named_status = apply_timed_condition(
+        target,
+        effect_id,
+        attacker_id,
+        source_effect_id=effect_id,
+        applied_round=round_number,
+        expires_round=round_number + 1,
+        expiry_timing="source_turn_start",
+    )
+    return named_status is not None or next_attack_disadvantage_sources(target) > before
 
 
 def weapon_sap_eligible(state: CombatantState, attack: WeaponAttack) -> bool:
@@ -59,10 +69,14 @@ def apply_weapon_sap(
 
 
 def sap_disadvantage(state: CombatantState) -> int:
-    """Compatibility alias; the actual math is the universal modifier stack."""
+    """Compatibility alias; named Sap status never owns the roll math."""
     return next_attack_disadvantage_sources(state)
 
 
 def consume_sap(state: CombatantState) -> int:
-    """Compatibility alias; next-attack disadvantage consumes on the next attack roll."""
-    return consume_next_attack_disadvantage(state)
+    """Consume universal roll math and remove only Sap's named presentation markers."""
+    removed = consume_next_attack_disadvantage(state)
+    effects = [effect for effect in list(state.timed_effects) if effect.effect_id in SAP_EFFECT_IDS]
+    for effect in effects:
+        remove_effect_instance(state, effect)
+    return removed
