@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 138,
-    "blocked": 192
+    "public_ready": 140,
+    "blocked": 190
   },
   "monsters": [
     {
@@ -3231,7 +3231,7 @@
       "monster_name": "Ettin",
       "srd_source_page": 284,
       "srd_source_reference": "SRD 5.2.1 p. 284",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-ettin",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -3241,22 +3241,17 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "damage-or-condition-defense",
-        "multiattack"
-      ],
-      "unsupported_mechanics": [
-        "condition-or-control",
+        "multiattack",
         "unsupported-action-rider"
       ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "condition-or-control",
-        "monster-combat-mechanics-not-certified",
-        "unsupported-action-rider"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-fire-elemental",
@@ -3315,7 +3310,7 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
+        "hit-modifier-mismatch:srd-fire-giant-hammer-throw:next-attack-disadvantage",
         "unsupported-action-rider"
       ]
     },
@@ -7499,7 +7494,7 @@
       "monster_name": "Satyr",
       "srd_source_page": 321,
       "srd_source_reference": "SRD 5.2.1 p. 321",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-satyr",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -7509,22 +7504,17 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
+        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "condition-or-control",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "condition-or-control",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-scorpion",
