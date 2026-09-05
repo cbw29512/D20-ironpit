@@ -1,4 +1,5 @@
 from app.combat.action_resources import consume_resource, recharge_start_of_turn, resource_available
+from app.combat.state import build_combatant_state
 from app.content.capability_compiler import compile_combatant
 from app.content.monster_catalog import load_monster_rows
 from app.content.monster_recharge_attack_batch import (
@@ -7,7 +8,6 @@ from app.content.monster_recharge_attack_batch import (
 )
 from app.content.monster_source_audit import audit_monster_source
 from app.content.monster_source_definition import source_row
-from app.domain.runtime import CombatantState
 
 
 class FixedDice:
@@ -39,7 +39,7 @@ def test_ape_is_source_derived_recharge_attack_monster() -> None:
 def test_recharge_attack_resource_is_shared_and_generic() -> None:
     template = compile_combatant(build_recharge_attack_monster_definitions()["srd-ape"])
     rock = next(attack for attack in [template.weapon_attack, *template.alternate_weapon_attacks] if attack.weapon.name == "Rock")
-    state = CombatantState.from_template(template)
+    state = build_combatant_state(template)
     assert resource_available(state, rock)
     assert consume_resource(state, rock) == 0
     assert not resource_available(state, rock)

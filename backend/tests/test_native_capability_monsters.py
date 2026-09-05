@@ -43,9 +43,11 @@ def test_native_definitions_extend_production_roster_without_replacing_legacy_id
     production = build_arena_roster().monsters
     legacy_ids = {monster.id for monster in legacy}
     production_ids = {monster.id for monster in production}
-    assert len(production) == len(legacy) + len(NATIVE)
-    assert set(NATIVE) <= production_ids
+    native_ids = production_ids - legacy_ids
+    assert len(production_ids) == len(production)
+    assert set(NATIVE) <= native_ids
     assert legacy_ids <= production_ids
+    assert all(get_capability_definition(template_id).kind == "monster" for template_id in native_ids)
 
 
 def test_native_registry_rejects_cross_layer_duplicate_ids() -> None:
