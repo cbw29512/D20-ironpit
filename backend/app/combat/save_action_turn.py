@@ -52,7 +52,7 @@ def resolve_save_choice(
         event = resolve_save_action(
             sequence, round_number, attacker, target, action, distance, dice,
             spend_action=index == 0, spend_resource=index == 0,
-            shared_damage_rolls=shared_damage_rolls, affected_states=affected,
+            shared_damage_rolls=shared_damage_rolls, affected_states=affected, setup=setup,
         )
         events.append(event)
         if shared_damage_rolls is None and event.damage_components:

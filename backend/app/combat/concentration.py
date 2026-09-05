@@ -110,6 +110,8 @@ def resolve_concentration_damage(
     damage_taken: int,
     dice: DiceProvider,
     affected_states: Iterable[CombatantState] | None = None,
+    *,
+    advantage_sources: int = 0,
 ) -> ConcentrationCheck | None:
     if damage_taken < 0:
         raise ValueError("Concentration damage cannot be negative.")
@@ -119,7 +121,9 @@ def resolve_concentration_damage(
         end_concentration(owner, affected_states)
         return ConcentrationCheck(None, None, False, True, "incapacitated-or-dead")
     dc = concentration_dc(damage_taken)
-    roll, succeeded = resolve_saving_throw(owner, "constitution", dc, dice)
+    roll, succeeded = resolve_saving_throw(
+        owner, "constitution", dc, dice, advantage_sources=advantage_sources,
+    )
     if not succeeded:
         end_concentration(owner, affected_states)
     return ConcentrationCheck(dc, roll, succeeded, not succeeded, "damage")

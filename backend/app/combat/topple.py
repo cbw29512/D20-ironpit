@@ -27,6 +27,8 @@ def resolve_topple_hit(
     defender: CombatantState,
     attack: WeaponAttack,
     dice: DiceProvider,
+    *,
+    advantage_sources: int = 0,
 ) -> ToppleResolution:
     """Resolve the optional 2024 Topple mastery after a successful weapon hit."""
     try:
@@ -43,7 +45,9 @@ def resolve_topple_hit(
         if level is None:
             raise ValueError(f"Topple attacker {attacker.template.id!r} requires a certified character level.")
         dc = 8 + modifier + proficiency_bonus(level)
-        save_roll, succeeded = resolve_saving_throw(defender, "constitution", dc, dice)
+        save_roll, succeeded = resolve_saving_throw(
+            defender, "constitution", dc, dice, advantage_sources=advantage_sources,
+        )
         if not succeeded:
             defender.active_effect_ids.append(PRONE_EFFECT_ID)
         return ToppleResolution(save_roll, dc, succeeded, not succeeded)

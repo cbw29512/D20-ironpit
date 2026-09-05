@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.auras import roll_advantage_sources
 from app.combat.concentration import end_concentration_if_expired
 from app.combat.condition_lifecycle import resolve_source_condition_timing, resolve_target_condition_timing
 from app.combat.death_saves import resolve_death_save
@@ -18,7 +19,7 @@ from app.combat.precombat_spells import prepare_defenses
 from app.combat.source_bound_effects import cleanup_disabled_source_effects
 from app.combat.state import refresh_start_of_turn
 from app.combat.timed_conditions import expire_start_of_turn_conditions
-from app.domain.encounters import EncounterBattleResult, EncounterCombatant, EncounterSelection
+from app.domain.encounters import EncounterBattleResult, EncounterCombatant, EncounterSelection, EncounterSetup
 from app.domain.models import BattleEvent
 
 logger = logging.getLogger(__name__)
@@ -30,23 +31,24 @@ def _combatant_index(combatants: list[EncounterCombatant]) -> dict[str, Encounte
 
 
 def _resolve_zero_hp_turn(
-    sequence: int,
-    round_number: int,
-    combatant: EncounterCombatant,
-    dice: DiceProvider,
+    sequence: int, round_number: int, combatant: EncounterCombatant,
+    setup: EncounterSetup, dice: DiceProvider,
 ) -> tuple[BattleEvent | None, int]:
     state = combatant.state
     if state.template.kind != "character" or state.current_hp != 0:
         return None, sequence
     if state.is_dead or state.is_stable:
         return None, sequence
-    event = resolve_death_save(sequence, round_number, combatant.combatant_id, state, dice)
+    event = resolve_death_save(
+        sequence, round_number, combatant.combatant_id, state, dice,
+        advantage_sources=roll_advantage_sources(combatant, setup, "saving_throw"),
+    )
     return event, sequence + 1
 
 
 def _end_turn_lifecycle(sequence, round_number, member, setup, dice):
     events, sequence = resolve_target_condition_timing(
-        sequence, round_number, member, "target_turn_end", dice,
+        sequence, round_number, member, "target_turn_end", dice, setup,
     )
     source_events, sequence = resolve_source_condition_timing(
         sequence, round_number, member, setup, "source_turn_end",
@@ -89,11 +91,11 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                 )
                 events.extend(expiry_events)
                 lifecycle_events, sequence = resolve_target_condition_timing(
-                    sequence, round_number, member, "target_turn_start", dice,
+                    sequence, round_number, member, "target_turn_start", dice, setup,
                 )
                 events.extend(lifecycle_events)
 
-                death_event, sequence = _resolve_zero_hp_turn(sequence, round_number, member, dice)
+                death_event, sequence = _resolve_zero_hp_turn(sequence, round_number, member, setup, dice)
                 if death_event is not None:
                     events.append(death_event)
                 if member.state.current_hp <= 0 or member.state.is_dead:

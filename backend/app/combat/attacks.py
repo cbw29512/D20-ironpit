@@ -40,7 +40,7 @@ def resolve_attack(
     feature_id: str | None = None, turn_key: str | None = None, bonus_damage: BonusDamageSpec | None = None,
     close_enemy_active: bool = True, redirect_target: CombatantState | None = None,
     redirect_target_event_id: str | None = None, affected_states: list[CombatantState] | None = None,
-    sneak_attack_ally_available: bool = False,
+    sneak_attack_ally_available: bool = False, target_save_advantage_sources: int = 0,
 ) -> BattleEvent:
     try:
         if spend_action and not is_available(attacker, "action"):
@@ -87,16 +87,24 @@ def resolve_attack(
             )
             applied_total, damage_components = apply_damage_defenses(actual_defender, rolled_components); damage_roll.total = applied_total
             applied_types = {part.damage_type for part in damage_components if part.applied_total > 0}
-            damage_outcome = apply_damage(actual_defender, applied_total, critical=critical, damage_types=applied_types, dice=dice, affected_states=affected_states)
+            damage_outcome = apply_damage(
+                actual_defender, applied_total, critical=critical, damage_types=applied_types, dice=dice,
+                affected_states=affected_states, saving_throw_advantage_sources=target_save_advantage_sources,
+            )
             applied_conditions = apply_hit_conditions(attack, actual_defender, attacker_event_id, round_number, affected_states)
-            topple = resolve_topple_hit(attacker, actual_defender, attack, dice)
+            topple = resolve_topple_hit(
+                attacker, actual_defender, attack, dice, advantage_sources=target_save_advantage_sources,
+            )
             if topple.applied and "prone" not in applied_conditions: applied_conditions.append("prone")
             weapon_sap_applied = apply_weapon_sap(attacker, attacker_event_id, actual_defender, attack, round_number)
             if not weapon_sap_applied: tactical_sap_applied = apply_tactical_master_sap(attacker, attacker_event_id, actual_defender, attack, round_number)
             vex_applied = apply_vex_mastery(attacker, attacker_event_id, actual_event_id, attack, round_number, applied_total)
             end_rage_if_incapacitated(actual_defender)
         else:
-            graze = resolve_graze_miss(attacker, actual_defender, attack, dice, affected_states)
+            graze = resolve_graze_miss(
+                attacker, actual_defender, attack, dice, affected_states,
+                saving_throw_advantage_sources=target_save_advantage_sources,
+            )
             if graze is not None:
                 damage_roll, damage_components, damage_outcome = graze
                 end_rage_if_incapacitated(actual_defender)

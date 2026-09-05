@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available, spend
+from app.combat.auras import roll_advantage_sources
 from app.combat.condition_rules import close_hit_is_automatic_critical
 from app.combat.conditions import attack_roll_condition_sources
 from app.combat.damage_defenses import apply_damage_defenses
@@ -66,6 +67,7 @@ def resolve_spell_attack(
         advantage = condition_advantage + attacks_against_advantage_sources(target.state)
         advantage += attacks_against_reckless_advantage(target.state)
         advantage += next_attack_against_advantage_sources(caster.state, target.combatant_id)
+        advantage += roll_advantage_sources(caster, setup, "attack_roll")
         close_threat = spell.attack_kind == "ranged" and close_ranged_threat_exists(caster, setup)
         mode = resolve_roll_mode(advantage, condition_disadvantage + sap_disadvantage(caster.state) + int(close_threat))
         target_ac = effective_armor_class(target.state)
@@ -88,8 +90,12 @@ def resolve_spell_attack(
             damage_roll, rolled = _damage(spell, critical, dice)
             applied_total, damage_components = apply_damage_defenses(target.state, rolled); damage_roll.total = applied_total
             affected_states = [entry.state for entry in [*setup.heroes, *setup.monsters]]
-            apply_damage(target.state, applied_total, critical=critical,
-                         damage_types={part.damage_type for part in damage_components if part.applied_total}, dice=dice, affected_states=affected_states)
+            apply_damage(
+                target.state, applied_total, critical=critical,
+                damage_types={part.damage_type for part in damage_components if part.applied_total},
+                dice=dice, affected_states=affected_states,
+                saving_throw_advantage_sources=roll_advantage_sources(target, setup, "saving_throw"),
+            )
             if target.state.is_alive and not target.state.is_dead:
                 for index, effect in enumerate(spell.on_hit_modifier_effects):
                     add_modifier(target.state, build_spell_modifier(

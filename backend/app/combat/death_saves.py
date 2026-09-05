@@ -3,8 +3,11 @@ from __future__ import annotations
 import logging
 
 from app.combat.dice import DiceProvider
+from app.combat.modifier_stack import apply_d20_bonus_dice
+from app.combat.rolls import resolve_roll_mode, roll_d20
 from app.combat.zero_hp import restore_hit_points, reset_death_saves
-from app.domain.models import BattleEvent, CombatantState, DiceRoll
+from app.domain.models import BattleEvent, CombatantState
+from app.domain.modifiers import ModifierKind
 
 logger = logging.getLogger(__name__)
 
@@ -22,6 +25,8 @@ def resolve_death_save(
     combatant_id: str,
     state: CombatantState,
     dice: DiceProvider,
+    *,
+    advantage_sources: int = 0,
 ) -> BattleEvent:
     """Resolve one SRD 5.2.1 Death Saving Throw at the start of a character turn."""
     try:
@@ -30,8 +35,13 @@ def resolve_death_save(
         if state.current_hp != 0 or state.is_dead or state.is_stable:
             raise ValueError("This character does not currently make a Death Saving Throw.")
 
-        natural = dice.roll(20)
-        roll = DiceRoll(notation="1d20", rolls=[natural], selected_roll=natural, total=natural)
+        roll = apply_d20_bonus_dice(
+            state,
+            ModifierKind.SAVING_THROW_BONUS_DIE,
+            roll_d20(dice, 0, resolve_roll_mode(advantage_sources, 0)),
+            dice,
+        )
+        natural = roll.selected_roll or 0
         hp_before = state.current_hp
         successes_before = state.death_save_successes
         failures_before = state.death_save_failures
@@ -43,7 +53,7 @@ def resolve_death_save(
         elif natural == 1:
             state.death_save_failures = min(3, state.death_save_failures + 2)
             result = "natural 1; two failures"
-        elif natural >= 10:
+        elif roll.total >= 10:
             state.death_save_successes = min(3, state.death_save_successes + 1)
             result = "success"
         else:

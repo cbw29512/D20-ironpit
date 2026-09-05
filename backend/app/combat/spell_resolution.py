@@ -81,7 +81,7 @@ def resolve_spell(
         event = resolve_save_action(
             sequence, round_number, caster, target, save_action,
             abs(caster.position_ft - target.position_ft), dice, spend_action=False,
-            shared_damage_rolls=shared_damage_rolls, affected_states=affected_states,
+            shared_damage_rolls=shared_damage_rolls, affected_states=affected_states, setup=setup,
         )
         events.append(event)
         if shared_damage_rolls is None and event.damage_components:

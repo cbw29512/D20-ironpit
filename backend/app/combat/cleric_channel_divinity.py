@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.action_economy import is_available, spend
+from app.combat.auras import roll_advantage_sources
 from app.combat.cleric_channel_policy import ChannelDivinityChoice
 from app.combat.cleric_divine_spark import resolve_divine_spark
 from app.combat.cleric_preserve_life import resolve_preserve_life
@@ -86,7 +87,10 @@ def resolve_turn_undead(
     remaining = _spend_channel(cleric)
     events: list[BattleEvent] = []
     for target in targets:
-        roll, succeeded = resolve_saving_throw(target.state, "wisdom", dc, dice)
+        roll, succeeded = resolve_saving_throw(
+            target.state, "wisdom", dc, dice,
+            advantage_sources=roll_advantage_sources(target, setup, "saving_throw"),
+        )
         applied = [] if succeeded else _apply_turn_effects(cleric, target, setup, round_number)
         events.append(BattleEvent(
             sequence=sequence, round_number=round_number, event_type="saving_throw",

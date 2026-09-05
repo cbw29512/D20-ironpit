@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.auras import roll_advantage_sources
 from app.combat.modifier_stack import expire_target_turn_modifiers
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.timed_conditions import remove_effect_group
@@ -32,6 +33,7 @@ def resolve_target_condition_timing(
     target: EncounterCombatant,
     timing: ConditionTiming,
     dice,
+    setup: EncounterSetup | None = None,
 ) -> tuple[list[BattleEvent], int]:
     """Resolve expiry and one repeat save per grouped source effect on the affected creature's turn."""
     try:
@@ -41,10 +43,8 @@ def resolve_target_condition_timing(
                 continue
             if _repeat_save_due(effect, round_number, timing):
                 roll, succeeded = resolve_saving_throw(
-                    target.state,
-                    effect.repeat_save_ability,
-                    effect.repeat_save_dc,
-                    dice,
+                    target.state, effect.repeat_save_ability, effect.repeat_save_dc, dice,
+                    advantage_sources=roll_advantage_sources(target, setup, "saving_throw"),
                 )
                 removed = remove_effect_group(target.state, effect) if succeeded else []
                 events.append(BattleEvent(

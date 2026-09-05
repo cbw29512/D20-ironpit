@@ -3,6 +3,7 @@ from __future__ import annotations
 from app.combat.action_resources import consume_resource, resource_available
 from app.combat.ally_context import active_allies
 from app.combat.attacks import resolve_attack
+from app.combat.auras import roll_advantage_sources
 from app.combat.champion import apply_critical_closing_move
 from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
@@ -40,6 +41,9 @@ def resolve_encounter_attack(
     if reckless_started:
         mark_reckless_use_while_raging(attacker.state, turn_key)
     redirect = select_redirect_ally(target, setup) if setup is not None else None
+    save_target = redirect or target
+    attack_aura = roll_advantage_sources(attacker, setup, "attack_roll")
+    save_aura = roll_advantage_sources(save_target, setup, "saving_throw")
     close_enemy = close_enemy_active
     if close_enemy is None:
         close_enemy = False if setup is not None else True
@@ -48,12 +52,13 @@ def resolve_encounter_attack(
     event = resolve_attack(
         sequence, round_number, attacker.state, target.state, attack, distance_ft, dice,
         actor_event_id=attacker.combatant_id, target_event_id=target.combatant_id,
-        spend_action=spend_action, advantage_sources=advantage_sources,
+        spend_action=spend_action, advantage_sources=advantage_sources + attack_aura,
         other_disadvantage_sources=other_disadvantage_sources, feature_id=feature_id,
         turn_key=turn_key, bonus_damage=bonus_damage, close_enemy_active=close_enemy,
         redirect_target=redirect.state if redirect is not None else None,
         redirect_target_event_id=redirect.combatant_id if redirect is not None else None,
         affected_states=affected_states, sneak_attack_ally_available=sneak_ally,
+        target_save_advantage_sources=save_aura,
     )
     consume_resource(attacker.state, attack)
     if reckless_started:

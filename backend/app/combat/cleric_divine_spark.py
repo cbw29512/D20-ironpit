@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.combat.auras import roll_advantage_sources
 from app.combat.damage_defenses import adjusted_damage_amount, apply_damage_defenses
 from app.combat.dice import DiceProvider
 from app.combat.saving_throw_rolls import resolve_saving_throw
@@ -52,7 +53,10 @@ def resolve_divine_spark(
             resource_remaining=resource_remaining, animation="divine-spark",
             description=f"{cleric.state.template.name} restores {healed} HP with Divine Spark.",
         )
-    save, succeeded = resolve_saving_throw(target.state, "constitution", save_dc, dice)
+    save_advantage = roll_advantage_sources(target, setup, "saving_throw")
+    save, succeeded = resolve_saving_throw(
+        target.state, "constitution", save_dc, dice, advantage_sources=save_advantage,
+    )
     damage_type = _damage_type(target)
     component = DamageRollComponent(
         source="Divine Spark", notation=notation, rolls=[roll], modifier=modifier,
@@ -62,7 +66,10 @@ def resolve_divine_spark(
     before = target.state.current_hp
     if applied_total:
         states = [member.state for member in [*setup.heroes, *setup.monsters]]
-        apply_damage(target.state, applied_total, damage_types={damage_type}, dice=dice, affected_states=states)
+        apply_damage(
+            target.state, applied_total, damage_types={damage_type}, dice=dice, affected_states=states,
+            saving_throw_advantage_sources=save_advantage,
+        )
     return BattleEvent(
         sequence=sequence, round_number=round_number, event_type="saving_throw",
         actor_id=cleric.combatant_id, actor_name=cleric.state.template.name,

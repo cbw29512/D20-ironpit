@@ -63,7 +63,11 @@ def resolve_end_turn_aura(
         applied = adjusted_damage_amount(raw, aura.damage_type, target.state)
         component = DamageRollComponent(source=aura.name, notation=notation, rolls=rolls, modifier=aura.damage_bonus,
                                         damage_type=aura.damage_type, total=raw, applied_total=applied)
-        apply_damage(target.state, applied, damage_types={aura.damage_type} if applied else set(), dice=dice, affected_states=states)
+        apply_damage(
+            target.state, applied, damage_types={aura.damage_type} if applied else set(), dice=dice,
+            affected_states=states,
+            saving_throw_advantage_sources=roll_advantage_sources(target, setup, "saving_throw"),
+        )
         events.append(BattleEvent(
             sequence=sequence, round_number=round_number, event_type="feature", actor_id=source.combatant_id,
             actor_name=source.state.template.name, target_id=target.combatant_id, target_name=target.state.template.name,

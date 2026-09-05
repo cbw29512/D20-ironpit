@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.action_economy import is_available, spend
+from app.combat.auras import roll_advantage_sources
 from app.combat.barbarian import end_rage_if_incapacitated
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
@@ -8,6 +9,7 @@ from app.combat.grapple import apply_grapple
 from app.combat.save_action_resources import consume_resource, resource_available
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.zero_hp import apply_damage
+from app.domain.encounters import EncounterSetup
 from app.domain.models import BattleEvent, DamageRollComponent, DamageType, DiceRoll, EncounterCombatant, SavingThrowAction
 from app.domain.runtime import CombatantState
 from app.domain.size import size_at_most
@@ -38,12 +40,16 @@ def resolve_save_action(
     sequence: int, round_number: int, actor: EncounterCombatant, target: EncounterCombatant,
     action: SavingThrowAction, distance_ft: int, dice: DiceProvider, *, spend_action: bool = True,
     spend_resource: bool = True, shared_damage_rolls: list[int] | None = None,
-    affected_states: list[CombatantState] | None = None,
+    affected_states: list[CombatantState] | None = None, setup: EncounterSetup | None = None,
 ) -> BattleEvent:
     if spend_action and not is_available(actor.state, "action"): raise ValueError("Action is not available for a saving throw action.")
     if not legal_save_action(action, target, distance_ft): raise ValueError(f"{action.name} has no legal target at {distance_ft} feet.")
     if spend_resource and not resource_available(actor.state, action): raise ValueError(f"{action.name} has no remaining resource use.")
-    save_roll, succeeded = resolve_saving_throw(target.state, action.save_ability, action.dc, dice, magical=action.magical)
+    save_advantage = roll_advantage_sources(target, setup, "saving_throw")
+    save_roll, succeeded = resolve_saving_throw(
+        target.state, action.save_ability, action.dc, dice, magical=action.magical,
+        advantage_sources=save_advantage,
+    )
     if spend_action: spend(actor.state, "action")
     remaining = consume_resource(actor.state, action) if spend_resource else None
     hp_before = target.state.current_hp; temporary_hp_before = target.state.temporary_hp
@@ -58,7 +64,10 @@ def resolve_save_action(
                                modifier=sum(component.modifier for component in rolled_components), total=applied_total)
     if applied_total:
         applied_types = {part.damage_type for part in damage_components if part.applied_total > 0}
-        damage_outcome = apply_damage(target.state, applied_total, damage_types=applied_types, dice=dice, affected_states=affected_states)
+        damage_outcome = apply_damage(
+            target.state, applied_total, damage_types=applied_types, dice=dice, affected_states=affected_states,
+            saving_throw_advantage_sources=save_advantage,
+        )
         end_rage_if_incapacitated(target.state)
     applied_conditions: list[str] = []
     if not succeeded and target.state.is_alive and not target.state.is_dead and action.grapple_escape_dc is not None:
