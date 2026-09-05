@@ -7694,6 +7694,9 @@
           "max_target_size": "medium",
           "restrains": false
         },
+        "resource_cost": 1,
+        "area_slots": 1,
+        "priority": 0,
         "animation": "constrict"
       }
     ],
@@ -9650,6 +9653,9 @@
           "max_target_size": "large",
           "restrains": false
         },
+        "resource_cost": 1,
+        "area_slots": 1,
+        "priority": 0,
         "animation": "constrict"
       }
     ],
