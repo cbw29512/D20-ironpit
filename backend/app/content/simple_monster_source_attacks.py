@@ -17,6 +17,11 @@ _EXTRA_DICE = re.compile(
     re.I,
 )
 _EXTRA_FIXED = re.compile(r"\bplus\s+(\d+)\s+([A-Za-z]+)\s+damage\b", re.I)
+_NEXT_ATTACK_DISADVANTAGE = re.compile(
+    r"(?:has|gains?)\s+Disadvantage\s+on\s+(?:the|its)\s+next\s+attack\s+roll"
+    r"(?:\s+it\s+makes)?\s+before\s+the\s+end\s+of\s+its\s+next\s+turn",
+    re.I,
+)
 _COUNT = r"one|two|three|four|five|six|\d+"
 
 
@@ -59,6 +64,8 @@ def parse_simple_attacks(row: dict[str, object]) -> tuple[list[dict[str, object]
                 continue
             amount, e_type = extra.groups()
             effects.append({"kind": "damage", "source": heading, "dice": {"count": 0, "size": 6, "bonus": int(amount)}, "damage_type": e_type.lower()})
+        if _NEXT_ATTACK_DISADVANTAGE.search(block):
+            effects.append({"kind": "next-attack-disadvantage", "expires_at_end_of_target_turn": True})
         attack = {
             "id": attack_id, "name": heading, "weapon_id": f"{attack_id}-weapon",
             "attack_kind": kind.lower(), "attack_bonus": int(bonus),
