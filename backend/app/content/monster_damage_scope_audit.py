@@ -15,6 +15,13 @@ _REPEATED = re.compile(r"\b(?:start|end) of (?:its|the target'?s|each) turn\b", 
 _HEALING = re.compile(r"\b(?:regains?\s+\d+|Temporary Hit Points?)\b", re.I)
 _DEFENSE = re.compile(r"\b(?:Vulnerabilities|Resistances|Immunities)\b", re.I)
 _EXTRA_DAMAGE = re.compile(r"\bplus\s+[^.]{0,80}\bdamage\b", re.I)
+_FLAT_ROLL_MODIFIER = re.compile(
+    r"\b(?:add(?:s)?|subtract(?:s)?)\s+[+-]?\d+\s+(?:to|from)\s+(?:the|that|its|their)?\s*"
+    r"(?:roll|ability check|saving throw|attack roll)\b"
+    r"|\b[+-]\d+\s+(?:bonus|penalty)\s+to\s+(?:an?|the|its|their)?\s*"
+    r"(?:roll|ability check|saving throw|attack roll)\b",
+    re.I,
+)
 
 
 @dataclass(frozen=True)
@@ -58,6 +65,8 @@ def audit_monster_damage_scope(row: dict[str, object]) -> MonsterDamageAudit:
         families.add("reaction-damage")
     if _damaging(legendary):
         families.add("legendary-action-damage")
+    if _FLAT_ROLL_MODIFIER.search(all_combat):
+        families.add("flat-roll-modifier")
     if _HEALING.search(all_combat):
         families.add("healing-or-temporary-hp")
     if _DEFENSE.search(raw):
