@@ -1,23 +1,27 @@
 from __future__ import annotations
 
+from app.content.movement_modes import parse_movement_profile
 from app.domain.models import CombatantTemplate
-
-_DEFERRED_ENVIRONMENT_MONSTERS = {
-    "Killer Whale": "aquatic-only",
-}
+from app.domain.movement import MovementModes
 
 
-def deferred_environment_reason(name: str) -> str | None:
-    return _DEFERRED_ENVIRONMENT_MONSTERS.get(name)
+def deferred_environment_reason(source_speed: object | MovementModes) -> str | None:
+    """Return standard-Iron-Pit environment blockers from movement mechanics, never names."""
+    movement = source_speed if isinstance(source_speed, MovementModes) else parse_movement_profile(source_speed)
+    if movement.fly_ft > 0:
+        return None
+    if movement.swim_ft > 0 and movement.walk_ft <= 5:
+        return "aquatic-only"
+    return None
 
 
 def standard_arena_eligible(template: CombatantTemplate) -> bool:
-    """Ignore movement rate; defer environment-only and source-MV0 monsters."""
+    """Ignore movement-only rules; reject creatures that cannot function in the standard arena."""
     if template.kind != "monster":
         return True
-    if deferred_environment_reason(template.name) is not None:
-        return False
     movement = template.movement_modes
+    if deferred_environment_reason(movement) is not None:
+        return False
     return any((
         movement.walk_ft > 0,
         movement.fly_ft > 0,
