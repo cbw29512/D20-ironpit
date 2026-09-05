@@ -5,11 +5,17 @@ from app.domain.catalog import CoverageStatus
 
 def test_simple_source_family_compiles_without_bespoke_monster_builders() -> None:
     definitions = build_simple_source_definitions()
-    assert {item.name for item in definitions.values()} == {"Blink Dog", "Spy", "Tough Boss", "Xorn"}
+    assert {item.name for item in definitions.values()} == {"Blink Dog", "Fire Giant", "Spy", "Tough Boss", "Xorn"}
 
     spy = definitions["srd-spy"]
     poison = [effect for attack in spy.attacks for effect in attack.effects if effect.kind == "damage"]
     assert any(effect.damage_type.value == "poison" for effect in poison)
+
+    fire_giant = definitions["srd-fire-giant"]
+    hammer = next(attack for attack in fire_giant.attacks if attack.name == "Hammer Throw")
+    disadvantage = [effect for effect in hammer.effects if effect.kind == "next-attack-disadvantage"]
+    assert len(disadvantage) == 1
+    assert disadvantage[0].expires_at_end_of_target_turn is True
 
     boss = definitions["srd-tough-boss"]
     assert boss.attack_action is not None
@@ -24,6 +30,6 @@ def test_simple_source_family_compiles_without_bespoke_monster_builders() -> Non
 
 def test_simple_source_family_is_promoted_only_through_full_catalog_audit() -> None:
     cards = {card.name: card for card in build_monster_catalog()}
-    for name in ("Blink Dog", "Spy", "Tough Boss", "Xorn"):
+    for name in ("Blink Dog", "Fire Giant", "Spy", "Tough Boss", "Xorn"):
         assert cards[name].coverage_status is CoverageStatus.RAW_READY
         assert cards[name].blockers == []
