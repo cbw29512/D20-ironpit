@@ -37,6 +37,7 @@ class ResourceDefinition(BaseModel):
     id: str
     name: str
     max_uses: int = Field(ge=0)
+    recharge_min_d6: int | None = Field(default=None, ge=2, le=6)
 
 
 class CombatantTemplate(BaseModel):

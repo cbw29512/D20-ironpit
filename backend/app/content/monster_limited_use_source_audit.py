@@ -11,6 +11,7 @@ logger = logging.getLogger(__name__)
 _FIELDS = ("traits", "actions", "bonusActions", "reactions")
 _CONNECTORS = frozenset({"a", "an", "and", "of", "or", "the", "to"})
 _MARKER = re.compile(r"\((?:[^)]*(?:Recharge\s+\d(?:\s*[-–]\s*\d)?|\d+\s*/\s*Day)[^)]*)\)", re.I)
+_RECHARGE = re.compile(r"^(?P<section>[^:]+):(?P<name>.+?)\s*\(Recharge\s+(?P<minimum>\d)(?:\s*[-–]\s*\d)?\)$", re.I)
 
 
 def _is_heading(value: str) -> bool:
@@ -47,13 +48,28 @@ def parse_limited_use_names(row: dict[str, object]) -> list[str]:
     return names
 
 
+def _recharge_save_supported(template: CombatantTemplate, fingerprint: str) -> bool:
+    match = _RECHARGE.match(fingerprint)
+    if match is None or match.group("section").lower() != "actions":
+        return False
+    name = match.group("name").strip().lower()
+    minimum = int(match.group("minimum"))
+    action = next((item for item in template.saving_throw_actions if item.name.lower() == name), None)
+    if action is None or action.resource_id is None:
+        return False
+    resource = next((item for item in template.resources if item.id == action.resource_id), None)
+    return bool(resource and resource.max_uses == 1 and resource.recharge_min_d6 == minimum)
+
+
 def limited_use_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
-    """No Recharge/N-per-Day feature is RAW-ready until its use economy is implemented."""
+    """Certify shared recharge save actions; fail closed on every other limited-use feature."""
     expected = parse_limited_use_names(row)
     issues: list[str] = []
     if template.source_limited_use_names != expected:
         issues.append("source-limited-use-fingerprint-mismatch")
     for name in expected:
+        if _recharge_save_supported(template, name):
+            continue
         slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
         issues.append(f"uncertified-limited-use:{slug}")
     return issues

@@ -43,4 +43,22 @@ assert.equal(window.IRON_PIT_BROWSER_ATTACK.conditionSources(state, defender, 5,
 assert.equal(window.IRON_PIT_BROWSER_SAVES.saveMode(state, "wisdom"), "advantage", "Save trigger must use effective Max HP");
 state.active_effect_ids.push("restrained");
 assert.equal(window.IRON_PIT_BROWSER_SAVES.saveMode(state, "dexterity"), "normal", "Bloodied Advantage and Restrained Disadvantage must cancel");
-console.log("Generated RAW-certified browser monsters expose all six SRD saves and Bloodied Frenzy parity.");
+
+const hellHound = window.IRON_PIT_BROWSER_MONSTERS["srd-hell-hound"];
+assert.ok(hellHound, "Hell Hound must be present after recharge-family certification");
+const breath = hellHound.saving_throw_actions[0];
+assert.deepEqual(
+  { resourceId: breath.resourceId, areaSlots: breath.areaSlots, priority: breath.priority },
+  { resourceId: "srd-hell-hound-fire-breath-recharge", areaSlots: 3, priority: 100 },
+);
+const breathState = window.IRON_PIT_BROWSER_STATE.buildState(hellHound);
+breathState.resources[breath.resourceId] = 0;
+let rechargeRoll = 4;
+window.IRON_PIT_DICE = { roll: () => rechargeRoll };
+window.IRON_PIT_BROWSER_SAVES.rechargeStart(breathState);
+assert.equal(breathState.resources[breath.resourceId], 0, "Recharge 5-6 must stay spent on 4");
+rechargeRoll = 5;
+window.IRON_PIT_BROWSER_SAVES.rechargeStart(breathState);
+assert.equal(breathState.resources[breath.resourceId], 1, "Recharge 5-6 must restore on 5");
+
+console.log("Generated RAW-certified browser monsters expose all six SRD saves, Bloodied Frenzy parity, and generic recharge saves.");

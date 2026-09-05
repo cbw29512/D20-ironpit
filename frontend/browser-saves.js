@@ -5,6 +5,7 @@
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
   const S = () => window.IRON_PIT_BROWSER_STATE;
+  const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2 || { dangerSenseAdvantage: () => 0 };
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { applyD20Bonus: (_state, _kind, roll) => roll };
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION;
@@ -36,9 +37,41 @@
     return { roll, succeeded: roll.total >= dc };
   }
 
+  function resourceAvailable(state, action) {
+    return !action.resourceId || (state.resources?.[action.resourceId] ?? 0) >= (action.resourceCost || 1);
+  }
+  function consumeResource(state, action) {
+    if (!action.resourceId) return null;
+    if (!resourceAvailable(state, action)) throw new Error(`${action.name} has no remaining resource use.`);
+    state.resources[action.resourceId] -= action.resourceCost || 1;
+    return state.resources[action.resourceId];
+  }
+  function rechargeStart(state) {
+    for (const [id, threshold] of Object.entries(state.template.resource_recharge || {})) {
+      const maximum = state.template.resources?.[id] ?? 0;
+      if ((state.resources?.[id] ?? 0) < maximum && D().roll(6) >= threshold) state.resources[id] = maximum;
+    }
+  }
+
   function legalAction(action, target, distance) {
     if (distance > action.range) return false;
     return !action.targetMaxSize || S().sizeAtMost(target, action.targetMaxSize);
+  }
+
+  function chooseAction(member, setup, priorityOnly = false) {
+    const actions = [...(member.state.template.saving_throw_actions || [])]
+      .filter((action) => resourceAvailable(member.state, action) && (!priorityOnly || (action.priority || 0) > 0))
+      .sort((left, right) => (right.priority || 0) - (left.priority || 0) || left.id.localeCompare(right.id));
+    for (const action of actions) {
+      const targets = [];
+      for (const target of F().targetOrder(member, setup)) {
+        const distance = F().saveDistance(member, target, action.range);
+        if (legalAction(action, target, distance)) targets.push({ target, distance });
+        if (targets.length >= (action.areaSlots || 1)) break;
+      }
+      if (targets.length) return { action, targets };
+    }
+    return null;
   }
 
   function damageRolls(action, count, shared) {
@@ -49,11 +82,13 @@
   }
 
   function resolveAction(sequence, round, actor, target, action, distance, options = {}) {
-    const spendAction = options.spendAction !== false;
+    const spendAction = options.spendAction !== false, spendResource = options.spendResource !== false;
     if (spendAction && !E().available(actor.state, "action")) throw new Error("Action is unavailable for saving throw action.");
     if (!legalAction(action, target, distance)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
+    if (spendResource && !resourceAvailable(actor.state, action)) throw new Error(`${action.name} has no remaining resource use.`);
     const save = resolveSavingThrow(target.state, action.saveAbility, action.dc);
     if (spendAction) E().spend(actor.state, "action");
+    const resourceRemaining = spendResource ? consumeResource(actor.state, action) : null;
     const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
     const deathSuccessBefore = target.state.death_save_successes, deathFailureBefore = target.state.death_save_failures;
     const concentrationBefore = target.state.concentration?.effect_id || null;
@@ -89,10 +124,24 @@
       temporary_hp_before: temporaryHpBefore, temporary_hp_after: target.state.temporary_hp,
       death_save_successes_before: deathSuccessBefore, death_save_failures_before: deathFailureBefore,
       death_save_successes: target.state.death_save_successes, death_save_failures: target.state.death_save_failures,
-      is_stable: target.state.is_stable, is_dead: target.state.is_dead, feature_id: action.id,
+      is_stable: target.state.is_stable, is_dead: target.state.is_dead, feature_id: action.id, resource_remaining: resourceRemaining,
       concentration_ended_effect_id: concentrationBefore && !target.state.concentration ? concentrationBefore : null,
       animation: action.animation || "save-effect", description };
   }
 
-  window.IRON_PIT_BROWSER_SAVES = { legalAction, resolveAction, resolveSavingThrow, saveMode };
+  function resolveChoice(sequence, round, member, setup, choice) {
+    const events = []; let sharedDamageRolls = null;
+    choice.targets.forEach(({ target, distance }, index) => {
+      const event = resolveAction(sequence++, round, member, target, choice.action, distance, {
+        spendAction: index === 0, spendResource: index === 0, sharedDamageRolls, setup,
+      });
+      events.push(event);
+      if (sharedDamageRolls === null && event.damage_components?.length) sharedDamageRolls = [...event.damage_components[0].rolls];
+    });
+    return { events, sequence };
+  }
+
+  window.IRON_PIT_BROWSER_SAVES = {
+    chooseAction, legalAction, rechargeStart, resolveAction, resolveChoice, resolveSavingThrow, resourceAvailable, saveMode,
+  };
 })();

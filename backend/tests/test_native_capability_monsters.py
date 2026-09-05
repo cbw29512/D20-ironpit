@@ -19,6 +19,17 @@ NATIVE = {
     "srd-xorn": "Xorn",
     "srd-hill-giant": "Hill Giant",
     "srd-spy": "Spy",
+    "srd-hell-hound": "Hell Hound",
+    "srd-black-dragon-wyrmling": "Black Dragon Wyrmling",
+    "srd-young-black-dragon": "Young Black Dragon",
+    "srd-blue-dragon-wyrmling": "Blue Dragon Wyrmling",
+    "srd-young-blue-dragon": "Young Blue Dragon",
+    "srd-green-dragon-wyrmling": "Green Dragon Wyrmling",
+    "srd-young-green-dragon": "Young Green Dragon",
+    "srd-red-dragon-wyrmling": "Red Dragon Wyrmling",
+    "srd-young-red-dragon": "Young Red Dragon",
+    "srd-white-dragon-wyrmling": "White Dragon Wyrmling",
+    "srd-young-white-dragon": "Young White Dragon",
 }
 
 

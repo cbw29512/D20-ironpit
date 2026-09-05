@@ -15,9 +15,10 @@ from app.combat.healing import choose_healing_action, resolve_healing
 from app.combat.ongoing_spell_control import build_forced_retreat_event, forced_retreat_active
 from app.combat.opening_burst import opening_feature_id
 from app.combat.orc import should_use_adrenaline_rush, use_adrenaline_rush
-from app.combat.pit_policy import choose_standard_attack, save_distance, target_order
+from app.combat.pit_policy import choose_standard_attack, target_order
 from app.combat.policy import should_use_second_wind
-from app.combat.saving_throws import legal_save_action, resolve_save_action
+from app.combat.save_action_resources import recharge_start_of_turn
+from app.combat.save_action_turn import choose_save_action, resolve_save_choice
 from app.combat.spell_offense import resolve_best_spell_offense
 from app.combat.standard_attack_action import resolve_standard_attack_action
 from app.combat.state import begin_turn
@@ -58,15 +59,6 @@ def _resolve_support_actions(sequence, round_number, member, setup, dice, turn_k
     return events, sequence
 
 
-def _save_choice(attacker: EncounterCombatant, setup: EncounterSetup):
-    for target in target_order(attacker, setup):
-        for action in attacker.state.template.saving_throw_actions:
-            distance = save_distance(attacker, target, action.range_ft)
-            if legal_save_action(action, target, distance):
-                return target, action, distance
-    return None
-
-
 def resolve_combat_turn(
     sequence: int, round_number: int, attacker: EncounterCombatant, target: EncounterCombatant,
     setup: EncounterSetup, dice: DiceProvider,
@@ -74,6 +66,7 @@ def resolve_combat_turn(
     """Resolve a fixed-formation Iron Pit turn; ordinary movement is abstracted away."""
     events: list[BattleEvent] = []
     cleanup_grapples(setup)
+    recharge_start_of_turn(attacker.state, dice)
     begin_turn(attacker.state)
     turn_key = f"{round_number}:{attacker.combatant_id}"
     if forced_retreat_active(attacker.state):
@@ -116,19 +109,21 @@ def resolve_combat_turn(
     if charged or attacker.state.is_dead or attacker.state.is_unconscious:
         return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
+    priority_save = choose_save_action(attacker, setup, priority_only=True)
+    if priority_save is not None:
+        more, sequence = resolve_save_choice(sequence, round_number, attacker, setup, priority_save, dice)
+        events.extend(more)
+        return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
+
     if attacker.state.template.attack_action is not None:
         action_events, sequence = resolve_attack_action(sequence, round_number, attacker, setup, dice)
         events.extend(action_events)
         return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
-    save_choice = _save_choice(attacker, setup)
+    save_choice = choose_save_action(attacker, setup)
     if save_choice is not None and is_available(attacker.state, "action"):
-        save_target, save_action, distance = save_choice
-        affected = [member.state for member in [*setup.heroes, *setup.monsters]]
-        events.append(resolve_save_action(
-            sequence, round_number, attacker, save_target, save_action, distance, dice,
-            affected_states=affected,
-        )); sequence += 1
+        more, sequence = resolve_save_choice(sequence, round_number, attacker, setup, save_choice, dice)
+        events.extend(more)
         return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
     attack_choice = choose_standard_attack(attacker, setup)

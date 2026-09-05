@@ -63,6 +63,10 @@ class SaveCapabilityDefinition(BaseModel):
     damage_type: DamageType | None = None
     success_damage: Literal["none", "half"] = "none"
     grapple: GrappleEffectDefinition | None = None
+    resource_id: str | None = None
+    resource_cost: int = Field(default=1, ge=1, le=20)
+    area_slots: int = Field(default=1, ge=1, le=8)
+    priority: int = 0
     animation: str = "save-effect"
 
     @model_validator(mode="after")

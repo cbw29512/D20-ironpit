@@ -143,3 +143,6 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Xorn": _p("brute", "xorn"),
     "Zombie": _p("humanoid", "zombie"),
 }
+
+from app.content.figure_profiles_recharge_batch import RECHARGE_BATCH_FIGURE_PROFILES
+MONSTER_FIGURE_PROFILES.update(RECHARGE_BATCH_FIGURE_PROFILES)

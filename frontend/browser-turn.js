@@ -58,19 +58,9 @@
     return { events, sequence: rage?.sequence ?? sequence };
   }
 
-  function saveChoice(member, setup) {
-    for (const target of F().targetOrder(member, setup)) {
-      for (const action of member.state.template.saving_throw_actions || []) {
-        const distance = F().saveDistance(member, target, action.range);
-        if (V().legalAction(action, target, distance)) return { target, action, distance };
-      }
-    }
-    return null;
-  }
-
   function resolveTurn(sequence, round, member, setup) {
     enablePitRangePolicy();
-    const events = []; H().cleanup(setup); S().beginTurn(member.state);
+    const events = []; H().cleanup(setup); V().rechargeStart(member.state); S().beginTurn(member.state);
     const turnKey = `${round}:${member.combatant_id}`;
     if (O()?.forcedRetreatActive(member.state)) {
       events.push(O().event(sequence++, round, member));
@@ -101,15 +91,22 @@
       return finalize(events, charged.sequence, round, member, setup, turnKey);
     }
 
+    const prioritySave = V().chooseAction(member, setup, true);
+    if (prioritySave) {
+      const saved = V().resolveChoice(sequence, round, member, setup, prioritySave);
+      events.push(...saved.events);
+      return finalize(events, saved.sequence, round, member, setup, turnKey);
+    }
     if (member.state.template.attack_action) {
       const multi = M().resolveAttackAction(sequence, round, member, setup);
       events.push(...multi.events);
       return finalize(events, multi.sequence, round, member, setup, turnKey);
     }
-    const saved = saveChoice(member, setup);
-    if (saved && E().available(member.state, "action")) {
-      events.push(V().resolveAction(sequence++, round, member, saved.target, saved.action, saved.distance));
-      return finalize(events, sequence, round, member, setup, turnKey);
+    const saveChoice = V().chooseAction(member, setup);
+    if (saveChoice && E().available(member.state, "action")) {
+      const saved = V().resolveChoice(sequence, round, member, setup, saveChoice);
+      events.push(...saved.events);
+      return finalize(events, saved.sequence, round, member, setup, turnKey);
     }
     const choice = F().chooseStandardAttack(member, setup);
     if (choice && E().available(member.state, "action")) {

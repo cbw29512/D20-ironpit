@@ -7,6 +7,7 @@ from pathlib import Path
 
 from app.content.capability_compiler import compile_combatant
 from app.content.monster_creature_types import complete_monster_creature_types
+from app.content.monster_recharge_batch import build_recharge_monster_definitions
 from app.domain.capabilities import CombatantDefinition
 from app.domain.models import CombatantTemplate
 
@@ -41,6 +42,18 @@ def _load_registry(path: Path) -> dict[str, CombatantDefinition]:
     return parse_capability_definitions(json.loads(path.read_text(encoding="utf-8")))
 
 
+def _merge_native(
+    merged: dict[str, CombatantDefinition],
+    shard: dict[str, CombatantDefinition],
+    label: str,
+) -> None:
+    overlap = set(merged) & set(shard)
+    if overlap:
+        duplicate = ", ".join(sorted(overlap))
+        raise ValueError(f"Native combat capability ids overlap in {label}: {duplicate}.")
+    merged.update(shard)
+
+
 def _load_native_registries() -> dict[str, CombatantDefinition]:
     try:
         paths = sorted(_DATA_DIR.glob(_NATIVE_PATH_GLOB))
@@ -48,12 +61,8 @@ def _load_native_registries() -> dict[str, CombatantDefinition]:
             raise ValueError("No native combat capability registry shards were found.")
         merged: dict[str, CombatantDefinition] = {}
         for path in paths:
-            shard = _load_registry(path)
-            overlap = set(merged) & set(shard)
-            if overlap:
-                duplicate = ", ".join(sorted(overlap))
-                raise ValueError(f"Native combat capability ids overlap across shards: {duplicate}.")
-            merged.update(shard)
+            _merge_native(merged, _load_registry(path), path.name)
+        _merge_native(merged, build_recharge_monster_definitions(), "recharge family")
         return merged
     except Exception:
         logger.exception("Failed to load native combat capability registry shards.")
