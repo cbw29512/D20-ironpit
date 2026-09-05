@@ -1,4 +1,5 @@
 from app.content.monster_catalog import build_monster_catalog
+from app.content.simple_monster_source_attacks import parse_simple_attacks
 from app.content.simple_monster_source_definitions import build_simple_source_definitions
 from app.domain.catalog import CoverageStatus
 
@@ -26,6 +27,30 @@ def test_simple_source_family_compiles_without_bespoke_monster_builders() -> Non
     assert xorn.attack_action is not None
     xorn_names = {attack.id: attack.name for attack in xorn.attacks}
     assert [xorn_names[slot.attack_ids[0]] for slot in xorn.attack_action.slots] == ["Bite", "Claw", "Claw", "Claw"]
+
+
+def test_simple_source_parser_compiles_generic_grapple_and_prone_riders() -> None:
+    grapple_row = {
+        "name": "Homebrew Grappler",
+        "actions": (
+            "Grab. Melee Attack Roll: +5, reach 10 ft. "
+            "Hit: 8 (1d10 + 3) Bludgeoning damage. "
+            "If the target is a Medium or smaller creature, it has the Grappled condition (escape DC 13)."
+        ),
+    }
+    attacks, _ = parse_simple_attacks(grapple_row)
+    assert attacks[0]["effects"] == [{"kind": "grapple", "escape_dc": 13, "max_target_size": "medium"}]
+
+    prone_row = {
+        "name": "Homebrew Charger",
+        "actions": (
+            "Ram. Melee Attack Roll: +6, reach 5 ft. "
+            "Hit: 10 (1d12 + 4) Bludgeoning damage. "
+            "If the target is a Large or smaller creature, it has the Prone condition."
+        ),
+    }
+    attacks, _ = parse_simple_attacks(prone_row)
+    assert attacks[0]["effects"] == [{"kind": "prone", "max_target_size": "large"}]
 
 
 def test_simple_source_family_is_promoted_only_through_full_catalog_audit() -> None:
