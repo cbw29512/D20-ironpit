@@ -1,13 +1,22 @@
 from __future__ import annotations
 
-from app.content.movement_modes import parse_movement_profile
+from app.content.movement_modes import parse_movement_profile, source_movement_modes
 from app.domain.models import CombatantTemplate
 from app.domain.movement import MovementModes
 
 
-def deferred_environment_reason(source_speed: object | MovementModes) -> str | None:
+def _environment_movement(source: object | MovementModes) -> MovementModes:
+    if isinstance(source, MovementModes):
+        return source
+    text = str(source).strip()
+    if "ft" in text.lower():
+        return parse_movement_profile(text)
+    return source_movement_modes(text)
+
+
+def deferred_environment_reason(source: object | MovementModes) -> str | None:
     """Return standard-Iron-Pit environment blockers from movement mechanics, never names."""
-    movement = source_speed if isinstance(source_speed, MovementModes) else parse_movement_profile(source_speed)
+    movement = _environment_movement(source)
     if movement.fly_ft > 0:
         return None
     if movement.swim_ft > 0 and movement.walk_ft <= 5:
