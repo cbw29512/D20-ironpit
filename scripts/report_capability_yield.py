@@ -7,6 +7,7 @@ from app.content.blocker_yield import build_blocker_signatures, single_family_yi
 from app.content.monster_catalog import build_monster_catalog, load_monster_rows
 from app.content.monster_trait_source_audit import parse_trait_names
 from app.domain.catalog import CoverageStatus
+from report_mvp_scope_audit import main as report_mvp_scope
 from report_zero_engine_monsters import _ALLOWED_TRAITS, _source_blockers
 
 _SIGNATURE_LIMIT = 25
@@ -140,3 +141,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+    report_mvp_scope()
