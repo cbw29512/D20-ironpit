@@ -69,7 +69,7 @@ def _redirect_matches(template: CombatantTemplate, source: object) -> bool:
 
 
 def reaction_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
-    """Block only reactions that can change an Iron Pit MVP outcome."""
+    """Known modeled reactions validate exactly; other nonmath reactions may defer."""
     source = row.get("reactions", ""); expected = parse_reaction_names(source); issues: list[str] = []
     if template.source_reaction_names != expected:
         issues.append("source-reaction-fingerprint-mismatch")
@@ -78,15 +78,19 @@ def reaction_issues(template: CombatantTemplate, row: dict[str, object]) -> list
     if template.redirect_attack_reaction is not None and "Redirect Attack" not in expected:
         issues.append("unexpected-redirect-attack-reaction")
     for name in expected:
-        if name == "Parry" and _parry_matches(template, source):
+        if name == "Parry":
+            if _parry_matches(template, source):
+                continue
+            issues.extend(("parry-source-mismatch", "uncertified-reaction:parry"))
             continue
-        if name == "Redirect Attack" and _redirect_matches(template, source):
+        if name == "Redirect Attack":
+            if _redirect_matches(template, source):
+                continue
+            issues.extend(("redirect-attack-source-mismatch", "uncertified-reaction:redirect-attack"))
             continue
         block = feature_block(source, name)
         if block and not affects_mvp_combat_math(block) and not _CASTS_SPELL.search(block):
             continue
-        if name == "Parry": issues.append("parry-source-mismatch")
-        elif name == "Redirect Attack": issues.append("redirect-attack-source-mismatch")
         issues.append(f"uncertified-reaction:{_slug(name)}")
     return issues
 
