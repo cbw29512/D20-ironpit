@@ -1,29 +1,24 @@
-from app.combat.dice import FixedDiceProvider
-from app.combat.engine import run_duel
+from app.combat.encounter_targeting import combatant_distance
+from app.combat.formation import starting_position_ft
+from app.combat.state import build_combatant_state
 from app.content.demo import build_demo_fighter, build_goblin_warrior
-from app.domain.models import RollMode
+from app.domain.encounters import EncounterCombatant, EncounterSelection
 
 
-def test_ninety_foot_duel_forces_dash_then_shortbow_attack() -> None:
-    battle = run_duel(
-        build_demo_fighter(),
-        build_goblin_warrior(),
-        FixedDiceProvider([20, 1, 20, 6, 6]),
-        starting_distance_ft=90,
+def _member(combatant_id: str, side: str, template) -> EncounterCombatant:
+    return EncounterCombatant(
+        combatant_id=combatant_id,
+        side=side,
+        position_ft=starting_position_ft(template, side),
+        state=build_combatant_state(template),
     )
 
-    event_types = [event.event_type for event in battle.events]
-    ranged_attack = next(
-        event for event in battle.events
-        if event.event_type == "attack" and event.weapon_id == "shortbow"
-    )
 
-    assert event_types[:5] == ["initiative", "initiative", "movement", "dash", "movement"]
-    assert battle.battlefield.distance_ft == 30
-    assert ranged_attack.projectile == "arrow"
-    assert ranged_attack.attack_roll is not None
-    assert ranged_attack.attack_roll.mode is RollMode.NORMAL
-    assert ranged_attack.critical is True
-    assert ranged_attack.damage_roll is not None
-    assert ranged_attack.damage_roll.total == 14
-    assert battle.winner_id == "srd-goblin-warrior"
+def test_fixed_pit_replaces_legacy_ninety_foot_starting_distance() -> None:
+    assert "starting_distance_ft" not in EncounterSelection.model_fields
+    fighter = _member("hero-1", "heroes", build_demo_fighter())
+    goblin = _member("monster-1", "monsters", build_goblin_warrior())
+
+    assert fighter.position_ft == 5
+    assert goblin.position_ft == 10
+    assert combatant_distance(fighter, goblin) == 5

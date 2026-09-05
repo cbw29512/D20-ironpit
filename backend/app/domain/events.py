@@ -6,7 +6,6 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 from app.domain.combatants import DamageType
-from app.domain.runtime import BattlefieldState, CombatantState
 
 
 class RollMode(StrEnum):
@@ -85,15 +84,3 @@ class BattleEvent(BaseModel):
     resource_remaining: int | None = None
     animation: str
     description: str
-
-
-class BattleResult(BaseModel):
-    battle_id: str
-    winner_id: str | None
-    winner_name: str | None
-    rounds: int
-    fighter: CombatantState
-    monster: CombatantState
-    battlefield: BattlefieldState
-    events: list[BattleEvent]
-    ruleset: str = "SRD 5.2.1 subset"

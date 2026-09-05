@@ -9,21 +9,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.combat.dice import SecureDiceProvider
 from app.combat.encounter_engine import run_encounter
 from app.combat.encounter_setup import build_encounter_setup
-from app.combat.engine import run_duel
 from app.content.audited_fighter import build_karnok_stoneward
 from app.content.catalog import build_full_content_catalog
 from app.content.demo import build_goblin_warrior
 from app.content.readiness import assert_public_selection_runnable
 from app.content.roster import build_arena_roster
 from app.domain.catalog import FullContentCatalog
-from app.domain.models import (
-    ArenaRoster,
-    BattleResult,
-    DemoRoster,
-    EncounterBattleResult,
-    EncounterSelection,
-    EncounterSetup,
-)
+from app.domain.models import ArenaRoster, DemoRoster, EncounterBattleResult, EncounterSelection, EncounterSetup
 
 logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO"))
 logger = logging.getLogger(__name__)
@@ -100,25 +92,3 @@ def get_demo_roster() -> DemoRoster:
     except Exception as exc:
         logger.exception("Demo roster API failed.")
         raise HTTPException(status_code=500, detail="Demo roster could not be loaded.") from exc
-
-
-@app.post("/api/battles/demo", response_model=BattleResult)
-def create_demo_battle() -> BattleResult:
-    try:
-        return run_duel(
-            build_karnok_stoneward(), build_goblin_warrior(), SecureDiceProvider(), starting_distance_ft=5
-        )
-    except Exception as exc:
-        logger.exception("Demo battle API failed.")
-        raise HTTPException(status_code=500, detail="Battle could not be completed.") from exc
-
-
-@app.post("/api/battles/demo-ranged", response_model=BattleResult)
-def create_ranged_demo_battle() -> BattleResult:
-    try:
-        return run_duel(
-            build_karnok_stoneward(), build_goblin_warrior(), SecureDiceProvider(), starting_distance_ft=90
-        )
-    except Exception as exc:
-        logger.exception("Ranged demo battle API failed.")
-        raise HTTPException(status_code=500, detail="Ranged battle could not be completed.") from exc

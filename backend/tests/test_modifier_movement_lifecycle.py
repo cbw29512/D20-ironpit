@@ -3,7 +3,6 @@ from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.encounter_movement import take_encounter_dash
 from app.combat.modifier_stack import add_modifier
-from app.combat.movement import take_dash
 from app.combat.orc import use_adrenaline_rush
 from app.combat.state import begin_turn, build_combatant_state
 from app.combat.tactical_shift import resolve_tactical_shift
@@ -13,7 +12,6 @@ from app.content.demo import build_goblin_warrior
 from app.content.fighter_progression import build_karnok_stoneward_level
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.modifiers import CombatModifier, ModifierKind
-from app.domain.models import BattlefieldState
 
 
 def _speed_modifier(source_id: str = "effect-source") -> CombatModifier:
@@ -30,19 +28,14 @@ def _member(combatant_id, side, position, template):
     )
 
 
-def test_dash_paths_add_effective_speed_not_base_speed() -> None:
-    state = build_combatant_state(build_karnok_stoneward())
-    add_modifier(state, _speed_modifier())
-    begin_turn(state)
-    event = take_dash(1, 1, state, BattlefieldState(distance_ft=60))
-    assert event.movement_ft == 20
-    assert state.movement_remaining_ft == 40
-
+def test_dash_adds_effective_speed_not_base_speed() -> None:
     mover = _member("hero-1", "heroes", 0, build_karnok_stoneward())
     target = _member("monster-1", "monsters", 60, build_goblin_warrior())
     add_modifier(mover.state, _speed_modifier("encounter-source"))
     begin_turn(mover.state)
+
     event = take_encounter_dash(1, 1, mover, target)
+
     assert event.movement_ft == 20
     assert mover.state.movement_remaining_ft == 40
 

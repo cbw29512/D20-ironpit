@@ -88,8 +88,3 @@ class CombatantState(BaseModel):
     temporary_damage_resistances: list[DamageType] = Field(default_factory=list)
     rage_expires_round: int | None = Field(default=None, ge=1)
     rage_max_round: int | None = Field(default=None, ge=1)
-
-
-class BattlefieldState(BaseModel):
-    starting_distance_ft: int = Field(default=5, ge=0)
-    distance_ft: int = Field(default=5, ge=0)

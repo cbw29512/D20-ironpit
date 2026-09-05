@@ -28,8 +28,8 @@ from app.domain.encounters import (
     EncounterSide,
     InitiativeGroup,
 )
-from app.domain.events import BattleEvent, BattleResult, DamageRollComponent, DiceRoll, RollMode
-from app.domain.runtime import ArenaRoster, BattlefieldState, CombatantState, DemoRoster, ResourceState, TimedEffect
+from app.domain.events import BattleEvent, DamageRollComponent, DiceRoll, RollMode
+from app.domain.runtime import ArenaRoster, CombatantState, DemoRoster, ResourceState, TimedEffect
 from app.domain.traits import CombatTrait
 
 __all__ = [
@@ -37,8 +37,6 @@ __all__ = [
     "AttackActionDefinition",
     "AttackActionSlot",
     "BattleEvent",
-    "BattlefieldState",
-    "BattleResult",
     "CombatTrait",
     "CombatantState",
     "CombatantTemplate",

@@ -1,72 +1,76 @@
 import pytest
 
-from app.combat.movement import move_toward_target, take_dash
+from app.combat.encounter_movement import move_toward_combatant, take_encounter_dash
+from app.combat.encounter_targeting import combatant_distance
 from app.combat.policy import select_weapon_attack
 from app.combat.state import begin_turn, build_combatant_state
-from app.combat.turns import prepare_attack
 from app.content.demo import build_demo_fighter, build_goblin_warrior
-from app.domain.models import BattlefieldState
+from app.domain.encounters import EncounterCombatant
+
+
+def _member(combatant_id: str, side: str, position: int, template) -> EncounterCombatant:
+    return EncounterCombatant(
+        combatant_id=combatant_id, side=side, position_ft=position,
+        state=build_combatant_state(template),
+    )
 
 
 def test_fighter_moves_up_to_speed_toward_melee_reach() -> None:
-    fighter = build_combatant_state(build_demo_fighter())
-    battlefield = BattlefieldState(distance_ft=90)
-    begin_turn(fighter)
+    fighter = _member("hero-1", "heroes", 0, build_demo_fighter())
+    target = _member("monster-1", "monsters", 90, build_goblin_warrior())
+    begin_turn(fighter.state)
 
-    event = move_toward_target(1, 1, fighter, battlefield, desired_distance_ft=5)
+    event = move_toward_combatant(1, 1, fighter, target, desired_distance_ft=5)
 
-    assert event is not None
-    assert event.movement_ft == 30
-    assert battlefield.distance_ft == 60
-    assert fighter.movement_remaining_ft == 0
+    assert event is not None and event.movement_ft == 30
+    assert combatant_distance(fighter, target) == 60
+    assert fighter.state.movement_remaining_ft == 0
 
 
-def test_dash_spends_action_and_adds_speed_to_movement() -> None:
-    fighter = build_combatant_state(build_demo_fighter())
-    battlefield = BattlefieldState(distance_ft=60)
-    begin_turn(fighter)
-    fighter.movement_remaining_ft = 0
+def test_dash_spends_action_and_adds_effective_speed_to_movement() -> None:
+    fighter = _member("hero-1", "heroes", 0, build_demo_fighter())
+    target = _member("monster-1", "monsters", 60, build_goblin_warrior())
+    begin_turn(fighter.state)
+    fighter.state.movement_remaining_ft = 0
 
-    event = take_dash(1, 1, fighter, battlefield)
+    event = take_encounter_dash(1, 1, fighter, target)
 
     assert event.event_type == "dash"
-    assert fighter.action_available is False
-    assert fighter.movement_remaining_ft == 30
+    assert fighter.state.action_available is False
+    assert fighter.state.movement_remaining_ft == 30
     with pytest.raises(ValueError, match="Action is not available"):
-        take_dash(2, 1, fighter, battlefield)
+        take_encounter_dash(2, 1, fighter, target)
 
 
-def test_prepare_attack_dashes_when_target_is_too_far_for_one_move() -> None:
-    fighter = build_combatant_state(build_demo_fighter())
-    battlefield = BattlefieldState(distance_ft=90)
-    begin_turn(fighter)
+def test_movement_and_dash_primitives_compose_without_a_second_turn_engine() -> None:
+    fighter = _member("hero-1", "heroes", 0, build_demo_fighter())
+    target = _member("monster-1", "monsters", 90, build_goblin_warrior())
+    begin_turn(fighter.state)
 
-    attack, events, next_sequence = prepare_attack(1, 1, fighter, battlefield)
+    first = move_toward_combatant(1, 1, fighter, target, 5)
+    dash = take_encounter_dash(2, 1, fighter, target)
+    second = move_toward_combatant(3, 1, fighter, target, 5)
 
-    assert attack is None
-    assert [event.event_type for event in events] == ["movement", "dash", "movement"]
-    assert battlefield.distance_ft == 30
-    assert fighter.action_available is False
-    assert next_sequence == 4
+    assert [first.event_type, dash.event_type, second.event_type] == ["movement", "dash", "movement"]
+    assert combatant_distance(fighter, target) == 30
+    assert fighter.state.action_available is False
 
 
-def test_prepare_attack_can_move_then_attack_without_dashing() -> None:
-    fighter = build_combatant_state(build_demo_fighter())
-    battlefield = BattlefieldState(distance_ft=30)
-    begin_turn(fighter)
+def test_move_to_melee_range_preserves_action_for_attack() -> None:
+    fighter = _member("hero-1", "heroes", 0, build_demo_fighter())
+    target = _member("monster-1", "monsters", 30, build_goblin_warrior())
+    begin_turn(fighter.state)
 
-    attack, events, _ = prepare_attack(1, 2, fighter, battlefield)
+    event = move_toward_combatant(1, 2, fighter, target, 5)
+    attack = select_weapon_attack(fighter.state, combatant_distance(fighter, target))
 
-    assert attack is not None
-    assert attack.weapon.id == "longsword"
-    assert [event.event_type for event in events] == ["movement"]
-    assert battlefield.distance_ft == 5
-    assert fighter.action_available is True
+    assert event is not None and event.movement_ft == 25
+    assert attack is not None and attack.weapon.id == "longsword"
+    assert fighter.state.action_available is True
 
 
 def test_goblin_selects_shortbow_when_scimitar_is_out_of_reach() -> None:
     goblin = build_combatant_state(build_goblin_warrior())
-
     attack = select_weapon_attack(goblin, distance_ft=90)
 
     assert attack is not None
