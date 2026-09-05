@@ -5,7 +5,7 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import ConditionName, ConditionRemovalAction, HealingAction
-from app.domain.auras import EndTurnDamageAura
+from app.domain.auras import EndTurnDamageAura, RollAdvantageAura
 from app.domain.capability_attacks import (
     AttackCapabilityDefinition,
     CapabilityActionSlot,
@@ -43,6 +43,7 @@ class CombatantDefinition(BaseModel):
     attack_roll_advantage_triggers: list[AttackRollAdvantageTrigger] = Field(default_factory=list)
     saving_throw_advantage_triggers: list[SavingThrowAdvantageTrigger] = Field(default_factory=list)
     end_turn_damage_aura: EndTurnDamageAura | None = None
+    roll_advantage_aura: RollAdvantageAura | None = None
     attacks: list[AttackCapabilityDefinition] = Field(min_length=1)
     primary_attack_id: str
     unarmed_opportunity_attack: UnarmedStrikeDamage | None = None

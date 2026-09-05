@@ -16,3 +16,11 @@ class EndTurnDamageAura(BaseModel):
     damage_type: DamageType
     target_mode: Literal["enemies", "all_others"] = "enemies"
     disabled_while_incapacitated: bool = False
+
+
+class RollAdvantageAura(BaseModel):
+    name: str
+    radius_ft: int = Field(ge=0)
+    grants_attack_roll_advantage: bool = False
+    grants_saving_throw_advantage: bool = False
+    disabled_while_incapacitated: bool = False

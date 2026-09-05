@@ -5,7 +5,7 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AttackActionDefinition, ConditionName, ConditionRemovalAction, HealingAction, SavingThrowAction
-from app.domain.auras import EndTurnDamageAura
+from app.domain.auras import EndTurnDamageAura, RollAdvantageAura
 from app.domain.character_builds import AbilityScores
 from app.domain.movement import MovementModes
 from app.domain.progression import ProgressionCombatFeatures
@@ -60,6 +60,7 @@ class CombatantTemplate(BaseModel):
     attack_roll_advantage_triggers: list[AttackRollAdvantageTrigger] = Field(default_factory=list)
     saving_throw_advantage_triggers: list[SavingThrowAdvantageTrigger] = Field(default_factory=list)
     end_turn_damage_aura: EndTurnDamageAura | None = None
+    roll_advantage_aura: RollAdvantageAura | None = None
     weapon_attack: WeaponAttack
     alternate_weapon_attacks: list[WeaponAttack] = Field(default_factory=list)
     unarmed_opportunity_attack: UnarmedStrikeDamage | None = None

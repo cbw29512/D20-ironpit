@@ -6,6 +6,18 @@
   const targets = (member, setup, aura) => [...setup.heroes, ...setup.monsters].filter((target) =>
     target.combatant_id !== member.combatant_id && !target.state.is_dead &&
     (aura.targetMode === "all_others" || target.side !== member.side) && S().distance(member, target) <= aura.radius);
+  function rollAdvantageSources(member, setup, kind) {
+    if (!member || !setup) return 0;
+    const sources = member.side === "heroes" ? setup.heroes : setup.monsters;
+    return sources.filter((source) => {
+      const aura = source.state?.template?.rollAdvantageAura;
+      if (!aura || source.state.is_dead || !source.state.is_alive || source.state.current_hp <= 0) return false;
+      if (aura.disabledWhileIncapacitated && Q().incapacitated(source.state)) return false;
+      if (kind === "attack_roll" && !aura.grantsAttackRollAdvantage) return false;
+      if (kind === "saving_throw" && !aura.grantsSavingThrowAdvantage) return false;
+      return S().distance(source, member) <= aura.radius;
+    }).length;
+  }
 
   function resolve(sequence, round, member, setup) {
     const aura = member.state.template.endTurnDamageAura;
@@ -29,5 +41,5 @@
     }
     return { events, sequence };
   }
-  window.IRON_PIT_BROWSER_AURA = { resolve };
+  window.IRON_PIT_BROWSER_AURA = { resolve, rollAdvantageSources };
 })();

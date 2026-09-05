@@ -31,6 +31,14 @@ def _aura_row(template):
             "disabledWhileIncapacitated": aura.disabled_while_incapacitated}
 
 
+def _roll_aura_row(template):
+    aura = template.roll_advantage_aura
+    if aura is None: return None
+    return {"name": aura.name, "radius": aura.radius_ft, "grantsAttackRollAdvantage": aura.grants_attack_roll_advantage,
+            "grantsSavingThrowAdvantage": aura.grants_saving_throw_advantage,
+            "disabledWhileIncapacitated": aura.disabled_while_incapacitated}
+
+
 def render() -> str:
     try:
         rows = []
@@ -38,6 +46,8 @@ def render() -> str:
             row = template_row(template); row["creature_type"] = template.creature_type
             aura = _aura_row(template)
             if aura: row["endTurnDamageAura"] = aura
+            roll_aura = _roll_aura_row(template)
+            if roll_aura: row["rollAdvantageAura"] = roll_aura
             rows.append(row)
         ids = {row["id"] for row in rows}
         if len(rows) != len(ids): raise RuntimeError("Certified browser monster export contains duplicate template IDs.")

@@ -1,11 +1,35 @@
 from __future__ import annotations
 
+from typing import Literal
+
 from app.combat.condition_rules import is_incapacitated
 from app.combat.damage_defenses import adjusted_damage_amount
 from app.combat.zero_hp import apply_damage
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.events import BattleEvent, DamageRollComponent, DiceRoll
 from app.combat.dice import DiceProvider
+
+
+def roll_advantage_sources(
+    member: EncounterCombatant, setup: EncounterSetup | None, kind: Literal["attack_roll", "saving_throw"],
+) -> int:
+    if setup is None:
+        return 0
+    sources = setup.heroes if member.side == "heroes" else setup.monsters
+    count = 0
+    for source in sources:
+        aura = source.state.template.roll_advantage_aura
+        if aura is None or source.state.is_dead or not source.state.is_alive or source.state.current_hp <= 0:
+            continue
+        if aura.disabled_while_incapacitated and is_incapacitated(source.state):
+            continue
+        if kind == "attack_roll" and not aura.grants_attack_roll_advantage:
+            continue
+        if kind == "saving_throw" and not aura.grants_saving_throw_advantage:
+            continue
+        if abs(source.position_ft - member.position_ft) <= aura.radius_ft:
+            count += 1
+    return count
 
 
 def _targets(source: EncounterCombatant, setup: EncounterSetup, radius: int, mode: str) -> list[EncounterCombatant]:
