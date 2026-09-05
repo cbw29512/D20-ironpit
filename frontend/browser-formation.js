@@ -4,6 +4,7 @@
   const HERO_BACK = 0, HERO_FRONT = 5, MONSTER_FRONT = 10, MONSTER_BACK = 15;
   const attacks = (template) => template?.attacks || [];
   const alive = (member) => member.state.is_alive && !member.state.is_dead && member.state.current_hp > 0;
+  const resourceReady = (member, attack) => !attack.resourceId || Boolean(window.IRON_PIT_BROWSER_SAVES?.resourceAvailable(member.state, attack));
 
   function hasRangedWeaponOffense(template) {
     return attacks(template).some((attack) => attack.kind === "ranged" && Number.isFinite(attack.long) && attack.long > 5);
@@ -30,13 +31,10 @@
   function livingTargets(member, setup) {
     const pool = enemies(member, setup), active = pool.filter(alive);
     if (active.length) return active;
-    return pool.filter((target) => target.state.template.kind === "character"
-      && target.state.is_alive && !target.state.is_dead && target.state.current_hp === 0);
+    return pool.filter((target) => target.state.template.kind === "character" && target.state.is_alive && !target.state.is_dead && target.state.current_hp === 0);
   }
   function targetOrder(member, setup, preferBackline = false) {
-    const targets = livingTargets(member, setup);
-    const front = targets.filter((target) => !isBackline(target));
-    const back = targets.filter(isBackline);
+    const targets = livingTargets(member, setup), front = targets.filter((target) => !isBackline(target)), back = targets.filter(isBackline);
     return preferBackline ? [...back, ...front] : [...front, ...back];
   }
   function hasFrontlineTarget(member, setup) { return livingTargets(member, setup).some((target) => !isBackline(target)); }
@@ -56,12 +54,10 @@
     if (!Number.isFinite(normal)) throw new Error(`Ranged attack ${attack.id} has no normal range.`);
     return Math.min(actual, normal);
   }
-  function saveDistance(member, target, range) {
-    return Math.min(Math.abs(member.position_ft - target.position_ft), range);
-  }
+  function saveDistance(member, target, range) { return Math.min(Math.abs(member.position_ft - target.position_ft), range); }
   function chooseAttack(member, setup, ids, kind = null, preferBackline = false) {
     const allowed = new Set(ids);
-    const profiles = attacks(member.state.template).filter((attack) => allowed.has(attack.id) && (!kind || attack.kind === kind));
+    const profiles = attacks(member.state.template).filter((attack) => allowed.has(attack.id) && (!kind || attack.kind === kind) && resourceReady(member, attack));
     for (const target of targetOrder(member, setup, preferBackline)) {
       const attack = profiles.find((profile) => targetAllowed(member, target, profile));
       if (attack) return { target, attack, distance: attackDistance(member, target, attack) };
@@ -71,18 +67,15 @@
   function chooseStandardAttack(member, setup) {
     const ids = attacks(member.state.template).map((attack) => attack.id);
     if (isBackline(member) && alliedFrontlineActive(member, setup)) {
-      const ranged = chooseAttack(member, setup, ids, "ranged");
-      if (ranged) return ranged;
+      const ranged = chooseAttack(member, setup, ids, "ranged"); if (ranged) return ranged;
     }
     return chooseAttack(member, setup, ids, "melee") || chooseAttack(member, setup, ids, "ranged");
   }
   function flexibleSlotHasBoth(member, ids) {
-    const allowed = new Set(ids), kinds = new Set(attacks(member.state.template).filter((a) => allowed.has(a.id)).map((a) => a.kind));
+    const allowed = new Set(ids), kinds = new Set(attacks(member.state.template).filter((a) => allowed.has(a.id) && resourceReady(member, a)).map((a) => a.kind));
     return kinds.has("melee") && kinds.has("ranged");
   }
-  function backlineHoldsPosition(member, setup) {
-    return isBackline(member) && alliedFrontlineActive(member, setup) && hasRangedWeaponOffense(member.state.template);
-  }
+  function backlineHoldsPosition(member, setup) { return isBackline(member) && alliedFrontlineActive(member, setup) && hasRangedWeaponOffense(member.state.template); }
 
   window.IRON_PIT_BROWSER_FORMATION = {
     hasRangedWeaponOffense, hasTrueRangeOffense, usesBackline, isBackline, startingPosition,

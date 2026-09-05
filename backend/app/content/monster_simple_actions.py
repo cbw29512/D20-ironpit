@@ -7,7 +7,8 @@ from app.content.monster_source_definition import slug
 _DAMAGE = "acid|bludgeoning|cold|fire|force|lightning|necrotic|piercing|poison|psychic|radiant|slashing|thunder"
 _NUMBER = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6}
 _ATTACK = re.compile(
-    rf"(?P<name>[A-Z][A-Za-z’' -]{{0,60}})\.\s+(?P<kind>Melee|Ranged) Attack Roll:\s*(?P<bonus>[+-]?\d+),\s*"
+    rf"(?P<name>[A-Z][A-Za-z’' -]{{0,60}}?)(?:\s*\(Recharge\s+(?P<minimum>\d)(?:\s*[-–]\s*\d)?\))?\.\s+"
+    rf"(?P<kind>Melee|Ranged) Attack Roll:\s*(?P<bonus>[+-]?\d+),\s*"
     rf"(?:(?:reach\s+(?P<reach>\d+)\s*(?:ft\.?|feet))|(?:range\s+(?P<normal>\d+)\s*/\s*(?P<long>\d+)\s*(?:ft\.?|feet)))\.\s*"
     rf"Hit:\s*\d+\s*\((?P<count>\d+)d(?P<size>\d+)(?:\s*(?P<sign>[+-])\s*(?P<flat>\d+))?\)\s*"
     rf"(?P<type>{_DAMAGE})\s+damage"
@@ -30,31 +31,39 @@ def _bonus(sign: str | None, value: str | None) -> int:
     return int(value) * (-1 if sign == "-" else 1)
 
 
+def parse_attack_rolls(row: dict[str, object]) -> tuple[list[dict[str, object]], list[dict[str, object]]]:
+    attacks: list[dict[str, object]] = []; resources: list[dict[str, object]] = []
+    for match in _ATTACK.finditer(str(row.get("actions", ""))):
+        name = match.group("name").strip(); monster_id = f"srd-{slug(str(row['name']))}"
+        attack_id = f"{monster_id}-{slug(name)}"; kind = match.group("kind").lower()
+        attack: dict[str, object] = {
+            "id": attack_id, "name": name, "weapon_id": f"{attack_id}-weapon", "attack_kind": kind,
+            "attack_bonus": int(match.group("bonus")),
+            "damage": {"count": int(match.group("count")), "size": int(match.group("size")),
+                       "bonus": _bonus(match.group("sign"), match.group("flat"))},
+            "damage_type": match.group("type").lower(), "animation": "projectile" if kind == "ranged" else ("bite" if name.lower() == "bite" else "slash"),
+        }
+        if kind == "melee": attack["reach_ft"] = int(match.group("reach"))
+        else: attack.update(normal_range_ft=int(match.group("normal")), long_range_ft=int(match.group("long")))
+        if match.group("xtype"):
+            attack["effects"] = [{
+                "kind": "damage", "source": f"{row['name']} {match.group('xtype').title()}",
+                "dice": {"count": int(match.group("xcount")), "size": int(match.group("xsize")),
+                         "bonus": _bonus(match.group("xsign"), match.group("xflat"))},
+                "damage_type": match.group("xtype").lower(),
+            }]
+        if match.group("minimum"):
+            resource_id = f"{attack_id}-recharge"; attack["resource_id"] = resource_id
+            resources.append({"id": resource_id, "name": name, "max_uses": 1, "recharge_min_d6": int(match.group("minimum"))})
+        attacks.append(attack)
+    return attacks, resources
+
+
 def parse_single_attack(row: dict[str, object]) -> dict[str, object]:
-    matches = list(_ATTACK.finditer(str(row.get("actions", ""))))
-    if len(matches) != 1:
-        raise ValueError(f"Simple family requires exactly one attack roll for {row['name']!r}; found {len(matches)}.")
-    match = matches[0]; name = match.group("name").strip(); monster_id = f"srd-{slug(str(row['name']))}"
-    attack_id = f"{monster_id}-{slug(name)}"; kind = match.group("kind").lower()
-    attack: dict[str, object] = {
-        "id": attack_id, "name": name, "weapon_id": f"{attack_id}-weapon", "attack_kind": kind,
-        "attack_bonus": int(match.group("bonus")),
-        "damage": {"count": int(match.group("count")), "size": int(match.group("size")),
-                   "bonus": _bonus(match.group("sign"), match.group("flat"))},
-        "damage_type": match.group("type").lower(), "animation": "projectile" if kind == "ranged" else ("bite" if name.lower() == "bite" else "slash"),
-    }
-    if kind == "melee":
-        attack["reach_ft"] = int(match.group("reach"))
-    else:
-        attack.update(normal_range_ft=int(match.group("normal")), long_range_ft=int(match.group("long")))
-    if match.group("xtype"):
-        attack["effects"] = [{
-            "kind": "damage", "source": f"{row['name']} {match.group('xtype').title()}",
-            "dice": {"count": int(match.group("xcount")), "size": int(match.group("xsize")),
-                     "bonus": _bonus(match.group("xsign"), match.group("xflat"))},
-            "damage_type": match.group("xtype").lower(),
-        }]
-    return attack
+    attacks, resources = parse_attack_rolls(row)
+    if len(attacks) != 1 or resources:
+        raise ValueError(f"Simple family requires exactly one unlimited attack roll for {row['name']!r}; found {len(attacks)} attacks and {len(resources)} limited resources.")
+    return attacks[0]
 
 
 def parse_single_recharge_save(row: dict[str, object]) -> tuple[dict[str, object], dict[str, object]]:

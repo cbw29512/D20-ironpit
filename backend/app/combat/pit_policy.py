@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.action_resources import resource_available
 from app.combat.attack_legality import attack_allowed_against
 from app.combat.encounter_targeting import combatant_distance, living_opponents
 from app.combat.formation import uses_backline
@@ -67,12 +68,12 @@ def save_distance(attacker: EncounterCombatant, target: EncounterCombatant, rang
 
 def _attack_profiles(attacker: EncounterCombatant, allowed_ids: list[str], kind: WeaponAttackKind | None):
     allowed = set(allowed_ids)
-    profiles = [
+    return [
         attack
         for attack in [attacker.state.template.weapon_attack, *attacker.state.template.alternate_weapon_attacks]
         if attack.id in allowed and (kind is None or attack.weapon.attack_kind is kind)
+        and resource_available(attacker.state, attack)
     ]
-    return profiles
 
 
 def choose_attack(

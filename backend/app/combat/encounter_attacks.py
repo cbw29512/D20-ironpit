@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.combat.action_resources import consume_resource, resource_available
 from app.combat.ally_context import active_allies
 from app.combat.attacks import resolve_attack
 from app.combat.champion import apply_critical_closing_move
@@ -31,6 +32,8 @@ def resolve_encounter_attack(
     close_enemy_active: bool | None = None,
     allow_reckless: bool = False,
 ) -> BattleEvent:
+    if not resource_available(attacker.state, attack):
+        raise ValueError(f"{attack.weapon.name} has no remaining resource use.")
     reckless_started = allow_reckless and activate_reckless_attack(
         attacker.state, attack, attacker.combatant_id, round_number,
     )
@@ -52,6 +55,7 @@ def resolve_encounter_attack(
         redirect_target_event_id=redirect.combatant_id if redirect is not None else None,
         affected_states=affected_states, sneak_attack_ally_available=sneak_ally,
     )
+    consume_resource(attacker.state, attack)
     if reckless_started:
         event.description += f" {attacker.state.template.name} uses Reckless Attack."
         if event.feature_id is None:

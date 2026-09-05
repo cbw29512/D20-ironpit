@@ -35,6 +35,8 @@ class AttackCapabilityDefinition(BaseModel):
     rage_eligible: bool = False
     effects: list[AttackEffectDefinition] = Field(default_factory=list)
     forbid_target_grappled_by_self: bool = False
+    resource_id: str | None = None
+    resource_cost: int = Field(default=1, ge=1, le=20)
 
     @model_validator(mode="after")
     def validate_attack_shape(self) -> "AttackCapabilityDefinition":

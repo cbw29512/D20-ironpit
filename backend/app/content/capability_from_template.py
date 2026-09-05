@@ -68,6 +68,8 @@ def _attack(attack: WeaponAttack) -> dict[str, object]:
         "rage_eligible": attack.rage_eligible,
         "effects": effects, "forbid_target_grappled_by_self": attack.forbid_target_grappled_by_self,
     }
+    if attack.resource_id:
+        result["resource_id"] = attack.resource_id; result["resource_cost"] = attack.resource_cost
     if attack.fixed_damage is None:
         result["damage"] = _dice(weapon.dice_count, weapon.dice_size, attack.damage_bonus)
     else:
