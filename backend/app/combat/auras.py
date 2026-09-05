@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from app.combat.condition_rules import is_incapacitated
 from app.combat.damage_defenses import adjusted_damage_amount
-from app.combat.formation import distance_between
 from app.combat.zero_hp import apply_damage
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.events import BattleEvent, DamageRollComponent, DiceRoll
@@ -16,7 +15,7 @@ def _targets(source: EncounterCombatant, setup: EncounterSetup, radius: int, mod
         if member.combatant_id != source.combatant_id
         and not member.state.is_dead
         and (mode == "all_others" or member.side != source.side)
-        and distance_between(source, member) <= radius
+        and abs(source.position_ft - member.position_ft) <= radius
     ]
 
 
