@@ -14,6 +14,7 @@ _COMBAT_MATH = (
     re.compile(r"\bHit Points?\b|\bTemporary Hit Points?\b", re.I),
     re.compile(r"\bAC\b|\bArmor Class\b", re.I),
     re.compile(r"\battack roll(?:s)?\b|\bdamage roll(?:s)?\b|\bto hit\b", re.I),
+    re.compile(r"\battacks?\b", re.I),
     re.compile(r"\bsaving throw(?:s)?\b|\bsave DC\b|\bD20 Test(?:s)?\b", re.I),
     re.compile(r"\binitiative\b|\bcritical hit(?:s)?\b|\bConcentration\b", re.I),
     re.compile(
@@ -76,10 +77,8 @@ def combat_math_relevant(source: object) -> bool:
     text = normalized_source_text(source)
     if not text:
         return False
-    # A returned/thrown weapon, forced movement, Speed change, teleport, Hide,
-    # Disengage, sensory output, and similar movement/presentation mechanics are
-    # deliberately absent here. If they also alter math, another signal below
-    # still catches the feature.
+    # Movement/presentation mechanics are deliberately absent unless the same
+    # source also mentions an attack or another supported mathematical outcome.
     return any(pattern.search(text) for pattern in _COMBAT_MATH)
 
 
