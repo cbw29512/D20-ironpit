@@ -32,3 +32,27 @@ def test_damage_scope_ignores_non_damage_riders_but_keeps_damage_families() -> N
         "damage-defense",
     }
     assert all("condition" not in family for family in audit.families)
+
+
+def test_flat_roll_modifier_is_combat_math_even_without_damage_text() -> None:
+    row = {
+        "id": "test-roll-modifier",
+        "name": "Test Roll Modifier",
+        "actions": "",
+        "traits": "",
+        "bonusActions": "",
+        "reactions": (
+            "Quick Insight. When a creature makes an ability check or saving throw, "
+            "the monster adds 2 to the roll."
+        ),
+        "legendaryActions": "",
+        "rawText": "",
+    }
+
+    assert "flat-roll-modifier" in audit_monster_damage_scope(row).families
+
+
+def test_sphinx_of_wonder_burst_of_ingenuity_is_not_zero_engine() -> None:
+    row = next(row for row in load_monster_rows() if row["name"] == "Sphinx of Wonder")
+
+    assert "flat-roll-modifier" in audit_monster_damage_scope(row).families
