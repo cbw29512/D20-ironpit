@@ -1,15 +1,19 @@
 from __future__ import annotations
 
+import re
+
 from app.content.movement_modes import parse_movement_profile, source_movement_modes
 from app.domain.models import CombatantTemplate
 from app.domain.movement import MovementModes
+
+_SPEED_TEXT = re.compile(r"\d+\s*ft\b", re.IGNORECASE)
 
 
 def _environment_movement(source: object | MovementModes) -> MovementModes:
     if isinstance(source, MovementModes):
         return source
     text = str(source).strip()
-    if "ft" in text.lower():
+    if _SPEED_TEXT.search(text):
         return parse_movement_profile(text)
     return source_movement_modes(text)
 
