@@ -9,8 +9,8 @@ from pathlib import Path
 from app.content.arena_eligibility import deferred_environment_reason
 from app.content.monster_neighbor_bleed_corrections import apply_neighbor_bleed_corrections
 from app.content.monster_neighbor_bleed_normalizer import normalize_neighbor_name_bleed
-from app.content.monster_ready_native import NATIVE_READY_BY_NAME
 from app.content.monster_section_heading_corrections import apply_section_heading_corrections
+from app.content.native_monster_candidates import native_candidate_ids_by_name
 from app.domain.catalog import CoverageStatus, MonsterCatalogCard
 from app.domain.models import CombatantTemplate
 
@@ -110,9 +110,11 @@ def _runtime_monsters() -> dict[str, CombatantTemplate]:
         return {}
 
 
-def _card(row: dict[str, object], runtime: dict[str, CombatantTemplate]) -> MonsterCatalogCard:
+def _card(
+    row: dict[str, object], runtime: dict[str, CombatantTemplate], native_candidates: dict[str, str],
+) -> MonsterCatalogCard:
     name = str(row["name"])
-    candidate_id = NATIVE_READY_BY_NAME.get(name) or _READY_BY_NAME.get(name)
+    candidate_id = native_candidates.get(name) or _READY_BY_NAME.get(name)
     deferred = deferred_environment_reason(name, str(row.get("speed", "")))
     blockers = [f"deferred-environment:{deferred}"] if deferred else ([] if candidate_id else ["monster-combat-mechanics-not-certified"])
     if candidate_id and not deferred:
@@ -140,4 +142,5 @@ def _card(row: dict[str, object], runtime: dict[str, CombatantTemplate]) -> Mons
 
 def build_monster_catalog() -> list[MonsterCatalogCard]:
     runtime = _runtime_monsters()
-    return [_card(row, runtime) for row in load_monster_rows()]
+    native_candidates = native_candidate_ids_by_name(runtime)
+    return [_card(row, runtime, native_candidates) for row in load_monster_rows()]

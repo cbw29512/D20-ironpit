@@ -54,6 +54,12 @@ def parse_trait_names(source_traits: object) -> list[str]:
     return names
 
 
+def modeled_combat_traits(source_traits: object) -> list[CombatTrait]:
+    """Map source headings to every shared CombatTrait already implemented by the engine."""
+    names = set(parse_trait_names(source_traits))
+    return [runtime_trait for source_name, runtime_trait in _MODELED_TRAITS.items() if source_name in names]
+
+
 def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
     expected = parse_trait_names(row.get("traits", ""))
     issues: list[str] = []
