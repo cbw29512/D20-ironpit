@@ -41,6 +41,7 @@ _HIDDEN_RIDER = re.compile(
     r"|\b(?:summons?|creates?)\b[^.]{0,100}\b(?:creature|monster|specter|zombie|skeleton)\b"
     r"|\brises(?:\s+\d+\s+hours?\s+later)?\s+as\s+(?:a|an)\s+[A-Za-z’'\-]+\b"
     r"|\bdamage,?\s+or\s+\d+\s*\([^)]*\)\s+\w+\s+damage\s+if\b"
+    r"|\b(?:start|end)\s+of\s+(?:each|every|the)\b[^.]{0,120}\btakes?\s+\d+\s*\([^)]*\)\s+\w+\s+damage\b"
     rf"|\bplus\s+\d+\s+(?:{_DAMAGE_TYPES})\s+damage\b",
     re.I,
 )
