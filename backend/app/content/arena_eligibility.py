@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from functools import lru_cache
 import re
 
 from app.domain.models import CombatantTemplate
@@ -10,9 +11,20 @@ _FLY = re.compile(r"\bfly\s+(\d+)\s*ft\b", re.IGNORECASE)
 _SWIM = re.compile(r"\bswim\s+(\d+)\s*ft\b", re.IGNORECASE)
 
 
+@lru_cache(maxsize=1)
+def _source_speed_by_name() -> dict[str, object]:
+    # Local import avoids a module-load cycle while keeping the catalog's
+    # existing name-based eligibility call source-derived.
+    from app.content.monster_catalog import load_monster_rows
+
+    return {str(row["name"]): row["speed"] for row in load_monster_rows()}
+
+
 def _source_environment_speeds(source_speed: object) -> tuple[int, int, int]:
     """Read only walk/fly/swim facts needed for standard-arena eligibility."""
     text = str(source_speed or "").strip()
+    if not (_BASE_WALK.search(text) or _FLY.search(text) or _SWIM.search(text)):
+        text = str(_source_speed_by_name().get(text, text)).strip()
     walk = _BASE_WALK.search(text)
     fly = _FLY.search(text)
     swim = _SWIM.search(text)
