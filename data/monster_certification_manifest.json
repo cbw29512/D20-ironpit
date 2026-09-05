@@ -7759,11 +7759,11 @@
         "reaction"
       ],
       "supported_mechanics": [
-        "damage-or-condition-defense"
+        "damage-or-condition-defense",
+        "reaction"
       ],
       "unsupported_mechanics": [
-        "no-attack-roll",
-        "reaction"
+        "no-attack-roll"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -7771,8 +7771,7 @@
       "public_ready_status": "blocked",
       "blockers": [
         "monster-combat-mechanics-not-certified",
-        "no-attack-roll",
-        "reaction"
+        "no-attack-roll"
       ]
     },
     {
