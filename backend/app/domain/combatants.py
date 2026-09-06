@@ -7,20 +7,14 @@ from pydantic import BaseModel, Field, model_validator
 from app.domain.actions import AttackActionDefinition, ConditionName, ConditionRemovalAction, HealingAction, SavingThrowAction
 from app.domain.character_builds import AbilityScores
 from app.domain.movement import MovementModes
+from app.domain.passive_effects import AllyRollAuraDefinition, RegenerationDefinition, TurnDamageAuraDefinition
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.reactions import ParryReaction, RedirectAttackReaction
 from app.domain.size import CreatureSize
 from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellSaveAction
 from app.domain.traits import CombatTrait
 from app.domain.unarmed import UnarmedStrikeDamage
-from app.domain.weapons import (
-    ConditionalDamage,
-    DamageType,
-    OnHitDamage,
-    Weapon,
-    WeaponAttack,
-    WeaponAttackKind,
-)
+from app.domain.weapons import ConditionalDamage, DamageType, OnHitDamage, Weapon, WeaponAttack, WeaponAttackKind
 
 
 class VisualLoadout(BaseModel):
@@ -47,28 +41,6 @@ class ResourceDefinition(BaseModel):
     name: str
     max_uses: int = Field(ge=0)
     recharge: RechargeDefinition | None = None
-
-
-class RegenerationDefinition(BaseModel):
-    """A start-of-turn HP restoration trait with RAW damage suppression/death timing."""
-
-    amount: int = Field(gt=0)
-    suppressed_by_damage_types: list[DamageType] = Field(default_factory=list)
-    delays_death_at_zero: bool = False
-
-
-class TurnDamageAuraDefinition(BaseModel):
-    """Automatic source-turn damage centered on the creature."""
-
-    id: str
-    name: str
-    radius_ft: int = Field(gt=0)
-    dice_count: int = Field(gt=0, le=40)
-    dice_size: int = Field(ge=2, le=100)
-    damage_bonus: int = 0
-    damage_type: DamageType
-    target_mode: Literal["enemies", "all-creatures"] = "enemies"
-    suppressed_if_incapacitated: bool = False
 
 
 class CombatantTemplate(BaseModel):
@@ -122,6 +94,7 @@ class CombatantTemplate(BaseModel):
     resources: list[ResourceDefinition] = Field(default_factory=list)
     regeneration: RegenerationDefinition | None = None
     turn_damage_auras: list[TurnDamageAuraDefinition] = Field(default_factory=list)
+    ally_roll_auras: list[AllyRollAuraDefinition] = Field(default_factory=list)
     source: str
 
     @model_validator(mode="before")
