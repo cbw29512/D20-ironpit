@@ -10,6 +10,7 @@ from app.combat.grapple import (
 )
 from app.combat.hit_modifiers import apply_hit_modifier_effects
 from app.combat.modifier_stack import effective_speed
+from app.combat.target_state import target_missing_hp_attack_advantage
 from app.combat.timed_conditions import apply_timed_condition
 from app.domain.models import CombatantState, WeaponAttack
 from app.domain.size import size_at_most
@@ -39,8 +40,8 @@ def attack_roll_condition_sources(
     distance_ft: int,
     target_id: str | None = None,
 ) -> tuple[int, int]:
-    """Return Advantage and Disadvantage sources from supported conditions."""
-    advantage = 0
+    """Return Advantage and Disadvantage sources from supported conditions and target state."""
+    advantage = target_missing_hp_attack_advantage(attacker, defender)
     disadvantage = 0
     if has_condition(attacker, BLINDED_EFFECT_ID):
         disadvantage += 1
