@@ -14,12 +14,12 @@ from app.content.monster_trait_source_audit import _MODELED_TRAITS, parse_trait_
 from app.content.monster_turn_aura_source import parse_turn_damage_auras
 from app.content.movement_modes import parse_movement_profile, standard_arena_closing_speed
 from app.content.simple_monster_source_attacks import parse_simple_attacks
-from app.content.simple_monster_source_saves import parse_simple_bonus_save_actions, parse_simple_save_actions
+from app.content.simple_monster_source_saves import attach_save_replacement, parse_simple_bonus_save_actions, parse_simple_save_actions
 from app.domain.capabilities import CombatantDefinition
 
 _SIMPLE_SOURCE_NAMES = frozenset({
     "Azer Sentinel", "Berserker", "Blink Dog", "Bone Devil", "Bugbear Stalker", "Bugbear Warrior", "Ettin", "Fire Giant", "Ghoul", "Giant Shark", "Hezrou",
-    "Hill Giant", "Hobgoblin Captain", "Hunter Shark", "Magmin", "Merrow", "Nightmare", "Piranha", "Sahuagin Warrior", "Satyr",
+    "Hill Giant", "Hobgoblin Captain", "Hunter Shark", "Magmin", "Merrow", "Nightmare", "Piranha", "Pirate", "Sahuagin Warrior", "Satyr",
     "Specter", "Spy", "Tough Boss", "Troll Limb", "Wraith", "Xorn",
 })
 
@@ -39,6 +39,7 @@ def _initiative(row: dict[str, object]) -> int:
 def _definition(row: dict[str, object]) -> CombatantDefinition:
     attacks, multiattack = parse_simple_attacks(row); defenses = parse_defense_profile(row)
     save_actions = [*parse_simple_save_actions(row), *parse_simple_bonus_save_actions(row)]
+    multiattack = attach_save_replacement(row, multiattack, save_actions)
     trait_names = parse_trait_names(row.get("traits", "")) if str(row.get("traits", "")).strip() else []
     combat_traits = [_MODELED_TRAITS[name].value for name in trait_names if name in _MODELED_TRAITS]
     regeneration = parse_regeneration(row); turn_damage_auras = parse_turn_damage_auras(row)
