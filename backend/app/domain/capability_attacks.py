@@ -4,7 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
-from app.domain.actions import AbilityName
+from app.domain.actions import AbilityName, ActionCost
 from app.domain.areas import AreaGeometry
 from app.domain.capability_effects import AttackEffectDefinition, DiceSpec, GrappleEffectDefinition
 from app.domain.size import CreatureSize
@@ -61,6 +61,7 @@ class AttackCapabilityDefinition(BaseModel):
 class SaveCapabilityDefinition(BaseModel):
     id: str
     name: str
+    action_cost: ActionCost = "action"
     save_ability: Literal["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
     dc: int = Field(ge=1, le=40)
     range_ft: int = Field(ge=0)
