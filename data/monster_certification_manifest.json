@@ -6569,8 +6569,8 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
+        "save-or-complex-action",
+        "source-save-action-count-mismatch"
       ]
     },
     {
