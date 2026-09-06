@@ -13,12 +13,14 @@
   const D = () => window.IRON_PIT_DICE;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (state, cost) => cost === "action" && state.action_available, spend: (state) => { state.action_available = false; } };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { autoFailStrDex: (state) => state.is_unconscious };
+  const T = () => window.IRON_PIT_BROWSER_TARGET_STATE || { isBloodied: () => false };
   const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
   const BOARD_COLUMNS = 3, MAX_BOARD_SLOTS = 6;
 
   function saveMode(state, ability, againstMagic = false) {
     const magicResistance = againstMagic && state.template.traits?.includes("magic-resistance") ? 1 : 0;
-    const advantage = (ability === "strength" && state.active_effect_ids.includes("rage") ? 1 : 0) + B2().dangerSenseAdvantage(state, ability) + magicResistance;
+    const bloodiedAdvantage = state.template.traits?.includes("bloodied-attack-save-advantage") && T().isBloodied(state) ? 1 : 0;
+    const advantage = (ability === "strength" && state.active_effect_ids.includes("rage") ? 1 : 0) + B2().dangerSenseAdvantage(state, ability) + magicResistance + bloodiedAdvantage;
     const disadvantage = ability === "dexterity" && state.active_effect_ids.includes("restrained") ? 1 : 0;
     return R().modeFromSources(advantage, disadvantage);
   }
