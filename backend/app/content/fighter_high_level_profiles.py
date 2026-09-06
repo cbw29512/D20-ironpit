@@ -15,21 +15,21 @@ def _audit(level: int) -> list[FeatureAudit]:
         15: [("superior-critical", "Superior Critical", "subclass")],
         16: [("ability-score-improvement-l16", "Ability Score Improvement", "feat")],
         17: [("action-surge-indomitable-l17", "Action Surge and Indomitable Uses", "class")],
+        18: [("survivor-defy-death", "Survivor — Defy Death", "subclass"),
+             ("survivor-heroic-rally", "Survivor — Heroic Rally", "subclass")],
+        19: [("boon-combat-prowess", "Boon of Combat Prowess", "feat")],
+        20: [("three-extra-attacks", "Three Extra Attacks", "class")],
     }
     return [FeatureAudit(
-        feature_id=feature_id,
-        feature_name=name,
-        source_reference=source,
-        category=category,
-        combat_relevant=True,
-        automated=True,
+        feature_id=feature_id, feature_name=name, source_reference=source,
+        category=category, combat_relevant=True, automated=True,
         notes=f"Canonical Fighter level {level} progression is compiled from the authoritative 1-20 combat spine.",
     ) for feature_id, name, category in specs[level]]
 
 
 def _build(level: int) -> CharacterBuildProfile:
-    if not 13 <= level <= 17:
-        raise ValueError("High-level Fighter profile supports levels 13 through 17.")
+    if not 13 <= level <= 20:
+        raise ValueError("High-level Fighter profile supports levels 13 through 20.")
     previous = build_karnok_stoneward_level12_profile() if level == 13 else _build(level - 1)
     data = advance_profile_data(previous, level)
     apply_fighter_level_to_profile_data(data, level)
@@ -46,3 +46,6 @@ def build_karnok_stoneward_level14_profile() -> CharacterBuildProfile: return _b
 def build_karnok_stoneward_level15_profile() -> CharacterBuildProfile: return _build(15)
 def build_karnok_stoneward_level16_profile() -> CharacterBuildProfile: return _build(16)
 def build_karnok_stoneward_level17_profile() -> CharacterBuildProfile: return _build(17)
+def build_karnok_stoneward_level18_profile() -> CharacterBuildProfile: return _build(18)
+def build_karnok_stoneward_level19_profile() -> CharacterBuildProfile: return _build(19)
+def build_karnok_stoneward_level20_profile() -> CharacterBuildProfile: return _build(20)
