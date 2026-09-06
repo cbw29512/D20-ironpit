@@ -4,7 +4,7 @@ import logging
 
 from app.combat.action_economy import is_available, spend
 from app.combat.barbarian import end_rage_if_incapacitated, extend_rage_from_attack
-from app.combat.bloodied import bloodied_fury_advantage
+from app.combat.bloodied import bloodied_attack_advantage, bloodied_fury_advantage
 from app.combat.condition_rules import close_hit_is_automatic_critical
 from app.combat.conditions import apply_hit_conditions, attack_roll_condition_sources
 from app.combat.damage import BonusDamageSpec, resolve_weapon_damage
@@ -52,6 +52,7 @@ def resolve_attack(
         mode = resolve_attack_roll_mode(
             weapon, distance_ft,
             advantage_sources=(advantage_sources + condition_advantage + bloodied_fury_advantage(attacker, attack)
+                               + bloodied_attack_advantage(attacker)
                                + attacks_against_advantage_sources(defender) + attacks_against_reckless_advantage(defender)
                                + reckless_attack_advantage(attacker, attack)
                                + next_attack_against_advantage_sources(attacker, defender_event_id)),
