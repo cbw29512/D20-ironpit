@@ -38,9 +38,10 @@ jobs:
           python scripts/verify_certification_manifests.py --write
           python scripts/export_roster_mechanic_checklist.py
           python scripts/report_universal_engine_backlog.py > data/universal_engine_backlog.txt
+          python scripts/report_capability_yield.py > data/capability_yield.txt
       - name: Refuse unexpected generator drift
         run: |
-          unexpected="$(git status --porcelain --untracked-files=all | awk '{print $2}' | grep -Ev '^(backend/app/content/data/combatant_capabilities_v1.json|frontend/browser-heroes.js|frontend/browser-monsters-generated.js|frontend/figure-profiles.js|data/hero_certification_manifest.json|data/monster_certification_manifest.json|data/roster_combat_mechanics_v1.json|data/universal_engine_backlog.txt)$' || true)"
+          unexpected="$(git status --porcelain --untracked-files=all | awk '{print $2}' | grep -Ev '^(backend/app/content/data/combatant_capabilities_v1.json|frontend/browser-heroes.js|frontend/browser-monsters-generated.js|frontend/figure-profiles.js|data/hero_certification_manifest.json|data/monster_certification_manifest.json|data/roster_combat_mechanics_v1.json|data/universal_engine_backlog.txt|data/capability_yield.txt)$' || true)"
           if [ -n "$unexpected" ]; then
             echo "Generator modified files outside its owned outputs:"
             echo "$unexpected"
@@ -48,8 +49,8 @@ jobs:
           fi
       - name: Commit only generator-owned outputs
         run: |
-          outputs="backend/app/content/data/combatant_capabilities_v1.json frontend/browser-heroes.js frontend/browser-monsters-generated.js frontend/figure-profiles.js data/hero_certification_manifest.json data/monster_certification_manifest.json data/roster_combat_mechanics_v1.json data/universal_engine_backlog.txt"
-          if git diff --quiet -- $outputs && [ -z "$(git status --porcelain --untracked-files=all -- data/universal_engine_backlog.txt)" ]; then
+          outputs="backend/app/content/data/combatant_capabilities_v1.json frontend/browser-heroes.js frontend/browser-monsters-generated.js frontend/figure-profiles.js data/hero_certification_manifest.json data/monster_certification_manifest.json data/roster_combat_mechanics_v1.json data/universal_engine_backlog.txt data/capability_yield.txt"
+          if git diff --quiet -- $outputs && [ -z "$(git status --porcelain --untracked-files=all -- data/universal_engine_backlog.txt data/capability_yield.txt)" ]; then
             echo "Generated artifacts already current."
             exit 0
           fi
