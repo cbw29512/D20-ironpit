@@ -15,6 +15,7 @@ from app.content.monster_trait_source_audit import _MODELED_TRAITS, parse_trait_
 from app.content.monster_turn_aura_source import parse_turn_damage_auras
 from app.content.movement_modes import parse_movement_profile, standard_arena_closing_speed
 from app.content.simple_monster_source_attacks import parse_simple_attacks
+from app.content.simple_monster_source_resources import attach_limited_use_resources
 from app.content.simple_monster_source_saves import attach_save_replacement, parse_simple_bonus_save_actions, parse_simple_save_actions
 from app.domain.capabilities import CombatantDefinition
 from app.domain.traits import CombatTrait
@@ -42,6 +43,7 @@ def _initiative(row: dict[str, object]) -> int:
 def _definition(row: dict[str, object]) -> CombatantDefinition:
     attacks, multiattack = parse_simple_attacks(row); defenses = parse_defense_profile(row)
     save_actions = [*parse_simple_save_actions(row), *parse_simple_bonus_save_actions(row)]
+    resources, limited_use_names = attach_limited_use_resources(row, attacks, save_actions)
     multiattack = attach_save_replacement(row, multiattack, save_actions)
     trait_names = parse_trait_names(row.get("traits", "")) if str(row.get("traits", "")).strip() else []
     combat_traits = [_MODELED_TRAITS[name].value for name in trait_names if name in _MODELED_TRAITS]
@@ -59,6 +61,7 @@ def _definition(row: dict[str, object]) -> CombatantDefinition:
         "movement_modes": parse_movement_profile(row["speed"]).model_dump(mode="json"),
         "initiative_bonus": _initiative(row), "attacks": attacks, "primary_attack_id": attacks[0]["id"],
         "save_actions": save_actions, "saving_throw_bonuses": parse_saving_throw_bonuses(row), "combat_traits": combat_traits,
+        "resources": resources, "source_limited_use_names": limited_use_names,
         "source_trait_names": trait_names, "damage_vulnerabilities": sorted(defenses["damage_vulnerabilities"]),
         "damage_resistances": sorted(defenses["damage_resistances"]), "damage_immunities": sorted(defenses["damage_immunities"]),
         "condition_immunities": sorted(defenses["condition_immunities"]),
