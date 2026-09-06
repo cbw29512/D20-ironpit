@@ -21,7 +21,7 @@ from app.domain.traits import CombatTrait
 
 _SIMPLE_SOURCE_NAMES = frozenset({
     "Azer Sentinel", "Berserker", "Blink Dog", "Bone Devil", "Bugbear Stalker", "Bugbear Warrior", "Ettin", "Fire Giant", "Ghoul", "Giant Shark", "Hezrou",
-    "Hill Giant", "Hobgoblin Captain", "Hunter Shark", "Lion", "Magmin", "Merrow", "Nightmare", "Piranha", "Pirate", "Sahuagin Warrior", "Satyr",
+    "Hill Giant", "Hobgoblin Captain", "Hunter Shark", "Lion", "Magmin", "Merrow", "Mimic", "Nightmare", "Piranha", "Pirate", "Sahuagin Warrior", "Satyr",
     "Specter", "Spy", "Tough Boss", "Troll Limb", "Werebear", "Wereboar", "Wererat", "Weretiger", "Werewolf", "Wraith", "Xorn",
 })
 _CHARGE_RIDER = re.compile(r"\bmoved\s+\d+\+\s*feet\s+straight\s+toward\s+(?:it|the target)\s+immediately\s+before\s+the\s+hit\b", re.I)
