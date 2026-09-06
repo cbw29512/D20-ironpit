@@ -21,18 +21,56 @@ _MAX_HP_REDUCTION = re.compile(
     r"(?:the\s+)?(?:(Acid|Bludgeoning|Cold|Fire|Force|Lightning|Necrotic|Piercing|Poison|Psychic|Radiant|Slashing|Thunder)\s+)?damage taken",
     re.I,
 )
+_CONDITION = (
+    r"Blinded|Charmed|Deafened|Frightened|Incapacitated|Invisible|Paralyzed|Petrified|"
+    r"Poisoned|Prone|Restrained|Stunned|Unconscious"
+)
+_TARGET_TIMED_CONDITION = re.compile(
+    rf"\bthe target has the (?P<condition>{_CONDITION}) condition until the "
+    r"(?P<when>start|end) of its next turn\b", re.I,
+)
+_SOURCE_TIMED_CONDITION = re.compile(
+    rf"\bthe target has the (?P<condition>{_CONDITION}) condition until the "
+    r"(?P<when>start|end) of the [A-Za-z][A-Za-z'’ -]*[’']s next turn\b", re.I,
+)
+
+
+def _direct_hit_text(block: str) -> str:
+    match = re.search(r"\bHit:\s*", block, re.I)
+    return block[match.end():] if match else ""
+
+
+def _timed_condition_effects(block: str) -> list[dict[str, object]]:
+    """Compile only unconditional conditions stated directly in Hit prose."""
+    hit_text = _direct_hit_text(block)
+    if not hit_text:
+        return []
+    effects: list[dict[str, object]] = []
+    for pattern, owner in ((_TARGET_TIMED_CONDITION, "target"), (_SOURCE_TIMED_CONDITION, "source")):
+        for match in pattern.finditer(hit_text):
+            prefix = hit_text[:match.start()].lower()
+            clause = re.split(r"[.;]", prefix)[-1]
+            if "saving throw" in clause or "must succeed" in clause:
+                continue
+            effects.append({
+                "kind": "condition",
+                "condition": match.group("condition").lower(),
+                "expiry_timing": f"{owner}_turn_{match.group('when').lower()}",
+            })
+    return effects
 
 
 def parse_hit_riders(block: str) -> list[dict[str, object]]:
     """Compile source attack riders by mathematical outcome; unknown prose remains audited elsewhere."""
     try:
-        effects: list[dict[str, object]] = []
+        effects = _timed_condition_effects(block)
+        timed_conditions = {str(effect["condition"]) for effect in effects if effect.get("kind") == "condition"}
         grapple = _GRAPPLE.search(block)
         if grapple:
             max_size, escape_dc = grapple.groups()
             effects.append({"kind": "grapple", "escape_dc": int(escape_dc), "max_target_size": max_size.lower()})
         prone = _PRONE.search(block)
-        if prone:
+        if prone and "prone" not in timed_conditions:
             effects.append({"kind": "prone", "max_target_size": prone.group(1).lower()})
         if _NEXT_ATTACK_DISADVANTAGE.search(block):
             effects.append({"kind": "next-attack-disadvantage", "expires_at_end_of_target_turn": True})
