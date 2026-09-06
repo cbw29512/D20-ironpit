@@ -3,7 +3,8 @@ from app.combat.saving_throws import resolve_save_action
 from app.combat.state import build_combatant_state
 from app.content.demo import build_goblin_warrior
 from app.content.simple_monster_source_definitions import build_simple_source_definitions
-from app.domain.models import EncounterCombatant, SaveConditionEffect, SavingThrowAction
+from app.domain.actions import SaveConditionEffect, SavingThrowAction
+from app.domain.models import EncounterCombatant
 
 
 def _combatant(combatant_id: str, position_ft: int) -> EncounterCombatant:
