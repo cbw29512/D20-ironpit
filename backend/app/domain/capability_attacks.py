@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName, ActionCost
 from app.domain.areas import AreaGeometry
-from app.domain.capability_effects import AttackEffectDefinition, DiceSpec, GrappleEffectDefinition
+from app.domain.capability_effects import AttackEffectDefinition, ConditionEffectDefinition, DiceSpec, GrappleEffectDefinition
 from app.domain.size import CreatureSize
 from app.domain.weapons import DamageType, WeaponAttackKind
 
@@ -71,6 +71,7 @@ class SaveCapabilityDefinition(BaseModel):
     damage_type: DamageType | None = None
     success_damage: Literal["none", "half"] = "none"
     grapple: GrappleEffectDefinition | None = None
+    failure_conditions: list[ConditionEffectDefinition] = Field(default_factory=list, max_length=8)
     resource_id: str | None = None
     resource_cost: int | None = Field(default=None, ge=1, le=20)
     animation: str = "save-effect"
@@ -83,6 +84,8 @@ class SaveCapabilityDefinition(BaseModel):
             raise ValueError("Save resource cost requires a resource id.")
         if self.grapple and self.grapple.max_target_size and self.target_max_size and self.grapple.max_target_size != self.target_max_size:
             raise ValueError("Save target size and grapple target size cannot disagree.")
+        if any(effect.initial_save_ability is not None or effect.initial_save_dc is not None for effect in self.failure_conditions):
+            raise ValueError("Save-action conditions inherit the action's saving throw and cannot declare another initial save.")
         return self
 
 
