@@ -16,6 +16,7 @@ _MODELED_TRAITS = {
     "Pack Tactics": CombatTrait.PACK_TACTICS,
     "Bloodied Fury": CombatTrait.BLOODIED_FURY,
     "Blood Frenzy": CombatTrait.TARGET_MISSING_HP_ATTACK_ADVANTAGE,
+    "Magic Resistance": CombatTrait.MAGIC_RESISTANCE,
     "Swarm": CombatTrait.SWARM,
     "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
 }
