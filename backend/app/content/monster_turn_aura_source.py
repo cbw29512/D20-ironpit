@@ -4,7 +4,7 @@ import re
 
 from app.content.monster_combat_scope import feature_blocks, normalized_source_text
 from app.content.monster_trait_source_audit import parse_trait_names
-from app.domain.combatants import TurnDamageAuraDefinition
+from app.domain.passive_effects import TurnDamageAuraDefinition
 from app.domain.weapons import DamageType
 
 _FIRE_AURA = re.compile(
