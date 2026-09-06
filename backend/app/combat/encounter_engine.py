@@ -20,6 +20,7 @@ from app.combat.source_bound_effects import cleanup_disabled_source_effects
 from app.combat.start_turn_events import (
     resolve_start_turn_progression_healing, resolve_start_turn_recharges, resolve_start_turn_regeneration,
 )
+from app.combat.start_turn_save_auras import resolve_start_turn_save_auras
 from app.combat.state import refresh_start_of_turn
 from app.combat.timed_conditions import expire_start_of_turn_conditions
 from app.combat.turn_damage_auras import resolve_end_turn_damage_auras
@@ -94,6 +95,8 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                 more, sequence = expire_start_of_turn_conditions(sequence, round_number, member, setup)
                 events.extend(more)
                 more, sequence = resolve_target_condition_timing(sequence, round_number, member, "target_turn_start", dice)
+                events.extend(more)
+                more, sequence = resolve_start_turn_save_auras(sequence, round_number, member, setup, dice)
                 events.extend(more)
                 events, sequence = _flush_deaths(events, sequence, round_number, setup, dice)
                 death_event, sequence = _resolve_zero_hp_turn(sequence, round_number, member, dice)
