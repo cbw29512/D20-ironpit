@@ -5,6 +5,7 @@ import logging
 from app.combat.action_economy import is_available, spend
 from app.combat.barbarian import end_rage_if_incapacitated, extend_rage_from_attack
 from app.combat.bloodied import bloodied_attack_advantage, bloodied_fury_advantage
+from app.combat.combat_prowess import apply_combat_prowess
 from app.combat.condition_rules import close_hit_is_automatic_critical
 from app.combat.conditions import apply_hit_conditions, attack_roll_condition_sources
 from app.combat.damage import BonusDamageSpec, resolve_weapon_damage
@@ -75,6 +76,9 @@ def resolve_attack(
         hit = natural != 1 and (natural_20 or attack_roll.total >= target_ac)
         hit, parry_used = resolve_parry_hit(actual_defender, attack, attack_roll.total, natural, hit)
         if parry_used: target_ac += actual_defender.template.parry_reaction.ac_bonus
+        missed_before_prowess = not hit
+        hit = apply_combat_prowess(attacker, hit, turn_key or f"{round_number}:{attacker_event_id}")
+        prowess_used = missed_before_prowess and hit
         critical = bool(hit and (expanded_critical or (close_hit_is_automatic_critical(actual_defender) and distance_ft <= 5)))
         hp_before = actual_defender.current_hp; temporary_hp_before = actual_defender.temporary_hp
         death_success_before = actual_defender.death_save_successes; death_failure_before = actual_defender.death_save_failures
@@ -107,6 +111,7 @@ def resolve_attack(
         outcome = "CRITICAL HIT" if critical else ("HIT" if hit else "MISS")
         description = f"{attacker.template.name}: {outcome} with {weapon.name}."
         if heroic_reroll: description += " Heroic Inspiration rerolls one d20."
+        if prowess_used: description += " Combat Prowess turns the miss into a hit."
         if not hit and damage_roll is not None: description += f" Graze deals {damage_roll.total} {weapon.damage_type.value} damage."
         if studied_applied: description += f" Studied Attacks primes the next attack against {defender.template.name}."
         if redirect_used: description += f" {defender.template.name} uses Redirect Attack; {actual_defender.template.name} becomes the target."
