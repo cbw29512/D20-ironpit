@@ -35,6 +35,7 @@ class AttackCapabilityDefinition(BaseModel):
     attack_ability_modifier: int | None = None
     rage_eligible: bool = False
     effects: list[AttackEffectDefinition] = Field(default_factory=list)
+    advantage_if_target_grappled_by_self: bool = False
     forbid_target_grappled_by_self: bool = False
     resource_id: str | None = None
     resource_cost: int | None = Field(default=None, ge=1, le=20)
@@ -43,9 +44,7 @@ class AttackCapabilityDefinition(BaseModel):
     def validate_attack_shape(self) -> "AttackCapabilityDefinition":
         if (self.damage is None) == (self.fixed_damage is None):
             raise ValueError("Attack must declare exactly one of damage or fixed_damage.")
-        if self.attack_kind == WeaponAttackKind.RANGED and (
-            self.normal_range_ft is None or self.long_range_ft is None
-        ):
+        if self.attack_kind == WeaponAttackKind.RANGED and (self.normal_range_ft is None or self.long_range_ft is None):
             raise ValueError("Ranged attack requires normal and long range.")
         if self.attack_ability_modifier is not None and self.attack_ability is None:
             raise ValueError("Attack ability modifier requires an explicit attack ability.")
@@ -81,9 +80,8 @@ class SaveCapabilityDefinition(BaseModel):
             raise ValueError("Save damage dice and damage type must be declared together.")
         if self.resource_id is None and self.resource_cost is not None:
             raise ValueError("Save resource cost requires a resource id.")
-        if self.grapple and self.grapple.max_target_size and self.target_max_size:
-            if self.grapple.max_target_size != self.target_max_size:
-                raise ValueError("Save target size and grapple target size cannot disagree.")
+        if self.grapple and self.grapple.max_target_size and self.target_max_size and self.grapple.max_target_size != self.target_max_size:
+            raise ValueError("Save target size and grapple target size cannot disagree.")
         return self
 
 
