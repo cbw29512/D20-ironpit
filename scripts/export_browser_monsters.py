@@ -46,10 +46,14 @@ def _add_attack_resource_metadata(row, template) -> None:
     if len(serialized) != len(attacks):
         raise RuntimeError(f"Attack serialization count drift for {template.id}.")
     for item, attack in zip(serialized, attacks, strict=True):
-        if attack.resource_id is None:
-            continue
-        item["resourceId"] = attack.resource_id
-        item["resourceCost"] = attack.resource_cost
+        if attack.resource_id is not None:
+            item["resourceId"] = attack.resource_id
+            item["resourceCost"] = attack.resource_cost
+        if attack.max_hp_reduction is not None:
+            rider = {}
+            if attack.max_hp_reduction.damage_type is not None:
+                rider["damageType"] = attack.max_hp_reduction.damage_type.value
+            item["maxHpReduction"] = rider
 
 
 def render() -> str:
