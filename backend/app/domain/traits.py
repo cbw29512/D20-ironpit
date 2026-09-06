@@ -3,7 +3,7 @@ from enum import StrEnum
 
 class CombatTrait(StrEnum):
     PACK_TACTICS = "pack-tactics"
-    SAVAGE_ATTACKER = "savage-attacker"
+    SAVAGE_ATTACKER = "savager-attacker"
     ADRENALINE_RUSH = "adrenaline-rush"
     RELENTLESS_ENDURANCE = "relentless-endurance"
     CHARGE = "charge"
@@ -14,5 +14,6 @@ class CombatTrait(StrEnum):
     UNDEAD_FORTITUDE = "undead-fortitude"
     REGENERATION = "regeneration"
     END_TURN_DAMAGE_AURA = "end-turn-damage-aura"
+    DEATH_TRIGGER_SAVE = "death-trigger-save"
     LIFE_DOMAIN = "life-domain"
     MAGIC_RESISTANCE = "magic-resistance"
