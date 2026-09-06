@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 135,
-    "blocked": 195
+    "public_ready": 136,
+    "blocked": 194
   },
   "monsters": [
     {
@@ -1173,15 +1173,15 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "multiattack"
+        "multiattack",
+        "trait"
       ],
       "unsupported_mechanics": [
         "bonus-action",
         "defense-clause",
         "limited-use",
         "reaction",
-        "spellcasting",
-        "trait"
+        "spellcasting"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -1193,8 +1193,7 @@
         "limited-use",
         "monster-combat-mechanics-not-certified",
         "reaction",
-        "spellcasting",
-        "trait"
+        "spellcasting"
       ]
     },
     {
@@ -1535,12 +1534,12 @@
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action"
+        "saving-throw-action",
+        "trait"
       ],
       "unsupported_mechanics": [
         "condition-or-control",
-        "save-or-complex-action",
-        "trait"
+        "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -1549,8 +1548,7 @@
       "blockers": [
         "condition-or-control",
         "monster-combat-mechanics-not-certified",
-        "save-or-complex-action",
-        "trait"
+        "save-or-complex-action"
       ]
     },
     {
@@ -2913,11 +2911,11 @@
       "supported_mechanics": [
         "attack-roll",
         "bonus-action",
-        "multiattack"
+        "multiattack",
+        "trait"
       ],
       "unsupported_mechanics": [
-        "spellcasting",
-        "trait"
+        "spellcasting"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -2925,8 +2923,7 @@
       "public_ready_status": "blocked",
       "blockers": [
         "monster-combat-mechanics-not-certified",
-        "spellcasting",
-        "trait"
+        "spellcasting"
       ]
     },
     {
@@ -5265,11 +5262,11 @@
       ],
       "supported_mechanics": [
         "attack-roll",
-        "damage-or-condition-defense"
+        "damage-or-condition-defense",
+        "trait"
       ],
       "unsupported_mechanics": [
-        "spellcasting",
-        "trait"
+        "spellcasting"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -5277,8 +5274,7 @@
       "public_ready_status": "blocked",
       "blockers": [
         "monster-combat-mechanics-not-certified",
-        "spellcasting",
-        "trait"
+        "spellcasting"
       ]
     },
     {
@@ -6900,12 +6896,12 @@
       "supported_mechanics": [
         "attack-roll",
         "multiattack",
-        "saving-throw-action"
+        "saving-throw-action",
+        "trait"
       ],
       "unsupported_mechanics": [
         "condition-or-control",
-        "save-or-complex-action",
-        "trait"
+        "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -6914,8 +6910,7 @@
       "blockers": [
         "condition-or-control",
         "monster-combat-mechanics-not-certified",
-        "save-or-complex-action",
-        "trait"
+        "save-or-complex-action"
       ]
     },
     {
@@ -6990,14 +6985,14 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "saving-throw-action"
+        "saving-throw-action",
+        "trait"
       ],
       "unsupported_mechanics": [
         "condition-or-control",
         "limited-use",
         "save-or-complex-action",
-        "spellcasting",
-        "trait"
+        "spellcasting"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -7008,8 +7003,7 @@
         "limited-use",
         "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "spellcasting",
-        "trait"
+        "spellcasting"
       ]
     },
     {
@@ -7356,7 +7350,7 @@
       "monster_name": "Sahuagin Warrior",
       "srd_source_page": 321,
       "srd_source_reference": "SRD 5.2.1 p. 321",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-sahuagin-warrior",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -7368,19 +7362,15 @@
         "attack-roll",
         "bonus-action",
         "damage-or-condition-defense",
-        "multiattack"
-      ],
-      "unsupported_mechanics": [
+        "multiattack",
         "trait"
       ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "monster-combat-mechanics-not-certified",
-        "trait"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-salamander",
@@ -7433,11 +7423,11 @@
       ],
       "supported_mechanics": [
         "attack-roll",
-        "saving-throw-action"
+        "saving-throw-action",
+        "trait"
       ],
       "unsupported_mechanics": [
-        "save-or-complex-action",
-        "trait"
+        "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -7445,8 +7435,7 @@
       "public_ready_status": "blocked",
       "blockers": [
         "monster-combat-mechanics-not-certified",
-        "save-or-complex-action",
-        "trait"
+        "save-or-complex-action"
       ]
     },
     {
@@ -7922,12 +7911,12 @@
       ],
       "supported_mechanics": [
         "attack-roll",
-        "damage-or-condition-defense"
+        "damage-or-condition-defense",
+        "trait"
       ],
       "unsupported_mechanics": [
         "limited-use",
-        "reaction",
-        "trait"
+        "reaction"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -7936,8 +7925,7 @@
       "blockers": [
         "limited-use",
         "monster-combat-mechanics-not-certified",
-        "reaction",
-        "trait"
+        "reaction"
       ]
     },
     {
@@ -8156,13 +8144,13 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "multiattack"
+        "multiattack",
+        "trait"
       ],
       "unsupported_mechanics": [
         "bonus-action",
         "limited-use",
-        "spellcasting",
-        "trait"
+        "spellcasting"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -8172,8 +8160,7 @@
         "bonus-action",
         "limited-use",
         "monster-combat-mechanics-not-certified",
-        "spellcasting",
-        "trait"
+        "spellcasting"
       ]
     },
     {
