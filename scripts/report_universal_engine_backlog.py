@@ -62,14 +62,15 @@ def _monster_family_rows(blockers_by_name: dict[str, list[str]]) -> list[tuple[s
 
     signatures = build_blocker_signatures(blockers_by_name)
     immediate = single_family_yields(signatures)
-    return sorted(
+    rows = [
         (
             family,
             len(immediate.get(family, ())),
             len(monsters),
         )
         for family, monsters in affected.items()
-    , key=lambda row: (-row[1], -row[2], row[0]))
+    ]
+    return sorted(rows, key=lambda row: (-row[1], -row[2], row[0]))
 
 
 def _hero_rows(statuses: dict[str, str]) -> list[tuple[str, str, int, int, str]]:
