@@ -21,6 +21,7 @@ _MODELED_TRAITS = {
     "Regeneration": CombatTrait.REGENERATION,
     "Fire Aura": CombatTrait.END_TURN_DAMAGE_AURA,
     "Death Burst": CombatTrait.DEATH_TRIGGER_SAVE,
+    "Aura of Authority": CombatTrait.ALLY_ROLL_AURA,
     "Swarm": CombatTrait.SWARM,
     "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
 }
