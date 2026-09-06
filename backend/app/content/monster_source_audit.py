@@ -77,9 +77,9 @@ def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) ->
         issues.extend(limited_use_issues(template, row))
         issues.extend(legendary_action_issues(template, row))
         issues.extend(spellcasting_issues(template, row))
-        issues.extend(survival_action_issues(row.get("actions", "")))
         actions = normalized(row.get("actions", ""))
         runtime_attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
+        issues.extend(survival_action_issues(row.get("actions", ""), runtime_attacks))
         if _source_attack_mode_count(actions) != len(runtime_attacks):
             issues.append("source-attack-count-mismatch")
         if len(_SAVING_THROW.findall(actions)) != len(template.saving_throw_actions):
