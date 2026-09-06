@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.content.capability_attack_compiler import UnsupportedCapabilityError, compile_attack
-from app.domain.actions import AttackActionDefinition, AttackActionSlot, SavingThrowAction
+from app.domain.actions import AttackActionDefinition, AttackActionSlot, SaveConditionEffect, SavingThrowAction
 from app.domain.capabilities import CombatantDefinition, SaveCapabilityDefinition
 from app.domain.models import CombatantTemplate
 
@@ -25,6 +25,14 @@ def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
         success_damage=definition.success_damage,
         grapple_escape_dc=grapple.escape_dc if grapple else None,
         restrains_while_grappled=grapple.restrains if grapple else False,
+        failure_conditions=[SaveConditionEffect(
+            condition_id=effect.condition,
+            expiry_timing=effect.expiry_timing,
+            repeat_save_ability=effect.repeat_save_ability,
+            repeat_save_dc=effect.repeat_save_dc,
+            repeat_save_timing=effect.repeat_save_timing,
+            allowed_removal_action_ids=effect.allowed_removal_action_ids,
+        ) for effect in definition.failure_conditions],
         resource_id=definition.resource_id,
         resource_cost=definition.resource_cost or 1,
         animation=definition.animation,
