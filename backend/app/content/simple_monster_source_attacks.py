@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 import re
 
-from app.content.monster_combat_scope import feature_blocks
+from app.content.monster_combat_scope import base_feature_name, feature_blocks, strip_post_combat_outcomes
 from app.content.monster_trait_source_audit import parse_trait_names
 from app.content.simple_monster_source_riders import parse_hit_riders
 
@@ -15,6 +15,7 @@ _HYBRID = re.compile(rf"\bMelee or Ranged Attack Roll:\s*([+-]?\d+)(?:\s*\([^)]*
 _EXTRA_DICE = re.compile(r"\bplus\s+\d+\s*\(\s*(\d+)d(\d+)(?:\s*([+-])\s*(\d+))?\s*\)\s*([A-Za-z]+)\s+damage", re.I)
 _EXTRA_FIXED = re.compile(r"\bplus\s+(\d+)\s+([A-Za-z]+)\s+damage\b", re.I)
 _GRAPPLE_ADV = re.compile(r"\bwith Advantage if the target is Grappled by the [^)]+", re.I)
+_REPLACE_ATTACK = re.compile(r"\bcan replace one attack with a (?P<name>[A-Z][A-Za-z’'\- ]+?) attack\.", re.I)
 _COUNT = r"one|two|three|four|five|six|\d+"
 _SIMPLE_MULTI_CHOICE = re.compile(
     rf"\bmakes\s+({_COUNT})\s+([A-Z][A-Za-z’'\-]*(?:\s+[A-Z][A-Za-z’'\-]*)?(?:\s+or\s+[A-Z][A-Za-z’'\-]*(?:\s+[A-Z][A-Za-z’'\-]*)?)+)\s+attacks?\b",
@@ -58,7 +59,7 @@ def _entry(monster_slug: str, heading: str, mode: str, bonus: str, reach: str | 
 
 def parse_simple_attacks(row: dict[str, object]) -> tuple[list[dict[str, object]], dict[str, object] | None]:
     try:
-        source = str(row.get("actions", "")); headings = parse_trait_names(source, preserve_annotations=True)
+        source = strip_post_combat_outcomes(row.get("actions", "")); headings = parse_trait_names(source, preserve_annotations=True)
         blocks = feature_blocks(source, headings); monster_slug = _slug(str(row["name"])); attacks = []
         by_name: dict[str, list[str]] = {}
         for heading, block in blocks.items():
@@ -84,6 +85,15 @@ def parse_simple_attacks(row: dict[str, object]) -> tuple[list[dict[str, object]
         logger.exception("Failed to parse simple source attacks for %r", row.get("name")); raise
 
 
+def _replacement_ids(source: str, by_name: dict[str, list[str]]) -> list[str]:
+    match = _REPLACE_ATTACK.search(source)
+    if match is None: return []
+    wanted = match.group("name").strip().casefold()
+    matches = [ids for heading, ids in by_name.items() if base_feature_name(heading).casefold() == wanted]
+    if len(matches) != 1: raise ValueError(f"Replacement attack {match.group('name')!r} did not resolve uniquely.")
+    return matches[0]
+
+
 def _parse_multiattack(row: dict[str, object], source: str | None, by_name: dict[str, list[str]]) -> dict[str, object] | None:
     if source is None: return None
     declared = re.search(rf"\bmakes\s+({_COUNT})\s+attacks?\b", source, re.I)
@@ -102,4 +112,8 @@ def _parse_multiattack(row: dict[str, object], source: str | None, by_name: dict
             if name in by_name: slots.extend({"attack_ids": by_name[name]} for _ in range(_number(count)))
         total = _number(declared.group(1)) if declared else sum(_number(count) for count, name in parts if name in by_name)
         if not total or len(slots) != total: raise ValueError(f"Unrecognized fixed Multiattack sequence for {row['name']!r}: {source!r}")
+    replacement_ids = _replacement_ids(source, by_name)
+    if replacement_ids:
+        if not slots: raise ValueError(f"Replacement attack requires a Multiattack slot for {row['name']!r}.")
+        slots[0]["attack_ids"] = list(dict.fromkeys([*slots[0]["attack_ids"], *replacement_ids]))
     return {"id": f"srd-{_slug(str(row['name']))}-multiattack", "name": "Multiattack", "is_attack_action": False, "slots": slots}
