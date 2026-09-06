@@ -47,6 +47,22 @@ Conceptually:
 
 Example: +4 Strength and +3 Dexterity both apply because they affect different stats. +4 Strength and +2 Strength do not stack; use +4 Strength.
 
+## Dynamic derived-stat recomputation
+
+Runtime ability-score buffs and debuffs modify the effective ability score first. Every derived combat value must read that current effective score rather than a cached starting modifier.
+
+Example:
+
+- Strength 18 has a +4 modifier.
+- A +4 Strength runtime buff produces effective Strength 22 and therefore a +6 modifier.
+- Strength-based attack rolls, Strength-based damage, Strength saving throws, and any other combat-relevant Strength-derived calculation immediately use +6 instead of +4.
+- When the buff expires, those derived values immediately return to the values produced by the unmodified score.
+- Negative ability-score effects work the same way in reverse.
+
+This evaluation is dynamic throughout combat. At minimum, active effects are reconciled each round and whenever an effect is applied, expires, is removed, suppressed, or replaced. Do not permanently mutate the source combatant definition.
+
+The same rule applies to Dexterity, Constitution, Intelligence, Wisdom, and Charisma. If an affected ability is used for a spell attack, spell save DC, saving throw, attack, damage, or another modeled combat calculation, the derived value must use the current effective ability score.
+
 ## Advantage and Disadvantage
 
 Advantage and Disadvantage are binary and never stack.
