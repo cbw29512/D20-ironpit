@@ -81,6 +81,32 @@ War clerics and other balanced combat-oriented cleric packages should use an app
 
 The package does not need artificial exact symmetry if one spell level has a clearly better simple legal option, but the overall identity should remain balanced rather than drifting into healer-only or damage-only behavior.
 
+## Bard packages
+
+Bards follow the same curated Iron Pit spell path rather than carrying a full tabletop spell list.
+
+- keep the package small and deterministic;
+- favor a simple mix of one useful buff, one useful debuff/control option, and straightforward damage choices as spell levels permit;
+- prefer buffs/debuffs that resolve through universal AC, attack/save modifier, Advantage/Disadvantage, condition, healing, or damage primitives;
+- exclude social/exploration-only bard spells from runtime selection and certification blockers;
+- avoid mechanically elaborate illusion, charm, summon, terrain, or multi-entity spells when a simpler legal bard spell provides a comparable combat role;
+- add more exotic bard magic later only as a deliberate engine-expansion project.
+
+The Bard should still feel like a support/control caster, but Iron Pit expresses that identity using a small set of mathematically clean combat spells rather than reproducing every tabletop option.
+
+## Paladin packages
+
+Paladins also follow the same curated Iron Pit spell path.
+
+- keep the package small, deterministic, and combat-only;
+- prefer straightforward healing, buffs, defenses, and damage/smite-style effects that reuse universal engine primitives;
+- do not include utility-only paladin spells merely because they appear on the tabletop class list;
+- avoid complicated aura, summon, terrain, or special-targeting spell machinery when a simpler legal paladin spell fills the same combat role;
+- preserve the Paladin's hybrid martial/support identity without turning spell selection into a separate tactical subsystem;
+- add harder paladin spells later only when deliberately selected for future engine expansion.
+
+Paladin attacks, smites, healing, AC effects, Advantage/Disadvantage, conditions, and resources should reuse the same universal combat primitives used by monsters, clerics, bards, and every other Iron Pit combatant.
+
 ## Spell-level progression
 
 Caster progression extends one deterministic class/role package over time rather than inventing a new spellbook at every level.
@@ -88,10 +114,12 @@ Caster progression extends one deterministic class/role package over time rather
 When a character gains access to a new spell level:
 
 1. choose from the approved simple Iron Pit spell pool for that class/theme/role;
-2. preserve the role ratios above;
+2. preserve the role ratios or class identity rules above;
 3. prefer already-supported universal mechanics;
 4. avoid introducing a complex new engine feature merely to match a tabletop spell when a simpler legal spell can fill the same combat role;
 5. add harder spells later only when deliberately selected for a future engine-expansion tranche.
+
+This progression rule explicitly applies to full casters and partial/half casters, including Cleric, Bard, Paladin, and other spellcasting classes represented in Iron Pit.
 
 ## Certification consequence
 
