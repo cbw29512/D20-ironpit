@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.barbarian import rage_active
+from app.combat.bloodied import bloodied_save_advantage
 from app.combat.condition_rules import automatically_fails_strength_dexterity_save
 from app.combat.danger_sense import danger_sense_advantage
 from app.combat.dice import DiceProvider
@@ -14,6 +15,7 @@ from app.domain.traits import CombatTrait
 
 def saving_throw_mode(state: CombatantState, ability: str, *, against_magic: bool = False) -> RollMode:
     advantage = int(ability == "strength" and rage_active(state)) + danger_sense_advantage(state, ability)
+    advantage += bloodied_save_advantage(state)
     advantage += int(against_magic and CombatTrait.MAGIC_RESISTANCE in state.template.combat_traits)
     disadvantage = 1 if ability == "dexterity" and RESTRAINED_EFFECT_ID in state.active_effect_ids else 0
     if (advantage > 0) == (disadvantage > 0):
