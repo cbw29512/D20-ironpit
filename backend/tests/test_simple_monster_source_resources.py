@@ -17,6 +17,7 @@ def test_per_day_attack_binds_to_finite_resource() -> None:
         "name": "Flame Burst",
         "max_uses": 2,
     }]
+    assert "recharge" not in resources[0]
     assert attacks[0]["resource_id"] == resources[0]["id"]
     assert attacks[0]["resource_cost"] == 1
 
