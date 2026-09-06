@@ -45,12 +45,12 @@
   }
 
   function resolveAction(sequence, round, actor, target, action, distance, options = {}) {
-    const spendAction = options.spendAction !== false, spendResource = options.spendResource !== false;
-    if (spendAction && !E().available(actor.state, "action")) throw new Error("Action is unavailable for saving throw action.");
+    const spendAction = options.spendAction !== false, spendResource = options.spendResource !== false, actionCost = action.actionCost || "action";
+    if (spendAction && !E().available(actor.state, actionCost)) throw new Error(`${actionCost.replace("_", " ")} is unavailable for saving throw action.`);
     if (spendResource && !resourceAvailable(actor.state, action)) throw new Error(`${action.name} resource is unavailable.`);
     if (!legalAction(action, target, distance)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
     const save = resolveSavingThrow(target.state, action.saveAbility, action.dc, Boolean(options.againstMagic));
-    if (spendAction) E().spend(actor.state, "action");
+    if (spendAction) E().spend(actor.state, actionCost);
     if (spendResource && action.resourceId) X().spend(actor.state, action.resourceId, action.resourceCost || 1);
     const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
     const deathSuccessBefore = target.state.death_save_successes, deathFailureBefore = target.state.death_save_failures;
@@ -127,10 +127,12 @@
     return candidates[0]?.targets || [];
   }
 
-  function resolveTurnAction(sequence, round, actor, setup, resourceBackedOnly) {
-    if (!E().available(actor.state, "action")) return { events: [], sequence, used: false };
+  function resolveTurnAction(sequence, round, actor, setup, resourceBackedOnly, actionCost = "action") {
+    if (!E().available(actor.state, actionCost)) return { events: [], sequence, used: false };
     for (const action of actor.state.template.saving_throw_actions || []) {
-      if (resourceBackedOnly !== Boolean(action.resourceId) || !resourceAvailable(actor.state, action)) continue;
+      if ((action.actionCost || "action") !== actionCost) continue;
+      if (resourceBackedOnly != null && resourceBackedOnly !== Boolean(action.resourceId)) continue;
+      if (!resourceAvailable(actor.state, action)) continue;
       const targets = targetsFor(actor, setup, action); if (!targets.length) continue;
       const events = []; let shared = null;
       targets.forEach((target, index) => {
