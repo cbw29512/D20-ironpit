@@ -6,9 +6,10 @@ from app.domain.catalog import CoverageStatus
 
 _EXPECTED_SIMPLE_SOURCE = {
     "Azer Sentinel", "Berserker", "Blink Dog", "Bone Devil", "Bugbear Warrior", "Ettin", "Fire Giant", "Hezrou",
-    "Hill Giant", "Hobgoblin Captain", "Magmin", "Merrow", "Mimic", "Nightmare", "Sahuagin Warrior", "Satyr",
+    "Hill Giant", "Hobgoblin Captain", "Magmin", "Merrow", "Nightmare", "Sahuagin Warrior", "Satyr",
     "Specter", "Spy", "Tough Boss", "Troll Limb", "Wraith", "Xorn",
 }
+_EXPECTED_READY_SOURCE = _EXPECTED_SIMPLE_SOURCE - {"Specter", "Wraith"}
 
 
 def test_simple_source_family_compiles_without_bespoke_monster_builders() -> None:
@@ -95,7 +96,8 @@ def test_simple_source_parser_compiles_maximum_hp_drain_by_damage_outcome() -> N
 
 def test_simple_source_family_is_promoted_only_through_full_catalog_audit() -> None:
     cards = {card.name: card for card in build_monster_catalog()}
-    for name in _EXPECTED_SIMPLE_SOURCE:
+    for name in _EXPECTED_READY_SOURCE:
         assert cards[name].coverage_status is CoverageStatus.RAW_READY
         assert cards[name].blockers == []
-    assert cards["Roper"].coverage_status is CoverageStatus.BLOCKED
+    for name in ("Mimic", "Roper", "Specter", "Wraith"):
+        assert cards[name].coverage_status is CoverageStatus.BLOCKED
