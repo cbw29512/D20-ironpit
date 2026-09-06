@@ -16,6 +16,10 @@ _EXTRA_DICE = re.compile(r"\bplus\s+\d+\s*\(\s*(\d+)d(\d+)(?:\s*([+-])\s*(\d+))?
 _EXTRA_FIXED = re.compile(r"\bplus\s+(\d+)\s+([A-Za-z]+)\s+damage\b", re.I)
 _GRAPPLE_ADV = re.compile(r"\bwith Advantage if the target is Grappled by the [^)]+", re.I)
 _COUNT = r"one|two|three|four|five|six|\d+"
+_SIMPLE_MULTI_CHOICE = re.compile(
+    rf"\bmakes\s+({_COUNT})\s+([A-Z][A-Za-z’'\-]*(?:\s+[A-Z][A-Za-z’'\-]*)?(?:\s+or\s+[A-Z][A-Za-z’'\-]*(?:\s+[A-Z][A-Za-z’'\-]*)?)+)\s+attacks?\b",
+    re.I,
+)
 
 
 def _slug(value: str) -> str: return re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
@@ -84,11 +88,14 @@ def _parse_multiattack(row: dict[str, object], source: str | None, by_name: dict
     if source is None: return None
     declared = re.search(rf"\bmakes\s+({_COUNT})\s+attacks?\b", source, re.I)
     choice = re.search(r"\busing\s+(.+?)\s+in\s+any\s+combination\b", source, re.I); slots = []
-    if choice:
-        if declared is None: raise ValueError(f"Unrecognized Multiattack count for {row['name']!r}: {source!r}")
-        names = [item.strip() for item in re.split(r"\s+or\s+|,", choice.group(1)) if item.strip()]
+    simple_choice = _SIMPLE_MULTI_CHOICE.search(source)
+    if choice or simple_choice:
+        count = declared.group(1) if choice and declared else simple_choice.group(1) if simple_choice else None
+        names_source = choice.group(1) if choice else simple_choice.group(2)
+        if count is None: raise ValueError(f"Unrecognized Multiattack count for {row['name']!r}: {source!r}")
+        names = [item.strip() for item in re.split(r"\s+or\s+|,", names_source) if item.strip()]
         if any(name not in by_name for name in names): raise ValueError(f"Multiattack references an unknown attack for {row['name']!r}.")
-        ids = [attack_id for name in names for attack_id in by_name[name]]; slots = [{"attack_ids": ids} for _ in range(_number(declared.group(1)))]
+        ids = [attack_id for name in names for attack_id in by_name[name]]; slots = [{"attack_ids": ids} for _ in range(_number(count))]
     else:
         parts = re.findall(rf"\b({_COUNT})\s+([A-Z][A-Za-z’'\-]*(?:\s+[A-Z][A-Za-z’'\-]*)?)(?=\s+(?:attacks?\b|and\b|,|$))", source)
         for count, name in parts:
