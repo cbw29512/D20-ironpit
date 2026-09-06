@@ -75,7 +75,7 @@
     const natural = attackRoll.selected_roll, naturalTwenty = natural === 20, baseTargetAc = M().effectiveArmorClass(actualTarget.state);
     const initialHit = natural !== 1 && (naturalTwenty || attackRoll.total >= baseTargetAc);
     const parry = window.IRON_PIT_BROWSER_REACTIONS?.parryHit?.(actualTarget.state, attack, attackRoll, initialHit, baseTargetAc) || { hit: initialHit, used: false };
-    const hit = parry.hit, targetAc = baseTargetAc + (parry.used ? actualTarget.state.template.parry_reaction.ac_bonus : 0);
+    const turnKey = extra.turnKey || `${round}:${attacker.combatant_id}`, prowessUsed = !parry.hit && Boolean(attacker.state.template.combat_prowess) && attacker.state.feature_last_turn_keys["boon-combat-prowess"] !== turnKey; if (prowessUsed) attacker.state.feature_last_turn_keys["boon-combat-prowess"] = turnKey; const hit = parry.hit || prowessUsed, targetAc = baseTargetAc + (parry.used ? actualTarget.state.template.parry_reaction.ac_bonus : 0);
     const expandedCritical = natural >= (attacker.state.template.critical_hit_minimum || 20);
     const critical = Boolean(hit && (expandedCritical || (Q().autoCritical(actualTarget.state) && distance <= 5)));
     const hpBefore = actualTarget.state.current_hp, temporaryHpBefore = actualTarget.state.temporary_hp;
@@ -84,7 +84,7 @@
     let damageRoll = null, damageComponents = [], damageOutcome = null, sapApplied = "", vexApplied = false, studiedApplied = false;
     let topple = { saveRoll: null, saveDc: null, saveSucceeded: null, applied: false }; const applied = [];
     if (hit) {
-      const damage = R().weaponDamage(attacker.state, attack, critical, mode, extra.turnKey || `${round}:${attacker.combatant_id}`,
+      const damage = R().weaponDamage(attacker.state, attack, critical, mode, turnKey,
         extra.bonusDamage || null, actualTarget.state, window.IRON_PIT_BROWSER_SNEAK_ATTACK?.allyAvailable(attacker, extra.setup) || false);
       damageComponents = damage.components.map((part) => ({ ...part, applied_total: adjustedDamage(actualTarget.state, part.total, part.damage_type) }));
       damageRoll = { ...damage.roll, total: damageComponents.reduce((sum, part) => sum + part.applied_total, 0) };
@@ -126,7 +126,7 @@
     if (studiedApplied) description += ` Studied Attacks primes the next attack against ${target.state.template.name}.`;
     if (recklessStarted) description += ` ${attacker.state.template.name} uses Reckless Attack.`;
     if (redirected) description += ` ${target.state.template.name} uses Redirect Attack; ${actualTarget.state.template.name} becomes the target.`;
-    if (parry.used) description += ` ${actualTarget.state.template.name} uses Parry.`;
+    if (parry.used) description += ` ${actualTarget.state.template.name} uses Parry.`; if (prowessUsed) description += ` ${attacker.state.template.name} uses Boon of Combat Prowess to turn the miss into a hit.`;
     if (sapApplied === "weapon") description += ` Sap mastery affects ${actualTarget.state.template.name}.`;
     if (sapApplied === "tactical") description += ` Tactical Master applies Sap to ${actualTarget.state.template.name}.`;
     if (vexApplied) description += ` Vex primes the next attack against ${actualTarget.state.template.name}.`;
@@ -142,7 +142,7 @@
       death_save_successes_before: deathSuccessBefore, death_save_failures_before: deathFailureBefore,
       death_save_successes: actualTarget.state.death_save_successes, death_save_failures: actualTarget.state.death_save_failures,
       is_stable: actualTarget.state.is_stable, is_dead: actualTarget.state.is_dead, weapon_id: attack.id, projectile: attack.projectile || null,
-      feature_id: extra.featureId || (recklessStarted ? "reckless-attack" : null), concentration_ended_effect_id: concentrationBefore && !actualTarget.state.concentration ? concentrationBefore : null,
+      feature_id: extra.featureId || (prowessUsed ? "boon-combat-prowess" : recklessStarted ? "reckless-attack" : null), concentration_ended_effect_id: concentrationBefore && !actualTarget.state.concentration ? concentrationBefore : null,
       animation: attack.animation || (attack.kind === "ranged" ? "projectile" : "slash"), description };
     return window.IRON_PIT_BROWSER_CHAMPION?.criticalMove(attacker, extra.setup, event) || event;
   }
