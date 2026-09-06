@@ -3,6 +3,7 @@ from __future__ import annotations
 import re
 
 from app.content.monster_catalog import load_monster_rows
+from app.content.monster_death_trigger_source import parse_death_trigger_saves
 from app.content.monster_defense_source_audit import parse_defense_profile
 from app.content.monster_regeneration_source import parse_regeneration
 from app.content.monster_saving_throws import parse_saving_throw_bonuses
@@ -13,7 +14,7 @@ from app.content.simple_monster_source_attacks import parse_simple_attacks
 from app.domain.capabilities import CombatantDefinition
 
 _SIMPLE_SOURCE_NAMES = frozenset({
-    "Azer Sentinel", "Berserker", "Blink Dog", "Ettin", "Fire Giant", "Nightmare",
+    "Azer Sentinel", "Berserker", "Blink Dog", "Ettin", "Fire Giant", "Magmin", "Nightmare",
     "Sahuagin Warrior", "Spy", "Tough Boss", "Troll Limb", "Xorn",
 })
 
@@ -39,6 +40,7 @@ def _definition(row: dict[str, object]) -> CombatantDefinition:
     combat_traits = [_MODELED_TRAITS[name].value for name in trait_names if name in _MODELED_TRAITS]
     regeneration = parse_regeneration(row)
     turn_damage_auras = parse_turn_damage_auras(row)
+    death_trigger_saves = parse_death_trigger_saves(row)
     name = str(row["name"])
     slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
     data: dict[str, object] = {
@@ -72,6 +74,8 @@ def _definition(row: dict[str, object]) -> CombatantDefinition:
         data["regeneration"] = regeneration.model_dump(mode="json")
     if turn_damage_auras:
         data["turn_damage_auras"] = [aura.model_dump(mode="json") for aura in turn_damage_auras]
+    if death_trigger_saves:
+        data["death_trigger_save_actions"] = [action.model_dump(mode="json") for action in death_trigger_saves]
     return CombatantDefinition.model_validate(data)
 
 
