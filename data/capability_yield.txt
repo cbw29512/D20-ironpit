@@ -1,18 +1,18 @@
-CAPABILITY_YIELD_BASELINE	ready=146	blocked=184	actionable_blocked=174	deferred=10	signatures=68
+CAPABILITY_YIELD_BASELINE	ready=147	blocked=183	actionable_blocked=173	deferred=10	signatures=68
 CAPABILITY_DEFERRED_ENVIRONMENT	Giant Seahorse | Giant Shark | Hunter Shark | Killer Whale | Octopus | Piranha | Reef Shark | Seahorse | Swarm of Piranhas
 CAPABILITY_DEFERRED_NONCOMBAT	Shrieker Fungus
-CAPABILITY_SINGLE_FAMILY	condition-or-control	6	Animated Rug of Smothering | Bone Devil | Giant Toad | Merrow | Phase Spider | Roper
+CAPABILITY_SINGLE_FAMILY	condition-or-control	5	Animated Rug of Smothering | Bone Devil | Giant Toad | Phase Spider | Roper
 CAPABILITY_SINGLE_FAMILY	save-or-complex-action	4	Horned Devil | Werebear | Wererat | Werewolf
 CAPABILITY_SINGLE_FAMILY	trait	4	Barbed Devil | Fire Elemental | Flesh Golem | Hydra
 CAPABILITY_SINGLE_FAMILY	unclassified-source-audit-gap	4	Bugbear Warrior | Mimic | Shadow | Stirge
 CAPABILITY_SINGLE_FAMILY	spellcasting	3	Druid | Dryad | Imp
 CAPABILITY_SINGLE_FAMILY	bonus-action	1	Bugbear Stalker
 CAPABILITY_SINGLE_FAMILY	reaction	1	Ochre Jelly
-CAPABILITY_CONTROL_SIGNATURE	poisoned	3	Bone Devil | Merrow | Roper
+CAPABILITY_CONTROL_SIGNATURE	poisoned	2	Bone Devil | Roper
 CAPABILITY_CONTROL_SIGNATURE	blinded+prone+restrained+swallow	1	Giant Toad
 CAPABILITY_CONTROL_SIGNATURE	blinded+restrained	1	Animated Rug of Smothering
 CAPABILITY_CONTROL_SIGNATURE	paralyzed+poisoned	1	Phase Spider
-CAPABILITY_CONTROL_EFFECT	poisoned	4	Bone Devil | Merrow | Phase Spider | Roper
+CAPABILITY_CONTROL_EFFECT	poisoned	3	Bone Devil | Phase Spider | Roper
 CAPABILITY_CONTROL_EFFECT	blinded	2	Animated Rug of Smothering | Giant Toad
 CAPABILITY_CONTROL_EFFECT	restrained	2	Animated Rug of Smothering | Giant Toad
 CAPABILITY_CONTROL_EFFECT	paralyzed	1	Phase Spider
@@ -34,7 +34,7 @@ CAPABILITY_SIGNATURE	8	condition-or-control+legendary+limited-use+save-or-comple
 CAPABILITY_SIGNATURE	7	bonus-action+limited-use	Basilisk | Centaur Trooper | Frost Giant | Giant Hyena | Gnoll Warrior | Medusa | Nalfeshnee
 CAPABILITY_SIGNATURE	7	limited-use+save-or-complex-action	Ankheg | Copper Dragon Wyrmling | Gold Dragon Wyrmling | Magma Mephit | Swarm of Ravens | Young Copper Dragon | Young Gold Dragon
 CAPABILITY_SIGNATURE	6	bonus-action+limited-use+spellcasting	Cultist Fanatic | Drider | Incubus | Priest | Priest Acolyte | Stone Golem
-CAPABILITY_SIGNATURE	6	condition-or-control	Animated Rug of Smothering | Bone Devil | Giant Toad | Merrow | Phase Spider | Roper
+CAPABILITY_SIGNATURE	5	condition-or-control	Animated Rug of Smothering | Bone Devil | Giant Toad | Phase Spider | Roper
 CAPABILITY_SIGNATURE	4	condition-or-control+limited-use+save-or-complex-action+spellcasting	Doppelganger | Dust Mephit | Quasit | Storm Giant
 CAPABILITY_SIGNATURE	4	save-or-complex-action	Horned Devil | Werebear | Wererat | Werewolf
 CAPABILITY_SIGNATURE	4	spellcasting+trait	Efreeti | Gray Ooze | Green Hag | Spirit Naga
