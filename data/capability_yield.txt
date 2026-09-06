@@ -1,11 +1,11 @@
-CAPABILITY_YIELD_BASELINE	ready=150	blocked=180	actionable_blocked=170	deferred=10	signatures=68
+CAPABILITY_YIELD_BASELINE	ready=149	blocked=181	actionable_blocked=171	deferred=10	signatures=68
 CAPABILITY_DEFERRED_ENVIRONMENT	Giant Seahorse | Giant Shark | Hunter Shark | Killer Whale | Octopus | Piranha | Reef Shark | Seahorse | Swarm of Piranhas
 CAPABILITY_DEFERRED_NONCOMBAT	Shrieker Fungus
 CAPABILITY_SINGLE_FAMILY	condition-or-control	4	Animated Rug of Smothering | Giant Toad | Phase Spider | Roper
 CAPABILITY_SINGLE_FAMILY	save-or-complex-action	4	Horned Devil | Werebear | Wererat | Werewolf
 CAPABILITY_SINGLE_FAMILY	trait	4	Barbed Devil | Fire Elemental | Flesh Golem | Hydra
 CAPABILITY_SINGLE_FAMILY	spellcasting	3	Druid | Dryad | Imp
-CAPABILITY_SINGLE_FAMILY	unclassified-source-audit-gap	2	Shadow | Stirge
+CAPABILITY_SINGLE_FAMILY	unclassified-source-audit-gap	3	Mimic | Shadow | Stirge
 CAPABILITY_SINGLE_FAMILY	bonus-action	1	Bugbear Stalker
 CAPABILITY_SINGLE_FAMILY	reaction	1	Ochre Jelly
 CAPABILITY_CONTROL_SIGNATURE	blinded+prone+restrained+swallow	1	Giant Toad
@@ -45,10 +45,10 @@ CAPABILITY_SIGNATURE	3	condition-or-control+limited-use+save-or-complex-action+s
 CAPABILITY_SIGNATURE	3	condition-or-control+save-or-complex-action+unsupported-action-rider	Death Dog | Mummy | Otyugh
 CAPABILITY_SIGNATURE	3	spellcasting	Druid | Dryad | Imp
 CAPABILITY_SIGNATURE	3	trait+unsupported-action-rider	Clay Golem | Specter | Wraith
+CAPABILITY_SIGNATURE	3	unclassified-source-audit-gap	Mimic | Shadow | Stirge
 CAPABILITY_SIGNATURE	2	bonus-action+condition-or-control+spellcasting	Cloud Giant | Oni
 CAPABILITY_SIGNATURE	2	bonus-action+limited-use+save-or-complex-action+spellcasting+trait	Deva | Planetar
 CAPABILITY_SIGNATURE	2	condition-or-control+legendary+limited-use+save-or-complex-action+trait	Aboleth | Kraken
 CAPABILITY_SIGNATURE	2	condition-or-control+limited-use+reaction	Giant Octopus | Stone Giant
 CAPABILITY_SIGNATURE	2	condition-or-control+limited-use+save-or-complex-action+trait	Gibbering Mouther | Water Elemental
 CAPABILITY_SIGNATURE	2	condition-or-control+save-or-complex-action+spellcasting	Lamia | Sprite
-CAPABILITY_SIGNATURE	2	condition-or-control+save-or-complex-action+spellcasting+trait	Gelatinous Cube | Guardian Naga
