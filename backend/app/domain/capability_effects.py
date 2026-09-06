@@ -40,6 +40,7 @@ class GrappleEffectDefinition(BaseModel):
     escape_dc: int = Field(ge=1, le=40)
     max_target_size: CreatureSize | None = None
     restrains: bool = False
+    escape_check_disadvantage: bool = False
 
 
 class ConditionEffectDefinition(BaseModel):
