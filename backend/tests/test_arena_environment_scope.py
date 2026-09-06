@@ -2,6 +2,7 @@ from app.content.arena_eligibility import deferred_environment_reason, standard_
 from app.content.legacy_monster_roster import build_legacy_monster_templates
 from app.content.monster_catalog import build_monster_catalog, load_monster_rows
 from app.content.monsters_zero_engine import build_zero_engine_monsters
+from app.content.simple_monster_source_definitions import build_simple_source_definitions
 from app.domain.catalog import CoverageStatus
 from app.domain.movement import MovementModes
 
@@ -41,6 +42,17 @@ def test_srd_catalog_has_nine_aquatic_only_environment_deferrals() -> None:
     }
 
     assert len(deferred) == 9
+
+
+def test_deferred_aquatic_only_never_enter_simple_source_registry() -> None:
+    rows = {str(row["name"]): row for row in load_monster_rows()}
+    definitions = build_simple_source_definitions()
+
+    assert definitions
+    assert all(
+        deferred_environment_reason(rows[definition.name]["speed"]) is None
+        for definition in definitions.values()
+    )
 
 
 def test_land_arena_grapple_batch_remains_eligible() -> None:
