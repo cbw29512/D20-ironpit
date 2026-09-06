@@ -129,7 +129,8 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
 
 def _save(action: Any) -> dict[str, Any]:
     row: dict[str, Any] = {
-        "id": action.id, "name": action.name, "saveAbility": action.save_ability, "dc": action.dc,
+        "id": action.id, "name": action.name, "actionCost": action.action_cost,
+        "saveAbility": action.save_ability, "dc": action.dc,
         "range": action.range_ft, "damageDiceCount": action.damage_dice_count,
         "damageDiceSize": action.damage_dice_size, "damageBonus": action.damage_bonus,
         "damageType": action.damage_type, "successDamage": action.success_damage, "animation": action.animation,
