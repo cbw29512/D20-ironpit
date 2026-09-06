@@ -53,6 +53,28 @@ def test_simple_source_parser_compiles_generic_grapple_and_prone_riders() -> Non
     assert attacks[0]["effects"] == [{"kind": "prone", "max_target_size": "large"}]
 
 
+def test_simple_source_parser_compiles_maximum_hp_drain_by_damage_outcome() -> None:
+    untyped = {
+        "name": "Homebrew Drainer",
+        "actions": (
+            "Life Drain. Melee Attack Roll: +4, reach 5 ft. Hit: 7 (2d6) Necrotic damage. "
+            "If the target is a creature, its Hit Point maximum decreases by an amount equal to the damage taken."
+        ),
+    }
+    attacks, _ = parse_simple_attacks(untyped)
+    assert {"kind": "max-hp-reduction"} in attacks[0]["effects"]
+
+    typed = {
+        "name": "Homebrew Acid Drainer",
+        "actions": (
+            "Slam. Melee Attack Roll: +8, reach 5 ft. Hit: 12 (2d6 + 5) Bludgeoning damage plus 3 (1d6) Acid damage. "
+            "The target's Hit Point maximum is reduced by an amount equal to the Acid damage taken."
+        ),
+    }
+    attacks, _ = parse_simple_attacks(typed)
+    assert {"kind": "max-hp-reduction", "damage_type": "acid"} in attacks[0]["effects"]
+
+
 def test_simple_source_family_is_promoted_only_through_full_catalog_audit() -> None:
     cards = {card.name: card for card in build_monster_catalog()}
     for name in ("Blink Dog", "Fire Giant", "Spy", "Tough Boss", "Xorn"):
