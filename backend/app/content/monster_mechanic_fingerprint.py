@@ -3,6 +3,8 @@ from __future__ import annotations
 import re
 from collections.abc import Mapping
 
+from app.content.monster_combat_scope import strip_post_combat_outcomes
+
 _TEXT_FIELDS = ("traits", "actions", "bonusActions", "reactions", "legendaryActions")
 _CONDITIONS = (
     "blinded", "charmed", "deafened", "frightened", "grappled", "incapacitated",
@@ -60,11 +62,11 @@ _COMPLEXITY_WEIGHTS = {
 
 
 def _source_text(row: Mapping[str, object]) -> str:
-    return "\n".join(str(row.get(field, "") or "") for field in _TEXT_FIELDS)
+    return "\n".join(strip_post_combat_outcomes(row.get(field, "")) for field in _TEXT_FIELDS)
 
 
 def normalized_monster_mechanics(row: Mapping[str, object]) -> tuple[str, ...]:
-    """Return combat-math mechanics only; pure movement never enters the fingerprint."""
+    """Return combat-math mechanics only; pure movement and post-combat outcomes never enter the fingerprint."""
     text = _source_text(row)
     mechanics = {name for name, pattern in _PATTERNS if pattern.search(text)}
     if re.search(r"\bdamage\b", text, re.I):
@@ -76,22 +78,16 @@ def normalized_monster_mechanics(row: Mapping[str, object]) -> tuple[str, ...]:
         if re.search(rf"\b{condition}\b", text, re.I):
             mechanics.add(f"condition:{condition}")
     raw = str(row.get("rawText", "") or "")
-    if re.search(r"\bdamage resistance\b|\bresistant to\b", raw, re.I):
-        mechanics.add("resistance")
-    if re.search(r"\bdamage vulnerabilit|\bvulnerable to\b", raw, re.I):
-        mechanics.add("vulnerability")
-    if re.search(r"\bdamage immunit|\bimmune to\b", raw, re.I):
-        mechanics.add("immunity")
+    if re.search(r"\bdamage resistance\b|\bresistant to\b", raw, re.I): mechanics.add("resistance")
+    if re.search(r"\bdamage vulnerabilit|\bvulnerable to\b", raw, re.I): mechanics.add("vulnerability")
+    if re.search(r"\bdamage immunit|\bimmune to\b", raw, re.I): mechanics.add("immunity")
     return tuple(sorted(mechanics))
 
 
 def mechanic_complexity(mechanics: tuple[str, ...]) -> int:
     total = 0
     for mechanic in mechanics:
-        if mechanic.startswith("damage:") or mechanic.startswith("condition:"):
-            total += 1
-        else:
-            total += _COMPLEXITY_WEIGHTS.get(mechanic, 2)
+        total += 1 if mechanic.startswith("damage:") or mechanic.startswith("condition:") else _COMPLEXITY_WEIGHTS.get(mechanic, 2)
     return total
 
 
