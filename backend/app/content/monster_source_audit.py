@@ -6,7 +6,7 @@ import re
 from app.content.monster_attack_source_audit import attack_issues, normalized, save_action_issues
 from app.content.monster_bonus_action_source_audit import bonus_action_issues
 from app.content.monster_charge_source_audit import charge_replacement_issues
-from app.content.monster_combat_scope import strip_post_combat_outcomes
+from app.content.monster_combat_scope import battle_ready_size, strip_post_combat_outcomes
 from app.content.monster_defense_source_audit import defense_issues
 from app.content.monster_legendary_source_audit import legendary_action_issues
 from app.content.monster_limited_use_source_audit import limited_use_issues
@@ -42,10 +42,12 @@ def _challenge(row: dict[str, object]) -> str:
     return str(row["challenge"]).split()[0]
 
 
-def _size_matches(runtime_size: str, source_size: object) -> bool:
-    text = str(source_size).lower()
+def _size_matches(runtime_size: str, row: dict[str, object]) -> bool:
+    text = str(row["size"]).lower()
     allowed = {size for size in _SIZE_NAMES if re.search(rf"\b{size}\b", text)}
-    if not allowed: raise ValueError(f"SRD size could not be parsed: {source_size!r}")
+    ready = battle_ready_size(row)
+    if ready: allowed.add(ready)
+    if not allowed: raise ValueError(f"SRD size could not be parsed: {row['size']!r}")
     return runtime_size.lower() in allowed
 
 
@@ -63,7 +65,7 @@ def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) ->
     try:
         checks = (
             (template.name == str(row["name"]), "name-mismatch"),
-            (_size_matches(template.size.value, row["size"]), "size-mismatch"),
+            (_size_matches(template.size.value, row), "size-mismatch"),
             (template.armor_class == _first_int(row["armorClass"]), "armor-class-mismatch"),
             (template.max_hp == _first_int(row["hitPoints"]), "hit-points-mismatch"),
             (template.challenge_rating == _challenge(row), "challenge-rating-mismatch"),
