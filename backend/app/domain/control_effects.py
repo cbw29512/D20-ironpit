@@ -20,12 +20,14 @@ class GrappleSource(BaseModel):
     escape_dc: int = Field(ge=1, le=40)
     range_ft: int = Field(default=5, ge=0)
     restrains: bool = False
+    escape_check_disadvantage: bool = False
 
 
 class HitControlEffect(BaseModel):
     max_target_size: CreatureSize | None = None
     grapple_escape_dc: int | None = Field(default=None, ge=1, le=40)
     restrains_while_grappled: bool = False
+    grapple_escape_check_disadvantage: bool = False
     condition_id: ConditionName | None = None
     initial_save_ability: AbilityName | None = None
     initial_save_dc: int | None = Field(default=None, ge=1, le=40)
