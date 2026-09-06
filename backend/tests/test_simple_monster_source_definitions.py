@@ -4,7 +4,11 @@ from app.content.simple_monster_source_definitions import build_simple_source_de
 from app.domain.catalog import CoverageStatus
 
 
-_EXPECTED_SIMPLE_SOURCE = {"Berserker", "Blink Dog", "Ettin", "Fire Giant", "Nightmare", "Sahuagin Warrior", "Spy", "Tough Boss", "Xorn"}
+_EXPECTED_SIMPLE_SOURCE = {
+    "Azer Sentinel", "Berserker", "Blink Dog", "Bugbear Warrior", "Ettin", "Fire Giant", "Hezrou",
+    "Hill Giant", "Hobgoblin Captain", "Magmin", "Merrow", "Nightmare", "Sahuagin Warrior", "Satyr",
+    "Spy", "Tough Boss", "Troll Limb", "Xorn",
+}
 
 
 def test_simple_source_family_compiles_without_bespoke_monster_builders() -> None:

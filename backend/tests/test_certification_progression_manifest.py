@@ -58,11 +58,12 @@ def test_fighter_level_eight_manifest_preserves_gwf_and_extra_attack_without_blo
     assert level_eight["public_ready_status"] == "ready"
 
 
-def test_fighter_level_twelve_is_public_and_level_thirteen_remains_blocked() -> None:
+def test_fighter_full_progression_is_public_and_manifest_count_is_self_consistent() -> None:
     manifest = json.loads(HERO_MANIFEST.read_text(encoding="utf-8"))
     fighter = next(hero for hero in manifest["heroes"] if hero["class_id"] == "fighter")
     level_twelve = next(level for level in fighter["levels"] if level["level"] == 12)
     level_thirteen = next(level for level in fighter["levels"] if level["level"] == 13)
+    level_twenty = next(level for level in fighter["levels"] if level["level"] == 20)
     counted_ready = sum(
         1
         for hero in manifest["heroes"]
@@ -75,7 +76,8 @@ def test_fighter_level_twelve_is_public_and_level_thirteen_remains_blocked() -> 
     }
     browser = BROWSER_HEROES.read_text(encoding="utf-8")
 
-    assert manifest["summary"]["public_ready"] == counted_ready == 23
+    assert manifest["summary"]["public_ready"] == counted_ready
+    assert counted_ready >= 36
     assert level_twelve["runtime_template_id"] == "karnok-stoneward-l12"
     assert required <= set(level_twelve["expected_combat_features"])
     assert required <= set(level_twelve["supported_mechanics"])
@@ -84,7 +86,10 @@ def test_fighter_level_twelve_is_public_and_level_thirteen_remains_blocked() -> 
     assert level_twelve["public_ready_status"] == "ready"
     assert "karnok-stoneward-l12" in browser
 
-    assert level_thirteen["runtime_template_id"] is None
-    assert level_thirteen["public_ready_status"] == "blocked"
-    assert "hero-level-not-certified" in level_thirteen["blockers"]
-    assert "karnok-stoneward-l13" not in browser
+    assert level_thirteen["runtime_template_id"] == "karnok-stoneward-l13"
+    assert level_thirteen["public_ready_status"] == "ready"
+    assert level_thirteen["blockers"] == []
+    assert "karnok-stoneward-l13" in browser
+    assert level_twenty["runtime_template_id"] == "karnok-stoneward-l20"
+    assert level_twenty["public_ready_status"] == "ready"
+    assert "karnok-stoneward-l20" in browser

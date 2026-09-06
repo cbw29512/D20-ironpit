@@ -1,5 +1,3 @@
-import pytest
-
 from app.content.build_audit import assert_character_build_raw_ready, audit_character_build
 from app.content.fighter_progression import build_karnok_stoneward_level
 from app.content.fighter_progression_profile import build_karnok_stoneward_level4_profile
@@ -55,8 +53,8 @@ def test_fighter_level_four_runtime_matches_candidate_combat_fingerprint() -> No
     assert_pregen_combat_stats(template, combat_profile)
 
 
-def test_fighter_candidate_progression_fails_closed_on_first_missing_engine_feature() -> None:
+def test_fighter_progression_reaches_supported_superior_critical_frontier() -> None:
     assert build_karnok_stoneward_level(13).progression_features.studied_attacks is True
     assert build_karnok_stoneward_level(14).level == 14
-    with pytest.raises(ValueError, match="level 15 awaits engine support for: superior-critical"):
-        build_karnok_stoneward_level(15)
+    assert build_karnok_stoneward_level(15).progression_features.critical_hit_minimum == 18
+    assert build_karnok_stoneward_level(20).level == 20

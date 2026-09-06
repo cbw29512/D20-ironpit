@@ -34,8 +34,10 @@ def test_shared_feature_registry_compiles_reusable_fighter_and_barbarian_flags()
 
 def test_shared_feature_registry_fails_closed_for_unimplemented_combat_mechanics() -> None:
     assert unsupported_hero_engine_features(("rage", "frenzy")) == ()
-    assert unsupported_hero_engine_features(("heroic-warrior", "studied-attacks")) == ()
+    assert unsupported_hero_engine_features(("heroic-warrior", "studied-attacks", "superior-critical")) == ()
     assert unsupported_hero_engine_features(("rage", "instinctive-pounce", "brutal-strike")) == (
         "instinctive-pounce", "brutal-strike",
     )
-    assert unsupported_hero_engine_features(("studied-attacks", "superior-critical")) == ("superior-critical",)
+    assert unsupported_hero_engine_features(("studied-attacks", "unknown-combat-feature")) == (
+        "unknown-combat-feature",
+    )
