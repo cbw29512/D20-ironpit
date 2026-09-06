@@ -43,7 +43,7 @@ BARBARIAN_COMBAT_LEVELS: dict[int, BarbarianCombatLevel] = {
     4: _r(4, 2, 14, 45, 18, 16, 30, 1, 3, 2, _M3, source="D&D Beyond Basic Rules 2024: Barbarian 4 Ability Score Improvement, Orc, Soldier, Savage Attacker, Equipment"),
     5: _r(5, 3, 14, 55, 18, 16, 40, 2, 3, 2, _M3, add=("extra-attack", "fast-movement"), source="D&D Beyond Basic Rules 2024: Barbarian 5 Extra Attack and Fast Movement, Orc, Soldier, Savage Attacker, Equipment"),
     6: _r(6, 3, 14, 65, 18, 16, 40, 2, 4, 2, _M3, add=("mindless-rage",), source="D&D Beyond Basic Rules 2024: Barbarian 6 Path of the Berserker Mindless Rage, Orc, Soldier, Savage Attacker, Equipment"),
-    7: _r(7, 3, 14, 75, 18, 16, 40, 2, 4, 2, _M3, add=("feral-instinct", "instinctive-pounce"), source="D&D Beyond Basic Rules 2024: Barbarian 7 Feral Instinct and Instinctive Pounce"),
+    7: _r(7, 3, 14, 75, 18, 16, 40, 2, 4, 2, _M3, add=("feral-instinct",), ignored=("instinctive-pounce",), source="D&D Beyond Basic Rules 2024: Barbarian 7 Feral Instinct and Instinctive Pounce"),
     8: _r(8, 3, 14, 85, 20, 16, 40, 2, 4, 2, _M3, source="D&D Beyond Basic Rules 2024: Barbarian 8 Ability Score Improvement (+2 Strength)"),
     9: _r(9, 4, 14, 95, 20, 16, 40, 2, 4, 3, _M3, add=("brutal-strike",), ignored=("hamstring-blow",), source="D&D Beyond Basic Rules 2024: Barbarian 9 Brutal Strike"),
     10: _r(10, 4, 14, 105, 20, 16, 40, 2, 4, 3, _M4, add=("retaliation",), source="D&D Beyond Basic Rules 2024: Barbarian 10 Berserker Retaliation"),
