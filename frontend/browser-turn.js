@@ -9,7 +9,10 @@
   const NO_SAVE = { resolveTurnAction: (sequence) => ({ events: [], sequence, used: false }) };
   const V = () => window.IRON_PIT_BROWSER_SAVES?.resolveTurnAction ? window.IRON_PIT_BROWSER_SAVES : NO_SAVE;
   const D = () => window.IRON_PIT_DICE;
-  const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (s, c) => c === "action" ? s.action_available : s.bonus_action_available };
+  const E = () => window.IRON_PIT_ACTION_ECONOMY || {
+    available: (s, c) => c === "action" ? s.action_available : c === "bonus_action" ? s.bonus_action_available : s.reaction_available,
+    spend: (s, c) => { if (c === "action") s.action_available = false; else if (c === "bonus_action") s.bonus_action_available = false; else s.reaction_available = false; },
+  };
   const NO_CONTROL = { cleanup: () => {}, shouldEscape: () => false };
   const H = () => window.IRON_PIT_BROWSER_GRAPPLE || NO_CONTROL;
 
@@ -22,12 +25,14 @@
   }
 
   function deathSave(sequence, round, member) {
-    const state = member.state, natural = D().roll(20);
+    const state = member.state, advantage = Boolean(state.template.survivor_death_save_advantage);
+    const rolls = advantage ? [D().roll(20), D().roll(20)] : [D().roll(20)], natural = Math.max(...rolls);
     const successesBefore = state.death_save_successes, failuresBefore = state.death_save_failures;
+    const recoveryMinimum = state.template.survivor_death_save_critical_minimum || 20;
     let result = "failure";
-    if (natural === 20) {
+    if (natural >= recoveryMinimum) {
       state.current_hp = 1; state.is_alive = true; state.is_unconscious = false; state.is_stable = false;
-      state.death_save_successes = 0; state.death_save_failures = 0; result = "natural 20; regains 1 HP";
+      state.death_save_successes = 0; state.death_save_failures = 0; result = `${natural} counts as a natural 20; regains 1 HP`;
     } else if (natural === 1) {
       state.death_save_failures = Math.min(3, state.death_save_failures + 2); result = "natural 1; two failures";
     } else if (natural >= 10) {
@@ -40,10 +45,24 @@
       state.is_stable = true; state.is_unconscious = true; state.death_save_successes = 0; state.death_save_failures = 0; result = "third success; becomes Stable";
     }
     return { sequence, round_number: round, event_type: "death_save", actor_id: member.combatant_id, actor_name: state.template.name,
-      death_save_roll: { notation: "1d20", rolls: [natural], selected_roll: natural, modifier: 0, mode: "normal", total: natural },
+      death_save_roll: { notation: advantage ? "2d20kh1" : "1d20", rolls, selected_roll: natural, modifier: 0, mode: advantage ? "advantage" : "normal", total: natural },
       hp_after: state.current_hp, death_save_successes_before: successesBefore, death_save_failures_before: failuresBefore,
       death_save_successes: state.death_save_successes, death_save_failures: state.death_save_failures,
       is_stable: state.is_stable, is_dead: state.is_dead, animation: "death-save", description: `${state.template.name} makes a Death Save: ${result}.` };
+  }
+
+  function progressionHealing(sequence, round, member) {
+    const state = member.state, bonus = state.template.bloodied_start_turn_healing_bonus || 0;
+    const con = state.template.ability_scores?.constitution;
+    if (!bonus || con == null || state.is_dead || state.current_hp <= 0 || state.current_hp > Math.floor(S().effectiveMaxHp(state) / 2)) return null;
+    const before = state.current_hp, amount = bonus + Math.floor((con - 10) / 2);
+    state.current_hp = Math.min(S().effectiveMaxHp(state), before + amount);
+    const healed = state.current_hp - before;
+    if (healed <= 0) return null;
+    return { sequence, round_number: round, event_type: "healing", actor_id: member.combatant_id, actor_name: state.template.name,
+      target_id: member.combatant_id, target_name: state.template.name, feature_id: "bloodied-start-turn-healing",
+      hp_before: before, hp_after: state.current_hp, animation: "healing",
+      description: `${state.template.name} regains ${healed} HP at the start of the turn.` };
   }
 
   function finalize(events, sequence, round, member, setup, turnKey, allowSurge = true) {
@@ -56,6 +75,7 @@
   function resolveTurn(sequence, round, member, setup) {
     enablePitRangePolicy();
     const events = []; H().cleanup(setup); S().beginTurn(member.state);
+    const rally = progressionHealing(sequence, round, member); if (rally) { events.push(rally); sequence += 1; }
     const turnKey = `${round}:${member.combatant_id}`;
     if (O()?.forcedRetreatActive(member.state)) {
       events.push(O().event(sequence++, round, member)); return finalize(events, sequence, round, member, setup, turnKey, false);
@@ -95,13 +115,15 @@
     const choice = F().chooseStandardAttack(member, setup);
     if (choice && E().available(member.state, "action")) {
       const pack = S().packTactics(member, setup), opener = C()?.openingFeature?.(round, member, setup) || null;
+      const steady = Boolean(member.state.template.steady_aim && E().available(member.state, "bonus_action"));
+      if (steady) { E().spend(member.state, "bonus_action"); events.push({ sequence: sequence++, round_number: round, event_type: "feature", actor_id: member.combatant_id, actor_name: member.state.template.name, feature_id: "steady-aim", animation: "condition", description: `${member.state.template.name} uses Steady Aim; the next attack this turn has Advantage.` }); }
       const standard = U().resolve(sequence, round, member, choice.target, choice.attack, choice.distance, setup, turnKey, {
-        advantage: pack ? 1 : 0, featureId: opener || (pack ? "pack-tactics" : null),
+        advantage: (pack ? 1 : 0) + (steady ? 1 : 0), featureId: opener || (steady ? "steady-aim" : pack ? "pack-tactics" : null),
       });
       events.push(...standard.events); sequence = standard.sequence;
     }
     return finalize(events, sequence, round, member, setup, turnKey);
   }
 
-  window.IRON_PIT_BROWSER_TURN = { deathSave, resolveTurn };
+  window.IRON_PIT_BROWSER_TURN = { deathSave, progressionHealing, resolveTurn };
 })();
