@@ -16,17 +16,18 @@
   const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
   const BOARD_COLUMNS = 3, MAX_BOARD_SLOTS = 6;
 
-  function saveMode(state, ability) {
-    const advantage = (ability === "strength" && state.active_effect_ids.includes("rage") ? 1 : 0) + B2().dangerSenseAdvantage(state, ability);
+  function saveMode(state, ability, againstMagic = false) {
+    const magicResistance = againstMagic && state.template.traits?.includes("magic-resistance") ? 1 : 0;
+    const advantage = (ability === "strength" && state.active_effect_ids.includes("rage") ? 1 : 0) + B2().dangerSenseAdvantage(state, ability) + magicResistance;
     const disadvantage = ability === "dexterity" && state.active_effect_ids.includes("restrained") ? 1 : 0;
     return R().modeFromSources(advantage, disadvantage);
   }
 
-  function resolveSavingThrow(state, ability, dc) {
+  function resolveSavingThrow(state, ability, dc, againstMagic = false) {
     if ((ability === "strength" || ability === "dexterity") && Q().autoFailStrDex(state)) return { roll: null, succeeded: false };
     const bonus = state.template.saving_throw_bonuses?.[ability];
     if (bonus == null) throw new Error(`${state.template.name} lacks a certified ${ability} saving throw bonus.`);
-    let roll = M().applyD20Bonus(state, "saving-throw-bonus-die", R().d20(bonus, saveMode(state, ability)));
+    let roll = M().applyD20Bonus(state, "saving-throw-bonus-die", R().d20(bonus, saveMode(state, ability, againstMagic)));
     if (roll.total < dc) { const reroll = window.IRON_PIT_BROWSER_INDOMITABLE?.use(state, ability); if (reroll) roll = reroll; }
     return { roll, succeeded: roll.total >= dc };
   }
@@ -43,10 +44,10 @@
 
   function resolveAction(sequence, round, actor, target, action, distance, options = {}) {
     const spendAction = options.spendAction !== false, spendResource = options.spendResource !== false;
-    if (spendAction && !E().available(actor.state, "action")) throw new Error("Action is unavailable for saving throw action.");
+    if (spendAction && !F().available(actor.state, "action")) throw new Error("Action is unavailable for saving throw action.");
     if (spendResource && !resourceAvailable(actor.state, action)) throw new Error(`${action.name} resource is unavailable.`);
     if (!legalAction(action, target, distance)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
-    const save = resolveSavingThrow(target.state, action.saveAbility, action.dc);
+    const save = resolveSavingThrow(target.state, action.saveAbility, action.dc, Boolean(options.againstMagic));
     if (spendAction) E().spend(actor.state, "action");
     if (spendResource && action.resourceId) X().spend(actor.state, action.resourceId, action.resourceCost || 1);
     const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
@@ -105,10 +106,10 @@
       for (const target of F().targetOrder(actor, setup)) if (legalAction(action, target, F().saveDistance(actor, target, action.range))) return [target];
       return [];
     }
-    if (!['cone', 'line'].includes(action.area.shape)) throw new Error(`${action.name} area shape is not runtime-certified.`);
+    if (!["cone", "line"].includes(action.area.shape)) throw new Error(`${action.name} area shape is not runtime-certified.`);
     const [enemies, friends] = rows(actor, setup);
     const order = Object.fromEntries(F().targetOrder(actor, setup).map((member, index) => [member.combatant_id, index]));
-    if (action.area.shape === 'line') return lineTargets(actor, setup, action, enemies, friends, order);
+    if (action.area.shape === "line") return lineTargets(actor, setup, action, enemies, friends, order);
     const width = action.area.sizeFt;
     if (!width || width % 5) throw new Error(`${action.name} area width must use 5-foot card increments.`);
     const slotCount = Math.min(MAX_BOARD_SLOTS, Math.max(1, width / 5)), candidates = [];

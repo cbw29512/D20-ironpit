@@ -11,3 +11,4 @@ class CombatTrait(StrEnum):
     SWARM = "swarm"
     UNDEAD_FORTITUDE = "undead-fortitude"
     LIFE_DOMAIN = "life-domain"
+    MAGIC_RESISTANCE = "magic-resistance"
