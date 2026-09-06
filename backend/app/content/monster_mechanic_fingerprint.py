@@ -19,8 +19,12 @@ _PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
     ("saving-throw", re.compile(r"\bsaving throw\b|\bDC\s*\d+\s+(?:STR|DEX|CON|INT|WIS|CHA)\b", re.I)),
     ("advantage", re.compile(r"\badvantage\b", re.I)),
     ("disadvantage", re.compile(r"\bdisadvantage\b", re.I)),
+    ("injured-target-advantage", re.compile(r"\badvantage\b[^.]{0,120}\b(?:doesn['’]t have all|has less than (?:its|the) maximum|missing)\b[^.]{0,80}\bhit points?\b", re.I)),
     ("flat-modifier", re.compile(r"\bbonus to\b|\bpenalty to\b|\bAC increases?\b|\bAC decreases?\b", re.I)),
     ("bonus-die", re.compile(r"\badd(?:s)?\s+\d*d\d+\b|\bsubtract(?:s)?\s+\d*d\d+\b", re.I)),
+    ("ability-score-change", re.compile(r"\b(?:Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma)\s+score\s+(?:decreases?|increases?|is reduced|is increased)\b", re.I)),
+    ("ability-score-zero-death", re.compile(r"\bdies?\b[^.]{0,100}\b(?:Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma)\b[^.]{0,80}\b0\b", re.I)),
+    ("attachment-state", re.compile(r"\battaches?\s+to\b|\bwhile attached\b|\bdetach(?:es|ed|ing)?\b", re.I)),
     ("temporary-hp", re.compile(r"\btemporary hit points?\b", re.I)),
     ("healing", re.compile(r"\bregains?\s+\d+|\bregains? hit points?\b|\bheals?\b", re.I)),
     ("max-hp-change", re.compile(r"\bhit point maximum\b", re.I)),
@@ -43,13 +47,15 @@ _PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
 )
 _COMPLEXITY_WEIGHTS = {
     "attack-roll": 1, "multiattack": 1, "saving-throw": 2, "advantage": 1,
-    "disadvantage": 1, "flat-modifier": 2, "bonus-die": 2, "temporary-hp": 2,
-    "healing": 2, "max-hp-change": 3, "regeneration": 3, "recharge": 2,
-    "limited-use": 2, "reaction": 2, "bonus-action": 1, "aura": 3,
-    "start-turn": 2, "end-turn": 2, "repeat-save": 3, "concentration": 3,
-    "zero-hp-effect": 3, "death-trigger": 3, "spellcasting": 4,
-    "summoning": 7, "transformation": 7, "legendary": 6,
-    "damage": 1, "resistance": 1, "vulnerability": 1, "immunity": 1,
+    "disadvantage": 1, "injured-target-advantage": 1, "flat-modifier": 2,
+    "bonus-die": 2, "ability-score-change": 4, "ability-score-zero-death": 3,
+    "attachment-state": 6, "temporary-hp": 2, "healing": 2, "max-hp-change": 3,
+    "regeneration": 3, "recharge": 2, "limited-use": 2, "reaction": 2,
+    "bonus-action": 1, "aura": 3, "start-turn": 2, "end-turn": 2,
+    "repeat-save": 3, "concentration": 3, "zero-hp-effect": 3,
+    "death-trigger": 3, "spellcasting": 4, "summoning": 7, "transformation": 7,
+    "legendary": 6, "damage": 1, "resistance": 1, "vulnerability": 1,
+    "immunity": 1,
 }
 
 
