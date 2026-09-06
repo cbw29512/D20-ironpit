@@ -4,6 +4,13 @@ import re
 
 _SPACE = re.compile(r"\s+")
 _ANNOTATION = re.compile(r"\s*\([^)]*\)\s*$")
+_POST_COMBAT_LYCANTHROPY = re.compile(
+    r"If the target is a Humanoid, it is subjected to the following effect\. "
+    r"Constitution Saving Throw: DC \d+\. Failure: The target is cursed\. "
+    r"If the cursed target drops to 0 Hit Points, it instead becomes a [A-Za-z-]+ under the GM[’']s control and has 10 Hit Points\. "
+    r"Success: The target is immune to this [A-Za-z-]+[’']s curse for 24 hours\.",
+    re.I,
+)
 
 # Iron Pit scope is intentionally narrower than the full tabletop ruleset.
 # Movement, positioning, senses, stealth, environment, and narrative-only text
@@ -48,6 +55,11 @@ def normalized_source_text(value: object) -> str:
     return _SPACE.sub(" ", str(value or "")).strip()
 
 
+def strip_post_combat_outcomes(value: object) -> str:
+    """Remove source consequences explicitly declared outside Iron Pit combat scope."""
+    return _POST_COMBAT_LYCANTHROPY.sub("", normalized_source_text(value)).strip()
+
+
 def base_feature_name(name: str) -> str:
     return _ANNOTATION.sub("", normalized_source_text(name)).strip()
 
@@ -84,7 +96,7 @@ def feature_blocks(source: object, headings: list[str] | tuple[str, ...]) -> dic
 
 def combat_math_relevant(source: object) -> bool:
     """Return True only when source text can change an Iron Pit combat outcome."""
-    text = normalized_source_text(source)
+    text = strip_post_combat_outcomes(source)
     if not text:
         return False
     # Movement/presentation mechanics are deliberately absent unless the same
