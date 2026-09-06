@@ -1,4 +1,4 @@
-UNIVERSAL_ENGINE_BASELINE	monster_ready=159	monster_actionable_blocked=161	monster_deferred=10	monster_families=13	planned_hero_mechanics=368
+UNIVERSAL_ENGINE_BASELINE	monster_ready=160	monster_actionable_blocked=160	monster_deferred=10	monster_families=12	planned_hero_mechanics=368
 UNIVERSAL_ENGINE_MONSTER_FAMILIES
 UNIVERSAL_MONSTER_FAMILY	condition-or-control	immediate_unlocks=4	affected=86	engine_status=unmapped
 UNIVERSAL_MONSTER_FAMILY	trait	immediate_unlocks=4	affected=66	engine_status=unmapped
@@ -9,7 +9,6 @@ UNIVERSAL_MONSTER_FAMILY	unsupported-action-rider	immediate_unlocks=1	affected=1
 UNIVERSAL_MONSTER_FAMILY	reaction	immediate_unlocks=1	affected=13	engine_status=unmapped
 UNIVERSAL_MONSTER_FAMILY	attachment-state	immediate_unlocks=1	affected=3	engine_status=unmapped
 UNIVERSAL_MONSTER_FAMILY	ability-score-change	immediate_unlocks=1	affected=1	engine_status=unmapped
-UNIVERSAL_MONSTER_FAMILY	unclassified-source-audit-gap	immediate_unlocks=1	affected=1	engine_status=unmapped
 UNIVERSAL_MONSTER_FAMILY	limited-use	immediate_unlocks=0	affected=96	engine_status=unmapped
 UNIVERSAL_MONSTER_FAMILY	legendary	immediate_unlocks=0	affected=30	engine_status=unmapped
 UNIVERSAL_MONSTER_FAMILY	defense-clause	immediate_unlocks=0	affected=4	engine_status=unmapped
