@@ -1,4 +1,4 @@
-CAPABILITY_YIELD_BASELINE	ready=138	blocked=192	actionable_blocked=182	deferred=10	signatures=69
+CAPABILITY_YIELD_BASELINE	ready=139	blocked=191	actionable_blocked=181	deferred=10	signatures=69
 CAPABILITY_DEFERRED_ENVIRONMENT	Giant Seahorse | Giant Shark | Hunter Shark | Killer Whale | Octopus | Piranha | Reef Shark | Seahorse | Swarm of Piranhas
 CAPABILITY_DEFERRED_NONCOMBAT	Shrieker Fungus
 CAPABILITY_SINGLE_FAMILY	trait	9	Azer Sentinel | Barbed Devil | Fire Elemental | Flesh Golem | Hezrou | Hobgoblin Captain | Hydra | Magmin | Troll Limb
