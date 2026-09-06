@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field, model_validator
 from app.domain.actions import AttackActionDefinition, ConditionName, ConditionRemovalAction, HealingAction, SavingThrowAction
 from app.domain.character_builds import AbilityScores
 from app.domain.movement import MovementModes
-from app.domain.passive_effects import AllyRollAuraDefinition, RegenerationDefinition, TurnDamageAuraDefinition
+from app.domain.passive_effects import AllyRollAuraDefinition, RegenerationDefinition, StartTurnSaveAuraDefinition, TurnDamageAuraDefinition
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.reactions import ParryReaction, RedirectAttackReaction
 from app.domain.size import CreatureSize
@@ -95,22 +95,18 @@ class CombatantTemplate(BaseModel):
     regeneration: RegenerationDefinition | None = None
     turn_damage_auras: list[TurnDamageAuraDefinition] = Field(default_factory=list)
     ally_roll_auras: list[AllyRollAuraDefinition] = Field(default_factory=list)
+    start_turn_save_auras: list[StartTurnSaveAuraDefinition] = Field(default_factory=list)
     source: str
 
     @model_validator(mode="before")
     @classmethod
     def _normalize_compatibility_fields(cls, values: object) -> object:
-        if not isinstance(values, dict):
-            return values
+        if not isinstance(values, dict): return values
         normalized = dict(values)
         if "movement_modes" not in normalized and "speed_ft" in normalized:
             normalized["movement_modes"] = {"walk_ft": normalized["speed_ft"]}
-        style = normalized.get("fighting_style")
-        styles = normalized.get("fighting_styles")
-        if styles is None:
-            styles = []
-        if not styles and style:
-            normalized["fighting_styles"] = [style]
-        elif styles and not style:
-            normalized["fighting_style"] = styles[0]
+        style = normalized.get("fighting_style"); styles = normalized.get("fighting_styles")
+        if styles is None: styles = []
+        if not styles and style: normalized["fighting_styles"] = [style]
+        elif styles and not style: normalized["fighting_style"] = styles[0]
         return normalized
