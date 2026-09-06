@@ -83,25 +83,25 @@ MONSTER_MATRIX_FAMILY	1	advantage+attack-roll+aura+condition:frightened+conditio
 MONSTER_MATRIX_QUEUE	1	Hunter Shark	unsupported=0	complexity=5	edge=false	blockers=none	mechanics=advantage+attack-roll+damage+damage:piercing+injured-target-advantage
 MONSTER_MATRIX_QUEUE	2	Piranha	unsupported=0	complexity=5	edge=false	blockers=none	mechanics=advantage+attack-roll+damage+damage:piercing+injured-target-advantage
 MONSTER_MATRIX_QUEUE	3	Giant Shark	unsupported=0	complexity=6	edge=false	blockers=none	mechanics=advantage+attack-roll+damage+damage:piercing+injured-target-advantage+multiattack
-MONSTER_MATRIX_QUEUE	4	Shadow	unsupported=0	complexity=8	edge=false	blockers=none	mechanics=ability-score-change+attack-roll+damage+damage:necrotic+disadvantage
-MONSTER_MATRIX_QUEUE	5	Mimic	unsupported=0	complexity=8	edge=false	blockers=none	mechanics=advantage+attack-roll+condition:grappled+damage+damage:acid+damage:bludgeoning+damage:piercing+disadvantage
-MONSTER_MATRIX_QUEUE	6	Swarm of Piranhas	unsupported=0	complexity=9	edge=false	blockers=none	mechanics=advantage+attack-roll+damage+damage:piercing+healing+injured-target-advantage+temporary-hp
-MONSTER_MATRIX_QUEUE	7	Stirge	unsupported=0	complexity=13	edge=false	blockers=none	mechanics=attachment-state+attack-roll+aura+damage+damage:necrotic+damage:piercing
-MONSTER_MATRIX_QUEUE	8	Seahorse	unsupported=1	complexity=0	edge=false	blockers=no-attack-roll	mechanics=combat-math-none
-MONSTER_MATRIX_QUEUE	9	Ochre Jelly	unsupported=1	complexity=4	edge=false	blockers=reaction	mechanics=attack-roll+damage+damage:acid+damage:slashing
-MONSTER_MATRIX_QUEUE	10	Animated Rug of Smothering	unsupported=1	complexity=6	edge=false	blockers=condition-or-control	mechanics=attack-roll+condition:blinded+condition:grappled+condition:restrained+damage+damage:bludgeoning
-MONSTER_MATRIX_QUEUE	11	Roper	unsupported=1	complexity=7	edge=false	blockers=condition-or-control	mechanics=attack-roll+condition:grappled+condition:poisoned+damage+damage:piercing+damage:psychic+multiattack
-MONSTER_MATRIX_QUEUE	12	Barbed Devil	unsupported=1	complexity=8	edge=false	blockers=trait	mechanics=advantage+attack-roll+condition:grappled+damage+damage:fire+damage:piercing+damage:slashing+multiattack
-MONSTER_MATRIX_QUEUE	13	Fire Elemental	unsupported=1	complexity=8	edge=false	blockers=trait	mechanics=attack-roll+aura+damage+damage:cold+damage:fire+multiattack
-MONSTER_MATRIX_QUEUE	14	Imp	unsupported=1	complexity=9	edge=false	blockers=spellcasting	mechanics=advantage+attack-roll+damage+damage:piercing+damage:poison+spellcasting
-MONSTER_MATRIX_QUEUE	15	Giant Toad	unsupported=1	complexity=9	edge=false	blockers=condition-or-control	mechanics=attack-roll+condition:blinded+condition:grappled+condition:prone+condition:restrained+damage+damage:acid+damage:piercing+damage:poison
-MONSTER_MATRIX_QUEUE	16	Hydra	unsupported=1	complexity=9	edge=false	blockers=trait	mechanics=attack-roll+damage+damage:fire+damage:piercing+healing+multiattack+reaction
-MONSTER_MATRIX_QUEUE	17	Phase Spider	unsupported=1	complexity=10	edge=false	blockers=condition-or-control	mechanics=attack-roll+condition:paralyzed+condition:poisoned+damage+damage:piercing+damage:poison+multiattack+zero-hp-effect
-MONSTER_MATRIX_QUEUE	18	Flesh Golem	unsupported=1	complexity=11	edge=false	blockers=trait	mechanics=advantage+attack-roll+aura+damage+damage:bludgeoning+damage:fire+damage:lightning+disadvantage+multiattack
-MONSTER_MATRIX_QUEUE	19	Werebear	unsupported=1	complexity=11	edge=false	blockers=save-or-complex-action	mechanics=attack-roll+damage+damage:piercing+damage:slashing+immunity+multiattack+saving-throw+zero-hp-effect
-MONSTER_MATRIX_QUEUE	20	Wererat	unsupported=1	complexity=11	edge=false	blockers=save-or-complex-action	mechanics=attack-roll+damage+damage:piercing+damage:slashing+immunity+multiattack+saving-throw+zero-hp-effect
-MONSTER_MATRIX_QUEUE	21	Horned Devil	unsupported=1	complexity=12	edge=false	blockers=save-or-complex-action	mechanics=advantage+attack-roll+aura+damage+damage:fire+damage:necrotic+damage:piercing+multiattack+saving-throw
-MONSTER_MATRIX_QUEUE	22	Druid	unsupported=1	complexity=12	edge=false	blockers=spellcasting	mechanics=attack-roll+damage+damage:bludgeoning+damage:poison+damage:radiant+limited-use+multiattack+spellcasting
+MONSTER_MATRIX_QUEUE	4	Mimic	unsupported=0	complexity=8	edge=false	blockers=none	mechanics=advantage+attack-roll+condition:grappled+damage+damage:acid+damage:bludgeoning+damage:piercing+disadvantage
+MONSTER_MATRIX_QUEUE	5	Swarm of Piranhas	unsupported=0	complexity=9	edge=false	blockers=none	mechanics=advantage+attack-roll+damage+damage:piercing+healing+injured-target-advantage+temporary-hp
+MONSTER_MATRIX_QUEUE	6	Seahorse	unsupported=1	complexity=0	edge=false	blockers=no-attack-roll	mechanics=combat-math-none
+MONSTER_MATRIX_QUEUE	7	Ochre Jelly	unsupported=1	complexity=4	edge=false	blockers=reaction	mechanics=attack-roll+damage+damage:acid+damage:slashing
+MONSTER_MATRIX_QUEUE	8	Animated Rug of Smothering	unsupported=1	complexity=6	edge=false	blockers=condition-or-control	mechanics=attack-roll+condition:blinded+condition:grappled+condition:restrained+damage+damage:bludgeoning
+MONSTER_MATRIX_QUEUE	9	Roper	unsupported=1	complexity=7	edge=false	blockers=condition-or-control	mechanics=attack-roll+condition:grappled+condition:poisoned+damage+damage:piercing+damage:psychic+multiattack
+MONSTER_MATRIX_QUEUE	10	Shadow	unsupported=1	complexity=8	edge=false	blockers=ability-score-change	mechanics=ability-score-change+attack-roll+damage+damage:necrotic+disadvantage
+MONSTER_MATRIX_QUEUE	11	Barbed Devil	unsupported=1	complexity=8	edge=false	blockers=trait	mechanics=advantage+attack-roll+condition:grappled+damage+damage:fire+damage:piercing+damage:slashing+multiattack
+MONSTER_MATRIX_QUEUE	12	Fire Elemental	unsupported=1	complexity=8	edge=false	blockers=trait	mechanics=attack-roll+aura+damage+damage:cold+damage:fire+multiattack
+MONSTER_MATRIX_QUEUE	13	Imp	unsupported=1	complexity=9	edge=false	blockers=spellcasting	mechanics=advantage+attack-roll+damage+damage:piercing+damage:poison+spellcasting
+MONSTER_MATRIX_QUEUE	14	Giant Toad	unsupported=1	complexity=9	edge=false	blockers=condition-or-control	mechanics=attack-roll+condition:blinded+condition:grappled+condition:prone+condition:restrained+damage+damage:acid+damage:piercing+damage:poison
+MONSTER_MATRIX_QUEUE	15	Hydra	unsupported=1	complexity=9	edge=false	blockers=trait	mechanics=attack-roll+damage+damage:fire+damage:piercing+healing+multiattack+reaction
+MONSTER_MATRIX_QUEUE	16	Phase Spider	unsupported=1	complexity=10	edge=false	blockers=condition-or-control	mechanics=attack-roll+condition:paralyzed+condition:poisoned+damage+damage:piercing+damage:poison+multiattack+zero-hp-effect
+MONSTER_MATRIX_QUEUE	17	Flesh Golem	unsupported=1	complexity=11	edge=false	blockers=trait	mechanics=advantage+attack-roll+aura+damage+damage:bludgeoning+damage:fire+damage:lightning+disadvantage+multiattack
+MONSTER_MATRIX_QUEUE	18	Werebear	unsupported=1	complexity=11	edge=false	blockers=save-or-complex-action	mechanics=attack-roll+damage+damage:piercing+damage:slashing+immunity+multiattack+saving-throw+zero-hp-effect
+MONSTER_MATRIX_QUEUE	19	Wererat	unsupported=1	complexity=11	edge=false	blockers=save-or-complex-action	mechanics=attack-roll+damage+damage:piercing+damage:slashing+immunity+multiattack+saving-throw+zero-hp-effect
+MONSTER_MATRIX_QUEUE	20	Horned Devil	unsupported=1	complexity=12	edge=false	blockers=save-or-complex-action	mechanics=advantage+attack-roll+aura+damage+damage:fire+damage:necrotic+damage:piercing+multiattack+saving-throw
+MONSTER_MATRIX_QUEUE	21	Druid	unsupported=1	complexity=12	edge=false	blockers=spellcasting	mechanics=attack-roll+damage+damage:bludgeoning+damage:poison+damage:radiant+limited-use+multiattack+spellcasting
+MONSTER_MATRIX_QUEUE	22	Stirge	unsupported=1	complexity=13	edge=false	blockers=attachment-state	mechanics=attachment-state+attack-roll+aura+damage+damage:necrotic+damage:piercing
 MONSTER_MATRIX_QUEUE	23	Dryad	unsupported=1	complexity=15	edge=false	blockers=spellcasting	mechanics=advantage+attack-roll+aura+damage+damage:piercing+damage:slashing+limited-use+multiattack+spellcasting
 MONSTER_MATRIX_QUEUE	24	Werewolf	unsupported=1	complexity=16	edge=false	blockers=save-or-complex-action	mechanics=advantage+attack-roll+aura+condition:incapacitated+damage+damage:piercing+damage:slashing+immunity+multiattack+saving-throw+zero-hp-effect
 MONSTER_MATRIX_QUEUE	25	Giant Seahorse	unsupported=2	complexity=3	edge=false	blockers=bonus-action+unsupported-action-rider	mechanics=attack-roll+damage+damage:bludgeoning

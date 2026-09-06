@@ -2215,6 +2215,7 @@
       "srd_source_reference": "SRD 5.2.1 p. 274",
       "runtime_template_id": null,
       "detected_combat_mechanics": [
+        "attachment-state",
         "attack-roll",
         "bonus-action",
         "condition-or-control",
@@ -2229,6 +2230,7 @@
         "multiattack"
       ],
       "unsupported_mechanics": [
+        "attachment-state",
         "bonus-action",
         "condition-or-control",
         "spellcasting",
@@ -2239,6 +2241,7 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
+        "attachment-state",
         "bonus-action",
         "condition-or-control",
         "monster-combat-mechanics-not-certified",
@@ -2487,6 +2490,7 @@
       "srd_source_reference": "SRD 5.2.1 p. 278",
       "runtime_template_id": null,
       "detected_combat_mechanics": [
+        "attachment-state",
         "attack-roll",
         "condition-or-control",
         "limited-use",
@@ -2496,6 +2500,7 @@
         "attack-roll"
       ],
       "unsupported_mechanics": [
+        "attachment-state",
         "condition-or-control",
         "limited-use",
         "save-or-complex-action"
@@ -2505,6 +2510,7 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
+        "attachment-state",
         "condition-or-control",
         "limited-use",
         "monster-combat-mechanics-not-certified",
@@ -7469,6 +7475,7 @@
       "srd_source_reference": "SRD 5.2.1 p. 322",
       "runtime_template_id": null,
       "detected_combat_mechanics": [
+        "ability-score-change",
         "attack-roll",
         "bonus-action",
         "damage-or-condition-defense",
@@ -7481,13 +7488,14 @@
         "trait"
       ],
       "unsupported_mechanics": [
-        "monster-combat-mechanics-not-certified"
+        "ability-score-change"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
+        "ability-score-change",
         "monster-combat-mechanics-not-certified"
       ]
     },
@@ -7997,19 +8005,21 @@
       "srd_source_reference": "SRD 5.2.1 p. 329",
       "runtime_template_id": null,
       "detected_combat_mechanics": [
+        "attachment-state",
         "attack-roll"
       ],
       "supported_mechanics": [
         "attack-roll"
       ],
       "unsupported_mechanics": [
-        "monster-combat-mechanics-not-certified"
+        "attachment-state"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
+        "attachment-state",
         "monster-combat-mechanics-not-certified"
       ]
     },
