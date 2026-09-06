@@ -1041,12 +1041,12 @@
       "demand_count": 1,
       "id": "cunning-action",
       "kinds": [
-        "base-feature"
+        "arena-ignored"
       ],
       "owners": [
         "rogue/base"
       ],
-      "status": "planned"
+      "status": "arena_out_of_scope"
     },
     {
       "demand_count": 1,
@@ -4079,7 +4079,7 @@
       "owners": [
         "rogue/base"
       ],
-      "status": "planned"
+      "status": "supported"
     },
     {
       "demand_count": 1,
@@ -4294,12 +4294,12 @@
       "demand_count": 1,
       "id": "thief-fast-hands",
       "kinds": [
-        "subclass-feature"
+        "arena-ignored"
       ],
       "owners": [
         "rogue/thief"
       ],
-      "status": "planned"
+      "status": "arena_out_of_scope"
     },
     {
       "demand_count": 1,
@@ -4951,8 +4951,8 @@
   },
   "schema_version": 1,
   "summary": {
-    "arena_out_of_scope": 29,
-    "planned": 371,
-    "supported": 44
+    "arena_out_of_scope": 31,
+    "planned": 368,
+    "supported": 45
   }
 }

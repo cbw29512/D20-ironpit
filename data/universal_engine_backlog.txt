@@ -1,4 +1,4 @@
-UNIVERSAL_ENGINE_BASELINE	monster_ready=148	monster_actionable_blocked=172	monster_deferred=10	monster_families=11	planned_hero_mechanics=371
+UNIVERSAL_ENGINE_BASELINE	monster_ready=148	monster_actionable_blocked=172	monster_deferred=10	monster_families=11	planned_hero_mechanics=368
 UNIVERSAL_ENGINE_MONSTER_FAMILIES
 UNIVERSAL_MONSTER_FAMILY	condition-or-control	immediate_unlocks=5	affected=91	engine_status=unmapped
 UNIVERSAL_MONSTER_FAMILY	save-or-complex-action	immediate_unlocks=4	affected=106	engine_status=unmapped
@@ -102,7 +102,6 @@ UNIVERSAL_HERO_MECHANIC	combat-inspiration	owners=1	classes=1	status=planned	kin
 UNIVERSAL_HERO_MECHANIC	corona-of-light	owners=1	classes=1	status=planned	kinds=subclass-feature
 UNIVERSAL_HERO_MECHANIC	countercharm	owners=1	classes=1	status=planned	kinds=base-feature
 UNIVERSAL_HERO_MECHANIC	create-thrall	owners=1	classes=1	status=planned	kinds=subclass-feature
-UNIVERSAL_HERO_MECHANIC	cunning-action	owners=1	classes=1	status=planned	kinds=base-feature
 UNIVERSAL_HERO_MECHANIC	cunning-strike	owners=1	classes=1	status=planned	kinds=base-feature
 UNIVERSAL_HERO_MECHANIC	cutting-words	owners=1	classes=1	status=planned	kinds=subclass-feature
 UNIVERSAL_HERO_MECHANIC	dark-ones-blessing	owners=1	classes=1	status=planned	kinds=subclass-feature
@@ -324,7 +323,6 @@ UNIVERSAL_HERO_MECHANIC	spell-package:oath-devotion	owners=1	classes=1	status=pl
 UNIVERSAL_HERO_MECHANIC	spell-package:oath-vengeance	owners=1	classes=1	status=planned	kinds=spell-package
 UNIVERSAL_HERO_MECHANIC	spell-package:war-domain	owners=1	classes=1	status=planned	kinds=spell-package
 UNIVERSAL_HERO_MECHANIC	spell-resistance	owners=1	classes=1	status=planned	kinds=subclass-feature
-UNIVERSAL_HERO_MECHANIC	steady-aim	owners=1	classes=1	status=planned	kinds=base-feature
 UNIVERSAL_HERO_MECHANIC	stormborn	owners=1	classes=1	status=planned	kinds=subclass-feature
 UNIVERSAL_HERO_MECHANIC	stride-of-the-elements	owners=1	classes=1	status=planned	kinds=subclass-feature
 UNIVERSAL_HERO_MECHANIC	stroke-of-luck	owners=1	classes=1	status=planned	kinds=base-feature
@@ -335,7 +333,6 @@ UNIVERSAL_HERO_MECHANIC	superior-hunters-prey	owners=1	classes=1	status=planned	
 UNIVERSAL_HERO_MECHANIC	superior-inspiration	owners=1	classes=1	status=planned	kinds=base-feature
 UNIVERSAL_HERO_MECHANIC	supreme-healing	owners=1	classes=1	status=planned	kinds=subclass-feature
 UNIVERSAL_HERO_MECHANIC	telepathic-speech	owners=1	classes=1	status=planned	kinds=subclass-feature
-UNIVERSAL_HERO_MECHANIC	thief-fast-hands	owners=1	classes=1	status=planned	kinds=subclass-feature
 UNIVERSAL_HERO_MECHANIC	thief-supreme-sneak	owners=1	classes=1	status=planned	kinds=subclass-feature
 UNIVERSAL_HERO_MECHANIC	thief-use-magic-device	owners=1	classes=1	status=planned	kinds=subclass-feature
 UNIVERSAL_HERO_MECHANIC	thiefs-reflexes	owners=1	classes=1	status=planned	kinds=subclass-feature
