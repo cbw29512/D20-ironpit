@@ -4,6 +4,7 @@ import re
 
 from app.content.arena_eligibility import deferred_environment_reason
 from app.content.monster_catalog import load_monster_rows
+from app.content.monster_combat_scope import battle_ready_size
 from app.content.monster_death_trigger_source import parse_death_trigger_saves
 from app.content.monster_defense_source_audit import parse_defense_profile
 from app.content.monster_regeneration_source import parse_regeneration
@@ -20,7 +21,7 @@ from app.domain.capabilities import CombatantDefinition
 _SIMPLE_SOURCE_NAMES = frozenset({
     "Azer Sentinel", "Berserker", "Blink Dog", "Bone Devil", "Bugbear Stalker", "Bugbear Warrior", "Ettin", "Fire Giant", "Ghoul", "Giant Shark", "Hezrou",
     "Hill Giant", "Hobgoblin Captain", "Hunter Shark", "Lion", "Magmin", "Merrow", "Nightmare", "Piranha", "Pirate", "Sahuagin Warrior", "Satyr",
-    "Specter", "Spy", "Tough Boss", "Troll Limb", "Wraith", "Xorn",
+    "Specter", "Spy", "Tough Boss", "Troll Limb", "Werebear", "Wererat", "Weretiger", "Werewolf", "Wraith", "Xorn",
 })
 
 
@@ -46,10 +47,11 @@ def _definition(row: dict[str, object]) -> CombatantDefinition:
     death_trigger_saves = parse_death_trigger_saves(row); ally_roll_auras = parse_ally_roll_auras(row)
     start_turn_save_auras = parse_start_turn_save_auras(row)
     name = str(row["name"]); slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
+    arena_size = battle_ready_size(row) or str(row["size"]).split()[0].lower()
     data: dict[str, object] = {
         "schema_version": 1, "id": f"srd-{slug}", "name": name, "archetype": "source-certified monster",
         "challenge_rating": str(row["challenge"]).split()[0], "kind": "monster", "creature_type": str(row["type"]),
-        "size": str(row["size"]).split()[0].lower(), "armor_class": _first_int(row["armorClass"]),
+        "size": arena_size, "armor_class": _first_int(row["armorClass"]),
         "max_hp": _first_int(row["hitPoints"]), "speed_ft": standard_arena_closing_speed(row["speed"]),
         "movement_modes": parse_movement_profile(row["speed"]).model_dump(mode="json"),
         "initiative_bonus": _initiative(row), "attacks": attacks, "primary_attack_id": attacks[0]["id"],
@@ -77,6 +79,6 @@ def build_simple_source_definitions() -> dict[str, CombatantDefinition]:
         if deferred_environment_reason(rows[name]["speed"]) is None
     ]
     definitions = [_definition(rows[name]) for name in eligible_names]
-    result = {definition.id: definition for definition in definitions}
+    result = {definition.id: definition for definition in definitions]
     if len(result) != len(definitions): raise ValueError("Simple source-derived monster ids must be unique.")
     return result
