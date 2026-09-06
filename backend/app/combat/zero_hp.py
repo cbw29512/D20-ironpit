@@ -3,12 +3,11 @@ from __future__ import annotations
 import logging
 from typing import Literal
 
-from app.combat.concentration import resolve_concentration_damage
 from app.combat.conditions import PRONE_EFFECT_ID, apply_condition
+from app.combat.damage_finalization import finish_damage
 from app.combat.dice import DiceProvider
 from app.combat.hit_points import effective_max_hp
 from app.combat.orc import use_relentless_endurance
-from app.combat.source_bound_effects import end_damage_sensitive_effects
 from app.combat.undead_fortitude import resolve_undead_fortitude
 from app.domain.models import CombatantState, DamageType
 from app.domain.traits import CombatTrait
@@ -68,26 +67,6 @@ def _after_temporary_hp(state: CombatantState, amount: int) -> int:
     return amount - absorbed
 
 
-def _finish_damage(
-    state: CombatantState,
-    outcome: ZeroHpOutcome,
-    damage_taken: int,
-    dice: DiceProvider | None,
-    affected_states: list[CombatantState] | None,
-) -> ZeroHpOutcome:
-    end_damage_sensitive_effects(state)
-    if state.concentration is None:
-        return outcome
-    if dice is None:
-        if state.is_dead or state.is_unconscious:
-            from app.combat.concentration import end_concentration_if_incapacitated
-            end_concentration_if_incapacitated(state, affected_states)
-            return outcome
-        raise ValueError("A dice provider is required to resolve Concentration damage.")
-    resolve_concentration_damage(state, damage_taken, dice, affected_states)
-    return outcome
-
-
 def restore_hit_points(state: CombatantState, amount: int) -> int:
     """Restore true HP; ordinary healing cannot restore a dead creature or a Swarm."""
     if amount < 0:
@@ -138,28 +117,26 @@ def apply_damage(
         _record_regeneration_suppression(state, incoming, types)
         amount = _after_temporary_hp(state, amount)
         if state.current_hp == 0:
-            return _finish_damage(state, _damage_at_zero(state, incoming, critical=critical), incoming, dice, affected_states)
+            return finish_damage(state, _damage_at_zero(state, incoming, critical=critical), incoming, dice, affected_states)
         if amount == 0:
-            return _finish_damage(state, "damaged", incoming, dice, affected_states)
+            return finish_damage(state, "damaged", incoming, dice, affected_states)
 
         hp_before = state.current_hp
         state.current_hp = max(0, hp_before - amount)
         if state.current_hp > 0:
-            return _finish_damage(state, "damaged", incoming, dice, affected_states)
-        if resolve_undead_fortitude(
-            state, incoming, types, critical=critical, dice=dice,
-        ):
-            return _finish_damage(state, "undead_fortitude", incoming, dice, affected_states)
+            return finish_damage(state, "damaged", incoming, dice, affected_states)
+        if resolve_undead_fortitude(state, incoming, types, critical=critical, dice=dice):
+            return finish_damage(state, "undead_fortitude", incoming, dice, affected_states)
         if state.template.kind == "monster":
             outcome = _mark_unconscious(state) if _regeneration_delays_death(state) else _mark_dead(state)
-            return _finish_damage(state, outcome, incoming, dice, affected_states)
+            return finish_damage(state, outcome, incoming, dice, affected_states)
 
         remaining_damage = max(0, amount - hp_before)
         if remaining_damage >= effective_max_hp(state):
-            return _finish_damage(state, _mark_dead(state), incoming, dice, affected_states)
+            return finish_damage(state, _mark_dead(state), incoming, dice, affected_states)
         if use_relentless_endurance(state, remaining_damage):
-            return _finish_damage(state, "relentless_endurance", incoming, dice, affected_states)
-        return _finish_damage(state, _mark_unconscious(state), incoming, dice, affected_states)
+            return finish_damage(state, "relentless_endurance", incoming, dice, affected_states)
+        return finish_damage(state, _mark_unconscious(state), incoming, dice, affected_states)
     except ValueError:
         raise
     except Exception as exc:
