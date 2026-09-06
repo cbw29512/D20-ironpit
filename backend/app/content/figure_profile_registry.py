@@ -16,6 +16,7 @@ _NATIVE_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Lion": {"form": "quadruped", "detail": "lion"},
     "Magmin": {"form": "humanoid", "detail": "magmin"},
     "Merrow": {"form": "brute", "detail": "merrow"},
+    "Mimic": {"form": "blob", "detail": "mimic"},
     "Red Dragon Wyrmling": {"form": "reptile", "detail": "red-dragon-wyrmling"},
     "Satyr": {"form": "humanoid", "detail": "satyr"},
     "Troll Limb": {"form": "brute", "detail": "troll-limb"},
