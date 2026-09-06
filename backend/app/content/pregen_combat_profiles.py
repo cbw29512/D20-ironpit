@@ -126,6 +126,6 @@ def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
         *(_karnok_profile(level) for level in range(1, 21)),
         *(_rokhan_profile(level) for level in range(1, 9)),
         *(_seraphine_profile(level) for level in range(1, 5)),
-        build_mara_quickstep_combat_profile(),
+        *(build_mara_quickstep_combat_profile(level) for level in range(1, 5)),
     ]
     return {profile.template_id: profile for profile in profiles}
