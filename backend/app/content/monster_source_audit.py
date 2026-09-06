@@ -6,6 +6,7 @@ import re
 from app.content.monster_attack_source_audit import attack_issues, normalized, save_action_issues
 from app.content.monster_bonus_action_source_audit import bonus_action_issues
 from app.content.monster_charge_source_audit import charge_replacement_issues
+from app.content.monster_combat_scope import strip_post_combat_outcomes
 from app.content.monster_defense_source_audit import defense_issues
 from app.content.monster_legendary_source_audit import legendary_action_issues
 from app.content.monster_limited_use_source_audit import limited_use_issues
@@ -73,11 +74,11 @@ def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) ->
         issues.extend(defense_issues(template, row)); issues.extend(trait_issues(template, row)); issues.extend(reaction_issues(template, row))
         issues.extend(bonus_action_issues(template, row)); issues.extend(limited_use_issues(template, row)); issues.extend(legendary_action_issues(template, row))
         issues.extend(spellcasting_issues(template, row))
-        actions = normalized(row.get("actions", "")); bonus_actions = normalized(row.get("bonusActions", ""))
+        actions = normalized(strip_post_combat_outcomes(row.get("actions", ""))); bonus_actions = normalized(row.get("bonusActions", ""))
         runtime_attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
         action_saves = [action for action in template.saving_throw_actions if action.action_cost == "action"]
         bonus_saves = [action for action in template.saving_throw_actions if action.action_cost == "bonus_action"]
-        issues.extend(survival_action_issues(row.get("actions", ""), runtime_attacks))
+        issues.extend(survival_action_issues(actions, runtime_attacks))
         if _source_attack_mode_count(actions) != len(runtime_attacks): issues.append("source-attack-count-mismatch")
         expected_action_saves = len(action_saves) + _embedded_hit_save_count(runtime_attacks)
         if len(_SAVING_THROW.findall(actions)) != expected_action_saves: issues.append("source-save-action-count-mismatch")
