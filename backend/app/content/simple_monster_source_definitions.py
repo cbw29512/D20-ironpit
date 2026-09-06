@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 
+from app.content.arena_eligibility import deferred_environment_reason
 from app.content.monster_catalog import load_monster_rows
 from app.content.monster_death_trigger_source import parse_death_trigger_saves
 from app.content.monster_defense_source_audit import parse_defense_profile
@@ -70,7 +71,11 @@ def _definition(row: dict[str, object]) -> CombatantDefinition:
 def build_simple_source_definitions() -> dict[str, CombatantDefinition]:
     rows = {str(row["name"]): row for row in load_monster_rows()}; missing = _SIMPLE_SOURCE_NAMES - rows.keys()
     if missing: raise ValueError(f"Missing SRD simple-monster rows: {', '.join(sorted(missing))}")
-    definitions = [_definition(rows[name]) for name in sorted(_SIMPLE_SOURCE_NAMES)]
+    eligible_names = [
+        name for name in sorted(_SIMPLE_SOURCE_NAMES)
+        if deferred_environment_reason(rows[name]["speed"]) is None
+    ]
+    definitions = [_definition(rows[name]) for name in eligible_names]
     result = {definition.id: definition for definition in definitions}
     if len(result) != len(definitions): raise ValueError("Simple source-derived monster ids must be unique.")
     return result
