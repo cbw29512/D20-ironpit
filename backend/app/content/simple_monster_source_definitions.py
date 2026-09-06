@@ -8,6 +8,7 @@ from app.content.monster_defense_source_audit import parse_defense_profile
 from app.content.monster_regeneration_source import parse_regeneration
 from app.content.monster_roll_aura_source import parse_ally_roll_auras
 from app.content.monster_saving_throws import parse_saving_throw_bonuses
+from app.content.monster_start_turn_aura_source import parse_start_turn_save_auras
 from app.content.monster_trait_source_audit import _MODELED_TRAITS, parse_trait_names
 from app.content.monster_turn_aura_source import parse_turn_damage_auras
 from app.content.movement_modes import parse_movement_profile, standard_arena_closing_speed
@@ -15,7 +16,7 @@ from app.content.simple_monster_source_attacks import parse_simple_attacks
 from app.domain.capabilities import CombatantDefinition
 
 _SIMPLE_SOURCE_NAMES = frozenset({
-    "Azer Sentinel", "Berserker", "Blink Dog", "Ettin", "Fire Giant", "Hobgoblin Captain",
+    "Azer Sentinel", "Berserker", "Blink Dog", "Ettin", "Fire Giant", "Hezrou", "Hobgoblin Captain",
     "Magmin", "Nightmare", "Sahuagin Warrior", "Spy", "Tough Boss", "Troll Limb", "Xorn",
 })
 
@@ -38,6 +39,7 @@ def _definition(row: dict[str, object]) -> CombatantDefinition:
     combat_traits = [_MODELED_TRAITS[name].value for name in trait_names if name in _MODELED_TRAITS]
     regeneration = parse_regeneration(row); turn_damage_auras = parse_turn_damage_auras(row)
     death_trigger_saves = parse_death_trigger_saves(row); ally_roll_auras = parse_ally_roll_auras(row)
+    start_turn_save_auras = parse_start_turn_save_auras(row)
     name = str(row["name"]); slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
     data: dict[str, object] = {
         "schema_version": 1, "id": f"srd-{slug}", "name": name, "archetype": "source-certified monster",
@@ -58,6 +60,7 @@ def _definition(row: dict[str, object]) -> CombatantDefinition:
     if turn_damage_auras: data["turn_damage_auras"] = [aura.model_dump(mode="json") for aura in turn_damage_auras]
     if death_trigger_saves: data["death_trigger_save_actions"] = [action.model_dump(mode="json") for action in death_trigger_saves]
     if ally_roll_auras: data["ally_roll_auras"] = [aura.model_dump(mode="json") for aura in ally_roll_auras]
+    if start_turn_save_auras: data["start_turn_save_auras"] = [aura.model_dump(mode="json") for aura in start_turn_save_auras]
     return CombatantDefinition.model_validate(data)
 
 
