@@ -8348,6 +8348,7 @@
           "max_target_size": "medium",
           "restrains": false
         },
+        "failure_conditions": [],
         "animation": "constrict"
       }
     ],
@@ -10451,6 +10452,7 @@
           "max_target_size": "large",
           "restrains": false
         },
+        "failure_conditions": [],
         "animation": "constrict"
       }
     ],
