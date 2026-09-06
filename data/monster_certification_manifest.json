@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 153,
-    "blocked": 177
+    "public_ready": 156,
+    "blocked": 174
   },
   "monsters": [
     {
@@ -9025,12 +9025,11 @@
       "monster_name": "Werebear",
       "srd_source_page": 337,
       "srd_source_reference": "SRD 5.2.1 p. 337",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-werebear",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action"
       ],
       "supported_mechanics": [
@@ -9039,17 +9038,12 @@
         "multiattack",
         "saving-throw-action"
       ],
-      "unsupported_mechanics": [
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-wereboar",
@@ -9062,7 +9056,6 @@
         "bonus-action",
         "condition-or-control",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action"
       ],
       "supported_mechanics": [
@@ -9072,8 +9065,7 @@
         "saving-throw-action"
       ],
       "unsupported_mechanics": [
-        "condition-or-control",
-        "save-or-complex-action"
+        "condition-or-control"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -9081,8 +9073,7 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
+        "monster-combat-mechanics-not-certified"
       ]
     },
     {
@@ -9090,12 +9081,11 @@
       "monster_name": "Wererat",
       "srd_source_page": 338,
       "srd_source_reference": "SRD 5.2.1 p. 338",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-wererat",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action"
       ],
       "supported_mechanics": [
@@ -9104,17 +9094,12 @@
         "multiattack",
         "saving-throw-action"
       ],
-      "unsupported_mechanics": [
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-weretiger",
@@ -9126,7 +9111,6 @@
         "attack-roll",
         "bonus-action",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action"
       ],
       "supported_mechanics": [
@@ -9135,8 +9119,7 @@
         "saving-throw-action"
       ],
       "unsupported_mechanics": [
-        "bonus-action",
-        "save-or-complex-action"
+        "bonus-action"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -9144,8 +9127,7 @@
       "public_ready_status": "blocked",
       "blockers": [
         "bonus-action",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
+        "uncertified-bonus-action:prowl"
       ]
     },
     {
@@ -9153,12 +9135,11 @@
       "monster_name": "Werewolf",
       "srd_source_page": 339,
       "srd_source_reference": "SRD 5.2.1 p. 339",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-werewolf",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
@@ -9169,17 +9150,12 @@
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-white-dragon-wyrmling",
