@@ -235,3 +235,40 @@ Before merging any combat feature, ask:
 > If a different monster, pregen, or homebrew feature produced exactly this same mathematical outcome under a different name, would it use this exact same engine primitive?
 
 If the answer is no, the design is probably too specific and should be generalized before certification.
+
+## 16. Curated spell doctrine
+
+Iron Pit does not attempt to support the entire tabletop spell catalog. Spell lists are deliberately curated for predictable combat math and low implementation complexity.
+
+The governing rule is:
+
+> If a spell has no effect on the mathematical outcome of an Iron Pit fight, the pawn does not use it and it cannot block certification.
+
+Examples of arena-neutral spells include `Zone of Truth`, `Detect Magic`, `Detect Evil and Good`, `Tongues`, and similar exploration/social/utility magic when it has no supported combat consequence.
+
+Caster packages should remain intentionally small and role-specific:
+
+- normally choose one straightforward combat buff;
+- normally choose one straightforward combat debuff;
+- fill most remaining offensive choices with direct damage spells appropriate to the caster's theme, such as fire, cold, or a mixed damage package;
+- prefer spells that resolve through existing universal attack, save, damage, healing, AC, Advantage/Disadvantage, condition, or resource primitives;
+- avoid spells whose primary value requires bespoke simulation, unusual targeting mini-games, extensive terrain logic, summons, duplicate bodies/images, or other edge-case machinery when a simpler spell can fill the same tactical role;
+- `Magic Missile` is simplified so all missiles chosen for the casting strike one target rather than requiring multi-target missile allocation logic;
+- defensive reactions such as `Shield` are preferred over mechanically elaborate defensive spells when they fill the same role cleanly.
+
+`Dispel Magic` and `Counterspell` are combat-relevant because preventing or ending a sufficiently important combat spell can change the fight outcome. Their AI policy is deliberately selective:
+
+- use them against substantial damage, strong buffs/debuffs, domination/action-denial, or similarly high-impact effects;
+- do not spend them on trivial effects or small modifiers such as a minor `-1 to hit`;
+- the exact value threshold must be shared and universal rather than caster-specific; until that threshold is explicitly defined, do not invent different special-case thresholds for individual monsters or pregens.
+
+Utility spells with a combat-capable component are decomposed like every other mixed ability: retain only the supported combat consequence and ignore the utility-only portion.
+
+Cleric spell packages are role-based rather than one universal full spellbook:
+
+- a standard/balanced cleric package should devote roughly half of its selected combat spells to healing and the remainder to simple combat offense/support;
+- a healer-focused cleric should heavily prioritize the curated healing package;
+- a damage-focused cleric should heavily prioritize the curated damage package;
+- cleric spell choices must follow the same simplicity rule as every other caster and should avoid complex edge-case spells when a simpler legal spell fills the role.
+
+Spell support is therefore a curated Iron Pit product decision, not an obligation to reproduce every RAW spell interaction in the tabletop game.
