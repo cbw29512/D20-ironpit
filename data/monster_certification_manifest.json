@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 139,
-    "blocked": 191
+    "public_ready": 140,
+    "blocked": 190
   },
   "monsters": [
     {
@@ -6395,13 +6395,13 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "multiattack"
+        "multiattack",
+        "trait"
       ],
       "unsupported_mechanics": [
         "bonus-action",
         "condition-or-control",
-        "spellcasting",
-        "trait"
+        "spellcasting"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -6411,8 +6411,7 @@
         "bonus-action",
         "condition-or-control",
         "monster-combat-mechanics-not-certified",
-        "spellcasting",
-        "trait"
+        "spellcasting"
       ]
     },
     {
@@ -8619,25 +8618,21 @@
       "monster_name": "Troll Limb",
       "srd_source_page": 333,
       "srd_source_reference": "SRD 5.2.1 p. 333",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-troll-limb",
       "detected_combat_mechanics": [
         "attack-roll",
         "trait"
       ],
       "supported_mechanics": [
-        "attack-roll"
-      ],
-      "unsupported_mechanics": [
+        "attack-roll",
         "trait"
       ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "monster-combat-mechanics-not-certified",
-        "trait"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-tyrannosaurus-rex",
