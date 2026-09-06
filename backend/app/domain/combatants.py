@@ -49,6 +49,14 @@ class ResourceDefinition(BaseModel):
     recharge: RechargeDefinition | None = None
 
 
+class RegenerationDefinition(BaseModel):
+    """A start-of-turn HP restoration trait with RAW damage suppression/death timing."""
+
+    amount: int = Field(gt=0)
+    suppressed_by_damage_types: list[DamageType] = Field(default_factory=list)
+    delays_death_at_zero: bool = False
+
+
 class CombatantTemplate(BaseModel):
     id: str
     name: str
@@ -97,6 +105,7 @@ class CombatantTemplate(BaseModel):
     rage_damage_bonus: int = Field(default=0, ge=0, le=10)
     visual: VisualLoadout
     resources: list[ResourceDefinition] = Field(default_factory=list)
+    regeneration: RegenerationDefinition | None = None
     source: str
 
     @model_validator(mode="before")
