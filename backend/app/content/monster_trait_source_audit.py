@@ -15,6 +15,7 @@ _CONNECTORS = frozenset({"a", "an", "and", "of", "or", "the", "to"})
 _MODELED_TRAITS = {
     "Pack Tactics": CombatTrait.PACK_TACTICS,
     "Bloodied Fury": CombatTrait.BLOODIED_FURY,
+    "Bloodied Frenzy": CombatTrait.BLOODIED_ATTACK_SAVE_ADVANTAGE,
     "Blood Frenzy": CombatTrait.TARGET_MISSING_HP_ATTACK_ADVANTAGE,
     "Magic Resistance": CombatTrait.MAGIC_RESISTANCE,
     "Swarm": CombatTrait.SWARM,
