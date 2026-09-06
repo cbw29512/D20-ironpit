@@ -5,15 +5,11 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import ConditionName, ConditionRemovalAction, HealingAction, SavingThrowAction
-from app.domain.capability_attacks import (
-    AttackCapabilityDefinition,
-    CapabilityActionSlot,
-    MultiattackCapabilityDefinition,
-    SaveCapabilityDefinition,
-)
+from app.domain.capability_attacks import AttackCapabilityDefinition, MultiattackCapabilityDefinition, SaveCapabilityDefinition
 from app.domain.character_builds import AbilityScores
-from app.domain.combatants import RegenerationDefinition, ResourceDefinition, TurnDamageAuraDefinition, VisualLoadout
+from app.domain.combatants import ResourceDefinition, VisualLoadout
 from app.domain.movement import MovementModes
+from app.domain.passive_effects import AllyRollAuraDefinition, RegenerationDefinition, TurnDamageAuraDefinition
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.reactions import ParryReaction, RedirectAttackReaction
 from app.domain.size import CreatureSize
@@ -72,6 +68,7 @@ class CombatantDefinition(BaseModel):
     resources: list[ResourceDefinition] = Field(default_factory=list)
     regeneration: RegenerationDefinition | None = None
     turn_damage_auras: list[TurnDamageAuraDefinition] = Field(default_factory=list)
+    ally_roll_auras: list[AllyRollAuraDefinition] = Field(default_factory=list)
     visual: VisualLoadout
     source: str
     unsupported_capabilities: list[str] = Field(default_factory=list)
@@ -79,38 +76,26 @@ class CombatantDefinition(BaseModel):
     @model_validator(mode="before")
     @classmethod
     def normalize_fighting_styles(cls, values: object) -> object:
-        if not isinstance(values, dict):
-            return values
+        if not isinstance(values, dict): return values
         normalized = dict(values)
-        style = normalized.get("fighting_style")
-        styles = normalized.get("fighting_styles") or []
-        if not styles and style:
-            normalized["fighting_styles"] = [style]
-        elif styles and not style:
-            normalized["fighting_style"] = styles[0]
+        style = normalized.get("fighting_style"); styles = normalized.get("fighting_styles") or []
+        if not styles and style: normalized["fighting_styles"] = [style]
+        elif styles and not style: normalized["fighting_style"] = styles[0]
         return normalized
 
     @model_validator(mode="after")
     def validate_references(self) -> "CombatantDefinition":
-        attack_ids = {attack.id for attack in self.attacks}
-        save_ids = {action.id for action in self.save_actions}
+        attack_ids = {attack.id for attack in self.attacks}; save_ids = {action.id for action in self.save_actions}
         resource_ids = {resource.id for resource in self.resources}
-        if self.kind == "character" and self.ability_scores is None:
-            raise ValueError("Character combatant definitions require ability scores.")
-        if len(attack_ids) != len(self.attacks) or len(save_ids) != len(self.save_actions):
-            raise ValueError("Capability ids must be unique within their action family.")
-        if len(resource_ids) != len(self.resources):
-            raise ValueError("Resource ids must be unique.")
-        if self.primary_attack_id not in attack_ids:
-            raise ValueError("primary_attack_id must reference a declared attack.")
+        if self.kind == "character" and self.ability_scores is None: raise ValueError("Character combatant definitions require ability scores.")
+        if len(attack_ids) != len(self.attacks) or len(save_ids) != len(self.save_actions): raise ValueError("Capability ids must be unique within their action family.")
+        if len(resource_ids) != len(self.resources): raise ValueError("Resource ids must be unique.")
+        if self.primary_attack_id not in attack_ids: raise ValueError("primary_attack_id must reference a declared attack.")
         for attack in self.attacks:
-            if attack.resource_id is not None and attack.resource_id not in resource_ids:
-                raise ValueError(f"Attack {attack.id!r} references undeclared resource {attack.resource_id!r}.")
+            if attack.resource_id is not None and attack.resource_id not in resource_ids: raise ValueError(f"Attack {attack.id!r} references undeclared resource {attack.resource_id!r}.")
         for action in self.save_actions:
-            if action.resource_id is not None and action.resource_id not in resource_ids:
-                raise ValueError(f"Save action {action.id!r} references undeclared resource {action.resource_id!r}.")
+            if action.resource_id is not None and action.resource_id not in resource_ids: raise ValueError(f"Save action {action.id!r} references undeclared resource {action.resource_id!r}.")
         if self.attack_action:
             for slot in self.attack_action.slots:
-                if not set(slot.attack_ids) <= attack_ids or not set(slot.save_action_ids) <= save_ids:
-                    raise ValueError("Multiattack slot references an undeclared capability id.")
+                if not set(slot.attack_ids) <= attack_ids or not set(slot.save_action_ids) <= save_ids: raise ValueError("Multiattack slot references an undeclared capability id.")
         return self
