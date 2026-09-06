@@ -112,3 +112,22 @@ def test_restrained_grapple_escape_spends_action_and_rage_helps_strength_check()
     assert hero.state.action_available is False
     assert hero.state.grapple_sources == []
     assert hero.state.movement_remaining_ft == hero.state.template.speed_ft
+
+
+def test_grapple_source_can_impose_disadvantage_on_escape_check() -> None:
+    setup = _setup()
+    hero, crocodile = setup.heroes[0], setup.monsters[0]
+    hero.state.action_available = True
+    apply_grapple(
+        hero.state, crocodile.combatant_id, 30, 5,
+        restrains=True, escape_check_disadvantage=True,
+    )
+
+    event = resolve_escape_grapple(
+        1, 1, hero.combatant_id, hero.state, FixedDiceProvider([18, 2]),
+    )
+
+    assert event.ability_check_roll is not None
+    assert event.ability_check_roll.mode is RollMode.DISADVANTAGE
+    assert event.ability_check_roll.selected_roll == 2
+    assert event.check_succeeded is False
