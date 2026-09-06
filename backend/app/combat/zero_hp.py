@@ -127,15 +127,15 @@ def apply_damage(
             return finish_damage(state, "damaged", incoming, dice, affected_states)
         if resolve_undead_fortitude(state, incoming, types, critical=critical, dice=dice):
             return finish_damage(state, "undead_fortitude", incoming, dice, affected_states)
-        if state.template.kind == "monster":
-            outcome = _mark_unconscious(state) if _regeneration_delays_death(state) else _mark_dead(state)
-            return finish_damage(state, outcome, incoming, dice, affected_states)
 
         remaining_damage = max(0, amount - hp_before)
         if remaining_damage >= effective_max_hp(state):
             return finish_damage(state, _mark_dead(state), incoming, dice, affected_states)
         if use_relentless_endurance(state, remaining_damage):
             return finish_damage(state, "relentless_endurance", incoming, dice, affected_states)
+        if state.template.kind == "monster":
+            outcome = _mark_unconscious(state) if _regeneration_delays_death(state) else _mark_dead(state)
+            return finish_damage(state, outcome, incoming, dice, affected_states)
         return finish_damage(state, _mark_unconscious(state), incoming, dice, affected_states)
     except ValueError:
         raise
