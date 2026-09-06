@@ -82,7 +82,7 @@
     let topple = { saveRoll: null, saveDc: null, saveSucceeded: null, applied: false }, controlSave = { applied: [], saveRoll: null, saveAbility: null, saveDc: null, saveSucceeded: null }; const applied = [];
     if (hit) {
       const damage = R().weaponDamage(attacker.state, attack, critical, mode, turnKey,
-        extra.bonusDamage || null, actualTarget.state, window.IRON_PIT_BROWSER_SNEAK_ATTACK?.allyAvailable(attacker, extra.setup) || false);
+        extra.bonusDamage || null, actualTarget.state, window.IRON_PIT_BROWSER_SNEAK_ATTACK?.allyAvailable(attacker, extra.setup) || false, attacker.combatant_id);
       damageComponents = damage.components.map((part) => ({ ...part, applied_total: adjustedDamage(actualTarget.state, part.total, part.damage_type) }));
       damageRoll = { ...damage.roll, total: damageComponents.reduce((sum, part) => sum + part.applied_total, 0) };
       const appliedTypes = [...new Set(damageComponents.filter((part) => part.applied_total > 0).map((part) => part.damage_type))], affectedStates = states(extra.setup);
@@ -91,7 +91,7 @@
       const living = actualTarget.state.is_alive && !actualTarget.state.is_dead, proneMax = extra.proneMaxSize || attack.proneMaxSize;
       if (living && S().canProne(actualTarget, proneMax) && !I().immune(actualTarget.state, "prone")) { if (!actualTarget.state.active_effect_ids.includes("prone")) actualTarget.state.active_effect_ids.push("prone"); applied.push("prone"); }
       const control = attack.controlEffect;
-      if (living && control?.grappleEscapeDc && (!control.maxTargetSize || S().sizeAtMost(actualTarget, control.maxTargetSize))) applied.push(...G().apply(actualTarget.state, attacker.combatant_id, control.grappleEscapeDc, attack.reach || 5, Boolean(control.restrainsWhileGrappled)));
+      if (living && control?.grappleEscapeDc && (!control.maxTargetSize || S().sizeAtMost(actualTarget, control.maxTargetSize))) applied.push(...G().apply(actualTarget.state, attacker.combatant_id, control.grappleEscapeDc, attack.reach || 5, Boolean(control.restrainsWhileGrappled), Boolean(control.grappleEscapeCheckDisadvantage)));
       if (living && control?.conditionId && !control.initialSaveAbility) {
         const timed = T().apply(actualTarget.state, control.conditionId, attacker.combatant_id, { sourceEffectId: attack.id, appliedRound: round,
           expiresAtStartOfSourceTurn: Boolean(control.expiresAtStartOfSourceTurn), expiryTiming: control.expiryTiming || null,
