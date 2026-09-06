@@ -7,7 +7,7 @@ from app.domain.catalog import CoverageStatus
 _EXPECTED_SIMPLE_SOURCE = {
     "Azer Sentinel", "Berserker", "Blink Dog", "Bone Devil", "Bugbear Stalker", "Bugbear Warrior", "Ettin", "Fire Giant", "Ghoul", "Hezrou",
     "Hill Giant", "Hobgoblin Captain", "Lion", "Magmin", "Merrow", "Nightmare", "Pirate", "Sahuagin Warrior", "Satyr",
-    "Specter", "Spy", "Tough Boss", "Troll Limb", "Wraith", "Xorn",
+    "Specter", "Spy", "Tough Boss", "Troll Limb", "Werebear", "Wererat", "Weretiger", "Werewolf", "Wraith", "Xorn",
 }
 _EXPECTED_READY_SOURCE = _EXPECTED_SIMPLE_SOURCE - {"Specter", "Wraith"}
 
@@ -33,16 +33,12 @@ def test_simple_source_family_compiles_without_bespoke_monster_builders() -> Non
     assert any(effect.kind == "prone" for effect in battleaxe.effects)
 
     ghoul = definitions["srd-ghoul"]
-    claw = next(attack for attack in ghoul.attacks if attack.name == "Claw")
-    paralyze = next(effect for effect in claw.effects if effect.kind == "condition")
-    assert paralyze.condition == "paralyzed"
-    assert paralyze.initial_save_ability == "constitution" and paralyze.initial_save_dc == 10
-    assert paralyze.expiry_timing == "target_turn_end"
-    assert paralyze.excluded_creature_types == ["undead"] and paralyze.excluded_species_ids == ["elf"]
+    claw = next(effect for attack in definitions["srd-ghoul"].attacks for effect in attack.effects if attack.name == "Claw" and effect.kind == "condition")
+    assert claw.condition == "paralyzed" and claw.initial_save_ability == "constitution" and claw.initial_save_dc == 10
+    assert claw.expiry_timing == "target_turn_end" and claw.excluded_creature_types == ["undead"] and claw.excluded_species_ids == ["elf"]
 
     boss = definitions["srd-tough-boss"]
-    assert boss.attack_action is not None
-    assert len(boss.attack_action.slots) == 2
+    assert boss.attack_action is not None and len(boss.attack_action.slots) == 2
     assert all(len(slot.attack_ids) == 2 for slot in boss.attack_action.slots)
 
     xorn = definitions["srd-xorn"]
@@ -54,6 +50,16 @@ def test_simple_source_family_compiles_without_bespoke_monster_builders() -> Non
         drainer = definitions[f"srd-{name.lower()}"]
         life_drain = next(attack for attack in drainer.attacks if attack.name == "Life Drain")
         assert any(effect.kind == "max-hp-reduction" for effect in life_drain.effects)
+
+
+def test_lycanthropes_enter_in_battle_ready_hybrid_form_without_curse_runtime() -> None:
+    definitions = build_simple_source_definitions()
+    expected_sizes = {"Werebear": "large", "Wererat": "medium", "Weretiger": "large", "Werewolf": "large"}
+    for name, size in expected_sizes.items():
+        definition = definitions[f"srd-{name.lower()}"]
+        assert definition.size.value == size
+        assert definition.save_actions == []
+        assert definition.attack_action is not None
 
 
 def test_simple_source_parser_compiles_generic_grapple_and_prone_riders() -> None:
