@@ -34,7 +34,20 @@ jobs:
       - name: Generate browser heroes
         run: python scripts/export_browser_heroes.py
       - name: Generate browser monsters
-        run: python scripts/export_browser_monsters.py
+        id: browser_monsters
+        run: |
+          set +e
+          python scripts/export_browser_monsters.py > browser-monster-export.log 2>&1
+          status=$?
+          cat browser-monster-export.log
+          exit $status
+      - name: Upload browser monster export diagnostics
+        if: failure() && steps.browser_monsters.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-monster-export-diagnostics-${{ github.sha }}
+          path: browser-monster-export.log
+          retention-days: 1
       - name: Generate figure profiles
         run: python scripts/export_figure_profiles.py
       - name: Generate certification manifests
