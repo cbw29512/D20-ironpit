@@ -11,6 +11,10 @@ _POST_COMBAT_LYCANTHROPY = re.compile(
     r"Success: The target is immune to this [A-Za-z-]+[’']s curse for 24 hours\.",
     re.I,
 )
+_BATTLE_READY_HYBRID = re.compile(
+    r"\bshape-shifts into a (?P<size>Tiny|Small|Medium|Large|Huge|Gargantuan) [^.]*?hybrid(?: form)?\b",
+    re.I,
+)
 
 # Iron Pit scope is intentionally narrower than the full tabletop ruleset.
 # Movement, positioning, senses, stealth, environment, and narrative-only text
@@ -58,6 +62,12 @@ def normalized_source_text(value: object) -> str:
 def strip_post_combat_outcomes(value: object) -> str:
     """Remove source consequences explicitly declared outside Iron Pit combat scope."""
     return _POST_COMBAT_LYCANTHROPY.sub("", normalized_source_text(value)).strip()
+
+
+def battle_ready_size(row: dict[str, object]) -> str | None:
+    """Resolve an at-will hybrid form used on arena entry when only form presentation/size differs."""
+    match = _BATTLE_READY_HYBRID.search(normalized_source_text(row.get("bonusActions", "")))
+    return match.group("size").lower() if match else None
 
 
 def base_feature_name(name: str) -> str:
