@@ -50,8 +50,12 @@ def bonus_action_issues(template: CombatantTemplate, row: dict[str, object]) -> 
     if not expected:
         return issues
     blocks = feature_blocks(source, expected)
+    modeled = {action.name for action in template.saving_throw_actions if action.action_cost == "bonus_action"}
     for name in expected:
-        if _base_name(name) in _ARENA_NEUTRAL_BONUS_ACTIONS or not combat_math_relevant(blocks[name]):
+        base = _base_name(name)
+        if base in _ARENA_NEUTRAL_BONUS_ACTIONS or not combat_math_relevant(blocks[name]):
+            continue
+        if base in modeled:
             continue
         issues.append(f"uncertified-bonus-action:{_slug(name)}")
     return issues
