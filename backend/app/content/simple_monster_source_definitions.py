@@ -7,13 +7,14 @@ from app.content.monster_defense_source_audit import parse_defense_profile
 from app.content.monster_regeneration_source import parse_regeneration
 from app.content.monster_saving_throws import parse_saving_throw_bonuses
 from app.content.monster_trait_source_audit import _MODELED_TRAITS, parse_trait_names
+from app.content.monster_turn_aura_source import parse_turn_damage_auras
 from app.content.movement_modes import parse_movement_profile, standard_arena_closing_speed
 from app.content.simple_monster_source_attacks import parse_simple_attacks
 from app.domain.capabilities import CombatantDefinition
 
 _SIMPLE_SOURCE_NAMES = frozenset({
-    "Berserker", "Blink Dog", "Ettin", "Fire Giant", "Nightmare", "Sahuagin Warrior",
-    "Spy", "Tough Boss", "Troll Limb", "Xorn",
+    "Azer Sentinel", "Berserker", "Blink Dog", "Ettin", "Fire Giant", "Nightmare",
+    "Sahuagin Warrior", "Spy", "Tough Boss", "Troll Limb", "Xorn",
 })
 
 
@@ -37,6 +38,7 @@ def _definition(row: dict[str, object]) -> CombatantDefinition:
     trait_names = parse_trait_names(row.get("traits", "")) if str(row.get("traits", "")).strip() else []
     combat_traits = [_MODELED_TRAITS[name].value for name in trait_names if name in _MODELED_TRAITS]
     regeneration = parse_regeneration(row)
+    turn_damage_auras = parse_turn_damage_auras(row)
     name = str(row["name"])
     slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
     data: dict[str, object] = {
@@ -68,6 +70,8 @@ def _definition(row: dict[str, object]) -> CombatantDefinition:
         data["attack_action"] = multiattack
     if regeneration is not None:
         data["regeneration"] = regeneration.model_dump(mode="json")
+    if turn_damage_auras:
+        data["turn_damage_auras"] = [aura.model_dump(mode="json") for aura in turn_damage_auras]
     return CombatantDefinition.model_validate(data)
 
 
