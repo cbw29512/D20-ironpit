@@ -6,7 +6,7 @@ from app.domain.catalog import CoverageStatus
 
 _EXPECTED_SIMPLE_SOURCE = {
     "Azer Sentinel", "Berserker", "Blink Dog", "Bone Devil", "Bugbear Warrior", "Ettin", "Fire Giant", "Hezrou",
-    "Hill Giant", "Hobgoblin Captain", "Magmin", "Merrow", "Mimic", "Nightmare", "Roper", "Sahuagin Warrior", "Satyr",
+    "Hill Giant", "Hobgoblin Captain", "Magmin", "Merrow", "Mimic", "Nightmare", "Sahuagin Warrior", "Satyr",
     "Specter", "Spy", "Tough Boss", "Troll Limb", "Wraith", "Xorn",
 }
 
@@ -98,3 +98,4 @@ def test_simple_source_family_is_promoted_only_through_full_catalog_audit() -> N
     for name in _EXPECTED_SIMPLE_SOURCE:
         assert cards[name].coverage_status is CoverageStatus.RAW_READY
         assert cards[name].blockers == []
+    assert cards["Roper"].coverage_status is CoverageStatus.BLOCKED
