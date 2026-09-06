@@ -17,9 +17,9 @@ from app.content.simple_monster_source_saves import parse_simple_save_actions
 from app.domain.capabilities import CombatantDefinition
 
 _SIMPLE_SOURCE_NAMES = frozenset({
-    "Azer Sentinel", "Berserker", "Blink Dog", "Ettin", "Fire Giant", "Hezrou", "Hill Giant",
-    "Hobgoblin Captain", "Magmin", "Merrow", "Nightmare", "Sahuagin Warrior", "Satyr", "Spy",
-    "Tough Boss", "Troll Limb", "Xorn",
+    "Azer Sentinel", "Berserker", "Blink Dog", "Bugbear Warrior", "Ettin", "Fire Giant", "Hezrou",
+    "Hill Giant", "Hobgoblin Captain", "Magmin", "Merrow", "Nightmare", "Sahuagin Warrior", "Satyr",
+    "Spy", "Tough Boss", "Troll Limb", "Xorn",
 })
 
 
