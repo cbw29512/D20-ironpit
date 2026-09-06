@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 156,
-    "blocked": 174
+    "public_ready": 159,
+    "blocked": 171
   },
   "monsters": [
     {
@@ -3465,14 +3465,14 @@
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action"
+        "saving-throw-action",
+        "trait"
       ],
       "unsupported_mechanics": [
         "condition-or-control",
         "limited-use",
         "save-or-complex-action",
-        "spellcasting",
-        "trait"
+        "spellcasting"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -3483,8 +3483,7 @@
         "limited-use",
         "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "spellcasting",
-        "trait"
+        "spellcasting"
       ]
     },
     {
@@ -7706,7 +7705,7 @@
       "monster_name": "Specter",
       "srd_source_page": 327,
       "srd_source_reference": "SRD 5.2.1 p. 327",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-specter",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -7715,21 +7714,16 @@
       ],
       "supported_mechanics": [
         "attack-roll",
-        "damage-or-condition-defense"
-      ],
-      "unsupported_mechanics": [
+        "damage-or-condition-defense",
         "trait",
         "unsupported-action-rider"
       ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "trait",
-        "uncertified-trait:incorporeal-movement",
-        "unsupported-action-rider"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-sphinx-of-lore",
@@ -9050,7 +9044,7 @@
       "monster_name": "Wereboar",
       "srd_source_page": 338,
       "srd_source_reference": "SRD 5.2.1 p. 338",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-wereboar",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -9061,20 +9055,16 @@
       "supported_mechanics": [
         "attack-roll",
         "bonus-action",
+        "condition-or-control",
         "multiattack",
         "saving-throw-action"
       ],
-      "unsupported_mechanics": [
-        "condition-or-control"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "condition-or-control",
-        "monster-combat-mechanics-not-certified"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-wererat",
@@ -9106,7 +9096,7 @@
       "monster_name": "Weretiger",
       "srd_source_page": 339,
       "srd_source_reference": "SRD 5.2.1 p. 339",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-weretiger",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -9115,20 +9105,16 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "bonus-action",
         "multiattack",
         "saving-throw-action"
       ],
-      "unsupported_mechanics": [
-        "bonus-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "bonus-action",
-        "uncertified-bonus-action:prowl"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-werewolf",
@@ -9238,11 +9224,11 @@
       ],
       "supported_mechanics": [
         "attack-roll",
-        "damage-or-condition-defense"
+        "damage-or-condition-defense",
+        "trait"
       ],
       "unsupported_mechanics": [
-        "bonus-action",
-        "trait"
+        "bonus-action"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -9250,8 +9236,7 @@
       "public_ready_status": "blocked",
       "blockers": [
         "bonus-action",
-        "monster-combat-mechanics-not-certified",
-        "trait"
+        "monster-combat-mechanics-not-certified"
       ]
     },
     {
@@ -9343,10 +9328,10 @@
       ],
       "supported_mechanics": [
         "attack-roll",
-        "damage-or-condition-defense"
+        "damage-or-condition-defense",
+        "trait"
       ],
       "unsupported_mechanics": [
-        "trait",
         "unsupported-action-rider"
       ],
       "python_certification_status": "blocked",
@@ -9354,8 +9339,6 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "trait",
-        "uncertified-trait:incorporeal-movement",
         "unsupported-action-rider",
         "unsupported-combatant-creation-action"
       ]

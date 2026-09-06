@@ -1,25 +1,25 @@
-CAPABILITY_YIELD_BASELINE	ready=156	blocked=174	actionable_blocked=164	deferred=10	signatures=70
+CAPABILITY_YIELD_BASELINE	ready=159	blocked=171	actionable_blocked=161	deferred=10	signatures=70
 CAPABILITY_DEFERRED_ENVIRONMENT	Giant Seahorse | Giant Shark | Hunter Shark | Killer Whale | Octopus | Piranha | Reef Shark | Seahorse | Swarm of Piranhas
 CAPABILITY_DEFERRED_NONCOMBAT	Shrieker Fungus
-CAPABILITY_SINGLE_FAMILY	condition-or-control	5	Animated Rug of Smothering | Giant Toad | Phase Spider | Roper | Wereboar
+CAPABILITY_SINGLE_FAMILY	condition-or-control	4	Animated Rug of Smothering | Giant Toad | Phase Spider | Roper
 CAPABILITY_SINGLE_FAMILY	trait	4	Barbed Devil | Fire Elemental | Flesh Golem | Hydra
 CAPABILITY_SINGLE_FAMILY	spellcasting	3	Druid | Dryad | Imp
 CAPABILITY_SINGLE_FAMILY	ability-score-change	1	Shadow
 CAPABILITY_SINGLE_FAMILY	attachment-state	1	Stirge
-CAPABILITY_SINGLE_FAMILY	bonus-action	1	Weretiger
+CAPABILITY_SINGLE_FAMILY	bonus-action	1	Will-o’-Wisp
 CAPABILITY_SINGLE_FAMILY	reaction	1	Ochre Jelly
 CAPABILITY_SINGLE_FAMILY	save-or-complex-action	1	Horned Devil
 CAPABILITY_SINGLE_FAMILY	unclassified-source-audit-gap	1	Mimic
+CAPABILITY_SINGLE_FAMILY	unsupported-action-rider	1	Wraith
 CAPABILITY_CONTROL_SIGNATURE	blinded+prone+restrained+swallow	1	Giant Toad
 CAPABILITY_CONTROL_SIGNATURE	blinded+restrained	1	Animated Rug of Smothering
 CAPABILITY_CONTROL_SIGNATURE	paralyzed+poisoned	1	Phase Spider
 CAPABILITY_CONTROL_SIGNATURE	poisoned	1	Roper
-CAPABILITY_CONTROL_SIGNATURE	prone	1	Wereboar
 CAPABILITY_CONTROL_EFFECT	blinded	2	Animated Rug of Smothering | Giant Toad
 CAPABILITY_CONTROL_EFFECT	poisoned	2	Phase Spider | Roper
-CAPABILITY_CONTROL_EFFECT	prone	2	Giant Toad | Wereboar
 CAPABILITY_CONTROL_EFFECT	restrained	2	Animated Rug of Smothering | Giant Toad
 CAPABILITY_CONTROL_EFFECT	paralyzed	1	Phase Spider
+CAPABILITY_CONTROL_EFFECT	prone	1	Giant Toad
 CAPABILITY_CONTROL_EFFECT	swallow	1	Giant Toad
 CAPABILITY_TRAIT_SINGLE_HEADING	Barbed Hide	1	Barbed Devil
 CAPABILITY_TRAIT_HEADING	Aversion to Fire	1	Flesh Golem
@@ -37,21 +37,21 @@ CAPABILITY_SIGNATURE	8	condition-or-control+legendary+limited-use+save-or-comple
 CAPABILITY_SIGNATURE	7	bonus-action+limited-use	Basilisk | Centaur Trooper | Frost Giant | Giant Hyena | Gnoll Warrior | Medusa | Nalfeshnee
 CAPABILITY_SIGNATURE	7	limited-use+save-or-complex-action	Ankheg | Copper Dragon Wyrmling | Gold Dragon Wyrmling | Magma Mephit | Swarm of Ravens | Young Copper Dragon | Young Gold Dragon
 CAPABILITY_SIGNATURE	6	bonus-action+limited-use+spellcasting	Cultist Fanatic | Drider | Incubus | Priest | Priest Acolyte | Stone Golem
-CAPABILITY_SIGNATURE	5	condition-or-control	Animated Rug of Smothering | Giant Toad | Phase Spider | Roper | Wereboar
-CAPABILITY_SIGNATURE	4	condition-or-control+limited-use+save-or-complex-action+spellcasting	Doppelganger | Dust Mephit | Quasit | Storm Giant
+CAPABILITY_SIGNATURE	5	condition-or-control+limited-use+save-or-complex-action+spellcasting	Doppelganger | Dust Mephit | Ghost | Quasit | Storm Giant
+CAPABILITY_SIGNATURE	4	condition-or-control	Animated Rug of Smothering | Giant Toad | Phase Spider | Roper
 CAPABILITY_SIGNATURE	4	spellcasting+trait	Efreeti | Gray Ooze | Green Hag | Spirit Naga
 CAPABILITY_SIGNATURE	4	trait	Barbed Devil | Fire Elemental | Flesh Golem | Hydra
 CAPABILITY_SIGNATURE	3	bonus-action+condition-or-control	Elephant | Mammoth | Purple Worm
 CAPABILITY_SIGNATURE	3	bonus-action+condition-or-control+limited-use+save-or-complex-action	Behir | Ettercap | Gorgon
-CAPABILITY_SIGNATURE	3	condition-or-control+limited-use+save-or-complex-action+spellcasting+trait	Ghost | Pit Fiend | Sea Hag
 CAPABILITY_SIGNATURE	3	condition-or-control+save-or-complex-action+unsupported-action-rider	Death Dog | Mummy | Otyugh
 CAPABILITY_SIGNATURE	3	spellcasting	Druid | Dryad | Imp
-CAPABILITY_SIGNATURE	3	trait+unsupported-action-rider	Clay Golem | Specter | Wraith
 CAPABILITY_SIGNATURE	2	bonus-action+condition-or-control+spellcasting	Cloud Giant | Oni
 CAPABILITY_SIGNATURE	2	bonus-action+limited-use+save-or-complex-action+spellcasting+trait	Deva | Planetar
 CAPABILITY_SIGNATURE	2	condition-or-control+legendary+limited-use+save-or-complex-action+trait	Aboleth | Kraken
 CAPABILITY_SIGNATURE	2	condition-or-control+limited-use+reaction	Giant Octopus | Stone Giant
+CAPABILITY_SIGNATURE	2	condition-or-control+limited-use+save-or-complex-action+spellcasting+trait	Pit Fiend | Sea Hag
 CAPABILITY_SIGNATURE	2	condition-or-control+limited-use+save-or-complex-action+trait	Gibbering Mouther | Water Elemental
 CAPABILITY_SIGNATURE	2	condition-or-control+save-or-complex-action+spellcasting	Lamia | Sprite
 CAPABILITY_SIGNATURE	2	condition-or-control+save-or-complex-action+spellcasting+trait	Gelatinous Cube | Guardian Naga
 CAPABILITY_SIGNATURE	2	condition-or-control+save-or-complex-action+trait	Erinyes | Shambling Mound
+CAPABILITY_SIGNATURE	2	condition-or-control+trait	Assassin | Earth Elemental
