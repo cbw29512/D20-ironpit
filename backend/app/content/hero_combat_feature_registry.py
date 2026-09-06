@@ -9,7 +9,7 @@ SUPPORTED_HERO_ENGINE_FEATURES = {
     "survivor-defy-death", "survivor-heroic-rally",
     "rage", "danger-sense", "reckless-attack", "frenzy", "fast-movement", "mindless-rage",
     "feral-instinct",
-    "sneak-attack", "weapon-mastery",
+    "sneak-attack", "weapon-mastery", "steady-aim",
     "cleric-spellcasting", "divine-order-protector", "divine-spark", "turn-undead",
     "disciple-of-life", "preserve-life",
 }
@@ -31,7 +31,7 @@ _STATIC_PROGRESSION_FIELDS: dict[str, dict[str, object]] = {
     "fast-movement": {"fast_movement_bonus_ft": 10},
     "mindless-rage": {"mindless_rage": True},
     "feral-instinct": {"initiative_advantage": True},
-    "instinctive-pounce": {"instinctive_pounce_fraction": 0.5},
+    "steady-aim": {"steady_aim": True},
 }
 
 
