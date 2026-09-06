@@ -1,4 +1,4 @@
-UNIVERSAL_ENGINE_BASELINE	monster_ready=143	monster_actionable_blocked=177	monster_deferred=10	monster_families=11	planned_hero_mechanics=372
+UNIVERSAL_ENGINE_BASELINE	monster_ready=143	monster_actionable_blocked=177	monster_deferred=10	monster_families=11	planned_hero_mechanics=371
 UNIVERSAL_ENGINE_MONSTER_FAMILIES
 UNIVERSAL_MONSTER_FAMILY	condition-or-control	immediate_unlocks=6	affected=93	engine_status=unmapped
 UNIVERSAL_MONSTER_FAMILY	trait	immediate_unlocks=5	affected=80	engine_status=unmapped
@@ -211,7 +211,6 @@ UNIVERSAL_HERO_MECHANIC	improved-shadow-step	owners=1	classes=1	status=planned	k
 UNIVERSAL_HERO_MECHANIC	improved-warding-flare	owners=1	classes=1	status=planned	kinds=subclass-feature
 UNIVERSAL_HERO_MECHANIC	indomitable-might	owners=1	classes=1	status=planned	kinds=base-feature
 UNIVERSAL_HERO_MECHANIC	innate-sorcery	owners=1	classes=1	status=planned	kinds=base-feature
-UNIVERSAL_HERO_MECHANIC	instinctive-pounce	owners=1	classes=1	status=planned	kinds=base-feature
 UNIVERSAL_HERO_MECHANIC	intimidating-presence	owners=1	classes=1	status=planned	kinds=subclass-feature
 UNIVERSAL_HERO_MECHANIC	land-arid-spells	owners=1	classes=1	status=planned	kinds=subclass-feature
 UNIVERSAL_HERO_MECHANIC	lands-aid	owners=1	classes=1	status=planned	kinds=subclass-feature

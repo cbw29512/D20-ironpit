@@ -5,7 +5,7 @@
   "summary": {
     "canonical_heroes": 12,
     "level_slots": 240,
-    "public_ready": 31
+    "public_ready": 33
   },
   "heroes": [
     {
@@ -275,24 +275,50 @@
             "id": "path-berserker",
             "name": "Path of the Berserker"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "rokhan-stonefury-l7",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Barbarian 7 Feral Instinct and Instinctive Pounce"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:rokhan-greataxe",
+            "attack:rokhan-handaxe-thrown",
+            "danger-sense",
+            "fast-movement",
+            "frenzy",
+            "initiative-advantage",
+            "mindless-rage",
+            "multiattack-or-extra-attack",
+            "reckless-attack",
+            "resource:adrenaline-rush",
+            "resource:rage",
+            "resource:relentless-endurance",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savager-attacker"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:rokhan-greataxe",
+            "attack:rokhan-handaxe-thrown",
+            "danger-sense",
+            "fast-movement",
+            "frenzy",
+            "initiative-advantage",
+            "mindless-rage",
+            "multiattack-or-extra-attack",
+            "reckless-attack",
+            "resource:adrenaline-rush",
+            "resource:rage",
+            "resource:relentless-endurance",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savager-attacker"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 8,
@@ -300,24 +326,50 @@
             "id": "path-berserker",
             "name": "Path of the Berserker"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "rokhan-stonefury-l8",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Barbarian 8 Ability Score Improvement (+2 Strength)"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:rokhan-greataxe",
+            "attack:rokhan-handaxe-thrown",
+            "danger-sense",
+            "fast-movement",
+            "frenzy",
+            "initiative-advantage",
+            "mindless-rage",
+            "multiattack-or-extra-attack",
+            "reckless-attack",
+            "resource:adrenaline-rush",
+            "resource:rage",
+            "resource:relentless-endurance",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savager-attacker"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:rokhan-greataxe",
+            "attack:rokhan-handaxe-thrown",
+            "danger-sense",
+            "fast-movement",
+            "frenzy",
+            "initiative-advantage",
+            "mindless-rage",
+            "multiattack-or-extra-attack",
+            "reckless-attack",
+            "resource:adrenaline-rush",
+            "resource:rage",
+            "resource:relentless-endurance",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savager-attacker"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 9,
