@@ -63,6 +63,10 @@ _PROFILES = {
     "rhinoceros-gore": _prone_charge(
         "rhinoceros-gore", 20, CreatureSize.LARGE, bonus_damage=ChargeDamage(2, 8, DamageType.PIERCING),
     ),
+    "srd-wereboar-tusk-boar-or-hybrid-form-only": _prone_charge(
+        "srd-wereboar-tusk-boar-or-hybrid-form-only", 20, CreatureSize.MEDIUM,
+        bonus_damage=ChargeDamage(2, 6, DamageType.PIERCING),
+    ),
     "triceratops-gore": _prone_charge(
         "triceratops-gore", 20, CreatureSize.HUGE, bonus_damage=ChargeDamage(2, 8, DamageType.PIERCING),
     ),
