@@ -89,6 +89,10 @@ def resolve_combat_turn(
         if adrenaline_event is not None:
             events.append(adrenaline_event); sequence += 1
 
+    bonus_save_events, sequence, _ = resolve_save_action_turn(
+        sequence, round_number, attacker, setup, dice, resource_backed_only=None, action_cost="bonus_action",
+    )
+    events.extend(bonus_save_events)
     spell_events, sequence = resolve_best_spell_offense(sequence, round_number, attacker, setup, turn_key, dice)
     events.extend(spell_events)
     if not is_available(attacker.state, "action"):
