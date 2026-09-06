@@ -13,11 +13,12 @@ from app.content.monster_trait_source_audit import _MODELED_TRAITS, parse_trait_
 from app.content.monster_turn_aura_source import parse_turn_damage_auras
 from app.content.movement_modes import parse_movement_profile, standard_arena_closing_speed
 from app.content.simple_monster_source_attacks import parse_simple_attacks
+from app.content.simple_monster_source_saves import parse_simple_save_actions
 from app.domain.capabilities import CombatantDefinition
 
 _SIMPLE_SOURCE_NAMES = frozenset({
     "Azer Sentinel", "Berserker", "Blink Dog", "Ettin", "Fire Giant", "Hezrou", "Hill Giant",
-    "Hobgoblin Captain", "Magmin", "Nightmare", "Sahuagin Warrior", "Spy", "Tough Boss", "Troll Limb", "Xorn",
+    "Hobgoblin Captain", "Magmin", "Nightmare", "Sahuagin Warrior", "Satyr", "Spy", "Tough Boss", "Troll Limb", "Xorn",
 })
 
 
@@ -35,6 +36,7 @@ def _initiative(row: dict[str, object]) -> int:
 
 def _definition(row: dict[str, object]) -> CombatantDefinition:
     attacks, multiattack = parse_simple_attacks(row); defenses = parse_defense_profile(row)
+    save_actions = parse_simple_save_actions(row)
     trait_names = parse_trait_names(row.get("traits", "")) if str(row.get("traits", "")).strip() else []
     combat_traits = [_MODELED_TRAITS[name].value for name in trait_names if name in _MODELED_TRAITS]
     regeneration = parse_regeneration(row); turn_damage_auras = parse_turn_damage_auras(row)
@@ -48,7 +50,7 @@ def _definition(row: dict[str, object]) -> CombatantDefinition:
         "max_hp": _first_int(row["hitPoints"]), "speed_ft": standard_arena_closing_speed(row["speed"]),
         "movement_modes": parse_movement_profile(row["speed"]).model_dump(mode="json"),
         "initiative_bonus": _initiative(row), "attacks": attacks, "primary_attack_id": attacks[0]["id"],
-        "saving_throw_bonuses": parse_saving_throw_bonuses(row), "combat_traits": combat_traits,
+        "save_actions": save_actions, "saving_throw_bonuses": parse_saving_throw_bonuses(row), "combat_traits": combat_traits,
         "source_trait_names": trait_names, "damage_vulnerabilities": sorted(defenses["damage_vulnerabilities"]),
         "damage_resistances": sorted(defenses["damage_resistances"]), "damage_immunities": sorted(defenses["damage_immunities"]),
         "condition_immunities": sorted(defenses["condition_immunities"]),
