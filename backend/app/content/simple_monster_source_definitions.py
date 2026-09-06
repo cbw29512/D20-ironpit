@@ -79,6 +79,6 @@ def build_simple_source_definitions() -> dict[str, CombatantDefinition]:
         if deferred_environment_reason(rows[name]["speed"]) is None
     ]
     definitions = [_definition(rows[name]) for name in eligible_names]
-    result = {definition.id: definition for definition in definitions]
+    result = {definition.id: definition for definition in definitions}
     if len(result) != len(definitions): raise ValueError("Simple source-derived monster ids must be unique.")
     return result
