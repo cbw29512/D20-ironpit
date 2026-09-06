@@ -1,4 +1,4 @@
-UNIVERSAL_ENGINE_BASELINE	monster_ready=143	monster_actionable_blocked=177	monster_deferred=10	monster_families=11	planned_hero_mechanics=375
+UNIVERSAL_ENGINE_BASELINE	monster_ready=143	monster_actionable_blocked=177	monster_deferred=10	monster_families=11	planned_hero_mechanics=372
 UNIVERSAL_ENGINE_MONSTER_FAMILIES
 UNIVERSAL_MONSTER_FAMILY	condition-or-control	immediate_unlocks=6	affected=93	engine_status=unmapped
 UNIVERSAL_MONSTER_FAMILY	trait	immediate_unlocks=5	affected=80	engine_status=unmapped
@@ -73,7 +73,6 @@ UNIVERSAL_HERO_MECHANIC	beguiling-magic	owners=1	classes=1	status=planned	kinds=
 UNIVERSAL_HERO_MECHANIC	blessed-healer	owners=1	classes=1	status=planned	kinds=subclass-feature
 UNIVERSAL_HERO_MECHANIC	blessed-strikes	owners=1	classes=1	status=planned	kinds=base-feature
 UNIVERSAL_HERO_MECHANIC	body-and-mind	owners=1	classes=1	status=planned	kinds=base-feature
-UNIVERSAL_HERO_MECHANIC	boon-combat-prowess	owners=1	classes=1	status=planned	kinds=base-feature
 UNIVERSAL_HERO_MECHANIC	boon-dimensional-travel	owners=1	classes=1	status=planned	kinds=base-feature
 UNIVERSAL_HERO_MECHANIC	boon-of-fate	owners=1	classes=1	status=planned	kinds=base-feature
 UNIVERSAL_HERO_MECHANIC	boon-spell-recall	owners=1	classes=1	status=planned	kinds=base-feature
@@ -336,8 +335,6 @@ UNIVERSAL_HERO_MECHANIC	superior-hunters-defense	owners=1	classes=1	status=plann
 UNIVERSAL_HERO_MECHANIC	superior-hunters-prey	owners=1	classes=1	status=planned	kinds=subclass-feature
 UNIVERSAL_HERO_MECHANIC	superior-inspiration	owners=1	classes=1	status=planned	kinds=base-feature
 UNIVERSAL_HERO_MECHANIC	supreme-healing	owners=1	classes=1	status=planned	kinds=subclass-feature
-UNIVERSAL_HERO_MECHANIC	survivor-defy-death	owners=1	classes=1	status=planned	kinds=subclass-feature
-UNIVERSAL_HERO_MECHANIC	survivor-heroic-rally	owners=1	classes=1	status=planned	kinds=subclass-feature
 UNIVERSAL_HERO_MECHANIC	telepathic-speech	owners=1	classes=1	status=planned	kinds=subclass-feature
 UNIVERSAL_HERO_MECHANIC	thief-fast-hands	owners=1	classes=1	status=planned	kinds=subclass-feature
 UNIVERSAL_HERO_MECHANIC	thief-supreme-sneak	owners=1	classes=1	status=planned	kinds=subclass-feature
