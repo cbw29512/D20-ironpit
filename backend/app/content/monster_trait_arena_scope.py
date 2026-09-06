@@ -8,8 +8,10 @@ _OBJECT_END_DAMAGE = re.compile(
     r"\bThe\s+\w+\s+takes\s+\d+(?:\s*\([^)]*\))?\s+[A-Za-z]+\s+damage\s+if\s+it\s+ends\s+its\s+turn\s+inside\s+an\s+object\. ?",
     re.IGNORECASE,
 )
-_SUNLIGHT_SENTENCE = re.compile(
-    r"\bWhile\s+in\s+sunlight,\s+[^.]*\. ?",
+_SUNLIGHT_SENTENCE = re.compile(r"\bWhile\s+in\s+sunlight,\s+[^.]*\. ?", re.IGNORECASE)
+_OFF_ARENA_RESTORATION = re.compile(
+    r"\bIf\s+the\s+[A-Za-z][A-Za-z'’ -]*\s+dies\s+outside\s+the\s+[^,]+,\s+[^.]*"
+    r"reviving\s+with\s+all\s+its\s+Hit\s+Points\s+somewhere\s+in\s+the\s+[^.]+\. ?",
     re.IGNORECASE,
 )
 
@@ -21,4 +23,5 @@ def arena_neutral_trait_source(source: object) -> bool:
         return True
     scoped = _OBJECT_END_DAMAGE.sub("", text)
     scoped = _SUNLIGHT_SENTENCE.sub("", scoped)
+    scoped = _OFF_ARENA_RESTORATION.sub("", scoped)
     return not combat_math_relevant(scoped)
