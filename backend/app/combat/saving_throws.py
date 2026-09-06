@@ -46,14 +46,14 @@ def resolve_save_action(
     affected_states: list[CombatantState] | None = None, against_magic: bool = False,
     advantage_sources: int = 0,
 ) -> BattleEvent:
-    if spend_action and not is_available(actor.state, "action"): raise ValueError("Action is not available for a saving throw action.")
+    if spend_action and not is_available(actor.state, action.action_cost): raise ValueError(f"{action.action_cost.replace('_', ' ').title()} is not available for {action.name}.")
     if spend_resource_cost and not save_action_resource_available(actor.state, action): raise ValueError(f"{action.name} resource is unavailable.")
     if not legal_save_action(action, target, distance_ft): raise ValueError(f"{action.name} has no legal target at {distance_ft} feet.")
     save_roll, succeeded = resolve_saving_throw(
         target.state, action.save_ability, action.dc, dice,
         against_magic=against_magic, advantage_sources=advantage_sources,
     )
-    if spend_action: spend(actor.state, "action")
+    if spend_action: spend(actor.state, action.action_cost)
     if spend_resource_cost and action.resource_id is not None:
         spend_resource(actor.state, action.resource_id, action.resource_cost)
     hp_before = target.state.current_hp; temporary_hp_before = target.state.temporary_hp
