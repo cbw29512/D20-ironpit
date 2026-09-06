@@ -6,7 +6,7 @@ from app.domain.catalog import CoverageStatus
 
 _EXPECTED_SIMPLE_SOURCE = {
     "Azer Sentinel", "Berserker", "Blink Dog", "Bone Devil", "Bugbear Stalker", "Bugbear Warrior", "Ettin", "Fire Giant", "Ghoul", "Hezrou",
-    "Hill Giant", "Hobgoblin Captain", "Magmin", "Merrow", "Nightmare", "Pirate", "Sahuagin Warrior", "Satyr",
+    "Hill Giant", "Hobgoblin Captain", "Lion", "Magmin", "Merrow", "Nightmare", "Pirate", "Sahuagin Warrior", "Satyr",
     "Specter", "Spy", "Tough Boss", "Troll Limb", "Wraith", "Xorn",
 }
 _EXPECTED_READY_SOURCE = _EXPECTED_SIMPLE_SOURCE - {"Specter", "Wraith"}
