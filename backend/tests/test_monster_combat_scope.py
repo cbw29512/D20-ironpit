@@ -3,6 +3,7 @@ from app.content.monster_combat_scope import combat_math_relevant, feature_block
 from app.content.monster_legendary_source_audit import legendary_source_relevant
 from app.content.monster_limited_use_source_audit import limited_use_source_relevant, parse_limited_use_names
 from app.content.monster_reaction_source_audit import arena_neutral_reaction_source
+from app.content.monster_trait_arena_scope import arena_neutral_trait_source
 from app.content.monster_trait_source_audit import combat_relevant_trait_names
 
 
@@ -45,9 +46,16 @@ def test_trait_scope_ignores_movement_but_keeps_save_math() -> None:
     assert combat_relevant_trait_names(source) == {"Magic Resistance"}
 
 
-def test_bonus_action_scope_ignores_teleport_only() -> None:
-    source = "Teleport (Recharge 4-6). The blink dog teleports up to 40 feet to an unoccupied space it can see."
-    assert arena_neutral_bonus_action_source(source)
+def test_incorporeal_object_damage_is_outside_open_pit_scope() -> None:
+    source = "Incorporeal Movement. The creature can move through other creatures and objects as if they were Difficult Terrain. It takes 5 (1d10) Force damage if it ends its turn inside an object."
+    assert arena_neutral_trait_source(source)
+
+
+def test_bonus_action_scope_ignores_teleport_and_prowl_hide() -> None:
+    teleport = "Teleport (Recharge 4-6). The blink dog teleports up to 40 feet to an unoccupied space it can see."
+    prowl = "Prowl (Tiger or Hybrid Form Only). The weretiger moves up to its Speed without provoking Opportunity Attacks. At the end of this movement, the weretiger can take the Hide action."
+    assert arena_neutral_bonus_action_source(teleport)
+    assert arena_neutral_bonus_action_source(prowl)
 
 
 def test_reaction_scope_ignores_audible_or_movement_only_but_not_roll_math() -> None:
