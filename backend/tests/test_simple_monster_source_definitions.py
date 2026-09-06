@@ -5,7 +5,7 @@ from app.domain.catalog import CoverageStatus
 
 
 _EXPECTED_SIMPLE_SOURCE = {
-    "Azer Sentinel", "Berserker", "Blink Dog", "Bone Devil", "Bugbear Warrior", "Ettin", "Fire Giant", "Hezrou",
+    "Azer Sentinel", "Berserker", "Blink Dog", "Bone Devil", "Bugbear Stalker", "Bugbear Warrior", "Ettin", "Fire Giant", "Ghoul", "Hezrou",
     "Hill Giant", "Hobgoblin Captain", "Magmin", "Merrow", "Nightmare", "Sahuagin Warrior", "Satyr",
     "Specter", "Spy", "Tough Boss", "Troll Limb", "Wraith", "Xorn",
 }
@@ -31,6 +31,14 @@ def test_simple_source_family_compiles_without_bespoke_monster_builders() -> Non
     assert any(effect.kind == "next-attack-disadvantage" for effect in morningstar.effects)
     battleaxe = next(attack for attack in ettin.attacks if attack.name == "Battleaxe")
     assert any(effect.kind == "prone" for effect in battleaxe.effects)
+
+    ghoul = definitions["srd-ghoul"]
+    claw = next(attack for attack in ghoul.attacks if attack.name == "Claw")
+    paralyze = next(effect for effect in claw.effects if effect.kind == "condition")
+    assert paralyze.condition == "paralyzed"
+    assert paralyze.initial_save_ability == "constitution" and paralyze.initial_save_dc == 10
+    assert paralyze.expiry_timing == "target_turn_end"
+    assert paralyze.excluded_creature_types == ["undead"] and paralyze.excluded_species_ids == ["elf"]
 
     boss = definitions["srd-tough-boss"]
     assert boss.attack_action is not None
