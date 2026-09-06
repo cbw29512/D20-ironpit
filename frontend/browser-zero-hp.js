@@ -57,6 +57,14 @@
     return before - after;
   }
 
+  function applyAttackMaxHpReduction(state, attack, components) {
+    const rider = attack.maxHpReduction;
+    if (!rider) return 0;
+    const amount = components.filter((part) => !rider.damageType || part.damage_type === rider.damageType)
+      .reduce((sum, part) => sum + (part.applied_total || 0), 0);
+    return applyMaxHpReduction(state, amount);
+  }
+
   function finish(state, outcome, incoming, affectedStates) {
     B()?.endDamageSensitive(state);
     if (!state.concentration) return outcome;
@@ -93,5 +101,5 @@
     return finish(state, "unconscious", incoming, affectedStates);
   }
 
-  window.IRON_PIT_BROWSER_ZERO_HP = { applyDamage, applyMaxHpReduction };
+  window.IRON_PIT_BROWSER_ZERO_HP = { applyDamage, applyAttackMaxHpReduction, applyMaxHpReduction };
 })();
