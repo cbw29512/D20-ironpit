@@ -173,20 +173,24 @@ Keep Concentration RAW unless a documented simplification is required for implem
 
 ## Zero HP and death saving throws
 
-Keep death saving throws RAW for combatants that use them.
+Keep the RAW distinction between player characters/pregens and monsters.
 
-- A creature that starts its turn at 0 HP and is not Stable makes a Death Saving Throw.
+- Pregens/player characters use the normal Death Saving Throw system at 0 HP.
+- Monsters normally die immediately at 0 HP.
+- A monster or pregen with an explicit zero-HP feature such as Relentless Endurance, regeneration, a death-prevention feature, or another source-defined exception resolves that feature before the normal zero-HP result when its trigger applies.
+- Do not give ordinary monsters Death Saving Throws merely for symmetry.
+- A pregen that starts its turn at 0 HP and is not Stable makes a Death Saving Throw.
 - Roll 1d20 with no ability score attached: 10 or higher is one success; 9 or lower is one failure.
-- Three successes make the creature Stable.
-- Three failures kill the creature.
+- Three successes make the pregen Stable.
+- Three failures kill the pregen.
 - Successes and failures need not be consecutive.
 - Regaining any HP or becoming Stable resets both counters to zero.
 - A natural 1 on the Death Saving Throw causes two failures.
 - A natural 20 on the Death Saving Throw restores 1 HP immediately.
 - Taking damage while at 0 HP causes one Death Saving Throw failure.
 - If that damage is from a Critical Hit, it causes two failures instead.
-- If damage at 0 HP meets the applicable RAW instant-death threshold, the creature dies immediately.
-- Zero-HP, Stable, Unconscious, healing, and death-save state must use shared combat state rather than class- or monster-specific branches.
+- If damage at 0 HP meets the applicable RAW instant-death threshold, the pregen dies immediately.
+- Zero-HP, Stable, Unconscious, healing, and death-save state must use shared combat state rather than class-specific branches; monster zero-HP exceptions must reuse generic trigger/resource/state primitives where possible.
 
 ## Conditions and mixed effects
 
