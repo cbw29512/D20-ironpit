@@ -16,8 +16,8 @@ from app.content.simple_monster_source_attacks import parse_simple_attacks
 from app.domain.capabilities import CombatantDefinition
 
 _SIMPLE_SOURCE_NAMES = frozenset({
-    "Azer Sentinel", "Berserker", "Blink Dog", "Ettin", "Fire Giant", "Hezrou", "Hobgoblin Captain",
-    "Magmin", "Nightmare", "Sahuagin Warrior", "Spy", "Tough Boss", "Troll Limb", "Xorn",
+    "Azer Sentinel", "Berserker", "Blink Dog", "Ettin", "Fire Giant", "Hezrou", "Hill Giant",
+    "Hobgoblin Captain", "Magmin", "Nightmare", "Sahuagin Warrior", "Spy", "Tough Boss", "Troll Limb", "Xorn",
 })
 
 
