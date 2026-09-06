@@ -32,12 +32,23 @@ def _add_save_area_metadata(row, template) -> None:
     if len(serialized) != len(template.saving_throw_actions):
         raise RuntimeError(f"Saving-throw serialization count drift for {template.id}.")
     for item, action in zip(serialized, template.saving_throw_actions, strict=True):
-        if action.area is None:
-            continue
-        area = {"shape": action.area.shape, "sizeFt": action.area.size_ft}
-        if action.area.width_ft is not None:
-            area["widthFt"] = action.area.width_ft
-        item["area"] = area
+        if action.area is not None:
+            area = {"shape": action.area.shape, "sizeFt": action.area.size_ft}
+            if action.area.width_ft is not None:
+                area["widthFt"] = action.area.width_ft
+            item["area"] = area
+        if action.failure_conditions:
+            item["failureConditions"] = [
+                {
+                    "conditionId": effect.condition_id,
+                    "expiryTiming": effect.expiry_timing,
+                    "repeatSaveAbility": effect.repeat_save_ability,
+                    "repeatSaveDc": effect.repeat_save_dc,
+                    "repeatSaveTiming": effect.repeat_save_timing,
+                    "allowedRemovalActionIds": list(effect.allowed_removal_action_ids),
+                }
+                for effect in action.failure_conditions
+            ]
 
 
 def _add_attack_resource_metadata(row, template) -> None:
