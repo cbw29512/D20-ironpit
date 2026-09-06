@@ -38,6 +38,10 @@ def hit_control_issues(attack: WeaponAttack, actions: str) -> list[str]:
             issues.append(f"grapple-size-mismatch:{attack.id}")
         if control.restrains_while_grappled and "restrained" not in actions.lower():
             issues.append(f"restrained-rider-mismatch:{attack.id}")
+        if control.grapple_escape_check_disadvantage and not re.search(
+            r"Ability checks made to escape this grapple have Disadvantage", actions, re.I,
+        ):
+            issues.append(f"grapple-escape-disadvantage-mismatch:{attack.id}")
     if control.condition_id is not None and not _timing_present(actions, control):
         issues.append(f"condition-rider-mismatch:{attack.id}:{control.condition_id}")
     if control.initial_save_ability is not None:
