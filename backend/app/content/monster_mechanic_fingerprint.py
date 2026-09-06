@@ -3,9 +3,22 @@ from __future__ import annotations
 import re
 from collections.abc import Mapping
 
-from app.content.monster_combat_scope import strip_post_combat_outcomes
+from app.content.monster_combat_scope import (
+    base_feature_name,
+    combat_math_relevant,
+    feature_blocks,
+    strip_post_combat_outcomes,
+)
+from app.content.monster_trait_source_audit import parse_trait_names
 
 _TEXT_FIELDS = ("traits", "actions", "bonusActions", "reactions", "legendaryActions")
+_SECTION_LABELS = {
+    "traits": "trait",
+    "actions": "action",
+    "bonusActions": "bonus-action",
+    "reactions": "reaction",
+    "legendaryActions": "legendary-action",
+}
 _CONDITIONS = (
     "blinded", "charmed", "deafened", "frightened", "grappled", "incapacitated",
     "invisible", "paralyzed", "petrified", "poisoned", "prone", "restrained",
@@ -57,7 +70,7 @@ _COMPLEXITY_WEIGHTS = {
     "repeat-save": 3, "concentration": 3, "zero-hp-effect": 3,
     "death-trigger": 3, "spellcasting": 4, "summoning": 7, "transformation": 7,
     "legendary": 6, "damage": 1, "resistance": 1, "vulnerability": 1,
-    "immunity": 1,
+    "immunity": 1, "source-parse-error": 10,
 }
 
 
@@ -65,9 +78,9 @@ def _source_text(row: Mapping[str, object]) -> str:
     return "\n".join(strip_post_combat_outcomes(row.get(field, "")) for field in _TEXT_FIELDS)
 
 
-def normalized_monster_mechanics(row: Mapping[str, object]) -> tuple[str, ...]:
-    """Return combat-math mechanics only; pure movement and post-combat outcomes never enter the fingerprint."""
-    text = _source_text(row)
+def normalized_source_mechanics(source: object) -> tuple[str, ...]:
+    """Normalize one source feature into reusable combat-math mechanics."""
+    text = strip_post_combat_outcomes(source)
     mechanics = {name for name, pattern in _PATTERNS if pattern.search(text)}
     if re.search(r"\bdamage\b", text, re.I):
         mechanics.add("damage")
@@ -77,11 +90,101 @@ def normalized_monster_mechanics(row: Mapping[str, object]) -> tuple[str, ...]:
     for condition in _CONDITIONS:
         if re.search(rf"\b{condition}\b", text, re.I):
             mechanics.add(f"condition:{condition}")
+    return tuple(sorted(mechanics))
+
+
+def normalized_monster_mechanics(row: Mapping[str, object]) -> tuple[str, ...]:
+    """Return combat-math mechanics only; pure movement and post-combat outcomes never enter the fingerprint."""
+    mechanics = set(normalized_source_mechanics(_source_text(row)))
     raw = str(row.get("rawText", "") or "")
     if re.search(r"\bdamage resistance\b|\bresistant to\b", raw, re.I): mechanics.add("resistance")
     if re.search(r"\bdamage vulnerabilit|\bvulnerable to\b", raw, re.I): mechanics.add("vulnerability")
     if re.search(r"\bdamage immunit|\bimmune to\b", raw, re.I): mechanics.add("immunity")
     return tuple(sorted(mechanics))
+
+
+def mechanic_equivalence_fingerprint(mechanics: tuple[str, ...]) -> str:
+    """Collapse data parameters that should not create separate engine branches.
+
+    Damage type and amount are data consumed by the universal typed-damage path, so
+    fire/cold/etc. attacks can share one mechanic family. Conditions remain explicit
+    because each condition has distinct combat-math semantics.
+    """
+    normalized = {
+        "damage:typed" if mechanic.startswith("damage:") else mechanic
+        for mechanic in mechanics
+    }
+    return "+".join(sorted(normalized)) if normalized else "combat-math-none"
+
+
+def _statblock_defense_record(row: Mapping[str, object]) -> dict[str, object] | None:
+    raw = str(row.get("rawText", "") or "")
+    mechanics: set[str] = set()
+    if re.search(r"\bdamage resistance\b|\bresistant to\b", raw, re.I): mechanics.add("resistance")
+    if re.search(r"\bdamage vulnerabilit|\bvulnerable to\b", raw, re.I): mechanics.add("vulnerability")
+    if re.search(r"\bdamage immunit|\bimmune to\b", raw, re.I): mechanics.add("immunity")
+    if not mechanics:
+        return None
+    ordered = tuple(sorted(mechanics))
+    return {
+        "monster": str(row.get("name", "")),
+        "section": "statblock",
+        "source_name": "Damage Defenses",
+        "normalized_name": "Damage Defenses",
+        "mechanics": ordered,
+        "fingerprint": "+".join(ordered),
+        "equivalence_fingerprint": mechanic_equivalence_fingerprint(ordered),
+        "parse_error": False,
+    }
+
+
+def source_ability_records(row: Mapping[str, object]) -> tuple[dict[str, object], ...]:
+    """Return every combat-relevant source feature as an independently comparable record.
+
+    Exact printed headings are preserved for logs/audits. A parser failure is emitted as
+    an explicit record rather than silently dropping source material from the registry.
+    """
+    records: list[dict[str, object]] = []
+    monster = str(row.get("name", ""))
+    for field in _TEXT_FIELDS:
+        source = strip_post_combat_outcomes(row.get(field, ""))
+        if not source:
+            continue
+        try:
+            headings = parse_trait_names(source, preserve_annotations=True)
+            blocks = feature_blocks(source, headings)
+        except ValueError:
+            if combat_math_relevant(source):
+                mechanics = tuple(sorted({*normalized_source_mechanics(source), "source-parse-error"}))
+                records.append({
+                    "monster": monster,
+                    "section": _SECTION_LABELS[field],
+                    "source_name": f"[Unparsed {field}]",
+                    "normalized_name": f"[Unparsed {field}]",
+                    "mechanics": mechanics,
+                    "fingerprint": "+".join(mechanics),
+                    "equivalence_fingerprint": mechanic_equivalence_fingerprint(mechanics),
+                    "parse_error": True,
+                })
+            continue
+        for heading, block in blocks.items():
+            if not combat_math_relevant(block):
+                continue
+            mechanics = normalized_source_mechanics(block)
+            records.append({
+                "monster": monster,
+                "section": _SECTION_LABELS[field],
+                "source_name": heading,
+                "normalized_name": base_feature_name(heading),
+                "mechanics": mechanics,
+                "fingerprint": "+".join(mechanics) if mechanics else "combat-math-none",
+                "equivalence_fingerprint": mechanic_equivalence_fingerprint(mechanics),
+                "parse_error": False,
+            })
+    defense_record = _statblock_defense_record(row)
+    if defense_record is not None:
+        records.append(defense_record)
+    return tuple(records)
 
 
 def mechanic_complexity(mechanics: tuple[str, ...]) -> int:
