@@ -67,6 +67,24 @@ class ConditionRemovalAction(BaseModel):
         return self
 
 
+class SaveConditionEffect(BaseModel):
+    """One condition applied when a saving-throw action fails."""
+
+    condition_id: ConditionName
+    expiry_timing: ConditionTiming | None = None
+    repeat_save_ability: AbilityName | None = None
+    repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
+    repeat_save_timing: ConditionTiming | None = None
+    allowed_removal_action_ids: list[str] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def validate_repeat_save(self) -> "SaveConditionEffect":
+        repeat = (self.repeat_save_ability, self.repeat_save_dc, self.repeat_save_timing)
+        if any(item is not None for item in repeat) and not all(item is not None for item in repeat):
+            raise ValueError("Failed-save condition repeat save requires ability, DC, and timing together.")
+        return self
+
+
 class SavingThrowAction(BaseModel):
     id: str
     name: str
@@ -83,6 +101,7 @@ class SavingThrowAction(BaseModel):
     success_damage: Literal["none", "half"] = "none"
     grapple_escape_dc: int | None = Field(default=None, ge=1, le=40)
     restrains_while_grappled: bool = False
+    failure_conditions: list[SaveConditionEffect] = Field(default_factory=list, max_length=8)
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
     animation: str = "save-effect"
