@@ -59,7 +59,7 @@ load("browser-turn.js");
   window.IRON_PIT_BROWSER_GRAPPLE = { cleanup: () => {}, shouldEscape: () => false };
   window.IRON_PIT_BROWSER_ONGOING_SPELL_CONTROL = { forcedRetreatActive: () => false };
   window.IRON_PIT_BROWSER_SUPPORT = { resolve: (sequence) => ({ events: [], sequence }), secondWind: () => null, adrenaline: () => null };
-  window.IRON_PIT_BROWSER_RAGE = { enter: () => null, finalize: (sequence) => ({ event: null, sequence }) };
+  window.IRON_PIT_BROWSER_RAGE = { enter: () => null, extendFromAttack: () => {}, finalize: (sequence) => ({ event: null, sequence }) };
   window.IRON_PIT_BROWSER_ACTION_SURGE = { resolveAttack: () => null };
   window.IRON_PIT_BROWSER_SPELL_OFFENSE = { resolve: (sequence) => ({ events: [], sequence }) };
   window.IRON_PIT_BROWSER_CHARGE = { resolveClosing: (sequence) => ({ events: [], sequence, handled: false }), openingFeature: () => null };
