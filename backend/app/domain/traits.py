@@ -12,5 +12,6 @@ class CombatTrait(StrEnum):
     TARGET_MISSING_HP_ATTACK_ADVANTAGE = "target-missing-hp-attack-advantage"
     SWARM = "swarm"
     UNDEAD_FORTITUDE = "undead-fortitude"
+    REGENERATION = "regeneration"
     LIFE_DOMAIN = "life-domain"
     MAGIC_RESISTANCE = "magic-resistance"
