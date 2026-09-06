@@ -28,6 +28,18 @@ def test_feature_blocks_use_reviewed_headings_instead_of_guessing_prose() -> Non
     assert blocks["Magic Resistance"].startswith("Magic Resistance.")
 
 
+def test_feature_blocks_ignore_earlier_reference_to_later_heading() -> None:
+    source = (
+        "Multiattack. The creature makes two Claw attacks. It can replace one attack with a use of Dreadful Glare. "
+        "Claw. Melee Attack Roll: +5, reach 5 ft. Hit: 6 Slashing damage. "
+        "Dreadful Glare. Wisdom Saving Throw: DC 12, one creature within 30 feet."
+    )
+    blocks = feature_blocks(source, ["Multiattack", "Claw", "Dreadful Glare"])
+    assert blocks["Multiattack"].endswith("Dreadful Glare.")
+    assert blocks["Dreadful Glare"].startswith("Dreadful Glare. Wisdom Saving Throw")
+    assert "Attack Roll" not in blocks["Dreadful Glare"]
+
+
 def test_trait_scope_ignores_movement_but_keeps_save_math() -> None:
     source = "Earth Glide. The creature can move through nonmagical earth and stone. Magic Resistance. The creature has Advantage on saving throws against spells and other magical effects."
     assert combat_relevant_trait_names(source) == {"Magic Resistance"}
