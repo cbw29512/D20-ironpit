@@ -4,6 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
+from app.domain.actions import AbilityName, ConditionName, ConditionTiming
 from app.domain.weapons import DamageType
 
 
@@ -33,4 +34,18 @@ class AllyRollAuraDefinition(BaseModel):
     radius_ft: int = Field(gt=0)
     attack_advantage: bool = False
     saving_throw_advantage: bool = False
+    suppressed_if_incapacitated: bool = False
+
+
+class StartTurnSaveAuraDefinition(BaseModel):
+    """A source-centered save forced when another creature starts its turn in range."""
+
+    id: str
+    name: str
+    radius_ft: int = Field(gt=0)
+    save_ability: AbilityName
+    dc: int = Field(ge=1, le=40)
+    failure_condition: ConditionName
+    condition_expiry_timing: ConditionTiming = "target_turn_start"
+    target_mode: Literal["enemies", "all-other-creatures"] = "all-other-creatures"
     suppressed_if_incapacitated: bool = False
