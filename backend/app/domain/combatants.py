@@ -92,6 +92,7 @@ class CombatantTemplate(BaseModel):
     unarmed_opportunity_attack: UnarmedStrikeDamage | None = None
     attack_action: AttackActionDefinition | None = None
     saving_throw_actions: list[SavingThrowAction] = Field(default_factory=list)
+    death_trigger_save_actions: list[SavingThrowAction] = Field(default_factory=list)
     spell_save_actions: list[SpellSaveAction] = Field(default_factory=list)
     spell_attack_actions: list[SpellAttackAction] = Field(default_factory=list)
     defensive_spell_actions: list[DefensiveSpellAction] = Field(default_factory=list)
