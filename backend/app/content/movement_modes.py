@@ -17,21 +17,27 @@ _MODE_FIELDS = {
     "swim": "swim_ft",
     "burrow": "burrow_ft",
 }
+_FORM_ONLY = re.compile(r"\([^)]*\bform only\b[^)]*\)", re.I)
 
 
 def parse_movement_modes(source_speed: object) -> dict[str, int]:
-    """Parse SRD Speed text without collapsing distinct movement modes."""
+    """Parse SRD Speed text without collapsing distinct arena-relevant movement modes."""
     text = str(source_speed).strip().lower()
     if not text:
         raise ValueError("SRD Speed text is empty.")
     modes: dict[str, int] = {}
-    for index, part in enumerate(piece.strip() for piece in text.split(",")):
+    parts = [piece.strip() for piece in text.split(",")]
+    for part in parts:
+        # Alternate speeds printed for a shape-shift form do not affect Iron Pit's
+        # battle-ready movement abstraction and are intentionally out of scope.
+        if _FORM_ONLY.search(part):
+            continue
         match = re.search(r"(\d+)\s*ft", part)
         if not match:
             raise ValueError(f"Could not parse movement speed component: {part!r}")
         speed = int(match.group(1))
         named = next((mode for mode in _MOVEMENT_MODES[1:] if re.search(rf"\b{mode}\b", part)), None)
-        mode = named or ("walk" if index == 0 else None)
+        mode = named or ("walk" if "walk" not in modes else None)
         if mode is None:
             raise ValueError(f"Unknown movement mode in SRD Speed component: {part!r}")
         if mode in modes:
@@ -68,7 +74,7 @@ def standard_arena_closing_speed(source_speed: object) -> int:
 
 
 def movement_mode_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
-    """Return a blocker for every movement fingerprint component that drifts from SRD."""
+    """Return a blocker for every arena-relevant movement fingerprint component that drifts from SRD."""
     expected = parse_movement_profile(row["speed"])
     issues = [
         f"movement-{mode}-mismatch"
