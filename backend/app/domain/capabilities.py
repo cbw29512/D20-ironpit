@@ -9,7 +9,7 @@ from app.domain.capability_attacks import AttackCapabilityDefinition, Multiattac
 from app.domain.character_builds import AbilityScores
 from app.domain.combatants import ResourceDefinition, VisualLoadout
 from app.domain.movement import MovementModes
-from app.domain.passive_effects import AllyRollAuraDefinition, RegenerationDefinition, TurnDamageAuraDefinition
+from app.domain.passive_effects import AllyRollAuraDefinition, RegenerationDefinition, StartTurnSaveAuraDefinition, TurnDamageAuraDefinition
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.reactions import ParryReaction, RedirectAttackReaction
 from app.domain.size import CreatureSize
@@ -69,6 +69,7 @@ class CombatantDefinition(BaseModel):
     regeneration: RegenerationDefinition | None = None
     turn_damage_auras: list[TurnDamageAuraDefinition] = Field(default_factory=list)
     ally_roll_auras: list[AllyRollAuraDefinition] = Field(default_factory=list)
+    start_turn_save_auras: list[StartTurnSaveAuraDefinition] = Field(default_factory=list)
     visual: VisualLoadout
     source: str
     unsupported_capabilities: list[str] = Field(default_factory=list)
