@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from app.combat.action_economy import is_available
-from app.combat.ally_context import pack_tactics_active
 from app.combat.attack_actions import resolve_attack_action
 from app.combat.barbarian import enter_rage, finalize_rage_turn
 from app.combat.charge import resolve_charge_closing
@@ -15,13 +14,12 @@ from app.combat.grapple import cleanup_grapples, resolve_escape_grapple, should_
 from app.combat.healing import choose_healing_action, resolve_healing
 from app.combat.limited_attack_turn import resolve_resource_backed_attack_turn
 from app.combat.ongoing_spell_control import build_forced_retreat_event, forced_retreat_active
-from app.combat.opening_burst import opening_feature_id
 from app.combat.orc import should_use_adrenaline_rush, use_adrenaline_rush
-from app.combat.pit_policy import choose_standard_attack, target_order
+from app.combat.pit_policy import target_order
 from app.combat.policy import should_use_second_wind
 from app.combat.save_action_turn import resolve_save_action_turn
 from app.combat.spell_offense import resolve_best_spell_offense
-from app.combat.standard_attack_action import resolve_standard_attack_action
+from app.combat.standard_turn_attack import resolve_standard_turn_attack
 from app.combat.state import begin_turn
 from app.combat.tactical_shift import resolve_tactical_shift
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -130,14 +128,6 @@ def resolve_combat_turn(
         events.extend(save_events)
         return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
-    attack_choice = choose_standard_attack(attacker, setup)
-    if attack_choice is not None and is_available(attacker.state, "action"):
-        attack_target, attack, distance = attack_choice
-        pack = pack_tactics_active(attacker, attack_target, setup)
-        feature = opening_feature_id(round_number, attacker, setup) or ("pack-tactics" if pack else None)
-        more, sequence = resolve_standard_attack_action(
-            sequence, round_number, attacker, attack_target, attack, distance, dice, setup, turn_key,
-            advantage_sources=1 if pack else 0, feature_id=feature,
-        )
-        events.extend(more)
+    more, sequence = resolve_standard_turn_attack(sequence, round_number, attacker, setup, dice, turn_key)
+    events.extend(more)
     return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
