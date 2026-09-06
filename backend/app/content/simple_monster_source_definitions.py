@@ -19,7 +19,7 @@ from app.domain.capabilities import CombatantDefinition
 
 _SIMPLE_SOURCE_NAMES = frozenset({
     "Azer Sentinel", "Berserker", "Blink Dog", "Bone Devil", "Bugbear Stalker", "Bugbear Warrior", "Ettin", "Fire Giant", "Ghoul", "Giant Shark", "Hezrou",
-    "Hill Giant", "Hobgoblin Captain", "Hunter Shark", "Magmin", "Merrow", "Nightmare", "Piranha", "Pirate", "Sahuagin Warrior", "Satyr",
+    "Hill Giant", "Hobgoblin Captain", "Hunter Shark", "Lion", "Magmin", "Merrow", "Nightmare", "Piranha", "Pirate", "Sahuagin Warrior", "Satyr",
     "Specter", "Spy", "Tough Boss", "Troll Limb", "Wraith", "Xorn",
 })
 
