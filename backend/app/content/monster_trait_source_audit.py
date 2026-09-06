@@ -20,6 +20,7 @@ _MODELED_TRAITS = {
     "Magic Resistance": CombatTrait.MAGIC_RESISTANCE,
     "Regeneration": CombatTrait.REGENERATION,
     "Fire Aura": CombatTrait.END_TURN_DAMAGE_AURA,
+    "Stench": CombatTrait.START_TURN_SAVE_AURA,
     "Death Burst": CombatTrait.DEATH_TRIGGER_SAVE,
     "Aura of Authority": CombatTrait.ALLY_ROLL_AURA,
     "Swarm": CombatTrait.SWARM,
