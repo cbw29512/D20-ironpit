@@ -171,6 +171,23 @@ Keep Concentration RAW unless a documented simplification is required for implem
 - When Concentration ends, every runtime buff, debuff, condition, or other effect owned by that Concentration source is removed immediately.
 - Concentration resolution must use the shared saving-throw and runtime-effect systems rather than spell-specific branches.
 
+## Zero HP and death saving throws
+
+Keep death saving throws RAW for combatants that use them.
+
+- A creature that starts its turn at 0 HP and is not Stable makes a Death Saving Throw.
+- Roll 1d20 with no ability score attached: 10 or higher is one success; 9 or lower is one failure.
+- Three successes make the creature Stable.
+- Three failures kill the creature.
+- Successes and failures need not be consecutive.
+- Regaining any HP or becoming Stable resets both counters to zero.
+- A natural 1 on the Death Saving Throw causes two failures.
+- A natural 20 on the Death Saving Throw restores 1 HP immediately.
+- Taking damage while at 0 HP causes one Death Saving Throw failure.
+- If that damage is from a Critical Hit, it causes two failures instead.
+- If damage at 0 HP meets the applicable RAW instant-death threshold, the creature dies immediately.
+- Zero-HP, Stable, Unconscious, healing, and death-save state must use shared combat state rather than class- or monster-specific branches.
+
 ## Conditions and mixed effects
 
 Keep the combat-math portions of conditions and mixed abilities. Ignore only the portions that do not affect Iron Pit outcomes.
