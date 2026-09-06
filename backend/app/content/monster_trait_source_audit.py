@@ -19,6 +19,7 @@ _MODELED_TRAITS = {
     "Blood Frenzy": CombatTrait.TARGET_MISSING_HP_ATTACK_ADVANTAGE,
     "Magic Resistance": CombatTrait.MAGIC_RESISTANCE,
     "Regeneration": CombatTrait.REGENERATION,
+    "Fire Aura": CombatTrait.END_TURN_DAMAGE_AURA,
     "Swarm": CombatTrait.SWARM,
     "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
 }
