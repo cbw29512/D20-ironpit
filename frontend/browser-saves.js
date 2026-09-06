@@ -1,6 +1,5 @@
 (() => {
   "use strict";
-
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
@@ -88,7 +87,6 @@
       concentration_ended_effect_id: concentrationBefore && !target.state.concentration ? concentrationBefore : null,
       animation: action.animation || "save-effect", description };
   }
-
   const living = (member) => member.state.is_alive && !member.state.is_dead && member.state.current_hp > 0;
   const rows = (actor, setup) => actor.side === "heroes" ? [setup.monsters, setup.heroes] : [setup.heroes, setup.monsters];
   const forward = (actor, member) => (actor.side === "heroes" ? 1 : -1) * (member.position_ft - actor.position_ft);
