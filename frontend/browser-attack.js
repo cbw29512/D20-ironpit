@@ -1,8 +1,7 @@
 (() => {
   "use strict";
   const S = () => window.IRON_PIT_BROWSER_STATE, R = () => window.IRON_PIT_BROWSER_ROLLS;
-  const G = () => window.IRON_PIT_BROWSER_GRAPPLE, T = () => window.IRON_PIT_BROWSER_TIMED, Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
-  const HC = () => window.IRON_PIT_BROWSER_HIT_CONTROL || { resolve: () => ({ applied: [], saveRoll: null, saveAbility: null, saveDc: null, saveSucceeded: null }) };
+  const G = () => window.IRON_PIT_BROWSER_GRAPPLE, T = () => window.IRON_PIT_BROWSER_TIMED, Z = () => window.IRON_PIT_BROWSER_ZERO_HP; const HC = () => window.IRON_PIT_BROWSER_HIT_CONTROL || { resolve: () => ({ applied: [], saveRoll: null, saveAbility: null, saveDc: null, saveSucceeded: null }) };
   const SAP = () => window.IRON_PIT_BROWSER_SAP || { applyWeapon: () => false, consume: () => 0, disadvantage: () => 0 };
   const TM = () => window.IRON_PIT_BROWSER_TACTICAL_MASTER || { apply: () => false };
   const GRZ = () => window.IRON_PIT_BROWSER_GRAZE || { rawDamage: () => null };
