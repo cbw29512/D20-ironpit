@@ -11,6 +11,11 @@ _POST_COMBAT_LYCANTHROPY = re.compile(
     r"Success: The target is immune to this [A-Za-z-]+[’']s curse for 24 hours\.",
     re.I,
 )
+_POST_COMBAT_CORPSE_CREATION = re.compile(
+    r"\b[A-Z][A-Za-z’'\- ]+\. The [A-Za-z’'\- ]+ targets? a Humanoid corpse [^.]*\. "
+    r"The target[’']s spirit rises as a [A-Za-z’'\-]+ [^.]*\. "
+    r"The [A-Za-z’'\-]+ is under the [^.]+ control\. The [^.]+ can have no more than [^.]+\. ?",
+)
 _BATTLE_READY_HYBRID = re.compile(
     r"\bshape-shifts into a (?P<size>Tiny|Small|Medium|Large|Huge|Gargantuan) [^.]*?hybrid(?: form)?\b",
     re.I,
@@ -60,8 +65,9 @@ def normalized_source_text(value: object) -> str:
 
 
 def strip_post_combat_outcomes(value: object) -> str:
-    """Remove source consequences explicitly declared outside Iron Pit combat scope."""
-    return _POST_COMBAT_LYCANTHROPY.sub("", normalized_source_text(value)).strip()
+    """Remove source consequences that cannot change the winner of the current standard Iron Pit battle."""
+    text = _POST_COMBAT_LYCANTHROPY.sub("", normalized_source_text(value))
+    return _POST_COMBAT_CORPSE_CREATION.sub("", text).strip()
 
 
 def battle_ready_size(row: dict[str, object]) -> str | None:
