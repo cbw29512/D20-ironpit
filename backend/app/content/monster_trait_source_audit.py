@@ -6,6 +6,7 @@ from functools import lru_cache
 
 from app.content.monster_combat_scope import combat_math_relevant, feature_blocks
 from app.content.monster_catalog import load_monster_rows
+from app.content.monster_trait_arena_scope import arena_neutral_trait_source
 from app.domain.models import CombatantTemplate
 from app.domain.traits import CombatTrait
 
@@ -21,7 +22,7 @@ _ARENA_NEUTRAL_TRAITS = frozenset({
     "Agile", "Amphibious", "Beast of Burden", "False Appearance", "Flyby", "Hellish Restoration",
     "Hold Breath", "Ice Walk", "Illumination", "Jumper", "Keen Hearing", "Keen Hearing and Sight",
     "Keen Hearing and Smell", "Keen Sight", "Keen Smell", "Mimicry", "Running Leap", "Spider Climb",
-    "Standing Leap", "Sunlight Sensitivity", "Training", "Water Breathing", "Web Walker",
+    "Standing Leap", "Training", "Water Breathing", "Web Walker",
 })
 
 
@@ -67,7 +68,7 @@ def combat_relevant_trait_names(source_traits: object) -> set[str]:
     return {
         _normalized_heading(name)
         for name in annotated
-        if combat_math_relevant(blocks[name])
+        if combat_math_relevant(blocks[name]) and not arena_neutral_trait_source(blocks[name])
     }
 
 
