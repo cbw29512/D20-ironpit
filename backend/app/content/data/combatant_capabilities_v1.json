@@ -145,6 +145,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "leather",
       "main_hand": "scimitar",
@@ -272,6 +273,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "clothes",
       "main_hand": "dagger",
@@ -413,6 +415,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "half-plate",
       "main_hand": "longsword",
@@ -542,6 +545,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "dagger",
@@ -723,6 +727,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "chain-shirt",
       "main_hand": "scimitar",
@@ -849,6 +854,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "leather",
       "main_hand": "scimitar",
@@ -949,6 +955,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "clothes",
       "main_hand": "club",
@@ -1073,6 +1080,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "chain-shirt",
       "main_hand": "spear",
@@ -1175,6 +1183,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "none",
       "main_hand": "bite",
@@ -1273,6 +1282,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "none",
       "main_hand": "bite",
@@ -1388,6 +1398,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "feathers",
       "main_hand": "beak",
@@ -1486,6 +1497,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "none",
       "main_hand": "beak",
@@ -1586,6 +1598,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -1693,6 +1706,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "fur",
       "main_hand": "bite",
@@ -1800,6 +1814,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "fur",
       "main_hand": "bite",
@@ -1917,6 +1932,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "fur",
       "main_hand": "claw",
@@ -2062,6 +2078,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "fur",
       "main_hand": "claw",
@@ -2164,6 +2181,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "fur",
       "main_hand": "bite",
@@ -2262,6 +2280,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "fur",
       "main_hand": "bite",
@@ -2362,6 +2381,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "fur",
       "main_hand": "horns",
@@ -2460,6 +2480,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "fur",
       "main_hand": "hooves",
@@ -2560,6 +2581,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "fur",
       "main_hand": "bite",
@@ -2658,6 +2680,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "fur",
       "main_hand": "bite",
@@ -2761,6 +2784,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "hide",
       "main_hand": "tusks",
@@ -2861,6 +2885,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "hide",
       "main_hand": "antlers",
@@ -2964,6 +2989,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "hide",
       "main_hand": "tusks",
@@ -3094,6 +3120,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "bones",
       "main_hand": "horns",
@@ -3213,6 +3240,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "hide",
       "main_hand": "horns",
@@ -3320,6 +3348,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "bones",
       "main_hand": "hooves",
@@ -3445,6 +3474,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "hide",
       "main_hand": "claws",
@@ -3541,6 +3571,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "ram",
@@ -3707,6 +3738,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "spear",
@@ -3826,6 +3858,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "feathers",
       "main_hand": "claws",
@@ -3924,6 +3957,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "rake",
@@ -4020,6 +4054,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -4114,6 +4149,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -4210,6 +4246,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "scratch",
@@ -4306,6 +4343,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "claw",
@@ -4403,6 +4441,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -4497,6 +4536,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "talons",
@@ -4593,6 +4633,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -4689,6 +4730,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "talons",
@@ -4785,6 +4827,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -4881,6 +4924,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "beak",
@@ -4975,6 +5019,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -5073,6 +5118,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "talons",
@@ -5173,6 +5219,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "rend",
@@ -5273,6 +5320,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -5392,6 +5440,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "rend",
@@ -5490,6 +5539,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "hooves",
@@ -5590,6 +5640,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -5688,6 +5739,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "hooves",
@@ -5793,6 +5845,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "rend",
@@ -5895,6 +5948,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "beak",
@@ -5993,6 +6047,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -6093,6 +6148,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "ram",
@@ -6197,6 +6253,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "talons",
@@ -6299,6 +6356,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -6397,6 +6455,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -6500,6 +6559,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -6600,6 +6660,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "hooves",
@@ -6700,6 +6761,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "gore",
@@ -6800,6 +6862,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "hooves",
@@ -6946,6 +7009,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "greatclub",
@@ -7063,6 +7127,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "rend",
@@ -7184,6 +7249,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "rend",
@@ -7328,6 +7394,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "leather",
       "main_hand": "longbow",
@@ -7455,6 +7522,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "chain-shirt",
       "main_hand": "spear",
@@ -7565,6 +7633,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -7675,6 +7744,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "claw",
@@ -7799,6 +7869,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -7968,6 +8039,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "claw",
@@ -8119,6 +8191,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "tentacles",
@@ -8247,6 +8320,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "claw",
@@ -8356,6 +8430,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -8470,6 +8545,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "beak",
@@ -8632,6 +8708,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "sting",
@@ -8747,6 +8824,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -8863,6 +8941,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "sting",
@@ -8981,6 +9060,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -9100,6 +9180,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "shell",
       "main_hand": "bite",
@@ -9222,6 +9303,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "tail",
@@ -9355,6 +9437,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "feathers",
       "main_hand": "talons",
@@ -9471,6 +9554,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "fur",
       "main_hand": "antlers",
@@ -9627,6 +9711,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -9771,6 +9856,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -9925,6 +10011,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "jaws",
@@ -10053,6 +10140,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Slam",
@@ -10162,6 +10250,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Slash",
@@ -10265,6 +10354,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Slam",
@@ -10376,6 +10466,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Ritual Sickle",
@@ -10485,6 +10576,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Bite",
@@ -10610,6 +10702,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Claw",
@@ -10721,6 +10814,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Bone Cudgel",
@@ -10890,6 +10984,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Javelin",
@@ -11009,6 +11104,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Bite",
@@ -11118,6 +11214,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Vile Slime",
@@ -11269,6 +11366,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Rend",
@@ -11376,6 +11474,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Slam",
@@ -11487,6 +11586,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Hooves",
@@ -11594,6 +11694,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Sting",
@@ -11724,6 +11825,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Shortsword",
@@ -11834,6 +11936,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Bite",
@@ -11961,6 +12064,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Mace",
@@ -12072,6 +12176,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Bite",
@@ -12194,6 +12299,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Rotting Touch",
@@ -12301,6 +12407,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Slam",
@@ -12409,6 +12516,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "fur",
       "main_hand": "bite",
@@ -12537,6 +12645,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "none",
       "main_hand": "Bites",
@@ -12665,6 +12774,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "none",
       "main_hand": "Bites",
@@ -12803,6 +12913,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "none",
       "main_hand": "Swarm of Grasping Hands",
@@ -12953,6 +13064,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "studded-leather",
       "main_hand": "Scimitar",
@@ -13131,6 +13243,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "plate",
       "main_hand": "Greatsword",
@@ -13234,6 +13347,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "breastplate",
       "main_hand": "Rapier",
@@ -13384,6 +13498,7 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "turn_damage_auras": [],
+    "ally_roll_auras": [],
     "visual": {
       "armor": "splint",
       "main_hand": "Greatsword",
