@@ -5,7 +5,7 @@
   "summary": {
     "canonical_heroes": 12,
     "level_slots": 240,
-    "public_ready": 33
+    "public_ready": 36
   },
   "heroes": [
     {
@@ -4932,7 +4932,7 @@
           "subclass": null,
           "runtime_template_id": "mara-quickstep-l1",
           "source_references": [
-            "D&D Beyond Basic Rules 2024: Rogue 1, Orc, Soldier, Savage Attacker, Leather Armor, Shortsword, Shortbow, Vex"
+            "D&D Beyond Basic Rules 2024: Rogue 1, Thief, Orc, Soldier, Savage Attacker, Leather Armor, Shortsword, Shortbow, Vex"
           ],
           "expected_combat_features": [
             "attack:mara-shortbow",
@@ -4964,24 +4964,36 @@
         {
           "level": 2,
           "subclass": null,
-          "runtime_template_id": null,
+          "runtime_template_id": "mara-quickstep-l2",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Rogue 2, Thief, Orc, Soldier, Savage Attacker, Leather Armor, Shortsword, Shortbow, Vex"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:mara-shortbow",
+            "attack:mara-shortsword",
+            "resource:adrenaline-rush",
+            "resource:relentless-endurance",
+            "sneak-attack",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savager-attacker"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:mara-shortbow",
+            "attack:mara-shortsword",
+            "resource:adrenaline-rush",
+            "resource:relentless-endurance",
+            "sneak-attack",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savager-attacker"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 3,
@@ -4989,24 +5001,36 @@
             "id": "thief",
             "name": "Thief"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "mara-quickstep-l3",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Rogue 3, Thief, Orc, Soldier, Savage Attacker, Leather Armor, Shortsword, Shortbow, Vex"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:mara-shortbow",
+            "attack:mara-shortsword",
+            "resource:adrenaline-rush",
+            "resource:relentless-endurance",
+            "sneak-attack",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savager-attacker"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:mara-shortbow",
+            "attack:mara-shortsword",
+            "resource:adrenaline-rush",
+            "resource:relentless-endurance",
+            "sneak-attack",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savager-attacker"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 4,
@@ -5014,24 +5038,36 @@
             "id": "thief",
             "name": "Thief"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "mara-quickstep-l4",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Rogue 4, Thief, Orc, Soldier, Savage Attacker, Leather Armor, Shortsword, Shortbow, Vex"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:mara-shortbow",
+            "attack:mara-shortsword",
+            "resource:adrenaline-rush",
+            "resource:relentless-endurance",
+            "sneak-attack",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savager-attacker"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:mara-shortbow",
+            "attack:mara-shortsword",
+            "resource:adrenaline-rush",
+            "resource:relentless-endurance",
+            "sneak-attack",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savager-attacker"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 5,
