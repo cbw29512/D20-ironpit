@@ -1,11 +1,11 @@
-CAPABILITY_YIELD_BASELINE	ready=147	blocked=183	actionable_blocked=173	deferred=10	signatures=68
+CAPABILITY_YIELD_BASELINE	ready=148	blocked=182	actionable_blocked=172	deferred=10	signatures=68
 CAPABILITY_DEFERRED_ENVIRONMENT	Giant Seahorse | Giant Shark | Hunter Shark | Killer Whale | Octopus | Piranha | Reef Shark | Seahorse | Swarm of Piranhas
 CAPABILITY_DEFERRED_NONCOMBAT	Shrieker Fungus
 CAPABILITY_SINGLE_FAMILY	condition-or-control	5	Animated Rug of Smothering | Bone Devil | Giant Toad | Phase Spider | Roper
 CAPABILITY_SINGLE_FAMILY	save-or-complex-action	4	Horned Devil | Werebear | Wererat | Werewolf
 CAPABILITY_SINGLE_FAMILY	trait	4	Barbed Devil | Fire Elemental | Flesh Golem | Hydra
-CAPABILITY_SINGLE_FAMILY	unclassified-source-audit-gap	4	Bugbear Warrior | Mimic | Shadow | Stirge
 CAPABILITY_SINGLE_FAMILY	spellcasting	3	Druid | Dryad | Imp
+CAPABILITY_SINGLE_FAMILY	unclassified-source-audit-gap	3	Mimic | Shadow | Stirge
 CAPABILITY_SINGLE_FAMILY	bonus-action	1	Bugbear Stalker
 CAPABILITY_SINGLE_FAMILY	reaction	1	Ochre Jelly
 CAPABILITY_CONTROL_SIGNATURE	poisoned	2	Bone Devil | Roper
@@ -39,13 +39,13 @@ CAPABILITY_SIGNATURE	4	condition-or-control+limited-use+save-or-complex-action+s
 CAPABILITY_SIGNATURE	4	save-or-complex-action	Horned Devil | Werebear | Wererat | Werewolf
 CAPABILITY_SIGNATURE	4	spellcasting+trait	Efreeti | Gray Ooze | Green Hag | Spirit Naga
 CAPABILITY_SIGNATURE	4	trait	Barbed Devil | Fire Elemental | Flesh Golem | Hydra
-CAPABILITY_SIGNATURE	4	unclassified-source-audit-gap	Bugbear Warrior | Mimic | Shadow | Stirge
 CAPABILITY_SIGNATURE	3	bonus-action+condition-or-control	Elephant | Mammoth | Purple Worm
 CAPABILITY_SIGNATURE	3	bonus-action+condition-or-control+limited-use+save-or-complex-action	Behir | Ettercap | Gorgon
 CAPABILITY_SIGNATURE	3	condition-or-control+limited-use+save-or-complex-action+spellcasting+trait	Ghost | Pit Fiend | Sea Hag
 CAPABILITY_SIGNATURE	3	condition-or-control+save-or-complex-action+unsupported-action-rider	Death Dog | Mummy | Otyugh
 CAPABILITY_SIGNATURE	3	spellcasting	Druid | Dryad | Imp
 CAPABILITY_SIGNATURE	3	trait+unsupported-action-rider	Clay Golem | Specter | Wraith
+CAPABILITY_SIGNATURE	3	unclassified-source-audit-gap	Mimic | Shadow | Stirge
 CAPABILITY_SIGNATURE	2	bonus-action+condition-or-control+spellcasting	Cloud Giant | Oni
 CAPABILITY_SIGNATURE	2	bonus-action+limited-use+save-or-complex-action+spellcasting+trait	Deva | Planetar
 CAPABILITY_SIGNATURE	2	condition-or-control+legendary+limited-use+save-or-complex-action+trait	Aboleth | Kraken

@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 147,
-    "blocked": 183
+    "public_ready": 148,
+    "blocked": 182
   },
   "monsters": [
     {
@@ -1949,7 +1949,7 @@
       "monster_name": "Bugbear Warrior",
       "srd_source_page": 272,
       "srd_source_reference": "SRD 5.2.1 p. 272",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-bugbear-warrior",
       "detected_combat_mechanics": [
         "attack-roll",
         "trait"
@@ -1958,16 +1958,12 @@
         "attack-roll",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "monster-combat-mechanics-not-certified"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "monster-combat-mechanics-not-certified"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-bulette",

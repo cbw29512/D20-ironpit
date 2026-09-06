@@ -68,6 +68,7 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -108,6 +109,7 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -215,6 +217,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -241,6 +244,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -347,6 +351,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -386,6 +391,7 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -494,6 +500,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -520,6 +527,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -643,6 +651,7 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -683,6 +692,7 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -818,6 +828,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -844,6 +855,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -948,6 +960,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -1054,6 +1067,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -1080,6 +1094,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -1184,6 +1199,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -1292,6 +1308,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -1409,6 +1426,7 @@
             "mode": "replace_weapon"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -1517,6 +1535,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -1621,6 +1640,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -1732,6 +1752,7 @@
             "max_target_size": "medium"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -1845,6 +1866,7 @@
             "max_target_size": "large"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -1953,6 +1975,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -2076,6 +2099,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -2104,6 +2128,7 @@
             "max_target_size": "large"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -2227,6 +2252,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -2335,6 +2361,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -2439,6 +2466,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -2545,6 +2573,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -2649,6 +2678,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -2755,6 +2785,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -2859,6 +2890,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -2968,6 +3000,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -3074,6 +3107,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -3183,6 +3217,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -3206,6 +3241,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -3319,6 +3355,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -3444,6 +3481,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -3557,6 +3595,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -3580,6 +3619,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -3684,6 +3724,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -3813,6 +3854,7 @@
             "expires_at_end_of_target_turn": true
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -3856,6 +3898,7 @@
             "expires_at_end_of_target_turn": true
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -3962,6 +4005,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -4083,6 +4127,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -4187,6 +4232,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -4289,6 +4335,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -4389,6 +4436,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -4491,6 +4539,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -4593,6 +4642,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -4696,6 +4746,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -4796,6 +4847,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -4898,6 +4950,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -5000,6 +5053,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -5102,6 +5156,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -5204,6 +5259,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -5308,6 +5364,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -5412,6 +5469,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -5518,6 +5576,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -5624,6 +5683,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -5749,6 +5809,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -5853,6 +5914,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -5959,6 +6021,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -6068,6 +6131,7 @@
             "max_target_size": "large"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -6174,6 +6238,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -6278,6 +6343,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -6386,6 +6452,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -6492,6 +6559,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -6602,6 +6670,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -6710,6 +6779,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -6819,6 +6889,7 @@
             "max_target_size": "medium"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -6923,6 +6994,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -7029,6 +7101,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -7135,6 +7208,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -7241,6 +7315,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -7264,6 +7339,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -7289,6 +7365,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -7393,6 +7470,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -7516,6 +7594,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -7645,6 +7724,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -7668,6 +7748,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -7793,6 +7874,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -7818,6 +7900,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -7933,6 +8016,7 @@
             "restrains": true
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -8049,6 +8133,7 @@
             "restrains": false
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -8158,6 +8243,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -8295,6 +8381,7 @@
             "restrains": false
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -8331,6 +8418,7 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -8463,6 +8551,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -8493,6 +8582,7 @@
             "restrains": false
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -8627,6 +8717,7 @@
             "restrains": false
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -8762,6 +8853,7 @@
             "allowed_removal_action_ids": []
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -8877,6 +8969,7 @@
             "allowed_removal_action_ids": []
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -8989,6 +9082,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -9032,6 +9126,7 @@
             "allowed_removal_action_ids": []
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -9170,6 +9265,7 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -9291,6 +9387,7 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -9413,6 +9510,7 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -9524,6 +9622,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -9654,6 +9753,7 @@
             "max_target_size": "huge"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -9790,6 +9890,7 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -9929,6 +10030,7 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -10045,6 +10147,7 @@
             "restrains": true
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -10073,6 +10176,7 @@
             "max_target_size": "large"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": true
       }
     ],
@@ -10200,6 +10304,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -10357,6 +10462,7 @@
             "restrains": true
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -10385,6 +10491,7 @@
             "max_target_size": "huge"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": true
       }
     ],
@@ -10510,6 +10617,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -10644,6 +10752,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -10759,6 +10868,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -10881,6 +10991,7 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -10994,6 +11105,7 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -11100,6 +11212,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -11244,6 +11357,7 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -11348,6 +11462,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -11373,6 +11488,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -11396,6 +11512,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -11523,6 +11640,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -11648,6 +11766,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -11763,6 +11882,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -11788,6 +11908,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -11920,6 +12041,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -12046,6 +12168,7 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -12159,6 +12282,7 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -12263,6 +12387,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -12288,6 +12413,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -12408,6 +12534,7 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -12515,6 +12642,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -12540,6 +12668,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -12661,6 +12790,7 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -12765,6 +12895,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -12893,6 +13024,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -13014,6 +13146,7 @@
             "expires_at_end_of_target_turn": false
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -13133,6 +13266,7 @@
             "mode": "replace_weapon"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -13267,6 +13401,7 @@
             "mode": "replace_weapon"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -13405,6 +13540,7 @@
             "max_target_size": "medium"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -13532,6 +13668,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -13558,6 +13695,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -13701,6 +13839,7 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -13740,6 +13879,7 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -13872,6 +14012,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -13981,6 +14122,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -14007,6 +14149,7 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
         "forbid_target_grappled_by_self": false
       }
     ],

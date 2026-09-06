@@ -1,10 +1,10 @@
-UNIVERSAL_ENGINE_BASELINE	monster_ready=147	monster_actionable_blocked=173	monster_deferred=10	monster_families=11	planned_hero_mechanics=371
+UNIVERSAL_ENGINE_BASELINE	monster_ready=148	monster_actionable_blocked=172	monster_deferred=10	monster_families=11	planned_hero_mechanics=371
 UNIVERSAL_ENGINE_MONSTER_FAMILIES
 UNIVERSAL_MONSTER_FAMILY	condition-or-control	immediate_unlocks=5	affected=91	engine_status=unmapped
 UNIVERSAL_MONSTER_FAMILY	save-or-complex-action	immediate_unlocks=4	affected=106	engine_status=unmapped
 UNIVERSAL_MONSTER_FAMILY	trait	immediate_unlocks=4	affected=70	engine_status=unmapped
-UNIVERSAL_MONSTER_FAMILY	unclassified-source-audit-gap	immediate_unlocks=4	affected=4	engine_status=unmapped
 UNIVERSAL_MONSTER_FAMILY	spellcasting	immediate_unlocks=3	affected=68	engine_status=unmapped
+UNIVERSAL_MONSTER_FAMILY	unclassified-source-audit-gap	immediate_unlocks=3	affected=3	engine_status=unmapped
 UNIVERSAL_MONSTER_FAMILY	bonus-action	immediate_unlocks=1	affected=37	engine_status=unmapped
 UNIVERSAL_MONSTER_FAMILY	reaction	immediate_unlocks=1	affected=13	engine_status=unmapped
 UNIVERSAL_MONSTER_FAMILY	limited-use	immediate_unlocks=0	affected=96	engine_status=unmapped
