@@ -14,6 +14,15 @@ Examples:
 - Flavor text such as sweating, smell, speech, appearance, or discomfort is ignored unless it also changes a combat-math result or action availability.
 - Iron Pit itself may be treated as magically managing positioning, so combatants do not kite, flee, fly around, burrow around, or otherwise turn combat into a movement simulator.
 
+### Post-combat outcomes
+
+Effects whose only meaningful consequence is after the current Iron Pit fight are outside combat scope.
+
+- Lycanthrope curse infection is post-combat bookkeeping and is not resolved during the fight.
+- The SRD lycanthrope curse clause that would transform a cursed Humanoid at 0 HP into the lycanthrope under GM control is intentionally ignored in Iron Pit. Reaching 0 HP uses the normal Iron Pit zero-HP/death result instead.
+- The associated curse saving throw and 24-hour curse immunity do not affect the current fight and are therefore ignored.
+- This is an explicit Iron Pit simplification, not an assertion that the SRD rule lacks those consequences.
+
 ## Universal-mechanic rule
 
 Ability names do not define engine mechanics. Different source abilities that produce the same mechanical result must reuse the same universal primitive. Preserve the exact source ability name in combat logs.
@@ -49,7 +58,7 @@ Example: +4 Strength and +3 Dexterity both apply because they affect different s
 
 ## Flat modifiers and bonus-die modifiers
 
-Flat modifiers and bonus-die modifiers are separate runtime channels and may both apply to the same roll or stat-derived check.
+Flat modifiers and bonus-die modifiers are separate runtime channels and may both apply to the same roll or stat.
 
 For each affected roll channel, such as an attack roll, saving throw, or ability check:
 
