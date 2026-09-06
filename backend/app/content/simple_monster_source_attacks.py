@@ -78,7 +78,9 @@ def parse_simple_attacks(row: dict[str, object]) -> tuple[list[dict[str, object]
                 built = [_entry(monster_slug, heading, kind.lower(), bonus, reach, normal, long, count, size, sign, damage_bonus, damage_type, _effects(block, match.span(), heading))]
             if _GRAPPLE_ADV.search(block):
                 for attack in built: attack["advantage_if_target_grappled_by_self"] = True
-            attacks.extend(built); by_name[heading] = [item["id"] for item in built]
+            attacks.extend(built); base = base_feature_name(heading)
+            if base in by_name: raise ValueError(f"Duplicate base attack heading {base!r} for {row['name']!r}.")
+            by_name[base] = [item["id"] for item in built]
         if not attacks: raise ValueError(f"No ordinary attacks parsed for {row['name']!r}.")
         return attacks, _parse_multiattack(row, blocks.get("Multiattack"), by_name)
     except (KeyError, TypeError, ValueError):
@@ -89,7 +91,7 @@ def _replacement_ids(source: str, by_name: dict[str, list[str]]) -> list[str]:
     match = _REPLACE_ATTACK.search(source)
     if match is None: return []
     wanted = match.group("name").strip().casefold()
-    matches = [ids for heading, ids in by_name.items() if base_feature_name(heading).casefold() == wanted]
+    matches = [ids for name, ids in by_name.items() if name.casefold() == wanted]
     if len(matches) != 1: raise ValueError(f"Replacement attack {match.group('name')!r} did not resolve uniquely.")
     return matches[0]
 
