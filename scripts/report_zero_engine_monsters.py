@@ -6,7 +6,7 @@ import re
 from app.content.arena_eligibility import deferred_environment_reason
 from app.content.monster_bonus_action_source_audit import arena_neutral_bonus_action_source
 from app.content.monster_catalog import build_monster_catalog, load_monster_rows
-from app.content.monster_combat_scope import combat_math_relevant
+from app.content.monster_combat_scope import combat_math_relevant, strip_post_combat_outcomes
 from app.content.monster_defense_source_audit import parse_defense_profile
 from app.content.monster_legendary_source_audit import legendary_source_relevant
 from app.content.monster_limited_use_source_audit import limited_use_source_relevant, parse_limited_use_names
@@ -66,12 +66,9 @@ def _has_neighbor_bleed(row: dict[str, object], monster_names: set[str]) -> bool
 
 def _reaction_is_modeled(row: dict[str, object], reactions: list[str]) -> bool:
     source = row.get("reactions", "")
-    if arena_neutral_reaction_source(source):
-        return True
-    if reactions == ["Parry"]:
-        return parse_parry_ac_bonus(source) is not None
-    if reactions == ["Redirect Attack"]:
-        return parse_redirect_attack_range(source) == 5
+    if arena_neutral_reaction_source(source): return True
+    if reactions == ["Parry"]: return parse_parry_ac_bonus(source) is not None
+    if reactions == ["Redirect Attack"]: return parse_redirect_attack_range(source) == 5
     return not reactions
 
 
@@ -89,54 +86,33 @@ def _source_blockers(row: dict[str, object], monster_names: set[str]) -> list[st
     blockers: list[str] = []
     try:
         relevant_traits = combat_relevant_trait_names(row.get("traits", ""))
-        if any(name not in _ALLOWED_TRAITS for name in relevant_traits):
-            blockers.append("trait")
-    except ValueError:
-        blockers.append("trait-parse")
+        if any(name not in _ALLOWED_TRAITS for name in relevant_traits): blockers.append("trait")
+    except ValueError: blockers.append("trait-parse")
     try:
         reactions = parse_reaction_names(row.get("reactions", ""))
-        if not _reaction_is_modeled(row, reactions):
-            blockers.append("reaction")
-    except ValueError:
-        blockers.append("reaction-parse")
+        if not _reaction_is_modeled(row, reactions): blockers.append("reaction")
+    except ValueError: blockers.append("reaction-parse")
     try:
-        if not arena_neutral_bonus_action_source(row.get("bonusActions", "")):
-            blockers.append("bonus-action")
-    except ValueError:
-        blockers.append("bonus-action-parse")
+        if not arena_neutral_bonus_action_source(row.get("bonusActions", "")): blockers.append("bonus-action")
+    except ValueError: blockers.append("bonus-action-parse")
     try:
-        if _limited_use_relevant(row):
-            blockers.append("limited-use")
-    except ValueError:
-        blockers.append("limited-use-parse")
+        if _limited_use_relevant(row): blockers.append("limited-use")
+    except ValueError: blockers.append("limited-use-parse")
     try:
-        if legendary_source_relevant(row.get("legendaryActions", "")):
-            blockers.append("legendary")
-    except ValueError:
-        blockers.append("legendary-parse")
-    if spellcasting_fingerprint(row) is not None and not arena_neutral_spellcasting(row):
-        blockers.append("spellcasting")
-    try:
-        parse_defense_profile(row)
-    except ValueError:
-        blockers.append("defense-clause")
-    actions = str(row.get("actions", ""))
-    if combat_math_relevant(actions) and not _ATTACK_ROLL.search(actions):
-        blockers.append("no-attack-roll")
-    if _COMPLEX_ACTION.search(actions):
-        blockers.append("save-or-complex-action")
-    if _CONDITION_OR_CONTROL.search(actions):
-        blockers.append("condition-or-control")
-    if _ABILITY_SCORE_CHANGE.search(actions):
-        blockers.append("ability-score-change")
-    if _ATTACHMENT_STATE.search(actions):
-        blockers.append("attachment-state")
-    if _unmodeled_action_rider(actions):
-        blockers.append("unsupported-action-rider")
-    if _has_neighbor_bleed(row, monster_names):
-        blockers.append("source-neighbor-bleed")
-    if not blockers and not _ATTACK_ROLL.search(actions):
-        blockers.append(_NONCOMBAT)
+        if legendary_source_relevant(row.get("legendaryActions", "")): blockers.append("legendary")
+    except ValueError: blockers.append("legendary-parse")
+    if spellcasting_fingerprint(row) is not None and not arena_neutral_spellcasting(row): blockers.append("spellcasting")
+    try: parse_defense_profile(row)
+    except ValueError: blockers.append("defense-clause")
+    actions = strip_post_combat_outcomes(row.get("actions", ""))
+    if combat_math_relevant(actions) and not _ATTACK_ROLL.search(actions): blockers.append("no-attack-roll")
+    if _COMPLEX_ACTION.search(actions): blockers.append("save-or-complex-action")
+    if _CONDITION_OR_CONTROL.search(actions): blockers.append("condition-or-control")
+    if _ABILITY_SCORE_CHANGE.search(actions): blockers.append("ability-score-change")
+    if _ATTACHMENT_STATE.search(actions): blockers.append("attachment-state")
+    if _unmodeled_action_rider(actions): blockers.append("unsupported-action-rider")
+    if _has_neighbor_bleed(row, monster_names): blockers.append("source-neighbor-bleed")
+    if not blockers and not _ATTACK_ROLL.search(actions): blockers.append(_NONCOMBAT)
     return blockers
 
 
@@ -145,61 +121,34 @@ def _ready_names() -> set[str]:
 
 
 def main() -> None:
-    rows = load_monster_rows()
-    monster_names = {str(row["name"]) for row in rows}
-    ready_names = _ready_names()
-    safe: list[dict[str, object]] = []
-    already_ready: list[str] = []
-    deferred: list[str] = []
-    noncombat: list[str] = []
-    blocker_counts: dict[str, int] = {}
-    blocker_names: dict[str, list[str]] = {}
-    reaction_details: list[dict[str, object]] = []
-    rider_details: list[dict[str, object]] = []
+    rows = load_monster_rows(); monster_names = {str(row["name"]) for row in rows}; ready_names = _ready_names()
+    safe: list[dict[str, object]] = []; already_ready: list[str] = []; deferred: list[str] = []; noncombat: list[str] = []
+    blocker_counts: dict[str, int] = {}; blocker_names: dict[str, list[str]] = {}
+    reaction_details: list[dict[str, object]] = []; rider_details: list[dict[str, object]] = []
     for row in rows:
         name = str(row["name"])
-        if name in ready_names:
-            already_ready.append(name)
-            continue
-        if deferred_environment_reason(row["speed"]) is not None:
-            deferred.append(name)
-            continue
+        if name in ready_names: already_ready.append(name); continue
+        if deferred_environment_reason(row["speed"]) is not None: deferred.append(name); continue
         blockers = _source_blockers(row, monster_names)
-        if blockers == [_NONCOMBAT]:
-            noncombat.append(name)
-            continue
+        if blockers == [_NONCOMBAT]: noncombat.append(name); continue
         for blocker in set(blockers):
             blocker_counts[blocker] = blocker_counts.get(blocker, 0) + 1
             blocker_names.setdefault(blocker, []).append(name)
-        if "reaction" in blockers:
-            reaction_details.append({"name": name, "blockers": blockers, "reactions": str(row.get("reactions", ""))})
-        if "unsupported-action-rider" in blockers:
-            rider_details.append({"name": name, "blockers": blockers, "actions": str(row.get("actions", ""))})
-        if not blockers:
-            safe.append(row)
-    print(
-        f"ZERO_ENGINE_BASELINE existing={len(already_ready)} missing={len(safe)} "
-        f"deferred={len(deferred)} noncombat={len(noncombat)}"
-    )
-    if deferred:
-        print("ZERO_ENGINE_DEFERRED_ENVIRONMENT\t" + " | ".join(sorted(deferred)))
-    if noncombat:
-        print("ZERO_ENGINE_DEFERRED_NONCOMBAT\t" + " | ".join(sorted(noncombat)))
+        if "reaction" in blockers: reaction_details.append({"name": name, "blockers": blockers, "reactions": str(row.get("reactions", ""))})
+        if "unsupported-action-rider" in blockers: rider_details.append({"name": name, "blockers": blockers, "actions": str(row.get("actions", ""))})
+        if not blockers: safe.append(row)
+    print(f"ZERO_ENGINE_BASELINE existing={len(already_ready)} missing={len(safe)} deferred={len(deferred)} noncombat={len(noncombat)}")
+    if deferred: print("ZERO_ENGINE_DEFERRED_ENVIRONMENT\t" + " | ".join(sorted(deferred)))
+    if noncombat: print("ZERO_ENGINE_DEFERRED_NONCOMBAT\t" + " | ".join(sorted(noncombat)))
     for row in safe:
-        detail = {field: row.get(field, "") for field in _DETAIL_FIELDS}
-        raw = str(row.get("rawText", ""))
-        initiative = re.search(r"\bInitiative\s+([+-]?\d+)", raw, re.I)
-        detail["initiative"] = int(initiative.group(1)) if initiative else None
+        detail = {field: row.get(field, "") for field in _DETAIL_FIELDS}; raw = str(row.get("rawText", ""))
+        initiative = re.search(r"\bInitiative\s+([+-]?\d+)", raw, re.I); detail["initiative"] = int(initiative.group(1)) if initiative else None
         print("ZERO_ENGINE_DETAIL\t" + json.dumps(detail, ensure_ascii=False, separators=(",", ":")))
-    for detail in reaction_details:
-        print("ZERO_ENGINE_REACTION_DETAIL\t" + json.dumps(detail, ensure_ascii=False, separators=(",", ":")))
-    for detail in rider_details:
-        print("ZERO_ENGINE_RIDER_DETAIL\t" + json.dumps(detail, ensure_ascii=False, separators=(",", ":")))
+    for detail in reaction_details: print("ZERO_ENGINE_REACTION_DETAIL\t" + json.dumps(detail, ensure_ascii=False, separators=(",", ":")))
+    for detail in rider_details: print("ZERO_ENGINE_RIDER_DETAIL\t" + json.dumps(detail, ensure_ascii=False, separators=(",", ":")))
     for blocker, count in sorted(blocker_counts.items(), key=lambda item: (-item[1], item[0])):
         print(f"ZERO_ENGINE_BLOCKER\t{blocker}\t{count}")
-        if count <= _DETAIL_BLOCKER_LIMIT:
-            print(f"ZERO_ENGINE_BLOCKER_NAMES\t{blocker}\t" + " | ".join(sorted(blocker_names[blocker])))
+        if count <= _DETAIL_BLOCKER_LIMIT: print(f"ZERO_ENGINE_BLOCKER_NAMES\t{blocker}\t" + " | ".join(sorted(blocker_names[blocker])))
 
 
-if __name__ == "__main__":
-    main()
+if __name__ == "__main__": main()
