@@ -13,7 +13,12 @@ class UnsupportedCapabilityError(ValueError):
 
 def _compile_control(effect: GrappleEffectDefinition | ConditionEffectDefinition) -> HitControlEffect:
     if isinstance(effect, GrappleEffectDefinition):
-        return HitControlEffect(max_target_size=effect.max_target_size, grapple_escape_dc=effect.escape_dc, restrains_while_grappled=effect.restrains)
+        return HitControlEffect(
+            max_target_size=effect.max_target_size,
+            grapple_escape_dc=effect.escape_dc,
+            restrains_while_grappled=effect.restrains,
+            grapple_escape_check_disadvantage=effect.escape_check_disadvantage,
+        )
     return HitControlEffect(
         max_target_size=effect.max_target_size, condition_id=effect.condition,
         initial_save_ability=effect.initial_save_ability, initial_save_dc=effect.initial_save_dc,
