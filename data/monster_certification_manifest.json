@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 160,
-    "blocked": 170
+    "public_ready": 161,
+    "blocked": 169
   },
   "monsters": [
     {
@@ -9315,7 +9315,7 @@
       "monster_name": "Wraith",
       "srd_source_page": 342,
       "srd_source_reference": "SRD 5.2.1 p. 342",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-wraith",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -9325,19 +9325,15 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "trait"
-      ],
-      "unsupported_mechanics": [
+        "trait",
         "unsupported-action-rider"
       ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "unsupported-action-rider",
-        "unsupported-combatant-creation-action"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-wyvern",
