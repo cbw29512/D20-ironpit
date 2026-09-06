@@ -62,6 +62,19 @@ function downedHero() {
 }
 
 {
+  const state = S.buildState(structuredClone(heroTemplate));
+  state.max_hp_bonus = 20;
+  state.current_hp = S.effectiveMaxHp(state);
+  const attack = { maxHpReduction: { damageType: "acid" } };
+  const components = [
+    { damage_type: "bludgeoning", applied_total: 5 },
+    { damage_type: "acid", applied_total: 4 },
+  ];
+  assert.equal(Z.applyAttackMaxHpReduction(state, attack, components), 4);
+  assert.equal(state.max_hp_reduction, 4, "typed drain ignores other damage components");
+}
+
+{
   const state = downedHero();
   state.reaction_available = false;
   S.refreshReaction(state);
