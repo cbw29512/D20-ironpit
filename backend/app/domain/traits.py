@@ -14,6 +14,7 @@ class CombatTrait(StrEnum):
     UNDEAD_FORTITUDE = "undead-fortitude"
     REGENERATION = "regeneration"
     END_TURN_DAMAGE_AURA = "end-turn-damage-aura"
+    START_TURN_SAVE_AURA = "start-turn-save-aura"
     DEATH_TRIGGER_SAVE = "death-trigger-save"
     ALLY_ROLL_AURA = "ally-roll-aura"
     LIFE_DOMAIN = "life-domain"
