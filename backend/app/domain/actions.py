@@ -105,6 +105,7 @@ class ConditionRemovalAction(BaseModel):
 class SavingThrowAction(BaseModel):
     id: str
     name: str
+    action_cost: ActionCost = "action"
     save_ability: AbilityName
     dc: int = Field(ge=1, le=40)
     range_ft: int = Field(ge=0)
