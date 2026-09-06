@@ -30,7 +30,7 @@
             "resource:relentless-endurance",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "supported_mechanics": [
             "attack:rokhan-greataxe",
@@ -40,7 +40,7 @@
             "resource:relentless-endurance",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "unsupported_mechanics": [],
           "python_certification_status": "certified",
@@ -66,7 +66,7 @@
             "resource:relentless-endurance",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "supported_mechanics": [
             "attack:rokhan-greataxe",
@@ -78,7 +78,7 @@
             "resource:relentless-endurance",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "unsupported_mechanics": [],
           "python_certification_status": "certified",
@@ -108,7 +108,7 @@
             "resource:relentless-endurance",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "supported_mechanics": [
             "attack:rokhan-greataxe",
@@ -121,7 +121,7 @@
             "resource:relentless-endurance",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "unsupported_mechanics": [],
           "python_certification_status": "certified",
@@ -151,7 +151,7 @@
             "resource:relentless-endurance",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "supported_mechanics": [
             "attack:rokhan-greataxe",
@@ -164,7 +164,7 @@
             "resource:relentless-endurance",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "unsupported_mechanics": [],
           "python_certification_status": "certified",
@@ -196,7 +196,7 @@
             "resource:relentless-endurance",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "supported_mechanics": [
             "attack:rokhan-greataxe",
@@ -211,7 +211,7 @@
             "resource:relentless-endurance",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "unsupported_mechanics": [],
           "python_certification_status": "certified",
@@ -244,7 +244,7 @@
             "resource:relentless-endurance",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "supported_mechanics": [
             "attack:rokhan-greataxe",
@@ -260,7 +260,7 @@
             "resource:relentless-endurance",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "unsupported_mechanics": [],
           "python_certification_status": "certified",
@@ -2254,7 +2254,7 @@
             "resource:second-wind",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "supported_mechanics": [
             "attack:karnok-greatsword",
@@ -2264,7 +2264,7 @@
             "resource:second-wind",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "unsupported_mechanics": [],
           "python_certification_status": "certified",
@@ -2289,7 +2289,7 @@
             "resource:second-wind",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "supported_mechanics": [
             "attack:karnok-greatsword",
@@ -2300,7 +2300,7 @@
             "resource:second-wind",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "unsupported_mechanics": [],
           "python_certification_status": "certified",
@@ -2332,7 +2332,7 @@
             "resource:second-wind",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "supported_mechanics": [
             "athletics-advantage",
@@ -2347,7 +2347,7 @@
             "resource:second-wind",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "unsupported_mechanics": [],
           "python_certification_status": "certified",
@@ -2379,7 +2379,7 @@
             "resource:second-wind",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "supported_mechanics": [
             "athletics-advantage",
@@ -2394,7 +2394,7 @@
             "resource:second-wind",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "unsupported_mechanics": [],
           "python_certification_status": "certified",
@@ -2428,7 +2428,7 @@
             "tactical-shift",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "supported_mechanics": [
             "athletics-advantage",
@@ -2445,7 +2445,7 @@
             "tactical-shift",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "unsupported_mechanics": [],
           "python_certification_status": "certified",
@@ -2479,7 +2479,7 @@
             "tactical-shift",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "supported_mechanics": [
             "athletics-advantage",
@@ -2496,7 +2496,7 @@
             "tactical-shift",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "unsupported_mechanics": [],
           "python_certification_status": "certified",
@@ -2531,7 +2531,7 @@
             "tactical-shift",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "supported_mechanics": [
             "athletics-advantage",
@@ -2549,7 +2549,7 @@
             "tactical-shift",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "unsupported_mechanics": [],
           "python_certification_status": "certified",
@@ -2584,7 +2584,7 @@
             "tactical-shift",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "supported_mechanics": [
             "athletics-advantage",
@@ -2602,7 +2602,7 @@
             "tactical-shift",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "unsupported_mechanics": [],
           "python_certification_status": "certified",
@@ -2640,7 +2640,7 @@
             "tactical-shift",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "supported_mechanics": [
             "athletics-advantage",
@@ -2661,7 +2661,7 @@
             "tactical-shift",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "unsupported_mechanics": [],
           "python_certification_status": "certified",
@@ -2700,7 +2700,7 @@
             "tactical-shift",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "supported_mechanics": [
             "athletics-advantage",
@@ -2722,7 +2722,7 @@
             "tactical-shift",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "unsupported_mechanics": [],
           "python_certification_status": "certified",
@@ -2761,7 +2761,7 @@
             "tactical-shift",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "supported_mechanics": [
             "athletics-advantage",
@@ -2783,7 +2783,7 @@
             "tactical-shift",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "unsupported_mechanics": [],
           "python_certification_status": "certified",
@@ -2822,7 +2822,7 @@
             "tactical-shift",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "supported_mechanics": [
             "athletics-advantage",
@@ -2844,7 +2844,7 @@
             "tactical-shift",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "unsupported_mechanics": [],
           "python_certification_status": "certified",
@@ -4586,7 +4586,7 @@
             "sneak-attack",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "supported_mechanics": [
             "attack:mara-shortbow",
@@ -4596,7 +4596,7 @@
             "sneak-attack",
             "trait:adrenaline-rush",
             "trait:relentless-endurance",
-            "trait:savage-attacker"
+            "trait:savager-attacker"
           ],
           "unsupported_mechanics": [],
           "python_certification_status": "certified",

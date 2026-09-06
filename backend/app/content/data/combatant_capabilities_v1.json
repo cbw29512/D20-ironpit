@@ -113,6 +113,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -239,6 +240,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -377,6 +379,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -504,6 +507,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -681,6 +685,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -814,6 +819,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -911,6 +917,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -1036,6 +1043,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -1133,6 +1141,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -1234,6 +1243,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -1344,6 +1354,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -1445,6 +1456,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -1542,6 +1554,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -1646,6 +1659,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -1752,6 +1766,7 @@
       "damage": 4
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -1872,6 +1887,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -2016,6 +2032,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -2113,6 +2130,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -2214,6 +2232,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -2311,6 +2330,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -2410,6 +2430,7 @@
       "damage": 5
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -2507,6 +2528,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -2606,6 +2628,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -2703,6 +2726,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -2805,6 +2829,7 @@
       "damage": 4
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -2904,6 +2929,7 @@
       "damage": 4
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -3029,6 +3055,7 @@
       "damage": 5
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -3154,6 +3181,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -3253,6 +3281,7 @@
       "damage": 5
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -3382,6 +3411,7 @@
       "damage": 5
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -3479,6 +3509,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -3644,6 +3675,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -3762,6 +3794,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -3857,6 +3890,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -3954,6 +3988,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -4049,6 +4084,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -4142,6 +4178,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -4237,6 +4274,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -4332,6 +4370,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -4428,6 +4467,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -4521,6 +4561,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -4616,6 +4657,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -4711,6 +4753,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -4806,6 +4849,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -4901,6 +4945,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -4998,6 +5043,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -5095,6 +5141,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -5194,6 +5241,7 @@
       "damage": 5
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -5312,6 +5360,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -5411,6 +5460,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -5508,6 +5558,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -5607,6 +5658,7 @@
       "damage": 4
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -5709,6 +5761,7 @@
       "damage": 4
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -5808,6 +5861,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -5905,6 +5959,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -6006,6 +6061,7 @@
       "damage": 4
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -6105,6 +6161,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -6208,6 +6265,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -6309,6 +6367,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -6411,6 +6470,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -6508,6 +6568,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -6607,6 +6668,7 @@
       "damage": 6
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -6706,6 +6768,7 @@
       "damage": 5
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -6853,6 +6916,7 @@
       "damage": 5
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -6969,6 +7033,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -7085,6 +7150,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -7232,6 +7298,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -7354,6 +7421,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -7462,6 +7530,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -7571,6 +7640,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -7696,6 +7766,7 @@
         "animation": "constrict"
       }
     ],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -7864,6 +7935,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -8013,6 +8085,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -8140,6 +8213,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -8249,6 +8323,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -8357,6 +8432,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -8524,6 +8600,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -8636,6 +8713,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -8750,6 +8828,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -8865,6 +8944,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -8988,6 +9068,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -9111,6 +9192,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -9240,6 +9322,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -9353,6 +9436,7 @@
       "damage": 5
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -9509,6 +9593,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -9652,6 +9737,7 @@
         "animation": "constrict"
       }
     ],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -9807,6 +9893,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -9925,6 +10012,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -10033,6 +10121,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -10141,6 +10230,7 @@
       "damage": 5
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -10256,6 +10346,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -10362,6 +10453,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -10480,6 +10572,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -10598,6 +10691,7 @@
       "damage": 4
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -10766,6 +10860,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -10882,6 +10977,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -10981,6 +11077,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -11142,6 +11239,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -11239,6 +11337,7 @@
       "damage": 5
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -11358,6 +11457,7 @@
       "damage": 5
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -11464,6 +11564,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -11586,6 +11687,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -11699,6 +11801,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -11824,6 +11927,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -11938,6 +12042,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -12054,6 +12159,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -12156,6 +12262,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -12270,6 +12377,7 @@
       "damage": 4
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -12382,6 +12490,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -12509,6 +12618,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -12640,6 +12750,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -12807,6 +12918,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -12982,6 +13094,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -13086,6 +13199,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -13235,6 +13349,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
