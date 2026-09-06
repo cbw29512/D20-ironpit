@@ -9,14 +9,7 @@ from app.content.monster_combat_scope import (
     feature_blocks,
     strip_post_combat_outcomes,
 )
-from app.content.monster_mechanic_patterns import (
-    COMPLEXITY_WEIGHTS as _COMPLEXITY_WEIGHTS,
-    CONDITIONS as _CONDITIONS,
-    DAMAGE_TYPES as _DAMAGE_TYPES,
-    PATTERNS as _PATTERNS,
-    SECTION_LABELS as _SECTION_LABELS,
-    TEXT_FIELDS as _TEXT_FIELDS,
-)
+from app.content.monster_mechanic_patterns import COMPLEXITY_WEIGHTS as _COMPLEXITY_WEIGHTS, CONDITIONS as _CONDITIONS, DAMAGE_TYPES as _DAMAGE_TYPES, PATTERNS as _PATTERNS, SECTION_LABELS as _SECTION_LABELS, TEXT_FIELDS as _TEXT_FIELDS
 from app.content.monster_trait_source_audit import parse_trait_names
 
 
