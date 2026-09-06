@@ -26,19 +26,17 @@ def _records() -> list[dict[str, object]]:
     records: list[dict[str, object]] = []
     for row in rows:
         name = str(row["name"])
-        card = cards[name]
-        ready = card.coverage_status is CoverageStatus.RAW_READY
+        ready = cards[name].coverage_status is CoverageStatus.RAW_READY
         mechanics = normalized_monster_mechanics(row)
         blockers = [] if ready else _source_blockers(row, names)
         ignored_noncombat = blockers == [_NONCOMBAT]
         if ignored_noncombat:
             blockers = []
-        edge_case = bool(set(mechanics) & _EDGE_CASES)
         records.append({
             "monster": name,
             "ready": ready,
             "ignored_noncombat": ignored_noncombat,
-            "edge_case": edge_case,
+            "edge_case": bool(set(mechanics) & _EDGE_CASES),
             "unsupported_families": tuple(sorted(set(blockers))),
             "unsupported_count": len(set(blockers)),
             "complexity": mechanic_complexity(mechanics),
@@ -53,21 +51,37 @@ def _queue_key(record: dict[str, object]) -> tuple[object, ...]:
         bool(record["edge_case"]),
         int(record["unsupported_count"]),
         int(record["complexity"]),
+        str(record["fingerprint"]),
+        str(record["monster"]),
+    )
+
+
+def _matrix_key(record: dict[str, object]) -> tuple[object, ...]:
+    return (
+        bool(record["edge_case"]),
+        int(record["complexity"]),
+        str(record["fingerprint"]),
         str(record["monster"]),
     )
 
 
 def _write_csv(path: Path, records: list[dict[str, object]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
+    actionable = [record for record in records if not record["ready"] and not record["ignored_noncombat"]]
+    rank_by_name = {
+        str(record["monster"]): rank
+        for rank, record in enumerate(sorted(actionable, key=_queue_key), start=1)
+    }
     fields = (
-        "monster", "ready", "ignored_noncombat", "edge_case", "unsupported_count",
-        "complexity", "unsupported_families", "mechanics", "fingerprint",
+        "work_rank", "monster", "ready", "ignored_noncombat", "edge_case",
+        "unsupported_count", "complexity", "unsupported_families", "mechanics", "fingerprint",
     )
     with path.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=fields)
         writer.writeheader()
-        for record in sorted(records, key=lambda item: str(item["monster"])):
+        for record in sorted(records, key=_matrix_key):
             row = dict(record)
+            row["work_rank"] = rank_by_name.get(str(record["monster"]), "")
             row["unsupported_families"] = " | ".join(record["unsupported_families"])
             row["mechanics"] = " | ".join(record["mechanics"])
             writer.writerow({field: row[field] for field in fields})
