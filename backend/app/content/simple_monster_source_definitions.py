@@ -17,7 +17,7 @@ from app.content.simple_monster_source_saves import parse_simple_bonus_save_acti
 from app.domain.capabilities import CombatantDefinition
 
 _SIMPLE_SOURCE_NAMES = frozenset({
-    "Azer Sentinel", "Berserker", "Blink Dog", "Bone Devil", "Bugbear Stalker", "Bugbear Warrior", "Ettin", "Fire Giant", "Hezrou",
+    "Azer Sentinel", "Berserker", "Blink Dog", "Bone Devil", "Bugbear Stalker", "Bugbear Warrior", "Ettin", "Fire Giant", "Ghoul", "Hezrou",
     "Hill Giant", "Hobgoblin Captain", "Magmin", "Merrow", "Nightmare", "Sahuagin Warrior", "Satyr",
     "Specter", "Spy", "Tough Boss", "Troll Limb", "Wraith", "Xorn",
 })
@@ -46,7 +46,7 @@ def _definition(row: dict[str, object]) -> CombatantDefinition:
     name = str(row["name"]); slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
     data: dict[str, object] = {
         "schema_version": 1, "id": f"srd-{slug}", "name": name, "archetype": "source-certified monster",
-        "challenge_rating": str(row["challenge"]).split()[0], "kind": "monster",
+        "challenge_rating": str(row["challenge"]).split()[0], "kind": "monster", "creature_type": str(row["type"]),
         "size": str(row["size"]).split()[0].lower(), "armor_class": _first_int(row["armorClass"]),
         "max_hp": _first_int(row["hitPoints"]), "speed_ft": standard_arena_closing_speed(row["speed"]),
         "movement_modes": parse_movement_profile(row["speed"]).model_dump(mode="json"),
