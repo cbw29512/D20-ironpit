@@ -4,7 +4,7 @@ import re
 
 from app.content.arena_eligibility import deferred_environment_reason
 from app.content.monster_catalog import load_monster_rows
-from app.content.monster_combat_scope import battle_ready_size
+from app.content.monster_combat_scope import battle_ready_size, strip_post_combat_outcomes
 from app.content.monster_death_trigger_source import parse_death_trigger_saves
 from app.content.monster_defense_source_audit import parse_defense_profile
 from app.content.monster_regeneration_source import parse_regeneration
@@ -17,12 +17,14 @@ from app.content.movement_modes import parse_movement_profile, standard_arena_cl
 from app.content.simple_monster_source_attacks import parse_simple_attacks
 from app.content.simple_monster_source_saves import attach_save_replacement, parse_simple_bonus_save_actions, parse_simple_save_actions
 from app.domain.capabilities import CombatantDefinition
+from app.domain.traits import CombatTrait
 
 _SIMPLE_SOURCE_NAMES = frozenset({
     "Azer Sentinel", "Berserker", "Blink Dog", "Bone Devil", "Bugbear Stalker", "Bugbear Warrior", "Ettin", "Fire Giant", "Ghoul", "Giant Shark", "Hezrou",
     "Hill Giant", "Hobgoblin Captain", "Hunter Shark", "Lion", "Magmin", "Merrow", "Nightmare", "Piranha", "Pirate", "Sahuagin Warrior", "Satyr",
-    "Specter", "Spy", "Tough Boss", "Troll Limb", "Werebear", "Wererat", "Weretiger", "Werewolf", "Wraith", "Xorn",
+    "Specter", "Spy", "Tough Boss", "Troll Limb", "Werebear", "Wereboar", "Wererat", "Weretiger", "Werewolf", "Wraith", "Xorn",
 })
+_CHARGE_RIDER = re.compile(r"\bmoved\s+\d+\+\s*feet\s+straight\s+toward\s+(?:it|the target)\s+immediately\s+before\s+the\s+hit\b", re.I)
 
 
 def _first_int(value: object) -> int:
@@ -43,6 +45,7 @@ def _definition(row: dict[str, object]) -> CombatantDefinition:
     multiattack = attach_save_replacement(row, multiattack, save_actions)
     trait_names = parse_trait_names(row.get("traits", "")) if str(row.get("traits", "")).strip() else []
     combat_traits = [_MODELED_TRAITS[name].value for name in trait_names if name in _MODELED_TRAITS]
+    if _CHARGE_RIDER.search(strip_post_combat_outcomes(row.get("actions", ""))): combat_traits.append(CombatTrait.CHARGE.value)
     regeneration = parse_regeneration(row); turn_damage_auras = parse_turn_damage_auras(row)
     death_trigger_saves = parse_death_trigger_saves(row); ally_roll_auras = parse_ally_roll_auras(row)
     start_turn_save_auras = parse_start_turn_save_auras(row)
