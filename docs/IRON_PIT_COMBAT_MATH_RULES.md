@@ -80,6 +80,16 @@ This evaluation is dynamic throughout combat. At minimum, active effects are rec
 
 The same rule applies to Dexterity, Constitution, Intelligence, Wisdom, and Charisma. If an affected ability is used for a spell attack, spell save DC, saving throw, attack, damage, or another modeled combat calculation, the derived value must use the current effective ability score.
 
+## Proficiency
+
+Keep proficiency as close to D&D RAW as practical without creating one-off engine complexity.
+
+- Proficiency Bonus is applied once when the combatant is proficient.
+- Multiple sources granting proficiency do not stack duplicate Proficiency Bonuses.
+- Expertise or double-proficiency effects multiply the normal proficiency contribution rather than adding a second independent proficiency source.
+- If an effect genuinely changes the effective Proficiency Bonus, every combat-relevant derived value that uses proficiency must read the current effective value dynamically.
+- Do not add exotic proficiency exceptions until a real supported combatant requires them.
+
 ## Advantage and Disadvantage
 
 Advantage and Disadvantage are binary and never stack.
@@ -89,6 +99,18 @@ Advantage and Disadvantage are binary and never stack.
 - Both: cancel completely; roll 1d20.
 - Multiple sources of Advantage are still one Advantage state.
 - Multiple sources of Disadvantage are still one Disadvantage state.
+
+## Action economy and combat flow
+
+Keep the core D&D combat flow RAW unless a deliberate Iron Pit simplification is documented.
+
+- Initiative and turn order remain normal combat concepts.
+- A combatant normally has one Action on its turn.
+- A combatant can use one Bonus Action when an available feature, spell, or ability permits it.
+- A combatant has one Reaction between the starts of its turns, subject to the normal trigger and availability rules.
+- Extra Attack changes the number of attacks produced by the Attack action; it is not a separate monster- or class-specific action system.
+- Effects such as Action Surge, Incapacitated, Stunned, or reaction denial modify these shared action resources rather than creating bespoke combat flows.
+- Movement is the Iron Pit's abstraction and is not simulated as ordinary tactical movement when it has no separate combat-math consequence.
 
 ## Damage packets
 
@@ -136,6 +158,18 @@ Temporary Hit Points never stack. Keep the highest currently applicable Temporar
 Healing follows normal D&D behavior: current HP cannot be healed above current maximum HP.
 
 If maximum HP is currently reduced, healing is capped by the current reduced maximum.
+
+## Concentration
+
+Keep Concentration RAW unless a documented simplification is required for implementation.
+
+- A creature can maintain only one Concentration effect at a time, not one per round.
+- The same Concentration effect can remain active across many rounds until its duration ends or Concentration is broken.
+- Beginning another Concentration effect ends the previous one.
+- Taking damage can require a Constitution saving throw to maintain Concentration; failure ends it.
+- Incapacitation, unconsciousness, death, or any other RAW Concentration-ending state ends the effect.
+- When Concentration ends, every runtime buff, debuff, condition, or other effect owned by that Concentration source is removed immediately.
+- Concentration resolution must use the shared saving-throw and runtime-effect systems rather than spell-specific branches.
 
 ## Conditions and mixed effects
 
