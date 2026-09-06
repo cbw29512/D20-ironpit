@@ -4,8 +4,7 @@ from __future__ import annotations
 ROGUE_SUBCLASS_DELTA_DATA: dict[str, dict[int, dict[str, tuple[str, ...]]]] = {
     "thief": {
         3: {
-            "features_added": ("thief-fast-hands",),
-            "arena_ignored": ("thief-second-story-work",),
+            "arena_ignored": ("thief-fast-hands", "thief-second-story-work"),
         },
         9: {"features_added": ("thief-supreme-sneak",)},
         13: {"features_added": ("thief-use-magic-device",)},
