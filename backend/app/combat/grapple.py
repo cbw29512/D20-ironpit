@@ -31,7 +31,8 @@ def _sync_effect_ids(state: CombatantState) -> None:
 
 
 def apply_grapple(
-    state: CombatantState, source_id: str, escape_dc: int, range_ft: int, *, restrains: bool = False,
+    state: CombatantState, source_id: str, escape_dc: int, range_ft: int, *,
+    restrains: bool = False, escape_check_disadvantage: bool = False,
 ) -> list[str]:
     if condition_is_immune(state, GRAPPLED_EFFECT_ID):
         return []
@@ -39,6 +40,7 @@ def apply_grapple(
     restrains = restrains and not condition_is_immune(state, RESTRAINED_EFFECT_ID)
     state.grapple_sources.append(GrappleSource(
         source_id=source_id, escape_dc=escape_dc, range_ft=range_ft, restrains=restrains,
+        escape_check_disadvantage=escape_check_disadvantage,
     ))
     _sync_effect_ids(state)
     return [GRAPPLED_EFFECT_ID, RESTRAINED_EFFECT_ID] if restrains else [GRAPPLED_EFFECT_ID]
@@ -78,24 +80,28 @@ def should_escape_grapple(state: CombatantState) -> bool:
     return is_available(state, "action") and any(source.restrains for source in state.grapple_sources)
 
 
-def _check_mode(state: CombatantState, strength_check: bool) -> RollMode:
+def _check_mode(state: CombatantState, strength_check: bool, source: GrappleSource) -> RollMode:
     advantage = strength_check and (
         rage_active(state) or state.template.progression_features.athletics_advantage
     )
-    disadvantage = has_condition(state, POISONED_EFFECT_ID) or has_condition(state, FRIGHTENED_EFFECT_ID)
+    disadvantage = (
+        has_condition(state, POISONED_EFFECT_ID)
+        or has_condition(state, FRIGHTENED_EFFECT_ID)
+        or source.escape_check_disadvantage
+    )
     if advantage == disadvantage:
         return RollMode.NORMAL
     return RollMode.ADVANTAGE if advantage else RollMode.DISADVANTAGE
 
 
-def _escape_choice(state: CombatantState) -> tuple[str, int, RollMode]:
+def _escape_choice(state: CombatantState, source: GrappleSource) -> tuple[str, int, RollMode]:
     athletics = state.template.skill_bonuses.get("athletics")
     acrobatics = state.template.skill_bonuses.get("acrobatics")
     if athletics is None and acrobatics is None:
         raise ValueError(f"{state.template.name} lacks certified Athletics/Acrobatics bonuses.")
     if athletics is not None and (acrobatics is None or athletics >= acrobatics):
-        return "strength (athletics)", athletics, _check_mode(state, True)
-    return "dexterity (acrobatics)", int(acrobatics), _check_mode(state, False)
+        return "strength (athletics)", athletics, _check_mode(state, True, source)
+    return "dexterity (acrobatics)", int(acrobatics), _check_mode(state, False, source)
 
 
 def resolve_escape_grapple(
@@ -104,7 +110,7 @@ def resolve_escape_grapple(
     if not is_available(state, "action"):
         raise ValueError("Action is not available to escape a grapple.")
     source = next((item for item in state.grapple_sources if item.restrains), state.grapple_sources[0])
-    check_name, bonus, mode = _escape_choice(state)
+    check_name, bonus, mode = _escape_choice(state, source)
     check = roll_d20(dice, bonus, mode)
     success = check.total >= source.escape_dc
     tactical_used = False
