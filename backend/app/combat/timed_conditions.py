@@ -29,10 +29,11 @@ def apply_timed_condition(
     ends_on_damage: bool = False,
     ends_if_source_incapacitated: bool = False,
     ends_if_source_dead: bool = False,
+    default_poison_recovery: bool = True,
 ) -> str | None:
     if condition_is_immune(state, effect_id):
         return None
-    if effect_id == POISONED_EFFECT_ID:
+    if effect_id == POISONED_EFFECT_ID and default_poison_recovery:
         if any(effect.effect_id == POISONED_EFFECT_ID for effect in state.timed_effects):
             return POISONED_EFFECT_ID
         expires_at_start_of_source_turn = False
