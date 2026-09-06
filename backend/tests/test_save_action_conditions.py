@@ -8,11 +8,14 @@ from app.domain.models import EncounterCombatant
 
 
 def _combatant(combatant_id: str, position_ft: int) -> EncounterCombatant:
+    template = build_goblin_warrior()
+    saves = dict(template.saving_throw_bonuses); saves.setdefault("wisdom", 0)
+    template = template.model_copy(update={"saving_throw_bonuses": saves})
     return EncounterCombatant(
         combatant_id=combatant_id,
         side="monsters" if position_ft == 0 else "heroes",
         position_ft=position_ft,
-        state=build_combatant_state(build_goblin_warrior()),
+        state=build_combatant_state(template),
     )
 
 
