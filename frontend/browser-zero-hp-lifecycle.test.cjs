@@ -50,6 +50,19 @@ function downedHero() {
 }
 
 {
+  const template = structuredClone(heroTemplate);
+  template.kind = "monster";
+  template.traits = [...(template.traits || []), "relentless-endurance"];
+  const state = S.buildState(template);
+  state.resources["relentless-endurance"] = 1;
+  assert.equal(Z.applyDamage(state, state.current_hp, false), "relentless_endurance");
+  assert.equal(state.current_hp, 1, "explicit zero-HP survival resolves before default monster death");
+  assert.equal(state.is_alive, true);
+  assert.equal(state.is_dead, false);
+  assert.equal(state.resources["relentless-endurance"], 0);
+}
+
+{
   const state = S.buildState(structuredClone(heroTemplate));
   state.max_hp_bonus = 5;
   state.current_hp = S.effectiveMaxHp(state);
