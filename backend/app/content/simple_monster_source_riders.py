@@ -8,6 +8,9 @@ _GRAPPLE = re.compile(
     r"\bIf the target is a (Tiny|Small|Medium|Large|Huge|Gargantuan) or smaller creature,\s*"
     r"it has the Grappled condition\s*\(escape DC\s*(\d+)\)", re.I,
 )
+_GRAPPLE_ESCAPE_DISADVANTAGE = re.compile(
+    r"\bAbility checks made to escape this grapple have Disadvantage\b", re.I,
+)
 _PRONE = re.compile(
     r"\bIf the target is a (Tiny|Small|Medium|Large|Huge|Gargantuan) or smaller creature,\s*"
     r"it has the Prone condition\b", re.I,
@@ -81,7 +84,10 @@ def parse_hit_riders(block: str) -> list[dict[str, object]]:
         grapple = _GRAPPLE.search(block)
         if grapple:
             max_size, escape_dc = grapple.groups()
-            effects.append({"kind": "grapple", "escape_dc": int(escape_dc), "max_target_size": max_size.lower()})
+            effects.append({
+                "kind": "grapple", "escape_dc": int(escape_dc), "max_target_size": max_size.lower(),
+                "escape_check_disadvantage": bool(_GRAPPLE_ESCAPE_DISADVANTAGE.search(block)),
+            })
         prone = _PRONE.search(block)
         if prone and "prone" not in timed_conditions:
             effects.append({"kind": "prone", "max_target_size": prone.group(1).lower()})
