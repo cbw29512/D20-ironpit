@@ -90,8 +90,7 @@ def resolve_attack(
             active_turn_key = turn_key or f"{round_number}:{attacker_event_id}"
             damage_roll, rolled_components = resolve_weapon_damage(
                 attacker, attack, dice, critical, mode, active_turn_key, bonus_damage=bonus_damage,
-                target=actual_defender, sneak_attack_ally_available=sneak_attack_ally_available,
-                attacker_id=attacker_event_id,
+                target=actual_defender, sneak_attack_ally_available=sneak_attack_ally_available, attacker_id=attacker_event_id,
             )
             applied_total, damage_components = apply_damage_defenses(actual_defender, rolled_components); damage_roll.total = applied_total
             applied_types = {part.damage_type for part in damage_components if part.applied_total > 0}
