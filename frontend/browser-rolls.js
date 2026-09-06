@@ -63,7 +63,7 @@
     return damageComponent({ ...spec, damageBonus: 0 }, critical);
   }
 
-  function conditionalActive(spec, attacker, target, mode) {
+  function conditionalActive(spec, attacker, target, mode, attackerId = null) {
     if (!spec) return false;
     if (spec.trigger === "attack_advantage") return mode === "advantage";
     if (spec.trigger === "attacker_bloodied") return bloodied(attacker);
@@ -71,12 +71,16 @@
       if (!target) throw new Error("Target state is required for target-Bloodied conditional damage.");
       return bloodied(target);
     }
+    if (spec.trigger === "target_grappled_by_self") {
+      if (!target || !attackerId) return false;
+      return target.grapple_sources?.some((source) => source.source_id === attackerId) || false;
+    }
     throw new Error(`Unsupported conditional damage trigger: ${spec.trigger}`);
   }
 
-  function weaponDamage(attacker, attack, critical, mode, turnKey, bonusDamage = null, target = null, sneakAllyAvailable = false) {
+  function weaponDamage(attacker, attack, critical, mode, turnKey, bonusDamage = null, target = null, sneakAllyAvailable = false, attackerId = null) {
     const conditional = attack.conditionalDamage || null;
-    const replacement = conditional?.mode === "replace_weapon" && conditionalActive(conditional, attacker, target, mode)
+    const replacement = conditional?.mode === "replace_weapon" && conditionalActive(conditional, attacker, target, mode, attackerId)
       ? conditional : null;
     let rolled;
     if (replacement) {
@@ -104,7 +108,7 @@
         notation: `${count}d${sides}+0`, rolls, modifier: 0, total: rolls.reduce((a, b) => a + b, 0),
       });
     }
-    if (conditional?.mode === "add" && conditionalActive(conditional, attacker, target, mode)) {
+    if (conditional?.mode === "add" && conditionalActive(conditional, attacker, target, mode, attackerId)) {
       components.push(damageComponent({ ...conditional, source: "Conditional bonus damage" }, critical));
     }
     const sneak = window.IRON_PIT_BROWSER_SNEAK_ATTACK?.bonusDamage(attacker, attack, mode, turnKey, sneakAllyAvailable);
