@@ -33,6 +33,12 @@ _SOURCE_TIMED_CONDITION = re.compile(
     rf"\bthe target has the (?P<condition>{_CONDITION}) condition until the "
     r"(?P<when>start|end) of the [A-Za-z][A-Za-z'’ -]*[’']s next turn\b", re.I,
 )
+_SAVE_TIMED_CONDITION = re.compile(
+    rf"(?:(?:If the target is a creature that isn[’']t an (?P<type>[A-Za-z]+)(?: or (?P<species>[A-Za-z]+))?, it is subjected to the following effect\. )?)"
+    rf"(?P<ability>Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) Saving Throw: DC (?P<dc>\d+)\. "
+    rf"Failure: The target has the (?P<condition>{_CONDITION}) condition until the (?P<when>start|end) of its next turn\.",
+    re.I,
+)
 
 
 def _direct_hit_text(block: str) -> str:
@@ -41,22 +47,29 @@ def _direct_hit_text(block: str) -> str:
 
 
 def _timed_condition_effects(block: str) -> list[dict[str, object]]:
-    """Compile only unconditional conditions stated directly in Hit prose."""
+    """Compile unconditional and save-gated timed conditions stated directly in Hit prose."""
     hit_text = _direct_hit_text(block)
     if not hit_text:
         return []
     effects: list[dict[str, object]] = []
+    save_spans: list[tuple[int, int]] = []
+    for match in _SAVE_TIMED_CONDITION.finditer(hit_text):
+        save_spans.append(match.span())
+        effect: dict[str, object] = {
+            "kind": "condition", "condition": match.group("condition").lower(),
+            "initial_save_ability": match.group("ability").lower(), "initial_save_dc": int(match.group("dc")),
+            "expiry_timing": f"target_turn_{match.group('when').lower()}",
+        }
+        if match.group("type"): effect["excluded_creature_types"] = [match.group("type").lower()]
+        if match.group("species"): effect["excluded_species_ids"] = [match.group("species").lower()]
+        effects.append(effect)
     for pattern, owner in ((_TARGET_TIMED_CONDITION, "target"), (_SOURCE_TIMED_CONDITION, "source")):
         for match in pattern.finditer(hit_text):
-            prefix = hit_text[:match.start()].lower()
-            clause = re.split(r"[.;]", prefix)[-1]
-            if "saving throw" in clause or "must succeed" in clause:
-                continue
-            effects.append({
-                "kind": "condition",
-                "condition": match.group("condition").lower(),
-                "expiry_timing": f"{owner}_turn_{match.group('when').lower()}",
-            })
+            if any(start <= match.start() < end for start, end in save_spans): continue
+            prefix = hit_text[:match.start()].lower(); clause = re.split(r"[.;]", prefix)[-1]
+            if "saving throw" in clause or "must succeed" in clause: continue
+            effects.append({"kind": "condition", "condition": match.group("condition").lower(),
+                            "expiry_timing": f"{owner}_turn_{match.group('when').lower()}"})
     return effects
 
 
@@ -77,8 +90,7 @@ def parse_hit_riders(block: str) -> list[dict[str, object]]:
         max_hp = _MAX_HP_REDUCTION.search(block)
         if max_hp:
             effect: dict[str, object] = {"kind": "max-hp-reduction"}
-            if max_hp.group(1):
-                effect["damage_type"] = max_hp.group(1).lower()
+            if max_hp.group(1): effect["damage_type"] = max_hp.group(1).lower()
             effects.append(effect)
         return effects
     except (AttributeError, TypeError, ValueError):
