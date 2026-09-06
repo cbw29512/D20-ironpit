@@ -23,6 +23,15 @@ Effects whose only meaningful consequence is after the current Iron Pit fight ar
 - The associated curse saving throw and 24-hour curse immunity do not affect the current fight and are therefore ignored.
 - This is an explicit Iron Pit simplification, not an assertion that the SRD rule lacks those consequences.
 
+### Battle-ready forms
+
+When a creature has an at-will form change whose printed game statistics remain the same except for size, movement, presentation, equipment handling, or which form-labeled attacks are available, Iron Pit may enter that creature in a legal battle-ready form before initiative rather than simulating form switching during combat.
+
+- Preserve the battle-ready form's combat-relevant size and legal attacks.
+- Ignore form-only movement differences under the normal Iron Pit movement abstraction.
+- Do not build a runtime transformation subsystem merely to model presentation or movement differences.
+- If changing form alters additional combat math such as AC, HP, ability scores, damage, defenses, actions, saves, or another outcome-changing property, that difference remains in scope and requires the appropriate universal mechanic.
+
 ## Universal-mechanic rule
 
 Ability names do not define engine mechanics. Different source abilities that produce the same mechanical result must reuse the same universal primitive. Preserve the exact source ability name in combat logs.
