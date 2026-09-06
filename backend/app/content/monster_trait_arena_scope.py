@@ -5,7 +5,7 @@ import re
 from app.content.monster_combat_scope import combat_math_relevant
 
 _OBJECT_END_DAMAGE = re.compile(
-    r"\bThe\s+\w+\s+takes\s+\d+(?:\s*\([^)]*\))?\s+[A-Za-z]+\s+damage\s+if\s+it\s+ends\s+its\s+turn\s+inside\s+an\s+object\. ?",
+    r"\b(?:The\s+\w+|It)\s+takes\s+\d+(?:\s*\([^)]*\))?\s+[A-Za-z]+\s+damage\s+if\s+it\s+ends\s+its\s+turn\s+inside\s+an\s+object\. ?",
     re.IGNORECASE,
 )
 _SUNLIGHT_SENTENCE = re.compile(r"\bWhile\s+in\s+sunlight,\s+[^.]*\. ?", re.IGNORECASE)
