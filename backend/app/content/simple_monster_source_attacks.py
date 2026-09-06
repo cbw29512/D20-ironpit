@@ -15,6 +15,10 @@ _HYBRID = re.compile(rf"\bMelee or Ranged Attack Roll:\s*([+-]?\d+)(?:\s*\([^)]*
 _EXTRA_DICE = re.compile(r"\bplus\s+\d+\s*\(\s*(\d+)d(\d+)(?:\s*([+-])\s*(\d+))?\s*\)\s*([A-Za-z]+)\s+damage", re.I)
 _EXTRA_FIXED = re.compile(r"\bplus\s+(\d+)\s+([A-Za-z]+)\s+damage\b", re.I)
 _GRAPPLE_ADV = re.compile(r"\bwith Advantage if the target is Grappled by the [^)]+", re.I)
+_GRAPPLE_REPLACEMENT = re.compile(
+    r"\bor\s+\d+\s*\(\s*(\d+)d(\d+)(?:\s*([+-])\s*(\d+))?\s*\)\s*([A-Za-z]+)\s+damage\s+"
+    r"if\s+the\s+target\s+is\s+Grappled\s+by\s+the\s+[A-Za-z][A-Za-z'’ -]*", re.I,
+)
 _REPLACE_ATTACK = re.compile(r"\bcan replace one attack with a (?P<name>[A-Z][A-Za-z’'\- ]+?) attack\.", re.I)
 _COUNT = r"one|two|three|four|five|six|\d+"
 _SIMPLE_MULTI_CHOICE = re.compile(
@@ -35,6 +39,13 @@ def _effects(block: str, base_span: tuple[int, int], heading: str) -> list[dict[
     for extra in extras:
         count, size, sign, bonus, damage_type = extra.groups()
         effects.append({"kind": "damage", "source": heading, "dice": _dice(count, size, sign, bonus), "damage_type": damage_type.lower()})
+    replacement = _GRAPPLE_REPLACEMENT.search(block)
+    if replacement:
+        count, size, sign, bonus, damage_type = replacement.groups()
+        effects.append({
+            "kind": "damage", "source": heading, "dice": _dice(count, size, sign, bonus),
+            "damage_type": damage_type.lower(), "trigger": "target_grappled_by_self", "mode": "replace_weapon",
+        })
     spans = [base_span, *[item.span() for item in extras]]
     for extra in _EXTRA_FIXED.finditer(block):
         if any(start <= extra.start() < end for start, end in spans): continue
