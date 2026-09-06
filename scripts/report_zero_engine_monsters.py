@@ -28,6 +28,12 @@ _COMPLEX_ACTION = re.compile(
     r"\b(Saving Throw|Failure:|Success:|Temporary Hit Points?|regains?\s+\d+|Concentration)\b",
     re.I,
 )
+_ABILITY_SCORE_CHANGE = re.compile(
+    r"\b(?:Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma)\s+score\s+"
+    r"(?:decreases?|increases?|is reduced|is increased)\b",
+    re.I,
+)
+_ATTACHMENT_STATE = re.compile(r"\battaches?\s+to\b|\bwhile attached\b|\bdetach(?:es|ed|ing)?\b", re.I)
 _DAMAGE_TYPES = r"Acid|Bludgeoning|Cold|Fire|Force|Lightning|Necrotic|Piercing|Poison|Psychic|Radiant|Slashing|Thunder"
 _SUPPORTED_BLOODIED_REPLACEMENT = re.compile(
     rf"\bdamage,?\s+or\s+\d+\s*\(\s*\d+\s*d\s*\d+(?:\s*[+-]\s*\d+)?\s*\)\s+"
@@ -121,6 +127,10 @@ def _source_blockers(row: dict[str, object], monster_names: set[str]) -> list[st
         blockers.append("save-or-complex-action")
     if _CONDITION_OR_CONTROL.search(actions):
         blockers.append("condition-or-control")
+    if _ABILITY_SCORE_CHANGE.search(actions):
+        blockers.append("ability-score-change")
+    if _ATTACHMENT_STATE.search(actions):
+        blockers.append("attachment-state")
     if _unmodeled_action_rider(actions):
         blockers.append("unsupported-action-rider")
     if _has_neighbor_bleed(row, monster_names):
