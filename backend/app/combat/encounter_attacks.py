@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.ally_context import active_allies
+from app.combat.ally_roll_auras import ally_roll_aura_advantage_sources
 from app.combat.attacks import resolve_attack
 from app.combat.champion import apply_critical_closing_move
 from app.combat.damage import BonusDamageSpec
@@ -31,11 +32,11 @@ def resolve_encounter_attack(
     close_enemy_active: bool | None = None,
     allow_reckless: bool = False,
 ) -> BattleEvent:
-    reckless_started = allow_reckless and activate_reckless_attack(
-        attacker.state, attack, attacker.combatant_id, round_number,
-    )
+    reckless_started = allow_reckless and activate_reckless_attack(attacker.state, attack, attacker.combatant_id, round_number)
     if reckless_started:
         mark_reckless_use_while_raging(attacker.state, turn_key)
+    if setup is not None:
+        advantage_sources += ally_roll_aura_advantage_sources(attacker, setup, roll_kind="attack")
     redirect = select_redirect_ally(target, setup) if setup is not None else None
     close_enemy = close_enemy_active
     if close_enemy is None:
