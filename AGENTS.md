@@ -3,13 +3,14 @@
 Before changing combat code, read these in order:
 
 1. `docs/IRON_PIT_UNIVERSAL_COMBAT_DOCTRINE.md`
-2. `docs/IRON_PIT_DAMAGE_SCOPE.md`
-3. `docs/ARENA_POLICY.md`
-4. `docs/IRON_PIT_MASTER_PLAN.md`
-5. `docs/CANONICAL_COMBAT_BUILD_POLICY.md`
-6. the structured certification manifests
+2. `docs/IRON_PIT_CURATED_SPELL_POLICY.md`
+3. `docs/IRON_PIT_DAMAGE_SCOPE.md`
+4. `docs/ARENA_POLICY.md`
+5. `docs/IRON_PIT_MASTER_PLAN.md`
+6. `docs/CANONICAL_COMBAT_BUILD_POLICY.md`
+7. the structured certification manifests
 
-`docs/IRON_PIT_UNIVERSAL_COMBAT_DOCTRINE.md` is the highest-authority combat architecture and scope document. If an older master-plan checkpoint, implementation shortcut, test assumption, historical certification rule, or other document conflicts with that doctrine, the doctrine controls until the older material is reconciled. Only a later explicit user decision may change it.
+`docs/IRON_PIT_UNIVERSAL_COMBAT_DOCTRINE.md` is the highest-authority combat architecture and scope document. `docs/IRON_PIT_CURATED_SPELL_POLICY.md` is the authoritative spell-selection and spell-AI policy beneath that doctrine. If an older master-plan checkpoint, implementation shortcut, test assumption, historical certification rule, or other document conflicts with those policies, the newer explicit doctrine/policy controls until the older material is reconciled. Only a later explicit user decision may change them.
 
 The repository, source records, permanent tests, and generated certification state are authoritative for current implementation state. Historical counts and chat checkpoints are not substitutes for exact-head repository evidence.
 
@@ -108,7 +109,7 @@ Combat creates disposable runtime state. Current HP, Temporary HP, conditions, b
 
 ## Canonical hero architecture
 
-`docs/CANONICAL_COMBAT_BUILD_POLICY.md` is authoritative for canonical hero construction and mass production.
+`docs/CANONICAL_COMBAT_BUILD_POLICY.md` is authoritative for canonical hero construction and mass production. `docs/IRON_PIT_CURATED_SPELL_POLICY.md` controls curated spell selection and spell AI for caster progressions.
 
 The product contains 12 persistent named canonical heroes, one per core class, across levels 1 through 20: exactly 240 hero level snapshots. The user selects `Hero -> Level -> Fight`; identity persists across progression.
 
@@ -126,8 +127,8 @@ The product contains 12 persistent named canonical heroes, one per core class, a
 - Progression must update every applicable in-scope combat datum: level, proficiency, HP, ASIs/feats, subclass, AC, attacks, attack/damage bonuses, relevant saves, equipment, weapon masteries, resources, action economy, Extra Attack, spellcasting/slots, healing/defenses, class/subclass effects, and scaling.
 - Only explicitly certified levels may be selectable or runnable.
 - Karnok Stoneward is the Fighter progression. Rokhan Stonefury is the Barbarian progression. Remaining identities are defined by `backend/app/content/hero_progressions.py`.
-- Caster classes reuse one deterministic canonical class spell package. A new level extends the same package rather than inventing a new spellbook.
-- Every caster level must receive its full class-appropriate prepared/known damaging package target and spell-slot allotment before promotion.
+- Caster classes reuse one deterministic canonical class/role spell package. A new level extends the same package rather than inventing a new spellbook.
+- Every caster level must receive its full class-appropriate curated combat spell package target and spell-slot allotment before promotion.
 - Spell upcasting remains deliberately deferred until explicitly reactivated and separately certified.
 - Cantrip scaling by character level remains required.
 - Melee loadouts follow one repeatable policy: DEX-primary favors dual wielding; STR-primary with shield training favors one-hander + shield; STR power builds favor a two-hander.
