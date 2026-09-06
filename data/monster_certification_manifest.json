@@ -5939,8 +5939,8 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "trait",
-        "uncertified-trait:adhesive"
+        "monster-combat-mechanics-not-certified",
+        "trait"
       ]
     },
     {
