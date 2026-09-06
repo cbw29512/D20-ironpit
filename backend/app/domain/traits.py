@@ -15,5 +15,6 @@ class CombatTrait(StrEnum):
     REGENERATION = "regeneration"
     END_TURN_DAMAGE_AURA = "end-turn-damage-aura"
     DEATH_TRIGGER_SAVE = "death-trigger-save"
+    ALLY_ROLL_AURA = "ally-roll-aura"
     LIFE_DOMAIN = "life-domain"
     MAGIC_RESISTANCE = "magic-resistance"
