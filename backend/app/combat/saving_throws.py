@@ -7,6 +7,7 @@ from app.combat.dice import DiceProvider
 from app.combat.grapple import apply_grapple
 from app.combat.resource_pool import resource_uses, spend_resource
 from app.combat.saving_throw_rolls import resolve_saving_throw
+from app.combat.timed_conditions import apply_timed_condition
 from app.combat.zero_hp import apply_damage
 from app.domain.models import BattleEvent, DamageRollComponent, DamageType, DiceRoll, EncounterCombatant, SavingThrowAction
 from app.domain.runtime import CombatantState
@@ -37,6 +38,27 @@ def _damage_components(action: SavingThrowAction, dice: DiceProvider, succeeded:
     if succeeded and action.success_damage == "half": total //= 2
     return [DamageRollComponent(source=action.name, notation=f"{action.damage_dice_count}d{action.damage_dice_size}+{action.damage_bonus}", rolls=rolls,
                                 modifier=action.damage_bonus, damage_type=DamageType(action.damage_type), total=max(0, total))]
+
+
+def _failed_save_conditions(
+    action: SavingThrowAction, actor: EncounterCombatant, target: EncounterCombatant,
+    round_number: int, affected_states: list[CombatantState] | None,
+) -> list[str]:
+    applied: list[str] = []
+    for condition in action.failure_conditions:
+        effect = apply_timed_condition(
+            target.state, condition.condition_id, actor.combatant_id,
+            source_effect_id=action.id, applied_round=round_number,
+            expires_at_start_of_source_turn=condition.expiry_timing == "source_turn_start",
+            expiry_timing=condition.expiry_timing,
+            repeat_save_ability=condition.repeat_save_ability,
+            repeat_save_dc=condition.repeat_save_dc,
+            repeat_save_timing=condition.repeat_save_timing,
+            allowed_removal_action_ids=condition.allowed_removal_action_ids,
+            affected_states=affected_states, default_poison_recovery=False,
+        )
+        if effect is not None: applied.append(effect)
+    return applied
 
 
 def resolve_save_action(
@@ -71,13 +93,17 @@ def resolve_save_action(
         damage_outcome = apply_damage(target.state, applied_total, damage_types=applied_types, dice=dice, affected_states=affected_states)
         end_rage_if_incapacitated(target.state)
     applied_conditions: list[str] = []
-    if not succeeded and target.state.is_alive and not target.state.is_dead and action.grapple_escape_dc is not None:
-        applied_conditions = apply_grapple(target.state, actor.combatant_id, action.grapple_escape_dc, action.range_ft, restrains=action.restrains_while_grappled)
+    if not succeeded and target.state.is_alive and not target.state.is_dead:
+        if action.grapple_escape_dc is not None:
+            applied_conditions.extend(apply_grapple(target.state, actor.combatant_id, action.grapple_escape_dc, action.range_ft, restrains=action.restrains_while_grappled))
+        applied_conditions.extend(_failed_save_conditions(action, actor, target, round_number, affected_states))
     outcome = "SUCCEEDS" if succeeded else "FAILS"
     description = f"{target.state.template.name} {outcome} a DC {action.dc} {action.save_ability.title()} save against {actor.state.template.name}'s {action.name}."
     if damage_outcome == "undead_fortitude": description += f" {target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP."
     if "grappled" in applied_conditions: description += f" {target.state.template.name} is Grappled."
     if "restrained" in applied_conditions: description += f" {target.state.template.name} is Restrained while Grappled."
+    named_conditions = [item for item in applied_conditions if item not in {"grappled", "restrained"}]
+    if named_conditions: description += f" {target.state.template.name} gains {', '.join(named_conditions)}."
     return BattleEvent(
         sequence=sequence, round_number=round_number, event_type="saving_throw", actor_id=actor.combatant_id, actor_name=actor.state.template.name,
         target_id=target.combatant_id, target_name=target.state.template.name, saving_throw_roll=save_roll,
