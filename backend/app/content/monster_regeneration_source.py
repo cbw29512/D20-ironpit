@@ -4,7 +4,7 @@ import re
 
 from app.content.monster_combat_scope import feature_blocks
 from app.content.monster_trait_source_audit import parse_trait_names
-from app.domain.combatants import RegenerationDefinition
+from app.domain.passive_effects import RegenerationDefinition
 from app.domain.weapons import DamageType
 
 _AMOUNT = re.compile(r"\bregains\s+(\d+)\s+Hit Points?\s+at the start of each of (?:its|their) turns?", re.I)
