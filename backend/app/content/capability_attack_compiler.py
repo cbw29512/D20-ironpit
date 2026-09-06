@@ -16,6 +16,8 @@ def _compile_control(effect: GrappleEffectDefinition | ConditionEffectDefinition
         return HitControlEffect(max_target_size=effect.max_target_size, grapple_escape_dc=effect.escape_dc, restrains_while_grappled=effect.restrains)
     return HitControlEffect(
         max_target_size=effect.max_target_size, condition_id=effect.condition,
+        initial_save_ability=effect.initial_save_ability, initial_save_dc=effect.initial_save_dc,
+        excluded_creature_types=effect.excluded_creature_types, excluded_species_ids=effect.excluded_species_ids,
         expires_at_start_of_source_turn=effect.expires_at_start_of_source_turn, expiry_timing=effect.expiry_timing,
         repeat_save_ability=effect.repeat_save_ability, repeat_save_dc=effect.repeat_save_dc,
         repeat_save_timing=effect.repeat_save_timing, allowed_removal_action_ids=effect.allowed_removal_action_ids,
