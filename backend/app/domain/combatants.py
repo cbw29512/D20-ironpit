@@ -57,6 +57,20 @@ class RegenerationDefinition(BaseModel):
     delays_death_at_zero: bool = False
 
 
+class TurnDamageAuraDefinition(BaseModel):
+    """Automatic source-turn damage centered on the creature."""
+
+    id: str
+    name: str
+    radius_ft: int = Field(gt=0)
+    dice_count: int = Field(gt=0, le=40)
+    dice_size: int = Field(ge=2, le=100)
+    damage_bonus: int = 0
+    damage_type: DamageType
+    target_mode: Literal["enemies", "all-creatures"] = "enemies"
+    suppressed_if_incapacitated: bool = False
+
+
 class CombatantTemplate(BaseModel):
     id: str
     name: str
@@ -106,6 +120,7 @@ class CombatantTemplate(BaseModel):
     visual: VisualLoadout
     resources: list[ResourceDefinition] = Field(default_factory=list)
     regeneration: RegenerationDefinition | None = None
+    turn_damage_auras: list[TurnDamageAuraDefinition] = Field(default_factory=list)
     source: str
 
     @model_validator(mode="before")
