@@ -1,0 +1,27 @@
+name: Monster Mechanic Matrix
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  matrix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Iron Pit rules engine
+        working-directory: backend
+        run: pip install -e '.[dev]'
+      - name: Build normalized 330-monster mechanic matrix
+        run: python scripts/report_monster_mechanic_matrix.py --csv data/monster_mechanic_matrix.csv
+      - name: Upload Excel-friendly matrix
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-mechanic-matrix-${{ github.sha }}
+          path: data/monster_mechanic_matrix.csv
+          retention-days: 7
