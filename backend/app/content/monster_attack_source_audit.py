@@ -4,6 +4,7 @@ import re
 from typing import Any
 
 from app.content.monster_attack_modifier_source_audit import hit_modifier_issues
+from app.content.monster_hit_control_source_audit import hit_control_issues
 from app.domain.models import WeaponAttack
 
 
@@ -54,31 +55,6 @@ def _max_size_rider_present(actions: str, size: Any, condition: str) -> bool:
     )
 
 
-def _condition_timing_present(actions: str, control: Any) -> bool:
-    condition = control.condition_id
-    if condition is None:
-        return True
-    if not re.search(rf"\b{re.escape(condition)}\s+condition\b", actions, re.IGNORECASE):
-        return False
-    timing = control.expiry_timing
-    if timing is None and control.expires_at_start_of_source_turn:
-        timing = "source_turn_start"
-    target = {
-        "target_turn_start": r"until\s+the\s+start\s+of\s+its\s+next\s+turn",
-        "target_turn_end": r"until\s+the\s+end\s+of\s+its\s+next\s+turn",
-    }.get(timing)
-    if target:
-        return bool(re.search(target, actions, re.IGNORECASE))
-    source = {
-        "source_turn_start": "start",
-        "source_turn_end": "end",
-    }.get(timing)
-    if source:
-        pattern = rf"until\s+the\s+{source}\s+of\s+the\s+[^.]+?[’']s\s+next\s+turn"
-        return bool(re.search(pattern, actions, re.IGNORECASE))
-    return True
-
-
 def attack_issues(attack: WeaponAttack, actions: str) -> list[str]:
     issues: list[str] = []
     weapon = attack.weapon
@@ -118,16 +94,7 @@ def attack_issues(attack: WeaponAttack, actions: str) -> list[str]:
         untargetable = re.search(r"can(?:not|'t|’t)\s+be\s+targeted", actions, re.IGNORECASE)
         if not untargetable or weapon.name.lower() not in actions:
             issues.append(f"grappled-target-restriction-mismatch:{attack.id}")
-    control = attack.control_effect
-    if control and control.grapple_escape_dc is not None:
-        if "grappled" not in actions or f"escape dc {control.grapple_escape_dc}" not in actions:
-            issues.append(f"grapple-rider-mismatch:{attack.id}")
-        if control.max_target_size is not None and not _max_size_rider_present(actions, control.max_target_size, "grappled"):
-            issues.append(f"grapple-size-mismatch:{attack.id}")
-        if control.restrains_while_grappled and "restrained" not in actions:
-            issues.append(f"restrained-rider-mismatch:{attack.id}")
-    if control and control.condition_id is not None and not _condition_timing_present(actions, control):
-        issues.append(f"condition-rider-mismatch:{attack.id}:{control.condition_id}")
+    issues.extend(hit_control_issues(attack, actions))
     return issues
 
 
