@@ -28,7 +28,7 @@ def resolve_start_turn_regeneration(
             return [BattleEvent(
                 sequence=sequence, round_number=round_number, event_type="feature",
                 actor_id=member.combatant_id, actor_name=member.state.template.name,
-                feature_id="regeneration", animation="death",
+                feature_id="regeneration", is_dead=True, animation="death",
                 description=f"{member.state.template.name}'s Regeneration is suppressed and it dies at 0 HP.",
             )], sequence + 1
         return [BattleEvent(
@@ -37,14 +37,15 @@ def resolve_start_turn_regeneration(
             feature_id="regeneration", animation="condition",
             description=f"{member.state.template.name}'s Regeneration is suppressed this turn.",
         )], sequence + 1
+    hp_before = member.state.current_hp
     healed = restore_hit_points(member.state, profile.amount)
     if healed <= 0:
         return [], sequence
     return [BattleEvent(
         sequence=sequence, round_number=round_number, event_type="healing",
         actor_id=member.combatant_id, actor_name=member.state.template.name,
-        feature_id="regeneration", healing=healed, animation="healing",
-        description=f"{member.state.template.name} regenerates {healed} HP.",
+        feature_id="regeneration", hp_before=hp_before, hp_after=member.state.current_hp,
+        animation="healing", description=f"{member.state.template.name} regenerates {healed} HP.",
     )], sequence + 1
 
 
