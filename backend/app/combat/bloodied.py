@@ -17,3 +17,16 @@ def bloodied_fury_advantage(state: CombatantState, attack: WeaponAttack) -> int:
     if attack.weapon.attack_kind is not WeaponAttackKind.MELEE:
         return 0
     return int(is_bloodied(state))
+
+
+def bloodied_attack_advantage(state: CombatantState) -> int:
+    """Return one Advantage source for generic all-attack Bloodied features."""
+    return int(
+        CombatTrait.BLOODIED_ATTACK_SAVE_ADVANTAGE in state.template.combat_traits
+        and is_bloodied(state)
+    )
+
+
+def bloodied_save_advantage(state: CombatantState) -> int:
+    """Return one Advantage source for generic all-save Bloodied features."""
+    return bloodied_attack_advantage(state)
