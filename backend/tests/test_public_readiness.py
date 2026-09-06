@@ -60,8 +60,8 @@ def test_legacy_uncertified_hero_cannot_bypass_catalog_through_api_id() -> None:
 
 
 def test_uncertified_monster_id_is_rejected_before_engine_setup() -> None:
-    with pytest.raises(ValueError, match="srd-specter"):
-        assert_public_selection_runnable(_selection("karnok-stoneward-l1", "srd-specter"))
+    with pytest.raises(ValueError, match="srd-mimic"):
+        assert_public_selection_runnable(_selection("karnok-stoneward-l1", "srd-mimic"))
 
 
 def test_public_setup_endpoint_returns_400_for_uncertified_hero() -> None:
