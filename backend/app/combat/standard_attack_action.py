@@ -4,12 +4,19 @@ import logging
 
 from app.combat.attack_resources import spend_attack_resource
 from app.combat.cleave import resolve_cleave_extra_attack
+from app.combat.death_triggers import resolve_pending_death_triggers
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.light_attack_resolution import resolve_light_extra_attack
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, WeaponAttack
 
 logger = logging.getLogger(__name__)
+
+
+def _flush_death_triggers(events, sequence, round_number, attacker, setup, dice):
+    triggered, sequence = resolve_pending_death_triggers(sequence, round_number, setup, dice)
+    events.extend(triggered)
+    return events, sequence, attacker.state.is_dead or attacker.state.is_unconscious
 
 
 def resolve_standard_attack_action(
@@ -27,41 +34,39 @@ def resolve_standard_attack_action(
     feature_id: str | None = None,
     allow_reckless: bool = True,
 ) -> tuple[list[BattleEvent], int]:
-    """Resolve one Attack action plus optional mastery/Light follow-up."""
+    """Resolve one Attack action plus optional mastery/Light extra attack."""
     try:
         spend_attack_resource(attacker.state, attack)
         event = resolve_encounter_attack(
-            sequence,
-            round_number,
-            attacker,
-            target,
-            attack,
-            distance_ft,
-            dice,
-            setup,
-            advantage_sources=advantage_sources,
-            feature_id=feature_id,
-            turn_key=turn_key,
-            allow_reckless=allow_reckless,
+            sequence, round_number, attacker, target, attack, distance_ft, dice, setup,
+            advantage_sources=advantage_sources, feature_id=feature_id,
+            turn_key=turn_key, allow_reckless=allow_reckless,
         )
         events = [event]
         sequence += 1
+        events, sequence, stopped = _flush_death_triggers(
+            events, sequence, round_number, attacker, setup, dice,
+        )
+        if stopped:
+            return events, sequence
+
         cleave, sequence = resolve_cleave_extra_attack(
             sequence, round_number, attacker, event, attack, setup, dice, turn_key,
         )
         events.extend(cleave)
-        if attacker.state.template.kind != "character" or not attack.weapon.light:
+        events, sequence, stopped = _flush_death_triggers(
+            events, sequence, round_number, attacker, setup, dice,
+        )
+        if stopped or attacker.state.template.kind != "character" or not attack.weapon.light:
             return events, sequence
+
         more, sequence = resolve_light_extra_attack(
-            sequence,
-            round_number,
-            attacker,
-            setup,
-            dice,
-            attack,
-            turn_key,
+            sequence, round_number, attacker, setup, dice, attack, turn_key,
         )
         events.extend(more)
+        events, sequence, _ = _flush_death_triggers(
+            events, sequence, round_number, attacker, setup, dice,
+        )
         return events, sequence
     except ValueError:
         raise
