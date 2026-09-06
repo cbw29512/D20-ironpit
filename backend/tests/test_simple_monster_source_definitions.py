@@ -1,13 +1,15 @@
+from app.combat.charge_profiles import charge_profile_for_attack_id
 from app.content.monster_catalog import build_monster_catalog
 from app.content.simple_monster_source_attacks import parse_simple_attacks
 from app.content.simple_monster_source_definitions import build_simple_source_definitions
 from app.domain.catalog import CoverageStatus
+from app.domain.traits import CombatTrait
 
 
 _EXPECTED_SIMPLE_SOURCE = {
     "Azer Sentinel", "Berserker", "Blink Dog", "Bone Devil", "Bugbear Stalker", "Bugbear Warrior", "Ettin", "Fire Giant", "Ghoul", "Hezrou",
     "Hill Giant", "Hobgoblin Captain", "Lion", "Magmin", "Merrow", "Nightmare", "Pirate", "Sahuagin Warrior", "Satyr",
-    "Specter", "Spy", "Tough Boss", "Troll Limb", "Werebear", "Wererat", "Weretiger", "Werewolf", "Wraith", "Xorn",
+    "Specter", "Spy", "Tough Boss", "Troll Limb", "Werebear", "Wereboar", "Wererat", "Weretiger", "Werewolf", "Wraith", "Xorn",
 }
 _EXPECTED_READY_SOURCE = _EXPECTED_SIMPLE_SOURCE - {"Specter", "Wraith"}
 
@@ -54,12 +56,23 @@ def test_simple_source_family_compiles_without_bespoke_monster_builders() -> Non
 
 def test_lycanthropes_enter_in_battle_ready_hybrid_form_without_curse_runtime() -> None:
     definitions = build_simple_source_definitions()
-    expected_sizes = {"Werebear": "large", "Wererat": "medium", "Weretiger": "large", "Werewolf": "large"}
+    expected_sizes = {"Werebear": "large", "Wereboar": "medium", "Wererat": "medium", "Weretiger": "large", "Werewolf": "large"}
     for name, size in expected_sizes.items():
         definition = definitions[f"srd-{name.lower()}"]
         assert definition.size.value == size
         assert definition.save_actions == []
         assert definition.attack_action is not None
+
+
+def test_wereboar_uses_universal_charge_profile() -> None:
+    definition = build_simple_source_definitions()["srd-wereboar"]
+    tusk = next(attack for attack in definition.attacks if attack.name.startswith("Tusk"))
+    profile = charge_profile_for_attack_id(tusk.id)
+    assert CombatTrait.CHARGE.value in definition.combat_traits
+    assert profile is not None and profile.minimum_move_ft == 20
+    assert profile.max_target_size.value == "medium" and profile.prone_max_target_size.value == "medium"
+    assert profile.bonus_damage is not None and (profile.bonus_damage.dice_count, profile.bonus_damage.dice_size) == (2, 6)
+    assert profile.bonus_damage.damage_type.value == "piercing"
 
 
 def test_simple_source_parser_compiles_generic_grapple_and_prone_riders() -> None:
