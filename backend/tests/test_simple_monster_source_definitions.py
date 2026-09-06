@@ -5,9 +5,9 @@ from app.domain.catalog import CoverageStatus
 
 
 _EXPECTED_SIMPLE_SOURCE = {
-    "Azer Sentinel", "Berserker", "Blink Dog", "Bugbear Warrior", "Ettin", "Fire Giant", "Hezrou",
-    "Hill Giant", "Hobgoblin Captain", "Magmin", "Merrow", "Nightmare", "Sahuagin Warrior", "Satyr",
-    "Spy", "Tough Boss", "Troll Limb", "Xorn",
+    "Azer Sentinel", "Berserker", "Blink Dog", "Bone Devil", "Bugbear Warrior", "Ettin", "Fire Giant", "Hezrou",
+    "Hill Giant", "Hobgoblin Captain", "Magmin", "Merrow", "Mimic", "Nightmare", "Roper", "Sahuagin Warrior", "Satyr",
+    "Specter", "Spy", "Tough Boss", "Troll Limb", "Wraith", "Xorn",
 }
 
 
@@ -40,6 +40,11 @@ def test_simple_source_family_compiles_without_bespoke_monster_builders() -> Non
     assert xorn.attack_action is not None
     xorn_names = {attack.id: attack.name for attack in xorn.attacks}
     assert [xorn_names[slot.attack_ids[0]] for slot in xorn.attack_action.slots] == ["Bite", "Claw", "Claw", "Claw"]
+
+    for name in ("Specter", "Wraith"):
+        drainer = definitions[f"srd-{name.lower()}"]
+        life_drain = next(attack for attack in drainer.attacks if attack.name == "Life Drain")
+        assert any(effect.kind == "max-hp-reduction" for effect in life_drain.effects)
 
 
 def test_simple_source_parser_compiles_generic_grapple_and_prone_riders() -> None:
