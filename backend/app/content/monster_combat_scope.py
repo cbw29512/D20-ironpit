@@ -34,7 +34,7 @@ _COMBAT_MATH = (
     re.compile(r"\bsaving throw(?:s)?\b|\bsave DC\b|\bD20 Test(?:s)?\b", re.I),
     re.compile(r"\binitiative\b|\bcritical hit(?:s)?\b|\bConcentration\b", re.I),
     re.compile(
-        r"\b(?:blinded|charmed|frightened|incapacitated|paralyzed|petrified|poisoned|prone|restrained|stunned|unconscious)\b",
+        r"\b(?:blinded|charmed|frightened|grappled|incapacitated|paralyzed|petrified|poisoned|prone|restrained|stunned|unconscious)\b",
         re.I,
     ),
     re.compile(r"\b(?:heavily obscured|invisible|invisibility)\b", re.I),
