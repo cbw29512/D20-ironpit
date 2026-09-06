@@ -14,7 +14,7 @@ const load = (name) => vm.runInThisContext(
 for (const file of [
   "browser-heroes.js", "browser-action-economy.js", "browser-grapple.js", "browser-state.js",
   "browser-rolls.js", "browser-zero-hp.js", "browser-attack.js", "browser-saves.js", "browser-charge.js",
-  "browser-formation.js", "browser-multiattack.js", "browser-action-surge.js", "browser-support.js", "browser-tactical-shift.js",
+  "browser-formation.js", "browser-multiattack.js", "browser-action-surge.js", "browser-healing.js", "browser-support.js", "browser-tactical-shift.js",
 ]) load(file);
 
 const fighter = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l5"];
