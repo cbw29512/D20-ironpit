@@ -4145,7 +4145,7 @@
       "owners": [
         "fighter/champion"
       ],
-      "status": "planned"
+      "status": "supported"
     },
     {
       "demand_count": 1,
@@ -4952,7 +4952,7 @@
   "schema_version": 1,
   "summary": {
     "arena_out_of_scope": 28,
-    "planned": 376,
-    "supported": 40
+    "planned": 375,
+    "supported": 41
   }
 }

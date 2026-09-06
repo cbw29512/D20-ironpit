@@ -1,4 +1,4 @@
-UNIVERSAL_ENGINE_BASELINE	monster_ready=143	monster_actionable_blocked=177	monster_deferred=10	monster_families=11	planned_hero_mechanics=376
+UNIVERSAL_ENGINE_BASELINE	monster_ready=143	monster_actionable_blocked=177	monster_deferred=10	monster_families=11	planned_hero_mechanics=375
 UNIVERSAL_ENGINE_MONSTER_FAMILIES
 UNIVERSAL_MONSTER_FAMILY	condition-or-control	immediate_unlocks=6	affected=93	engine_status=unmapped
 UNIVERSAL_MONSTER_FAMILY	trait	immediate_unlocks=5	affected=80	engine_status=unmapped
@@ -331,7 +331,6 @@ UNIVERSAL_HERO_MECHANIC	stormborn	owners=1	classes=1	status=planned	kinds=subcla
 UNIVERSAL_HERO_MECHANIC	stride-of-the-elements	owners=1	classes=1	status=planned	kinds=subclass-feature
 UNIVERSAL_HERO_MECHANIC	stroke-of-luck	owners=1	classes=1	status=planned	kinds=base-feature
 UNIVERSAL_HERO_MECHANIC	stunning-strike	owners=1	classes=1	status=planned	kinds=base-feature
-UNIVERSAL_HERO_MECHANIC	superior-critical	owners=1	classes=1	status=planned	kinds=subclass-feature
 UNIVERSAL_HERO_MECHANIC	superior-defense	owners=1	classes=1	status=planned	kinds=base-feature
 UNIVERSAL_HERO_MECHANIC	superior-hunters-defense	owners=1	classes=1	status=planned	kinds=subclass-feature
 UNIVERSAL_HERO_MECHANIC	superior-hunters-prey	owners=1	classes=1	status=planned	kinds=subclass-feature
