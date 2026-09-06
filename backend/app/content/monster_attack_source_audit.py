@@ -55,6 +55,28 @@ def _max_size_rider_present(actions: str, size: Any, condition: str) -> bool:
     )
 
 
+def _save_condition_timing_present(effect: Any, actions: str) -> bool:
+    timing = effect.expiry_timing
+    if timing is None: return True
+    owner, _, edge = timing.partition("_turn_")
+    if edge not in {"start", "end"}: return False
+    if owner == "source":
+        pattern = rf"until\s+the\s+{edge}\s+of\s+(?!its\b)(?:the\s+)?[^.]+?[’']s\s+next\s+turn"
+    elif owner == "target":
+        pattern = rf"until\s+the\s+{edge}\s+of\s+(?:its|(?:the\s+)?target[’']s)\s+next\s+turn"
+    else:
+        return False
+    return bool(re.search(pattern, actions, re.IGNORECASE))
+
+
+def _repeat_save_timing_present(effect: Any, actions: str) -> bool:
+    timing = effect.repeat_save_timing
+    if timing is None: return True
+    owner, _, edge = timing.partition("_turn_")
+    if owner != "target" or edge not in {"start", "end"}: return False
+    return bool(re.search(rf"repeats?\s+the\s+save\s+at\s+the\s+{edge}\s+of\s+each\s+of\s+its\s+turns", actions, re.IGNORECASE))
+
+
 def attack_issues(attack: WeaponAttack, actions: str) -> list[str]:
     issues: list[str] = []
     weapon = attack.weapon
@@ -110,4 +132,12 @@ def save_action_issues(action: Any, actions: str) -> list[str]:
     if action.grapple_escape_dc is not None:
         if "grappled" not in actions or f"escape dc {action.grapple_escape_dc}" not in actions:
             issues.append(f"save-grapple-rider-mismatch:{action.id}")
+    for effect in action.failure_conditions:
+        condition = effect.condition_id.lower()
+        if not re.search(rf"\b{re.escape(condition)}\s+condition\b", actions, re.IGNORECASE):
+            issues.append(f"save-condition-missing:{action.id}:{condition}")
+        if not _save_condition_timing_present(effect, actions):
+            issues.append(f"save-condition-timing-mismatch:{action.id}:{condition}")
+        if not _repeat_save_timing_present(effect, actions):
+            issues.append(f"save-repeat-timing-mismatch:{action.id}:{condition}")
     return issues
