@@ -77,21 +77,21 @@ def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) ->
         issues.extend(limited_use_issues(template, row))
         issues.extend(legendary_action_issues(template, row))
         issues.extend(spellcasting_issues(template, row))
-        actions = normalized(row.get("actions", ""))
+        actions = normalized(row.get("actions", "")); bonus_actions = normalized(row.get("bonusActions", ""))
         runtime_attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
+        action_saves = [action for action in template.saving_throw_actions if action.action_cost == "action"]
+        bonus_saves = [action for action in template.saving_throw_actions if action.action_cost == "bonus_action"]
         issues.extend(survival_action_issues(row.get("actions", ""), runtime_attacks))
-        if _source_attack_mode_count(actions) != len(runtime_attacks):
-            issues.append("source-attack-count-mismatch")
-        if len(_SAVING_THROW.findall(actions)) != len(template.saving_throw_actions):
-            issues.append("source-save-action-count-mismatch")
-        for attack in runtime_attacks:
-            issues.extend(attack_issues(attack, actions))
+        if _source_attack_mode_count(actions) != len(runtime_attacks): issues.append("source-attack-count-mismatch")
+        if len(_SAVING_THROW.findall(actions)) != len(action_saves): issues.append("source-save-action-count-mismatch")
+        if len(_SAVING_THROW.findall(bonus_actions)) != len(bonus_saves): issues.append("source-bonus-save-count-mismatch")
+        for attack in runtime_attacks: issues.extend(attack_issues(attack, actions))
         issues.extend(charge_replacement_issues(template, actions))
-        for action in template.saving_throw_actions:
-            issues.extend(save_action_issues(action, actions))
-            issues.extend(save_math_issues(action, actions))
-        if template.attack_action is not None and "multiattack" not in actions:
-            issues.append("multiattack-source-missing")
+        for action in action_saves:
+            issues.extend(save_action_issues(action, actions)); issues.extend(save_math_issues(action, actions))
+        for action in bonus_saves:
+            issues.extend(save_action_issues(action, bonus_actions)); issues.extend(save_math_issues(action, bonus_actions))
+        if template.attack_action is not None and "multiattack" not in actions: issues.append("multiattack-source-missing")
         return issues
     except (KeyError, ValueError):
         raise
