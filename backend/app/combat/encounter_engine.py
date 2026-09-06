@@ -19,6 +19,7 @@ from app.combat.source_bound_effects import cleanup_disabled_source_effects
 from app.combat.start_turn_events import resolve_start_turn_recharges, resolve_start_turn_regeneration
 from app.combat.state import refresh_start_of_turn
 from app.combat.timed_conditions import expire_start_of_turn_conditions
+from app.combat.turn_damage_auras import resolve_end_turn_damage_auras
 from app.domain.encounters import EncounterBattleResult, EncounterCombatant, EncounterSelection
 from app.domain.models import BattleEvent
 
@@ -46,9 +47,11 @@ def _resolve_zero_hp_turn(
 
 
 def _end_turn_lifecycle(sequence, round_number, member, setup, dice):
-    events, sequence = resolve_target_condition_timing(
+    events, sequence = resolve_end_turn_damage_auras(sequence, round_number, member, setup, dice)
+    target_events, sequence = resolve_target_condition_timing(
         sequence, round_number, member, "target_turn_end", dice,
     )
+    events.extend(target_events)
     source_events, sequence = resolve_source_condition_timing(
         sequence, round_number, member, setup, "source_turn_end",
     )
