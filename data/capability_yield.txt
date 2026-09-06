@@ -1,8 +1,8 @@
-CAPABILITY_YIELD_BASELINE	ready=145	blocked=185	actionable_blocked=175	deferred=10	signatures=68
+CAPABILITY_YIELD_BASELINE	ready=146	blocked=184	actionable_blocked=174	deferred=10	signatures=68
 CAPABILITY_DEFERRED_ENVIRONMENT	Giant Seahorse | Giant Shark | Hunter Shark | Killer Whale | Octopus | Piranha | Reef Shark | Seahorse | Swarm of Piranhas
 CAPABILITY_DEFERRED_NONCOMBAT	Shrieker Fungus
 CAPABILITY_SINGLE_FAMILY	condition-or-control	6	Animated Rug of Smothering | Bone Devil | Giant Toad | Merrow | Phase Spider | Roper
-CAPABILITY_SINGLE_FAMILY	save-or-complex-action	5	Horned Devil | Satyr | Werebear | Wererat | Werewolf
+CAPABILITY_SINGLE_FAMILY	save-or-complex-action	4	Horned Devil | Werebear | Wererat | Werewolf
 CAPABILITY_SINGLE_FAMILY	trait	4	Barbed Devil | Fire Elemental | Flesh Golem | Hydra
 CAPABILITY_SINGLE_FAMILY	unclassified-source-audit-gap	4	Bugbear Warrior | Mimic | Shadow | Stirge
 CAPABILITY_SINGLE_FAMILY	spellcasting	3	Druid | Dryad | Imp
@@ -35,8 +35,8 @@ CAPABILITY_SIGNATURE	7	bonus-action+limited-use	Basilisk | Centaur Trooper | Fro
 CAPABILITY_SIGNATURE	7	limited-use+save-or-complex-action	Ankheg | Copper Dragon Wyrmling | Gold Dragon Wyrmling | Magma Mephit | Swarm of Ravens | Young Copper Dragon | Young Gold Dragon
 CAPABILITY_SIGNATURE	6	bonus-action+limited-use+spellcasting	Cultist Fanatic | Drider | Incubus | Priest | Priest Acolyte | Stone Golem
 CAPABILITY_SIGNATURE	6	condition-or-control	Animated Rug of Smothering | Bone Devil | Giant Toad | Merrow | Phase Spider | Roper
-CAPABILITY_SIGNATURE	5	save-or-complex-action	Horned Devil | Satyr | Werebear | Wererat | Werewolf
 CAPABILITY_SIGNATURE	4	condition-or-control+limited-use+save-or-complex-action+spellcasting	Doppelganger | Dust Mephit | Quasit | Storm Giant
+CAPABILITY_SIGNATURE	4	save-or-complex-action	Horned Devil | Werebear | Wererat | Werewolf
 CAPABILITY_SIGNATURE	4	spellcasting+trait	Efreeti | Gray Ooze | Green Hag | Spirit Naga
 CAPABILITY_SIGNATURE	4	trait	Barbed Devil | Fire Elemental | Flesh Golem | Hydra
 CAPABILITY_SIGNATURE	4	unclassified-source-audit-gap	Bugbear Warrior | Mimic | Shadow | Stirge
