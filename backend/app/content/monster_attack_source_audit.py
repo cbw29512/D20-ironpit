@@ -35,6 +35,8 @@ def _conditional_clause_pattern(conditional: Any) -> re.Pattern[str]:
         trigger = r"if\s+the\s+attack\s+roll\s+had\s+advantage"
     elif conditional.trigger == "target_bloodied":
         trigger = r"if\s+the\s+target\s+is\s+bloodied"
+    elif conditional.trigger == "target_grappled_by_self":
+        trigger = r"if\s+the\s+target\s+is\s+grappled\s+by\s+the\s+[a-z][a-z'’ -]*"
     else:
         trigger = r"if\s+the\s+(?!target\b)[a-z][a-z -]*\s+is\s+bloodied"
     return re.compile(
