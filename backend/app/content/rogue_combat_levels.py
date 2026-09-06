@@ -14,7 +14,7 @@ class RogueCombatLevel:
 
 _ROWS = {
     1: (2, 1, ("sneak-attack", "weapon-mastery"), ("expertise", "thieves-cant")),
-    2: (2, 1, ("cunning-action",), ()),
+    2: (2, 1, (), ("cunning-action",)),
     3: (2, 2, ("steady-aim",), ()),
     4: (2, 2, (), ()),
     5: (3, 3, ("cunning-strike", "uncanny-dodge"), ()),
