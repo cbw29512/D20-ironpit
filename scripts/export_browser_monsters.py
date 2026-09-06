@@ -65,6 +65,9 @@ def _add_attack_resource_metadata(row, template) -> None:
             if attack.max_hp_reduction.damage_type is not None:
                 rider["damageType"] = attack.max_hp_reduction.damage_type.value
             item["maxHpReduction"] = rider
+        control = attack.control_effect
+        if control is not None and control.grapple_escape_check_disadvantage:
+            item.setdefault("controlEffect", {})["grappleEscapeCheckDisadvantage"] = True
 
 
 def render() -> str:
