@@ -8927,6 +8927,8 @@
           {
             "kind": "condition",
             "condition": "poisoned",
+            "excluded_creature_types": [],
+            "excluded_species_ids": [],
             "expires_at_start_of_source_turn": true,
             "expiry_timing": "source_turn_start",
             "allowed_removal_action_ids": []
@@ -9044,6 +9046,8 @@
           {
             "kind": "condition",
             "condition": "poisoned",
+            "excluded_creature_types": [],
+            "excluded_species_ids": [],
             "expires_at_start_of_source_turn": false,
             "expiry_timing": "target_turn_end",
             "allowed_removal_action_ids": []
@@ -9202,6 +9206,8 @@
           {
             "kind": "condition",
             "condition": "poisoned",
+            "excluded_creature_types": [],
+            "excluded_species_ids": [],
             "expires_at_start_of_source_turn": true,
             "expiry_timing": "source_turn_start",
             "allowed_removal_action_ids": []
