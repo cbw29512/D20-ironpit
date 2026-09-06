@@ -52,15 +52,25 @@ def base_feature_name(name: str) -> str:
     return _ANNOTATION.sub("", normalized_source_text(name)).strip()
 
 
+def _heading_start(text: str, marker: str) -> int:
+    """Find a reviewed heading at a sentence boundary, not an earlier prose reference."""
+    start = text.find(marker)
+    while start >= 0:
+        if start == 0 or text[start - 2:start] == ". ":
+            return start
+        start = text.find(marker, start + 1)
+    return -1
+
+
 def feature_blocks(source: object, headings: list[str] | tuple[str, ...]) -> dict[str, str]:
-    """Split a reviewed SRD section by already-parsed headings without guessing new headings."""
+    """Split a reviewed SRD section by actual heading occurrences without guessing new headings."""
     text = normalized_source_text(source)
     if not text:
         return {}
     located: list[tuple[int, int, str]] = []
     for heading in headings:
         marker = f"{normalized_source_text(heading)}."
-        start = text.find(marker)
+        start = _heading_start(text, marker)
         if start < 0:
             raise ValueError(f"SRD feature heading {heading!r} was not found in source section.")
         located.append((start, start + len(marker), heading))
