@@ -32,6 +32,9 @@ def _mark_dead(state: CombatantState) -> ZeroHpOutcome:
     state.is_unconscious = False
     state.is_stable = False
     state.active_effect_ids = [effect for effect in state.active_effect_ids if effect != DODGE_EFFECT_ID]
+    for action in state.template.death_trigger_save_actions:
+        if action.id not in state.pending_death_trigger_ids:
+            state.pending_death_trigger_ids.append(action.id)
     return "dead"
 
 
