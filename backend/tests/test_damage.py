@@ -1,5 +1,6 @@
 from app.combat.damage import resolve_weapon_damage
 from app.combat.dice import FixedDiceProvider
+from app.combat.grapple import apply_grapple
 from app.combat.state import build_combatant_state
 from app.content.demo import build_demo_fighter, build_goblin_warrior
 from app.domain.models import ConditionalDamage, DamageType, RollMode
@@ -151,3 +152,35 @@ def test_bloodied_replacement_critical_doubles_replacement_dice() -> None:
 
     assert total.total == 15
     assert components[0].notation == "2d8+2"
+
+
+def test_target_grappled_by_same_source_replaces_weapon_damage_profile() -> None:
+    goblin = build_combatant_state(build_goblin_warrior())
+    target = build_combatant_state(build_demo_fighter())
+    apply_grapple(target, "attacker-1", 13, 5)
+    attack = goblin.template.weapon_attack.model_copy(deep=True)
+    attack.conditional_damage = [_replacement("target_grappled_by_self")]
+
+    total, components = resolve_weapon_damage(
+        goblin, attack, FixedDiceProvider([7]), False, RollMode.NORMAL,
+        target=target, attacker_id="attacker-1",
+    )
+
+    assert total.total == 9
+    assert components[0].notation == "1d8+2"
+
+
+def test_other_creatures_grapple_does_not_trigger_self_replacement_damage() -> None:
+    goblin = build_combatant_state(build_goblin_warrior())
+    target = build_combatant_state(build_demo_fighter())
+    apply_grapple(target, "other-1", 13, 5)
+    attack = goblin.template.weapon_attack.model_copy(deep=True)
+    attack.conditional_damage = [_replacement("target_grappled_by_self")]
+
+    total, components = resolve_weapon_damage(
+        goblin, attack, FixedDiceProvider([4]), False, RollMode.ADVANTAGE,
+        target=target, attacker_id="attacker-1",
+    )
+
+    assert total.total == 6
+    assert components[0].notation == "1d6+2"
