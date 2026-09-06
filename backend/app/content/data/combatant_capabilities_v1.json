@@ -8085,7 +8085,8 @@
             "kind": "grapple",
             "escape_dc": 12,
             "max_target_size": "medium",
-            "restrains": true
+            "restrains": true,
+            "escape_check_disadvantage": false
           }
         ],
         "advantage_if_target_grappled_by_self": false,
@@ -8203,7 +8204,8 @@
             "kind": "grapple",
             "escape_dc": 11,
             "max_target_size": "medium",
-            "restrains": false
+            "restrains": false,
+            "escape_check_disadvantage": false
           }
         ],
         "advantage_if_target_grappled_by_self": false,
@@ -8346,7 +8348,8 @@
           "kind": "grapple",
           "escape_dc": 12,
           "max_target_size": "medium",
-          "restrains": false
+          "restrains": false,
+          "escape_check_disadvantage": false
         },
         "failure_conditions": [],
         "animation": "constrict"
@@ -8455,7 +8458,8 @@
             "kind": "grapple",
             "escape_dc": 13,
             "max_target_size": "large",
-            "restrains": false
+            "restrains": false,
+            "escape_check_disadvantage": false
           }
         ],
         "advantage_if_target_grappled_by_self": false,
@@ -8657,7 +8661,8 @@
             "kind": "grapple",
             "escape_dc": 12,
             "max_target_size": "medium",
-            "restrains": false
+            "restrains": false,
+            "escape_check_disadvantage": false
           }
         ],
         "advantage_if_target_grappled_by_self": false,
@@ -8793,7 +8798,8 @@
             "kind": "grapple",
             "escape_dc": 14,
             "max_target_size": "medium",
-            "restrains": false
+            "restrains": false,
+            "escape_check_disadvantage": false
           }
         ],
         "advantage_if_target_grappled_by_self": false,
@@ -10240,7 +10246,8 @@
             "kind": "grapple",
             "escape_dc": 15,
             "max_target_size": "large",
-            "restrains": true
+            "restrains": true,
+            "escape_check_disadvantage": false
           }
         ],
         "advantage_if_target_grappled_by_self": false,
@@ -10450,7 +10457,8 @@
           "kind": "grapple",
           "escape_dc": 14,
           "max_target_size": "large",
-          "restrains": false
+          "restrains": false,
+          "escape_check_disadvantage": false
         },
         "failure_conditions": [],
         "animation": "constrict"
@@ -10560,7 +10568,8 @@
             "kind": "grapple",
             "escape_dc": 17,
             "max_target_size": "large",
-            "restrains": true
+            "restrains": true,
+            "escape_check_disadvantage": false
           }
         ],
         "advantage_if_target_grappled_by_self": false,
