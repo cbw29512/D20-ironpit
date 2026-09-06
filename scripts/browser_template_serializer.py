@@ -26,6 +26,13 @@ def _control(effect: Any) -> dict[str, Any] | None:
         row["restrainsWhileGrappled"] = True
     if effect.condition_id:
         row["conditionId"] = effect.condition_id
+        if effect.initial_save_ability:
+            row["initialSaveAbility"] = effect.initial_save_ability
+            row["initialSaveDc"] = effect.initial_save_dc
+        if effect.excluded_creature_types:
+            row["excludedCreatureTypes"] = list(effect.excluded_creature_types)
+        if effect.excluded_species_ids:
+            row["excludedSpeciesIds"] = list(effect.excluded_species_ids)
         if effect.expires_at_start_of_source_turn:
             row["expiresAtStartOfSourceTurn"] = True
         if effect.expiry_timing:
@@ -261,6 +268,7 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
         row: dict[str, Any] = {
             "id": template.id, "name": template.name, "archetype": template.archetype,
             "level": template.level, "challenge_rating": template.challenge_rating, "kind": template.kind,
+            "creature_type": template.creature_type, "species_id": template.species_id,
             "size": template.size.value, "armor_class": template.armor_class, "max_hp": template.max_hp,
             "speed_ft": template.speed_ft, "movement_modes": template.movement_modes.model_dump(),
             "initiative_bonus": template.initiative_bonus,
