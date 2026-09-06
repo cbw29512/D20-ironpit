@@ -19,7 +19,7 @@ _SIMPLE_SAVE = re.compile(
 _CONDITION_SAVE = re.compile(
     rf"^(?P<name>.+?)\. (?P<ability>{_ABILITY}) Saving Throw: DC (?P<dc>\d+), "
     rf"one creature .*?within (?P<range>\d+) feet\. Failure: The target has the (?P<condition>{_CONDITION}) condition "
-    r"until the (?P<edge>start|end) of the .+? next turn\.$",
+    r"until the (?P<edge>start|end) of (?P<owner>.+?) next turn\.$",
     re.I,
 )
 _GRAPPLE_SAVE = re.compile(
@@ -35,15 +35,24 @@ def _slug(value: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
 
 
+def _condition_timing(row: dict[str, object], match: re.Match[str]) -> str:
+    edge = match.group("edge").lower(); owner = match.group("owner").lower().replace("’", "'").strip()
+    if owner == "its" or "target" in owner:
+        return f"target_turn_{edge}"
+    monster = str(row["name"]).lower().replace("’", "'")
+    if monster in owner:
+        return f"source_turn_{edge}"
+    raise ValueError(f"Cannot prove condition-turn owner for {row['name']!r}: {match.group(0)!r}")
+
+
 def _condition_save_row(row: dict[str, object], match: re.Match[str]) -> dict[str, object]:
-    monster_slug = _slug(str(row["name"])); edge = match.group("edge").lower()
+    monster_slug = _slug(str(row["name"])); timing = _condition_timing(row, match)
     return {
         "id": f"srd-{monster_slug}-{_slug(match.group('name'))}", "name": match.group("name"),
         "save_ability": match.group("ability").lower(), "dc": int(match.group("dc")),
         "range_ft": int(match.group("range")),
         "failure_conditions": [{
-            "kind": "condition", "condition": match.group("condition").lower(),
-            "expiry_timing": f"source_turn_{edge}",
+            "kind": "condition", "condition": match.group("condition").lower(), "expiry_timing": timing,
         }],
         "animation": "save-effect",
     }
