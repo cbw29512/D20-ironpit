@@ -11,7 +11,7 @@ _EXPECTED_SIMPLE_SOURCE = {
     "Hill Giant", "Hobgoblin Captain", "Lion", "Magmin", "Merrow", "Nightmare", "Pirate", "Sahuagin Warrior", "Satyr",
     "Specter", "Spy", "Tough Boss", "Troll Limb", "Werebear", "Wereboar", "Wererat", "Weretiger", "Werewolf", "Wraith", "Xorn",
 }
-_EXPECTED_READY_SOURCE = _EXPECTED_SIMPLE_SOURCE - {"Specter", "Wraith"}
+_EXPECTED_READY_SOURCE = _EXPECTED_SIMPLE_SOURCE
 
 
 def test_simple_source_family_compiles_without_bespoke_monster_builders() -> None:
@@ -85,7 +85,9 @@ def test_simple_source_parser_compiles_generic_grapple_and_prone_riders() -> Non
         ),
     }
     attacks, _ = parse_simple_attacks(grapple_row)
-    assert attacks[0]["effects"] == [{"kind": "grapple", "escape_dc": 13, "max_target_size": "medium"}]
+    assert attacks[0]["effects"] == [{
+        "kind": "grapple", "escape_dc": 13, "max_target_size": "medium", "escape_check_disadvantage": False,
+    }]
 
     prone_row = {
         "name": "Homebrew Charger",
@@ -126,5 +128,5 @@ def test_simple_source_family_is_promoted_only_through_full_catalog_audit() -> N
     for name in _EXPECTED_READY_SOURCE:
         assert cards[name].coverage_status is CoverageStatus.RAW_READY
         assert cards[name].blockers == []
-    for name in ("Mimic", "Roper", "Specter", "Wraith"):
+    for name in ("Mimic", "Roper"):
         assert cards[name].coverage_status is CoverageStatus.BLOCKED
