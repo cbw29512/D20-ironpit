@@ -77,7 +77,7 @@ def _write_csv(path: Path, records: list[dict[str, object]]) -> None:
         "unsupported_count", "complexity", "unsupported_families", "mechanics", "fingerprint",
     )
     with path.open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fields)
+        writer = csv.DictWriter(handle, fieldnames=fields, lineterminator="\n")
         writer.writeheader()
         for record in sorted(records, key=_matrix_key):
             row = dict(record)
