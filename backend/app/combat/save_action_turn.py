@@ -5,19 +5,21 @@ from app.combat.death_triggers import resolve_pending_death_triggers
 from app.combat.pit_policy import save_distance
 from app.combat.save_area_targeting import targets_for_action
 from app.combat.saving_throws import resolve_save_action, save_action_resource_available
+from app.domain.actions import ActionCost
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 
 
 def resolve_save_action_turn(
     sequence: int, round_number: int, actor: EncounterCombatant, setup: EncounterSetup, dice,
-    *, resource_backed_only: bool,
+    *, resource_backed_only: bool | None, action_cost: ActionCost = "action",
 ) -> tuple[list[BattleEvent], int, bool]:
-    if not is_available(actor.state, "action"):
+    if not is_available(actor.state, action_cost):
         return [], sequence, False
     affected = [member.state for member in [*setup.heroes, *setup.monsters]]
     for action in actor.state.template.saving_throw_actions:
-        if resource_backed_only != (action.resource_id is not None): continue
+        if action.action_cost != action_cost: continue
+        if resource_backed_only is not None and resource_backed_only != (action.resource_id is not None): continue
         if not save_action_resource_available(actor.state, action): continue
         targets = targets_for_action(actor, setup, action)
         if not targets: continue
