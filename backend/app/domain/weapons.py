@@ -32,7 +32,7 @@ class WeaponAttackKind(StrEnum):
 
 
 class ConditionalDamage(BaseModel):
-    trigger: Literal["attack_advantage", "attacker_bloodied", "target_bloodied"]
+    trigger: Literal["attack_advantage", "attacker_bloodied", "target_bloodied", "target_grappled_by_self"]
     mode: Literal["add", "replace_weapon"] = "add"
     dice_count: int = Field(ge=1, le=20)
     dice_size: int = Field(ge=2, le=100)
@@ -95,6 +95,7 @@ class WeaponAttack(BaseModel):
     sneak_attack_eligible: bool = False
     knocks_prone_max_size: CreatureSize | None = None
     control_effect: HitControlEffect | None = None
+    advantage_if_target_grappled_by_self: bool = False
     forbid_target_grappled_by_self: bool = False
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
