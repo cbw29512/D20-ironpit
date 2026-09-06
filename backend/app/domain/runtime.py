@@ -90,6 +90,7 @@ class CombatantState(BaseModel):
     rage_expires_round: int | None = Field(default=None, ge=1)
     rage_max_round: int | None = Field(default=None, ge=1)
     regeneration_suppressed_next_turn: bool = False
+    pending_death_trigger_ids: list[str] = Field(default_factory=list)
 
 
 class BattlefieldState(BaseModel):
