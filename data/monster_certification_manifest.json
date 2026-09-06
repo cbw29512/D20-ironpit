@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 161,
-    "blocked": 169
+    "public_ready": 160,
+    "blocked": 170
   },
   "monsters": [
     {
@@ -5919,7 +5919,7 @@
       "monster_name": "Mimic",
       "srd_source_page": 308,
       "srd_source_reference": "SRD 5.2.1 p. 308",
-      "runtime_template_id": "srd-mimic",
+      "runtime_template_id": null,
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -5929,15 +5929,19 @@
       "supported_mechanics": [
         "attack-roll",
         "bonus-action",
-        "damage-or-condition-defense",
+        "damage-or-condition-defense"
+      ],
+      "unsupported_mechanics": [
         "trait"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "trait",
+        "uncertified-trait:adhesive"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-minotaur-skeleton",

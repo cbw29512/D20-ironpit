@@ -1,8 +1,8 @@
-CAPABILITY_YIELD_BASELINE	ready=161	blocked=169	actionable_blocked=159	deferred=10	signatures=68
+CAPABILITY_YIELD_BASELINE	ready=160	blocked=170	actionable_blocked=160	deferred=10	signatures=68
 CAPABILITY_DEFERRED_ENVIRONMENT	Giant Seahorse | Giant Shark | Hunter Shark | Killer Whale | Octopus | Piranha | Reef Shark | Seahorse | Swarm of Piranhas
 CAPABILITY_DEFERRED_NONCOMBAT	Shrieker Fungus
+CAPABILITY_SINGLE_FAMILY	trait	5	Barbed Devil | Fire Elemental | Flesh Golem | Hydra | Mimic
 CAPABILITY_SINGLE_FAMILY	condition-or-control	4	Animated Rug of Smothering | Giant Toad | Phase Spider | Roper
-CAPABILITY_SINGLE_FAMILY	trait	4	Barbed Devil | Fire Elemental | Flesh Golem | Hydra
 CAPABILITY_SINGLE_FAMILY	spellcasting	3	Druid | Dryad | Imp
 CAPABILITY_SINGLE_FAMILY	ability-score-change	1	Shadow
 CAPABILITY_SINGLE_FAMILY	attachment-state	1	Stirge
@@ -19,7 +19,9 @@ CAPABILITY_CONTROL_EFFECT	restrained	2	Animated Rug of Smothering | Giant Toad
 CAPABILITY_CONTROL_EFFECT	paralyzed	1	Phase Spider
 CAPABILITY_CONTROL_EFFECT	prone	1	Giant Toad
 CAPABILITY_CONTROL_EFFECT	swallow	1	Giant Toad
+CAPABILITY_TRAIT_SINGLE_HEADING	Adhesive	1	Mimic
 CAPABILITY_TRAIT_SINGLE_HEADING	Barbed Hide	1	Barbed Devil
+CAPABILITY_TRAIT_HEADING	Adhesive	1	Mimic
 CAPABILITY_TRAIT_HEADING	Aversion to Fire	1	Flesh Golem
 CAPABILITY_TRAIT_HEADING	Barbed Hide	1	Barbed Devil
 CAPABILITY_TRAIT_HEADING	Berserk	1	Flesh Golem
@@ -36,9 +38,9 @@ CAPABILITY_SIGNATURE	7	bonus-action+limited-use	Basilisk | Centaur Trooper | Fro
 CAPABILITY_SIGNATURE	7	limited-use+save-or-complex-action	Ankheg | Copper Dragon Wyrmling | Gold Dragon Wyrmling | Magma Mephit | Swarm of Ravens | Young Copper Dragon | Young Gold Dragon
 CAPABILITY_SIGNATURE	6	bonus-action+limited-use+spellcasting	Cultist Fanatic | Drider | Incubus | Priest | Priest Acolyte | Stone Golem
 CAPABILITY_SIGNATURE	5	condition-or-control+limited-use+save-or-complex-action+spellcasting	Doppelganger | Dust Mephit | Ghost | Quasit | Storm Giant
+CAPABILITY_SIGNATURE	5	trait	Barbed Devil | Fire Elemental | Flesh Golem | Hydra | Mimic
 CAPABILITY_SIGNATURE	4	condition-or-control	Animated Rug of Smothering | Giant Toad | Phase Spider | Roper
 CAPABILITY_SIGNATURE	4	spellcasting+trait	Efreeti | Gray Ooze | Green Hag | Spirit Naga
-CAPABILITY_SIGNATURE	4	trait	Barbed Devil | Fire Elemental | Flesh Golem | Hydra
 CAPABILITY_SIGNATURE	3	bonus-action+condition-or-control	Elephant | Mammoth | Purple Worm
 CAPABILITY_SIGNATURE	3	bonus-action+condition-or-control+limited-use+save-or-complex-action	Behir | Ettercap | Gorgon
 CAPABILITY_SIGNATURE	3	condition-or-control+save-or-complex-action+unsupported-action-rider	Death Dog | Mummy | Otyugh
