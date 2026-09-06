@@ -46,15 +46,18 @@ MONSTER_MATRIX_MECHANIC	condition:unconscious	7	Adult Brass Dragon | Ancient Bra
 MONSTER_MATRIX_MECHANIC	condition:deafened	5	Adult Bronze Dragon | Ancient Bronze Dragon | Storm Giant | Swarm of Ravens | Tarrasque
 MONSTER_MATRIX_MECHANIC	death-trigger	5	Balor | Dust Mephit | Ice Mephit | Magma Mephit | Steam Mephit
 MONSTER_MATRIX_MECHANIC	condition:petrified	4	Basilisk | Cockatrice | Gorgon | Medusa
+MONSTER_MATRIX_MECHANIC	injured-target-advantage	4	Giant Shark | Hunter Shark | Piranha | Swarm of Piranhas
+MONSTER_MATRIX_MECHANIC	attachment-state	3	Cloaker | Darkmantle | Stirge
 MONSTER_MATRIX_MECHANIC	condition:invisible	3	Green Hag | Invisible Stalker | Will-o’-Wisp
 MONSTER_MATRIX_MECHANIC	reaction	3	Hydra | Ice Devil | Marilith
 MONSTER_MATRIX_MECHANIC	regeneration	3	Oni | Shield Guardian | Troll
 MONSTER_MATRIX_MECHANIC	condition:stunned	2	Otyugh | Vrock
+MONSTER_MATRIX_MECHANIC	ability-score-change	1	Shadow
 MONSTER_MATRIX_MECHANIC	end-turn	1	Chain Devil
 MONSTER_MATRIX_MECHANIC	summoning	1	Wraith
 MONSTER_MATRIX_FAMILY	4	attack-roll+aura+condition:prone+damage+damage:bludgeoning+damage:piercing+multiattack+saving-throw	Bulette | Elephant | Gladiator | Mammoth
 MONSTER_MATRIX_FAMILY	3	attack-roll+damage+damage:piercing+damage:slashing+immunity+multiattack+saving-throw+zero-hp-effect	Werebear | Wererat | Weretiger
-MONSTER_MATRIX_FAMILY	2	advantage+attack-roll+damage+damage:piercing	Hunter Shark | Piranha
+MONSTER_MATRIX_FAMILY	2	advantage+attack-roll+damage+damage:piercing+injured-target-advantage	Hunter Shark | Piranha
 MONSTER_MATRIX_FAMILY	2	attack-roll+aura+bonus-action+concentration+damage+damage:acid+damage:psychic+damage:slashing+legendary+limited-use+multiattack+recharge+saving-throw+spellcasting+temporary-hp+transformation	Adult Copper Dragon | Ancient Copper Dragon
 MONSTER_MATRIX_FAMILY	2	attack-roll+aura+concentration+condition:deafened+condition:prone+damage+damage:lightning+damage:slashing+damage:thunder+legendary+limited-use+multiattack+recharge+saving-throw+spellcasting+temporary-hp+transformation	Adult Bronze Dragon | Ancient Bronze Dragon
 MONSTER_MATRIX_FAMILY	2	attack-roll+aura+concentration+condition:incapacitated+condition:unconscious+damage+damage:fire+damage:slashing+legendary+limited-use+multiattack+recharge+repeat-save+saving-throw+spellcasting+temporary-hp+transformation	Adult Brass Dragon | Ancient Brass Dragon
@@ -68,22 +71,22 @@ MONSTER_MATRIX_FAMILY	2	attack-roll+damage+damage:fire+damage:slashing+disadvant
 MONSTER_MATRIX_FAMILY	2	attack-roll+damage+damage:fire+damage:slashing+legendary+limited-use+multiattack+recharge+saving-throw+spellcasting	Adult Red Dragon | Ancient Red Dragon
 MONSTER_MATRIX_FAMILY	2	attack-roll+damage+damage:lightning+damage:slashing+legendary+limited-use+multiattack+recharge+saving-throw+spellcasting	Adult Blue Dragon | Ancient Blue Dragon
 MONSTER_MATRIX_FAMILY	2	attack-roll+damage+damage:piercing+limited-use	Giant Hyena | Gnoll Warrior
+MONSTER_MATRIX_FAMILY	1	ability-score-change+attack-roll+damage+damage:necrotic+disadvantage	Shadow
+MONSTER_MATRIX_FAMILY	1	advantage+attachment-state+attack-roll+aura+concentration+condition:blinded+damage+damage:bludgeoning+flat-modifier+limited-use	Darkmantle
 MONSTER_MATRIX_FAMILY	1	advantage+attack-roll+aura+bonus-action+condition:restrained+damage+damage:force+damage:necrotic+damage:psychic+damage:slashing+multiattack+saving-throw+zero-hp-effect	Erinyes
 MONSTER_MATRIX_FAMILY	1	advantage+attack-roll+aura+concentration+condition:blinded+condition:deafened+condition:frightened+condition:grappled+condition:prone+condition:restrained+damage+damage:acid+damage:bludgeoning+damage:piercing+damage:slashing+damage:thunder+legendary+limited-use+multiattack+recharge+saving-throw	Tarrasque
-MONSTER_MATRIX_FAMILY	1	advantage+attack-roll+aura+concentration+condition:blinded+damage+damage:bludgeoning+flat-modifier+limited-use	Darkmantle
 MONSTER_MATRIX_FAMILY	1	advantage+attack-roll+aura+concentration+condition:prone+condition:restrained+damage+damage:lightning+damage:slashing+damage:thunder+limited-use+multiattack+repeat-save+saving-throw+spellcasting	Djinni
 MONSTER_MATRIX_FAMILY	1	advantage+attack-roll+aura+condition:blinded+condition:paralyzed+damage+damage:bludgeoning+damage:necrotic+damage:psychic+healing+legendary+limited-use+max-hp-change+multiattack+saving-throw+spellcasting+zero-hp-effect	Mummy Lord
 MONSTER_MATRIX_FAMILY	1	advantage+attack-roll+aura+condition:blinded+damage+damage:piercing+damage:radiant+damage:slashing+legendary+limited-use+multiattack+saving-throw+spellcasting	Solar
 MONSTER_MATRIX_FAMILY	1	advantage+attack-roll+aura+condition:charmed+damage+damage:piercing+multiattack+saving-throw	Pirate Captain
 MONSTER_MATRIX_FAMILY	1	advantage+attack-roll+aura+condition:frightened+condition:grappled+condition:restrained+damage+damage:fire+damage:slashing+end-turn+immunity+multiattack+saving-throw	Chain Devil
-MONSTER_MATRIX_FAMILY	1	advantage+attack-roll+aura+condition:frightened+condition:incapacitated+condition:poisoned+damage+damage:fire+damage:force+damage:necrotic+damage:piercing+damage:poison+healing+immunity+legendary+limited-use+multiattack+recharge+repeat-save+saving-throw+spellcasting	Pit Fiend
-MONSTER_MATRIX_QUEUE	1	Hunter Shark	unsupported=0	complexity=4	edge=false	blockers=none	mechanics=advantage+attack-roll+damage+damage:piercing
-MONSTER_MATRIX_QUEUE	2	Piranha	unsupported=0	complexity=4	edge=false	blockers=none	mechanics=advantage+attack-roll+damage+damage:piercing
-MONSTER_MATRIX_QUEUE	3	Shadow	unsupported=0	complexity=4	edge=false	blockers=none	mechanics=attack-roll+damage+damage:necrotic+disadvantage
-MONSTER_MATRIX_QUEUE	4	Giant Shark	unsupported=0	complexity=5	edge=false	blockers=none	mechanics=advantage+attack-roll+damage+damage:piercing+multiattack
-MONSTER_MATRIX_QUEUE	5	Stirge	unsupported=0	complexity=7	edge=false	blockers=none	mechanics=attack-roll+aura+damage+damage:necrotic+damage:piercing
-MONSTER_MATRIX_QUEUE	6	Mimic	unsupported=0	complexity=8	edge=false	blockers=none	mechanics=advantage+attack-roll+condition:grappled+damage+damage:acid+damage:bludgeoning+damage:piercing+disadvantage
-MONSTER_MATRIX_QUEUE	7	Swarm of Piranhas	unsupported=0	complexity=8	edge=false	blockers=none	mechanics=advantage+attack-roll+damage+damage:piercing+healing+temporary-hp
+MONSTER_MATRIX_QUEUE	1	Hunter Shark	unsupported=0	complexity=5	edge=false	blockers=none	mechanics=advantage+attack-roll+damage+damage:piercing+injured-target-advantage
+MONSTER_MATRIX_QUEUE	2	Piranha	unsupported=0	complexity=5	edge=false	blockers=none	mechanics=advantage+attack-roll+damage+damage:piercing+injured-target-advantage
+MONSTER_MATRIX_QUEUE	3	Giant Shark	unsupported=0	complexity=6	edge=false	blockers=none	mechanics=advantage+attack-roll+damage+damage:piercing+injured-target-advantage+multiattack
+MONSTER_MATRIX_QUEUE	4	Shadow	unsupported=0	complexity=8	edge=false	blockers=none	mechanics=ability-score-change+attack-roll+damage+damage:necrotic+disadvantage
+MONSTER_MATRIX_QUEUE	5	Mimic	unsupported=0	complexity=8	edge=false	blockers=none	mechanics=advantage+attack-roll+condition:grappled+damage+damage:acid+damage:bludgeoning+damage:piercing+disadvantage
+MONSTER_MATRIX_QUEUE	6	Swarm of Piranhas	unsupported=0	complexity=9	edge=false	blockers=none	mechanics=advantage+attack-roll+damage+damage:piercing+healing+injured-target-advantage+temporary-hp
+MONSTER_MATRIX_QUEUE	7	Stirge	unsupported=0	complexity=13	edge=false	blockers=none	mechanics=attachment-state+attack-roll+aura+damage+damage:necrotic+damage:piercing
 MONSTER_MATRIX_QUEUE	8	Seahorse	unsupported=1	complexity=0	edge=false	blockers=no-attack-roll	mechanics=combat-math-none
 MONSTER_MATRIX_QUEUE	9	Ochre Jelly	unsupported=1	complexity=4	edge=false	blockers=reaction	mechanics=attack-roll+damage+damage:acid+damage:slashing
 MONSTER_MATRIX_QUEUE	10	Animated Rug of Smothering	unsupported=1	complexity=6	edge=false	blockers=condition-or-control	mechanics=attack-roll+condition:blinded+condition:grappled+condition:restrained+damage+damage:bludgeoning
