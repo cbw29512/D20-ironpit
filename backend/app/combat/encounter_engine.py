@@ -16,7 +16,7 @@ from app.combat.hit_modifiers import expire_source_turn_start_modifiers
 from app.combat.modifier_stack import expire_source_turn_modifiers
 from app.combat.precombat_spells import prepare_defenses
 from app.combat.source_bound_effects import cleanup_disabled_source_effects
-from app.combat.start_turn_events import resolve_start_turn_recharges
+from app.combat.start_turn_events import resolve_start_turn_recharges, resolve_start_turn_regeneration
 from app.combat.state import refresh_start_of_turn
 from app.combat.timed_conditions import expire_start_of_turn_conditions
 from app.domain.encounters import EncounterBattleResult, EncounterCombatant, EncounterSelection
@@ -84,6 +84,12 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                 cleanup_disabled_source_effects(setup)
                 expire_source_turn_start_modifiers(affected_states, member.combatant_id)
                 refresh_start_of_turn(member.state)
+                regeneration_events, sequence = resolve_start_turn_regeneration(
+                    sequence, round_number, member,
+                )
+                events.extend(regeneration_events)
+                if member.state.is_dead:
+                    continue
                 recharge_events, sequence = resolve_start_turn_recharges(
                     sequence, round_number, member, dice,
                 )
