@@ -9,7 +9,7 @@
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2 || { dangerSenseAdvantage: () => 0 };
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { applyD20Bonus: (_state, _kind, roll) => roll };
-  const C = () => window.IRON_PIT_BROWSER_CONCENTRATION;
+  const C = () => window.IRON_PIT_BROWSER_CONCENTRATION, TC = () => window.IRON_PIT_BROWSER_TIMED;
   const D = () => window.IRON_PIT_DICE;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (state, cost) => cost === "action" && state.action_available, spend: (state) => { state.action_available = false; } };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { autoFailStrDex: (state) => state.is_unconscious };
@@ -72,10 +72,12 @@
     }
     let appliedConditions = [];
     if (!save.succeeded && target.state.is_alive && !target.state.is_dead && action.grappleEscapeDc) appliedConditions = G().apply(target.state, actor.combatant_id, action.grappleEscapeDc, action.range, Boolean(action.restrainsWhileGrappled));
+    if (!save.succeeded && target.state.is_alive && !target.state.is_dead) for (const effect of action.failureConditions || []) { const applied = TC().apply(target.state, effect.conditionId, actor.combatant_id, { sourceEffectId: action.id, appliedRound: round, expiryTiming: effect.expiryTiming, repeatSaveAbility: effect.repeatSaveAbility, repeatSaveDc: effect.repeatSaveDc, repeatSaveTiming: effect.repeatSaveTiming, allowedRemovalActionIds: effect.allowedRemovalActionIds, defaultPoisonRecovery: false }); if (applied) appliedConditions.push(applied); }
     let description = `${target.state.template.name} ${save.succeeded ? "SUCCEEDS" : "FAILS"} a DC ${action.dc} ${action.saveAbility} save against ${actor.state.template.name}'s ${action.name}.`;
     if (damageOutcome === "undead_fortitude") description += ` ${target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP.`;
     if (appliedConditions.includes("grappled")) description += ` ${target.state.template.name} is Grappled.`;
     if (appliedConditions.includes("restrained")) description += ` ${target.state.template.name} is Restrained while Grappled.`;
+    const namedConditions = appliedConditions.filter((item) => !["grappled", "restrained"].includes(item)); if (namedConditions.length) description += ` ${target.state.template.name} gains ${namedConditions.join(", ")}.`;
     return { sequence, round_number: round, event_type: "saving_throw", actor_id: actor.combatant_id, actor_name: actor.state.template.name,
       target_id: target.combatant_id, target_name: target.state.template.name, saving_throw_roll: save.roll, save_ability: action.saveAbility, save_dc: action.dc,
       save_succeeded: save.succeeded, damage_roll: damageRoll, damage_components: damageComponents, applied_condition_ids: appliedConditions,
