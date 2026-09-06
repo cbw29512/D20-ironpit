@@ -99,6 +99,7 @@ def apply_hit_conditions(
                 control.grapple_escape_dc,
                 attack.weapon.reach_ft,
                 restrains=control.restrains_while_grappled,
+                escape_check_disadvantage=control.grapple_escape_check_disadvantage,
             ))
     if control is not None and control.condition_id is not None and control.initial_save_ability is None:
         timed = apply_timed_condition(
