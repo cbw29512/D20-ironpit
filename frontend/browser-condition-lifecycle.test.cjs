@@ -18,6 +18,7 @@ const S = window.IRON_PIT_BROWSER_STATE;
 const T = window.IRON_PIT_BROWSER_TIMED;
 const L = window.IRON_PIT_BROWSER_CONDITION_LIFECYCLE;
 const A = window.IRON_PIT_BROWSER_ATTACK;
+const V = window.IRON_PIT_BROWSER_SAVES;
 const template = () => structuredClone(window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"]);
 const member = (id, side = "heroes", source = template()) => ({ combatant_id: id, side, position_ft: 0, state: S.buildState(structuredClone(source)) });
 let d20 = 1;
@@ -79,6 +80,22 @@ window.IRON_PIT_DICE = {
   const second = L.resolveSourceTiming(first.sequence, 5, sourceB, setup, "source_turn_start");
   assert.equal(second.events.length, 1);
   assert.equal(target.state.active_effect_ids.includes("frightened"), false);
+}
+
+{
+  const source = member("monster-1:panache", "monsters"), target = member("hero-1:panache", "heroes");
+  d20 = 1;
+  const action = {
+    id: "test-panache", name: "Enthralling Panache", saveAbility: "wisdom", dc: 20, range: 30,
+    damageDiceCount: 0, damageDiceSize: 6, damageBonus: 0, damageType: null, successDamage: "none",
+    failureConditions: [{ conditionId: "charmed", expiryTiming: "source_turn_start" }],
+  };
+  const event = V.resolveAction(1, 1, source, target, action, 5);
+  assert.equal(event.save_succeeded, false); assert.deepEqual(event.applied_condition_ids, ["charmed"]);
+  assert.equal(target.state.timed_effects[0].source_effect_id, "test-panache");
+  assert.equal(target.state.timed_effects[0].expiry_timing, "source_turn_start");
+  const ended = L.resolveSourceTiming(2, 2, source, { heroes: [target], monsters: [source] }, "source_turn_start");
+  assert.deepEqual(ended.events[0].removed_condition_ids, ["charmed"]);
 }
 
 const ghoulTemplate = window.IRON_PIT_BROWSER_MONSTERS["srd-ghoul"];
