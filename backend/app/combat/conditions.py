@@ -100,7 +100,7 @@ def apply_hit_conditions(
                 attack.weapon.reach_ft,
                 restrains=control.restrains_while_grappled,
             ))
-    if control is not None and control.condition_id is not None:
+    if control is not None and control.condition_id is not None and control.initial_save_ability is None:
         timed = apply_timed_condition(
             defender,
             control.condition_id,
