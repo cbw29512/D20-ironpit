@@ -1,8 +1,8 @@
-CAPABILITY_YIELD_BASELINE	ready=142	blocked=188	actionable_blocked=178	deferred=10	signatures=69
+CAPABILITY_YIELD_BASELINE	ready=143	blocked=187	actionable_blocked=177	deferred=10	signatures=69
 CAPABILITY_DEFERRED_ENVIRONMENT	Giant Seahorse | Giant Shark | Hunter Shark | Killer Whale | Octopus | Piranha | Reef Shark | Seahorse | Swarm of Piranhas
 CAPABILITY_DEFERRED_NONCOMBAT	Shrieker Fungus
 CAPABILITY_SINGLE_FAMILY	condition-or-control	6	Animated Rug of Smothering | Giant Toad | Hill Giant | Merrow | Phase Spider | Roper
-CAPABILITY_SINGLE_FAMILY	trait	6	Barbed Devil | Fire Elemental | Flesh Golem | Hezrou | Hobgoblin Captain | Hydra
+CAPABILITY_SINGLE_FAMILY	trait	5	Barbed Devil | Fire Elemental | Flesh Golem | Hezrou | Hydra
 CAPABILITY_SINGLE_FAMILY	save-or-complex-action	4	Satyr | Werebear | Wererat | Werewolf
 CAPABILITY_SINGLE_FAMILY	unclassified-source-audit-gap	4	Bugbear Warrior | Mimic | Shadow | Stirge
 CAPABILITY_SINGLE_FAMILY	spellcasting	3	Druid | Dryad | Imp
@@ -19,8 +19,6 @@ CAPABILITY_CONTROL_EFFECT	prone	2	Giant Toad | Hill Giant
 CAPABILITY_CONTROL_EFFECT	restrained	2	Animated Rug of Smothering | Giant Toad
 CAPABILITY_CONTROL_EFFECT	paralyzed	1	Phase Spider
 CAPABILITY_CONTROL_EFFECT	swallow	1	Giant Toad
-CAPABILITY_TRAIT_SINGLE_HEADING	Aura of Authority	1	Hobgoblin Captain
-CAPABILITY_TRAIT_HEADING	Aura of Authority	1	Hobgoblin Captain
 CAPABILITY_TRAIT_HEADING	Aversion to Fire	1	Flesh Golem
 CAPABILITY_TRAIT_HEADING	Barbed Hide	1	Barbed Devil
 CAPABILITY_TRAIT_HEADING	Berserk	1	Flesh Golem
@@ -40,7 +38,7 @@ CAPABILITY_SIGNATURE	7	limited-use+save-or-complex-action	Ankheg | Copper Dragon
 CAPABILITY_SIGNATURE	6	bonus-action+limited-use	Basilisk | Centaur Trooper | Frost Giant | Giant Hyena | Gnoll Warrior | Medusa
 CAPABILITY_SIGNATURE	6	bonus-action+limited-use+spellcasting	Cultist Fanatic | Drider | Incubus | Priest | Priest Acolyte | Stone Golem
 CAPABILITY_SIGNATURE	6	condition-or-control	Animated Rug of Smothering | Giant Toad | Hill Giant | Merrow | Phase Spider | Roper
-CAPABILITY_SIGNATURE	6	trait	Barbed Devil | Fire Elemental | Flesh Golem | Hezrou | Hobgoblin Captain | Hydra
+CAPABILITY_SIGNATURE	5	trait	Barbed Devil | Fire Elemental | Flesh Golem | Hezrou | Hydra
 CAPABILITY_SIGNATURE	4	condition-or-control+limited-use+save-or-complex-action+spellcasting	Doppelganger | Dust Mephit | Quasit | Storm Giant
 CAPABILITY_SIGNATURE	4	condition-or-control+save-or-complex-action+trait	Erinyes | Ghast | Marilith | Shambling Mound
 CAPABILITY_SIGNATURE	4	save-or-complex-action	Satyr | Werebear | Wererat | Werewolf

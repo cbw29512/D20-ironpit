@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 142,
-    "blocked": 188
+    "public_ready": 143,
+    "blocked": 187
   },
   "monsters": [
     {
@@ -4975,7 +4975,7 @@
       "monster_name": "Hobgoblin Captain",
       "srd_source_page": 299,
       "srd_source_reference": "SRD 5.2.1 p. 299",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-hobgoblin-captain",
       "detected_combat_mechanics": [
         "attack-roll",
         "multiattack",
@@ -4983,19 +4983,15 @@
       ],
       "supported_mechanics": [
         "attack-roll",
-        "multiattack"
-      ],
-      "unsupported_mechanics": [
+        "multiattack",
         "trait"
       ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "monster-combat-mechanics-not-certified",
-        "trait"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-hobgoblin-warrior",
