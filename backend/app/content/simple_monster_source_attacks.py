@@ -5,6 +5,7 @@ import re
 
 from app.content.monster_combat_scope import feature_blocks
 from app.content.monster_trait_source_audit import parse_trait_names
+from app.content.simple_monster_source_riders import parse_hit_riders
 
 logger = logging.getLogger(__name__)
 _NUMBER = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6}
@@ -19,21 +20,6 @@ _EXTRA_DICE = re.compile(
     re.I,
 )
 _EXTRA_FIXED = re.compile(r"\bplus\s+(\d+)\s+([A-Za-z]+)\s+damage\b", re.I)
-_GRAPPLE = re.compile(
-    r"\bIf the target is a (Tiny|Small|Medium|Large|Huge|Gargantuan) or smaller creature,\s*"
-    r"it has the Grappled condition\s*\(escape DC\s*(\d+)\)",
-    re.I,
-)
-_PRONE = re.compile(
-    r"\bIf the target is a (Tiny|Small|Medium|Large|Huge|Gargantuan) or smaller creature,\s*"
-    r"it has the Prone condition\b",
-    re.I,
-)
-_NEXT_ATTACK_DISADVANTAGE = re.compile(
-    r"(?:has|gains?)\s+Disadvantage\s+on\s+(?:the|its)\s+next\s+attack\s+roll"
-    r"(?:\s+it\s+makes)?\s+before\s+the\s+end\s+of\s+its\s+next\s+turn",
-    re.I,
-)
 _COUNT = r"one|two|three|four|five|six|\d+"
 
 
@@ -48,22 +34,6 @@ def _number(value: str) -> int:
 def _dice(count: str, size: str, sign: str | None, bonus: str | None) -> dict[str, int]:
     amount = int(bonus or 0) * (-1 if sign == "-" else 1)
     return {"count": int(count), "size": int(size), "bonus": amount}
-
-
-def _control_effects(block: str) -> list[dict[str, object]]:
-    try:
-        effects: list[dict[str, object]] = []
-        grapple = _GRAPPLE.search(block)
-        if grapple:
-            max_size, escape_dc = grapple.groups()
-            effects.append({"kind": "grapple", "escape_dc": int(escape_dc), "max_target_size": max_size.lower()})
-        prone = _PRONE.search(block)
-        if prone:
-            effects.append({"kind": "prone", "max_target_size": prone.group(1).lower()})
-        return effects
-    except (AttributeError, TypeError, ValueError):
-        logger.exception("Failed to compile source-backed on-hit control rider from %r", block)
-        raise
 
 
 def parse_simple_attacks(row: dict[str, object]) -> tuple[list[dict[str, object]], dict[str, object] | None]:
@@ -93,9 +63,7 @@ def parse_simple_attacks(row: dict[str, object]) -> tuple[list[dict[str, object]
                     continue
                 amount, e_type = extra.groups()
                 effects.append({"kind": "damage", "source": heading, "dice": {"count": 0, "size": 6, "bonus": int(amount)}, "damage_type": e_type.lower()})
-            effects.extend(_control_effects(block))
-            if _NEXT_ATTACK_DISADVANTAGE.search(block):
-                effects.append({"kind": "next-attack-disadvantage", "expires_at_end_of_target_turn": True})
+            effects.extend(parse_hit_riders(block))
             attack = {
                 "id": attack_id, "name": heading, "weapon_id": f"{attack_id}-weapon",
                 "attack_kind": kind.lower(), "attack_bonus": int(bonus),
