@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 153,
-    "blocked": 177
+    "public_ready": 151,
+    "blocked": 179
   },
   "monsters": [
     {
@@ -4001,7 +4001,7 @@
       "public_ready_status": "blocked",
       "blockers": [
         "bonus-action",
-        "monster-combat-mechanics-not-certified",
+        "deferred-environment:aquatic-only",
         "unsupported-action-rider"
       ]
     },
@@ -4022,14 +4022,14 @@
         "trait"
       ],
       "unsupported_mechanics": [
-        "monster-combat-mechanics-not-certified"
+        "deferred-environment:aquatic-only"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-certified"
+        "deferred-environment:aquatic-only"
       ]
     },
     {
@@ -5073,14 +5073,14 @@
         "trait"
       ],
       "unsupported_mechanics": [
-        "monster-combat-mechanics-not-certified"
+        "deferred-environment:aquatic-only"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-certified"
+        "deferred-environment:aquatic-only"
       ]
     },
     {
@@ -5377,12 +5377,17 @@
         "attack-roll",
         "trait"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "unsupported_mechanics": [
+        "deferred-environment:aquatic-only"
+      ],
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "deferred-environment:aquatic-only",
+        "missing-runtime-template"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-knight",
@@ -6279,8 +6284,8 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
+        "deferred-environment:aquatic-only",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "reaction"
       ]
     },
@@ -6526,14 +6531,14 @@
         "trait"
       ],
       "unsupported_mechanics": [
-        "monster-combat-mechanics-not-certified"
+        "deferred-environment:aquatic-only"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-certified"
+        "deferred-environment:aquatic-only"
       ]
     },
     {
@@ -7063,7 +7068,7 @@
       "monster_name": "Reef Shark",
       "srd_source_page": 360,
       "srd_source_reference": "SRD 5.2.1 p. 360",
-      "runtime_template_id": "srd-reef-shark",
+      "runtime_template_id": null,
       "detected_combat_mechanics": [
         "attack-roll",
         "trait"
@@ -7072,12 +7077,16 @@
         "attack-roll",
         "trait"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "unsupported_mechanics": [
+        "deferred-environment:aquatic-only"
+      ],
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "deferred-environment:aquatic-only"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-remorhaz",
@@ -7464,7 +7473,7 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-certified",
+        "deferred-environment:aquatic-only",
         "no-attack-roll"
       ]
     },
@@ -8267,14 +8276,14 @@
         "trait"
       ],
       "unsupported_mechanics": [
-        "monster-combat-mechanics-not-certified"
+        "deferred-environment:aquatic-only"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-certified"
+        "deferred-environment:aquatic-only"
       ]
     },
     {
