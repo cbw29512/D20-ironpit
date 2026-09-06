@@ -57,6 +57,18 @@ assert.equal(Object.keys(monsters).length, 58, "control batch must bring browser
 }
 
 {
+  const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
+  const crab = member("monster-1:crab", "monsters", monsters["srd-giant-crab"]);
+  hero.state.action_available = true;
+  G.apply(hero.state, crab.combatant_id, 30, 5, false, true);
+  window.IRON_PIT_DICE = queuedDice([18, 2]);
+  const event = G.escape(1, 1, hero);
+  assert.equal(event.ability_check_roll.mode, "disadvantage");
+  assert.equal(event.ability_check_roll.selected_roll, 2);
+  assert.equal(event.check_succeeded, false);
+}
+
+{
   const held = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
   const other = member("hero-2:rokhan", "heroes", heroes["rokhan-stonefury-l1"]);
   const crab = member("monster-1:crab", "monsters", monsters["srd-giant-crab"]);
