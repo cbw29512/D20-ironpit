@@ -47,6 +47,23 @@ Conceptually:
 
 Example: +4 Strength and +3 Dexterity both apply because they affect different stats. +4 Strength and +2 Strength do not stack; use +4 Strength.
 
+## Flat modifiers and bonus-die modifiers
+
+Flat modifiers and bonus-die modifiers are separate runtime channels and may both apply to the same roll or stat-derived check.
+
+For each affected roll channel, such as an attack roll, saving throw, or ability check:
+
+- apply the strongest applicable positive flat modifier;
+- apply the strongest applicable negative flat modifier;
+- apply the strongest applicable positive bonus-die modifier;
+- apply the strongest applicable negative bonus-die modifier;
+- additional modifiers within the same channel and sign do not stack;
+- flat and die channels do not suppress one another.
+
+Example: an attack with a +2 temporary flat bonus and a +1d4 temporary bonus die uses both. A second +1 flat bonus is suppressed by the +2. A second +1d6 bonus die competes with the +1d4 bonus-die effect; only the strongest applicable positive bonus-die effect is used according to the engine's deterministic comparison rule.
+
+Baseline proficiency, ability modifiers, weapon bonuses, and other permanent construction values remain part of the normal base calculation and are not runtime stacking effects.
+
 ## Dynamic derived-stat recomputation
 
 Runtime ability-score buffs and debuffs modify the effective ability score first. Every derived combat value must read that current effective score rather than a cached starting modifier.
