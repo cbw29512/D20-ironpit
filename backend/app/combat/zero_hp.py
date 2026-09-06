@@ -44,6 +44,21 @@ def _mark_unconscious(state: CombatantState) -> ZeroHpOutcome:
     return "unconscious"
 
 
+def _regeneration_delays_death(state: CombatantState) -> bool:
+    profile = state.template.regeneration
+    return profile is not None and profile.delays_death_at_zero
+
+
+def _record_regeneration_suppression(
+    state: CombatantState, amount: int, damage_types: set[DamageType],
+) -> None:
+    profile = state.template.regeneration
+    if profile is None or amount <= 0:
+        return
+    if set(profile.suppressed_by_damage_types) & damage_types:
+        state.regeneration_suppressed_next_turn = True
+
+
 def _after_temporary_hp(state: CombatantState, amount: int) -> int:
     absorbed = min(state.temporary_hp, amount)
     state.temporary_hp -= absorbed
@@ -88,7 +103,9 @@ def restore_hit_points(state: CombatantState, amount: int) -> int:
 
 
 def _damage_at_zero(state: CombatantState, incoming: int, *, critical: bool) -> ZeroHpOutcome:
-    if state.template.kind == "monster" or incoming >= effective_max_hp(state):
+    if state.template.kind == "monster":
+        return _mark_unconscious(state) if _regeneration_delays_death(state) else _mark_dead(state)
+    if incoming >= effective_max_hp(state):
         return _mark_dead(state)
     state.is_stable = False
     state.death_save_failures = min(3, state.death_save_failures + (2 if critical else 1))
@@ -115,6 +132,7 @@ def apply_damage(
 
         incoming = amount
         types = damage_types or set()
+        _record_regeneration_suppression(state, incoming, types)
         amount = _after_temporary_hp(state, amount)
         if state.current_hp == 0:
             return _finish_damage(state, _damage_at_zero(state, incoming, critical=critical), incoming, dice, affected_states)
@@ -130,7 +148,8 @@ def apply_damage(
         ):
             return _finish_damage(state, "undead_fortitude", incoming, dice, affected_states)
         if state.template.kind == "monster":
-            return _finish_damage(state, _mark_dead(state), incoming, dice, affected_states)
+            outcome = _mark_unconscious(state) if _regeneration_delays_death(state) else _mark_dead(state)
+            return _finish_damage(state, outcome, incoming, dice, affected_states)
 
         remaining_damage = max(0, amount - hp_before)
         if remaining_damage >= effective_max_hp(state):
