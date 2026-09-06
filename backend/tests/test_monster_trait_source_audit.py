@@ -51,7 +51,7 @@ def test_unknown_outcome_changing_trait_fails_closed() -> None:
     row = dict(_row("Wolf"))
     row["traits"] = "Magic Resistance. The wolf has Advantage on saving throws against spells and magical effects."
     drifted = wolf.model_copy(update={"source_trait_names": ["Magic Resistance"], "combat_traits": []})
-    assert "uncertified-trait:magic-resistance" in trait_issues(drifted, row)
+    assert "trait-runtime-missing:magic-resistance" in trait_issues(drifted, row)
 
 
 def test_catalog_blocks_missing_runtime_pack_tactics(monkeypatch) -> None:

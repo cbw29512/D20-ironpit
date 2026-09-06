@@ -4,9 +4,12 @@ from app.content.simple_monster_source_definitions import build_simple_source_de
 from app.domain.catalog import CoverageStatus
 
 
+_EXPECTED_SIMPLE_SOURCE = {"Berserker", "Blink Dog", "Ettin", "Fire Giant", "Nightmare", "Sahuagin Warrior", "Spy", "Tough Boss", "Xorn"}
+
+
 def test_simple_source_family_compiles_without_bespoke_monster_builders() -> None:
     definitions = build_simple_source_definitions()
-    assert {item.name for item in definitions.values()} == {"Blink Dog", "Fire Giant", "Spy", "Tough Boss", "Xorn"}
+    assert {item.name for item in definitions.values()} == _EXPECTED_SIMPLE_SOURCE
 
     spy = definitions["srd-spy"]
     poison = [effect for attack in spy.attacks for effect in attack.effects if effect.kind == "damage"]
@@ -17,6 +20,12 @@ def test_simple_source_family_compiles_without_bespoke_monster_builders() -> Non
     disadvantage = [effect for effect in hammer.effects if effect.kind == "next-attack-disadvantage"]
     assert len(disadvantage) == 1
     assert disadvantage[0].expires_at_end_of_target_turn is True
+
+    ettin = definitions["srd-ettin"]
+    morningstar = next(attack for attack in ettin.attacks if attack.name == "Morningstar")
+    assert any(effect.kind == "next-attack-disadvantage" for effect in morningstar.effects)
+    battleaxe = next(attack for attack in ettin.attacks if attack.name == "Battleaxe")
+    assert any(effect.kind == "prone" for effect in battleaxe.effects)
 
     boss = definitions["srd-tough-boss"]
     assert boss.attack_action is not None
@@ -77,6 +86,6 @@ def test_simple_source_parser_compiles_maximum_hp_drain_by_damage_outcome() -> N
 
 def test_simple_source_family_is_promoted_only_through_full_catalog_audit() -> None:
     cards = {card.name: card for card in build_monster_catalog()}
-    for name in ("Blink Dog", "Fire Giant", "Spy", "Tough Boss", "Xorn"):
+    for name in _EXPECTED_SIMPLE_SOURCE:
         assert cards[name].coverage_status is CoverageStatus.RAW_READY
         assert cards[name].blockers == []

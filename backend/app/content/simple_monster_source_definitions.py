@@ -10,7 +10,7 @@ from app.content.movement_modes import parse_movement_profile, standard_arena_cl
 from app.content.simple_monster_source_attacks import parse_simple_attacks
 from app.domain.capabilities import CombatantDefinition
 
-_SIMPLE_SOURCE_NAMES = frozenset({"Berserker", "Blink Dog", "Fire Giant", "Nightmare", "Sahuagin Warrior", "Spy", "Tough Boss", "Xorn"})
+_SIMPLE_SOURCE_NAMES = frozenset({"Berserker", "Blink Dog", "Ettin", "Fire Giant", "Nightmare", "Sahuagin Warrior", "Spy", "Tough Boss", "Xorn"})
 
 
 def _first_int(value: object) -> int:

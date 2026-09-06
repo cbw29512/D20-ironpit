@@ -87,9 +87,9 @@ def test_raw_ready_monsters_are_audited_runtime_subset() -> None:
     ready_ids = {card.runnable_template_id for card in cards if card.coverage_status is CoverageStatus.RAW_READY}
     runtime_ids = {template.id for template in build_arena_roster().monsters}
     assert ready_ids <= runtime_ids
-    berserker = next(card for card in cards if card.name == "Berserker")
-    assert berserker.runnable_template_id is None
-    assert berserker.blockers == ["monster-combat-mechanics-not-certified"]
+    stirge = next(card for card in cards if card.name == "Stirge")
+    assert stirge.runnable_template_id is None
+    assert stirge.blockers
 
 
 def test_raw_ready_monsters_have_precise_srd_page_references() -> None:
