@@ -135,6 +135,6 @@
     syncFinal(battle); return battle;
   }
 
-  window.IRON_PIT_BATTLEFIELD_REPLAY = { classifyStatusLanes, concentrationLabel, conditionLabel };
+  window.IRON_PIT_BATTLEFIELD_REPLAY = { bindBattle, classifyStatusLanes, concentrationLabel, conditionLabel, eventStep, play, syncFinal };
   window.playIronPitBattle = play;
 })();
