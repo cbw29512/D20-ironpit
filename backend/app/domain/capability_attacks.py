@@ -38,6 +38,7 @@ class AttackCapabilityDefinition(BaseModel):
     rage_eligible: bool = False
     effects: list[AttackEffectDefinition] = Field(default_factory=list)
     advantage_if_target_grappled_by_self: bool = False
+    advantage_if_target_missing_hp: bool = False
     forbid_target_grappled_by_self: bool = False
     resource_id: str | None = None
     resource_cost: int | None = Field(default=None, ge=1, le=20)
