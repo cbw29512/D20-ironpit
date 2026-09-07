@@ -5,6 +5,7 @@ import re
 
 from app.content.monster_combat_scope import base_feature_name, feature_blocks, strip_post_combat_outcomes
 from app.content.monster_trait_source_audit import parse_trait_names
+from app.content.simple_monster_source_charge import parse_attack_charge
 from app.content.simple_monster_source_riders import parse_hit_riders
 
 logger = logging.getLogger(__name__)
@@ -95,6 +96,9 @@ def parse_simple_attacks(row: dict[str, object]) -> tuple[list[dict[str, object]
                     kind, bonus, reach, normal, long, amount, damage_type = fixed.groups()
                     built = [_entry(monster_slug, heading, kind.lower(), bonus, reach, normal, long, "0", "2", None, "0", damage_type, _effects(block, fixed.span(), heading))]
                     built[0].pop("damage"); built[0]["fixed_damage"] = int(amount)
+            charge = parse_attack_charge(block)
+            if charge is not None:
+                for attack in built: attack["charge"] = charge
             if _GRAPPLE_ADV.search(block):
                 for attack in built: attack["advantage_if_target_grappled_by_self"] = True
             if _MISSING_HP_ADV.search(block):

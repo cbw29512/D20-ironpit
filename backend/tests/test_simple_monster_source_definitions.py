@@ -1,9 +1,7 @@
-from app.combat.charge_profiles import charge_profile_for_attack_id
 from app.content.monster_catalog import build_monster_catalog
 from app.content.simple_monster_source_attacks import parse_simple_attacks
 from app.content.simple_monster_source_definitions import build_simple_source_definitions
 from app.domain.catalog import CoverageStatus
-from app.domain.traits import CombatTrait
 
 
 _EXPECTED_SIMPLE_SOURCE = {
@@ -65,15 +63,15 @@ def test_lycanthropes_enter_in_battle_ready_hybrid_form_without_curse_runtime() 
         assert definition.attack_action is not None
 
 
-def test_wereboar_uses_universal_charge_profile() -> None:
+def test_wereboar_uses_source_derived_universal_charge_data() -> None:
     definition = build_simple_source_definitions()["srd-wereboar"]
     tusk = next(attack for attack in definition.attacks if attack.name.startswith("Tusk"))
-    profile = charge_profile_for_attack_id(tusk.id)
-    assert CombatTrait.CHARGE.value in definition.combat_traits
+    profile = tusk.charge
     assert profile is not None and profile.minimum_move_ft == 20
     assert profile.max_target_size.value == "medium" and profile.prone_max_target_size.value == "medium"
     assert profile.bonus_damage is not None and (profile.bonus_damage.dice_count, profile.bonus_damage.dice_size) == (2, 6)
     assert profile.bonus_damage.damage_type.value == "piercing"
+    assert "charge" not in definition.combat_traits
 
 
 def test_simple_source_parser_compiles_generic_grapple_and_prone_riders() -> None:

@@ -19,7 +19,6 @@ from app.content.simple_monster_source_bonus_saves import parse_simple_bonus_sav
 from app.content.simple_monster_source_resources import attach_limited_use_resources
 from app.content.simple_monster_source_saves import attach_save_replacement, parse_simple_save_actions
 from app.domain.capabilities import CombatantDefinition
-from app.domain.traits import CombatTrait
 
 _SIMPLE_SOURCE_NAMES = frozenset({
     "Ankheg", "Azer Sentinel", "Berserker", "Black Dragon Wyrmling", "Blink Dog", "Blue Dragon Wyrmling", "Bone Devil", "Bugbear Stalker", "Bugbear Warrior",
@@ -27,7 +26,6 @@ _SIMPLE_SOURCE_NAMES = frozenset({
     "Lion", "Magmin", "Merrow", "Nightmare", "Piranha", "Pirate", "Red Dragon Wyrmling", "Sahuagin Warrior", "Satyr", "Specter", "Spy", "Tough Boss",
     "Troll Limb", "Werebear", "Wereboar", "Wererat", "Weretiger", "Werewolf", "White Dragon Wyrmling", "Winter Wolf", "Wraith", "Xorn",
 })
-_CHARGE_RIDER = re.compile(r"\bmoved\s+\d+\+\s*feet\s+straight\s+toward\s+(?:it|the target)\s+immediately\s+before\s+the\s+hit\b", re.I)
 
 
 def _first_int(value: object) -> int:
@@ -49,7 +47,6 @@ def _definition(row: dict[str, object]) -> CombatantDefinition:
     multiattack = attach_save_replacement(row, multiattack, save_actions)
     trait_names = parse_trait_names(row.get("traits", "")) if str(row.get("traits", "")).strip() else []
     combat_traits = [_MODELED_TRAITS[name].value for name in trait_names if name in _MODELED_TRAITS]
-    if _CHARGE_RIDER.search(strip_post_combat_outcomes(row.get("actions", ""))): combat_traits.append(CombatTrait.CHARGE.value)
     regeneration = parse_regeneration(row); turn_damage_auras = parse_turn_damage_auras(row)
     death_trigger_saves = parse_death_trigger_saves(row); ally_roll_auras = parse_ally_roll_auras(row)
     start_turn_save_auras = parse_start_turn_save_auras(row)
@@ -82,10 +79,7 @@ def _definition(row: dict[str, object]) -> CombatantDefinition:
 def build_simple_source_definitions() -> dict[str, CombatantDefinition]:
     rows = {str(row["name"]): row for row in load_monster_rows()}; missing = _SIMPLE_SOURCE_NAMES - rows.keys()
     if missing: raise ValueError(f"Missing SRD simple-monster rows: {', '.join(sorted(missing))}")
-    eligible_names = [
-        name for name in sorted(_SIMPLE_SOURCE_NAMES)
-        if deferred_environment_reason(rows[name]["speed"]) is None
-    ]
+    eligible_names = [name for name in sorted(_SIMPLE_SOURCE_NAMES) if deferred_environment_reason(rows[name]["speed"]) is None]
     definitions = [_definition(rows[name]) for name in eligible_names]
     result = {definition.id: definition for definition in definitions}
     if len(result) != len(definitions): raise ValueError("Simple source-derived monster ids must be unique.")
