@@ -13996,6 +13996,144 @@
   },
   {
     "schema_version": 1,
+    "id": "srd-swarm-of-piranhas",
+    "name": "Swarm of Piranhas",
+    "archetype": "source-certified swarm candidate",
+    "challenge_rating": "1",
+    "kind": "monster",
+    "size": "medium",
+    "armor_class": 13,
+    "max_hp": 28,
+    "speed_ft": 5,
+    "movement_modes": {
+      "walk_ft": 5,
+      "fly_ft": 0,
+      "climb_ft": 0,
+      "swim_ft": 40,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": 3,
+    "progression_features": {
+      "critical_hit_minimum": 20,
+      "initiative_advantage": false,
+      "athletics_advantage": false,
+      "steady_aim": false,
+      "heroic_warrior": false,
+      "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
+    },
+    "attacks": [
+      {
+        "id": "srd-swarm-of-piranhas-bites",
+        "name": "Bites",
+        "weapon_id": "srd-swarm-of-piranhas-bites-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 5,
+        "damage": {
+          "count": 2,
+          "size": 4,
+          "bonus": 3
+        },
+        "damage_type": "piercing",
+        "animation": "swarm",
+        "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "effects": [
+          {
+            "kind": "damage",
+            "source": "conditional:attacker_bloodied",
+            "dice": {
+              "count": 1,
+              "size": 4,
+              "bonus": 3
+            },
+            "damage_type": "piercing",
+            "trigger": "attacker_bloodied",
+            "mode": "replace_weapon"
+          }
+        ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
+        "forbid_target_grappled_by_self": false
+      }
+    ],
+    "primary_attack_id": "srd-swarm-of-piranhas-bites",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 3,
+      "damage": 2
+    },
+    "save_actions": [],
+    "death_trigger_save_actions": [],
+    "spell_save_actions": [],
+    "defensive_spell_actions": [],
+    "healing_actions": [],
+    "condition_removal_actions": [],
+    "saving_throw_bonuses": {
+      "strength": 1,
+      "dexterity": 3,
+      "constitution": -1,
+      "intelligence": -5,
+      "wisdom": -2,
+      "charisma": -4
+    },
+    "skill_bonuses": {},
+    "combat_traits": [
+      "swarm"
+    ],
+    "source_trait_names": [
+      "Swarm",
+      "Water Breathing"
+    ],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [],
+    "source_limited_use_names": [],
+    "source_legendary_action_names": [],
+    "fighting_styles": [],
+    "weapon_masteries": [],
+    "damage_resistances": [
+      "bludgeoning",
+      "piercing",
+      "slashing"
+    ],
+    "damage_vulnerabilities": [],
+    "damage_immunities": [],
+    "condition_immunities": [
+      "charmed",
+      "frightened",
+      "grappled",
+      "paralyzed",
+      "petrified",
+      "prone",
+      "restrained",
+      "stunned"
+    ],
+    "wearing_heavy_armor": false,
+    "rage_damage_bonus": 0,
+    "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
+    "visual": {
+      "armor": "none",
+      "main_hand": "Bites",
+      "body_style": "swarm"
+    },
+    "source": "SRD 5.2.1 p. 362",
+    "unsupported_capabilities": []
+  },
+  {
+    "schema_version": 1,
     "id": "srd-bandit-captain",
     "name": "Bandit Captain",
     "archetype": "source-certified Parry monster",
