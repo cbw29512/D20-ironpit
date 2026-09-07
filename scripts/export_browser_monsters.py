@@ -42,6 +42,14 @@ def _add_save_area_metadata(row, template) -> None:
             if action.area.width_ft is not None:
                 area["widthFt"] = action.area.width_ft
             item["area"] = area
+        if action.additional_damage:
+            item["additionalDamage"] = [
+                {
+                    "source": packet.source, "diceCount": packet.dice_count, "diceSize": packet.dice_size,
+                    "damageBonus": packet.damage_bonus, "damageType": packet.damage_type.value,
+                }
+                for packet in action.additional_damage
+            ]
         if action.failure_conditions:
             item["failureConditions"] = [
                 {
