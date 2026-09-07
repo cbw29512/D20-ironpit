@@ -6,7 +6,7 @@ from app.domain.catalog import CoverageStatus
 
 _EXPECTED_SIMPLE_SOURCE = {
     "Ankheg", "Azer Sentinel", "Berserker", "Black Dragon Wyrmling", "Blink Dog", "Blue Dragon Wyrmling", "Bone Devil", "Bugbear Stalker", "Bugbear Warrior",
-    "Ettin", "Fire Giant", "Ghoul", "Giant Shark", "Green Dragon Wyrmling", "Hell Hound", "Hezrou", "Hill Giant", "Hobgoblin Captain", "Hunter Shark",
+    "Ettin", "Fire Giant", "Ghoul", "Giant Seahorse", "Giant Shark", "Green Dragon Wyrmling", "Hell Hound", "Hezrou", "Hill Giant", "Hobgoblin Captain", "Hunter Shark",
     "Lion", "Magmin", "Merrow", "Nightmare", "Piranha", "Pirate", "Red Dragon Wyrmling", "Sahuagin Warrior", "Satyr", "Specter", "Spy", "Tough Boss",
     "Troll Limb", "Werebear", "Wereboar", "Wererat", "Weretiger", "Werewolf", "White Dragon Wyrmling", "Winter Wolf", "Wraith", "Xorn",
 }
@@ -72,6 +72,17 @@ def test_wereboar_uses_source_derived_universal_charge_data() -> None:
     assert profile.bonus_damage is not None and (profile.bonus_damage.dice_count, profile.bonus_damage.dice_size) == (2, 6)
     assert profile.bonus_damage.damage_type.value == "piercing"
     assert "charge" not in definition.combat_traits
+
+
+def test_giant_seahorse_uses_source_derived_replacement_charge_data() -> None:
+    definition = build_simple_source_definitions()["srd-giant-seahorse"]
+    ram = next(attack for attack in definition.attacks if attack.name == "Ram")
+    profile = ram.charge
+    assert profile is not None and profile.minimum_move_ft == 20
+    assert profile.replacement_damage is not None
+    assert (profile.replacement_damage.dice_count, profile.replacement_damage.dice_size) == (2, 8)
+    assert profile.replacement_damage.damage_bonus == 2
+    assert profile.replacement_damage.damage_type.value == "bludgeoning"
 
 
 def test_simple_source_parser_compiles_generic_grapple_and_prone_riders() -> None:

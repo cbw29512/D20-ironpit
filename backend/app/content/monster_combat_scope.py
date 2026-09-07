@@ -20,6 +20,10 @@ _BATTLE_READY_HYBRID = re.compile(
     r"\bshape-shifts into a (?P<size>Tiny|Small|Medium|Large|Huge|Gargantuan) [^.]*?hybrid(?: form)?\b",
     re.I,
 )
+_NON_PROVOKING_MOVEMENT = re.compile(
+    r"\b(?:without provoking Opportunity Attacks?|(?:doesn[’']t|does not) provoke an Opportunity Attack)\b",
+    re.I,
+)
 
 # Iron Pit scope is intentionally narrower than the full tabletop ruleset.
 # Movement, positioning, senses, stealth, environment, and narrative-only text
@@ -115,8 +119,9 @@ def combat_math_relevant(source: object) -> bool:
     text = strip_post_combat_outcomes(source)
     if not text:
         return False
-    # Movement/presentation mechanics are deliberately absent unless the same
-    # source also mentions an attack or another supported mathematical outcome.
+    # Non-provoking movement remains movement-only in fixed Pit formation; strip
+    # only the negated Opportunity Attack phrase so real attack rules still count.
+    text = _NON_PROVOKING_MOVEMENT.sub("", text)
     return any(pattern.search(text) for pattern in _COMBAT_MATH)
 
 
