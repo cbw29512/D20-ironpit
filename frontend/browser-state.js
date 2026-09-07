@@ -25,6 +25,16 @@
     };
   }
 
+  function setPositiveHitPoints(state, amount) {
+    if (!(amount > 0)) throw new Error("Positive Hit Points must be greater than zero.");
+    const current = Math.min(effectiveMaxHp(state), amount);
+    if (!(current > 0)) throw new Error("A combatant with a 0 Hit Point maximum cannot enter a positive-HP state.");
+    state.current_hp = current;
+    state.is_alive = true; state.is_dead = false; state.is_unconscious = false; state.is_stable = false;
+    state.death_save_successes = 0; state.death_save_failures = 0;
+    return current;
+  }
+
   function grantTemporaryHp(state, amount) {
     if (amount < 0) throw new Error("Temporary HP cannot be negative.");
     if (state.template.traits?.includes("swarm")) return state.temporary_hp;
@@ -105,6 +115,6 @@
   const canProne = (target, maxSize) => sizeAtMost(target, maxSize);
   window.IRON_PIT_BROWSER_STATE = {
     active, beginTurn, buildState, canProne, distance, downedCharacter, effectiveMaxHp, grantTemporaryHp, hasActiveAlly,
-    moveToward, nearestTarget, packTactics, refreshReaction, refreshStartOfTurn, sizeAtMost, targetPriority,
+    moveToward, nearestTarget, packTactics, refreshReaction, refreshStartOfTurn, setPositiveHitPoints, sizeAtMost, targetPriority,
   };
 })();

@@ -31,8 +31,7 @@
     const recoveryMinimum = state.template.survivor_death_save_critical_minimum || 20;
     let result = "failure";
     if (natural >= recoveryMinimum) {
-      state.current_hp = 1; state.is_alive = true; state.is_unconscious = false; state.is_stable = false;
-      state.death_save_successes = 0; state.death_save_failures = 0; result = `${natural} counts as a natural 20; regains 1 HP`;
+      S().setPositiveHitPoints(state, 1); result = `${natural} counts as a natural 20; regains 1 HP`;
     } else if (natural === 1) {
       state.death_save_failures = Math.min(3, state.death_save_failures + 2); result = "natural 1; two failures";
     } else if (natural >= 10) {
@@ -56,9 +55,9 @@
     const con = state.template.ability_scores?.constitution;
     if (!bonus || con == null || state.is_dead || state.current_hp <= 0 || state.current_hp > Math.floor(S().effectiveMaxHp(state) / 2)) return null;
     const before = state.current_hp, amount = bonus + Math.floor((con - 10) / 2);
-    state.current_hp = Math.min(S().effectiveMaxHp(state), before + amount);
-    const healed = state.current_hp - before;
+    const after = Math.min(S().effectiveMaxHp(state), before + amount), healed = after - before;
     if (healed <= 0) return null;
+    S().setPositiveHitPoints(state, after);
     return { sequence, round_number: round, event_type: "healing", actor_id: member.combatant_id, actor_name: state.template.name,
       target_id: member.combatant_id, target_name: state.template.name, feature_id: "bloodied-start-turn-healing",
       hp_before: before, hp_after: state.current_hp, animation: "healing",

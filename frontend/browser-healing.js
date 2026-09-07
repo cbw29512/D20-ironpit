@@ -65,13 +65,9 @@
 
   function restore(state, amount) {
     if (state.is_dead || amount <= 0 || swarm(state)) return 0;
-    const before = state.current_hp;
-    state.current_hp = Math.min(S().effectiveMaxHp(state), before + amount);
-    const healed = state.current_hp - before;
-    if (healed > 0) {
-      state.is_alive = true; state.is_unconscious = false; state.is_stable = false;
-      state.death_save_successes = 0; state.death_save_failures = 0;
-    }
+    const before = state.current_hp, after = Math.min(S().effectiveMaxHp(state), before + amount);
+    const healed = after - before;
+    if (healed > 0) S().setPositiveHitPoints(state, after);
     return healed;
   }
 

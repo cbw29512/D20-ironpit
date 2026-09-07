@@ -13,10 +13,7 @@
     if (!state.template.traits?.includes("relentless-endurance")) return false;
     if ((state.resources["relentless-endurance"] || 0) < 1 || remaining >= S().effectiveMaxHp(state)) return false;
     state.resources["relentless-endurance"] -= 1;
-    state.current_hp = 1;
-    state.is_alive = true;
-    state.is_unconscious = false;
-    state.is_stable = false;
+    S().setPositiveHitPoints(state, 1);
     return true;
   }
 

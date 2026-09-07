@@ -6,7 +6,7 @@ from typing import Literal
 from app.combat.conditions import PRONE_EFFECT_ID, apply_condition
 from app.combat.damage_finalization import finish_damage
 from app.combat.dice import DiceProvider
-from app.combat.hit_points import effective_max_hp
+from app.combat.hit_points import effective_max_hp, set_positive_hit_points
 from app.combat.orc import use_relentless_endurance
 from app.combat.undead_fortitude import resolve_undead_fortitude
 from app.domain.models import CombatantState, DamageType
@@ -74,13 +74,10 @@ def restore_hit_points(state: CombatantState, amount: int) -> int:
     if state.is_dead or amount == 0 or CombatTrait.SWARM in state.template.combat_traits:
         return 0
     before = state.current_hp
-    state.current_hp = min(effective_max_hp(state), before + amount)
-    healed = state.current_hp - before
+    after = min(effective_max_hp(state), before + amount)
+    healed = after - before
     if healed > 0:
-        state.is_alive = True
-        state.is_unconscious = False
-        state.is_stable = False
-        reset_death_saves(state)
+        set_positive_hit_points(state, after)
     return healed
 
 
