@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.dice import DiceProvider
-from app.domain.models import CombatantState, DiceRoll, RollMode
+from app.domain.models import CombatantState, DiceRoll, RollMode, RollRevision
 
 logger = logging.getLogger(__name__)
 
@@ -65,12 +65,28 @@ def reroll_failed_attack_with_heroic_inspiration(
             selected = min(rerolled)
         else:
             selected = rerolled[0]
+        total = selected + roll.modifier
+        revision = RollRevision(
+            source_effect_id="heroic-inspiration",
+            kind="die_replacement",
+            original_rolls=list(roll.rolls),
+            replacement_rolls=rerolled,
+            original_modifier=roll.modifier,
+            replacement_modifier=roll.modifier,
+            original_selected=roll.selected_roll,
+            replacement_selected=selected,
+            original_total=roll.total,
+            replacement_total=total,
+            accepted="replacement",
+            replaced_die_index=index,
+        )
         state.heroic_inspiration = False
         return roll.model_copy(update={
             "rolls": rerolled,
             "selected_roll": selected,
-            "total": selected + roll.modifier,
+            "total": total,
             "notation": f"{roll.notation} [Heroic Inspiration]",
+            "revisions": [*roll.revisions, revision],
         }), True
     except ValueError:
         raise
