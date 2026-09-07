@@ -4,6 +4,7 @@ import re
 
 from app.content.monster_combat_scope import feature_blocks
 from app.content.monster_trait_source_audit import parse_trait_names
+from app.content.simple_monster_source_save_expansion import _timing
 
 _ABILITY = r"Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma"
 _SIZE = r"Tiny|Small|Medium|Large|Huge|Gargantuan"
@@ -18,6 +19,10 @@ _GRAPPLE_SAVE = re.compile(
 _TRAMPLE_SAVE = re.compile(
     rf"^(?P<name>.+?)\. (?P<ability>{_ABILITY}) Saving Throw: DC (?P<dc>\d+), one creature within (?P<range>\d+) feet that has the (?P<condition>{_CONDITION}) condition\. "
     rf"Failure: \d+ \((?P<count>\d+)d(?P<die>\d+)(?P<bonus>\s*[+-]\s*\d+)?\) (?P<type>{_DAMAGE}) damage\. Success: Half damage\.$", re.I,
+)
+_TIMED_CONDITION_SAVE = re.compile(
+    rf"^(?P<name>.+?)\. (?P<ability>{_ABILITY}) Saving Throw: DC (?P<dc>\d+), one creature .*?within (?P<range>\d+) feet\. "
+    rf"Failure: The target has the (?P<condition>{_CONDITION}) condition until the (?P<edge>start|end) of (?P<owner>.+?) next turn\.$", re.I,
 )
 
 
@@ -51,6 +56,14 @@ def parse_simple_bonus_save_actions(row: dict[str, object]) -> list[dict[str, ob
                 "required_target_conditions": [match.group("condition").lower()],
                 "damage": {"count": int(match.group("count")), "size": int(match.group("die")), "bonus": bonus},
                 "damage_type": match.group("type").lower(), "success_damage": "half", "animation": "save-effect",
+            }); continue
+        match = _TIMED_CONDITION_SAVE.fullmatch(block)
+        if match:
+            actions.append({
+                "id": f"srd-{monster_slug}-{_slug(heading)}", "name": heading, "action_cost": "bonus_action",
+                "save_ability": match.group("ability").lower(), "dc": int(match.group("dc")), "range_ft": int(match.group("range")),
+                "failure_conditions": [{"kind": "condition", "condition": match.group("condition").lower(), "expiry_timing": _timing(row, match.group("edge"), match.group("owner"))}],
+                "animation": "save-effect",
             }); continue
         raise ValueError(f"Simple bonus-save parser cannot prove {row['name']} {heading!r}: {block!r}")
     return actions
