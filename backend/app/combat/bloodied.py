@@ -10,6 +10,11 @@ def is_bloodied(state: CombatantState) -> bool:
     return state.current_hp * 2 <= effective_max_hp(state)
 
 
+def target_missing_hp_attack_advantage(attack: WeaponAttack, target: CombatantState) -> int:
+    """Return Advantage for attacks that key off any missing Hit Points."""
+    return int(attack.advantage_if_target_missing_hp and target.current_hp < effective_max_hp(target))
+
+
 def bloodied_fury_advantage(state: CombatantState, attack: WeaponAttack) -> int:
     """Return one Advantage source for supported Bloodied Fury melee attacks."""
     if CombatTrait.BLOODIED_FURY not in state.template.combat_traits:
