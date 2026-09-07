@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 171,
-    "blocked": 159
+    "public_ready": 180,
+    "blocked": 150
   },
   "monsters": [
     {
@@ -1030,7 +1030,7 @@
       "monster_name": "Animated Rug of Smothering",
       "srd_source_page": 259,
       "srd_source_reference": "SRD 5.2.1 p. 259",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-animated-rug-of-smothering",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -1038,19 +1038,15 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "damage-or-condition-defense"
       ],
-      "unsupported_mechanics": [
-        "condition-or-control"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "condition-or-control",
-        "monster-combat-mechanics-not-certified"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-ankheg",
@@ -2100,7 +2096,7 @@
       "monster_name": "Chimera",
       "srd_source_page": 273,
       "srd_source_reference": "SRD 5.2.1 p. 273",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-chimera",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -2112,26 +2108,19 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
+        "limited-use",
         "multiattack",
-        "saving-throw-action"
-      ],
-      "unsupported_mechanics": [
-        "condition-or-control",
-        "limited-use",
         "save-or-complex-action",
+        "saving-throw-action",
         "unsupported-action-rider"
       ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "condition-or-control",
-        "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action",
-        "unsupported-action-rider"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-chuul",
@@ -3768,7 +3757,7 @@
       "monster_name": "Giant Frog",
       "srd_source_page": 351,
       "srd_source_reference": "SRD 5.2.1 p. 351",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-giant-frog",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -3777,21 +3766,16 @@
       ],
       "supported_mechanics": [
         "attack-roll",
-        "trait"
-      ],
-      "unsupported_mechanics": [
         "condition-or-control",
+        "trait",
         "unsupported-action-rider"
       ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "condition-or-control",
-        "monster-combat-mechanics-not-certified",
-        "unsupported-action-rider"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-giant-goat",
@@ -4049,7 +4033,7 @@
       "monster_name": "Giant Toad",
       "srd_source_page": 354,
       "srd_source_reference": "SRD 5.2.1 p. 354",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-giant-toad",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -4057,19 +4041,15 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "condition-or-control"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "condition-or-control",
-        "monster-combat-mechanics-not-certified"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-giant-venomous-snake",
@@ -5637,7 +5617,7 @@
       "monster_name": "Magma Mephit",
       "srd_source_page": 307,
       "srd_source_reference": "SRD 5.2.1 p. 307",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-magma-mephit",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -5649,22 +5629,17 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
+        "limited-use",
+        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "limited-use",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-magmin",
@@ -5936,28 +5911,23 @@
       "monster_name": "Minotaur of Baphomet",
       "srd_source_page": 309,
       "srd_source_reference": "SRD 5.2.1 p. 309",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-minotaur-of-baphomet",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
         "limited-use"
       ],
       "supported_mechanics": [
-        "attack-roll"
-      ],
-      "unsupported_mechanics": [
+        "attack-roll",
         "condition-or-control",
         "limited-use"
       ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "condition-or-control",
-        "limited-use",
-        "monster-combat-mechanics-not-certified"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-mule",
@@ -6449,7 +6419,7 @@
       "monster_name": "Phase Spider",
       "srd_source_page": 313,
       "srd_source_reference": "SRD 5.2.1 p. 313",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-phase-spider",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -6460,20 +6430,16 @@
       "supported_mechanics": [
         "attack-roll",
         "bonus-action",
+        "condition-or-control",
         "multiattack",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "condition-or-control"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "condition-or-control",
-        "monster-combat-mechanics-not-certified"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-piranha",
@@ -7428,7 +7394,7 @@
       "monster_name": "Shadow",
       "srd_source_page": 322,
       "srd_source_reference": "SRD 5.2.1 p. 322",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-shadow",
       "detected_combat_mechanics": [
         "ability-score-change",
         "attack-roll",
@@ -7437,22 +7403,18 @@
         "trait"
       ],
       "supported_mechanics": [
+        "ability-score-change",
         "attack-roll",
         "bonus-action",
         "damage-or-condition-defense",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "ability-score-change"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "ability-score-change",
-        "monster-combat-mechanics-not-certified"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-shambling-mound",
@@ -7953,25 +7915,21 @@
       "monster_name": "Stirge",
       "srd_source_page": 329,
       "srd_source_reference": "SRD 5.2.1 p. 329",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-stirge",
       "detected_combat_mechanics": [
         "attachment-state",
         "attack-roll"
       ],
       "supported_mechanics": [
+        "attachment-state",
         "attack-roll"
       ],
-      "unsupported_mechanics": [
-        "attachment-state"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "attachment-state",
-        "monster-combat-mechanics-not-certified"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-stone-giant",

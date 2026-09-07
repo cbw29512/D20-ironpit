@@ -1,22 +1,12 @@
-CAPABILITY_YIELD_BASELINE	ready=171	blocked=159	actionable_blocked=157	deferred=2	signatures=67
+CAPABILITY_YIELD_BASELINE	ready=180	blocked=150	actionable_blocked=148	deferred=2	signatures=62
 CAPABILITY_DEFERRED_NONCOMBAT	Seahorse | Shrieker Fungus
 CAPABILITY_SINGLE_FAMILY	trait	5	Barbed Devil | Fire Elemental | Flesh Golem | Hydra | Mimic
-CAPABILITY_SINGLE_FAMILY	condition-or-control	4	Animated Rug of Smothering | Giant Toad | Phase Spider | Roper
-CAPABILITY_SINGLE_FAMILY	ability-score-change	1	Shadow
-CAPABILITY_SINGLE_FAMILY	attachment-state	1	Stirge
 CAPABILITY_SINGLE_FAMILY	bonus-action	1	Will-o’-Wisp
+CAPABILITY_SINGLE_FAMILY	condition-or-control	1	Roper
 CAPABILITY_SINGLE_FAMILY	reaction	1	Ochre Jelly
 CAPABILITY_SINGLE_FAMILY	save-or-complex-action	1	Horned Devil
-CAPABILITY_CONTROL_SIGNATURE	blinded+prone+restrained+swallow	1	Giant Toad
-CAPABILITY_CONTROL_SIGNATURE	blinded+restrained	1	Animated Rug of Smothering
-CAPABILITY_CONTROL_SIGNATURE	paralyzed+poisoned	1	Phase Spider
 CAPABILITY_CONTROL_SIGNATURE	poisoned	1	Roper
-CAPABILITY_CONTROL_EFFECT	blinded	2	Animated Rug of Smothering | Giant Toad
-CAPABILITY_CONTROL_EFFECT	poisoned	2	Phase Spider | Roper
-CAPABILITY_CONTROL_EFFECT	restrained	2	Animated Rug of Smothering | Giant Toad
-CAPABILITY_CONTROL_EFFECT	paralyzed	1	Phase Spider
-CAPABILITY_CONTROL_EFFECT	prone	1	Giant Toad
-CAPABILITY_CONTROL_EFFECT	swallow	1	Giant Toad
+CAPABILITY_CONTROL_EFFECT	poisoned	1	Roper
 CAPABILITY_TRAIT_SINGLE_HEADING	Adhesive	1	Mimic
 CAPABILITY_TRAIT_SINGLE_HEADING	Barbed Hide	1	Barbed Devil
 CAPABILITY_TRAIT_HEADING	Adhesive	1	Mimic
@@ -34,10 +24,9 @@ CAPABILITY_SIGNATURE	11	condition-or-control+save-or-complex-action	Bearded Devi
 CAPABILITY_SIGNATURE	8	condition-or-control+legendary+limited-use+save-or-complex-action+spellcasting+trait	Adult Brass Dragon | Adult Bronze Dragon | Adult Silver Dragon | Ancient Brass Dragon | Ancient Bronze Dragon | Ancient Silver Dragon | Sphinx of Lore | Sphinx of Valor
 CAPABILITY_SIGNATURE	7	bonus-action+limited-use	Basilisk | Centaur Trooper | Frost Giant | Giant Hyena | Gnoll Warrior | Medusa | Nalfeshnee
 CAPABILITY_SIGNATURE	6	bonus-action+limited-use+spellcasting	Cultist Fanatic | Drider | Incubus | Priest | Priest Acolyte | Stone Golem
-CAPABILITY_SIGNATURE	6	limited-use+save-or-complex-action	Copper Dragon Wyrmling | Gold Dragon Wyrmling | Magma Mephit | Swarm of Ravens | Young Copper Dragon | Young Gold Dragon
 CAPABILITY_SIGNATURE	5	condition-or-control+limited-use+save-or-complex-action+spellcasting	Doppelganger | Dust Mephit | Ghost | Quasit | Storm Giant
+CAPABILITY_SIGNATURE	5	limited-use+save-or-complex-action	Copper Dragon Wyrmling | Gold Dragon Wyrmling | Swarm of Ravens | Young Copper Dragon | Young Gold Dragon
 CAPABILITY_SIGNATURE	5	trait	Barbed Devil | Fire Elemental | Flesh Golem | Hydra | Mimic
-CAPABILITY_SIGNATURE	4	condition-or-control	Animated Rug of Smothering | Giant Toad | Phase Spider | Roper
 CAPABILITY_SIGNATURE	4	spellcasting+trait	Efreeti | Gray Ooze | Green Hag | Spirit Naga
 CAPABILITY_SIGNATURE	3	bonus-action+condition-or-control	Elephant | Mammoth | Purple Worm
 CAPABILITY_SIGNATURE	3	bonus-action+condition-or-control+limited-use+save-or-complex-action	Behir | Ettercap | Gorgon
@@ -53,3 +42,4 @@ CAPABILITY_SIGNATURE	2	condition-or-control+save-or-complex-action+spellcasting+
 CAPABILITY_SIGNATURE	2	condition-or-control+save-or-complex-action+trait	Erinyes | Shambling Mound
 CAPABILITY_SIGNATURE	2	condition-or-control+trait	Assassin | Earth Elemental
 CAPABILITY_SIGNATURE	2	legendary+limited-use+save-or-complex-action+trait	Adult White Dragon | Ancient White Dragon
+CAPABILITY_SIGNATURE	2	limited-use+reaction	Octopus | Sphinx of Wonder
