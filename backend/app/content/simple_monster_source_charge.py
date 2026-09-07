@@ -25,7 +25,10 @@ _REPLACEMENT = re.compile(
     r"immediately\s+before\s+the\s+hit\b",
     re.I,
 )
-_PRONE = re.compile(r"\b(?:the\s+)?target\s+(?:also\s+)?has\s+the\s+Prone\s+condition\b", re.I)
+_PRONE = re.compile(
+    r"\b(?:the\s+)?target\b[^.]{0,160}\b(?:also\s+)?has\s+the\s+Prone\s+condition\b",
+    re.I,
+)
 
 
 def _damage(match: re.Match[str]) -> dict[str, object]:
