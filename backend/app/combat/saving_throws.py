@@ -31,13 +31,24 @@ def _damage_rolls(action: SavingThrowAction, dice: DiceProvider, shared_damage_r
     return list(shared_damage_rolls)
 
 
+def _component(source: str, count: int, size: int, bonus: int, damage_type: str, dice: DiceProvider, half: bool, shared: list[int] | None = None) -> DamageRollComponent:
+    rolls = list(shared) if shared is not None else [dice.roll(size) for _ in range(count)]
+    total = sum(rolls) + bonus
+    if half: total //= 2
+    return DamageRollComponent(source=source, notation=f"{count}d{size}+{bonus}", rolls=rolls,
+                               modifier=bonus, damage_type=DamageType(damage_type), total=max(0, total))
+
+
 def _damage_components(action: SavingThrowAction, dice: DiceProvider, succeeded: bool, shared_damage_rolls: list[int] | None = None) -> list[DamageRollComponent]:
-    if action.damage_dice_count == 0 or (succeeded and action.success_damage == "none"): return []
-    if action.damage_type is None: raise ValueError(f"{action.name} has damage dice but no damage type.")
-    rolls = _damage_rolls(action, dice, shared_damage_rolls); total = sum(rolls) + action.damage_bonus
-    if succeeded and action.success_damage == "half": total //= 2
-    return [DamageRollComponent(source=action.name, notation=f"{action.damage_dice_count}d{action.damage_dice_size}+{action.damage_bonus}", rolls=rolls,
-                                modifier=action.damage_bonus, damage_type=DamageType(action.damage_type), total=max(0, total))]
+    if succeeded and action.success_damage == "none": return []
+    half = succeeded and action.success_damage == "half"; result: list[DamageRollComponent] = []
+    if action.damage_dice_count:
+        if action.damage_type is None: raise ValueError(f"{action.name} has damage dice but no damage type.")
+        rolls = _damage_rolls(action, dice, shared_damage_rolls)
+        result.append(_component(action.name, action.damage_dice_count, action.damage_dice_size, action.damage_bonus, action.damage_type, dice, half, rolls))
+    for packet in action.additional_damage:
+        result.append(_component(packet.source, packet.dice_count, packet.dice_size, packet.damage_bonus, packet.damage_type.value, dice, half))
+    return result
 
 
 def _failed_save_conditions(
