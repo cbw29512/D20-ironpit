@@ -1,4 +1,4 @@
-CAPABILITY_YIELD_BASELINE	ready=186	blocked=144	actionable_blocked=142	deferred=2	signatures=63
+CAPABILITY_YIELD_BASELINE	ready=188	blocked=142	actionable_blocked=140	deferred=2	signatures=63
 CAPABILITY_DEFERRED_NONCOMBAT	Seahorse | Shrieker Fungus
 CAPABILITY_SINGLE_FAMILY	trait	5	Barbed Devil | Fire Elemental | Flesh Golem | Hydra | Mimic
 CAPABILITY_SINGLE_FAMILY	bonus-action	1	Will-o’-Wisp
@@ -29,7 +29,6 @@ CAPABILITY_SIGNATURE	5	condition-or-control+limited-use+save-or-complex-action+s
 CAPABILITY_SIGNATURE	5	limited-use+save-or-complex-action	Copper Dragon Wyrmling | Gold Dragon Wyrmling | Swarm of Ravens | Young Copper Dragon | Young Gold Dragon
 CAPABILITY_SIGNATURE	5	trait	Barbed Devil | Fire Elemental | Flesh Golem | Hydra | Mimic
 CAPABILITY_SIGNATURE	4	spellcasting+trait	Efreeti | Gray Ooze | Green Hag | Spirit Naga
-CAPABILITY_SIGNATURE	3	bonus-action+condition-or-control	Elephant | Mammoth | Purple Worm
 CAPABILITY_SIGNATURE	3	bonus-action+condition-or-control+limited-use+save-or-complex-action	Behir | Ettercap | Gorgon
 CAPABILITY_SIGNATURE	3	condition-or-control+save-or-complex-action+unsupported-action-rider	Death Dog | Mummy | Otyugh
 CAPABILITY_SIGNATURE	2	bonus-action+condition-or-control+spellcasting	Cloud Giant | Oni
@@ -44,3 +43,4 @@ CAPABILITY_SIGNATURE	2	condition-or-control+save-or-complex-action+trait	Erinyes
 CAPABILITY_SIGNATURE	2	legendary+limited-use+save-or-complex-action+trait	Adult White Dragon | Ancient White Dragon
 CAPABILITY_SIGNATURE	2	limited-use+reaction	Octopus | Sphinx of Wonder
 CAPABILITY_SIGNATURE	2	limited-use+save-or-complex-action+trait	Iron Golem | Steam Mephit
+CAPABILITY_SIGNATURE	2	reaction+spellcasting+trait	Black Pudding | Shield Guardian

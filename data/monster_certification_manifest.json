@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 186,
-    "blocked": 144
+    "public_ready": 188,
+    "blocked": 142
   },
   "monsters": [
     {
@@ -2991,7 +2991,7 @@
       "monster_name": "Elephant",
       "srd_source_page": 348,
       "srd_source_reference": "SRD 5.2.1 p. 348",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-elephant",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -3000,21 +3000,16 @@
       ],
       "supported_mechanics": [
         "attack-roll",
-        "multiattack"
-      ],
-      "unsupported_mechanics": [
-        "bonus-action",
-        "condition-or-control"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
         "bonus-action",
         "condition-or-control",
-        "monster-combat-mechanics-not-certified"
-      ]
+        "multiattack"
+      ],
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-elk",
@@ -5642,7 +5637,7 @@
       "monster_name": "Mammoth",
       "srd_source_page": 357,
       "srd_source_reference": "SRD 5.2.1 p. 357",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-mammoth",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -5651,21 +5646,16 @@
       ],
       "supported_mechanics": [
         "attack-roll",
-        "multiattack"
-      ],
-      "unsupported_mechanics": [
-        "bonus-action",
-        "condition-or-control"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
         "bonus-action",
         "condition-or-control",
-        "monster-combat-mechanics-not-certified"
-      ]
+        "multiattack"
+      ],
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-manticore",
