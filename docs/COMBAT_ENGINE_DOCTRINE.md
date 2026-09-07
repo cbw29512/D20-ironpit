@@ -98,6 +98,20 @@ Default behavior:
 
 An explicit RAW/source rule can override the default when it specifically says so. Specific source text beats the ordinary default, but the override should still be represented as source data feeding the shared action-economy system rather than as source-specific engine code whenever possible.
 
+### Multiattack
+Multiattack is one universal attack-sequence mechanic regardless of source.
+
+The source owns:
+- the printed/log name
+- how many attacks are made
+- which attack or ability names are used
+- their order, if order matters
+- any source-defined alternatives or choices
+
+The engine owns executing the declared sequence through the same universal Action, attack-roll, saving-throw, damage, condition, and effect systems used everywhere else.
+
+Two spear attacks, three claw attacks, one bite plus two claws, or ninety-seven sword attacks are all the same Multiattack mechanic with different source data. Do not create monster-specific Multiattack resolvers when a source-defined sequence is sufficient.
+
 ## Composition rule
 
 A printed ability is a named composition of universal mechanics plus source-owned parameters.
