@@ -5,6 +5,7 @@ import re
 from app.content.monster_combat_scope import feature_blocks
 from app.content.monster_trait_source_audit import parse_trait_names
 from app.content.simple_monster_source_constrict import parse_constrict_save
+from app.content.simple_monster_source_point_areas import parse_point_radius_save
 
 _ABILITY = r"Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma"
 _DAMAGE = r"Acid|Bludgeoning|Cold|Fire|Force|Lightning|Necrotic|Piercing|Poison|Psychic|Radiant|Slashing|Thunder"
@@ -36,6 +37,7 @@ _REPLACE_ONE = re.compile(r"\bcan replace one attack with a use of (?P<name>[A-Z
 def _slug(value: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
 
+
 def _condition_timing(row: dict[str, object], match: re.Match[str]) -> str:
     edge = match.group("edge").lower(); owner = match.group("owner").lower().replace("’", "'").strip()
     if owner == "its" or "target" in owner:
@@ -44,6 +46,7 @@ def _condition_timing(row: dict[str, object], match: re.Match[str]) -> str:
     if monster in owner:
         return f"source_turn_{edge}"
     raise ValueError(f"Cannot prove condition-turn owner for {row['name']!r}: {match.group(0)!r}")
+
 
 def _condition_save_row(row: dict[str, object], match: re.Match[str]) -> dict[str, object]:
     monster_slug = _slug(str(row["name"])); timing = _condition_timing(row, match)
@@ -87,7 +90,7 @@ def _damage_save_row(
 
 
 def parse_simple_save_actions(row: dict[str, object]) -> list[dict[str, object]]:
-    """Parse proven single-target or cone/line damage saves and simple timed conditions."""
+    """Parse proven single-target or area damage saves and simple timed conditions."""
     source = str(row.get("actions", ""))
     headings = parse_trait_names(source, preserve_annotations=True) if source.strip() else []
     blocks = feature_blocks(source, headings) if headings else {}
@@ -100,6 +103,9 @@ def parse_simple_save_actions(row: dict[str, object]) -> list[dict[str, object]]
         area_match = _AREA_SAVE.fullmatch(block)
         if area_match is not None:
             actions.append(_damage_save_row(row, heading, area_match, area=True)); continue
+        point_radius = parse_point_radius_save(row, heading, block)
+        if point_radius is not None:
+            actions.append(point_radius); continue
         condition_match = _CONDITION_SAVE.fullmatch(block)
         if condition_match is not None:
             actions.append(_condition_save_row(row, condition_match)); continue

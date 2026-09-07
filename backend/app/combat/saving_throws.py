@@ -20,7 +20,10 @@ def save_action_resource_available(state: CombatantState, action: SavingThrowAct
 
 
 def legal_save_action(action: SavingThrowAction, target: EncounterCombatant, distance_ft: int) -> bool:
-    if distance_ft > action.range_ft: return False
+    range_limit = action.range_ft
+    if action.area is not None and action.area.shape == "radius":
+        range_limit += action.area.size_ft
+    if distance_ft > range_limit: return False
     return action.target_max_size is None or size_at_most(target.state.template.size, action.target_max_size)
 
 
@@ -57,6 +60,8 @@ def _failed_save_conditions(
 ) -> list[str]:
     applied: list[str] = []
     for condition in action.failure_conditions:
+        if condition.max_target_size is not None and not size_at_most(target.state.template.size, condition.max_target_size):
+            continue
         effect = apply_timed_condition(
             target.state, condition.condition_id, actor.combatant_id,
             source_effect_id=action.id, applied_round=round_number,

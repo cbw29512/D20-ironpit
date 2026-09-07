@@ -72,6 +72,7 @@ class SaveConditionEffect(BaseModel):
     """One condition applied when a saving-throw action fails."""
 
     condition_id: ConditionName
+    max_target_size: CreatureSize | None = None
     expiry_timing: ConditionTiming | None = None
     repeat_save_ability: AbilityName | None = None
     repeat_save_dc: int | None = Field(default=None, ge=1, le=40)

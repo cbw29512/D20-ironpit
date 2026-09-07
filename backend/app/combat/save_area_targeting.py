@@ -3,7 +3,7 @@ from __future__ import annotations
 from app.combat.board_geometry import column_for_slot, slots_in_column
 from app.combat.pit_policy import save_distance, target_order
 from app.combat.saving_throws import legal_save_action
-from app.combat.spell_area import CARD_WIDTH_FT, MAX_CARD_SLOTS
+from app.combat.spell_area import CARD_WIDTH_FT, MAX_CARD_SLOTS, best_area_placement
 from app.domain.actions import SavingThrowAction
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 
@@ -79,6 +79,18 @@ def _forward_area_targets(actor: EncounterCombatant, setup: EncounterSetup, acti
     return max(candidates, key=lambda item: (item[0], item[1]))[2] if candidates else []
 
 
+def _radius_targets(actor: EncounterCombatant, setup: EncounterSetup, action: SavingThrowAction):
+    area = action.area
+    if area is None or area.shape != "radius":
+        raise ValueError(f"{action.name} is not a radius area action.")
+    placement = best_area_placement(actor, setup, area.size_ft, action.range_ft)
+    if placement is None:
+        return []
+    enemies, _ = _rows(actor, setup)
+    by_id = {member.combatant_id: member for member in enemies}
+    return [by_id[combatant_id] for combatant_id in placement.enemy_ids]
+
+
 def area_targets(actor: EncounterCombatant, setup: EncounterSetup, action: SavingThrowAction):
     if action.area is None:
         return []
@@ -86,6 +98,8 @@ def area_targets(actor: EncounterCombatant, setup: EncounterSetup, action: Savin
         return _line_targets(actor, setup, action)
     if action.area.shape in {"cone", "cube"}:
         return _forward_area_targets(actor, setup, action)
+    if action.area.shape == "radius":
+        return _radius_targets(actor, setup, action)
     raise ValueError(f"{action.name} area shape {action.area.shape!r} is not runtime-certified.")
 
 

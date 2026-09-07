@@ -31,6 +31,7 @@ def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
         restrains_while_grappled=grapple.restrains if grapple else False,
         failure_conditions=[SaveConditionEffect(
             condition_id=effect.condition,
+            max_target_size=effect.max_target_size,
             expiry_timing=effect.expiry_timing,
             repeat_save_ability=effect.repeat_save_ability,
             repeat_save_dc=effect.repeat_save_dc,
