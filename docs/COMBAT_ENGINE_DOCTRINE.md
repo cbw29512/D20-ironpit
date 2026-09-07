@@ -88,6 +88,16 @@ Advantage and Disadvantage are universal roll modifiers regardless of source. A 
 
 The source owns why and when Advantage or Disadvantage applies; the engine owns how the roll is resolved.
 
+### Action economy
+Action, Bonus Action, and Reaction are universal action-economy buckets. A source ability declares which bucket it uses; using that ability consumes that bucket through the shared engine.
+
+Default behavior:
+- an Action consumes the creature's Action
+- a Bonus Action consumes the creature's Bonus Action
+- a Reaction consumes the creature's Reaction
+
+An explicit RAW/source rule can override the default when it specifically says so. Specific source text beats the ordinary default, but the override should still be represented as source data feeding the shared action-economy system rather than as source-specific engine code whenever possible.
+
 ## Composition rule
 
 A printed ability is a named composition of universal mechanics plus source-owned parameters.
