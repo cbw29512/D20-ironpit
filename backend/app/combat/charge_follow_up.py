@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.charge_profiles import ChargeProfile
 from app.combat.dice import DiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.encounter_targeting import combatant_distance
@@ -11,7 +10,6 @@ from app.domain.models import BattleEvent, WeaponAttack
 from app.domain.weapons import ChargeDefinition
 
 logger = logging.getLogger(__name__)
-ChargeData = ChargeDefinition | ChargeProfile
 
 
 def _attack_by_id(attacker: EncounterCombatant, attack_id: str) -> WeaponAttack | None:
@@ -35,7 +33,7 @@ def resolve_charge_follow_up(
     round_number: int,
     attacker: EncounterCombatant,
     target: EncounterCombatant,
-    profile: ChargeData,
+    profile: ChargeDefinition,
     first_event: BattleEvent,
     dice: DiceProvider,
     setup: EncounterSetup | None,

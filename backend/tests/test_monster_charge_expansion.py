@@ -1,4 +1,4 @@
-from app.combat.charge import charge_profile_for_attack_id, resolve_charge_closing
+from app.combat.charge import resolve_charge_closing
 from app.combat.dice import FixedDiceProvider
 from app.combat.state import begin_turn, build_combatant_state
 from app.content.audited_fighter import build_karnok_stoneward
@@ -48,7 +48,7 @@ def test_minotaur_skeleton_charge_profile_matches_source() -> None:
     assert [attack.id for attack in [monster.weapon_attack, *monster.alternate_weapon_attacks]] == [
         "minotaur-skeleton-gore", "minotaur-skeleton-slam",
     ]
-    profile = charge_profile_for_attack_id("minotaur-skeleton-gore")
+    profile = monster.weapon_attack.charge
     assert profile is not None and profile.bonus_damage is not None
     assert profile.minimum_move_ft == 20
     assert (profile.bonus_damage.dice_count, profile.bonus_damage.dice_size) == (2, 8)
@@ -62,7 +62,7 @@ def test_triceratops_charge_and_multiattack_match_source() -> None:
     assert [slot.attack_ids for slot in monster.attack_action.slots] == [
         ["triceratops-gore"], ["triceratops-gore"],
     ]
-    profile = charge_profile_for_attack_id("triceratops-gore")
+    profile = monster.weapon_attack.charge
     assert profile is not None and profile.bonus_damage is not None
     assert profile.minimum_move_ft == 20
     assert (profile.bonus_damage.dice_count, profile.bonus_damage.dice_size) == (2, 8)
@@ -71,12 +71,13 @@ def test_triceratops_charge_and_multiattack_match_source() -> None:
 
 
 def test_warhorse_skeleton_charge_is_prone_only() -> None:
-    profile = charge_profile_for_attack_id("warhorse-skeleton-hooves")
+    monster = build_warhorse_skeleton()
+    profile = monster.weapon_attack.charge
     assert profile is not None
     assert profile.minimum_move_ft == 20
     assert profile.max_target_size.value == "large"
     assert profile.bonus_damage is None
-    attacker, target, setup = _opening_pair(build_warhorse_skeleton(), "1/2")
+    attacker, target, setup = _opening_pair(monster, "1/2")
 
     events, _, handled = resolve_charge_closing(
         1, 1, attacker, target, FixedDiceProvider([15, 1]), setup,
@@ -91,8 +92,9 @@ def test_warhorse_skeleton_charge_is_prone_only() -> None:
 def test_allosaurus_charge_claws_grant_bite_follow_up_on_hit() -> None:
     monster = build_allosaurus()
     assert monster.weapon_attack.id == "allosaurus-bite"
-    assert monster.alternate_weapon_attacks[0].id == "allosaurus-claws"
-    profile = charge_profile_for_attack_id("allosaurus-claws")
+    claws = monster.alternate_weapon_attacks[0]
+    assert claws.id == "allosaurus-claws"
+    profile = claws.charge
     assert profile is not None
     assert profile.minimum_move_ft == 30
     assert profile.max_target_size.value == "large"
