@@ -21,6 +21,14 @@ _NATIVE_PATHS = (
     _DATA_DIR / "combatant_capabilities_native_low_cr_v1.json",
     _DATA_DIR / "combatant_capabilities_native_pack_tactics_v1.json",
 )
+_SOURCE_REPLACED_NATIVE_IDS = frozenset({
+    "srd-black-dragon-wyrmling",
+    "srd-blue-dragon-wyrmling",
+    "srd-green-dragon-wyrmling",
+    "srd-hell-hound",
+    "srd-red-dragon-wyrmling",
+    "srd-white-dragon-wyrmling",
+})
 
 
 def parse_capability_definitions(rows: object) -> dict[str, CombatantDefinition]:
@@ -60,6 +68,19 @@ def _load_native_registries() -> dict[str, CombatantDefinition]:
     return merged
 
 
+def _prefer_source_replacements(
+    merged: dict[str, CombatantDefinition], source_simple: dict[str, CombatantDefinition],
+) -> dict[str, CombatantDefinition]:
+    missing = _SOURCE_REPLACED_NATIVE_IDS - set(source_simple)
+    if missing:
+        raise ValueError(f"Source replacements are missing source definitions: {', '.join(sorted(missing))}.")
+    overlap = set(merged) & set(source_simple)
+    unexpected = overlap - _SOURCE_REPLACED_NATIVE_IDS
+    if unexpected:
+        raise ValueError(f"Source-derived capability ids overlap existing registries: {', '.join(sorted(unexpected))}.")
+    return {combatant_id: item for combatant_id, item in merged.items() if combatant_id not in _SOURCE_REPLACED_NATIVE_IDS}
+
+
 @lru_cache(maxsize=1)
 def load_capability_definitions() -> dict[str, CombatantDefinition]:
     try:
@@ -67,9 +88,7 @@ def load_capability_definitions() -> dict[str, CombatantDefinition]:
         native = _load_native_registries()
         merged = merge_capability_definitions(generated, native)
         source_simple = build_simple_source_definitions()
-        overlap = set(merged) & set(source_simple)
-        if overlap:
-            raise ValueError(f"Source-derived capability ids overlap existing registries: {', '.join(sorted(overlap))}.")
+        merged = _prefer_source_replacements(merged, source_simple)
         return {**merged, **source_simple}
     except Exception as exc:
         logger.exception("Failed to load declarative combat capability registries.")
