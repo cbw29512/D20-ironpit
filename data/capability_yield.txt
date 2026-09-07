@@ -1,13 +1,13 @@
-CAPABILITY_YIELD_BASELINE	ready=169	blocked=161	actionable_blocked=159	deferred=2	signatures=68
+CAPABILITY_YIELD_BASELINE	ready=170	blocked=160	actionable_blocked=158	deferred=2	signatures=68
 CAPABILITY_DEFERRED_NONCOMBAT	Seahorse | Shrieker Fungus
 CAPABILITY_SINGLE_FAMILY	trait	5	Barbed Devil | Fire Elemental | Flesh Golem | Hydra | Mimic
 CAPABILITY_SINGLE_FAMILY	condition-or-control	4	Animated Rug of Smothering | Giant Toad | Phase Spider | Roper
-CAPABILITY_SINGLE_FAMILY	spellcasting	2	Druid | Dryad
 CAPABILITY_SINGLE_FAMILY	ability-score-change	1	Shadow
 CAPABILITY_SINGLE_FAMILY	attachment-state	1	Stirge
 CAPABILITY_SINGLE_FAMILY	bonus-action	1	Will-o’-Wisp
 CAPABILITY_SINGLE_FAMILY	reaction	1	Ochre Jelly
 CAPABILITY_SINGLE_FAMILY	save-or-complex-action	1	Horned Devil
+CAPABILITY_SINGLE_FAMILY	spellcasting	1	Druid
 CAPABILITY_CONTROL_SIGNATURE	blinded+prone+restrained+swallow	1	Giant Toad
 CAPABILITY_CONTROL_SIGNATURE	blinded+restrained	1	Animated Rug of Smothering
 CAPABILITY_CONTROL_SIGNATURE	paralyzed+poisoned	1	Phase Spider
