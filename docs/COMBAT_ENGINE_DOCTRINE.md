@@ -78,6 +78,16 @@ A saving throw or check is universal regardless of source. The source supplies t
 
 A DC 12 Dexterity save and a DC 18 Dexterity save use the same saving-throw mechanic. Only the source parameters differ.
 
+### Advantage and Disadvantage
+Advantage and Disadvantage are universal roll modifiers regardless of source. A monster trait, condition, spell, weapon feature, class feature, circumstance, or homebrew rule may grant or impose them, but the engine resolves them through one shared rule.
+
+2024 RAW stacking behavior is universal:
+- one or more sources of Advantage still produce only Advantage, not extra d20s
+- one or more sources of Disadvantage still produce only Disadvantage
+- if at least one source of Advantage and at least one source of Disadvantage apply to the same roll, they cancel and the roll uses one d20 regardless of how many sources exist on either side
+
+The source owns why and when Advantage or Disadvantage applies; the engine owns how the roll is resolved.
+
 ## Composition rule
 
 A printed ability is a named composition of universal mechanics plus source-owned parameters.
