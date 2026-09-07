@@ -24,7 +24,7 @@
     return { roll, succeeded: roll.total >= dc };
   }
   function resourceAvailable(state, action) { return !action.resourceId || X().available(state, action.resourceId, action.resourceCost || 1); }
-  function legalAction(action, target, distance) { const range = action.range + (action.area?.shape === "radius" ? action.area.sizeFt : 0); return distance <= range && (!action.targetMaxSize || S().sizeAtMost(target, action.targetMaxSize)); }
+  function legalAction(action, target, distance) { const range = action.range + (action.area?.shape === "radius" ? action.area.sizeFt : 0); return distance <= range && (!action.targetMaxSize || S().sizeAtMost(target, action.targetMaxSize)) && (action.requiredTargetConditions || []).every((id) => target.state.active_effect_ids.includes(id)); }
   function damageRolls(action, count, shared) {
     if (shared == null) return D().rollMany(count, action.damageDiceSize);
     if (!Array.isArray(shared) || shared.length !== count) throw new Error(`${action.name} shared damage roll count is invalid.`);
