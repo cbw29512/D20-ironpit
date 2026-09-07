@@ -16,6 +16,14 @@ _SIMPLE_SAVE = re.compile(
     r"(?: Success: Half damage\.)?$",
     re.I,
 )
+_AREA_SAVE = re.compile(
+    rf"^(?P<name>.+?)\. (?P<ability>{_ABILITY}) Saving Throw: DC (?P<dc>\d+), "
+    r"each creature in an? (?P<length>\d+)-foot(?:(?:-long, (?P<width>\d+)-foot-wide))? (?P<shape>Cone|Line)\. "
+    r"Failure: \d+ "
+    rf"\((?P<count>\d+)d(?P<size>\d+)(?P<bonus>\s*[+-]\s*\d+)?\) (?P<type>{_DAMAGE}) damage\."
+    r"(?: Success: Half damage\.)?$",
+    re.I,
+)
 _CONDITION_SAVE = re.compile(
     rf"^(?P<name>.+?)\. (?P<ability>{_ABILITY}) Saving Throw: DC (?P<dc>\d+), "
     rf"one creature .*?within (?P<range>\d+) feet\. Failure: The target has the (?P<condition>{_CONDITION}) condition "
@@ -58,29 +66,52 @@ def _condition_save_row(row: dict[str, object], match: re.Match[str]) -> dict[st
     }
 
 
+def _damage_save_row(
+    row: dict[str, object], heading: str, match: re.Match[str], *, area: bool = False,
+) -> dict[str, object]:
+    bonus = int((match.group("bonus") or "0").replace(" ", ""))
+    result: dict[str, object] = {
+        "id": f"srd-{_slug(str(row['name']))}-{_slug(heading)}", "name": heading,
+        "save_ability": match.group("ability").lower(), "dc": int(match.group("dc")),
+        "range_ft": int(match.group("length") if area else match.group("range")),
+        "damage": {"count": int(match.group("count")), "size": int(match.group("size")), "bonus": bonus},
+        "damage_type": match.group("type").lower(),
+        "success_damage": "half" if "Success: Half damage." in match.group(0) else "none",
+        "animation": "save-effect",
+    }
+    if area:
+        shape = match.group("shape").lower(); geometry: dict[str, object] = {
+            "shape": shape, "size_ft": int(match.group("length")),
+        }
+        width = match.group("width")
+        if shape == "line":
+            if width is None:
+                raise ValueError(f"Line save requires a printed width for {row['name']!r}: {match.group(0)!r}")
+            geometry["width_ft"] = int(width)
+        elif width is not None:
+            raise ValueError(f"Only line saves can define width for {row['name']!r}: {match.group(0)!r}")
+        result["area"] = geometry
+    return result
+
+
 def parse_simple_save_actions(row: dict[str, object]) -> list[dict[str, object]]:
-    """Parse one-target damage or timed-condition saves; fail closed on other shapes."""
+    """Parse proven single-target or cone/line damage saves and simple timed conditions."""
     source = str(row.get("actions", ""))
     headings = parse_trait_names(source, preserve_annotations=True) if source.strip() else []
     blocks = feature_blocks(source, headings) if headings else {}
-    monster_slug = _slug(str(row["name"])); actions: list[dict[str, object]] = []
+    actions: list[dict[str, object]] = []
     for heading, block in blocks.items():
         if "Saving Throw:" not in block or "Attack Roll:" in block: continue
         match = _SIMPLE_SAVE.fullmatch(block)
-        if match is None:
-            condition_match = _CONDITION_SAVE.fullmatch(block)
-            if condition_match is not None:
-                actions.append(_condition_save_row(row, condition_match)); continue
-            raise ValueError(f"Simple save parser cannot prove {row['name']} {heading!r}: {block!r}")
-        bonus = int((match.group("bonus") or "0").replace(" ", ""))
-        actions.append({
-            "id": f"srd-{monster_slug}-{_slug(heading)}", "name": heading,
-            "save_ability": match.group("ability").lower(), "dc": int(match.group("dc")),
-            "range_ft": int(match.group("range")),
-            "damage": {"count": int(match.group("count")), "size": int(match.group("size")), "bonus": bonus},
-            "damage_type": match.group("type").lower(), "success_damage": "half" if "Success: Half damage." in block else "none",
-            "animation": "save-effect",
-        })
+        if match is not None:
+            actions.append(_damage_save_row(row, heading, match)); continue
+        area_match = _AREA_SAVE.fullmatch(block)
+        if area_match is not None:
+            actions.append(_damage_save_row(row, heading, area_match, area=True)); continue
+        condition_match = _CONDITION_SAVE.fullmatch(block)
+        if condition_match is not None:
+            actions.append(_condition_save_row(row, condition_match)); continue
+        raise ValueError(f"Simple save parser cannot prove {row['name']} {heading!r}: {block!r}")
     return actions
 
 
