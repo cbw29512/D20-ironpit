@@ -121,6 +121,6 @@ def build_simple_source_definitions() -> dict[str, CombatantDefinition]:
     if missing: raise ValueError(f"Missing SRD simple-monster rows: {', '.join(sorted(missing))}")
     eligible_names = [name for name in sorted(_SIMPLE_SOURCE_NAMES) if deferred_environment_reason(rows[name]["speed"]) is None]
     definitions = [_definition(rows[name]) for name in eligible_names]
-    result = {definition.id: definition for definition in definitions]
+    result = {definition.id: definition for definition in definitions}
     if len(result) != len(definitions): raise ValueError("Simple source-derived monster ids must be unique.")
     return result
