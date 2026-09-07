@@ -21,8 +21,16 @@ class DamageEffectDefinition(BaseModel):
     source: str
     dice: DiceSpec
     damage_type: DamageType
-    trigger: Literal["on_hit", "attack_advantage", "attacker_bloodied", "target_bloodied"] = "on_hit"
+    trigger: Literal[
+        "on_hit", "on_save", "attack_advantage", "attacker_bloodied",
+        "target_bloodied", "target_grappled_by_self",
+    ] = "on_hit"
     mode: Literal["add", "replace_weapon"] = "add"
+
+
+class MaxHpReductionEffectDefinition(BaseModel):
+    kind: Literal["max-hp-reduction"] = "max-hp-reduction"
+    damage_type: DamageType | None = None
 
 
 class ProneEffectDefinition(BaseModel):
@@ -35,12 +43,17 @@ class GrappleEffectDefinition(BaseModel):
     escape_dc: int = Field(ge=1, le=40)
     max_target_size: CreatureSize | None = None
     restrains: bool = False
+    escape_check_disadvantage: bool = False
 
 
 class ConditionEffectDefinition(BaseModel):
     kind: Literal["condition"] = "condition"
     condition: ConditionName
     max_target_size: CreatureSize | None = None
+    initial_save_ability: AbilityName | None = None
+    initial_save_dc: int | None = Field(default=None, ge=1, le=40)
+    excluded_creature_types: list[str] = Field(default_factory=list)
+    excluded_species_ids: list[str] = Field(default_factory=list)
     expires_at_start_of_source_turn: bool = False
     expiry_timing: ConditionTiming | None = None
     repeat_save_ability: AbilityName | None = None
@@ -50,6 +63,6 @@ class ConditionEffectDefinition(BaseModel):
 
 
 AttackEffectDefinition = Annotated[
-    DamageEffectDefinition | ProneEffectDefinition | GrappleEffectDefinition | ConditionEffectDefinition | HitModifierEffect,
+    DamageEffectDefinition | MaxHpReductionEffectDefinition | ProneEffectDefinition | GrappleEffectDefinition | ConditionEffectDefinition | HitModifierEffect,
     Field(discriminator="kind"),
 ]

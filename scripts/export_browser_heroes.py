@@ -200,6 +200,11 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "fast_movement_bonus_ft": progression.fast_movement_bonus_ft,
         "mindless_rage": progression.mindless_rage,
         "instinctive_pounce_fraction": progression.instinctive_pounce_fraction,
+        "steady_aim": progression.steady_aim,
+        "survivor_death_save_advantage": progression.survivor_death_save_advantage,
+        "survivor_death_save_critical_minimum": progression.survivor_death_save_critical_minimum,
+        "bloodied_start_turn_healing_bonus": progression.bloodied_start_turn_healing_bonus,
+        "combat_prowess": progression.combat_prowess,
         "great_weapon_fighting": progression.great_weapon_fighting,
         "sneak_attack_d6": progression.sneak_attack_d6,
         "critical_move_fraction": progression.critical_move_fraction,
@@ -209,6 +214,8 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
                    "figure_form": template.visual.body_style, "role": template.archetype.lower()},
         "source": template.source,
     }
+    if template.ability_scores is not None:
+        row["ability_scores"] = template.ability_scores.model_dump()
     if progression.indomitable_bonus:
         row["indomitable_bonus"] = progression.indomitable_bonus
     if progression.tactical_master_sap_weapon_ids:

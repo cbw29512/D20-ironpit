@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.action_economy import is_available, spend
+from app.combat.hit_points import effective_max_hp, set_positive_hit_points
 from app.combat.temporary_hp import grant_temporary_hit_points
 from app.domain.models import BattleEvent, CombatantState
 from app.domain.traits import CombatTrait
@@ -65,14 +66,11 @@ def use_adrenaline_rush(
 def use_relentless_endurance(state: CombatantState, remaining_damage: int) -> bool:
     if CombatTrait.RELENTLESS_ENDURANCE not in state.template.combat_traits:
         return False
-    if remaining_damage >= state.template.max_hp:
+    if remaining_damage >= effective_max_hp(state):
         return False
     resource = _resource(state, RELENTLESS_RESOURCE_ID)
     if resource is None or resource.current_uses <= 0:
         return False
     resource.current_uses -= 1
-    state.current_hp = 1
-    state.is_alive = True
-    state.is_unconscious = False
-    state.is_stable = False
+    set_positive_hit_points(state, 1)
     return True

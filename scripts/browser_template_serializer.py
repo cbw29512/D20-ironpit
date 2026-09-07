@@ -3,9 +3,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from app.combat.charge import charge_profile_for_attack_id
 from app.domain.models import CombatantTemplate, WeaponAttack
-from app.domain.traits import CombatTrait
 
 logger = logging.getLogger(__name__)
 
@@ -26,6 +24,13 @@ def _control(effect: Any) -> dict[str, Any] | None:
         row["restrainsWhileGrappled"] = True
     if effect.condition_id:
         row["conditionId"] = effect.condition_id
+        if effect.initial_save_ability:
+            row["initialSaveAbility"] = effect.initial_save_ability
+            row["initialSaveDc"] = effect.initial_save_dc
+        if effect.excluded_creature_types:
+            row["excludedCreatureTypes"] = list(effect.excluded_creature_types)
+        if effect.excluded_species_ids:
+            row["excludedSpeciesIds"] = list(effect.excluded_species_ids)
         if effect.expires_at_start_of_source_turn:
             row["expiresAtStartOfSourceTurn"] = True
         if effect.expiry_timing:
@@ -49,6 +54,29 @@ def _hit_modifier(effect: Any) -> dict[str, Any]:
         row["expiresAtStartOfSourceTurn"] = True
     if effect.expires_at_end_of_target_turn:
         row["expiresAtEndOfTargetTurn"] = True
+    return row
+
+
+def _charge(profile: Any) -> dict[str, Any]:
+    row: dict[str, Any] = {"minimumMove": profile.minimum_move_ft}
+    if profile.prone_max_target_size is not None:
+        row["proneMaxSize"] = profile.prone_max_target_size.value
+    if profile.max_target_size is not None and profile.max_target_size != profile.prone_max_target_size:
+        row["targetMaxSize"] = profile.max_target_size.value
+    if profile.bonus_damage is not None:
+        row.update(
+            diceCount=profile.bonus_damage.dice_count,
+            diceSize=profile.bonus_damage.dice_size,
+            damageType=profile.bonus_damage.damage_type.value,
+        )
+    if profile.replacement_damage is not None:
+        replacement = profile.replacement_damage
+        row["replacementDamage"] = {
+            "diceCount": replacement.dice_count, "diceSize": replacement.dice_size,
+            "damageBonus": replacement.damage_bonus, "damageType": replacement.damage_type.value,
+        }
+    if profile.follow_up_attack_id:
+        row["followUpAttackId"] = profile.follow_up_attack_id
     return row
 
 
@@ -98,29 +126,8 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
         control = _control(attack.control_effect)
         if control:
             row["controlEffect"] = control
-        if CombatTrait.CHARGE.value in traits:
-            profile = charge_profile_for_attack_id(attack.id)
-            if profile:
-                charge: dict[str, Any] = {"minimumMove": profile.minimum_move_ft}
-                if profile.prone_max_target_size is not None:
-                    charge["proneMaxSize"] = profile.prone_max_target_size.value
-                if profile.max_target_size is not None and profile.max_target_size != profile.prone_max_target_size:
-                    charge["targetMaxSize"] = profile.max_target_size.value
-                if profile.bonus_damage is not None:
-                    charge.update(
-                        diceCount=profile.bonus_damage.dice_count,
-                        diceSize=profile.bonus_damage.dice_size,
-                        damageType=profile.bonus_damage.damage_type.value,
-                    )
-                if profile.replacement_damage is not None:
-                    replacement = profile.replacement_damage
-                    charge["replacementDamage"] = {
-                        "diceCount": replacement.dice_count, "diceSize": replacement.dice_size,
-                        "damageBonus": replacement.damage_bonus, "damageType": replacement.damage_type.value,
-                    }
-                if profile.follow_up_attack_id:
-                    charge["followUpAttackId"] = profile.follow_up_attack_id
-                row["charge"] = charge
+        if attack.charge is not None:
+            row["charge"] = _charge(attack.charge)
         return row
     except Exception:
         logger.exception("Failed to serialize attack %s for browser runtime.", attack.id)
@@ -129,17 +136,26 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
 
 def _save(action: Any) -> dict[str, Any]:
     row: dict[str, Any] = {
-        "id": action.id, "name": action.name, "saveAbility": action.save_ability, "dc": action.dc,
+        "id": action.id, "name": action.name, "actionCost": action.action_cost,
+        "saveAbility": action.save_ability, "dc": action.dc,
         "range": action.range_ft, "damageDiceCount": action.damage_dice_count,
         "damageDiceSize": action.damage_dice_size, "damageBonus": action.damage_bonus,
         "damageType": action.damage_type, "successDamage": action.success_damage, "animation": action.animation,
     }
+    if action.area is not None:
+        area: dict[str, Any] = {"shape": action.area.shape, "sizeFt": action.area.size_ft}
+        if action.area.width_ft is not None:
+            area["widthFt"] = action.area.width_ft
+        row["area"] = area
     if action.target_max_size:
         row["targetMaxSize"] = _value(action.target_max_size)
     if action.grapple_escape_dc is not None:
         row["grappleEscapeDc"] = action.grapple_escape_dc
     if action.restrains_while_grappled:
         row["restrainsWhileGrappled"] = True
+    if action.resource_id:
+        row["resourceId"] = action.resource_id
+        row["resourceCost"] = action.resource_cost
     return row
 
 
@@ -240,6 +256,16 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
     return row
 
 
+def _resource_recharges(template: CombatantTemplate) -> dict[str, dict[str, Any]]:
+    return {
+        item.id: {
+            "name": item.name, "minimum": item.recharge.minimum,
+            "maximum": item.recharge.maximum, "dieSize": item.recharge.die_size,
+        }
+        for item in template.resources if item.recharge is not None
+    }
+
+
 def template_row(template: CombatantTemplate) -> dict[str, Any]:
     try:
         traits = {item.value for item in template.combat_traits}
@@ -247,6 +273,7 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
         row: dict[str, Any] = {
             "id": template.id, "name": template.name, "archetype": template.archetype,
             "level": template.level, "challenge_rating": template.challenge_rating, "kind": template.kind,
+            "creature_type": template.creature_type, "species_id": template.species_id,
             "size": template.size.value, "armor_class": template.armor_class, "max_hp": template.max_hp,
             "speed_ft": template.speed_ft, "movement_modes": template.movement_modes.model_dump(),
             "initiative_bonus": template.initiative_bonus,
@@ -262,6 +289,9 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                        "off_hand": template.visual.off_hand, "body_style": template.visual.body_style},
             "source": template.source, **_progression_features(template),
         }
+        recharge = _resource_recharges(template)
+        if recharge:
+            row["resource_recharges"] = recharge
         if template.kind == "monster":
             row["source_trait_names"] = list(template.source_trait_names)
             row["source_reaction_names"] = list(template.source_reaction_names)

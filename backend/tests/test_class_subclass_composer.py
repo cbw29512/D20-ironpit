@@ -76,71 +76,43 @@ def test_base_plus_selected_subclass_preserves_every_researched_feature_set() ->
 
 
 def test_monk_base_spine_contains_no_open_hand_subclass_features() -> None:
-    subclass_features = {
-        feature
-        for level in range(1, 21)
-        for feature in subclass_combat_features("warrior-open-hand", level)
-    }
+    subclass_features = {feature for level in range(1, 21) for feature in subclass_combat_features("warrior-open-hand", level)}
     assert subclass_features
     assert subclass_features.isdisjoint(canonical_base_class_features("monk", 20))
 
 
 def test_paladin_base_spine_contains_no_devotion_subclass_features() -> None:
-    subclass_features = {
-        feature
-        for level in range(1, 21)
-        for feature in subclass_combat_features("oath-devotion", level)
-    }
+    subclass_features = {feature for level in range(1, 21) for feature in subclass_combat_features("oath-devotion", level)}
     assert subclass_features
     assert subclass_features.isdisjoint(canonical_base_class_features("paladin", 20))
 
 
 def test_ranger_base_spine_contains_no_hunter_subclass_features() -> None:
-    subclass_features = {
-        feature
-        for level in range(1, 21)
-        for feature in subclass_combat_features("hunter", level)
-    }
+    subclass_features = {feature for level in range(1, 21) for feature in subclass_combat_features("hunter", level)}
     assert subclass_features
     assert subclass_features.isdisjoint(canonical_base_class_features("ranger", 20))
 
 
 def test_wizard_base_spine_contains_no_evoker_subclass_features() -> None:
-    subclass_features = {
-        feature
-        for level in range(1, 21)
-        for feature in subclass_combat_features("evoker", level)
-    }
+    subclass_features = {feature for level in range(1, 21) for feature in subclass_combat_features("evoker", level)}
     assert subclass_features
     assert subclass_features.isdisjoint(canonical_base_class_features("wizard", 20))
 
 
 def test_sorcerer_base_spine_contains_no_draconic_subclass_features() -> None:
-    subclass_features = {
-        feature
-        for level in range(1, 21)
-        for feature in subclass_combat_features("draconic-sorcery", level)
-    }
+    subclass_features = {feature for level in range(1, 21) for feature in subclass_combat_features("draconic-sorcery", level)}
     assert subclass_features
     assert subclass_features.isdisjoint(canonical_base_class_features("sorcerer", 20))
 
 
 def test_warlock_base_spine_contains_no_fiend_subclass_features() -> None:
-    subclass_features = {
-        feature
-        for level in range(1, 21)
-        for feature in subclass_combat_features("fiend-patron", level)
-    }
+    subclass_features = {feature for level in range(1, 21) for feature in subclass_combat_features("fiend-patron", level)}
     assert subclass_features
     assert subclass_features.isdisjoint(canonical_base_class_features("warlock", 20))
 
 
 def test_cleric_base_spine_contains_no_life_domain_subclass_features() -> None:
-    subclass_features = {
-        feature
-        for level in range(1, 21)
-        for feature in subclass_combat_features("life-domain", level)
-    }
+    subclass_features = {feature for level in range(1, 21) for feature in subclass_combat_features("life-domain", level)}
     assert subclass_features
     assert subclass_features.isdisjoint(canonical_base_class_features("cleric", 20))
 
@@ -156,22 +128,19 @@ def test_fighter_base_never_gets_champion_features_without_champion_overlay() ->
     assert "tactical-mind" in base_three
 
 
-def test_rogue_base_and_thief_overlay_are_independent() -> None:
+def test_rogue_base_and_thief_overlay_keep_arena_neutral_features_out_of_combat_math() -> None:
     base_three = canonical_base_class_features("rogue", 3)
     thief_three = canonical_combat_features("rogue", 3, "thief")
     assert "sneak-attack" in base_three
-    assert "cunning-action" in base_three
+    assert "cunning-action" not in base_three
     assert "steady-aim" in base_three
     assert "thief-fast-hands" not in base_three
-    assert "thief-fast-hands" in thief_three
+    assert "thief-fast-hands" not in thief_three
+    assert "thief-fast-hands" in ROGUE_SUBCLASS_DELTA_DATA["thief"][3]["arena_ignored"]
 
 
 def test_rogue_base_spine_contains_no_thief_subclass_features() -> None:
-    subclass_features = {
-        feature
-        for level in range(1, 21)
-        for feature in subclass_combat_features("thief", level)
-    }
+    subclass_features = {feature for level in range(1, 21) for feature in subclass_combat_features("thief", level)}
     assert subclass_features
     assert subclass_features.isdisjoint(canonical_base_class_features("rogue", 20))
 
@@ -188,11 +157,7 @@ def test_druid_base_is_shared_before_land_or_future_moon_builds() -> None:
 
 
 def test_druid_base_spine_contains_no_land_subclass_features() -> None:
-    subclass_features = {
-        feature
-        for level in range(1, 21)
-        for feature in subclass_combat_features("circle-land", level)
-    }
+    subclass_features = {feature for level in range(1, 21) for feature in subclass_combat_features("circle-land", level)}
     assert subclass_features
     assert subclass_features.isdisjoint(canonical_base_class_features("druid", 20))
 

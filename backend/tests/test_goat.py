@@ -1,5 +1,5 @@
 from app.combat.attacks import resolve_attack
-from app.combat.charge import charge_profile_for_attack_id, resolve_charge_closing
+from app.combat.charge import resolve_charge_closing
 from app.combat.dice import FixedDiceProvider
 from app.combat.state import begin_turn, build_combatant_state
 from app.content.audited_fighter import build_karnok_stoneward
@@ -36,7 +36,7 @@ def test_goat_ram_and_charge_replacement_match_srd() -> None:
     goat = _goat()
     ram = goat.weapon_attack
     assert (ram.id, ram.attack_bonus, ram.fixed_damage) == ("goat-ram", 2, 1)
-    profile = charge_profile_for_attack_id("goat-ram")
+    profile = ram.charge
     assert profile is not None and profile.replacement_damage is not None
     assert profile.minimum_move_ft == 20
     assert profile.max_target_size is None

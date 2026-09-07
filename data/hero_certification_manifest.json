@@ -5,7 +5,7 @@
   "summary": {
     "canonical_heroes": 12,
     "level_slots": 240,
-    "public_ready": 23
+    "public_ready": 36
   },
   "heroes": [
     {
@@ -275,24 +275,50 @@
             "id": "path-berserker",
             "name": "Path of the Berserker"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "rokhan-stonefury-l7",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Barbarian 7 Feral Instinct and Instinctive Pounce"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:rokhan-greataxe",
+            "attack:rokhan-handaxe-thrown",
+            "danger-sense",
+            "fast-movement",
+            "frenzy",
+            "initiative-advantage",
+            "mindless-rage",
+            "multiattack-or-extra-attack",
+            "reckless-attack",
+            "resource:adrenaline-rush",
+            "resource:rage",
+            "resource:relentless-endurance",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savage-attacker"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:rokhan-greataxe",
+            "attack:rokhan-handaxe-thrown",
+            "danger-sense",
+            "fast-movement",
+            "frenzy",
+            "initiative-advantage",
+            "mindless-rage",
+            "multiattack-or-extra-attack",
+            "reckless-attack",
+            "resource:adrenaline-rush",
+            "resource:rage",
+            "resource:relentless-endurance",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savage-attacker"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 8,
@@ -300,24 +326,50 @@
             "id": "path-berserker",
             "name": "Path of the Berserker"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "rokhan-stonefury-l8",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Barbarian 8 Ability Score Improvement (+2 Strength)"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:rokhan-greataxe",
+            "attack:rokhan-handaxe-thrown",
+            "danger-sense",
+            "fast-movement",
+            "frenzy",
+            "initiative-advantage",
+            "mindless-rage",
+            "multiattack-or-extra-attack",
+            "reckless-attack",
+            "resource:adrenaline-rush",
+            "resource:rage",
+            "resource:relentless-endurance",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savage-attacker"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:rokhan-greataxe",
+            "attack:rokhan-handaxe-thrown",
+            "danger-sense",
+            "fast-movement",
+            "frenzy",
+            "initiative-advantage",
+            "mindless-rage",
+            "multiattack-or-extra-attack",
+            "reckless-attack",
+            "resource:adrenaline-rush",
+            "resource:rage",
+            "resource:relentless-endurance",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savage-attacker"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 9,
@@ -2859,24 +2911,62 @@
             "id": "champion",
             "name": "Champion"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "karnok-stoneward-l13",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Fighter 13 Indomitable and Studied Attacks"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "athletics-advantage",
+            "attack:karnok-greatsword",
+            "attack:karnok-shortbow",
+            "expanded-critical-range",
+            "great-weapon-fighting",
+            "heroic-warrior",
+            "indomitable",
+            "initiative-advantage",
+            "multiattack-or-extra-attack",
+            "post-critical-movement",
+            "resource:action-surge",
+            "resource:adrenaline-rush",
+            "resource:indomitable",
+            "resource:relentless-endurance",
+            "resource:second-wind",
+            "studied-attacks",
+            "tactical-master",
+            "tactical-shift",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savage-attacker"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "athletics-advantage",
+            "attack:karnok-greatsword",
+            "attack:karnok-shortbow",
+            "expanded-critical-range",
+            "great-weapon-fighting",
+            "heroic-warrior",
+            "indomitable",
+            "initiative-advantage",
+            "multiattack-or-extra-attack",
+            "post-critical-movement",
+            "resource:action-surge",
+            "resource:adrenaline-rush",
+            "resource:indomitable",
+            "resource:relentless-endurance",
+            "resource:second-wind",
+            "studied-attacks",
+            "tactical-master",
+            "tactical-shift",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savage-attacker"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 14,
@@ -2884,24 +2974,62 @@
             "id": "champion",
             "name": "Champion"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "karnok-stoneward-l14",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Fighter 14 Ability Score Improvement (+2 Dexterity)"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "athletics-advantage",
+            "attack:karnok-greatsword",
+            "attack:karnok-shortbow",
+            "expanded-critical-range",
+            "great-weapon-fighting",
+            "heroic-warrior",
+            "indomitable",
+            "initiative-advantage",
+            "multiattack-or-extra-attack",
+            "post-critical-movement",
+            "resource:action-surge",
+            "resource:adrenaline-rush",
+            "resource:indomitable",
+            "resource:relentless-endurance",
+            "resource:second-wind",
+            "studied-attacks",
+            "tactical-master",
+            "tactical-shift",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savage-attacker"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "athletics-advantage",
+            "attack:karnok-greatsword",
+            "attack:karnok-shortbow",
+            "expanded-critical-range",
+            "great-weapon-fighting",
+            "heroic-warrior",
+            "indomitable",
+            "initiative-advantage",
+            "multiattack-or-extra-attack",
+            "post-critical-movement",
+            "resource:action-surge",
+            "resource:adrenaline-rush",
+            "resource:indomitable",
+            "resource:relentless-endurance",
+            "resource:second-wind",
+            "studied-attacks",
+            "tactical-master",
+            "tactical-shift",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savage-attacker"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 15,
@@ -2909,24 +3037,62 @@
             "id": "champion",
             "name": "Champion"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "karnok-stoneward-l15",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Fighter 15 Fighter Subclass"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "athletics-advantage",
+            "attack:karnok-greatsword",
+            "attack:karnok-shortbow",
+            "expanded-critical-range",
+            "great-weapon-fighting",
+            "heroic-warrior",
+            "indomitable",
+            "initiative-advantage",
+            "multiattack-or-extra-attack",
+            "post-critical-movement",
+            "resource:action-surge",
+            "resource:adrenaline-rush",
+            "resource:indomitable",
+            "resource:relentless-endurance",
+            "resource:second-wind",
+            "studied-attacks",
+            "tactical-master",
+            "tactical-shift",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savage-attacker"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "athletics-advantage",
+            "attack:karnok-greatsword",
+            "attack:karnok-shortbow",
+            "expanded-critical-range",
+            "great-weapon-fighting",
+            "heroic-warrior",
+            "indomitable",
+            "initiative-advantage",
+            "multiattack-or-extra-attack",
+            "post-critical-movement",
+            "resource:action-surge",
+            "resource:adrenaline-rush",
+            "resource:indomitable",
+            "resource:relentless-endurance",
+            "resource:second-wind",
+            "studied-attacks",
+            "tactical-master",
+            "tactical-shift",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savage-attacker"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 16,
@@ -2934,24 +3100,62 @@
             "id": "champion",
             "name": "Champion"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "karnok-stoneward-l16",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Fighter 16 Ability Score Improvement (+2 Dexterity)"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "athletics-advantage",
+            "attack:karnok-greatsword",
+            "attack:karnok-shortbow",
+            "expanded-critical-range",
+            "great-weapon-fighting",
+            "heroic-warrior",
+            "indomitable",
+            "initiative-advantage",
+            "multiattack-or-extra-attack",
+            "post-critical-movement",
+            "resource:action-surge",
+            "resource:adrenaline-rush",
+            "resource:indomitable",
+            "resource:relentless-endurance",
+            "resource:second-wind",
+            "studied-attacks",
+            "tactical-master",
+            "tactical-shift",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savage-attacker"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "athletics-advantage",
+            "attack:karnok-greatsword",
+            "attack:karnok-shortbow",
+            "expanded-critical-range",
+            "great-weapon-fighting",
+            "heroic-warrior",
+            "indomitable",
+            "initiative-advantage",
+            "multiattack-or-extra-attack",
+            "post-critical-movement",
+            "resource:action-surge",
+            "resource:adrenaline-rush",
+            "resource:indomitable",
+            "resource:relentless-endurance",
+            "resource:second-wind",
+            "studied-attacks",
+            "tactical-master",
+            "tactical-shift",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savage-attacker"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 17,
@@ -2959,24 +3163,62 @@
             "id": "champion",
             "name": "Champion"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "karnok-stoneward-l17",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Fighter 17 Action Surge and Indomitable uses increase"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "athletics-advantage",
+            "attack:karnok-greatsword",
+            "attack:karnok-shortbow",
+            "expanded-critical-range",
+            "great-weapon-fighting",
+            "heroic-warrior",
+            "indomitable",
+            "initiative-advantage",
+            "multiattack-or-extra-attack",
+            "post-critical-movement",
+            "resource:action-surge",
+            "resource:adrenaline-rush",
+            "resource:indomitable",
+            "resource:relentless-endurance",
+            "resource:second-wind",
+            "studied-attacks",
+            "tactical-master",
+            "tactical-shift",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savage-attacker"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "athletics-advantage",
+            "attack:karnok-greatsword",
+            "attack:karnok-shortbow",
+            "expanded-critical-range",
+            "great-weapon-fighting",
+            "heroic-warrior",
+            "indomitable",
+            "initiative-advantage",
+            "multiattack-or-extra-attack",
+            "post-critical-movement",
+            "resource:action-surge",
+            "resource:adrenaline-rush",
+            "resource:indomitable",
+            "resource:relentless-endurance",
+            "resource:second-wind",
+            "studied-attacks",
+            "tactical-master",
+            "tactical-shift",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savage-attacker"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 18,
@@ -2984,24 +3226,68 @@
             "id": "champion",
             "name": "Champion"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "karnok-stoneward-l18",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Fighter 18 Fighter Subclass"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "athletics-advantage",
+            "attack:karnok-greatsword",
+            "attack:karnok-shortbow",
+            "bloodied-start-turn-healing",
+            "expanded-critical-range",
+            "great-weapon-fighting",
+            "heroic-warrior",
+            "indomitable",
+            "initiative-advantage",
+            "multiattack-or-extra-attack",
+            "post-critical-movement",
+            "resource:action-surge",
+            "resource:adrenaline-rush",
+            "resource:indomitable",
+            "resource:relentless-endurance",
+            "resource:second-wind",
+            "studied-attacks",
+            "survivor-death-save-advantage",
+            "survivor-death-save-critical",
+            "tactical-master",
+            "tactical-shift",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savage-attacker"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "athletics-advantage",
+            "attack:karnok-greatsword",
+            "attack:karnok-shortbow",
+            "bloodied-start-turn-healing",
+            "expanded-critical-range",
+            "great-weapon-fighting",
+            "heroic-warrior",
+            "indomitable",
+            "initiative-advantage",
+            "multiattack-or-extra-attack",
+            "post-critical-movement",
+            "resource:action-surge",
+            "resource:adrenaline-rush",
+            "resource:indomitable",
+            "resource:relentless-endurance",
+            "resource:second-wind",
+            "studied-attacks",
+            "survivor-death-save-advantage",
+            "survivor-death-save-critical",
+            "tactical-master",
+            "tactical-shift",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savage-attacker"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 19,
@@ -3009,24 +3295,70 @@
             "id": "champion",
             "name": "Champion"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "karnok-stoneward-l19",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Fighter 19 Boon of Combat Prowess (+1 Dexterity)"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "athletics-advantage",
+            "attack:karnok-greatsword",
+            "attack:karnok-shortbow",
+            "bloodied-start-turn-healing",
+            "combat-prowess",
+            "expanded-critical-range",
+            "great-weapon-fighting",
+            "heroic-warrior",
+            "indomitable",
+            "initiative-advantage",
+            "multiattack-or-extra-attack",
+            "post-critical-movement",
+            "resource:action-surge",
+            "resource:adrenaline-rush",
+            "resource:indomitable",
+            "resource:relentless-endurance",
+            "resource:second-wind",
+            "studied-attacks",
+            "survivor-death-save-advantage",
+            "survivor-death-save-critical",
+            "tactical-master",
+            "tactical-shift",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savage-attacker"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "athletics-advantage",
+            "attack:karnok-greatsword",
+            "attack:karnok-shortbow",
+            "bloodied-start-turn-healing",
+            "combat-prowess",
+            "expanded-critical-range",
+            "great-weapon-fighting",
+            "heroic-warrior",
+            "indomitable",
+            "initiative-advantage",
+            "multiattack-or-extra-attack",
+            "post-critical-movement",
+            "resource:action-surge",
+            "resource:adrenaline-rush",
+            "resource:indomitable",
+            "resource:relentless-endurance",
+            "resource:second-wind",
+            "studied-attacks",
+            "survivor-death-save-advantage",
+            "survivor-death-save-critical",
+            "tactical-master",
+            "tactical-shift",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savage-attacker"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 20,
@@ -3034,24 +3366,70 @@
             "id": "champion",
             "name": "Champion"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "karnok-stoneward-l20",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Fighter 20 Three Extra Attacks"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "athletics-advantage",
+            "attack:karnok-greatsword",
+            "attack:karnok-shortbow",
+            "bloodied-start-turn-healing",
+            "combat-prowess",
+            "expanded-critical-range",
+            "great-weapon-fighting",
+            "heroic-warrior",
+            "indomitable",
+            "initiative-advantage",
+            "multiattack-or-extra-attack",
+            "post-critical-movement",
+            "resource:action-surge",
+            "resource:adrenaline-rush",
+            "resource:indomitable",
+            "resource:relentless-endurance",
+            "resource:second-wind",
+            "studied-attacks",
+            "survivor-death-save-advantage",
+            "survivor-death-save-critical",
+            "tactical-master",
+            "tactical-shift",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savage-attacker"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "athletics-advantage",
+            "attack:karnok-greatsword",
+            "attack:karnok-shortbow",
+            "bloodied-start-turn-healing",
+            "combat-prowess",
+            "expanded-critical-range",
+            "great-weapon-fighting",
+            "heroic-warrior",
+            "indomitable",
+            "initiative-advantage",
+            "multiattack-or-extra-attack",
+            "post-critical-movement",
+            "resource:action-surge",
+            "resource:adrenaline-rush",
+            "resource:indomitable",
+            "resource:relentless-endurance",
+            "resource:second-wind",
+            "studied-attacks",
+            "survivor-death-save-advantage",
+            "survivor-death-save-critical",
+            "tactical-master",
+            "tactical-shift",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savage-attacker"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         }
       ]
     },
@@ -4576,7 +4954,7 @@
           "subclass": null,
           "runtime_template_id": "mara-quickstep-l1",
           "source_references": [
-            "D&D Beyond Basic Rules 2024: Rogue 1, Orc, Soldier, Savage Attacker, Leather Armor, Shortsword, Shortbow, Vex"
+            "D&D Beyond Basic Rules 2024: Rogue 1, Thief, Orc, Soldier, Savage Attacker, Leather Armor, Shortsword, Shortbow, Vex"
           ],
           "expected_combat_features": [
             "attack:mara-shortbow",
@@ -4608,24 +4986,36 @@
         {
           "level": 2,
           "subclass": null,
-          "runtime_template_id": null,
+          "runtime_template_id": "mara-quickstep-l2",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Rogue 2, Thief, Orc, Soldier, Savage Attacker, Leather Armor, Shortsword, Shortbow, Vex"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:mara-shortbow",
+            "attack:mara-shortsword",
+            "resource:adrenaline-rush",
+            "resource:relentless-endurance",
+            "sneak-attack",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savage-attacker"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:mara-shortbow",
+            "attack:mara-shortsword",
+            "resource:adrenaline-rush",
+            "resource:relentless-endurance",
+            "sneak-attack",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savage-attacker"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 3,
@@ -4633,24 +5023,38 @@
             "id": "thief",
             "name": "Thief"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "mara-quickstep-l3",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Rogue 3, Thief, Orc, Soldier, Savage Attacker, Leather Armor, Shortsword, Shortbow, Vex"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:mara-shortbow",
+            "attack:mara-shortsword",
+            "resource:adrenaline-rush",
+            "resource:relentless-endurance",
+            "sneak-attack",
+            "steady-aim",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savage-attacker"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:mara-shortbow",
+            "attack:mara-shortsword",
+            "resource:adrenaline-rush",
+            "resource:relentless-endurance",
+            "sneak-attack",
+            "steady-aim",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savage-attacker"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 4,
@@ -4658,24 +5062,38 @@
             "id": "thief",
             "name": "Thief"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "mara-quickstep-l4",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Rogue 4, Thief, Orc, Soldier, Savage Attacker, Leather Armor, Shortsword, Shortbow, Vex"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:mara-shortbow",
+            "attack:mara-shortsword",
+            "resource:adrenaline-rush",
+            "resource:relentless-endurance",
+            "sneak-attack",
+            "steady-aim",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savage-attacker"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:mara-shortbow",
+            "attack:mara-shortsword",
+            "resource:adrenaline-rush",
+            "resource:relentless-endurance",
+            "sneak-attack",
+            "steady-aim",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance",
+            "trait:savage-attacker"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 5,

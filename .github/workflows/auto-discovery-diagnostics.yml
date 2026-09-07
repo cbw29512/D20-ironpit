@@ -1,0 +1,23 @@
+name: Auto Discovery Diagnostics
+
+on:
+  push:
+    branches:
+      - feat/pregen-combat-completion
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Python rules reference
+        working-directory: backend
+        run: pip install -e '.[dev]'
+      - name: Report blocked auto-discovery causes
+        run: python scripts/report_auto_discovery_failures.py

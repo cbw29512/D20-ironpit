@@ -11,6 +11,12 @@ def _combatant_defeated(member: EncounterCombatant) -> bool:
     state = member.state
     if state.template.kind == "character":
         return state.is_dead or not state.is_alive
+    regeneration = state.template.regeneration
+    if (
+        state.current_hp <= 0 and regeneration is not None
+        and regeneration.delays_death_at_zero and state.is_alive and not state.is_dead
+    ):
+        return False
     return state.current_hp <= 0 or state.is_dead or not state.is_alive
 
 
@@ -19,7 +25,7 @@ def _side_defeated(combatants: list[EncounterCombatant]) -> bool:
 
 
 def resolve_encounter_outcome(setup: EncounterSetup) -> EncounterOutcome:
-    """Return the deathmatch outcome; 0 HP alone does not defeat a living player character."""
+    """Return the deathmatch outcome while preserving delayed Regeneration death checks."""
     try:
         heroes_dead = _side_defeated(setup.heroes)
         monsters_dead = _side_defeated(setup.monsters)

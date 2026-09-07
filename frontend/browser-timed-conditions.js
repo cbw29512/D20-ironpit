@@ -7,12 +7,12 @@
 
   function apply(state, effectId, sourceId, options = {}) {
     if (I().immune(state, effectId)) return null;
-    if (effectId === POISONED && state.timed_effects.some((effect) => effect.effect_id === POISONED)) return POISONED;
+    const poison = effectId === POISONED && options.defaultPoisonRecovery !== false;
+    if (poison && state.timed_effects.some((effect) => effect.effect_id === POISONED)) return POISONED;
     const sourceEffectId = options.sourceEffectId || null;
     state.timed_effects = state.timed_effects.filter((effect) => !(
       effect.effect_id === effectId && effect.source_id === sourceId && (effect.source_effect_id || null) === sourceEffectId
     ));
-    const poison = effectId === POISONED;
     const expiryTiming = poison ? null : (options.expiryTiming || (options.expiresAtStartOfSourceTurn ? "source_turn_start" : null));
     state.timed_effects.push({
       effect_id: effectId,

@@ -10,9 +10,10 @@ from app.domain.size import CreatureSize
 from app.domain.traits import CombatTrait
 
 _SPECS = {
-    "Swarm of Bats": ("Bites", 4, 2, 4, 0, 1, 4, "piercing", None),
-    "Swarm of Rats": ("Bites", 2, 2, 4, 0, 1, 4, "piercing", None),
-    "Swarm of Crawling Claws": ("Swarm of Grasping Hands", 4, 4, 8, 2, 2, 8, "necrotic", CreatureSize.MEDIUM),
+    "Swarm of Bats": ("Bites", 4, 2, 4, 0, 1, 4, "piercing", None, False),
+    "Swarm of Rats": ("Bites", 2, 2, 4, 0, 1, 4, "piercing", None, False),
+    "Swarm of Crawling Claws": ("Swarm of Grasping Hands", 4, 4, 8, 2, 2, 8, "necrotic", CreatureSize.MEDIUM, False),
+    "Swarm of Piranhas": ("Bites", 5, 2, 4, 3, 1, 4, "piercing", None, True),
 }
 
 
@@ -29,7 +30,7 @@ def _row(name: str) -> dict[str, object]:
 
 def _template(name: str) -> CombatantTemplate:
     row = _row(name)
-    action, bonus, base_count, base_size, base_bonus, blood_count, blood_size, damage_type, prone_size = _SPECS[name]
+    action, bonus, base_count, base_size, base_bonus, blood_count, blood_size, damage_type, prone_size, injured_advantage = _SPECS[name]
     attack_id = f"srd-{_slug(name)}-{_slug(action)}"
     attack = WeaponAttack(
         id=attack_id,
@@ -39,6 +40,7 @@ def _template(name: str) -> CombatantTemplate:
             animation="swarm", reach_ft=5,
         ),
         attack_bonus=bonus, damage_bonus=base_bonus, knocks_prone_max_size=prone_size,
+        advantage_if_target_missing_hp=injured_advantage,
         conditional_damage=[ConditionalDamage(
             trigger="attacker_bloodied", mode="replace_weapon",
             dice_count=blood_count, dice_size=blood_size, damage_bonus=base_bonus,

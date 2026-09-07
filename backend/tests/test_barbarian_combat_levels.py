@@ -1,5 +1,3 @@
-import pytest
-
 from app.content.barbarian_combat_levels import (
     BARBARIAN_COMBAT_LEVELS,
     barbarian_arena_ignored,
@@ -38,11 +36,11 @@ def test_barbarian_table_encodes_one_logical_optimized_progression() -> None:
         assert (row.strength, row.constitution) == scores
 
 
-def test_barbarian_features_accumulate_while_noncombat_and_slow_are_ignored() -> None:
+def test_barbarian_features_accumulate_while_arena_neutral_movement_is_ignored() -> None:
     level_six = set(barbarian_combat_features(6))
     assert {"rage", "danger-sense", "reckless-attack", "frenzy", "extra-attack", "fast-movement", "mindless-rage"} <= level_six
     assert "primal-knowledge" not in level_six
-    assert barbarian_arena_ignored(9) == ("primal-knowledge", "hamstring-blow")
+    assert barbarian_arena_ignored(9) == ("primal-knowledge", "instinctive-pounce", "hamstring-blow")
     level_twenty = set(barbarian_combat_features(20))
     assert "brutal-strike" not in level_twenty
     assert {"brutal-strike-2d10", "retaliation", "relentless-rage", "intimidating-presence",
@@ -50,7 +48,7 @@ def test_barbarian_features_accumulate_while_noncombat_and_slow_are_ignored() ->
 
 
 def test_existing_barbarian_runtime_levels_are_compiled_from_the_table() -> None:
-    for level in range(1, 7):
+    for level in range(1, 9):
         row = BARBARIAN_COMBAT_LEVELS[level]
         template = build_rokhan_stonefury_level(level)
         strength_mod = _modifier(row.strength)
@@ -71,9 +69,9 @@ def test_existing_barbarian_runtime_levels_are_compiled_from_the_table() -> None
         assert (len(template.attack_action.slots) if template.attack_action else 1) == row.attack_count
 
 
-def test_complete_barbarian_table_blocks_only_on_missing_combat_engine_feature() -> None:
-    assert unsupported_barbarian_engine_features(6) == ()
-    assert unsupported_barbarian_engine_features(7) == ("instinctive-pounce",)
+def test_current_barbarian_frontier_blocks_only_on_missing_combat_engine_feature() -> None:
+    assert unsupported_barbarian_engine_features(7) == ()
+    assert unsupported_barbarian_engine_features(8) == ()
+    assert unsupported_barbarian_engine_features(9) == ("brutal-strike",)
     assert BARBARIAN_COMBAT_LEVELS[7].max_hp == 75
-    with pytest.raises(ValueError, match="instinctive-pounce"):
-        build_rokhan_stonefury_level(7)
+    assert build_rokhan_stonefury_level(8).level == 8

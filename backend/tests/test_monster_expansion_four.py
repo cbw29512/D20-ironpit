@@ -1,4 +1,3 @@
-from app.combat.charge import charge_profile_for_attack_id
 from app.content.monster_catalog import load_monster_rows
 from app.content.monster_source_audit import audit_monster_source
 from app.content.roster import build_arena_roster
@@ -38,7 +37,7 @@ def test_giant_eagle_and_elk_typed_damage_and_charge_are_exact() -> None:
     assert CombatTrait.CHARGE in elk.combat_traits
     assert elk.weapon_attack.weapon.reach_ft == 10
     assert elk.weapon_attack.on_hit_damage[0].damage_type is DamageType.RADIANT
-    profile = charge_profile_for_attack_id("giant-elk-ram")
+    profile = elk.weapon_attack.charge
     assert profile is not None and profile.bonus_damage is not None
     assert profile.minimum_move_ft == 20
     assert (profile.bonus_damage.dice_count, profile.bonus_damage.dice_size) == (2, 4)

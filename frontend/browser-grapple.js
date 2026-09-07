@@ -21,11 +21,14 @@
     if (restrained) state.active_effect_ids.push("restrained");
   }
 
-  function apply(state, sourceId, escapeDc, rangeFt, restrains = false) {
+  function apply(state, sourceId, escapeDc, rangeFt, restrains = false, escapeCheckDisadvantage = false) {
     if (I().immune(state, "grappled")) return [];
     state.grapple_sources = state.grapple_sources.filter((source) => source.source_id !== sourceId);
     const effectiveRestrains = restrains && !I().immune(state, "restrained");
-    state.grapple_sources.push({ source_id: sourceId, escape_dc: escapeDc, range_ft: rangeFt, restrains: effectiveRestrains });
+    state.grapple_sources.push({
+      source_id: sourceId, escape_dc: escapeDc, range_ft: rangeFt, restrains: effectiveRestrains,
+      escape_check_disadvantage: Boolean(escapeCheckDisadvantage),
+    });
     sync(state);
     return effectiveRestrains ? ["grappled", "restrained"] : ["grappled"];
   }
@@ -64,7 +67,8 @@
     const useAthletics = athletics != null && (acrobatics == null || athletics >= acrobatics);
     const bonus = useAthletics ? athletics : acrobatics;
     const advantage = useAthletics && (state.active_effect_ids.includes("rage") || state.template.athletics_advantage) ? 1 : 0;
-    const disadvantage = state.active_effect_ids.includes("poisoned") || state.active_effect_ids.includes("frightened") ? 1 : 0;
+    const disadvantage = (state.active_effect_ids.includes("poisoned") || state.active_effect_ids.includes("frightened") ? 1 : 0)
+      + (source.escape_check_disadvantage ? 1 : 0);
     let roll = R().d20(bonus, R().modeFromSources(advantage, disadvantage));
     let success = roll.total >= source.escape_dc, tactical = null;
     if (!success && T()) {

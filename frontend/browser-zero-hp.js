@@ -13,10 +13,7 @@
     if (!state.template.traits?.includes("relentless-endurance")) return false;
     if ((state.resources["relentless-endurance"] || 0) < 1 || remaining >= S().effectiveMaxHp(state)) return false;
     state.resources["relentless-endurance"] -= 1;
-    state.current_hp = 1;
-    state.is_alive = true;
-    state.is_unconscious = false;
-    state.is_stable = false;
+    S().setPositiveHitPoints(state, 1);
     return true;
   }
 
@@ -44,6 +41,25 @@
     state.is_unconscious = false;
     state.is_stable = false;
     endDodge(state);
+  }
+
+  function applyMaxHpReduction(state, amount) {
+    if (amount < 0) throw new Error("Maximum-HP reduction cannot be negative.");
+    if (!amount || state.is_dead) return 0;
+    const before = S().effectiveMaxHp(state);
+    state.max_hp_reduction = Math.min(state.template.max_hp + (state.max_hp_bonus || 0), (state.max_hp_reduction || 0) + amount);
+    const after = S().effectiveMaxHp(state);
+    state.current_hp = Math.min(state.current_hp, after);
+    if (!after) markDead(state);
+    return before - after;
+  }
+
+  function applyAttackMaxHpReduction(state, attack, components) {
+    const rider = attack.maxHpReduction;
+    if (!rider) return 0;
+    const amount = components.filter((part) => !rider.damageType || part.damage_type === rider.damageType)
+      .reduce((sum, part) => sum + (part.applied_total || 0), 0);
+    return applyMaxHpReduction(state, amount);
   }
 
   function finish(state, outcome, incoming, affectedStates) {
@@ -74,13 +90,13 @@
     state.current_hp = Math.max(0, before - amount);
     if (state.current_hp > 0) return finish(state, "damaged", incoming, affectedStates);
     if (useUndeadFortitude(state, incoming, damageTypes, critical)) return finish(state, "undead_fortitude", incoming, affectedStates);
-    if (state.template.kind === "monster") { markDead(state); return finish(state, "dead", incoming, affectedStates); }
     const remaining = Math.max(0, amount - before);
     if (remaining >= S().effectiveMaxHp(state)) { markDead(state); return finish(state, "dead", incoming, affectedStates); }
     if (useRelentless(state, remaining)) return finish(state, "relentless_endurance", incoming, affectedStates);
+    if (state.template.kind === "monster") { markDead(state); return finish(state, "dead", incoming, affectedStates); }
     markUnconscious(state);
     return finish(state, "unconscious", incoming, affectedStates);
   }
 
-  window.IRON_PIT_BROWSER_ZERO_HP = { applyDamage };
+  window.IRON_PIT_BROWSER_ZERO_HP = { applyDamage, applyAttackMaxHpReduction, applyMaxHpReduction };
 })();

@@ -1,68 +1,44 @@
 from __future__ import annotations
 
-import hashlib
 import logging
-import re
 from functools import lru_cache
 
 from app.content.monster_catalog import load_monster_rows
+from app.content.monster_spell_selection import curated_spellcasting_issues
+from app.content.monster_spell_source_parser import (
+    printed_spell_names,
+    source_spell_names,
+    spellcasting_fingerprint,
+    spellcasting_source_text,
+)
 from app.domain.models import CombatantTemplate
 
 logger = logging.getLogger(__name__)
-_FIELDS = ("traits", "actions", "bonusActions", "reactions")
-_CASTING = re.compile(r"\bSpellcasting\b|\bcast(?:s|ing)?\b", re.IGNORECASE)
-_SPELL_GROUP = re.compile(
-    r"\b(?:At Will|\d+/Day(?: Each)?):\s*(.*?)(?=\s+(?:At Will|\d+/Day(?: Each)?):|$)",
-    re.IGNORECASE,
-)
+
 # Explicitly certified as irrelevant to the standard flat/open Iron Pit outcome.
 # These spells are never selected as combat actions; unknown additions fail closed.
 _ARENA_NEUTRAL_SPELLS = frozenset({"Detect Evil and Good", "Detect Magic", "Clairvoyance"})
 
 
-def _normalized(value: object) -> str:
-    return re.sub(r"\s+", " ", str(value or "")).strip()
-
-
-def spellcasting_source_text(row: dict[str, object]) -> str:
-    """Retain complete source sections that contain casting rules, not guessed spell metadata."""
-    chunks: list[str] = []
-    for field in _FIELDS:
-        text = _normalized(row.get(field, ""))
-        if text and _CASTING.search(text):
-            chunks.append(f"{field}={text}")
-    return "\n".join(chunks)
-
-
-def spellcasting_fingerprint(row: dict[str, object]) -> str | None:
-    text = spellcasting_source_text(row)
-    return hashlib.sha256(text.encode("utf-8")).hexdigest() if text else None
-
-
-def _printed_spell_names(row: dict[str, object]) -> set[str]:
-    text = spellcasting_source_text(row)
-    return {
-        spell.strip()
-        for group in _SPELL_GROUP.findall(text)
-        for spell in group.split(",")
-        if spell.strip()
-    }
-
-
 def arena_neutral_spellcasting(row: dict[str, object]) -> bool:
-    """True only when every parsed printed spell is explicitly certified arena-neutral."""
-    spells = _printed_spell_names(row)
+    """True only when every source spell is explicitly certified arena-neutral."""
+    spells = source_spell_names(row)
     return bool(spells) and spells <= _ARENA_NEUTRAL_SPELLS
 
 
 def spellcasting_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
-    """Fail closed on combat casting while allowing explicitly certified noncombat spell lists."""
+    """Fail closed unless casting is neutral or covered by an explicit reviewed caster list."""
     expected = spellcasting_fingerprint(row)
     issues: list[str] = []
     if template.source_spellcasting_fingerprint != expected:
         issues.append("source-spellcasting-fingerprint-mismatch")
-    if expected is not None and not arena_neutral_spellcasting(row):
+    if expected is None or arena_neutral_spellcasting(row):
+        return issues
+    curated = curated_spellcasting_issues(template, row)
+    if curated is None:
         issues.extend(("uncertified-monster-spellcasting", "spell-concentration-source-not-vendored"))
+    else:
+        issues.extend(curated)
     return issues
 
 

@@ -73,14 +73,21 @@ const choice = {
     damageType: "fire", successDamage: "half", upcastDicePerLevel: 0,
   },
   slotLevel: 0,
-  targetIds: targets.map((target) => target.combatant_id),
+ targetIds: targets.map((target) => target.combatant_id),
   placement: { enemyIds: targets.map((target) => target.combatant_id), friendlyIds: [] },
+};
+const originalResolveAction = window.IRON_PIT_BROWSER_SAVES.resolveAction;
+let sawMagicProvenance = false;
+window.IRON_PIT_BROWSER_SAVES.resolveAction = (...args) => {
+  sawMagicProvenance ||= Boolean(args[6]?.againstMagic);
+  return originalResolveAction(...args);
 };
 const result = window.IRON_PIT_BROWSER_SPELL_RESOLUTION.resolve(
   1, 1, caster, { heroes: [caster], monsters: targets }, choice, "caster:round-1",
 );
 const saves = result.events.filter((event) => event.event_type === "saving_throw");
 
+assert.equal(sawMagicProvenance, true);
 assert.equal(damageRollCalls, 1);
 assert.equal(saves.length, 2);
 assert.equal(saves[0].save_succeeded, false);
@@ -89,4 +96,25 @@ assert.deepEqual(saves[0].damage_components[0].rolls, [4, 4]);
 assert.deepEqual(saves[1].damage_components[0].rolls, [4, 4]);
 assert.equal(saves[0].damage_roll.total, 8);
 assert.equal(saves[1].damage_roll.total, 4);
-console.log("Browser simultaneous save damage uses one shared RAW damage roll.");
+
+window.IRON_PIT_BROWSER_ROLLS.modeFromSources = (advantage, disadvantage) => {
+  if (Boolean(advantage) === Boolean(disadvantage)) return "normal";
+  return advantage ? "advantage" : "disadvantage";
+};
+window.IRON_PIT_BROWSER_ROLLS.d20 = (bonus, mode) => {
+  const rolls = mode === "advantage" ? [2, 18] : [2];
+  const natural = mode === "advantage" ? Math.max(...rolls) : rolls[0];
+  return { natural, total: natural + bonus, mode, rolls, modifier: bonus };
+};
+const resistant = member("resistant", "monsters", 30).state;
+resistant.template.traits = ["magic-resistance"];
+const magical = window.IRON_PIT_BROWSER_SAVES.resolveSavingThrow(resistant, "dexterity", 10, true);
+const ordinary = window.IRON_PIT_BROWSER_SAVES.resolveSavingThrow(resistant, "dexterity", 10, false);
+assert.equal(magical.roll.mode, "advantage");
+assert.equal(magical.succeeded, true);
+assert.equal(ordinary.roll.mode, "normal");
+assert.equal(ordinary.succeeded, false);
+resistant.active_effect_ids.push("restrained");
+assert.equal(window.IRON_PIT_BROWSER_SAVES.saveMode(resistant, "dexterity", true), "normal");
+
+console.log("Browser spell saves preserve magical provenance and Magic Resistance parity.");

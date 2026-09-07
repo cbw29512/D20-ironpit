@@ -31,6 +31,7 @@ from app.domain.encounters import (
 from app.domain.events import BattleEvent, BattleResult, DamageRollComponent, DiceRoll, RollMode
 from app.domain.runtime import ArenaRoster, BattlefieldState, CombatantState, DemoRoster, ResourceState, TimedEffect
 from app.domain.traits import CombatTrait
+from app.domain.weapons import ChargeDamage, ChargeDefinition, MaxHpReductionRider
 
 __all__ = [
     "ArenaRoster",
@@ -39,6 +40,8 @@ __all__ = [
     "BattleEvent",
     "BattlefieldState",
     "BattleResult",
+    "ChargeDamage",
+    "ChargeDefinition",
     "CombatTrait",
     "CombatantState",
     "CombatantTemplate",
@@ -59,6 +62,7 @@ __all__ = [
     "HealingAction",
     "HitControlEffect",
     "InitiativeGroup",
+    "MaxHpReductionRider",
     "OnHitDamage",
     "ResourceDefinition",
     "ResourceState",

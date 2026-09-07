@@ -68,10 +68,8 @@ def _karnok_profile(level: int, _legacy_hp: int | None = None) -> PregenCombatPr
     row = FIGHTER_COMBAT_LEVELS[level]
     abilities = _scores(row.strength, row.dexterity, row.constitution, 10, 10, 10)
     resources = [("second-wind", row.second_wind_uses)]
-    if row.action_surge_uses:
-        resources.append(("action-surge", row.action_surge_uses))
-    if row.indomitable_uses:
-        resources.append(("indomitable", row.indomitable_uses))
+    if row.action_surge_uses: resources.append(("action-surge", row.action_surge_uses))
+    if row.indomitable_uses: resources.append(("indomitable", row.indomitable_uses))
     resources.extend((("adrenaline-rush", row.proficiency_bonus), ("relentless-endurance", 1)))
     features = canonical_combat_features("fighter", level, "champion")
     attacks = (replace(_KARNOK_ATTACKS[0], damage_die_minimum=3), _KARNOK_ATTACKS[1]) if "great-weapon-fighting" in features else _KARNOK_ATTACKS
@@ -83,20 +81,10 @@ def _karnok_profile(level: int, _legacy_hp: int | None = None) -> PregenCombatPr
     )
 
 
-def build_karnok_stoneward_level4_combat_profile() -> PregenCombatProfile:
-    return _karnok_profile(4)
-
-
-def build_karnok_stoneward_level5_combat_profile() -> PregenCombatProfile:
-    return _karnok_profile(5)
-
-
-def build_karnok_stoneward_level6_combat_profile() -> PregenCombatProfile:
-    return _karnok_profile(6)
-
-
-def build_karnok_stoneward_level7_combat_profile() -> PregenCombatProfile:
-    return _karnok_profile(7)
+def build_karnok_stoneward_level4_combat_profile() -> PregenCombatProfile: return _karnok_profile(4)
+def build_karnok_stoneward_level5_combat_profile() -> PregenCombatProfile: return _karnok_profile(5)
+def build_karnok_stoneward_level6_combat_profile() -> PregenCombatProfile: return _karnok_profile(6)
+def build_karnok_stoneward_level7_combat_profile() -> PregenCombatProfile: return _karnok_profile(7)
 
 
 def _rokhan_profile(level: int, _legacy_hp: int | None = None) -> PregenCombatProfile:
@@ -115,36 +103,29 @@ def _rokhan_profile(level: int, _legacy_hp: int | None = None) -> PregenCombatPr
 def _seraphine_profile(level: int, *_legacy: int) -> PregenCombatProfile:
     row = CLERIC_COMBAT_LEVELS[level]
     abilities = _scores(10, 10, 10, 14, row.wisdom, row.charisma)
-    resources = [(f"spell-slot-{spell_level}", uses)
-                 for spell_level, uses in enumerate(row.spell_slots, start=1) if uses]
-    if row.channel_divinity_uses:
-        resources.append(("channel-divinity", row.channel_divinity_uses))
+    resources = [(f"spell-slot-{spell_level}", uses) for spell_level, uses in enumerate(row.spell_slots, start=1) if uses]
+    if row.channel_divinity_uses: resources.append(("channel-divinity", row.channel_divinity_uses))
     resources.extend((("adrenaline-rush", row.proficiency_bonus), ("relentless-endurance", 1)))
     return PregenCombatProfile(
         f"seraphine-dawnshield-l{level}", "Cleric", level, abilities, ("wisdom", "charisma"),
         row.armor_class, row.max_hp, 30,
-        (("athletics", 0), ("acrobatics", 0),
-         ("arcana", row.proficiency_bonus + 2), ("history", row.proficiency_bonus + 2),
-         ("medicine", row.proficiency_bonus + _modifier(row.wisdom)),
+        (("athletics", 0), ("acrobatics", 0), ("arcana", row.proficiency_bonus + 2),
+         ("history", row.proficiency_bonus + 2), ("medicine", row.proficiency_bonus + _modifier(row.wisdom)),
          ("persuasion", row.proficiency_bonus + _modifier(row.charisma))),
         (AttackExpectation("mace", "strength", 1, 6, "bludgeoning"),), (), tuple(resources),
     )
 
 
-def build_seraphine_dawnshield_level3_combat_profile() -> PregenCombatProfile:
-    return _seraphine_profile(3)
-
-
-def build_seraphine_dawnshield_level4_combat_profile() -> PregenCombatProfile:
-    return _seraphine_profile(4)
+def build_seraphine_dawnshield_level3_combat_profile() -> PregenCombatProfile: return _seraphine_profile(3)
+def build_seraphine_dawnshield_level4_combat_profile() -> PregenCombatProfile: return _seraphine_profile(4)
 
 
 def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
     from app.content.rogue_combat_fingerprint import build_mara_quickstep_combat_profile
     profiles = [
-        *(_karnok_profile(level) for level in range(1, 13)),
-        *(_rokhan_profile(level) for level in range(1, 7)),
+        *(_karnok_profile(level) for level in range(1, 21)),
+        *(_rokhan_profile(level) for level in range(1, 9)),
         *(_seraphine_profile(level) for level in range(1, 5)),
-        build_mara_quickstep_combat_profile(),
+        *(build_mara_quickstep_combat_profile(level) for level in range(1, 5)),
     ]
     return {profile.template_id: profile for profile in profiles}

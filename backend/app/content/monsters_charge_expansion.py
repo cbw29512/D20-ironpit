@@ -2,108 +2,71 @@ from __future__ import annotations
 
 from app.content.monster_equipment import build_monster_visual
 from app.domain.actions import AttackActionDefinition, AttackActionSlot
-from app.domain.models import CombatantTemplate, DamageType, Weapon, WeaponAttack, WeaponAttackKind
+from app.domain.models import ChargeDamage, ChargeDefinition, CombatantTemplate, DamageType, Weapon, WeaponAttack, WeaponAttackKind
 from app.domain.size import CreatureSize
 from app.domain.traits import CombatTrait
 
 
 def _attack(
-    attack_id: str,
-    name: str,
-    bonus: int,
-    dice_count: int,
-    dice_size: int,
-    damage_bonus: int,
-    damage_type: DamageType,
+    attack_id: str, name: str, bonus: int, dice_count: int, dice_size: int,
+    damage_bonus: int, damage_type: DamageType, *, charge: ChargeDefinition | None = None,
 ) -> WeaponAttack:
     return WeaponAttack(
         id=attack_id,
         weapon=Weapon(
-            id=attack_id,
-            name=name,
-            attack_kind=WeaponAttackKind.MELEE,
-            dice_count=dice_count,
-            dice_size=dice_size,
-            damage_type=damage_type,
-            animation="heavy-strike",
-            reach_ft=5,
+            id=attack_id, name=name, attack_kind=WeaponAttackKind.MELEE,
+            dice_count=dice_count, dice_size=dice_size, damage_type=damage_type,
+            animation="heavy-strike", reach_ft=5,
         ),
-        attack_bonus=bonus,
-        damage_bonus=damage_bonus,
+        attack_bonus=bonus, damage_bonus=damage_bonus, charge=charge,
+    )
+
+
+def _charge(maximum: CreatureSize, count: int | None, size: int = 8, damage_type: DamageType = DamageType.PIERCING) -> ChargeDefinition:
+    bonus = None if count is None else ChargeDamage(dice_count=count, dice_size=size, damage_type=damage_type)
+    return ChargeDefinition(
+        minimum_move_ft=20, max_target_size=maximum, prone_max_target_size=maximum, bonus_damage=bonus,
     )
 
 
 def build_minotaur_skeleton() -> CombatantTemplate:
-    gore = _attack("minotaur-skeleton-gore", "Gore", 6, 2, 6, 4, DamageType.PIERCING)
+    gore = _attack("minotaur-skeleton-gore", "Gore", 6, 2, 6, 4, DamageType.PIERCING,
+                   charge=_charge(CreatureSize.LARGE, 2))
     slam = _attack("minotaur-skeleton-slam", "Slam", 6, 2, 10, 4, DamageType.BLUDGEONING)
     return CombatantTemplate(
-        id="srd-minotaur-skeleton",
-        name="Minotaur Skeleton",
-        archetype="Minotaur Skeleton",
-        challenge_rating="2",
-        kind="monster",
-        size=CreatureSize.LARGE,
-        armor_class=12,
-        max_hp=45,
-        speed_ft=40,
-        initiative_bonus=0,
-        weapon_attack=gore,
-        alternate_weapon_attacks=[slam],
-        combat_traits=[CombatTrait.CHARGE],
-        damage_vulnerabilities=[DamageType.BLUDGEONING],
-        damage_immunities=[DamageType.POISON],
-        condition_immunities=["exhaustion", "poisoned"],
+        id="srd-minotaur-skeleton", name="Minotaur Skeleton", archetype="Minotaur Skeleton",
+        challenge_rating="2", kind="monster", size=CreatureSize.LARGE, armor_class=12, max_hp=45,
+        speed_ft=40, initiative_bonus=0, weapon_attack=gore, alternate_weapon_attacks=[slam],
+        combat_traits=[CombatTrait.CHARGE], damage_vulnerabilities=[DamageType.BLUDGEONING],
+        damage_immunities=[DamageType.POISON], condition_immunities=["exhaustion", "poisoned"],
         visual=build_monster_visual("bones", "horns", "minotaur-skeleton"),
         source="SRD 5.2.1 Minotaur Skeleton p. 326",
     )
 
 
 def build_triceratops() -> CombatantTemplate:
-    gore = _attack("triceratops-gore", "Gore", 9, 2, 12, 6, DamageType.PIERCING)
+    gore = _attack("triceratops-gore", "Gore", 9, 2, 12, 6, DamageType.PIERCING,
+                   charge=_charge(CreatureSize.HUGE, 2))
     multiattack = AttackActionDefinition(
-        id="triceratops-multiattack",
-        name="Multiattack",
-        slots=[
-            AttackActionSlot(attack_ids=[gore.id]),
-            AttackActionSlot(attack_ids=[gore.id]),
-        ],
+        id="triceratops-multiattack", name="Multiattack",
+        slots=[AttackActionSlot(attack_ids=[gore.id]), AttackActionSlot(attack_ids=[gore.id])],
     )
     return CombatantTemplate(
-        id="srd-triceratops",
-        name="Triceratops",
-        archetype="Triceratops",
-        challenge_rating="5",
-        kind="monster",
-        size=CreatureSize.HUGE,
-        armor_class=14,
-        max_hp=114,
-        speed_ft=50,
-        initiative_bonus=-1,
-        weapon_attack=gore,
-        attack_action=multiattack,
-        combat_traits=[CombatTrait.CHARGE],
-        visual=build_monster_visual("hide", "horns", "triceratops"),
-        source="SRD 5.2.1 Triceratops p. 363",
+        id="srd-triceratops", name="Triceratops", archetype="Triceratops", challenge_rating="5",
+        kind="monster", size=CreatureSize.HUGE, armor_class=14, max_hp=114, speed_ft=50,
+        initiative_bonus=-1, weapon_attack=gore, attack_action=multiattack, combat_traits=[CombatTrait.CHARGE],
+        visual=build_monster_visual("hide", "horns", "triceratops"), source="SRD 5.2.1 Triceratops p. 363",
     )
 
 
 def build_warhorse_skeleton() -> CombatantTemplate:
-    hooves = _attack("warhorse-skeleton-hooves", "Hooves", 6, 1, 6, 4, DamageType.BLUDGEONING)
+    hooves = _attack("warhorse-skeleton-hooves", "Hooves", 6, 1, 6, 4, DamageType.BLUDGEONING,
+                     charge=_charge(CreatureSize.LARGE, None))
     return CombatantTemplate(
-        id="srd-warhorse-skeleton",
-        name="Warhorse Skeleton",
-        archetype="Warhorse Skeleton",
-        challenge_rating="1/2",
-        kind="monster",
-        size=CreatureSize.LARGE,
-        armor_class=13,
-        max_hp=22,
-        speed_ft=60,
-        initiative_bonus=1,
-        weapon_attack=hooves,
-        combat_traits=[CombatTrait.CHARGE],
-        damage_vulnerabilities=[DamageType.BLUDGEONING],
-        damage_immunities=[DamageType.POISON],
+        id="srd-warhorse-skeleton", name="Warhorse Skeleton", archetype="Warhorse Skeleton",
+        challenge_rating="1/2", kind="monster", size=CreatureSize.LARGE, armor_class=13, max_hp=22,
+        speed_ft=60, initiative_bonus=1, weapon_attack=hooves, combat_traits=[CombatTrait.CHARGE],
+        damage_vulnerabilities=[DamageType.BLUDGEONING], damage_immunities=[DamageType.POISON],
         condition_immunities=["exhaustion", "poisoned"],
         visual=build_monster_visual("bones", "hooves", "warhorse-skeleton"),
         source="SRD 5.2.1 Warhorse Skeleton p. 326",
@@ -112,23 +75,18 @@ def build_warhorse_skeleton() -> CombatantTemplate:
 
 def build_allosaurus() -> CombatantTemplate:
     bite = _attack("allosaurus-bite", "Bite", 6, 2, 10, 4, DamageType.PIERCING)
-    claws = _attack("allosaurus-claws", "Claws", 6, 1, 8, 4, DamageType.SLASHING)
+    claws = _attack(
+        "allosaurus-claws", "Claws", 6, 1, 8, 4, DamageType.SLASHING,
+        charge=ChargeDefinition(
+            minimum_move_ft=30, max_target_size=CreatureSize.LARGE,
+            prone_max_target_size=CreatureSize.LARGE, follow_up_attack_id="allosaurus-bite",
+        ),
+    )
     return CombatantTemplate(
-        id="srd-allosaurus",
-        name="Allosaurus",
-        archetype="Allosaurus",
-        challenge_rating="2",
-        kind="monster",
-        size=CreatureSize.LARGE,
-        armor_class=13,
-        max_hp=51,
-        speed_ft=60,
-        initiative_bonus=1,
-        skill_bonuses={"perception": 5},
-        weapon_attack=bite,
-        alternate_weapon_attacks=[claws],
-        combat_traits=[CombatTrait.CHARGE],
-        visual=build_monster_visual("hide", "claws", "allosaurus"),
+        id="srd-allosaurus", name="Allosaurus", archetype="Allosaurus", challenge_rating="2", kind="monster",
+        size=CreatureSize.LARGE, armor_class=13, max_hp=51, speed_ft=60, initiative_bonus=1,
+        skill_bonuses={"perception": 5}, weapon_attack=bite, alternate_weapon_attacks=[claws],
+        combat_traits=[CombatTrait.CHARGE], visual=build_monster_visual("hide", "claws", "allosaurus"),
         source="SRD 5.2.1 Allosaurus p. 344",
     )
 

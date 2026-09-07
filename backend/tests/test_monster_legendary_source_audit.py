@@ -19,6 +19,12 @@ def test_tarrasque_legendary_fingerprint_preserves_uses_and_actions() -> None:
     ]
 
 
+def test_lair_use_annotation_preserves_base_legendary_uses() -> None:
+    parsed = parse_legendary_action_names(_row("Adult Black Dragon")["legendaryActions"])
+    assert parsed[0] == "uses:3"
+    assert {"Cloud of Insects", "Frightful Presence", "Pounce"}.issubset(parsed)
+
+
 def test_current_saber_tooth_has_no_legendary_actions() -> None:
     saber = _monster("Saber-Toothed Tiger")
     assert saber.source_legendary_action_names == []

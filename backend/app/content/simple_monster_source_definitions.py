@@ -1,0 +1,126 @@
+from __future__ import annotations
+
+import re
+
+from app.content.arena_eligibility import deferred_environment_reason
+from app.content.monster_catalog import load_monster_rows
+from app.content.monster_combat_scope import battle_ready_size
+from app.content.monster_curated_spell_actions import curated_spell_save_capabilities
+from app.content.monster_death_trigger_source import parse_death_trigger_saves
+from app.content.monster_defense_source_audit import parse_defense_profile
+from app.content.monster_reaction_source_audit import parse_parry_ac_bonus, parse_reaction_names
+from app.content.monster_regeneration_source import parse_regeneration
+from app.content.monster_roll_aura_source import parse_ally_roll_auras
+from app.content.monster_saving_throws import parse_saving_throw_bonuses
+from app.content.monster_spell_source_parser import spellcasting_fingerprint
+from app.content.monster_start_turn_aura_source import parse_start_turn_save_auras
+from app.content.monster_trait_source_audit import _MODELED_TRAITS, parse_trait_names
+from app.content.monster_turn_aura_source import parse_turn_damage_auras
+from app.content.movement_modes import parse_movement_profile, standard_arena_closing_speed
+from app.content.simple_monster_source_attacks import parse_simple_attacks
+from app.content.simple_monster_source_bonus_saves import parse_simple_bonus_save_actions
+from app.content.simple_monster_source_resources import attach_limited_use_resources
+from app.content.simple_monster_source_saves import attach_save_replacement, parse_simple_save_actions
+from app.domain.capabilities import CombatantDefinition
+
+_SIMPLE_SOURCE_NAMES = frozenset({
+    "Ankheg", "Azer Sentinel", "Berserker", "Black Dragon Wyrmling", "Blink Dog", "Blue Dragon Wyrmling", "Bone Devil", "Bugbear Stalker", "Bugbear Warrior",
+    "Druid", "Dryad", "Ettin", "Fire Giant", "Ghoul", "Giant Seahorse", "Giant Shark", "Green Dragon Wyrmling", "Hell Hound", "Hezrou", "Hill Giant",
+    "Hobgoblin Captain", "Hunter Shark", "Imp", "Lion", "Magmin", "Merrow", "Nightmare", "Piranha", "Pirate", "Red Dragon Wyrmling", "Sahuagin Warrior",
+    "Satyr", "Specter", "Spy", "Tough Boss", "Troll Limb", "Werebear", "Wereboar", "Wererat", "Weretiger", "Werewolf", "White Dragon Wyrmling",
+    "Winter Wolf", "Wraith", "Xorn",
+})
+
+
+def _first_int(value: object) -> int:
+    match = re.search(r"-?\d+", str(value))
+    if match is None: raise ValueError(f"No integer in SRD value {value!r}.")
+    return int(match.group())
+
+
+def _initiative(row: dict[str, object]) -> int:
+    match = re.search(r"\bInitiative\s+([+-]?\d+)", str(row.get("rawText", "")), re.I)
+    if match is None: raise ValueError(f"Missing initiative for {row.get('name')!r}.")
+    return int(match.group(1))
+
+
+def _slug(value: object) -> str:
+    return re.sub(r"[^a-z0-9]+", "-", str(value).lower()).strip("-")
+
+
+def _definition(row: dict[str, object]) -> CombatantDefinition:
+    attacks, multiattack = parse_simple_attacks(row); defenses = parse_defense_profile(row)
+    save_actions = [*parse_simple_save_actions(row), *parse_simple_bonus_save_actions(row)]
+    resources, limited_use_names = attach_limited_use_resources(row, attacks, save_actions)
+    spell_saves, spell_resources = curated_spell_save_capabilities(row)
+    save_actions.extend(spell_saves); resources.extend(spell_resources)
+    multiattack = attach_save_replacement(row, multiattack, save_actions)
+    trait_names = parse_trait_names(row.get("traits", "")) if str(row.get("traits", "")).strip() else []
+    combat_traits = [_MODELED_TRAITS[name].value for name in trait_names if name in _MODELED_TRAITS]
+    reaction_names = parse_reaction_names(row.get("reactions", "")); parry_bonus = parse_parry_ac_bonus(row.get("reactions", "")) if reaction_names == ["Parry"] else None
+    regeneration = parse_regeneration(row); turn_damage_auras = parse_turn_damage_auras(row)
+    death_trigger_saves = parse_death_trigger_saves(row); ally_roll_auras = parse_ally_roll_auras(row)
+    start_turn_save_auras = parse_start_turn_save_auras(row)
+    name = str(row["name"]); slug = _slug(name)
+    arena_size = battle_ready_size(row) or str(row["size"]).split()[0].lower()
+    data: dict[str, object] = {
+        "schema_version": 1, "id": f"srd-{slug}", "name": name, "archetype": "source-certified monster",
+        "challenge_rating": str(row["challenge"]).split()[0], "kind": "monster", "creature_type": str(row["type"]),
+        "size": arena_size, "armor_class": _first_int(row["armorClass"]),
+        "max_hp": _first_int(row["hitPoints"]), "speed_ft": standard_arena_closing_speed(row["speed"]),
+        "movement_modes": parse_movement_profile(row["speed"]).model_dump(mode="json"),
+        "initiative_bonus": _initiative(row), "attacks": attacks, "primary_attack_id": attacks[0]["id"],
+        "save_actions": save_actions, "saving_throw_bonuses": parse_saving_throw_bonuses(row), "combat_traits": combat_traits,
+        "resources": resources, "source_limited_use_names": limited_use_names,
+        "source_trait_names": trait_names, "source_spellcasting_fingerprint": spellcasting_fingerprint(row),
+        "damage_vulnerabilities": sorted(defenses["damage_vulnerabilities"]),
+        "damage_resistances": sorted(defenses["damage_resistances"]), "damage_immunities": sorted(defenses["damage_immunities"]),
+        "condition_immunities": sorted(defenses["condition_immunities"]),
+        "visual": {"armor": "natural", "main_hand": attacks[0]["name"], "body_style": "monster"},
+        "source": str(row["sourceReference"]),
+    }
+    if multiattack is not None: data["attack_action"] = multiattack
+    if parry_bonus is not None: data["parry_reaction"] = {"ac_bonus": parry_bonus}
+    if regeneration is not None: data["regeneration"] = regeneration.model_dump(mode="json")
+    if turn_damage_auras: data["turn_damage_auras"] = [aura.model_dump(mode="json") for aura in turn_damage_auras]
+    if death_trigger_saves: data["death_trigger_save_actions"] = [action.model_dump(mode="json") for action in death_trigger_saves]
+    if ally_roll_auras: data["ally_roll_auras"] = [aura.model_dump(mode="json") for aura in ally_roll_auras]
+    if start_turn_save_auras: data["start_turn_save_auras"] = [aura.model_dump(mode="json") for aura in start_turn_save_auras]
+    return CombatantDefinition.model_validate(data)
+
+
+def audited_source_definition(row: dict[str, object]) -> CombatantDefinition | None:
+    """Return a source-derived definition only when the full existing audit proves zero combat-math gaps."""
+    from app.content.capability_compiler import compile_combatant
+    from app.content.monster_source_audit import audit_monster_source
+    from app.content.monster_source_metadata import complete_monster_source_metadata
+
+    try:
+        definition = _definition(row)
+        template = complete_monster_source_metadata([compile_combatant(definition)])[0]
+        return definition if audit_monster_source(template, row) == [] else None
+    except (ValueError, RuntimeError):
+        return None
+
+
+def discover_audited_source_definitions(excluded_ids: set[str]) -> dict[str, CombatantDefinition]:
+    """Harvest every unregistered SRD row already proven by universal parsers and source audits."""
+    result: dict[str, CombatantDefinition] = {}
+    for row in sorted(load_monster_rows(), key=lambda item: str(item["name"])):
+        combatant_id = f"srd-{_slug(row['name'])}"
+        if combatant_id in excluded_ids or deferred_environment_reason(row["speed"]) is not None:
+            continue
+        definition = audited_source_definition(row)
+        if definition is not None:
+            result[combatant_id] = definition
+    return result
+
+
+def build_simple_source_definitions() -> dict[str, CombatantDefinition]:
+    rows = {str(row["name"]): row for row in load_monster_rows()}; missing = _SIMPLE_SOURCE_NAMES - rows.keys()
+    if missing: raise ValueError(f"Missing SRD simple-monster rows: {', '.join(sorted(missing))}")
+    eligible_names = [name for name in sorted(_SIMPLE_SOURCE_NAMES) if deferred_environment_reason(rows[name]["speed"]) is None]
+    definitions = [_definition(rows[name]) for name in eligible_names]
+    result = {definition.id: definition for definition in definitions}
+    if len(result) != len(definitions): raise ValueError("Simple source-derived monster ids must be unique.")
+    return result

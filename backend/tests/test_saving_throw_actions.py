@@ -3,7 +3,7 @@ import pytest
 from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.saving_throws import legal_save_action, resolve_save_action, resolve_saving_throw
-from app.domain.models import DamageType, EncounterSelection, RollMode
+from app.domain.models import DamageType, EncounterSelection, OnHitDamage, RollMode
 
 
 def _state(hero_id="karnok-stoneward-l1"):
@@ -70,6 +70,28 @@ def test_constrict_failure_deals_damage_and_grapples() -> None:
     assert hero.state.current_hp == 6
     assert event.applied_condition_ids == ["grappled"]
     assert hero.state.grapple_sources[0].escape_dc == 12
+
+
+def test_multi_packet_save_applies_defenses_per_damage_type() -> None:
+    _, hero, snake = _constrict_setup()
+    hero.state.template.damage_resistances = [DamageType.FIRE]
+    action = snake.state.template.saving_throw_actions[0].model_copy(update={
+        "damage_dice_count": 1,
+        "damage_dice_size": 6,
+        "damage_bonus": 0,
+        "damage_type": "bludgeoning",
+        "additional_damage": [OnHitDamage(
+            source="Fire", dice_count=1, dice_size=6, damage_bonus=0, damage_type=DamageType.FIRE,
+        )],
+    })
+    event = resolve_save_action(1, 1, snake, hero, action, 5, FixedDiceProvider([1, 6, 6]))
+    assert event.save_succeeded is False
+    assert [(part.damage_type.value, part.total, part.applied_total) for part in event.damage_components] == [
+        ("bludgeoning", 6, 6), ("fire", 6, 3),
+    ]
+    assert event.damage_roll is not None and event.damage_roll.total == 9
+    assert hero.state.current_hp == 3
+    assert event.applied_condition_ids == ["grappled"]
 
 
 def test_constrict_success_rolls_no_damage_and_applies_no_grapple() -> None:

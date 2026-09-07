@@ -4,9 +4,9 @@ import logging
 
 from app.combat.attack_legality import attack_allowed_against
 from app.combat.encounter_targeting import combatant_distance, living_opponents, select_nearest_target
+from app.combat.saving_throws import save_target_requirements_met
 from app.domain.actions import AttackActionSlot
 from app.domain.encounters import EncounterCombatant, EncounterSetup
-from app.domain.size import size_at_most
 
 logger = logging.getLogger(__name__)
 
@@ -21,8 +21,7 @@ def _slot_statically_allows(attacker: EncounterCombatant, target: EncounterComba
         return True
     allowed_saves = set(slot.save_action_ids)
     return any(
-        action.id in allowed_saves
-        and (action.target_max_size is None or size_at_most(target.state.template.size, action.target_max_size))
+        action.id in allowed_saves and save_target_requirements_met(action, target)
         for action in attacker.state.template.saving_throw_actions
     )
 

@@ -142,3 +142,4 @@ load("browser-turn.js");
 }
 
 console.log("Browser Fighter 2 progression regressions passed.");
+require("./browser-advanced-progression.test.cjs");

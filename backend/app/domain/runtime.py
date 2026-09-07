@@ -61,6 +61,7 @@ class CombatantState(BaseModel):
     template: CombatantTemplate
     current_hp: int
     max_hp_bonus: int = Field(default=0, ge=0)
+    max_hp_reduction: int = Field(default=0, ge=0)
     temporary_hp: int = Field(default=0, ge=0)
     initiative_roll: int | None = None
     initiative_total: int | None = None
@@ -88,6 +89,8 @@ class CombatantState(BaseModel):
     temporary_damage_resistances: list[DamageType] = Field(default_factory=list)
     rage_expires_round: int | None = Field(default=None, ge=1)
     rage_max_round: int | None = Field(default=None, ge=1)
+    regeneration_suppressed_next_turn: bool = False
+    pending_death_trigger_ids: list[str] = Field(default_factory=list)
 
 
 class BattlefieldState(BaseModel):

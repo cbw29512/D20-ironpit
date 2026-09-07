@@ -13,6 +13,7 @@ class ModifierKind(StrEnum):
     SAVING_THROW_BONUS_DIE = "saving-throw-bonus-die"
     ATTACKS_AGAINST_ADVANTAGE = "attacks-against-advantage"
     NEXT_ATTACK_AGAINST_ADVANTAGE = "next-attack-against-advantage"
+    NEXT_ATTACK_DISADVANTAGE = "next-attack-disadvantage"
     BONUS_DAMAGE = "bonus-damage"
     SPEED = "speed"
 
@@ -21,6 +22,7 @@ class CombatModifier(BaseModel):
     id: str
     source_id: str
     source_effect_id: str
+    source_name: str | None = None
     kind: ModifierKind
     flat_bonus: int = 0
     dice_count: int = Field(default=0, ge=0, le=20)
@@ -48,9 +50,13 @@ class CombatModifier(BaseModel):
             raise ValueError("Bonus damage requires a damage type.")
         if self.kind is not ModifierKind.BONUS_DAMAGE and self.damage_type is not None:
             raise ValueError(f"{self.kind.value} does not accept a damage type.")
-        advantage_kinds = {ModifierKind.ATTACKS_AGAINST_ADVANTAGE, ModifierKind.NEXT_ATTACK_AGAINST_ADVANTAGE}
-        if self.kind in advantage_kinds and self.flat_bonus:
-            raise ValueError("Attack-advantage modifiers do not accept a flat bonus.")
+        roll_modes = {
+            ModifierKind.ATTACKS_AGAINST_ADVANTAGE,
+            ModifierKind.NEXT_ATTACK_AGAINST_ADVANTAGE,
+            ModifierKind.NEXT_ATTACK_DISADVANTAGE,
+        }
+        if self.kind in roll_modes and self.flat_bonus:
+            raise ValueError("Attack roll-mode modifiers do not accept a flat bonus.")
         if self.kind is ModifierKind.SPEED and self.flat_bonus == 0:
             raise ValueError("Speed modifiers require a nonzero flat bonus.")
         if self.kind is ModifierKind.NEXT_ATTACK_AGAINST_ADVANTAGE and self.target_id is None:

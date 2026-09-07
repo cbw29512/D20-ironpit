@@ -4,7 +4,7 @@
   const el = (id) => document.getElementById(id);
   const nodes = new Map();
   const SELF_BUFFS = new Set(["rage", "dodge"]);
-  const DEBUFF_MODIFIERS = new Set(["attacks-against-advantage"]);
+  const DEBUFF_MODIFIERS = new Set(["attacks-against-advantage", "next-attack-disadvantage"]);
   const reduced = () => window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, reduced() ? Math.min(ms, 70) : ms));
   const cleanLabel = (id) => String(id || "").replace(/^weapon-mastery-/, "").replace(/^tactical-master-/, "").replaceAll("_", " ").replaceAll("-", " ").toUpperCase();
