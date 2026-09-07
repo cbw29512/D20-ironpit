@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field, model_validator
 from app.domain.areas import AreaGeometry
 from app.domain.control_effects import AbilityName, ConditionName, ConditionTiming, GrappleSource, HitControlEffect
 from app.domain.size import CreatureSize
+from app.domain.weapons import DamagePacket
 
 ActionCost = Literal["action", "bonus_action", "reaction"]
 HealingTargetMode = Literal["self", "ally", "self_or_ally", "other"]
@@ -98,6 +99,7 @@ class SavingThrowAction(BaseModel):
     damage_dice_size: int = Field(default=6, ge=2, le=100)
     damage_bonus: int = 0
     damage_type: DamageTypeName | None = None
+    additional_damage: list[DamagePacket] = Field(default_factory=list, max_length=8)
     success_damage: Literal["none", "half"] = "none"
     grapple_escape_dc: int | None = Field(default=None, ge=1, le=40)
     restrains_while_grappled: bool = False
@@ -105,6 +107,12 @@ class SavingThrowAction(BaseModel):
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
     animation: str = "save-effect"
+
+    @model_validator(mode="after")
+    def validate_damage_shape(self) -> "SavingThrowAction":
+        if self.area is not None and self.additional_damage:
+            raise ValueError("Multi-packet area saves await shared-roll bundle support.")
+        return self
 
 
 class AttackActionSlot(BaseModel):
