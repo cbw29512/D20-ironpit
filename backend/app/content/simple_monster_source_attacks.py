@@ -11,10 +11,12 @@ logger = logging.getLogger(__name__)
 _NUMBER = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6}
 _DAMAGE = r"Hit:\s*\d+\s*\(\s*(\d+)d(\d+)(?:\s*([+-])\s*(\d+))?\s*\)\s*([A-Za-z]+)\s+damage"
 _ATTACK = re.compile(rf"\b(Melee|Ranged) Attack Roll:\s*([+-]?\d+)(?:\s*\([^)]*\))?,\s*(?:(?:reach\s+(\d+)\s*ft\.?)|(?:range\s+(\d+)\s*/\s*(\d+)\s*ft\.?))\s*{_DAMAGE}", re.I)
+_FIXED_ATTACK = re.compile(r"\b(Melee|Ranged) Attack Roll:\s*([+-]?\d+)(?:\s*\([^)]*\))?,\s*(?:(?:reach\s+(\d+)\s*ft\.?)|(?:range\s+(\d+)\s*/\s*(\d+)\s*ft\.?))\s*Hit:\s*(\d+)\s*([A-Za-z]+)\s+damage", re.I)
 _HYBRID = re.compile(rf"\bMelee or Ranged Attack Roll:\s*([+-]?\d+)(?:\s*\([^)]*\))?,\s*reach\s+(\d+)\s*ft\.?\s+or\s+range\s+(\d+)\s*/\s*(\d+)\s*ft\.?\s*{_DAMAGE}", re.I)
 _EXTRA_DICE = re.compile(r"\bplus\s+\d+\s*\(\s*(\d+)d(\d+)(?:\s*([+-])\s*(\d+))?\s*\)\s*([A-Za-z]+)\s+damage", re.I)
 _EXTRA_FIXED = re.compile(r"\bplus\s+(\d+)\s+([A-Za-z]+)\s+damage\b", re.I)
 _GRAPPLE_ADV = re.compile(r"\bwith Advantage if the target is Grappled by the [^)]+", re.I)
+_MISSING_HP_ADV = re.compile(r"\bwith Advantage if the target (?:doesn['’]t|does not) have all its Hit Points\b", re.I)
 _GRAPPLE_REPLACEMENT = re.compile(
     r"\bor\s+\d+\s*\(\s*(\d+)d(\d+)(?:\s*([+-])\s*(\d+))?\s*\)\s*([A-Za-z]+)\s+damage\s+"
     r"if\s+the\s+target\s+is\s+Grappled\s+by\s+the\s+[A-Za-z][A-Za-z'’ -]*", re.I,
@@ -84,11 +86,19 @@ def parse_simple_attacks(row: dict[str, object]) -> tuple[list[dict[str, object]
                 ]
             else:
                 match = _ATTACK.search(block)
-                if match is None: raise ValueError(f"Simple attack parser cannot prove {row['name']} {heading!r}: {block!r}")
-                kind, bonus, reach, normal, long, count, size, sign, damage_bonus, damage_type = match.groups()
-                built = [_entry(monster_slug, heading, kind.lower(), bonus, reach, normal, long, count, size, sign, damage_bonus, damage_type, _effects(block, match.span(), heading))]
+                if match is not None:
+                    kind, bonus, reach, normal, long, count, size, sign, damage_bonus, damage_type = match.groups()
+                    built = [_entry(monster_slug, heading, kind.lower(), bonus, reach, normal, long, count, size, sign, damage_bonus, damage_type, _effects(block, match.span(), heading))]
+                else:
+                    fixed = _FIXED_ATTACK.search(block)
+                    if fixed is None: raise ValueError(f"Simple attack parser cannot prove {row['name']} {heading!r}: {block!r}")
+                    kind, bonus, reach, normal, long, amount, damage_type = fixed.groups()
+                    built = [_entry(monster_slug, heading, kind.lower(), bonus, reach, normal, long, "0", "2", None, "0", damage_type, _effects(block, fixed.span(), heading))]
+                    built[0].pop("damage"); built[0]["fixed_damage"] = int(amount)
             if _GRAPPLE_ADV.search(block):
                 for attack in built: attack["advantage_if_target_grappled_by_self"] = True
+            if _MISSING_HP_ADV.search(block):
+                for attack in built: attack["advantage_if_target_missing_hp"] = True
             attacks.extend(built); base = base_feature_name(heading)
             if base in by_name: raise ValueError(f"Duplicate base attack heading {base!r} for {row['name']!r}.")
             by_name[base] = [item["id"] for item in built]
