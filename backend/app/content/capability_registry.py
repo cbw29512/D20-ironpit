@@ -8,7 +8,10 @@ from pathlib import Path
 from app.content.capability_compiler import compile_combatant
 from app.content.monster_creature_types import complete_monster_creature_types
 from app.content.monster_source_metadata import complete_monster_source_metadata
-from app.content.simple_monster_source_definitions import build_simple_source_definitions
+from app.content.simple_monster_source_definitions import (
+    build_simple_source_definitions,
+    discover_audited_source_definitions,
+)
 from app.domain.capabilities import CombatantDefinition
 from app.domain.models import CombatantTemplate
 
@@ -89,7 +92,8 @@ def load_capability_definitions() -> dict[str, CombatantDefinition]:
         merged = merge_capability_definitions(generated, native)
         source_simple = build_simple_source_definitions()
         merged = _prefer_source_replacements(merged, source_simple)
-        return {**merged, **source_simple}
+        source_discovered = discover_audited_source_definitions(set(merged) | set(source_simple))
+        return {**merged, **source_simple, **source_discovered}
     except Exception as exc:
         logger.exception("Failed to load declarative combat capability registries.")
         raise RuntimeError("Combat capability registry could not be loaded.") from exc

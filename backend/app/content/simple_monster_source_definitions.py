@@ -43,6 +43,10 @@ def _initiative(row: dict[str, object]) -> int:
     return int(match.group(1))
 
 
+def _slug(value: object) -> str:
+    return re.sub(r"[^a-z0-9]+", "-", str(value).lower()).strip("-")
+
+
 def _definition(row: dict[str, object]) -> CombatantDefinition:
     attacks, multiattack = parse_simple_attacks(row); defenses = parse_defense_profile(row)
     save_actions = [*parse_simple_save_actions(row), *parse_simple_bonus_save_actions(row)]
@@ -55,7 +59,7 @@ def _definition(row: dict[str, object]) -> CombatantDefinition:
     regeneration = parse_regeneration(row); turn_damage_auras = parse_turn_damage_auras(row)
     death_trigger_saves = parse_death_trigger_saves(row); ally_roll_auras = parse_ally_roll_auras(row)
     start_turn_save_auras = parse_start_turn_save_auras(row)
-    name = str(row["name"]); slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
+    name = str(row["name"]); slug = _slug(name)
     arena_size = battle_ready_size(row) or str(row["size"]).split()[0].lower()
     data: dict[str, object] = {
         "schema_version": 1, "id": f"srd-{slug}", "name": name, "archetype": "source-certified monster",
@@ -80,6 +84,33 @@ def _definition(row: dict[str, object]) -> CombatantDefinition:
     if ally_roll_auras: data["ally_roll_auras"] = [aura.model_dump(mode="json") for aura in ally_roll_auras]
     if start_turn_save_auras: data["start_turn_save_auras"] = [aura.model_dump(mode="json") for aura in start_turn_save_auras]
     return CombatantDefinition.model_validate(data)
+
+
+def audited_source_definition(row: dict[str, object]) -> CombatantDefinition | None:
+    """Return a source-derived definition only when the full existing audit proves zero combat-math gaps."""
+    from app.content.capability_compiler import compile_combatant
+    from app.content.monster_source_audit import audit_monster_source
+    from app.content.monster_source_metadata import complete_monster_source_metadata
+
+    try:
+        definition = _definition(row)
+        template = complete_monster_source_metadata([compile_combatant(definition)])[0]
+        return definition if audit_monster_source(template, row) == [] else None
+    except (ValueError, RuntimeError):
+        return None
+
+
+def discover_audited_source_definitions(excluded_ids: set[str]) -> dict[str, CombatantDefinition]:
+    """Harvest every unregistered SRD row already proven by universal parsers and source audits."""
+    result: dict[str, CombatantDefinition] = {}
+    for row in sorted(load_monster_rows(), key=lambda item: str(item["name"])):
+        combatant_id = f"srd-{_slug(row['name'])}"
+        if combatant_id in excluded_ids or deferred_environment_reason(row["speed"]) is not None:
+            continue
+        definition = audited_source_definition(row)
+        if definition is not None:
+            result[combatant_id] = definition
+    return result
 
 
 def build_simple_source_definitions() -> dict[str, CombatantDefinition]:
