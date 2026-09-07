@@ -5,12 +5,12 @@ import re
 _SIZE = r"Tiny|Small|Medium|Large|Huge|Gargantuan"
 _DICE = r"(?P<count>\d+)d(?P<size>\d+)(?:\s*(?P<sign>[+-])\s*(?P<bonus>\d+))?"
 _RUNUP = re.compile(
-    r"\b(?:the\s+)?[A-Za-z][A-Za-z'’ -]*\s+moved\s+(?P<distance>\d+)\+\s*feet\s+"
+    r"\b(?:the\s+)?[A-Za-z][A-Za-z'’\-]*\s+moved\s+(?P<distance>\d+)\+\s*feet\s+"
     r"straight\s+toward\s+(?:it|the\s+target)\s+immediately\s+before\s+the\s+hit\b",
     re.I,
 )
 _TARGET_SIZE = re.compile(
-    rf"\bIf\s+(?:the\s+)?target\s+is\s+(?:a\s+)?(?P<size>{_SIZE})\s+or\s+smaller(?:\s+creature)?\s+and\s*$",
+    rf"\bIf\s+(?:the\s+)?target\s+is\s+(?:a\s+)?(?P<size>{_SIZE})\s+or\s+smaller(?:\s+creature)?\b",
     re.I,
 )
 _EXTRA_DAMAGE = re.compile(
@@ -21,7 +21,7 @@ _EXTRA_DAMAGE = re.compile(
 _REPLACEMENT = re.compile(
     rf"\bor\s+\d+\s*\(\s*{_DICE}\s*\)\s+"
     r"(?P<damage_type>Acid|Bludgeoning|Cold|Fire|Force|Lightning|Necrotic|Piercing|Poison|Psychic|Radiant|Slashing|Thunder)\s+damage\s+if\s+"
-    r"(?:the\s+)?[A-Za-z][A-Za-z'’ -]*\s+moved\s+(?P<distance>\d+)\+\s*feet\s+straight\s+toward\s+the\s+target\s+"
+    r"(?:the\s+)?[A-Za-z][A-Za-z'’\-]*\s+moved\s+(?P<distance>\d+)\+\s*feet\s+straight\s+toward\s+the\s+target\s+"
     r"immediately\s+before\s+the\s+hit\b",
     re.I,
 )
