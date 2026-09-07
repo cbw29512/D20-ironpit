@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 181,
-    "blocked": 149
+    "public_ready": 184,
+    "blocked": 146
   },
   "monsters": [
     {
@@ -490,7 +490,7 @@
       "monster_name": "Air Elemental",
       "srd_source_page": 258,
       "srd_source_reference": "SRD 5.2.1 p. 258",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-air-elemental",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -503,26 +503,20 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "damage-or-condition-defense",
+        "limited-use",
         "multiattack",
+        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "condition-or-control",
-        "limited-use",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "condition-or-control",
-        "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-allosaurus",
@@ -1845,7 +1839,7 @@
       "monster_name": "Bronze Dragon Wyrmling",
       "srd_source_page": 269,
       "srd_source_reference": "SRD 5.2.1 p. 269",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-bronze-dragon-wyrmling",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -1858,26 +1852,20 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "damage-or-condition-defense",
+        "limited-use",
         "multiattack",
+        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "condition-or-control",
-        "limited-use",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "condition-or-control",
-        "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-brown-bear",
@@ -9396,7 +9384,7 @@
       "monster_name": "Young Bronze Dragon",
       "srd_source_page": 270,
       "srd_source_reference": "SRD 5.2.1 p. 270",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-young-bronze-dragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -9409,26 +9397,20 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "damage-or-condition-defense",
+        "limited-use",
         "multiattack",
+        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "condition-or-control",
-        "limited-use",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "condition-or-control",
-        "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-young-copper-dragon",
