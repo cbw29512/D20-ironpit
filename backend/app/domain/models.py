@@ -28,7 +28,17 @@ from app.domain.encounters import (
     EncounterSide,
     InitiativeGroup,
 )
-from app.domain.events import BattleEvent, BattleResult, DamageRollComponent, DiceRoll, RollMode
+from app.domain.events import (
+    AuditPhase,
+    AuditStep,
+    BattleEvent,
+    BattleResult,
+    DamageRollComponent,
+    DiceRoll,
+    EventAudit,
+    RollMode,
+    RollRevision,
+)
 from app.domain.runtime import ArenaRoster, BattlefieldState, CombatantState, DemoRoster, ResourceState, TimedEffect
 from app.domain.traits import CombatTrait
 from app.domain.turbo import (
@@ -43,6 +53,8 @@ __all__ = [
     "ArenaRoster",
     "AttackActionDefinition",
     "AttackActionSlot",
+    "AuditPhase",
+    "AuditStep",
     "BattleEvent",
     "BattlefieldState",
     "BattleResult",
@@ -63,6 +75,7 @@ __all__ = [
     "EncounterSelection",
     "EncounterSetup",
     "EncounterSide",
+    "EventAudit",
     "GrappleSource",
     "HealingAction",
     "HitControlEffect",
@@ -71,6 +84,7 @@ __all__ = [
     "ResourceDefinition",
     "ResourceState",
     "RollMode",
+    "RollRevision",
     "SavingThrowAction",
     "TimedEffect",
     "TurboBatchRequest",
