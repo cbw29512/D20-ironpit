@@ -6,6 +6,7 @@ from app.content.monster_combat_scope import feature_blocks
 from app.content.monster_trait_source_audit import parse_trait_names
 from app.content.simple_monster_source_constrict import parse_constrict_save
 from app.content.simple_monster_source_point_areas import parse_point_radius_save
+from app.content.simple_monster_source_save_expansion import parse_expanded_save
 
 _ABILITY = r"Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma"
 _DAMAGE = r"Acid|Bludgeoning|Cold|Fire|Force|Lightning|Necrotic|Piercing|Poison|Psychic|Radiant|Slashing|Thunder"
@@ -106,6 +107,9 @@ def parse_simple_save_actions(row: dict[str, object]) -> list[dict[str, object]]
         point_radius = parse_point_radius_save(row, heading, block)
         if point_radius is not None:
             actions.append(point_radius); continue
+        expanded = parse_expanded_save(row, heading, block)
+        if expanded is not None:
+            actions.append(expanded); continue
         condition_match = _CONDITION_SAVE.fullmatch(block)
         if condition_match is not None:
             actions.append(_condition_save_row(row, condition_match)); continue
