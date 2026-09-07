@@ -9,7 +9,6 @@ from app.content.simple_monster_source_constrict import parse_constrict_save
 _ABILITY = r"Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma"
 _DAMAGE = r"Acid|Bludgeoning|Cold|Fire|Force|Lightning|Necrotic|Piercing|Poison|Psychic|Radiant|Slashing|Thunder"
 _CONDITION = r"Blinded|Charmed|Deafened|Exhaustion|Frightened|Incapacitated|Paralyzed|Petrified|Poisoned|Prone|Restrained|Stunned|Unconscious"
-_SIZE = r"Tiny|Small|Medium|Large|Huge|Gargantuan"
 _SIMPLE_SAVE = re.compile(
     rf"^(?P<name>.+?)\. (?P<ability>{_ABILITY}) Saving Throw: DC (?P<dc>\d+), "
     r"one creature .*?within (?P<range>\d+) feet\. Failure: \d+ "
@@ -29,12 +28,6 @@ _CONDITION_SAVE = re.compile(
     rf"^(?P<name>.+?)\. (?P<ability>{_ABILITY}) Saving Throw: DC (?P<dc>\d+), "
     rf"one creature .*?within (?P<range>\d+) feet\. Failure: The target has the (?P<condition>{_CONDITION}) condition "
     r"until the (?P<edge>start|end) of (?P<owner>.+?) next turn\.$",
-    re.I,
-)
-_GRAPPLE_SAVE = re.compile(
-    rf"^(?P<name>.+?)\. (?P<ability>{_ABILITY}) Saving Throw: DC (?P<dc>\d+), "
-    rf"one (?P<size>{_SIZE}) or smaller creature .*?within (?P<range>\d+) feet\. "
-    r"Failure: The target has the Grappled condition \(escape DC (?P<escape>\d+)\)\.$",
     re.I,
 )
 _REPLACE_ONE = re.compile(r"\bcan replace one attack with a use of (?P<name>[A-Z][A-Za-z’'\- ]+)\.?")
@@ -132,23 +125,3 @@ def attach_save_replacement(
     if not slots: raise ValueError(f"{row['name']} replacement save requires a Multiattack slot.")
     slots[0]["save_action_ids"] = [save_id]; result["slots"] = slots
     return result
-
-
-def parse_simple_bonus_save_actions(row: dict[str, object]) -> list[dict[str, object]]:
-    """Parse mathematically simple Bonus Action saves into the same universal save capability."""
-    source = str(row.get("bonusActions", ""))
-    headings = parse_trait_names(source, preserve_annotations=True) if source.strip() else []
-    blocks = feature_blocks(source, headings) if headings else {}
-    monster_slug = _slug(str(row["name"])); actions: list[dict[str, object]] = []
-    for heading, block in blocks.items():
-        if "Saving Throw:" not in block: continue
-        match = _GRAPPLE_SAVE.fullmatch(block)
-        if match is None: raise ValueError(f"Simple bonus-save parser cannot prove {row['name']} {heading!r}: {block!r}")
-        actions.append({
-            "id": f"srd-{monster_slug}-{_slug(heading)}", "name": heading, "action_cost": "bonus_action",
-            "save_ability": match.group("ability").lower(), "dc": int(match.group("dc")), "range_ft": int(match.group("range")),
-            "target_max_size": match.group("size").lower(),
-            "grapple": {"kind": "grapple", "escape_dc": int(match.group("escape")), "max_target_size": match.group("size").lower()},
-            "animation": "grapple",
-        })
-    return actions
