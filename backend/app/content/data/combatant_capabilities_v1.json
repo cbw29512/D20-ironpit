@@ -2947,6 +2947,17 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "charge": {
+          "minimum_move_ft": 20,
+          "max_target_size": "medium",
+          "prone_max_target_size": "medium",
+          "bonus_damage": {
+            "dice_count": 1,
+            "dice_size": 6,
+            "damage_type": "piercing",
+            "damage_bonus": 0
+          }
+        },
         "advantage_if_target_grappled_by_self": false,
         "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
@@ -3059,6 +3070,17 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "charge": {
+          "minimum_move_ft": 20,
+          "max_target_size": "large",
+          "prone_max_target_size": "large",
+          "bonus_damage": {
+            "dice_count": 1,
+            "dice_size": 6,
+            "damage_type": "bludgeoning",
+            "damage_bonus": 0
+          }
+        },
         "advantage_if_target_grappled_by_self": false,
         "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
@@ -3168,6 +3190,17 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "charge": {
+          "minimum_move_ft": 20,
+          "max_target_size": "large",
+          "prone_max_target_size": "large",
+          "bonus_damage": {
+            "dice_count": 2,
+            "dice_size": 6,
+            "damage_type": "piercing",
+            "damage_bonus": 0
+          }
+        },
         "advantage_if_target_grappled_by_self": false,
         "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
@@ -3280,6 +3313,17 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "charge": {
+          "minimum_move_ft": 20,
+          "max_target_size": "large",
+          "prone_max_target_size": "large",
+          "bonus_damage": {
+            "dice_count": 2,
+            "dice_size": 8,
+            "damage_type": "piercing",
+            "damage_bonus": 0
+          }
+        },
         "advantage_if_target_grappled_by_self": false,
         "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
@@ -3421,6 +3465,17 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "charge": {
+          "minimum_move_ft": 20,
+          "max_target_size": "huge",
+          "prone_max_target_size": "huge",
+          "bonus_damage": {
+            "dice_count": 2,
+            "dice_size": 8,
+            "damage_type": "piercing",
+            "damage_bonus": 0
+          }
+        },
         "advantage_if_target_grappled_by_self": false,
         "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
@@ -3549,6 +3604,11 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "charge": {
+          "minimum_move_ft": 20,
+          "max_target_size": "large",
+          "prone_max_target_size": "large"
+        },
         "advantage_if_target_grappled_by_self": false,
         "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
@@ -3690,6 +3750,12 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "charge": {
+          "minimum_move_ft": 30,
+          "max_target_size": "large",
+          "prone_max_target_size": "large",
+          "follow_up_attack_id": "allosaurus-bite"
+        },
         "advantage_if_target_grappled_by_self": false,
         "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
@@ -3797,6 +3863,15 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "charge": {
+          "minimum_move_ft": 20,
+          "replacement_damage": {
+            "dice_count": 1,
+            "dice_size": 4,
+            "damage_type": "bludgeoning",
+            "damage_bonus": 0
+          }
+        },
         "advantage_if_target_grappled_by_self": false,
         "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
@@ -6577,6 +6652,17 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "charge": {
+          "minimum_move_ft": 20,
+          "max_target_size": "large",
+          "prone_max_target_size": "large",
+          "bonus_damage": {
+            "dice_count": 2,
+            "dice_size": 4,
+            "damage_type": "bludgeoning",
+            "damage_bonus": 0
+          }
+        },
         "advantage_if_target_grappled_by_self": false,
         "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
@@ -7238,6 +7324,17 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "charge": {
+          "minimum_move_ft": 20,
+          "max_target_size": "large",
+          "prone_max_target_size": "large",
+          "bonus_damage": {
+            "dice_count": 2,
+            "dice_size": 8,
+            "damage_type": "piercing",
+            "damage_bonus": 0
+          }
+        },
         "advantage_if_target_grappled_by_self": false,
         "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
@@ -7347,6 +7444,17 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "charge": {
+          "minimum_move_ft": 20,
+          "max_target_size": "large",
+          "prone_max_target_size": "large",
+          "bonus_damage": {
+            "dice_count": 2,
+            "dice_size": 4,
+            "damage_type": "bludgeoning",
+            "damage_bonus": 0
+          }
+        },
         "advantage_if_target_grappled_by_self": false,
         "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
@@ -10233,6 +10341,17 @@
             "mode": "add"
           }
         ],
+        "charge": {
+          "minimum_move_ft": 20,
+          "max_target_size": "huge",
+          "prone_max_target_size": "huge",
+          "bonus_damage": {
+            "dice_count": 2,
+            "dice_size": 4,
+            "damage_type": "bludgeoning",
+            "damage_bonus": 0
+          }
+        },
         "advantage_if_target_grappled_by_self": false,
         "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
