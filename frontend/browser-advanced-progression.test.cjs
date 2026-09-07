@@ -8,7 +8,7 @@ const vm = require("node:vm");
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 
-window.IRON_PIT_BROWSER_STATE = { effectiveMaxHp: (state) => state.template.max_hp };
+load("browser-state.js");
 load("browser-turn.js");
 
 // Survivor: Advantage on Death Saves and 18-20 produces the natural-20 recovery result.
