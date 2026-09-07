@@ -16,7 +16,7 @@ load("browser-turn.js");
   const queue = [5, 18];
   window.IRON_PIT_DICE = { roll: () => queue.shift() };
   const state = {
-    template: { name: "Karnok", survivor_death_save_advantage: true, survivor_death_save_critical_minimum: 18 },
+    template: { name: "Karnok", max_hp: 20, survivor_death_save_advantage: true, survivor_death_save_critical_minimum: 18 },
     current_hp: 0, is_alive: true, is_dead: false, is_unconscious: true, is_stable: false,
     death_save_successes: 1, death_save_failures: 1,
   };
