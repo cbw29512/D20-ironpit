@@ -62,7 +62,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
         attack_ability=definition.attack_ability, attack_ability_modifier=definition.attack_ability_modifier,
         rage_eligible=definition.rage_eligible, fixed_damage=definition.fixed_damage, conditional_damage=conditional,
         on_hit_damage=on_hit, on_hit_modifier_effects=on_hit_modifiers, max_hp_reduction=max_hp_reduction,
-        knocks_prone_max_size=prone_size, control_effect=control,
+        charge=definition.charge, knocks_prone_max_size=prone_size, control_effect=control,
         advantage_if_target_grappled_by_self=definition.advantage_if_target_grappled_by_self,
         advantage_if_target_missing_hp=definition.advantage_if_target_missing_hp,
         forbid_target_grappled_by_self=definition.forbid_target_grappled_by_self,

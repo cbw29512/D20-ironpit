@@ -5,7 +5,7 @@ import re
 from app.content.monster_catalog import load_monster_rows
 from app.content.monster_defense_source_audit import parse_defense_profile
 from app.content.movement_modes import parse_movement_profile, standard_arena_closing_speed
-from app.domain.models import CombatantTemplate, DamageType, VisualLoadout, Weapon, WeaponAttack, WeaponAttackKind
+from app.domain.models import ChargeDamage, ChargeDefinition, CombatantTemplate, DamageType, VisualLoadout, Weapon, WeaponAttack, WeaponAttackKind
 from app.domain.size import CreatureSize
 from app.domain.traits import CombatTrait
 
@@ -31,6 +31,10 @@ def build_goat() -> CombatantTemplate:
             animation="heavy-strike", reach_ft=5,
         ),
         attack_bonus=2, damage_bonus=0, fixed_damage=1,
+        charge=ChargeDefinition(
+            minimum_move_ft=20,
+            replacement_damage=ChargeDamage(dice_count=1, dice_size=4, damage_type=DamageType.BLUDGEONING),
+        ),
     )
     return CombatantTemplate(
         id="srd-goat", name="Goat", archetype="source-certified charging beast", kind="monster",

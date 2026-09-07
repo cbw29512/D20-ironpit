@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from app.content.monster_equipment import build_monster_visual
 from app.domain.models import (
-    AttackActionDefinition, AttackActionSlot, CombatantTemplate, DamageType,
+    AttackActionDefinition, AttackActionSlot, ChargeDamage, ChargeDefinition, CombatantTemplate, DamageType,
     Weapon, WeaponAttack, WeaponAttackKind,
 )
 from app.domain.size import CreatureSize
@@ -13,6 +13,7 @@ def _attack(
     attack_id: str, name: str, bonus: int, dice_count: int, dice_size: int,
     damage_bonus: int, damage_type: DamageType, *, reach: int = 5,
     prone: CreatureSize | None = None, fixed_damage: int | None = None,
+    charge: ChargeDefinition | None = None,
 ) -> WeaponAttack:
     return WeaponAttack(
         id=attack_id,
@@ -22,7 +23,14 @@ def _attack(
             animation="bite" if name == "Bite" else "heavy-strike", reach_ft=reach,
         ),
         attack_bonus=bonus, damage_bonus=damage_bonus, knocks_prone_max_size=prone,
-        fixed_damage=fixed_damage,
+        fixed_damage=fixed_damage, charge=charge,
+    )
+
+
+def _charge(maximum: CreatureSize, count: int | None, size: int = 4, damage_type: DamageType = DamageType.BLUDGEONING) -> ChargeDefinition:
+    bonus = None if count is None else ChargeDamage(dice_count=count, dice_size=size, damage_type=damage_type)
+    return ChargeDefinition(
+        minimum_move_ft=20, max_target_size=maximum, prone_max_target_size=maximum, bonus_damage=bonus,
     )
 
 
@@ -75,8 +83,8 @@ def build_beast_batch_two() -> list[CombatantTemplate]:
                _attack("giant-fire-beetle-bite", "Bite", 1, 0, 2, 0, DamageType.FIRE, fixed_damage=1),
                351, resistances=(DamageType.FIRE,)),
         _beast("srd-giant-goat", "Giant Goat", "1/2", CreatureSize.LARGE, 11, 19, 40, 1,
-               _attack("giant-goat-ram", "Ram", 5, 1, 6, 3, DamageType.BLUDGEONING), 351,
-               traits=(CombatTrait.CHARGE,)),
+               _attack("giant-goat-ram", "Ram", 5, 1, 6, 3, DamageType.BLUDGEONING,
+                       charge=_charge(CreatureSize.LARGE, 2)), 351, traits=(CombatTrait.CHARGE,)),
         # Flyby and utility-only spellcasting never alter the no-kiting flat-arena fight.
         _beast("srd-giant-owl", "Giant Owl", "1/4", CreatureSize.LARGE, 12, 19, 60, 2,
                _attack("giant-owl-talons", "Talons", 4, 1, 10, 2, DamageType.SLASHING), 352,
@@ -92,9 +100,10 @@ def build_beast_batch_two() -> list[CombatantTemplate]:
         _beast("srd-mule", "Mule", "1/8", CreatureSize.MEDIUM, 10, 11, 40, 0,
                _attack("mule-hooves", "Hooves", 4, 1, 4, 2, DamageType.BLUDGEONING), 357),
         _beast("srd-rhinoceros", "Rhinoceros", "2", CreatureSize.LARGE, 13, 45, 40, -1,
-               _attack("rhinoceros-gore", "Gore", 7, 2, 8, 5, DamageType.PIERCING), 360,
+               _attack("rhinoceros-gore", "Gore", 7, 2, 8, 5, DamageType.PIERCING,
+                       charge=_charge(CreatureSize.LARGE, 2, 8, DamageType.PIERCING)), 360,
                traits=(CombatTrait.CHARGE,)),
         _beast("srd-warhorse", "Warhorse", "1/2", CreatureSize.LARGE, 11, 19, 60, 1,
-               _attack("warhorse-hooves", "Hooves", 6, 2, 4, 4, DamageType.BLUDGEONING), 364,
-               traits=(CombatTrait.CHARGE,)),
+               _attack("warhorse-hooves", "Hooves", 6, 2, 4, 4, DamageType.BLUDGEONING,
+                       charge=_charge(CreatureSize.LARGE, 2)), 364, traits=(CombatTrait.CHARGE,)),
     ]

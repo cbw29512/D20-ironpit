@@ -38,7 +38,7 @@ def charge_replacement_issues(template: CombatantTemplate, actions: str) -> list
     issues: list[str] = []
     attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
     for attack in attacks:
-        profile = charge_profile_for_attack_id(attack.id)
+        profile = attack.charge or charge_profile_for_attack_id(attack.id)
         if profile is None: continue
         issues.extend(_source_profile_issues(attack.id, profile, actions))
         replacement = profile.replacement_damage

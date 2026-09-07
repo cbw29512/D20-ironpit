@@ -10,7 +10,7 @@ from app.domain.capability_effects import (
     AttackEffectDefinition, ConditionEffectDefinition, DamageEffectDefinition, DiceSpec, GrappleEffectDefinition,
 )
 from app.domain.size import CreatureSize
-from app.domain.weapons import DamageType, WeaponAttackKind
+from app.domain.weapons import ChargeDefinition, DamageType, WeaponAttackKind
 
 
 class AttackCapabilityDefinition(BaseModel):
@@ -37,6 +37,7 @@ class AttackCapabilityDefinition(BaseModel):
     attack_ability_modifier: int | None = None
     rage_eligible: bool = False
     effects: list[AttackEffectDefinition] = Field(default_factory=list)
+    charge: ChargeDefinition | None = None
     advantage_if_target_grappled_by_self: bool = False
     advantage_if_target_missing_hp: bool = False
     forbid_target_grappled_by_self: bool = False

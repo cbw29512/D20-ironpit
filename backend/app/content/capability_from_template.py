@@ -31,6 +31,8 @@ def _attack(attack: WeaponAttack) -> dict[str, object]:
     if attack.control_effect is not None:
         effects.append(_control_effect(attack.control_effect))
     result: dict[str, object] = {"id": attack.id, "weapon_id": weapon.id, "name": weapon.name, "attack_kind": weapon.attack_kind, "attack_bonus": attack.attack_bonus, "damage_type": weapon.damage_type, "animation": weapon.animation, "reach_ft": weapon.reach_ft, "normal_range_ft": weapon.normal_range_ft, "long_range_ft": weapon.long_range_ft, "projectile": weapon.projectile, "mastery_property": weapon.mastery_property, "light": weapon.light, "finesse": weapon.finesse, "heavy": weapon.heavy, "two_handed": weapon.two_handed, "versatile": weapon.versatile, "attack_ability": attack.attack_ability, "attack_ability_modifier": attack.attack_ability_modifier, "rage_eligible": attack.rage_eligible, "effects": effects, "advantage_if_target_grappled_by_self": attack.advantage_if_target_grappled_by_self, "advantage_if_target_missing_hp": attack.advantage_if_target_missing_hp, "forbid_target_grappled_by_self": attack.forbid_target_grappled_by_self}
+    if attack.charge is not None:
+        result["charge"] = attack.charge.model_dump(mode="json")
     if attack.resource_id is not None:
         result["resource_id"] = attack.resource_id
         result["resource_cost"] = attack.resource_cost
