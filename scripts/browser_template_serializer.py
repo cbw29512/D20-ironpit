@@ -142,6 +142,11 @@ def _save(action: Any) -> dict[str, Any]:
         "damageDiceSize": action.damage_dice_size, "damageBonus": action.damage_bonus,
         "damageType": action.damage_type, "successDamage": action.success_damage, "animation": action.animation,
     }
+    if action.area is not None:
+        area: dict[str, Any] = {"shape": action.area.shape, "sizeFt": action.area.size_ft}
+        if action.area.width_ft is not None:
+            area["widthFt"] = action.area.width_ft
+        row["area"] = area
     if action.target_max_size:
         row["targetMaxSize"] = _value(action.target_max_size)
     if action.grapple_escape_dc is not None:
