@@ -96,7 +96,10 @@ def attack_issues(attack: WeaponAttack, actions: str) -> list[str]:
     if weapon.attack_kind.value == "melee" and not _melee_reach_pattern(weapon.reach_ft).search(actions):
         issues.append(f"melee-reach-mismatch:{attack.id}")
     if weapon.attack_kind.value == "ranged" and weapon.normal_range_ft is not None:
-        ranged = rf"range\s+{weapon.normal_range_ft}\s*/\s*{weapon.long_range_ft}\s*(?:ft\.?|feet)\b"
+        if weapon.long_range_ft == weapon.normal_range_ft:
+            ranged = rf"range\s+{weapon.normal_range_ft}\s*(?:ft\.?|feet)\b"
+        else:
+            ranged = rf"range\s+{weapon.normal_range_ft}\s*/\s*{weapon.long_range_ft}\s*(?:ft\.?|feet)\b"
         if not re.search(ranged, actions, re.IGNORECASE):
             issues.append(f"ranged-range-mismatch:{attack.id}")
     for extra in attack.on_hit_damage:
