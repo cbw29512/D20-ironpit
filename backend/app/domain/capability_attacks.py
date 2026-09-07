@@ -6,7 +6,9 @@ from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName, ActionCost
 from app.domain.areas import AreaGeometry
-from app.domain.capability_effects import AttackEffectDefinition, ConditionEffectDefinition, DiceSpec, GrappleEffectDefinition
+from app.domain.capability_effects import (
+    AttackEffectDefinition, ConditionEffectDefinition, DamageEffectDefinition, DiceSpec, GrappleEffectDefinition,
+)
 from app.domain.size import CreatureSize
 from app.domain.weapons import DamageType, WeaponAttackKind
 
@@ -69,6 +71,7 @@ class SaveCapabilityDefinition(BaseModel):
     area: AreaGeometry | None = None
     damage: DiceSpec | None = None
     damage_type: DamageType | None = None
+    additional_damage: list[DamageEffectDefinition] = Field(default_factory=list, max_length=8)
     success_damage: Literal["none", "half"] = "none"
     grapple: GrappleEffectDefinition | None = None
     failure_conditions: list[ConditionEffectDefinition] = Field(default_factory=list, max_length=8)
@@ -80,6 +83,10 @@ class SaveCapabilityDefinition(BaseModel):
     def validate_damage(self) -> "SaveCapabilityDefinition":
         if (self.damage is None) != (self.damage_type is None):
             raise ValueError("Save damage dice and damage type must be declared together.")
+        if any(effect.trigger != "on_failed_save" or effect.mode != "add" for effect in self.additional_damage):
+            raise ValueError("Additional save damage must be additive failed-save damage.")
+        if self.area is not None and self.additional_damage:
+            raise ValueError("Multi-packet area saves await shared-roll bundle support.")
         if self.resource_id is None and self.resource_cost is not None:
             raise ValueError("Save resource cost requires a resource id.")
         if self.grapple and self.grapple.max_target_size and self.target_max_size and self.grapple.max_target_size != self.target_max_size:
