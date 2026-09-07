@@ -107,7 +107,7 @@
       fightNumber = turboView().replayNumber(api.state.turboBatch);
       const record = turboView().findFight(api.state.turboBatch, fightNumber) || api.state.turboBatch.errors.find((item) => item.fight_number === fightNumber);
       if (!record) throw new Error(`Fight #${fightNumber} was not found.`);
-      api.state.fighting = true; api.render(); api.clearResult();
+      api.state.session = null; api.state.fighting = true; api.render(); api.clearResult();
       const session = execution().resolveReplay(api.state.turboBatch.selection, record.seed, slotMap(match)); api.state.session = session;
       el("status").textContent = `${mode === "step" ? "Step" : "Watch"} replay #${fightNumber} · seed ${record.seed}.`;
       if (mode === "step") await session.begin();
