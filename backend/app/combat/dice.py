@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import random
 import secrets
 from collections import deque
 from typing import Protocol
@@ -25,6 +26,29 @@ class SecureDiceProvider:
             raise RuntimeError(f"Unable to roll d{sides}.") from exc
 
 
+class SeededDiceProvider:
+    """Deterministic dice for replayable Iron Pit fights."""
+
+    def __init__(self, seed: int) -> None:
+        try:
+            if seed < 0:
+                raise ValueError("Seed must be non-negative.")
+            self.seed = seed
+            self._random = random.Random(seed)
+        except Exception:
+            logger.exception("Failed to initialize seeded dice provider.")
+            raise
+
+    def roll(self, sides: int) -> int:
+        try:
+            if sides < 2:
+                raise ValueError("A die must have at least two sides.")
+            return self._random.randrange(1, sides + 1)
+        except Exception as exc:
+            logger.exception("Seeded die roll failed for d%s.", sides)
+            raise RuntimeError(f"Unable to roll seeded d{sides}.") from exc
+
+
 class FixedDiceProvider:
     """Deterministic dice for unit tests; never use for production fights."""
 
@@ -33,7 +57,7 @@ class FixedDiceProvider:
             if not rolls:
                 raise ValueError("At least one fixed roll is required.")
             self._rolls: deque[int] = deque(rolls)
-        except Exception as exc:
+        except Exception:
             logger.exception("Failed to initialize fixed dice provider.")
             raise
 

@@ -31,6 +31,13 @@ from app.domain.encounters import (
 from app.domain.events import BattleEvent, BattleResult, DamageRollComponent, DiceRoll, RollMode
 from app.domain.runtime import ArenaRoster, BattlefieldState, CombatantState, DemoRoster, ResourceState, TimedEffect
 from app.domain.traits import CombatTrait
+from app.domain.turbo import (
+    EncounterReplayRequest,
+    TurboBatchRequest,
+    TurboBatchResult,
+    TurboFightError,
+    TurboFightSummary,
+)
 
 __all__ = [
     "ArenaRoster",
@@ -52,6 +59,7 @@ __all__ = [
     "EncounterCombatant",
     "EncounterInitiative",
     "EncounterOutcome",
+    "EncounterReplayRequest",
     "EncounterSelection",
     "EncounterSetup",
     "EncounterSide",
@@ -65,6 +73,10 @@ __all__ = [
     "RollMode",
     "SavingThrowAction",
     "TimedEffect",
+    "TurboBatchRequest",
+    "TurboBatchResult",
+    "TurboFightError",
+    "TurboFightSummary",
     "VisualLoadout",
     "Weapon",
     "WeaponAttack",

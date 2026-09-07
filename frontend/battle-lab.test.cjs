@@ -6,7 +6,8 @@ const path = require("node:path");
 const vm = require("node:vm");
 
 global.window = globalThis;
-vm.runInThisContext(fs.readFileSync(path.join(__dirname, "battle-lab.js"), "utf8"), { filename: "battle-lab.js" });
+const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
+load("battle-lab.js"); load("browser-turbo.js");
 
 const lab = window.IRON_PIT_BATTLE_LAB;
 
@@ -38,4 +39,26 @@ const lab = window.IRON_PIT_BATTLE_LAB;
 }
 
 assert.equal("createSeededDice" in lab, false, "Battle Lab must never expose an alternate seeded combat RNG");
-console.log("battle lab production-path diagnostics passed");
+
+function member(id, hp) {
+  return { combatant_id: id, state: { current_hp: hp, is_alive: hp > 0, is_dead: hp <= 0 } };
+}
+function turboEngine() {
+  return { runEncounter: () => {
+    const attack = window.IRON_PIT_DICE.roll(20), damage = window.IRON_PIT_DICE.roll(8), win = attack >= 11;
+    return { battle_id: `test-${attack}-${damage}`, outcome: win ? "heroes_win" : "monsters_win", rounds: 1,
+      setup: { heroes: [member("hero", win ? 5 : 0)], monsters: [member("monster", win ? 0 : 5)] }, initiative: { turn_order: ["hero", "monster"] }, events: [] };
+  } };
+}
+
+(async () => {
+  const secureDice = { roll: () => 1 }; window.IRON_PIT_DICE = secureDice; window.IRON_PIT_BROWSER_ENGINE = turboEngine();
+  const first = window.IRON_PIT_BROWSER_TURBO.runSeeded({ hero_ids: ["hero"], monster_ids: ["monster"] }, 424242);
+  const replay = window.IRON_PIT_BROWSER_TURBO.runSeeded({ hero_ids: ["hero"], monster_ids: ["monster"] }, 424242);
+  assert.deepEqual(first.battle, replay.battle); assert.deepEqual(first.rolls, replay.rolls);
+  assert.equal(window.IRON_PIT_DICE, secureDice, "replay must restore production dice after seeded execution");
+  const batch = await window.IRON_PIT_BROWSER_TURBO.runBatch({ hero_ids: ["hero"], monster_ids: ["monster"] }, 10, 99);
+  assert.equal(batch.valid_fights + batch.engine_errors, 10);
+  assert.equal(batch.heroes_wins + batch.monsters_wins + batch.draws, batch.valid_fights);
+  console.log("battle lab and Turbo replay diagnostics passed");
+})().catch((error) => { console.error(error); process.exitCode = 1; });

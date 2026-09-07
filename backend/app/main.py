@@ -10,6 +10,7 @@ from app.combat.dice import SecureDiceProvider
 from app.combat.encounter_engine import run_encounter
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.engine import run_duel
+from app.combat.turbo import run_seeded_encounter, run_turbo_batch
 from app.content.audited_fighter import build_karnok_stoneward
 from app.content.catalog import build_full_content_catalog
 from app.content.demo import build_goblin_warrior
@@ -21,8 +22,11 @@ from app.domain.models import (
     BattleResult,
     DemoRoster,
     EncounterBattleResult,
+    EncounterReplayRequest,
     EncounterSelection,
     EncounterSetup,
+    TurboBatchRequest,
+    TurboBatchResult,
 )
 
 logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO"))
@@ -44,8 +48,6 @@ app.add_middleware(
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
-
-
 @app.get("/health")
 def health() -> dict[str, str]:
     return {"status": "ok"}
@@ -91,6 +93,30 @@ def create_encounter_battle(selection: EncounterSelection) -> EncounterBattleRes
     except Exception as exc:
         logger.exception("Encounter fight API failed.")
         raise HTTPException(status_code=500, detail="Encounter fight could not be completed.") from exc
+
+
+@app.post("/api/encounters/replay", response_model=EncounterBattleResult)
+def create_encounter_replay(request: EncounterReplayRequest) -> EncounterBattleResult:
+    try:
+        assert_public_selection_runnable(request.selection)
+        return run_seeded_encounter(request.selection, request.seed)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except Exception as exc:
+        logger.exception("Encounter replay API failed.")
+        raise HTTPException(status_code=500, detail="Encounter replay could not be completed.") from exc
+
+
+@app.post("/api/encounters/turbo", response_model=TurboBatchResult)
+def create_encounter_turbo(request: TurboBatchRequest) -> TurboBatchResult:
+    try:
+        assert_public_selection_runnable(request.selection)
+        return run_turbo_batch(request)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except Exception as exc:
+        logger.exception("Encounter turbo API failed.")
+        raise HTTPException(status_code=500, detail="Encounter turbo batch could not be completed.") from exc
 
 
 @app.get("/api/roster/demo", response_model=DemoRoster)
