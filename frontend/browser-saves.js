@@ -1,21 +1,13 @@
 (() => {
   "use strict";
-  const R = () => window.IRON_PIT_BROWSER_ROLLS;
-  const A = () => window.IRON_PIT_BROWSER_ATTACK;
-  const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
-  const S = () => window.IRON_PIT_BROWSER_STATE;
-  const X = () => window.IRON_PIT_BROWSER_RESOURCES;
-  const F = () => window.IRON_PIT_BROWSER_FORMATION;
-  const PA = () => window.IRON_PIT_BROWSER_SPELL_AREA;
-  const B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2 || { dangerSenseAdvantage: () => 0 };
-  const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { applyD20Bonus: (_state, _kind, roll) => roll };
+  const R = () => window.IRON_PIT_BROWSER_ROLLS, A = () => window.IRON_PIT_BROWSER_ATTACK, G = () => window.IRON_PIT_BROWSER_GRAPPLE;
+  const S = () => window.IRON_PIT_BROWSER_STATE, X = () => window.IRON_PIT_BROWSER_RESOURCES, F = () => window.IRON_PIT_BROWSER_FORMATION, PA = () => window.IRON_PIT_BROWSER_SPELL_AREA;
+  const B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2 || { dangerSenseAdvantage: () => 0 }, M = () => window.IRON_PIT_BROWSER_MODIFIERS || { applyD20Bonus: (_state, _kind, roll) => roll };
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION, TC = () => window.IRON_PIT_BROWSER_TIMED;
   const D = () => window.IRON_PIT_DICE, SD = () => window.IRON_PIT_BROWSER_SAVE_DAMAGE;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (state, cost) => cost === "action" && state.action_available, spend: (state) => { state.action_available = false; } };
-  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { autoFailStrDex: (state) => state.is_unconscious };
-  const T = () => window.IRON_PIT_BROWSER_TARGET_STATE || { isBloodied: () => false };
-  const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
-  const BOARD_COLUMNS = 3, MAX_BOARD_SLOTS = 6;
+  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { autoFailStrDex: (state) => state.is_unconscious }, T = () => window.IRON_PIT_BROWSER_TARGET_STATE || { isBloodied: () => false };
+  const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [], BOARD_COLUMNS = 3, MAX_BOARD_SLOTS = 6;
   function saveMode(state, ability, againstMagic = false) {
     const magicResistance = againstMagic && state.template.traits?.includes("magic-resistance") ? 1 : 0;
     const bloodiedAdvantage = state.template.traits?.includes("bloodied-attack-save-advantage") && T().isBloodied(state) ? 1 : 0;
@@ -32,10 +24,7 @@
     return { roll, succeeded: roll.total >= dc };
   }
   function resourceAvailable(state, action) { return !action.resourceId || X().available(state, action.resourceId, action.resourceCost || 1); }
-  function legalAction(action, target, distance) {
-    const range = action.range + (action.area?.shape === "radius" ? action.area.sizeFt : 0);
-    return distance <= range && (!action.targetMaxSize || S().sizeAtMost(target, action.targetMaxSize));
-  }
+  function legalAction(action, target, distance) { const range = action.range + (action.area?.shape === "radius" ? action.area.sizeFt : 0); return distance <= range && (!action.targetMaxSize || S().sizeAtMost(target, action.targetMaxSize)); }
   function damageRolls(action, count, shared) {
     if (shared == null) return D().rollMany(count, action.damageDiceSize);
     if (!Array.isArray(shared) || shared.length !== count) throw new Error(`${action.name} shared damage roll count is invalid.`);
@@ -110,15 +99,9 @@
       .sort((a, b) => (order[a.combatant_id] ?? MAX_BOARD_SLOTS) - (order[b.combatant_id] ?? MAX_BOARD_SLOTS));
   }
   function targetsFor(actor, setup, action) {
-    if (!action.area) {
-      for (const target of F().targetOrder(actor, setup)) if (legalAction(action, target, F().saveDistance(actor, target, action.range))) return [target];
-      return [];
-    }
+    if (!action.area) { for (const target of F().targetOrder(actor, setup)) if (legalAction(action, target, F().saveDistance(actor, target, action.range))) return [target]; return []; }
     const [enemies, friends] = rows(actor, setup);
-    if (action.area.shape === "radius") {
-      const placement = PA()?.bestPlacement(actor, setup, action.area.sizeFt, action.range); if (!placement) return [];
-      const byId = new Map(enemies.map((member) => [member.combatant_id, member])); return placement.enemyIds.map((id) => byId.get(id)).filter(Boolean);
-    }
+    if (action.area.shape === "radius") { const placement = PA()?.bestPlacement(actor, setup, action.area.sizeFt, action.range); if (!placement) return []; const byId = new Map(enemies.map((member) => [member.combatant_id, member])); return placement.enemyIds.map((id) => byId.get(id)).filter(Boolean); }
     if (!["cone", "cube", "line"].includes(action.area.shape)) throw new Error(`${action.name} area shape is not runtime-certified.`);
     const order = Object.fromEntries(F().targetOrder(actor, setup).map((member, index) => [member.combatant_id, index]));
     if (action.area.shape === "line") return lineTargets(actor, setup, action, enemies, friends, order);
@@ -145,9 +128,7 @@
       const targets = targetsFor(actor, setup, action); if (!targets.length) continue;
       const events = []; let shared = null;
       targets.forEach((target, index) => {
-        const event = resolveAction(sequence++, round, actor, target, action, F().saveDistance(actor, target, action.range), {
-          spendAction: index === 0, spendResource: index === 0, sharedDamageRolls: shared, setup,
-        });
+        const event = resolveAction(sequence++, round, actor, target, action, F().saveDistance(actor, target, action.range), { spendAction: index === 0, spendResource: index === 0, sharedDamageRolls: shared, setup });
         events.push(event); if (!shared && event.damage_components?.length) shared = [...event.damage_components[0].rolls];
       });
       return { events, sequence, used: true };
