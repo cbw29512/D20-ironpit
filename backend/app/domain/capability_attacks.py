@@ -9,6 +9,7 @@ from app.domain.areas import AreaGeometry
 from app.domain.capability_effects import (
     AttackEffectDefinition, ConditionEffectDefinition, DamageEffectDefinition, DiceSpec, GrappleEffectDefinition,
 )
+from app.domain.control_effects import ConditionName
 from app.domain.size import CreatureSize
 from app.domain.weapons import ChargeDefinition, DamageType, WeaponAttackKind
 
@@ -70,6 +71,7 @@ class SaveCapabilityDefinition(BaseModel):
     dc: int = Field(ge=1, le=40)
     range_ft: int = Field(ge=0)
     target_max_size: CreatureSize | None = None
+    required_target_conditions: list[ConditionName] = Field(default_factory=list, max_length=8)
     area: AreaGeometry | None = None
     damage: DiceSpec | None = None
     damage_type: DamageType | None = None

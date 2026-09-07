@@ -95,6 +95,7 @@ class SavingThrowAction(BaseModel):
     dc: int = Field(ge=1, le=40)
     range_ft: int = Field(ge=0)
     target_max_size: CreatureSize | None = None
+    required_target_conditions: list[ConditionName] = Field(default_factory=list, max_length=8)
     area: AreaGeometry | None = None
     damage_dice_count: int = Field(default=0, ge=0, le=40)
     damage_dice_size: int = Field(default=6, ge=2, le=100)

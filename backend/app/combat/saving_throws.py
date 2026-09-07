@@ -19,12 +19,17 @@ def save_action_resource_available(state: CombatantState, action: SavingThrowAct
     return resource_uses(state, action.resource_id) >= action.resource_cost
 
 
+def save_target_requirements_met(action: SavingThrowAction, target: EncounterCombatant) -> bool:
+    if action.target_max_size is not None and not size_at_most(target.state.template.size, action.target_max_size): return False
+    return all(condition in target.state.active_effect_ids for condition in action.required_target_conditions)
+
+
 def legal_save_action(action: SavingThrowAction, target: EncounterCombatant, distance_ft: int) -> bool:
     range_limit = action.range_ft
     if action.area is not None and action.area.shape == "radius":
         range_limit += action.area.size_ft
     if distance_ft > range_limit: return False
-    return action.target_max_size is None or size_at_most(target.state.template.size, action.target_max_size)
+    return save_target_requirements_met(action, target)
 
 
 def _damage_rolls(action: SavingThrowAction, dice: DiceProvider, shared_damage_rolls: list[int] | None) -> list[int]:

@@ -44,7 +44,7 @@ def _attack(attack: WeaponAttack) -> dict[str, object]:
 
 
 def _save(action) -> dict[str, object]:
-    result: dict[str, object] = {"id": action.id, "name": action.name, "save_ability": action.save_ability, "dc": action.dc, "range_ft": action.range_ft, "target_max_size": action.target_max_size, "area": action.area.model_dump(mode="json") if action.area else None, "success_damage": action.success_damage, "animation": action.animation}
+    result: dict[str, object] = {"id": action.id, "name": action.name, "save_ability": action.save_ability, "dc": action.dc, "range_ft": action.range_ft, "target_max_size": action.target_max_size, "required_target_conditions": list(action.required_target_conditions), "area": action.area.model_dump(mode="json") if action.area else None, "success_damage": action.success_damage, "animation": action.animation}
     if action.resource_id is not None:
         result["resource_id"] = action.resource_id
         result["resource_cost"] = action.resource_cost
