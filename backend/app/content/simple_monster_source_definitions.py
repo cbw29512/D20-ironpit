@@ -8,6 +8,7 @@ from app.content.monster_combat_scope import battle_ready_size
 from app.content.monster_curated_spell_actions import curated_spell_save_capabilities
 from app.content.monster_death_trigger_source import parse_death_trigger_saves
 from app.content.monster_defense_source_audit import parse_defense_profile
+from app.content.monster_reaction_source_audit import parse_parry_ac_bonus, parse_reaction_names
 from app.content.monster_regeneration_source import parse_regeneration
 from app.content.monster_roll_aura_source import parse_ally_roll_auras
 from app.content.monster_saving_throws import parse_saving_throw_bonuses
@@ -56,6 +57,7 @@ def _definition(row: dict[str, object]) -> CombatantDefinition:
     multiattack = attach_save_replacement(row, multiattack, save_actions)
     trait_names = parse_trait_names(row.get("traits", "")) if str(row.get("traits", "")).strip() else []
     combat_traits = [_MODELED_TRAITS[name].value for name in trait_names if name in _MODELED_TRAITS]
+    reaction_names = parse_reaction_names(row.get("reactions", "")); parry_bonus = parse_parry_ac_bonus(row.get("reactions", "")) if reaction_names == ["Parry"] else None
     regeneration = parse_regeneration(row); turn_damage_auras = parse_turn_damage_auras(row)
     death_trigger_saves = parse_death_trigger_saves(row); ally_roll_auras = parse_ally_roll_auras(row)
     start_turn_save_auras = parse_start_turn_save_auras(row)
@@ -78,6 +80,7 @@ def _definition(row: dict[str, object]) -> CombatantDefinition:
         "source": str(row["sourceReference"]),
     }
     if multiattack is not None: data["attack_action"] = multiattack
+    if parry_bonus is not None: data["parry_reaction"] = {"ac_bonus": parry_bonus}
     if regeneration is not None: data["regeneration"] = regeneration.model_dump(mode="json")
     if turn_damage_auras: data["turn_damage_auras"] = [aura.model_dump(mode="json") for aura in turn_damage_auras]
     if death_trigger_saves: data["death_trigger_save_actions"] = [action.model_dump(mode="json") for action in death_trigger_saves]
@@ -118,6 +121,6 @@ def build_simple_source_definitions() -> dict[str, CombatantDefinition]:
     if missing: raise ValueError(f"Missing SRD simple-monster rows: {', '.join(sorted(missing))}")
     eligible_names = [name for name in sorted(_SIMPLE_SOURCE_NAMES) if deferred_environment_reason(rows[name]["speed"]) is None]
     definitions = [_definition(rows[name]) for name in eligible_names]
-    result = {definition.id: definition for definition in definitions}
+    result = {definition.id: definition for definition in definitions]
     if len(result) != len(definitions): raise ValueError("Simple source-derived monster ids must be unique.")
     return result
