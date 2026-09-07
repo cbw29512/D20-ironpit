@@ -32,9 +32,14 @@
         throw error;
       }
     };
+    const rollMany = (count, sides) => {
+      try {
+        if (!Number.isInteger(count) || count < 1) throw new RangeError("Dice count must be positive.");
+        return Array.from({ length: count }, () => roll(sides));
+      } catch (error) { console.error("Seeded dice pool failed", error); throw error; }
+    };
     return {
-      roll,
-      rollMany: (count, sides) => Array.from({ length: count }, () => roll(sides)),
+      roll, rollMany,
       clearHistory: () => { history.length = 0; },
       getHistory: () => history.map((item) => ({ ...item })),
     };
