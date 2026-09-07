@@ -48,7 +48,7 @@
     const heroes = state.heroSlots.filter(Boolean).length, monsters = state.monsterSlots.filter(Boolean).length;
     el("hero-summary").textContent = `${heroes} / 6`; el("monster-summary").textContent = `${monsters} / 6`;
     const disabled = heroes === 0 || monsters === 0 || state.fighting;
-    el("fight-button").disabled = disabled; el("turbo-button").disabled = disabled;
+    for (const id of ["fight-button", "step-fight-button", "turbo-button"]) el(id).disabled = disabled;
   }
 
   function showResult(battle) {
