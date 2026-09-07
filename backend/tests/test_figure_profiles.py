@@ -25,7 +25,7 @@ def test_reviewed_profiles_are_explicit_and_nonempty() -> None:
 
 def test_anatomically_distinct_monsters_do_not_share_humanoid_fallbacks() -> None:
     expected = {
-        "Animated Flying Sword": "weapon", "Ankylosaurus": "reptile", "Archelon": "aquatic-reptile",
+        "Animated Flying Sword": "weapon", "Ankheg": "insect", "Ankylosaurus": "reptile", "Archelon": "aquatic-reptile",
         "Axe Beak": "bird", "Baboon": "primate", "Blink Dog": "quadruped", "Blood Hawk": "bird",
         "Fire Giant": "brute", "Flying Snake": "snake", "Gargoyle": "gargoyle",
         "Giant Constrictor Snake": "snake", "Giant Crocodile": "reptile", "Giant Eagle": "bird",
@@ -46,7 +46,7 @@ def test_anatomically_distinct_monsters_do_not_share_humanoid_fallbacks() -> Non
 
 def test_new_batch_has_specific_reviewed_details() -> None:
     expected = {
-        "Animated Armor": "animated-armor", "Animated Flying Sword": "flying-sword", "Awakened Tree": "tree",
+        "Animated Armor": "animated-armor", "Animated Flying Sword": "flying-sword", "Ankheg": "ankheg", "Awakened Tree": "tree",
         "Blink Dog": "blink-dog", "Blood Hawk": "blood-hawk", "Fire Giant": "fire-giant",
         "Flying Snake": "flying-snake", "Gargoyle": "gargoyle", "Goat": "goat",
         "Goblin Boss": "goblin-boss", "Green Dragon Wyrmling": "green-dragon-wyrmling",

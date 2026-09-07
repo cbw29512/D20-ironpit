@@ -27,7 +27,7 @@ def test_green_dragon_wyrmling_native_capabilities_match_srd_source() -> None:
     assert [(item.dice_count, item.dice_size, item.damage_type.value) for item in template.weapon_attack.on_hit_damage] == [(1, 6, "poison")]
 
     breath = template.saving_throw_actions[0]
-    assert (breath.name, breath.save_ability, breath.dc) == ("Poison Breath", "constitution", 11)
+    assert (breath.name, breath.save_ability, breath.dc) == ("Poison Breath (Recharge 5–6)", "constitution", 11)
     assert (breath.damage_dice_count, breath.damage_dice_size, breath.damage_type, breath.success_damage) == (6, 6, "poison", "half")
     assert breath.area is not None and (breath.area.shape, breath.area.size_ft) == ("cone", 15)
     resource = template.resources[0]

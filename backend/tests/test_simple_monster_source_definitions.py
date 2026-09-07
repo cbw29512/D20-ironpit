@@ -7,9 +7,10 @@ from app.domain.traits import CombatTrait
 
 
 _EXPECTED_SIMPLE_SOURCE = {
-    "Azer Sentinel", "Berserker", "Blink Dog", "Bone Devil", "Bugbear Stalker", "Bugbear Warrior", "Ettin", "Fire Giant", "Ghoul", "Hezrou",
-    "Hill Giant", "Hobgoblin Captain", "Lion", "Magmin", "Merrow", "Nightmare", "Pirate", "Sahuagin Warrior", "Satyr",
-    "Specter", "Spy", "Tough Boss", "Troll Limb", "Werebear", "Wereboar", "Wererat", "Weretiger", "Werewolf", "Wraith", "Xorn",
+    "Ankheg", "Azer Sentinel", "Berserker", "Black Dragon Wyrmling", "Blink Dog", "Blue Dragon Wyrmling", "Bone Devil", "Bugbear Stalker", "Bugbear Warrior",
+    "Ettin", "Fire Giant", "Ghoul", "Giant Shark", "Green Dragon Wyrmling", "Hell Hound", "Hezrou", "Hill Giant", "Hobgoblin Captain", "Hunter Shark",
+    "Lion", "Magmin", "Merrow", "Nightmare", "Piranha", "Pirate", "Red Dragon Wyrmling", "Sahuagin Warrior", "Satyr", "Specter", "Spy", "Tough Boss",
+    "Troll Limb", "Werebear", "Wereboar", "Wererat", "Weretiger", "Werewolf", "White Dragon Wyrmling", "Winter Wolf", "Wraith", "Xorn",
 }
 _EXPECTED_READY_SOURCE = _EXPECTED_SIMPLE_SOURCE
 
