@@ -14064,7 +14064,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
-        "advantage_if_target_missing_hp": false,
+        "advantage_if_target_missing_hp": true,
         "forbid_target_grappled_by_self": false
       }
     ],
