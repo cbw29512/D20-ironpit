@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 188,
-    "blocked": 142
+    "public_ready": 190,
+    "blocked": 140
   },
   "monsters": [
     {
@@ -4201,7 +4201,7 @@
       "monster_name": "Gladiator",
       "srd_source_page": 289,
       "srd_source_reference": "SRD 5.2.1 p. 289",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-gladiator",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -4212,23 +4212,18 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "multiattack",
         "reaction",
+        "save-or-complex-action",
         "saving-throw-action"
       ],
-      "unsupported_mechanics": [
-        "condition-or-control",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "condition-or-control",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-gnoll-warrior",
@@ -5683,7 +5678,7 @@
       "monster_name": "Marilith",
       "srd_source_page": 306,
       "srd_source_reference": "SRD 5.2.1 p. 306",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-marilith",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -5698,25 +5693,20 @@
       "supported_mechanics": [
         "attack-roll",
         "bonus-action",
+        "condition-or-control",
         "damage-or-condition-defense",
         "multiattack",
         "reaction",
+        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "condition-or-control",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "condition-or-control",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-mastiff",
