@@ -54,6 +54,7 @@ def _add_save_area_metadata(row, template) -> None:
             item["failureConditions"] = [
                 {
                     "conditionId": effect.condition_id,
+                    "maxTargetSize": effect.max_target_size.value if effect.max_target_size else None,
                     "expiryTiming": effect.expiry_timing,
                     "repeatSaveAbility": effect.repeat_save_ability,
                     "repeatSaveDc": effect.repeat_save_dc,
