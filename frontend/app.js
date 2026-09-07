@@ -11,7 +11,7 @@
   const turboView = () => window.IRON_PIT_TURBO_VIEW;
   function updateControls() {
     el("rerun-button").disabled = state.fighting || !state.hasRun;
-    for (const id of ["quick-test", "reset-fight", "turbo-button"]) el(id).disabled = state.fighting;
+    for (const id of ["quick-test", "reset-fight"]) el(id).disabled = state.fighting;
   }
   function clearResult(message = "Cards loaded. Press FIGHT when both sides are ready.") {
     el("result-panel").hidden = true; el("pit-round").textContent = "";
@@ -64,7 +64,7 @@
   async function runTurbo() {
     const match = matchup(); if (match.error) { el("status").textContent = match.error; return; }
     try {
-      const count = turboView().fightCount(); state.fighting = true; render(); clearResult("Turbo Mode is running the full combat engine without animations.");
+      const count = turboView().fightCount(); state.fighting = true; turboView().hide(); render(); clearResult("Turbo Mode is running the full combat engine without animations.");
       el("status").textContent = `Turbo: 0 / ${count.toLocaleString()} fights`;
       state.turboBatch = await turbo().runBatch(match.selection, count, null, (done, total) => { el("status").textContent = `Turbo: ${done.toLocaleString()} / ${total.toLocaleString()} fights`; });
       turboView().render(state.turboBatch); el("status").textContent = `Turbo complete: ${state.turboBatch.valid_fights.toLocaleString()} valid fights.`;
@@ -92,7 +92,7 @@
   }
   function resetFight() {
     if (state.fighting) return;
-    clearResult("Battle reset. Cards are still loaded."); render(); el("status").textContent = "Battle reset. Press FIGHT or RUN AGAIN.";
+    state.turboBatch = null; turboView().hide(); clearResult("Battle reset. Cards are still loaded."); render(); el("status").textContent = "Battle reset. Press FIGHT or RUN AGAIN.";
   }
   function cardByTemplate(side, templateId) {
     const rows = side === "heroes" ? state.catalog.heroes : state.catalog.monsters;
