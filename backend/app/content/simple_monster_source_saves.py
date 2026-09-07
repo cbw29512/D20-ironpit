@@ -4,6 +4,7 @@ import re
 
 from app.content.monster_combat_scope import feature_blocks
 from app.content.monster_trait_source_audit import parse_trait_names
+from app.content.simple_monster_source_constrict import parse_constrict_save
 
 _ABILITY = r"Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma"
 _DAMAGE = r"Acid|Bludgeoning|Cold|Fire|Force|Lightning|Necrotic|Piercing|Poison|Psychic|Radiant|Slashing|Thunder"
@@ -109,6 +110,9 @@ def parse_simple_save_actions(row: dict[str, object]) -> list[dict[str, object]]
         condition_match = _CONDITION_SAVE.fullmatch(block)
         if condition_match is not None:
             actions.append(_condition_save_row(row, condition_match)); continue
+        constrict = parse_constrict_save(row, heading, block)
+        if constrict is not None:
+            actions.append(constrict); continue
         raise ValueError(f"Simple save parser cannot prove {row['name']} {heading!r}: {block!r}")
     return actions
 
