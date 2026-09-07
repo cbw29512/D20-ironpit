@@ -112,6 +112,21 @@ The engine owns executing the declared sequence through the same universal Actio
 
 Two spear attacks, three claw attacks, one bite plus two claws, or ninety-seven sword attacks are all the same Multiattack mechanic with different source data. Do not create monster-specific Multiattack resolvers when a source-defined sequence is sufficient.
 
+### Recharge and limited availability checks
+Recharge is one universal availability-check mechanic. The source declares the die and the accepted result or result set; the engine rolls and decides whether the ability becomes available.
+
+Conceptually:
+
+`roll configured die -> compare result to configured accepted results -> available or unavailable`
+
+Examples:
+- RAW `Recharge 5-6`: roll `d6`; results 5 or 6 restore availability.
+- Hypothetical homebrew `Recharge 50-500 on d1000`: roll `d1000`; any result from 50 through 500 restores availability.
+
+Recharge answers only whether the named source ability can be used. It does not own that ability's attack roll, save, damage, condition, range, area, or other effects; those remain separate universal mechanics populated by source data.
+
+Likewise, fixed limited uses such as `1/Day`, `3/Day`, or another source-defined count are shared resource counters. The source supplies the count/reset rule; the engine owns availability and consumption.
+
 ## Composition rule
 
 A printed ability is a named composition of universal mechanics plus source-owned parameters.
