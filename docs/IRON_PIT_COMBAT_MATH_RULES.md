@@ -4,7 +4,7 @@ This file is durable project policy. Treat these rules as locked architecture un
 
 ## Core scope rule
 
-Iron Pit preserves every D&D effect that changes combat math or action availability and ignores every part of an effect that is purely movement, flavor, exploration, social, or otherwise outcome-neutral inside the Pit.
+Iron Pit preserves every D&D effect that changes combat math or action availability and ignores every part of an effect that is purely movement, flavor, exploration, social, environmental, or otherwise outcome-neutral inside the Pit.
 
 Examples:
 
@@ -13,6 +13,7 @@ Examples:
 - An effect that sets Speed to 0, deals 2d6 damage, and causes Prone: ignore Speed 0; keep 2d6 damage and Prone.
 - Flavor text such as sweating, smell, speech, appearance, or discomfort is ignored unless it also changes a combat-math result or action availability.
 - Iron Pit itself may be treated as magically managing positioning, so combatants do not kite, flee, fly around, burrow around, or otherwise turn combat into a movement simulator.
+- Iron Pit magically sustains aquatic and water-dependent creatures. A creature is never excluded merely because it normally needs water or cannot breathe air. Swim-only creatures may enter the Pit; preserve their combat math and ignore the environmental breathing requirement.
 
 ### Post-combat outcomes
 
