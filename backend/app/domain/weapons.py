@@ -62,6 +62,32 @@ class MaxHpReductionRider(BaseModel):
     damage_type: DamageType | None = None
 
 
+class ChargeDamage(BaseModel):
+    dice_count: int = Field(ge=0, le=40)
+    dice_size: int = Field(ge=2, le=100)
+    damage_type: DamageType
+    damage_bonus: int = 0
+
+
+class ChargeDefinition(BaseModel):
+    """Source-neutral Charge parameters carried by an attack instead of an id registry."""
+
+    minimum_move_ft: int = Field(ge=0)
+    max_target_size: CreatureSize | None = None
+    prone_max_target_size: CreatureSize | None = None
+    bonus_damage: ChargeDamage | None = None
+    replacement_damage: ChargeDamage | None = None
+    follow_up_attack_id: str | None = None
+
+    @model_validator(mode="after")
+    def validate_charge(self) -> "ChargeDefinition":
+        if self.bonus_damage is not None and self.replacement_damage is not None:
+            raise ValueError("Charge cannot both add and replace attack damage.")
+        if not any((self.prone_max_target_size, self.bonus_damage, self.replacement_damage, self.follow_up_attack_id)):
+            raise ValueError("Charge must define an outcome-changing combat consequence.")
+        return self
+
+
 class Weapon(BaseModel):
     id: str
     name: str
@@ -95,6 +121,7 @@ class WeaponAttack(BaseModel):
     on_hit_damage: list[OnHitDamage] = Field(default_factory=list)
     on_hit_modifier_effects: list[HitModifierEffect] = Field(default_factory=list)
     max_hp_reduction: MaxHpReductionRider | None = None
+    charge: ChargeDefinition | None = None
     rage_eligible: bool = False
     sneak_attack_eligible: bool = False
     knocks_prone_max_size: CreatureSize | None = None
