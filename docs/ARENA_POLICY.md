@@ -82,16 +82,19 @@ Multiple sources never create custom variants:
 
 Runtime/audit data should preserve contributing source names even though the mathematical resolver is shared.
 
-## Aquatic-only creatures
+## Aquatic and environment-dependent creatures
 
-Aquatic-only creatures that cannot meaningfully participate in the standard land Pit are **deferred environment content**, not unresolved universal engine work.
+Aquatic-only and other environment-dependent creatures are valid standard-Pit combatants. The Pit magically supplies whatever surrounding environment each creature requires to breathe and function.
 
-Use an explicit environment deferral such as `deferred-environment:aquatic-only`. Do not spend current implementation time creating aquatic tactical behavior. A future aquatic arena can reuse the same universal combat engine.
+- Water breathing, inability to breathe air, currents, drowning, and similar environment dependencies are environmental rather than combat math.
+- Do not invent aquatic tactical behavior, special current rules, drowning rules, or separate movement math for these creatures. The existing movement abstraction still applies.
+- Attacks, damage, saves, conditions, traits, reactions, resources, recharge, defenses, and every other in-scope combat consequence are enforced normally.
+- `deferred-environment:aquatic-only` is obsolete and must not be emitted for an otherwise certifiable creature.
 
 ## Readiness rule
 
 A card is blocked only by an unsupported consequence that changes actual Iron Pit combat math under this policy.
 
-Movement-only riders, aquatic-only environment requirements, exploration/social/narrative effects, and other deliberately out-of-scope consequences do not block certification.
+Movement-only riders, breathing/environment requirements supplied by the Pit, exploration/social/narrative effects, and other deliberately out-of-scope consequences do not block certification.
 
 Unsupported in-scope combat math fails closed. Out-of-scope effects are intentionally ignored rather than approximated.

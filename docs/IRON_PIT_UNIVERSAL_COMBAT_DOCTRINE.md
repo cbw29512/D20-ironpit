@@ -170,15 +170,14 @@ When comparing legal offensive choices, prefer the option with the highest expec
 
 The combat-selection AI may remain intentionally simple even when the engine can accurately resolve more complex effects.
 
-## 11. Aquatic-only creatures are deferred, not implementation debt
+## 11. Aquatic and environment-dependent creatures use the standard combat engine
 
-Aquatic-only creatures that cannot meaningfully participate in the standard land Pit are outside the current certification target.
+Aquatic-only and other environment-dependent creatures are valid standard-Pit combatants. The Pit magically supplies whatever surrounding environment each creature requires to breathe and function.
 
-Mark them as an explicit environment deferral such as `deferred-environment:aquatic-only`.
-
-- Do not spend current implementation time building aquatic arena behavior.
-- Do not count aquatic-only deferrals as unresolved combat-engine blockers.
-- A later aquatic arena can reactivate them using the same universal combat engine.
+- Water breathing, inability to breathe air, currents, drowning, and similar environment dependencies are environmental rather than combat math.
+- Do not spend implementation time building aquatic tactical behavior, special current rules, drowning rules, or a separate aquatic resolver. The existing movement abstraction applies.
+- Attacks, damage, saves, conditions, traits, reactions, resources, recharge, defenses, and every other in-scope combat consequence are enforced normally through the same universal engine.
+- `deferred-environment:aquatic-only` is obsolete and must not be emitted for an otherwise certifiable creature.
 
 ## 12. Immutable source cards, mutable fight state
 
@@ -220,7 +219,7 @@ A card is RAW-ready for the standard Pit when every supported-scope combat conse
 A card is not blocked by:
 
 - movement-only riders;
-- aquatic requirements when the whole creature is explicitly environment-deferred;
+- breathing/environment requirements supplied by the Pit;
 - exploration/social/narrative/object effects;
 - other source text with no supported consequence in the current Pit abstraction.
 

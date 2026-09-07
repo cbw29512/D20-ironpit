@@ -47,7 +47,7 @@ Example: `Prone + Speed effect` keeps Prone's attack-math consequences while the
 
 The standard arena is fixed at **3 columns x 4 rows = 12 combat slots**, split evenly into **6 monster slots** and **6 pregen/hero slots**. It is a slug-fest arena used to make engagement, range, reach, adjacency, area targeting, and simple closing deterministic, not to reproduce a full tactical map.
 
-Aquatic-only creatures are explicitly deferred from the current standard land Pit. They are not current combat-engine implementation debt and should be marked as an environment deferral rather than treated as an unresolved universal mechanic.
+Aquatic-only and other environment-dependent creatures remain eligible for the standard Pit. The Pit magically supplies whatever surrounding environment they require to breathe and function. Water breathing, inability to breathe air, currents, drowning, and similar environmental requirements are ignored as environment-only; all actual in-scope attacks, damage, saves, defenses, conditions, traits, reactions, resources, and recharge mechanics remain enforced normally.
 
 ## Conditions
 

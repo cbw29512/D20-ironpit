@@ -14,4 +14,5 @@ AQUATIC_FIGURE_PROFILES = {
     "Plesiosaurus": {"form": "aquatic-reptile", "detail": "plesiosaur"},
     "Reef Shark": {"form": "aquatic-fish", "detail": "shark"},
     "Sahuagin Warrior": {"form": "humanoid", "detail": "sahuagin-warrior"},
+    "Swarm of Piranhas": {"form": "swarm", "detail": "piranhas"},
 }

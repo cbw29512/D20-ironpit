@@ -99,7 +99,7 @@ It is a slug-fest board used to make engagement, range, reach, adjacency, target
 - If a mixed ability also changes supported combat math, model the supported component and ignore only movement.
 - Existing D&D five-foot-square conventions remain the working distance convention unless explicitly changed later.
 
-Aquatic-only creatures that cannot participate meaningfully in the standard land Pit are environment-deferred, not current universal-engine implementation debt. Mark them explicitly, e.g. `deferred-environment:aquatic-only`.
+Aquatic-only and other environment-dependent creatures are valid standard-Pit combatants. The Pit magically supplies whatever environment they require to breathe and function. Environmental dependencies such as water breathing, inability to breathe air, currents, and drowning do not block certification; all actual in-scope attacks, damage, saves, conditions, traits, reactions, resources, recharge, and defenses remain enforced normally. Do not emit `deferred-environment:aquatic-only` for an otherwise certifiable creature.
 
 ## Immutable card rule
 
