@@ -163,3 +163,5 @@ MONSTER_MATRIX_QUEUE	58	Cloud Giant	unsupported=3	complexity=12	edge=false	block
 MONSTER_MATRIX_QUEUE	59	Drider	unsupported=3	complexity=12	edge=false	blockers=bonus-action+limited-use+spellcasting	mechanics=attack-roll+damage+damage:piercing+damage:poison+disadvantage+multiattack+recharge+spellcasting
 MONSTER_MATRIX_QUEUE	60	Shambling Mound	unsupported=3	complexity=13	edge=false	blockers=condition-or-control+save-or-complex-action+trait	mechanics=attack-roll+aura+condition:blinded+condition:grappled+condition:restrained+damage+damage:bludgeoning+damage:lightning+multiattack+saving-throw
 MONSTER_MATRIX_CSV	data/monster_mechanic_matrix.csv
+MONSTER_ABILITY_CSV	data/monster_ability_equivalence.csv
+MONSTER_CAPABILITY_CSV	data/monster_capability_families.csv
