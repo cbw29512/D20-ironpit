@@ -70,6 +70,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -111,6 +112,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -220,6 +222,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -247,6 +250,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -355,6 +359,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -395,6 +400,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -505,6 +511,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -532,6 +539,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -657,6 +665,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -698,6 +707,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -835,6 +845,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -862,6 +873,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -968,6 +980,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -1076,6 +1089,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -1103,6 +1117,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -1209,6 +1224,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -1319,6 +1335,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -1438,6 +1455,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -1548,6 +1566,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -1654,6 +1673,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -1768,6 +1788,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -1884,6 +1905,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -1994,6 +2016,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -2119,6 +2142,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -2148,6 +2172,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -2273,6 +2298,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -2383,6 +2409,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -2489,6 +2516,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -2597,6 +2625,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -2703,6 +2732,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -2811,6 +2841,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -2917,6 +2948,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -3028,6 +3060,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -3136,6 +3169,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -3247,6 +3281,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -3271,6 +3306,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -3386,6 +3422,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -3513,6 +3550,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -3628,6 +3666,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -3652,6 +3691,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -3758,6 +3798,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -3890,6 +3931,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -3934,6 +3976,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -4042,6 +4085,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -4165,6 +4209,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -4271,6 +4316,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -4375,6 +4421,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -4477,6 +4524,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -4581,6 +4629,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -4685,6 +4734,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -4790,6 +4840,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -4892,6 +4943,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -4996,6 +5048,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -5100,6 +5153,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -5204,6 +5258,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -5308,6 +5363,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -5414,6 +5470,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -5520,6 +5577,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -5628,6 +5686,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -5736,6 +5795,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -5863,6 +5923,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -5969,6 +6030,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -6077,6 +6139,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -6188,6 +6251,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -6296,6 +6360,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -6402,6 +6467,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -6512,6 +6578,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -6620,6 +6687,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -6732,6 +6800,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -6842,6 +6911,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -6953,6 +7023,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -7059,6 +7130,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -7167,6 +7239,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -7275,6 +7348,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -7383,6 +7457,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -7407,6 +7482,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -7433,6 +7509,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -7539,6 +7616,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -7664,6 +7742,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -7795,6 +7874,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -7819,6 +7899,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -7946,6 +8027,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -7972,6 +8054,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -8090,6 +8173,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -8209,6 +8293,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -8320,6 +8405,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -8464,6 +8550,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -8501,6 +8588,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -8635,6 +8723,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -8667,6 +8756,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -8804,6 +8894,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -8943,6 +9034,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -9062,6 +9154,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -9176,6 +9269,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -9222,6 +9316,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -9362,6 +9457,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -9485,6 +9581,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -9609,6 +9706,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -9722,6 +9820,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -9854,6 +9953,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -9992,6 +10092,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -10133,6 +10234,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -10252,6 +10354,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -10281,6 +10384,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": true
       }
     ],
@@ -10411,6 +10515,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -10575,6 +10680,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -10604,6 +10710,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": true
       }
     ],
@@ -10731,6 +10838,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -10867,6 +10975,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -10984,6 +11093,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -11108,6 +11218,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -11223,6 +11334,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -11331,6 +11443,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -11477,6 +11590,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -11583,6 +11697,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -11609,6 +11724,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -11633,6 +11749,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -11762,6 +11879,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -11834,6 +11952,115 @@
   },
   {
     "schema_version": 1,
+    "id": "srd-killer-whale",
+    "name": "Killer Whale",
+    "archetype": "source-certified monster",
+    "challenge_rating": "3",
+    "kind": "monster",
+    "size": "huge",
+    "armor_class": 12,
+    "max_hp": 90,
+    "speed_ft": 5,
+    "movement_modes": {
+      "walk_ft": 5,
+      "fly_ft": 0,
+      "climb_ft": 0,
+      "swim_ft": 60,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": 2,
+    "progression_features": {
+      "critical_hit_minimum": 20,
+      "initiative_advantage": false,
+      "athletics_advantage": false,
+      "steady_aim": false,
+      "heroic_warrior": false,
+      "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
+    },
+    "attacks": [
+      {
+        "id": "srd-killer-whale-bite",
+        "name": "Bite",
+        "weapon_id": "srd-killer-whale-bite-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 6,
+        "damage": {
+          "count": 5,
+          "size": 6,
+          "bonus": 4
+        },
+        "damage_type": "piercing",
+        "animation": "strike",
+        "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
+        "forbid_target_grappled_by_self": false
+      }
+    ],
+    "primary_attack_id": "srd-killer-whale-bite",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 6,
+      "damage": 5
+    },
+    "save_actions": [],
+    "death_trigger_save_actions": [],
+    "spell_save_actions": [],
+    "defensive_spell_actions": [],
+    "healing_actions": [],
+    "condition_removal_actions": [],
+    "saving_throw_bonuses": {
+      "strength": 4,
+      "dexterity": 2,
+      "constitution": 1,
+      "intelligence": -4,
+      "wisdom": 1,
+      "charisma": -2
+    },
+    "skill_bonuses": {},
+    "combat_traits": [],
+    "source_trait_names": [
+      "Hold Breath"
+    ],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [],
+    "source_limited_use_names": [],
+    "source_legendary_action_names": [],
+    "fighting_styles": [],
+    "weapon_masteries": [],
+    "damage_resistances": [],
+    "damage_vulnerabilities": [],
+    "damage_immunities": [],
+    "condition_immunities": [],
+    "wearing_heavy_armor": false,
+    "rage_damage_bonus": 0,
+    "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
+    "visual": {
+      "armor": "natural",
+      "main_hand": "Bite",
+      "body_style": "monster"
+    },
+    "source": "SRD 5.2.1 p. 356",
+    "unsupported_capabilities": []
+  },
+  {
+    "schema_version": 1,
     "id": "srd-lemure",
     "name": "Lemure",
     "archetype": "source-certified monster",
@@ -11889,6 +12116,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -12006,6 +12234,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -12032,6 +12261,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -12166,6 +12396,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -12294,6 +12525,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -12409,6 +12641,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -12515,6 +12748,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -12541,6 +12775,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -12663,6 +12898,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -12772,6 +13008,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -12798,6 +13035,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -12921,6 +13159,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -13027,6 +13266,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -13157,6 +13397,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -13280,6 +13521,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -13401,6 +13643,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -13537,6 +13780,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -13677,6 +13921,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -13806,6 +14051,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -13833,6 +14079,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -13978,6 +14225,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -14018,6 +14266,7 @@
           }
         ],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -14152,6 +14401,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -14263,6 +14513,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -14290,6 +14541,7 @@
         "rage_eligible": false,
         "effects": [],
         "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],

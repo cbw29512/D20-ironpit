@@ -1,16 +1,18 @@
-UNIVERSAL_ENGINE_BASELINE	monster_ready=161	monster_actionable_blocked=159	monster_deferred=10	monster_families=12	planned_hero_mechanics=368
+UNIVERSAL_ENGINE_BASELINE	monster_ready=166	monster_actionable_blocked=163	monster_deferred=1	monster_families=14	planned_hero_mechanics=368
 UNIVERSAL_ENGINE_MONSTER_FAMILIES
 UNIVERSAL_MONSTER_FAMILY	trait	immediate_unlocks=5	affected=67	engine_status=unmapped
 UNIVERSAL_MONSTER_FAMILY	condition-or-control	immediate_unlocks=4	affected=86	engine_status=unmapped
 UNIVERSAL_MONSTER_FAMILY	spellcasting	immediate_unlocks=3	affected=68	engine_status=unmapped
 UNIVERSAL_MONSTER_FAMILY	save-or-complex-action	immediate_unlocks=1	affected=97	engine_status=unmapped
-UNIVERSAL_MONSTER_FAMILY	bonus-action	immediate_unlocks=1	affected=35	engine_status=unmapped
-UNIVERSAL_MONSTER_FAMILY	reaction	immediate_unlocks=1	affected=13	engine_status=unmapped
+UNIVERSAL_MONSTER_FAMILY	bonus-action	immediate_unlocks=1	affected=36	engine_status=unmapped
+UNIVERSAL_MONSTER_FAMILY	reaction	immediate_unlocks=1	affected=14	engine_status=unmapped
 UNIVERSAL_MONSTER_FAMILY	attachment-state	immediate_unlocks=1	affected=3	engine_status=unmapped
 UNIVERSAL_MONSTER_FAMILY	ability-score-change	immediate_unlocks=1	affected=1	engine_status=unmapped
-UNIVERSAL_MONSTER_FAMILY	limited-use	immediate_unlocks=0	affected=95	engine_status=unmapped
+UNIVERSAL_MONSTER_FAMILY	no-attack-roll	immediate_unlocks=1	affected=1	engine_status=unmapped
+UNIVERSAL_MONSTER_FAMILY	unclassified-source-audit-gap	immediate_unlocks=1	affected=1	engine_status=unmapped
+UNIVERSAL_MONSTER_FAMILY	limited-use	immediate_unlocks=0	affected=96	engine_status=unmapped
 UNIVERSAL_MONSTER_FAMILY	legendary	immediate_unlocks=0	affected=30	engine_status=unmapped
-UNIVERSAL_MONSTER_FAMILY	unsupported-action-rider	immediate_unlocks=0	affected=14	engine_status=unmapped
+UNIVERSAL_MONSTER_FAMILY	unsupported-action-rider	immediate_unlocks=0	affected=15	engine_status=unmapped
 UNIVERSAL_MONSTER_FAMILY	defense-clause	immediate_unlocks=0	affected=4	engine_status=unmapped
 UNIVERSAL_ENGINE_HERO_MECHANICS
 UNIVERSAL_HERO_MECHANIC	boon-irresistible-offense	owners=2	classes=2	status=planned	kinds=base-feature
