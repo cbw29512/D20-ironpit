@@ -42,7 +42,6 @@ _REPLACE_ONE = re.compile(r"\bcan replace one attack with a use of (?P<name>[A-Z
 def _slug(value: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
 
-
 def _condition_timing(row: dict[str, object], match: re.Match[str]) -> str:
     edge = match.group("edge").lower(); owner = match.group("owner").lower().replace("’", "'").strip()
     if owner == "its" or "target" in owner:
@@ -51,7 +50,6 @@ def _condition_timing(row: dict[str, object], match: re.Match[str]) -> str:
     if monster in owner:
         return f"source_turn_{edge}"
     raise ValueError(f"Cannot prove condition-turn owner for {row['name']!r}: {match.group(0)!r}")
-
 
 def _condition_save_row(row: dict[str, object], match: re.Match[str]) -> dict[str, object]:
     monster_slug = _slug(str(row["name"])); timing = _condition_timing(row, match)
