@@ -10,11 +10,11 @@ from app.content.monster_trait_source_audit import parse_trait_names
 from app.domain.models import CombatantTemplate
 
 logger = logging.getLogger(__name__)
-_USES = re.compile(r"\bLegendary Action Uses:\s*(\d+)\.", re.I)
+_USES = re.compile(r"\bLegendary Action Uses:\s*(\d+)(?:\s*\(\d+\s+in\s+Lair\))?\.", re.I)
 
 
 def parse_legendary_action_names(source_legendary_actions: object) -> list[str]:
-    """Retain the printed legendary use count plus every action heading."""
+    """Retain the printed base legendary use count plus every action heading."""
     text = str(source_legendary_actions or "").strip()
     if not text:
         return []
