@@ -59,10 +59,17 @@ jobs:
       - name: Generate detailed capability yield
         run: python scripts/report_capability_yield.py > data/capability_yield.txt
       - name: Generate normalized monster mechanic matrix
-        run: python scripts/report_monster_mechanic_matrix.py --csv data/monster_mechanic_matrix.csv > data/monster_mechanic_matrix.txt
+        run: |
+          python scripts/report_monster_mechanic_matrix.py \
+            --csv data/monster_mechanic_matrix.csv \
+            --ability-csv data/monster_ability_equivalence.csv \
+            --capability-csv data/monster_capability_families.csv \
+            > data/monster_mechanic_matrix.txt
+      - name: Generate master monster work ledger
+        run: python scripts/export_monster_work_ledger.py --write
       - name: Refuse unexpected generator drift
         run: |
-          unexpected="$(git status --porcelain --untracked-files=all | awk '{print $2}' | grep -Ev '^(backend/app/content/data/combatant_capabilities_v1.json|frontend/browser-heroes.js|frontend/browser-monsters-generated.js|frontend/figure-profiles.js|data/hero_certification_manifest.json|data/monster_certification_manifest.json|data/roster_combat_mechanics_v1.json|data/universal_engine_backlog.txt|data/capability_yield.txt|data/monster_mechanic_matrix.csv|data/monster_mechanic_matrix.txt)$' || true)"
+          unexpected="$(git status --porcelain --untracked-files=all | awk '{print $2}' | grep -Ev '^(backend/app/content/data/combatant_capabilities_v1.json|frontend/browser-heroes.js|frontend/browser-monsters-generated.js|frontend/figure-profiles.js|data/hero_certification_manifest.json|data/monster_certification_manifest.json|data/roster_combat_mechanics_v1.json|data/universal_engine_backlog.txt|data/capability_yield.txt|data/monster_mechanic_matrix.csv|data/monster_mechanic_matrix.txt|data/monster_ability_equivalence.csv|data/monster_capability_families.csv|data/monster_master_ledger.json|data/monster_active_queue.json|data/monster_active_queue.csv)$' || true)"
           if [ -n "$unexpected" ]; then
             echo "Generator modified files outside its owned outputs:"
             echo "$unexpected"
@@ -70,8 +77,8 @@ jobs:
           fi
       - name: Commit only generator-owned outputs
         run: |
-          outputs="backend/app/content/data/combatant_capabilities_v1.json frontend/browser-heroes.js frontend/browser-monsters-generated.js frontend/figure-profiles.js data/hero_certification_manifest.json data/monster_certification_manifest.json data/roster_combat_mechanics_v1.json data/universal_engine_backlog.txt data/capability_yield.txt data/monster_mechanic_matrix.csv data/monster_mechanic_matrix.txt"
-          if git diff --quiet -- $outputs && [ -z "$(git status --porcelain --untracked-files=all -- data/universal_engine_backlog.txt data/capability_yield.txt data/monster_mechanic_matrix.csv data/monster_mechanic_matrix.txt)" ]; then
+          outputs="backend/app/content/data/combatant_capabilities_v1.json frontend/browser-heroes.js frontend/browser-monsters-generated.js frontend/figure-profiles.js data/hero_certification_manifest.json data/monster_certification_manifest.json data/roster_combat_mechanics_v1.json data/universal_engine_backlog.txt data/capability_yield.txt data/monster_mechanic_matrix.csv data/monster_mechanic_matrix.txt data/monster_ability_equivalence.csv data/monster_capability_families.csv data/monster_master_ledger.json data/monster_active_queue.json data/monster_active_queue.csv"
+          if git diff --quiet -- $outputs && [ -z "$(git status --porcelain --untracked-files=all -- data/universal_engine_backlog.txt data/capability_yield.txt data/monster_mechanic_matrix.csv data/monster_mechanic_matrix.txt data/monster_ability_equivalence.csv data/monster_capability_families.csv data/monster_master_ledger.json data/monster_active_queue.json data/monster_active_queue.csv)" ]; then
             echo "Generated artifacts already current."
             exit 0
           fi
