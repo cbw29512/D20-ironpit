@@ -27,8 +27,8 @@ def test_curated_exclusions_let_dryad_and_imp_use_their_normal_combat_paths() ->
     assert spellcasting_issues(_monster("Imp"), _row("Imp")) == []
 
 
-def test_selected_druid_thunderwave_must_be_vendored_before_certification() -> None:
-    assert spellcasting_issues(_monster("Druid"), _row("Druid")) == ["curated-monster-spell-not-vendored"]
+def test_selected_druid_thunderwave_is_vendored_for_certification() -> None:
+    assert spellcasting_issues(_monster("Druid"), _row("Druid")) == []
 
 
 def test_curated_caster_list_fails_closed_when_source_adds_a_spell() -> None:

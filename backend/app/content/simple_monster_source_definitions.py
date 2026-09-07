@@ -11,6 +11,7 @@ from app.content.monster_defense_source_audit import parse_defense_profile
 from app.content.monster_regeneration_source import parse_regeneration
 from app.content.monster_roll_aura_source import parse_ally_roll_auras
 from app.content.monster_saving_throws import parse_saving_throw_bonuses
+from app.content.monster_spell_source_parser import spellcasting_fingerprint
 from app.content.monster_start_turn_aura_source import parse_start_turn_save_auras
 from app.content.monster_trait_source_audit import _MODELED_TRAITS, parse_trait_names
 from app.content.monster_turn_aura_source import parse_turn_damage_auras
@@ -65,7 +66,8 @@ def _definition(row: dict[str, object]) -> CombatantDefinition:
         "initiative_bonus": _initiative(row), "attacks": attacks, "primary_attack_id": attacks[0]["id"],
         "save_actions": save_actions, "saving_throw_bonuses": parse_saving_throw_bonuses(row), "combat_traits": combat_traits,
         "resources": resources, "source_limited_use_names": limited_use_names,
-        "source_trait_names": trait_names, "damage_vulnerabilities": sorted(defenses["damage_vulnerabilities"]),
+        "source_trait_names": trait_names, "source_spellcasting_fingerprint": spellcasting_fingerprint(row),
+        "damage_vulnerabilities": sorted(defenses["damage_vulnerabilities"]),
         "damage_resistances": sorted(defenses["damage_resistances"]), "damage_immunities": sorted(defenses["damage_immunities"]),
         "condition_immunities": sorted(defenses["condition_immunities"]),
         "visual": {"armor": "natural", "main_hand": attacks[0]["name"], "body_style": "monster"},
