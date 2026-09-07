@@ -6,6 +6,7 @@ AQUATIC_FIGURE_PROFILES = {
     "Crocodile": {"form": "reptile", "detail": "crocodile"},
     "Giant Crab": {"form": "crab", "detail": "crab"},
     "Giant Crocodile": {"form": "reptile", "detail": "crocodile"},
+    "Giant Seahorse": {"form": "aquatic-fish", "detail": "seahorse"},
     "Giant Shark": {"form": "aquatic-fish", "detail": "shark"},
     "Hunter Shark": {"form": "aquatic-fish", "detail": "shark"},
     "Killer Whale": {"form": "aquatic-mammal", "detail": "orca"},
