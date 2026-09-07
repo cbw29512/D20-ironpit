@@ -12,6 +12,46 @@ Examples of arena-neutral utility magic include Zone of Truth, Detect Magic, Det
 
 If a utility spell contains a combat-relevant component, decompose it exactly like any other mixed feature: keep the combat-math consequence and ignore the utility-only portion.
 
+## One spell, every caster
+
+Spell mechanics are caster-agnostic. A Fireball is the same Fireball whether it is cast by a monster, NPC, pregen, Wizard, Sorcerer, or any other combatant.
+
+- keep one canonical shared combat-spell definition for each supported spell;
+- resolve that definition through shared spell mechanics rather than caster-specific implementations;
+- caster data supplies only context such as spell save DC, spell attack modifier, resource/slot availability, cast level, and supported concentration state;
+- the shared spell definition owns its attack/save rule, damage or healing, range/area, success behavior, scaling, and supported combat effects;
+- never create separate monster/class/pregen implementations of the same spell;
+- once a spell is supported, every legal caster uses that same implementation.
+
+Per-caster spell lists choose **which** shared spells a combatant may use. They never redefine **how** those spells work.
+
+## Per-caster selection modes
+
+Every caster gets an explicit deterministic Iron Pit combat-spell list. There are two selection modes.
+
+### Package or choose-X casters
+
+When a class, build, role, or other source gives the caster a number of spells to choose rather than a fixed named stat-block list:
+
+1. preserve the required number of curated selections;
+2. choose from the approved simple Iron Pit combat-spell pool that the caster can legally know or prepare;
+3. prefer already-supported shared spell mechanics;
+4. preserve the intended class/theme/role without adding complexity merely to mirror the full tabletop list;
+5. record the resulting per-caster list explicitly and deterministically.
+
+### Named-stat-block casters
+
+When a monster or NPC stat block names specific spells:
+
+1. ignore arena-neutral utility/noncombat spells;
+2. ignore movement-only spell consequences that do not affect Iron Pit combat math;
+3. review the remaining combat-relevant named spells case by case;
+4. include straightforward supported combat spells when they add useful combat behavior;
+5. deliberately exclude a complex combat spell when Iron Pit is not modeling that mechanic yet, and record that exclusion rather than silently pretending the spell is supported;
+6. a spell selected into the caster's Iron Pit combat list must resolve accurately or remain a certification blocker.
+
+A fixed printed spell list therefore does not force Iron Pit to implement every utility or high-complexity spell before the combatant can participate. The curated list is the explicit boundary.
+
 ## Curated package philosophy
 
 Caster packages must stay intentionally small, deterministic, and easy to resolve through universal engine primitives.
@@ -124,6 +164,8 @@ This progression rule explicitly applies to full casters and partial/half caster
 ## Certification consequence
 
 A monster or pregen is not blocked because its printed or class spell list contains arena-neutral utility magic that the Iron Pit AI will never select.
+
+A package/choose-X caster is certified against its explicit curated selections. A named-stat-block caster is certified against its explicit included combat spells plus any other non-spell combat mechanics still in scope. Deliberately excluded complex spells remain documented exclusions rather than hidden implementation gaps.
 
 A selected curated combat spell must either resolve accurately through supported universal primitives or remain a real blocker.
 
