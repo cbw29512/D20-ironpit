@@ -5,7 +5,7 @@ import logging
 from app.content.capability_attack_compiler import UnsupportedCapabilityError, compile_attack
 from app.domain.actions import AttackActionDefinition, AttackActionSlot, SaveConditionEffect, SavingThrowAction
 from app.domain.capabilities import CombatantDefinition, SaveCapabilityDefinition
-from app.domain.models import CombatantTemplate
+from app.domain.models import CombatantTemplate, OnHitDamage
 
 logger = logging.getLogger(__name__)
 
@@ -22,6 +22,10 @@ def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
         damage_dice_size=damage.size if damage else 6,
         damage_bonus=damage.bonus if damage else 0,
         damage_type=definition.damage_type.value if definition.damage_type else None,
+        additional_damage=[OnHitDamage(
+            source=effect.source, dice_count=effect.dice.count, dice_size=effect.dice.size,
+            damage_bonus=effect.dice.bonus, damage_type=effect.damage_type,
+        ) for effect in definition.additional_damage],
         success_damage=definition.success_damage,
         grapple_escape_dc=grapple.escape_dc if grapple else None,
         restrains_while_grappled=grapple.restrains if grapple else False,
