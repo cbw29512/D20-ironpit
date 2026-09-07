@@ -15,8 +15,9 @@ from app.content.monster_trait_source_audit import _MODELED_TRAITS, parse_trait_
 from app.content.monster_turn_aura_source import parse_turn_damage_auras
 from app.content.movement_modes import parse_movement_profile, standard_arena_closing_speed
 from app.content.simple_monster_source_attacks import parse_simple_attacks
+from app.content.simple_monster_source_bonus_saves import parse_simple_bonus_save_actions
 from app.content.simple_monster_source_resources import attach_limited_use_resources
-from app.content.simple_monster_source_saves import attach_save_replacement, parse_simple_bonus_save_actions, parse_simple_save_actions
+from app.content.simple_monster_source_saves import attach_save_replacement, parse_simple_save_actions
 from app.domain.capabilities import CombatantDefinition
 from app.domain.traits import CombatTrait
 
