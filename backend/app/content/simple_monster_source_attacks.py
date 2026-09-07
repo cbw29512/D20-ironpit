@@ -11,9 +11,9 @@ from app.content.simple_monster_source_riders import parse_hit_riders
 logger = logging.getLogger(__name__)
 _NUMBER = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6}
 _DAMAGE = r"Hit:\s*\d+\s*\(\s*(\d+)d(\d+)(?:\s*([+-])\s*(\d+))?\s*\)\s*([A-Za-z]+)\s+damage"
-_ATTACK = re.compile(rf"\b(Melee|Ranged) Attack Roll:\s*([+-]?\d+)(?:\s*\([^)]*\))?,\s*(?:(?:reach\s+(\d+)\s*ft\.?)|(?:range\s+(\d+)\s*/\s*(\d+)\s*ft\.?))\s*{_DAMAGE}", re.I)
-_FIXED_ATTACK = re.compile(r"\b(Melee|Ranged) Attack Roll:\s*([+-]?\d+)(?:\s*\([^)]*\))?,\s*(?:(?:reach\s+(\d+)\s*ft\.?)|(?:range\s+(\d+)\s*/\s*(\d+)\s*ft\.?))\s*Hit:\s*(\d+)\s*([A-Za-z]+)\s+damage", re.I)
-_HYBRID = re.compile(rf"\bMelee or Ranged Attack Roll:\s*([+-]?\d+)(?:\s*\([^)]*\))?,\s*reach\s+(\d+)\s*ft\.?\s+or\s+range\s+(\d+)\s*/\s*(\d+)\s*ft\.?\s*{_DAMAGE}", re.I)
+_ATTACK = re.compile(rf"\b(Melee|Ranged) Attack Roll:\s*([+-]?\d+)(?:\s*\([^)]*\))?,\s*(?:(?:reach\s+(\d+)\s*ft\.?)|(?:range\s+(\d+)(?:\s*/\s*(\d+))?\s*ft\.?))\s*{_DAMAGE}", re.I)
+_FIXED_ATTACK = re.compile(r"\b(Melee|Ranged) Attack Roll:\s*([+-]?\d+)(?:\s*\([^)]*\))?,\s*(?:(?:reach\s+(\d+)\s*ft\.?)|(?:range\s+(\d+)(?:\s*/\s*(\d+))?\s*ft\.?))\s*Hit:\s*(\d+)\s*([A-Za-z]+)\s+damage", re.I)
+_HYBRID = re.compile(rf"\bMelee or Ranged Attack Roll:\s*([+-]?\d+)(?:\s*\([^)]*\))?,\s*reach\s+(\d+)\s*ft\.?\s+or\s+range\s+(\d+)(?:\s*/\s*(\d+))?\s*ft\.?\s*{_DAMAGE}", re.I)
 _EXTRA_DICE = re.compile(r"\bplus\s+\d+\s*\(\s*(\d+)d(\d+)(?:\s*([+-])\s*(\d+))?\s*\)\s*([A-Za-z]+)\s+damage", re.I)
 _EXTRA_FIXED = re.compile(r"\bplus\s+(\d+)\s+([A-Za-z]+)\s+damage\b", re.I)
 _GRAPPLE_ADV = re.compile(r"\bwith Advantage if the target is Grappled by the [^)]+", re.I)
@@ -67,7 +67,7 @@ def _entry(monster_slug: str, heading: str, mode: str, bonus: str, reach: str | 
         "damage_type": damage_type.lower(), "animation": "projectile" if mode == "ranged" else "strike",
         "reach_ft": int(reach or 5), "effects": effects,
     }
-    if normal: attack.update({"normal_range_ft": int(normal), "long_range_ft": int(long), "projectile": _slug(heading)})
+    if normal: attack.update({"normal_range_ft": int(normal), "long_range_ft": int(long or normal), "projectile": _slug(heading)})
     return attack
 
 
