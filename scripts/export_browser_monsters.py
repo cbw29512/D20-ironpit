@@ -73,6 +73,8 @@ def _add_attack_resource_metadata(row, template) -> None:
         if attack.resource_id is not None:
             item["resourceId"] = attack.resource_id
             item["resourceCost"] = attack.resource_cost
+        if attack.advantage_if_target_missing_hp:
+            item["advantageIfTargetMissingHp"] = True
         if attack.max_hp_reduction is not None:
             rider = {}
             if attack.max_hp_reduction.damage_type is not None:
