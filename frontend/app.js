@@ -10,11 +10,10 @@
 
   function updateControls() {
     const ready = state.heroSlots.some(Boolean) && state.monsterSlots.some(Boolean);
-    el("fight-button").disabled = state.fighting || !ready;
-    el("step-fight-button").disabled = state.fighting || !ready;
-    el("turbo-button").disabled = state.fighting || !ready;
-    el("rerun-button").disabled = state.fighting || !state.hasRun;
-    for (const id of ["quick-test", "reset-fight"]) el(id).disabled = state.fighting;
+    const active = Boolean(state.session && !state.session.complete);
+    for (const id of ["fight-button", "step-fight-button", "turbo-button"]) el(id).disabled = state.fighting || active || !ready;
+    el("rerun-button").disabled = state.fighting || active || !state.hasRun;
+    el("quick-test").disabled = state.fighting || active; el("reset-fight").disabled = state.fighting;
   }
 
   function clearResult(message = "Cards loaded. Press FIGHT when both sides are ready.") {
@@ -41,7 +40,7 @@
   }
 
   function openSlot(side, index) {
-    if (state.fighting || !state.catalog) return;
+    if (state.fighting || (state.session && !state.session.complete) || !state.catalog) return;
     picker().open(state, side, index, setSlot, removeSlot);
   }
 
@@ -75,7 +74,7 @@
   }
 
   function loadSample() {
-    if (state.fighting || !state.catalog) return;
+    if (state.fighting || (state.session && !state.session.complete) || !state.catalog) return;
     const heroes = [cardByTemplate("heroes", "karnok-stoneward-l1"), cardByTemplate("heroes", "seraphine-dawnshield-l1")];
     const monsters = [cardByTemplate("monsters", "srd-goblin-warrior"), cardByTemplate("monsters", "srd-wolf")];
     if ([...heroes, ...monsters].some((card) => !card)) { el("status").textContent = "Sample matchup could not find its certified cards."; return; }
