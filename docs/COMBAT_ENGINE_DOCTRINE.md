@@ -36,6 +36,23 @@ Example:
 - Giant sword: attack data + large Slashing damage packet
 - Both use the same attack-roll and Slashing-damage systems.
 
+### Mixed damage packets
+Each damage packet is resolved independently before the resulting HP loss is combined.
+
+Example: `1d8 Slashing + 1d6 Poison` against a target that is Vulnerable to Slashing and Immune to Poison:
+- resolve the Slashing packet and apply Slashing vulnerability
+- resolve the Poison packet and reduce it to 0 because of Poison immunity
+- combine the resolved packets into the final HP loss
+
+No resistance, immunity, or vulnerability on one damage type changes another damage packet unless the source explicitly says so.
+
+### Damage defenses and condition defenses are separate
+Damage resistance, damage immunity, damage vulnerability, and condition immunity are independent universal checks.
+
+A creature being Immune to Poison damage does not automatically make it Immune to the Poisoned condition. A creature being Immune to the Poisoned condition does not automatically make it Immune to Poison damage. If a source has both, both are recorded and checked separately.
+
+This rule applies to every damage type and every condition.
+
 ### Conditions
 Every condition is universal. Prone is Prone regardless of source. Poisoned is Poisoned regardless of source.
 
