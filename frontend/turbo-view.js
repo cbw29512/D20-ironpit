@@ -34,7 +34,7 @@
       el("turbo-rounds").textContent = `Average ${batch.average_rounds} rounds`;
       el("turbo-notables").textContent = `Fastest #${batch.fastest_fight_number ?? "—"} · Longest #${batch.longest_fight_number ?? "—"} · Batch seed ${batch.batch_seed}`;
       const input = el("turbo-fight-number"); input.max = String(batch.requested_fights); input.value = String(batch.fastest_fight_number || batch.errors[0]?.fight_number || 1);
-      el("turbo-replay-button").disabled = false;
+      el("turbo-replay-button").disabled = false; el("turbo-replay-step-button").disabled = false;
       const errorBox = el("turbo-error-summary"); errorBox.hidden = errors === 0;
       errorBox.textContent = errors ? `${errors} fight${errors === 1 ? "" : "s"} hit an engine-rule error and were excluded from the ratios. Enter that fight number to reproduce it.` : "";
       panel.hidden = false;
