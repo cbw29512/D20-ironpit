@@ -64,6 +64,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
         on_hit_damage=on_hit, on_hit_modifier_effects=on_hit_modifiers, max_hp_reduction=max_hp_reduction,
         knocks_prone_max_size=prone_size, control_effect=control,
         advantage_if_target_grappled_by_self=definition.advantage_if_target_grappled_by_self,
+        advantage_if_target_missing_hp=definition.advantage_if_target_missing_hp,
         forbid_target_grappled_by_self=definition.forbid_target_grappled_by_self,
         resource_id=definition.resource_id, resource_cost=definition.resource_cost or 1,
     )
