@@ -6,6 +6,7 @@
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const X = () => window.IRON_PIT_BROWSER_RESOURCES;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
+  const PA = () => window.IRON_PIT_BROWSER_SPELL_AREA;
   const B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2 || { dangerSenseAdvantage: () => 0 };
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { applyD20Bonus: (_state, _kind, roll) => roll };
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION, TC = () => window.IRON_PIT_BROWSER_TIMED;
@@ -31,7 +32,10 @@
     return { roll, succeeded: roll.total >= dc };
   }
   function resourceAvailable(state, action) { return !action.resourceId || X().available(state, action.resourceId, action.resourceCost || 1); }
-  function legalAction(action, target, distance) { return distance <= action.range && (!action.targetMaxSize || S().sizeAtMost(target, action.targetMaxSize)); }
+  function legalAction(action, target, distance) {
+    const range = action.range + (action.area?.shape === "radius" ? action.area.sizeFt : 0);
+    return distance <= range && (!action.targetMaxSize || S().sizeAtMost(target, action.targetMaxSize));
+  }
   function damageRolls(action, count, shared) {
     if (shared == null) return D().rollMany(count, action.damageDiceSize);
     if (!Array.isArray(shared) || shared.length !== count) throw new Error(`${action.name} shared damage roll count is invalid.`);
@@ -70,7 +74,10 @@
     }
     let appliedConditions = [];
     if (!save.succeeded && target.state.is_alive && !target.state.is_dead && action.grappleEscapeDc) appliedConditions = G().apply(target.state, actor.combatant_id, action.grappleEscapeDc, action.range, Boolean(action.restrainsWhileGrappled));
-    if (!save.succeeded && target.state.is_alive && !target.state.is_dead) for (const effect of action.failureConditions || []) { const applied = TC().apply(target.state, effect.conditionId, actor.combatant_id, { sourceEffectId: action.id, appliedRound: round, expiryTiming: effect.expiryTiming, repeatSaveAbility: effect.repeatSaveAbility, repeatSaveDc: effect.repeatSaveDc, repeatSaveTiming: effect.repeatSaveTiming, allowedRemovalActionIds: effect.allowedRemovalActionIds, defaultPoisonRecovery: false }); if (applied) appliedConditions.push(applied); }
+    if (!save.succeeded && target.state.is_alive && !target.state.is_dead) for (const effect of action.failureConditions || []) {
+      if (effect.maxTargetSize && !S().sizeAtMost(target, effect.maxTargetSize)) continue;
+      const applied = TC().apply(target.state, effect.conditionId, actor.combatant_id, { sourceEffectId: action.id, appliedRound: round, expiryTiming: effect.expiryTiming, repeatSaveAbility: effect.repeatSaveAbility, repeatSaveDc: effect.repeatSaveDc, repeatSaveTiming: effect.repeatSaveTiming, allowedRemovalActionIds: effect.allowedRemovalActionIds, defaultPoisonRecovery: false }); if (applied) appliedConditions.push(applied);
+    }
     let description = `${target.state.template.name} ${save.succeeded ? "SUCCEEDS" : "FAILS"} a DC ${action.dc} ${action.saveAbility} save against ${actor.state.template.name}'s ${action.name}.`;
     if (damageOutcome === "undead_fortitude") description += ` ${target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP.`;
     if (appliedConditions.includes("grappled")) description += ` ${target.state.template.name} is Grappled.`;
@@ -107,8 +114,12 @@
       for (const target of F().targetOrder(actor, setup)) if (legalAction(action, target, F().saveDistance(actor, target, action.range))) return [target];
       return [];
     }
-    if (!["cone", "cube", "line"].includes(action.area.shape)) throw new Error(`${action.name} area shape is not runtime-certified.`);
     const [enemies, friends] = rows(actor, setup);
+    if (action.area.shape === "radius") {
+      const placement = PA()?.bestPlacement(actor, setup, action.area.sizeFt, action.range); if (!placement) return [];
+      const byId = new Map(enemies.map((member) => [member.combatant_id, member])); return placement.enemyIds.map((id) => byId.get(id)).filter(Boolean);
+    }
+    if (!["cone", "cube", "line"].includes(action.area.shape)) throw new Error(`${action.name} area shape is not runtime-certified.`);
     const order = Object.fromEntries(F().targetOrder(actor, setup).map((member, index) => [member.combatant_id, index]));
     if (action.area.shape === "line") return lineTargets(actor, setup, action, enemies, friends, order);
     const width = action.area.sizeFt;
