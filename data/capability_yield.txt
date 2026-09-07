@@ -1,8 +1,9 @@
-CAPABILITY_YIELD_BASELINE	ready=185	blocked=145	actionable_blocked=143	deferred=2	signatures=62
+CAPABILITY_YIELD_BASELINE	ready=186	blocked=144	actionable_blocked=142	deferred=2	signatures=63
 CAPABILITY_DEFERRED_NONCOMBAT	Seahorse | Shrieker Fungus
 CAPABILITY_SINGLE_FAMILY	trait	5	Barbed Devil | Fire Elemental | Flesh Golem | Hydra | Mimic
 CAPABILITY_SINGLE_FAMILY	bonus-action	1	Will-o’-Wisp
 CAPABILITY_SINGLE_FAMILY	condition-or-control	1	Roper
+CAPABILITY_SINGLE_FAMILY	limited-use	1	Treant
 CAPABILITY_SINGLE_FAMILY	reaction	1	Ochre Jelly
 CAPABILITY_SINGLE_FAMILY	save-or-complex-action	1	Horned Devil
 CAPABILITY_CONTROL_SIGNATURE	poisoned	1	Roper
@@ -40,6 +41,6 @@ CAPABILITY_SIGNATURE	2	condition-or-control+limited-use+save-or-complex-action+t
 CAPABILITY_SIGNATURE	2	condition-or-control+save-or-complex-action+spellcasting	Lamia | Sprite
 CAPABILITY_SIGNATURE	2	condition-or-control+save-or-complex-action+spellcasting+trait	Gelatinous Cube | Guardian Naga
 CAPABILITY_SIGNATURE	2	condition-or-control+save-or-complex-action+trait	Erinyes | Shambling Mound
-CAPABILITY_SIGNATURE	2	condition-or-control+trait	Assassin | Earth Elemental
 CAPABILITY_SIGNATURE	2	legendary+limited-use+save-or-complex-action+trait	Adult White Dragon | Ancient White Dragon
 CAPABILITY_SIGNATURE	2	limited-use+reaction	Octopus | Sphinx of Wonder
+CAPABILITY_SIGNATURE	2	limited-use+save-or-complex-action+trait	Iron Golem | Steam Mephit
