@@ -37,6 +37,8 @@ def _add_save_area_metadata(row, template) -> None:
         # through the same universal save runtime without a second subsystem.
         if action.action_cost == "action":
             item.pop("actionCost", None)
+        if action.required_target_conditions:
+            item["requiredTargetConditions"] = list(action.required_target_conditions)
         if action.area is not None:
             area = {"shape": action.area.shape, "sizeFt": action.area.size_ft}
             if action.area.width_ft is not None:
