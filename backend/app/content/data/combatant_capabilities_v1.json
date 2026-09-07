@@ -8343,6 +8343,7 @@
           "bonus": 0
         },
         "damage_type": "bludgeoning",
+        "additional_damage": [],
         "success_damage": "none",
         "grapple": {
           "kind": "grapple",
@@ -10452,6 +10453,7 @@
           "bonus": 4
         },
         "damage_type": "bludgeoning",
+        "additional_damage": [],
         "success_damage": "none",
         "grapple": {
           "kind": "grapple",
