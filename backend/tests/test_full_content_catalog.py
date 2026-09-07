@@ -72,10 +72,10 @@ def test_uncertified_cards_fail_closed_in_catalog() -> None:
     assert barbarian_20.runnable_template_id is None
     assert barbarian_20.blockers
 
-    stirge = next(monster for monster in catalog.monsters if monster.name == "Stirge")
-    assert stirge.coverage_status is CoverageStatus.BLOCKED
-    assert stirge.runnable_template_id is None
-    assert stirge.blockers
+    roper = next(monster for monster in catalog.monsters if monster.name == "Roper")
+    assert roper.coverage_status is CoverageStatus.BLOCKED
+    assert roper.runnable_template_id is None
+    assert roper.blockers
 
 
 def test_current_audited_heroes_are_raw_ready() -> None:
