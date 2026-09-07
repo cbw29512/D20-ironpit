@@ -4,6 +4,9 @@ from dataclasses import dataclass
 from typing import Literal
 
 from app.domain.actions import AbilityName, DamageTypeName
+from app.domain.areas import AreaGeometry
+from app.domain.capabilities import SaveCapabilityDefinition
+from app.domain.capability_effects import DiceSpec
 from app.domain.spells import SpellSaveAction
 
 
@@ -19,11 +22,17 @@ class SaveDamageSpellSpec:
     damage_type: DamageTypeName
     success_damage: Literal["none", "half"] = "half"
     area_radius_ft: int | None = None
+    area_shape: Literal["cube", "cone", "line"] | None = None
+    area_size_ft: int | None = None
     damage_bonus: int = 0
     upcast_dice_per_level: int = 0
 
 
 SIMPLE_SAVE_DAMAGE_SPELLS = {
+    "thunderwave": SaveDamageSpellSpec(
+        "thunderwave", "Thunderwave", 1, 15, "constitution", 2, 8, "thunder",
+        area_shape="cube", area_size_ft=15, upcast_dice_per_level=1,
+    ),
     "shatter": SaveDamageSpellSpec(
         "shatter", "Shatter", 2, 60, "constitution", 3, 8, "thunder",
         area_radius_ft=10, upcast_dice_per_level=1,
@@ -51,11 +60,42 @@ SIMPLE_SAVE_DAMAGE_SPELLS = {
 }
 
 
-def build_simple_save_damage_spell(spell_id: str, save_dc: int) -> SpellSaveAction:
+def _spec(spell_id: str) -> SaveDamageSpellSpec:
     try:
-        spec = SIMPLE_SAVE_DAMAGE_SPELLS[spell_id]
+        return SIMPLE_SAVE_DAMAGE_SPELLS[spell_id]
     except KeyError as exc:
         raise ValueError(f"Unsupported simple save-damage spell: {spell_id}.") from exc
+
+
+def build_simple_save_damage_capability(
+    spell_id: str,
+    save_dc: int,
+    *,
+    resource_id: str | None = None,
+) -> SaveCapabilityDefinition:
+    """Build the source-neutral save/damage effect used by any caster access wrapper."""
+    spec = _spec(spell_id)
+    if spec.area_radius_ft is not None:
+        raise ValueError(f"{spec.name} radius targeting still uses the shared spell-area wrapper.")
+    area = None
+    if spec.area_shape is not None:
+        if spec.area_size_ft is None:
+            raise ValueError(f"{spec.name} area shape requires a size.")
+        area = AreaGeometry(shape=spec.area_shape, size_ft=spec.area_size_ft)
+    return SaveCapabilityDefinition(
+        id=spec.id, name=spec.name, save_ability=spec.save_ability, dc=save_dc,
+        range_ft=spec.range_ft, area=area,
+        damage=DiceSpec(count=spec.dice_count, size=spec.dice_size, bonus=spec.damage_bonus),
+        damage_type=spec.damage_type, success_damage=spec.success_damage,
+        resource_id=resource_id, resource_cost=1 if resource_id else None,
+        animation=spec.id,
+    )
+
+
+def build_simple_save_damage_spell(spell_id: str, save_dc: int) -> SpellSaveAction:
+    spec = _spec(spell_id)
+    if spec.area_shape is not None:
+        raise ValueError(f"{spec.name} uses non-radius geometry; use the shared save capability builder.")
     return SpellSaveAction(
         id=spec.id,
         name=spec.name,

@@ -4,7 +4,8 @@ import re
 
 from app.content.arena_eligibility import deferred_environment_reason
 from app.content.monster_catalog import load_monster_rows
-from app.content.monster_combat_scope import battle_ready_size, strip_post_combat_outcomes
+from app.content.monster_combat_scope import battle_ready_size
+from app.content.monster_curated_spell_actions import curated_spell_save_capabilities
 from app.content.monster_death_trigger_source import parse_death_trigger_saves
 from app.content.monster_defense_source_audit import parse_defense_profile
 from app.content.monster_regeneration_source import parse_regeneration
@@ -45,6 +46,8 @@ def _definition(row: dict[str, object]) -> CombatantDefinition:
     attacks, multiattack = parse_simple_attacks(row); defenses = parse_defense_profile(row)
     save_actions = [*parse_simple_save_actions(row), *parse_simple_bonus_save_actions(row)]
     resources, limited_use_names = attach_limited_use_resources(row, attacks, save_actions)
+    spell_saves, spell_resources = curated_spell_save_capabilities(row)
+    save_actions.extend(spell_saves); resources.extend(spell_resources)
     multiattack = attach_save_replacement(row, multiattack, save_actions)
     trait_names = parse_trait_names(row.get("traits", "")) if str(row.get("traits", "")).strip() else []
     combat_traits = [_MODELED_TRAITS[name].value for name in trait_names if name in _MODELED_TRAITS]

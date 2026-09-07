@@ -53,10 +53,10 @@ def _line_targets(actor: EncounterCombatant, setup: EncounterSetup, action: Savi
     return sorted(targets, key=lambda member: order.get(member.combatant_id, MAX_CARD_SLOTS))
 
 
-def _cone_targets(actor: EncounterCombatant, setup: EncounterSetup, action: SavingThrowAction):
+def _forward_area_targets(actor: EncounterCombatant, setup: EncounterSetup, action: SavingThrowAction):
     area = action.area
-    if area is None or area.shape != "cone" or area.size_ft % CARD_WIDTH_FT:
-        raise ValueError(f"{action.name} Cone must use 5-foot card increments.")
+    if area is None or area.shape not in {"cone", "cube"} or area.size_ft % CARD_WIDTH_FT:
+        raise ValueError(f"{action.name} forward area must use 5-foot card increments.")
     slot_count = min(MAX_CARD_SLOTS, max(1, area.size_ft // CARD_WIDTH_FT))
     enemies, friends = _rows(actor, setup)
     order = {member.combatant_id: index for index, member in enumerate(target_order(actor, setup))}
@@ -84,8 +84,8 @@ def area_targets(actor: EncounterCombatant, setup: EncounterSetup, action: Savin
         return []
     if action.area.shape == "line":
         return _line_targets(actor, setup, action)
-    if action.area.shape == "cone":
-        return _cone_targets(actor, setup, action)
+    if action.area.shape in {"cone", "cube"}:
+        return _forward_area_targets(actor, setup, action)
     raise ValueError(f"{action.name} area shape {action.area.shape!r} is not runtime-certified.")
 
 

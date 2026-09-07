@@ -13,6 +13,7 @@ from app.content.monster_limited_use_source_audit import limited_use_issues
 from app.content.monster_reaction_source_audit import reaction_issues
 from app.content.monster_save_math_source_audit import save_math_issues
 from app.content.monster_saving_throws import parse_saving_throw_bonuses
+from app.content.monster_spell_selection import curated_runtime_spell_ids
 from app.content.monster_spellcasting_source_audit import spellcasting_issues
 from app.content.monster_survival_source_audit import survival_action_issues
 from app.content.monster_trait_source_audit import trait_issues
@@ -78,8 +79,9 @@ def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) ->
         issues.extend(spellcasting_issues(template, row))
         actions = normalized(strip_post_combat_outcomes(row.get("actions", ""))); bonus_actions = normalized(row.get("bonusActions", ""))
         runtime_attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
-        action_saves = [action for action in template.saving_throw_actions if action.action_cost == "action"]
-        bonus_saves = [action for action in template.saving_throw_actions if action.action_cost == "bonus_action"]
+        curated_spell_ids = curated_runtime_spell_ids(row)
+        action_saves = [action for action in template.saving_throw_actions if action.action_cost == "action" and action.id not in curated_spell_ids]
+        bonus_saves = [action for action in template.saving_throw_actions if action.action_cost == "bonus_action" and action.id not in curated_spell_ids]
         issues.extend(survival_action_issues(actions, runtime_attacks))
         if _source_attack_mode_count(actions) != len(runtime_attacks): issues.append("source-attack-count-mismatch")
         expected_action_saves = len(action_saves) + _embedded_hit_save_count(runtime_attacks)

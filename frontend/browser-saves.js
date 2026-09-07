@@ -107,7 +107,7 @@
       for (const target of F().targetOrder(actor, setup)) if (legalAction(action, target, F().saveDistance(actor, target, action.range))) return [target];
       return [];
     }
-    if (!["cone", "line"].includes(action.area.shape)) throw new Error(`${action.name} area shape is not runtime-certified.`);
+    if (!["cone", "cube", "line"].includes(action.area.shape)) throw new Error(`${action.name} area shape is not runtime-certified.`);
     const [enemies, friends] = rows(actor, setup);
     const order = Object.fromEntries(F().targetOrder(actor, setup).map((member, index) => [member.combatant_id, index]));
     if (action.area.shape === "line") return lineTargets(actor, setup, action, enemies, friends, order);

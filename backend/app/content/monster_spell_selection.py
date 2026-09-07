@@ -40,8 +40,14 @@ MONSTER_CASTER_SPELL_SELECTIONS: dict[str, MonsterSpellSelection] = {
 }
 
 
+def curated_runtime_spell_ids(row: dict[str, object]) -> set[str]:
+    selection = MONSTER_CASTER_SPELL_SELECTIONS.get(str(row.get("name", "")))
+    return selection.runtime_ids() if selection is not None else set()
+
+
 def _runtime_action_ids(template: CombatantTemplate) -> set[str]:
     families = (
+        template.saving_throw_actions,
         template.spell_save_actions,
         template.spell_attack_actions,
         template.defensive_spell_actions,
