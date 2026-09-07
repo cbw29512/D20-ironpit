@@ -4,11 +4,12 @@ from __future__ import annotations
 SUPPORTED_HERO_ENGINE_FEATURES = {
     "second-wind", "savage-attacker", "adrenaline-rush", "relentless-endurance",
     "action-surge", "tactical-mind", "extra-attack",
-    "improved-critical", "remarkable-athlete", "tactical-shift", "great-weapon-fighting",
-    "indomitable", "tactical-master", "heroic-warrior", "studied-attacks",
+    "improved-critical", "superior-critical", "remarkable-athlete", "tactical-shift", "great-weapon-fighting",
+    "indomitable", "tactical-master", "heroic-warrior", "studied-attacks", "boon-combat-prowess",
+    "survivor-defy-death", "survivor-heroic-rally",
     "rage", "danger-sense", "reckless-attack", "frenzy", "fast-movement", "mindless-rage",
     "feral-instinct",
-    "sneak-attack", "weapon-mastery",
+    "sneak-attack", "weapon-mastery", "steady-aim",
     "cleric-spellcasting", "divine-order-protector", "divine-spark", "turn-undead",
     "disciple-of-life", "preserve-life",
 }
@@ -16,22 +17,21 @@ SUPPORTED_HERO_ENGINE_FEATURES = {
 _STATIC_PROGRESSION_FIELDS: dict[str, dict[str, object]] = {
     "improved-critical": {"critical_hit_minimum": 19},
     "superior-critical": {"critical_hit_minimum": 18},
-    "remarkable-athlete": {
-        "initiative_advantage": True,
-        "athletics_advantage": True,
-        "critical_move_fraction": 0.5,
-    },
+    "remarkable-athlete": {"initiative_advantage": True, "athletics_advantage": True, "critical_move_fraction": 0.5},
     "tactical-shift": {"tactical_shift_fraction": 0.5},
     "great-weapon-fighting": {"great_weapon_fighting": True},
     "heroic-warrior": {"heroic_warrior": True},
     "studied-attacks": {"studied_attacks": True},
+    "survivor-defy-death": {"survivor_death_save_advantage": True, "survivor_death_save_critical_minimum": 18},
+    "survivor-heroic-rally": {"bloodied_start_turn_healing_bonus": 5},
+    "boon-combat-prowess": {"combat_prowess": True},
     "danger-sense": {"danger_sense": True},
     "reckless-attack": {"reckless_attack": True},
     "frenzy": {"frenzy": True},
     "fast-movement": {"fast_movement_bonus_ft": 10},
     "mindless-rage": {"mindless_rage": True},
     "feral-instinct": {"initiative_advantage": True},
-    "instinctive-pounce": {"instinctive_pounce_fraction": 0.5},
+    "steady-aim": {"steady_aim": True},
 }
 
 

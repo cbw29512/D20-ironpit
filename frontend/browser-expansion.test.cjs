@@ -11,7 +11,7 @@ for (const file of [
   "browser-dice.js", "browser-monsters.js", "browser-monsters-expansion.js",
   "browser-condition-rules.js", "browser-action-economy.js", "browser-grapple.js",
   "browser-timed-conditions.js", "browser-state.js", "browser-rage.js",
-  "browser-rolls.js", "browser-zero-hp.js", "browser-attack.js", "browser-formation.js", "browser-multiattack.js",
+  "browser-rolls.js", "browser-zero-hp.js", "browser-attack.js", "browser-target-state.js", "browser-formation.js", "browser-multiattack.js", "browser-saves.js",
 ]) load(file);
 
 const queuedDice = (values, fallback = 10) => {
@@ -22,6 +22,8 @@ const queuedDice = (values, fallback = 10) => {
 const S = window.IRON_PIT_BROWSER_STATE;
 const A = window.IRON_PIT_BROWSER_ATTACK;
 const M = window.IRON_PIT_BROWSER_MULTIATTACK;
+const T = window.IRON_PIT_BROWSER_TARGET_STATE;
+const SV = window.IRON_PIT_BROWSER_SAVES;
 const monsters = window.IRON_PIT_BROWSER_MONSTERS;
 const member = (id, side, template, position) => ({
   combatant_id: id, side, position_ft: position, state: S.buildState(structuredClone(template)),
@@ -68,6 +70,40 @@ const targetTemplate = {
   assert.equal(hippogriff.speed_ft, 60);
   assert.equal(result.events.filter((event) => event.event_type === "attack").length, 2);
   assert.deepEqual(result.events.map((event) => event.weapon_id), ["hippogriff-rend", "hippogriff-rend"]);
+}
+
+{
+  const attack = { id: "claw", name: "Claw", kind: "melee", bonus: 0, diceCount: 1, diceSize: 4, damageBonus: 0, damageType: "slashing", reach: 5 };
+  const frenzyTemplate = { ...targetTemplate, id: "frenzy", name: "Frenzy", kind: "monster", armor_class: 10, max_hp: 20,
+    attacks: [attack], primary_attack_id: "claw", traits: ["target-missing-hp-attack-advantage"] };
+  const attacker = member("frenzy", "monsters", frenzyTemplate, 5);
+  const target = member("hero", "heroes", targetTemplate, 0);
+  assert.equal(T.attackAdvantage(attacker, target), 0);
+  target.state.current_hp = 99;
+  assert.equal(T.attackAdvantage(attacker, target), 1);
+  target.state.max_hp_reduction = 1;
+  assert.equal(T.attackAdvantage(attacker, target), 0, "effective max HP prevents false injured state");
+  target.state.max_hp_reduction = 0;
+  window.IRON_PIT_DICE = queuedDice([5, 15, 3]);
+  const event = A.resolveAttack(1, 1, attacker, target, attack, 5, { spendAction: false });
+  assert.equal(event.attack_roll.mode, "advantage");
+  assert.equal(event.hit, true, "injured target Advantage selects the higher d20");
+}
+
+{
+  const attack = { id: "axe", name: "Axe", kind: "melee", bonus: 0, diceCount: 1, diceSize: 4, damageBonus: 0, damageType: "slashing", reach: 5 };
+  const bloodiedTemplate = { ...targetTemplate, id: "bloodied", name: "Bloodied", kind: "monster", armor_class: 10, max_hp: 20,
+    saving_throw_bonuses: { wisdom: 0, dexterity: 0 }, attacks: [attack], primary_attack_id: "axe", traits: ["bloodied-attack-save-advantage"] };
+  const attacker = member("bloodied", "monsters", bloodiedTemplate, 5);
+  const target = member("hero", "heroes", targetTemplate, 0);
+  attacker.state.current_hp = 10;
+  assert.equal(T.isBloodied(attacker.state), true);
+  assert.equal(T.attackAdvantage(attacker, target), 1);
+  assert.equal(SV.saveMode(attacker.state, "wisdom"), "advantage");
+  attacker.state.active_effect_ids.push("restrained");
+  assert.equal(SV.saveMode(attacker.state, "dexterity"), "normal", "Bloodied Advantage cancels save Disadvantage");
+  attacker.state.max_hp_reduction = 1;
+  assert.equal(T.isBloodied(attacker.state), false, "Bloodied threshold follows effective max HP");
 }
 
 console.log("Browser expansion monster regressions passed.");

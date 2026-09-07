@@ -4,52 +4,19 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
+from app.domain.areas import AreaGeometry
+from app.domain.control_effects import AbilityName, ConditionName, ConditionTiming, GrappleSource, HitControlEffect
 from app.domain.size import CreatureSize
+from app.domain.weapons import DamagePacket
 
-AbilityName = Literal["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
 ActionCost = Literal["action", "bonus_action", "reaction"]
 HealingTargetMode = Literal["self", "ally", "self_or_ally", "other"]
 ConditionRemovalTargetMode = Literal["self", "ally", "self_or_ally"]
 ConditionReactionTrigger = Literal["condition_applied_to_self", "condition_applied_to_ally"]
-ConditionTiming = Literal["source_turn_start", "source_turn_end", "target_turn_start", "target_turn_end"]
 DamageTypeName = Literal[
     "acid", "bludgeoning", "cold", "fire", "force", "lightning", "necrotic",
     "piercing", "poison", "psychic", "radiant", "slashing", "thunder",
 ]
-ConditionName = Literal[
-    "blinded", "charmed", "deafened", "exhaustion", "frightened", "grappled",
-    "incapacitated", "invisible", "paralyzed", "petrified", "poisoned", "prone",
-    "restrained", "stunned", "unconscious",
-]
-
-
-class GrappleSource(BaseModel):
-    source_id: str
-    escape_dc: int = Field(ge=1, le=40)
-    range_ft: int = Field(default=5, ge=0)
-    restrains: bool = False
-
-
-class HitControlEffect(BaseModel):
-    max_target_size: CreatureSize | None = None
-    grapple_escape_dc: int | None = Field(default=None, ge=1, le=40)
-    restrains_while_grappled: bool = False
-    condition_id: ConditionName | None = None
-    expires_at_start_of_source_turn: bool = False
-    expiry_timing: ConditionTiming | None = None
-    repeat_save_ability: AbilityName | None = None
-    repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
-    repeat_save_timing: ConditionTiming | None = None
-    allowed_removal_action_ids: list[str] = Field(default_factory=list)
-
-    @model_validator(mode="after")
-    def validate_condition_lifecycle(self) -> "HitControlEffect":
-        repeat_fields = (self.repeat_save_ability, self.repeat_save_dc, self.repeat_save_timing)
-        if any(item is not None for item in repeat_fields) and not all(item is not None for item in repeat_fields):
-            raise ValueError("Repeat-save condition lifecycle requires ability, DC, and timing together.")
-        if self.expires_at_start_of_source_turn and self.expiry_timing not in {None, "source_turn_start"}:
-            raise ValueError("Legacy source-start expiry conflicts with explicit condition timing.")
-        return self
 
 
 class HealingAction(BaseModel):
@@ -63,6 +30,7 @@ class HealingAction(BaseModel):
     dice_count: int = Field(default=0, ge=0, le=40)
     dice_size: int = Field(default=6, ge=2, le=100)
     healing_bonus: int = Field(default=0, ge=0)
+    removable_conditions: list[ConditionName] = Field(default_factory=list)
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
     animation: str = "healing"
@@ -100,23 +68,51 @@ class ConditionRemovalAction(BaseModel):
         return self
 
 
+class SaveConditionEffect(BaseModel):
+    """One condition applied when a saving-throw action fails."""
+
+    condition_id: ConditionName
+    expiry_timing: ConditionTiming | None = None
+    repeat_save_ability: AbilityName | None = None
+    repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
+    repeat_save_timing: ConditionTiming | None = None
+    allowed_removal_action_ids: list[str] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def validate_repeat_save(self) -> "SaveConditionEffect":
+        repeat = (self.repeat_save_ability, self.repeat_save_dc, self.repeat_save_timing)
+        if any(item is not None for item in repeat) and not all(item is not None for item in repeat):
+            raise ValueError("Failed-save condition repeat save requires ability, DC, and timing together.")
+        return self
+
+
 class SavingThrowAction(BaseModel):
     id: str
     name: str
+    action_cost: ActionCost = "action"
     save_ability: AbilityName
     dc: int = Field(ge=1, le=40)
     range_ft: int = Field(ge=0)
     target_max_size: CreatureSize | None = None
+    area: AreaGeometry | None = None
     damage_dice_count: int = Field(default=0, ge=0, le=40)
     damage_dice_size: int = Field(default=6, ge=2, le=100)
     damage_bonus: int = 0
     damage_type: DamageTypeName | None = None
+    additional_damage: list[DamagePacket] = Field(default_factory=list, max_length=8)
     success_damage: Literal["none", "half"] = "none"
     grapple_escape_dc: int | None = Field(default=None, ge=1, le=40)
     restrains_while_grappled: bool = False
+    failure_conditions: list[SaveConditionEffect] = Field(default_factory=list, max_length=8)
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
     animation: str = "save-effect"
+
+    @model_validator(mode="after")
+    def validate_damage_shape(self) -> "SavingThrowAction":
+        if self.area is not None and self.additional_damage:
+            raise ValueError("Multi-packet area saves await shared-roll bundle support.")
+        return self
 
 
 class AttackActionSlot(BaseModel):

@@ -14,8 +14,7 @@ def test_each_rogue_subclass_reuses_shared_rogue_features_without_thief_leakage(
     trickster = canonical_combat_features("rogue", 17, "arcane-trickster")
     assert all("sneak-attack" in features for features in (thief, assassin, trickster))
     assert all("cunning-strike" in features for features in (thief, assassin, trickster))
-    assert "thief-fast-hands" in thief
-    assert "thief-fast-hands" not in assassin
-    assert "thief-fast-hands" not in trickster
+    assert all("thief-fast-hands" not in features for features in (thief, assassin, trickster))
+    assert "thief-fast-hands" in ROGUE_SUBCLASS_DELTA_DATA["thief"][3]["arena_ignored"]
     assert "assassin-death-strike" in assassin
     assert "arcane-trickster-spell-thief" in trickster

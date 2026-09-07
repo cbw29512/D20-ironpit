@@ -6,6 +6,7 @@ import re
 from functools import lru_cache
 
 from app.content.monster_catalog import load_monster_rows
+from app.content.monster_trait_source_audit import parse_trait_names
 from app.domain.models import CombatantTemplate
 
 logger = logging.getLogger(__name__)
@@ -15,6 +16,14 @@ _SPELL_GROUP = re.compile(
     r"\b(?:At Will|\d+/Day(?: Each)?):\s*(.*?)(?=\s+(?:At Will|\d+/Day(?: Each)?):|$)",
     re.IGNORECASE,
 )
+# Reviewed source-extraction fixes only. These repair flattened SRD text boundaries;
+# they do not model monster mechanics or alter runtime behavior.
+_SOURCE_LIST_BOUNDARY_FIXES = {
+    "Adult Gold Dragon": (
+        "Zone of Truth Weakening Breath. Strength Saving Throw:",
+        "Zone of Truth. Weakening Breath. Strength Saving Throw:",
+    ),
+}
 # Explicitly certified as irrelevant to the standard flat/open Iron Pit outcome.
 # These spells are never selected as combat actions; unknown additions fail closed.
 _ARENA_NEUTRAL_SPELLS = frozenset({"Detect Evil and Good", "Detect Magic", "Clairvoyance"})
@@ -22,6 +31,16 @@ _ARENA_NEUTRAL_SPELLS = frozenset({"Detect Evil and Good", "Detect Magic", "Clai
 
 def _normalized(value: object) -> str:
     return re.sub(r"\s+", " ", str(value or "")).strip()
+
+
+def _corrected_spell_text(row: dict[str, object], field: str) -> str:
+    text = _normalized(row.get(field, ""))
+    fix = _SOURCE_LIST_BOUNDARY_FIXES.get(str(row.get("name", "")))
+    if fix is not None:
+        before, after = fix
+        if before in text:
+            text = text.replace(before, after, 1)
+    return text
 
 
 def spellcasting_source_text(row: dict[str, object]) -> str:
@@ -39,19 +58,60 @@ def spellcasting_fingerprint(row: dict[str, object]) -> str | None:
     return hashlib.sha256(text.encode("utf-8")).hexdigest() if text else None
 
 
-def _printed_spell_names(row: dict[str, object]) -> set[str]:
-    text = spellcasting_source_text(row)
-    return {
-        spell.strip()
-        for group in _SPELL_GROUP.findall(text)
-        for spell in group.split(",")
-        if spell.strip()
-    }
+def _outside_parentheses_prefix(text: str, headings: list[str]) -> str:
+    """Bound a spell list before the next parsed feature or free prose sentence."""
+    markers = tuple(f" {heading}." for heading in headings)
+    depth = 0
+    for index, char in enumerate(text):
+        if char == "(":
+            depth += 1
+            continue
+        if char == ")" and depth:
+            depth -= 1
+            continue
+        if depth:
+            continue
+        if any(text.startswith(marker, index) for marker in markers):
+            return text[:index]
+        if char == ".":
+            return text[:index]
+    return text
+
+
+def _split_outside_parentheses(text: str) -> list[str]:
+    """Split spell-list commas without splitting explanatory spell parentheses."""
+    parts: list[str] = []
+    start = 0
+    depth = 0
+    for index, char in enumerate(text):
+        if char == "(":
+            depth += 1
+        elif char == ")" and depth:
+            depth -= 1
+        elif char == "," and depth == 0:
+            parts.append(text[start:index].strip())
+            start = index + 1
+    parts.append(text[start:].strip())
+    return [part for part in parts if part]
+
+
+def printed_spell_names(row: dict[str, object]) -> set[str]:
+    """Extract only spell-list entries; reviewed source corrections stop flattened feature bleed."""
+    spells: set[str] = set()
+    for field in _FIELDS:
+        text = _corrected_spell_text(row, field)
+        if not text or not _CASTING.search(text):
+            continue
+        headings = parse_trait_names(text, preserve_annotations=True)
+        for group in _SPELL_GROUP.findall(text):
+            bounded = _outside_parentheses_prefix(group, headings)
+            spells.update(_split_outside_parentheses(bounded))
+    return spells
 
 
 def arena_neutral_spellcasting(row: dict[str, object]) -> bool:
     """True only when every parsed printed spell is explicitly certified arena-neutral."""
-    spells = _printed_spell_names(row)
+    spells = printed_spell_names(row)
     return bool(spells) and spells <= _ARENA_NEUTRAL_SPELLS
 
 

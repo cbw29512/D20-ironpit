@@ -46,7 +46,6 @@ for (const id of [
 assert.ok(generated["srd-tyrannosaurus-rex"]);
 assert.ok(generated["srd-commoner"], "Certified Commoner must be present in the browser runtime");
 assert.ok(generated["srd-lemure"], "Certified Lemure must be present in the browser runtime");
-assert.equal(generated["srd-killer-whale"], undefined, "Aquatic-only Killer Whale must remain deferred from the standard arena");
 assert.deepEqual(generated["srd-cultist"].attacks[0].onHitDamage, [
   { source: "Necrotic", diceCount: 0, diceSize: 2, damageBonus: 1, damageType: "necrotic" },
 ]);
@@ -322,4 +321,4 @@ assert.ok(heroOne.state.active_effect_ids.includes("grappled"));
 assert.ok(heroOne.state.active_effect_ids.includes("restrained"));
 assert.ok(heroTwo.state.active_effect_ids.includes("prone"));
 
-console.log(`Generated monster runtime contains ${generatedIds.length} manifest-certified templates, including Commoner and Lemure, timed on-hit Speed modifiers, Charge damage replacement, fixed typed hit riders, and source-turn on-hit Advantage modifiers, with aquatic-only Killer Whale deferred, shared grapple-control monsters, Allosaurus Charge follow-up Bite, native data-only swarms, Charge riders, Prone-only Charge, conditional damage, Redirect Attack, and T. rex retargeting.`);
+console.log(`Generated monster runtime contains ${generatedIds.length} manifest-certified templates, including Commoner and Lemure, timed on-hit Speed modifiers, Charge damage replacement, fixed typed hit riders, source-turn on-hit Advantage modifiers, shared grapple-control monsters, Allosaurus Charge follow-up Bite, native data-only swarms, Charge riders, Prone-only Charge, conditional damage, Redirect Attack, and T. rex retargeting.`);

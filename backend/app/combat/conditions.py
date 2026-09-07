@@ -10,6 +10,7 @@ from app.combat.grapple import (
 )
 from app.combat.hit_modifiers import apply_hit_modifier_effects
 from app.combat.modifier_stack import effective_speed
+from app.combat.target_state import target_missing_hp_attack_advantage
 from app.combat.timed_conditions import apply_timed_condition
 from app.domain.models import CombatantState, WeaponAttack
 from app.domain.size import size_at_most
@@ -21,14 +22,26 @@ POISONED_EFFECT_ID = "poisoned"
 PRONE_EFFECT_ID = "prone"
 
 
+def apply_condition(state: CombatantState, condition_id: str) -> bool:
+    """Apply one shared condition state when the target is eligible."""
+    if state.is_dead or not state.is_alive:
+        return False
+    if condition_is_immune(state, condition_id):
+        return False
+    if condition_id in state.active_effect_ids:
+        return False
+    state.active_effect_ids.append(condition_id)
+    return True
+
+
 def attack_roll_condition_sources(
     attacker: CombatantState,
     defender: CombatantState,
     distance_ft: int,
     target_id: str | None = None,
 ) -> tuple[int, int]:
-    """Return Advantage and Disadvantage sources from supported conditions."""
-    advantage = 0
+    """Return Advantage and Disadvantage sources from supported conditions and target state."""
+    advantage = target_missing_hp_attack_advantage(attacker, defender)
     disadvantage = 0
     if has_condition(attacker, BLINDED_EFFECT_ID):
         disadvantage += 1
@@ -74,14 +87,9 @@ def apply_hit_conditions(
     apply_hit_modifier_effects(defender, source_id, attack)
     applied: list[str] = []
     maximum = attack.knocks_prone_max_size
-    if (
-        maximum is not None
-        and size_at_most(defender.template.size, maximum)
-        and not condition_is_immune(defender, PRONE_EFFECT_ID)
-    ):
-        if PRONE_EFFECT_ID not in defender.active_effect_ids:
-            defender.active_effect_ids.append(PRONE_EFFECT_ID)
-        applied.append(PRONE_EFFECT_ID)
+    if maximum is not None and size_at_most(defender.template.size, maximum):
+        if apply_condition(defender, PRONE_EFFECT_ID):
+            applied.append(PRONE_EFFECT_ID)
     control = attack.control_effect
     if control is not None and control.grapple_escape_dc is not None:
         if control.max_target_size is None or size_at_most(defender.template.size, control.max_target_size):
@@ -91,8 +99,9 @@ def apply_hit_conditions(
                 control.grapple_escape_dc,
                 attack.weapon.reach_ft,
                 restrains=control.restrains_while_grappled,
+                escape_check_disadvantage=control.grapple_escape_check_disadvantage,
             ))
-    if control is not None and control.condition_id is not None:
+    if control is not None and control.condition_id is not None and control.initial_save_ability is None:
         timed = apply_timed_condition(
             defender,
             control.condition_id,

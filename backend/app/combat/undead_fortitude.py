@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.dice import DiceProvider
+from app.combat.hit_points import set_positive_hit_points
 from app.domain.models import CombatantState, DamageType
 from app.domain.traits import CombatTrait
 
@@ -26,9 +27,5 @@ def resolve_undead_fortitude(
     dc = 5 + damage_taken
     if dice.roll(20) + bonus < dc:
         return False
-    state.current_hp = 1
-    state.is_alive = True
-    state.is_dead = False
-    state.is_unconscious = False
-    state.is_stable = False
+    set_positive_hit_points(state, 1)
     return True

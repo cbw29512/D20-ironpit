@@ -4,11 +4,21 @@
   window.IRON_PIT_UNARMED_OPPORTUNITY = {
     "srd-ankylosaurus": {"attack_bonus":6,"damage":5},
     "srd-awakened-tree": {"attack_bonus":6,"damage":5},
+    "srd-bone-devil": {"attack_bonus":8,"damage":5},
+    "srd-bugbear-stalker": {"attack_bonus":5,"damage":4},
+    "srd-bugbear-warrior": {"attack_bonus":4,"damage":3},
+    "srd-fire-giant": {"attack_bonus":11,"damage":8},
     "srd-giant-constrictor-snake": {"attack_bonus":6,"damage":5},
     "srd-giant-elk": {"attack_bonus":6,"damage":5},
     "srd-giant-venomous-snake": {"attack_bonus":2,"damage":1},
+    "srd-hill-giant": {"attack_bonus":8,"damage":6},
     "srd-plesiosaurus": {"attack_bonus":6,"damage":5},
     "srd-tyrannosaurus-rex": {"attack_bonus":10,"damage":8},
-    "srd-violet-fungus": {"attack_bonus":-2,"damage":0}
+    "srd-violet-fungus": {"attack_bonus":-2,"damage":0},
+    "srd-young-black-dragon": {"attack_bonus":7,"damage":5},
+    "srd-young-blue-dragon": {"attack_bonus":9,"damage":6},
+    "srd-young-green-dragon": {"attack_bonus":7,"damage":5},
+    "srd-young-red-dragon": {"attack_bonus":10,"damage":7},
+    "srd-young-white-dragon": {"attack_bonus":7,"damage":5}
   };
 })();

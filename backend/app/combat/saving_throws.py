@@ -5,11 +5,18 @@ from app.combat.barbarian import end_rage_if_incapacitated
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
 from app.combat.grapple import apply_grapple
+from app.combat.resource_pool import resource_uses, spend_resource
 from app.combat.saving_throw_rolls import resolve_saving_throw
+from app.combat.timed_conditions import apply_timed_condition
 from app.combat.zero_hp import apply_damage
 from app.domain.models import BattleEvent, DamageRollComponent, DamageType, DiceRoll, EncounterCombatant, SavingThrowAction
 from app.domain.runtime import CombatantState
 from app.domain.size import size_at_most
+
+
+def save_action_resource_available(state: CombatantState, action: SavingThrowAction) -> bool:
+    if action.resource_id is None: return True
+    return resource_uses(state, action.resource_id) >= action.resource_cost
 
 
 def legal_save_action(action: SavingThrowAction, target: EncounterCombatant, distance_ft: int) -> bool:
@@ -24,24 +31,64 @@ def _damage_rolls(action: SavingThrowAction, dice: DiceProvider, shared_damage_r
     return list(shared_damage_rolls)
 
 
+def _component(source: str, count: int, size: int, bonus: int, damage_type: str, dice: DiceProvider, half: bool, shared: list[int] | None = None) -> DamageRollComponent:
+    rolls = list(shared) if shared is not None else [dice.roll(size) for _ in range(count)]
+    total = sum(rolls) + bonus
+    if half: total //= 2
+    return DamageRollComponent(source=source, notation=f"{count}d{size}+{bonus}", rolls=rolls,
+                               modifier=bonus, damage_type=DamageType(damage_type), total=max(0, total))
+
+
 def _damage_components(action: SavingThrowAction, dice: DiceProvider, succeeded: bool, shared_damage_rolls: list[int] | None = None) -> list[DamageRollComponent]:
-    if action.damage_dice_count == 0 or (succeeded and action.success_damage == "none"): return []
-    if action.damage_type is None: raise ValueError(f"{action.name} has damage dice but no damage type.")
-    rolls = _damage_rolls(action, dice, shared_damage_rolls); total = sum(rolls) + action.damage_bonus
-    if succeeded and action.success_damage == "half": total //= 2
-    return [DamageRollComponent(source=action.name, notation=f"{action.damage_dice_count}d{action.damage_dice_size}+{action.damage_bonus}", rolls=rolls,
-                                modifier=action.damage_bonus, damage_type=DamageType(action.damage_type), total=max(0, total))]
+    if succeeded and action.success_damage == "none": return []
+    half = succeeded and action.success_damage == "half"; result: list[DamageRollComponent] = []
+    if action.damage_dice_count:
+        if action.damage_type is None: raise ValueError(f"{action.name} has damage dice but no damage type.")
+        rolls = _damage_rolls(action, dice, shared_damage_rolls)
+        result.append(_component(action.name, action.damage_dice_count, action.damage_dice_size, action.damage_bonus, action.damage_type, dice, half, rolls))
+    for packet in action.additional_damage:
+        result.append(_component(packet.source, packet.dice_count, packet.dice_size, packet.damage_bonus, packet.damage_type.value, dice, half))
+    return result
+
+
+def _failed_save_conditions(
+    action: SavingThrowAction, actor: EncounterCombatant, target: EncounterCombatant,
+    round_number: int, affected_states: list[CombatantState] | None,
+) -> list[str]:
+    applied: list[str] = []
+    for condition in action.failure_conditions:
+        effect = apply_timed_condition(
+            target.state, condition.condition_id, actor.combatant_id,
+            source_effect_id=action.id, applied_round=round_number,
+            expires_at_start_of_source_turn=condition.expiry_timing == "source_turn_start",
+            expiry_timing=condition.expiry_timing,
+            repeat_save_ability=condition.repeat_save_ability,
+            repeat_save_dc=condition.repeat_save_dc,
+            repeat_save_timing=condition.repeat_save_timing,
+            allowed_removal_action_ids=condition.allowed_removal_action_ids,
+            affected_states=affected_states, default_poison_recovery=False,
+        )
+        if effect is not None: applied.append(effect)
+    return applied
 
 
 def resolve_save_action(
     sequence: int, round_number: int, actor: EncounterCombatant, target: EncounterCombatant,
     action: SavingThrowAction, distance_ft: int, dice: DiceProvider, *, spend_action: bool = True,
-    shared_damage_rolls: list[int] | None = None, affected_states: list[CombatantState] | None = None,
+    spend_resource_cost: bool = True, shared_damage_rolls: list[int] | None = None,
+    affected_states: list[CombatantState] | None = None, against_magic: bool = False,
+    advantage_sources: int = 0,
 ) -> BattleEvent:
-    if spend_action and not is_available(actor.state, "action"): raise ValueError("Action is not available for a saving throw action.")
+    if spend_action and not is_available(actor.state, action.action_cost): raise ValueError(f"{action.action_cost.replace('_', ' ').title()} is not available for {action.name}.")
+    if spend_resource_cost and not save_action_resource_available(actor.state, action): raise ValueError(f"{action.name} resource is unavailable.")
     if not legal_save_action(action, target, distance_ft): raise ValueError(f"{action.name} has no legal target at {distance_ft} feet.")
-    save_roll, succeeded = resolve_saving_throw(target.state, action.save_ability, action.dc, dice)
-    if spend_action: spend(actor.state, "action")
+    save_roll, succeeded = resolve_saving_throw(
+        target.state, action.save_ability, action.dc, dice,
+        against_magic=against_magic, advantage_sources=advantage_sources,
+    )
+    if spend_action: spend(actor.state, action.action_cost)
+    if spend_resource_cost and action.resource_id is not None:
+        spend_resource(actor.state, action.resource_id, action.resource_cost)
     hp_before = target.state.current_hp; temporary_hp_before = target.state.temporary_hp
     death_success_before = target.state.death_save_successes; death_failure_before = target.state.death_save_failures
     concentration_before = target.state.concentration.effect_id if target.state.concentration else None
@@ -57,13 +104,17 @@ def resolve_save_action(
         damage_outcome = apply_damage(target.state, applied_total, damage_types=applied_types, dice=dice, affected_states=affected_states)
         end_rage_if_incapacitated(target.state)
     applied_conditions: list[str] = []
-    if not succeeded and target.state.is_alive and not target.state.is_dead and action.grapple_escape_dc is not None:
-        applied_conditions = apply_grapple(target.state, actor.combatant_id, action.grapple_escape_dc, action.range_ft, restrains=action.restrains_while_grappled)
+    if not succeeded and target.state.is_alive and not target.state.is_dead:
+        if action.grapple_escape_dc is not None:
+            applied_conditions.extend(apply_grapple(target.state, actor.combatant_id, action.grapple_escape_dc, action.range_ft, restrains=action.restrains_while_grappled))
+        applied_conditions.extend(_failed_save_conditions(action, actor, target, round_number, affected_states))
     outcome = "SUCCEEDS" if succeeded else "FAILS"
     description = f"{target.state.template.name} {outcome} a DC {action.dc} {action.save_ability.title()} save against {actor.state.template.name}'s {action.name}."
     if damage_outcome == "undead_fortitude": description += f" {target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP."
     if "grappled" in applied_conditions: description += f" {target.state.template.name} is Grappled."
     if "restrained" in applied_conditions: description += f" {target.state.template.name} is Restrained while Grappled."
+    named_conditions = [item for item in applied_conditions if item not in {"grappled", "restrained"}]
+    if named_conditions: description += f" {target.state.template.name} gains {', '.join(named_conditions)}."
     return BattleEvent(
         sequence=sequence, round_number=round_number, event_type="saving_throw", actor_id=actor.combatant_id, actor_name=actor.state.template.name,
         target_id=target.combatant_id, target_name=target.state.template.name, saving_throw_roll=save_roll,
@@ -74,5 +125,6 @@ def resolve_save_action(
         death_save_successes=target.state.death_save_successes, death_save_failures=target.state.death_save_failures,
         is_stable=target.state.is_stable, is_dead=target.state.is_dead, feature_id=action.id,
         concentration_ended_effect_id=concentration_before if concentration_before and target.state.concentration is None else None,
+        resource_remaining=(resource_uses(actor.state, action.resource_id) if action.resource_id else None),
         animation=action.animation, description=description,
     )

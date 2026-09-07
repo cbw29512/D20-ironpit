@@ -23,8 +23,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -64,6 +69,8 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -104,6 +111,8 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -113,6 +122,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -143,6 +153,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "leather",
       "main_hand": "scimitar",
@@ -176,8 +189,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -203,6 +221,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -229,6 +249,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -238,6 +260,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -268,6 +291,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "clothes",
       "main_hand": "dagger",
@@ -300,8 +326,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -327,6 +358,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -366,6 +399,8 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -375,6 +410,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -407,6 +443,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "half-plate",
       "main_hand": "longsword",
@@ -439,8 +478,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -466,6 +510,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -492,6 +538,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -501,6 +549,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -534,6 +583,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "dagger",
@@ -566,8 +618,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -607,6 +664,8 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -647,6 +706,8 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -677,6 +738,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -713,6 +775,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "chain-shirt",
       "main_hand": "scimitar",
@@ -746,8 +811,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -774,6 +844,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -800,6 +872,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -809,6 +883,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -837,6 +912,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "leather",
       "main_hand": "scimitar",
@@ -869,8 +947,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -896,6 +979,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -905,6 +990,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -935,6 +1021,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "clothes",
       "main_hand": "club",
@@ -967,8 +1056,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -994,6 +1088,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -1020,6 +1116,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -1029,6 +1127,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -1057,6 +1156,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "chain-shirt",
       "main_hand": "spear",
@@ -1089,8 +1191,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -1116,6 +1223,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -1125,6 +1234,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -1157,6 +1267,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "none",
       "main_hand": "bite",
@@ -1189,8 +1302,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -1216,6 +1334,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -1225,6 +1345,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -1253,6 +1374,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "none",
       "main_hand": "bite",
@@ -1285,8 +1409,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -1325,6 +1454,8 @@
             "mode": "replace_weapon"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -1334,6 +1465,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -1366,6 +1498,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "feathers",
       "main_hand": "beak",
@@ -1398,8 +1533,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -1425,6 +1565,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -1434,6 +1576,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -1462,6 +1605,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "none",
       "main_hand": "beak",
@@ -1494,8 +1640,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -1521,6 +1672,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -1530,6 +1683,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -1560,6 +1714,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -1575,6 +1732,7 @@
     "archetype": "Wolf",
     "challenge_rating": "1/4",
     "kind": "monster",
+    "creature_type": "Beast",
     "size": "medium",
     "armor_class": 12,
     "max_hp": 11,
@@ -1592,8 +1750,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -1624,6 +1787,8 @@
             "max_target_size": "medium"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -1633,6 +1798,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -1665,6 +1831,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "fur",
       "main_hand": "bite",
@@ -1680,6 +1849,7 @@
     "archetype": "Dire Wolf",
     "challenge_rating": "1",
     "kind": "monster",
+    "creature_type": "Beast",
     "size": "large",
     "armor_class": 14,
     "max_hp": 22,
@@ -1697,8 +1867,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -1729,6 +1904,8 @@
             "max_target_size": "large"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -1738,6 +1915,7 @@
       "damage": 4
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -1770,6 +1948,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "fur",
       "main_hand": "bite",
@@ -1802,8 +1983,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -1829,6 +2015,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -1857,6 +2045,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -1885,6 +2074,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "fur",
       "main_hand": "claw",
@@ -1917,8 +2109,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -1944,6 +2141,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -1972,6 +2171,8 @@
             "max_target_size": "large"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -2000,6 +2201,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -2028,6 +2230,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "fur",
       "main_hand": "claw",
@@ -2060,8 +2265,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -2087,6 +2297,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -2096,6 +2308,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -2128,6 +2341,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "fur",
       "main_hand": "bite",
@@ -2160,8 +2376,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -2187,6 +2408,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -2196,6 +2419,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -2224,6 +2448,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "fur",
       "main_hand": "bite",
@@ -2256,8 +2483,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -2283,6 +2515,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -2292,6 +2526,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -2322,6 +2557,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "fur",
       "main_hand": "horns",
@@ -2354,8 +2592,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -2381,6 +2624,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -2390,6 +2635,7 @@
       "damage": 5
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -2418,6 +2664,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "fur",
       "main_hand": "hooves",
@@ -2450,8 +2699,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -2477,6 +2731,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -2486,6 +2742,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -2516,6 +2773,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "fur",
       "main_hand": "bite",
@@ -2548,8 +2808,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -2575,6 +2840,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -2584,6 +2851,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -2612,6 +2880,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "fur",
       "main_hand": "bite",
@@ -2644,8 +2915,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -2671,6 +2947,19 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "charge": {
+          "minimum_move_ft": 20,
+          "max_target_size": "medium",
+          "prone_max_target_size": "medium",
+          "bonus_damage": {
+            "dice_count": 1,
+            "dice_size": 6,
+            "damage_type": "piercing",
+            "damage_bonus": 0
+          }
+        },
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -2680,6 +2969,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -2713,6 +3003,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "hide",
       "main_hand": "tusks",
@@ -2745,8 +3038,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -2772,6 +3070,19 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "charge": {
+          "minimum_move_ft": 20,
+          "max_target_size": "large",
+          "prone_max_target_size": "large",
+          "bonus_damage": {
+            "dice_count": 1,
+            "dice_size": 6,
+            "damage_type": "bludgeoning",
+            "damage_bonus": 0
+          }
+        },
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -2781,6 +3092,7 @@
       "damage": 4
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -2811,6 +3123,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "hide",
       "main_hand": "antlers",
@@ -2843,8 +3158,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -2870,6 +3190,19 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "charge": {
+          "minimum_move_ft": 20,
+          "max_target_size": "large",
+          "prone_max_target_size": "large",
+          "bonus_damage": {
+            "dice_count": 2,
+            "dice_size": 6,
+            "damage_type": "piercing",
+            "damage_bonus": 0
+          }
+        },
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -2879,6 +3212,7 @@
       "damage": 4
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -2912,6 +3246,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "hide",
       "main_hand": "tusks",
@@ -2944,8 +3281,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -2971,6 +3313,19 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "charge": {
+          "minimum_move_ft": 20,
+          "max_target_size": "large",
+          "prone_max_target_size": "large",
+          "bonus_damage": {
+            "dice_count": 2,
+            "dice_size": 8,
+            "damage_type": "piercing",
+            "damage_bonus": 0
+          }
+        },
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -2994,6 +3349,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -3003,6 +3360,7 @@
       "damage": 5
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -3040,6 +3398,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "bones",
       "main_hand": "horns",
@@ -3072,8 +3433,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -3099,6 +3465,19 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "charge": {
+          "minimum_move_ft": 20,
+          "max_target_size": "huge",
+          "prone_max_target_size": "huge",
+          "bonus_damage": {
+            "dice_count": 2,
+            "dice_size": 8,
+            "damage_type": "piercing",
+            "damage_bonus": 0
+          }
+        },
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -3127,6 +3506,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -3157,6 +3537,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "hide",
       "main_hand": "horns",
@@ -3189,8 +3572,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -3216,6 +3604,13 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "charge": {
+          "minimum_move_ft": 20,
+          "max_target_size": "large",
+          "prone_max_target_size": "large"
+        },
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -3225,6 +3620,7 @@
       "damage": 5
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -3262,6 +3658,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "bones",
       "main_hand": "hooves",
@@ -3294,8 +3693,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -3321,6 +3725,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -3344,6 +3750,14 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "charge": {
+          "minimum_move_ft": 30,
+          "max_target_size": "large",
+          "prone_max_target_size": "large",
+          "follow_up_attack_id": "allosaurus-bite"
+        },
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -3353,6 +3767,7 @@
       "damage": 5
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -3385,6 +3800,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "hide",
       "main_hand": "claws",
@@ -3417,8 +3835,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -3440,6 +3863,17 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "charge": {
+          "minimum_move_ft": 20,
+          "replacement_damage": {
+            "dice_count": 1,
+            "dice_size": 4,
+            "damage_type": "bludgeoning",
+            "damage_bonus": 0
+          }
+        },
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -3449,6 +3883,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -3479,6 +3914,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "ram",
@@ -3494,6 +3932,7 @@
     "archetype": "source-certified aquatic skirmisher",
     "challenge_rating": "1/8",
     "kind": "monster",
+    "creature_type": "elemental",
     "size": "medium",
     "armor_class": 11,
     "max_hp": 11,
@@ -3511,8 +3950,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -3561,6 +4005,8 @@
             "expires_at_end_of_target_turn": true
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -3604,6 +4050,8 @@
             "expires_at_end_of_target_turn": true
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -3613,6 +4061,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -3643,6 +4092,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "spear",
@@ -3675,8 +4127,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -3702,6 +4159,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -3730,6 +4189,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -3760,6 +4220,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "feathers",
       "main_hand": "claws",
@@ -3792,8 +4255,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -3815,6 +4283,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -3824,6 +4294,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -3856,6 +4327,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "rake",
@@ -3888,8 +4362,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -3911,6 +4390,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -3920,6 +4401,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -3950,6 +4432,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -3982,8 +4467,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -4005,6 +4495,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -4014,6 +4506,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -4042,6 +4535,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -4074,8 +4570,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -4097,6 +4598,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -4106,6 +4609,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -4136,6 +4640,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "scratch",
@@ -4168,8 +4675,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -4191,6 +4703,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -4200,6 +4714,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -4230,6 +4745,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "claw",
@@ -4262,8 +4780,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -4285,6 +4808,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -4294,6 +4819,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -4325,6 +4851,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -4357,8 +4886,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -4380,6 +4914,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -4389,6 +4925,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -4417,6 +4954,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "talons",
@@ -4449,8 +4989,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -4472,6 +5017,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -4481,6 +5028,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -4511,6 +5059,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -4543,8 +5094,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -4566,6 +5122,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -4575,6 +5133,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -4605,6 +5164,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "talons",
@@ -4637,8 +5199,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -4660,6 +5227,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -4669,6 +5238,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -4699,6 +5269,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -4731,8 +5304,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -4754,6 +5332,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -4763,6 +5343,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -4793,6 +5374,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "beak",
@@ -4825,8 +5409,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -4848,6 +5437,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -4857,6 +5448,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -4885,6 +5477,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -4917,8 +5512,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -4944,6 +5544,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -4953,6 +5555,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -4981,6 +5584,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "talons",
@@ -5013,8 +5619,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -5040,6 +5651,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -5049,6 +5662,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -5079,6 +5693,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "rend",
@@ -5111,8 +5728,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -5138,6 +5760,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -5147,6 +5771,7 @@
       "damage": 5
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -5177,6 +5802,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -5209,8 +5837,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -5236,6 +5869,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -5264,6 +5899,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -5294,6 +5930,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "rend",
@@ -5326,8 +5965,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -5353,6 +5997,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -5362,6 +6008,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -5390,6 +6037,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "hooves",
@@ -5422,8 +6072,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -5449,6 +6104,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -5458,6 +6115,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -5488,6 +6146,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -5520,8 +6181,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -5547,6 +6213,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -5556,6 +6224,7 @@
       "damage": 4
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -5584,6 +6253,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "hooves",
@@ -5616,8 +6288,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -5648,6 +6325,8 @@
             "max_target_size": "large"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -5657,6 +6336,7 @@
       "damage": 4
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -5687,6 +6367,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "rend",
@@ -5719,8 +6402,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -5746,6 +6434,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -5755,6 +6445,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -5787,6 +6478,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "beak",
@@ -5819,8 +6513,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -5842,6 +6541,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -5851,6 +6552,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -5883,6 +6585,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -5915,8 +6620,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -5942,6 +6652,19 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "charge": {
+          "minimum_move_ft": 20,
+          "max_target_size": "large",
+          "prone_max_target_size": "large",
+          "bonus_damage": {
+            "dice_count": 2,
+            "dice_size": 4,
+            "damage_type": "bludgeoning",
+            "damage_bonus": 0
+          }
+        },
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -5951,6 +6674,7 @@
       "damage": 4
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -5981,6 +6705,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "ram",
@@ -6013,8 +6740,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -6040,6 +6772,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -6049,6 +6783,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -6083,6 +6818,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "talons",
@@ -6115,8 +6853,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -6142,6 +6885,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -6151,6 +6896,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -6183,6 +6929,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -6215,8 +6964,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -6242,6 +6996,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -6251,6 +7007,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -6279,6 +7036,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -6311,8 +7071,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -6343,6 +7108,8 @@
             "max_target_size": "medium"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -6352,6 +7119,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -6380,6 +7148,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -6412,8 +7183,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -6439,6 +7215,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -6448,6 +7226,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -6478,6 +7257,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "hooves",
@@ -6510,8 +7292,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -6537,6 +7324,19 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "charge": {
+          "minimum_move_ft": 20,
+          "max_target_size": "large",
+          "prone_max_target_size": "large",
+          "bonus_damage": {
+            "dice_count": 2,
+            "dice_size": 8,
+            "damage_type": "piercing",
+            "damage_bonus": 0
+          }
+        },
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -6546,6 +7346,7 @@
       "damage": 6
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -6576,6 +7377,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "gore",
@@ -6608,8 +7412,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -6635,6 +7444,19 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "charge": {
+          "minimum_move_ft": 20,
+          "max_target_size": "large",
+          "prone_max_target_size": "large",
+          "bonus_damage": {
+            "dice_count": 2,
+            "dice_size": 4,
+            "damage_type": "bludgeoning",
+            "damage_bonus": 0
+          }
+        },
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -6644,6 +7466,7 @@
       "damage": 5
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -6674,6 +7497,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "hooves",
@@ -6706,8 +7532,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -6733,6 +7564,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -6756,6 +7589,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -6781,6 +7616,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -6790,6 +7627,7 @@
       "damage": 5
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -6818,6 +7656,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "greatclub",
@@ -6850,8 +7691,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -6877,6 +7723,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -6905,6 +7753,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -6933,6 +7782,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "rend",
@@ -6965,8 +7817,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -6992,6 +7849,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -7020,6 +7879,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -7052,6 +7912,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "rend",
@@ -7084,8 +7947,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -7113,6 +7981,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -7136,6 +8006,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -7166,6 +8038,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -7194,6 +8067,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "leather",
       "main_hand": "longbow",
@@ -7226,8 +8102,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -7253,6 +8134,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -7278,6 +8161,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -7287,6 +8172,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -7319,6 +8205,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "chain-shirt",
       "main_hand": "spear",
@@ -7351,8 +8240,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -7382,9 +8276,12 @@
             "kind": "grapple",
             "escape_dc": 12,
             "max_target_size": "medium",
-            "restrains": true
+            "restrains": true,
+            "escape_check_disadvantage": false
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -7394,6 +8291,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -7427,6 +8325,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -7459,8 +8360,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -7490,9 +8396,12 @@
             "kind": "grapple",
             "escape_dc": 11,
             "max_target_size": "medium",
-            "restrains": false
+            "restrains": false,
+            "escape_check_disadvantage": false
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -7502,6 +8411,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -7535,6 +8445,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "claw",
@@ -7567,8 +8480,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -7594,6 +8512,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -7606,6 +8526,7 @@
       {
         "id": "constrictor-snake-constrict",
         "name": "Constrict",
+        "action_cost": "action",
         "save_ability": "strength",
         "dc": 12,
         "range_ft": 5,
@@ -7616,16 +8537,20 @@
           "bonus": 0
         },
         "damage_type": "bludgeoning",
+        "additional_damage": [],
         "success_damage": "none",
         "grapple": {
           "kind": "grapple",
           "escape_dc": 12,
           "max_target_size": "medium",
-          "restrains": false
+          "restrains": false,
+          "escape_check_disadvantage": false
         },
+        "failure_conditions": [],
         "animation": "constrict"
       }
     ],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -7657,6 +8582,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -7689,8 +8617,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -7720,9 +8653,12 @@
             "kind": "grapple",
             "escape_dc": 13,
             "max_target_size": "large",
-            "restrains": false
+            "restrains": false,
+            "escape_check_disadvantage": false
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -7759,6 +8695,8 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -7793,6 +8731,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -7824,6 +8763,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "claw",
@@ -7856,8 +8798,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -7883,6 +8830,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -7910,9 +8859,12 @@
             "kind": "grapple",
             "escape_dc": 12,
             "max_target_size": "medium",
-            "restrains": false
+            "restrains": false,
+            "escape_check_disadvantage": false
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -7941,6 +8893,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -7973,6 +8926,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "tentacles",
@@ -8005,8 +8961,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -8036,9 +8997,12 @@
             "kind": "grapple",
             "escape_dc": 14,
             "max_target_size": "medium",
-            "restrains": false
+            "restrains": false,
+            "escape_check_disadvantage": false
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -8067,6 +9031,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -8099,6 +9064,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "claw",
@@ -8131,8 +9099,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -8161,11 +9134,15 @@
           {
             "kind": "condition",
             "condition": "poisoned",
+            "excluded_creature_types": [],
+            "excluded_species_ids": [],
             "expires_at_start_of_source_turn": true,
             "expiry_timing": "source_turn_start",
             "allowed_removal_action_ids": []
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -8175,6 +9152,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -8206,6 +9184,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -8238,8 +9219,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -8268,11 +9254,15 @@
           {
             "kind": "condition",
             "condition": "poisoned",
+            "excluded_creature_types": [],
+            "excluded_species_ids": [],
             "expires_at_start_of_source_turn": false,
             "expiry_timing": "target_turn_end",
             "allowed_removal_action_ids": []
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -8282,6 +9272,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -8318,6 +9309,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "beak",
@@ -8350,8 +9344,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -8377,6 +9376,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -8415,11 +9416,15 @@
           {
             "kind": "condition",
             "condition": "poisoned",
+            "excluded_creature_types": [],
+            "excluded_species_ids": [],
             "expires_at_start_of_source_turn": true,
             "expiry_timing": "source_turn_start",
             "allowed_removal_action_ids": []
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -8448,6 +9453,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -8478,6 +9484,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "sting",
@@ -8510,8 +9519,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -8550,6 +9564,8 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -8559,6 +9575,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -8591,6 +9608,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -8623,8 +9643,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -8663,6 +9688,8 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -8672,6 +9699,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -8705,6 +9733,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "sting",
@@ -8737,8 +9768,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -8777,6 +9813,8 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -8786,6 +9824,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -8821,6 +9860,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -8853,8 +9895,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -8880,6 +9927,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -8908,6 +9957,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -8938,6 +9988,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "shell",
       "main_hand": "bite",
@@ -8970,8 +10023,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -9002,6 +10060,8 @@
             "max_target_size": "huge"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -9030,6 +10090,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -9058,6 +10119,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "tail",
@@ -9090,8 +10154,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -9130,6 +10199,8 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -9158,6 +10229,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -9189,6 +10261,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "feathers",
       "main_hand": "talons",
@@ -9221,8 +10296,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -9261,6 +10341,19 @@
             "mode": "add"
           }
         ],
+        "charge": {
+          "minimum_move_ft": 20,
+          "max_target_size": "huge",
+          "prone_max_target_size": "huge",
+          "bonus_damage": {
+            "dice_count": 2,
+            "dice_size": 4,
+            "damage_type": "bludgeoning",
+            "damage_bonus": 0
+          }
+        },
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -9270,6 +10363,7 @@
       "damage": 5
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -9303,6 +10397,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "fur",
       "main_hand": "antlers",
@@ -9335,8 +10432,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -9366,9 +10468,12 @@
             "kind": "grapple",
             "escape_dc": 15,
             "max_target_size": "large",
-            "restrains": true
+            "restrains": true,
+            "escape_check_disadvantage": false
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -9397,6 +10502,8 @@
             "max_target_size": "large"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": true
       }
     ],
@@ -9425,6 +10532,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -9457,6 +10565,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -9472,6 +10583,7 @@
     "archetype": "Giant Constrictor Snake",
     "challenge_rating": "2",
     "kind": "monster",
+    "creature_type": "Beast",
     "size": "huge",
     "armor_class": 12,
     "max_hp": 60,
@@ -9489,8 +10601,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -9516,6 +10633,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -9547,6 +10666,7 @@
       {
         "id": "giant-constrictor-snake-constrict",
         "name": "Constrict",
+        "action_cost": "action",
         "save_ability": "strength",
         "dc": 14,
         "range_ft": 10,
@@ -9557,16 +10677,20 @@
           "bonus": 4
         },
         "damage_type": "bludgeoning",
+        "additional_damage": [],
         "success_damage": "none",
         "grapple": {
           "kind": "grapple",
           "escape_dc": 14,
           "max_target_size": "large",
-          "restrains": false
+          "restrains": false,
+          "escape_check_disadvantage": false
         },
+        "failure_conditions": [],
         "animation": "constrict"
       }
     ],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -9599,6 +10723,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "bite",
@@ -9631,8 +10758,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -9662,9 +10794,12 @@
             "kind": "grapple",
             "escape_dc": 17,
             "max_target_size": "large",
-            "restrains": true
+            "restrains": true,
+            "escape_check_disadvantage": false
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -9693,6 +10828,8 @@
             "max_target_size": "huge"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": true
       }
     ],
@@ -9721,6 +10858,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -9751,6 +10889,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "jaws",
@@ -9783,8 +10924,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -9810,6 +10956,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -9838,6 +10986,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -9877,6 +11026,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Slam",
@@ -9909,8 +11061,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -9936,6 +11093,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -9945,6 +11104,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -9984,6 +11144,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Slash",
@@ -10016,8 +11179,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -10043,6 +11211,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -10052,6 +11222,7 @@
       "damage": 5
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -10085,6 +11256,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Slam",
@@ -10117,8 +11291,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -10157,6 +11336,8 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -10166,6 +11347,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -10194,6 +11376,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Ritual Sickle",
@@ -10226,8 +11411,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -10262,6 +11452,8 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -10271,6 +11463,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -10301,6 +11494,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Bite",
@@ -10333,8 +11529,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -10360,6 +11561,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -10388,6 +11591,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -10424,6 +11628,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Claw",
@@ -10456,8 +11663,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -10496,6 +11708,8 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -10505,6 +11719,7 @@
       "damage": 4
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -10533,6 +11748,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Bone Cudgel",
@@ -10565,8 +11783,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -10592,6 +11815,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -10617,6 +11842,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -10640,6 +11867,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -10672,6 +11901,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -10700,6 +11930,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Javelin",
@@ -10732,8 +11965,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -10759,6 +11997,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -10787,6 +12027,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -10817,12 +12058,124 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Bite",
       "body_style": "monster"
     },
     "source": "SRD 5.2.1 p. 355",
+    "unsupported_capabilities": []
+  },
+  {
+    "schema_version": 1,
+    "id": "srd-killer-whale",
+    "name": "Killer Whale",
+    "archetype": "source-certified monster",
+    "challenge_rating": "3",
+    "kind": "monster",
+    "size": "huge",
+    "armor_class": 12,
+    "max_hp": 90,
+    "speed_ft": 5,
+    "movement_modes": {
+      "walk_ft": 5,
+      "fly_ft": 0,
+      "climb_ft": 0,
+      "swim_ft": 60,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": 2,
+    "progression_features": {
+      "critical_hit_minimum": 20,
+      "initiative_advantage": false,
+      "athletics_advantage": false,
+      "steady_aim": false,
+      "heroic_warrior": false,
+      "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
+    },
+    "attacks": [
+      {
+        "id": "srd-killer-whale-bite",
+        "name": "Bite",
+        "weapon_id": "srd-killer-whale-bite-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 6,
+        "damage": {
+          "count": 5,
+          "size": 6,
+          "bonus": 4
+        },
+        "damage_type": "piercing",
+        "animation": "strike",
+        "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
+        "forbid_target_grappled_by_self": false
+      }
+    ],
+    "primary_attack_id": "srd-killer-whale-bite",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 6,
+      "damage": 5
+    },
+    "save_actions": [],
+    "death_trigger_save_actions": [],
+    "spell_save_actions": [],
+    "defensive_spell_actions": [],
+    "healing_actions": [],
+    "condition_removal_actions": [],
+    "saving_throw_bonuses": {
+      "strength": 4,
+      "dexterity": 2,
+      "constitution": 1,
+      "intelligence": -4,
+      "wisdom": 1,
+      "charisma": -2
+    },
+    "skill_bonuses": {},
+    "combat_traits": [],
+    "source_trait_names": [
+      "Hold Breath"
+    ],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [],
+    "source_limited_use_names": [],
+    "source_legendary_action_names": [],
+    "fighting_styles": [],
+    "weapon_masteries": [],
+    "damage_resistances": [],
+    "damage_vulnerabilities": [],
+    "damage_immunities": [],
+    "condition_immunities": [],
+    "wearing_heavy_armor": false,
+    "rage_damage_bonus": 0,
+    "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
+    "visual": {
+      "armor": "natural",
+      "main_hand": "Bite",
+      "body_style": "monster"
+    },
+    "source": "SRD 5.2.1 p. 356",
     "unsupported_capabilities": []
   },
   {
@@ -10849,8 +12202,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -10876,6 +12234,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -10885,6 +12245,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -10924,6 +12285,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Vile Slime",
@@ -10956,8 +12320,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -10983,6 +12352,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -11008,6 +12379,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -11045,6 +12418,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -11073,6 +12447,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Rend",
@@ -11105,8 +12482,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -11132,6 +12514,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -11141,6 +12525,7 @@
       "damage": 5
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -11178,6 +12563,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Slam",
@@ -11210,8 +12598,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -11250,6 +12643,8 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -11259,6 +12654,7 @@
       "damage": 5
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -11287,6 +12683,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Hooves",
@@ -11319,8 +12718,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -11355,6 +12759,8 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -11364,6 +12770,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -11392,6 +12799,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Sting",
@@ -11424,8 +12834,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -11451,6 +12866,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -11476,6 +12893,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -11485,6 +12904,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -11520,6 +12940,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Shortsword",
@@ -11552,8 +12975,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -11588,6 +13016,8 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -11597,6 +13027,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -11628,6 +13059,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Bite",
@@ -11660,8 +13094,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -11687,6 +13126,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -11712,6 +13153,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -11721,6 +13164,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -11753,6 +13197,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Mace",
@@ -11785,8 +13232,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -11825,6 +13277,8 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -11834,6 +13288,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -11862,6 +13317,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Bite",
@@ -11894,8 +13352,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -11921,6 +13384,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -11949,6 +13414,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -11982,6 +13448,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Rotting Touch",
@@ -12014,8 +13483,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -12041,6 +13515,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -12050,6 +13526,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -12087,6 +13564,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "natural",
       "main_hand": "Slam",
@@ -12119,8 +13599,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -12154,6 +13639,8 @@
             "expires_at_end_of_target_turn": false
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -12163,6 +13650,7 @@
       "damage": 4
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -12193,6 +13681,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "fur",
       "main_hand": "bite",
@@ -12225,8 +13716,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -12265,6 +13761,8 @@
             "mode": "replace_weapon"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -12274,6 +13772,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -12319,6 +13818,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "none",
       "main_hand": "Bites",
@@ -12351,8 +13853,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -12391,6 +13898,8 @@
             "mode": "replace_weapon"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -12400,6 +13909,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -12445,6 +13955,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "none",
       "main_hand": "Bites",
@@ -12477,8 +13990,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -12521,6 +14039,8 @@
             "max_target_size": "medium"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -12530,6 +14050,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -12581,12 +14102,153 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "none",
       "main_hand": "Swarm of Grasping Hands",
       "body_style": "swarm"
     },
     "source": "SRD 5.2.1 p. 278",
+    "unsupported_capabilities": []
+  },
+  {
+    "schema_version": 1,
+    "id": "srd-swarm-of-piranhas",
+    "name": "Swarm of Piranhas",
+    "archetype": "source-certified swarm candidate",
+    "challenge_rating": "1",
+    "kind": "monster",
+    "size": "medium",
+    "armor_class": 13,
+    "max_hp": 28,
+    "speed_ft": 5,
+    "movement_modes": {
+      "walk_ft": 5,
+      "fly_ft": 0,
+      "climb_ft": 0,
+      "swim_ft": 40,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": 3,
+    "progression_features": {
+      "critical_hit_minimum": 20,
+      "initiative_advantage": false,
+      "athletics_advantage": false,
+      "steady_aim": false,
+      "heroic_warrior": false,
+      "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
+    },
+    "attacks": [
+      {
+        "id": "srd-swarm-of-piranhas-bites",
+        "name": "Bites",
+        "weapon_id": "srd-swarm-of-piranhas-bites-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 5,
+        "damage": {
+          "count": 2,
+          "size": 4,
+          "bonus": 3
+        },
+        "damage_type": "piercing",
+        "animation": "swarm",
+        "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "effects": [
+          {
+            "kind": "damage",
+            "source": "conditional:attacker_bloodied",
+            "dice": {
+              "count": 1,
+              "size": 4,
+              "bonus": 3
+            },
+            "damage_type": "piercing",
+            "trigger": "attacker_bloodied",
+            "mode": "replace_weapon"
+          }
+        ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": true,
+        "forbid_target_grappled_by_self": false
+      }
+    ],
+    "primary_attack_id": "srd-swarm-of-piranhas-bites",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 3,
+      "damage": 2
+    },
+    "save_actions": [],
+    "death_trigger_save_actions": [],
+    "spell_save_actions": [],
+    "defensive_spell_actions": [],
+    "healing_actions": [],
+    "condition_removal_actions": [],
+    "saving_throw_bonuses": {
+      "strength": 1,
+      "dexterity": 3,
+      "constitution": -1,
+      "intelligence": -5,
+      "wisdom": -2,
+      "charisma": -4
+    },
+    "skill_bonuses": {},
+    "combat_traits": [
+      "swarm"
+    ],
+    "source_trait_names": [
+      "Swarm",
+      "Water Breathing"
+    ],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [],
+    "source_limited_use_names": [],
+    "source_legendary_action_names": [],
+    "fighting_styles": [],
+    "weapon_masteries": [],
+    "damage_resistances": [
+      "bludgeoning",
+      "piercing",
+      "slashing"
+    ],
+    "damage_vulnerabilities": [],
+    "damage_immunities": [],
+    "condition_immunities": [
+      "charmed",
+      "frightened",
+      "grappled",
+      "paralyzed",
+      "petrified",
+      "prone",
+      "restrained",
+      "stunned"
+    ],
+    "wearing_heavy_armor": false,
+    "rage_damage_bonus": 0,
+    "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
+    "visual": {
+      "armor": "none",
+      "main_hand": "Bites",
+      "body_style": "swarm"
+    },
+    "source": "SRD 5.2.1 p. 362",
     "unsupported_capabilities": []
   },
   {
@@ -12613,8 +14275,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -12640,6 +14307,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -12666,6 +14335,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -12696,6 +14367,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -12729,6 +14401,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "studded-leather",
       "main_hand": "Scimitar",
@@ -12761,8 +14436,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -12801,6 +14481,8 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -12840,6 +14522,8 @@
             "mode": "add"
           }
         ],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -12870,6 +14554,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -12905,6 +14590,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "plate",
       "main_hand": "Greatsword",
@@ -12937,8 +14625,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -12964,6 +14657,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -12973,6 +14668,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -13006,6 +14702,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "breastplate",
       "main_hand": "Rapier",
@@ -13038,8 +14737,13 @@
       "critical_hit_minimum": 20,
       "initiative_advantage": false,
       "athletics_advantage": false,
+      "steady_aim": false,
       "heroic_warrior": false,
       "studied_attacks": false,
+      "survivor_death_save_advantage": false,
+      "survivor_death_save_critical_minimum": 20,
+      "bloodied_start_turn_healing_bonus": 0,
+      "combat_prowess": false,
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
@@ -13065,6 +14769,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       },
       {
@@ -13091,6 +14797,8 @@
         "versatile": false,
         "rage_eligible": false,
         "effects": [],
+        "advantage_if_target_grappled_by_self": false,
+        "advantage_if_target_missing_hp": false,
         "forbid_target_grappled_by_self": false
       }
     ],
@@ -13121,6 +14829,7 @@
       ]
     },
     "save_actions": [],
+    "death_trigger_save_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -13154,6 +14863,9 @@
     "wearing_heavy_armor": false,
     "rage_damage_bonus": 0,
     "resources": [],
+    "turn_damage_auras": [],
+    "ally_roll_auras": [],
+    "start_turn_save_auras": [],
     "visual": {
       "armor": "splint",
       "main_hand": "Greatsword",

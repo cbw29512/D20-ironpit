@@ -14,6 +14,18 @@ def _advantage_modifier_matches(effect, actions: str) -> bool:
     return bool(re.search(pattern, actions, re.IGNORECASE))
 
 
+def _next_attack_disadvantage_matches(effect, actions: str) -> bool:
+    if effect.flat_bonus or effect.consume_on_attack_against or effect.expires_at_start_of_source_turn:
+        return False
+    if effect.expires_at_end_of_target_turn is not True:
+        return False
+    pattern = (
+        r"(?:has|gains?)\s+disadvantage\s+on\s+(?:the|its)\s+next\s+attack\s+roll"
+        r"(?:\s+it\s+makes)?\s+before\s+the\s+end\s+of\s+its\s+next\s+turn"
+    )
+    return bool(re.search(pattern, actions, re.IGNORECASE))
+
+
 def _speed_modifier_matches(effect, actions: str) -> bool:
     if effect.flat_bonus >= 0 or effect.consume_on_attack_against or effect.expires_at_start_of_source_turn:
         return False
@@ -29,6 +41,8 @@ def hit_modifier_issues(attack: WeaponAttack, actions: str) -> list[str]:
     for effect in attack.on_hit_modifier_effects:
         if effect.kind == "attacks-against-advantage":
             matched = _advantage_modifier_matches(effect, actions)
+        elif effect.kind == "next-attack-disadvantage":
+            matched = _next_attack_disadvantage_matches(effect, actions)
         elif effect.kind == "speed":
             matched = _speed_modifier_matches(effect, actions)
         else:

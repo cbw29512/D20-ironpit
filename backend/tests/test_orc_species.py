@@ -79,6 +79,18 @@ def test_relentless_endurance_drops_to_one_hp_once() -> None:
     assert state.current_hp == 0
 
 
+def test_relentless_endurance_precedes_default_monster_death() -> None:
+    state = _orc_fighter_state()
+    state.template.kind = "monster"
+
+    assert apply_damage(state, state.current_hp) == "relentless_endurance"
+    assert state.current_hp == 1
+    assert state.is_alive is True
+    assert state.is_dead is False
+    resource = next(item for item in state.resources if item.id == RELENTLESS_RESOURCE_ID)
+    assert resource.current_uses == 0
+
+
 def test_relentless_endurance_does_not_prevent_instant_death() -> None:
     state = _orc_fighter_state()
     damage = state.current_hp + state.template.max_hp

@@ -27,15 +27,17 @@
 
   function secondWind(sequence, round, member) {
     const state = member.state, uses = state.resources["second-wind"] || 0;
-    if (!uses || !E().available(state, "bonus_action") || state.current_hp <= 0 || state.current_hp > Math.floor(state.template.max_hp / 2)) return null;
+    if (!uses || !E().available(state, "bonus_action") || state.current_hp <= 0 || state.current_hp > Math.floor(S().effectiveMaxHp(state) / 2)) return null;
     const die = D().roll(10), total = die + state.template.level, before = state.current_hp;
-    state.current_hp = Math.min(state.template.max_hp, state.current_hp + total);
+    const healing = H();
+    if (!healing) throw new Error("Browser healing runtime is not loaded.");
+    const healed = healing.restore(state, total);
     state.resources["second-wind"] -= 1; E().spend(state, "bonus_action");
     return { sequence, round_number: round, event_type: "healing", actor_id: member.combatant_id, actor_name: state.template.name,
       target_id: member.combatant_id, target_name: state.template.name, hp_before: before, hp_after: state.current_hp,
       healing_roll: { notation: `1d10+${state.template.level}`, rolls: [die], modifier: state.template.level, total },
       feature_id: "second-wind", resource_remaining: state.resources["second-wind"], animation: "second-wind",
-      description: `${state.template.name} uses Second Wind and regains ${state.current_hp - before} HP.` };
+      description: `${state.template.name} uses Second Wind and regains ${healed} HP.` };
   }
 
   function adrenaline(sequence, round, member) {

@@ -5,55 +5,78 @@ import re
 from functools import lru_cache
 
 from app.content.monster_catalog import load_monster_rows
+from app.content.monster_combat_scope import base_feature_name, combat_math_relevant, feature_blocks
+from app.content.monster_limited_use_source import limited_use_spec, parse_limited_use_names
+from app.content.monster_trait_source_audit import parse_trait_names
 from app.domain.models import CombatantTemplate
 
 logger = logging.getLogger(__name__)
-_FIELDS = ("traits", "actions", "bonusActions", "reactions")
-_CONNECTORS = frozenset({"a", "an", "and", "of", "or", "the", "to"})
-_MARKER = re.compile(r"\((?:[^)]*(?:Recharge\s+\d(?:\s*[-–]\s*\d)?|\d+\s*/\s*Day)[^)]*)\)", re.I)
 
 
-def _is_heading(value: str) -> bool:
-    base = re.sub(r"\s*\([^)]*\)$", "", value).strip()
-    words = base.split()
-    if not words or len(value) > 100:
+def _resource_matches(template: CombatantTemplate, resource_id: str | None, resource_cost: int | None, fingerprint: str) -> bool:
+    if not resource_id or resource_cost != 1:
         return False
-    return all(
-        word.lower() in _CONNECTORS or re.fullmatch(r"[A-Z][A-Za-z’'\-]*", word)
-        for word in words
+    spec = limited_use_spec(fingerprint)
+    resource = next((item for item in template.resources if item.id == resource_id), None)
+    if resource is None or resource.max_uses != spec.max_uses:
+        return False
+    if spec.recharge_minimum is None:
+        return resource.recharge is None
+    return (
+        resource.recharge is not None
+        and resource.recharge.minimum == spec.recharge_minimum
+        and resource.recharge.maximum == spec.recharge_maximum
+        and resource.recharge.die_size == 6
     )
 
 
-def _limited_headings(source: object) -> list[str]:
-    text = re.sub(r"\s+", " ", str(source or "")).strip()
-    if not text:
-        return []
-    names: list[str] = []
-    for sentence in re.split(r"(?<=\.)\s+", text):
-        candidate = sentence[:-1].strip() if sentence.endswith(".") else ""
-        if candidate and _MARKER.search(candidate):
-            if not _is_heading(candidate):
-                raise ValueError(f"Limited-use marker is not on a parseable heading: {candidate!r}")
-            names.append(candidate)
-    if _MARKER.search(text) and not names:
-        raise ValueError(f"SRD limited-use heading could not be parsed from: {text!r}")
-    return names
+def _save_supported(template: CombatantTemplate, fingerprint: str) -> bool:
+    spec = limited_use_spec(fingerprint)
+    if spec.section not in {"actions", "bonusActions"}:
+        return False
+    action = next(
+        (item for item in template.saving_throw_actions if base_feature_name(item.name) == spec.base_name),
+        None,
+    )
+    if action is None:
+        return False
+    if spec.section == "bonusActions" and action.action_cost != "bonus_action":
+        return False
+    if spec.section == "actions" and action.action_cost != "action":
+        return False
+    return _resource_matches(template, action.resource_id, action.resource_cost, fingerprint)
 
 
-def parse_limited_use_names(row: dict[str, object]) -> list[str]:
-    names: list[str] = []
-    for field in _FIELDS:
-        names.extend(f"{field}:{name}" for name in _limited_headings(row.get(field, "")))
-    return names
+def _attack_supported(template: CombatantTemplate, fingerprint: str) -> bool:
+    spec = limited_use_spec(fingerprint)
+    if spec.section != "actions":
+        return False
+    attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
+    matching = [item for item in attacks if base_feature_name(item.weapon.name) == spec.base_name]
+    return bool(matching) and all(
+        _resource_matches(template, item.resource_id, item.resource_cost, fingerprint) for item in matching
+    )
+
+
+def limited_use_source_relevant(row: dict[str, object], fingerprint: str) -> bool:
+    spec = limited_use_spec(fingerprint)
+    source = row.get(spec.section, "")
+    headings = parse_trait_names(source, preserve_annotations=True)
+    blocks = feature_blocks(source, headings)
+    return combat_math_relevant(blocks[spec.heading])
 
 
 def limited_use_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
-    """No Recharge/N-per-Day feature is RAW-ready until its use economy is implemented."""
+    """Certify generic finite-use resources; ignore limited movement/sensory/presentation features."""
     expected = parse_limited_use_names(row)
     issues: list[str] = []
     if template.source_limited_use_names != expected:
         issues.append("source-limited-use-fingerprint-mismatch")
     for name in expected:
+        if _save_supported(template, name) or _attack_supported(template, name):
+            continue
+        if not limited_use_source_relevant(row, name):
+            continue
         slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
         issues.append(f"uncertified-limited-use:{slug}")
     return issues

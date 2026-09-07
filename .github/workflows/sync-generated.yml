@@ -3,7 +3,7 @@ name: Sync Generated Certification Artifacts
 on:
   push:
     branches:
-      - audit/raw-combat-log-figures-20260830
+      - feat/pregen-combat-completion
 
 permissions:
   contents: write
@@ -29,17 +29,40 @@ jobs:
         run: pip install -e '.[dev]'
       - name: Remove editable-install metadata
         run: rm -rf backend/iron_pit_backend.egg-info
-      - name: Generate authoritative certification artifacts
+      - name: Generate runtime monster capabilities
+        run: python scripts/export_runtime_monster_capabilities.py
+      - name: Generate browser heroes
+        run: python scripts/export_browser_heroes.py
+      - name: Generate browser monsters
+        id: browser_monsters
         run: |
-          python scripts/export_runtime_monster_capabilities.py
-          python scripts/export_browser_heroes.py
-          python scripts/export_browser_monsters.py
-          python scripts/export_figure_profiles.py
-          python scripts/verify_certification_manifests.py --write
-          python scripts/export_roster_mechanic_checklist.py
+          set +e
+          python scripts/export_browser_monsters.py > browser-monster-export.log 2>&1
+          status=$?
+          cat browser-monster-export.log
+          exit $status
+      - name: Upload browser monster export diagnostics
+        if: failure() && steps.browser_monsters.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-monster-export-diagnostics-${{ github.sha }}
+          path: browser-monster-export.log
+          retention-days: 1
+      - name: Generate figure profiles
+        run: python scripts/export_figure_profiles.py
+      - name: Generate certification manifests
+        run: python scripts/verify_certification_manifests.py --write
+      - name: Generate roster mechanic checklist
+        run: python scripts/export_roster_mechanic_checklist.py
+      - name: Generate universal engine backlog
+        run: python scripts/report_universal_engine_backlog.py > data/universal_engine_backlog.txt
+      - name: Generate detailed capability yield
+        run: python scripts/report_capability_yield.py > data/capability_yield.txt
+      - name: Generate normalized monster mechanic matrix
+        run: python scripts/report_monster_mechanic_matrix.py --csv data/monster_mechanic_matrix.csv > data/monster_mechanic_matrix.txt
       - name: Refuse unexpected generator drift
         run: |
-          unexpected="$(git status --porcelain --untracked-files=all | awk '{print $2}' | grep -Ev '^(backend/app/content/data/combatant_capabilities_v1.json|frontend/browser-heroes.js|frontend/browser-monsters-generated.js|frontend/figure-profiles.js|data/hero_certification_manifest.json|data/monster_certification_manifest.json|data/roster_combat_mechanics_v1.json)$' || true)"
+          unexpected="$(git status --porcelain --untracked-files=all | awk '{print $2}' | grep -Ev '^(backend/app/content/data/combatant_capabilities_v1.json|frontend/browser-heroes.js|frontend/browser-monsters-generated.js|frontend/figure-profiles.js|data/hero_certification_manifest.json|data/monster_certification_manifest.json|data/roster_combat_mechanics_v1.json|data/universal_engine_backlog.txt|data/capability_yield.txt|data/monster_mechanic_matrix.csv|data/monster_mechanic_matrix.txt)$' || true)"
           if [ -n "$unexpected" ]; then
             echo "Generator modified files outside its owned outputs:"
             echo "$unexpected"
@@ -47,8 +70,8 @@ jobs:
           fi
       - name: Commit only generator-owned outputs
         run: |
-          outputs="backend/app/content/data/combatant_capabilities_v1.json frontend/browser-heroes.js frontend/browser-monsters-generated.js frontend/figure-profiles.js data/hero_certification_manifest.json data/monster_certification_manifest.json data/roster_combat_mechanics_v1.json"
-          if git diff --quiet -- $outputs; then
+          outputs="backend/app/content/data/combatant_capabilities_v1.json frontend/browser-heroes.js frontend/browser-monsters-generated.js frontend/figure-profiles.js data/hero_certification_manifest.json data/monster_certification_manifest.json data/roster_combat_mechanics_v1.json data/universal_engine_backlog.txt data/capability_yield.txt data/monster_mechanic_matrix.csv data/monster_mechanic_matrix.txt"
+          if git diff --quiet -- $outputs && [ -z "$(git status --porcelain --untracked-files=all -- data/universal_engine_backlog.txt data/capability_yield.txt data/monster_mechanic_matrix.csv data/monster_mechanic_matrix.txt)" ]; then
             echo "Generated artifacts already current."
             exit 0
           fi

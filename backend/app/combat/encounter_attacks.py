@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.ally_context import active_allies
+from app.combat.ally_roll_auras import ally_roll_aura_advantage_sources
 from app.combat.attacks import resolve_attack
 from app.combat.champion import apply_critical_closing_move
 from app.combat.damage import BonusDamageSpec
@@ -12,30 +13,25 @@ from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, WeaponAttack
 
 
+def _grapple_advantage(attacker: EncounterCombatant, target: EncounterCombatant, attack: WeaponAttack) -> int:
+    if not attack.advantage_if_target_grappled_by_self:
+        return 0
+    return int(any(source.source_id == attacker.combatant_id for source in target.state.grapple_sources))
+
+
 def resolve_encounter_attack(
-    sequence: int,
-    round_number: int,
-    attacker: EncounterCombatant,
-    target: EncounterCombatant,
-    attack: WeaponAttack,
-    distance_ft: int,
-    dice: DiceProvider,
-    setup: EncounterSetup | None,
-    *,
-    spend_action: bool = True,
-    advantage_sources: int = 0,
-    other_disadvantage_sources: int = 0,
-    feature_id: str | None = None,
-    turn_key: str | None = None,
-    bonus_damage: BonusDamageSpec | None = None,
-    close_enemy_active: bool | None = None,
-    allow_reckless: bool = False,
+    sequence: int, round_number: int, attacker: EncounterCombatant, target: EncounterCombatant,
+    attack: WeaponAttack, distance_ft: int, dice: DiceProvider, setup: EncounterSetup | None, *,
+    spend_action: bool = True, advantage_sources: int = 0, other_disadvantage_sources: int = 0,
+    feature_id: str | None = None, turn_key: str | None = None, bonus_damage: BonusDamageSpec | None = None,
+    close_enemy_active: bool | None = None, allow_reckless: bool = False,
 ) -> BattleEvent:
-    reckless_started = allow_reckless and activate_reckless_attack(
-        attacker.state, attack, attacker.combatant_id, round_number,
-    )
+    reckless_started = allow_reckless and activate_reckless_attack(attacker.state, attack, attacker.combatant_id, round_number)
     if reckless_started:
         mark_reckless_use_while_raging(attacker.state, turn_key)
+    advantage_sources += _grapple_advantage(attacker, target, attack)
+    if setup is not None:
+        advantage_sources += ally_roll_aura_advantage_sources(attacker, setup, roll_kind="attack")
     redirect = select_redirect_ally(target, setup) if setup is not None else None
     close_enemy = close_enemy_active
     if close_enemy is None:

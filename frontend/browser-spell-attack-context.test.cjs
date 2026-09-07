@@ -17,7 +17,6 @@ for (const file of [
 
 const S = window.IRON_PIT_BROWSER_STATE;
 const M = window.IRON_PIT_BROWSER_MODIFIERS;
-const T = window.IRON_PIT_BROWSER_TIMED;
 const X = window.IRON_PIT_BROWSER_SPELL_ATTACK;
 const base = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"];
 const rangedSpell = {
@@ -61,8 +60,10 @@ function study(caster, target) {
 }
 
 function sap(caster) {
-  T.apply(caster.state, "weapon-mastery-sap", "enemy", {
-    sourceEffectId: "weapon-mastery", appliedRound: 1, expiresRound: 2, expiryTiming: "source_turn_start",
+  M.add(caster.state, {
+    id: "sap-next-attack", source_id: "enemy", source_effect_id: "weapon-mastery-sap", source_name: "Sap",
+    kind: "next-attack-disadvantage", flat_bonus: 0, dice_count: 0, dice_size: 0, damage_type: null,
+    concentration_required: false, consume_on_attack_against: false, expires_at_start_of_source_turn: true,
   });
 }
 
@@ -84,7 +85,7 @@ function sap(caster) {
   const event = X.resolve(1, 1, caster, target, rangedSpell, arena, "1:caster");
   assert.equal(event.attack_roll.mode, "normal"); assert.equal(event.hit, true);
   assert.equal(M.nextAttackAgainstAdvantage(caster.state, target.combatant_id), 0);
-  assert.equal(caster.state.timed_effects.some((effect) => effect.effect_id === "weapon-mastery-sap"), false);
+  assert.equal(M.nextAttackDisadvantage(caster.state), 0);
 }
 
 {

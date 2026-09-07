@@ -1,5 +1,3 @@
-import pytest
-
 from app.content.fighter_combat_levels import (
     FIGHTER_COMBAT_LEVELS,
     fighter_arena_ignored,
@@ -57,8 +55,8 @@ def test_fighter_features_accumulate_and_replacements_are_explicit() -> None:
     assert fighter_arena_ignored(20) == ("tactical-master-push", "tactical-master-slow")
 
 
-def test_existing_fighter_runtime_levels_are_compiled_from_the_table() -> None:
-    for level in range(1, 15):
+def test_fighter_runtime_levels_are_compiled_from_the_table() -> None:
+    for level in range(1, 21):
         row = FIGHTER_COMBAT_LEVELS[level]
         template = build_karnok_stoneward_level(level)
         strength_mod = _modifier(row.strength)
@@ -82,14 +80,7 @@ def test_existing_fighter_runtime_levels_are_compiled_from_the_table() -> None:
         assert (len(template.attack_action.slots) if template.attack_action else 1) == row.attack_count
 
 
-def test_complete_table_can_outrun_engine_without_silently_running_unsupported_rules() -> None:
-    assert unsupported_fighter_engine_features(9) == ()
-    assert unsupported_fighter_engine_features(10) == ()
-    assert unsupported_fighter_engine_features(12) == ()
-    assert unsupported_fighter_engine_features(13) == ()
-    assert unsupported_fighter_engine_features(14) == ()
-    assert unsupported_fighter_engine_features(15) == ("superior-critical",)
-    assert FIGHTER_COMBAT_LEVELS[13].max_hp == 147
-    assert FIGHTER_COMBAT_LEVELS[14].max_hp == 158
-    with pytest.raises(ValueError, match="superior-critical"):
-        build_karnok_stoneward_level(15)
+def test_complete_fighter_table_is_supported_without_silent_feature_gaps() -> None:
+    for level in range(1, 21):
+        assert unsupported_fighter_engine_features(level) == ()
+        assert build_karnok_stoneward_level(level).level == level

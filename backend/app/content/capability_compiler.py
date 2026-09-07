@@ -3,9 +3,9 @@ from __future__ import annotations
 import logging
 
 from app.content.capability_attack_compiler import UnsupportedCapabilityError, compile_attack
-from app.domain.actions import AttackActionDefinition, AttackActionSlot, SavingThrowAction
+from app.domain.actions import AttackActionDefinition, AttackActionSlot, SaveConditionEffect, SavingThrowAction
 from app.domain.capabilities import CombatantDefinition, SaveCapabilityDefinition
-from app.domain.models import CombatantTemplate
+from app.domain.models import CombatantTemplate, OnHitDamage
 
 logger = logging.getLogger(__name__)
 
@@ -14,19 +14,31 @@ def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
     damage = definition.damage
     grapple = definition.grapple
     return SavingThrowAction(
-        id=definition.id,
-        name=definition.name,
-        save_ability=definition.save_ability,
-        dc=definition.dc,
-        range_ft=definition.range_ft,
+        id=definition.id, name=definition.name, action_cost=definition.action_cost,
+        save_ability=definition.save_ability, dc=definition.dc, range_ft=definition.range_ft,
         target_max_size=definition.target_max_size or (grapple.max_target_size if grapple else None),
+        area=definition.area,
         damage_dice_count=damage.count if damage else 0,
         damage_dice_size=damage.size if damage else 6,
         damage_bonus=damage.bonus if damage else 0,
         damage_type=definition.damage_type.value if definition.damage_type else None,
+        additional_damage=[OnHitDamage(
+            source=effect.source, dice_count=effect.dice.count, dice_size=effect.dice.size,
+            damage_bonus=effect.dice.bonus, damage_type=effect.damage_type,
+        ) for effect in definition.additional_damage],
         success_damage=definition.success_damage,
         grapple_escape_dc=grapple.escape_dc if grapple else None,
         restrains_while_grappled=grapple.restrains if grapple else False,
+        failure_conditions=[SaveConditionEffect(
+            condition_id=effect.condition,
+            expiry_timing=effect.expiry_timing,
+            repeat_save_ability=effect.repeat_save_ability,
+            repeat_save_dc=effect.repeat_save_dc,
+            repeat_save_timing=effect.repeat_save_timing,
+            allowed_removal_action_ids=effect.allowed_removal_action_ids,
+        ) for effect in definition.failure_conditions],
+        resource_id=definition.resource_id,
+        resource_cost=definition.resource_cost or 1,
         animation=definition.animation,
     )
 
@@ -36,13 +48,8 @@ def _compile_attack_action(definition: CombatantDefinition) -> AttackActionDefin
     if action is None:
         return None
     return AttackActionDefinition(
-        id=action.id,
-        name=action.name,
-        is_attack_action=action.is_attack_action,
-        slots=[
-            AttackActionSlot(attack_ids=slot.attack_ids, save_action_ids=slot.save_action_ids)
-            for slot in action.slots
-        ],
+        id=action.id, name=action.name, is_attack_action=action.is_attack_action,
+        slots=[AttackActionSlot(attack_ids=slot.attack_ids, save_action_ids=slot.save_action_ids) for slot in action.slots],
     )
 
 
@@ -50,9 +57,7 @@ def compile_combatant(definition: CombatantDefinition) -> CombatantTemplate:
     try:
         if definition.unsupported_capabilities:
             blockers = ", ".join(sorted(definition.unsupported_capabilities))
-            raise UnsupportedCapabilityError(
-                f"{definition.id} requires unsupported capabilities: {blockers}"
-            )
+            raise UnsupportedCapabilityError(f"{definition.id} requires unsupported capabilities: {blockers}")
         attacks = [compile_attack(item) for item in definition.attacks]
         attack_by_id = {attack.id: attack for attack in attacks}
         primary = attack_by_id[definition.primary_attack_id]
@@ -73,6 +78,4 @@ def compile_combatant(definition: CombatantDefinition) -> CombatantTemplate:
         raise
     except Exception as exc:
         logger.exception("Failed to compile combat capability definition %s.", definition.id)
-        raise RuntimeError(
-            f"Combat capability definition {definition.id} could not be compiled."
-        ) from exc
+        raise RuntimeError(f"Combat capability definition {definition.id} could not be compiled.") from exc
