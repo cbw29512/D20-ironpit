@@ -9,13 +9,12 @@
   const B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2 || { dangerSenseAdvantage: () => 0 };
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { applyD20Bonus: (_state, _kind, roll) => roll };
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION, TC = () => window.IRON_PIT_BROWSER_TIMED;
-  const D = () => window.IRON_PIT_DICE;
+  const D = () => window.IRON_PIT_DICE, SD = () => window.IRON_PIT_BROWSER_SAVE_DAMAGE;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (state, cost) => cost === "action" && state.action_available, spend: (state) => { state.action_available = false; } };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { autoFailStrDex: (state) => state.is_unconscious };
   const T = () => window.IRON_PIT_BROWSER_TARGET_STATE || { isBloodied: () => false };
   const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
   const BOARD_COLUMNS = 3, MAX_BOARD_SLOTS = 6;
-
   function saveMode(state, ability, againstMagic = false) {
     const magicResistance = againstMagic && state.template.traits?.includes("magic-resistance") ? 1 : 0;
     const bloodiedAdvantage = state.template.traits?.includes("bloodied-attack-save-advantage") && T().isBloodied(state) ? 1 : 0;
@@ -23,7 +22,6 @@
     const disadvantage = ability === "dexterity" && state.active_effect_ids.includes("restrained") ? 1 : 0;
     return R().modeFromSources(advantage, disadvantage);
   }
-
   function resolveSavingThrow(state, ability, dc, againstMagic = false) {
     if ((ability === "strength" || ability === "dexterity") && Q().autoFailStrDex(state)) return { roll: null, succeeded: false };
     const bonus = state.template.saving_throw_bonuses?.[ability];
@@ -32,17 +30,14 @@
     if (roll.total < dc) { const reroll = window.IRON_PIT_BROWSER_INDOMITABLE?.use(state, ability); if (reroll) roll = reroll; }
     return { roll, succeeded: roll.total >= dc };
   }
-
   function resourceAvailable(state, action) { return !action.resourceId || X().available(state, action.resourceId, action.resourceCost || 1); }
   function legalAction(action, target, distance) { return distance <= action.range && (!action.targetMaxSize || S().sizeAtMost(target, action.targetMaxSize)); }
-
   function damageRolls(action, count, shared) {
     if (shared == null) return D().rollMany(count, action.damageDiceSize);
     if (!Array.isArray(shared) || shared.length !== count) throw new Error(`${action.name} shared damage roll count is invalid.`);
     if (shared.some((roll) => !Number.isInteger(roll) || roll < 1 || roll > action.damageDiceSize)) throw new Error(`${action.name} shared damage rolls contain an invalid die result.`);
     return [...shared];
   }
-
   function resolveAction(sequence, round, actor, target, action, distance, options = {}) {
     const spendAction = options.spendAction !== false, spendResource = options.spendResource !== false, actionCost = action.actionCost || "action";
     if (spendAction && !E().available(actor.state, actionCost)) throw new Error(`${actionCost.replace("_", " ")} is unavailable for saving throw action.`);
@@ -55,8 +50,12 @@
     const deathSuccessBefore = target.state.death_save_successes, deathFailureBefore = target.state.death_save_failures;
     const concentrationBefore = target.state.concentration?.effect_id || null;
     let damageRoll = null, damageComponents = [], damageOutcome = null;
-    const count = action.damageDiceCount || 0;
-    if (count && !(save.succeeded && action.successDamage === "none")) {
+    const count = action.damageDiceCount || 0, multiPacket = Boolean(action.additionalDamage?.length);
+    if (multiPacket) {
+      const bundle = SD()?.resolve(target.state, action, save.succeeded); if (!bundle) throw new Error("Multi-packet save damage resolver is unavailable.");
+      damageRoll = bundle.damageRoll; damageComponents = bundle.damageComponents;
+      if (bundle.appliedTotal) { const affectedStates = states(options.setup); damageOutcome = A().applyDamage(target.state, bundle.appliedTotal, false, bundle.damageTypes, affectedStates); window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated?.(target.state); C()?.endIfIncapacitated?.(target.state, affectedStates); }
+    } else if (count && !(save.succeeded && action.successDamage === "none")) {
       if (!action.damageType) throw new Error(`${action.name} has damage dice but no damage type.`);
       const rolls = damageRolls(action, count, options.sharedDamageRolls);
       let total = rolls.reduce((sum, roll) => sum + roll, 0) + (action.damageBonus || 0);
@@ -126,7 +125,6 @@
     candidates.sort((a, b) => b.targets.length - a.targets.length || a.start - b.start);
     return candidates[0]?.targets || [];
   }
-
   function resolveTurnAction(sequence, round, actor, setup, resourceBackedOnly, actionCost = "action") {
     if (!E().available(actor.state, actionCost)) return { events: [], sequence, used: false };
     for (const action of actor.state.template.saving_throw_actions || []) {
@@ -145,6 +143,5 @@
     }
     return { events: [], sequence, used: false };
   }
-
   window.IRON_PIT_BROWSER_SAVES = { legalAction, resourceAvailable, resolveAction, resolveSavingThrow, resolveTurnAction, saveMode, targetsFor };
 })();
