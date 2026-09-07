@@ -8,7 +8,7 @@ const root = __dirname;
 const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
 const ids = new Set([...html.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]));
 
-for (const file of ["app.js", "battlefield-picker.js", "battlefield-view.js", "battlefield-replay.js", "turbo-view.js"]) {
+for (const file of ["app.js", "battle-actions.js", "battlefield-picker.js", "battlefield-view.js", "battlefield-replay.js", "turbo-view.js"]) {
   const source = fs.readFileSync(path.join(root, file), "utf8");
   const referenced = [
     ...source.matchAll(/\bel\("([^"]+)"\)/g),
@@ -18,11 +18,12 @@ for (const file of ["app.js", "battlefield-picker.js", "battlefield-view.js", "b
 }
 
 for (const id of [
-  "hero-slots", "monster-slots", "fight-button", "pit-round", "status",
+  "hero-slots", "monster-slots", "fight-button", "step-fight-button", "pit-round", "status",
+  "step-session-actions", "next-event-button", "watch-rest-button",
   "quick-test", "rerun-button", "reset-fight", "lab-summary",
   "turbo-count", "turbo-button", "turbo-panel", "turbo-result-title", "turbo-result-summary",
   "turbo-heroes", "turbo-monsters", "turbo-draws", "turbo-rounds", "turbo-notables",
-  "turbo-fight-number", "turbo-replay-button", "turbo-error-summary",
+  "turbo-fight-number", "turbo-replay-button", "turbo-replay-step-button", "turbo-error-summary",
   "card-picker", "picker-class", "picker-level", "picker-cr", "picker-monster",
   "confirm-card", "remove-card", "combat-fx-overlay",
 ]) assert.ok(ids.has(id), `battlefield is missing #${id}`);
@@ -31,13 +32,16 @@ assert.equal(ids.has("instant-mode"), false, "production battlefield must not ex
 assert.equal(ids.has("picker-hero"), false, "canonical heroes must not expose a redundant build selector");
 assert.equal(ids.has("distance"), false, "formation combat must not expose a starting-distance control");
 assert.match(html, /<button id="quick-test" type="button">LOAD SAMPLE<\/button>/);
-assert.match(html, /id="turbo-count"[^>]+value="100"/); assert.match(html, /browser-turbo\.js/); assert.match(html, /turbo-view\.js/);
+assert.match(html, /id="step-fight-button"/); assert.match(html, /id="turbo-count"[^>]+value="100"/);
+assert.match(html, /browser-turbo\.js/); assert.match(html, /browser-execution\.js/); assert.match(html, /battle-actions\.js/);
 assert.match(html, /Production combat path · secure Web Crypto dice/);
 assert.match(html, /browser-offense-value\.js/); assert.match(html, /browser-spell-offense\.js/);
 
 const view = fs.readFileSync(path.join(root, "battlefield-view.js"), "utf8");
 const replay = fs.readFileSync(path.join(root, "battlefield-replay.js"), "utf8");
 const app = fs.readFileSync(path.join(root, "app.js"), "utf8");
+const actions = fs.readFileSync(path.join(root, "battle-actions.js"), "utf8");
+const execution = fs.readFileSync(path.join(root, "browser-execution.js"), "utf8");
 const engine = fs.readFileSync(path.join(root, "browser-engine.js"), "utf8");
 const formation = fs.readFileSync(path.join(root, "browser-formation.js"), "utf8");
 const lab = fs.readFileSync(path.join(root, "battle-lab.js"), "utf8");
@@ -48,12 +52,15 @@ const css = fs.readFileSync(path.join(root, "battlefield.css"), "utf8");
 assert.match(view, /MAX_SLOTS = 6/); assert.match(app, /MAX_SLOTS = 6/);
 assert.match(view, /card-concentration/); assert.match(replay, /CONCENTRATING/);
 assert.match(app, /Iron Pit ready\. Choose cards or load the sample matchup\./);
-assert.match(app, /IRON_PIT_BROWSER_TURBO/); assert.match(app, /replayTurbo/);
-assert.doesNotMatch(app, /createSeededDice|battle-seed|instant-mode|IRON_PIT_DICE\s*=/);
+assert.match(app, /IRON_PIT_EXECUTION/); assert.match(app, /IRON_PIT_BATTLE_ACTIONS/);
+assert.match(actions, /startLive/); assert.match(actions, /nextEvent/); assert.match(actions, /watchRest/); assert.match(actions, /replayTurbo/);
+assert.match(execution, /function createSession/); assert.match(execution, /function resolveLive/); assert.match(execution, /function resolveReplay/); assert.match(execution, /async function runTurbo/);
+assert.doesNotMatch(app, /runEncounter|runSeeded|runBatch|IRON_PIT_DICE\s*=/);
 assert.doesNotMatch(lab, /createSeededDice|seedNumber/);
 assert.match(lab, /function diagnosticId/);
 assert.match(dice, /crypto\.getRandomValues/); assert.match(dice, /function clearHistory/); assert.match(dice, /function getHistory/);
 assert.match(turbo, /function runSeeded/); assert.match(turbo, /async function runBatch/); assert.match(turbo, /finally \{ window\.IRON_PIT_DICE = prior; \}/);
+assert.match(replay, /bindBattle/); assert.match(replay, /eventStep/); assert.match(replay, /syncFinal/);
 assert.match(engine, /1-6 cards per side/); assert.match(engine, /IRON_PIT_BROWSER_FORMATION/);
 assert.match(formation, /HERO_FRONT = 5/); assert.match(formation, /MONSTER_FRONT = 10/);
 assert.match(replay, /initiative-badge/); assert.match(replay, /critical-screen/); assert.match(replay, /fumble-blackout/);
@@ -65,9 +72,10 @@ assert.ok(html.indexOf("browser-action-surge.js") < html.indexOf("browser-turn.j
 assert.ok(html.indexOf("browser-formation.js") < html.indexOf("browser-engine.js"), "formation must load before the combat engine");
 assert.ok(html.indexOf("battlefield-picker.js") < html.indexOf("app.js"));
 assert.ok(html.indexOf("battlefield-view.js") < html.indexOf("app.js"));
-assert.ok(html.indexOf("battlefield-replay.js") < html.indexOf("battle-lab.js"));
-assert.ok(html.indexOf("battle-lab.js") < html.indexOf("browser-turbo.js"));
-assert.ok(html.indexOf("browser-turbo.js") < html.indexOf("turbo-view.js"));
-assert.ok(html.indexOf("turbo-view.js") < html.indexOf("app.js"));
+assert.ok(html.indexOf("battlefield-replay.js") < html.indexOf("browser-execution.js"));
+assert.ok(html.indexOf("browser-turbo.js") < html.indexOf("browser-execution.js"));
+assert.ok(html.indexOf("turbo-view.js") < html.indexOf("browser-execution.js"));
+assert.ok(html.indexOf("browser-execution.js") < html.indexOf("battle-actions.js"));
+assert.ok(html.indexOf("battle-actions.js") < html.indexOf("app.js"));
 
-console.log("production-path six-slot battlefield + Turbo wiring regression passed");
+console.log("production-path battlefield + universal execution wiring regression passed");
