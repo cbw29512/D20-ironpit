@@ -14282,6 +14282,129 @@
   },
   {
     "schema_version": 1,
+    "id": "srd-shadow",
+    "name": "Shadow",
+    "archetype": "source-compiled monster",
+    "challenge_rating": "1/2",
+    "kind": "monster",
+    "size": "medium",
+    "armor_class": 12,
+    "max_hp": 27,
+    "speed_ft": 40,
+    "movement_modes": {
+      "walk_ft": 40,
+      "fly_ft": 0,
+      "climb_ft": 0,
+      "swim_ft": 0,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": 2,
+    "progression_features": {
+      "critical_hit_minimum": 20,
+      "initiative_advantage": false,
+      "athletics_advantage": false,
+      "heroic_warrior": false,
+      "studied_attacks": false,
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
+    },
+    "attacks": [
+      {
+        "id": "srd-shadow-draining-swipe",
+        "name": "Draining Swipe",
+        "weapon_id": "srd-shadow-draining-swipe-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 4,
+        "damage": {
+          "count": 1,
+          "size": 6,
+          "bonus": 2
+        },
+        "damage_type": "necrotic",
+        "animation": "strike",
+        "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "conditional_attack_modifiers": [],
+        "effects": [],
+        "forbid_target_grappled_by_self": false
+      }
+    ],
+    "primary_attack_id": "srd-shadow-draining-swipe",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 0,
+      "damage": 0
+    },
+    "save_actions": [],
+    "spell_save_actions": [],
+    "defensive_spell_actions": [],
+    "healing_actions": [],
+    "condition_removal_actions": [],
+    "saving_throw_bonuses": {
+      "strength": -2,
+      "dexterity": 2,
+      "constitution": 1,
+      "intelligence": -2,
+      "wisdom": 0,
+      "charisma": -1
+    },
+    "skill_bonuses": {},
+    "combat_traits": [],
+    "source_trait_names": [
+      "Amorphous",
+      "Sunlight Weakness"
+    ],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [
+      "Shadow Stealth"
+    ],
+    "source_limited_use_names": [],
+    "source_legendary_action_names": [],
+    "fighting_styles": [],
+    "weapon_masteries": [],
+    "damage_resistances": [
+      "acid",
+      "cold",
+      "fire",
+      "lightning",
+      "thunder"
+    ],
+    "damage_vulnerabilities": [
+      "radiant"
+    ],
+    "damage_immunities": [
+      "necrotic",
+      "poison"
+    ],
+    "condition_immunities": [
+      "exhaustion",
+      "frightened",
+      "grappled",
+      "paralyzed",
+      "petrified",
+      "poisoned",
+      "prone",
+      "restrained",
+      "unconscious"
+    ],
+    "wearing_heavy_armor": false,
+    "rage_damage_bonus": 0,
+    "resources": [],
+    "visual": {
+      "armor": "natural",
+      "main_hand": "Draining Swipe",
+      "body_style": "monster"
+    },
+    "source": "SRD 5.2.1 p. 322",
+    "unsupported_capabilities": []
+  },
+  {
+    "schema_version": 1,
     "id": "srd-specter",
     "name": "Specter",
     "archetype": "source-compiled monster",
