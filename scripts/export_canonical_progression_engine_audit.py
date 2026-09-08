@@ -22,12 +22,20 @@ from app.content.hero_progressions import CANONICAL_HEROES  # noqa: E402
 from app.content.subclass_combat_overlays import subclass_overlay  # noqa: E402
 
 
+NON_BLOCKING_STATUSES = frozenset({"supported", "arena_out_of_scope"})
+
+
 def _status(feature_id: str, statuses: dict[str, str]) -> str:
     if feature_id in SUPPORTED_HERO_FEATURES:
         return "supported"
     if feature_id in statuses:
         return statuses[feature_id]
     return "planned"
+
+
+def _is_blocking(status: str) -> bool:
+    """Return whether a capability status prevents an arena snapshot from certifying."""
+    return status not in NON_BLOCKING_STATUSES
 
 
 def _ignored_at_level(class_id: str, subclass_id: str, level: int) -> list[str]:
@@ -56,13 +64,13 @@ def _payload() -> dict[str, object]:
             active = set(canonical_combat_features(hero.class_id, level, hero.subclass_id))
             introduced = sorted(active - previous)
             feature_rows = [{"id": item, "status": _status(item, statuses)} for item in introduced]
-            blockers = [row for row in feature_rows if row["status"] != "supported"]
+            blockers = [row for row in feature_rows if _is_blocking(str(row["status"]))]
             if blockers and first_blocked_level is None:
                 first_blocked_level = level
             for row in feature_rows:
-                all_features.add(row["id"])
-                if row["status"] != "supported":
-                    blocker_features[row["id"]] = row["status"]
+                all_features.add(str(row["id"]))
+                if _is_blocking(str(row["status"])):
+                    blocker_features[str(row["id"])] = str(row["status"])
             levels.append({
                 "level": level,
                 "introduced_combat_features": feature_rows,
