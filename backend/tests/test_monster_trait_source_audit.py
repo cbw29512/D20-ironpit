@@ -53,8 +53,10 @@ def test_xorn_environment_only_traits_are_neutral_in_standard_pit() -> None:
 def test_water_breathing_is_combat_irrelevant_but_source_fingerprinted() -> None:
     row = _row("Reef Shark")
     monster = _monster("Reef Shark")
-    assert parse_trait_names(row["traits"]) == ["Water Breathing"]
-    assert monster.source_trait_names == ["Water Breathing"]
+    expected_traits = ["Pack Tactics", "Water Breathing"]
+    assert parse_trait_names(row["traits"]) == expected_traits
+    assert monster.source_trait_names == expected_traits
+    assert CombatTrait.PACK_TACTICS in monster.combat_traits
     assert trait_issues(monster, row) == []
     card = next(card for card in build_monster_catalog() if card.name == "Reef Shark")
     assert card.coverage_status is CoverageStatus.RAW_READY
