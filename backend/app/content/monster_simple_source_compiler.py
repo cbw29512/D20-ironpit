@@ -10,7 +10,6 @@ from app.content.movement_modes import parse_movement_profile, standard_arena_cl
 from app.domain.actions import AttackActionDefinition, AttackActionSlot
 from app.domain.models import CombatantTemplate, DamageType, OnHitDamage, VisualLoadout, Weapon, WeaponAttack, WeaponAttackKind
 from app.domain.size import CreatureSize
-
 _ATTACK = re.compile(
     r"(?P<name>[A-Z][A-Za-z0-9 ’'()/-]+)\.\s+(?P<mode>Melee|Ranged|Melee or Ranged)\s+Attack Roll:\s*"
     r"(?P<bonus>[+-]?\d+),\s*(?P<range>[^.]+)\.\s+Hit:\s*(?P<hit>.*?)(?=(?:\s+[A-Z][A-Za-z0-9 ’'()/-]+\.\s+"
