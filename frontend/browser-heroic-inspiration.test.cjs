@@ -70,7 +70,12 @@ const plainState = () => ({ template, heroic_inspiration: false });
   assert.equal(unchanged.used, false); assert.equal(impossible.heroic_inspiration, true);
 }
 
-window.IRON_PIT_BROWSER_GRAPPLE = { speedIsZero: () => false, attackDisadvantage: () => 0, apply: () => [] };
+window.IRON_PIT_BROWSER_GRAPPLE = {
+  speedIsZero: () => false,
+  attackDisadvantage: () => 0,
+  apply: () => [],
+  applyControl: () => [],
+};
 window.IRON_PIT_BROWSER_MODIFIERS = {
   effectiveSpeed: (state) => state.template.speed_ft, effectiveArmorClass: (state) => state.template.armor_class,
   attacksAgainstAdvantage: () => 0, consumeAttacksAgainstAdvantage: () => 0, nextAttackAgainstAdvantage: () => 0,
