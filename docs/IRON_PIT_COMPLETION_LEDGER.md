@@ -14,7 +14,7 @@ Do not mark content complete from this file alone. Regenerate and verify the aut
 
 Branch: `feat/usable-roster-warlock-l1`
 
-Re-anchored head before this checkpoint: `c61865b75b0c5dd29a39f6721bd6bfc2f9d0c983`
+Re-anchored head before this checkpoint: `9a39c8988914f33c15da1d9f7cbba155ec4584f5`
 
 ### Monsters
 
@@ -26,6 +26,7 @@ Re-anchored head before this checkpoint: `c61865b75b0c5dd29a39f6721bd6bfc2f9d0c9
 
 - Canonical classes: **12**
 - Level snapshots audited: **240** (12 classes × levels 1–20)
+- Certified pregen snapshots at this checkpoint: **24 / 240**
 - Level-1 engine-ready classes in the current progression audit: **8 / 12**
 - Current Level-1 blockers: `bardic-inspiration`, `martial-arts`, `hunters-mark`, `innate-sorcery`
 
@@ -42,9 +43,9 @@ Current CI coverage report at the immediately preceding source commit reported:
 
 ### CI diagnosis
 
-The latest source CI failure was not a combat resolver regression. The first real failure was a stale generated `data/roster_combat_mechanics_v1.json` artifact. The promotion workflow regenerated that checklist together with the canonical progression audit at commit `c61865b75b0c5dd29a39f6721bd6bfc2f9d0c983`.
+The stale generated-artifact failure chain has been repaired. The current exact head before this checkpoint (`9a39c8988914f33c15da1d9f7cbba155ec4584f5`) did not expose a failing test job: GitHub marked its workflow run `action_required`, with no jobs created. This is a workflow-execution gate rather than evidence of a combat-engine regression.
 
-The generated promotion commit was created by `github-actions[bot]`, so it did not recursively trigger the normal push CI. This checkpoint commit intentionally re-triggers exact-head CI on top of the regenerated artifacts.
+This human-authored checkpoint commit intentionally changes only the progress ledger so normal exact-head CI can be re-triggered without altering certification state or runtime behavior. No monster or pregen readiness is advanced by this commit.
 
 ## Locked implementation rules
 
@@ -58,4 +59,4 @@ The generated promotion commit was created by `github-actions[bot]`, so it did n
 
 ## Next priority
 
-After exact-head CI is green, prefer the smallest reusable primitive that unlocks multiple blocked snapshots or monsters. For Level 1 pregens, investigate the four remaining blockers as generic mechanics/data before writing any class-specific code.
+Do not add mechanic scope until exact-head CI executes cleanly. Once it is green, prefer the smallest reusable primitive that unlocks multiple blocked snapshots or monsters. For Level 1 pregens, investigate the four remaining blockers as generic mechanics/data before writing any class-specific code.
