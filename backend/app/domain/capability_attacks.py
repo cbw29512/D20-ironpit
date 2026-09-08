@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName
 from app.domain.areas import AreaTargeting
-from app.domain.capability_effects import AttackEffectDefinition, DiceSpec, GrappleEffectDefinition
+from app.domain.capability_effects import AttackEffectDefinition, ControlEffectDefinition, DiceSpec, GrappleEffectDefinition
 from app.domain.size import CreatureSize
 from app.domain.weapons import ConditionalAttackModifier, DamageType, WeaponAttackKind
 
@@ -70,6 +70,7 @@ class SaveCapabilityDefinition(BaseModel):
     damage_type: DamageType | None = None
     success_damage: Literal["none", "half"] = "none"
     magical_effect: bool = False
+    failure_control: ControlEffectDefinition | None = None
     grapple: GrappleEffectDefinition | None = None
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1)
@@ -79,9 +80,12 @@ class SaveCapabilityDefinition(BaseModel):
     def validate_damage(self) -> "SaveCapabilityDefinition":
         if (self.damage is None) != (self.damage_type is None):
             raise ValueError("Save damage dice and damage type must be declared together.")
-        if self.grapple and self.grapple.max_target_size and self.target_max_size:
-            if self.grapple.max_target_size != self.target_max_size:
-                raise ValueError("Save target size and grapple target size cannot disagree.")
+        if self.failure_control is not None and self.grapple is not None:
+            raise ValueError("Save action cannot declare both failure_control and legacy grapple data.")
+        control = self.failure_control or self.grapple
+        if control and control.max_target_size and self.target_max_size:
+            if control.max_target_size != self.target_max_size:
+                raise ValueError("Save target size and failure-control target size cannot disagree.")
         if self.resource_id is None and self.resource_cost != 1:
             raise ValueError("Save-action resource cost requires a resource id.")
         return self
