@@ -7,20 +7,27 @@ from app.domain.size import CreatureSize
 
 _SIZE = r"Tiny|Small|Medium|Large|Huge|Gargantuan"
 _PRONE = re.compile(
-    rf"(?:If the target is a (?P<size>{_SIZE}) or smaller creature, )?it has the Prone condition\.?",
+    rf"(?:If the target is a (?P<size>{_SIZE}) or smaller creature, )?it has the Prone condition\.(?=\s|$)",
     re.I,
 )
 _GRAPPLE = re.compile(
-    rf"If the target is a (?P<size>{_SIZE}) or smaller creature, it has the Grappled condition \(escape DC (?P<dc>\d+)\)(?: from [^.]+)?\.?",
+    rf"If the target is a (?P<size>{_SIZE}) or smaller creature, it has the Grappled condition \(escape DC (?P<dc>\d+)\)(?: from [^.]+)?\.(?=\s|$)",
     re.I,
 )
-_RESTRAINED = re.compile(r"While Grappled, the target has the Restrained condition\.?", re.I)
+_RESTRAINED = re.compile(
+    r"While Grappled, the target has the Restrained condition\.(?=\s|$)",
+    re.I,
+)
 _POISONED = re.compile(
-    r"(?:and )?the target has the Poisoned condition until the (?P<edge>start|end) of (?P<owner>its|the [A-Za-z’' -]+) next turn\.?",
+    r"(?:and )?the target has the Poisoned condition until the (?P<edge>start|end) of (?P<owner>its|the [A-Za-z’' -]+) next turn\.(?=\s|$)",
     re.I,
 )
 _CONTROL_WORDS = re.compile(
     r"\b(blinded|charmed|deafened|frightened|grappled|incapacitated|paralyzed|petrified|poisoned|prone|restrained|stunned|unconscious|push(?:es|ed)?|pull(?:s|ed)?|swallow(?:s|ed)?)\b",
+    re.I,
+)
+_COMPLEX_REMAINDER = re.compile(
+    r"\b(can't|cannot|only|total cover|suffocat|attach|detach|escape from|takes? .* damage at|damage at the)\b",
     re.I,
 )
 
@@ -36,7 +43,7 @@ def _poison_timing(edge: str, owner: str) -> str:
 
 
 def parse_simple_control_rider(hit: str) -> tuple[str, HitControlEffect | None, CreatureSize | None]:
-    """Strip one source clause already representable by universal on-hit condition mechanics."""
+    """Strip only exact source clauses already represented by universal on-hit mechanics."""
     text = hit
     control: HitControlEffect | None = None
     prone_size: CreatureSize | None = None
@@ -65,16 +72,16 @@ def parse_simple_control_rider(hit: str) -> tuple[str, HitControlEffect | None, 
 
     prone = _PRONE.search(text)
     if prone:
-        prone_size = _size(prone.group("size"))
+        prone_size = _size(prone.group("size")) or CreatureSize.GARGANTUAN
         text = _PRONE.sub("", text, count=1)
 
     return re.sub(r"\s+", " ", text).strip(" ,"), control, prone_size
 
 
 def has_unmodeled_control_text(actions: str) -> bool:
-    """Return True only when control language remains after stripping supported source shapes."""
+    """Fail closed whenever any control wording or attached behavior remains after exact stripping."""
     clean = _GRAPPLE.sub("", actions)
     clean = _RESTRAINED.sub("", clean)
     clean = _POISONED.sub("", clean)
     clean = _PRONE.sub("", clean)
-    return bool(_CONTROL_WORDS.search(clean))
+    return bool(_CONTROL_WORDS.search(clean) or _COMPLEX_REMAINDER.search(clean))
