@@ -2,13 +2,14 @@ from __future__ import annotations
 
 from app.combat.action_economy import is_available, spend
 from app.combat.barbarian import end_rage_if_incapacitated
+from app.combat.control_effects import apply_control_effect
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
 from app.combat.evasion import evasion_damage_fraction
-from app.combat.grapple import apply_grapple
 from app.combat.resources import action_resource_available, spend_action_resource
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.zero_hp import apply_damage
+from app.domain.actions import HitControlEffect
 from app.domain.models import BattleEvent, DamageRollComponent, DamageType, DiceRoll, EncounterCombatant, SavingThrowAction
 from app.domain.runtime import CombatantState
 from app.domain.size import size_at_most
@@ -47,6 +48,16 @@ def _damage_components(
                                 modifier=action.damage_bonus, damage_type=DamageType(action.damage_type), total=max(0, total))]
 
 
+def _legacy_failure_control(action: SavingThrowAction) -> HitControlEffect | None:
+    if action.grapple_escape_dc is None:
+        return None
+    return HitControlEffect(
+        max_target_size=action.target_max_size,
+        grapple_escape_dc=action.grapple_escape_dc,
+        restrains_while_grappled=action.restrains_while_grappled,
+    )
+
+
 def resolve_save_action(
     sequence: int, round_number: int, actor: EncounterCombatant, target: EncounterCombatant,
     action: SavingThrowAction, distance_ft: int, dice: DiceProvider, *, spend_action: bool = True,
@@ -77,8 +88,16 @@ def resolve_save_action(
         damage_outcome = apply_damage(target.state, applied_total, damage_types=applied_types, dice=dice, affected_states=affected_states)
         end_rage_if_incapacitated(target.state)
     applied_conditions: list[str] = []
-    if not succeeded and target.state.is_alive and not target.state.is_dead and action.grapple_escape_dc is not None:
-        applied_conditions = apply_grapple(target.state, actor.combatant_id, action.grapple_escape_dc, action.range_ft, restrains=action.restrains_while_grappled)
+    if not succeeded:
+        applied_conditions = apply_control_effect(
+            target.state,
+            actor.combatant_id,
+            action.id,
+            _legacy_failure_control(action),
+            range_ft=action.range_ft,
+            round_number=round_number,
+            affected_states=affected_states,
+        )
     outcome = "SUCCEEDS" if succeeded else "FAILS"
     description = f"{target.state.template.name} {outcome} a DC {action.dc} {action.save_ability.title()} save against {actor.state.template.name}'s {action.name}."
     if evasion_damage_fraction(target.state, action, succeeded) is not None:
