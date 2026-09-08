@@ -60,8 +60,8 @@ def compile_simple_monster(row: dict[str, object], monster_names: set[str]) -> C
     try:
         if source_blockers(row, monster_names):
             raise ValueError("source requires mechanics outside the simple universal compiler")
-        if str(row.get("reactions", "")).strip() or str(row.get("bonusActions", "")).strip() or "Spellcasting." in str(row.get("actions", "")):
-            raise ValueError("source needs a modeled reaction, bonus action, or spellcasting fingerprint")
+        if str(row.get("reactions", "")).strip() or "Spellcasting." in str(row.get("actions", "")):
+            raise ValueError("source needs a modeled reaction or spellcasting fingerprint")
         attacks = parse_simple_attacks(row)
         defenses = parse_defense_profile(row)
         raw = str(row["rawText"])
