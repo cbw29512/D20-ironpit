@@ -5,6 +5,7 @@ from app.domain.capabilities import AttackCapabilityDefinition
 from app.domain.capability_effects import (
     ConditionEffectDefinition,
     DamageEffectDefinition,
+    ForcedMovementEffectDefinition,
     GrappleEffectDefinition,
     ProneEffectDefinition,
 )
@@ -65,7 +66,9 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
             prone_size = effect.max_target_size
         elif isinstance(effect, HitModifierEffect):
             on_hit_modifiers.append(effect)
-        elif isinstance(effect, (GrappleEffectDefinition, ConditionEffectDefinition)):
+        elif isinstance(effect, (
+            GrappleEffectDefinition, ConditionEffectDefinition, ForcedMovementEffectDefinition,
+        )):
             control = compile_control(effect)
         else:
             raise UnsupportedCapabilityError(f"Unsupported attack effect: {effect!r}")
