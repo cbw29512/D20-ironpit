@@ -46,6 +46,12 @@ def _melee_reach_pattern(reach_ft: int) -> re.Pattern[str]:
     return re.compile(rf"\breach\s+{reach_ft}\s*(?:ft\.?|feet)\b", re.IGNORECASE)
 
 
+def _ranged_range_pattern(normal_ft: int, long_ft: int | None) -> re.Pattern[str]:
+    if long_ft is None or long_ft == normal_ft:
+        return re.compile(rf"\brange\s+{normal_ft}\s*(?:ft\.?|feet)\b", re.IGNORECASE)
+    return re.compile(rf"\brange\s+{normal_ft}\s*/\s*{long_ft}\s*(?:ft\.?|feet)\b", re.IGNORECASE)
+
+
 def _max_size_rider_present(actions: str, size: Any, condition: str) -> bool:
     size_name = getattr(size, "value", size)
     return bool(
@@ -96,8 +102,7 @@ def attack_issues(attack: WeaponAttack, actions: str) -> list[str]:
     if weapon.attack_kind.value == "melee" and not _melee_reach_pattern(weapon.reach_ft).search(actions):
         issues.append(f"melee-reach-mismatch:{attack.id}")
     if weapon.attack_kind.value == "ranged" and weapon.normal_range_ft is not None:
-        ranged = rf"range\s+{weapon.normal_range_ft}\s*/\s*{weapon.long_range_ft}\s*(?:ft\.?|feet)\b"
-        if not re.search(ranged, actions, re.IGNORECASE):
+        if not _ranged_range_pattern(weapon.normal_range_ft, weapon.long_range_ft).search(actions):
             issues.append(f"ranged-range-mismatch:{attack.id}")
     for extra in attack.on_hit_damage:
         if extra.dice_count == 0:
