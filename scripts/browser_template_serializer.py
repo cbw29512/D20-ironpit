@@ -71,6 +71,11 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             row["proneMaxSize"] = attack.knocks_prone_max_size.value
         if attack.forbid_target_grappled_by_self:
             row["forbidSelfGrappledTarget"] = True
+        if attack.conditional_attack_modifiers:
+            row["conditionalAttackModifiers"] = [
+                {"trigger": item.trigger, "mode": item.mode}
+                for item in attack.conditional_attack_modifiers
+            ]
         if attack.on_hit_damage:
             row["onHitDamage"] = [
                 {"source": part.source, "diceCount": part.dice_count, "diceSize": part.dice_size,
