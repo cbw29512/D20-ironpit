@@ -19,6 +19,10 @@ _POISONED = re.compile(
     r"(?:and )?the target has the Poisoned condition until the (?P<edge>start|end) of (?P<owner>its|the [A-Za-z’' -]+) next turn\.?",
     re.I,
 )
+_CONTROL_WORDS = re.compile(
+    r"\b(blinded|charmed|deafened|frightened|grappled|incapacitated|paralyzed|petrified|poisoned|prone|restrained|stunned|unconscious|push(?:es|ed)?|pull(?:s|ed)?|swallow(?:s|ed)?)\b",
+    re.I,
+)
 
 
 def _size(value: str | None) -> CreatureSize | None:
@@ -32,11 +36,7 @@ def _poison_timing(edge: str, owner: str) -> str:
 
 
 def parse_simple_control_rider(hit: str) -> tuple[str, HitControlEffect | None, CreatureSize | None]:
-    """Strip one source clause already representable by universal on-hit condition mechanics.
-
-    Returns clean hit text, an optional persistent/timed control effect, and an optional Prone size cap.
-    Unknown or compound control text is deliberately left untouched so the classifier keeps it blocked.
-    """
+    """Strip one source clause already representable by universal on-hit condition mechanics."""
     text = hit
     control: HitControlEffect | None = None
     prone_size: CreatureSize | None = None
@@ -71,10 +71,10 @@ def parse_simple_control_rider(hit: str) -> tuple[str, HitControlEffect | None, 
     return re.sub(r"\s+", " ", text).strip(" ,"), control, prone_size
 
 
-def has_unmodeled_control_text(hit: str) -> bool:
-    clean, _control, _prone = parse_simple_control_rider(hit)
-    return bool(re.search(
-        r"\b(blinded|charmed|deafened|frightened|grappled|incapacitated|paralyzed|petrified|poisoned|prone|restrained|stunned|unconscious|push(?:es|ed)?|pull(?:s|ed)?|swallow(?:s|ed)?)\b",
-        clean,
-        re.I,
-    ))
+def has_unmodeled_control_text(actions: str) -> bool:
+    """Return True only when control language remains after stripping supported source shapes."""
+    clean = _GRAPPLE.sub("", actions)
+    clean = _RESTRAINED.sub("", clean)
+    clean = _POISONED.sub("", clean)
+    clean = _PRONE.sub("", clean)
+    return bool(_CONTROL_WORDS.search(clean))
