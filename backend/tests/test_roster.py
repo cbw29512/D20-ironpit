@@ -1,23 +1,25 @@
-from app.main import get_demo_roster
+from app.content.audited_fighter import build_karnok_stoneward
+from app.content.demo import build_goblin_warrior
 
 
-def test_demo_roster_uses_canonical_fighter_identity() -> None:
-    roster = get_demo_roster()
+def test_demo_templates_use_canonical_fighter_identity() -> None:
+    fighter = build_karnok_stoneward()
+    monster = build_goblin_warrior()
 
-    assert roster.fighter.id == "karnok-stoneward-l1"
-    assert roster.fighter.name == "Karnok Stoneward"
-    assert roster.fighter.archetype == "Fighter"
-    assert roster.fighter.level == 1
-    assert roster.fighter.armor_class == 17
-    assert roster.fighter.max_hp == 12
-    assert roster.fighter.weapon_attack.weapon.name == "Greatsword"
-    assert roster.fighter.fighting_style == "Defense"
-    assert len(roster.fighter.weapon_masteries) == 3
-    assert roster.fighter.visual.off_hand is None
+    assert fighter.id == "karnok-stoneward-l1"
+    assert fighter.name == "Karnok Stoneward"
+    assert fighter.archetype == "Fighter"
+    assert fighter.level == 1
+    assert fighter.armor_class == 17
+    assert fighter.max_hp == 12
+    assert fighter.weapon_attack.weapon.name == "Greatsword"
+    assert fighter.fighting_style == "Defense"
+    assert len(fighter.weapon_masteries) == 3
+    assert fighter.visual.off_hand is None
 
-    assert roster.monster.id == "srd-goblin-warrior"
-    assert roster.monster.archetype == "Goblin Warrior"
-    assert roster.monster.challenge_rating == "1/4"
-    assert roster.monster.max_hp == 10
-    assert roster.monster.weapon_attack.weapon.name == "Scimitar"
-    assert roster.monster.visual.off_hand == "shield"
+    assert monster.id == "srd-goblin-warrior"
+    assert monster.archetype == "Goblin Warrior"
+    assert monster.challenge_rating == "1/4"
+    assert monster.max_hp == 10
+    assert monster.weapon_attack.weapon.name == "Scimitar"
+    assert monster.visual.off_hand == "shield"
