@@ -17,41 +17,47 @@ The repository guard skips Netlify builds whenever `CONTEXT` is not `production`
 
 Iron Pit production is a **static browser application**.
 
-- Netlify serves `frontend/`.
-- `scripts/prepare_static_site.py` copies the SRD catalog artifact required by the browser catalog.
+- Netlify serves the prepared static browser site.
+- `scripts/prepare_static_site.py` generates/copies authoritative browser artifacts from the Python rules/content oracle.
 - The browser combat engine resolves fights locally.
-- Production must not depend on `IRON_PIT_API_BASE`, `/api/`, Render, Docker, or a running FastAPI service.
-- The Python implementation remains in the repository as a rules-reference/CI oracle.
+- Production has no HTTP API/backend dependency.
+- The Python implementation remains in the repository for rules behavior, generation, audits, manifests, and CI only.
+- Docker/server deployment files are intentionally absent unless a future server-backed product feature is explicitly approved.
 
 ## Production smoke test
 
-- [ ] The page loads without a backend service.
-- [ ] The catalog reports 330 SRD monster records.
-- [ ] Only RAW-ready cards can be added to a fight.
-- [ ] 1–8 Hero Cards and 1–8 Monster Cards can be selected.
+- [ ] The page loads with no backend service.
+- [ ] The catalog contains exactly 330 canonical 2024 SRD monster records.
+- [ ] Only RAW-ready cards can enter automated combat.
+- [ ] 1–6 Hero Cards and 1–6 Monster Cards can be selected.
 - [ ] Duplicate monster cards remain independent combatants.
-- [ ] Party Total Levels and Monster Total CR update correctly.
-- [ ] The standard 30-foot Pit and 5-foot engaged start are available.
-- [ ] **FIGHT** resolves through `IRON_PIT_BROWSER_ENGINE.runEncounter`.
-- [ ] The animated stick-figure Pit appears and replays the battle event stream.
-- [ ] Ranged/thrown attacks can occur while combatants close; nobody holds range or kites.
-- [ ] Multiattack/Extra Attack uses its legal action economy.
-- [ ] HP, criticals, healing, movement, death saves, downed states, and deaths visibly update.
-- [ ] A player character reaching 0 HP does not automatically end the fight.
-- [ ] The result appears only after the deathmatch reaches a winner or the safety round limit.
-- [ ] The DM Details log matches the replayed event sequence.
+- [ ] FIGHT resolves through the canonical browser execution controller/engine.
+- [ ] STEP FIGHT can advance one event at a time.
+- [ ] WATCH REST continues the same Step session without rerolling/restarting.
+- [ ] Turbo uses the same combat engine with presentation overhead suppressed.
+- [ ] A selected Turbo fight reproduces from its recorded seed.
+- [ ] Engine-rule errors are excluded from Turbo outcome ratios and remain reproducible.
+- [ ] HP, conditions, buffs/debuffs, concentration, resources, death saves, down/death states, and other supported state visibly update.
+- [ ] A player character reaching 0 HP does not automatically end the fight unless a specific lethal rule overrides the generic 0-HP path.
+- [ ] The DM Details log matches the event stream and expandable audit evidence.
+- [ ] Unsupported outcome-changing mechanics fail closed.
 
 ## CI requirements before production
 
-- [ ] Python reference tests pass.
+- [ ] Python reference/certification tests pass.
 - [ ] Production source-size limits pass.
-- [ ] Static site preparation produces the SRD catalog artifact.
+- [ ] Capability/source audits pass.
+- [ ] Certification manifests regenerate/verify cleanly.
+- [ ] Static-site preparation produces deterministic current artifacts.
+- [ ] Generated-static parity is clean.
 - [ ] All production JavaScript passes syntax validation.
-- [ ] Deterministic browser engine, Rage, monster-batch, and melee-deathmatch regressions pass.
-- [ ] CI proves the active production path contains no API dependency.
-- [ ] CI proves the animated Pit is wired into the active fight path.
+- [ ] Permanent browser combat regressions pass.
+- [ ] Step/Watch/Replay/Turbo invariants pass.
+- [ ] Audit annotation is proven non-invasive.
+- [ ] CI proves the active production path has no required API/backend dependency.
+- [ ] Both public static entry points contain all required production modules.
 - [ ] Netlify production-only credit guard passes.
 
 ## Future services
 
-Accounts, persistence, rankings, or other server-backed features may introduce a service later. They are not dependencies of the combat MVP and must not be added to the fight path without a deliberate architecture decision and new certification gates.
+Accounts, persistence, rankings, or other server-backed features may introduce a service later. They are not dependencies of the combat product and must not be added to the fight path without a deliberate architecture decision and new certification gates.
