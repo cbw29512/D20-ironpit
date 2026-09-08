@@ -4,6 +4,7 @@
   const engine = () => window.IRON_PIT_BROWSER_ENGINE;
   const dice = () => window.IRON_PIT_DICE;
   const lab = () => window.IRON_PIT_BATTLE_LAB;
+  const audit = () => window.IRON_PIT_BROWSER_AUDIT;
   const replayView = () => window.IRON_PIT_BATTLEFIELD_REPLAY;
   const turbo = () => window.IRON_PIT_BROWSER_TURBO;
 
@@ -85,7 +86,7 @@
   function resolveLive(selection, slotMap) {
     try {
       dice().clearHistory();
-      const battle = engine().runEncounter(structuredClone(selection));
+      const battle = audit().annotateBattle(engine().runEncounter(structuredClone(selection)));
       const rolls = dice().getHistory();
       const diagnosticId = lab().diagnosticId(selection.hero_ids, selection.monster_ids, rolls);
       return createSession({ battle, slotMap, rolls, diagnosticId, mode: "live" });
@@ -99,7 +100,7 @@
     try {
       const replay = turbo().runSeeded(selection, seed);
       return createSession({
-        battle: replay.battle,
+        battle: audit().annotateBattle(replay.battle),
         slotMap,
         rolls: replay.rolls,
         diagnosticId: replay.diagnostic_id,
