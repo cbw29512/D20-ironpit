@@ -41,7 +41,7 @@ def resolve_attack(
     feature_id: str | None = None, turn_key: str | None = None, bonus_damage: BonusDamageSpec | None = None,
     close_enemy_active: bool = True, redirect_target: CombatantState | None = None,
     redirect_target_event_id: str | None = None, affected_states: list[CombatantState] | None = None,
-    sneak_attack_ally_available: bool = False,
+    sneak_attack_ally_available: bool = False, off_turn: bool = False,
 ) -> BattleEvent:
     try:
         if spend_action and not is_available(attacker, "action"):
@@ -69,8 +69,8 @@ def resolve_attack(
             spend(defender, "reaction"); actual_defender = redirect_target
             actual_event_id = redirect_target_event_id or redirect_target.template.id; redirect_used = True
         natural = attack_roll.selected_roll or 0; natural_20 = natural == 20
-        natural_1 = natural == 1
-        if natural_1:
+        natural_1 = natural == 1; natural_1_ends_turn = natural_1 and not off_turn
+        if natural_1_ends_turn:
             terminate_turn(attacker, "iron-pit-natural-1-attack")
         expanded_critical = natural >= attacker.template.progression_features.critical_hit_minimum
         target_ac = effective_armor_class(actual_defender)
@@ -107,7 +107,8 @@ def resolve_attack(
             studied_applied = apply_studied_attack_miss(attacker, attacker_event_id, defender_event_id, round_number)
         outcome = "CRITICAL HIT" if critical else ("HIT" if hit else "MISS")
         description = f"{attacker.template.name}: {outcome} with {weapon.name}."
-        if natural_1: description += " Natural 1: Iron Pit immediately ends the attacker's turn."
+        if natural_1_ends_turn: description += " Natural 1: Iron Pit immediately ends the attacker's turn."
+        elif natural_1: description += " Natural 1: automatic miss; this off-turn attack does not terminate a future turn."
         if heroic_reroll: description += " Heroic Inspiration rerolls one d20."
         if not hit and damage_roll is not None: description += f" Graze deals {damage_roll.total} {weapon.damage_type.value} damage."
         if studied_applied: description += f" Studied Attacks primes the next attack against {defender.template.name}."
@@ -128,8 +129,8 @@ def resolve_attack(
             target_id=actual_event_id, target_name=actual_defender.template.name, attack_name=weapon.name, target_ac=target_ac,
             attack_roll=attack_roll, saving_throw_roll=topple.save_roll if topple else None, save_ability="constitution" if topple and topple.save_dc is not None else None, save_dc=topple.save_dc if topple else None, save_succeeded=topple.save_succeeded if topple else None,
             damage_roll=damage_roll, damage_components=damage_components, applied_condition_ids=applied_conditions,
-            hit=hit, critical=critical, turn_terminated=natural_1,
-            turn_termination_reason="iron-pit-natural-1-attack" if natural_1 else None,
+            hit=hit, critical=critical, turn_terminated=natural_1_ends_turn,
+            turn_termination_reason="iron-pit-natural-1-attack" if natural_1_ends_turn else None,
             hp_before=hp_before, hp_after=actual_defender.current_hp,
             temporary_hp_before=temporary_hp_before, temporary_hp_after=actual_defender.temporary_hp,
             death_save_successes_before=death_success_before, death_save_failures_before=death_failure_before,
