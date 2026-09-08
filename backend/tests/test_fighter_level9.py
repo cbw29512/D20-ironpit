@@ -80,11 +80,21 @@ def test_failed_save_automatically_uses_indomitable_but_success_does_not() -> No
     assert roll is not None and roll.selected_roll == 10 and roll.total == 19
     assert "Indomitable +9" in roll.notation
     assert _indomitable_uses(failed_state) == 0
+    assert len(roll.revisions) == 1
+    revision = roll.revisions[0]
+    assert revision.source_effect_id == "indomitable"
+    assert revision.kind == "full_reroll"
+    assert revision.original_rolls == [2]
+    assert revision.replacement_rolls == [10]
+    assert revision.original_total == 2
+    assert revision.replacement_total == 19
+    assert revision.accepted == "replacement"
 
     successful_state = build_combatant_state(build_karnok_stoneward_level(9))
     roll, succeeded = resolve_saving_throw(successful_state, "wisdom", 15, FixedDiceProvider([15]))
     assert succeeded is True
     assert roll is not None and roll.total == 15
+    assert roll.revisions == []
     assert _indomitable_uses(successful_state) == 1
 
 
