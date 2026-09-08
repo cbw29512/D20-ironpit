@@ -13,7 +13,12 @@ def apply_event_forced_movement(
     control: HitControlEffect | None,
     event: BattleEvent,
 ) -> BattleEvent:
-    if control is None or control.forced_movement is None:
+    if (
+        control is None
+        or control.forced_movement is None
+        or target.state.is_dead
+        or not target.state.is_alive
+    ):
         return event
     before_distance = combatant_distance(source, target)
     result = apply_forced_movement(
