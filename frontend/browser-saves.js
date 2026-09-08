@@ -50,6 +50,10 @@
     return !action.targetMaxSize || S().sizeAtMost(target, action.targetMaxSize);
   }
 
+  function resourceAvailable(actor, action) {
+    return S().attackResourceAvailable(actor.state, action);
+  }
+
   function damageRolls(action, count, shared) {
     if (shared == null) return D().rollMany(count, action.damageDiceSize);
     if (!Array.isArray(shared) || shared.length !== count) throw new Error(`${action.name} shared damage roll count is invalid.`);
@@ -60,9 +64,11 @@
   function resolveAction(sequence, round, actor, target, action, distance, options = {}) {
     const spendAction = options.spendAction !== false;
     if (spendAction && !E().available(actor.state, "action")) throw new Error("Action is unavailable for saving throw action.");
+    if (!resourceAvailable(actor, action)) throw new Error(`${action.name} resource is unavailable.`);
     if (!legalAction(action, target, distance)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
     const save = resolveSavingThrow(target.state, action.saveAbility, action.dc);
     if (spendAction) E().spend(actor.state, "action");
+    S().spendAttackResource(actor.state, action);
     const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
     const deathSuccessBefore = target.state.death_save_successes, deathFailureBefore = target.state.death_save_failures;
     const concentrationBefore = target.state.concentration?.effect_id || null;
@@ -99,9 +105,10 @@
       death_save_successes_before: deathSuccessBefore, death_save_failures_before: deathFailureBefore,
       death_save_successes: target.state.death_save_successes, death_save_failures: target.state.death_save_failures,
       is_stable: target.state.is_stable, is_dead: target.state.is_dead, feature_id: action.id,
+      resource_remaining: action.resourceId ? actor.state.resources[action.resourceId] : null,
       concentration_ended_effect_id: concentrationBefore && !target.state.concentration ? concentrationBefore : null,
       animation: action.animation || "save-effect", description };
   }
 
-  window.IRON_PIT_BROWSER_SAVES = { legalAction, resolveAction, resolveSavingThrow, saveMode };
+  window.IRON_PIT_BROWSER_SAVES = { legalAction, resourceAvailable, resolveAction, resolveSavingThrow, saveMode };
 })();
