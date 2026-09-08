@@ -21,15 +21,15 @@ assert.equal(monsters["srd-ogre-zombie"].creature_type, "Undead");
 assert.equal(monsters["srd-goblin-warrior"].creature_type, "Fey (Goblinoid)");
 assert.notEqual(monsters["srd-goblin-warrior"].creature_type, "Undead");
 
-for (const id of ["srd-piranha", "srd-reef-shark", "srd-swarm-of-piranhas"]) {
-  const monster = monsters[id];
-  assert.ok(monster, `${id} must be certified under the hospitable-arena policy`);
-  assert.deepEqual(monster.source_trait_names, ["Water Breathing"]);
-  assert.ok(monster.movement_modes.swim_ft > 0, `${id} must preserve its source swim movement`);
+const reef = monsters["srd-reef-shark"];
+assert.ok(reef, "srd-reef-shark must be certified under the hospitable-arena policy");
+assert.deepEqual(reef.source_trait_names, ["Water Breathing"]);
+assert.ok(reef.movement_modes.swim_ft > 0, "srd-reef-shark must preserve its source swim movement");
+
+for (const id of [
+  "srd-giant-shark", "srd-hunter-shark", "srd-piranha", "srd-swarm-of-piranhas",
+]) {
+  assert.equal(monsters[id], undefined, `${id} must fail closed until its conditional attack modifier is modeled`);
 }
 
-for (const id of ["srd-giant-shark", "srd-hunter-shark"]) {
-  assert.equal(monsters[id], undefined, `${id} must fail closed until injured-target attack Advantage is modeled`);
-}
-
-console.log("Generated browser monsters treat Water Breathing as combat-irrelevant while sharks with injured-target attack Advantage remain fail-closed.");
+console.log("Generated browser monsters treat Water Breathing as combat-irrelevant while conditional attack modifiers remain fail-closed.");
