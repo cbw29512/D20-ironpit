@@ -36,6 +36,7 @@ window.IRON_PIT_BROWSER_GRAPPLE = {
   attackDisadvantage: () => 0,
   speedIsZero: () => false,
   apply: () => [],
+  applyControl: () => [],
 };
 window.IRON_PIT_BROWSER_CONDITION_RULES = {
   has: (state, id) => state.active_effect_ids.includes(id),
