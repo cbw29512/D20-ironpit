@@ -6,6 +6,10 @@ from app.domain.control_effects import ForcedMovementEffect
 from app.domain.size import CreatureSize
 
 _SIZE = r"Tiny|Small|Medium|Large|Huge|Gargantuan"
+_SAVE = r"Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma"
+_ACTION_MARKER = re.compile(
+    rf"(?:(?P<mode>Melee or Ranged|Melee|Ranged)\s+Attack Roll:|(?:{_SAVE})\s+Saving Throw:)", re.I,
+)
 _FORCED = re.compile(
     rf"(?:If the target is a (?P<size>{_SIZE}) or smaller creature, )?"
     r"(?:(?:the [A-Za-z’' -]+ )?(?P<active>pushes|pulls) the target|"
@@ -35,6 +39,14 @@ def _effect(match: re.Match[str]) -> tuple[ForcedMovementEffect, CreatureSize | 
     ), _size(match.group("size"))
 
 
+def _runtime_mode_count(text: str, movement_start: int) -> int:
+    markers = list(_ACTION_MARKER.finditer(text, 0, movement_start))
+    if not markers:
+        return 1
+    mode = markers[-1].group("mode")
+    return 2 if mode and mode.lower() == "melee or ranged" else 1
+
+
 def parse_forced_movement_rider(text: str) -> tuple[str, ForcedMovementEffect | None, CreatureSize | None]:
     """Strip one exact push/pull clause while preserving printed distance semantics."""
     try:
@@ -49,9 +61,13 @@ def parse_forced_movement_rider(text: str) -> tuple[str, ForcedMovementEffect | 
 
 
 def forced_movement_specs(text: str) -> list[tuple[ForcedMovementEffect, CreatureSize | None]]:
-    """Return every exact movement fingerprint retained by the source grammar."""
+    """Return source fingerprints expanded to the runtime modes produced by each source action."""
     try:
-        return [_effect(match) for match in _FORCED.finditer(text)]
+        specs: list[tuple[ForcedMovementEffect, CreatureSize | None]] = []
+        for match in _FORCED.finditer(text):
+            spec = _effect(match)
+            specs.extend([spec] * _runtime_mode_count(text, match.start()))
+        return specs
     except (TypeError, ValueError) as exc:
         raise ValueError("forced-movement source fingerprinting failed") from exc
 
