@@ -72,14 +72,15 @@ def _action(match: re.Match[str], monster_slug: str, recharges: dict[str, int]) 
     range_ft, area, target_size = _targeting(match.group("target"))
     bonus = int(match.group("bonus") or 0) * (-1 if match.group("sign") == "-" else 1)
     resource_id = f"srd-{monster_slug}-{_slug(name)}-recharge" if name in recharges else None
-    failure_control = None
+    failure_control = None; escape_dc = None; restrains = False
     if "escape" in match.re.groupindex:
         escape = match.group("escape")
         if escape:
+            escape_dc = int(escape); restrains = bool(match.group("restrained"))
             failure_control = HitControlEffect(
                 max_target_size=target_size,
-                grapple_escape_dc=int(escape),
-                restrains_while_grappled=bool(match.group("restrained")),
+                grapple_escape_dc=escape_dc,
+                restrains_while_grappled=restrains,
             )
     return SavingThrowAction(
         id=f"srd-{monster_slug}-{_slug(name)}", name=name,
@@ -88,6 +89,7 @@ def _action(match: re.Match[str], monster_slug: str, recharges: dict[str, int]) 
         damage_dice_count=int(match.group("count")), damage_dice_size=int(match.group("size")),
         damage_bonus=bonus, damage_type=match.group("type").lower(),
         success_damage="half" if match.group("success") else "none", failure_control=failure_control,
+        grapple_escape_dc=escape_dc, restrains_while_grappled=restrains,
         resource_id=resource_id, animation="save-effect",
     )
 
