@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Literal, TypedDict
 
+from app.content.figure_profiles_undead import UNDEAD_FIGURE_PROFILES
+
 FigureForm = Literal[
     "aquatic-mammal", "aquatic-reptile", "bat", "bear", "bird", "brute", "centipede", "crab", "fish", "frog",
     "gargoyle", "hippogriff", "hoofed", "humanoid", "insect", "plant", "primate", "pterosaur", "quadruped",
@@ -97,11 +99,9 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Manticore": _p("quadruped", "manticore"),
     "Mastiff": _p("quadruped", "canine"),
     "Merfolk Skirmisher": _p("humanoid", "merfolk-skirmisher"),
-    "Minotaur Skeleton": _p("brute", "minotaur-skeleton"),
     "Mule": _p("hoofed", "equine"),
     "Noble": _p("humanoid", "noble"),
     "Ogre": _p("brute", "ogre"),
-    "Ogre Zombie": _p("brute", "ogre-zombie"),
     "Owl": _p("bird", "owl"),
     "Owlbear": _p("bear", "owlbear"),
     "Panther": _p("quadruped", "cat"),
@@ -120,9 +120,6 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Sahuagin Warrior": _p("humanoid", "sahuagin-warrior"),
     "Scorpion": _p("scorpion", "scorpion"),
     "Scout": _p("humanoid", "scout"),
-    "Shadow": _p("humanoid", "shadow"),
-    "Skeleton": _p("humanoid", "skeleton"),
-    "Specter": _p("humanoid", "specter"),
     "Spider": _p("spider", "spider"),
     "Spy": _p("humanoid", "spy"),
     "Swarm of Bats": _p("swarm", "bats"),
@@ -139,14 +136,12 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Violet Fungus": _p("plant", "violet-fungus"),
     "Vulture": _p("bird", "vulture"),
     "Warhorse": _p("hoofed", "equine"),
-    "Warhorse Skeleton": _p("hoofed", "skeleton-equine"),
     "Warrior Infantry": _p("humanoid", "infantry"),
     "Warrior Veteran": _p("humanoid", "veteran"),
     "Weasel": _p("quadruped", "mustelid"),
     "Wolf": _p("quadruped", "canine"),
     "Worg": _p("quadruped", "canine"),
-    "Wraith": _p("humanoid", "wraith"),
     "Wyvern": _p("reptile", "wyvern"),
     "Xorn": _p("brute", "xorn"),
-    "Zombie": _p("humanoid", "zombie"),
 }
+MONSTER_FIGURE_PROFILES.update(UNDEAD_FIGURE_PROFILES)  # type: ignore[arg-type]
