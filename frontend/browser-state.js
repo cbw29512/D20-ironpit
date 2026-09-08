@@ -1,24 +1,20 @@
 (() => {
   "use strict";
-
   const SIZE_RANK = { tiny: 0, small: 1, medium: 2, large: 3, huge: 4, gargantuan: 5 };
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { effectiveSpeed: (state) => state.template.speed_ft };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { incapacitated: (state) => state.is_unconscious };
   const effectiveMaxHp = (state) => state.template.max_hp + (state.max_hp_bonus || 0);
-
   function attackResourceAvailable(state, attack) {
     if (!attack?.resourceId) return true;
     return (state.resources?.[attack.resourceId] || 0) >= (attack.resourceCost || 1);
   }
-
   function spendAttackResource(state, attack) {
     if (!attack?.resourceId) return;
     const cost = attack.resourceCost || 1;
     if (!attackResourceAvailable(state, attack)) throw new Error(`Resource is unavailable for attack ${attack.id}.`);
     state.resources[attack.resourceId] -= cost;
   }
-
   function rechargeStart(state, dice = window.IRON_PIT_DICE) {
     const metadata = state.template.resource_recharge || {};
     if (!dice?.roll) return [];
@@ -32,7 +28,6 @@
     }
     return results;
   }
-
   function ensureResourceAttackWrapper() {
     const runtime = window.IRON_PIT_BROWSER_ATTACK;
     if (!runtime?.resolveAttack || runtime.__resourceWrapped) return;
@@ -46,7 +41,6 @@
     };
     runtime.__resourceWrapped = true;
   }
-
   function buildState(template) {
     ensureResourceAttackWrapper();
     return {
@@ -62,25 +56,21 @@
       temporary_damage_resistances: [], rage_expires_round: null, rage_max_round: null,
     };
   }
-
   function grantTemporaryHp(state, amount) {
     if (amount < 0) throw new Error("Temporary HP cannot be negative.");
     if (state.template.traits?.includes("swarm")) return state.temporary_hp;
     state.temporary_hp = Math.max(state.temporary_hp, amount);
     return state.temporary_hp;
   }
-
   function terminateTurn(state, reason) {
     state.turn_terminated = true; state.turn_termination_reason = reason;
     state.action_available = false; state.bonus_action_available = false; state.movement_remaining_ft = 0;
   }
-
   function refreshReaction(state) { state.reaction_available = true; }
   function refreshStartOfTurn(state) {
     refreshReaction(state);
     window.IRON_PIT_BROWSER_HEROIC_INSPIRATION?.grant(state);
   }
-
   function beginTurn(state) {
     ensureResourceAttackWrapper();
     state.turn_terminated = false; state.turn_termination_reason = null;
@@ -99,13 +89,11 @@
     }
     return recharge;
   }
-
   const distance = (a, b) => Math.abs(a.position_ft - b.position_ft);
   const active = (member) => member.state.is_alive && !member.state.is_dead
     && member.state.current_hp > 0 && !Q().incapacitated(member.state);
   const downedCharacter = (member) => member.state.template.kind === "character" && member.state.is_alive && !member.state.is_dead && member.state.current_hp === 0;
   const opponents = (member, setup) => member.side === "heroes" ? setup.monsters : setup.heroes;
-
   function targetPriority(member) {
     const state = member.state;
     if (!state.is_alive || state.is_dead) return null;
@@ -113,14 +101,12 @@
     if (state.template.kind === "character" && state.current_hp === 0) return 2;
     return null;
   }
-
   function priorityTargets(member, setup) {
     const eligible = opponents(member, setup).filter((candidate) => targetPriority(candidate) !== null);
     if (!eligible.length) return [];
     const priority = Math.min(...eligible.map(targetPriority));
     return eligible.filter((candidate) => targetPriority(candidate) === priority);
   }
-
   function nearestTarget(member, setup) {
     const candidates = priorityTargets(member, setup);
     if (!candidates.length) return null;
@@ -132,12 +118,10 @@
     const choices = grapplers.length ? grapplers : candidates;
     return choices.reduce((best, item) => distance(member, item) < distance(member, best) ? item : best);
   }
-
   function hasActiveAlly(member, setup) {
     const allies = member.side === "heroes" ? setup.heroes : setup.monsters;
     return allies.some((ally) => ally.combatant_id !== member.combatant_id && active(ally));
   }
-
   const packTactics = (member, setup) => member.state.template.traits?.includes("pack-tactics") && hasActiveAlly(member, setup);
   function moveToward(member, target, desired) {
     const before = distance(member, target);
@@ -147,7 +131,6 @@
     member.state.movement_remaining_ft -= moved;
     return { before, after: distance(member, target), moved };
   }
-
   const sizeAtMost = (member, maxSize) => Boolean(maxSize) && SIZE_RANK[member.state.template.size] <= SIZE_RANK[maxSize];
   const canProne = (target, maxSize) => sizeAtMost(target, maxSize);
   window.IRON_PIT_BROWSER_STATE = {
