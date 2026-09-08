@@ -62,7 +62,12 @@ def build_varek_ashenmark_level(level: int) -> CombatantTemplate:
             "wisdom": 4,
             "charisma": 5,
         },
+        # Athletics and Acrobatics are always exposed on arena pregens because
+        # universal grapple/escape resolution consumes those checks even when
+        # the character is not proficient in either skill.
         skill_bonuses={
+            "athletics": 0,
+            "acrobatics": 0,
             "arcana": 3,
             "intimidation": 5,
             "insight": 4,
