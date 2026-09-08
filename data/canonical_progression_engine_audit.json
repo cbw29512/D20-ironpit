@@ -61,10 +61,6 @@
       "status": "planned"
     },
     {
-      "id": "bardic-inspiration",
-      "status": "planned"
-    },
-    {
       "id": "beast-spells",
       "status": "planned"
     },
@@ -1032,20 +1028,15 @@
     },
     {
       "class_id": "bard",
-      "first_blocked_level": 1,
+      "first_blocked_level": 3,
       "hero_name": "Lyra Silverstring",
-      "level_1_engine_ready": false,
+      "level_1_engine_ready": true,
       "levels": [
         {
           "arena_ignored_introduced": [
             "bardic-inspiration"
           ],
-          "blockers": [
-            {
-              "id": "bardic-inspiration",
-              "status": "planned"
-            }
-          ],
+          "blockers": [],
           "introduced_combat_features": [
             {
               "id": "bard-spellcasting",
@@ -1053,7 +1044,7 @@
             },
             {
               "id": "bardic-inspiration",
-              "status": "planned"
+              "status": "arena_out_of_scope"
             },
             {
               "id": "magic-initiate-cleric",
@@ -4375,12 +4366,13 @@
   "summary": {
     "canonical_classes": 12,
     "feature_statuses": {
-      "planned": 184,
+      "arena_out_of_scope": 1,
+      "planned": 183,
       "supported": 42
     },
-    "level_1_engine_ready_classes": 8,
+    "level_1_engine_ready_classes": 9,
     "level_slots": 240,
-    "unique_blocking_features": 184,
+    "unique_blocking_features": 183,
     "unique_combat_features": 226
   }
 }
