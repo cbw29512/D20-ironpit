@@ -2,14 +2,13 @@ from __future__ import annotations
 
 from app.combat.action_economy import is_available, spend
 from app.combat.barbarian import end_rage_if_incapacitated
-from app.combat.control_effects import apply_control_effect
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
 from app.combat.evasion import evasion_damage_fraction
 from app.combat.resources import action_resource_available, spend_action_resource
+from app.combat.save_control import apply_save_forced_movement, resolve_failed_save_control
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.zero_hp import apply_damage
-from app.domain.actions import HitControlEffect
 from app.domain.models import BattleEvent, DamageRollComponent, DamageType, DiceRoll, EncounterCombatant, SavingThrowAction
 from app.domain.runtime import CombatantState
 from app.domain.size import size_at_most
@@ -48,18 +47,6 @@ def _damage_components(
                                 modifier=action.damage_bonus, damage_type=DamageType(action.damage_type), total=max(0, total))]
 
 
-def _failure_control(action: SavingThrowAction) -> HitControlEffect | None:
-    if action.failure_control is not None:
-        return action.failure_control
-    if action.grapple_escape_dc is None:
-        return None
-    return HitControlEffect(
-        max_target_size=action.target_max_size,
-        grapple_escape_dc=action.grapple_escape_dc,
-        restrains_while_grappled=action.restrains_while_grappled,
-    )
-
-
 def resolve_save_action(
     sequence: int, round_number: int, actor: EncounterCombatant, target: EncounterCombatant,
     action: SavingThrowAction, distance_ft: int, dice: DiceProvider, *, spend_action: bool = True,
@@ -89,17 +76,10 @@ def resolve_save_action(
         applied_types = {part.damage_type for part in damage_components if part.applied_total > 0}
         damage_outcome = apply_damage(target.state, applied_total, damage_types=applied_types, dice=dice, affected_states=affected_states)
         end_rage_if_incapacitated(target.state)
-    applied_conditions: list[str] = []
-    if not succeeded:
-        applied_conditions = apply_control_effect(
-            target.state,
-            actor.combatant_id,
-            action.id,
-            _failure_control(action),
-            range_ft=action.range_ft,
-            round_number=round_number,
-            affected_states=affected_states,
-        )
+    control_result = None if succeeded else resolve_failed_save_control(
+        actor, target, action, round_number, affected_states,
+    )
+    applied_conditions = control_result.applied_conditions if control_result is not None else []
     outcome = "SUCCEEDS" if succeeded else "FAILS"
     description = f"{target.state.template.name} {outcome} a DC {action.dc} {action.save_ability.title()} save against {actor.state.template.name}'s {action.name}."
     if evasion_damage_fraction(target.state, action, succeeded) is not None:
@@ -111,7 +91,7 @@ def resolve_save_action(
     if action.resource_id is not None:
         resource = next(resource for resource in actor.state.resources if resource.id == action.resource_id)
         resource_remaining = resource.current_uses
-    return BattleEvent(
+    event = BattleEvent(
         sequence=sequence, round_number=round_number, event_type="saving_throw", actor_id=actor.combatant_id, actor_name=actor.state.template.name,
         target_id=target.combatant_id, target_name=target.state.template.name, saving_throw_roll=save_roll,
         save_ability=action.save_ability, save_dc=action.dc, save_succeeded=succeeded, damage_roll=damage_roll, damage_components=damage_components,
@@ -123,3 +103,4 @@ def resolve_save_action(
         concentration_ended_effect_id=concentration_before if concentration_before and target.state.concentration is None else None,
         resource_remaining=resource_remaining, animation=action.animation, description=description,
     )
+    return apply_save_forced_movement(actor, target, control_result, event) if control_result is not None else event
