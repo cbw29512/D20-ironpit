@@ -32,14 +32,15 @@ def merge_capability_definitions(
 ) -> dict[str, CombatantDefinition]:
     """Merge migration-era native rows under source-derived generated rows.
 
-    Native definitions are still useful for content not yet generated, but once an id is
-    generated from the authoritative runtime/source pipeline that definition wins. This
-    lets migration entries disappear naturally instead of requiring hand deletion first.
+    Source-derived generated rows are authoritative. Native definitions remain only for
+    ids that have not yet been generated, so superseded migration entries cannot alter
+    ordering or semantics of the canonical generated roster.
     """
     overlap = set(generated) & set(native)
     if overlap:
         logger.info("Generated capability definitions supersede %d native migration rows.", len(overlap))
-    return {**native, **generated}
+    remaining_native = {key: value for key, value in native.items() if key not in generated}
+    return {**remaining_native, **generated}
 
 
 def _load_registry(path: Path) -> dict[str, CombatantDefinition]:
