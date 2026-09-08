@@ -39,6 +39,7 @@
   }
 
   function applyMovement(source, target, control, event = null) {
+    if (!control || target.state.is_dead || !target.state.is_alive) return null;
     const result = F()?.apply(source, target, control) || null;
     if (!result || !event) return result;
     event.distance_before_ft = result.beforeDistanceFt;
