@@ -4,8 +4,8 @@
   "generation_policy": "Derived automatically from canonical SRD rows plus runtime/source audit readiness.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 131,
-    "blocked": 199
+    "public_ready": 144,
+    "blocked": 186
   },
   "monsters": [
     {
@@ -1629,16 +1629,12 @@
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "source-save-action-count-mismatch"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "source-save-action-count-mismatch"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-black-pudding",
@@ -1740,16 +1736,12 @@
         "multiattack",
         "saving-throw-action"
       ],
-      "unsupported_mechanics": [
-        "source-save-action-count-mismatch"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "source-save-action-count-mismatch"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-boar",
@@ -2755,16 +2747,12 @@
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "source-save-action-count-mismatch"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "source-save-action-count-mismatch"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-dretch",
@@ -4514,16 +4502,12 @@
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "source-save-action-count-mismatch"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "source-save-action-count-mismatch"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-green-hag",
@@ -4804,16 +4788,12 @@
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "source-save-action-count-mismatch"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "source-save-action-count-mismatch"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-hezrou",
@@ -7024,16 +7004,12 @@
         "multiattack",
         "saving-throw-action"
       ],
-      "unsupported_mechanics": [
-        "source-save-action-count-mismatch"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "source-save-action-count-mismatch"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-reef-shark",
@@ -9149,16 +9125,12 @@
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "source-save-action-count-mismatch"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "source-save-action-count-mismatch"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-wight",
@@ -9241,16 +9213,12 @@
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "source-save-action-count-mismatch"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "source-save-action-count-mismatch"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-wolf",
@@ -9383,16 +9351,12 @@
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "source-save-action-count-mismatch"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "source-save-action-count-mismatch"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-young-blue-dragon",
@@ -9412,16 +9376,12 @@
         "multiattack",
         "saving-throw-action"
       ],
-      "unsupported_mechanics": [
-        "source-save-action-count-mismatch"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "source-save-action-count-mismatch"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-young-brass-dragon",
@@ -9577,16 +9537,12 @@
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "source-save-action-count-mismatch"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "source-save-action-count-mismatch"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-young-red-dragon",
@@ -9606,16 +9562,12 @@
         "multiattack",
         "saving-throw-action"
       ],
-      "unsupported_mechanics": [
-        "source-save-action-count-mismatch"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "source-save-action-count-mismatch"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-young-silver-dragon",
@@ -9671,16 +9623,12 @@
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "source-save-action-count-mismatch"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "source-save-action-count-mismatch"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-zombie",
