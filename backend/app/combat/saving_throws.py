@@ -48,7 +48,9 @@ def _damage_components(
                                 modifier=action.damage_bonus, damage_type=DamageType(action.damage_type), total=max(0, total))]
 
 
-def _legacy_failure_control(action: SavingThrowAction) -> HitControlEffect | None:
+def _failure_control(action: SavingThrowAction) -> HitControlEffect | None:
+    if action.failure_control is not None:
+        return action.failure_control
     if action.grapple_escape_dc is None:
         return None
     return HitControlEffect(
@@ -93,7 +95,7 @@ def resolve_save_action(
             target.state,
             actor.combatant_id,
             action.id,
-            _legacy_failure_control(action),
+            _failure_control(action),
             range_ft=action.range_ft,
             round_number=round_number,
             affected_states=affected_states,
