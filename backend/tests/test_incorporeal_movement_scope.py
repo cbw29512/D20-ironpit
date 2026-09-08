@@ -8,11 +8,15 @@ def test_incorporeal_movement_is_combat_irrelevant_in_standard_pit() -> None:
     rows = load_monster_rows()
     names = {str(row["name"]) for row in rows}
     by_name = {str(row["name"]): row for row in rows}
+    expected_traits = {
+        "Specter": ["Incorporeal Movement"],
+        "Wraith": ["Incorporeal Movement", "Sunlight Sensitivity"],
+    }
 
-    for name in ("Specter", "Wraith"):
+    for name, traits in expected_traits.items():
         row = by_name[name]
         assert source_blockers(row, names) == []
 
         monster = compile_simple_monster(row, names)
-        assert monster.source_trait_names == ["Incorporeal Movement"]
+        assert monster.source_trait_names == traits
         assert audit_monster_source(monster, row) == []
