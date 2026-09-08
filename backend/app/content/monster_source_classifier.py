@@ -5,7 +5,7 @@ import re
 from app.content.monster_attack_roll_modifier_source_audit import unsupported_conditional_attack_modifier
 from app.content.monster_bonus_action_source_audit import _ARENA_NEUTRAL_BONUS_ACTIONS, _base_name, parse_bonus_action_names
 from app.content.monster_defense_source_audit import parse_defense_profile
-from app.content.monster_limited_use_source_audit import parse_limited_use_names
+from app.content.monster_limited_use_source_audit import parse_action_recharges, parse_limited_use_names
 from app.content.monster_reaction_source_audit import parse_parry_ac_bonus, parse_reaction_names, parse_redirect_attack_range
 from app.content.monster_simple_control_rider import has_unmodeled_control_text
 from app.content.monster_simple_hit_modifier_rider import strip_modeled_hit_modifier_riders
@@ -52,6 +52,14 @@ def _reaction_is_modeled(row: dict[str, object], reactions: list[str]) -> bool:
     return not reactions
 
 
+def _limited_uses_are_simple_action_recharges(row: dict[str, object]) -> bool:
+    names = parse_limited_use_names(row)
+    if not names:
+        return True
+    recharges = parse_action_recharges(row)
+    return bool(recharges) and len(names) == len(recharges) and all(name.startswith("actions:") for name in names)
+
+
 def _unmodeled_action_rider(actions: str) -> bool:
     clean = _SUPPORTED_BLOODIED_REPLACEMENT.sub("damage", actions)
     clean = _SUPPORTED_FIXED_RIDER.sub("", clean)
@@ -81,7 +89,7 @@ def source_blockers(row: dict[str, object], monster_names: set[str]) -> list[str
     except ValueError:
         blockers.append("bonus-action-parse")
     try:
-        if parse_limited_use_names(row):
+        if not _limited_uses_are_simple_action_recharges(row):
             blockers.append("limited-use")
     except ValueError:
         blockers.append("limited-use-parse")
