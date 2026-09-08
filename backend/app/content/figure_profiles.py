@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Literal, TypedDict
 
+from app.content.figure_profiles_recharge import RECHARGE_FIGURE_PROFILES
 from app.content.figure_profiles_undead import UNDEAD_FIGURE_PROFILES
 
 FigureForm = Literal[
@@ -146,3 +147,4 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Xorn": _p("brute", "xorn"),
 }
 MONSTER_FIGURE_PROFILES.update(UNDEAD_FIGURE_PROFILES)  # type: ignore[arg-type]
+MONSTER_FIGURE_PROFILES.update(RECHARGE_FIGURE_PROFILES)  # type: ignore[arg-type]
