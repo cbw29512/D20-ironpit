@@ -10,6 +10,12 @@ def _setup(heroes: list[str], monsters: list[str]):
     return build_encounter_setup(EncounterSelection(hero_ids=heroes, monster_ids=monsters))
 
 
+def _neutralize_initiative(setup) -> None:
+    for member in [*setup.heroes, *setup.monsters]:
+        member.state.template.initiative_bonus = 0
+        member.state.template.progression_features.initiative_advantage = False
+
+
 def test_identical_monsters_share_one_raw_initiative_roll() -> None:
     setup = _setup(["karnok-stoneward-l1"], ["srd-goblin-warrior", "srd-goblin-warrior"])
     initiative = roll_encounter_initiative(setup, FixedDiceProvider([10, 15]))
@@ -45,24 +51,46 @@ def test_initiative_event_preserves_full_advantage_roll_provenance() -> None:
     assert next_sequence == 3
 
 
-def test_tied_heroes_keep_selected_party_order() -> None:
-    setup = _setup(["karnok-stoneward-l1", "rokhan-stonefury-l1"], ["srd-commoner"])
-    initiative = roll_encounter_initiative(setup, FixedDiceProvider([10, 10, 1]))
-
-    assert initiative.turn_order[:2] == [
-        "hero-1:karnok-stoneward-l1",
-        "hero-2:rokhan-stonefury-l1",
-    ]
-
-
-def test_cross_side_tie_uses_explicit_arena_gm_tiebreak() -> None:
+def test_natural_20_has_top_priority_over_higher_normal_roll() -> None:
     setup = _setup(["karnok-stoneward-l1"], ["srd-commoner"])
-    initiative = roll_encounter_initiative(setup, FixedDiceProvider([10, 11, 17]))
+    _neutralize_initiative(setup)
+    initiative = roll_encounter_initiative(setup, FixedDiceProvider([20, 19]))
 
     assert initiative.groups[0].side == "heroes"
-    assert initiative.groups[0].tie_break_roll == 17
-    assert initiative.groups[1].side == "monsters"
-    assert initiative.groups[1].tie_break_roll == 4
+    assert initiative.groups[0].natural_roll == 20
+    events, _ = build_initiative_events(initiative, 1)
+    assert "Natural 20: top initiative priority." in events[0].description
+
+
+def test_natural_1_has_bottom_priority() -> None:
+    setup = _setup(["karnok-stoneward-l1"], ["srd-commoner"])
+    _neutralize_initiative(setup)
+    initiative = roll_encounter_initiative(setup, FixedDiceProvider([1, 2]))
+
+    assert initiative.groups[-1].side == "heroes"
+    assert initiative.groups[-1].natural_roll == 1
+    events, _ = build_initiative_events(initiative, 1)
+    hero_event = next(event for event in events if event.actor_id.startswith("hero-1:"))
+    assert "Natural 1: bottom initiative priority." in hero_event.description
+
+
+def test_exact_initiative_ties_reroll_only_tied_groups_until_resolved() -> None:
+    setup = _setup(["karnok-stoneward-l1"], ["srd-commoner"])
+    _neutralize_initiative(setup)
+    initiative = roll_encounter_initiative(setup, FixedDiceProvider([10, 10, 5, 5, 7, 12]))
+
+    hero = next(group for group in initiative.groups if group.side == "heroes")
+    monster = next(group for group in initiative.groups if group.side == "monsters")
+    assert hero.tie_break_rolls == [5, 7]
+    assert monster.tie_break_rolls == [5, 12]
+    assert monster.tie_break_roll == 12
+    assert initiative.groups[0].side == "monsters"
+
+    events, _ = build_initiative_events(initiative, 1)
+    hero_event = next(event for event in events if event.actor_id.startswith("hero-1:"))
+    monster_event = next(event for event in events if event.actor_id.startswith("monster-1:"))
+    assert "Tie rerolls: 5 → 7." in hero_event.description
+    assert "Tie rerolls: 5 → 12." in monster_event.description
 
 
 def test_encounter_outcome_requires_an_entire_side_down() -> None:

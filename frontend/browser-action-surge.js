@@ -9,6 +9,7 @@
   function available(state, turnKey) {
     return (state.resources["action-surge"] || 0) > 0
       && !state.action_available
+      && !state.turn_terminated
       && !state.is_dead
       && !Q().incapacitated(state)
       && state.feature_last_turn_keys["action-surge"] !== turnKey;

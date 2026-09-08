@@ -12,6 +12,8 @@ def is_available(state: CombatantState, cost: ActionCost) -> bool:
     """Return whether the printed action type is currently available under the 2024 economy."""
     if state.is_dead or is_incapacitated(state):
         return False
+    if state.turn_terminated and cost != "reaction":
+        return False
     if cost == "action":
         return state.action_available
     if cost == "bonus_action":

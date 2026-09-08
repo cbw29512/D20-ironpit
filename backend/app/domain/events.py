@@ -111,6 +111,8 @@ class BattleEvent(BaseModel):
     healing_roll: DiceRoll | None = None
     hit: bool | None = None
     critical: bool = False
+    turn_terminated: bool = False
+    turn_termination_reason: str | None = None
     hp_before: int | None = None
     hp_after: int | None = None
     temporary_hp_before: int | None = Field(default=None, ge=0)

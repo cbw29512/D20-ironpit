@@ -48,4 +48,5 @@ def resolve_opportunity_attack(
         sequence, round_number, reactor, mover, attack, distance_before_ft, dice, setup,
         spend_action=False, advantage_sources=1 if pack else 0,
         feature_id="opportunity-attack", close_enemy_active=True, turn_key=turn_key,
+        off_turn=True,
     )

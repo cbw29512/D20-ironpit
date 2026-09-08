@@ -91,7 +91,7 @@ def resolve_attack_action(
         turn_key = f"{round_number}:{attacker.combatant_id}"
 
         for index, slot in enumerate(definition.slots):
-            if attacker.state.is_dead or attacker.state.is_unconscious:
+            if attacker.state.is_dead or attacker.state.is_unconscious or attacker.state.turn_terminated:
                 break
             split_this_slot = (
                 index > 0
@@ -114,6 +114,8 @@ def resolve_attack_action(
                 )
                 events.append(event)
                 sequence += 1
+                if attacker.state.turn_terminated:
+                    break
                 cleave, sequence = resolve_cleave_extra_attack(
                     sequence, round_number, attacker, event, attack, setup, dice, turn_key,
                 )
@@ -132,7 +134,7 @@ def resolve_attack_action(
                 ))
                 sequence += 1
 
-        if definition.is_attack_action and light_trigger is not None:
+        if definition.is_attack_action and light_trigger is not None and not attacker.state.turn_terminated:
             more, sequence = resolve_light_extra_attack(
                 sequence, round_number, attacker, setup, dice, light_trigger, turn_key,
             )

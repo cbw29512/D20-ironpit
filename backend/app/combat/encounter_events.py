@@ -12,6 +12,15 @@ def build_initiative_events(
 ) -> tuple[list[BattleEvent], int]:
     events: list[BattleEvent] = []
     for group in initiative.groups:
+        description = f"{', '.join(group.combatant_ids)} act at Initiative {group.initiative_count}."
+        if group.natural_roll == 20:
+            description += " Natural 20: top initiative priority."
+        elif group.natural_roll == 1:
+            description += " Natural 1: bottom initiative priority."
+        if group.tie_break_rolls:
+            history = " → ".join(str(value) for value in group.tie_break_rolls)
+            suffix = "s" if len(group.tie_break_rolls) > 1 else ""
+            description += f" Tie reroll{suffix}: {history}."
         events.append(BattleEvent(
             sequence=sequence,
             round_number=0,
@@ -20,7 +29,7 @@ def build_initiative_events(
             actor_name=group.template_id,
             attack_roll=group.initiative_roll,
             animation="initiative",
-            description=f"{', '.join(group.combatant_ids)} act at Initiative {group.initiative_count}.",
+            description=description,
         ))
         sequence += 1
     return events, sequence

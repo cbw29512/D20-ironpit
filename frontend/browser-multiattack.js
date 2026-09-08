@@ -54,9 +54,9 @@
     const rangedSplit = useRangedSplit(member, setup, slots);
     const turnKey = `${round}:${member.combatant_id}`;
 
-    slots.forEach((slot, index) => {
-      if (member.state.is_dead || member.state.is_unconscious) return;
-      const data = slotData(slot);
+    for (let index = 0; index < slots.length; index += 1) {
+      if (member.state.is_dead || member.state.is_unconscious || member.state.turn_terminated) break;
+      const data = slotData(slots[index]);
       const splitThis = index > 0 && rangedSplit && !rangedSplitUsed && F().flexibleSlotHasBoth(member, data.attackIds);
       const choice = attackChoice(member, setup, data, splitThis);
       if (choice) {
@@ -68,19 +68,18 @@
           allowReckless: true, ignoreCloseThreat: true,
         });
         events.push(event);
+        if (member.state.turn_terminated) break;
         const cleave = WM().resolveCleave(sequence, round, member, event, choice.attack, setup, turnKey);
         events.push(...cleave.events); sequence = cleave.sequence;
         if (definition.isAttackAction && !lightTrigger && choice.attack.light) lightTrigger = choice.attack;
         openingFeature = null;
-        return;
+        continue;
       }
       const saved = saveChoice(member, setup, data);
-      if (saved) {
-        events.push(V().resolveAction(sequence++, round, member, saved.target, saved.save, saved.distance, { spendAction: false }));
-      }
-    });
+      if (saved) events.push(V().resolveAction(sequence++, round, member, saved.target, saved.save, saved.distance, { spendAction: false }));
+    }
 
-    if (definition.isAttackAction && lightTrigger) {
+    if (definition.isAttackAction && lightTrigger && !member.state.turn_terminated) {
       const extra = R().resolve(sequence, round, member, setup, lightTrigger, turnKey);
       events.push(...extra.events); sequence = extra.sequence;
     }

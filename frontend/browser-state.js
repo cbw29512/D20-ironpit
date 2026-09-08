@@ -13,6 +13,7 @@
       is_unconscious: false, is_stable: false, is_dead: false,
       death_save_successes: 0, death_save_failures: 0,
       action_available: true, bonus_action_available: true, reaction_available: true,
+      turn_terminated: false, turn_termination_reason: null,
       movement_remaining_ft: 0, resources: { ...(template.resources || {}) }, heroic_inspiration: false,
       active_effect_ids: [], active_buff_effect_ids: [], opening_buff_spell_id: null,
       grapple_sources: [], timed_effects: [], active_modifiers: [], concentration: null,
@@ -28,6 +29,11 @@
     return state.temporary_hp;
   }
 
+  function terminateTurn(state, reason) {
+    state.turn_terminated = true; state.turn_termination_reason = reason;
+    state.action_available = false; state.bonus_action_available = false; state.movement_remaining_ft = 0;
+  }
+
   function refreshReaction(state) { state.reaction_available = true; }
   function refreshStartOfTurn(state) {
     refreshReaction(state);
@@ -35,6 +41,7 @@
   }
 
   function beginTurn(state) {
+    state.turn_terminated = false; state.turn_termination_reason = null;
     const incapacitated = Q().incapacitated(state);
     state.action_available = !incapacitated;
     state.bonus_action_available = !incapacitated;
@@ -101,6 +108,6 @@
   const canProne = (target, maxSize) => sizeAtMost(target, maxSize);
   window.IRON_PIT_BROWSER_STATE = {
     active, beginTurn, buildState, canProne, distance, downedCharacter, effectiveMaxHp, grantTemporaryHp, hasActiveAlly,
-    moveToward, nearestTarget, packTactics, refreshReaction, refreshStartOfTurn, sizeAtMost, targetPriority,
+    moveToward, nearestTarget, packTactics, refreshReaction, refreshStartOfTurn, sizeAtMost, targetPriority, terminateTurn,
   };
 })();

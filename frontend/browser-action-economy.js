@@ -7,6 +7,7 @@
 
   function available(state, cost) {
     if (state.is_dead || Q().incapacitated(state)) return false;
+    if (state.turn_terminated && cost !== "reaction") return false;
     if (cost === "action") return Boolean(state.action_available);
     if (cost === "bonus_action") return Boolean(state.bonus_action_available);
     if (cost === "reaction") return Boolean(state.reaction_available);

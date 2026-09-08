@@ -19,7 +19,7 @@ def resolve_action_surge_attack(
     turn_key: str,
 ) -> tuple[list[BattleEvent], int]:
     """Iron Pit policy: spend Action Surge only when its extra Action can immediately attack."""
-    if not action_surge_available(attacker.state, turn_key):
+    if attacker.state.turn_terminated or not action_surge_available(attacker.state, turn_key):
         return [], sequence
 
     choice = None

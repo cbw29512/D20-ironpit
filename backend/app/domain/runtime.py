@@ -73,6 +73,8 @@ class CombatantState(BaseModel):
     action_available: bool = True
     bonus_action_available: bool = True
     reaction_available: bool = True
+    turn_terminated: bool = False
+    turn_termination_reason: str | None = None
     heroic_inspiration: bool = False
     movement_remaining_ft: int = Field(default=0, ge=0)
     resources: list[ResourceState] = Field(default_factory=list)

@@ -100,6 +100,7 @@ window.IRON_PIT_BROWSER_STATE.refreshStartOfTurn = (s) => {
   if (s.template.heroic_warrior && !s.heroic_inspiration) s.heroic_inspiration = true;
 };
 setDice([4, 17, 10]);
+load("browser-initiative.js");
 load("browser-engine.js");
 {
   const battle = window.IRON_PIT_BROWSER_ENGINE.runEncounter({ hero_ids: ["champion"], monster_ids: ["target"] });

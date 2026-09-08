@@ -38,8 +38,19 @@ def refresh_start_of_turn(state: CombatantState) -> None:
     grant_heroic_warrior_inspiration(state)
 
 
+def terminate_turn(state: CombatantState, reason: str) -> None:
+    """End voluntary activity for the current turn without consuming the creature's Reaction."""
+    state.turn_terminated = True
+    state.turn_termination_reason = reason
+    state.action_available = False
+    state.bonus_action_available = False
+    state.movement_remaining_ft = 0
+
+
 def begin_turn(state: CombatantState) -> None:
     try:
+        state.turn_terminated = False
+        state.turn_termination_reason = None
         incapacitated = is_incapacitated(state)
         state.action_available = not incapacitated
         state.bonus_action_available = not incapacitated
