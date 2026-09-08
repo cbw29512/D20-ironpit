@@ -3,7 +3,7 @@
 
   const HERO_BACK = 0, HERO_FRONT = 5, MONSTER_FRONT = 10, MONSTER_BACK = 15;
   const attacks = (template) => template?.attacks || [];
-  const R = () => window.IRON_PIT_BROWSER_RESOURCES;
+  const R = () => window.IRON_PIT_BROWSER_RESOURCES || { attackAvailable: () => true };
   const alive = (member) => member.state.is_alive && !member.state.is_dead && member.state.current_hp > 0;
 
   function hasRangedWeaponOffense(template) {
