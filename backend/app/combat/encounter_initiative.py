@@ -50,30 +50,41 @@ def _base_groups(setup: EncounterSetup, dice: DiceProvider) -> list[InitiativeGr
     return groups
 
 
-def _resolve_cross_side_ties(groups: list[InitiativeGroup], dice: DiceProvider) -> None:
-    by_count: dict[int, list[InitiativeGroup]] = defaultdict(list)
-    for group in groups:
-        by_count[group.initiative_count].append(group)
-    for tied in by_count.values():
-        if len({group.side for group in tied}) < 2:
-            continue
-        arena_roll = dice.roll(20)
-        hero_rank = arena_roll
-        monster_rank = 21 - arena_roll
-        for group in tied:
-            group.tie_break_roll = hero_rank if group.side == "heroes" else monster_rank
+def _priority(group: InitiativeGroup) -> int:
+    if group.natural_roll == 20:
+        return 2
+    if group.natural_roll == 1:
+        return 0
+    return 1
+
+
+def _resolve_ties(groups: list[InitiativeGroup], dice: DiceProvider) -> None:
+    """Reroll only unresolved exact ties until every initiative group has a stable order."""
+    while True:
+        tied_by_signature: dict[tuple[int, int, tuple[int, ...]], list[InitiativeGroup]] = defaultdict(list)
+        for group in groups:
+            tied_by_signature[(_priority(group), group.initiative_count, tuple(group.tie_break_rolls))].append(group)
+        unresolved = [tied for tied in tied_by_signature.values() if len(tied) > 1]
+        if not unresolved:
+            return
+        for tied in unresolved:
+            for group in tied:
+                value = dice.roll(20)
+                group.tie_break_rolls.append(value)
+                group.tie_break_roll = value
 
 
 def roll_encounter_initiative(setup: EncounterSetup, dice: DiceProvider) -> EncounterInitiative:
-    """Apply SRD 5.2.1 initiative, grouping identical monsters with equivalent condition state."""
+    """Resolve initiative with Iron Pit natural-20/natural-1 buckets and pure d20 tie rerolls."""
     try:
         groups = _base_groups(setup, dice)
-        _resolve_cross_side_ties(groups, dice)
+        _resolve_ties(groups, dice)
         indexed = {id(group): index for index, group in enumerate(groups)}
         groups.sort(
             key=lambda group: (
+                _priority(group),
                 group.initiative_count,
-                group.tie_break_roll or 0,
+                tuple(group.tie_break_rolls),
                 -indexed[id(group)],
             ),
             reverse=True,
