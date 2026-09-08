@@ -23,7 +23,8 @@ assert.notEqual(monsters["srd-goblin-warrior"].creature_type, "Undead");
 
 const reef = monsters["srd-reef-shark"];
 assert.ok(reef, "srd-reef-shark must be certified under the hospitable-arena policy");
-assert.deepEqual(reef.source_trait_names, ["Water Breathing"]);
+assert.deepEqual(reef.source_trait_names, ["Pack Tactics", "Water Breathing"]);
+assert.ok(reef.combat_traits.includes("pack-tactics"), "srd-reef-shark must export Pack Tactics into runtime combat data");
 assert.ok(reef.movement_modes.swim_ft > 0, "srd-reef-shark must preserve its source swim movement");
 
 for (const id of [
@@ -32,4 +33,4 @@ for (const id of [
   assert.equal(monsters[id], undefined, `${id} must fail closed until its conditional attack modifier is modeled`);
 }
 
-console.log("Generated browser monsters treat Water Breathing as combat-irrelevant while conditional attack modifiers remain fail-closed.");
+console.log("Generated browser monsters preserve Reef Shark Pack Tactics, treat Water Breathing as arena-neutral, and keep conditional attack modifiers fail-closed.");
