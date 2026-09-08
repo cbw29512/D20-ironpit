@@ -11,7 +11,7 @@ for (const file of [
   "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-state.js", "browser-rolls.js", "browser-undead-fortitude.js", "browser-zero-hp.js",
   "browser-forced-movement.js", "browser-control.js", "browser-attack-helpers.js", "browser-attack.js",
-  "browser-save-helpers.js", "browser-saves.js",
+  "browser-resources.js", "browser-save-helpers.js", "browser-saves.js",
 ]) load(file);
 
 let queue = [];
