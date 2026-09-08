@@ -92,6 +92,8 @@ jobs:
         run: |
           node frontend/battle-lab.test.cjs
           node frontend/browser-execution.test.cjs
+          node frontend/browser-audit.test.cjs
+          node frontend/browser-roll-revisions.test.cjs
           node frontend/browser-dice-recording.test.cjs
           node frontend/browser-engine.test.cjs
           node frontend/browser-formation.test.cjs
@@ -161,11 +163,13 @@ jobs:
           ! grep -q '/api/' frontend/app.js frontend/browser-execution.js
           ! grep -q 'createSeededDice' frontend/app.js frontend/battle-lab.js frontend/browser-execution.js
           ! grep -q 'window.IRON_PIT_DICE[[:space:]]*=' frontend/app.js frontend/browser-execution.js
+          ! grep -Eq 'runEncounter|IRON_PIT_DICE' frontend/browser-audit.js
           ! test -e render.yaml
           ! test -e frontend/config.js
           ! test -e scripts/write_frontend_config.py
           grep -q 'IRON_PIT_BROWSER_ENGINE' frontend/browser-execution.js
           grep -q 'runEncounter' frontend/browser-execution.js
+          grep -q 'IRON_PIT_BROWSER_AUDIT' frontend/browser-execution.js
           grep -q 'IRON_PIT_CANONICAL_MONSTERS_READY' frontend/app.js
           grep -q 'IRON_PIT_BATTLE_LAB' frontend/browser-execution.js
           grep -q 'crypto.getRandomValues' frontend/browser-dice.js
@@ -186,7 +190,9 @@ jobs:
           ! grep -q 'id="instant-mode"' index.html
           ! grep -q 'id="distance"' index.html
           grep -q 'battle-lab.css' index.html
+          grep -q 'audit-log.css' index.html
           grep -q 'battle-lab.js' index.html
+          grep -q 'browser-audit.js' index.html
           grep -q 'browser-execution.js' index.html
           grep -q 'battle-actions.js' index.html
           grep -q 'figure-archetypes.css' index.html
@@ -250,7 +256,9 @@ jobs:
           ! grep -q 'id="distance"' frontend/index.html
           grep -q 'battlefield.css' frontend/index.html
           grep -q 'battle-lab.css' frontend/index.html
+          grep -q 'audit-log.css' frontend/index.html
           grep -q 'battle-lab.js' frontend/index.html
+          grep -q 'browser-audit.js' frontend/index.html
           grep -q 'browser-execution.js' frontend/index.html
           grep -q 'battle-actions.js' frontend/index.html
           grep -q 'figure-archetypes.css' frontend/index.html
@@ -301,8 +309,10 @@ jobs:
           grep -q 'browser-spell-attack.js' frontend/index.html
           grep -q 'browser-precombat-spells.js' frontend/index.html
           grep -q 'figure-visuals.js' frontend/index.html
+          grep -q 'auditDetails' frontend/battlefield-view.js
           grep -q 'IRON_PIT_EXECUTION' frontend/app.js
           grep -q 'IRON_PIT_BROWSER_ENGINE' frontend/browser-execution.js
+          grep -q 'IRON_PIT_BROWSER_AUDIT' frontend/browser-execution.js
           grep -q 'https://www.buymeacoffee.com/divclass016' frontend/index.html
       - name: Validate Netlify production-only credit guard
         run: |

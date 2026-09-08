@@ -33,11 +33,19 @@
     rerolled[index] = window.IRON_PIT_DICE.roll(20);
     const selected = roll.mode === "advantage" ? Math.max(...rerolled)
       : roll.mode === "disadvantage" ? Math.min(...rerolled) : rerolled[0];
+    const total = selected + roll.modifier;
+    const revision = {
+      source_effect_id: "heroic-inspiration", kind: "die_replacement",
+      original_rolls: [...roll.rolls], replacement_rolls: [...rerolled],
+      original_modifier: roll.modifier || 0, replacement_modifier: roll.modifier || 0,
+      original_selected: roll.selected_roll, replacement_selected: selected,
+      original_total: roll.total, replacement_total: total, accepted: "replacement", replaced_die_index: index,
+    };
     state.heroic_inspiration = false;
     return {
       used: true,
-      roll: { ...roll, rolls: rerolled, selected_roll: selected, total: selected + roll.modifier,
-        notation: `${roll.notation} [Heroic Inspiration]` },
+      roll: { ...roll, rolls: rerolled, selected_roll: selected, total,
+        revisions: [...(roll.revisions || []), revision], notation: `${roll.notation} [Heroic Inspiration]` },
     };
   }
 

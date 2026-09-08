@@ -7,7 +7,7 @@ from app.combat.dice import DiceProvider
 from app.combat.grapple import RESTRAINED_EFFECT_ID
 from app.combat.modifier_stack import apply_d20_bonus_dice
 from app.combat.rolls import roll_d20
-from app.domain.models import CombatantState, DiceRoll, RollMode
+from app.domain.models import CombatantState, DiceRoll, RollMode, RollRevision
 from app.domain.modifiers import ModifierKind
 
 
@@ -17,6 +17,22 @@ def saving_throw_mode(state: CombatantState, ability: str) -> RollMode:
     if (advantage > 0) == (disadvantage > 0):
         return RollMode.NORMAL
     return RollMode.ADVANTAGE if advantage else RollMode.DISADVANTAGE
+
+
+def _indomitable_revision(original: DiceRoll, replacement: DiceRoll) -> RollRevision:
+    return RollRevision(
+        source_effect_id="indomitable",
+        kind="full_reroll",
+        original_rolls=list(original.rolls),
+        replacement_rolls=list(replacement.rolls),
+        original_modifier=original.modifier,
+        replacement_modifier=replacement.modifier,
+        original_selected=original.selected_roll,
+        replacement_selected=replacement.selected_roll,
+        original_total=original.total,
+        replacement_total=replacement.total,
+        accepted="replacement",
+    )
 
 
 def resolve_saving_throw(
@@ -40,5 +56,6 @@ def resolve_saving_throw(
 
         reroll = use_indomitable(state, ability, dice)
         if reroll is not None:
-            roll = reroll
+            revision = _indomitable_revision(roll, reroll)
+            roll = reroll.model_copy(update={"revisions": [*reroll.revisions, revision]})
     return roll, roll.total >= dc

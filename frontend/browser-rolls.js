@@ -74,6 +74,17 @@
     throw new Error(`Unsupported conditional damage trigger: ${spec.trigger}`);
   }
 
+  function savageRevision(first, second, useSecond) {
+    return {
+      source_effect_id: "savage-attacker", kind: "roll_twice_choose",
+      original_rolls: [...first.rolls], replacement_rolls: [...second.rolls],
+      original_modifier: first.modifier || 0, replacement_modifier: second.modifier || 0,
+      original_selected: null, replacement_selected: null,
+      original_total: first.total, replacement_total: second.total,
+      accepted: useSecond ? "replacement" : "original", replaced_die_index: null,
+    };
+  }
+
   function weaponDamage(attacker, attack, critical, mode, turnKey, bonusDamage = null, target = null, sneakAllyAvailable = false) {
     const conditional = attack.conditionalDamage || null;
     const replacement = conditional?.mode === "replace_weapon" && conditionalActive(conditional, attacker, target, mode)
@@ -88,9 +99,10 @@
       const effective = { ...attack, damageBonus: attack.damageBonus + rageBonus };
       rolled = candidate(effective, critical);
       if (attacker.template.traits?.includes("savage-attacker") && attacker.feature_last_turn_keys["savage-attacker"] !== turnKey) {
-        const second = candidate(effective, critical);
+        const first = rolled, second = candidate(effective, critical), useSecond = second.total > first.total;
+        rolled = useSecond ? second : first;
+        rolled.revisions = [...(rolled.revisions || []), savageRevision(first, second, useSecond)];
         attacker.feature_last_turn_keys["savage-attacker"] = turnKey;
-        if (second.total > rolled.total) rolled = second;
       }
     }
     const components = [{ source: attack.name, damage_type: replacement?.damageType || attack.damageType, ...rolled }];
