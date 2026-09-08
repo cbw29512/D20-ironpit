@@ -1,4 +1,4 @@
-from app.content.arena_eligibility import standard_arena_eligible
+from app.content.arena_eligibility import deferred_environment_reason, standard_arena_eligible
 from app.content.legacy_monster_roster import build_legacy_monster_templates
 from app.content.monster_catalog import build_monster_catalog
 from app.content.monsters_zero_engine import build_zero_engine_monsters
@@ -6,17 +6,21 @@ from app.domain.catalog import CoverageStatus
 from app.domain.movement import MovementModes
 
 
-def test_aquatic_only_killer_whale_is_deferred_from_standard_arena() -> None:
+def test_hospitable_pit_promotes_killer_whale_without_environment_blocker() -> None:
     templates = build_legacy_monster_templates()
-    assert all(template.name != "Killer Whale" for template in templates)
+    whale = next(template for template in templates if template.name == "Killer Whale")
+    assert whale.movement_modes.walk_ft == 5
+    assert whale.movement_modes.swim_ft == 60
+    assert whale.source_trait_names == ["Hold Breath"]
+    assert deferred_environment_reason("Killer Whale") is None
 
     card = next(card for card in build_monster_catalog() if card.name == "Killer Whale")
-    assert card.coverage_status is CoverageStatus.BLOCKED
-    assert card.runnable_template_id is None
-    assert card.blockers == ["deferred-environment:aquatic-only"]
+    assert card.coverage_status is CoverageStatus.RAW_READY
+    assert card.runnable_template_id == "srd-killer-whale"
+    assert card.blockers == []
 
 
-def test_standard_arena_eligibility_is_movement_driven() -> None:
+def test_magical_hospitality_never_rewrites_or_rejects_movement_modes() -> None:
     whale = next(template for template in build_zero_engine_monsters() if template.name == "Killer Whale")
     swimmer = whale.model_copy(update={
         "name": "Synthetic Swimmer",
@@ -34,12 +38,14 @@ def test_standard_arena_eligibility_is_movement_driven() -> None:
         "name": "Synthetic Flyer",
         "movement_modes": MovementModes(walk_ft=0, fly_ft=40, swim_ft=40),
     })
-    assert standard_arena_eligible(swimmer) is False
-    assert standard_arena_eligible(nominal_swimmer) is False
-    assert standard_arena_eligible(slow_land) is True
-    assert standard_arena_eligible(flyer) is True
+    for template in (swimmer, nominal_swimmer, slow_land, flyer):
+        assert standard_arena_eligible(template) is True
+
+    assert swimmer.movement_modes == MovementModes(walk_ft=0, swim_ft=40)
+    assert nominal_swimmer.movement_modes == MovementModes(walk_ft=5, swim_ft=40)
+    assert flyer.movement_modes == MovementModes(walk_ft=0, fly_ft=40, swim_ft=40)
 
 
-def test_land_arena_grapple_batch_remains_eligible() -> None:
+def test_existing_grapple_batch_remains_eligible() -> None:
     names = {template.name for template in build_legacy_monster_templates()}
     assert {"Giant Scorpion", "Grick", "Griffon"} <= names
