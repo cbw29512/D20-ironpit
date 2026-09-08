@@ -18,6 +18,8 @@ def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
     target_size = definition.target_max_size
     if target_size is None and failure_control is not None:
         target_size = failure_control.max_target_size
+    grapple_escape_dc = failure_control.grapple_escape_dc if failure_control is not None else None
+    restrains = bool(failure_control and failure_control.restrains_while_grappled)
     return SavingThrowAction(
         id=definition.id,
         name=definition.name,
@@ -33,6 +35,8 @@ def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
         success_damage=definition.success_damage,
         magical_effect=definition.magical_effect,
         failure_control=failure_control,
+        grapple_escape_dc=grapple_escape_dc,
+        restrains_while_grappled=restrains,
         resource_id=definition.resource_id,
         resource_cost=definition.resource_cost,
         animation=definition.animation,
