@@ -63,10 +63,11 @@ def test_uncertified_monster_id_is_rejected_before_engine_setup() -> None:
     blocked = next(
         card
         for card in build_monster_catalog()
-        if card.coverage_status is not CoverageStatus.RAW_READY and card.runnable_template_id is not None
+        if card.coverage_status is not CoverageStatus.RAW_READY
     )
-    with pytest.raises(ValueError, match=blocked.runnable_template_id):
-        assert_public_selection_runnable(_selection("karnok-stoneward-l1", blocked.runnable_template_id))
+    assert blocked.runnable_template_id is None
+    with pytest.raises(ValueError, match=blocked.id):
+        assert_public_selection_runnable(_selection("karnok-stoneward-l1", blocked.id))
 
 
 def test_uncertified_hero_is_rejected_before_engine_setup() -> None:
