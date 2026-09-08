@@ -140,10 +140,9 @@ def compile_simple_monster(row: dict[str, object], monster_names: set[str]) -> C
 def build_auto_simple_monsters(existing_names: set[str]) -> list[CombatantTemplate]:
     rows = load_monster_rows(); names = {str(row["name"]) for row in rows}; compiled: list[CombatantTemplate] = []
     for row in rows:
-        if str(row["name"]) in existing_names:
+        name = str(row["name"])
+        if name in existing_names or source_blockers(row, names):
             continue
-        try:
-            compiled.append(compile_simple_monster(row, names))
-        except ValueError:
-            continue
+        try: compiled.append(compile_simple_monster(row, names))
+        except ValueError as exc: raise RuntimeError(f"Source-safe monster {name!r} failed compilation.") from exc
     return compiled
