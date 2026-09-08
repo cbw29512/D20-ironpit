@@ -68,6 +68,8 @@ class SaveCapabilityDefinition(BaseModel):
     damage_type: DamageType | None = None
     success_damage: Literal["none", "half"] = "none"
     grapple: GrappleEffectDefinition | None = None
+    resource_id: str | None = None
+    resource_cost: int = Field(default=1, ge=1)
     animation: str = "save-effect"
 
     @model_validator(mode="after")
@@ -77,6 +79,8 @@ class SaveCapabilityDefinition(BaseModel):
         if self.grapple and self.grapple.max_target_size and self.target_max_size:
             if self.grapple.max_target_size != self.target_max_size:
                 raise ValueError("Save target size and grapple target size cannot disagree.")
+        if self.resource_id is None and self.resource_cost != 1:
+            raise ValueError("Save-action resource cost requires a resource id.")
         return self
 
 
