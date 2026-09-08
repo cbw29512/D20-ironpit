@@ -18,6 +18,7 @@ from app.combat.orc import should_use_adrenaline_rush, use_adrenaline_rush
 from app.combat.pit_policy import choose_standard_attack, save_distance, target_order
 from app.combat.policy import should_use_second_wind
 from app.combat.saving_throws import legal_save_action, resolve_save_action, save_action_resource_available
+from app.combat.signature_save_actions import resolve_signature_area_save
 from app.combat.spell_offense import resolve_best_spell_offense
 from app.combat.standard_attack_action import resolve_standard_attack_action
 from app.combat.tactical_shift import resolve_tactical_shift
@@ -108,6 +109,9 @@ def resolve_combat_turn(
     events.extend(spell_events)
     if not is_available(attacker.state, "action"):
         return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
+    signature_events, sequence, used_signature = resolve_signature_area_save(sequence, round_number, attacker, setup, dice)
+    events.extend(signature_events)
+    if used_signature: return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
     targets = target_order(attacker, setup)
     if not targets:
