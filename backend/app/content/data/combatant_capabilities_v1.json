@@ -13503,18 +13503,6 @@
         "effects": [
           {
             "kind": "damage",
-            "source": "Piercing",
-            "dice": {
-              "count": 1,
-              "size": 4,
-              "bonus": 4
-            },
-            "damage_type": "piercing",
-            "trigger": "on_hit",
-            "mode": "add"
-          },
-          {
-            "kind": "damage",
             "source": "Poison",
             "dice": {
               "count": 3,
@@ -13524,6 +13512,18 @@
             "damage_type": "poison",
             "trigger": "on_hit",
             "mode": "add"
+          },
+          {
+            "kind": "damage",
+            "source": "conditional:attacker_bloodied",
+            "dice": {
+              "count": 1,
+              "size": 4,
+              "bonus": 4
+            },
+            "damage_type": "piercing",
+            "trigger": "attacker_bloodied",
+            "mode": "replace_weapon"
           }
         ],
         "forbid_target_grappled_by_self": false
