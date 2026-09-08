@@ -4,6 +4,7 @@ import re
 
 from app.content.monster_attack_roll_modifier_source_audit import parse_attack_roll_modifier
 from app.content.monster_bloodied_source_damage import extract_bloodied_replacement
+from app.content.monster_simple_control_rider import parse_simple_control_rider
 from app.domain.models import DamageType, OnHitDamage, Weapon, WeaponAttack, WeaponAttackKind
 
 _ATTACK = re.compile(
@@ -59,6 +60,7 @@ def parse_simple_attacks(row: dict[str, object]) -> list[WeaponAttack]:
     try:
         for match in _ATTACK.finditer(str(row["actions"])):
             clean_hit, bloodied = extract_bloodied_replacement(match.group("hit"))
+            clean_hit, control, prone_size = parse_simple_control_rider(clean_hit)
             count, size, damage_bonus, damage_type, fixed, extras = _damage(clean_hit)
             modes = ["melee", "ranged"] if match.group("mode").lower() == "melee or ranged" else [match.group("mode").lower()]
             conditional = parse_attack_roll_modifier(match.group("conditional")) if match.group("conditional") else None
@@ -78,7 +80,7 @@ def parse_simple_attacks(row: dict[str, object]) -> list[WeaponAttack]:
                 )
                 attacks.append(WeaponAttack(
                     id=attack_id, weapon=weapon, attack_bonus=int(match.group("bonus")), damage_bonus=damage_bonus,
-                    fixed_damage=fixed, on_hit_damage=extras,
+                    fixed_damage=fixed, on_hit_damage=extras, control_effect=control, knocks_prone_max_size=prone_size,
                     conditional_attack_modifiers=[conditional] if conditional is not None else [],
                     conditional_damage=[bloodied] if bloodied is not None else [],
                 ))
