@@ -7,6 +7,7 @@ from app.content.monster_defense_source_audit import parse_defense_profile
 from app.content.monster_limited_use_source_audit import parse_action_recharges, parse_limited_use_names
 from app.content.monster_saving_throws import parse_saving_throw_bonuses
 from app.content.monster_simple_attack_parser import first_attack_start, parse_simple_attacks
+from app.content.monster_simple_save_control_parser import parse_simple_save_control_actions
 from app.content.monster_simple_save_parser import parse_simple_save_actions
 from app.content.monster_source_classifier import source_blockers
 from app.content.monster_trait_source_audit import _MODELED_TRAITS, parse_trait_names
@@ -78,7 +79,7 @@ def compile_simple_monster(row: dict[str, object], monster_names: set[str]) -> C
         if str(row.get("reactions", "")).strip() or "Spellcasting." in str(row.get("actions", "")):
             raise ValueError("source needs a modeled reaction or spellcasting fingerprint")
         attacks = parse_simple_attacks(row)
-        save_actions = parse_simple_save_actions(row)
+        save_actions = [*parse_simple_save_actions(row), *parse_simple_save_control_actions(row)]
         defenses = parse_defense_profile(row)
         raw = str(row["rawText"])
         initiative = re.search(r"\bInitiative\s+([+-]?\d+)", raw, re.I)
