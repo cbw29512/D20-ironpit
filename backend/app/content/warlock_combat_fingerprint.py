@@ -21,7 +21,14 @@ def build_varek_ashenmark_combat_profile() -> PregenCombatProfile:
         armor_class=11,
         max_hp=8,
         speed_ft=30,
-        skill_bonuses=(("arcana", 3), ("intimidation", 5), ("insight", 4), ("religion", 3)),
+        skill_bonuses=(
+            ("athletics", 0),
+            ("acrobatics", 0),
+            ("arcana", 3),
+            ("intimidation", 5),
+            ("insight", 4),
+            ("religion", 3),
+        ),
         attacks=(
             AttackExpectation(
                 weapon_id="longsword",
