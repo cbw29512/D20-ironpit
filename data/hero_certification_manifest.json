@@ -5,7 +5,7 @@
   "summary": {
     "canonical_heroes": 12,
     "level_slots": 240,
-    "public_ready": 23
+    "public_ready": 24
   },
   "heroes": [
     {
@@ -5592,24 +5592,34 @@
         {
           "level": 1,
           "subclass": null,
-          "runtime_template_id": null,
+          "runtime_template_id": "varek-ashenmark-l1",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024 / SRD 5.2.1: Warlock 1, Pact of the Blade, Eldritch Blast, Orc, Acolyte, Leather Armor"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:varek-pact-longsword",
+            "resource:adrenaline-rush",
+            "resource:pact-slot-1",
+            "resource:relentless-endurance",
+            "spell-attack-action:eldritch-blast",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:varek-pact-longsword",
+            "resource:adrenaline-rush",
+            "resource:pact-slot-1",
+            "resource:relentless-endurance",
+            "spell-attack-action:eldritch-blast",
+            "trait:adrenaline-rush",
+            "trait:relentless-endurance"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 2,
