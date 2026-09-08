@@ -5,9 +5,9 @@ from collections import defaultdict
 
 from app.content.blocker_yield import build_blocker_signatures, single_family_yields
 from app.content.monster_catalog import build_monster_catalog, load_monster_rows
+from app.content.monster_source_classifier import _ALLOWED_TRAITS, source_blockers
 from app.content.monster_trait_source_audit import parse_trait_names
 from app.domain.catalog import CoverageStatus
-from report_zero_engine_monsters import _ALLOWED_TRAITS, _source_blockers
 
 _SIGNATURE_LIMIT = 25
 _CONTROL_EFFECT = re.compile(
@@ -107,7 +107,7 @@ def main() -> None:
         name = str(row["name"])
         if name in ready_names:
             continue
-        blockers = _source_blockers(row, monster_names)
+        blockers = source_blockers(row, monster_names)
         blockers_by_name[name] = blockers or ["unclassified-source-audit-gap"]
 
     signatures = build_blocker_signatures(blockers_by_name)
