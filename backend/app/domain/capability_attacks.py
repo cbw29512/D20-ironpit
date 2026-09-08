@@ -69,6 +69,7 @@ class SaveCapabilityDefinition(BaseModel):
     damage: DiceSpec | None = None
     damage_type: DamageType | None = None
     success_damage: Literal["none", "half"] = "none"
+    magical_effect: bool = False
     grapple: GrappleEffectDefinition | None = None
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1)
