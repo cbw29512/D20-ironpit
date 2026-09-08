@@ -61,6 +61,7 @@
   function saveChoice(member, setup) {
     for (const target of F().targetOrder(member, setup)) {
       for (const action of member.state.template.saving_throw_actions || []) {
+        if (!V().resourceAvailable(member, action)) continue;
         const distance = F().saveDistance(member, target, action.range);
         if (V().legalAction(action, target, distance)) return { target, action, distance };
       }
