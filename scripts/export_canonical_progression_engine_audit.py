@@ -33,6 +33,13 @@ def _status(feature_id: str, statuses: dict[str, str]) -> str:
     return "planned"
 
 
+def _effective_status(feature_id: str, statuses: dict[str, str], arena_ignored: set[str]) -> str:
+    """Resolve audit status, giving canonical arena-exclusion metadata precedence."""
+    if feature_id in arena_ignored:
+        return "arena_out_of_scope"
+    return _status(feature_id, statuses)
+
+
 def _is_blocking(status: str) -> bool:
     """Return whether a capability status prevents an arena snapshot from certifying."""
     return status not in NON_BLOCKING_STATUSES
@@ -53,6 +60,7 @@ def _payload() -> dict[str, object]:
     coverage = json.loads(MATRIX.read_text(encoding="utf-8"))
     statuses = {item["id"]: item["status"] for item in coverage["capabilities"]}
     all_features: set[str] = set()
+    effective_statuses: dict[str, str] = {}
     blocker_features: dict[str, str] = {}
     classes: list[dict[str, object]] = []
 
@@ -63,18 +71,25 @@ def _payload() -> dict[str, object]:
         for level in range(1, 21):
             active = set(canonical_combat_features(hero.class_id, level, hero.subclass_id))
             introduced = sorted(active - previous)
-            feature_rows = [{"id": item, "status": _status(item, statuses)} for item in introduced]
+            ignored_introduced = set(_ignored_at_level(hero.class_id, hero.subclass_id, level))
+            feature_rows = [
+                {"id": item, "status": _effective_status(item, statuses, ignored_introduced)}
+                for item in introduced
+            ]
             blockers = [row for row in feature_rows if _is_blocking(str(row["status"]))]
             if blockers and first_blocked_level is None:
                 first_blocked_level = level
             for row in feature_rows:
-                all_features.add(str(row["id"]))
-                if _is_blocking(str(row["status"])):
-                    blocker_features[str(row["id"])] = str(row["status"])
+                feature_id = str(row["id"])
+                feature_status = str(row["status"])
+                all_features.add(feature_id)
+                effective_statuses[feature_id] = feature_status
+                if _is_blocking(feature_status):
+                    blocker_features[feature_id] = feature_status
             levels.append({
                 "level": level,
                 "introduced_combat_features": feature_rows,
-                "arena_ignored_introduced": _ignored_at_level(hero.class_id, hero.subclass_id, level),
+                "arena_ignored_introduced": sorted(ignored_introduced),
                 "blockers": blockers,
             })
             previous = active
@@ -87,7 +102,7 @@ def _payload() -> dict[str, object]:
             "levels": levels,
         })
 
-    status_counts = Counter(_status(feature_id, statuses) for feature_id in all_features)
+    status_counts = Counter(effective_statuses[feature_id] for feature_id in all_features)
     return {
         "schema_version": 1,
         "ruleset": "srd-5.2.1-2024",
