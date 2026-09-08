@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from app.combat.dice import DiceProvider
-from app.domain.models import CombatantState, DamageRollComponent, DamageType
+from app.domain.models import CombatantState, DamageRollComponent, DamageType, RollRevision
 from app.domain.traits import CombatTrait
 
 FEATURE_ID = CombatTrait.SAVAGE_ATTACKER.value
@@ -48,5 +48,20 @@ def roll_weapon_component(
 
     second = candidate()
     state.feature_last_turn_keys[FEATURE_ID] = turn_key
-    chosen = second if second.total > first.total else first
-    return chosen.model_copy(update={"source": f"{source} (Savage Attacker)"})
+    use_second = second.total > first.total
+    chosen = second if use_second else first
+    revision = RollRevision(
+        source_effect_id=FEATURE_ID,
+        kind="roll_twice_choose",
+        original_rolls=list(first.rolls),
+        replacement_rolls=list(second.rolls),
+        original_modifier=first.modifier,
+        replacement_modifier=second.modifier,
+        original_total=first.total,
+        replacement_total=second.total,
+        accepted="replacement" if use_second else "original",
+    )
+    return chosen.model_copy(update={
+        "source": f"{source} (Savage Attacker)",
+        "revisions": [*chosen.revisions, revision],
+    })
