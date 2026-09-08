@@ -39,11 +39,6 @@ def test_xorn_environment_only_traits_are_neutral_in_standard_pit() -> None:
     row = _row("Xorn")
     source_traits = parse_trait_names(row["traits"])
     assert source_traits == ["Earth Glide", "Treasure Sense"]
-
-    # Trait certification is independent of runtime promotion. Xorn is still a
-    # blocked catalog entry until its complete source/build/runtime audit earns
-    # a runnable template, so use an existing immutable monster template only
-    # as the structural carrier for the real Xorn source fingerprint.
     probe = _monster("Deer").model_copy(
         update={"source_trait_names": source_traits, "combat_traits": []},
     )
@@ -64,21 +59,34 @@ def test_water_breathing_is_combat_irrelevant_but_source_fingerprinted() -> None
     assert card.blockers == []
 
 
-def test_conditional_attack_modifiers_fail_closed_until_universal_primitive_exists() -> None:
+def test_target_missing_hp_attack_modifiers_are_universally_compiled() -> None:
     rows = load_monster_rows()
     names = {str(row["name"]) for row in rows}
     catalog = {card.name: card for card in build_monster_catalog()}
-    affected = {
-        "Ankheg", "Bugbear Stalker", "Bugbear Warrior", "Doppelganger", "Giant Shark",
-        "Hunter Shark", "Mimic", "Piranha", "Swarm of Piranhas",
-    }
+    promoted = {"Giant Shark", "Hunter Shark", "Piranha", "Swarm of Piranhas"}
+    for name in promoted:
+        assert "conditional-attack-modifier" not in source_blockers(_row(name), names)
+        monster = _monster(name)
+        assert monster.weapon_attack.conditional_attack_modifiers
+        modifier = monster.weapon_attack.conditional_attack_modifiers[0]
+        assert modifier.trigger == "target_missing_hp"
+        assert modifier.mode == "advantage"
+        assert catalog[name].coverage_status is CoverageStatus.RAW_READY
+        assert catalog[name].blockers == []
+
+
+def test_other_conditional_attack_modifiers_remain_fail_closed() -> None:
+    rows = load_monster_rows()
+    names = {str(row["name"]) for row in rows}
+    catalog = {card.name: card for card in build_monster_catalog()}
+    unsupported = {"Ankheg", "Bugbear Stalker", "Bugbear Warrior", "Doppelganger", "Mimic"}
     detected = {
         str(row["name"])
         for row in rows
         if "conditional-attack-modifier" in source_blockers(row, names)
     }
-    assert detected == affected
-    for name in affected:
+    assert detected == unsupported
+    for name in unsupported:
         card = catalog[name]
         assert card.coverage_status is CoverageStatus.BLOCKED
         assert card.runnable_template_id is None
