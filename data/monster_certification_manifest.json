@@ -5808,6 +5808,7 @@
         "trait"
       ],
       "unsupported_mechanics": [
+        "forced-movement-source-mismatch",
         "source-attack-count-mismatch"
       ],
       "python_certification_status": "blocked",
@@ -5815,6 +5816,7 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
+        "forced-movement-source-mismatch",
         "source-attack-count-mismatch"
       ]
     },
