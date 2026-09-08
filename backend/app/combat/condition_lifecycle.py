@@ -20,6 +20,12 @@ def _repeat_save_due(effect, timing: ConditionTiming) -> bool:
     return effect.repeat_save_timing == timing
 
 
+def _source_expiry_due(effect, round_number: int, timing: ConditionTiming) -> bool:
+    return effect.expiry_timing == timing and (
+        effect.expires_round is None or round_number >= effect.expires_round
+    )
+
+
 def resolve_target_condition_timing(
     sequence: int,
     round_number: int,
@@ -105,7 +111,8 @@ def resolve_source_condition_timing(
         for target in [*setup.heroes, *setup.monsters]:
             expiring = [
                 effect for effect in target.state.timed_effects
-                if effect.source_id == source.combatant_id and effect.expiry_timing == timing
+                if effect.source_id == source.combatant_id
+                and _source_expiry_due(effect, round_number, timing)
             ]
             for effect in expiring:
                 if effect not in target.state.timed_effects:
