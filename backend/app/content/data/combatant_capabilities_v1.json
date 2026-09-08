@@ -13932,18 +13932,6 @@
             "damage_type": "acid",
             "trigger": "on_hit",
             "mode": "add"
-          },
-          {
-            "kind": "damage",
-            "source": "Acid",
-            "dice": {
-              "count": 5,
-              "size": 8,
-              "bonus": 0
-            },
-            "damage_type": "acid",
-            "trigger": "on_hit",
-            "mode": "add"
           }
         ],
         "forbid_target_grappled_by_self": false,
@@ -14105,18 +14093,6 @@
             "source": "Lightning",
             "dice": {
               "count": 1,
-              "size": 6,
-              "bonus": 0
-            },
-            "damage_type": "lightning",
-            "trigger": "on_hit",
-            "mode": "add"
-          },
-          {
-            "kind": "damage",
-            "source": "Lightning",
-            "dice": {
-              "count": 6,
               "size": 6,
               "bonus": 0
             },
@@ -14315,18 +14291,6 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [
-          {
-            "kind": "damage",
-            "source": "Fire",
-            "dice": {
-              "count": 16,
-              "size": 6,
-              "bonus": 0
-            },
-            "damage_type": "fire",
-            "trigger": "on_hit",
-            "mode": "add"
-          },
           {
             "kind": "prone",
             "max_target_size": "huge"
@@ -14626,18 +14590,6 @@
             "damage_type": "poison",
             "trigger": "on_hit",
             "mode": "add"
-          },
-          {
-            "kind": "damage",
-            "source": "Poison",
-            "dice": {
-              "count": 6,
-              "size": 6,
-              "bonus": 0
-            },
-            "damage_type": "poison",
-            "trigger": "on_hit",
-            "mode": "add"
           }
         ],
         "forbid_target_grappled_by_self": false,
@@ -14800,18 +14752,6 @@
             "source": "Fire",
             "dice": {
               "count": 1,
-              "size": 6,
-              "bonus": 0
-            },
-            "damage_type": "fire",
-            "trigger": "on_hit",
-            "mode": "add"
-          },
-          {
-            "kind": "damage",
-            "source": "Fire",
-            "dice": {
-              "count": 5,
               "size": 6,
               "bonus": 0
             },
@@ -15345,18 +15285,6 @@
             "source": "Fire",
             "dice": {
               "count": 1,
-              "size": 6,
-              "bonus": 0
-            },
-            "damage_type": "fire",
-            "trigger": "on_hit",
-            "mode": "add"
-          },
-          {
-            "kind": "damage",
-            "source": "Fire",
-            "dice": {
-              "count": 7,
               "size": 6,
               "bonus": 0
             },
@@ -16561,18 +16489,6 @@
             "damage_type": "cold",
             "trigger": "on_hit",
             "mode": "add"
-          },
-          {
-            "kind": "damage",
-            "source": "Cold",
-            "dice": {
-              "count": 5,
-              "size": 8,
-              "bonus": 0
-            },
-            "damage_type": "cold",
-            "trigger": "on_hit",
-            "mode": "add"
           }
         ],
         "forbid_target_grappled_by_self": false,
@@ -16728,18 +16644,6 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [
-          {
-            "kind": "damage",
-            "source": "Cold",
-            "dice": {
-              "count": 4,
-              "size": 8,
-              "bonus": 0
-            },
-            "damage_type": "cold",
-            "trigger": "on_hit",
-            "mode": "add"
-          },
           {
             "kind": "prone",
             "max_target_size": "large"
@@ -17013,18 +16917,6 @@
             "damage_type": "acid",
             "trigger": "on_hit",
             "mode": "add"
-          },
-          {
-            "kind": "damage",
-            "source": "Acid",
-            "dice": {
-              "count": 14,
-              "size": 6,
-              "bonus": 0
-            },
-            "damage_type": "acid",
-            "trigger": "on_hit",
-            "mode": "add"
           }
         ],
         "forbid_target_grappled_by_self": false,
@@ -17198,18 +17090,6 @@
             "damage_type": "lightning",
             "trigger": "on_hit",
             "mode": "add"
-          },
-          {
-            "kind": "damage",
-            "source": "Lightning",
-            "dice": {
-              "count": 10,
-              "size": 10,
-              "bonus": 0
-            },
-            "damage_type": "lightning",
-            "trigger": "on_hit",
-            "mode": "add"
           }
         ],
         "forbid_target_grappled_by_self": false,
@@ -17375,18 +17255,6 @@
             "source": "Poison",
             "dice": {
               "count": 2,
-              "size": 6,
-              "bonus": 0
-            },
-            "damage_type": "poison",
-            "trigger": "on_hit",
-            "mode": "add"
-          },
-          {
-            "kind": "damage",
-            "source": "Poison",
-            "dice": {
-              "count": 12,
               "size": 6,
               "bonus": 0
             },
@@ -17567,18 +17435,6 @@
             "damage_type": "fire",
             "trigger": "on_hit",
             "mode": "add"
-          },
-          {
-            "kind": "damage",
-            "source": "Fire",
-            "dice": {
-              "count": 16,
-              "size": 6,
-              "bonus": 0
-            },
-            "damage_type": "fire",
-            "trigger": "on_hit",
-            "mode": "add"
           }
         ],
         "forbid_target_grappled_by_self": false,
@@ -17744,18 +17600,6 @@
             "dice": {
               "count": 1,
               "size": 4,
-              "bonus": 0
-            },
-            "damage_type": "cold",
-            "trigger": "on_hit",
-            "mode": "add"
-          },
-          {
-            "kind": "damage",
-            "source": "Cold",
-            "dice": {
-              "count": 9,
-              "size": 8,
               "bonus": 0
             },
             "damage_type": "cold",
