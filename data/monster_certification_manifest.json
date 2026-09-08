@@ -2525,12 +2525,10 @@
       "srd_source_reference": "SRD 5.2.1 p. 278",
       "runtime_template_id": "srd-cultist",
       "detected_combat_mechanics": [
-        "attack-roll",
-        "unsupported-action-rider"
+        "attack-roll"
       ],
       "supported_mechanics": [
-        "attack-roll",
-        "unsupported-action-rider"
+        "attack-roll"
       ],
       "unsupported_mechanics": [],
       "python_certification_status": "certified",
@@ -3418,8 +3416,7 @@
         "bonus-action",
         "damage-or-condition-defense",
         "limited-use",
-        "multiattack",
-        "unsupported-action-rider"
+        "multiattack"
       ],
       "supported_mechanics": [
         "attack-roll",
@@ -3428,8 +3425,7 @@
       ],
       "unsupported_mechanics": [
         "bonus-action",
-        "limited-use",
-        "unsupported-action-rider"
+        "limited-use"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -3438,8 +3434,7 @@
       "blockers": [
         "bonus-action",
         "limited-use",
-        "monster-combat-mechanics-not-compiled",
-        "unsupported-action-rider"
+        "monster-combat-mechanics-not-compiled"
       ]
     },
     {
@@ -9518,12 +9513,10 @@
       "srd_source_reference": "SRD 5.2.1 p. 342",
       "runtime_template_id": "srd-worg",
       "detected_combat_mechanics": [
-        "attack-roll",
-        "unsupported-action-rider"
+        "attack-roll"
       ],
       "supported_mechanics": [
-        "attack-roll",
-        "unsupported-action-rider"
+        "attack-roll"
       ],
       "unsupported_mechanics": [],
       "python_certification_status": "certified",
