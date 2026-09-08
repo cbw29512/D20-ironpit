@@ -4,8 +4,8 @@
   "generation_policy": "Derived automatically from canonical SRD rows plus runtime/source audit readiness.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 130,
-    "blocked": 200
+    "public_ready": 131,
+    "blocked": 199
   },
   "monsters": [
     {
@@ -500,7 +500,6 @@
         "attack-roll",
         "condition-or-control",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
         "save-or-complex-action",
         "saving-throw-action",
@@ -514,7 +513,6 @@
       ],
       "unsupported_mechanics": [
         "condition-or-control",
-        "limited-use",
         "save-or-complex-action",
         "trait"
       ],
@@ -524,7 +522,6 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action",
         "trait"
@@ -1073,7 +1070,6 @@
         "attack-roll",
         "condition-or-control",
         "conditional-attack-modifier",
-        "limited-use",
         "save-or-complex-action",
         "saving-throw-action",
         "trait"
@@ -1085,7 +1081,6 @@
       "unsupported_mechanics": [
         "condition-or-control",
         "conditional-attack-modifier",
-        "limited-use",
         "save-or-complex-action",
         "trait"
       ],
@@ -1096,7 +1091,6 @@
       "blockers": [
         "condition-or-control",
         "conditional-attack-modifier",
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action",
         "trait"
@@ -1128,27 +1122,21 @@
       "monster_name": "Ape",
       "srd_source_page": 344,
       "srd_source_reference": "SRD 5.2.1 p. 344",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-ape",
       "detected_combat_mechanics": [
         "attack-roll",
-        "limited-use",
         "multiattack"
       ],
       "supported_mechanics": [
         "attack-roll",
         "multiattack"
       ],
-      "unsupported_mechanics": [
-        "limited-use"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "limited-use",
-        "monster-combat-mechanics-not-compiled"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-archelon",
@@ -1582,7 +1570,6 @@
         "bonus-action",
         "condition-or-control",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
         "save-or-complex-action",
         "saving-throw-action"
@@ -1596,7 +1583,6 @@
       "unsupported_mechanics": [
         "bonus-action",
         "condition-or-control",
-        "limited-use",
         "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
@@ -1606,7 +1592,6 @@
       "blockers": [
         "bonus-action",
         "condition-or-control",
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action"
       ]
@@ -1666,7 +1651,6 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
         "save-or-complex-action",
         "saving-throw-action",
@@ -1680,7 +1664,6 @@
         "trait"
       ],
       "unsupported_mechanics": [
-        "limited-use",
         "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
@@ -1688,7 +1671,6 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action"
       ]
@@ -1784,7 +1766,6 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
         "save-or-complex-action",
         "saving-throw-action"
@@ -1796,7 +1777,6 @@
         "saving-throw-action"
       ],
       "unsupported_mechanics": [
-        "limited-use",
         "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
@@ -1804,7 +1784,6 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action"
       ]
@@ -1874,7 +1853,6 @@
         "attack-roll",
         "condition-or-control",
         "damage-or-condition-defense",
-        "limited-use",
         "save-or-complex-action",
         "saving-throw-action"
       ],
@@ -1885,7 +1863,6 @@
       ],
       "unsupported_mechanics": [
         "condition-or-control",
-        "limited-use",
         "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
@@ -1894,7 +1871,6 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action"
       ]
@@ -1909,7 +1885,6 @@
         "attack-roll",
         "condition-or-control",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
         "save-or-complex-action",
         "saving-throw-action",
@@ -1924,7 +1899,6 @@
       ],
       "unsupported_mechanics": [
         "condition-or-control",
-        "limited-use",
         "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
@@ -1933,7 +1907,6 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action"
       ]
@@ -2178,7 +2151,6 @@
       "runtime_template_id": null,
       "detected_combat_mechanics": [
         "attack-roll",
-        "limited-use",
         "multiattack",
         "save-or-complex-action",
         "saving-throw-action",
@@ -2190,7 +2162,6 @@
         "saving-throw-action"
       ],
       "unsupported_mechanics": [
-        "limited-use",
         "save-or-complex-action",
         "unsupported-action-rider"
       ],
@@ -2199,7 +2170,6 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action",
         "unsupported-action-rider"
@@ -2438,7 +2408,6 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "save-or-complex-action",
         "saving-throw-action"
       ],
@@ -2448,7 +2417,6 @@
         "saving-throw-action"
       ],
       "unsupported_mechanics": [
-        "limited-use",
         "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
@@ -2456,7 +2424,6 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action"
       ]
@@ -2758,7 +2725,6 @@
         "condition-or-control",
         "conditional-attack-modifier",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
         "save-or-complex-action",
         "saving-throw-action",
@@ -2774,7 +2740,6 @@
         "bonus-action",
         "condition-or-control",
         "conditional-attack-modifier",
-        "limited-use",
         "save-or-complex-action",
         "spellcasting"
       ],
@@ -2786,7 +2751,6 @@
         "bonus-action",
         "condition-or-control",
         "conditional-attack-modifier",
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action",
         "spellcasting"
@@ -2820,7 +2784,6 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
         "save-or-complex-action",
         "saving-throw-action",
@@ -2834,7 +2797,6 @@
         "trait"
       ],
       "unsupported_mechanics": [
-        "limited-use",
         "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
@@ -2842,7 +2804,6 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action"
       ]
@@ -3198,7 +3159,6 @@
         "attack-roll",
         "bonus-action",
         "condition-or-control",
-        "limited-use",
         "multiattack",
         "save-or-complex-action",
         "saving-throw-action",
@@ -3213,7 +3173,6 @@
       "unsupported_mechanics": [
         "bonus-action",
         "condition-or-control",
-        "limited-use",
         "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
@@ -3223,7 +3182,6 @@
       "blockers": [
         "bonus-action",
         "condition-or-control",
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action"
       ]
@@ -3529,7 +3487,6 @@
         "attack-roll",
         "condition-or-control",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
         "save-or-complex-action",
         "saving-throw-action",
@@ -3544,7 +3501,6 @@
       ],
       "unsupported_mechanics": [
         "condition-or-control",
-        "limited-use",
         "save-or-complex-action",
         "spellcasting",
         "trait"
@@ -3555,7 +3511,6 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action",
         "spellcasting",
@@ -3606,7 +3561,6 @@
         "attack-roll",
         "bonus-action",
         "condition-or-control",
-        "limited-use",
         "multiattack",
         "save-or-complex-action",
         "saving-throw-action"
@@ -3619,7 +3573,6 @@
       ],
       "unsupported_mechanics": [
         "condition-or-control",
-        "limited-use",
         "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
@@ -3628,7 +3581,6 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action"
       ]
@@ -4111,7 +4063,6 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
-        "limited-use",
         "save-or-complex-action",
         "saving-throw-action",
         "trait"
@@ -4123,7 +4074,6 @@
       ],
       "unsupported_mechanics": [
         "condition-or-control",
-        "limited-use",
         "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
@@ -4132,7 +4082,6 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action"
       ]
@@ -4277,7 +4226,6 @@
         "attack-roll",
         "condition-or-control",
         "damage-or-condition-defense",
-        "limited-use",
         "save-or-complex-action",
         "saving-throw-action",
         "trait"
@@ -4289,7 +4237,6 @@
       ],
       "unsupported_mechanics": [
         "condition-or-control",
-        "limited-use",
         "save-or-complex-action",
         "trait"
       ],
@@ -4299,7 +4246,6 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action",
         "trait"
@@ -4501,7 +4447,6 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
         "save-or-complex-action",
         "saving-throw-action",
@@ -4515,7 +4460,6 @@
         "trait"
       ],
       "unsupported_mechanics": [
-        "limited-use",
         "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
@@ -4523,7 +4467,6 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action"
       ]
@@ -4539,7 +4482,6 @@
         "bonus-action",
         "condition-or-control",
         "damage-or-condition-defense",
-        "limited-use",
         "save-or-complex-action",
         "saving-throw-action"
       ],
@@ -4551,7 +4493,6 @@
       "unsupported_mechanics": [
         "bonus-action",
         "condition-or-control",
-        "limited-use",
         "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
@@ -4561,7 +4502,6 @@
       "blockers": [
         "bonus-action",
         "condition-or-control",
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action"
       ]
@@ -4605,7 +4545,6 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
         "save-or-complex-action",
         "saving-throw-action",
@@ -4619,7 +4558,6 @@
         "trait"
       ],
       "unsupported_mechanics": [
-        "limited-use",
         "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
@@ -4627,7 +4565,6 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action"
       ]
@@ -4814,7 +4751,6 @@
         "bonus-action",
         "damage-or-condition-defense",
         "defense-clause",
-        "limited-use",
         "multiattack",
         "save-or-complex-action",
         "saving-throw-action",
@@ -4829,7 +4765,6 @@
       ],
       "unsupported_mechanics": [
         "defense-clause",
-        "limited-use",
         "save-or-complex-action",
         "trait"
       ],
@@ -4839,7 +4774,6 @@
       "public_ready_status": "blocked",
       "blockers": [
         "defense-clause",
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action",
         "trait"
@@ -4903,7 +4837,6 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
         "save-or-complex-action",
         "saving-throw-action",
@@ -4917,7 +4850,6 @@
         "trait"
       ],
       "unsupported_mechanics": [
-        "limited-use",
         "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
@@ -4925,7 +4857,6 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action"
       ]
@@ -5225,7 +5156,6 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
         "spellcasting",
         "trait",
@@ -5237,7 +5167,6 @@
         "multiattack"
       ],
       "unsupported_mechanics": [
-        "limited-use",
         "spellcasting",
         "trait",
         "unsupported-action-rider"
@@ -5247,7 +5176,6 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "spellcasting",
         "trait",
@@ -5409,7 +5337,6 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
         "save-or-complex-action",
         "saving-throw-action",
@@ -5422,7 +5349,6 @@
         "saving-throw-action"
       ],
       "unsupported_mechanics": [
-        "limited-use",
         "save-or-complex-action",
         "trait"
       ],
@@ -5431,7 +5357,6 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action",
         "trait"
@@ -5770,7 +5695,6 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "save-or-complex-action",
         "saving-throw-action",
         "trait"
@@ -5781,7 +5705,6 @@
         "saving-throw-action"
       ],
       "unsupported_mechanics": [
-        "limited-use",
         "save-or-complex-action",
         "trait"
       ],
@@ -5790,7 +5713,6 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action",
         "trait"
@@ -6090,15 +6012,13 @@
       "runtime_template_id": null,
       "detected_combat_mechanics": [
         "attack-roll",
-        "condition-or-control",
-        "limited-use"
+        "condition-or-control"
       ],
       "supported_mechanics": [
         "attack-roll"
       ],
       "unsupported_mechanics": [
-        "condition-or-control",
-        "limited-use"
+        "condition-or-control"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -6106,7 +6026,6 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "limited-use",
         "monster-combat-mechanics-not-compiled"
       ]
     },
@@ -7068,7 +6987,6 @@
         "condition-or-control",
         "damage-or-condition-defense",
         "defense-clause",
-        "limited-use",
         "multiattack",
         "save-or-complex-action",
         "saving-throw-action",
@@ -7084,7 +7002,6 @@
       "unsupported_mechanics": [
         "condition-or-control",
         "defense-clause",
-        "limited-use",
         "save-or-complex-action",
         "spellcasting",
         "trait"
@@ -7096,7 +7013,6 @@
       "blockers": [
         "condition-or-control",
         "defense-clause",
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action",
         "spellcasting",
@@ -7154,7 +7070,6 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
         "save-or-complex-action",
         "saving-throw-action"
@@ -7166,7 +7081,6 @@
         "saving-throw-action"
       ],
       "unsupported_mechanics": [
-        "limited-use",
         "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
@@ -7174,7 +7088,6 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action"
       ]
@@ -7541,7 +7454,6 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
-        "limited-use",
         "save-or-complex-action",
         "saving-throw-action",
         "spellcasting",
@@ -7553,7 +7465,6 @@
       ],
       "unsupported_mechanics": [
         "condition-or-control",
-        "limited-use",
         "save-or-complex-action",
         "spellcasting",
         "trait"
@@ -7564,7 +7475,6 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action",
         "spellcasting",
@@ -7731,7 +7641,6 @@
         "attack-roll",
         "condition-or-control",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
         "save-or-complex-action",
         "saving-throw-action"
@@ -7744,7 +7653,6 @@
       ],
       "unsupported_mechanics": [
         "condition-or-control",
-        "limited-use",
         "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
@@ -7753,7 +7661,6 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action"
       ]
@@ -8086,7 +7993,6 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "save-or-complex-action",
         "saving-throw-action",
         "trait",
@@ -8098,7 +8004,6 @@
         "saving-throw-action"
       ],
       "unsupported_mechanics": [
-        "limited-use",
         "save-or-complex-action",
         "trait",
         "unsupported-action-rider"
@@ -8108,7 +8013,6 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action",
         "trait",
@@ -8218,7 +8122,6 @@
         "attack-roll",
         "condition-or-control",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
         "save-or-complex-action",
         "saving-throw-action",
@@ -8234,7 +8137,6 @@
       ],
       "unsupported_mechanics": [
         "condition-or-control",
-        "limited-use",
         "save-or-complex-action",
         "spellcasting"
       ],
@@ -8244,7 +8146,6 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action",
         "spellcasting"
@@ -8418,7 +8319,6 @@
         "attack-roll",
         "condition-or-control",
         "damage-or-condition-defense",
-        "limited-use",
         "save-or-complex-action",
         "saving-throw-action",
         "trait"
@@ -8431,7 +8331,6 @@
       ],
       "unsupported_mechanics": [
         "condition-or-control",
-        "limited-use",
         "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
@@ -8440,7 +8339,6 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action"
       ]
@@ -9089,7 +8987,6 @@
         "attack-roll",
         "condition-or-control",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
         "save-or-complex-action",
         "saving-throw-action",
@@ -9103,7 +9000,6 @@
       ],
       "unsupported_mechanics": [
         "condition-or-control",
-        "limited-use",
         "save-or-complex-action",
         "trait"
       ],
@@ -9113,7 +9009,6 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action",
         "trait"
@@ -9312,7 +9207,6 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
         "save-or-complex-action",
         "saving-throw-action",
@@ -9326,7 +9220,6 @@
         "trait"
       ],
       "unsupported_mechanics": [
-        "limited-use",
         "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
@@ -9334,7 +9227,6 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action"
       ]
@@ -9411,7 +9303,6 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "save-or-complex-action",
         "saving-throw-action",
         "trait"
@@ -9423,7 +9314,6 @@
         "trait"
       ],
       "unsupported_mechanics": [
-        "limited-use",
         "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
@@ -9431,7 +9321,6 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action"
       ]
@@ -9556,7 +9445,6 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
         "save-or-complex-action",
         "saving-throw-action",
@@ -9570,7 +9458,6 @@
         "trait"
       ],
       "unsupported_mechanics": [
-        "limited-use",
         "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
@@ -9578,7 +9465,6 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action"
       ]
@@ -9592,7 +9478,6 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
         "save-or-complex-action",
         "saving-throw-action"
@@ -9604,7 +9489,6 @@
         "saving-throw-action"
       ],
       "unsupported_mechanics": [
-        "limited-use",
         "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
@@ -9612,7 +9496,6 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action"
       ]
@@ -9627,7 +9510,6 @@
         "attack-roll",
         "condition-or-control",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
         "save-or-complex-action",
         "saving-throw-action"
@@ -9640,7 +9522,6 @@
       ],
       "unsupported_mechanics": [
         "condition-or-control",
-        "limited-use",
         "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
@@ -9649,7 +9530,6 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action"
       ]
@@ -9664,7 +9544,6 @@
         "attack-roll",
         "condition-or-control",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
         "save-or-complex-action",
         "saving-throw-action",
@@ -9679,7 +9558,6 @@
       ],
       "unsupported_mechanics": [
         "condition-or-control",
-        "limited-use",
         "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
@@ -9688,7 +9566,6 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action"
       ]
@@ -9702,7 +9579,6 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
         "save-or-complex-action",
         "saving-throw-action"
@@ -9714,7 +9590,6 @@
         "saving-throw-action"
       ],
       "unsupported_mechanics": [
-        "limited-use",
         "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
@@ -9722,7 +9597,6 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action"
       ]
@@ -9736,7 +9610,6 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
         "save-or-complex-action",
         "saving-throw-action",
@@ -9750,7 +9623,6 @@
         "trait"
       ],
       "unsupported_mechanics": [
-        "limited-use",
         "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
@@ -9758,7 +9630,6 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action"
       ]
@@ -9772,7 +9643,6 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
         "save-or-complex-action",
         "saving-throw-action",
@@ -9786,7 +9656,6 @@
         "trait"
       ],
       "unsupported_mechanics": [
-        "limited-use",
         "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
@@ -9794,7 +9663,6 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action"
       ]
@@ -9808,7 +9676,6 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
         "save-or-complex-action",
         "saving-throw-action"
@@ -9820,7 +9687,6 @@
         "saving-throw-action"
       ],
       "unsupported_mechanics": [
-        "limited-use",
         "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
@@ -9828,7 +9694,6 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action"
       ]
@@ -9843,7 +9708,6 @@
         "attack-roll",
         "condition-or-control",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
         "save-or-complex-action",
         "saving-throw-action"
@@ -9856,7 +9720,6 @@
       ],
       "unsupported_mechanics": [
         "condition-or-control",
-        "limited-use",
         "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
@@ -9865,7 +9728,6 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action"
       ]
@@ -9879,7 +9741,6 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
         "save-or-complex-action",
         "saving-throw-action",
@@ -9893,7 +9754,6 @@
         "trait"
       ],
       "unsupported_mechanics": [
-        "limited-use",
         "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
@@ -9901,7 +9761,6 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "limited-use",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action"
       ]
