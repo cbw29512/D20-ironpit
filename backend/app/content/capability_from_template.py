@@ -85,6 +85,7 @@ def _save(action) -> dict[str, object]:
         "id": action.id, "name": action.name, "save_ability": action.save_ability,
         "dc": action.dc, "range_ft": action.range_ft, "area": action.area,
         "target_max_size": action.target_max_size, "success_damage": action.success_damage,
+        "magical_effect": action.magical_effect,
         "animation": action.animation, "resource_id": action.resource_id,
         "resource_cost": action.resource_cost,
     }
