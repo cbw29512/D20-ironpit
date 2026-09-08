@@ -1,7 +1,7 @@
 from __future__ import annotations
 
+from app.combat.condition_application import apply_condition_effect
 from app.combat.grapple import apply_grapple
-from app.combat.timed_conditions import apply_timed_condition
 from app.domain.actions import HitControlEffect
 from app.domain.runtime import CombatantState
 from app.domain.size import size_at_most
@@ -33,20 +33,14 @@ def apply_control_effect(
             restrains=effect.restrains_while_grappled,
         ))
     if effect.condition_id is not None:
-        timed = apply_timed_condition(
+        condition = apply_condition_effect(
             target,
-            effect.condition_id,
             source_id,
-            source_effect_id=source_effect_id,
-            applied_round=round_number,
-            expires_at_start_of_source_turn=effect.expires_at_start_of_source_turn,
-            expiry_timing=effect.expiry_timing,
-            repeat_save_ability=effect.repeat_save_ability,
-            repeat_save_dc=effect.repeat_save_dc,
-            repeat_save_timing=effect.repeat_save_timing,
-            allowed_removal_action_ids=effect.allowed_removal_action_ids,
+            source_effect_id,
+            effect,
+            round_number=round_number,
             affected_states=affected_states,
         )
-        if timed is not None:
-            applied.append(timed)
+        if condition is not None:
+            applied.append(condition)
     return list(dict.fromkeys(applied))
