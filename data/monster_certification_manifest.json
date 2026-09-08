@@ -4,8 +4,8 @@
   "generation_policy": "Derived automatically from canonical SRD rows plus runtime/source audit readiness.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 145,
-    "blocked": 185
+    "public_ready": 146,
+    "blocked": 184
   },
   "monsters": [
     {
@@ -2953,16 +2953,12 @@
         "multiattack",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "ranged-range-mismatch:srd-earth-elemental-rock-launch"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "ranged-range-mismatch:srd-earth-elemental-rock-launch"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-efreeti",
