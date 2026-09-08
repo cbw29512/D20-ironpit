@@ -13,6 +13,12 @@ ConditionName = Literal[
     "incapacitated", "invisible", "paralyzed", "petrified", "poisoned", "prone",
     "restrained", "stunned", "unconscious",
 ]
+ForcedMovementDirection = Literal["push", "pull"]
+
+
+class ForcedMovementEffect(BaseModel):
+    direction: ForcedMovementDirection
+    max_distance_ft: int = Field(ge=5, le=120, multiple_of=5)
 
 
 class GrappleSource(BaseModel):
@@ -24,6 +30,7 @@ class GrappleSource(BaseModel):
 
 class HitControlEffect(BaseModel):
     max_target_size: CreatureSize | None = None
+    forced_movement: ForcedMovementEffect | None = None
     grapple_escape_dc: int | None = Field(default=None, ge=1, le=40)
     restrains_while_grappled: bool = False
     condition_id: ConditionName | None = None
