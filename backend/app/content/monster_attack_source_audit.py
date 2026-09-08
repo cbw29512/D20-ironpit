@@ -135,7 +135,6 @@ def attack_issues(attack: WeaponAttack, actions: str) -> list[str]:
         issues.append(f"condition-rider-mismatch:{attack.id}:{control.condition_id}")
     return issues
 
-
 def save_action_issues(action: Any, actions: str) -> list[str]:
     issues: list[str] = []
     if action.name.lower() not in actions:
