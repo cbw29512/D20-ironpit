@@ -1,13 +1,12 @@
 (() => {
   "use strict";
   const S = () => window.IRON_PIT_BROWSER_STATE;
-  const R = () => window.IRON_PIT_BROWSER_ROLLS;
   const T = () => window.IRON_PIT_BROWSER_TURN;
   const L = () => window.IRON_PIT_BROWSER_CONDITION_LIFECYCLE;
   const P = () => window.IRON_PIT_BROWSER_PRECOMBAT_SPELLS;
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION, B = () => window.IRON_PIT_BROWSER_SOURCE_BOUND_EFFECTS;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
-  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { incapacitated: (state) => state.is_unconscious };
+  const I = () => window.IRON_PIT_BROWSER_INITIATIVE;
   const heroes = () => window.IRON_PIT_BROWSER_HEROES;
   const monsters = () => window.IRON_PIT_BROWSER_MONSTERS;
 
@@ -35,7 +34,8 @@
   function crNumber(value) {
     const text = String(value || "0");
     if (!text.includes("/")) return Number(text) || 0;
-    const [a, b] = text.split("/").map(Number); return a / b;
+    const [a, b] = text.split("/").map(Number);
+    return a / b;
   }
 
   function totalCr(values) {
@@ -43,76 +43,6 @@
     if (quarters % 4 === 0) return String(quarters / 4);
     const divisor = quarters % 2 === 0 ? 2 : 4;
     return `${quarters / (4 / divisor)}/${divisor}`;
-  }
-
-  function initiativePriority(group) {
-    if (group.natural_roll === 20) return 2;
-    if (group.natural_roll === 1) return 0;
-    return 1;
-  }
-
-  function rerollExactInitiativeTies(groups) {
-    while (true) {
-      const signatures = new Map();
-      for (const group of groups) {
-        const key = `${initiativePriority(group)}:${group.initiative_count}:${group.tie_break_rolls.join(",")}`;
-        const tied = signatures.get(key) || []; tied.push(group); signatures.set(key, tied);
-      }
-      const unresolved = [...signatures.values()].filter((tied) => tied.length > 1);
-      if (!unresolved.length) return;
-      for (const tied of unresolved) {
-        for (const group of tied) {
-          const value = window.IRON_PIT_DICE.roll(20);
-          group.tie_break_rolls.push(value); group.tie_break_roll = value;
-        }
-      }
-    }
-  }
-
-  function compareTieHistory(left, right) {
-    const length = Math.max(left.length, right.length);
-    for (let index = 0; index < length; index += 1) {
-      const a = left[index] || 0, b = right[index] || 0;
-      if (a !== b) return b - a;
-    }
-    return 0;
-  }
-
-  function initiative(setup) {
-    const groups = setup.heroes.map((member, index) => ({ side: "heroes", template_id: member.state.template.id, members: [member], index }));
-    const byTemplate = new Map();
-    setup.monsters.forEach((member, index) => {
-      const key = member.state.template.id;
-      if (!byTemplate.has(key)) byTemplate.set(key, { side: "monsters", template_id: key, members: [], index: setup.heroes.length + index });
-      byTemplate.get(key).members.push(member);
-    });
-    groups.push(...byTemplate.values());
-    for (const group of groups) {
-      const state = group.members[0].state, advantage = Boolean(state.template.initiative_advantage), disadvantage = Q().incapacitated(state);
-      const mode = advantage === disadvantage ? "normal" : advantage ? "advantage" : "disadvantage";
-      const roll = R().d20(state.template.initiative_bonus, mode);
-      group.initiative_roll = roll; group.natural_roll = roll.selected_roll;
-      group.initiative_bonus = state.template.initiative_bonus;
-      group.initiative_count = roll.total;
-      group.tie_break_roll = null; group.tie_break_rolls = [];
-      group.members.forEach((member) => {
-        member.state.initiative_roll = roll.selected_roll;
-        member.state.initiative_total = roll.total;
-      });
-    }
-    rerollExactInitiativeTies(groups);
-    groups.sort((a, b) => initiativePriority(b) - initiativePriority(a)
-      || b.initiative_count - a.initiative_count
-      || compareTieHistory(a.tie_break_rolls, b.tie_break_rolls)
-      || a.index - b.index);
-    return {
-      groups: groups.map((group) => ({
-        side: group.side, template_id: group.template_id, combatant_ids: group.members.map((m) => m.combatant_id),
-        initiative_roll: group.initiative_roll, natural_roll: group.natural_roll, initiative_bonus: group.initiative_bonus,
-        initiative_count: group.initiative_count, tie_break_roll: group.tie_break_roll, tie_break_rolls: [...group.tie_break_rolls],
-      })),
-      turn_order: groups.flatMap((group) => group.members.map((member) => member.combatant_id)),
-    };
   }
 
   function defeatedMember(member) {
@@ -130,19 +60,6 @@
     return "active";
   }
 
-  function initiativeEvents(init, setup, startSequence = 1) {
-    const all = [...setup.heroes, ...setup.monsters];
-    const names = new Map(all.map((member) => [member.combatant_id, member.state.template.name]));
-    let sequence = startSequence;
-    return init.groups.map((group) => {
-      let description = `${names.get(group.combatant_ids[0])}${group.combatant_ids.length > 1 ? ` group (${group.combatant_ids.length})` : ""} rolls initiative ${group.initiative_count}.`;
-      if (group.natural_roll === 20) description += " Natural 20: top initiative priority.";
-      if (group.natural_roll === 1) description += " Natural 1: bottom initiative priority.";
-      if (group.tie_break_rolls.length) description += ` Tie reroll${group.tie_break_rolls.length > 1 ? "s" : ""}: ${group.tie_break_rolls.join(" → ")}.`;
-      return { sequence: sequence++, round_number: 0, event_type: "initiative", actor_id: group.combatant_ids[0], actor_name: names.get(group.combatant_ids[0]), attack_roll: group.initiative_roll, animation: "initiative", description };
-    });
-  }
-
   function lifecycle(sequence, round, member, setup, targetTiming, sourceTiming) {
     const target = L().resolveTargetTiming(sequence, round, member, targetTiming);
     const source = L().resolveSourceTiming(target.sequence, round, member, setup, sourceTiming);
@@ -157,26 +74,33 @@
     if (!selection.hero_ids?.length || !selection.monster_ids?.length || selection.hero_ids.length > 6 || selection.monster_ids.length > 6) throw new Error("Iron Pit requires 1-6 cards per side.");
     const setup = buildSetup(selection);
     const prep = P()?.prepare(setup, 1) || { events: [], sequence: 1 };
-    const init = initiative(setup);
+    const init = I().resolve(setup);
     const members = [...setup.heroes, ...setup.monsters], states = members.map((member) => member.state);
     const byId = new Map(members.map((member) => [member.combatant_id, member]));
-    const events = [...prep.events, ...initiativeEvents(init, setup, prep.sequence)]; let sequence = events.length + 1; let resolvedRound = 0;
+    const events = [...prep.events, ...I().events(init, setup, prep.sequence)];
+    let sequence = events.length + 1, resolvedRound = 0;
     for (let round = 1; round <= 100; round += 1) {
       resolvedRound = round;
       for (const id of init.turn_order) {
-        const current = outcome(setup); if (current !== "active") return finish(setup, init, events, current, round, sequence);
+        const current = outcome(setup);
+        if (current !== "active") return finish(setup, init, events, current, round, sequence);
         const member = byId.get(id);
-        B()?.cleanupDisabledSources(setup); window.IRON_PIT_BROWSER_MODIFIERS?.expireSourceTurnStart(states, member.combatant_id); S().refreshStartOfTurn(member.state); C()?.endIfExpired(member.state, round, states);
+        B()?.cleanupDisabledSources(setup);
+        window.IRON_PIT_BROWSER_MODIFIERS?.expireSourceTurnStart(states, member.combatant_id);
+        S().refreshStartOfTurn(member.state);
+        C()?.endIfExpired(member.state, round, states);
         const start = lifecycle(sequence, round, member, setup, "target_turn_start", "source_turn_start");
         events.push(...start.events); sequence = start.sequence;
         if (member.state.template.kind === "character" && member.state.current_hp === 0 && !member.state.is_dead && !member.state.is_stable) events.push(T().deathSave(sequence++, round, member));
         if (member.state.current_hp > 0 && !member.state.is_dead) {
-          const turn = T().resolveTurn(sequence, round, member, setup); events.push(...turn.events); sequence = turn.sequence;
+          const turn = T().resolveTurn(sequence, round, member, setup);
+          events.push(...turn.events); sequence = turn.sequence;
         }
         const end = lifecycle(sequence, round, member, setup, "target_turn_end", "source_turn_end");
         events.push(...end.events); sequence = end.sequence;
       }
-      const current = outcome(setup); if (current !== "active") return finish(setup, init, events, current, round, sequence);
+      const current = outcome(setup);
+      if (current !== "active") return finish(setup, init, events, current, round, sequence);
     }
     return finish(setup, init, events, "draw", resolvedRound, sequence);
   }
@@ -186,5 +110,5 @@
     return { battle_id: crypto.randomUUID?.() || `battle-${Date.now()}`, outcome: result, rounds: round, setup, initiative: init, events, ruleset: "SRD 5.2.1 Iron Pit formation deathmatch subset" };
   }
 
-  window.IRON_PIT_BROWSER_ENGINE = { initiative, runEncounter };
+  window.IRON_PIT_BROWSER_ENGINE = { runEncounter };
 })();
