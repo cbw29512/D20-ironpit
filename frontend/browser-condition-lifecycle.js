@@ -7,6 +7,8 @@
 
   const label = (id) => id.replaceAll("_", " ").replace(/\b\w/g, (char) => char.toUpperCase());
   const repeatSaveDue = (effect, timing) => effect.repeat_save_timing === timing;
+  const sourceExpiryDue = (effect, round, timing) =>
+    effect.expiry_timing === timing && (effect.expires_round == null || round >= effect.expires_round);
 
   function resolveTargetTiming(sequence, round, target, timing) {
     const events = [];
@@ -52,7 +54,7 @@
     try {
       for (const target of [...setup.heroes, ...setup.monsters]) {
         const expiring = target.state.timed_effects.filter((effect) =>
-          effect.source_id === source.combatant_id && effect.expiry_timing === timing,
+          effect.source_id === source.combatant_id && sourceExpiryDue(effect, round, timing),
         );
         for (const effect of expiring) {
           if (!target.state.timed_effects.includes(effect)) continue;
