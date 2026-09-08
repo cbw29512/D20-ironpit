@@ -1,10 +1,10 @@
 from app.combat.cleric_channel_divinity import resolve_channel_divinity
 from app.combat.cleric_channel_policy import ChannelDivinityChoice, choose_channel_divinity
+from app.combat.condition_lifecycle import resolve_source_condition_timing
 from app.combat.dice import FixedDiceProvider
 from app.combat.ongoing_spell_control import forced_retreat_active
 from app.combat.source_bound_effects import cleanup_disabled_source_effects
 from app.combat.state import build_combatant_state
-from app.combat.timed_conditions import expire_start_of_turn_conditions
 from app.combat.zero_hp import apply_damage
 from app.content.audited_cleric import build_seraphine_dawnshield_level_two
 from app.content.audited_fighter import build_karnok_stoneward
@@ -87,10 +87,10 @@ def test_turn_undead_expires_at_one_minute_not_next_cleric_turn() -> None:
     resolve_channel_divinity(
         1, 1, cleric, setup, ChannelDivinityChoice("turn-undead", (skeleton,)), FixedDiceProvider([1]),
     )
-    events, sequence = expire_start_of_turn_conditions(2, 10, cleric, setup)
+    events, sequence = resolve_source_condition_timing(2, 10, cleric, setup, "source_turn_start")
     assert events == [] and sequence == 2
     assert forced_retreat_active(skeleton.state) is True
-    events, sequence = expire_start_of_turn_conditions(2, 11, cleric, setup)
+    events, sequence = resolve_source_condition_timing(2, 11, cleric, setup, "source_turn_start")
     assert sequence == 3
     assert events[0].removed_condition_ids == ["turned-undead", "frightened", "incapacitated"]
     assert skeleton.state.timed_effects == []
