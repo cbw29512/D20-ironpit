@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from app.content.monster_catalog import build_monster_catalog, load_monster_rows
 from app.content.monster_trait_source_audit import parse_trait_names, trait_issues
-from app.content.monsters_zero_engine import build_zero_engine_monsters
 from app.content.roster import build_arena_roster
 from app.domain.catalog import CoverageStatus
 from app.domain.traits import CombatTrait
@@ -36,9 +35,18 @@ def test_arena_neutral_trait_remains_fingerprinted() -> None:
 
 
 def test_xorn_environment_only_traits_are_neutral_in_standard_pit() -> None:
-    xorn = next(monster for monster in build_zero_engine_monsters() if monster.name == "Xorn")
-    assert xorn.source_trait_names == ["Earth Glide", "Treasure Sense"]
-    assert trait_issues(xorn, _row("Xorn")) == []
+    row = _row("Xorn")
+    source_traits = parse_trait_names(row["traits"])
+    assert source_traits == ["Earth Glide", "Treasure Sense"]
+
+    # Trait certification is independent of runtime promotion. Xorn is still a
+    # blocked catalog entry until its complete source/build/runtime audit earns
+    # a runnable template, so use an existing immutable monster template only
+    # as the structural carrier for the real Xorn source fingerprint.
+    probe = _monster("Deer").model_copy(
+        update={"source_trait_names": source_traits, "combat_traits": []},
+    )
+    assert trait_issues(probe, row) == []
 
 
 def test_unknown_outcome_changing_trait_fails_closed() -> None:
