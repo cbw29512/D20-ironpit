@@ -5,6 +5,7 @@
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
   const S = () => window.IRON_PIT_BROWSER_STATE;
+  const U = () => window.IRON_PIT_BROWSER_RESOURCES;
   const B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2 || { dangerSenseAdvantage: () => 0 };
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { applyD20Bonus: (_state, _kind, roll) => roll };
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION;
@@ -51,7 +52,7 @@
   }
 
   function resourceAvailable(actor, action) {
-    return S().attackResourceAvailable(actor.state, action);
+    return U().attackAvailable(actor.state, action);
   }
 
   function damageRolls(action, count, shared) {
@@ -68,7 +69,7 @@
     if (!legalAction(action, target, distance)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
     const save = resolveSavingThrow(target.state, action.saveAbility, action.dc);
     if (spendAction) E().spend(actor.state, "action");
-    if (spendResource) S().spendAttackResource(actor.state, action);
+    if (spendResource) U().spendAttack(actor.state, action);
     const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
     const deathSuccessBefore = target.state.death_save_successes, deathFailureBefore = target.state.death_save_failures;
     const concentrationBefore = target.state.concentration?.effect_id || null;
