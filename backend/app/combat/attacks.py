@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import logging
-
 from app.combat.action_economy import is_available, spend
 from app.combat.barbarian import end_rage_if_incapacitated, extend_rage_from_attack
 from app.combat.bloodied import bloodied_fury_advantage
