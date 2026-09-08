@@ -11,6 +11,11 @@ SUPPORTED_HERO_ENGINE_FEATURES = {
     "sneak-attack", "weapon-mastery",
     "cleric-spellcasting", "divine-order-protector", "divine-spark", "turn-undead",
     "disciple-of-life", "preserve-life",
+}
+
+# These features are fully represented by immutable pregen data and generic engine primitives.
+# They are certification-complete without introducing class-specific combat-engine behavior.
+SUPPORTED_HERO_DATA_FEATURES = {
     "eldritch-invocations", "pact-magic",
 }
 
@@ -37,7 +42,8 @@ _STATIC_PROGRESSION_FIELDS: dict[str, dict[str, object]] = {
 
 
 def unsupported_hero_engine_features(features: tuple[str, ...] | list[str]) -> tuple[str, ...]:
-    return tuple(feature for feature in features if feature not in SUPPORTED_HERO_ENGINE_FEATURES)
+    supported = SUPPORTED_HERO_ENGINE_FEATURES | SUPPORTED_HERO_DATA_FEATURES
+    return tuple(feature for feature in features if feature not in supported)
 
 
 def compile_progression_feature_fields(features: tuple[str, ...] | list[str], level: int) -> dict[str, object]:
