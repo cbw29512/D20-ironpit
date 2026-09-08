@@ -13873,6 +13873,200 @@
   },
   {
     "schema_version": 1,
+    "id": "srd-assassin",
+    "name": "Assassin",
+    "archetype": "source-compiled monster",
+    "challenge_rating": "8",
+    "kind": "monster",
+    "size": "medium",
+    "armor_class": 16,
+    "max_hp": 97,
+    "speed_ft": 30,
+    "movement_modes": {
+      "walk_ft": 30,
+      "fly_ft": 0,
+      "climb_ft": 0,
+      "swim_ft": 0,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": 10,
+    "progression_features": {
+      "critical_hit_minimum": 20,
+      "initiative_advantage": false,
+      "athletics_advantage": false,
+      "heroic_warrior": false,
+      "studied_attacks": false,
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
+    },
+    "attacks": [
+      {
+        "id": "srd-assassin-shortsword",
+        "name": "Shortsword",
+        "weapon_id": "srd-assassin-shortsword-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 7,
+        "damage": {
+          "count": 1,
+          "size": 6,
+          "bonus": 4
+        },
+        "damage_type": "piercing",
+        "animation": "strike",
+        "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "conditional_attack_modifiers": [],
+        "effects": [
+          {
+            "kind": "damage",
+            "source": "Poison",
+            "dice": {
+              "count": 5,
+              "size": 6,
+              "bonus": 0
+            },
+            "damage_type": "poison",
+            "trigger": "on_hit",
+            "mode": "add"
+          },
+          {
+            "kind": "condition",
+            "condition": "poisoned",
+            "expires_at_start_of_source_turn": true,
+            "expiry_timing": "source_turn_start",
+            "allowed_removal_action_ids": []
+          }
+        ],
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
+      },
+      {
+        "id": "srd-assassin-light-crossbow",
+        "name": "Light Crossbow",
+        "weapon_id": "srd-assassin-light-crossbow-weapon",
+        "attack_kind": "ranged",
+        "attack_bonus": 7,
+        "damage": {
+          "count": 1,
+          "size": 8,
+          "bonus": 4
+        },
+        "damage_type": "piercing",
+        "animation": "strike",
+        "reach_ft": 5,
+        "normal_range_ft": 80,
+        "long_range_ft": 320,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "conditional_attack_modifiers": [],
+        "effects": [
+          {
+            "kind": "damage",
+            "source": "Poison",
+            "dice": {
+              "count": 6,
+              "size": 6,
+              "bonus": 0
+            },
+            "damage_type": "poison",
+            "trigger": "on_hit",
+            "mode": "add"
+          }
+        ],
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
+      }
+    ],
+    "primary_attack_id": "srd-assassin-shortsword",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 3,
+      "damage": 1
+    },
+    "attack_action": {
+      "id": "srd-assassin-multiattack",
+      "name": "Multiattack",
+      "is_attack_action": false,
+      "slots": [
+        {
+          "attack_ids": [
+            "srd-assassin-shortsword",
+            "srd-assassin-light-crossbow"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "srd-assassin-shortsword",
+            "srd-assassin-light-crossbow"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "srd-assassin-shortsword",
+            "srd-assassin-light-crossbow"
+          ],
+          "save_action_ids": []
+        }
+      ]
+    },
+    "save_actions": [],
+    "spell_save_actions": [],
+    "defensive_spell_actions": [],
+    "healing_actions": [],
+    "condition_removal_actions": [],
+    "saving_throw_bonuses": {
+      "strength": 0,
+      "dexterity": 7,
+      "constitution": 2,
+      "intelligence": 6,
+      "wisdom": 0,
+      "charisma": 0
+    },
+    "skill_bonuses": {},
+    "combat_traits": [
+      "evasion"
+    ],
+    "source_trait_names": [
+      "Evasion"
+    ],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [
+      "Cunning Action"
+    ],
+    "source_limited_use_names": [],
+    "source_legendary_action_names": [],
+    "fighting_styles": [],
+    "weapon_masteries": [],
+    "damage_resistances": [
+      "poison"
+    ],
+    "damage_vulnerabilities": [],
+    "damage_immunities": [],
+    "condition_immunities": [],
+    "wearing_heavy_armor": false,
+    "rage_damage_bonus": 0,
+    "resources": [],
+    "visual": {
+      "armor": "natural",
+      "main_hand": "Shortsword",
+      "body_style": "monster"
+    },
+    "source": "SRD 5.2.1 p. 260",
+    "unsupported_capabilities": []
+  },
+  {
+    "schema_version": 1,
     "id": "srd-black-dragon-wyrmling",
     "name": "Black Dragon Wyrmling",
     "archetype": "source-compiled monster",
@@ -14406,6 +14600,170 @@
       "body_style": "monster"
     },
     "source": "SRD 5.2.1 p. 281",
+    "unsupported_capabilities": []
+  },
+  {
+    "schema_version": 1,
+    "id": "srd-earth-elemental",
+    "name": "Earth Elemental",
+    "archetype": "source-compiled monster",
+    "challenge_rating": "5",
+    "kind": "monster",
+    "size": "large",
+    "armor_class": 17,
+    "max_hp": 147,
+    "speed_ft": 30,
+    "movement_modes": {
+      "walk_ft": 30,
+      "fly_ft": 0,
+      "climb_ft": 0,
+      "swim_ft": 0,
+      "burrow_ft": 30,
+      "hover": false
+    },
+    "initiative_bonus": -1,
+    "progression_features": {
+      "critical_hit_minimum": 20,
+      "initiative_advantage": false,
+      "athletics_advantage": false,
+      "heroic_warrior": false,
+      "studied_attacks": false,
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
+    },
+    "attacks": [
+      {
+        "id": "srd-earth-elemental-slam",
+        "name": "Slam",
+        "weapon_id": "srd-earth-elemental-slam-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 8,
+        "damage": {
+          "count": 2,
+          "size": 8,
+          "bonus": 5
+        },
+        "damage_type": "bludgeoning",
+        "animation": "strike",
+        "reach_ft": 10,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "conditional_attack_modifiers": [],
+        "effects": [],
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
+      },
+      {
+        "id": "srd-earth-elemental-rock-launch",
+        "name": "Rock Launch",
+        "weapon_id": "srd-earth-elemental-rock-launch-weapon",
+        "attack_kind": "ranged",
+        "attack_bonus": 8,
+        "damage": {
+          "count": 1,
+          "size": 6,
+          "bonus": 5
+        },
+        "damage_type": "bludgeoning",
+        "animation": "strike",
+        "reach_ft": 5,
+        "normal_range_ft": 60,
+        "long_range_ft": 60,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "conditional_attack_modifiers": [],
+        "effects": [
+          {
+            "kind": "prone",
+            "max_target_size": "large"
+          }
+        ],
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
+      }
+    ],
+    "primary_attack_id": "srd-earth-elemental-slam",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 8,
+      "damage": 6
+    },
+    "attack_action": {
+      "id": "srd-earth-elemental-multiattack",
+      "name": "Multiattack",
+      "is_attack_action": false,
+      "slots": [
+        {
+          "attack_ids": [
+            "srd-earth-elemental-slam",
+            "srd-earth-elemental-rock-launch"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "srd-earth-elemental-slam",
+            "srd-earth-elemental-rock-launch"
+          ],
+          "save_action_ids": []
+        }
+      ]
+    },
+    "save_actions": [],
+    "spell_save_actions": [],
+    "defensive_spell_actions": [],
+    "healing_actions": [],
+    "condition_removal_actions": [],
+    "saving_throw_bonuses": {
+      "strength": 5,
+      "dexterity": -1,
+      "constitution": 5,
+      "intelligence": -3,
+      "wisdom": 0,
+      "charisma": -3
+    },
+    "skill_bonuses": {},
+    "combat_traits": [],
+    "source_trait_names": [
+      "Earth Glide",
+      "Siege Monster"
+    ],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [],
+    "source_limited_use_names": [],
+    "source_legendary_action_names": [],
+    "fighting_styles": [],
+    "weapon_masteries": [],
+    "damage_resistances": [],
+    "damage_vulnerabilities": [
+      "thunder"
+    ],
+    "damage_immunities": [
+      "poison"
+    ],
+    "condition_immunities": [
+      "exhaustion",
+      "paralyzed",
+      "petrified",
+      "poisoned",
+      "unconscious"
+    ],
+    "wearing_heavy_armor": false,
+    "rage_damage_bonus": 0,
+    "resources": [],
+    "visual": {
+      "armor": "natural",
+      "main_hand": "Slam",
+      "body_style": "monster"
+    },
+    "source": "SRD 5.2.1 p. 282",
     "unsupported_capabilities": []
   },
   {

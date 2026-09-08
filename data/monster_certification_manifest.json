@@ -4,8 +4,8 @@
   "generation_policy": "Derived automatically from canonical SRD rows plus runtime/source audit readiness.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 144,
-    "blocked": 186
+    "public_ready": 145,
+    "blocked": 185
   },
   "monsters": [
     {
@@ -1179,7 +1179,7 @@
       "monster_name": "Assassin",
       "srd_source_page": 260,
       "srd_source_reference": "SRD 5.2.1 p. 260",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-assassin",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -1191,19 +1191,15 @@
         "attack-roll",
         "bonus-action",
         "damage-or-condition-defense",
-        "multiattack"
-      ],
-      "unsupported_mechanics": [
+        "multiattack",
         "trait"
       ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "monster-combat-mechanics-not-compiled",
-        "trait"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-awakened-shrub",
@@ -2944,7 +2940,7 @@
       "monster_name": "Earth Elemental",
       "srd_source_page": 282,
       "srd_source_reference": "SRD 5.2.1 p. 282",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-earth-elemental",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -2954,18 +2950,18 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "multiattack"
+        "multiattack",
+        "trait"
       ],
       "unsupported_mechanics": [
-        "trait"
+        "ranged-range-mismatch:srd-earth-elemental-rock-launch"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-compiled",
-        "trait"
+        "ranged-range-mismatch:srd-earth-elemental-rock-launch"
       ]
     },
     {
@@ -5388,14 +5384,14 @@
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action"
+        "saving-throw-action",
+        "trait"
       ],
       "unsupported_mechanics": [
         "condition-or-control",
         "legendary",
         "limited-use",
-        "save-or-complex-action",
-        "trait"
+        "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -5406,8 +5402,7 @@
         "legendary",
         "limited-use",
         "monster-combat-mechanics-not-compiled",
-        "save-or-complex-action",
-        "trait"
+        "save-or-complex-action"
       ]
     },
     {
@@ -8392,11 +8387,11 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "multiattack"
+        "multiattack",
+        "trait"
       ],
       "unsupported_mechanics": [
-        "limited-use",
-        "trait"
+        "limited-use"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -8404,8 +8399,7 @@
       "public_ready_status": "blocked",
       "blockers": [
         "limited-use",
-        "monster-combat-mechanics-not-compiled",
-        "trait"
+        "monster-combat-mechanics-not-compiled"
       ]
     },
     {
