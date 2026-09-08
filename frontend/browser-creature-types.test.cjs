@@ -21,4 +21,13 @@ assert.equal(monsters["srd-ogre-zombie"].creature_type, "Undead");
 assert.equal(monsters["srd-goblin-warrior"].creature_type, "Fey (Goblinoid)");
 assert.notEqual(monsters["srd-goblin-warrior"].creature_type, "Undead");
 
-console.log("Generated browser monsters expose source-backed creature types for deterministic targeting.");
+for (const id of [
+  "srd-giant-shark", "srd-hunter-shark", "srd-piranha", "srd-reef-shark", "srd-swarm-of-piranhas",
+]) {
+  const monster = monsters[id];
+  assert.ok(monster, `${id} must be certified under the hospitable-arena policy`);
+  assert.deepEqual(monster.source_trait_names, ["Water Breathing"]);
+  assert.ok(monster.movement_modes.swim_ft > 0, `${id} must preserve its source swim movement`);
+}
+
+console.log("Generated browser monsters expose source-backed creature types and certify Water Breathing as combat-irrelevant without rewriting aquatic movement.");

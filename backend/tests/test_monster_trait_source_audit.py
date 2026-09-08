@@ -49,6 +49,27 @@ def test_xorn_environment_only_traits_are_neutral_in_standard_pit() -> None:
     assert trait_issues(probe, row) == []
 
 
+def test_water_breathing_is_combat_irrelevant_but_source_fingerprinted() -> None:
+    expected = {
+        "Giant Shark": "srd-giant-shark",
+        "Hunter Shark": "srd-hunter-shark",
+        "Piranha": "srd-piranha",
+        "Reef Shark": "srd-reef-shark",
+        "Swarm of Piranhas": "srd-swarm-of-piranhas",
+    }
+    catalog = {card.name: card for card in build_monster_catalog()}
+    for name, runtime_id in expected.items():
+        row = _row(name)
+        monster = _monster(name)
+        assert parse_trait_names(row["traits"]) == ["Water Breathing"]
+        assert monster.source_trait_names == ["Water Breathing"]
+        assert trait_issues(monster, row) == []
+        card = catalog[name]
+        assert card.coverage_status is CoverageStatus.RAW_READY
+        assert card.runnable_template_id == runtime_id
+        assert card.blockers == []
+
+
 def test_unknown_outcome_changing_trait_fails_closed() -> None:
     wolf = _monster("Wolf")
     row = dict(_row("Wolf"))
