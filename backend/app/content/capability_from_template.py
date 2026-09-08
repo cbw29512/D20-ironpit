@@ -85,6 +85,7 @@ def _save(action) -> dict[str, object]:
         "id": action.id, "name": action.name, "save_ability": action.save_ability,
         "dc": action.dc, "range_ft": action.range_ft, "target_max_size": action.target_max_size,
         "success_damage": action.success_damage, "animation": action.animation,
+        "resource_id": action.resource_id, "resource_cost": action.resource_cost,
     }
     if action.damage_dice_count:
         result["damage"] = _dice(action.damage_dice_count, action.damage_dice_size, action.damage_bonus)
