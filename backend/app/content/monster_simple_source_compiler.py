@@ -7,6 +7,7 @@ from app.content.monster_defense_source_audit import parse_defense_profile
 from app.content.monster_limited_use_source_audit import parse_action_recharges, parse_limited_use_names
 from app.content.monster_saving_throws import parse_saving_throw_bonuses
 from app.content.monster_simple_attack_parser import first_attack_start, parse_simple_attacks
+from app.content.monster_simple_save_parser import parse_simple_save_actions
 from app.content.monster_source_classifier import source_blockers
 from app.content.monster_trait_source_audit import _MODELED_TRAITS, parse_trait_names
 from app.content.movement_modes import parse_movement_profile, standard_arena_closing_speed
@@ -77,6 +78,7 @@ def compile_simple_monster(row: dict[str, object], monster_names: set[str]) -> C
         if str(row.get("reactions", "")).strip() or "Spellcasting." in str(row.get("actions", "")):
             raise ValueError("source needs a modeled reaction or spellcasting fingerprint")
         attacks = parse_simple_attacks(row)
+        save_actions = parse_simple_save_actions(row)
         defenses = parse_defense_profile(row)
         raw = str(row["rawText"])
         initiative = re.search(r"\bInitiative\s+([+-]?\d+)", raw, re.I)
@@ -89,7 +91,8 @@ def compile_simple_monster(row: dict[str, object], monster_names: set[str]) -> C
             max_hp=int(re.search(r"\d+", str(row["hitPoints"])).group()), speed_ft=standard_arena_closing_speed(row["speed"]),
             movement_modes=parse_movement_profile(row["speed"]), initiative_bonus=int(initiative.group(1)),
             challenge_rating=str(row["challenge"]).split()[0], weapon_attack=attacks[0], alternate_weapon_attacks=attacks[1:],
-            attack_action=_multiattack(row, attacks), combat_traits=[_MODELED_TRAITS[name] for name in traits if name in _MODELED_TRAITS],
+            attack_action=_multiattack(row, attacks), saving_throw_actions=save_actions,
+            combat_traits=[_MODELED_TRAITS[name] for name in traits if name in _MODELED_TRAITS],
             source_trait_names=traits, source_limited_use_names=parse_limited_use_names(row), resources=_recharge_resources(row),
             saving_throw_bonuses=parse_saving_throw_bonuses(row),
             damage_vulnerabilities=[DamageType(item) for item in sorted(defenses["damage_vulnerabilities"])],
