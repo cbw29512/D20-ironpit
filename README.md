@@ -1,80 +1,101 @@
 # The Iron Pit
 
-**Pick D&D cards. Watch stick figures close into melee and fight to the death.**
+**Pick D&D cards. Run a rules-driven fight. Step through every event, watch it play, or simulate the matchup X times.**
 
-Iron Pit is a rules-first browser combat game built against the D&D 2024 / SRD 5.2.1 rules. The production fight path runs entirely in the browser; Python remains the reference rules implementation used by CI.
+Iron Pit is a rules-first browser combat simulator. The current certified public ruleset is D&D 2024 / SRD 5.2.1. Production fights run entirely in the browser; Python remains the reference/certification oracle used by generators, audits, manifests, and CI.
 
-## Locked product goal
+## Authoritative rules
 
-1. The landing page is the battlefield: six hero card slots on the left and six monster card slots on the right.
-2. Click an empty hero slot to choose one of the 12 core classes, a level from 1–20, and an available certified pregen/build.
-3. Click an empty monster slot to choose a RAW-ready monster from a catalog sorted numerically by Challenge Rating.
-4. Every occupied slot is an individual combatant with its own HP, conditions, initiative identity, death state, and stick-figure silhouette.
-5. Press the large **FIGHT** button in the center to roll initiative and run the automated battle.
-6. Initiative appears at the top of each occupied card. The active card shakes during its events, critical hits shake/flash the screen red, and a natural-1 attack briefly blacks out the attacker card.
-7. Combatants use legal ranged/thrown attacks while closing when available, continue closing instead of kiting, and prefer legal melee attacks once engaged.
-8. Player characters at 0 HP remain in the battle under 2024 RAW: they become Unconscious, make Death Saving Throws, and can return above 0 HP through legal healing or a natural 20. Monsters follow their printed zero-HP behavior.
-9. The fight ends only when one side is actually defeated under the supported RAW rules, not merely because every character has touched 0 HP once.
-10. The detailed event log remains available beneath the battlefield for rules auditing.
+Read `docs/IRON_PIT_RULES_CONTRACT.md` for the product/combat contract.
 
-See `docs/ARENA_POLICY.md` for the exact arena assumptions.
+Key principles:
 
-## Battlefield card picker
+- source monster/pregen cards are immutable;
+- every fight gets fresh temporary combat state and fully resets afterward;
+- unsupported outcome-changing mechanics fail closed;
+- implement universal mechanics once instead of class/monster-specific resolver hacks;
+- exact source timing/order and specific-beats-general control resolution;
+- Python/browser parity is required before a capability is considered supported;
+- the battle log is an audit trail, not decoration.
 
-The battlefield always presents six fixed slots per side.
+## Production battlefield
 
-- **Hero slot:** click the slot, choose one of the 12 persistent heroes, then choose Level 1–20. Uncertified hero levels remain unavailable for automated combat rather than being approximated.
-- **Monster slot:** click the slot, then choose Challenge Rating → Monster. Only RAW-certified runnable monsters are selectable, sorted by numeric CR.
-- Duplicate monsters are separate combatants. Three Goblins occupy three cards, keep three independent HP totals, and are defeated independently.
-- Clicking an occupied slot allows that card to be changed or removed before the fight.
-- The battlefield contract is **1–6 cards per side**.
+- Six hero slots and six monster slots.
+- Only certified runnable cards can enter automated combat.
+- Duplicate monsters remain separate combatants with independent HP/state.
+- No public starting-distance control or kiting loop.
+- Card state shows current HP, conditions, concentration, buffs/debuffs, death/down states, and other supported combat state.
 
-## RAW action economy and healing policy
+## Execution modes
 
-Iron Pit tactics never create extra economy. The rules engine tracks the printed cost of every supported option.
+All modes use the same canonical combat resolution path:
 
-- A combatant normally has one **Action** on its turn.
-- A **Bonus Action** can be used only when a feature, spell, or stat block provides one, and only one Bonus Action can be spent on that turn.
-- A **Reaction** is trigger-driven. Once spent, it is unavailable until the start of that combatant's next turn.
-- **Extra Attack / Multiattack** represents multiple strikes within one Attack/Multiattack action; it is not another Action.
-- An Action spent on Dash cannot also pay for Attack or Multiattack that turn unless a separate rule explicitly grants another Action.
-- An Action spent on healing also blocks Action-cost attacks, Dodge, Dash, Charge attacks, and other Action options for the rest of that turn; normal movement and an unused legal Bonus Action remain separate.
-- Features that actually grant another Action, such as Action Surge, remain blocked until their exact additional-action rules are explicitly modeled and certified.
-- Incapacitated creatures cannot spend Actions, Bonus Actions, or Reactions. Movement remains governed separately by the actual condition's Speed rules.
+- **FIGHT / Watch** — play the fight automatically.
+- **STEP FIGHT** — pause after each resolved event.
+- **WATCH REST** — continue the same already-resolved Step session; no reroll/restart.
+- **REPLAY** — reproduce a seeded fight exactly.
+- **TURBO X** — run the matchup repeatedly without animation/rendering overhead and report win/loss/draw statistics.
 
-When a supported combatant has a legal healing option, Iron Pit's deterministic tactical priority is:
+Turbo stores lightweight fight summaries/seeds. Selecting a fight regenerates the exact seeded combat for Step/Watch/log review. Engine-rule errors are excluded from win-rate denominators and remain reproducible by seed.
 
-1. heal a living ally at **0 HP** when legally possible;
-2. otherwise heal a **Bloodied** ally (half maximum HP or fewer);
-3. only then consider self-healing, with Action-cost self-heals used conservatively because spending an Action can sacrifice offense.
+## Rules audit
 
-That priority is AI policy only. The heal itself always obeys its printed range, target restrictions, Action/Bonus Action/Reaction cost, resource or spell-slot cost, and other rules. Reaction healing is never fired proactively; it requires its actual trigger to be implemented first.
+Resolved events can expose expandable rules evidence, including where applicable:
 
-## Current content model
+- original and accepted dice;
+- Advantage/Disadvantage sources;
+- rerolls/replacements;
+- modifiers and totals;
+- AC/DC checks;
+- typed damage components;
+- defenses/absorption/Temporary HP/HP transitions;
+- conditions, concentration, resources, and state changes.
 
-- 330 unique SRD 5.2.1 monsters are cataloged with source metadata.
-- Unsupported outcome-changing mechanics fail closed instead of being approximated.
-- 99 monster templates are currently certified runnable in the browser combat engine.
-- The hero catalog contains 240 level snapshots across 12 persistent named heroes, one per core class, each progressing from level 1–20. Only explicitly audited levels are runnable; the current RAW-ready browser heroes are Karnok Stoneward (Fighter 1) and Rokhan Stonefury (Barbarian 1).
+Audit annotation is post-resolution/evidence-only and cannot change combat mechanics.
 
-## Combat foundation already represented
+## Content and certification
 
-The certified subset includes core d20 attack resolution, AC, HP, initiative, natural 1/20 behavior, critical weapon dice, typed and mixed damage defenses, temporary HP hooks, advantage/disadvantage, range penalties, ordered Multiattack including mixed weapon/save steps, movement, Charge, Pack Tactics, Prone, Grappled, Restrained, Poisoned, timed conditions, condition immunities, Rage, Savage Attacker, Second Wind, Orc Adrenaline Rush/Relentless Endurance, zero-HP handling, Death Saving Throws, and deathmatch targeting of downed player characters.
+- The canonical 2024 SRD catalog contains exactly **330 monsters** with source metadata.
+- The canonical hero architecture contains **12 persistent heroes × levels 1–20 = 240 possible hero snapshots**.
+- Only explicitly certified monster templates and hero levels are runnable.
+- Current ready/blocked counts are generated from repository state. Do not copy remembered counts into code or documentation.
 
-A mechanic is considered ready only when both the Python reference and browser production path are covered by regression tests where applicable.
+Report current certification with:
+
+```bash
+python scripts/report_certification_progress.py
+```
+
+Generated authority lives in:
+
+- `data/hero_certification_manifest.json`
+- `data/monster_certification_manifest.json`
+
+## Universal content pipeline
+
+### Monsters
+
+`SRD source -> source/parser audit -> detected mechanics -> universal capabilities -> runtime -> Python behavior -> browser parity -> generated artifact -> public readiness -> exact-head CI`
+
+After adding a universal capability, re-audit all 330 monsters and promote every newly unblocked creature rather than special-casing one monster.
+
+### Pregens
+
+One persistent canonical hero exists per core class. A certified level derives from the previous certified level plus that level's audited combat delta. See `docs/CANONICAL_COMBAT_BUILD_POLICY.md`.
 
 ## Production architecture
 
 - **GitHub:** source of truth and CI.
 - **GitHub Pages / Netlify:** static deployment targets.
-- **Browser engine:** authoritative production fight execution; no production `/api/` dependency.
-- **Python rules reference:** CI oracle and test bed, not required by the deployed site.
+- **Browser engine:** production combat execution.
+- **Python engine:** rules-reference/certification oracle; not required by the deployed site.
+- **No production HTTP API/backend dependency.**
 
-Non-production Netlify builds are intentionally skipped to protect deploy credits.
+Netlify is reserved for deliberate production-hosting checkpoints; routine work should be proven through generators, local/static tests, and GitHub CI.
 
 ## Run locally
 
-### Browser app
+### Browser
 
 ```bash
 python -m http.server 8080 --directory frontend
@@ -82,9 +103,7 @@ python -m http.server 8080 --directory frontend
 
 Open `http://localhost:8080`.
 
-The checked-in source catalog is copied into `frontend/data/` by the static-site preparation script used for production/CI.
-
-### Python reference tests
+### Python certification/tests
 
 ```bash
 cd backend
@@ -96,23 +115,19 @@ pytest -q
 
 ## Certification gate
 
-GitHub Actions must pass on the exact head before a roster count or UI build is called certified. The gate checks:
+A tranche is not complete because code exists. Exact-head CI must prove, as applicable:
 
-- production source-size limits;
-- the full Python rules-reference suite;
-- static browser packaging and the 330-monster data artifact;
-- JavaScript syntax;
-- deterministic browser combat regressions;
-- RAW Action/Bonus Action/Reaction availability and healing-target priority;
-- Dash/Multiattack and post-heal action-cost exclusivity;
-- numeric monster-CR sorting and the character catalog model;
-- six-slot battlefield wiring and DOM references;
-- initiative/card-turn/critical/fumble presentation hooks;
-- the strict melee-deathmatch and zero-HP contract;
-- backend-free production execution;
-- the clean GitHub Pages root entry;
-- the production-only Netlify credit guard.
+- source-size/architecture guards;
+- capability/source audits;
+- generated-static parity;
+- certification-manifest parity;
+- full Python suite;
+- JavaScript syntax and permanent browser regressions;
+- Step/Watch/Replay/Turbo invariants;
+- audit non-interference;
+- production browser-only/backend-free wiring;
+- static deployment packaging and Netlify production-only guard.
 
-## Next product priorities
+## Current priority
 
-Continue expanding the RAW rules engine and monster-specific animation vocabulary. New monsters and heroes become runnable only after every outcome-changing mechanic they depend on is implemented and certified; unsupported rules are never approximated just to increase the card count.
+Finish the universal engine capabilities in `IRON_PIT_RULES_CONTRACT.md`, then use those capabilities to unlock the remaining monster catalog and canonical pregen levels in large source-audited batches. Do not increase card counts by weakening rules fidelity.

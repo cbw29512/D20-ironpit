@@ -1,10 +1,8 @@
 import pytest
-from fastapi import HTTPException
 from pydantic import ValidationError
 
 from app.content.readiness import assert_public_selection_runnable
 from app.domain.models import EncounterSelection
-from app.main import create_encounter_setup
 
 
 def _selection(hero_id: str, monster_id: str = "srd-goblin-warrior") -> EncounterSelection:
@@ -54,7 +52,7 @@ def test_certified_zombies_pass_public_readiness(monster_id: str) -> None:
     assert_public_selection_runnable(_selection("karnok-stoneward-l1", monster_id))
 
 
-def test_legacy_uncertified_hero_cannot_bypass_catalog_through_api_id() -> None:
+def test_legacy_uncertified_hero_cannot_bypass_public_readiness() -> None:
     with pytest.raises(ValueError, match="aldric-vane-l1"):
         assert_public_selection_runnable(_selection("aldric-vane-l1"))
 
@@ -64,9 +62,6 @@ def test_uncertified_monster_id_is_rejected_before_engine_setup() -> None:
         assert_public_selection_runnable(_selection("karnok-stoneward-l1", "srd-specter"))
 
 
-def test_public_setup_endpoint_returns_400_for_uncertified_hero() -> None:
-    with pytest.raises(HTTPException) as caught:
-        create_encounter_setup(_selection("brom-ironmark-l1"))
-
-    assert caught.value.status_code == 400
-    assert "brom-ironmark-l1" in str(caught.value.detail)
+def test_uncertified_hero_is_rejected_before_engine_setup() -> None:
+    with pytest.raises(ValueError, match="brom-ironmark-l1"):
+        assert_public_selection_runnable(_selection("brom-ironmark-l1"))
