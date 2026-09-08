@@ -25,6 +25,11 @@
     return R().modeFromSources(advantage, disadvantage);
   }
 
+  function evasionApplies(state, action) {
+    return action.saveAbility === "dexterity" && action.successDamage === "half"
+      && state.template.traits?.includes("evasion");
+  }
+
   function indomitableRevision(original, replacement) {
     return {
       source_effect_id: "indomitable", kind: "full_reroll",
@@ -75,12 +80,13 @@
     const deathSuccessBefore = target.state.death_save_successes, deathFailureBefore = target.state.death_save_failures;
     const concentrationBefore = target.state.concentration?.effect_id || null;
     let damageRoll = null, damageComponents = [], damageOutcome = null;
-    const count = action.damageDiceCount || 0;
-    if (count && !(save.succeeded && action.successDamage === "none")) {
+    const count = action.damageDiceCount || 0, evasion = evasionApplies(target.state, action);
+    const evasionSuccess = evasion && save.succeeded;
+    if (count && !(save.succeeded && action.successDamage === "none") && !evasionSuccess) {
       if (!action.damageType) throw new Error(`${action.name} has damage dice but no damage type.`);
       const rolls = damageRolls(action, count, options.sharedDamageRolls);
       let total = rolls.reduce((sum, roll) => sum + roll, 0) + (action.damageBonus || 0);
-      if (save.succeeded && action.successDamage === "half") total = Math.floor(total / 2);
+      if ((evasion && !save.succeeded) || (save.succeeded && action.successDamage === "half")) total = Math.floor(total / 2);
       const applied = A().adjustedDamage(target.state, Math.max(0, total), action.damageType);
       damageComponents = [{ source: action.name, notation: `${count}d${action.damageDiceSize}+${action.damageBonus || 0}`,
         rolls, modifier: action.damageBonus || 0, damage_type: action.damageType, total: Math.max(0, total), applied_total: applied }];
@@ -96,6 +102,7 @@
       appliedConditions = G().apply(target.state, actor.combatant_id, action.grappleEscapeDc, action.range, Boolean(action.restrainsWhileGrappled));
     }
     let description = `${target.state.template.name} ${save.succeeded ? "SUCCEEDS" : "FAILS"} a DC ${action.dc} ${action.saveAbility} save against ${actor.state.template.name}'s ${action.name}.`;
+    if (evasion) description += " Evasion modifies the damage.";
     if (damageOutcome === "undead_fortitude") description += ` ${target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP.`;
     if (appliedConditions.includes("grappled")) description += ` ${target.state.template.name} is Grappled.`;
     if (appliedConditions.includes("restrained")) description += ` ${target.state.template.name} is Restrained while Grappled.`;
@@ -112,5 +119,5 @@
       animation: action.animation || "save-effect", description };
   }
 
-  window.IRON_PIT_BROWSER_SAVES = { legalAction, resourceAvailable, resolveAction, resolveSavingThrow, saveMode };
+  window.IRON_PIT_BROWSER_SAVES = { evasionApplies, legalAction, resourceAvailable, resolveAction, resolveSavingThrow, saveMode };
 })();
