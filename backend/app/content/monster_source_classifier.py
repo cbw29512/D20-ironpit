@@ -9,6 +9,7 @@ from app.content.monster_limited_use_source_audit import parse_action_recharges,
 from app.content.monster_reaction_source_audit import parse_parry_ac_bonus, parse_reaction_names, parse_redirect_attack_range
 from app.content.monster_simple_control_rider import has_unmodeled_control_text
 from app.content.monster_simple_hit_modifier_rider import strip_modeled_hit_modifier_riders
+from app.content.monster_simple_save_control_parser import strip_simple_save_control_actions
 from app.content.monster_simple_save_parser import strip_simple_save_actions
 from app.content.monster_spellcasting_source_audit import arena_neutral_spellcasting, spellcasting_fingerprint
 from app.content.monster_trait_source_audit import _ARENA_NEUTRAL_TRAITS, _MODELED_TRAITS, parse_trait_names
@@ -103,7 +104,7 @@ def source_blockers(row: dict[str, object], monster_names: set[str]) -> list[str
     except ValueError:
         blockers.append("defense-clause")
     actions = str(row.get("actions", ""))
-    simple_clean = strip_simple_save_actions(actions)
+    simple_clean = strip_simple_save_control_actions(strip_simple_save_actions(actions))
     if not _ATTACK_ROLL.search(actions):
         blockers.append("no-attack-roll")
     try:
