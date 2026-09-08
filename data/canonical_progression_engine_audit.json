@@ -265,10 +265,6 @@
       "status": "planned"
     },
     {
-      "id": "eldritch-invocations",
-      "status": "planned"
-    },
-    {
       "id": "eldritch-master",
       "status": "planned"
     },
@@ -498,10 +494,6 @@
     },
     {
       "id": "overchannel",
-      "status": "planned"
-    },
-    {
-      "id": "pact-magic",
       "status": "planned"
     },
     {
@@ -3877,30 +3869,21 @@
     },
     {
       "class_id": "warlock",
-      "first_blocked_level": 1,
+      "first_blocked_level": 2,
       "hero_name": "Varek Ashenmark",
-      "level_1_engine_ready": false,
+      "level_1_engine_ready": true,
       "levels": [
         {
           "arena_ignored_introduced": [],
-          "blockers": [
-            {
-              "id": "eldritch-invocations",
-              "status": "planned"
-            },
-            {
-              "id": "pact-magic",
-              "status": "planned"
-            }
-          ],
+          "blockers": [],
           "introduced_combat_features": [
             {
               "id": "eldritch-invocations",
-              "status": "planned"
+              "status": "supported"
             },
             {
               "id": "pact-magic",
-              "status": "planned"
+              "status": "supported"
             }
           ],
           "level": 1
@@ -4488,12 +4471,12 @@
   "summary": {
     "canonical_classes": 12,
     "feature_statuses": {
-      "planned": 197,
-      "supported": 30
+      "planned": 195,
+      "supported": 32
     },
-    "level_1_engine_ready_classes": 4,
+    "level_1_engine_ready_classes": 5,
     "level_slots": 240,
-    "unique_blocking_features": 197,
+    "unique_blocking_features": 195,
     "unique_combat_features": 227
   }
 }
