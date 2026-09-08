@@ -1340,6 +1340,7 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
+        "condition-or-control",
         "damage-or-condition-defense",
         "limited-use",
         "multiattack",
@@ -1352,6 +1353,7 @@
       ],
       "unsupported_mechanics": [
         "bonus-action",
+        "condition-or-control",
         "limited-use",
         "trait"
       ],
@@ -1361,6 +1363,7 @@
       "public_ready_status": "blocked",
       "blockers": [
         "bonus-action",
+        "condition-or-control",
         "limited-use",
         "monster-combat-mechanics-not-compiled",
         "trait"
@@ -1825,6 +1828,7 @@
       "runtime_template_id": null,
       "detected_combat_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "damage-or-condition-defense",
         "multiattack",
         "save-or-complex-action",
@@ -1839,6 +1843,7 @@
         "trait"
       ],
       "unsupported_mechanics": [
+        "condition-or-control",
         "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
@@ -1846,6 +1851,7 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
+        "condition-or-control",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action"
       ]
@@ -9357,6 +9363,7 @@
       "runtime_template_id": null,
       "detected_combat_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "damage-or-condition-defense",
         "multiattack",
         "save-or-complex-action",
@@ -9371,6 +9378,7 @@
         "trait"
       ],
       "unsupported_mechanics": [
+        "condition-or-control",
         "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
@@ -9378,6 +9386,7 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
+        "condition-or-control",
         "monster-combat-mechanics-not-compiled",
         "save-or-complex-action"
       ]
