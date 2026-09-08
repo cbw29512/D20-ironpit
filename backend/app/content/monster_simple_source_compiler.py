@@ -7,7 +7,7 @@ from app.content.monster_source_classifier import source_blockers
 from app.content.monster_trait_source_audit import _MODELED_TRAITS, parse_trait_names
 from app.content.movement_modes import parse_movement_profile, standard_arena_closing_speed
 from app.domain.actions import AttackActionDefinition, AttackActionSlot
-from app.domain.models import CombatantTemplate, DamageType, OnHitDamage, VisualLoadout, Weapon, WeaponAttack, WeaponAttackKind
+from app.domain.models import CombatantTemplate, ConditionalDamage, DamageType, OnHitDamage, VisualLoadout, Weapon, WeaponAttack, WeaponAttackKind
 from app.domain.size import CreatureSize
 
 _ATTACK = re.compile(
@@ -22,6 +22,12 @@ _DICE_DAMAGE = re.compile(
 )
 _FIXED_DAMAGE = re.compile(
     r"^(?P<amount>\d+)\s+(?P<type>Acid|Bludgeoning|Cold|Fire|Force|Lightning|Necrotic|Piercing|Poison|Psychic|Radiant|Slashing|Thunder)\s+damage\b",
+    re.I,
+)
+_BLOODIED_REPLACEMENT = re.compile(
+    r",?\s+or\s+\d+\s*\(\s*(?P<count>\d+)d(?P<size>\d+)(?:\s*(?P<sign>[+-])\s*(?P<bonus>\d+))?\s*\)\s+"
+    r"(?P<type>Acid|Bludgeoning|Cold|Fire|Force|Lightning|Necrotic|Piercing|Poison|Psychic|Radiant|Slashing|Thunder)\s+damage\s+"
+    r"if\s+the\s+[a-z][a-z -]*\s+is\s+Bloodied\b",
     re.I,
 )
 _REACH = re.compile(r"reach\s+(\d+)\s*ft", re.I)
@@ -57,10 +63,27 @@ def _damage(hit: str) -> tuple[int, int, int, DamageType, int | None, list[OnHit
     raise ValueError("attack damage is not a simple supported damage clause")
 
 
+def _bloodied_replacement(hit: str) -> tuple[str, ConditionalDamage | None]:
+    match = _BLOODIED_REPLACEMENT.search(hit)
+    if match is None:
+        return hit, None
+    bonus = int(match.group("bonus") or 0) * (-1 if match.group("sign") == "-" else 1)
+    conditional = ConditionalDamage(
+        trigger="attacker_bloodied",
+        mode="replace_weapon",
+        dice_count=int(match.group("count")),
+        dice_size=int(match.group("size")),
+        damage_bonus=bonus,
+        damage_type=DamageType(match.group("type").lower()),
+    )
+    return hit[:match.start()] + hit[match.end():], conditional
+
+
 def _attacks(row: dict[str, object]) -> list[WeaponAttack]:
     attacks: list[WeaponAttack] = []
     for match in _ATTACK.finditer(str(row["actions"])):
-        count, size, damage_bonus, damage_type, fixed, extras = _damage(match.group("hit"))
+        clean_hit, bloodied = _bloodied_replacement(match.group("hit"))
+        count, size, damage_bonus, damage_type, fixed, extras = _damage(clean_hit)
         modes = ["melee", "ranged"] if match.group("mode").lower() == "melee or ranged" else [match.group("mode").lower()]
         for mode in modes:
             reach = _REACH.search(match.group("range")); ranged = _RANGE.search(match.group("range"))
@@ -79,6 +102,7 @@ def _attacks(row: dict[str, object]) -> list[WeaponAttack]:
             attacks.append(WeaponAttack(
                 id=attack_id, weapon=weapon, attack_bonus=int(match.group("bonus")), damage_bonus=damage_bonus,
                 fixed_damage=fixed, on_hit_damage=extras,
+                conditional_damage=[bloodied] if bloodied is not None else [],
             ))
     if not attacks:
         raise ValueError("no simple attacks parsed")
