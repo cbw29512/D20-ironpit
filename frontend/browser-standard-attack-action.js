@@ -16,9 +16,10 @@
       turnKey,
     });
     const events = [event];
+    if (member.state.turn_terminated) return { events, sequence };
     const cleave = W().resolveCleave(sequence, round, member, event, attack, setup, turnKey);
     events.push(...cleave.events); sequence = cleave.sequence;
-    if (member.state.template.kind !== "character" || !attack.light) return { events, sequence };
+    if (member.state.template.kind !== "character" || !attack.light || member.state.turn_terminated) return { events, sequence };
     const extra = L().resolve(sequence, round, member, setup, attack, turnKey);
     events.push(...extra.events);
     return { events, sequence: extra.sequence };
