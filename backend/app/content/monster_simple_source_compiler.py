@@ -4,13 +4,14 @@ import re
 
 from app.content.monster_catalog import load_monster_rows
 from app.content.monster_defense_source_audit import parse_defense_profile
+from app.content.monster_limited_use_source_audit import parse_action_recharges, parse_limited_use_names
 from app.content.monster_saving_throws import parse_saving_throw_bonuses
 from app.content.monster_simple_attack_parser import first_attack_start, parse_simple_attacks
 from app.content.monster_source_classifier import source_blockers
 from app.content.monster_trait_source_audit import _MODELED_TRAITS, parse_trait_names
 from app.content.movement_modes import parse_movement_profile, standard_arena_closing_speed
 from app.domain.actions import AttackActionDefinition, AttackActionSlot
-from app.domain.models import CombatantTemplate, DamageType, VisualLoadout, WeaponAttack
+from app.domain.models import CombatantTemplate, DamageType, ResourceDefinition, VisualLoadout, WeaponAttack
 from app.domain.size import CreatureSize
 
 _MULTI_PART = re.compile(r"(?P<count>one|two|three|four|five|six|\d+)\s+(?P<name>[A-Z][A-Za-z0-9 ’'/-]+?)\s+attacks?\b")
@@ -56,6 +57,19 @@ def _multiattack(row: dict[str, object], attacks: list[WeaponAttack]) -> AttackA
     return AttackActionDefinition(id=f"srd-{_slug(str(row['name']))}-multiattack", name="Multiattack", slots=slots)
 
 
+def _recharge_resources(row: dict[str, object]) -> list[ResourceDefinition]:
+    monster_slug = _slug(str(row["name"]))
+    return [
+        ResourceDefinition(
+            id=f"srd-{monster_slug}-{_slug(name)}-recharge",
+            name=name,
+            max_uses=1,
+            recharge_d6_min=minimum,
+        )
+        for name, minimum in parse_action_recharges(row).items()
+    ]
+
+
 def compile_simple_monster(row: dict[str, object], monster_names: set[str]) -> CombatantTemplate:
     try:
         if source_blockers(row, monster_names):
@@ -76,7 +90,8 @@ def compile_simple_monster(row: dict[str, object], monster_names: set[str]) -> C
             movement_modes=parse_movement_profile(row["speed"]), initiative_bonus=int(initiative.group(1)),
             challenge_rating=str(row["challenge"]).split()[0], weapon_attack=attacks[0], alternate_weapon_attacks=attacks[1:],
             attack_action=_multiattack(row, attacks), combat_traits=[_MODELED_TRAITS[name] for name in traits if name in _MODELED_TRAITS],
-            source_trait_names=traits, saving_throw_bonuses=parse_saving_throw_bonuses(row),
+            source_trait_names=traits, source_limited_use_names=parse_limited_use_names(row), resources=_recharge_resources(row),
+            saving_throw_bonuses=parse_saving_throw_bonuses(row),
             damage_vulnerabilities=[DamageType(item) for item in sorted(defenses["damage_vulnerabilities"])],
             damage_resistances=[DamageType(item) for item in sorted(defenses["damage_resistances"])],
             damage_immunities=[DamageType(item) for item in sorted(defenses["damage_immunities"])], condition_immunities=sorted(defenses["condition_immunities"]),
