@@ -14,7 +14,7 @@ Do not mark content complete from this file alone. Regenerate and verify the aut
 
 Branch: `feat/usable-roster-warlock-l1`
 
-Re-anchored generated head before this checkpoint: `9471d3d4f98ca088ed2affef8f6cce9288837cb7`
+Re-anchored generated head before this checkpoint: `6e79b928e5f1ef33cd8e167e2da716ccaa6dbd2e`
 
 ### Monsters
 
@@ -52,9 +52,9 @@ The capability matrix remains the authoritative declaration layer. No readiness 
 
 ### CI diagnosis
 
-The first exact-head test after the audit change correctly failed because Bard's canonical data had not yet declared `bardic-inspiration` arena-excluded. That source metadata is now fixed, the generic audit derivation is corrected, and the generated progression artifact was promoted at `9471d3d4f98ca088ed2affef8f6cce9288837cb7`.
+The generated-artifact promotion head `6e79b928e5f1ef33cd8e167e2da716ccaa6dbd2e` is bot-authored and GitHub classified its PR workflow as `action_required` before creating certification jobs. This checkpoint is intentionally human-authored and changes only this ledger so normal exact-head PR CI can execute against the already-generated state. No runtime behavior or readiness flag is changed here.
 
-The bot-authored generated-artifact commit did not itself expose an exact-head CI run. This human-authored checkpoint changes only the ledger so normal PR CI can execute against the complete generated head. Monster readiness remains **117 / 330** and certified pregen snapshots remain **24 / 240** until certification evidence earns higher totals.
+Monster readiness remains **117 / 330** and certified pregen snapshots remain **24 / 240** until certification evidence earns higher totals.
 
 ## Locked implementation rules
 
