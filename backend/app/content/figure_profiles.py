@@ -82,6 +82,7 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Guard": _p("humanoid", "guard"),
     "Guard Captain": _p("humanoid", "guard-captain"),
     "Hawk": _p("bird", "raptor"),
+    "Hill Giant": _p("brute", "hill-giant"),
     "Hippogriff": _p("hippogriff", "hippogriff"),
     "Hippopotamus": _p("quadruped", "hippopotamus"),
     "Hobgoblin Warrior": _p("humanoid", "hobgoblin"),
