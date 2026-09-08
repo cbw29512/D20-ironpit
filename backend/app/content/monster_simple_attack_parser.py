@@ -1,0 +1,89 @@
+from __future__ import annotations
+
+import re
+
+from app.content.monster_attack_roll_modifier_source_audit import parse_attack_roll_modifier
+from app.content.monster_bloodied_source_damage import extract_bloodied_replacement
+from app.domain.models import DamageType, OnHitDamage, Weapon, WeaponAttack, WeaponAttackKind
+
+_ATTACK = re.compile(
+    r"(?P<name>[A-Z][A-Za-z0-9 ’'()/-]+)\.\s+(?P<mode>Melee|Ranged|Melee or Ranged)\s+Attack Roll:\s*"
+    r"(?P<bonus>[+-]?\d+)\s*(?P<conditional>\([^)]*\))?,\s*(?P<range>[^.]+)\.\s+Hit:\s*(?P<hit>.*?)(?=(?:\s+[A-Z][A-Za-z0-9 ’'()/-]+\.\s+"
+    r"(?:Melee|Ranged|Melee or Ranged)\s+Attack Roll:)|$)", re.S,
+)
+_DICE_DAMAGE = re.compile(
+    r"\d+\s*\(\s*(?P<count>\d+)d(?P<size>\d+)(?:\s*(?P<sign>[+-])\s*(?P<bonus>\d+))?\s*\)\s+"
+    r"(?P<type>Acid|Bludgeoning|Cold|Fire|Force|Lightning|Necrotic|Piercing|Poison|Psychic|Radiant|Slashing|Thunder)\s+damage",
+    re.I,
+)
+_FIXED_DAMAGE = re.compile(
+    r"^(?P<amount>\d+)\s+(?P<type>Acid|Bludgeoning|Cold|Fire|Force|Lightning|Necrotic|Piercing|Poison|Psychic|Radiant|Slashing|Thunder)\s+damage\b",
+    re.I,
+)
+_REACH = re.compile(r"reach\s+(\d+)\s*ft", re.I)
+_RANGE = re.compile(r"range\s+(\d+)\s*/\s*(\d+)\s*ft", re.I)
+
+
+def _slug(value: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
+
+
+def first_attack_start(actions: str) -> int:
+    match = _ATTACK.search(actions)
+    if match is None:
+        raise ValueError("no simple attack roll found")
+    return match.start()
+
+
+def _damage(hit: str) -> tuple[int, int, int, DamageType, int | None, list[OnHitDamage]]:
+    matches = list(_DICE_DAMAGE.finditer(hit))
+    if matches:
+        first = matches[0]
+        bonus = int(first.group("bonus") or 0) * (-1 if first.group("sign") == "-" else 1)
+        extras: list[OnHitDamage] = []
+        for item in matches[1:]:
+            extra_bonus = int(item.group("bonus") or 0) * (-1 if item.group("sign") == "-" else 1)
+            extras.append(OnHitDamage(
+                source=item.group("type").title(), dice_count=int(item.group("count")), dice_size=int(item.group("size")),
+                damage_bonus=extra_bonus, damage_type=DamageType(item.group("type").lower()),
+            ))
+        return int(first.group("count")), int(first.group("size")), bonus, DamageType(first.group("type").lower()), None, extras
+    fixed = _FIXED_DAMAGE.search(hit.strip())
+    if fixed:
+        return 0, 2, 0, DamageType(fixed.group("type").lower()), int(fixed.group("amount")), []
+    raise ValueError("attack damage is not a simple supported damage clause")
+
+
+def parse_simple_attacks(row: dict[str, object]) -> list[WeaponAttack]:
+    attacks: list[WeaponAttack] = []
+    try:
+        for match in _ATTACK.finditer(str(row["actions"])):
+            clean_hit, bloodied = extract_bloodied_replacement(match.group("hit"))
+            count, size, damage_bonus, damage_type, fixed, extras = _damage(clean_hit)
+            modes = ["melee", "ranged"] if match.group("mode").lower() == "melee or ranged" else [match.group("mode").lower()]
+            conditional = parse_attack_roll_modifier(match.group("conditional")) if match.group("conditional") else None
+            for mode in modes:
+                reach = _REACH.search(match.group("range")); ranged = _RANGE.search(match.group("range"))
+                if mode == "melee" and reach is None:
+                    raise ValueError("simple melee attack lacks reach")
+                if mode == "ranged" and ranged is None:
+                    raise ValueError("simple ranged attack lacks range")
+                suffix = f"-{mode}" if len(modes) > 1 else ""
+                attack_id = f"srd-{_slug(str(row['name']))}-{_slug(match.group('name'))}{suffix}"
+                weapon = Weapon(
+                    id=f"{attack_id}-weapon", name=match.group("name"), attack_kind=WeaponAttackKind(mode),
+                    dice_count=count, dice_size=size, damage_type=damage_type, reach_ft=int(reach.group(1)) if reach else 5,
+                    normal_range_ft=int(ranged.group(1)) if ranged else None, long_range_ft=int(ranged.group(2)) if ranged else None,
+                    animation="strike",
+                )
+                attacks.append(WeaponAttack(
+                    id=attack_id, weapon=weapon, attack_bonus=int(match.group("bonus")), damage_bonus=damage_bonus,
+                    fixed_damage=fixed, on_hit_damage=extras,
+                    conditional_attack_modifiers=[conditional] if conditional is not None else [],
+                    conditional_damage=[bloodied] if bloodied is not None else [],
+                ))
+        if not attacks:
+            raise ValueError("no simple attacks parsed")
+        return attacks
+    except Exception as exc:
+        raise ValueError(f"simple attack parsing failed for {row.get('name', '<unknown>')}") from exc
