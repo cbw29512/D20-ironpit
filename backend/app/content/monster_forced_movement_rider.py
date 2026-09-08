@@ -11,7 +11,9 @@ _FORCED = re.compile(
     r"(?:(?:the [A-Za-z’' -]+ )?(?P<active>pushes|pulls) the target|"
     r"the target is (?P<passive>pushed|pulled))\s+"
     r"(?P<upto>up to )?(?P<distance>\d+) feet"
-    r"(?: straight)?\s+(?P<relation>away from|toward)\s+[^.]+\.(?=\s|$)",
+    r"(?: straight)?\s+(?P<relation>away from|toward)\s+"
+    r"(?P<anchor>itself|the [A-Za-z’' -]+?)"
+    r"(?:\.(?=\s|$)|(?=,?\s+and\s+(?:(?:the target|it)\s+)?has\b))",
     re.I,
 )
 
