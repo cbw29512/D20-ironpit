@@ -29,7 +29,7 @@ _DICE_DAMAGE = re.compile(
 _FIXED_DAMAGE = re.compile(rf"^(?P<amount>\d+)\s+(?P<type>{_DAMAGE_TYPES})\s+damage\b", re.I)
 _FIXED_EXTRA = re.compile(rf"\bplus\s+(?P<amount>\d+)\s+(?P<type>{_DAMAGE_TYPES})\s+damage\b", re.I)
 _REACH = re.compile(r"reach\s+(\d+)\s*ft", re.I)
-_RANGE = re.compile(r"range\s+(\d+)\s*/\s*(\d+)\s*ft", re.I)
+_RANGE = re.compile(r"range\s+(\d+)(?:\s*/\s*(\d+))?\s*ft", re.I)
 _RECHARGE_SUFFIX = re.compile(r"\s*\(\s*Recharge\s+\d(?:\s*[-–]\s*\d)?\s*\)\s*$", re.I)
 
 
@@ -91,10 +91,12 @@ def parse_simple_attacks(row: dict[str, object]) -> list[WeaponAttack]:
                     raise ValueError("simple ranged attack lacks range")
                 suffix = f"-{mode}" if len(modes) > 1 else ""
                 attack_id = f"srd-{monster_slug}-{_slug(attack_name)}{suffix}"
+                normal_range = int(ranged.group(1)) if ranged else None
+                long_range = int(ranged.group(2) or ranged.group(1)) if ranged else None
                 weapon = Weapon(
                     id=f"{attack_id}-weapon", name=attack_name, attack_kind=WeaponAttackKind(mode),
                     dice_count=count, dice_size=size, damage_type=damage_type, reach_ft=int(reach.group(1)) if reach else 5,
-                    normal_range_ft=int(ranged.group(1)) if ranged else None, long_range_ft=int(ranged.group(2)) if ranged else None,
+                    normal_range_ft=normal_range, long_range_ft=long_range,
                     animation="strike",
                 )
                 attacks.append(WeaponAttack(
