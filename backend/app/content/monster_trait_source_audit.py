@@ -17,6 +17,7 @@ _MODELED_TRAITS = {
     "Swarm": CombatTrait.SWARM,
     "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
     "Magic Resistance": CombatTrait.MAGIC_RESISTANCE,
+    "Evasion": CombatTrait.EVASION,
 }
 _ARENA_NEUTRAL_TRAITS = frozenset({
     "Agile", "Amorphous", "Amphibious", "Beast of Burden", "Demonic Restoration", "Diabolical Restoration",
