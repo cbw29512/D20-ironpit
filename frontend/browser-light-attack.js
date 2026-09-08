@@ -12,6 +12,7 @@
   }
 
   function resolve(sequence, round, member, setup, triggerAttack, turnKey) {
+    if (member.state.turn_terminated) return { events: [], sequence };
     const plan = L().plan(member.state, triggerAttack, turnKey);
     if (!plan) return { events: [], sequence };
     if (plan.usesBonusAction && !E().available(member.state, "bonus_action")) {
