@@ -20,6 +20,7 @@ from app.combat.modifier_stack import (
 from app.combat.parry import resolve_parry_hit
 from app.combat.range import resolve_attack_roll_mode
 from app.combat.reckless_attack import attacks_against_reckless_advantage, reckless_attack_advantage
+from app.combat.resources import attack_resource_available, spend_attack_resource
 from app.combat.rolls import roll_d20
 from app.combat.sap import apply_weapon_sap, consume_sap, sap_disadvantage
 from app.combat.state import terminate_turn
@@ -47,6 +48,8 @@ def resolve_attack(
     try:
         if spend_action and not is_available(attacker, "action"):
             raise ValueError("Action is not available for an attack.")
+        if not attack_resource_available(attacker, attack):
+            raise ValueError(f"Resource is not available for attack {attack.id!r}.")
         weapon = attack.weapon; defender_event_id = target_event_id or defender.template.id
         attacker_event_id = actor_event_id or attacker.template.id
         condition_advantage, condition_disadvantage = attack_roll_condition_sources(attacker, defender, distance_ft, defender_event_id)
@@ -61,6 +64,7 @@ def resolve_attack(
                                         + conditional_attack_disadvantage_sources(attacker, defender, attack)),
             close_enemy_active=close_enemy_active,
         )
+        spend_attack_resource(attacker, attack)
         base_roll = roll_d20(dice, attack.attack_bonus, mode)
         base_roll, heroic_reroll = reroll_failed_attack_with_heroic_inspiration(attacker, base_roll, effective_armor_class(defender), dice)
         attack_roll = apply_d20_bonus_dice(attacker, ModifierKind.ATTACK_ROLL_BONUS_DIE, base_roll, dice)
