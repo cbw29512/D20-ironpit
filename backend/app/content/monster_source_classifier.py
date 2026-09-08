@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 
+from app.content.monster_attack_roll_modifier_source_audit import unsupported_conditional_attack_modifier
 from app.content.monster_bonus_action_source_audit import _ARENA_NEUTRAL_BONUS_ACTIONS, _base_name, parse_bonus_action_names
 from app.content.monster_defense_source_audit import parse_defense_profile
 from app.content.monster_limited_use_source_audit import parse_limited_use_names
@@ -30,10 +31,6 @@ _HIDDEN_RIDER = re.compile(
     re.I,
 )
 _ATTACK_ROLL = re.compile(r"\b(?:Melee|Ranged|Melee or Ranged)\s+Attack Roll:", re.I)
-_CONDITIONAL_ATTACK_MODIFIER = re.compile(
-    r"\b(?:Melee|Ranged|Melee or Ranged)\s+Attack Roll:\s*[+-]?\d+\s*\([^)]*\b(?:Advantage|Disadvantage)\b[^)]*\)",
-    re.I,
-)
 _ALLOWED_TRAITS = set(_ARENA_NEUTRAL_TRAITS) | set(_MODELED_TRAITS)
 
 
@@ -92,7 +89,10 @@ def source_blockers(row: dict[str, object], monster_names: set[str]) -> list[str
     actions = str(row.get("actions", ""))
     if not _ATTACK_ROLL.search(actions):
         blockers.append("no-attack-roll")
-    if _CONDITIONAL_ATTACK_MODIFIER.search(actions):
+    try:
+        if unsupported_conditional_attack_modifier(actions):
+            blockers.append("conditional-attack-modifier")
+    except ValueError:
         blockers.append("conditional-attack-modifier")
     if _COMPLEX_ACTION.search(actions):
         blockers.append("save-or-complex-action")
