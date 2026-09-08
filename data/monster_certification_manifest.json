@@ -1532,7 +1532,6 @@
         "condition-or-control",
         "damage-or-condition-defense",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action"
       ],
       "supported_mechanics": [
@@ -1543,8 +1542,7 @@
       ],
       "unsupported_mechanics": [
         "bonus-action",
-        "condition-or-control",
-        "save-or-complex-action"
+        "condition-or-control"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -1553,8 +1551,7 @@
       "blockers": [
         "bonus-action",
         "condition-or-control",
-        "monster-combat-mechanics-not-compiled",
-        "save-or-complex-action"
+        "monster-combat-mechanics-not-compiled"
       ]
     },
     {
@@ -2326,14 +2323,10 @@
       "runtime_template_id": "srd-constrictor-snake",
       "detected_combat_mechanics": [
         "attack-roll",
-        "condition-or-control",
-        "save-or-complex-action",
         "saving-throw-action"
       ],
       "supported_mechanics": [
         "attack-roll",
-        "condition-or-control",
-        "save-or-complex-action",
         "saving-throw-action"
       ],
       "unsupported_mechanics": [],
@@ -3602,16 +3595,12 @@
       "runtime_template_id": "srd-giant-constrictor-snake",
       "detected_combat_mechanics": [
         "attack-roll",
-        "condition-or-control",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action"
       ],
       "supported_mechanics": [
         "attack-roll",
-        "condition-or-control",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action"
       ],
       "unsupported_mechanics": [],
@@ -5714,7 +5703,6 @@
         "limited-use",
         "multiattack",
         "reaction",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
@@ -5729,7 +5717,6 @@
         "bonus-action",
         "condition-or-control",
         "limited-use",
-        "save-or-complex-action",
         "trait"
       ],
       "python_certification_status": "blocked",
@@ -5741,7 +5728,6 @@
         "condition-or-control",
         "limited-use",
         "monster-combat-mechanics-not-compiled",
-        "save-or-complex-action",
         "trait"
       ]
     },
