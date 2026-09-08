@@ -7,12 +7,12 @@ const vm = require("node:vm");
 
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
-load("browser-execution.js");
+load("browser-audit.js"); load("browser-execution.js");
 
 const events = [
-  { round_number: 1, event_type: "initiative", actor_id: "hero" },
-  { round_number: 1, event_type: "attack", actor_id: "hero", target_id: "monster" },
-  { round_number: 1, event_type: "victory", actor_id: "arena" },
+  { round_number: 1, event_type: "initiative", actor_id: "hero", actor_name: "Hero" },
+  { round_number: 1, event_type: "attack", actor_id: "hero", actor_name: "Hero", target_id: "monster", target_name: "Monster" },
+  { round_number: 1, event_type: "victory", actor_id: "arena", actor_name: "Iron Pit", description: "Heroes win." },
 ];
 const battle = { battle_id: "test", outcome: "heroes_win", rounds: 1, events };
 const selection = { hero_ids: ["hero"], monster_ids: ["monster"] };
@@ -21,6 +21,12 @@ let engineCalls = 0, seededCalls = 0, batchCalls = 0, bindCalls = 0, syncCalls =
 const applied = [];
 const history = [];
 
+const withoutAudit = (event) => { const copy = structuredClone(event); delete copy.audit; return copy; };
+const assertSameBattle = (current) => {
+  assert.equal(current.battle_id, battle.battle_id);
+  assert.deepEqual(current.events.map(withoutAudit), battle.events);
+};
+
 window.IRON_PIT_DICE = {
   clearHistory: () => { history.length = 0; },
   getHistory: () => structuredClone(history),
@@ -28,9 +34,9 @@ window.IRON_PIT_DICE = {
 };
 window.IRON_PIT_BATTLE_LAB = { diagnosticId: (_heroes, _monsters, rolls) => `diag-${rolls.length}` };
 window.IRON_PIT_BATTLEFIELD_REPLAY = {
-  bindBattle: (current, slotMap) => { bindCalls += 1; assert.equal(current, battle); assert.deepEqual(slotMap, slots); },
+  bindBattle: (current, slotMap) => { bindCalls += 1; assertSameBattle(current); assert.deepEqual(slotMap, slots); },
   eventStep: async (event) => { applied.push(event); },
-  syncFinal: (current) => { syncCalls += 1; assert.equal(current, battle); },
+  syncFinal: (current) => { syncCalls += 1; assertSameBattle(current); },
 };
 window.IRON_PIT_BROWSER_ENGINE = {
   runEncounter: (current) => {
@@ -53,28 +59,30 @@ window.IRON_PIT_BROWSER_TURBO = {
   const execution = window.IRON_PIT_EXECUTION;
   const session = execution.resolveLive(selection, slots);
   assert.equal(engineCalls, 1, "live execution must resolve the canonical engine once");
-  assert.equal(session.rolls.length, 2);
-  assert.equal(session.diagnosticId, "diag-2");
+  assert.equal(session.rolls.length, 2); assert.equal(session.diagnosticId, "diag-2");
+  assert.ok(session.battle.events.every((event) => event.audit?.schema_version === 1), "every presented event must carry audit metadata");
+  assert.deepEqual(session.battle.events.map(withoutAudit), events, "audit annotation must not alter mechanical event data");
   assert.deepEqual(session.state(), { mode: "live", event_index: 0, event_count: 3, started: false, complete: false, seed: null });
 
   await session.begin();
   assert.equal(bindCalls, 1); assert.equal(engineCalls, 1);
   await session.step();
-  assert.deepEqual(applied, [events[0]]); assert.equal(engineCalls, 1, "stepping must not rerun combat");
+  assert.deepEqual(applied.map(withoutAudit), [events[0]]); assert.equal(engineCalls, 1, "stepping must not rerun combat");
   assert.equal(session.state().event_index, 1); assert.equal(session.state().complete, false);
 
   await session.watch();
-  assert.deepEqual(applied, events, "watch-rest must continue the same event stream");
+  assert.deepEqual(applied.map(withoutAudit), events, "watch-rest must continue the same mechanical event stream");
   assert.equal(engineCalls, 1, "switching Step to Watch must never reroll or rerun combat");
   assert.equal(syncCalls, 1); assert.equal(session.state().complete, true);
 
   const replay = execution.resolveReplay(selection, 424242, slots);
   assert.equal(seededCalls, 1); assert.equal(replay.mode, "replay"); assert.equal(replay.seed, 424242);
+  assert.ok(replay.battle.events.every((event) => event.audit?.schema_version === 1));
   await replay.step(); assert.equal(engineCalls, 1, "replay must use its preserved seeded result, not live resolution");
 
   let progress = null;
   const batch = await execution.runTurbo(selection, 100, 77, (done, total) => { progress = [done, total]; });
   assert.equal(batchCalls, 1); assert.equal(batch.requested_fights, 100); assert.deepEqual(progress, [100, 100]);
 
-  console.log("Universal Step/Watch/Replay/Turbo execution regressions passed.");
+  console.log("Universal execution + non-invasive audit regressions passed.");
 })().catch((error) => { console.error(error); process.exitCode = 1; });
