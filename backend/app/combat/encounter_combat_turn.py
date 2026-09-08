@@ -17,6 +17,7 @@ from app.combat.opening_burst import opening_feature_id
 from app.combat.orc import should_use_adrenaline_rush, use_adrenaline_rush
 from app.combat.pit_policy import choose_standard_attack, save_distance, target_order
 from app.combat.policy import should_use_second_wind
+from app.combat.resources import recharge_start_of_turn
 from app.combat.saving_throws import legal_save_action, resolve_save_action
 from app.combat.spell_offense import resolve_best_spell_offense
 from app.combat.standard_attack_action import resolve_standard_attack_action
@@ -75,6 +76,7 @@ def resolve_combat_turn(
     events: list[BattleEvent] = []
     cleanup_grapples(setup)
     begin_turn(attacker.state)
+    recharge_start_of_turn(attacker.state, dice)
     turn_key = f"{round_number}:{attacker.combatant_id}"
     if forced_retreat_active(attacker.state):
         events.append(build_forced_retreat_event(sequence, round_number, attacker.combatant_id, attacker.state)); sequence += 1
