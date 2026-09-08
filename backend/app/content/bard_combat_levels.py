@@ -36,7 +36,7 @@ def _r(level: int, pb: int, hp: int, intelligence: int, wisdom: int, charisma: i
 
 
 BARD_COMBAT_LEVELS: dict[int, BardCombatLevel] = {
-    1: _r(1, 2, 8, 13, 15, 17, 6, 4, _slots(2), add=("bardic-inspiration", "bard-spellcasting", "magic-initiate-cleric"), source="D&D Beyond Basic Rules 2024: Bard 1; Acolyte background"),
+    1: _r(1, 2, 8, 13, 15, 17, 6, 4, _slots(2), add=("bardic-inspiration", "bard-spellcasting", "magic-initiate-cleric"), ignored=("bardic-inspiration",), source="D&D Beyond Basic Rules 2024: Bard 1; Acolyte background"),
     2: _r(2, 2, 13, 13, 15, 17, 6, 5, _slots(3), ignored=("expertise", "jack-of-all-trades"), source="D&D Beyond Basic Rules 2024: Bard 2"),
     3: _r(3, 2, 18, 13, 15, 17, 6, 6, _slots(4, 2), add=("bard-combat-spells-2",), source="D&D Beyond Basic Rules 2024: Bard 3"),
     4: _r(4, 2, 23, 13, 15, 19, 6, 7, _slots(4, 3), source="D&D Beyond Basic Rules 2024: Bard 4 Ability Score Improvement (+2 Charisma)"),
