@@ -15,13 +15,14 @@ Do not mark content complete from this file alone. Certification is earned only 
 
 Branch: `feat/usable-roster-warlock-l1`
 
-Re-anchored generated head before this checkpoint: `c2aadfc609e163fd8b1db79ef42405f6600c0631`
+Re-anchored generated head before this checkpoint: `96a28a5dafdc4e7988cce19458419f2447aca7be`
 
 ### Monsters
 
 - Canonical SRD monsters: **330**
-- Public-ready in the current generated manifest: **125**
-- Blocked: **205**
+- Public-ready in the current generated manifest: **127**
+- Blocked: **203**
+- Latest earned tranche: **Specter** and **Wraith**. Their printed `Incorporeal Movement` trait is combat-irrelevant in the standard Iron Pit because the Pit has no walls, objects, obstacles, or terrain to traverse or end inside; printed flight and all other source combat data remain unchanged.
 - This total is machine-earned from the generated certification manifest; no readiness flags were manually advanced.
 
 ### Canonical pregen progression
@@ -47,12 +48,12 @@ Re-anchored generated head before this checkpoint: `c2aadfc609e163fd8b1db79ef424
 
 ## Current CI blocker
 
-Exact generated head `c2aadfc609e163fd8b1db79ef42405f6600c0631` is a `chore: sync generated Iron Pit content` commit. GitHub classified its PR CI run as `action_required` before certification jobs were created.
+Implementation head `b5a0aab79016734515d171f82cb1dcdbc9fc125c` successfully generated a 127-monster capability set, then `actions/upload-artifact@v4` uploaded the canonical hero artifact bytes but failed finalization with HTTP **403 Forbidden** from the artifact intermediary. The failure occurred before the remaining certification steps could run.
 
-Classification: **technical CI trigger blocker**, not a rules/product decision.
+Classification: **technical/transient CI infrastructure blocker**, not a rules/product decision and not an Iron Pit combat failure.
 
-Resolution: this human-authored ledger-only checkpoint intentionally changes no runtime behavior or certification data and exists to retrigger exact-head PR CI against the already-generated authoritative state.
+Resolution: generated-content automation already promoted the authoritative 127-monster artifacts at `96a28a5dafdc4e7988cce19458419f2447aca7be`. This human-authored ledger-only checkpoint changes no runtime behavior or certification data and exists to retrigger exact-head CI against that generated state.
 
 ## Next priority
 
-Do not add mechanic scope until exact-head CI executes on this checkpoint. If CI fails, fix the first real failure before adding scope. Once green, regenerate blocker-yield reports and choose the highest-leverage remaining item, classifying it as data-only, combat-irrelevant, already handled by an existing universal primitive, or a genuine missing universal primitive.
+Do not add mechanic scope until exact-head CI executes on this checkpoint. If CI fails, fix the first real Iron Pit failure before adding scope; if the artifact intermediary alone fails again, treat it as infrastructure noise and preserve the generated evidence. Once exact-head CI is green, regenerate blocker yields and choose the highest-leverage remaining item, classifying it as data-only, combat-irrelevant, already handled by an existing universal primitive, or a genuine missing universal primitive.
