@@ -46,6 +46,16 @@ def test_normal_failed_attack_rerolls_one_die_and_spends_inspiration() -> None:
     assert rerolled.total == 17
     assert "Heroic Inspiration" in rerolled.notation
     assert state.heroic_inspiration is False
+    assert len(rerolled.revisions) == 1
+    revision = rerolled.revisions[0]
+    assert revision.source_effect_id == "heroic-inspiration"
+    assert revision.kind == "die_replacement"
+    assert revision.original_rolls == [5]
+    assert revision.replacement_rolls == [8]
+    assert revision.original_total == 14
+    assert revision.replacement_total == 17
+    assert revision.accepted == "replacement"
+    assert revision.replaced_die_index == 0
 
 
 def test_heroic_inspiration_must_keep_a_worse_replacement_roll() -> None:
@@ -58,6 +68,9 @@ def test_heroic_inspiration_must_keep_a_worse_replacement_roll() -> None:
     assert used is True
     assert rerolled.selected_roll == 1
     assert rerolled.total == 10
+    assert rerolled.revisions[0].original_rolls == [7]
+    assert rerolled.revisions[0].replacement_rolls == [1]
+    assert rerolled.revisions[0].accepted == "replacement"
     assert state.heroic_inspiration is False
 
 
@@ -72,6 +85,9 @@ def test_advantage_replaces_only_one_die_and_recomputes_selected_roll() -> None:
     assert rerolled.rolls == [10, 7]
     assert rerolled.selected_roll == 10
     assert rerolled.total == 19
+    assert rerolled.revisions[0].original_rolls == [4, 7]
+    assert rerolled.revisions[0].replacement_rolls == [10, 7]
+    assert rerolled.revisions[0].replaced_die_index == 0
 
 
 def test_disadvantage_spends_only_when_one_die_replacement_can_recover_the_attack() -> None:
@@ -125,6 +141,8 @@ def test_attack_resolution_uses_heroic_inspiration_before_damage_resolution() ->
     assert event.attack_roll is not None
     assert event.attack_roll.rolls == [8]
     assert event.attack_roll.total == 17
+    assert event.attack_roll.revisions[0].original_rolls == [5]
+    assert event.attack_roll.revisions[0].replacement_rolls == [8]
     assert "Heroic Inspiration" in event.attack_roll.notation
     assert "Heroic Inspiration rerolls one d20" in event.description
     assert attacker.heroic_inspiration is False
