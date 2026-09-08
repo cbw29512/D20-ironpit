@@ -134,10 +134,8 @@ def _seraphine_profile(level: int, *_legacy: int) -> PregenCombatProfile:
 def build_seraphine_dawnshield_level3_combat_profile() -> PregenCombatProfile:
     return _seraphine_profile(3)
 
-
 def build_seraphine_dawnshield_level4_combat_profile() -> PregenCombatProfile:
     return _seraphine_profile(4)
-
 
 def build_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
     from app.content.rogue_combat_fingerprint import build_mara_quickstep_combat_profile
