@@ -28,6 +28,18 @@ class MaxDiceProvider:
         return sides
 
 
+class ScriptedEncounterDice:
+    """Script d20 decisions while keeping every damage die valid for its own size."""
+
+    def __init__(self, d20_rolls: list[int]) -> None:
+        self._d20_rolls = list(d20_rolls)
+
+    def roll(self, sides: int) -> int:
+        if sides == 20:
+            return self._d20_rolls.pop(0) if self._d20_rolls else 10
+        return sides
+
+
 def _replace_hero(setup, index: int, template) -> None:
     setup.heroes[index] = EncounterCombatant(
         combatant_id=f"hero-{index + 1}:{template.id}",
@@ -63,7 +75,7 @@ def test_duplicate_monsters_take_distinct_turns_against_canonical_heroes() -> No
             hero_ids=["karnok-stoneward-l1", "rokhan-stonefury-l1"],
             monster_ids=["srd-goblin-warrior", "srd-goblin-warrior"],
         ),
-        MaxDiceProvider([20, 15, 10]),
+        MaxDiceProvider([5, 4, 18]),
     )
     assert result.outcome in {"heroes_win", "monsters_win"}
     goblin_group = next(group for group in result.initiative.groups if group.side == "monsters")
@@ -91,7 +103,7 @@ def _downed_hero_result():
     with patch.object(encounter_engine, "build_encounter_setup", return_value=setup):
         return run_encounter(
             selection,
-            FixedDiceProvider([1, 1, 20, 20, 6, 6, 10, 20, 12, 12]),
+            ScriptedEncounterDice([10, 9, 19, 20, 10, 20]),
         )
 
 
