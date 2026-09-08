@@ -13,14 +13,15 @@ _CONNECTORS = frozenset({"a", "an", "and", "of", "or", "the", "to"})
 _MODELED_TRAITS = {
     "Pack Tactics": CombatTrait.PACK_TACTICS,
     "Bloodied Fury": CombatTrait.BLOODIED_FURY,
+    "Blood Frenzy": CombatTrait.BLOOD_FRENZY,
     "Swarm": CombatTrait.SWARM,
     "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
 }
 _ARENA_NEUTRAL_TRAITS = frozenset({
     "Agile", "Amphibious", "Beast of Burden", "Earth Glide", "False Appearance", "Flyby",
     "Hellish Restoration", "Hold Breath", "Ice Walk", "Illumination", "Jumper", "Keen Hearing",
-    "Keen Hearing and Sight", "Keen Hearing and Smell", "Keen Sight", "Keen Smell", "Mimicry",
-    "Running Leap", "Spider Climb", "Standing Leap", "Sunlight Sensitivity", "Training",
+    "Keen Hearing and Sight", "Keen Hearing and Smell", "Keen Sight", "Keen Smell", "Limited Amphibiousness", "Mimicry",
+    "Running Leap", "Shark Telepathy", "Spider Climb", "Standing Leap", "Sunlight Sensitivity", "Training",
     "Treasure Sense", "Water Breathing", "Web Walker",
 })
 
