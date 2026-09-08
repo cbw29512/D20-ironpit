@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 
+from app.content.monster_forced_movement_rider import parse_forced_movement_rider, strip_forced_movement_riders
 from app.domain.actions import HitControlEffect
 from app.domain.size import CreatureSize
 
@@ -14,10 +15,7 @@ _GRAPPLE = re.compile(
     rf"If the target is a (?P<size>{_SIZE}) or smaller creature, it has the Grappled condition \(escape DC (?P<dc>\d+)\)(?: from [^.]+)?\.(?=\s|$)",
     re.I,
 )
-_RESTRAINED = re.compile(
-    r"While Grappled, the target has the Restrained condition\.(?=\s|$)",
-    re.I,
-)
+_RESTRAINED = re.compile(r"While Grappled, the target has the Restrained condition\.(?=\s|$)", re.I)
 _POISONED = re.compile(
     r"(?:and )?the target has the Poisoned condition until the (?P<edge>start|end) of (?P<owner>its|the [A-Za-z’' -]+) next turn\.(?=\s|$)",
     re.I,
@@ -37,8 +35,7 @@ def _size(value: str | None) -> CreatureSize | None:
 
 
 def _poison_timing(edge: str, owner: str) -> str:
-    source_owned = owner.lower().startswith("the ")
-    side = "source" if source_owned else "target"
+    side = "source" if owner.lower().startswith("the ") else "target"
     return f"{side}_turn_{edge.lower()}"
 
 
@@ -70,6 +67,16 @@ def parse_simple_control_rider(hit: str) -> tuple[str, HitControlEffect | None, 
         )
         text = _POISONED.sub("", text, count=1)
 
+    text, movement, movement_size = parse_forced_movement_rider(text)
+    if movement is not None:
+        if control is None:
+            control = HitControlEffect(max_target_size=movement_size, forced_movement=movement)
+        else:
+            control = control.model_copy(update={
+                "forced_movement": movement,
+                "max_target_size": control.max_target_size or movement_size,
+            })
+
     prone = _PRONE.search(text)
     if prone:
         prone_size = _size(prone.group("size")) or CreatureSize.GARGANTUAN
@@ -82,7 +89,8 @@ def has_unmodeled_control_text(actions: str) -> bool:
     """Fail closed only for control clauses whose behavior remains after exact stripping."""
     if not _CONTROL_WORDS.search(actions):
         return False
-    clean = _GRAPPLE.sub("", actions)
+    clean = strip_forced_movement_riders(actions)
+    clean = _GRAPPLE.sub("", clean)
     clean = _RESTRAINED.sub("", clean)
     clean = _POISONED.sub("", clean)
     clean = _PRONE.sub("", clean)
