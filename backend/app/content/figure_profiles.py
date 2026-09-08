@@ -123,6 +123,7 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Shadow": _p("humanoid", "shadow"),
     "Skeleton": _p("humanoid", "skeleton"),
     "Spider": _p("spider", "spider"),
+    "Spy": _p("humanoid", "spy"),
     "Swarm of Bats": _p("swarm", "bats"),
     "Swarm of Crawling Claws": _p("swarm", "crawling-claws"),
     "Swarm of Insects": _p("swarm", "insects"),
