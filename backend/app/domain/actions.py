@@ -115,6 +115,7 @@ class SavingThrowAction(BaseModel):
     damage_type: DamageTypeName | None = None
     success_damage: Literal["none", "half"] = "none"
     magical_effect: bool = False
+    failure_control: HitControlEffect | None = None
     grapple_escape_dc: int | None = Field(default=None, ge=1, le=40)
     restrains_while_grappled: bool = False
     resource_id: str | None = None
