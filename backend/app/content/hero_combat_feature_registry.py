@@ -16,7 +16,9 @@ SUPPORTED_HERO_ENGINE_FEATURES = {
 # Fully represented by immutable pregen data plus generic combat primitives.
 # Keeping these separate prevents class/build labels from becoming engine branches.
 SUPPORTED_HERO_DATA_FEATURES = {
-    "eldritch-invocations", "pact-magic",
+    "bard-spellcasting", "druid-spellcasting", "paladin-spellcasting", "ranger-spellcasting",
+    "sorcerer-spellcasting", "wizard-spellcasting", "pact-magic", "eldritch-invocations",
+    "magic-initiate-cleric", "primal-order-warden", "unarmored-defense", "lay-on-hands",
 }
 SUPPORTED_HERO_FEATURES = SUPPORTED_HERO_ENGINE_FEATURES | SUPPORTED_HERO_DATA_FEATURES
 
