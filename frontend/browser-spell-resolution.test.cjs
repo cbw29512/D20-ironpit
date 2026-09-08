@@ -40,6 +40,7 @@ window.IRON_PIT_DICE = {
   },
 };
 
+load("browser-save-helpers.js");
 load("browser-saves.js");
 load("browser-spell-resolution.js");
 
