@@ -1,7 +1,5 @@
 from __future__ import annotations
-
 import re
-
 from app.content.monster_catalog import load_monster_rows
 from app.content.monster_defense_source_audit import parse_defense_profile
 from app.content.monster_saving_throws import parse_saving_throw_bonuses
@@ -119,9 +117,7 @@ def compile_simple_monster(row: dict[str, object], monster_names: set[str]) -> C
         raise ValueError("source requires mechanics outside the simple universal compiler")
     if str(row.get("reactions", "")).strip() or str(row.get("bonusActions", "")).strip() or "Spellcasting." in str(row.get("actions", "")):
         raise ValueError("source needs a modeled reaction, bonus action, or spellcasting fingerprint")
-    attacks = _attacks(row)
-    defenses = parse_defense_profile(row)
-    raw = str(row["rawText"])
+    attacks = _attacks(row); defenses = parse_defense_profile(row); raw = str(row["rawText"])
     initiative = re.search(r"\bInitiative\s+([+-]?\d+)", raw, re.I)
     if initiative is None:
         raise ValueError("source initiative missing")
@@ -136,8 +132,7 @@ def compile_simple_monster(row: dict[str, object], monster_names: set[str]) -> C
         source_trait_names=traits, saving_throw_bonuses=parse_saving_throw_bonuses(row),
         damage_vulnerabilities=[DamageType(item) for item in sorted(defenses["damage_vulnerabilities"])],
         damage_resistances=[DamageType(item) for item in sorted(defenses["damage_resistances"])],
-        damage_immunities=[DamageType(item) for item in sorted(defenses["damage_immunities"])],
-        condition_immunities=sorted(defenses["condition_immunities"]),
+        damage_immunities=[DamageType(item) for item in sorted(defenses["damage_immunities"])], condition_immunities=sorted(defenses["condition_immunities"]),
         visual=VisualLoadout(armor="natural", main_hand=attacks[0].weapon.name, body_style="monster"), source=str(row["sourceReference"]),
     )
 
