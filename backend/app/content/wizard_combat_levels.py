@@ -19,7 +19,7 @@ def _slots(*values: int) -> tuple[int, int, int, int, int, int, int, int, int]:
 
 
 _ROWS = {
-    1: (2, 3, 4, _slots(2), ("wizard-spellcasting", "arcane-recovery"), ("ritual-adept",)),
+    1: (2, 3, 4, _slots(2), ("wizard-spellcasting",), ("ritual-adept", "arcane-recovery")),
     2: (2, 3, 5, _slots(3), (), ("scholar",)),
     3: (2, 3, 6, _slots(4, 2), ("wizard-combat-spells-2",), ()),
     4: (2, 4, 7, _slots(4, 3), (), ()),
