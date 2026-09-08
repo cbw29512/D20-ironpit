@@ -42,6 +42,7 @@ class InitiativeGroup(BaseModel):
     initiative_bonus: int
     initiative_count: int
     tie_break_roll: int | None = Field(default=None, ge=1, le=20)
+    tie_break_rolls: list[int] = Field(default_factory=list)
 
 
 class EncounterInitiative(BaseModel):
