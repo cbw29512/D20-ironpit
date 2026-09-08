@@ -46,12 +46,19 @@ _ATTACKS = {
     ],
     "Venomous Snake": [("Bite", "melee", 4, 1, 4, 2, "piercing", None, 5, None, None, [("Poison", 1, 6, 0, "poison")])],
     "Violet Fungus": [("Rotting Touch", "melee", 2, 1, 8, 0, "necrotic", None, 10, None, None, [])],
+    "Xorn": [
+        ("Bite", "melee", 6, 4, 6, 3, "piercing", None, 5, None, None, []),
+        ("Claw", "melee", 6, 1, 10, 3, "slashing", None, 5, None, None, []),
+    ],
     "Zombie": [("Slam", "melee", 3, 1, 8, 1, "bludgeoning", None, 5, None, None, [])],
 }
 _MULTI = {
     "Animated Armor": (2, ("Slam",)), "Gargoyle": (2, ("Claw",)),
     "Guard Captain": (2, ("Javelin", "Longsword")), "Hippopotamus": (2, ("Bite",)),
     "Manticore": (3, ("Rend", "Tail Spike")), "Violet Fungus": (2, ("Rotting Touch",)),
+}
+_MULTI_SEQUENCE = {
+    "Xorn": ("Bite", "Claw", "Claw", "Claw"),
 }
 _TRAITS = {
     "Ogre Zombie": [CombatTrait.UNDEAD_FORTITUDE],
@@ -92,6 +99,13 @@ def _weapon_attack(monster: str, spec: tuple) -> WeaponAttack:
 
 
 def _multiattack(monster: str, attacks: list[WeaponAttack]) -> AttackActionDefinition | None:
+    by_name = {attack.weapon.name: attack.id for attack in attacks}
+    sequence = _MULTI_SEQUENCE.get(monster)
+    if sequence is not None:
+        return AttackActionDefinition(
+            id=f"srd-{_slug(monster)}-multiattack", name="Multiattack",
+            slots=[AttackActionSlot(attack_ids=[by_name[name]]) for name in sequence],
+        )
     profile = _MULTI.get(monster)
     if profile is None:
         return None
