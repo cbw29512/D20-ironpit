@@ -16,6 +16,7 @@ _MODELED_TRAITS = {
     "Blood Frenzy": CombatTrait.BLOOD_FRENZY,
     "Swarm": CombatTrait.SWARM,
     "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
+    "Magic Resistance": CombatTrait.MAGIC_RESISTANCE,
 }
 _ARENA_NEUTRAL_TRAITS = frozenset({
     "Agile", "Amorphous", "Amphibious", "Beast of Burden", "Demonic Restoration", "Diabolical Restoration",
