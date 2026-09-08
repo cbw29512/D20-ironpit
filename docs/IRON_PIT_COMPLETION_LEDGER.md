@@ -14,7 +14,7 @@ Do not mark content complete from this file alone. Regenerate and verify the aut
 
 Branch: `feat/usable-roster-warlock-l1`
 
-Re-anchored head before this checkpoint: `9a39c8988914f33c15da1d9f7cbba155ec4584f5`
+Re-anchored generated head before this checkpoint: `9471d3d4f98ca088ed2affef8f6cce9288837cb7`
 
 ### Monsters
 
@@ -27,25 +27,34 @@ Re-anchored head before this checkpoint: `9a39c8988914f33c15da1d9f7cbba155ec4584
 - Canonical classes: **12**
 - Level snapshots audited: **240** (12 classes × levels 1–20)
 - Certified pregen snapshots at this checkpoint: **24 / 240**
-- Level-1 engine-ready classes in the current progression audit: **8 / 12**
-- Current Level-1 blockers: `bardic-inspiration`, `martial-arts`, `hunters-mark`, `innate-sorcery`
+- Level-1 engine-ready classes in the regenerated progression audit: **9 / 12**
+- Current genuine Level-1 blockers: `martial-arts`, `hunters-mark`, `innate-sorcery`
+- `bardic-inspiration` is now explicitly classified from canonical Bard metadata as `arena_out_of_scope` for Iron Pit's solo duel rather than being falsely treated as a missing runtime mechanic.
+
+### Progression-audit correction
+
+The progression audit previously calculated canonical `arena_ignored` metadata but did not use it when assigning feature status or blockers. That made arena-excluded features appear as planned engine gaps.
+
+The exporter now gives canonical arena-exclusion metadata precedence when deriving effective audit status, and treats `supported` plus `arena_out_of_scope` as non-blocking. A regression test locks this behavior. Bard Level 1 now correctly advances from blocked to engine-ready without adding a Bard-specific runtime branch or claiming a mechanic that the arena never uses.
+
+Regenerated audit summary after this correction:
+
+- canonical classes: **12**
+- level slots: **240**
+- unique combat features: **226**
+- Level-1 engine-ready classes: **9**
+- feature statuses: `arena_out_of_scope=1`, `planned=183`, `supported=42`
+- unique blocking features: **183**
 
 ### Capability matrix
 
-Current CI coverage report at the immediately preceding source commit reported:
-
-- total capabilities: **59**
-- supported: **40**
-- partial: **10**
-- unsupported: **8**
-- arena-out-of-scope: **1**
-- blocked declarations: **0**
+The capability matrix remains the authoritative declaration layer. No readiness total in this ledger overrides its source/runtime evidence or certification manifests.
 
 ### CI diagnosis
 
-The stale generated-artifact failure chain has been repaired. The current exact head before this checkpoint (`9a39c8988914f33c15da1d9f7cbba155ec4584f5`) did not expose a failing test job: GitHub marked its workflow run `action_required`, with no jobs created. This is a workflow-execution gate rather than evidence of a combat-engine regression.
+The first exact-head test after the audit change correctly failed because Bard's canonical data had not yet declared `bardic-inspiration` arena-excluded. That source metadata is now fixed, the generic audit derivation is corrected, and the generated progression artifact was promoted at `9471d3d4f98ca088ed2affef8f6cce9288837cb7`.
 
-This human-authored checkpoint commit intentionally changes only the progress ledger so normal exact-head CI can be re-triggered without altering certification state or runtime behavior. No monster or pregen readiness is advanced by this commit.
+The bot-authored generated-artifact commit did not itself expose an exact-head CI run. This human-authored checkpoint changes only the ledger so normal PR CI can execute against the complete generated head. Monster readiness remains **117 / 330** and certified pregen snapshots remain **24 / 240** until certification evidence earns higher totals.
 
 ## Locked implementation rules
 
@@ -59,4 +68,4 @@ This human-authored checkpoint commit intentionally changes only the progress le
 
 ## Next priority
 
-Do not add mechanic scope until exact-head CI executes cleanly. Once it is green, prefer the smallest reusable primitive that unlocks multiple blocked snapshots or monsters. For Level 1 pregens, investigate the four remaining blockers as generic mechanics/data before writing any class-specific code.
+Do not add mechanic scope until exact-head CI executes cleanly. Once it is green, inspect `martial-arts`, `hunters-mark`, and `innate-sorcery` as generic/data-driven mechanics and prefer the smallest reusable primitive with the highest cross-roster yield.
