@@ -13,6 +13,56 @@ If implementation and this contract disagree, either fix the implementation or m
 - Python is the reference/certification oracle. The browser engine is the production fight engine. Supported capabilities require behavioral parity and permanent regression coverage.
 - Noncombat-only rules may be omitted from runtime only when they cannot alter an Iron Pit combat outcome.
 
+### 1A. Universal content-compilation contract
+
+This section is mandatory build methodology for monsters, pregens, spells, features, items, homebrew, and all future combat content.
+
+#### RAW is authority; content is data
+
+- Use the selected ruleset's exact RAW/source wording and values unless this contract explicitly defines an Iron Pit house rule.
+- Never guess a missing value, infer an unstated rule, invent a default, or simplify an outcome-changing clause merely because a nearby rule looks similar.
+- If source wording is ambiguous to the compiler or developer, verify the authoritative source. If a genuine product/rules decision remains after source verification, stop and ask rather than guessing.
+- A combatant, spell, feature, item, or action name is a label/identity only. Names must not select resolver behavior.
+- Differences between creatures/builds belong in immutable data: attack bonus, save/DC, ability used, damage dice, damage type, reach, range, target count, area shape/size, duration, timing, condition/rider, movement distance, resource link, usage limit, recharge threshold, and other printed parameters.
+
+#### Universal primitives, not named implementations
+
+Implement the smallest reusable combat primitive that faithfully represents the RAW mechanic, then compile every source using that mechanic into the same primitive.
+
+Examples:
+
+- **Bite, Claw, Tail, Slam, Sword, Spear, Rock, and similar attacks** are ordinary attack primitives. Their names do not create behavior. Their attack bonus, reach/range, damage dice/type, and riders are data.
+- **Recharge** is one universal resource/timing primitive. `Recharge 6`, `Recharge 5–6`, and other printed thresholds differ by immutable threshold data and by which action/resource is linked. A dragon breath weapon and an ape's Rock do not need separate recharge engines.
+- **Breath weapons, blasts, cones, lines, bursts, and similar damage actions** use universal targeting + save/attack + damage primitives. Shape, range/radius/length, save ability/DC, damage dice/type, and success outcome are data unless RAW adds another mechanic.
+- **Prone, Grappled, Restrained, Poisoned, Frightened, Stunned, and other conditions** are universal condition/effect-lifecycle primitives. Sources only define trigger, save/check, size restriction, duration, repeat save, escape rule, and other RAW parameters.
+- **Push/pull/forced movement** is universal forced movement. Sources provide direction, distance, trigger, save/check, and restrictions.
+- **Auras** are universal proximity/area triggers. Sources provide radius, timing, save, damage/effect, exclusions, and suppression rules.
+- **Regeneration/healing/Temporary HP/absorption** use universal health/resource primitives with source-defined amount, timing, eligibility, and suppression rules.
+- **Multiattack/Extra Attack/repeated attacks** use universal sequencing. Source data defines count, options, required sequence, and attack references.
+- **Damage-only spells** should compile through the same universal attack-roll or saving-throw, targeting, damage, resistance/immunity, resource/slot, concentration, and timing primitives already used elsewhere. Spell names do not create a second damage engine.
+- A spell with an additional outcome-changing RAW rider is not treated as damage-only by deleting the rider. The rider must map to an already-supported universal primitive or remain an explicit blocker until that primitive exists.
+
+#### Mechanic-family implementation order
+
+Development must be organized by reusable combat mechanic, not by individual monster/pregen name.
+
+When a blocker identifies a missing or incomplete combat mechanic:
+
+1. inventory every canonical monster and pregen/build that uses the same mechanic or compatible variants of it;
+2. verify the exact RAW variants and parameters before coding;
+3. define/extend the immutable schema needed to express those variants;
+4. implement the universal resolver/timing/state primitive once;
+5. compile all compatible source entries into that primitive;
+6. preserve Python/browser/Step/Watch/Replay/Turbo parity through the same canonical resolution path;
+7. re-audit the full canonical corpus and promote every source that is now genuinely unblocked;
+8. leave richer or materially different RAW variants blocked until their missing universal primitive is implemented.
+
+Do not stop at “Monster X works” when the mechanic is shared. A mechanic tranche is complete only after the repository has re-audited all canonical monsters and pregens that can use it.
+
+A source-specific parser adapter is allowed only to translate unambiguous RAW wording into universal data. It must not contain a named-combatant behavior branch. If a unique source mechanic cannot be expressed by existing primitives, add a reusable generic primitive capable of representing that behavior rather than branching on the source name.
+
+This architecture is intentionally extensible: adding an unlimited number of future monsters, pregens, spells, features, items, or homebrew entries should normally require new validated data, not new resolver code, whenever their mechanics are already represented by the universal engine.
+
 ## 2. Ruleset isolation
 
 The current certified public ruleset is D&D 2024 / SRD 5.2.1.
@@ -421,6 +471,7 @@ Monster promotion path:
 `SRD source -> source/parser audit -> detected mechanics -> universal capabilities -> runtime -> Python behavior -> browser parity -> generated artifact -> public readiness -> exact-head CI`
 
 - Re-audit all 330 monsters after adding a universal capability.
+- Build and certify by mechanic family across the entire roster rather than treating one monster as the unit of engine implementation.
 - A creature becomes runnable only when every outcome-changing printed mechanic is supported or explicitly proven irrelevant under the permanent arena contract.
 - Never use a richer/partially parsed stat block to certify a simpler approximation.
 
