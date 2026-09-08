@@ -5,15 +5,15 @@ import re
 from app.domain.models import ConditionalDamage, DamageType
 
 _BLOODIED_REPLACEMENT = re.compile(
-    r",?\s+or\s+\d+\s*\(\s*(?P<count>\d+)d(?P<size>\d+)(?:\s*(?P<sign>[+-])\s*(?P<bonus>\d+))?\s*\)\s+"
+    r"\bor\s+\d+\s*\(\s*(?P<count>\d+)d(?P<size>\d+)(?:\s*(?P<sign>[+-])\s*(?P<bonus>\d+))?\s*\)\s+"
     r"(?P<type>Acid|Bludgeoning|Cold|Fire|Force|Lightning|Necrotic|Piercing|Poison|Psychic|Radiant|Slashing|Thunder)\s+damage\s+"
-    r"if\s+the\s+[a-z][a-z -]*\s+is\s+Bloodied\b",
+    r"if\b.*?\bBloodied\b",
     re.I,
 )
 
 
 def extract_bloodied_replacement(hit: str) -> tuple[str, ConditionalDamage | None]:
-    """Extract the SRD Bloodied alternate damage clause from an attack's Hit text."""
+    """Extract an SRD Bloodied alternate weapon-damage clause from Hit text."""
     match = _BLOODIED_REPLACEMENT.search(hit)
     if match is None:
         return hit, None
@@ -26,4 +26,7 @@ def extract_bloodied_replacement(hit: str) -> tuple[str, ConditionalDamage | Non
         damage_bonus=bonus,
         damage_type=DamageType(match.group("type").lower()),
     )
-    return hit[:match.start()] + hit[match.end():], conditional
+    prefix = hit[:match.start()].rstrip(" ,")
+    suffix = hit[match.end():].lstrip(" ,")
+    separator = ", " if prefix and suffix else ""
+    return prefix + separator + suffix, conditional
