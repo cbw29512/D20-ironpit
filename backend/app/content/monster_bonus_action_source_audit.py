@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 # These actions only Hide/Disengage or alter pre-contact movement under the
 # documented flat, no-Hide, no-kiting, initiative-opener arena abstraction.
 _ARENA_NEUTRAL_BONUS_ACTIONS = frozenset({
-    "Aquatic Charge", "Charge", "Leap", "Nimble Escape", "Shadow Stealth",
+    "Aquatic Charge", "Charge", "Cunning Action", "Leap", "Nimble Escape", "Shadow Stealth",
 })
 
 
