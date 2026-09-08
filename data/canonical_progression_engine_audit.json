@@ -65,10 +65,6 @@
       "status": "planned"
     },
     {
-      "id": "bard-spellcasting",
-      "status": "planned"
-    },
-    {
       "id": "bardic-inspiration",
       "status": "planned"
     },
@@ -261,10 +257,6 @@
       "status": "planned"
     },
     {
-      "id": "druid-spellcasting",
-      "status": "planned"
-    },
-    {
       "id": "eldritch-master",
       "status": "planned"
     },
@@ -417,14 +409,6 @@
       "status": "planned"
     },
     {
-      "id": "lay-on-hands",
-      "status": "planned"
-    },
-    {
-      "id": "magic-initiate-cleric",
-      "status": "planned"
-    },
-    {
       "id": "magical-cunning",
       "status": "planned"
     },
@@ -501,10 +485,6 @@
       "status": "planned"
     },
     {
-      "id": "paladin-spellcasting",
-      "status": "planned"
-    },
-    {
       "id": "paladins-smite",
       "status": "planned"
     },
@@ -533,10 +513,6 @@
       "status": "planned"
     },
     {
-      "id": "primal-order-warden",
-      "status": "planned"
-    },
-    {
       "id": "quivering-palm",
       "status": "planned"
     },
@@ -562,10 +538,6 @@
     },
     {
       "id": "ranger-epic-boon",
-      "status": "planned"
-    },
-    {
-      "id": "ranger-spellcasting",
       "status": "planned"
     },
     {
@@ -622,10 +594,6 @@
     },
     {
       "id": "sorcerer-epic-boon",
-      "status": "planned"
-    },
-    {
-      "id": "sorcerer-spellcasting",
       "status": "planned"
     },
     {
@@ -705,10 +673,6 @@
       "status": "planned"
     },
     {
-      "id": "unarmored-defense",
-      "status": "planned"
-    },
-    {
       "id": "unarmored-movement",
       "status": "planned"
     },
@@ -770,10 +734,6 @@
     },
     {
       "id": "wizard-epic-boon",
-      "status": "planned"
-    },
-    {
-      "id": "wizard-spellcasting",
       "status": "planned"
     },
     {
@@ -1084,22 +1044,14 @@
           "arena_ignored_introduced": [],
           "blockers": [
             {
-              "id": "bard-spellcasting",
-              "status": "planned"
-            },
-            {
               "id": "bardic-inspiration",
-              "status": "planned"
-            },
-            {
-              "id": "magic-initiate-cleric",
               "status": "planned"
             }
           ],
           "introduced_combat_features": [
             {
               "id": "bard-spellcasting",
-              "status": "planned"
+              "status": "supported"
             },
             {
               "id": "bardic-inspiration",
@@ -1107,7 +1059,7 @@
             },
             {
               "id": "magic-initiate-cleric",
-              "status": "planned"
+              "status": "supported"
             }
           ],
           "level": 1
@@ -1704,41 +1656,28 @@
     },
     {
       "class_id": "druid",
-      "first_blocked_level": 1,
+      "first_blocked_level": 2,
       "hero_name": "Thalen Greenbough",
-      "level_1_engine_ready": false,
+      "level_1_engine_ready": true,
       "levels": [
         {
           "arena_ignored_introduced": [
             "druidic",
             "speak-with-animals"
           ],
-          "blockers": [
-            {
-              "id": "druid-spellcasting",
-              "status": "planned"
-            },
-            {
-              "id": "magic-initiate-cleric",
-              "status": "planned"
-            },
-            {
-              "id": "primal-order-warden",
-              "status": "planned"
-            }
-          ],
+          "blockers": [],
           "introduced_combat_features": [
             {
               "id": "druid-spellcasting",
-              "status": "planned"
+              "status": "supported"
             },
             {
               "id": "magic-initiate-cleric",
-              "status": "planned"
+              "status": "supported"
             },
             {
               "id": "primal-order-warden",
-              "status": "planned"
+              "status": "supported"
             }
           ],
           "level": 1
@@ -2302,10 +2241,6 @@
             {
               "id": "martial-arts",
               "status": "planned"
-            },
-            {
-              "id": "unarmored-defense",
-              "status": "planned"
             }
           ],
           "introduced_combat_features": [
@@ -2315,7 +2250,7 @@
             },
             {
               "id": "unarmored-defense",
-              "status": "planned"
+              "status": "supported"
             }
           ],
           "level": 1
@@ -2627,30 +2562,21 @@
     },
     {
       "class_id": "paladin",
-      "first_blocked_level": 1,
+      "first_blocked_level": 2,
       "hero_name": "Aurelia Brightshield",
-      "level_1_engine_ready": false,
+      "level_1_engine_ready": true,
       "levels": [
         {
           "arena_ignored_introduced": [],
-          "blockers": [
-            {
-              "id": "lay-on-hands",
-              "status": "planned"
-            },
-            {
-              "id": "paladin-spellcasting",
-              "status": "planned"
-            }
-          ],
+          "blockers": [],
           "introduced_combat_features": [
             {
               "id": "lay-on-hands",
-              "status": "planned"
+              "status": "supported"
             },
             {
               "id": "paladin-spellcasting",
-              "status": "planned"
+              "status": "supported"
             },
             {
               "id": "weapon-mastery",
@@ -2982,10 +2908,6 @@
             {
               "id": "hunters-mark",
               "status": "planned"
-            },
-            {
-              "id": "ranger-spellcasting",
-              "status": "planned"
             }
           ],
           "introduced_combat_features": [
@@ -2995,7 +2917,7 @@
             },
             {
               "id": "ranger-spellcasting",
-              "status": "planned"
+              "status": "supported"
             },
             {
               "id": "weapon-mastery",
@@ -3606,10 +3528,6 @@
             {
               "id": "innate-sorcery",
               "status": "planned"
-            },
-            {
-              "id": "sorcerer-spellcasting",
-              "status": "planned"
             }
           ],
           "introduced_combat_features": [
@@ -3619,7 +3537,7 @@
             },
             {
               "id": "sorcerer-spellcasting",
-              "status": "planned"
+              "status": "supported"
             }
           ],
           "level": 1
@@ -4169,10 +4087,6 @@
             {
               "id": "arcane-recovery",
               "status": "planned"
-            },
-            {
-              "id": "wizard-spellcasting",
-              "status": "planned"
             }
           ],
           "introduced_combat_features": [
@@ -4182,7 +4096,7 @@
             },
             {
               "id": "wizard-spellcasting",
-              "status": "planned"
+              "status": "supported"
             }
           ],
           "level": 1
@@ -4471,12 +4385,12 @@
   "summary": {
     "canonical_classes": 12,
     "feature_statuses": {
-      "planned": 195,
-      "supported": 32
+      "planned": 185,
+      "supported": 42
     },
-    "level_1_engine_ready_classes": 5,
+    "level_1_engine_ready_classes": 7,
     "level_slots": 240,
-    "unique_blocking_features": 195,
+    "unique_blocking_features": 185,
     "unique_combat_features": 227
   }
 }

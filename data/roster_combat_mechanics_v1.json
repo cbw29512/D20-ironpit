@@ -462,7 +462,7 @@
       "owners": [
         "bard/base"
       ],
-      "status": "planned"
+      "status": "supported"
     },
     {
       "demand_count": 1,
@@ -1412,7 +1412,7 @@
       "owners": [
         "druid/base"
       ],
-      "status": "planned"
+      "status": "supported"
     },
     {
       "demand_count": 1,
@@ -2581,7 +2581,7 @@
       "owners": [
         "paladin/base"
       ],
-      "status": "planned"
+      "status": "supported"
     },
     {
       "demand_count": 1,
@@ -2626,7 +2626,7 @@
         "bard/base",
         "druid/base"
       ],
-      "status": "planned"
+      "status": "supported"
     },
     {
       "demand_count": 1,
@@ -2971,7 +2971,7 @@
       "owners": [
         "paladin/base"
       ],
-      "status": "planned"
+      "status": "supported"
     },
     {
       "demand_count": 1,
@@ -3092,7 +3092,7 @@
       "owners": [
         "druid/base"
       ],
-      "status": "planned"
+      "status": "supported"
     },
     {
       "demand_count": 1,
@@ -3312,7 +3312,7 @@
       "owners": [
         "ranger/base"
       ],
-      "status": "planned"
+      "status": "supported"
     },
     {
       "demand_count": 1,
@@ -3705,7 +3705,7 @@
       "owners": [
         "sorcerer/base"
       ],
-      "status": "planned"
+      "status": "supported"
     },
     {
       "demand_count": 1,
@@ -4424,7 +4424,7 @@
       "owners": [
         "monk/base"
       ],
-      "status": "planned"
+      "status": "supported"
     },
     {
       "demand_count": 1,
@@ -4865,7 +4865,7 @@
       "owners": [
         "wizard/base"
       ],
-      "status": "planned"
+      "status": "supported"
     },
     {
       "demand_count": 1,
@@ -4952,7 +4952,7 @@
   "schema_version": 1,
   "summary": {
     "arena_out_of_scope": 28,
-    "planned": 374,
-    "supported": 42
+    "planned": 364,
+    "supported": 52
   }
 }
