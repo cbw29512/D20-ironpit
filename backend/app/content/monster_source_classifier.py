@@ -7,13 +7,10 @@ from app.content.monster_bonus_action_source_audit import _ARENA_NEUTRAL_BONUS_A
 from app.content.monster_defense_source_audit import parse_defense_profile
 from app.content.monster_limited_use_source_audit import parse_limited_use_names
 from app.content.monster_reaction_source_audit import parse_parry_ac_bonus, parse_reaction_names, parse_redirect_attack_range
+from app.content.monster_simple_control_rider import has_unmodeled_control_text
 from app.content.monster_spellcasting_source_audit import arena_neutral_spellcasting, spellcasting_fingerprint
 from app.content.monster_trait_source_audit import _ARENA_NEUTRAL_TRAITS, _MODELED_TRAITS, parse_trait_names
 
-_CONDITION_OR_CONTROL = re.compile(
-    r"\b(blinded|charmed|deafened|frightened|grappled|incapacitated|paralyzed|petrified|poisoned|prone|restrained|stunned|unconscious|push(?:es|ed)?|pull(?:s|ed)?|swallow(?:s|ed)?)\b",
-    re.I,
-)
 _COMPLEX_ACTION = re.compile(
     r"\b(Saving Throw|Failure:|Success:|Temporary Hit Points?|regains?\s+\d+|teleport|Concentration)\b",
     re.I,
@@ -96,7 +93,7 @@ def source_blockers(row: dict[str, object], monster_names: set[str]) -> list[str
         blockers.append("conditional-attack-modifier")
     if _COMPLEX_ACTION.search(actions):
         blockers.append("save-or-complex-action")
-    if _CONDITION_OR_CONTROL.search(actions):
+    if has_unmodeled_control_text(actions):
         blockers.append("condition-or-control")
     if _unmodeled_action_rider(actions):
         blockers.append("unsupported-action-rider")
