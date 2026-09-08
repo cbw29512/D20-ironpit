@@ -61,7 +61,7 @@ def test_giant_vulture_runtime_uses_printed_target_turn_end_poison() -> None:
     event = resolve_encounter_attack(1, 1, source, target, attack, 5, FixedDiceProvider([15, 4, 4]), setup)
     assert event.hit is True and "poisoned" in event.applied_condition_ids
     _assert_poison(target, "target_turn_end")
-    ended, _ = resolve_target_condition_timing(2, 1, target, "target_turn_end", FixedDiceProvider([]))
+    ended, _ = resolve_target_condition_timing(2, 1, target, "target_turn_end", FixedDiceProvider([1]))
     assert len(ended) == 1 and ended[0].removed_condition_ids == ["poisoned"]
 
 
