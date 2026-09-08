@@ -15,9 +15,10 @@ from app.combat.healing import choose_healing_action, resolve_healing
 from app.combat.ongoing_spell_control import build_forced_retreat_event, forced_retreat_active
 from app.combat.opening_burst import opening_feature_id
 from app.combat.orc import should_use_adrenaline_rush, use_adrenaline_rush
-from app.combat.pit_policy import choose_standard_attack, save_distance, target_order
+from app.combat.pit_policy import choose_standard_attack, target_order
 from app.combat.policy import should_use_second_wind
-from app.combat.saving_throws import legal_save_action, resolve_save_action, save_action_resource_available
+from app.combat.save_action_policy import choose_single_target_save
+from app.combat.saving_throws import resolve_save_action
 from app.combat.signature_save_actions import resolve_signature_area_save
 from app.combat.spell_offense import resolve_best_spell_offense
 from app.combat.standard_attack_action import resolve_standard_attack_action
@@ -57,17 +58,6 @@ def _resolve_support_actions(sequence, round_number, member, setup, dice, turn_k
     channel_events, sequence = resolve_channel_support(sequence, round_number, member, setup, dice)
     events.extend(channel_events)
     return events, sequence
-
-
-def _save_choice(attacker: EncounterCombatant, setup: EncounterSetup):
-    for target in target_order(attacker, setup):
-        for action in attacker.state.template.saving_throw_actions:
-            if not save_action_resource_available(attacker.state, action):
-                continue
-            distance = save_distance(attacker, target, action.range_ft)
-            if legal_save_action(action, target, distance):
-                return target, action, distance
-    return None
 
 
 def resolve_combat_turn(
@@ -128,7 +118,7 @@ def resolve_combat_turn(
         events.extend(action_events)
         return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
-    save_choice = _save_choice(attacker, setup)
+    save_choice = choose_single_target_save(attacker, setup)
     if save_choice is not None and is_available(attacker.state, "action"):
         save_target, save_action, distance = save_choice
         affected = [member.state for member in [*setup.heroes, *setup.monsters]]
