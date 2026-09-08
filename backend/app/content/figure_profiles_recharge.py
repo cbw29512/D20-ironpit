@@ -4,6 +4,7 @@ RECHARGE_FIGURE_PROFILES = {
     "Black Dragon Wyrmling": {"form": "reptile", "detail": "black-dragon"},
     "Blue Dragon Wyrmling": {"form": "reptile", "detail": "blue-dragon"},
     "Dragon Turtle": {"form": "aquatic-reptile", "detail": "dragon-turtle"},
+    "Earth Elemental": {"form": "brute", "detail": "earth-elemental"},
     "Green Dragon Wyrmling": {"form": "reptile", "detail": "green-dragon"},
     "Hell Hound": {"form": "quadruped", "detail": "hell-hound"},
     "Red Dragon Wyrmling": {"form": "reptile", "detail": "red-dragon"},
