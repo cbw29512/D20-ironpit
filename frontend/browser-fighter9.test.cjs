@@ -24,6 +24,13 @@ window.IRON_PIT_BROWSER_STATE = {
   canProne: () => false,
   sizeAtMost: () => false,
   distance: (a, b) => Math.abs(a.position_ft - b.position_ft),
+  terminateTurn: (state, reason) => {
+    state.turn_terminated = true;
+    state.turn_termination_reason = reason;
+    state.action_available = false;
+    state.bonus_action_available = false;
+    state.movement_remaining_ft = 0;
+  },
 };
 window.IRON_PIT_BROWSER_GRAPPLE = {
   attackDisadvantage: () => 0,
@@ -102,6 +109,7 @@ function state(template, resources = {}) {
     template, current_hp: template.max_hp, temporary_hp: 0, is_alive: true, is_dead: false,
     is_unconscious: false, is_stable: false, death_save_successes: 0, death_save_failures: 0,
     action_available: true, bonus_action_available: true, reaction_available: true, movement_remaining_ft: 30,
+    turn_terminated: false, turn_termination_reason: null,
     active_effect_ids: [], grapple_sources: [], timed_effects: [], active_modifiers: [],
     temporary_damage_resistances: [], resources: { ...resources }, feature_last_turn_keys: {},
   };
@@ -135,6 +143,8 @@ function state(template, resources = {}) {
   assert.equal(miss.hit, false);
   assert.equal(miss.damage_roll, null);
   assert.equal(missTarget.state.current_hp, hpBefore);
+  assert.equal(miss.turn_terminated, true);
+  assert.equal(missHero.state.turn_terminated, true);
 }
 
 {
