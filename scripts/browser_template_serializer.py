@@ -143,6 +143,10 @@ def _save(action: Any) -> dict[str, Any]:
         "damageDiceSize": action.damage_dice_size, "damageBonus": action.damage_bonus,
         "damageType": action.damage_type, "successDamage": action.success_damage, "animation": action.animation,
     }
+    if action.resource_id:
+        row["resourceId"] = action.resource_id
+        if action.resource_cost != 1:
+            row["resourceCost"] = action.resource_cost
     if action.target_max_size:
         row["targetMaxSize"] = _value(action.target_max_size)
     if action.grapple_escape_dc is not None:
@@ -306,5 +310,5 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             ]}
         return row
     except Exception:
-        logger.exception("Failed to serialize combatant template %s.", template.id)
+        logger.exception("Failed to serialize combatant template %s for browser runtime.", template.id)
         raise
