@@ -4,6 +4,7 @@ import re
 
 from app.content.monster_attack_roll_modifier_source_audit import parse_attack_roll_modifier
 from app.content.monster_bloodied_source_damage import extract_bloodied_replacement
+from app.content.monster_limited_use_source_audit import parse_action_recharges
 from app.content.monster_simple_control_rider import parse_simple_control_rider
 from app.content.monster_simple_hit_modifier_rider import parse_simple_hit_modifier_riders
 from app.domain.models import DamageType, OnHitDamage, Weapon, WeaponAttack, WeaponAttackKind
@@ -22,6 +23,7 @@ _FIXED_DAMAGE = re.compile(rf"^(?P<amount>\d+)\s+(?P<type>{_DAMAGE_TYPES})\s+dam
 _FIXED_EXTRA = re.compile(rf"\bplus\s+(?P<amount>\d+)\s+(?P<type>{_DAMAGE_TYPES})\s+damage\b", re.I)
 _REACH = re.compile(r"reach\s+(\d+)\s*ft", re.I)
 _RANGE = re.compile(r"range\s+(\d+)\s*/\s*(\d+)\s*ft", re.I)
+_RECHARGE_SUFFIX = re.compile(r"\s*\(\s*Recharge\s+\d(?:\s*[-–]\s*\d)?\s*\)\s*$", re.I)
 
 
 def _slug(value: str) -> str:
@@ -62,13 +64,18 @@ def _damage(hit: str) -> tuple[int, int, int, DamageType, int | None, list[OnHit
 def parse_simple_attacks(row: dict[str, object]) -> list[WeaponAttack]:
     attacks: list[WeaponAttack] = []
     try:
+        recharges = parse_action_recharges(row)
+        monster_slug = _slug(str(row["name"]))
         for match in _ATTACK.finditer(str(row["actions"])):
+            printed_name = match.group("name").strip()
+            attack_name = _RECHARGE_SUFFIX.sub("", printed_name).strip()
             clean_hit, bloodied = extract_bloodied_replacement(match.group("hit"))
             clean_hit, control, prone_size = parse_simple_control_rider(clean_hit)
             clean_hit, hit_modifiers = parse_simple_hit_modifier_riders(clean_hit)
             count, size, damage_bonus, damage_type, fixed, extras = _damage(clean_hit)
             modes = ["melee", "ranged"] if match.group("mode").lower() == "melee or ranged" else [match.group("mode").lower()]
             conditional = parse_attack_roll_modifier(match.group("conditional")) if match.group("conditional") else None
+            resource_id = f"srd-{monster_slug}-{_slug(attack_name)}-recharge" if attack_name in recharges else None
             for mode in modes:
                 reach = _REACH.search(match.group("range")); ranged = _RANGE.search(match.group("range"))
                 if mode == "melee" and reach is None:
@@ -76,9 +83,9 @@ def parse_simple_attacks(row: dict[str, object]) -> list[WeaponAttack]:
                 if mode == "ranged" and ranged is None:
                     raise ValueError("simple ranged attack lacks range")
                 suffix = f"-{mode}" if len(modes) > 1 else ""
-                attack_id = f"srd-{_slug(str(row['name']))}-{_slug(match.group('name'))}{suffix}"
+                attack_id = f"srd-{monster_slug}-{_slug(attack_name)}{suffix}"
                 weapon = Weapon(
-                    id=f"{attack_id}-weapon", name=match.group("name"), attack_kind=WeaponAttackKind(mode),
+                    id=f"{attack_id}-weapon", name=attack_name, attack_kind=WeaponAttackKind(mode),
                     dice_count=count, dice_size=size, damage_type=damage_type, reach_ft=int(reach.group(1)) if reach else 5,
                     normal_range_ft=int(ranged.group(1)) if ranged else None, long_range_ft=int(ranged.group(2)) if ranged else None,
                     animation="strike",
@@ -88,7 +95,7 @@ def parse_simple_attacks(row: dict[str, object]) -> list[WeaponAttack]:
                     fixed_damage=fixed, on_hit_damage=extras, on_hit_modifier_effects=hit_modifiers,
                     control_effect=control, knocks_prone_max_size=prone_size,
                     conditional_attack_modifiers=[conditional] if conditional is not None else [],
-                    conditional_damage=[bloodied] if bloodied is not None else [],
+                    conditional_damage=[bloodied] if bloodied is not None else [], resource_id=resource_id,
                 ))
         if not attacks:
             raise ValueError("no simple attacks parsed")
