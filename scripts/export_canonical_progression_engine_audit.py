@@ -17,13 +17,13 @@ from app.content.canonical_class_combat_spines import (  # noqa: E402
     canonical_combat_features,
 )
 from app.content.class_subclass_composer import base_class_arena_ignored  # noqa: E402
-from app.content.hero_combat_feature_registry import SUPPORTED_HERO_ENGINE_FEATURES  # noqa: E402
+from app.content.hero_combat_feature_registry import SUPPORTED_HERO_FEATURES  # noqa: E402
 from app.content.hero_progressions import CANONICAL_HEROES  # noqa: E402
 from app.content.subclass_combat_overlays import subclass_overlay  # noqa: E402
 
 
 def _status(feature_id: str, statuses: dict[str, str]) -> str:
-    if feature_id in SUPPORTED_HERO_ENGINE_FEATURES:
+    if feature_id in SUPPORTED_HERO_FEATURES:
         return "supported"
     if feature_id in statuses:
         return statuses[feature_id]
@@ -115,7 +115,11 @@ def main() -> int:
     print("CANONICAL_PROGRESSION_AUDIT " + " ".join(f"{key}={value}" for key, value in payload["summary"].items()))
     for item in payload["classes"]:
         first = item["first_blocked_level"] if item["first_blocked_level"] is not None else "none"
-        print(f"CANONICAL_CLASS_AUDIT class={item['class_id']} level1_ready={item['level_1_engine_ready']} first_blocked_level={first}")
+        blocker_ids = "none"
+        if item["first_blocked_level"] is not None:
+            first_row = item["levels"][item["first_blocked_level"] - 1]
+            blocker_ids = ",".join(row["id"] for row in first_row["blockers"]) or "none"
+        print(f"CANONICAL_CLASS_AUDIT class={item['class_id']} level1_ready={item['level_1_engine_ready']} first_blocked_level={first} blockers={blocker_ids}")
     return 0
 
 
