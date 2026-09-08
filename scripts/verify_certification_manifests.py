@@ -64,13 +64,19 @@ def _mechanics(template: Any) -> list[str]:
     return sorted(mechanics)
 
 
-def _assert_generated_artifact(path: Path, expected: str) -> None:
-    if path.read_text(encoding="utf-8") != expected:
-        raise RuntimeError(f"Generated browser artifact is stale: {path.relative_to(ROOT)}")
+def _ensure_generated_artifact(path: Path, expected: str, *, write: bool) -> None:
+    current = path.read_text(encoding="utf-8") if path.exists() else None
+    if current == expected:
+        return
+    if write:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(expected, encoding="utf-8")
+        return
+    raise RuntimeError(f"Generated browser artifact is stale: {path.relative_to(ROOT)}")
 
 
-def build_hero_manifest() -> dict[str, Any]:
-    _assert_generated_artifact(HERO_BROWSER_ARTIFACT, render_browser_heroes())
+def build_hero_manifest(*, write_artifacts: bool = False) -> dict[str, Any]:
+    _ensure_generated_artifact(HERO_BROWSER_ARTIFACT, render_browser_heroes(), write=write_artifacts)
     catalog = build_hero_catalog()
     entries = dict(build_certified_hero_entries())
     cards = {(card.class_id, card.level, card.build_id): card for card in catalog}
@@ -140,8 +146,8 @@ def _detected_monster_mechanics(row: dict[str, object], source_blockers: list[st
     return sorted(detected)
 
 
-def build_monster_manifest() -> dict[str, Any]:
-    _assert_generated_artifact(MONSTER_BROWSER_ARTIFACT, render_browser_monsters())
+def build_monster_manifest(*, write_artifacts: bool = False) -> dict[str, Any]:
+    _ensure_generated_artifact(MONSTER_BROWSER_ARTIFACT, render_browser_monsters(), write=write_artifacts)
     rows = load_monster_rows()
     cards = {card.name: card for card in build_monster_catalog()}
     runtime_by_name = {template.name: template for template in build_arena_roster().monsters}
@@ -223,16 +229,16 @@ def _validate_invariants(hero_manifest: dict[str, Any], monster_manifest: dict[s
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Generate or verify Iron Pit certification manifests.")
-    parser.add_argument("--write", action="store_true", help="Rewrite manifests from authoritative repository state.")
+    parser.add_argument("--write", action="store_true", help="Regenerate browser certification artifacts and manifests from authoritative repository state.")
     args = parser.parse_args()
-    heroes = build_hero_manifest()
-    monsters = build_monster_manifest()
+    heroes = build_hero_manifest(write_artifacts=args.write)
+    monsters = build_monster_manifest(write_artifacts=args.write)
     _validate_invariants(heroes, monsters)
     _assert_exact_ci_head()
     if args.write:
         _write(HERO_MANIFEST, heroes)
         _write(MONSTER_MANIFEST, monsters)
-        print("Wrote certification manifests from authoritative repository state.")
+        print("Wrote certification artifacts and manifests from authoritative repository state.")
         return
     if json.loads(HERO_MANIFEST.read_text(encoding="utf-8")) != heroes:
         raise RuntimeError("Hero certification manifest is stale or hand-edited.")
