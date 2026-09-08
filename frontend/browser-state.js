@@ -7,7 +7,48 @@
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { incapacitated: (state) => state.is_unconscious };
   const effectiveMaxHp = (state) => state.template.max_hp + (state.max_hp_bonus || 0);
 
+  function attackResourceAvailable(state, attack) {
+    if (!attack?.resourceId) return true;
+    return (state.resources?.[attack.resourceId] || 0) >= (attack.resourceCost || 1);
+  }
+
+  function spendAttackResource(state, attack) {
+    if (!attack?.resourceId) return;
+    const cost = attack.resourceCost || 1;
+    if (!attackResourceAvailable(state, attack)) throw new Error(`Resource is unavailable for attack ${attack.id}.`);
+    state.resources[attack.resourceId] -= cost;
+  }
+
+  function rechargeStart(state, dice = window.IRON_PIT_DICE) {
+    const metadata = state.template.resource_recharge || {};
+    if (!dice?.roll) return [];
+    const results = [];
+    for (const [id, rule] of Object.entries(metadata)) {
+      const current = state.resources?.[id] || 0, maximum = Number(rule.maxUses || 1);
+      if (current >= maximum) continue;
+      const roll = dice.roll(6), restored = roll >= Number(rule.minimum);
+      if (restored) state.resources[id] = maximum;
+      results.push({ id, roll, restored });
+    }
+    return results;
+  }
+
+  function ensureResourceAttackWrapper() {
+    const runtime = window.IRON_PIT_BROWSER_ATTACK;
+    if (!runtime?.resolveAttack || runtime.__resourceWrapped) return;
+    const raw = runtime.resolveAttack.bind(runtime);
+    runtime.resolveAttack = (...args) => {
+      const attacker = args[2], attack = args[4];
+      if (!attackResourceAvailable(attacker.state, attack)) throw new Error(`Resource is unavailable for attack ${attack.id}.`);
+      const event = raw(...args);
+      spendAttackResource(attacker.state, attack);
+      return event;
+    };
+    runtime.__resourceWrapped = true;
+  }
+
   function buildState(template) {
+    ensureResourceAttackWrapper();
     return {
       template, current_hp: template.max_hp, max_hp_bonus: 0, temporary_hp: 0, initiative_roll: null, initiative_total: null, is_alive: true,
       is_unconscious: false, is_stable: false, is_dead: false,
@@ -41,11 +82,13 @@
   }
 
   function beginTurn(state) {
+    ensureResourceAttackWrapper();
     state.turn_terminated = false; state.turn_termination_reason = null;
     const incapacitated = Q().incapacitated(state);
     state.action_available = !incapacitated;
     state.bonus_action_available = !incapacitated;
     refreshStartOfTurn(state);
+    rechargeStart(state);
     const speedZero = G()?.speedIsZero(state) || false;
     const speed = M().effectiveSpeed(state);
     state.movement_remaining_ft = speedZero ? 0 : speed;
@@ -107,7 +150,8 @@
   const sizeAtMost = (member, maxSize) => Boolean(maxSize) && SIZE_RANK[member.state.template.size] <= SIZE_RANK[maxSize];
   const canProne = (target, maxSize) => sizeAtMost(target, maxSize);
   window.IRON_PIT_BROWSER_STATE = {
-    active, beginTurn, buildState, canProne, distance, downedCharacter, effectiveMaxHp, grantTemporaryHp, hasActiveAlly,
-    moveToward, nearestTarget, packTactics, refreshReaction, refreshStartOfTurn, sizeAtMost, targetPriority, terminateTurn,
+    active, attackResourceAvailable, beginTurn, buildState, canProne, distance, downedCharacter, effectiveMaxHp,
+    grantTemporaryHp, hasActiveAlly, moveToward, nearestTarget, packTactics, rechargeStart, refreshReaction,
+    refreshStartOfTurn, sizeAtMost, spendAttackResource, targetPriority, terminateTurn,
   };
 })();
