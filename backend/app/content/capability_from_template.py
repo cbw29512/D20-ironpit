@@ -67,6 +67,7 @@ def _attack(attack: WeaponAttack) -> dict[str, object]:
         "attack_ability_modifier": attack.attack_ability_modifier,
         "rage_eligible": attack.rage_eligible,
         "effects": effects, "forbid_target_grappled_by_self": attack.forbid_target_grappled_by_self,
+        "resource_id": attack.resource_id, "resource_cost": attack.resource_cost,
     }
     if attack.conditional_attack_modifiers:
         result["conditional_attack_modifiers"] = [
