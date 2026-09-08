@@ -137,12 +137,12 @@
       "demand_count": 1,
       "id": "arcane-recovery",
       "kinds": [
-        "base-feature"
+        "arena-ignored"
       ],
       "owners": [
         "wizard/base"
       ],
-      "status": "planned"
+      "status": "arena_out_of_scope"
     },
     {
       "demand_count": 1,
@@ -4951,8 +4951,8 @@
   },
   "schema_version": 1,
   "summary": {
-    "arena_out_of_scope": 28,
-    "planned": 364,
+    "arena_out_of_scope": 29,
+    "planned": 363,
     "supported": 52
   }
 }

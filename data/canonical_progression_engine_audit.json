@@ -9,10 +9,6 @@
       "status": "planned"
     },
     {
-      "id": "arcane-recovery",
-      "status": "planned"
-    },
-    {
       "id": "archdruid",
       "status": "planned"
     },
@@ -4075,25 +4071,17 @@
     },
     {
       "class_id": "wizard",
-      "first_blocked_level": 1,
+      "first_blocked_level": 3,
       "hero_name": "Elian Starweaver",
-      "level_1_engine_ready": false,
+      "level_1_engine_ready": true,
       "levels": [
         {
           "arena_ignored_introduced": [
+            "arcane-recovery",
             "ritual-adept"
           ],
-          "blockers": [
-            {
-              "id": "arcane-recovery",
-              "status": "planned"
-            }
-          ],
+          "blockers": [],
           "introduced_combat_features": [
-            {
-              "id": "arcane-recovery",
-              "status": "planned"
-            },
             {
               "id": "wizard-spellcasting",
               "status": "supported"
@@ -4385,12 +4373,12 @@
   "summary": {
     "canonical_classes": 12,
     "feature_statuses": {
-      "planned": 185,
+      "planned": 184,
       "supported": 42
     },
-    "level_1_engine_ready_classes": 7,
+    "level_1_engine_ready_classes": 8,
     "level_slots": 240,
-    "unique_blocking_features": 185,
-    "unique_combat_features": 227
+    "unique_blocking_features": 184,
+    "unique_combat_features": 226
   }
 }
