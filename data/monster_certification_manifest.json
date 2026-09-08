@@ -4,8 +4,8 @@
   "generation_policy": "Derived automatically from canonical SRD rows plus runtime/source audit readiness.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 120,
-    "blocked": 210
+    "public_ready": 124,
+    "blocked": 206
   },
   "monsters": [
     {
@@ -4126,10 +4126,9 @@
       "monster_name": "Giant Shark",
       "srd_source_page": 353,
       "srd_source_reference": "SRD 5.2.1 p. 353",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-giant-shark",
       "detected_combat_mechanics": [
         "attack-roll",
-        "conditional-attack-modifier",
         "multiattack",
         "trait"
       ],
@@ -4138,17 +4137,12 @@
         "multiattack",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "conditional-attack-modifier"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "conditional-attack-modifier",
-        "monster-combat-mechanics-not-compiled"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-giant-spider",
@@ -5213,27 +5207,21 @@
       "monster_name": "Hunter Shark",
       "srd_source_page": 356,
       "srd_source_reference": "SRD 5.2.1 p. 356",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-hunter-shark",
       "detected_combat_mechanics": [
         "attack-roll",
-        "conditional-attack-modifier",
         "trait"
       ],
       "supported_mechanics": [
         "attack-roll",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "conditional-attack-modifier"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "conditional-attack-modifier",
-        "monster-combat-mechanics-not-compiled"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-hydra",
@@ -6708,27 +6696,21 @@
       "monster_name": "Piranha",
       "srd_source_page": 358,
       "srd_source_reference": "SRD 5.2.1 p. 358",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-piranha",
       "detected_combat_mechanics": [
         "attack-roll",
-        "conditional-attack-modifier",
         "trait"
       ],
       "supported_mechanics": [
         "attack-roll",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "conditional-attack-modifier"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "conditional-attack-modifier",
-        "monster-combat-mechanics-not-compiled"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-pirate",
@@ -8469,10 +8451,9 @@
       "monster_name": "Swarm of Piranhas",
       "srd_source_page": 362,
       "srd_source_reference": "SRD 5.2.1 p. 362",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-swarm-of-piranhas",
       "detected_combat_mechanics": [
         "attack-roll",
-        "conditional-attack-modifier",
         "damage-or-condition-defense",
         "trait"
       ],
@@ -8481,17 +8462,12 @@
         "damage-or-condition-defense",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "conditional-attack-modifier"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "conditional-attack-modifier",
-        "monster-combat-mechanics-not-compiled"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-swarm-of-rats",

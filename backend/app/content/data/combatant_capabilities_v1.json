@@ -13423,6 +13423,315 @@
   },
   {
     "schema_version": 1,
+    "id": "srd-giant-shark",
+    "name": "Giant Shark",
+    "archetype": "source-compiled monster",
+    "challenge_rating": "5",
+    "kind": "monster",
+    "size": "huge",
+    "armor_class": 13,
+    "max_hp": 92,
+    "speed_ft": 5,
+    "movement_modes": {
+      "walk_ft": 5,
+      "fly_ft": 0,
+      "climb_ft": 0,
+      "swim_ft": 60,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": 3,
+    "progression_features": {
+      "critical_hit_minimum": 20,
+      "initiative_advantage": false,
+      "athletics_advantage": false,
+      "heroic_warrior": false,
+      "studied_attacks": false,
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
+    },
+    "attacks": [
+      {
+        "id": "srd-giant-shark-bite",
+        "name": "Bite",
+        "weapon_id": "srd-giant-shark-bite-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 9,
+        "damage": {
+          "count": 3,
+          "size": 10,
+          "bonus": 6
+        },
+        "damage_type": "piercing",
+        "animation": "strike",
+        "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "effects": [],
+        "forbid_target_grappled_by_self": false
+      }
+    ],
+    "primary_attack_id": "srd-giant-shark-bite",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 9,
+      "damage": 7
+    },
+    "attack_action": {
+      "id": "srd-giant-shark-multiattack",
+      "name": "Multiattack",
+      "is_attack_action": false,
+      "slots": [
+        {
+          "attack_ids": [
+            "srd-giant-shark-bite"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "srd-giant-shark-bite"
+          ],
+          "save_action_ids": []
+        }
+      ]
+    },
+    "save_actions": [],
+    "spell_save_actions": [],
+    "defensive_spell_actions": [],
+    "healing_actions": [],
+    "condition_removal_actions": [],
+    "saving_throw_bonuses": {
+      "strength": 6,
+      "dexterity": 0,
+      "constitution": 5,
+      "intelligence": -5,
+      "wisdom": 0,
+      "charisma": -3
+    },
+    "skill_bonuses": {},
+    "combat_traits": [],
+    "source_trait_names": [
+      "Water Breathing"
+    ],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [],
+    "source_limited_use_names": [],
+    "source_legendary_action_names": [],
+    "fighting_styles": [],
+    "weapon_masteries": [],
+    "damage_resistances": [],
+    "damage_vulnerabilities": [],
+    "damage_immunities": [],
+    "condition_immunities": [],
+    "wearing_heavy_armor": false,
+    "rage_damage_bonus": 0,
+    "resources": [],
+    "visual": {
+      "armor": "natural",
+      "main_hand": "Bite",
+      "body_style": "monster"
+    },
+    "source": "SRD 5.2.1 p. 353",
+    "unsupported_capabilities": []
+  },
+  {
+    "schema_version": 1,
+    "id": "srd-hunter-shark",
+    "name": "Hunter Shark",
+    "archetype": "source-compiled monster",
+    "challenge_rating": "2",
+    "kind": "monster",
+    "size": "large",
+    "armor_class": 12,
+    "max_hp": 45,
+    "speed_ft": 5,
+    "movement_modes": {
+      "walk_ft": 5,
+      "fly_ft": 0,
+      "climb_ft": 0,
+      "swim_ft": 40,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": 2,
+    "progression_features": {
+      "critical_hit_minimum": 20,
+      "initiative_advantage": false,
+      "athletics_advantage": false,
+      "heroic_warrior": false,
+      "studied_attacks": false,
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
+    },
+    "attacks": [
+      {
+        "id": "srd-hunter-shark-bite",
+        "name": "Bite",
+        "weapon_id": "srd-hunter-shark-bite-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 6,
+        "damage": {
+          "count": 3,
+          "size": 6,
+          "bonus": 4
+        },
+        "damage_type": "piercing",
+        "animation": "strike",
+        "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "effects": [],
+        "forbid_target_grappled_by_self": false
+      }
+    ],
+    "primary_attack_id": "srd-hunter-shark-bite",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 6,
+      "damage": 5
+    },
+    "save_actions": [],
+    "spell_save_actions": [],
+    "defensive_spell_actions": [],
+    "healing_actions": [],
+    "condition_removal_actions": [],
+    "saving_throw_bonuses": {
+      "strength": 4,
+      "dexterity": 2,
+      "constitution": 2,
+      "intelligence": -5,
+      "wisdom": 0,
+      "charisma": -3
+    },
+    "skill_bonuses": {},
+    "combat_traits": [],
+    "source_trait_names": [
+      "Water Breathing"
+    ],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [],
+    "source_limited_use_names": [],
+    "source_legendary_action_names": [],
+    "fighting_styles": [],
+    "weapon_masteries": [],
+    "damage_resistances": [],
+    "damage_vulnerabilities": [],
+    "damage_immunities": [],
+    "condition_immunities": [],
+    "wearing_heavy_armor": false,
+    "rage_damage_bonus": 0,
+    "resources": [],
+    "visual": {
+      "armor": "natural",
+      "main_hand": "Bite",
+      "body_style": "monster"
+    },
+    "source": "SRD 5.2.1 p. 356",
+    "unsupported_capabilities": []
+  },
+  {
+    "schema_version": 1,
+    "id": "srd-piranha",
+    "name": "Piranha",
+    "archetype": "source-compiled monster",
+    "challenge_rating": "0",
+    "kind": "monster",
+    "size": "tiny",
+    "armor_class": 13,
+    "max_hp": 1,
+    "speed_ft": 5,
+    "movement_modes": {
+      "walk_ft": 5,
+      "fly_ft": 0,
+      "climb_ft": 0,
+      "swim_ft": 40,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": 3,
+    "progression_features": {
+      "critical_hit_minimum": 20,
+      "initiative_advantage": false,
+      "athletics_advantage": false,
+      "heroic_warrior": false,
+      "studied_attacks": false,
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
+    },
+    "attacks": [
+      {
+        "id": "srd-piranha-bite",
+        "name": "Bite",
+        "weapon_id": "srd-piranha-bite-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 5,
+        "fixed_damage": 1,
+        "damage_type": "piercing",
+        "animation": "strike",
+        "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "effects": [],
+        "forbid_target_grappled_by_self": false
+      }
+    ],
+    "primary_attack_id": "srd-piranha-bite",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": -2,
+      "damage": 0
+    },
+    "save_actions": [],
+    "spell_save_actions": [],
+    "defensive_spell_actions": [],
+    "healing_actions": [],
+    "condition_removal_actions": [],
+    "saving_throw_bonuses": {
+      "strength": -4,
+      "dexterity": 3,
+      "constitution": -1,
+      "intelligence": -5,
+      "wisdom": -2,
+      "charisma": -4
+    },
+    "skill_bonuses": {},
+    "combat_traits": [],
+    "source_trait_names": [
+      "Water Breathing"
+    ],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [],
+    "source_limited_use_names": [],
+    "source_legendary_action_names": [],
+    "fighting_styles": [],
+    "weapon_masteries": [],
+    "damage_resistances": [],
+    "damage_vulnerabilities": [],
+    "damage_immunities": [],
+    "condition_immunities": [],
+    "wearing_heavy_armor": false,
+    "rage_damage_bonus": 0,
+    "resources": [],
+    "visual": {
+      "armor": "natural",
+      "main_hand": "Bite",
+      "body_style": "monster"
+    },
+    "source": "SRD 5.2.1 p. 358",
+    "unsupported_capabilities": []
+  },
+  {
+    "schema_version": 1,
     "id": "srd-reef-shark",
     "name": "Reef Shark",
     "archetype": "source-compiled monster",
@@ -13647,6 +13956,133 @@
       "body_style": "monster"
     },
     "source": "SRD 5.2.1 p. 361",
+    "unsupported_capabilities": []
+  },
+  {
+    "schema_version": 1,
+    "id": "srd-swarm-of-piranhas",
+    "name": "Swarm of Piranhas",
+    "archetype": "source-compiled monster",
+    "challenge_rating": "1",
+    "kind": "monster",
+    "size": "medium",
+    "armor_class": 13,
+    "max_hp": 28,
+    "speed_ft": 5,
+    "movement_modes": {
+      "walk_ft": 5,
+      "fly_ft": 0,
+      "climb_ft": 0,
+      "swim_ft": 40,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": 3,
+    "progression_features": {
+      "critical_hit_minimum": 20,
+      "initiative_advantage": false,
+      "athletics_advantage": false,
+      "heroic_warrior": false,
+      "studied_attacks": false,
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
+    },
+    "attacks": [
+      {
+        "id": "srd-swarm-of-piranhas-bites",
+        "name": "Bites",
+        "weapon_id": "srd-swarm-of-piranhas-bites-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 5,
+        "damage": {
+          "count": 2,
+          "size": 4,
+          "bonus": 3
+        },
+        "damage_type": "piercing",
+        "animation": "strike",
+        "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "effects": [
+          {
+            "kind": "damage",
+            "source": "conditional:attacker_bloodied",
+            "dice": {
+              "count": 1,
+              "size": 4,
+              "bonus": 3
+            },
+            "damage_type": "piercing",
+            "trigger": "attacker_bloodied",
+            "mode": "replace_weapon"
+          }
+        ],
+        "forbid_target_grappled_by_self": false
+      }
+    ],
+    "primary_attack_id": "srd-swarm-of-piranhas-bites",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 3,
+      "damage": 2
+    },
+    "save_actions": [],
+    "spell_save_actions": [],
+    "defensive_spell_actions": [],
+    "healing_actions": [],
+    "condition_removal_actions": [],
+    "saving_throw_bonuses": {
+      "strength": 1,
+      "dexterity": 3,
+      "constitution": -1,
+      "intelligence": -5,
+      "wisdom": -2,
+      "charisma": -4
+    },
+    "skill_bonuses": {},
+    "combat_traits": [
+      "swarm"
+    ],
+    "source_trait_names": [
+      "Swarm",
+      "Water Breathing"
+    ],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [],
+    "source_limited_use_names": [],
+    "source_legendary_action_names": [],
+    "fighting_styles": [],
+    "weapon_masteries": [],
+    "damage_resistances": [
+      "bludgeoning",
+      "piercing",
+      "slashing"
+    ],
+    "damage_vulnerabilities": [],
+    "damage_immunities": [],
+    "condition_immunities": [
+      "charmed",
+      "frightened",
+      "grappled",
+      "paralyzed",
+      "petrified",
+      "prone",
+      "restrained",
+      "stunned"
+    ],
+    "wearing_heavy_armor": false,
+    "rage_damage_bonus": 0,
+    "resources": [],
+    "visual": {
+      "armor": "natural",
+      "main_hand": "Bites",
+      "body_style": "monster"
+    },
+    "source": "SRD 5.2.1 p. 362",
     "unsupported_capabilities": []
   },
   {
