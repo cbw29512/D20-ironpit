@@ -3,11 +3,11 @@ from app.combat.grapple import apply_grapple
 from app.combat.state import build_combatant_state
 from app.combat.timed_conditions import apply_timed_condition
 from app.combat.zero_hp import apply_damage
-from app.main import get_arena_roster
+from app.content.roster import build_arena_roster
 
 
 def _template(item_id: str):
-    roster = get_arena_roster()
+    roster = build_arena_roster()
     return next(item for item in [*roster.characters, *roster.monsters] if item.id == item_id).model_copy(deep=True)
 
 
