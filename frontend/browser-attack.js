@@ -11,7 +11,7 @@
   const B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2 || { activate: () => false, attackAdvantage: () => 0, attacksAgainstAdvantage: () => 0 };
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || {
     attacksAgainstAdvantage: () => 0, consumeAttacksAgainstAdvantage: () => 0, nextAttackAgainstAdvantage: () => 0,
-    consumeNextAttackAgainstAdvantage: () => 0, effectiveArmorClass: (state) => state.template.armor_class,
+    consumeNextAttackAgainstAdvantage: () => 0, nextAttackMadeDisadvantage: () => 0, consumeNextAttackMadeDisadvantage: () => 0, effectiveArmorClass: (state) => state.template.armor_class,
     effectiveSpeed: (state) => state.template.speed_ft, applyD20Bonus: (_state, _kind, roll) => roll,
   };
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION, CAM = () => window.IRON_PIT_BROWSER_CONDITIONAL_ATTACK || { advantage: () => 0, disadvantage: () => 0 }, I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
@@ -61,10 +61,10 @@
     const advantage = (extra.advantage || 0) + conditions.advantage + bloodiedFury(attacker.state, attack) + CAM().advantage(attacker.state, target.state, attack)
       + B2().attackAdvantage(attacker.state, attack) + M().nextAttackAgainstAdvantage(attacker.state, target.combatant_id);
     const closeThreat = attack.kind === "ranged" && rangedCloseThreat(attacker, target, distance, extra.setup);
-    const mode = R().attackMode(attack, distance, advantage, conditions.disadvantage + SAP().disadvantage(attacker.state) + CAM().disadvantage(attacker.state, target.state, attack), closeThreat);
+    const mode = R().attackMode(attack, distance, advantage, conditions.disadvantage + SAP().disadvantage(attacker.state) + CAM().disadvantage(attacker.state, target.state, attack) + M().nextAttackMadeDisadvantage(attacker.state), closeThreat);
     const heroic = HI().rerollFailedAttack(attacker.state, R().d20(attack.bonus, mode), M().effectiveArmorClass(target.state));
     const attackRoll = M().applyD20Bonus(attacker.state, "attack-roll-bonus-die", heroic.roll);
-    M().consumeNextAttackAgainstAdvantage(attacker.state, target.combatant_id); SAP().consume(attacker.state);
+    M().consumeNextAttackAgainstAdvantage(attacker.state, target.combatant_id); M().consumeNextAttackMadeDisadvantage(attacker.state); SAP().consume(attacker.state);
     M().consumeAttacksAgainstAdvantage(target.state); window.IRON_PIT_BROWSER_RAGE?.extendFromAttack(attacker.state, round);
     if (spendAction) E().spend(attacker.state, "action");
     const redirected = window.IRON_PIT_BROWSER_REACTIONS?.redirectAttack?.(target, extra.setup) || null, actualTarget = redirected || target;
@@ -110,7 +110,7 @@
         const appliedTotal = adjustedDamage(actualTarget.state, rawGraze, attack.damageType, false);
         damageComponents = [{ source: `${attack.name} (Graze)`, notation: String(rawGraze), rolls: [], modifier: 0,
           damage_type: attack.damageType, total: rawGraze, applied_total: appliedTotal }];
-        damageRoll = { notation: String(rawGraze), rolls: [], modifier: 0, selected_roll: null, mode: "normal", total: appliedTotal };
+        damageRoll = { notation: String(rawGraze), rolls, modifier: attack.damageBonus || 0, total: appliedTotal };
         const affectedStates = states(extra.setup), appliedTypes = appliedTotal > 0 ? [attack.damageType] : [];
         damageOutcome = applyDamage(actualTarget.state, appliedTotal, false, appliedTypes, affectedStates);
         window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(actualTarget.state); C()?.endIfIncapacitated(actualTarget.state, affectedStates);
