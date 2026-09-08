@@ -14,7 +14,6 @@ window.IRON_PIT_BROWSER_MODIFIERS = {
   removeSource: () => {},
 };
 window.IRON_PIT_BROWSER_CONDITION_RULES = { autoFailStrDex: () => false, incapacitated: (state) => Boolean(state.is_unconscious) };
-window.IRON_PIT_BROWSER_CONDITION_IMMITY = { immune: () => false };
 window.IRON_PIT_BROWSER_CONDITION_IMMUNITY = { immune: () => false };
 load("browser-save-helpers.js");
 load("browser-saves.js");
