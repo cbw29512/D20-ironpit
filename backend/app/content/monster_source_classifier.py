@@ -8,6 +8,7 @@ from app.content.monster_defense_source_audit import parse_defense_profile
 from app.content.monster_limited_use_source_audit import parse_limited_use_names
 from app.content.monster_reaction_source_audit import parse_parry_ac_bonus, parse_reaction_names, parse_redirect_attack_range
 from app.content.monster_simple_control_rider import has_unmodeled_control_text
+from app.content.monster_simple_hit_modifier_rider import strip_modeled_hit_modifier_riders
 from app.content.monster_spellcasting_source_audit import arena_neutral_spellcasting, spellcasting_fingerprint
 from app.content.monster_trait_source_audit import _ARENA_NEUTRAL_TRAITS, _MODELED_TRAITS, parse_trait_names
 
@@ -21,10 +22,10 @@ _SUPPORTED_BLOODIED_REPLACEMENT = re.compile(
     rf"(?:{_DAMAGE_TYPES})\s+damage\s+if\s+the\s+[a-z][a-z -]*\s+is\s+Bloodied\b",
     re.I,
 )
+_SUPPORTED_FIXED_RIDER = re.compile(rf"\bplus\s+\d+\s+(?:{_DAMAGE_TYPES})\s+damage\b", re.I)
 _HIDDEN_RIDER = re.compile(
     r"\b(?:Speed decreases|attaches?|detaches?|next attack roll|Hit or Miss:)\b"
-    r"|\bdamage,?\s+or\s+\d+\s*\([^)]*\)\s+\w+\s+damage\s+if\b"
-    rf"|\bplus\s+\d+\s+(?:{_DAMAGE_TYPES})\s+damage\b",
+    r"|\bdamage,?\s+or\s+\d+\s*\([^)]*\)\s+\w+\s+damage\s+if\b",
     re.I,
 )
 _ATTACK_ROLL = re.compile(r"\b(?:Melee|Ranged|Melee or Ranged)\s+Attack Roll:", re.I)
@@ -47,7 +48,10 @@ def _reaction_is_modeled(row: dict[str, object], reactions: list[str]) -> bool:
 
 
 def _unmodeled_action_rider(actions: str) -> bool:
-    return bool(_HIDDEN_RIDER.search(_SUPPORTED_BLOODIED_REPLACEMENT.sub("damage", actions)))
+    clean = _SUPPORTED_BLOODIED_REPLACEMENT.sub("damage", actions)
+    clean = _SUPPORTED_FIXED_RIDER.sub("", clean)
+    clean = strip_modeled_hit_modifier_riders(clean)
+    return bool(_HIDDEN_RIDER.search(clean))
 
 
 def source_blockers(row: dict[str, object], monster_names: set[str]) -> list[str]:
