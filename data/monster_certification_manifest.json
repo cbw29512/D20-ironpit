@@ -61,7 +61,6 @@
         "legendary",
         "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "spellcasting",
         "trait"
@@ -76,7 +75,6 @@
       "unsupported_mechanics": [
         "legendary",
         "limited-use",
-        "save-or-complex-action",
         "spellcasting"
       ],
       "python_certification_status": "blocked",
@@ -87,7 +85,6 @@
         "legendary",
         "limited-use",
         "monster-combat-mechanics-not-compiled",
-        "save-or-complex-action",
         "spellcasting"
       ]
     },
@@ -103,7 +100,6 @@
         "legendary",
         "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "spellcasting",
         "trait",
@@ -119,7 +115,6 @@
       "unsupported_mechanics": [
         "legendary",
         "limited-use",
-        "save-or-complex-action",
         "spellcasting",
         "trait-parse"
       ],
@@ -131,7 +126,6 @@
         "legendary",
         "limited-use",
         "monster-combat-mechanics-not-compiled",
-        "save-or-complex-action",
         "spellcasting",
         "trait-parse"
       ]
@@ -328,7 +322,6 @@
         "legendary",
         "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "spellcasting",
         "trait"
@@ -343,7 +336,6 @@
       "unsupported_mechanics": [
         "legendary",
         "limited-use",
-        "save-or-complex-action",
         "spellcasting"
       ],
       "python_certification_status": "blocked",
@@ -354,7 +346,6 @@
         "legendary",
         "limited-use",
         "monster-combat-mechanics-not-compiled",
-        "save-or-complex-action",
         "spellcasting"
       ]
     },
@@ -370,7 +361,6 @@
         "legendary",
         "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "spellcasting",
         "trait",
@@ -386,7 +376,6 @@
       "unsupported_mechanics": [
         "legendary",
         "limited-use",
-        "save-or-complex-action",
         "spellcasting",
         "trait-parse"
       ],
@@ -398,7 +387,6 @@
         "legendary",
         "limited-use",
         "monster-combat-mechanics-not-compiled",
-        "save-or-complex-action",
         "spellcasting",
         "trait-parse"
       ]
@@ -463,7 +451,6 @@
         "legendary",
         "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
@@ -476,8 +463,7 @@
       ],
       "unsupported_mechanics": [
         "legendary",
-        "limited-use",
-        "save-or-complex-action"
+        "limited-use"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -486,8 +472,7 @@
       "blockers": [
         "legendary",
         "limited-use",
-        "monster-combat-mechanics-not-compiled",
-        "save-or-complex-action"
+        "monster-combat-mechanics-not-compiled"
       ]
     },
     {
@@ -560,7 +545,6 @@
         "legendary",
         "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "spellcasting",
         "trait"
@@ -575,7 +559,6 @@
       "unsupported_mechanics": [
         "legendary",
         "limited-use",
-        "save-or-complex-action",
         "spellcasting"
       ],
       "python_certification_status": "blocked",
@@ -586,7 +569,6 @@
         "legendary",
         "limited-use",
         "monster-combat-mechanics-not-compiled",
-        "save-or-complex-action",
         "spellcasting"
       ]
     },
@@ -602,7 +584,6 @@
         "legendary",
         "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "spellcasting",
         "trait",
@@ -618,7 +599,6 @@
       "unsupported_mechanics": [
         "legendary",
         "limited-use",
-        "save-or-complex-action",
         "spellcasting",
         "trait-parse"
       ],
@@ -630,7 +610,6 @@
         "legendary",
         "limited-use",
         "monster-combat-mechanics-not-compiled",
-        "save-or-complex-action",
         "spellcasting",
         "trait-parse"
       ]
@@ -827,7 +806,6 @@
         "legendary",
         "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "spellcasting",
         "trait"
@@ -842,7 +820,6 @@
       "unsupported_mechanics": [
         "legendary",
         "limited-use",
-        "save-or-complex-action",
         "spellcasting"
       ],
       "python_certification_status": "blocked",
@@ -853,7 +830,6 @@
         "legendary",
         "limited-use",
         "monster-combat-mechanics-not-compiled",
-        "save-or-complex-action",
         "spellcasting"
       ]
     },
@@ -869,7 +845,6 @@
         "legendary",
         "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "spellcasting",
         "trait",
@@ -885,7 +860,6 @@
       "unsupported_mechanics": [
         "legendary",
         "limited-use",
-        "save-or-complex-action",
         "spellcasting",
         "trait-parse"
       ],
@@ -897,7 +871,6 @@
         "legendary",
         "limited-use",
         "monster-combat-mechanics-not-compiled",
-        "save-or-complex-action",
         "spellcasting",
         "trait-parse"
       ]
@@ -962,7 +935,6 @@
         "legendary",
         "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
@@ -975,8 +947,7 @@
       ],
       "unsupported_mechanics": [
         "legendary",
-        "limited-use",
-        "save-or-complex-action"
+        "limited-use"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -985,8 +956,7 @@
       "blockers": [
         "legendary",
         "limited-use",
-        "monster-combat-mechanics-not-compiled",
-        "save-or-complex-action"
+        "monster-combat-mechanics-not-compiled"
       ]
     },
     {
@@ -1070,7 +1040,6 @@
         "attack-roll",
         "condition-or-control",
         "conditional-attack-modifier",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
@@ -1081,7 +1050,6 @@
       "unsupported_mechanics": [
         "condition-or-control",
         "conditional-attack-modifier",
-        "save-or-complex-action",
         "trait"
       ],
       "python_certification_status": "blocked",
@@ -1092,7 +1060,6 @@
         "condition-or-control",
         "conditional-attack-modifier",
         "monster-combat-mechanics-not-compiled",
-        "save-or-complex-action",
         "trait"
       ]
     },
@@ -1647,12 +1614,11 @@
       "monster_name": "Black Dragon Wyrmling",
       "srd_source_page": 263,
       "srd_source_reference": "SRD 5.2.1 p. 263",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-black-dragon-wyrmling",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
@@ -1664,15 +1630,14 @@
         "trait"
       ],
       "unsupported_mechanics": [
-        "save-or-complex-action"
+        "source-save-action-count-mismatch"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-compiled",
-        "save-or-complex-action"
+        "source-save-action-count-mismatch"
       ]
     },
     {
@@ -1762,12 +1727,11 @@
       "monster_name": "Blue Dragon Wyrmling",
       "srd_source_page": 266,
       "srd_source_reference": "SRD 5.2.1 p. 266",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-blue-dragon-wyrmling",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action"
       ],
       "supported_mechanics": [
@@ -1777,15 +1741,14 @@
         "saving-throw-action"
       ],
       "unsupported_mechanics": [
-        "save-or-complex-action"
+        "source-save-action-count-mismatch"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-compiled",
-        "save-or-complex-action"
+        "source-save-action-count-mismatch"
       ]
     },
     {
@@ -2152,7 +2115,6 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "unsupported-action-rider"
       ],
@@ -2162,7 +2124,6 @@
         "saving-throw-action"
       ],
       "unsupported_mechanics": [
-        "save-or-complex-action",
         "unsupported-action-rider"
       ],
       "python_certification_status": "blocked",
@@ -2171,7 +2132,6 @@
       "public_ready_status": "blocked",
       "blockers": [
         "monster-combat-mechanics-not-compiled",
-        "save-or-complex-action",
         "unsupported-action-rider"
       ]
     },
@@ -2780,12 +2740,11 @@
       "monster_name": "Dragon Turtle",
       "srd_source_page": 281,
       "srd_source_reference": "SRD 5.2.1 p. 281",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-dragon-turtle",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
@@ -2797,15 +2756,14 @@
         "trait"
       ],
       "unsupported_mechanics": [
-        "save-or-complex-action"
+        "source-save-action-count-mismatch"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-compiled",
-        "save-or-complex-action"
+        "source-save-action-count-mismatch"
       ]
     },
     {
@@ -4541,12 +4499,11 @@
       "monster_name": "Green Dragon Wyrmling",
       "srd_source_page": 293,
       "srd_source_reference": "SRD 5.2.1 p. 293",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-green-dragon-wyrmling",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
@@ -4558,15 +4515,14 @@
         "trait"
       ],
       "unsupported_mechanics": [
-        "save-or-complex-action"
+        "source-save-action-count-mismatch"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-compiled",
-        "save-or-complex-action"
+        "source-save-action-count-mismatch"
       ]
     },
     {
@@ -4833,12 +4789,11 @@
       "monster_name": "Hell Hound",
       "srd_source_page": 297,
       "srd_source_reference": "SRD 5.2.1 p. 297",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-hell-hound",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
@@ -4850,15 +4805,14 @@
         "trait"
       ],
       "unsupported_mechanics": [
-        "save-or-complex-action"
+        "source-save-action-count-mismatch"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-compiled",
-        "save-or-complex-action"
+        "source-save-action-count-mismatch"
       ]
     },
     {
@@ -5192,7 +5146,6 @@
         "attack-roll",
         "damage-or-condition-defense",
         "limited-use",
-        "save-or-complex-action",
         "saving-throw-action",
         "spellcasting",
         "trait"
@@ -5204,7 +5157,6 @@
       ],
       "unsupported_mechanics": [
         "limited-use",
-        "save-or-complex-action",
         "spellcasting",
         "trait"
       ],
@@ -5215,7 +5167,6 @@
       "blockers": [
         "limited-use",
         "monster-combat-mechanics-not-compiled",
-        "save-or-complex-action",
         "spellcasting",
         "trait"
       ]
@@ -5338,7 +5289,6 @@
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
@@ -5349,7 +5299,6 @@
         "saving-throw-action"
       ],
       "unsupported_mechanics": [
-        "save-or-complex-action",
         "trait"
       ],
       "python_certification_status": "blocked",
@@ -5358,7 +5307,6 @@
       "public_ready_status": "blocked",
       "blockers": [
         "monster-combat-mechanics-not-compiled",
-        "save-or-complex-action",
         "trait"
       ]
     },
@@ -5695,7 +5643,6 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
@@ -5705,7 +5652,6 @@
         "saving-throw-action"
       ],
       "unsupported_mechanics": [
-        "save-or-complex-action",
         "trait"
       ],
       "python_certification_status": "blocked",
@@ -5714,7 +5660,6 @@
       "public_ready_status": "blocked",
       "blockers": [
         "monster-combat-mechanics-not-compiled",
-        "save-or-complex-action",
         "trait"
       ]
     },
@@ -7066,12 +7011,11 @@
       "monster_name": "Red Dragon Wyrmling",
       "srd_source_page": 318,
       "srd_source_reference": "SRD 5.2.1 p. 318",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-red-dragon-wyrmling",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action"
       ],
       "supported_mechanics": [
@@ -7081,15 +7025,14 @@
         "saving-throw-action"
       ],
       "unsupported_mechanics": [
-        "save-or-complex-action"
+        "source-save-action-count-mismatch"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-compiled",
-        "save-or-complex-action"
+        "source-save-action-count-mismatch"
       ]
     },
     {
@@ -7381,7 +7324,6 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
@@ -7391,7 +7333,6 @@
       ],
       "unsupported_mechanics": [
         "condition-or-control",
-        "save-or-complex-action",
         "trait"
       ],
       "python_certification_status": "blocked",
@@ -7401,7 +7342,6 @@
       "blockers": [
         "condition-or-control",
         "monster-combat-mechanics-not-compiled",
-        "save-or-complex-action",
         "trait"
       ]
     },
@@ -8123,7 +8063,6 @@
         "condition-or-control",
         "damage-or-condition-defense",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "spellcasting",
         "trait"
@@ -8137,7 +8076,6 @@
       ],
       "unsupported_mechanics": [
         "condition-or-control",
-        "save-or-complex-action",
         "spellcasting"
       ],
       "python_certification_status": "blocked",
@@ -8147,7 +8085,6 @@
       "blockers": [
         "condition-or-control",
         "monster-combat-mechanics-not-compiled",
-        "save-or-complex-action",
         "spellcasting"
       ]
     },
@@ -8160,10 +8097,8 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
-        "condition-or-control",
         "damage-or-condition-defense",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "spellcasting",
         "trait"
@@ -8176,8 +8111,6 @@
       ],
       "unsupported_mechanics": [
         "bonus-action",
-        "condition-or-control",
-        "save-or-complex-action",
         "spellcasting",
         "trait"
       ],
@@ -8187,9 +8120,7 @@
       "public_ready_status": "blocked",
       "blockers": [
         "bonus-action",
-        "condition-or-control",
         "monster-combat-mechanics-not-compiled",
-        "save-or-complex-action",
         "spellcasting",
         "trait"
       ]
@@ -9203,12 +9134,11 @@
       "monster_name": "White Dragon Wyrmling",
       "srd_source_page": 339,
       "srd_source_reference": "SRD 5.2.1 p. 339",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-white-dragon-wyrmling",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
@@ -9220,15 +9150,14 @@
         "trait"
       ],
       "unsupported_mechanics": [
-        "save-or-complex-action"
+        "source-save-action-count-mismatch"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-compiled",
-        "save-or-complex-action"
+        "source-save-action-count-mismatch"
       ]
     },
     {
@@ -9299,11 +9228,10 @@
       "monster_name": "Winter Wolf",
       "srd_source_page": 342,
       "srd_source_reference": "SRD 5.2.1 p. 342",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-winter-wolf",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
@@ -9314,15 +9242,14 @@
         "trait"
       ],
       "unsupported_mechanics": [
-        "save-or-complex-action"
+        "source-save-action-count-mismatch"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-compiled",
-        "save-or-complex-action"
+        "source-save-action-count-mismatch"
       ]
     },
     {
@@ -9441,12 +9368,11 @@
       "monster_name": "Young Black Dragon",
       "srd_source_page": 264,
       "srd_source_reference": "SRD 5.2.1 p. 264",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-young-black-dragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
@@ -9458,15 +9384,14 @@
         "trait"
       ],
       "unsupported_mechanics": [
-        "save-or-complex-action"
+        "source-save-action-count-mismatch"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-compiled",
-        "save-or-complex-action"
+        "source-save-action-count-mismatch"
       ]
     },
     {
@@ -9474,12 +9399,11 @@
       "monster_name": "Young Blue Dragon",
       "srd_source_page": 266,
       "srd_source_reference": "SRD 5.2.1 p. 266",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-young-blue-dragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action"
       ],
       "supported_mechanics": [
@@ -9489,15 +9413,14 @@
         "saving-throw-action"
       ],
       "unsupported_mechanics": [
-        "save-or-complex-action"
+        "source-save-action-count-mismatch"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-compiled",
-        "save-or-complex-action"
+        "source-save-action-count-mismatch"
       ]
     },
     {
@@ -9639,12 +9562,11 @@
       "monster_name": "Young Green Dragon",
       "srd_source_page": 293,
       "srd_source_reference": "SRD 5.2.1 p. 293",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-young-green-dragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
@@ -9656,15 +9578,14 @@
         "trait"
       ],
       "unsupported_mechanics": [
-        "save-or-complex-action"
+        "source-save-action-count-mismatch"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-compiled",
-        "save-or-complex-action"
+        "source-save-action-count-mismatch"
       ]
     },
     {
@@ -9672,12 +9593,11 @@
       "monster_name": "Young Red Dragon",
       "srd_source_page": 318,
       "srd_source_reference": "SRD 5.2.1 p. 318",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-young-red-dragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action"
       ],
       "supported_mechanics": [
@@ -9687,15 +9607,14 @@
         "saving-throw-action"
       ],
       "unsupported_mechanics": [
-        "save-or-complex-action"
+        "source-save-action-count-mismatch"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-compiled",
-        "save-or-complex-action"
+        "source-save-action-count-mismatch"
       ]
     },
     {
@@ -9737,12 +9656,11 @@
       "monster_name": "Young White Dragon",
       "srd_source_page": 340,
       "srd_source_reference": "SRD 5.2.1 p. 340",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-young-white-dragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
@@ -9754,15 +9672,14 @@
         "trait"
       ],
       "unsupported_mechanics": [
-        "save-or-complex-action"
+        "source-save-action-count-mismatch"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-compiled",
-        "save-or-complex-action"
+        "source-save-action-count-mismatch"
       ]
     },
     {
