@@ -25,6 +25,8 @@ load("browser-rolls.js");
 load("browser-grapple.js");
 load("browser-champion.js");
 load("browser-zero-hp.js");
+load("browser-control.js");
+load("browser-attack-helpers.js");
 load("browser-attack.js");
 
 const greatsword = { id: "greatsword", name: "Greatsword", kind: "melee", bonus: 5,
