@@ -5,6 +5,7 @@ from app.combat.barbarian import end_rage_if_incapacitated
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
 from app.combat.grapple import apply_grapple
+from app.combat.resources import action_resource_available, spend_action_resource
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.zero_hp import apply_damage
 from app.domain.models import BattleEvent, DamageRollComponent, DamageType, DiceRoll, EncounterCombatant, SavingThrowAction
@@ -15,6 +16,10 @@ from app.domain.size import size_at_most
 def legal_save_action(action: SavingThrowAction, target: EncounterCombatant, distance_ft: int) -> bool:
     if distance_ft > action.range_ft: return False
     return action.target_max_size is None or size_at_most(target.state.template.size, action.target_max_size)
+
+
+def save_action_resource_available(actor: CombatantState, action: SavingThrowAction) -> bool:
+    return action_resource_available(actor, action.resource_id, action.resource_cost)
 
 
 def _damage_rolls(action: SavingThrowAction, dice: DiceProvider, shared_damage_rolls: list[int] | None) -> list[int]:
@@ -39,9 +44,11 @@ def resolve_save_action(
     shared_damage_rolls: list[int] | None = None, affected_states: list[CombatantState] | None = None,
 ) -> BattleEvent:
     if spend_action and not is_available(actor.state, "action"): raise ValueError("Action is not available for a saving throw action.")
+    if not save_action_resource_available(actor.state, action): raise ValueError(f"{action.name} resource is unavailable.")
     if not legal_save_action(action, target, distance_ft): raise ValueError(f"{action.name} has no legal target at {distance_ft} feet.")
     save_roll, succeeded = resolve_saving_throw(target.state, action.save_ability, action.dc, dice)
     if spend_action: spend(actor.state, "action")
+    spend_action_resource(actor.state, action.resource_id, action.resource_cost, action_id=action.id)
     hp_before = target.state.current_hp; temporary_hp_before = target.state.temporary_hp
     death_success_before = target.state.death_save_successes; death_failure_before = target.state.death_save_failures
     concentration_before = target.state.concentration.effect_id if target.state.concentration else None
@@ -64,6 +71,10 @@ def resolve_save_action(
     if damage_outcome == "undead_fortitude": description += f" {target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP."
     if "grappled" in applied_conditions: description += f" {target.state.template.name} is Grappled."
     if "restrained" in applied_conditions: description += f" {target.state.template.name} is Restrained while Grappled."
+    resource_remaining = None
+    if action.resource_id is not None:
+        resource = next(resource for resource in actor.state.resources if resource.id == action.resource_id)
+        resource_remaining = resource.current_uses
     return BattleEvent(
         sequence=sequence, round_number=round_number, event_type="saving_throw", actor_id=actor.combatant_id, actor_name=actor.state.template.name,
         target_id=target.combatant_id, target_name=target.state.template.name, saving_throw_roll=save_roll,
@@ -74,5 +85,5 @@ def resolve_save_action(
         death_save_successes=target.state.death_save_successes, death_save_failures=target.state.death_save_failures,
         is_stable=target.state.is_stable, is_dead=target.state.is_dead, feature_id=action.id,
         concentration_ended_effect_id=concentration_before if concentration_before and target.state.concentration is None else None,
-        animation=action.animation, description=description,
+        resource_remaining=resource_remaining, animation=action.animation, description=description,
     )
