@@ -4,6 +4,7 @@ import re
 from typing import Any
 
 from app.content.monster_attack_modifier_source_audit import hit_modifier_issues
+from app.content.monster_save_action_source_audit import save_action_issues as _save_action_issues
 from app.domain.models import WeaponAttack
 
 
@@ -135,16 +136,6 @@ def attack_issues(attack: WeaponAttack, actions: str) -> list[str]:
         issues.append(f"condition-rider-mismatch:{attack.id}:{control.condition_id}")
     return issues
 
+
 def save_action_issues(action: Any, actions: str) -> list[str]:
-    issues: list[str] = []
-    if action.name.lower() not in actions:
-        issues.append(f"save-action-name-missing:{action.id}")
-    save = rf"{action.save_ability}\s+Saving Throw:\s*DC\s*{action.dc}\b"
-    if not re.search(save, actions, re.IGNORECASE):
-        issues.append(f"save-dc-mismatch:{action.id}")
-    if action.damage_dice_count and not _dice_pattern(action.damage_dice_count, action.damage_dice_size, action.damage_bonus).search(actions):
-        issues.append(f"save-damage-mismatch:{action.id}")
-    if action.grapple_escape_dc is not None:
-        if "grappled" not in actions or f"escape dc {action.grapple_escape_dc}" not in actions:
-            issues.append(f"save-grapple-rider-mismatch:{action.id}")
-    return issues
+    return _save_action_issues(action, actions, _dice_pattern)
