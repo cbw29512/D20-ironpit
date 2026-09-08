@@ -41,14 +41,16 @@ def _damage_components(action: SavingThrowAction, dice: DiceProvider, succeeded:
 def resolve_save_action(
     sequence: int, round_number: int, actor: EncounterCombatant, target: EncounterCombatant,
     action: SavingThrowAction, distance_ft: int, dice: DiceProvider, *, spend_action: bool = True,
-    shared_damage_rolls: list[int] | None = None, affected_states: list[CombatantState] | None = None,
+    spend_resource: bool = True, shared_damage_rolls: list[int] | None = None,
+    affected_states: list[CombatantState] | None = None,
 ) -> BattleEvent:
     if spend_action and not is_available(actor.state, "action"): raise ValueError("Action is not available for a saving throw action.")
     if not save_action_resource_available(actor.state, action): raise ValueError(f"{action.name} resource is unavailable.")
     if not legal_save_action(action, target, distance_ft): raise ValueError(f"{action.name} has no legal target at {distance_ft} feet.")
     save_roll, succeeded = resolve_saving_throw(target.state, action.save_ability, action.dc, dice)
     if spend_action: spend(actor.state, "action")
-    spend_action_resource(actor.state, action.resource_id, action.resource_cost, action_id=action.id)
+    if spend_resource:
+        spend_action_resource(actor.state, action.resource_id, action.resource_cost, action_id=action.id)
     hp_before = target.state.current_hp; temporary_hp_before = target.state.temporary_hp
     death_success_before = target.state.death_save_successes; death_failure_before = target.state.death_save_failures
     concentration_before = target.state.concentration.effect_id if target.state.concentration else None
