@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from app.domain.actions import HitControlEffect
+from app.content.capability_control_compiler import compile_control
 from app.domain.capabilities import AttackCapabilityDefinition
 from app.domain.capability_effects import (
     ConditionEffectDefinition,
@@ -14,25 +14,6 @@ from app.domain.models import ConditionalDamage, OnHitDamage, Weapon, WeaponAtta
 
 class UnsupportedCapabilityError(ValueError):
     pass
-
-
-def _compile_control(effect: GrappleEffectDefinition | ConditionEffectDefinition) -> HitControlEffect:
-    if isinstance(effect, GrappleEffectDefinition):
-        return HitControlEffect(
-            max_target_size=effect.max_target_size,
-            grapple_escape_dc=effect.escape_dc,
-            restrains_while_grappled=effect.restrains,
-        )
-    return HitControlEffect(
-        max_target_size=effect.max_target_size,
-        condition_id=effect.condition,
-        expires_at_start_of_source_turn=effect.expires_at_start_of_source_turn,
-        expiry_timing=effect.expiry_timing,
-        repeat_save_ability=effect.repeat_save_ability,
-        repeat_save_dc=effect.repeat_save_dc,
-        repeat_save_timing=effect.repeat_save_timing,
-        allowed_removal_action_ids=effect.allowed_removal_action_ids,
-    )
 
 
 def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
@@ -85,7 +66,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
         elif isinstance(effect, HitModifierEffect):
             on_hit_modifiers.append(effect)
         elif isinstance(effect, (GrappleEffectDefinition, ConditionEffectDefinition)):
-            control = _compile_control(effect)
+            control = compile_control(effect)
         else:
             raise UnsupportedCapabilityError(f"Unsupported attack effect: {effect!r}")
     return WeaponAttack(
