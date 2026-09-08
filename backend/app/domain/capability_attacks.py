@@ -5,6 +5,7 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName
+from app.domain.areas import AreaTargeting
 from app.domain.capability_effects import AttackEffectDefinition, DiceSpec, GrappleEffectDefinition
 from app.domain.size import CreatureSize
 from app.domain.weapons import ConditionalAttackModifier, DamageType, WeaponAttackKind
@@ -63,6 +64,7 @@ class SaveCapabilityDefinition(BaseModel):
     save_ability: Literal["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
     dc: int = Field(ge=1, le=40)
     range_ft: int = Field(ge=0)
+    area: AreaTargeting | None = None
     target_max_size: CreatureSize | None = None
     damage: DiceSpec | None = None
     damage_type: DamageType | None = None
