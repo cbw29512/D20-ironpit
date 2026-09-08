@@ -9773,7 +9773,7 @@
         "damage_type": "bludgeoning",
         "success_damage": "none",
         "magical_effect": false,
-        "grapple": {
+        "failure_control": {
           "kind": "grapple",
           "escape_dc": 14,
           "max_target_size": "large",
