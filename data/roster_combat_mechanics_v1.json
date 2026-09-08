@@ -468,6 +468,7 @@
       "demand_count": 1,
       "id": "bardic-inspiration",
       "kinds": [
+        "arena-ignored",
         "base-feature"
       ],
       "owners": [

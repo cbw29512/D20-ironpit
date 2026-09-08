@@ -1037,7 +1037,9 @@
       "level_1_engine_ready": false,
       "levels": [
         {
-          "arena_ignored_introduced": [],
+          "arena_ignored_introduced": [
+            "bardic-inspiration"
+          ],
           "blockers": [
             {
               "id": "bardic-inspiration",
