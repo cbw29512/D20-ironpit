@@ -10,6 +10,7 @@ from app.content.monster_trait_source_audit import parse_trait_names
 from app.domain.catalog import CoverageStatus
 
 _SIGNATURE_LIMIT = 25
+_NOISE_BLOCKERS = frozenset({"monster-combat-mechanics-not-compiled"})
 _CONTROL_EFFECT = re.compile(
     r"\b(blinded|charmed|deafened|frightened|grappled|incapacitated|paralyzed|petrified|poisoned|prone|restrained|stunned|unconscious|push(?:es|ed)?|pull(?:s|ed)?|swallow(?:s|ed)?)\b",
     re.I,
@@ -26,7 +27,7 @@ def _trait_heading_yields(rows_by_name: dict[str, dict[str, object]], names: lis
     for name in names:
         unsupported = _unsupported_traits(rows_by_name[name])
         if not unsupported:
-            raise RuntimeError(f"Trait-only blocker {name!r} has no unsupported trait heading.")
+            continue
         for trait in unsupported:
             yields[trait].append(name)
     return {
@@ -63,8 +64,6 @@ def _normalize_control_effect(value: str) -> str:
 def _control_effects(row: dict[str, object]) -> tuple[str, ...]:
     actions = str(row.get("actions", ""))
     effects = {_normalize_control_effect(match.group(1)) for match in _CONTROL_EFFECT.finditer(actions)}
-    if not effects:
-        raise RuntimeError(f"Control blocker {row.get('name')!r} has no recognized control effect.")
     return tuple(sorted(effects))
 
 
@@ -86,10 +85,23 @@ def _control_signatures(
 ) -> dict[tuple[str, ...], list[str]]:
     grouped: dict[tuple[str, ...], list[str]] = defaultdict(list)
     for name in names:
-        grouped[_control_effects(rows_by_name[name])].append(name)
+        effects = _control_effects(rows_by_name[name])
+        if effects:
+            grouped[effects].append(name)
     return {
         signature: sorted(monsters)
         for signature, monsters in sorted(grouped.items(), key=lambda item: (-len(item[1]), item[0]))
+    }
+
+
+def _family_incidence(blockers_by_name: dict[str, list[str]]) -> dict[str, list[str]]:
+    incidence: dict[str, list[str]] = defaultdict(list)
+    for name, blockers in blockers_by_name.items():
+        for blocker in sorted(set(blockers) - _NOISE_BLOCKERS):
+            incidence[blocker].append(name)
+    return {
+        blocker: sorted(names)
+        for blocker, names in sorted(incidence.items(), key=lambda item: (-len(item[1]), item[0]))
     }
 
 
@@ -114,12 +126,20 @@ def main() -> None:
     singles = single_family_yields(signatures)
     trait_only = singles.get("trait", [])
     control_only = singles.get("condition-or-control", [])
+    all_trait = [name for name, blockers in blockers_by_name.items() if "trait" in blockers]
+    all_control = [name for name, blockers in blockers_by_name.items() if "condition-or-control" in blockers]
     print(
         "CAPABILITY_YIELD_BASELINE"
         f"\tready={len(ready_names)}\tblocked={len(blockers_by_name)}\tsignatures={len(signatures)}"
     )
+    for blocker, names in _family_incidence(blockers_by_name).items():
+        print(f"CAPABILITY_FAMILY_INCIDENCE\t{blocker}\t{len(names)}\t" + " | ".join(names))
     for blocker, names in sorted(singles.items(), key=lambda item: (-len(item[1]), item[0])):
         print(f"CAPABILITY_SINGLE_FAMILY\t{blocker}\t{len(names)}\t" + " | ".join(names))
+    for effect, names in _control_effect_yields(rows_by_name, all_control).items():
+        print(f"CAPABILITY_CONTROL_INCIDENCE\t{effect}\t{len(names)}\t" + " | ".join(names))
+    for trait, names in _trait_heading_yields(rows_by_name, all_trait).items():
+        print(f"CAPABILITY_TRAIT_INCIDENCE\t{trait}\t{len(names)}\t" + " | ".join(names))
     for signature, names in _control_signatures(rows_by_name, control_only).items():
         print(f"CAPABILITY_CONTROL_SIGNATURE\t{'+'.join(signature)}\t{len(names)}\t" + " | ".join(names))
     for effect, names in _control_effect_yields(rows_by_name, control_only).items():
