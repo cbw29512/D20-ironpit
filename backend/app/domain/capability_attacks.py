@@ -36,6 +36,8 @@ class AttackCapabilityDefinition(BaseModel):
     conditional_attack_modifiers: list[ConditionalAttackModifier] = Field(default_factory=list)
     effects: list[AttackEffectDefinition] = Field(default_factory=list)
     forbid_target_grappled_by_self: bool = False
+    resource_id: str | None = None
+    resource_cost: int = Field(default=1, ge=1)
 
     @model_validator(mode="after")
     def validate_attack_shape(self) -> "AttackCapabilityDefinition":
@@ -47,6 +49,8 @@ class AttackCapabilityDefinition(BaseModel):
             raise ValueError("Ranged attack requires normal and long range.")
         if self.attack_ability_modifier is not None and self.attack_ability is None:
             raise ValueError("Attack ability modifier requires an explicit attack ability.")
+        if self.resource_id is None and self.resource_cost != 1:
+            raise ValueError("Attack resource cost requires a resource id.")
         control_count = sum(effect.kind in {"grapple", "condition"} for effect in self.effects)
         if control_count > 1:
             raise ValueError("Current runtime supports one persistent control rider per attack.")
