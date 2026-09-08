@@ -23,10 +23,10 @@ from app.content.subclass_combat_overlays import subclass_overlay  # noqa: E402
 
 
 def _status(feature_id: str, statuses: dict[str, str]) -> str:
-    if feature_id in statuses:
-        return statuses[feature_id]
     if feature_id in SUPPORTED_HERO_ENGINE_FEATURES:
         return "supported"
+    if feature_id in statuses:
+        return statuses[feature_id]
     return "planned"
 
 
@@ -104,15 +104,18 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Audit all 12 canonical pregens through level 20.")
     parser.add_argument("--check", action="store_true", help="Fail if the committed audit is stale.")
     args = parser.parse_args()
-    rendered = json.dumps(_payload(), indent=2, sort_keys=True) + "\n"
+    payload = _payload()
+    rendered = json.dumps(payload, indent=2, sort_keys=True) + "\n"
     if args.check:
         if not OUTPUT.is_file() or OUTPUT.read_text(encoding="utf-8") != rendered:
             print(f"Canonical progression audit is stale: {OUTPUT.relative_to(ROOT)}", file=sys.stderr)
             return 1
     else:
         OUTPUT.write_text(rendered, encoding="utf-8")
-    summary = json.loads(rendered)["summary"]
-    print("CANONICAL_PROGRESSION_AUDIT " + " ".join(f"{key}={value}" for key, value in summary.items()))
+    print("CANONICAL_PROGRESSION_AUDIT " + " ".join(f"{key}={value}" for key, value in payload["summary"].items()))
+    for item in payload["classes"]:
+        first = item["first_blocked_level"] if item["first_blocked_level"] is not None else "none"
+        print(f"CANONICAL_CLASS_AUDIT class={item['class_id']} level1_ready={item['level_1_engine_ready']} first_blocked_level={first}")
     return 0
 
 
