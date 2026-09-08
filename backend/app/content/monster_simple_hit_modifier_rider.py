@@ -12,6 +12,10 @@ _ATTACKS_AGAINST_ADVANTAGE = re.compile(
     r"(?:and )?the next attack roll made against the target before the start of the [A-Za-z’' -]+ next turn has Advantage\.(?=\s|$)",
     re.I,
 )
+_NEXT_ATTACK_MADE_DISADVANTAGE = re.compile(
+    r"(?:and )?the target has Disadvantage on the next attack roll it makes before the end of its next turn\.(?=\s|$)",
+    re.I,
+)
 
 
 def parse_simple_hit_modifier_riders(hit: str) -> tuple[str, list[HitModifierEffect]]:
@@ -37,9 +41,19 @@ def parse_simple_hit_modifier_riders(hit: str) -> tuple[str, list[HitModifierEff
         ))
         text = _ATTACKS_AGAINST_ADVANTAGE.sub("", text, count=1)
 
+    next_attack_made = _NEXT_ATTACK_MADE_DISADVANTAGE.search(text)
+    if next_attack_made:
+        effects.append(HitModifierEffect(
+            kind="next-attack-made-disadvantage",
+            consume_on_attack_made=True,
+            expires_at_end_of_target_turn=True,
+        ))
+        text = _NEXT_ATTACK_MADE_DISADVANTAGE.sub("", text, count=1)
+
     return re.sub(r"\s+", " ", text).strip(" ,"), effects
 
 
 def strip_modeled_hit_modifier_riders(actions: str) -> str:
     clean = _SPEED.sub("", actions)
-    return _ATTACKS_AGAINST_ADVANTAGE.sub("", clean)
+    clean = _ATTACKS_AGAINST_ADVANTAGE.sub("", clean)
+    return _NEXT_ATTACK_MADE_DISADVANTAGE.sub("", clean)
