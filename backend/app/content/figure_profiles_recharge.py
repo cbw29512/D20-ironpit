@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 RECHARGE_FIGURE_PROFILES = {
+    "Assassin": {"form": "humanoid", "detail": "assassin"},
     "Black Dragon Wyrmling": {"form": "reptile", "detail": "black-dragon"},
     "Blue Dragon Wyrmling": {"form": "reptile", "detail": "blue-dragon"},
     "Dragon Turtle": {"form": "aquatic-reptile", "detail": "dragon-turtle"},
