@@ -28,7 +28,12 @@ def test_bard_uses_simple_caster_array_and_deterministic_mental_advancement() ->
 
 
 def test_bard_base_table_and_lore_overlay_keep_only_arena_relevant_features() -> None:
-    assert bard_arena_ignored(20) == ("expertise", "jack-of-all-trades", "expertise-2")
+    assert bard_arena_ignored(20) == (
+        "bardic-inspiration",
+        "expertise",
+        "jack-of-all-trades",
+        "expertise-2",
+    )
     assert "lore-bonus-proficiencies" in subclass_ignored_ids_for_class("bard")
     level_seven = set(bard_combat_features(7))
     assert {"bardic-inspiration", "font-of-inspiration", "countercharm"} <= level_seven
