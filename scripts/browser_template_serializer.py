@@ -14,6 +14,20 @@ def _value(item: Any) -> Any:
     return getattr(item, "value", item)
 
 
+def _area(area: Any) -> dict[str, Any] | None:
+    if area is None:
+        return None
+    row: dict[str, Any] = {"shape": area.shape}
+    for source, target in (
+        ("length_ft", "lengthFt"), ("width_ft", "widthFt"), ("radius_ft", "radiusFt"),
+        ("height_ft", "heightFt"), ("origin_range_ft", "originRangeFt"),
+    ):
+        value = getattr(area, source)
+        if value:
+            row[target] = value
+    return row
+
+
 def _control(effect: Any) -> dict[str, Any] | None:
     if effect is None:
         return None
@@ -143,6 +157,9 @@ def _save(action: Any) -> dict[str, Any]:
         "damageDiceSize": action.damage_dice_size, "damageBonus": action.damage_bonus,
         "damageType": action.damage_type, "successDamage": action.success_damage, "animation": action.animation,
     }
+    area = _area(action.area)
+    if area:
+        row["area"] = area
     if action.resource_id:
         row["resourceId"] = action.resource_id
         if action.resource_cost != 1:
