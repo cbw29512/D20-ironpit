@@ -13,6 +13,7 @@ from app.content.monster_limited_use_source_audit import complete_monster_limite
 from app.content.monster_merfolk_skirmisher import build_merfolk_skirmisher
 from app.content.monster_reaction_source_audit import complete_monster_reaction_fingerprints
 from app.content.monster_saving_throws import complete_monster_saving_throws
+from app.content.monster_simple_source_compiler import build_auto_simple_monsters
 from app.content.monster_spellcasting_source_audit import complete_monster_spellcasting_fingerprints
 from app.content.monster_trait_source_audit import complete_monster_trait_fingerprints
 from app.content.monster_tyrannosaurus import build_tyrannosaurus_rex
@@ -43,7 +44,7 @@ from app.domain.models import CombatantTemplate
 
 
 def build_legacy_monster_templates() -> list[CombatantTemplate]:
-    """Build the pre-capability monster roster for migration/parity checks only."""
+    """Build source-backed runtime monsters; remaining manual builders are migration inputs only."""
     monsters = [
         build_goblin_warrior(), build_goblin_minion(), build_hobgoblin_warrior(), build_kobold_warrior(), build_goblin_boss(),
         build_bandit(), build_commoner(), build_guard(), build_giant_rat(), build_giant_weasel(), build_blood_hawk(),
@@ -55,6 +56,7 @@ def build_legacy_monster_templates() -> list[CombatantTemplate]:
         *build_expansion_four(), build_giant_crocodile(), build_giant_constrictor_snake(), build_tyrannosaurus_rex(),
         *build_zero_engine_monsters(), build_worg(), *build_swarm_candidates(), *build_parry_monsters(),
     ]
+    monsters.extend(build_auto_simple_monsters({monster.name for monster in monsters}))
     monsters = complete_monster_movement_modes(monsters)
     monsters = filter_standard_arena_eligible(monsters)
     monsters = complete_monster_trait_fingerprints(monsters)
