@@ -68,6 +68,15 @@
     return [...shared];
   }
 
+  function legacyFailureControl(action) {
+    if (!action.grappleEscapeDc) return null;
+    return {
+      maxTargetSize: action.targetMaxSize || null,
+      grappleEscapeDc: action.grappleEscapeDc,
+      restrainsWhileGrappled: Boolean(action.restrainsWhileGrappled),
+    };
+  }
+
   function resolveAction(sequence, round, actor, target, action, distance, options = {}) {
     const spendAction = options.spendAction !== false, spendResource = options.spendResource !== false;
     if (spendAction && !E().available(actor.state, "action")) throw new Error("Action is unavailable for saving throw action.");
@@ -98,8 +107,10 @@
       }
     }
     let appliedConditions = [];
-    if (!save.succeeded && target.state.is_alive && !target.state.is_dead && action.grappleEscapeDc) {
-      appliedConditions = G().apply(target.state, actor.combatant_id, action.grappleEscapeDc, action.range, Boolean(action.restrainsWhileGrappled));
+    if (!save.succeeded) {
+      appliedConditions = G().applyControl(
+        target, actor.combatant_id, action.id, legacyFailureControl(action), action.range, round, states(options.setup),
+      );
     }
     let description = `${target.state.template.name} ${save.succeeded ? "SUCCEEDS" : "FAILS"} a DC ${action.dc} ${action.saveAbility} save against ${actor.state.template.name}'s ${action.name}.`;
     if (evasion) description += " Evasion modifies the damage.";
