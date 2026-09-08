@@ -14,7 +14,7 @@
     consumeNextAttackAgainstAdvantage: () => 0, effectiveArmorClass: (state) => state.template.armor_class,
     effectiveSpeed: (state) => state.template.speed_ft, applyD20Bonus: (_state, _kind, roll) => roll,
   };
-  const C = () => window.IRON_PIT_BROWSER_CONCENTRATION, I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
+  const C = () => window.IRON_PIT_BROWSER_CONCENTRATION, CAM = () => window.IRON_PIT_BROWSER_CONDITIONAL_ATTACK || { advantage: () => 0, disadvantage: () => 0 }, I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || {
     attackAdvantage: (state) => state.is_unconscious, autoCritical: (state) => state.is_unconscious,
     has: (state, id) => state.active_effect_ids.includes(id), incapacitated: (state) => state.is_unconscious,
@@ -58,10 +58,10 @@
     const recklessStarted = extra.allowReckless === true && B2().activate(attacker, attack, round);
     if (recklessStarted) window.IRON_PIT_BROWSER_BARBARIAN3?.markRecklessUse(attacker.state, extra.turnKey);
     const conditions = conditionSources(attacker.state, target.state, distance, target.combatant_id);
-    const advantage = (extra.advantage || 0) + conditions.advantage + bloodiedFury(attacker.state, attack)
+    const advantage = (extra.advantage || 0) + conditions.advantage + bloodiedFury(attacker.state, attack) + CAM().advantage(attacker.state, target.state, attack)
       + B2().attackAdvantage(attacker.state, attack) + M().nextAttackAgainstAdvantage(attacker.state, target.combatant_id);
     const closeThreat = attack.kind === "ranged" && rangedCloseThreat(attacker, target, distance, extra.setup);
-    const mode = R().attackMode(attack, distance, advantage, conditions.disadvantage + SAP().disadvantage(attacker.state), closeThreat);
+    const mode = R().attackMode(attack, distance, advantage, conditions.disadvantage + SAP().disadvantage(attacker.state) + CAM().disadvantage(attacker.state, target.state, attack), closeThreat);
     const heroic = HI().rerollFailedAttack(attacker.state, R().d20(attack.bonus, mode), M().effectiveArmorClass(target.state));
     const attackRoll = M().applyD20Bonus(attacker.state, "attack-roll-bonus-die", heroic.roll);
     M().consumeNextAttackAgainstAdvantage(attacker.state, target.combatant_id); SAP().consume(attacker.state);
