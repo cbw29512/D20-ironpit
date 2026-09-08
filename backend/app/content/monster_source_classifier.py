@@ -23,6 +23,11 @@ _SUPPORTED_BLOODIED_REPLACEMENT = re.compile(
     re.I,
 )
 _SUPPORTED_FIXED_RIDER = re.compile(rf"\bplus\s+\d+\s+(?:{_DAMAGE_TYPES})\s+damage\b", re.I)
+_SUPPORTED_RETURNING_WEAPON = re.compile(
+    r"Hit or Miss:\s+The\s+[A-Za-z’' -]+\s+magically returns to\s+the\s+[A-Za-z’' -]+(?:’s|'s)\s+hand\s+"
+    r"immediately after a ranged attack\.?",
+    re.I,
+)
 _HIDDEN_RIDER = re.compile(
     r"\b(?:Speed decreases|attaches?|detaches?|next attack roll|Hit or Miss:)\b"
     r"|\bdamage,?\s+or\s+\d+\s*\([^)]*\)\s+\w+\s+damage\s+if\b",
@@ -50,6 +55,7 @@ def _reaction_is_modeled(row: dict[str, object], reactions: list[str]) -> bool:
 def _unmodeled_action_rider(actions: str) -> bool:
     clean = _SUPPORTED_BLOODIED_REPLACEMENT.sub("damage", actions)
     clean = _SUPPORTED_FIXED_RIDER.sub("", clean)
+    clean = _SUPPORTED_RETURNING_WEAPON.sub("", clean)
     clean = strip_modeled_hit_modifier_riders(clean)
     return bool(_HIDDEN_RIDER.search(clean))
 
