@@ -65,7 +65,8 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       },
       {
         "id": "goblin-shortbow",
@@ -106,7 +107,8 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "goblin-scimitar",
@@ -206,7 +208,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       },
       {
         "id": "goblin-minion-dagger-ranged",
@@ -233,7 +236,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "goblin-minion-dagger-melee",
@@ -332,7 +336,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       },
       {
         "id": "hobgoblin-longbow",
@@ -372,7 +377,8 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "hobgoblin-longsword",
@@ -473,7 +479,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       },
       {
         "id": "kobold-warrior-dagger-ranged",
@@ -500,7 +507,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "kobold-warrior-dagger-melee",
@@ -616,7 +624,8 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       },
       {
         "id": "goblin-boss-shortbow",
@@ -657,7 +666,8 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "goblin-boss-scimitar",
@@ -785,7 +795,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       },
       {
         "id": "bandit-light-crossbow",
@@ -812,7 +823,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "bandit-scimitar",
@@ -909,7 +921,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "commoner-club",
@@ -1008,7 +1021,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       },
       {
         "id": "guard-spear-thrown",
@@ -1035,7 +1049,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "guard-spear-melee",
@@ -1132,7 +1147,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "giant-rat-bite",
@@ -1233,7 +1249,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "giant-weasel-bite",
@@ -1343,7 +1360,8 @@
             "mode": "replace_weapon"
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-blood-hawk-beak",
@@ -1444,7 +1462,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "axe-beak-beak",
@@ -1541,7 +1560,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "giant-lizard-bite",
@@ -1645,7 +1665,8 @@
             "max_target_size": "medium"
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "wolf-bite",
@@ -1751,7 +1772,8 @@
             "max_target_size": "large"
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "dire-wolf-bite",
@@ -1852,7 +1874,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "black-bear-rend",
@@ -1968,7 +1991,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       },
       {
         "id": "brown-bear-claw",
@@ -1997,7 +2021,8 @@
             "max_target_size": "large"
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "brown-bear-bite",
@@ -2113,7 +2138,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "baboon-bite",
@@ -2214,7 +2240,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "camel-bite",
@@ -2311,7 +2338,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "deer-ram",
@@ -2410,7 +2438,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "draft-horse-hooves",
@@ -2507,7 +2536,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "giant-badger-bite",
@@ -2606,7 +2636,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "jackal-bite",
@@ -2703,7 +2734,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "boar-gore",
@@ -2805,7 +2837,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "elk-ram",
@@ -2904,7 +2937,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "giant-boar-gore",
@@ -3006,7 +3040,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       },
       {
         "id": "minotaur-skeleton-slam",
@@ -3030,7 +3065,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "minotaur-skeleton-gore",
@@ -3136,7 +3172,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "triceratops-gore",
@@ -3254,7 +3291,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "warhorse-skeleton-hooves",
@@ -3360,7 +3398,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       },
       {
         "id": "allosaurus-claws",
@@ -3384,7 +3423,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "allosaurus-bite",
@@ -3481,7 +3521,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "goat-ram",
@@ -3603,7 +3644,8 @@
             "expires_at_end_of_target_turn": true
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       },
       {
         "id": "merfolk-skirmisher-ocean-spear-melee",
@@ -3647,7 +3689,8 @@
             "expires_at_end_of_target_turn": true
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "merfolk-skirmisher-ocean-spear-ranged",
@@ -3746,7 +3789,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "hippogriff-rend",
@@ -3860,7 +3904,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "awakened-shrub-rake",
@@ -3957,7 +4002,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "badger-bite",
@@ -4052,7 +4098,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "bat-bite",
@@ -4145,7 +4192,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "cat-scratch",
@@ -4240,7 +4288,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "crab-claw",
@@ -4335,7 +4384,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "frog-bite",
@@ -4431,7 +4481,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "hawk-talons",
@@ -4524,7 +4575,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "lizard-bite",
@@ -4619,7 +4671,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "owl-talons",
@@ -4714,7 +4767,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "rat-bite",
@@ -4809,7 +4863,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "raven-beak",
@@ -4904,7 +4959,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "weasel-bite",
@@ -5001,7 +5057,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "eagle-talons",
@@ -5098,7 +5155,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "panther-rend",
@@ -5197,7 +5255,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "plesiosaurus-bite",
@@ -5296,7 +5355,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "polar-bear-rend",
@@ -5414,7 +5474,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "pony-hooves",
@@ -5511,7 +5572,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "pteranodon-bite",
@@ -5610,7 +5672,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "riding-horse-hooves",
@@ -5712,7 +5775,8 @@
             "max_target_size": "large"
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "tiger-rend",
@@ -5811,7 +5875,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "vulture-beak",
@@ -5908,7 +5973,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "giant-fire-beetle-bite",
@@ -6009,7 +6075,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "giant-goat-ram",
@@ -6108,7 +6175,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "giant-owl-talons",
@@ -6211,7 +6279,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "hyena-bite",
@@ -6312,7 +6381,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "giant-bat-bite",
@@ -6414,7 +6484,8 @@
             "max_target_size": "medium"
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "mastiff-bite",
@@ -6511,7 +6582,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "mule-hooves",
@@ -6610,7 +6682,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "rhinoceros-gore",
@@ -6709,7 +6782,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "warhorse-hooves",
@@ -6808,7 +6882,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       },
       {
         "id": "ogre-javelin-melee",
@@ -6832,7 +6907,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       },
       {
         "id": "ogre-javelin",
@@ -6858,7 +6934,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "ogre-greatclub",
@@ -6955,7 +7032,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "owlbear-rend",
@@ -7071,7 +7149,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "saber-toothed-tiger-rend",
@@ -7193,7 +7272,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       },
       {
         "id": "scout-shortsword",
@@ -7217,7 +7297,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "scout-longbow",
@@ -7335,7 +7416,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       },
       {
         "id": "warrior-infantry-spear-ranged",
@@ -7361,7 +7443,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "warrior-infantry-spear-melee",
@@ -7469,7 +7552,8 @@
             "restrains": true
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "crocodile-bite",
@@ -7578,7 +7662,8 @@
             "restrains": false
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "giant-crab-claw",
@@ -7680,7 +7765,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "constrictor-snake-bite",
@@ -7810,7 +7896,8 @@
             "restrains": false
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       },
       {
         "id": "srd-giant-scorpion-sting",
@@ -7847,7 +7934,8 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-giant-scorpion-claw",
@@ -7972,7 +8060,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       },
       {
         "id": "srd-grick-tentacles",
@@ -8003,7 +8092,8 @@
             "restrains": false
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-grick-beak",
@@ -8130,7 +8220,8 @@
             "restrains": false
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-griffon-rend",
@@ -8258,7 +8349,8 @@
             "allowed_removal_action_ids": []
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "giant-centipede-bite",
@@ -8366,7 +8458,8 @@
             "allowed_removal_action_ids": []
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "giant-vulture-gouge",
@@ -8471,7 +8564,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       },
       {
         "id": "wyvern-sting",
@@ -8515,7 +8609,8 @@
             "allowed_removal_action_ids": []
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "wyvern-bite",
@@ -8646,7 +8741,8 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "giant-venomous-snake-bite",
@@ -8760,7 +8856,8 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "giant-wasp-sting",
@@ -8875,7 +8972,8 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "giant-wolf-spider-bite",
@@ -8979,7 +9077,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "archelon-bite",
@@ -9102,7 +9201,8 @@
             "max_target_size": "huge"
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "ankylosaurus-tail",
@@ -9231,7 +9331,8 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "giant-eagle-rend",
@@ -9363,7 +9464,8 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "giant-elk-ram",
@@ -9472,7 +9574,8 @@
             "restrains": true
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       },
       {
         "id": "giant-crocodile-tail",
@@ -9501,7 +9604,8 @@
             "max_target_size": "large"
           }
         ],
-        "forbid_target_grappled_by_self": true
+        "forbid_target_grappled_by_self": true,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "giant-crocodile-bite",
@@ -9621,7 +9725,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "giant-constrictor-snake-bite",
@@ -9771,7 +9876,8 @@
             "restrains": true
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       },
       {
         "id": "tyrannosaurus-rex-tail",
@@ -9800,7 +9906,8 @@
             "max_target_size": "huge"
           }
         ],
-        "forbid_target_grappled_by_self": true
+        "forbid_target_grappled_by_self": true,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "tyrannosaurus-rex-bite",
@@ -9918,7 +10025,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-animated-armor-slam",
@@ -10045,7 +10153,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-animated-flying-sword-slash",
@@ -10153,7 +10262,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-awakened-tree-slam",
@@ -10268,7 +10378,8 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-cultist-ritual-sickle",
@@ -10374,7 +10485,8 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-flying-snake-bite",
@@ -10473,7 +10585,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-gargoyle-claw",
@@ -10610,7 +10723,8 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-grimlock-bone-cudgel",
@@ -10707,7 +10821,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       },
       {
         "id": "srd-guard-captain-javelin-ranged",
@@ -10733,7 +10848,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       },
       {
         "id": "srd-guard-captain-longsword",
@@ -10757,7 +10873,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-guard-captain-javelin-melee",
@@ -10877,7 +10994,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-hippopotamus-bite",
@@ -10995,7 +11113,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-killer-whale-bite",
@@ -11094,7 +11213,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-lemure-vile-slime",
@@ -11202,7 +11322,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       },
       {
         "id": "srd-manticore-tail-spike",
@@ -11228,7 +11349,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-manticore-rend",
@@ -11353,7 +11475,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-ogre-zombie-slam",
@@ -11472,7 +11595,8 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-pegasus-hooves",
@@ -11578,7 +11702,8 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-scorpion-sting",
@@ -11675,7 +11800,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       },
       {
         "id": "srd-skeleton-shortbow",
@@ -11701,7 +11827,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-skeleton-shortsword",
@@ -11814,7 +11941,8 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-spider-bite",
@@ -11914,7 +12042,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       },
       {
         "id": "srd-tough-heavy-crossbow",
@@ -11940,7 +12069,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-tough-mace",
@@ -12054,7 +12184,8 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-venomous-snake-bite",
@@ -12151,7 +12282,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-violet-fungus-rotting-touch",
@@ -12272,7 +12404,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       },
       {
         "id": "srd-xorn-claw",
@@ -12296,7 +12429,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-xorn-bite",
@@ -12435,7 +12569,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-zombie-slam",
@@ -12549,7 +12684,8 @@
             "expires_at_end_of_target_turn": false
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-worg-bite",
@@ -12661,7 +12797,8 @@
             "mode": "replace_weapon"
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-swarm-of-bats-bites",
@@ -12788,7 +12925,8 @@
             "mode": "replace_weapon"
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-swarm-of-rats-bites",
@@ -12919,7 +13057,8 @@
             "max_target_size": "medium"
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-swarm-of-crawling-claws-swarm-of-grasping-hands",
@@ -13039,7 +13178,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       },
       {
         "id": "srd-bandit-captain-pistol",
@@ -13066,7 +13206,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-bandit-captain-scimitar",
@@ -13202,7 +13343,8 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       },
       {
         "id": "srd-knight-heavy-crossbow",
@@ -13242,7 +13384,8 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-knight-greatsword",
@@ -13367,7 +13510,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-noble-rapier",
@@ -13469,7 +13613,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       },
       {
         "id": "srd-warrior-veteran-heavy-crossbow",
@@ -13496,7 +13641,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-warrior-veteran-greatsword",
@@ -13619,7 +13765,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       },
       {
         "id": "srd-ape-rock",
@@ -13645,7 +13792,9 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_id": "srd-ape-rock-recharge",
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-ape-fist",
@@ -13775,7 +13924,8 @@
           }
         ],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-giant-shark-bite",
@@ -13898,7 +14048,8 @@
             "max_target_size": "large"
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       },
       {
         "id": "srd-hill-giant-trash-lob",
@@ -13932,7 +14083,8 @@
             "allowed_removal_action_ids": []
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-hill-giant-tree-club",
@@ -14055,7 +14207,8 @@
           }
         ],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-hunter-shark-bite",
@@ -14155,7 +14308,8 @@
           }
         ],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-piranha-bite",
@@ -14254,7 +14408,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-reef-shark-bite",
@@ -14356,7 +14511,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-sahuagin-warrior-claw",
@@ -14483,7 +14639,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-shadow-draining-swipe",
@@ -14606,7 +14763,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-specter-life-drain",
@@ -14741,7 +14899,8 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       },
       {
         "id": "srd-spy-hand-crossbow",
@@ -14780,7 +14939,8 @@
             "mode": "add"
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-spy-shortsword",
@@ -14892,7 +15052,8 @@
             "mode": "replace_weapon"
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-swarm-of-insects-bites",
@@ -15025,7 +15186,8 @@
             "mode": "replace_weapon"
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-swarm-of-piranhas-bites",
@@ -15165,7 +15327,8 @@
             "mode": "replace_weapon"
           }
         ],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-swarm-of-venomous-snakes-bites",
@@ -15279,7 +15442,8 @@
         "rage_eligible": false,
         "conditional_attack_modifiers": [],
         "effects": [],
-        "forbid_target_grappled_by_self": false
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-wraith-life-drain",
