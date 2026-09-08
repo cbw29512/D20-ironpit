@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.content.monster_catalog import build_monster_catalog, load_monster_rows
+from app.content.monster_source_classifier import source_blockers
 from app.content.monster_trait_source_audit import parse_trait_names, trait_issues
 from app.content.roster import build_arena_roster
 from app.domain.catalog import CoverageStatus
@@ -50,15 +51,13 @@ def test_xorn_environment_only_traits_are_neutral_in_standard_pit() -> None:
 
 
 def test_water_breathing_is_combat_irrelevant_but_source_fingerprinted() -> None:
-    expected = {
-        "Giant Shark": "srd-giant-shark",
-        "Hunter Shark": "srd-hunter-shark",
+    ready = {
         "Piranha": "srd-piranha",
         "Reef Shark": "srd-reef-shark",
         "Swarm of Piranhas": "srd-swarm-of-piranhas",
     }
     catalog = {card.name: card for card in build_monster_catalog()}
-    for name, runtime_id in expected.items():
+    for name, runtime_id in ready.items():
         row = _row(name)
         monster = _monster(name)
         assert parse_trait_names(row["traits"]) == ["Water Breathing"]
@@ -68,6 +67,20 @@ def test_water_breathing_is_combat_irrelevant_but_source_fingerprinted() -> None
         assert card.coverage_status is CoverageStatus.RAW_READY
         assert card.runnable_template_id == runtime_id
         assert card.blockers == []
+
+
+def test_injured_target_attack_advantage_fails_closed_until_universal_primitive_exists() -> None:
+    rows = load_monster_rows()
+    names = {str(row["name"]) for row in rows}
+    catalog = {card.name: card for card in build_monster_catalog()}
+    for name in ("Giant Shark", "Hunter Shark"):
+        row = _row(name)
+        assert parse_trait_names(row["traits"]) == ["Water Breathing"]
+        assert "conditional-attack-modifier" in source_blockers(row, names)
+        card = catalog[name]
+        assert card.coverage_status is CoverageStatus.BLOCKED
+        assert card.runnable_template_id is None
+        assert "monster-combat-mechanics-not-compiled" in card.blockers
 
 
 def test_unknown_outcome_changing_trait_fails_closed() -> None:
