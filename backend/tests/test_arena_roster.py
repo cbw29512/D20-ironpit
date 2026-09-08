@@ -1,7 +1,7 @@
-from app.main import get_arena_roster
 from app.content.capability_registry import load_capability_definitions
 from app.content.certified_heroes import build_certified_hero_templates
 from app.content.pregens import build_brom_ironmark, build_mara_quickstep, build_selene_asharrow
+from app.content.roster import build_arena_roster
 from app.domain.models import ArenaRoster, WeaponAttackKind
 
 
@@ -10,7 +10,7 @@ def _by_id(items, item_id: str):
 
 
 def test_arena_roster_matches_merged_capability_registry() -> None:
-    roster = get_arena_roster()
+    roster = build_arena_roster()
     assert isinstance(roster, ArenaRoster)
     assert [item.id for item in roster.characters] == [item.id for item in build_certified_hero_templates()]
 
@@ -65,7 +65,7 @@ def test_mara_quickstep_matches_level_one_rogue_loadout() -> None:
 
 
 def test_tyrannosaurus_rex_keeps_multiattack_target_restriction() -> None:
-    rex = _by_id(get_arena_roster().monsters, "srd-tyrannosaurus-rex")
+    rex = _by_id(build_arena_roster().monsters, "srd-tyrannosaurus-rex")
     bite, tail = rex.weapon_attack, rex.alternate_weapon_attacks[0]
     assert bite.control_effect is not None and bite.control_effect.restrains_while_grappled
     assert tail.forbid_target_grappled_by_self is True
