@@ -130,20 +130,11 @@ def build_class_spell_package(class_id: CasterClassId, character_level: int) -> 
         spell for spell in CANONICAL_CANTRIPS.get(class_id, ())
         if spell.min_character_level <= character_level
     ]
-    if class_id == "cleric":
-        expected_cantrips = 3 + int(character_level >= 4) + int(character_level >= 10)
-        if len(cantrips) != expected_cantrips:
-            raise ValueError(
-                f"Cleric level {character_level} canonical package needs {expected_cantrips} cantrips, "
-                f"has {len(cantrips)}."
-            )
-    if class_id == "warlock":
-        expected_cantrips = 2 + int(character_level >= 4) + int(character_level >= 10)
-        if len(cantrips) != expected_cantrips:
-            raise ValueError(
-                f"Warlock level {character_level} canonical package needs {expected_cantrips} cantrips, "
-                f"has {len(cantrips)}."
-            )
+    expected_cantrips = None
+    if class_id == "cleric": expected_cantrips = 3 + int(character_level >= 4) + int(character_level >= 10)
+    if class_id == "warlock": expected_cantrips = 2 + int(character_level >= 4) + int(character_level >= 10)
+    if expected_cantrips is not None and len(cantrips) != expected_cantrips:
+        raise ValueError(f"{class_id} level {character_level} canonical package needs {expected_cantrips} cantrips, has {len(cantrips)}.")
     return ClassSpellPackage(
         class_id=class_id, casting_ability=CASTING_ABILITIES[class_id],
         cantrips=cantrips, spells=prepared[:expected], always_prepared_spells=always_prepared,
