@@ -13,13 +13,14 @@ logger = logging.getLogger(__name__)
 
 def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
     damage = definition.damage
-    legacy_grapple = definition.grapple
-    failure_control = compile_control(definition.failure_control or legacy_grapple)
+    generic_control = compile_control(definition.failure_control)
+    legacy_control = compile_control(definition.grapple)
+    effective_control = generic_control or legacy_control
     target_size = definition.target_max_size
-    if target_size is None and failure_control is not None:
-        target_size = failure_control.max_target_size
-    grapple_escape_dc = failure_control.grapple_escape_dc if failure_control is not None else None
-    restrains = bool(failure_control and failure_control.restrains_while_grappled)
+    if target_size is None and effective_control is not None:
+        target_size = effective_control.max_target_size
+    grapple_escape_dc = effective_control.grapple_escape_dc if effective_control is not None else None
+    restrains = bool(effective_control and effective_control.restrains_while_grappled)
     return SavingThrowAction(
         id=definition.id,
         name=definition.name,
@@ -34,7 +35,7 @@ def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
         damage_type=definition.damage_type.value if definition.damage_type else None,
         success_damage=definition.success_damage,
         magical_effect=definition.magical_effect,
-        failure_control=failure_control,
+        failure_control=generic_control,
         grapple_escape_dc=grapple_escape_dc,
         restrains_while_grappled=restrains,
         resource_id=definition.resource_id,
