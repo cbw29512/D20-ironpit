@@ -4,6 +4,7 @@ from app.combat.action_economy import is_available, spend
 from app.combat.barbarian import end_rage_if_incapacitated
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
+from app.combat.evasion import evasion_damage_fraction
 from app.combat.grapple import apply_grapple
 from app.combat.resources import action_resource_available, spend_action_resource
 from app.combat.saving_throw_rolls import resolve_saving_throw
@@ -29,11 +30,19 @@ def _damage_rolls(action: SavingThrowAction, dice: DiceProvider, shared_damage_r
     return list(shared_damage_rolls)
 
 
-def _damage_components(action: SavingThrowAction, dice: DiceProvider, succeeded: bool, shared_damage_rolls: list[int] | None = None) -> list[DamageRollComponent]:
+def _damage_components(
+    state: CombatantState, action: SavingThrowAction, dice: DiceProvider, succeeded: bool,
+    shared_damage_rolls: list[int] | None = None,
+) -> list[DamageRollComponent]:
     if action.damage_dice_count == 0 or (succeeded and action.success_damage == "none"): return []
+    evasion = evasion_damage_fraction(state, action, succeeded)
+    if evasion == (0, 1): return []
     if action.damage_type is None: raise ValueError(f"{action.name} has damage dice but no damage type.")
     rolls = _damage_rolls(action, dice, shared_damage_rolls); total = sum(rolls) + action.damage_bonus
-    if succeeded and action.success_damage == "half": total //= 2
+    if evasion is not None:
+        total = total * evasion[0] // evasion[1]
+    elif succeeded and action.success_damage == "half":
+        total //= 2
     return [DamageRollComponent(source=action.name, notation=f"{action.damage_dice_count}d{action.damage_dice_size}+{action.damage_bonus}", rolls=rolls,
                                 modifier=action.damage_bonus, damage_type=DamageType(action.damage_type), total=max(0, total))]
 
@@ -56,7 +65,7 @@ def resolve_save_action(
     hp_before = target.state.current_hp; temporary_hp_before = target.state.temporary_hp
     death_success_before = target.state.death_save_successes; death_failure_before = target.state.death_save_failures
     concentration_before = target.state.concentration.effect_id if target.state.concentration else None
-    rolled_components = _damage_components(action, dice, succeeded, shared_damage_rolls)
+    rolled_components = _damage_components(target.state, action, dice, succeeded, shared_damage_rolls)
     applied_total, damage_components = apply_damage_defenses(target.state, rolled_components)
     damage_roll = None; damage_outcome = None
     if rolled_components:
@@ -72,6 +81,8 @@ def resolve_save_action(
         applied_conditions = apply_grapple(target.state, actor.combatant_id, action.grapple_escape_dc, action.range_ft, restrains=action.restrains_while_grappled)
     outcome = "SUCCEEDS" if succeeded else "FAILS"
     description = f"{target.state.template.name} {outcome} a DC {action.dc} {action.save_ability.title()} save against {actor.state.template.name}'s {action.name}."
+    if evasion_damage_fraction(target.state, action, succeeded) is not None:
+        description += " Evasion modifies the damage."
     if damage_outcome == "undead_fortitude": description += f" {target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP."
     if "grappled" in applied_conditions: description += f" {target.state.template.name} is Grappled."
     if "restrained" in applied_conditions: description += f" {target.state.template.name} is Restrained while Grappled."
