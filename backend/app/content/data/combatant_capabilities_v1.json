@@ -13376,15 +13376,15 @@
         "effects": [
           {
             "kind": "damage",
-            "source": "Poison",
+            "source": "conditional:attacker_bloodied",
             "dice": {
               "count": 1,
               "size": 4,
               "bonus": 1
             },
             "damage_type": "poison",
-            "trigger": "on_hit",
-            "mode": "add"
+            "trigger": "attacker_bloodied",
+            "mode": "replace_weapon"
           }
         ],
         "forbid_target_grappled_by_self": false
