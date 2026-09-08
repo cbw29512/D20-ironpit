@@ -7789,6 +7789,7 @@
         },
         "damage_type": "bludgeoning",
         "success_damage": "none",
+        "magical_effect": false,
         "grapple": {
           "kind": "grapple",
           "escape_dc": 12,
@@ -9769,6 +9770,7 @@
         },
         "damage_type": "bludgeoning",
         "success_damage": "none",
+        "magical_effect": false,
         "grapple": {
           "kind": "grapple",
           "escape_dc": 14,
@@ -13982,6 +13984,7 @@
         },
         "damage_type": "acid",
         "success_damage": "half",
+        "magical_effect": false,
         "resource_id": "srd-black-dragon-wyrmling-acid-breath-recharge",
         "resource_cost": 1,
         "animation": "save-effect"
@@ -14149,6 +14152,7 @@
         },
         "damage_type": "lightning",
         "success_damage": "half",
+        "magical_effect": false,
         "resource_id": "srd-blue-dragon-wyrmling-lightning-breath-recharge",
         "resource_cost": 1,
         "animation": "save-effect"
@@ -14349,6 +14353,7 @@
         },
         "damage_type": "fire",
         "success_damage": "half",
+        "magical_effect": false,
         "resource_id": "srd-dragon-turtle-steam-breath-recharge",
         "resource_cost": 1,
         "animation": "save-effect"
@@ -14639,6 +14644,7 @@
         },
         "damage_type": "poison",
         "success_damage": "half",
+        "magical_effect": false,
         "resource_id": "srd-green-dragon-wyrmling-poison-breath-recharge",
         "resource_cost": 1,
         "animation": "save-effect"
@@ -14807,6 +14813,7 @@
         },
         "damage_type": "fire",
         "success_damage": "half",
+        "magical_effect": false,
         "resource_id": "srd-hell-hound-fire-breath-recharge",
         "resource_cost": 1,
         "animation": "save-effect"
@@ -15340,6 +15347,7 @@
         },
         "damage_type": "fire",
         "success_damage": "half",
+        "magical_effect": false,
         "resource_id": "srd-red-dragon-wyrmling-fire-breath-recharge",
         "resource_cost": 1,
         "animation": "save-effect"
@@ -16538,6 +16546,7 @@
         },
         "damage_type": "cold",
         "success_damage": "half",
+        "magical_effect": false,
         "resource_id": "srd-white-dragon-wyrmling-cold-breath-recharge",
         "resource_cost": 1,
         "animation": "save-effect"
@@ -16677,6 +16686,7 @@
         },
         "damage_type": "cold",
         "success_damage": "half",
+        "magical_effect": false,
         "resource_id": "srd-winter-wolf-cold-breath-recharge",
         "resource_cost": 1,
         "animation": "save-effect"
@@ -16973,6 +16983,7 @@
         },
         "damage_type": "acid",
         "success_damage": "half",
+        "magical_effect": false,
         "resource_id": "srd-young-black-dragon-acid-breath-recharge",
         "resource_cost": 1,
         "animation": "save-effect"
@@ -17146,6 +17157,7 @@
         },
         "damage_type": "lightning",
         "success_damage": "half",
+        "magical_effect": false,
         "resource_id": "srd-young-blue-dragon-lightning-breath-recharge",
         "resource_cost": 1,
         "animation": "save-effect"
@@ -17316,6 +17328,7 @@
         },
         "damage_type": "poison",
         "success_damage": "half",
+        "magical_effect": false,
         "resource_id": "srd-young-green-dragon-poison-breath-recharge",
         "resource_cost": 1,
         "animation": "save-effect"
@@ -17490,6 +17503,7 @@
         },
         "damage_type": "fire",
         "success_damage": "half",
+        "magical_effect": false,
         "resource_id": "srd-young-red-dragon-fire-breath-recharge",
         "resource_cost": 1,
         "animation": "save-effect"
@@ -17660,6 +17674,7 @@
         },
         "damage_type": "cold",
         "success_damage": "half",
+        "magical_effect": false,
         "resource_id": "srd-young-white-dragon-cold-breath-recharge",
         "resource_cost": 1,
         "animation": "save-effect"
