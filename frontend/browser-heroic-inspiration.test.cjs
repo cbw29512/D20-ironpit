@@ -74,7 +74,8 @@ window.IRON_PIT_BROWSER_GRAPPLE = { speedIsZero: () => false, attackDisadvantage
 window.IRON_PIT_BROWSER_MODIFIERS = {
   effectiveSpeed: (state) => state.template.speed_ft, effectiveArmorClass: (state) => state.template.armor_class,
   attacksAgainstAdvantage: () => 0, consumeAttacksAgainstAdvantage: () => 0, nextAttackAgainstAdvantage: () => 0,
-  consumeNextAttackAgainstAdvantage: () => 0, applyD20Bonus: (_state, _kind, roll) => roll,
+  consumeNextAttackAgainstAdvantage: () => 0, nextAttackMadeDisadvantage: () => 0,
+  consumeNextAttackMadeDisadvantage: () => 0, applyD20Bonus: (_state, _kind, roll) => roll,
 };
 window.IRON_PIT_BROWSER_CONDITION_RULES = {
   incapacitated: (state) => state.is_unconscious, has: (state, id) => state.active_effect_ids.includes(id),
