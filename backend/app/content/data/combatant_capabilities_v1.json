@@ -3640,6 +3640,7 @@
             "kind": "speed",
             "flat_bonus": -10,
             "consume_on_attack_against": false,
+            "consume_on_attack_made": false,
             "expires_at_start_of_source_turn": false,
             "expires_at_end_of_target_turn": true
           }
@@ -3685,6 +3686,7 @@
             "kind": "speed",
             "flat_bonus": -10,
             "consume_on_attack_against": false,
+            "consume_on_attack_made": false,
             "expires_at_start_of_source_turn": false,
             "expires_at_end_of_target_turn": true
           }
@@ -12684,6 +12686,7 @@
             "kind": "attacks-against-advantage",
             "flat_bonus": 0,
             "consume_on_attack_against": true,
+            "consume_on_attack_made": false,
             "expires_at_start_of_source_turn": true,
             "expires_at_end_of_target_turn": false
           }
