@@ -9,7 +9,7 @@ def test_incorporeal_movement_is_combat_irrelevant_in_standard_pit() -> None:
     names = {str(row["name"]) for row in rows}
     by_name = {str(row["name"]): row for row in rows}
     expected_traits = {
-        "Specter": ["Incorporeal Movement"],
+        "Specter": ["Incorporeal Movement", "Sunlight Sensitivity"],
         "Wraith": ["Incorporeal Movement", "Sunlight Sensitivity"],
     }
 
