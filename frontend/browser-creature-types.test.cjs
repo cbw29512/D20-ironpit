@@ -30,7 +30,11 @@ assert.ok(reef.movement_modes.swim_ft > 0, "srd-reef-shark must preserve its sou
 for (const id of [
   "srd-giant-shark", "srd-hunter-shark", "srd-piranha", "srd-swarm-of-piranhas",
 ]) {
-  assert.equal(monsters[id], undefined, `${id} must fail closed until its conditional attack modifier is modeled`);
+  const monster = monsters[id];
+  assert.ok(monster, `${id} must be certified once target-missing-hp Advantage is modeled`);
+  assert.deepEqual(monster.attacks[0].conditionalAttackModifiers, [
+    { trigger: "target_missing_hp", mode: "advantage" },
+  ]);
 }
 
-console.log("Generated browser monsters preserve Reef Shark Pack Tactics, treat Water Breathing as arena-neutral, and keep conditional attack modifiers fail-closed.");
+console.log("Generated browser monsters preserve aquatic source data and export target-missing-hp Advantage declaratively.");
