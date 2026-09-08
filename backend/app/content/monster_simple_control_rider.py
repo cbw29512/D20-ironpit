@@ -79,7 +79,9 @@ def parse_simple_control_rider(hit: str) -> tuple[str, HitControlEffect | None, 
 
 
 def has_unmodeled_control_text(actions: str) -> bool:
-    """Fail closed whenever any control wording or attached behavior remains after exact stripping."""
+    """Fail closed only for control clauses whose behavior remains after exact stripping."""
+    if not _CONTROL_WORDS.search(actions):
+        return False
     clean = _GRAPPLE.sub("", actions)
     clean = _RESTRAINED.sub("", clean)
     clean = _POISONED.sub("", clean)
