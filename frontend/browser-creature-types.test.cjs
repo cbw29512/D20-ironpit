@@ -37,4 +37,11 @@ for (const id of [
   ]);
 }
 
-console.log("Generated browser monsters preserve aquatic source data and export target-missing-hp Advantage declaratively.");
+for (const id of ["srd-specter", "srd-wraith"]) {
+  const monster = monsters[id];
+  assert.ok(monster, `${id} must be certified when Incorporeal Movement is classified as combat-irrelevant in the standard Pit`);
+  assert.deepEqual(monster.source_trait_names, ["Incorporeal Movement"]);
+  assert.equal(monster.movement_modes.fly_ft > 0, true, `${id} must preserve its printed flight movement`);
+}
+
+console.log("Generated browser monsters preserve source movement/traits, including combat-irrelevant Incorporeal Movement, and export target-missing-hp Advantage declaratively.");
