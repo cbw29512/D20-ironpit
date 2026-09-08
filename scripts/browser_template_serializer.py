@@ -65,6 +65,10 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             row.update(normal=weapon.normal_range_ft, long=weapon.long_range_ft, projectile=weapon.projectile)
         if attack.fixed_damage is not None:
             row["fixedDamage"] = attack.fixed_damage
+        if attack.resource_id:
+            row["resourceId"] = attack.resource_id
+            if attack.resource_cost != 1:
+                row["resourceCost"] = attack.resource_cost
         if attack.rage_eligible:
             row["rageEligible"] = True
         if attack.knocks_prone_max_size is not None:
@@ -259,6 +263,10 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             "attacks": [attack_row(item, traits) for item in attacks], "primary_attack_id": template.weapon_attack.id,
             "saving_throw_actions": [_save(item) for item in template.saving_throw_actions],
             "traits": sorted(traits), "resources": {item.id: item.max_uses for item in template.resources},
+            "resource_recharge": {
+                item.id: {"minimum": item.recharge_d6_min, "maxUses": item.max_uses, "name": item.name}
+                for item in template.resources if item.recharge_d6_min is not None
+            },
             "damage_resistances": [item.value for item in template.damage_resistances],
             "damage_vulnerabilities": [item.value for item in template.damage_vulnerabilities],
             "damage_immunities": [item.value for item in template.damage_immunities],
