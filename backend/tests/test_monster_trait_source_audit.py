@@ -75,6 +75,16 @@ def test_target_missing_hp_attack_modifiers_are_universally_compiled() -> None:
         assert catalog[name].blockers == []
 
 
+def test_sahuagin_blood_frenzy_reuses_target_missing_hp_advantage() -> None:
+    monster = _monster("Sahuagin Warrior")
+    assert monster.source_trait_names == ["Blood Frenzy", "Limited Amphibiousness", "Shark Telepathy"]
+    assert CombatTrait.BLOOD_FRENZY in monster.combat_traits
+    assert trait_issues(monster, _row("Sahuagin Warrior")) == []
+    card = next(card for card in build_monster_catalog() if card.name == "Sahuagin Warrior")
+    assert card.coverage_status is CoverageStatus.RAW_READY
+    assert card.blockers == []
+
+
 def test_other_conditional_attack_modifiers_remain_fail_closed() -> None:
     rows = load_monster_rows()
     names = {str(row["name"]) for row in rows}
