@@ -99,7 +99,8 @@ def test_action_surge_cannot_restart_a_natural_one_terminated_turn() -> None:
     events, sequence = resolve_action_surge_attack(
         1, 1, fighter, setup, FixedDiceProvider([20]), "1:hero-1:karnok-stoneward-l2",
     )
+    action_surge = next(item for item in fighter.state.resources if item.id == "action-surge")
     assert events == []
     assert sequence == 1
-    assert fighter.state.resources.get("action-surge", 0) == 1
+    assert action_surge.current_uses == 1
     assert fighter.state.turn_terminated is True
