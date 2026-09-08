@@ -8,22 +8,45 @@ def find_resource(state: CombatantState, resource_id: str) -> ResourceState | No
     return next((resource for resource in state.resources if resource.id == resource_id), None)
 
 
-def attack_resource_available(state: CombatantState, attack: WeaponAttack) -> bool:
-    if attack.resource_id is None:
+def action_resource_available(
+    state: CombatantState,
+    resource_id: str | None,
+    resource_cost: int = 1,
+) -> bool:
+    if resource_id is None:
         return True
-    resource = find_resource(state, attack.resource_id)
-    return resource is not None and resource.current_uses >= attack.resource_cost
+    resource = find_resource(state, resource_id)
+    return resource is not None and resource.current_uses >= resource_cost
+
+
+def spend_action_resource(
+    state: CombatantState,
+    resource_id: str | None,
+    resource_cost: int = 1,
+    *,
+    action_id: str,
+) -> None:
+    if resource_id is None:
+        return
+    resource = find_resource(state, resource_id)
+    if resource is None:
+        raise ValueError(f"Action {action_id!r} references missing resource {resource_id!r}.")
+    if resource.current_uses < resource_cost:
+        raise ValueError(f"Action {action_id!r} does not have enough uses remaining.")
+    resource.current_uses -= resource_cost
+
+
+def attack_resource_available(state: CombatantState, attack: WeaponAttack) -> bool:
+    return action_resource_available(state, attack.resource_id, attack.resource_cost)
 
 
 def spend_attack_resource(state: CombatantState, attack: WeaponAttack) -> None:
-    if attack.resource_id is None:
-        return
-    resource = find_resource(state, attack.resource_id)
-    if resource is None:
-        raise ValueError(f"Attack {attack.id!r} references missing resource {attack.resource_id!r}.")
-    if resource.current_uses < attack.resource_cost:
-        raise ValueError(f"Attack {attack.id!r} does not have enough uses remaining.")
-    resource.current_uses -= attack.resource_cost
+    spend_action_resource(
+        state,
+        attack.resource_id,
+        attack.resource_cost,
+        action_id=attack.id,
+    )
 
 
 def recharge_start_of_turn(state: CombatantState, dice: DiceProvider) -> list[tuple[str, int, bool]]:
