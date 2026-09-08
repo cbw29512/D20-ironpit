@@ -110,7 +110,7 @@
         const appliedTotal = adjustedDamage(actualTarget.state, rawGraze, attack.damageType, false);
         damageComponents = [{ source: `${attack.name} (Graze)`, notation: String(rawGraze), rolls: [], modifier: 0,
           damage_type: attack.damageType, total: rawGraze, applied_total: appliedTotal }];
-        damageRoll = { notation: String(rawGraze), rolls, modifier: attack.damageBonus || 0, total: appliedTotal };
+        damageRoll = { notation: String(rawGraze), rolls: [], modifier: 0, selected_roll: null, mode: "normal", total: appliedTotal };
         const affectedStates = states(extra.setup), appliedTypes = appliedTotal > 0 ? [attack.damageType] : [];
         damageOutcome = applyDamage(actualTarget.state, appliedTotal, false, appliedTypes, affectedStates);
         window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(actualTarget.state); C()?.endIfIncapacitated(actualTarget.state, affectedStates);
