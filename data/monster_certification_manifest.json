@@ -4,8 +4,8 @@
   "generation_policy": "Derived automatically from canonical SRD rows plus runtime/source audit readiness.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 151,
-    "blocked": 179
+    "public_ready": 152,
+    "blocked": 178
   },
   "monsters": [
     {
@@ -5807,18 +5807,12 @@
         "multiattack",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "forced-movement-source-mismatch",
-        "source-attack-count-mismatch"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "forced-movement-source-mismatch",
-        "source-attack-count-mismatch"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-mimic",

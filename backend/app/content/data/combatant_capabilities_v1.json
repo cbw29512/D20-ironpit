@@ -15927,6 +15927,80 @@
         "effects": [],
         "forbid_target_grappled_by_self": false,
         "resource_cost": 1
+      },
+      {
+        "id": "srd-merrow-harpoon-melee",
+        "name": "Harpoon",
+        "weapon_id": "srd-merrow-harpoon-melee-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 6,
+        "damage": {
+          "count": 2,
+          "size": 6,
+          "bonus": 4
+        },
+        "damage_type": "piercing",
+        "animation": "strike",
+        "reach_ft": 5,
+        "normal_range_ft": 20,
+        "long_range_ft": 60,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "conditional_attack_modifiers": [],
+        "effects": [
+          {
+            "kind": "forced_movement",
+            "movement": {
+              "direction": "pull",
+              "max_distance_ft": 15,
+              "distance_mode": "up_to"
+            },
+            "max_target_size": "large"
+          }
+        ],
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
+      },
+      {
+        "id": "srd-merrow-harpoon-ranged",
+        "name": "Harpoon",
+        "weapon_id": "srd-merrow-harpoon-ranged-weapon",
+        "attack_kind": "ranged",
+        "attack_bonus": 6,
+        "damage": {
+          "count": 2,
+          "size": 6,
+          "bonus": 4
+        },
+        "damage_type": "piercing",
+        "animation": "strike",
+        "reach_ft": 5,
+        "normal_range_ft": 20,
+        "long_range_ft": 60,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "conditional_attack_modifiers": [],
+        "effects": [
+          {
+            "kind": "forced_movement",
+            "movement": {
+              "direction": "pull",
+              "max_distance_ft": 15,
+              "distance_mode": "up_to"
+            },
+            "max_target_size": "large"
+          }
+        ],
+        "forbid_target_grappled_by_self": false,
+        "resource_cost": 1
       }
     ],
     "primary_attack_id": "srd-merrow-bite",
@@ -15942,14 +16016,18 @@
         {
           "attack_ids": [
             "srd-merrow-bite",
-            "srd-merrow-claw"
+            "srd-merrow-claw",
+            "srd-merrow-harpoon-melee",
+            "srd-merrow-harpoon-ranged"
           ],
           "save_action_ids": []
         },
         {
           "attack_ids": [
             "srd-merrow-bite",
-            "srd-merrow-claw"
+            "srd-merrow-claw",
+            "srd-merrow-harpoon-melee",
+            "srd-merrow-harpoon-ranged"
           ],
           "save_action_ids": []
         }
