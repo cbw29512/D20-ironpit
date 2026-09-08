@@ -14,7 +14,7 @@ for (const file of [
   "browser-zero-hp.js", "browser-weapon-mastery.js", "browser-graze.js", "browser-vex.js", "browser-attack.js",
   "browser-reactions.js", "browser-saves.js", "browser-charge.js", "browser-light-weapons.js", "browser-light-attack.js",
   "browser-standard-attack-action.js", "browser-multiattack.js", "browser-action-surge.js", "browser-formation.js",
-  "browser-engine.js",
+  "browser-initiative.js",
 ]) load(file);
 
 function queuedDice(values, fallback = 10) {
@@ -46,7 +46,7 @@ function neutralizeInitiative(setup) {
 {
   const setup = basicSetup(); neutralizeInitiative(setup);
   window.IRON_PIT_DICE = queuedDice([20, 19]);
-  const initiative = window.IRON_PIT_BROWSER_ENGINE.initiative(setup);
+  const initiative = window.IRON_PIT_BROWSER_INITIATIVE.resolve(setup);
   assert.equal(initiative.groups[0].side, "heroes");
   assert.equal(initiative.groups[0].natural_roll, 20);
 }
@@ -54,7 +54,7 @@ function neutralizeInitiative(setup) {
 {
   const setup = basicSetup(); neutralizeInitiative(setup);
   window.IRON_PIT_DICE = queuedDice([1, 2]);
-  const initiative = window.IRON_PIT_BROWSER_ENGINE.initiative(setup);
+  const initiative = window.IRON_PIT_BROWSER_INITIATIVE.resolve(setup);
   assert.equal(initiative.groups.at(-1).side, "heroes");
   assert.equal(initiative.groups.at(-1).natural_roll, 1);
 }
@@ -62,7 +62,7 @@ function neutralizeInitiative(setup) {
 {
   const setup = basicSetup(); neutralizeInitiative(setup);
   window.IRON_PIT_DICE = queuedDice([10, 10, 5, 5, 7, 12]);
-  const initiative = window.IRON_PIT_BROWSER_ENGINE.initiative(setup);
+  const initiative = window.IRON_PIT_BROWSER_INITIATIVE.resolve(setup);
   const hero = initiative.groups.find((group) => group.side === "heroes");
   const monster = initiative.groups.find((group) => group.side === "monsters");
   assert.deepEqual(hero.tie_break_rolls, [5, 7]);
@@ -96,7 +96,7 @@ function neutralizeInitiative(setup) {
 }
 
 {
-  const { hero: mover, monster: reactor, ...fight } = basicSetup();
+  const { hero: mover, monster: reactor } = basicSetup();
   const setup = { heroes: [mover], monsters: [reactor] };
   window.IRON_PIT_BROWSER_STATE.beginTurn(reactor.state);
   window.IRON_PIT_DICE = queuedDice([1]);
