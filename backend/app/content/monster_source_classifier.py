@@ -30,6 +30,10 @@ _HIDDEN_RIDER = re.compile(
     re.I,
 )
 _ATTACK_ROLL = re.compile(r"\b(?:Melee|Ranged|Melee or Ranged)\s+Attack Roll:", re.I)
+_CONDITIONAL_ATTACK_MODIFIER = re.compile(
+    r"\b(?:Melee|Ranged|Melee or Ranged)\s+Attack Roll:\s*[+-]?\d+\s*\([^)]*\b(?:Advantage|Disadvantage)\b[^)]*\)",
+    re.I,
+)
 _ALLOWED_TRAITS = set(_ARENA_NEUTRAL_TRAITS) | set(_MODELED_TRAITS)
 
 
@@ -88,6 +92,8 @@ def source_blockers(row: dict[str, object], monster_names: set[str]) -> list[str
     actions = str(row.get("actions", ""))
     if not _ATTACK_ROLL.search(actions):
         blockers.append("no-attack-roll")
+    if _CONDITIONAL_ATTACK_MODIFIER.search(actions):
+        blockers.append("conditional-attack-modifier")
     if _COMPLEX_ACTION.search(actions):
         blockers.append("save-or-complex-action")
     if _CONDITION_OR_CONTROL.search(actions):
