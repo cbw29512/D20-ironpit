@@ -10,10 +10,17 @@ from app.content.monster_simple_hit_modifier_rider import parse_simple_hit_modif
 from app.domain.models import DamageType, OnHitDamage, Weapon, WeaponAttack, WeaponAttackKind
 
 _DAMAGE_TYPES = r"Acid|Bludgeoning|Cold|Fire|Force|Lightning|Necrotic|Piercing|Poison|Psychic|Radiant|Slashing|Thunder"
+_SAVE_ABILITY = r"Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma"
+_NEXT_ACTION = (
+    r"(?:\s+[A-Z][A-Za-z0-9 ’'()/-]+\.\s+(?:"
+    r"(?:Melee|Ranged|Melee or Ranged)\s+Attack Roll:|"
+    rf"(?:{_SAVE_ABILITY})\s+Saving Throw:))|$"
+)
 _ATTACK = re.compile(
     r"(?P<name>[A-Z][A-Za-z0-9 ’'()/-]+)\.\s+(?P<mode>Melee|Ranged|Melee or Ranged)\s+Attack Roll:\s*"
-    r"(?P<bonus>[+-]?\d+)\s*(?P<conditional>\([^)]*\))?,\s*(?P<range>[^.]+)\.\s+Hit:\s*(?P<hit>.*?)(?=(?:\s+[A-Z][A-Za-z0-9 ’'()/-]+\.\s+"
-    r"(?:Melee|Ranged|Melee or Ranged)\s+Attack Roll:)|$)", re.S,
+    r"(?P<bonus>[+-]?\d+)\s*(?P<conditional>\([^)]*\))?,\s*(?P<range>[^.]+)\.\s+Hit:\s*(?P<hit>.*?)"
+    rf"(?={_NEXT_ACTION})",
+    re.S,
 )
 _DICE_DAMAGE = re.compile(
     rf"\d+\s*\(\s*(?P<count>\d+)d(?P<size>\d+)(?:\s*(?P<sign>[+-])\s*(?P<bonus>\d+))?\s*\)\s+(?P<type>{_DAMAGE_TYPES})\s+damage",
