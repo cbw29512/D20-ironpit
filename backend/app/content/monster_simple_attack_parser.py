@@ -18,7 +18,7 @@ _NEXT_ACTION = (
 )
 _ATTACK = re.compile(
     r"(?P<name>[A-Z][A-Za-z0-9 ’'()/-]+)\.\s+(?P<mode>Melee|Ranged|Melee or Ranged)\s+Attack Roll:\s*"
-    r"(?P<bonus>[+-]?\d+)\s*(?P<conditional>\([^)]*\))?,\s*(?P<range>[^.]+)\.\s+Hit:\s*(?P<hit>.*?)"
+    r"(?P<bonus>[+-]?\d+)\s*(?P<conditional>\([^)]*\))?,\s*(?P<range>.*?)\.\s+Hit:\s*(?P<hit>.*?)"
     rf"(?={_NEXT_ACTION})",
     re.S,
 )
