@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.dice import DiceProvider
+from app.domain.events import AuditPhase, AuditStep, BattleEvent, DiceRoll, EventAudit
 from app.domain.models import CombatantState, ResourceState, WeaponAttack
 
 
@@ -62,3 +63,46 @@ def recharge_start_of_turn(state: CombatantState, dice: DiceProvider) -> list[tu
             resource.current_uses = resource.max_uses
         results.append((resource.id, roll, restored))
     return results
+
+
+def recharge_start_events(
+    sequence: int,
+    round_number: int,
+    state: CombatantState,
+    actor_id: str,
+    dice: DiceProvider,
+) -> tuple[list[BattleEvent], int]:
+    events: list[BattleEvent] = []
+    for resource_id, roll, restored in recharge_start_of_turn(state, dice):
+        resource = find_resource(state, resource_id)
+        if resource is None or resource.recharge_d6_min is None:
+            raise ValueError(f"Recharge result references missing resource {resource_id!r}.")
+        threshold = resource.recharge_d6_min
+        outcome = "recharges" if restored else "does not recharge"
+        events.append(BattleEvent(
+            sequence=sequence,
+            round_number=round_number,
+            event_type="feature",
+            actor_id=actor_id,
+            actor_name=state.template.name,
+            feature_id=f"recharge:{resource_id}",
+            attack_roll=DiceRoll(
+                notation="1d6", rolls=[roll], selected_roll=roll, modifier=0, total=roll,
+            ),
+            resource_remaining=resource.current_uses,
+            animation="resource",
+            description=(
+                f"{state.template.name} rolls {roll} for {resource.name} "
+                f"(Recharge {threshold}–6) and {outcome}."
+            ),
+            audit=EventAudit(steps=[
+                AuditStep(phase=AuditPhase.ROLL, kind="roll", label=f"Recharge roll: {roll}"),
+                AuditStep(
+                    phase=AuditPhase.RESOURCE_CHANGE,
+                    kind="resource",
+                    label=f"{resource.name}: {resource.current_uses}/{resource.max_uses}",
+                ),
+            ]),
+        ))
+        sequence += 1
+    return events, sequence
