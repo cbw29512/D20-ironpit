@@ -14,11 +14,13 @@ ConditionName = Literal[
     "restrained", "stunned", "unconscious",
 ]
 ForcedMovementDirection = Literal["push", "pull"]
+ForcedMovementDistanceMode = Literal["fixed", "up_to"]
 
 
 class ForcedMovementEffect(BaseModel):
     direction: ForcedMovementDirection
     max_distance_ft: int = Field(ge=5, le=120, multiple_of=5)
+    distance_mode: ForcedMovementDistanceMode = "fixed"
 
 
 class GrappleSource(BaseModel):
