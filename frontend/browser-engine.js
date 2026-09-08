@@ -45,6 +45,39 @@
     return `${quarters / (4 / divisor)}/${divisor}`;
   }
 
+  function initiativePriority(group) {
+    if (group.natural_roll === 20) return 2;
+    if (group.natural_roll === 1) return 0;
+    return 1;
+  }
+
+  function rerollExactInitiativeTies(groups) {
+    while (true) {
+      const signatures = new Map();
+      for (const group of groups) {
+        const key = `${initiativePriority(group)}:${group.initiative_count}:${group.tie_break_rolls.join(",")}`;
+        const tied = signatures.get(key) || []; tied.push(group); signatures.set(key, tied);
+      }
+      const unresolved = [...signatures.values()].filter((tied) => tied.length > 1);
+      if (!unresolved.length) return;
+      for (const tied of unresolved) {
+        for (const group of tied) {
+          const value = window.IRON_PIT_DICE.roll(20);
+          group.tie_break_rolls.push(value); group.tie_break_roll = value;
+        }
+      }
+    }
+  }
+
+  function compareTieHistory(left, right) {
+    const length = Math.max(left.length, right.length);
+    for (let index = 0; index < length; index += 1) {
+      const a = left[index] || 0, b = right[index] || 0;
+      if (a !== b) return b - a;
+    }
+    return 0;
+  }
+
   function initiative(setup) {
     const groups = setup.heroes.map((member, index) => ({ side: "heroes", template_id: member.state.template.id, members: [member], index }));
     const byTemplate = new Map();
@@ -61,22 +94,23 @@
       group.initiative_roll = roll; group.natural_roll = roll.selected_roll;
       group.initiative_bonus = state.template.initiative_bonus;
       group.initiative_count = roll.total;
-      group.tie_break_roll = null;
+      group.tie_break_roll = null; group.tie_break_rolls = [];
       group.members.forEach((member) => {
         member.state.initiative_roll = roll.selected_roll;
         member.state.initiative_total = roll.total;
       });
     }
-    const tiedCounts = new Map();
-    groups.forEach((group) => { const list = tiedCounts.get(group.initiative_count) || []; list.push(group); tiedCounts.set(group.initiative_count, list); });
-    for (const tied of tiedCounts.values()) {
-      if (new Set(tied.map((item) => item.side)).size < 2) continue;
-      const arena = window.IRON_PIT_DICE.roll(20);
-      tied.forEach((group) => { group.tie_break_roll = group.side === "heroes" ? arena : 21 - arena; });
-    }
-    groups.sort((a, b) => b.initiative_count - a.initiative_count || (b.tie_break_roll || 0) - (a.tie_break_roll || 0) || a.index - b.index);
+    rerollExactInitiativeTies(groups);
+    groups.sort((a, b) => initiativePriority(b) - initiativePriority(a)
+      || b.initiative_count - a.initiative_count
+      || compareTieHistory(a.tie_break_rolls, b.tie_break_rolls)
+      || a.index - b.index);
     return {
-      groups: groups.map((group) => ({ side: group.side, template_id: group.template_id, combatant_ids: group.members.map((m) => m.combatant_id), initiative_roll: group.initiative_roll, natural_roll: group.natural_roll, initiative_bonus: group.initiative_bonus, initiative_count: group.initiative_count, tie_break_roll: group.tie_break_roll })),
+      groups: groups.map((group) => ({
+        side: group.side, template_id: group.template_id, combatant_ids: group.members.map((m) => m.combatant_id),
+        initiative_roll: group.initiative_roll, natural_roll: group.natural_roll, initiative_bonus: group.initiative_bonus,
+        initiative_count: group.initiative_count, tie_break_roll: group.tie_break_roll, tie_break_rolls: [...group.tie_break_rolls],
+      })),
       turn_order: groups.flatMap((group) => group.members.map((member) => member.combatant_id)),
     };
   }
@@ -100,7 +134,13 @@
     const all = [...setup.heroes, ...setup.monsters];
     const names = new Map(all.map((member) => [member.combatant_id, member.state.template.name]));
     let sequence = startSequence;
-    return init.groups.map((group) => ({ sequence: sequence++, round_number: 0, event_type: "initiative", actor_id: group.combatant_ids[0], actor_name: names.get(group.combatant_ids[0]), attack_roll: group.initiative_roll, animation: "initiative", description: `${names.get(group.combatant_ids[0])}${group.combatant_ids.length > 1 ? ` group (${group.combatant_ids.length})` : ""} rolls initiative ${group.initiative_count}.` }));
+    return init.groups.map((group) => {
+      let description = `${names.get(group.combatant_ids[0])}${group.combatant_ids.length > 1 ? ` group (${group.combatant_ids.length})` : ""} rolls initiative ${group.initiative_count}.`;
+      if (group.natural_roll === 20) description += " Natural 20: top initiative priority.";
+      if (group.natural_roll === 1) description += " Natural 1: bottom initiative priority.";
+      if (group.tie_break_rolls.length) description += ` Tie reroll${group.tie_break_rolls.length > 1 ? "s" : ""}: ${group.tie_break_rolls.join(" → ")}.`;
+      return { sequence: sequence++, round_number: 0, event_type: "initiative", actor_id: group.combatant_ids[0], actor_name: names.get(group.combatant_ids[0]), attack_roll: group.initiative_roll, animation: "initiative", description };
+    });
   }
 
   function lifecycle(sequence, round, member, setup, targetTiming, sourceTiming) {
@@ -146,5 +186,5 @@
     return { battle_id: crypto.randomUUID?.() || `battle-${Date.now()}`, outcome: result, rounds: round, setup, initiative: init, events, ruleset: "SRD 5.2.1 Iron Pit formation deathmatch subset" };
   }
 
-  window.IRON_PIT_BROWSER_ENGINE = { runEncounter };
+  window.IRON_PIT_BROWSER_ENGINE = { initiative, runEncounter };
 })();
