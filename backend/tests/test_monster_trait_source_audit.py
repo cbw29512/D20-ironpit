@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from app.content.monster_catalog import build_monster_catalog, load_monster_rows
 from app.content.monster_trait_source_audit import parse_trait_names, trait_issues
+from app.content.monsters_zero_engine import build_zero_engine_monsters
 from app.content.roster import build_arena_roster
 from app.domain.catalog import CoverageStatus
 from app.domain.traits import CombatTrait
@@ -32,6 +33,12 @@ def test_arena_neutral_trait_remains_fingerprinted() -> None:
     deer = _monster("Deer")
     assert deer.source_trait_names == ["Agile"]
     assert trait_issues(deer, _row("Deer")) == []
+
+
+def test_xorn_environment_only_traits_are_neutral_in_standard_pit() -> None:
+    xorn = next(monster for monster in build_zero_engine_monsters() if monster.name == "Xorn")
+    assert xorn.source_trait_names == ["Earth Glide", "Treasure Sense"]
+    assert trait_issues(xorn, _row("Xorn")) == []
 
 
 def test_unknown_outcome_changing_trait_fails_closed() -> None:
