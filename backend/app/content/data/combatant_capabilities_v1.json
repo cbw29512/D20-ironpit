@@ -11992,6 +11992,167 @@
   },
   {
     "schema_version": 1,
+    "id": "srd-xorn",
+    "name": "Xorn",
+    "archetype": "source-certified monster",
+    "challenge_rating": "5",
+    "kind": "monster",
+    "size": "medium",
+    "armor_class": 19,
+    "max_hp": 84,
+    "speed_ft": 20,
+    "movement_modes": {
+      "walk_ft": 20,
+      "fly_ft": 0,
+      "climb_ft": 0,
+      "swim_ft": 0,
+      "burrow_ft": 20,
+      "hover": false
+    },
+    "initiative_bonus": 0,
+    "progression_features": {
+      "critical_hit_minimum": 20,
+      "initiative_advantage": false,
+      "athletics_advantage": false,
+      "heroic_warrior": false,
+      "studied_attacks": false,
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
+    },
+    "attacks": [
+      {
+        "id": "srd-xorn-bite",
+        "name": "Bite",
+        "weapon_id": "srd-xorn-bite-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 6,
+        "damage": {
+          "count": 4,
+          "size": 6,
+          "bonus": 3
+        },
+        "damage_type": "piercing",
+        "animation": "strike",
+        "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "effects": [],
+        "forbid_target_grappled_by_self": false
+      },
+      {
+        "id": "srd-xorn-claw",
+        "name": "Claw",
+        "weapon_id": "srd-xorn-claw-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 6,
+        "damage": {
+          "count": 1,
+          "size": 10,
+          "bonus": 3
+        },
+        "damage_type": "slashing",
+        "animation": "strike",
+        "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "effects": [],
+        "forbid_target_grappled_by_self": false
+      }
+    ],
+    "primary_attack_id": "srd-xorn-bite",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 6,
+      "damage": 4
+    },
+    "attack_action": {
+      "id": "srd-xorn-multiattack",
+      "name": "Multiattack",
+      "is_attack_action": false,
+      "slots": [
+        {
+          "attack_ids": [
+            "srd-xorn-bite"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "srd-xorn-claw"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "srd-xorn-claw"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "srd-xorn-claw"
+          ],
+          "save_action_ids": []
+        }
+      ]
+    },
+    "save_actions": [],
+    "spell_save_actions": [],
+    "defensive_spell_actions": [],
+    "healing_actions": [],
+    "condition_removal_actions": [],
+    "saving_throw_bonuses": {
+      "strength": 3,
+      "dexterity": 0,
+      "constitution": 6,
+      "intelligence": 0,
+      "wisdom": 0,
+      "charisma": 0
+    },
+    "skill_bonuses": {},
+    "combat_traits": [],
+    "source_trait_names": [
+      "Earth Glide",
+      "Treasure Sense"
+    ],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [
+      "Charge"
+    ],
+    "source_limited_use_names": [],
+    "source_legendary_action_names": [],
+    "fighting_styles": [],
+    "weapon_masteries": [],
+    "damage_resistances": [],
+    "damage_vulnerabilities": [],
+    "damage_immunities": [
+      "poison"
+    ],
+    "condition_immunities": [
+      "paralyzed",
+      "petrified",
+      "poisoned"
+    ],
+    "wearing_heavy_armor": false,
+    "rage_damage_bonus": 0,
+    "resources": [],
+    "visual": {
+      "armor": "natural",
+      "main_hand": "Bite",
+      "body_style": "monster"
+    },
+    "source": "SRD 5.2.1 p. 343",
+    "unsupported_capabilities": []
+  },
+  {
+    "schema_version": 1,
     "id": "srd-zombie",
     "name": "Zombie",
     "archetype": "source-certified monster",
@@ -13160,6 +13321,271 @@
       "body_style": "humanoid"
     },
     "source": "SRD 5.2.1 p. 337",
+    "unsupported_capabilities": []
+  },
+  {
+    "schema_version": 1,
+    "id": "srd-swarm-of-insects",
+    "name": "Swarm of Insects",
+    "archetype": "source-compiled monster",
+    "challenge_rating": "1/2",
+    "kind": "monster",
+    "size": "medium",
+    "armor_class": 11,
+    "max_hp": 19,
+    "speed_ft": 20,
+    "movement_modes": {
+      "walk_ft": 20,
+      "fly_ft": 20,
+      "climb_ft": 0,
+      "swim_ft": 0,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": 1,
+    "progression_features": {
+      "critical_hit_minimum": 20,
+      "initiative_advantage": false,
+      "athletics_advantage": false,
+      "heroic_warrior": false,
+      "studied_attacks": false,
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
+    },
+    "attacks": [
+      {
+        "id": "srd-swarm-of-insects-bites",
+        "name": "Bites",
+        "weapon_id": "srd-swarm-of-insects-bites-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 3,
+        "damage": {
+          "count": 2,
+          "size": 4,
+          "bonus": 1
+        },
+        "damage_type": "poison",
+        "animation": "strike",
+        "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "effects": [
+          {
+            "kind": "damage",
+            "source": "Poison",
+            "dice": {
+              "count": 1,
+              "size": 4,
+              "bonus": 1
+            },
+            "damage_type": "poison",
+            "trigger": "on_hit",
+            "mode": "add"
+          }
+        ],
+        "forbid_target_grappled_by_self": false
+      }
+    ],
+    "primary_attack_id": "srd-swarm-of-insects-bites",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": -2,
+      "damage": 0
+    },
+    "save_actions": [],
+    "spell_save_actions": [],
+    "defensive_spell_actions": [],
+    "healing_actions": [],
+    "condition_removal_actions": [],
+    "saving_throw_bonuses": {
+      "strength": -4,
+      "dexterity": 1,
+      "constitution": 2,
+      "intelligence": -5,
+      "wisdom": -2,
+      "charisma": -5
+    },
+    "skill_bonuses": {},
+    "combat_traits": [
+      "swarm"
+    ],
+    "source_trait_names": [
+      "Spider Climb",
+      "Swarm"
+    ],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [],
+    "source_limited_use_names": [],
+    "source_legendary_action_names": [],
+    "fighting_styles": [],
+    "weapon_masteries": [],
+    "damage_resistances": [
+      "bludgeoning",
+      "piercing",
+      "slashing"
+    ],
+    "damage_vulnerabilities": [],
+    "damage_immunities": [],
+    "condition_immunities": [
+      "charmed",
+      "frightened",
+      "grappled",
+      "paralyzed",
+      "petrified",
+      "prone",
+      "restrained",
+      "stunned"
+    ],
+    "wearing_heavy_armor": false,
+    "rage_damage_bonus": 0,
+    "resources": [],
+    "visual": {
+      "armor": "natural",
+      "main_hand": "Bites",
+      "body_style": "monster"
+    },
+    "source": "SRD 5.2.1 p. 361",
+    "unsupported_capabilities": []
+  },
+  {
+    "schema_version": 1,
+    "id": "srd-swarm-of-venomous-snakes",
+    "name": "Swarm of Venomous Snakes",
+    "archetype": "source-compiled monster",
+    "challenge_rating": "2",
+    "kind": "monster",
+    "size": "medium",
+    "armor_class": 14,
+    "max_hp": 36,
+    "speed_ft": 30,
+    "movement_modes": {
+      "walk_ft": 30,
+      "fly_ft": 0,
+      "climb_ft": 0,
+      "swim_ft": 30,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": 4,
+    "progression_features": {
+      "critical_hit_minimum": 20,
+      "initiative_advantage": false,
+      "athletics_advantage": false,
+      "heroic_warrior": false,
+      "studied_attacks": false,
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
+    },
+    "attacks": [
+      {
+        "id": "srd-swarm-of-venomous-snakes-bites",
+        "name": "Bites",
+        "weapon_id": "srd-swarm-of-venomous-snakes-bites-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 6,
+        "damage": {
+          "count": 1,
+          "size": 8,
+          "bonus": 4
+        },
+        "damage_type": "piercing",
+        "animation": "strike",
+        "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "effects": [
+          {
+            "kind": "damage",
+            "source": "Piercing",
+            "dice": {
+              "count": 1,
+              "size": 4,
+              "bonus": 4
+            },
+            "damage_type": "piercing",
+            "trigger": "on_hit",
+            "mode": "add"
+          },
+          {
+            "kind": "damage",
+            "source": "Poison",
+            "dice": {
+              "count": 3,
+              "size": 6,
+              "bonus": 0
+            },
+            "damage_type": "poison",
+            "trigger": "on_hit",
+            "mode": "add"
+          }
+        ],
+        "forbid_target_grappled_by_self": false
+      }
+    ],
+    "primary_attack_id": "srd-swarm-of-venomous-snakes-bites",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 1,
+      "damage": 0
+    },
+    "save_actions": [],
+    "spell_save_actions": [],
+    "defensive_spell_actions": [],
+    "healing_actions": [],
+    "condition_removal_actions": [],
+    "saving_throw_bonuses": {
+      "strength": -1,
+      "dexterity": 4,
+      "constitution": 0,
+      "intelligence": -5,
+      "wisdom": 0,
+      "charisma": -4
+    },
+    "skill_bonuses": {},
+    "combat_traits": [
+      "swarm"
+    ],
+    "source_trait_names": [
+      "Swarm"
+    ],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [],
+    "source_limited_use_names": [],
+    "source_legendary_action_names": [],
+    "fighting_styles": [],
+    "weapon_masteries": [],
+    "damage_resistances": [
+      "bludgeoning",
+      "piercing",
+      "slashing"
+    ],
+    "damage_vulnerabilities": [],
+    "damage_immunities": [],
+    "condition_immunities": [
+      "charmed",
+      "frightened",
+      "grappled",
+      "paralyzed",
+      "petrified",
+      "prone",
+      "restrained",
+      "stunned"
+    ],
+    "wearing_heavy_armor": false,
+    "rage_damage_bonus": 0,
+    "resources": [],
+    "visual": {
+      "armor": "natural",
+      "main_hand": "Bites",
+      "body_style": "monster"
+    },
+    "source": "SRD 5.2.1 p. 362",
     "unsupported_capabilities": []
   }
 ]
