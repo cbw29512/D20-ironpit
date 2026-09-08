@@ -4,7 +4,9 @@
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { speedZero: (state) => state.active_effect_ids.includes("restrained") };
-  const T = () => window.IRON_PIT_BROWSER_TACTICAL_MIND;
+  const S = () => window.IRON_PIT_BROWSER_STATE;
+  const TC = () => window.IRON_PIT_BROWSER_TIMED;
+  const TM = () => window.IRON_PIT_BROWSER_TACTICAL_MIND;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
     available: (state, cost) => cost === "action" && state.action_available,
     spend: (state) => { state.action_available = false; },
@@ -28,6 +30,29 @@
     state.grapple_sources.push({ source_id: sourceId, escape_dc: escapeDc, range_ft: rangeFt, restrains: effectiveRestrains });
     sync(state);
     return effectiveRestrains ? ["grappled", "restrained"] : ["grappled"];
+  }
+
+  function applyControl(target, sourceId, sourceEffectId, control, rangeFt, round = null, affectedStates = []) {
+    if (!control || target.state.is_dead || !target.state.is_alive) return [];
+    if (control.maxTargetSize && !S().sizeAtMost(target, control.maxTargetSize)) return [];
+    const applied = [];
+    if (control.grappleEscapeDc) applied.push(...apply(
+      target.state, sourceId, control.grappleEscapeDc, rangeFt, Boolean(control.restrainsWhileGrappled),
+    ));
+    if (control.conditionId) {
+      const timed = TC()?.apply(target.state, control.conditionId, sourceId, {
+        sourceEffectId, appliedRound: round,
+        expiresAtStartOfSourceTurn: Boolean(control.expiresAtStartOfSourceTurn),
+        expiryTiming: control.expiryTiming || null,
+        repeatSaveAbility: control.repeatSaveAbility || null,
+        repeatSaveDc: control.repeatSaveDc || null,
+        repeatSaveTiming: control.repeatSaveTiming || null,
+        allowedRemovalActionIds: control.allowedRemovalActionIds || [],
+        affectedStates,
+      });
+      if (timed) applied.push(timed);
+    }
+    return [...new Set(applied)];
   }
 
   function release(state, sourceId) {
@@ -67,8 +92,8 @@
     const disadvantage = state.active_effect_ids.includes("poisoned") || state.active_effect_ids.includes("frightened") ? 1 : 0;
     let roll = R().d20(bonus, R().modeFromSources(advantage, disadvantage));
     let success = roll.total >= source.escape_dc, tactical = null;
-    if (!success && T()) {
-      tactical = T().apply(state, roll, source.escape_dc);
+    if (!success && TM()) {
+      tactical = TM().apply(state, roll, source.escape_dc);
       roll = tactical.roll; success = tactical.succeeded;
     }
     E().spend(state, "action");
@@ -87,5 +112,5 @@
     };
   }
 
-  window.IRON_PIT_BROWSER_GRAPPLE = { apply, attackDisadvantage, cleanup, escape, release, shouldEscape, speedIsZero };
+  window.IRON_PIT_BROWSER_GRAPPLE = { apply, applyControl, attackDisadvantage, cleanup, escape, release, shouldEscape, speedIsZero };
 })();
