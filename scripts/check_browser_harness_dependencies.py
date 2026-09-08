@@ -1,9 +1,12 @@
 from __future__ import annotations
 
 from pathlib import Path
+import re
 
 ROOT = Path(__file__).resolve().parents[1]
 FRONTEND = ROOT / "frontend"
+_LOAD_BLOCK = re.compile(r"for \(const file of \[(?P<body>.*?)\]\) load\(file\);", re.S)
+_QUOTED_FILE = re.compile(r'"([^"]+\.js)"')
 
 DEPENDENCIES = {
     "browser-attack.js": (
@@ -12,6 +15,7 @@ DEPENDENCIES = {
         "browser-attack-helpers.js",
     ),
     "browser-saves.js": (
+        "browser-resources.js",
         "browser-forced-movement.js",
         "browser-control.js",
         "browser-save-helpers.js",
@@ -19,22 +23,25 @@ DEPENDENCIES = {
 }
 
 
-def _ordered_before(text: str, dependency: str, consumer: str) -> bool:
-    dep_index = text.find(f'"{dependency}"')
-    consumer_index = text.find(f'"{consumer}"')
-    return dep_index >= 0 and consumer_index >= 0 and dep_index < consumer_index
+def _loader_lists(text: str) -> list[list[str]]:
+    return [_QUOTED_FILE.findall(match.group("body")) for match in _LOAD_BLOCK.finditer(text)]
+
+
+def _missing_dependencies(files: list[str], consumer: str) -> list[str]:
+    if consumer not in files:
+        return []
+    consumer_index = files.index(consumer)
+    return [dep for dep in DEPENDENCIES[consumer] if dep not in files[:consumer_index]]
 
 
 def main() -> int:
     failures: list[str] = []
     for path in sorted(FRONTEND.glob("*.test.cjs")):
-        text = path.read_text(encoding="utf-8")
-        for consumer, dependencies in DEPENDENCIES.items():
-            if f'"{consumer}"' not in text:
-                continue
-            missing = [dep for dep in dependencies if not _ordered_before(text, dep, consumer)]
-            if missing:
-                failures.append(f"{path.relative_to(ROOT)}: {consumer} missing/late {', '.join(missing)}")
+        for files in _loader_lists(path.read_text(encoding="utf-8")):
+            for consumer in DEPENDENCIES:
+                missing = _missing_dependencies(files, consumer)
+                if missing:
+                    failures.append(f"{path.relative_to(ROOT)}: {consumer} missing/late {', '.join(missing)}")
     if failures:
         print("BROWSER_HARNESS_DEPENDENCY_FAILURE")
         for failure in failures:
