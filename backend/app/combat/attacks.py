@@ -34,7 +34,6 @@ from app.domain.modifiers import ModifierKind
 
 logger = logging.getLogger(__name__)
 
-
 def resolve_attack(
     sequence: int, round_number: int, attacker: CombatantState, defender: CombatantState,
     attack: WeaponAttack, distance_ft: int, dice: DiceProvider,
