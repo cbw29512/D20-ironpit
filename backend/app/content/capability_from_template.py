@@ -92,7 +92,9 @@ def _save(action) -> dict[str, object]:
     if action.damage_dice_count:
         result["damage"] = _dice(action.damage_dice_count, action.damage_dice_size, action.damage_bonus)
         result["damage_type"] = action.damage_type
-    if action.grapple_escape_dc is not None:
+    if action.failure_control is not None:
+        result["failure_control"] = _control_effect(action.failure_control)
+    elif action.grapple_escape_dc is not None:
         result["grapple"] = {
             "kind": "grapple", "escape_dc": action.grapple_escape_dc,
             "max_target_size": action.target_max_size, "restrains": action.restrains_while_grappled,
