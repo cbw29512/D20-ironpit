@@ -22,26 +22,38 @@ def _size(value: str | None) -> CreatureSize | None:
     return CreatureSize(value.lower()) if value else None
 
 
+def _effect(match: re.Match[str]) -> tuple[ForcedMovementEffect, CreatureSize | None]:
+    verb = (match.group("active") or match.group("passive") or "").lower()
+    relation = match.group("relation").lower()
+    direction = "push" if verb.startswith("push") else "pull"
+    if (direction == "push" and relation != "away from") or (direction == "pull" and relation != "toward"):
+        raise ValueError("forced-movement verb and relative direction disagree")
+    return ForcedMovementEffect(
+        direction=direction,
+        max_distance_ft=int(match.group("distance")),
+        distance_mode="up_to" if match.group("upto") else "fixed",
+    ), _size(match.group("size"))
+
+
 def parse_forced_movement_rider(text: str) -> tuple[str, ForcedMovementEffect | None, CreatureSize | None]:
     """Strip one exact push/pull clause while preserving printed distance semantics."""
     try:
         match = _FORCED.search(text)
         if match is None:
             return text, None, None
-        verb = (match.group("active") or match.group("passive") or "").lower()
-        relation = match.group("relation").lower()
-        direction = "push" if verb.startswith("push") else "pull"
-        if (direction == "push" and relation != "away from") or (direction == "pull" and relation != "toward"):
-            raise ValueError("forced-movement verb and relative direction disagree")
-        effect = ForcedMovementEffect(
-            direction=direction,
-            max_distance_ft=int(match.group("distance")),
-            distance_mode="up_to" if match.group("upto") else "fixed",
-        )
+        effect, size = _effect(match)
         clean = text[:match.start()] + " " + text[match.end():]
-        return re.sub(r"\s+", " ", clean).strip(" ,"), effect, _size(match.group("size"))
+        return re.sub(r"\s+", " ", clean).strip(" ,"), effect, size
     except (TypeError, ValueError) as exc:
         raise ValueError("forced-movement rider parsing failed") from exc
+
+
+def forced_movement_specs(text: str) -> list[tuple[ForcedMovementEffect, CreatureSize | None]]:
+    """Return every exact movement fingerprint retained by the source grammar."""
+    try:
+        return [_effect(match) for match in _FORCED.finditer(text)]
+    except (TypeError, ValueError) as exc:
+        raise ValueError("forced-movement source fingerprinting failed") from exc
 
 
 def strip_forced_movement_riders(text: str) -> str:
