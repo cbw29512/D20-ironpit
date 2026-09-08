@@ -11,7 +11,7 @@ for (const file of [
   "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js", "browser-monsters-beast2.js",
   "browser-monsters-batch3.js", "browser-monsters-control.js", "browser-monsters-poison.js", "browser-condition-immunity.js",
   "browser-grapple.js", "browser-timed-conditions.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
-  "browser-zero-hp.js", "browser-attack.js",
+  "browser-zero-hp.js", "browser-forced-movement.js", "browser-control.js", "browser-attack-helpers.js", "browser-attack.js",
 ]) load(file);
 
 const queuedDice = (values, fallback = 10) => {
