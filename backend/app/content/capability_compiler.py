@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.content.capability_attack_compiler import UnsupportedCapabilityError, compile_attack
+from app.content.capability_control_compiler import compile_control
 from app.domain.actions import AttackActionDefinition, AttackActionSlot, SavingThrowAction
 from app.domain.capabilities import CombatantDefinition, SaveCapabilityDefinition
 from app.domain.models import CombatantTemplate
@@ -12,7 +13,11 @@ logger = logging.getLogger(__name__)
 
 def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
     damage = definition.damage
-    grapple = definition.grapple
+    legacy_grapple = definition.grapple
+    failure_control = compile_control(definition.failure_control or legacy_grapple)
+    target_size = definition.target_max_size
+    if target_size is None and failure_control is not None:
+        target_size = failure_control.max_target_size
     return SavingThrowAction(
         id=definition.id,
         name=definition.name,
@@ -20,15 +25,14 @@ def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
         dc=definition.dc,
         range_ft=definition.range_ft,
         area=definition.area,
-        target_max_size=definition.target_max_size or (grapple.max_target_size if grapple else None),
+        target_max_size=target_size,
         damage_dice_count=damage.count if damage else 0,
         damage_dice_size=damage.size if damage else 6,
         damage_bonus=damage.bonus if damage else 0,
         damage_type=definition.damage_type.value if definition.damage_type else None,
         success_damage=definition.success_damage,
         magical_effect=definition.magical_effect,
-        grapple_escape_dc=grapple.escape_dc if grapple else None,
-        restrains_while_grappled=grapple.restrains if grapple else False,
+        failure_control=failure_control,
         resource_id=definition.resource_id,
         resource_cost=definition.resource_cost,
         animation=definition.animation,
