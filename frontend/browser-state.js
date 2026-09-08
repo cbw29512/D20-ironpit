@@ -88,7 +88,7 @@
     state.action_available = !incapacitated;
     state.bonus_action_available = !incapacitated;
     refreshStartOfTurn(state);
-    rechargeStart(state);
+    const recharge = rechargeStart(state);
     const speedZero = G()?.speedIsZero(state) || false;
     const speed = M().effectiveSpeed(state);
     state.movement_remaining_ft = speedZero ? 0 : speed;
@@ -97,6 +97,7 @@
       state.movement_remaining_ft = Math.max(0, state.movement_remaining_ft - Math.floor(speed / 2));
       state.active_effect_ids = state.active_effect_ids.filter((id) => id !== "prone");
     }
+    return recharge;
   }
 
   const distance = (a, b) => Math.abs(a.position_ft - b.position_ft);
