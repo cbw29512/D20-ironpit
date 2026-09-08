@@ -1,6 +1,8 @@
+from app.content.monster_bonus_action_source_audit import complete_monster_bonus_action_fingerprints
 from app.content.monster_catalog import load_monster_rows
 from app.content.monster_saving_throws import with_source_saving_throws
 from app.content.monster_source_audit import audit_monster_source
+from app.content.monster_trait_source_audit import complete_monster_trait_fingerprints
 from app.content.monsters_zero_engine import build_zero_engine_monsters
 from app.domain.models import DamageType
 
@@ -8,6 +10,8 @@ from app.domain.models import DamageType
 def test_xorn_source_profile_and_ordered_multiattack_are_exact() -> None:
     raw = next(template for template in build_zero_engine_monsters() if template.name == "Xorn")
     xorn = with_source_saving_throws(raw)
+    xorn = complete_monster_trait_fingerprints([xorn])[0]
+    xorn = complete_monster_bonus_action_fingerprints([xorn])[0]
 
     assert (xorn.armor_class, xorn.max_hp, xorn.speed_ft, xorn.initiative_bonus) == (19, 84, 20, 0)
     assert xorn.weapon_attack.weapon.name == "Bite"
