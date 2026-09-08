@@ -15,13 +15,15 @@ Do not mark content complete from this file alone. Certification is earned only 
 
 Branch: `feat/usable-roster-warlock-l1`
 
-Re-anchored generated head before this checkpoint: `2de92340ac0e471d18e4c2cffb33107c0757d915`
+Re-anchored generated head before this checkpoint: `21d43fe655e3b129bad12840c1c41fd61334eb6c`
 
 ### Monsters
 
 - Canonical SRD monsters: **330**
-- Public-ready in the current generated manifest: **151**
-- Blocked: **179**
+- Public-ready in the current generated manifest: **152**
+- Blocked: **178**
+- Merrow is newly machine-earned after the universal simple attack parser was corrected to preserve dual-mode source grammar such as `reach 5 ft. or range 20/60 ft.`.
+- The parser now retains both melee and ranged Harpoon forms plus the existing universal forced-pull rider; no Merrow-specific combat resolver branch was added.
 - This total is machine-earned from `data/monster_certification_manifest.json`; no readiness flags were manually advanced.
 - Continue from the generated blocker inventory rather than redoing already-certified monsters.
 
@@ -45,16 +47,16 @@ Re-anchored generated head before this checkpoint: `2de92340ac0e471d18e4c2cffb33
 8. Utility-only abilities, spells, and traits that cannot alter combat math/state are omitted rather than modeled.
 9. Certification is earned from source/runtime/build/fingerprint/resource evidence; never by flipping readiness flags.
 
-## Current CI blocker
+## Latest blocker and resolution
 
-Generated head `2de92340ac0e471d18e4c2cffb33107c0757d915` is a `github-actions[bot]` generated-content commit. GitHub Actions CI run #7779 on that exact head concluded `action_required` before certification jobs executed.
+Exact-head CI #7815 failed in Python certification because Merrow's printed Harpoon was absent from the generated runtime. The generic attack parser stopped its range clause at the period in `reach 5 ft. or range 20/60 ft.`, producing only Bite and Claw and triggering `source-attack-count-mismatch` plus `forced-movement-source-mismatch`.
 
-Affected scope: the complete exact-head certification gate, not an individual monster, pregen, or combat rule.
+Affected content: **Merrow directly**; the parser defect could affect any future canonical attack using the same dual-mode reach/range grammar.
 
-Classification: **technical CI/authorship gate**, not a rules/product decision.
+Classification: **technical parser blocker**, autonomously fixable. No Chris rules/product decision was required.
 
-Fastest safe resolution: this human-authored ledger-only checkpoint changes no runtime behavior or generated certification data and retriggers exact-head CI against the already-earned 151-monster / 24-pregen state.
+Resolution: the universal parser now consumes the complete range clause through `. Hit:` rather than assuming no internal period. Permanent Python and browser tests pin both Harpoon modes, exact range/reach values, and the 15-foot `toward_source` forced movement. Generated artifacts promoted Merrow through the normal audits to **152/330**.
 
 ## Next priority
 
-Do not add mechanic scope until exact-head CI executes on this checkpoint. If CI fails, fix the first real Iron Pit failure before adding scope. Once exact-head CI is green, regenerate/read blocker yields and implement the highest-leverage remaining universal primitive, with Python/browser parity and permanent CI coverage, then regenerate all canonical certification artifacts.
+Verify exact-head CI on this human-authored checkpoint. If CI fails, fix its first real failure before adding scope. Once exact-head CI is green, regenerate/read blocker yields and implement the highest-leverage remaining universal primitive with Python/browser parity and permanent CI coverage, then regenerate all canonical certification artifacts.
