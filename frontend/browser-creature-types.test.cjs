@@ -24,7 +24,7 @@ assert.notEqual(monsters["srd-goblin-warrior"].creature_type, "Undead");
 const reef = monsters["srd-reef-shark"];
 assert.ok(reef, "srd-reef-shark must be certified under the hospitable-arena policy");
 assert.deepEqual(reef.source_trait_names, ["Pack Tactics", "Water Breathing"]);
-assert.ok(reef.combat_traits.includes("pack-tactics"), "srd-reef-shark must export Pack Tactics into runtime combat data");
+assert.ok(reef.traits.includes("pack-tactics"), "srd-reef-shark must export Pack Tactics into runtime combat data");
 assert.ok(reef.movement_modes.swim_ft > 0, "srd-reef-shark must preserve its source swim movement");
 
 for (const id of [
