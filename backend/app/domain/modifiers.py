@@ -13,6 +13,7 @@ class ModifierKind(StrEnum):
     SAVING_THROW_BONUS_DIE = "saving-throw-bonus-die"
     ATTACKS_AGAINST_ADVANTAGE = "attacks-against-advantage"
     NEXT_ATTACK_AGAINST_ADVANTAGE = "next-attack-against-advantage"
+    NEXT_ATTACK_MADE_DISADVANTAGE = "next-attack-made-disadvantage"
     BONUS_DAMAGE = "bonus-damage"
     SPEED = "speed"
 
@@ -29,6 +30,7 @@ class CombatModifier(BaseModel):
     target_id: str | None = None
     concentration_required: bool = False
     consume_on_attack_against: bool = False
+    consume_on_attack_made: bool = False
     expires_at_start_of_source_turn: bool = False
     expires_at_end_of_target_turn: bool = False
     expires_source_turn_end_round: int | None = Field(default=None, ge=1)
@@ -48,15 +50,21 @@ class CombatModifier(BaseModel):
             raise ValueError("Bonus damage requires a damage type.")
         if self.kind is not ModifierKind.BONUS_DAMAGE and self.damage_type is not None:
             raise ValueError(f"{self.kind.value} does not accept a damage type.")
-        advantage_kinds = {ModifierKind.ATTACKS_AGAINST_ADVANTAGE, ModifierKind.NEXT_ATTACK_AGAINST_ADVANTAGE}
-        if self.kind in advantage_kinds and self.flat_bonus:
-            raise ValueError("Attack-advantage modifiers do not accept a flat bonus.")
+        attack_mode_kinds = {
+            ModifierKind.ATTACKS_AGAINST_ADVANTAGE,
+            ModifierKind.NEXT_ATTACK_AGAINST_ADVANTAGE,
+            ModifierKind.NEXT_ATTACK_MADE_DISADVANTAGE,
+        }
+        if self.kind in attack_mode_kinds and self.flat_bonus:
+            raise ValueError("Attack roll mode modifiers do not accept a flat bonus.")
         if self.kind is ModifierKind.SPEED and self.flat_bonus == 0:
             raise ValueError("Speed modifiers require a nonzero flat bonus.")
         if self.kind is ModifierKind.NEXT_ATTACK_AGAINST_ADVANTAGE and self.target_id is None:
             raise ValueError("Target-scoped attack Advantage requires a target id.")
         if self.consume_on_attack_against and self.kind is not ModifierKind.ATTACKS_AGAINST_ADVANTAGE:
-            raise ValueError("Only attack-advantage defender modifiers can use consume_on_attack_against.")
+            raise ValueError("Only defender-wide attack Advantage can use consume_on_attack_against.")
+        if self.consume_on_attack_made and self.kind is not ModifierKind.NEXT_ATTACK_MADE_DISADVANTAGE:
+            raise ValueError("Only next-attack-made Disadvantage can use consume_on_attack_made.")
         return self
 
 
