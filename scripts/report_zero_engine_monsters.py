@@ -8,7 +8,7 @@ from app.content.monster_bonus_action_source_audit import (
     _base_name,
     parse_bonus_action_names,
 )
-from app.content.monster_catalog import _READY_BY_NAME, load_monster_rows
+from app.content.monster_catalog import build_monster_catalog, load_monster_rows
 from app.content.monster_defense_source_audit import parse_defense_profile
 from app.content.monster_limited_use_source_audit import parse_limited_use_names
 from app.content.monster_reaction_source_audit import (
@@ -18,6 +18,7 @@ from app.content.monster_reaction_source_audit import (
 )
 from app.content.monster_spellcasting_source_audit import arena_neutral_spellcasting, spellcasting_fingerprint
 from app.content.monster_trait_source_audit import _ARENA_NEUTRAL_TRAITS, _MODELED_TRAITS, parse_trait_names
+from app.domain.catalog import CoverageStatus
 
 _CONDITION_OR_CONTROL = re.compile(
     r"\b(blinded|charmed|deafened|frightened|grappled|incapacitated|paralyzed|petrified|poisoned|prone|restrained|stunned|unconscious|push(?:es|ed)?|pull(?:s|ed)?|swallow(?:s|ed)?)\b",
@@ -115,6 +116,10 @@ def _source_blockers(row: dict[str, object], monster_names: set[str]) -> list[st
 def main() -> None:
     rows = load_monster_rows()
     monster_names = {str(row["name"]) for row in rows}
+    ready_names = {
+        card.name for card in build_monster_catalog()
+        if card.coverage_status is CoverageStatus.RAW_READY
+    }
     safe: list[dict[str, object]] = []
     already_ready: list[str] = []
     blocker_counts: dict[str, int] = {}
@@ -128,20 +133,12 @@ def main() -> None:
             blocker_counts[blocker] = blocker_counts.get(blocker, 0) + 1
             blocker_names.setdefault(blocker, []).append(name)
         if "reaction" in blockers:
-            reaction_details.append({
-                "name": name,
-                "blockers": blockers,
-                "reactions": str(row.get("reactions", "")),
-            })
+            reaction_details.append({"name": name, "blockers": blockers, "reactions": str(row.get("reactions", ""))})
         if "unsupported-action-rider" in blockers:
-            rider_details.append({
-                "name": name,
-                "blockers": blockers,
-                "actions": str(row.get("actions", "")),
-            })
+            rider_details.append({"name": name, "blockers": blockers, "actions": str(row.get("actions", ""))})
         if blockers:
             continue
-        if name in _READY_BY_NAME:
+        if name in ready_names:
             already_ready.append(name)
         else:
             safe.append(row)
