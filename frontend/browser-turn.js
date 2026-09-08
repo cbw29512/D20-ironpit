@@ -5,7 +5,7 @@
   const J = () => window.IRON_PIT_BROWSER_ACTION_SURGE, P = () => window.IRON_PIT_BROWSER_SUPPORT;
   const T = () => window.IRON_PIT_BROWSER_TACTICAL_SHIFT, O = () => window.IRON_PIT_BROWSER_ONGOING_SPELL_CONTROL;
   const L = () => window.IRON_PIT_BROWSER_SPELL_OFFENSE, U = () => window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION;
-  const F = () => window.IRON_PIT_BROWSER_FORMATION, V = () => window.IRON_PIT_BROWSER_SAVES;
+  const F = () => window.IRON_PIT_BROWSER_FORMATION, V = () => window.IRON_PIT_BROWSER_SAVES, Z = () => window.IRON_PIT_BROWSER_AREA_SAVES;
   const D = () => window.IRON_PIT_DICE;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
     available: (s, c) => c === "action" ? s.action_available : s.bonus_action_available,
@@ -94,6 +94,8 @@
     const spell = L()?.resolve(sequence, round, member, setup, turnKey);
     if (spell) { events.push(...spell.events); sequence = spell.sequence; }
     if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
+    const signature = Z()?.resolveSignature(sequence, round, member, setup);
+    if (signature) { events.push(...signature.events); return finalize(events, signature.sequence, round, member, setup, turnKey); }
 
     const targets = F().targetOrder(member, setup);
     if (!targets.length) return finalize(events, sequence, round, member, setup, turnKey);
