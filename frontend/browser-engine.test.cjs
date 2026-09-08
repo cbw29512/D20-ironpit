@@ -174,3 +174,4 @@ function fight(heroIds, monsterIds, dice = deterministicDice()) {
 }
 
 console.log("Browser combat regressions passed.");
+require("./browser-initiative-natural-one.test.cjs");
