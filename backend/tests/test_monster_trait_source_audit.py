@@ -106,9 +106,9 @@ def test_other_conditional_attack_modifiers_remain_fail_closed() -> None:
 def test_unknown_outcome_changing_trait_fails_closed() -> None:
     wolf = _monster("Wolf")
     row = dict(_row("Wolf"))
-    row["traits"] = "Magic Resistance. The wolf has Advantage on saving throws against spells and magical effects."
-    drifted = wolf.model_copy(update={"source_trait_names": ["Magic Resistance"], "combat_traits": []})
-    assert "uncertified-trait:magic-resistance" in trait_issues(drifted, row)
+    row["traits"] = "Spell Reflection. The wolf reflects a spell that misses it."
+    drifted = wolf.model_copy(update={"source_trait_names": ["Spell Reflection"], "combat_traits": []})
+    assert "uncertified-trait:spell-reflection" in trait_issues(drifted, row)
 
 
 def test_catalog_blocks_missing_runtime_pack_tactics(monkeypatch) -> None:
