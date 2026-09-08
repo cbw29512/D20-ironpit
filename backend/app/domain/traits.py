@@ -11,4 +11,5 @@ class CombatTrait(StrEnum):
     BLOOD_FRENZY = "blood-frenzy"
     SWARM = "swarm"
     UNDEAD_FORTITUDE = "undead-fortitude"
+    MAGIC_RESISTANCE = "magic-resistance"
     LIFE_DOMAIN = "life-domain"
