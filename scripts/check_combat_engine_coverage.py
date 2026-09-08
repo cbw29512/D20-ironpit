@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 BACKEND = ROOT / "backend"
 MATRIX = ROOT / "data" / "combat_engine_coverage_v1.json"
 CI_WORKFLOW = ROOT / ".github" / "workflows" / "ci.yml"
+BROWSER_TEST_RUNNER = ROOT / "scripts" / "run_browser_tests.sh"
 VALID_STATUSES = {"supported", "blocked", "partial", "unsupported", "arena_out_of_scope"}
 
 sys.path.insert(0, str(BACKEND))
@@ -27,7 +28,17 @@ def _require_file(path: str, capability_id: str) -> None:
 def _require_permanent_browser_test(path: str, capability_id: str, ci_text: str) -> None:
     if not path.startswith("frontend/") or not path.endswith(".test.cjs"):
         return
-    if f"node {path}" not in ci_text:
+    direct_command = f"node {path}" in ci_text
+    discovery_runner = (
+        "bash scripts/run_browser_tests.sh" in ci_text
+        and BROWSER_TEST_RUNNER.is_file()
+        and path not in {
+            "frontend/browser-fighter6.test.cjs",
+            "frontend/browser-fighter7.test.cjs",
+            "frontend/browser-fighter8.test.cjs",
+        }
+    )
+    if not direct_command and not discovery_runner:
         raise ValueError(
             f"Supported capability {capability_id!r} cites browser test {path!r} "
             "that permanent CI does not execute."
