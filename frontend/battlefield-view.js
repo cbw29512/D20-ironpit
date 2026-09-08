@@ -68,15 +68,31 @@
     el("result-panel").hidden = false; el("status").textContent = winner;
   }
 
+  function auditDetails(event) {
+    const steps = event.audit?.steps || [];
+    if (!steps.length) return null;
+    const details = document.createElement("details"), heading = document.createElement("summary"), body = document.createElement("div");
+    details.className = "rules-audit"; heading.textContent = `RULES AUDIT · ${steps.length} step${steps.length === 1 ? "" : "s"}`; body.className = "rules-audit-steps";
+    steps.forEach((item, index) => {
+      const row = document.createElement("div"); row.className = "rules-audit-step";
+      row.innerHTML = `<span>${index + 1}</span><b></b><p></p>`;
+      row.querySelector("b").textContent = String(item.phase || "rule").replaceAll("_", " ").toUpperCase();
+      row.querySelector("p").textContent = item.label; body.append(row);
+    });
+    details.append(heading, body); return details;
+  }
+
   function writeLog(battle) {
     const root = el("battle-log"); root.replaceChildren();
     battle.events.forEach((event) => {
-      const li = document.createElement("li"); li.textContent = `R${event.round_number}: ${L()?.format(event) || event.description}`;
+      const li = document.createElement("li"), summary = document.createElement("div");
+      summary.className = "battle-log-summary"; summary.textContent = `R${event.round_number}: ${L()?.format(event) || event.description}`; li.append(summary);
+      const audit = auditDetails(event); if (audit) li.append(audit);
       if (event.critical) li.classList.add("log-critical");
       if (event.event_type === "attack" && event.attack_roll?.selected_roll === 1) li.classList.add("log-fumble");
       root.append(li);
     });
   }
 
-  window.IRON_PIT_BATTLEFIELD_VIEW = { render, showResult, writeLog };
+  window.IRON_PIT_BATTLEFIELD_VIEW = { auditDetails, render, showResult, writeLog };
 })();
