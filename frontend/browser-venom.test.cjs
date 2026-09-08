@@ -16,7 +16,7 @@ for (const file of [
   "browser-saves.js", "browser-condition-lifecycle.js", "browser-charge.js", "browser-light-weapons.js",
   "browser-light-attack.js", "browser-standard-attack-action.js", "browser-multiattack.js", "browser-healing.js",
   "browser-spellcasting.js", "browser-condition-removal.js", "browser-support.js", "browser-turn.js",
-  "browser-formation.js", "browser-engine.js",
+  "browser-formation.js", "browser-initiative.js", "browser-engine.js",
 ]) load(file);
 
 const queuedDice = (values, fallback = 10) => {
@@ -78,8 +78,6 @@ assert.equal(Object.keys(monsters).length, 62, "venom batch must bring browser r
 }
 
 {
-  // Deterministic end-to-end proof: Karnok rolls low initiative, the spider wins initiative,
-  // then lands a Bite so the real encounter log must contain a poison damage component.
   window.IRON_PIT_DICE = queuedDice([1, 20, 15, 3, 4, 4], 10);
   const battle = window.IRON_PIT_BROWSER_ENGINE.runEncounter({
     hero_ids: ["karnok-stoneward-l1"], monster_ids: ["srd-giant-wolf-spider"],
