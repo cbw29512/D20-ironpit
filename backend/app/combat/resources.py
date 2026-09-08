@@ -78,7 +78,12 @@ def recharge_start_events(
         if resource is None or resource.recharge_d6_min is None:
             raise ValueError(f"Recharge result references missing resource {resource_id!r}.")
         threshold = resource.recharge_d6_min
-        outcome = "recharges" if restored else "does not recharge"
+        requirement = f"{threshold}–6" if threshold < 6 else "6"
+        result_text = (
+            f"Recharge condition met: rolled {roll}, needs {requirement}. {resource.name} is restored."
+            if restored
+            else f"Recharge condition not met: rolled {roll}, needs {requirement}. {resource.name} remains unavailable."
+        )
         events.append(BattleEvent(
             sequence=sequence,
             round_number=round_number,
@@ -91,12 +96,13 @@ def recharge_start_events(
             ),
             resource_remaining=resource.current_uses,
             animation="resource",
-            description=(
-                f"{state.template.name} rolls {roll} for {resource.name} "
-                f"(Recharge {threshold}–6) and {outcome}."
-            ),
+            description=f"{state.template.name}: {result_text}",
             audit=EventAudit(steps=[
-                AuditStep(phase=AuditPhase.ROLL, kind="roll", label=f"Recharge roll: {roll}"),
+                AuditStep(
+                    phase=AuditPhase.ROLL,
+                    kind="roll",
+                    label=f"Recharge check: rolled {roll}; needs {requirement}; {'met' if restored else 'not met'}",
+                ),
                 AuditStep(
                     phase=AuditPhase.RESOURCE_CHANGE,
                     kind="resource",
