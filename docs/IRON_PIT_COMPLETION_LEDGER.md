@@ -14,13 +14,14 @@ Do not mark content complete from this file alone. Regenerate and verify the aut
 
 Branch: `feat/usable-roster-warlock-l1`
 
-Re-anchored generated head before this checkpoint: `7b707c0aab93ab74adc79fe31ddca566610ead78`
+Re-anchored generated head before this checkpoint: `f9d76efe36ef0587e90c54306da117b9763a9910`
 
 ### Monsters
 
 - Canonical SRD monsters: **330**
-- Public-ready in the current generated manifest: **118**
-- Blocked: **212**
+- Public-ready in the current generated manifest: **119**
+- Blocked: **211**
+- Latest earned promotion: **Killer Whale**, after removing the obsolete aquatic-only arena defer. Its printed movement modes remain intact; the Iron Pit's magical hospitality changes eligibility only, not combat movement data.
 
 ### Canonical pregen progression
 
@@ -50,13 +51,19 @@ Regenerated audit summary:
 
 The capability matrix remains the authoritative declaration layer. No readiness total in this ledger overrides its source/runtime evidence or certification manifests.
 
+### Environmental eligibility correction
+
+The Iron Pit is magically hospitable to every combatant. Aquatic, flying, atmospheric, breathing, and comparable biological/environmental requirements do not block arena eligibility unless they directly change combat math or combat state. Printed movement modes and combat-relevant environmental interactions remain authoritative data; magical hospitality does not rewrite speeds, create exploitable terrain, or approximate a combat mechanic.
+
+The obsolete `Killer Whale -> aquatic-only` defer and swim-only movement rejection were removed as a universal eligibility correction. `Hold Breath` was already classified as combat-irrelevant by the trait source audit, so no monster-specific resolver branch was introduced. Python and browser certification regressions now require the generated Killer Whale while preserving its exact movement and attack fingerprints.
+
 ### CI diagnosis
 
-The last human-authored implementation head `4eeb1e2ea96e537920d8f000ac2ab05cd5f48d91` reached the durable certification-manifest parity gate and failed because generated artifacts were stale. The generated-content workflow then promoted the corrected artifacts at `7b707c0aab93ab74adc79fe31ddca566610ead78`, including the monster manifest advancement from **117 / 330** to **118 / 330**. GitHub classified the PR workflow for that bot-authored promotion as `action_required` before creating certification jobs.
+Human implementation head `ceed750bcec598d82223853c06398338480f96af` removed the obsolete environment defer and added Python/browser regressions. The generated-content workflow then promoted the authoritative artifacts at `f9d76efe36ef0587e90c54306da117b9763a9910`, advancing the monster manifest from **118 / 330** to **119 / 330**. GitHub classified CI for that bot-authored promotion as `action_required` before creating certification jobs, matching the repository's prior bot-head behavior.
 
-This checkpoint is intentionally human-authored and changes only this ledger so normal exact-head PR CI can execute against the already-generated state. No runtime behavior, capability declaration, fingerprint, resource audit, or readiness flag is changed here.
+This checkpoint is intentionally human-authored so normal exact-head PR CI can execute against the already-generated state. No runtime behavior, capability declaration, fingerprint, resource audit, or readiness flag is changed by this ledger commit.
 
-Monster readiness is now **118 / 330** because the generated authoritative manifest earned that result. Certified pregen snapshots remain **24 / 240**.
+Monster readiness is **119 / 330** because the generated authoritative manifest earned that result. Certified pregen snapshots remain **24 / 240**.
 
 ## Locked implementation rules
 
@@ -67,7 +74,8 @@ Monster readiness is now **118 / 330** because the generated authoritative manif
 5. Step, Watch, Replay, and Turbo consume the same canonical resolver/event path.
 6. Exact timing, resource use, conditions, buffs/debuffs, reactions, damage defenses, lethal overrides, summons/forms, and boss mechanics remain auditable.
 7. Certification is earned from source/runtime/build/fingerprint/resource evidence; never by flipping readiness flags.
+8. Environmental or utility-only requirements are omitted when they cannot alter combat math/state; printed combat movement and actual combat effects are never discarded merely for convenience.
 
 ## Next priority
 
-Do not add mechanic scope until exact-head CI executes cleanly on the human checkpoint above. Once green, inspect the current blocker-yield report and the remaining Level-1 blockers (`martial-arts`, `hunters-mark`, `innate-sorcery`) and prefer the smallest reusable universal primitive with the highest cross-roster yield.
+Do not add mechanic scope until exact-head CI executes cleanly on this human checkpoint. Once green, re-run blocker yields under the hospitable-environment rule. The likely next data-only/combat-irrelevant tranche is `Water Breathing` for the five trait-only shark/piranha blockers, but it must be source-audited and earned through the same generation, parity, manifest, and exact-head CI gates before counting.
