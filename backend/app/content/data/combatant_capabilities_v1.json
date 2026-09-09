@@ -12222,6 +12222,169 @@
   },
   {
     "schema_version": 1,
+    "id": "srd-xorn",
+    "name": "Xorn",
+    "archetype": "source-certified monster",
+    "challenge_rating": "5",
+    "kind": "monster",
+    "size": "medium",
+    "armor_class": 19,
+    "max_hp": 84,
+    "speed_ft": 20,
+    "movement_modes": {
+      "walk_ft": 20,
+      "fly_ft": 0,
+      "climb_ft": 0,
+      "swim_ft": 0,
+      "burrow_ft": 20,
+      "hover": false
+    },
+    "initiative_bonus": 0,
+    "progression_features": {
+      "critical_hit_minimum": 20,
+      "initiative_advantage": false,
+      "athletics_advantage": false,
+      "heroic_warrior": false,
+      "studied_attacks": false,
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
+    },
+    "attacks": [
+      {
+        "id": "srd-xorn-bite",
+        "name": "Bite",
+        "weapon_id": "srd-xorn-bite-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 6,
+        "damage": {
+          "count": 4,
+          "size": 6,
+          "bonus": 3
+        },
+        "damage_type": "piercing",
+        "animation": "strike",
+        "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "conditional_attack_advantage": [],
+        "effects": [],
+        "forbid_target_grappled_by_self": false
+      },
+      {
+        "id": "srd-xorn-claw",
+        "name": "Claw",
+        "weapon_id": "srd-xorn-claw-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 6,
+        "damage": {
+          "count": 1,
+          "size": 10,
+          "bonus": 3
+        },
+        "damage_type": "slashing",
+        "animation": "strike",
+        "reach_ft": 5,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "conditional_attack_advantage": [],
+        "effects": [],
+        "forbid_target_grappled_by_self": false
+      }
+    ],
+    "primary_attack_id": "srd-xorn-bite",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 6,
+      "damage": 4
+    },
+    "attack_action": {
+      "id": "srd-xorn-multiattack",
+      "name": "Multiattack",
+      "is_attack_action": false,
+      "slots": [
+        {
+          "attack_ids": [
+            "srd-xorn-bite"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "srd-xorn-claw"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "srd-xorn-claw"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "srd-xorn-claw"
+          ],
+          "save_action_ids": []
+        }
+      ]
+    },
+    "save_actions": [],
+    "spell_save_actions": [],
+    "defensive_spell_actions": [],
+    "healing_actions": [],
+    "condition_removal_actions": [],
+    "saving_throw_bonuses": {
+      "strength": 3,
+      "dexterity": 0,
+      "constitution": 6,
+      "intelligence": 0,
+      "wisdom": 0,
+      "charisma": 0
+    },
+    "skill_bonuses": {},
+    "combat_traits": [],
+    "source_trait_names": [
+      "Earth Glide",
+      "Treasure Sense"
+    ],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [
+      "Charge"
+    ],
+    "source_limited_use_names": [],
+    "source_legendary_action_names": [],
+    "fighting_styles": [],
+    "weapon_masteries": [],
+    "damage_resistances": [],
+    "damage_vulnerabilities": [],
+    "damage_immunities": [
+      "poison"
+    ],
+    "condition_immunities": [
+      "paralyzed",
+      "petrified",
+      "poisoned"
+    ],
+    "wearing_heavy_armor": false,
+    "rage_damage_bonus": 0,
+    "resources": [],
+    "visual": {
+      "armor": "natural",
+      "main_hand": "Bite",
+      "body_style": "monster"
+    },
+    "source": "SRD 5.2.1 p. 343",
+    "unsupported_capabilities": []
+  },
+  {
+    "schema_version": 1,
     "id": "srd-zombie",
     "name": "Zombie",
     "archetype": "source-certified monster",
