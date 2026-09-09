@@ -8,6 +8,8 @@ const vm = require("node:vm");
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 load("browser-grid-geometry.js");
+load("browser-grid-movement-support.js");
+load("browser-grid-path-search.js");
 load("browser-grid-movement.js");
 
 const M = window.IRON_PIT_BROWSER_GRID_MOVEMENT;
@@ -57,5 +59,18 @@ const planAroundAlly = M.planToward(map, mover, target, [mover, ally, target], 5
 assert.ok(planAroundAlly.path.length > 0);
 assert.notDeepEqual(planAroundAlly.path.at(-1), { x: 1, y: 1 });
 assert.equal(planAroundAlly.final_distance_ft, 5);
+
+const slowMover = member("slow", "heroes", 0, 1);
+const farTarget = member("far-target", "monsters", 4, 1);
+const wall = [
+  member("wall-0", "monsters", 1, 0),
+  member("wall-1", "monsters", 1, 1),
+  member("wall-2", "monsters", 1, 2),
+];
+const fullRoutePlan = M.planToward(map, slowMover, farTarget, [slowMover, farTarget, ...wall], 5, 5);
+assert.equal(fullRoutePlan.path.length, 1);
+assert.deepEqual(fullRoutePlan.path[0], { x: 0, y: 2 });
+assert.equal(fullRoutePlan.movement_cost_ft, 5);
+assert.equal(fullRoutePlan.final_distance_ft, 20);
 
 console.log("Grid movement browser parity regressions passed.");
