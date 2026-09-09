@@ -3497,7 +3497,7 @@
     "size": "medium",
     "armor_class": 11,
     "max_hp": 11,
-    "speed_ft": 40,
+    "speed_ft": 10,
     "movement_modes": {
       "walk_ft": 10,
       "fly_ft": 0,
@@ -10835,7 +10835,7 @@
     "size": "huge",
     "armor_class": 12,
     "max_hp": 90,
-    "speed_ft": 60,
+    "speed_ft": 5,
     "movement_modes": {
       "walk_ft": 5,
       "fly_ft": 0,
