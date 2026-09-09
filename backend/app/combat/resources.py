@@ -44,13 +44,20 @@ def spend_action_resource(state: CombatantState, action: Any) -> int | None:
 
 
 def refresh_recharge_resources(state: CombatantState, dice: DiceProvider) -> list[RechargeResult]:
+    """At monster turn start, roll only depleted abilities that declare Recharge."""
+    if state.template.kind != "monster":
+        return []
+    recharge_definitions = {
+        item.id: item
+        for item in state.template.resources
+        if item.recharge_minimum is not None
+    }
+    if not recharge_definitions:
+        return []
     results: list[RechargeResult] = []
-    definitions = {item.id: item for item in state.template.resources}
     for resource in state.resources:
-        definition = definitions.get(resource.id)
-        if definition is None or definition.recharge_minimum is None:
-            continue
-        if resource.current_uses >= resource.max_uses:
+        definition = recharge_definitions.get(resource.id)
+        if definition is None or resource.current_uses >= resource.max_uses:
             continue
         roll = dice.roll(definition.recharge_die_size)
         recharged = roll >= definition.recharge_minimum
