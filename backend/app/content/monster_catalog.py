@@ -62,6 +62,7 @@ def load_monster_rows() -> list[dict[str, object]]:
         raise
 
 
+@lru_cache(maxsize=1)
 def _runtime_monsters_by_name() -> dict[str, CombatantTemplate]:
     try:
         from app.content.roster import build_arena_roster
@@ -74,6 +75,22 @@ def _runtime_monsters_by_name() -> dict[str, CombatantTemplate]:
     except Exception:
         logger.exception("Runtime monster roster failed; RAW READY candidates will fail closed.")
         return {}
+
+
+class _RuntimeCandidateIdsByName:
+    """Deprecated manifest adapter; candidate ids come only from the runtime registry."""
+
+    def get(self, name: str, default: str | None = None) -> str | None:
+        try:
+            template = _runtime_monsters_by_name().get(name)
+            return template.id if template is not None else default
+        except Exception:
+            logger.exception("Failed to resolve runtime candidate id for %s.", name)
+            return default
+
+
+# Compatibility only for the oversized manifest generator. This contains no hand-authored readiness flags.
+_READY_BY_NAME = _RuntimeCandidateIdsByName()
 
 
 def _card(row: dict[str, object], runtime: dict[str, CombatantTemplate]) -> MonsterCatalogCard:
