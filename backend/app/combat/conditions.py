@@ -99,6 +99,7 @@ def apply_hit_conditions(
             repeat_save_ability=control.repeat_save_ability,
             repeat_save_dc=control.repeat_save_dc,
             repeat_save_timing=control.repeat_save_timing,
+            repeat_save_delay_rounds=control.repeat_save_delay_rounds,
             allowed_removal_action_ids=control.allowed_removal_action_ids,
             affected_states=affected_states,
         )
