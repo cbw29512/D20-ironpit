@@ -99,6 +99,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
             controls.append(compile_persistent_effect(effect))
         else:
             raise UnsupportedCapabilityError(f"Unsupported attack effect: {effect!r}")
+    single_control = controls[0] if len(controls) == 1 else None
     return WeaponAttack(
         id=definition.id,
         weapon=weapon,
@@ -112,8 +113,8 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
         on_hit_damage=on_hit,
         on_hit_modifier_effects=on_hit_modifiers,
         knocks_prone_max_size=prone_size,
-        control_effect=controls[0] if len(controls) == 1 else None,
-        persistent_effects=controls,
+        control_effect=single_control,
+        persistent_effects=[] if single_control is not None else controls,
         resource_id=definition.resource_id,
         resource_cost=definition.resource_cost,
         forbid_target_grappled_by_self=definition.forbid_target_grappled_by_self,
