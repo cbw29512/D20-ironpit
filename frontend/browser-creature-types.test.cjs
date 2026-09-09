@@ -37,10 +37,14 @@ for (const id of [
   ]);
 }
 
-for (const id of ["srd-specter", "srd-wraith"]) {
+const incorporealProfiles = [
+  ["srd-specter", ["Incorporeal Movement"]],
+  ["srd-wraith", ["Incorporeal Movement", "Sunlight Sensitivity"]],
+];
+for (const [id, sourceTraitNames] of incorporealProfiles) {
   const monster = monsters[id];
   assert.ok(monster, `${id} must be certified when Incorporeal Movement is classified as combat-irrelevant in the standard Pit`);
-  assert.deepEqual(monster.source_trait_names, ["Incorporeal Movement"]);
+  assert.deepEqual(monster.source_trait_names, sourceTraitNames);
   assert.equal(monster.movement_modes.fly_ft > 0, true, `${id} must preserve its printed flight movement`);
 }
 
