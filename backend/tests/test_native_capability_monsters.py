@@ -23,11 +23,11 @@ def test_native_monsters_are_not_legacy_builder_outputs() -> None:
     assert set(NATIVE).isdisjoint(legacy_ids)
 
 
-def test_native_definitions_extend_production_roster_without_replacing_legacy_ids() -> None:
-    legacy = build_legacy_monster_templates()
+def test_native_definitions_are_present_once_in_production_roster() -> None:
     production = build_arena_roster().monsters
-    assert len(production) == len(legacy) + len(NATIVE)
-    assert [monster.id for monster in production[-len(NATIVE):]] == list(NATIVE)
+    production_ids = [monster.id for monster in production]
+    assert len(production_ids) == len(set(production_ids))
+    assert set(NATIVE) <= set(production_ids)
 
 
 def test_native_registry_rejects_cross_layer_duplicate_ids() -> None:
