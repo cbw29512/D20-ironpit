@@ -4,7 +4,6 @@ import heapq
 import logging
 
 from app.combat.grid_geometry import footprint_distance_ft
-from app.combat.grid_path_search import search_path_toward
 from app.combat.grid_pathing_support import movement_step_cost_ft, overlapping_occupants, position_for, reconstruct_path
 from app.domain.encounters import EncounterCombatant
 from app.domain.grid import BattleMapDefinition, GridPosition
