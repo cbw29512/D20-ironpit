@@ -77,7 +77,8 @@ def test_area_save_spends_one_action_and_one_resource_for_multiple_targets() -> 
     assert len(events) == 2
     assert next_sequence == 12
     assert actor.state.action_available is False
-    assert actor.state.resources[0].current_uses == 0
+    breath = next(item for item in actor.state.resources if item.id == "breath-use")
+    assert breath.current_uses == 0
     assert events[0].resource_remaining == 0
     assert events[1].resource_remaining is None
     assert events[0].damage_components[0].rolls == [4]
@@ -90,7 +91,7 @@ def test_area_preflight_rejects_illegal_covered_target_without_spending_costs() 
     target = _member("target", "monsters", 2, 5)
     action = _action(
         resource_id="breath-use",
-        target_max_size=CreatureSize.SMALL,
+        target_max_size=CreatureSize.TINY,
         area=AreaTargeting(shape="cone", origin="self", length_ft=15),
     )
     try:
@@ -100,7 +101,8 @@ def test_area_preflight_rejects_illegal_covered_target_without_spending_costs() 
     else:
         raise AssertionError("Illegal area target resolved instead of failing during preflight.")
     assert actor.state.action_available is True
-    assert actor.state.resources[0].current_uses == 1
+    breath = next(item for item in actor.state.resources if item.id == "breath-use")
+    assert breath.current_uses == 1
 
 
 def test_multi_target_save_rejects_allies_and_duplicate_targets_before_rolling() -> None:
