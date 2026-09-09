@@ -5,6 +5,7 @@ import re
 from functools import lru_cache
 
 from app.content.monster_catalog import load_monster_rows
+from app.content.monster_recharge_source_audit import recharge_fingerprint_implemented
 from app.domain.models import CombatantTemplate
 
 logger = logging.getLogger(__name__)
@@ -48,12 +49,14 @@ def parse_limited_use_names(row: dict[str, object]) -> list[str]:
 
 
 def limited_use_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
-    """No Recharge/N-per-Day feature is RAW-ready until its use economy is implemented."""
+    """Fail closed unless a source limited-use feature has matching runtime use economy."""
     expected = parse_limited_use_names(row)
     issues: list[str] = []
     if template.source_limited_use_names != expected:
         issues.append("source-limited-use-fingerprint-mismatch")
     for name in expected:
+        if recharge_fingerprint_implemented(template, name):
+            continue
         slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
         issues.append(f"uncertified-limited-use:{slug}")
     return issues
