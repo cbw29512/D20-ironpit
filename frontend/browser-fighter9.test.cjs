@@ -24,6 +24,7 @@ window.IRON_PIT_BROWSER_STATE = {
   canProne: () => false,
   sizeAtMost: () => false,
   distance: (a, b) => Math.abs(a.position_ft - b.position_ft),
+  effectiveMaxHp: (state) => Math.max(0, state.template.max_hp - (state.max_hp_reduction || 0)),
   terminateTurn: (state, reason) => {
     state.turn_terminated = true;
     state.turn_termination_reason = reason;
