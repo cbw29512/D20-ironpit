@@ -40,9 +40,10 @@ const targetTemplate = {
   const one = member("kobold-1", "monsters", kobold, 5);
   const two = member("kobold-2", "monsters", kobold, 5);
   const hero = member("hero", "heroes", targetTemplate, 0);
-  assert.equal(S.packTactics(one, { heroes: [hero], monsters: [one, two] }), true);
+  const setup = { heroes: [hero], monsters: [one, two] };
+  assert.equal(S.packTactics(one, hero, setup), true);
   two.state.current_hp = 0; two.state.is_alive = false; two.state.is_dead = true;
-  assert.equal(S.packTactics(one, { heroes: [hero], monsters: [one, two] }), false);
+  assert.equal(S.packTactics(one, hero, setup), false);
 }
 
 {
