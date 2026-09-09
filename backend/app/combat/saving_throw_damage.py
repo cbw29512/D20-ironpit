@@ -31,13 +31,22 @@ def build_save_damage_components(
     dice: DiceProvider,
     succeeded: bool,
     shared_damage_rolls: list[int] | None = None,
+    capture_shared_damage_rolls: list[int] | None = None,
 ) -> list[DamageRollComponent]:
     try:
-        if action.damage_dice_count == 0 or (succeeded and action.success_damage == "none"):
+        if action.damage_dice_count == 0:
+            return []
+        needs_shared_roll = capture_shared_damage_rolls is not None
+        if succeeded and action.success_damage == "none" and not needs_shared_roll:
             return []
         if action.damage_type is None:
             raise ValueError(f"{action.name} has damage dice but no damage type.")
         rolls = _damage_rolls(action, dice, shared_damage_rolls)
+        if capture_shared_damage_rolls is not None:
+            capture_shared_damage_rolls.clear()
+            capture_shared_damage_rolls.extend(rolls)
+        if succeeded and action.success_damage == "none":
+            return []
         total = sum(rolls) + action.damage_bonus
         if succeeded and action.success_damage == "half":
             total //= 2
