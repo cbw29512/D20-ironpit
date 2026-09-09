@@ -7,30 +7,32 @@ ROOT = Path(__file__).resolve().parents[1]
 FRONTEND = ROOT / "frontend"
 _LOAD_BLOCK = re.compile(r"for \(const file of \[(?P<body>.*?)\]\) load\(file\);", re.S)
 _QUOTED_FILE = re.compile(r'"([^"]+\.js)"')
-_DEPENDENCIES = {
-    "browser-attack.js": [
-        "browser-forced-movement.js",
-        "browser-control.js",
-        "browser-attack-helpers.js",
-    ],
-    "browser-saves.js": [
-        "browser-resources.js",
-        "browser-forced-movement.js",
-        "browser-control.js",
-        "browser-save-helpers.js",
-    ],
-}
+_SHARED = ["browser-forced-movement.js", "browser-control.js"]
+_ATTACK_ONLY = ["browser-attack-helpers.js"]
+_SAVE_ONLY = ["browser-resources.js", "browser-save-helpers.js"]
+
+
+def _insert_before(result: list[str], consumer: str, dependencies: list[str]) -> list[str]:
+    if consumer not in result:
+        return result
+    for dependency in dependencies:
+        result = [item for item in result if item != dependency]
+    consumer_index = result.index(consumer)
+    result[consumer_index:consumer_index] = dependencies
+    return result
 
 
 def _sync_files(files: list[str]) -> list[str]:
     result = list(files)
-    for consumer, dependencies in _DEPENDENCIES.items():
-        if consumer not in result:
-            continue
-        for dependency in dependencies:
-            result = [item for item in result if item != dependency]
-        consumer_index = result.index(consumer)
-        result[consumer_index:consumer_index] = dependencies
+    consumers = [name for name in ("browser-attack.js", "browser-saves.js") if name in result]
+    if not consumers:
+        return result
+    for dependency in _SHARED:
+        result = [item for item in result if item != dependency]
+    earliest = min(result.index(consumer) for consumer in consumers)
+    result[earliest:earliest] = _SHARED
+    result = _insert_before(result, "browser-attack.js", _ATTACK_ONLY)
+    result = _insert_before(result, "browser-saves.js", _SAVE_ONLY)
     return result
 
 
