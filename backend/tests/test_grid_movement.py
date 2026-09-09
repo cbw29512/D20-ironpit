@@ -73,6 +73,7 @@ def test_plan_toward_uses_diagonal_grid_steps_and_stops_at_melee_reach() -> None
     assert [(step.x, step.y) for step in plan.path] == [(1, 1), (2, 2)]
     assert plan.movement_cost_ft == 10
     assert plan.final_distance_ft == 5
+    assert plan.goal_reachable is True
 
 
 def test_plan_toward_never_ends_in_an_occupied_space() -> None:
@@ -85,6 +86,7 @@ def test_plan_toward_never_ends_in_an_occupied_space() -> None:
     assert plan.path
     assert (plan.path[-1].x, plan.path[-1].y) != (1, 1)
     assert plan.final_distance_ft == 5
+    assert plan.goal_reachable is True
 
 
 def test_full_route_search_moves_sideways_when_short_budget_cannot_immediately_close() -> None:
@@ -100,6 +102,7 @@ def test_full_route_search_moves_sideways_when_short_budget_cannot_immediately_c
     assert [(step.x, step.y) for step in plan.path] == [(0, 1)]
     assert plan.movement_cost_ft == 5
     assert plan.final_distance_ft == 20
+    assert plan.goal_reachable is True
 
 
 def test_diagonal_path_cannot_squeeze_between_two_blocked_orthogonal_spaces() -> None:
@@ -115,3 +118,4 @@ def test_diagonal_path_cannot_squeeze_between_two_blocked_orthogonal_spaces() ->
     assert plan.path == []
     assert plan.movement_cost_ft == 0
     assert plan.final_distance_ft == 10
+    assert plan.goal_reachable is False

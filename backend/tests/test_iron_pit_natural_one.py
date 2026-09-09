@@ -5,6 +5,7 @@ from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.opportunity_attacks import resolve_opportunity_attack
 from app.combat.state import begin_turn
+from app.domain.grid import GridPosition
 from app.domain.models import EncounterSelection
 
 
@@ -76,7 +77,9 @@ def test_natural_one_opportunity_attack_is_off_turn_and_does_not_poison_next_tur
 
 
 def test_natural_one_stops_remaining_multiattack_slots() -> None:
-    setup, attacker, _target = _setup("srd-black-bear")
+    setup, attacker, target = _setup("srd-black-bear")
+    attacker.state.position = GridPosition(x=8, y=6)
+    target.state.position = GridPosition(x=7, y=6)
     begin_turn(attacker.state)
     events, _ = resolve_attack_action(1, 1, attacker, setup, FixedDiceProvider([1]))
 

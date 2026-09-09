@@ -58,7 +58,8 @@ assert.equal(F.chooseStandardAttack(front, setup).attack.id, "blade", "frontline
 assert.equal(F.chooseStandardAttack(archer, setup).attack.id, "bow", "protected backline stays ranged");
 
 front.state.current_hp = 0; front.state.is_alive = false; front.state.is_dead = true;
-assert.equal(F.chooseStandardAttack(archer, setup).attack.id, "blade", "exposed ranged card switches to melee when possible");
+archer.position_ft = 5;
+assert.equal(F.chooseStandardAttack(archer, setup).attack.id, "blade", "ranged card switches to melee when actually engaged");
 
 window.IRON_PIT_BROWSER_ATTACK = {
   resolveAttack(sequence, round, attacker, target, attack) {
@@ -72,8 +73,8 @@ enemyFront.position_ft = 100;
 enemyFront.state.current_hp = 10; enemyFront.state.is_alive = true; enemyFront.state.is_dead = false;
 const before = [archer.position_ft, enemyFront.position_ft, enemyBack.position_ft];
 const turn = window.IRON_PIT_BROWSER_TURN.resolveTurn(1, 1, archer, setup);
-assert.equal(turn.events.find((event) => event.event_type === "attack").weapon_id, "blade");
+assert.equal(turn.events.find((event) => event.event_type === "attack").weapon_id, "bow");
 assert.equal(turn.events.some((event) => event.event_type === "movement" || event.event_type === "dash"), false);
 assert.deepEqual([archer.position_ft, enemyFront.position_ft, enemyBack.position_ft], before);
 
-console.log("Fixed-formation no-movement browser policy regressions passed.");
+console.log("Range-aware browser formation policy regressions passed.");

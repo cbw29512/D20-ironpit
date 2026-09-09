@@ -3,12 +3,26 @@ from pydantic import ValidationError
 
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.formation import backline_holds_position, starting_position_ft
+from app.combat.grid_geometry import footprint_side_squares, footprints_overlap, position_in_bounds
 from app.combat.state import build_combatant_state
+from app.content.arena_map import build_hero_deployment_zone, build_monster_deployment_zone
 from app.content.audited_fighter import build_karnok_stoneward
 from app.content.demo import build_goblin_warrior
 from app.content.pregens import build_selene_asharrow
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import EncounterSelection
+
+
+def _inside_zone(member: EncounterCombatant, zone) -> bool:
+    position = member.state.position
+    assert position is not None
+    side = footprint_side_squares(member.state.template.size)
+    return (
+        zone.x <= position.x
+        and zone.y <= position.y
+        and position.x + side <= zone.x + zone.width_squares
+        and position.y + side <= zone.y + zone.height_squares
+    )
 
 
 def test_builds_full_party_from_canonical_cards() -> None:
@@ -29,6 +43,23 @@ def test_builds_full_party_from_canonical_cards() -> None:
     assert encounter.monsters[0].state.template.id == "srd-goblin-warrior"
     assert encounter.monsters[1].state.template.id == "srd-goblin-warrior"
     assert encounter.monsters[0].combatant_id != encounter.monsters[1].combatant_id
+
+    assert encounter.map_definition is not None
+    hero_zone = build_hero_deployment_zone()
+    monster_zone = build_monster_deployment_zone()
+    assert all(_inside_zone(member, hero_zone) for member in encounter.heroes)
+    assert all(_inside_zone(member, monster_zone) for member in encounter.monsters)
+    members = [*encounter.heroes, *encounter.monsters]
+    for index, member in enumerate(members):
+        assert member.state.position is not None
+        assert position_in_bounds(encounter.map_definition, member.state.position, member.state.template.size)
+        for other in members[index + 1:]:
+            assert not footprints_overlap(
+                member.state.position,
+                member.state.template.size,
+                other.state.position,
+                other.state.template.size,
+            )
 
 
 def test_true_ranged_fixture_starts_backline() -> None:
@@ -59,11 +90,16 @@ def test_ranged_weapon_user_holds_without_frontline_role_dependency() -> None:
     assert backline_holds_position(ranged, encounter) is True
 
 
-def test_melee_front_lines_begin_engaged() -> None:
+def test_standard_setup_no_longer_starts_melee_combatants_engaged() -> None:
     encounter = build_encounter_setup(EncounterSelection(
         hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-commoner"],
     ))
-    assert abs(encounter.heroes[0].position_ft - encounter.monsters[0].position_ft) == 5
+    hero = encounter.heroes[0]
+    monster = encounter.monsters[0]
+    assert hero.state.position is not None
+    assert monster.state.position is not None
+    assert hero.state.position.x <= 7
+    assert monster.state.position.x >= 16
 
 
 def test_duplicate_canonical_cards_receive_independent_runtime_state() -> None:

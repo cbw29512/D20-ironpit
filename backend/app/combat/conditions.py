@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.condition_rules import attacks_have_advantage_against, has_condition
+from app.combat.dodge import DODGE_EFFECT_ID, dodge_benefits_active
 from app.combat.grapple import (
     RESTRAINED_EFFECT_ID,
     apply_grapple,
@@ -15,7 +16,6 @@ from app.domain.models import CombatantState, WeaponAttack
 from app.domain.size import size_at_most
 
 BLINDED_EFFECT_ID = "blinded"
-DODGE_EFFECT_ID = "dodge"
 FRIGHTENED_EFFECT_ID = "frightened"
 POISONED_EFFECT_ID = "poisoned"
 PRONE_EFFECT_ID = "prone"
@@ -42,12 +42,7 @@ def attack_roll_condition_sources(
         disadvantage += 1
     if target_id is not None:
         disadvantage += grapple_attack_disadvantage(attacker, target_id)
-    if (
-        DODGE_EFFECT_ID in defender.active_effect_ids
-        and not attacks_have_advantage_against(defender)
-        and not speed_is_zero(defender)
-        and effective_speed(defender) > 0
-    ):
+    if dodge_benefits_active(defender) and not attacks_have_advantage_against(defender):
         disadvantage += 1
     if attacks_have_advantage_against(defender):
         advantage += 1

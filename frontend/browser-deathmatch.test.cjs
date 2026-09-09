@@ -13,10 +13,14 @@ for (const file of [
   "browser-action-economy.js", "browser-grapple.js", "browser-timed-conditions.js", "browser-state.js",
   "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js", "browser-weapon-mastery.js",
   "browser-graze.js", "browser-vex.js", "browser-attack.js", "browser-reactions.js",
-  "browser-reaction-movement.js", "browser-saves.js", "browser-condition-lifecycle.js", "browser-charge.js",
+  "browser-saves.js", "browser-condition-lifecycle.js", "browser-charge.js",
   "browser-light-weapons.js", "browser-light-attack.js", "browser-standard-attack-action.js", "browser-multiattack.js",
-  "browser-healing.js", "browser-spellcasting.js", "browser-condition-removal.js",
-  "browser-support.js", "browser-turn.js", "browser-formation.js", "browser-initiative.js", "browser-engine.js",
+  "browser-healing.js", "browser-spellcasting.js", "browser-condition-removal.js", "browser-support.js",
+  "browser-dodge.js", "browser-formation.js", "browser-arena-map.js", "browser-grid-geometry.js",
+  "browser-grid-movement-support.js", "browser-grid-path-search-support.js", "browser-grid-path-search.js",
+  "browser-grid-movement.js", "browser-grid-reaction-support.js", "browser-reaction-movement.js",
+  "browser-offensive-ranges.js", "browser-offensive-movement.js", "browser-grid-placement.js",
+  "browser-turn.js", "browser-initiative.js", "browser-engine.js",
 ]) load(file);
 
 const maxDice = { roll: (sides) => sides, rollMany: (count, sides) => Array(count).fill(sides) };
@@ -131,10 +135,9 @@ function scoutAtFive() {
     hero_ids: ["karnok-stoneward-l1"], monster_ids: ["srd-scout"],
   });
   const scoutAttacks = battle.events.filter((event) => event.event_type === "attack" && event.actor_id.startsWith("monster-1:"));
-  const scoutMoves = battle.events.filter((event) => event.event_type === "movement" && event.actor_id.startsWith("monster-1:"));
-  assert.deepEqual(scoutAttacks.slice(0, 2).map((event) => event.weapon_id), ["scout-shortsword", "scout-shortsword"],
-    "an exposed ranged Multiattack switches to melee instead of firing at Disadvantage");
-  assert.deepEqual(scoutMoves, [], "fixed Pit formation never spends a turn closing");
+  const opening = scoutAttacks.slice(0, 2).map((event) => event.weapon_id);
+  assert.deepEqual(opening, ["scout-longbow", "scout-longbow"],
+    "a Scout at legal opening range uses its ranged Multiattack instead of teleporting into melee");
 }
 
-console.log("Browser melee deathmatch and fixed-formation ranged regressions passed.");
+console.log("Browser melee deathmatch and live-grid ranged regressions passed.");

@@ -36,7 +36,7 @@
       events.push(...multi.events);
       return { events, sequence: multi.sequence };
     }
-    const pack = window.IRON_PIT_BROWSER_STATE.packTactics(member, setup);
+    const pack = window.IRON_PIT_BROWSER_STATE.packTactics(member, choice.target, setup);
     const standard = U().resolve(sequence, round, member, choice.target, choice.attack, choice.distance, setup, turnKey, {
       advantage: pack ? 1 : 0, featureId: "action-surge",
     });

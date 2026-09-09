@@ -69,18 +69,27 @@
         desiredDistanceFt,
         helpers,
       );
+      const targetPosition = api.position(target);
+      const routeGoalPosition = route.length ? route[route.length - 1] : api.position(mover);
+      const routeGoalDistance = api.geometry().footprintDistanceFt(
+        routeGoalPosition,
+        mover.state.template.size,
+        targetPosition,
+        target.state.template.size,
+      );
       const prefix = affordableLegalPrefix(map, mover, members, route, movementBudgetFt);
       const finalPosition = prefix.path.length ? prefix.path[prefix.path.length - 1] : api.position(mover);
       const finalDistance = api.geometry().footprintDistanceFt(
         finalPosition,
         mover.state.template.size,
-        api.position(target),
+        targetPosition,
         target.state.template.size,
       );
       return {
         path: prefix.path,
         movement_cost_ft: prefix.cost,
         final_distance_ft: finalDistance,
+        goal_reachable: routeGoalDistance <= desiredDistanceFt,
       };
     } catch (error) {
       console.error("Failed to plan browser grid movement", {

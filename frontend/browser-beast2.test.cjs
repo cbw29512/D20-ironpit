@@ -134,7 +134,9 @@ assert.deepEqual(monsters["srd-giant-owl"].damage_resistances, ["necrotic", "rad
 {
   const one = { combatant_id: "monster-1:hyena", side: "monsters", position_ft: 10, state: S.buildState(structuredClone(monsters["srd-hyena"])) };
   const two = { combatant_id: "monster-2:hyena", side: "monsters", position_ft: 10, state: S.buildState(structuredClone(monsters["srd-hyena"])) };
-  assert.equal(S.packTactics(one, { heroes: [freshHero()], monsters: [one, two] }), true);
+  const hero = freshHero();
+  const setup = { heroes: [hero], monsters: [one, two] };
+  assert.equal(S.packTactics(one, hero, setup), true);
 }
 
 console.log("50-monster browser beast regressions passed.");

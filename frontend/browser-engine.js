@@ -7,11 +7,27 @@
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION, B = () => window.IRON_PIT_BROWSER_SOURCE_BOUND_EFFECTS;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const M = () => window.IRON_PIT_BROWSER_ARENA_MAP;
+  const G = () => window.IRON_PIT_BROWSER_GRID_PLACEMENT;
   const I = () => window.IRON_PIT_BROWSER_INITIATIVE;
   const heroes = () => window.IRON_PIT_BROWSER_HEROES;
   const monsters = () => window.IRON_PIT_BROWSER_MONSTERS;
 
   function cloneTemplate(template) { return structuredClone(template); }
+
+  function placeStandardGrid(heroMembers, monsterMembers) {
+    try {
+      if (!M()?.buildStandardMap || !M()?.buildHeroDeploymentZone || !M()?.buildMonsterDeploymentZone || !G()?.packZone || !G()?.apply) {
+        throw new Error("Authoritative Iron Pit grid deployment modules are not loaded.");
+      }
+      const mapDefinition = M().buildStandardMap();
+      G().apply(heroMembers, G().packZone(mapDefinition, M().buildHeroDeploymentZone(), heroMembers));
+      G().apply(monsterMembers, G().packZone(mapDefinition, M().buildMonsterDeploymentZone(), monsterMembers));
+      return mapDefinition;
+    } catch (error) {
+      console.error("Failed to apply browser Iron Pit grid deployment", { error });
+      throw error;
+    }
+  }
 
   function buildSetup(selection) {
     try {
@@ -25,12 +41,13 @@
         const template = cloneTemplate(monsters()[id]);
         return { combatant_id: `monster-${index + 1}:${id}`, side: "monsters", position_ft: F().startingPosition(template, "monsters"), state: S().buildState(template) };
       });
+      const mapDefinition = placeStandardGrid(heroMembers, monsterMembers);
       return {
         heroes: heroMembers,
         monsters: monsterMembers,
         hero_total_levels: heroMembers.reduce((sum, item) => sum + item.state.template.level, 0),
         monster_total_cr: totalCr(monsterMembers.map((item) => item.state.template.challenge_rating)),
-        map_definition: M()?.buildStandardMap?.() || null,
+        map_definition: mapDefinition,
       };
     } catch (error) {
       console.error("Failed to build browser encounter setup", { selection, error });
@@ -114,7 +131,7 @@
 
   function finish(setup, init, events, result, round, sequence) {
     events.push({ sequence, round_number: round, event_type: result === "draw" ? "draw" : "victory", actor_id: "arena", actor_name: "Iron Pit", animation: "victory", description: result === "heroes_win" ? "Heroes win the deathmatch." : result === "monsters_win" ? "Monsters win the deathmatch." : "The fight reaches the arena round limit and ends in a draw." });
-    return { battle_id: crypto.randomUUID?.() || `battle-${Date.now()}`, outcome: result, rounds: round, setup, initiative: init, events, ruleset: "SRD 5.2.1 Iron Pit formation deathmatch subset" };
+    return { battle_id: crypto.randomUUID?.() || `battle-${Date.now()}`, outcome: result, rounds: round, setup, initiative: init, events, ruleset: "SRD 5.2.1 Iron Pit grid deathmatch subset" };
   }
 
   window.IRON_PIT_BROWSER_ENGINE = { runEncounter };

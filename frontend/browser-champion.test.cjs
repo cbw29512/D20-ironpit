@@ -80,10 +80,13 @@ function state(name, kind, hp = 100) {
 }
 
 window.IRON_PIT_BROWSER_HEROES = { champion: { name: "Karnok", kind: "character", level: 3, speed_ft: 30,
-  initiative_bonus: 1, initiative_advantage: true, attacks: [greatsword], primary_attack_id: "greatsword" } };
+  initiative_bonus: 1, initiative_advantage: true, size: "medium", attacks: [greatsword], primary_attack_id: "greatsword" } };
 window.IRON_PIT_BROWSER_MONSTERS = { target: { name: "Target", kind: "monster", challenge_rating: "0", speed_ft: 30,
-  initiative_bonus: 0, attacks: [], primary_attack_id: null } };
-window.IRON_PIT_BROWSER_FORMATION = { startingPosition: (_template, side) => side === "heroes" ? 5 : 10 };
+  initiative_bonus: 0, size: "medium", attacks: [], primary_attack_id: null } };
+window.IRON_PIT_BROWSER_FORMATION = {
+  startingPosition: (_template, side) => side === "heroes" ? 5 : 10,
+  usesBackline: () => false,
+};
 window.IRON_PIT_BROWSER_PRECOMBAT_SPELLS = { prepare: (_setup, sequence) => ({ events: [], sequence }) };
 window.IRON_PIT_BROWSER_CONDITION_LIFECYCLE = {
   resolveTargetTiming: (sequence) => ({ events: [], sequence }), resolveSourceTiming: (sequence) => ({ events: [], sequence }),
@@ -93,13 +96,17 @@ window.IRON_PIT_BROWSER_TURN = { resolveTurn: (sequence, _round, _member, setup)
   return { events: [], sequence };
 } };
 window.IRON_PIT_BROWSER_STATE.buildState = (template) => ({ template, current_hp: 10, is_alive: true, is_dead: false,
-  is_unconscious: false, is_stable: false, active_effect_ids: [], reaction_available: true, heroic_inspiration: false });
+  is_unconscious: false, is_stable: false, active_effect_ids: [], reaction_available: true, heroic_inspiration: false,
+  position: null });
 window.IRON_PIT_BROWSER_STATE.refreshReaction = (s) => { s.reaction_available = true; };
 window.IRON_PIT_BROWSER_STATE.refreshStartOfTurn = (s) => {
   window.IRON_PIT_BROWSER_STATE.refreshReaction(s);
   if (s.template.heroic_warrior && !s.heroic_inspiration) s.heroic_inspiration = true;
 };
 setDice([4, 17, 10]);
+load("browser-grid-geometry.js");
+load("browser-arena-map.js");
+load("browser-grid-placement.js");
 load("browser-initiative.js");
 load("browser-engine.js");
 {

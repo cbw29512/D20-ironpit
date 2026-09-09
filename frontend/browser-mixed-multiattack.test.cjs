@@ -95,7 +95,7 @@ function hybridSetup() {
 }
 function rangedHybridSetup(protectedByFrontline) {
   const target = member("hero-front", "heroes", frontTarget, 5);
-  const attacker = member("monster-ranged", "monsters", rangedHybrid, 15);
+  const attacker = member("monster-ranged", "monsters", rangedHybrid, protectedByFrontline ? 15 : 10);
   const guard = member("monster-guard", "monsters", monsterGuard, 10);
   return {
     setup: { heroes: [target], monsters: protectedByFrontline ? [guard, attacker] : [attacker] },
@@ -135,7 +135,7 @@ function rangedHybridSetup(protectedByFrontline) {
   window.IRON_PIT_DICE = queuedDice([15, 4, 15, 4]);
   const result = T.resolveTurn(1, 1, attacker, setup);
   const attacks = result.events.filter((event) => event.event_type === "attack");
-  assert.deepEqual(attacks.map((event) => event.weapon_id), ["sword", "sword"], "exposed ranged Multiattack switches to melee");
+  assert.deepEqual(attacks.map((event) => event.weapon_id), ["sword", "sword"], "adjacent unscreened ranged Multiattack switches to melee");
 }
 
-console.log("Browser fixed-formation mixed Multiattack regressions passed.");
+console.log("Browser range-aware mixed Multiattack regressions passed.");

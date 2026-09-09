@@ -5,6 +5,7 @@ from app.combat.encounter_setup import build_encounter_setup
 from app.combat.state import begin_turn, build_combatant_state
 from app.content.audited_fighter import build_karnok_stoneward
 from app.content.monsters_wolves import build_dire_wolf, build_wolf
+from app.domain.grid import GridPosition
 from app.domain.models import EncounterSelection, RollMode
 
 
@@ -82,13 +83,16 @@ def test_prone_combatant_spends_half_speed_to_stand_at_turn_start() -> None:
     assert state.movement_remaining_ft == 15
 
 
-def test_two_wolves_activate_pack_tactics_under_arena_adjacency() -> None:
+def test_two_wolves_activate_pack_tactics_when_ally_is_within_five_feet_of_target() -> None:
     setup = build_encounter_setup(EncounterSelection(
         hero_ids=["karnok-stoneward-l1"],
         monster_ids=["srd-wolf", "srd-wolf"],
     ))
-    wolf = setup.monsters[0]
+    wolf, ally = setup.monsters
     target = setup.heroes[0]
+    target.state.position = GridPosition(x=8, y=7)
+    wolf.state.position = GridPosition(x=7, y=7)
+    ally.state.position = GridPosition(x=8, y=6)
 
     assert pack_tactics_active(wolf, target, setup) is True
 

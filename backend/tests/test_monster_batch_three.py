@@ -3,6 +3,7 @@ from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.state import begin_turn
 from app.content.monsters_batch_three import build_monster_batch_three
+from app.domain.grid import GridPosition
 from app.domain.models import EncounterSelection, WeaponAttackKind
 from app.domain.traits import CombatTrait
 
@@ -62,6 +63,11 @@ def _scout_attack_ids(*, protected: bool) -> list[str]:
         hero_ids=["karnok-stoneward-l1"], monster_ids=monster_ids,
     ))
     scout = next(member for member in setup.monsters if member.state.template.id == "srd-scout")
+    setup.heroes[0].state.position = GridPosition(x=7, y=6)
+    scout.state.position = GridPosition(x=8, y=6)
+    if protected:
+        infantry = next(member for member in setup.monsters if member.state.template.id == "srd-warrior-infantry")
+        infantry.state.position = GridPosition(x=9, y=6)
     begin_turn(scout.state)
     events, _ = resolve_attack_action(1, 1, scout, setup, FixedDiceProvider([10, 4, 10, 4]))
     return [event.weapon_id for event in events if event.event_type == "attack"]

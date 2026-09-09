@@ -36,7 +36,7 @@ function freshHero() {
 
 function multiattackIds(monsterId, protectedByFrontline = false) {
   const attacker = {
-    combatant_id: `monster-1:${monsterId}`, side: "monsters", position_ft: 15,
+    combatant_id: `monster-1:${monsterId}`, side: "monsters", position_ft: protectedByFrontline ? 15 : 10,
     state: S.buildState(structuredClone(monsters[monsterId])),
   };
   const hero = freshHero();
@@ -57,7 +57,7 @@ assert.deepEqual(multiattackIds("srd-saber-toothed-tiger"), [
   "saber-toothed-tiger-rend", "saber-toothed-tiger-rend",
 ]);
 assert.deepEqual(multiattackIds("srd-scout", true), ["scout-longbow", "scout-longbow"], "screened Scout stays ranged");
-assert.deepEqual(multiattackIds("srd-scout", false), ["scout-shortsword", "scout-shortsword"], "exposed Scout switches to melee");
+assert.deepEqual(multiattackIds("srd-scout", false), ["scout-shortsword", "scout-shortsword"], "adjacent unscreened Scout switches to melee");
 
 {
   const saber = {
@@ -89,7 +89,9 @@ assert.deepEqual(multiattackIds("srd-scout", false), ["scout-shortsword", "scout
     combatant_id: "monster-2:infantry", side: "monsters", position_ft: 10,
     state: S.buildState(structuredClone(monsters["srd-warrior-infantry"])),
   };
-  assert.equal(S.packTactics(one, { heroes: [freshHero()], monsters: [one, two] }), true);
+  const hero = freshHero();
+  const setup = { heroes: [hero], monsters: [one, two] };
+  assert.equal(S.packTactics(one, hero, setup), true);
   assert.deepEqual([one.state.template.attacks[1].normal, one.state.template.attacks[1].long], [20, 60]);
 }
 

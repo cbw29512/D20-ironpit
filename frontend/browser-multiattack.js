@@ -35,6 +35,15 @@
     return F().chooseAttack(member, setup, data.attackIds, "melee")
       || F().chooseAttack(member, setup, data.attackIds, "ranged");
   }
+  function slotHasLegalChoice(member, setup, slot) {
+    try {
+      const data = slotData(slot);
+      return Boolean(attackChoice(member, setup, data) || saveChoice(member, setup, data));
+    } catch (error) {
+      console.error("Failed to prove browser Attack/Multiattack slot legality", { member: member.combatant_id, error });
+      throw error;
+    }
+  }
   function useRangedSplit(member, setup, slots) {
     if (F().isBackline(member)) return false;
     if (!F().hasFrontlineTarget(member, setup) || !F().hasBacklineTarget(member, setup)) return false;
@@ -47,6 +56,7 @@
     if (!slots?.length || !E().available(member.state, "action") || !F().targetOrder(member, setup).length) {
       return { events: [], sequence };
     }
+    if (!slots.some((slot) => slotHasLegalChoice(member, setup, slot))) return { events: [], sequence };
     const events = [];
     E().spend(member.state, "action");
     let openingFeature = C()?.openingFeature?.(round, member, setup) || null;
@@ -61,7 +71,7 @@
       const choice = attackChoice(member, setup, data, splitThis);
       if (choice) {
         if (splitThis && choice.attack.kind === "ranged") rangedSplitUsed = true;
-        const pack = window.IRON_PIT_BROWSER_STATE.packTactics(member, setup);
+        const pack = window.IRON_PIT_BROWSER_STATE.packTactics(member, choice.target, setup);
         const featureId = openingFeature || (pack ? "pack-tactics" : definition.id);
         const event = A().resolveAttack(sequence++, round, member, choice.target, choice.attack, choice.distance, {
           spendAction: false, advantage: pack ? 1 : 0, setup, featureId, turnKey,

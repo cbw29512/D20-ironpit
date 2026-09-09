@@ -4,18 +4,17 @@ from app.combat.encounter_combat_turn import resolve_combat_turn
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.pit_policy import choose_standard_attack
 from app.combat.state import begin_turn, build_combatant_state
-from app.content.audited_fighter import build_karnok_stoneward
-from app.content.monster_attacks import build_giant_lizard_attack
 from app.content.monsters import build_giant_lizard
 from app.content.pregens import build_mara_quickstep
 from app.content.rogue_attacks import build_mara_shortbow_attack
+from app.domain.grid import GridPosition
 from app.domain.models import EncounterSelection, RollMode, WeaponAttackKind
 
 
-def _at_distance(setup, distance_ft: int):
+def _set_grid_distance(setup, distance_ft: int):
     hero, monster = setup.heroes[0], setup.monsters[0]
-    hero.position_ft = 0
-    monster.position_ft = distance_ft
+    hero.state.position = GridPosition(x=0, y=6)
+    monster.state.position = GridPosition(x=distance_ft // 5, y=6)
     return hero, monster
 
 
@@ -24,33 +23,35 @@ def _disable_adrenaline_rush(hero) -> None:
     resource.current_uses = 0
 
 
-def test_melee_only_creature_attacks_without_movement_or_dash() -> None:
+def test_melee_only_creature_advances_then_dodges_when_attack_is_not_reachable() -> None:
     setup = build_encounter_setup(EncounterSelection(
         hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-giant-lizard"],
     ))
-    hero, monster = _at_distance(setup, 60)
+    hero, monster = _set_grid_distance(setup, 60)
     hero.state.template.alternate_weapon_attacks = []
     _disable_adrenaline_rush(hero)
-    before = (hero.position_ft, monster.position_ft)
 
     events, _ = resolve_combat_turn(1, 1, hero, monster, setup, FixedDiceProvider([2]))
 
-    assert any(event.event_type == "attack" for event in events)
-    assert not any(event.event_type in {"movement", "dash"} for event in events)
-    assert (hero.position_ft, monster.position_ft) == before
+    movement = [event for event in events if event.event_type == "movement"]
+    assert sum(event.movement_cost_ft or 0 for event in movement) == 30
+    assert not any(event.event_type == "attack" for event in events)
+    assert events[-1].feature_id == "dodge"
+    assert hero.state.position == GridPosition(x=6, y=6)
+    assert "dodge" in hero.state.active_effect_ids
 
 
-def test_frontline_with_backup_range_prefers_melee_under_fixed_formation() -> None:
+def test_frontline_with_backup_range_uses_legal_range_instead_of_fake_closing() -> None:
     setup = build_encounter_setup(EncounterSelection(
         hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-giant-lizard"],
     ))
-    hero, monster = _at_distance(setup, 60)
+    hero, monster = _set_grid_distance(setup, 60)
     _disable_adrenaline_rush(hero)
 
     events, _ = resolve_combat_turn(1, 1, hero, monster, setup, FixedDiceProvider([2]))
 
     attack = next(event for event in events if event.event_type == "attack")
-    assert attack.weapon_id == "greatsword"
+    assert attack.weapon_id == "shortbow"
     assert not any(event.event_type in {"movement", "dash"} for event in events)
 
 
@@ -80,11 +81,13 @@ def test_protected_ranged_primary_uses_range_without_close_combat_disadvantage()
     assert event.attack_roll.mode is RollMode.NORMAL
 
 
-def test_exposed_ranged_primary_switches_to_melee_when_it_has_a_melee_option() -> None:
+def test_engaged_ranged_primary_switches_to_melee_when_it_has_a_melee_option() -> None:
     setup = build_encounter_setup(EncounterSelection(
         hero_ids=["mara-quickstep-l1"], monster_ids=["srd-giant-lizard"],
     ))
-    archer = setup.heroes[0]
+    archer, target = setup.heroes[0], setup.monsters[0]
+    archer.state.position = GridPosition(x=7, y=6)
+    target.state.position = GridPosition(x=8, y=6)
     ranged = next(
         attack for attack in [archer.state.template.weapon_attack, *archer.state.template.alternate_weapon_attacks]
         if attack.weapon.attack_kind is WeaponAttackKind.RANGED

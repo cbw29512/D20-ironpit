@@ -83,10 +83,10 @@ window.IRON_PIT_DICE = { roll: (sides) => sides === 20 ? 19 : 1, rollMany: (coun
   const target = member("pack-target");
   const setup = { heroes: [target], monsters: [attacker, ally] };
   assert.equal(S.active(ally), false, "Incapacitated ally is not an active combatant");
-  assert.equal(S.packTactics(attacker, setup), false, "Incapacitated ally cannot enable Pack Tactics");
+  assert.equal(S.packTactics(attacker, target, setup), false, "Incapacitated ally cannot enable Pack Tactics");
   ally.state.active_effect_ids = ["poisoned"];
   assert.equal(S.active(ally), true, "partially debuffed ally remains active");
-  assert.equal(S.packTactics(attacker, setup), true, "partially debuffed ally can still enable Pack Tactics");
+  assert.equal(S.packTactics(attacker, target, setup), true, "partially debuffed ally can still enable Pack Tactics");
 }
 console.log("Browser condition/action-economy integration regressions passed.");
 

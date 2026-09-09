@@ -6,6 +6,7 @@
   const T = () => window.IRON_PIT_BROWSER_TACTICAL_SHIFT, O = () => window.IRON_PIT_BROWSER_ONGOING_SPELL_CONTROL;
   const L = () => window.IRON_PIT_BROWSER_SPELL_OFFENSE, U = () => window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION;
   const F = () => window.IRON_PIT_BROWSER_FORMATION, V = () => window.IRON_PIT_BROWSER_SAVES;
+  const DG = () => window.IRON_PIT_BROWSER_DODGE, OM = () => window.IRON_PIT_BROWSER_OFFENSIVE_MOVEMENT;
   const D = () => window.IRON_PIT_DICE;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
     available: (s, c) => c === "action" ? s.action_available : s.bonus_action_available,
@@ -101,10 +102,20 @@
       return finalize(events, charged.sequence, round, member, setup, turnKey);
     }
 
+    const movement = OM()?.move(sequence, round, member, setup, turnKey);
+    if (movement) { events.push(...movement.events); sequence = movement.sequence; }
+    if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
+
+    const movedSpell = L()?.resolve(sequence, round, member, setup, turnKey);
+    if (movedSpell) { events.push(...movedSpell.events); sequence = movedSpell.sequence; }
+    if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
+
     if (member.state.template.attack_action) {
       const multi = M().resolveAttackAction(sequence, round, member, setup);
-      events.push(...multi.events);
-      return finalize(events, multi.sequence, round, member, setup, turnKey);
+      events.push(...multi.events); sequence = multi.sequence;
+      if (multi.events.length || !E().available(member.state, "action")) {
+        return finalize(events, sequence, round, member, setup, turnKey);
+      }
     }
     const saved = saveChoice(member, setup);
     if (saved && E().available(member.state, "action")) {
@@ -113,11 +124,13 @@
     }
     const choice = F().chooseStandardAttack(member, setup);
     if (choice && E().available(member.state, "action")) {
-      const pack = S().packTactics(member, setup), opener = C()?.openingFeature?.(round, member, setup) || null;
+      const pack = S().packTactics(member, choice.target, setup), opener = C()?.openingFeature?.(round, member, setup) || null;
       const standard = U().resolve(sequence, round, member, choice.target, choice.attack, choice.distance, setup, turnKey, {
         advantage: pack ? 1 : 0, featureId: opener || (pack ? "pack-tactics" : null),
       });
       events.push(...standard.events); sequence = standard.sequence;
+    } else if (E().available(member.state, "action")) {
+      events.push(DG().take(sequence++, round, member));
     }
     return finalize(events, sequence, round, member, setup, turnKey);
   }
