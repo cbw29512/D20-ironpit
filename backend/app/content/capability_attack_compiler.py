@@ -6,6 +6,7 @@ from app.domain.capability_effects import (
     ConditionEffectDefinition,
     DamageEffectDefinition,
     GrappleEffectDefinition,
+    MaxHpReductionEffectDefinition,
     ProneEffectDefinition,
 )
 from app.domain.hit_modifiers import HitModifierEffect
@@ -61,6 +62,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
     conditional: list[ConditionalDamage] = []
     prone_size = None
     control = None
+    reduce_max_hp_by_damage_taken = False
     for effect in definition.effects:
         if isinstance(effect, DamageEffectDefinition):
             if effect.trigger == "on_hit":
@@ -80,6 +82,8 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
                     damage_bonus=effect.dice.bonus,
                     damage_type=effect.damage_type,
                 ))
+        elif isinstance(effect, MaxHpReductionEffectDefinition):
+            reduce_max_hp_by_damage_taken = True
         elif isinstance(effect, ProneEffectDefinition):
             prone_size = effect.max_target_size
         elif isinstance(effect, HitModifierEffect):
@@ -101,6 +105,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
         conditional_attack_advantage=definition.conditional_attack_advantage,
         on_hit_damage=on_hit,
         on_hit_modifier_effects=on_hit_modifiers,
+        reduce_max_hp_by_damage_taken=reduce_max_hp_by_damage_taken,
         knocks_prone_max_size=prone_size,
         control_effect=control,
         forbid_target_grappled_by_self=definition.forbid_target_grappled_by_self,
