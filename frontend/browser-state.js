@@ -5,6 +5,7 @@
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { effectiveSpeed: (state) => state.template.speed_ft };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { incapacitated: (state) => state.is_unconscious };
+  const U = () => window.IRON_PIT_BROWSER_RESOURCES || { refresh: () => [] };
   const effectiveMaxHp = (state) => state.template.max_hp + (state.max_hp_bonus || 0);
 
   function buildState(template) {
@@ -38,6 +39,7 @@
   function refreshStartOfTurn(state) {
     refreshReaction(state);
     window.IRON_PIT_BROWSER_HEROIC_INSPIRATION?.grant(state);
+    return U().refresh(state);
   }
 
   function beginTurn(state) {
@@ -45,7 +47,7 @@
     const incapacitated = Q().incapacitated(state);
     state.action_available = !incapacitated;
     state.bonus_action_available = !incapacitated;
-    refreshStartOfTurn(state);
+    const rechargeResults = refreshStartOfTurn(state);
     const speedZero = G()?.speedIsZero(state) || false;
     const speed = M().effectiveSpeed(state);
     state.movement_remaining_ft = speedZero ? 0 : speed;
@@ -54,6 +56,7 @@
       state.movement_remaining_ft = Math.max(0, state.movement_remaining_ft - Math.floor(speed / 2));
       state.active_effect_ids = state.active_effect_ids.filter((id) => id !== "prone");
     }
+    return rechargeResults;
   }
 
   const distance = (a, b) => Math.abs(a.position_ft - b.position_ft);
