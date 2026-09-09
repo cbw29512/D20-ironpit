@@ -9,10 +9,12 @@ global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
   "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
-  "browser-modifiers.js", "browser-state.js", "browser-rolls.js", "browser-zero-hp.js", "browser-attack.js",
-  "browser-saves.js", "browser-concentration.js", "browser-spell-modifiers.js", "browser-spellcasting.js",
-  "browser-spell-area.js", "browser-offense-value.js", "browser-spell-policy.js", "browser-spell-resolution.js",
-  "browser-spell-attack-policy.js", "browser-spell-attack.js", "browser-spell-offense.js", "browser-precombat-spells.js",
+  "browser-modifiers.js", "browser-state.js", "browser-rolls.js", "browser-zero-hp.js",
+  "browser-forced-movement.js", "browser-control.js", "browser-attack-helpers.js", "browser-attack.js",
+  "browser-resources.js", "browser-save-helpers.js", "browser-saves.js", "browser-concentration.js",
+  "browser-spell-modifiers.js", "browser-spellcasting.js", "browser-spell-area.js", "browser-offense-value.js",
+  "browser-spell-policy.js", "browser-spell-resolution.js", "browser-spell-attack-policy.js", "browser-spell-attack.js",
+  "browser-spell-offense.js", "browser-precombat-spells.js",
 ]) load(file);
 
 const H = window.IRON_PIT_BROWSER_HEROES;

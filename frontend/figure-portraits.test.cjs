@@ -7,7 +7,9 @@ const vm = require("node:vm");
 
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
-for (const file of ["figure-profiles.js", "figure-visuals.js", "figure-portraits.js"]) load(file);
+for (const file of [
+  "figure-profiles.js", "figure-visuals.js", "figure-portraits.js",
+]) load(file);
 
 const P = window.IRON_PIT_FIGURE_PORTRAITS;
 const monster = (name, size = "medium") => ({ name, kind: "monster", size, attacks: [{ name: "Bite" }] });

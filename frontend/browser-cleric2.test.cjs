@@ -9,9 +9,11 @@ global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
   "browser-heroes.js", "browser-monsters-generated.js", "browser-condition-immunity.js", "browser-condition-rules.js",
-  "browser-action-economy.js", "browser-modifiers.js", "browser-grapple.js", "browser-state.js", "browser-rolls.js",
-  "browser-timed-conditions.js", "browser-source-bound-effects.js", "browser-undead-fortitude.js", "browser-zero-hp.js",
-  "browser-attack.js", "browser-saves.js", "browser-healing.js", "browser-cleric-channel.js",
+  "browser-action-economy.js", "browser-modifiers.js", "browser-grapple.js", "browser-state.js",
+  "browser-rolls.js", "browser-timed-conditions.js", "browser-source-bound-effects.js", "browser-undead-fortitude.js",
+  "browser-zero-hp.js", "browser-forced-movement.js", "browser-control.js", "browser-attack-helpers.js",
+  "browser-attack.js", "browser-resources.js", "browser-save-helpers.js", "browser-saves.js",
+  "browser-healing.js", "browser-cleric-channel.js",
 ]) load(file);
 
 const H = window.IRON_PIT_BROWSER_HEROES;
