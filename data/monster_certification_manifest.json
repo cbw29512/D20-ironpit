@@ -4,8 +4,8 @@
   "generation_policy": "Derived automatically from canonical SRD rows plus runtime/source audit readiness.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 152,
-    "blocked": 178
+    "public_ready": 153,
+    "blocked": 177
   },
   "monsters": [
     {
@@ -3171,16 +3171,12 @@
         "damage-or-condition-defense",
         "multiattack"
       ],
-      "unsupported_mechanics": [
-        "hit-modifier-mismatch:srd-fire-giant-hammer-throw:next-attack-made-disadvantage"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "hit-modifier-mismatch:srd-fire-giant-hammer-throw:next-attack-made-disadvantage"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-flesh-golem",
