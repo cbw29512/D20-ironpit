@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.ally_context import pack_tactics_active
+from app.combat.area_save_actions import resolve_area_save_action
 from app.combat.opening_burst import opening_feature_id
 from app.combat.recharge_action_policy import recharge_action_choice
 from app.combat.saving_throws import resolve_save_action
@@ -34,6 +35,12 @@ def resolve_priority_recharge_action(
                 affected_states=affected,
             )
             return [event], sequence + 1, True
+        if kind == "area-save":
+            action, placement = payload
+            events, sequence, _ = resolve_area_save_action(
+                sequence, round_number, attacker, setup, action, dice, placement=placement,
+            )
+            return events, sequence, True
         if kind == "attack":
             target, attack, distance = payload
             pack = pack_tactics_active(attacker, target, setup)
