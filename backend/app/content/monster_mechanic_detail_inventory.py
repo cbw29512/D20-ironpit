@@ -15,7 +15,7 @@ _CONTROL = re.compile(
     re.I,
 )
 _COMPLEX_PATTERNS: dict[str, re.Pattern[str]] = {
-    "save-branch": re.compile(r"\b(?:Saving Throw|Failure:|Success:)\b", re.I),
+    "save-branch": re.compile(r"(?:\bSaving Throw\b|\bFailure:|\bSuccess:)", re.I),
     "temporary-hp": re.compile(r"\bTemporary Hit Points?\b", re.I),
     "healing-or-regain": re.compile(r"\bregains?\s+\d+\b", re.I),
     "teleport": re.compile(r"\bteleport\b", re.I),
