@@ -3,6 +3,7 @@ from app.combat.condition_rules import is_incapacitated
 from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.encounter_targeting import close_ranged_threat_exists
+from app.domain.grid import GridPosition
 from app.domain.models import EncounterSelection, RollMode, WeaponAttackKind
 
 
@@ -16,9 +17,10 @@ def _setup(two_heroes: bool = False):
     downed.state.is_unconscious = True
     downed.state.active_effect_ids.append("prone")
     scout = setup.monsters[0]
-    scout.position_ft = 10
-    for hero in setup.heroes:
-        hero.position_ft = 5
+    scout.state.position = GridPosition(x=8, y=6)
+    downed.state.position = GridPosition(x=7, y=6)
+    if two_heroes:
+        setup.heroes[1].state.position = GridPosition(x=8, y=7)
     ranged = next(
         attack for attack in [scout.state.template.weapon_attack, *scout.state.template.alternate_weapon_attacks]
         if attack.weapon.attack_kind is WeaponAttackKind.RANGED
