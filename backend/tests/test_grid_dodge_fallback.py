@@ -32,9 +32,9 @@ def _commoner(
         raise
 
 
-def _target() -> EncounterCombatant:
+def _target(x: int = 20, y: int = 7) -> EncounterCombatant:
     try:
-        return _commoner("monster-target", "monsters", 20, 7)
+        return _commoner("monster-target", "monsters", x, y)
     except Exception:
         logger.exception("Failed to build blocked-grid target fixture.")
         raise
@@ -79,15 +79,16 @@ def test_blocked_melee_only_gargantuan_dodges_instead_of_breaking() -> None:
         raise
 
 
-def test_medium_melee_creature_boxed_by_summoned_allies_dodges() -> None:
+def test_medium_melee_creature_blocked_by_summoned_allies_dodges() -> None:
     try:
         mover = _commoner("hero-medium-mover", "heroes", 0, 7)
         wall = [
-            _commoner(f"summon-{x}-{y}", "heroes", x, y)
-            for x in range(1, 4)
-            for y in range(16)
+            _commoner("summon-wall-1", "heroes", 2, 0, size=CreatureSize.GARGANTUAN),
+            _commoner("summon-wall-2", "heroes", 2, 4, size=CreatureSize.GARGANTUAN),
+            _commoner("summon-wall-3", "heroes", 2, 8, size=CreatureSize.GARGANTUAN),
+            _commoner("summon-wall-4", "heroes", 2, 12, size=CreatureSize.GARGANTUAN),
         ]
-        _assert_dodge_only(mover, _target(), wall)
+        _assert_dodge_only(mover, _target(6, 7), wall)
     except Exception:
         logger.exception("Blocked Medium summon-wall Dodge fallback regression failed.")
         raise
