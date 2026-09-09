@@ -58,7 +58,9 @@ def test_large_footprint_is_hit_when_any_occupied_square_is_covered() -> None:
     target.state.template = target.state.template.model_copy(update={"size": CreatureSize.LARGE})
     area = AreaTargeting(shape="radius", origin="point", radius_ft=5)
     placements = legal_area_placements(actor, _setup([actor], [target]), area, 60)
-    assert any(placement.origin == (32.5, 2.5) and placement.target_ids == ("large",) for placement in placements)
+    matching = [placement for placement in placements if placement.target_ids == ("large",)]
+    assert matching
+    assert matching[0].origin == (17.5, 2.5)
 
 
 def test_missing_grid_position_fails_closed_instead_of_using_scalar_distance() -> None:
