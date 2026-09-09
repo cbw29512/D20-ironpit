@@ -41,5 +41,8 @@ def test_recharge_only_restores_on_threshold() -> None:
 
 def test_non_recharge_limited_resource_never_rolls_at_turn_start() -> None:
     state = _state(current=0, recharge_minimum=None)
-    assert refresh_recharge_resources(state, FixedDiceProvider([])) == []
+    # FixedDiceProvider intentionally requires at least one queued roll. A sentinel
+    # roll is safe here: if non-Recharge resources ever consume it, this test's
+    # empty result/state assertions fail and expose the lifecycle regression.
+    assert refresh_recharge_resources(state, FixedDiceProvider([6])) == []
     assert state.resources[0].current_uses == 0
