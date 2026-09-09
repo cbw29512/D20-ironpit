@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available, spend
+from app.combat.attack_description import build_attack_description
 from app.combat.barbarian import end_rage_if_incapacitated, extend_rage_from_attack
 from app.combat.bloodied import bloodied_fury_advantage
 from app.combat.condition_rules import close_hit_is_automatic_critical
@@ -20,6 +21,7 @@ from app.combat.modifier_stack import (
 from app.combat.parry import resolve_parry_hit
 from app.combat.range import resolve_attack_roll_mode
 from app.combat.reckless_attack import attacks_against_reckless_advantage, reckless_attack_advantage
+from app.combat.resources import spend_resource
 from app.combat.rolls import roll_d20
 from app.combat.sap import apply_weapon_sap, consume_sap, sap_disadvantage
 from app.combat.state import terminate_turn
@@ -60,6 +62,7 @@ def resolve_attack(
             other_disadvantage_sources=other_disadvantage_sources + condition_disadvantage + sap_disadvantage(attacker),
             close_enemy_active=close_enemy_active,
         )
+        resource_remaining = spend_resource(attacker, attack.resource_id, attack.resource_cost)
         base_roll = roll_d20(dice, attack.attack_bonus, mode)
         base_roll, heroic_reroll = reroll_failed_attack_with_heroic_inspiration(attacker, base_roll, effective_armor_class(defender), dice)
         attack_roll = apply_d20_bonus_dice(attacker, ModifierKind.ATTACK_ROLL_BONUS_DIE, base_roll, dice)
@@ -107,25 +110,14 @@ def resolve_attack(
                 damage_roll, damage_components, damage_outcome = graze
                 end_rage_if_incapacitated(actual_defender)
             studied_applied = apply_studied_attack_miss(attacker, attacker_event_id, defender_event_id, round_number)
-        outcome = "CRITICAL HIT" if critical else ("HIT" if hit else "MISS")
-        description = f"{attacker.template.name}: {outcome} with {weapon.name}."
-        if natural_1_ends_turn: description += " Natural 1: Iron Pit immediately ends the attacker's turn."
-        elif natural_1: description += " Natural 1: automatic miss; this off-turn attack does not terminate a future turn."
-        if heroic_reroll: description += " Heroic Inspiration rerolls one d20."
-        if not hit and damage_roll is not None: description += f" Graze deals {damage_roll.total} {weapon.damage_type.value} damage."
-        if studied_applied: description += f" Studied Attacks primes the next attack against {defender.template.name}."
-        if redirect_used: description += f" {defender.template.name} uses Redirect Attack; {actual_defender.template.name} becomes the target."
-        if parry_used: description += f" {actual_defender.template.name} uses Parry."
-        if weapon_sap_applied: description += f" Sap mastery affects {actual_defender.template.name}."
-        if tactical_sap_applied: description += f" Tactical Master applies Sap to {actual_defender.template.name}."
-        if vex_applied: description += f" Vex primes the next attack against {actual_defender.template.name}."
-        if topple and topple.save_dc is not None: description += f" Topple save DC {topple.save_dc}: {actual_defender.template.name} {'succeeds' if topple.save_succeeded else 'fails'}."
-        if damage_outcome == "relentless_endurance": description += f" {actual_defender.template.name} uses Relentless Endurance and remains at 1 HP."
-        if damage_outcome == "undead_fortitude": description += f" {actual_defender.template.name} succeeds on Undead Fortitude and remains at 1 HP."
-        if "prone" in applied_conditions: description += f" {actual_defender.template.name} is knocked Prone."
-        if "grappled" in applied_conditions: description += f" {actual_defender.template.name} is Grappled."
-        if "restrained" in applied_conditions: description += f" {actual_defender.template.name} is Restrained while Grappled."
-        if "poisoned" in applied_conditions: description += f" {actual_defender.template.name} is Poisoned."
+        description = build_attack_description(
+            attacker, defender, actual_defender, attack, hit=hit, critical=critical, natural_1=natural_1,
+            natural_1_ends_turn=natural_1_ends_turn, heroic_reroll=heroic_reroll,
+            damage_total=damage_roll.total if damage_roll is not None else None, studied_applied=studied_applied,
+            redirect_used=redirect_used, parry_used=parry_used, weapon_sap_applied=weapon_sap_applied,
+            tactical_sap_applied=tactical_sap_applied, vex_applied=vex_applied, topple=topple,
+            damage_outcome=damage_outcome, applied_conditions=applied_conditions,
+        )
         return BattleEvent(
             sequence=sequence, round_number=round_number, event_type="attack", actor_id=attacker_event_id, actor_name=attacker.template.name,
             target_id=actual_event_id, target_name=actual_defender.template.name, attack_name=weapon.name, target_ac=target_ac,
@@ -138,7 +130,8 @@ def resolve_attack(
             death_save_successes_before=death_success_before, death_save_failures_before=death_failure_before,
             death_save_successes=actual_defender.death_save_successes, death_save_failures=actual_defender.death_save_failures,
             is_stable=actual_defender.is_stable, is_dead=actual_defender.is_dead, weapon_id=weapon.id, projectile=weapon.projectile,
-            feature_id=feature_id, concentration_ended_effect_id=concentration_before if concentration_before and actual_defender.concentration is None else None,
+            feature_id=feature_id, resource_remaining=resource_remaining,
+            concentration_ended_effect_id=concentration_before if concentration_before and actual_defender.concentration is None else None,
             animation=weapon.animation, description=description,
         )
     except Exception as exc:
