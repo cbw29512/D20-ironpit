@@ -46,6 +46,8 @@ def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
         on_failure_modifier_effects=modifiers,
         grapple_escape_dc=legacy_grapple.grapple_escape_dc if legacy_grapple else None,
         restrains_while_grappled=legacy_grapple.restrains_while_grappled if legacy_grapple else False,
+        resource_id=definition.resource_id,
+        resource_cost=definition.resource_cost,
         animation=definition.animation,
     )
 
