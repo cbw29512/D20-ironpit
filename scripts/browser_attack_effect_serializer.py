@@ -37,6 +37,8 @@ def control_row(effect: Any) -> dict[str, Any] | None:
                 row["repeatSaveAbility"] = effect.repeat_save_ability
                 row["repeatSaveDc"] = effect.repeat_save_dc
                 row["repeatSaveTiming"] = effect.repeat_save_timing
+                if effect.repeat_save_delay_rounds:
+                    row["repeatSaveDelayRounds"] = effect.repeat_save_delay_rounds
             if effect.allowed_removal_action_ids:
                 row["allowedRemovalActionIds"] = list(effect.allowed_removal_action_ids)
         return row or None
