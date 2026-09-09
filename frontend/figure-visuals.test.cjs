@@ -72,6 +72,27 @@ assert.deepEqual({ form: monster("Swarm of Crawling Claws").form, detail: monste
 assert.equal(monster("Xorn").form, "brute");
 assert.equal(monster("Xorn").detail, "xorn");
 
+const xorn = window.IRON_PIT_BROWSER_MONSTERS["srd-xorn"];
+assert.ok(xorn, "Xorn must be exported only after canonical certification succeeds");
+assert.deepEqual(xorn.attack_action.slots, [
+  { attackIds: ["srd-xorn-bite"], saveActionIds: [] },
+  { attackIds: ["srd-xorn-claw"], saveActionIds: [] },
+  { attackIds: ["srd-xorn-claw"], saveActionIds: [] },
+  { attackIds: ["srd-xorn-claw"], saveActionIds: [] },
+]);
+const xornBite = xorn.attacks.find((attack) => attack.id === "srd-xorn-bite");
+const xornClaw = xorn.attacks.find((attack) => attack.id === "srd-xorn-claw");
+assert.deepEqual(
+  { bonus: xornBite.bonus, diceCount: xornBite.diceCount, diceSize: xornBite.diceSize, damageBonus: xornBite.damageBonus, damageType: xornBite.damageType },
+  { bonus: 6, diceCount: 4, diceSize: 6, damageBonus: 3, damageType: "piercing" },
+);
+assert.deepEqual(
+  { bonus: xornClaw.bonus, diceCount: xornClaw.diceCount, diceSize: xornClaw.diceSize, damageBonus: xornClaw.damageBonus, damageType: xornClaw.damageType },
+  { bonus: 6, diceCount: 1, diceSize: 10, damageBonus: 3, damageType: "slashing" },
+);
+assert.deepEqual(xorn.source_trait_names, ["Earth Glide", "Treasure Sense"]);
+assert.deepEqual(xorn.source_bonus_action_names, ["Charge"]);
+
 const unknown = monster("Future Unreviewed Monster");
 assert.equal(unknown.certified, false);
 assert.equal(unknown.form, "unknown", "uncertified monsters must fail visually closed rather than guessing anatomy");
