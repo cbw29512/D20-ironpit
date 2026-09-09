@@ -4,6 +4,7 @@
   const el = (id) => document.getElementById(id);
   const V = () => window.IRON_PIT_FIGURE_VISUALS;
   const P = () => window.IRON_PIT_FIGURE_PORTRAITS;
+  const A = () => window.IRON_PIT_COMBATANT_ART;
   const L = () => window.IRON_PIT_BATTLE_LOG;
   const MAX_SLOTS = 6;
 
@@ -14,8 +15,15 @@
   }
 
   function figureMarkup(template) {
-    const portrait = P()?.markup(template) || '<svg class="portrait-svg" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="32"/></svg>';
-    return `<div class="stick-figure fighter-portrait" aria-hidden="true">${portrait}</div>`;
+    try {
+      const artwork = A()?.markup(template);
+      const portrait = artwork || P()?.markup(template)
+        || '<svg class="portrait-svg" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="32"/></svg>';
+      return `<div class="stick-figure fighter-portrait" aria-hidden="true">${portrait}</div>`;
+    } catch (error) {
+      console.error("Failed to render battlefield combatant visual", { templateId: template?.id, error });
+      throw error;
+    }
   }
 
   function emptySlot(side, index, onOpen) {
