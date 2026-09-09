@@ -5,11 +5,12 @@
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { effectiveSpeed: (state) => state.template.speed_ft };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { incapacitated: (state) => state.is_unconscious };
-  const effectiveMaxHp = (state) => state.template.max_hp + (state.max_hp_bonus || 0);
+  const effectiveMaxHp = (state) => Math.max(0, state.template.max_hp + (state.max_hp_bonus || 0) - (state.max_hp_reduction || 0));
 
   function buildState(template) {
     return {
-      template, current_hp: template.max_hp, max_hp_bonus: 0, temporary_hp: 0, initiative_roll: null, initiative_total: null, is_alive: true,
+      template, current_hp: template.max_hp, max_hp_bonus: 0, max_hp_reduction: 0, temporary_hp: 0,
+      initiative_roll: null, initiative_total: null, is_alive: true,
       is_unconscious: false, is_stable: false, is_dead: false,
       death_save_successes: 0, death_save_failures: 0,
       action_available: true, bonus_action_available: true, reaction_available: true,
@@ -20,6 +21,20 @@
       feature_last_turn_keys: {}, spell_slot_expended_turn_key: null,
       temporary_damage_resistances: [], rage_expires_round: null, rage_max_round: null,
     };
+  }
+
+  function reduceMaxHp(state, amount) {
+    if (amount < 0) throw new Error("Hit Point maximum reduction cannot be negative.");
+    if (!amount || state.is_dead) return 0;
+    const before = effectiveMaxHp(state);
+    state.max_hp_reduction += amount;
+    const after = effectiveMaxHp(state);
+    state.current_hp = Math.min(state.current_hp, after);
+    if (after === 0) {
+      state.current_hp = 0; state.is_alive = false; state.is_dead = true;
+      state.is_unconscious = false; state.is_stable = false;
+    }
+    return before - after;
   }
 
   function grantTemporaryHp(state, amount) {
@@ -108,6 +123,6 @@
   const canProne = (target, maxSize) => sizeAtMost(target, maxSize);
   window.IRON_PIT_BROWSER_STATE = {
     active, beginTurn, buildState, canProne, distance, downedCharacter, effectiveMaxHp, grantTemporaryHp, hasActiveAlly,
-    moveToward, nearestTarget, packTactics, refreshReaction, refreshStartOfTurn, sizeAtMost, targetPriority, terminateTurn,
+    moveToward, nearestTarget, packTactics, reduceMaxHp, refreshReaction, refreshStartOfTurn, sizeAtMost, targetPriority, terminateTurn,
   };
 })();
