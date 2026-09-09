@@ -7,6 +7,7 @@ from app.combat.condition_removal import choose_condition_removal_action, resolv
 from app.combat.encounter_action_surge import resolve_action_surge_attack
 from app.combat.healing import choose_healing_action, resolve_healing
 from app.combat.pit_policy import save_distance, target_order
+from app.combat.resources import resource_available
 from app.combat.saving_throws import legal_save_action
 from app.combat.barbarian import finalize_rage_turn
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -63,6 +64,8 @@ def save_choice(attacker: EncounterCombatant, setup: EncounterSetup):
     try:
         for target in target_order(attacker, setup):
             for action in attacker.state.template.saving_throw_actions:
+                if not resource_available(attacker.state, action.resource_id, action.resource_cost):
+                    continue
                 distance = save_distance(attacker, target, action.range_ft)
                 if legal_save_action(action, target, distance):
                     return target, action, distance
