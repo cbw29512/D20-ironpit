@@ -14,6 +14,20 @@ def _value(item: Any) -> Any:
     return getattr(item, "value", item)
 
 
+def _gate(gate: Any) -> dict[str, Any] | None:
+    row: dict[str, Any] = {}
+    if gate.required_target_tags:
+        row["requiredTargetTags"] = list(gate.required_target_tags)
+    if gate.excluded_target_tags:
+        row["excludedTargetTags"] = list(gate.excluded_target_tags)
+    if gate.excluded_creature_types:
+        row["excludedCreatureTypes"] = list(gate.excluded_creature_types)
+    if gate.save_ability:
+        row["saveAbility"] = gate.save_ability
+        row["saveDc"] = gate.save_dc
+    return row or None
+
+
 def _control(effect: Any) -> dict[str, Any] | None:
     if effect is None:
         return None
@@ -24,6 +38,9 @@ def _control(effect: Any) -> dict[str, Any] | None:
         row["grappleEscapeDc"] = effect.grapple_escape_dc
     if effect.restrains_while_grappled:
         row["restrainsWhileGrappled"] = True
+    gate = _gate(effect.gate)
+    if gate:
+        row["gate"] = gate
     if effect.condition_id:
         row["conditionId"] = effect.condition_id
         if effect.expires_at_start_of_source_turn:
@@ -280,6 +297,10 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                        "off_hand": template.visual.off_hand, "body_style": template.visual.body_style},
             "source": template.source, **_progression_features(template),
         }
+        if template.creature_type:
+            row["creature_type"] = template.creature_type
+        if template.creature_tags:
+            row["creature_tags"] = list(template.creature_tags)
         rechargeable = [item for item in template.resources if item.recharge_minimum is not None]
         if rechargeable:
             row["resourceDefinitions"] = [
