@@ -5,11 +5,12 @@
 Before changing combat code, read:
 
 1. `docs/IRON_PIT_RULES_CONTRACT.md` — authoritative product/combat rules.
-2. `docs/UNIVERSAL_COMBATANT_ARCHITECTURE.md` — durable universal-engine and data-binding architecture.
-3. `docs/IRON_PIT_AUDIT_EVENT_SCHEMA.md` — audit/event evidence contract.
-4. `docs/CANONICAL_COMBAT_BUILD_POLICY.md` — canonical pregen construction.
-5. current source/runtime code and permanent tests.
-6. generated certification state in `data/hero_certification_manifest.json` and `data/monster_certification_manifest.json`.
+2. `docs/VTT_CARD_BATTLEFIELD_CONTRACT.md` — specific battlefield/card-token/grid architecture; it supersedes older fixed-formation/deity-closing assumptions wherever they conflict.
+3. `docs/UNIVERSAL_COMBATANT_ARCHITECTURE.md` — durable universal-engine and data-binding architecture.
+4. `docs/IRON_PIT_AUDIT_EVENT_SCHEMA.md` — audit/event evidence contract.
+5. `docs/CANONICAL_COMBAT_BUILD_POLICY.md` — canonical pregen construction.
+6. current source/runtime code and permanent tests.
+7. generated certification state in `data/hero_certification_manifest.json` and `data/monster_certification_manifest.json`.
 
 Repository truth beats chat summaries, historical counts, old milestone prose, uploaded registry dumps, and stale file-library references. External/user-provided files are evidence only until reconciled against the exact current commit.
 
@@ -35,7 +36,7 @@ Repository truth beats chat summaries, historical counts, old milestone prose, u
 - If there is any uncertainty about RAW wording, source interpretation, timing, architecture, data mapping, user intent, or whether an existing shared mechanic already covers the behavior, stop before changing code.
 - Do not guess, infer around the uncertainty, create a temporary special case, or keep coding merely to preserve momentum.
 - Ask Chris one precise clarification question that isolates the unresolved decision.
-- After Chris answers, write the decision into the repository before implementation continues. Rules/mechanics decisions belong in `docs/IRON_PIT_RULES_CONTRACT.md`; durable architecture decisions belong in `docs/UNIVERSAL_COMBATANT_ARCHITECTURE.md`; operating/process decisions belong in `AGENTS.md`.
+- After Chris answers, write the decision into the repository before implementation continues. Rules/mechanics decisions belong in `docs/IRON_PIT_RULES_CONTRACT.md`; durable universal architecture decisions belong in `docs/UNIVERSAL_COMBATANT_ARCHITECTURE.md`; battlefield/card-token/grid decisions belong in `docs/VTT_CARD_BATTLEFIELD_CONTRACT.md`; operating/process decisions belong in `AGENTS.md`.
 - If the correct authority file is itself unclear, ask before writing.
 - Re-read the written decision and implement against that repository authority. Do not rely on chat memory alone for a decision that can affect future combat work.
 - If a new clarification conflicts with an existing authoritative rule, stop and reconcile the conflict explicitly in the repository before changing runtime behavior.
@@ -46,9 +47,14 @@ Repository truth beats chat summaries, historical counts, old milestone prose, u
 - The Iron Pit magically makes the environment survivable/hospitable for every creature. Breathing, atmosphere, aquatic biology, flight requirements, and similar survival constraints never exclude a combatant.
 - Movement modes must never be used as roster eligibility filters.
 - Preserve printed movement modes and printed base speeds exactly as source data; never convert Swim/Fly/Climb/Burrow speed into a generic land/base speed just to make a creature runnable.
-- Ordinary Pit positioning/closing is abstracted by the deity/fixed-formation policy. A creature's printed movement speed does not prevent it from reaching the position required to use an otherwise legal attack.
+- The battlefield is one authoritative 5-foot square grid with real combatant x/y positions.
+- Voluntary movement consumes actual effective movement speed. The old free-closing/fixed-formation path is migration scaffolding only and must not remain the final combat authority.
+- Creature footprint derives from immutable printed size data: Tiny/Small/Medium 1x1, Large 2x2, Huge 3x3, Gargantuan 4x4 unless a more specific supported rule changes occupied space.
+- Movement, reach, range, collision, Opportunity Attacks, forced movement, auras, line of sight, and area geometry consume the same authoritative grid state.
+- Arena design and AI policy prevent degenerate fleeing/kiting; do not bypass printed movement to force engagement.
+- The card artwork is the moving battlefield token. Current HP, Temporary HP, conditions, buffs/debuffs, concentration, recharge/resource state, and similar live symbols are presentation overlays derived from runtime state and never rule inputs.
 - Reach/range still determine legal attack geometry. Forced movement, Opportunity Attacks, speed-changing effects, Grappled/Prone interactions, and any feature that explicitly depends on movement remain real mechanics and must follow the selected ruleset.
-- The arena abstraction must not create a hidden combat buff/debuff from a creature's locomotion type.
+- The arena must not create a hidden combat buff/debuff from a creature's locomotion type.
 
 ## Universal mechanic workflow
 
