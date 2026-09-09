@@ -1,11 +1,9 @@
 from unittest.mock import patch
 
 import app.combat.encounter_engine as encounter_engine
-from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_engine import run_encounter
 from app.combat.encounter_outcome import resolve_encounter_outcome
 from app.combat.encounter_setup import build_encounter_setup
-from app.combat.formation import starting_position_ft
 from app.combat.state import build_combatant_state
 from app.content.demo import build_demo_fighter
 from app.content.pregens import build_brom_ironmark, build_selene_asharrow
@@ -41,11 +39,14 @@ class ScriptedEncounterDice:
 
 
 def _replace_hero(setup, index: int, template) -> None:
+    previous = setup.heroes[index]
+    state = build_combatant_state(template)
+    state.position = previous.state.position.model_copy(deep=True) if previous.state.position is not None else None
     setup.heroes[index] = EncounterCombatant(
         combatant_id=f"hero-{index + 1}:{template.id}",
         side="heroes",
-        position_ft=starting_position_ft(template, "heroes"),
-        state=build_combatant_state(template),
+        position_ft=previous.position_ft,
+        state=state,
     )
 
 
@@ -155,7 +156,7 @@ def test_true_ranged_fixture_fires_without_kiting_or_closing() -> None:
     setup = build_encounter_setup(selection)
     selene = build_selene_asharrow()
     _replace_hero(setup, 0, selene)
-    initial_position = setup.heroes[0].position_ft
+    initial_position = setup.heroes[0].state.position.model_copy(deep=True)
     with patch.object(encounter_engine, "build_encounter_setup", return_value=setup):
         result = run_encounter(selection, MaxDiceProvider([20, 10]))
 
@@ -163,7 +164,7 @@ def test_true_ranged_fixture_fires_without_kiting_or_closing() -> None:
     attack = next(event for event in result.events if event.event_type == "attack")
     assert attack.actor_id == "hero-1:selene-asharrow-l1"
     assert attack.target_id == "monster-1:srd-commoner"
-    assert result.setup.heroes[0].position_ft == initial_position
+    assert result.setup.heroes[0].state.position == initial_position
     assert not any(
         event.event_type == "movement" and event.actor_id == "hero-1:selene-asharrow-l1"
         for event in result.events
