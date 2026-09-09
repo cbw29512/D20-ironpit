@@ -13,6 +13,7 @@ from app.content.arena_map import (
 )
 from app.content.roster import build_arena_roster
 from app.domain.encounters import EncounterCombatant, EncounterSelection, EncounterSetup
+from app.domain.grid import BattleMapDefinition
 from app.domain.models import CombatantTemplate
 
 logger = logging.getLogger(__name__)
@@ -85,7 +86,7 @@ def _member(card_id: str, index: int, side: str, cards: dict[str, CombatantTempl
 def _apply_standard_grid_placement(
     heroes: list[EncounterCombatant],
     monsters: list[EncounterCombatant],
-) -> object:
+) -> BattleMapDefinition:
     try:
         battle_map = build_standard_iron_pit_map()
         apply_placement(
