@@ -118,7 +118,7 @@ Normal initiative bonuses and ruleset-specific initiative mechanics apply, with 
 - Conditions suppress actions/reactions according to RAW.
 - Once-per-turn, once-per-round, and once-on-each-of-your-turns are distinct limits.
 - Dash/Disengage/Hide/Ready/Help/Search are not generic tactical spam; use them only when a supported combat identity or legal fallback requires them.
-- Dodge is the final automated fallback after meaningful healing/support priorities have been handled and no supported melee attack, ranged attack, offensive spell, or other supported offensive ability can be used or made legal with the combatant's remaining legal movement.
+- Dodge is the final automated fallback after meaningful healing/support priorities have been handled and no supported melee attack, ranged attack, offensive spell, or other supported offensive ability can be used or made legal after any useful legal approach movement available this turn.
 - A legal tactical dead end may resolve to Dodge. Unsupported mechanics, malformed state, impossible source data, mixed position authority, and engine/rules errors must fail closed and must never be converted into Dodge.
 
 ### Attack natural 1 — Iron Pit house rule
@@ -167,7 +167,7 @@ Permanent arena rules:
 - Printed creature size determines occupied footprint: Tiny/Small/Medium = 1×1, Large = 2×2, Huge = 3×3, Gargantuan = 4×4.
 - The moving battlefield representation is the combatant's card/art presentation rendered inside that footprint; presentation never determines mechanics.
 - Voluntary movement uses actual effective Speed and legal movement cost. The Pit deity no longer grants free ordinary closing or hidden movement distance.
-- Default Arena AI does not voluntarily flee, kite, circle, run to map edges, seek cover, or reposition without an action-driven reason. It moves only as needed to make a chosen legal action usable, subject to specific RAW overrides.
+- Default Arena AI does not voluntarily flee, kite, circle, run to map edges, seek cover, or reposition without an action-driven reason. If a supported offensive action is not yet reachable this turn but the pathfinder proves a legal eventual route to a usable position, the combatant advances as far as useful movement permits along that route. It does not stay still merely because it cannot attack this turn.
 - A combatant may pass through creature spaces only when the selected ruleset permits it, pays any required Difficult Terrain cost, and may not willingly end normal movement overlapping another creature.
 - Printed Walk, Fly, Climb, Swim, Burrow, Hover, and base-speed data remain source-derived and must not be rewritten merely to make a creature usable in the Pit.
 - Movement modes never become roster-eligibility filters. The magical Pit remains hospitable to aquatic, flying, burrowing, climbing, unusual-biology, breathing, and atmosphere requirements; this environmental hospitality does not grant free movement.
@@ -177,7 +177,7 @@ Permanent arena rules:
 - No default pits, lava, traps, difficult terrain, water, or random arena hazards. A supported RAW effect may create an area/hazard.
 - Flyers cannot use altitude to become permanently unreachable. A melee flyer must enter its legal reach to attack.
 - Opportunity Attacks, forced movement, Disengage consequences, speed changes, Grappled/Prone movement effects, Frightened movement restrictions, and other combat-relevant movement rules remain RAW where applicable.
-- If a creature cannot find a legal route or cannot reach any position that enables a supported offensive action this turn, that is a legal tactical state; after all other supported offensive families are exhausted, the normal fallback is Dodge if the Action is available.
+- If the pathfinder proves a legal eventual route toward a supported offensive position, the combatant may spend this turn making useful progress even when it cannot reach attack range yet; after moving, if no supported offense is legal and its Action remains, it Dodges. If no such eventual legal route exists, or no useful legal progress can be made, it stays put and uses the same Dodge fallback after the other supported offensive families are exhausted.
 
 ### AoE/targeting arena simplification
 
