@@ -23,21 +23,21 @@ def _disable_adrenaline_rush(hero) -> None:
     resource.current_uses = 0
 
 
-def test_melee_only_creature_dodges_when_speed_cannot_enable_offense() -> None:
+def test_melee_only_creature_advances_then_dodges_when_attack_is_not_reachable() -> None:
     setup = build_encounter_setup(EncounterSelection(
         hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-giant-lizard"],
     ))
     hero, monster = _set_grid_distance(setup, 60)
     hero.state.template.alternate_weapon_attacks = []
     _disable_adrenaline_rush(hero)
-    before = hero.state.position.model_copy(deep=True)
 
     events, _ = resolve_combat_turn(1, 1, hero, monster, setup, FixedDiceProvider([2]))
 
-    assert not any(event.event_type == "movement" for event in events)
+    movement = [event for event in events if event.event_type == "movement"]
+    assert sum(event.movement_cost_ft or 0 for event in movement) == 30
     assert not any(event.event_type == "attack" for event in events)
     assert events[-1].feature_id == "dodge"
-    assert hero.state.position == before
+    assert hero.state.position == GridPosition(x=6, y=6)
     assert "dodge" in hero.state.active_effect_ids
 
 
