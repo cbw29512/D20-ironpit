@@ -2,9 +2,11 @@ from app.combat.attacks import resolve_attack
 from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_combat_turn import resolve_combat_turn
 from app.combat.encounter_setup import build_encounter_setup
+from app.combat.encounter_targeting import combatant_distance
 from app.combat.state import build_combatant_state
 from app.content.monsters import build_commoner
 from app.content.monsters_charge import build_boar
+from app.domain.grid import GridPosition
 from app.domain.models import EncounterSelection, RollMode
 
 
@@ -13,8 +15,8 @@ def _boar_fixture(distance_ft: int):
         hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-boar"],
     ))
     hero, boar = setup.heroes[0], setup.monsters[0]
-    hero.position_ft = 0
-    boar.position_ft = distance_ft
+    hero.state.position = GridPosition(x=0, y=6)
+    boar.state.position = GridPosition(x=distance_ft // 5, y=6)
     hero.state.initiative_total = 10
     boar.state.initiative_total = 20
     return setup, hero, boar
@@ -22,7 +24,7 @@ def _boar_fixture(distance_ft: int):
 
 def test_boar_charges_when_it_sweeps_initiative_with_abstracted_runup() -> None:
     setup, hero, boar = _boar_fixture(30)
-    before = (hero.position_ft, boar.position_ft)
+    before = boar.state.position.model_copy(deep=True)
 
     events, _ = resolve_combat_turn(
         1, 1, boar, hero, setup, FixedDiceProvider([15, 2, 3])
@@ -36,32 +38,36 @@ def test_boar_charges_when_it_sweeps_initiative_with_abstracted_runup() -> None:
     assert attack.damage_roll.notation == "1d6+1 + 1d6+0"
     assert attack.damage_roll.total == 6
     assert attack.applied_condition_ids == ["prone"]
-    assert (hero.position_ft, boar.position_ft) == before
+    assert boar.state.position == before
     assert "dodge" not in boar.state.active_effect_ids
 
 
-def test_boar_that_does_not_win_initiative_uses_normal_melee_without_movement() -> None:
+def test_boar_without_initiative_sweep_moves_then_uses_normal_melee() -> None:
     setup, hero, boar = _boar_fixture(30)
     boar.state.initiative_total = hero.state.initiative_total
-    before = (hero.position_ft, boar.position_ft)
 
     events, _ = resolve_combat_turn(1, 1, boar, hero, setup, FixedDiceProvider([10, 3]))
 
-    assert [event.event_type for event in events] == ["attack"]
-    assert events[0].feature_id != "charge"
-    assert events[0].weapon_id == "boar-gore-weapon"
-    assert (hero.position_ft, boar.position_ft) == before
+    movement = [event for event in events if event.event_type == "movement"]
+    attacks = [event for event in events if event.event_type == "attack"]
+    assert sum(event.movement_ft or 0 for event in movement) == 25
+    assert len(attacks) == 1
+    assert attacks[0].feature_id != "charge"
+    assert attacks[0].weapon_id == "boar-gore-weapon"
+    assert combatant_distance(boar, hero) == 5
 
 
 def test_charge_is_not_reused_after_round_one() -> None:
     setup, hero, boar = _boar_fixture(30)
-    before = (hero.position_ft, boar.position_ft)
 
     events, _ = resolve_combat_turn(1, 2, boar, hero, setup, FixedDiceProvider([10, 3]))
 
-    assert [event.event_type for event in events] == ["attack"]
-    assert events[0].feature_id != "charge"
-    assert (hero.position_ft, boar.position_ft) == before
+    movement = [event for event in events if event.event_type == "movement"]
+    attacks = [event for event in events if event.event_type == "attack"]
+    assert sum(event.movement_ft or 0 for event in movement) == 25
+    assert len(attacks) == 1
+    assert attacks[0].feature_id != "charge"
+    assert combatant_distance(boar, hero) == 5
 
 
 def test_initiative_sweep_assumes_precontact_charge_runup_from_melee_slot() -> None:
