@@ -34,6 +34,18 @@ class ResourceDefinition(BaseModel):
     id: str
     name: str
     max_uses: int = Field(ge=0)
+    recharge_minimum: int | None = Field(default=None, ge=2, le=100)
+    recharge_die_size: int = Field(default=6, ge=2, le=100)
+
+    @model_validator(mode="after")
+    def validate_recharge(self) -> "ResourceDefinition":
+        if self.recharge_minimum is None:
+            return self
+        if self.recharge_minimum > self.recharge_die_size:
+            raise ValueError("Recharge minimum cannot exceed the recharge die size.")
+        if self.max_uses != 1:
+            raise ValueError("Recharge resources must model a single available use.")
+        return self
 
 
 class CombatantTemplate(BaseModel):
