@@ -65,6 +65,8 @@ def _hit_modifier(effect: Any) -> dict[str, Any]:
         row["flatBonus"] = effect.flat_bonus
     if effect.consume_on_attack_against:
         row["consumeOnAttackAgainst"] = True
+    if effect.consume_on_attack_made:
+        row["consumeOnAttackMade"] = True
     if effect.expires_at_start_of_source_turn:
         row["expiresAtStartOfSourceTurn"] = True
     if effect.expires_at_end_of_target_turn:
