@@ -93,13 +93,16 @@
     return success;
   }
 
-  function saveSpell(target, action) {
+  function saveAction(target, action) {
     if (!(action.damageDiceCount > 0) || !action.damageType) return 0;
     const success = saveSuccess(target, action);
-    const full = meanDamage(action.damageDiceCount, action.damageDiceSize, action.damageBonus || 0) * damageFactor(target.state, action.damageType);
+    const full = meanDamage(action.damageDiceCount, action.damageDiceSize, action.damageBonus || 0)
+      * damageFactor(target.state, action.damageType);
     const onSuccess = action.successDamage === "half" ? full * 0.5 : 0;
     return Math.max(0, (1 - success) * full + success * onSuccess);
   }
 
-  window.IRON_PIT_BROWSER_OFFENSE_VALUE = { attackProbabilities, saveSpell, spellAttack };
+  window.IRON_PIT_BROWSER_OFFENSE_VALUE = {
+    attackProbabilities, saveAction, saveSpell: saveAction, spellAttack,
+  };
 })();
