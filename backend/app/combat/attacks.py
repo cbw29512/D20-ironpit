@@ -1,5 +1,4 @@
 from __future__ import annotations
-
 import logging
 
 from app.combat.action_economy import is_available, spend
@@ -33,7 +32,6 @@ from app.domain.models import BattleEvent, CombatantState, WeaponAttack
 from app.domain.modifiers import ModifierKind
 
 logger = logging.getLogger(__name__)
-
 
 def resolve_attack(
     sequence: int, round_number: int, attacker: CombatantState, defender: CombatantState,
@@ -149,5 +147,4 @@ def resolve_attack(
             animation=weapon.animation, description=description,
         )
     except Exception as exc:
-        logger.exception("Attack failed: %s -> %s.", attacker.template.name, defender.template.name)
-        raise RuntimeError("Attack resolution failed.") from exc
+        logger.exception("Attack failed: %s -> %s.", attacker.template.name, defender.template.name); raise RuntimeError("Attack resolution failed.") from exc
