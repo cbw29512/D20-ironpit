@@ -14,11 +14,24 @@ from app.content.monster_blocker_inventory import (  # noqa: E402
     blocker_family_incidence,
     build_monster_blocker_inventory,
 )
+from app.content.monster_mechanic_detail_inventory import (  # noqa: E402
+    complex_action_incidence,
+    control_effect_incidence,
+    unsupported_trait_incidence,
+)
 from app.content.monster_mechanic_family_registry import MONSTER_MECHANIC_FAMILIES  # noqa: E402
 
 
+def _subfamilies(rows_by_name: dict[str, dict[str, object]], incidence: dict[str, list[str]]) -> dict[str, object]:
+    return {
+        "trait_headings": unsupported_trait_incidence(rows_by_name, incidence.get("trait", [])),
+        "control_effects": control_effect_incidence(rows_by_name, incidence.get("condition-or-control", [])),
+        "complex_action_kinds": complex_action_incidence(rows_by_name, incidence.get("save-or-complex-action", [])),
+    }
+
+
 def _payload() -> dict[str, object]:
-    _, ready_names, blockers_by_name = build_monster_blocker_inventory()
+    rows_by_name, ready_names, blockers_by_name = build_monster_blocker_inventory()
     incidence = blocker_family_incidence(blockers_by_name)
     missing_registry = sorted(set(incidence) - set(MONSTER_MECHANIC_FAMILIES))
     if missing_registry:
@@ -33,7 +46,7 @@ def _payload() -> dict[str, object]:
         layer = MONSTER_MECHANIC_FAMILIES[family]
         families.append({"id": family, "count": len(names), "monsters": names, **layer})
     return {
-        "schema_version": 2,
+        "schema_version": 3,
         "ruleset": "srd-5.2.1-2024",
         "summary": {
             "catalog_monsters": len(ready_names) + len(blockers_by_name),
@@ -44,6 +57,7 @@ def _payload() -> dict[str, object]:
             "unregistered_families": len(missing_registry),
         },
         "families": families,
+        "subfamilies": _subfamilies(rows_by_name, incidence),
         "unclassified_source_defects": unclassified,
     }
 
