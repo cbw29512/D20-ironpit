@@ -5,6 +5,7 @@ import logging
 from app.combat.attack_legality import attack_allowed_against
 from app.combat.encounter_targeting import combatant_distance, living_opponents
 from app.combat.formation import uses_backline
+from app.combat.range import resolve_attack_roll_mode
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import WeaponAttack, WeaponAttackKind
 
@@ -49,30 +50,44 @@ def allied_frontline_active(attacker: EncounterCombatant, setup: EncounterSetup)
 
 
 def attack_distance(attacker: EncounterCombatant, target: EncounterCombatant, attack: WeaponAttack) -> int:
-    """Collapse ordinary movement: a legal Pit attack is resolved at reach or normal range without moving cards."""
-    actual = combatant_distance(attacker, target)
-    weapon = attack.weapon
-    if weapon.attack_kind is WeaponAttackKind.MELEE:
-        return min(actual, weapon.reach_ft)
-    if weapon.normal_range_ft is None:
-        raise ValueError(f"Ranged attack {attack.id!r} has no normal range.")
-    return min(actual, weapon.normal_range_ft)
+    """Return authoritative battlefield distance; range legality belongs to the shared range resolver."""
+    try:
+        return combatant_distance(attacker, target)
+    except Exception as exc:
+        logger.exception("Failed to read attack distance for %s using %s.", attacker.combatant_id, attack.id)
+        raise RuntimeError("Attack distance could not be evaluated.") from exc
 
 
 def save_distance(attacker: EncounterCombatant, target: EncounterCombatant, range_ft: int) -> int:
-    if range_ft < 0:
-        raise ValueError("Save-action range cannot be negative.")
-    return min(combatant_distance(attacker, target), range_ft)
+    try:
+        if range_ft < 0:
+            raise ValueError("Save-action range cannot be negative.")
+        return combatant_distance(attacker, target)
+    except ValueError:
+        raise
+    except Exception as exc:
+        logger.exception("Failed to read save-action distance for %s.", attacker.combatant_id)
+        raise RuntimeError("Save-action distance could not be evaluated.") from exc
 
 
 def _attack_profiles(attacker: EncounterCombatant, allowed_ids: list[str], kind: WeaponAttackKind | None):
     allowed = set(allowed_ids)
-    profiles = [
+    return [
         attack
         for attack in [attacker.state.template.weapon_attack, *attacker.state.template.alternate_weapon_attacks]
         if attack.id in allowed and (kind is None or attack.weapon.attack_kind is kind)
     ]
-    return profiles
+
+
+def _attack_in_range(attack: WeaponAttack, distance_ft: int) -> bool:
+    try:
+        resolve_attack_roll_mode(attack.weapon, distance_ft, close_enemy_active=False)
+        return True
+    except ValueError:
+        return False
+    except Exception:
+        logger.exception("Failed to evaluate grid range for attack %s.", attack.id)
+        raise
 
 
 def choose_attack(
@@ -83,13 +98,14 @@ def choose_attack(
     kind: WeaponAttackKind | None = None,
     prefer_backline: bool = False,
 ) -> tuple[EncounterCombatant, WeaponAttack, int] | None:
-    """Choose a legal attack by Pit formation role; ordinary movement never blocks the choice."""
+    """Choose an actually legal attack at the combatants' current battlefield positions."""
     try:
         profiles = _attack_profiles(attacker, allowed_ids, kind)
         for target in target_order(attacker, setup, prefer_backline=prefer_backline):
+            distance = combatant_distance(attacker, target)
             for attack in profiles:
-                if attack_allowed_against(attack, attacker.combatant_id, target.state):
-                    return target, attack, attack_distance(attacker, target, attack)
+                if attack_allowed_against(attack, attacker.combatant_id, target.state) and _attack_in_range(attack, distance):
+                    return target, attack, distance
         return None
     except Exception as exc:
         logger.exception("Pit attack selection failed for %s.", attacker.combatant_id)
@@ -100,7 +116,7 @@ def choose_standard_attack(
     attacker: EncounterCombatant,
     setup: EncounterSetup,
 ) -> tuple[EncounterCombatant, WeaponAttack, int] | None:
-    """Frontliners prefer melee; protected backliners prefer range; exposed backliners switch to melee when possible."""
+    """Use legal range now: ranged holds position; melee is preferred when engaged."""
     ids = [
         attacker.state.template.weapon_attack.id,
         *(attack.id for attack in attacker.state.template.alternate_weapon_attacks),
