@@ -13,14 +13,7 @@ from app.domain.size import CreatureSize
 from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellSaveAction
 from app.domain.traits import CombatTrait
 from app.domain.unarmed import UnarmedStrikeDamage
-from app.domain.weapons import (
-    ConditionalDamage,
-    DamageType,
-    OnHitDamage,
-    Weapon,
-    WeaponAttack,
-    WeaponAttackKind,
-)
+from app.domain.weapons import ConditionalDamage, DamageType, OnHitDamage, Weapon, WeaponAttack, WeaponAttackKind
 
 
 class VisualLoadout(BaseModel):
@@ -56,6 +49,7 @@ class CombatantTemplate(BaseModel):
     challenge_rating: str | None = None
     kind: Literal["character", "monster"]
     creature_type: str | None = None
+    creature_tags: list[str] = Field(default_factory=list)
     size: CreatureSize = CreatureSize.MEDIUM
     ability_scores: AbilityScores | None = None
     armor_class: int = Field(ge=1)
@@ -107,9 +101,7 @@ class CombatantTemplate(BaseModel):
         if "movement_modes" not in normalized and "speed_ft" in normalized:
             normalized["movement_modes"] = {"walk_ft": normalized["speed_ft"]}
         style = normalized.get("fighting_style")
-        styles = normalized.get("fighting_styles")
-        if styles is None:
-            styles = []
+        styles = normalized.get("fighting_styles") or []
         if not styles and style:
             normalized["fighting_styles"] = [style]
         elif styles and not style:
