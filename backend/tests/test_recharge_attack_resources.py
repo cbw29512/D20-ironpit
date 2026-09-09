@@ -46,7 +46,7 @@ def test_resource_backed_attack_spends_on_miss_and_logs_remaining() -> None:
     setup, attacker, target, attack = _resource_backed_bandit()
 
     event = resolve_attack(
-        1, 1, attacker.state, target.state, attack, 5, FixedDiceProvider([2]),
+        1, 1, attacker.state, target.state, attack, 5, FixedDiceProvider([2, 2]),
         actor_event_id=attacker.combatant_id, target_event_id=target.combatant_id,
         affected_states=[member.state for member in [*setup.heroes, *setup.monsters]],
     )
