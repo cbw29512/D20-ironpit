@@ -36,6 +36,7 @@ def _compile_control(effect: GrappleEffectDefinition | ConditionEffectDefinition
             repeat_save_ability=effect.repeat_save_ability,
             repeat_save_dc=effect.repeat_save_dc,
             repeat_save_timing=effect.repeat_save_timing,
+            repeat_save_delay_rounds=effect.repeat_save_delay_rounds,
             allowed_removal_action_ids=effect.allowed_removal_action_ids,
         )
     except Exception:
