@@ -5,10 +5,11 @@
 Before changing combat code, read:
 
 1. `docs/IRON_PIT_RULES_CONTRACT.md` — authoritative product/combat rules.
-2. `docs/IRON_PIT_AUDIT_EVENT_SCHEMA.md` — audit/event evidence contract.
-3. `docs/CANONICAL_COMBAT_BUILD_POLICY.md` — canonical pregen construction.
-4. current source/runtime code and permanent tests.
-5. generated certification state in `data/hero_certification_manifest.json` and `data/monster_certification_manifest.json`.
+2. `docs/UNIVERSAL_COMBATANT_ARCHITECTURE.md` — durable universal-engine and data-binding architecture.
+3. `docs/IRON_PIT_AUDIT_EVENT_SCHEMA.md` — audit/event evidence contract.
+4. `docs/CANONICAL_COMBAT_BUILD_POLICY.md` — canonical pregen construction.
+5. current source/runtime code and permanent tests.
+6. generated certification state in `data/hero_certification_manifest.json` and `data/monster_certification_manifest.json`.
 
 Repository truth beats chat summaries, historical counts, old milestone prose, uploaded registry dumps, and stale file-library references. External/user-provided files are evidence only until reconciled against the exact current commit.
 
