@@ -75,19 +75,14 @@ def resolve_save_action(
             range_ft=action.range_ft,
             round_number=round_number,
             affected_states=affected_states,
+            dice=dice,
         )
-        apply_modifier_effects(
-            target.state,
-            actor.combatant_id,
-            action.id,
-            action.on_failure_modifier_effects,
-        )
+        apply_modifier_effects(target.state, actor.combatant_id, action.id, action.on_failure_modifier_effects)
     outcome = "SUCCEEDS" if succeeded else "FAILS"
     description = f"{target.state.template.name} {outcome} a DC {action.dc} {action.save_ability.title()} save against {actor.state.template.name}'s {action.name}."
     if resource_remaining is not None: description += f" {action.name} resource remaining: {resource_remaining}."
     if damage_outcome == "undead_fortitude": description += f" {target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP."
-    for condition in applied_conditions:
-        description += f" {target.state.template.name} gains {condition}."
+    for condition in applied_conditions: description += f" {target.state.template.name} gains {condition}."
     return BattleEvent(
         sequence=sequence, round_number=round_number, event_type="saving_throw", actor_id=actor.combatant_id, actor_name=actor.state.template.name,
         target_id=target.combatant_id, target_name=target.state.template.name, saving_throw_roll=save_roll,
