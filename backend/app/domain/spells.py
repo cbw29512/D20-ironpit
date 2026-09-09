@@ -5,6 +5,7 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName, ActionCost, DamageTypeName
+from app.domain.targeting import AreaTargeting
 
 SpellModifierKind = Literal[
     "armor-class", "attack-roll-bonus-die", "saving-throw-bonus-die",
@@ -112,6 +113,7 @@ class SpellSaveAction(BaseModel):
     action_cost: ActionCost = "action"
     range_ft: int = Field(ge=0)
     area_radius_ft: int | None = Field(default=None, ge=5)
+    area: AreaTargeting | None = None
     save_ability: AbilityName
     dc: int = Field(ge=1, le=40)
     damage_dice_count: int = Field(default=0, ge=0, le=40)
@@ -127,6 +129,12 @@ class SpellSaveAction(BaseModel):
     def validate_spell(self) -> "SpellSaveAction":
         if self.area_radius_ft is not None and self.area_radius_ft % 5:
             raise ValueError("Iron Pit area spell radii must use 5-foot increments.")
+        if self.area is None and self.area_radius_ft is not None:
+            self.area = AreaTargeting(shape="radius", origin="point", radius_ft=self.area_radius_ft)
+        elif self.area is not None and self.area_radius_ft is not None:
+            expected = AreaTargeting(shape="radius", origin="point", radius_ft=self.area_radius_ft)
+            if self.area != expected:
+                raise ValueError("Legacy spell radius and universal area geometry disagree.")
         if self.damage_dice_count and self.damage_type is None:
             raise ValueError("Damaging spells require a damage type.")
         return self
