@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field, model_validator
 
 from app.domain.areas import AreaTargeting
 from app.domain.capability_effects import AttackEffectDefinition, DiceSpec
+from app.domain.combat_ir_effects import HealingEffectIR
 from app.domain.combat_ir_resolution import (
     AttackRollResolutionIR,
     AutomaticResolutionIR,
@@ -14,6 +15,9 @@ from app.domain.combat_ir_resolution import (
 )
 from app.domain.size import CreatureSize
 from app.domain.weapons import DamageType
+
+TargetModeIR = Literal["enemy", "self", "ally", "self_or_ally", "other"]
+CombatEffectIR = AttackEffectDefinition | HealingEffectIR
 
 
 class ResourceCostIR(BaseModel):
@@ -26,6 +30,7 @@ class TargetingIR(BaseModel):
     range_ft: int = Field(default=5, ge=0)
     area: AreaTargeting | None = None
     max_target_size: CreatureSize | None = None
+    target_mode: TargetModeIR = "enemy"
 
     @model_validator(mode="after")
     def validate_area(self) -> "TargetingIR":
@@ -56,7 +61,7 @@ class CombatActionIR(BaseModel):
     targeting: TargetingIR
     resolution: ResolutionIR
     primary_damage: PrimaryDamageIR | None = None
-    effects: list[AttackEffectDefinition] = Field(default_factory=list)
+    effects: list[CombatEffectIR] = Field(default_factory=list)
     resource_cost: ResourceCostIR | None = None
     animation: str = "action"
 
