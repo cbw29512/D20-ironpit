@@ -7,21 +7,28 @@
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const R = () => window.IRON_PIT_BROWSER_LIGHT_ATTACK;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
+  const RES = () => window.IRON_PIT_BROWSER_RESOURCES;
   const WM = () => window.IRON_PIT_BROWSER_WEAPON_MASTERY || { resolveCleave: (sequence) => ({ events: [], sequence }) };
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (s) => s.action_available, spend: (s) => { s.action_available = false; } };
   const slotData = (slot) => Array.isArray(slot) ? { attackIds: slot, saveActionIds: [] }
     : { attackIds: slot.attackIds || [], saveActionIds: slot.saveActionIds || [] };
 
   function saveChoice(member, setup, data) {
-    const allowed = new Set(data.saveActionIds);
-    for (const target of F().targetOrder(member, setup)) {
-      const action = (member.state.template.saving_throw_actions || []).find((item) => {
-        const distance = F().saveDistance(member, target, item.range);
-        return allowed.has(item.id) && V().legalAction(item, target, distance);
-      });
-      if (action) return { target, save: action, distance: F().saveDistance(member, target, action.range) };
+    try {
+      const allowed = new Set(data.saveActionIds);
+      for (const target of F().targetOrder(member, setup)) {
+        const action = (member.state.template.saving_throw_actions || []).find((item) => {
+          if (!RES().available(member.state, item.resourceId, item.resourceCost || 1)) return false;
+          const distance = F().saveDistance(member, target, item.range);
+          return allowed.has(item.id) && V().legalAction(item, target, distance);
+        });
+        if (action) return { target, save: action, distance: F().saveDistance(member, target, action.range) };
+      }
+      return null;
+    } catch (error) {
+      console.error("Failed browser Multiattack save choice", { member: member.combatant_id, error });
+      throw error;
     }
-    return null;
   }
   function attackChoice(member, setup, data, rangedBackline = false) {
     if (rangedBackline) {
