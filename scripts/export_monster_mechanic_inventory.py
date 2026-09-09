@@ -14,18 +14,26 @@ from app.content.monster_blocker_inventory import (  # noqa: E402
     blocker_family_incidence,
     build_monster_blocker_inventory,
 )
+from app.content.monster_mechanic_family_registry import MONSTER_MECHANIC_FAMILIES  # noqa: E402
 
 
 def _payload() -> dict[str, object]:
     _, ready_names, blockers_by_name = build_monster_blocker_inventory()
     incidence = blocker_family_incidence(blockers_by_name)
+    missing_registry = sorted(set(incidence) - set(MONSTER_MECHANIC_FAMILIES))
+    if missing_registry:
+        raise ValueError(f"Unclassified blocker families: {', '.join(missing_registry)}")
     unclassified = sorted(
         name
         for name, blockers in blockers_by_name.items()
         if "unclassified-source-audit-gap" in blockers
     )
+    families = []
+    for family, names in incidence.items():
+        layer = MONSTER_MECHANIC_FAMILIES[family]
+        families.append({"id": family, "count": len(names), "monsters": names, **layer})
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "ruleset": "srd-5.2.1-2024",
         "summary": {
             "catalog_monsters": len(ready_names) + len(blockers_by_name),
@@ -33,11 +41,9 @@ def _payload() -> dict[str, object]:
             "blocked": len(blockers_by_name),
             "blocker_families": len(incidence),
             "unclassified_source_defects": len(unclassified),
+            "unregistered_families": len(missing_registry),
         },
-        "families": [
-            {"id": family, "count": len(names), "monsters": names}
-            for family, names in incidence.items()
-        ],
+        "families": families,
         "unclassified_source_defects": unclassified,
     }
 
@@ -61,6 +67,7 @@ def main() -> int:
         f" blocked={summary['blocked']}"
         f" families={summary['blocker_families']}"
         f" unclassified={summary['unclassified_source_defects']}"
+        f" unregistered={summary['unregistered_families']}"
     )
     return 0
 
