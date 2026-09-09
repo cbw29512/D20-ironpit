@@ -4,13 +4,11 @@ import re
 from collections import defaultdict
 
 from app.content.blocker_yield import build_blocker_signatures, single_family_yields
-from app.content.monster_catalog import build_monster_catalog, load_monster_rows
-from app.content.monster_source_classifier import _ALLOWED_TRAITS, source_blockers
+from app.content.monster_blocker_inventory import blocker_family_incidence, build_monster_blocker_inventory
+from app.content.monster_source_classifier import _ALLOWED_TRAITS
 from app.content.monster_trait_source_audit import parse_trait_names
-from app.domain.catalog import CoverageStatus
 
 _SIGNATURE_LIMIT = 25
-_NOISE_BLOCKERS = frozenset({"monster-combat-mechanics-not-compiled"})
 _CONTROL_EFFECT = re.compile(
     r"\b(blinded|charmed|deafened|frightened|grappled|incapacitated|paralyzed|petrified|poisoned|prone|restrained|stunned|unconscious|push(?:es|ed)?|pull(?:s|ed)?|swallow(?:s|ed)?)\b",
     re.I,
@@ -94,34 +92,8 @@ def _control_signatures(
     }
 
 
-def _family_incidence(blockers_by_name: dict[str, list[str]]) -> dict[str, list[str]]:
-    incidence: dict[str, list[str]] = defaultdict(list)
-    for name, blockers in blockers_by_name.items():
-        for blocker in sorted(set(blockers) - _NOISE_BLOCKERS):
-            incidence[blocker].append(name)
-    return {
-        blocker: sorted(names)
-        for blocker, names in sorted(incidence.items(), key=lambda item: (-len(item[1]), item[0]))
-    }
-
-
 def main() -> None:
-    rows = load_monster_rows()
-    rows_by_name = {str(row["name"]): row for row in rows}
-    monster_names = set(rows_by_name)
-    ready_names = {
-        card.name
-        for card in build_monster_catalog()
-        if card.coverage_status is CoverageStatus.RAW_READY
-    }
-    blockers_by_name: dict[str, list[str]] = {}
-    for row in rows:
-        name = str(row["name"])
-        if name in ready_names:
-            continue
-        blockers = source_blockers(row, monster_names)
-        blockers_by_name[name] = blockers or ["unclassified-source-audit-gap"]
-
+    rows_by_name, ready_names, blockers_by_name = build_monster_blocker_inventory()
     signatures = build_blocker_signatures(blockers_by_name)
     singles = single_family_yields(signatures)
     trait_only = singles.get("trait", [])
@@ -132,7 +104,7 @@ def main() -> None:
         "CAPABILITY_YIELD_BASELINE"
         f"\tready={len(ready_names)}\tblocked={len(blockers_by_name)}\tsignatures={len(signatures)}"
     )
-    for blocker, names in _family_incidence(blockers_by_name).items():
+    for blocker, names in blocker_family_incidence(blockers_by_name).items():
         print(f"CAPABILITY_FAMILY_INCIDENCE\t{blocker}\t{len(names)}\t" + " | ".join(names))
     for blocker, names in sorted(singles.items(), key=lambda item: (-len(item[1]), item[0])):
         print(f"CAPABILITY_SINGLE_FAMILY\t{blocker}\t{len(names)}\t" + " | ".join(names))
