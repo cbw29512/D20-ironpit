@@ -2,6 +2,7 @@
   "use strict";
 
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
+  const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const T = () => window.IRON_PIT_BROWSER_TIMED;
 
@@ -19,7 +20,12 @@
           Boolean(effect.restrainsWhileGrappled),
         ));
       }
-      if (!effect.conditionId) continue;
+      if (!effect.conditionId || I().immune(target.state, effect.conditionId)) continue;
+      if (effect.conditionId === "prone") {
+        if (!target.state.active_effect_ids.includes("prone")) target.state.active_effect_ids.push("prone");
+        applied.push("prone");
+        continue;
+      }
       const condition = T().apply(target.state, effect.conditionId, sourceId, {
         sourceEffectId,
         appliedRound: round,
