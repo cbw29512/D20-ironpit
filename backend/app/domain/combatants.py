@@ -31,10 +31,17 @@ class VisualLoadout(BaseModel):
     body_style: str = "humanoid"
 
 
+class RechargeRule(BaseModel):
+    trigger: Literal["start_of_turn"] = "start_of_turn"
+    die_size: Literal[6] = 6
+    minimum_roll: int = Field(ge=1, le=6)
+
+
 class ResourceDefinition(BaseModel):
     id: str
     name: str
     max_uses: int = Field(ge=0)
+    recharge: RechargeRule | None = None
 
 
 class CombatantTemplate(BaseModel):
