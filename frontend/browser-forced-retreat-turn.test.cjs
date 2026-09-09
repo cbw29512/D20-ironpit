@@ -7,7 +7,7 @@ const vm = require("node:vm");
 
 global.window = globalThis;
 let supportCalls = 0, surgeCalls = 0;
-window.IRON_PIT_BROWSER_STATE = { beginTurn: () => {}, distance: () => 5, nearestTarget: () => null };
+window.IRON_PIT_BROWSER_STATE = { beginTurn: () => [], distance: () => 5, nearestTarget: () => null };
 window.IRON_PIT_BROWSER_GRAPPLE = { cleanup: () => {}, shouldEscape: () => false, speedIsZero: () => false };
 window.IRON_PIT_BROWSER_ONGOING_SPELL_CONTROL = {
   forcedRetreatActive: () => true,
@@ -20,11 +20,12 @@ window.IRON_PIT_BROWSER_ONGOING_SPELL_CONTROL = {
 window.IRON_PIT_BROWSER_SUPPORT = { resolve: () => { supportCalls += 1; return null; } };
 window.IRON_PIT_BROWSER_ACTION_SURGE = { resolveAttack: () => { surgeCalls += 1; return null; } };
 window.IRON_PIT_BROWSER_RAGE = { finalize: (sequence) => ({ event: null, sequence }) };
+vm.runInThisContext(fs.readFileSync(path.join(__dirname, "browser-resources.js"), "utf8"), { filename: "browser-resources.js" });
 vm.runInThisContext(fs.readFileSync(path.join(__dirname, "browser-turn.js"), "utf8"), { filename: "browser-turn.js" });
 
 const member = {
   combatant_id: "fighter", side: "heroes", position_ft: 5,
-  state: { template: { name: "Fighter", attacks: [] }, timed_effects: [{ turn_behavior: "forced_retreat" }] },
+  state: { template: { name: "Fighter", kind: "character", attacks: [], resourceDefinitions: [] }, resources: {}, timed_effects: [{ turn_behavior: "forced_retreat" }] },
 };
 const enemy = { combatant_id: "goblin", side: "monsters", position_ft: 10, state: { template: { name: "Goblin" } } };
 const setup = { heroes: [member], monsters: [enemy] };
