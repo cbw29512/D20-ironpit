@@ -19,8 +19,9 @@ _MODELED_TRAITS = {
 _ARENA_NEUTRAL_TRAITS = frozenset({
     "Agile", "Amphibious", "Beast of Burden", "False Appearance", "Flyby", "Hellish Restoration",
     "Hold Breath", "Ice Walk", "Illumination", "Jumper", "Keen Hearing", "Keen Hearing and Sight",
-    "Keen Hearing and Smell", "Keen Sight", "Keen Smell", "Mimicry", "Running Leap", "Spider Climb",
-    "Standing Leap", "Sunlight Sensitivity", "Training", "Web Walker",
+    "Keen Hearing and Smell", "Keen Sight", "Keen Smell", "Limited Amphibiousness", "Mimicry",
+    "Running Leap", "Spider Climb", "Standing Leap", "Sunlight Sensitivity", "Training", "Water Breathing",
+    "Web Walker",
 })
 
 
