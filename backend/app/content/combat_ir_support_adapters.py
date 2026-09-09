@@ -3,6 +3,7 @@ from __future__ import annotations
 from app.domain.actions import ConditionRemovalAction, HealingAction
 from app.domain.combat_ir import AutomaticResolutionIR, CombatActionIR, ResourceCostIR, TargetingIR
 from app.domain.combat_ir_effects import ConditionRemovalEffectIR, HealingEffectIR
+from app.domain.combat_ir_triggers import ConditionAppliedTriggerIR
 
 
 def healing_action_to_ir(action: HealingAction) -> CombatActionIR:
@@ -27,6 +28,13 @@ def healing_action_to_ir(action: HealingAction) -> CombatActionIR:
     )
 
 
+def _condition_trigger(action: ConditionRemovalAction) -> ConditionAppliedTriggerIR | None:
+    if action.reaction_trigger is None:
+        return None
+    subject = "self" if action.reaction_trigger == "condition_applied_to_self" else "ally"
+    return ConditionAppliedTriggerIR(subject=subject)
+
+
 def condition_removal_action_to_ir(action: ConditionRemovalAction) -> CombatActionIR:
     resource_costs = [
         ResourceCostIR(resource_id=resource_id, amount=amount)
@@ -41,7 +49,7 @@ def condition_removal_action_to_ir(action: ConditionRemovalAction) -> CombatActi
         name=action.name,
         action_cost=action.action_cost,
         trigger="reaction" if action.action_cost == "reaction" else "turn",
-        reaction_trigger=action.reaction_trigger,
+        reaction_trigger=_condition_trigger(action),
         targeting=TargetingIR(range_ft=action.range_ft, target_mode=action.target_mode),
         resolution=AutomaticResolutionIR(),
         effects=[ConditionRemovalEffectIR(
