@@ -55,11 +55,13 @@ const plan = M.planToward(map, mover, target, [mover, target], 5, 30);
 assert.deepEqual(plan.path, [{ x: 1, y: 1 }, { x: 2, y: 2 }]);
 assert.equal(plan.movement_cost_ft, 10);
 assert.equal(plan.final_distance_ft, 5);
+assert.equal(plan.goal_reachable, true);
 
 const planAroundAlly = M.planToward(map, mover, target, [mover, ally, target], 5, 30);
 assert.ok(planAroundAlly.path.length > 0);
 assert.notDeepEqual(planAroundAlly.path.at(-1), { x: 1, y: 1 });
 assert.equal(planAroundAlly.final_distance_ft, 5);
+assert.equal(planAroundAlly.goal_reachable, true);
 
 const slowMover = member("slow", "heroes", 0, 1);
 const farTarget = member("far-target", "monsters", 4, 1);
@@ -73,5 +75,16 @@ assert.equal(fullRoutePlan.path.length, 1);
 assert.deepEqual(fullRoutePlan.path[0], { x: 0, y: 2 });
 assert.equal(fullRoutePlan.movement_cost_ft, 5);
 assert.equal(fullRoutePlan.final_distance_ft, 20);
+assert.equal(fullRoutePlan.goal_reachable, true);
+
+const trapped = member("trapped", "heroes", 0, 0);
+const trappedTarget = member("trapped-target", "monsters", 2, 2);
+const blockers = [
+  member("block-east", "monsters", 1, 0),
+  member("block-south", "monsters", 0, 1),
+];
+const blockedPlan = M.planToward(map, trapped, trappedTarget, [trapped, trappedTarget, ...blockers], 5, 30);
+assert.deepEqual(blockedPlan.path, []);
+assert.equal(blockedPlan.goal_reachable, false);
 
 console.log("Grid movement browser parity regressions passed.");
