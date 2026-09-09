@@ -15,7 +15,7 @@ for (const file of [
   "browser-weapon-mastery.js", "browser-attack.js", "browser-reactions.js", "browser-reaction-movement.js",
   "browser-saves.js", "browser-condition-lifecycle.js", "browser-charge.js", "browser-light-weapons.js",
   "browser-light-attack.js", "browser-standard-attack-action.js", "browser-multiattack.js", "browser-healing.js",
-  "browser-spellcasting.js", "browser-condition-removal.js", "browser-support.js", "browser-turn.js",
+  "browser-spellcasting.js", "browser-condition-removal.js", "browser-support.js", "browser-resources.js", "browser-turn.js",
   "browser-formation.js", "browser-initiative.js", "browser-engine.js",
 ]) load(file);
 
