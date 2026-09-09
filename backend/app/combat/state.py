@@ -8,6 +8,7 @@ from app.combat.dice import DiceProvider
 from app.combat.grapple import speed_is_zero
 from app.combat.heroic_inspiration import grant_heroic_warrior_inspiration
 from app.combat.modifier_stack import effective_speed
+from app.combat.regeneration import resolve_regeneration
 from app.combat.resources import RechargeResult, refresh_recharge_resources
 from app.domain.models import CombatantState, CombatantTemplate, ResourceState
 
@@ -38,6 +39,7 @@ def refresh_reaction(state: CombatantState) -> None:
 def refresh_start_of_turn(state: CombatantState, dice: DiceProvider | None = None) -> list[RechargeResult]:
     refresh_reaction(state)
     grant_heroic_warrior_inspiration(state)
+    resolve_regeneration(state)
     return refresh_recharge_resources(state, dice) if dice is not None else []
 
 

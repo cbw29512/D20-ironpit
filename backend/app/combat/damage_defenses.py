@@ -22,12 +22,8 @@ def adjusted_damage_amount(
         template = target.template
         if damage_type in template.damage_immunities:
             return 0
-
         adjusted = amount
-        resistances = {
-            *template.damage_resistances,
-            *target.temporary_damage_resistances,
-        }
+        resistances = {*template.damage_resistances, *target.temporary_damage_resistances}
         if damage_type in resistances or has_condition(target, "petrified"):
             adjusted //= 2
         if allow_vulnerability and damage_type in template.damage_vulnerabilities:
@@ -44,18 +40,16 @@ def apply_damage_defenses(
     target: CombatantState,
     components: list[DamageRollComponent],
 ) -> tuple[int, list[DamageRollComponent]]:
-    """Apply defenses per typed component and return the total damage actually taken."""
+    """Apply defenses per typed component and record damage types that actually penetrate defenses."""
     try:
         adjusted_components: list[DamageRollComponent] = []
         applied_total = 0
         for component in components:
-            applied = adjusted_damage_amount(
-                component.total,
-                component.damage_type,
-                target,
-            )
+            applied = adjusted_damage_amount(component.total, component.damage_type, target)
             adjusted_components.append(component.model_copy(update={"applied_total": applied}))
             applied_total += applied
+            if applied > 0 and component.damage_type not in target.damage_types_since_last_turn:
+                target.damage_types_since_last_turn.append(component.damage_type)
         return applied_total, adjusted_components
     except Exception as exc:
         logger.exception("Typed damage defenses failed for %s.", target.template.name)
