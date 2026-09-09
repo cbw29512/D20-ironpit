@@ -8,6 +8,18 @@ def test_all_declarative_combatants_compile_to_action_ir() -> None:
         action_ir = compile_combatant_action_ir(definition)
         assert action_ir.combatant_id == definition.id
         assert action_ir.primary_attack_id == definition.primary_attack_id
-        expected_count = len(definition.attacks) + len(definition.save_actions)
+        expected_count = (
+            len(definition.attacks)
+            + len(definition.save_actions)
+            + len(definition.healing_actions)
+            + len(definition.condition_removal_actions)
+        )
         assert len(action_ir.actions) == expected_count
+        expected_ids = {
+            *(action.id for action in definition.attacks),
+            *(action.id for action in definition.save_actions),
+            *(action.id for action in definition.healing_actions),
+            *(action.id for action in definition.condition_removal_actions),
+        }
+        assert {action.id for action in action_ir.actions} == expected_ids
         assert (action_ir.attack_sequence is None) == (definition.attack_action is None)
