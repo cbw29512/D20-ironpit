@@ -37,3 +37,21 @@ def recharge_save_choice(attacker: EncounterCombatant, setup: EncounterSetup):
     except Exception as exc:
         logger.exception("Failed Recharge save choice for %s.", attacker.combatant_id)
         raise RuntimeError("Recharge save choice could not be evaluated.") from exc
+
+
+def recharge_action_choice(attacker: EncounterCombatant, setup: EncounterSetup):
+    try:
+        attack = recharge_attack_choice(attacker, setup)
+        save = recharge_save_choice(attacker, setup)
+        if attack is not None and save is not None:
+            raise ValueError(
+                "Multiple legal Recharge action families require explicit source-priority metadata."
+            )
+        if save is not None:
+            return "save", save
+        if attack is not None:
+            return "attack", attack
+        return None
+    except Exception as exc:
+        logger.exception("Failed universal Recharge action priority for %s.", attacker.combatant_id)
+        raise RuntimeError("Recharge action priority could not be evaluated.") from exc
