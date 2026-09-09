@@ -64,7 +64,7 @@ def test_highest_level_safe_spell_is_chosen_first() -> None:
     assert len(choice.target_ids) == 4
 
 
-def test_point_aoe_edge_places_past_enemy_line_to_spare_adjacent_ally() -> None:
+def test_point_aoe_targets_enemies_under_ally_safe_pit_policy() -> None:
     caster = _caster([_spell("fireball", 3, 10), _spell("lower-bolt", 2)], {3: 1, 2: 1})
     setup = _setup(caster, [_monster(0, 5), _monster(1, 5)], [_ally(1, 0)])
     choice = choose_spell(caster, setup, "1:caster")
@@ -74,15 +74,16 @@ def test_point_aoe_edge_places_past_enemy_line_to_spare_adjacent_ally() -> None:
     assert set(choice.target_ids) == {"monster-0", "monster-1"}
 
 
-def test_short_range_aoe_falls_through_when_safe_edge_placement_is_impossible() -> None:
+def test_short_range_aoe_remains_legal_under_ally_safe_pit_policy() -> None:
     caster = _caster([_spell("burst", 3, 10, range_ft=5), _spell("lower-bolt", 2)], {3: 1, 2: 1})
     setup = _setup(caster, [_monster(0, 5), _monster(1, 5)], [_ally(1, 0)])
     choice = choose_spell(caster, setup, "1:caster")
     assert choice is not None
-    assert choice.action.id == "lower-bolt"
+    assert choice.action.id == "burst"
+    assert set(choice.target_ids) == {"monster-0", "monster-1"}
 
 
-def test_resolving_aoe_spends_one_slot_and_uses_safe_enemy_only_placement() -> None:
+def test_resolving_aoe_spends_one_slot_and_uses_enemy_only_pit_targets() -> None:
     caster = _caster([_spell("fireball", 3, 20)], {3: 1})
     setup = _setup(caster, [_monster(i, 5) for i in range(3)])
     choice = choose_spell(caster, setup, "1:caster")
@@ -94,7 +95,7 @@ def test_resolving_aoe_spends_one_slot_and_uses_safe_enemy_only_placement() -> N
     assert sequence == 5
     assert len(events) == 4
     assert events[0].feature_id == "fireball"
-    assert "3 enemies and 0 unprotected allies" in events[0].description
+    assert "Area covers 3 enemies." in events[0].description
     assert {event.target_id for event in events[1:]} == {"monster-0", "monster-1", "monster-2"}
     slot = next(item for item in caster.state.resources if item.id == "spell-slot-3")
     assert slot.current_uses == 0
