@@ -25,6 +25,7 @@ load("browser-rolls.js");
 load("browser-grapple.js");
 load("browser-champion.js");
 load("browser-zero-hp.js");
+load("browser-forced-movement.js");
 load("browser-control.js");
 load("browser-attack-helpers.js");
 load("browser-attack.js");
