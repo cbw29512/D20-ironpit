@@ -39,6 +39,8 @@ class AttackCapabilityDefinition(BaseModel):
     attack_ability_modifier: int | None = None
     rage_eligible: bool = False
     effects: list[AttackEffectDefinition] = Field(default_factory=list)
+    resource_id: str | None = None
+    resource_cost: int = Field(default=1, ge=1, le=20)
     forbid_target_grappled_by_self: bool = False
 
     @model_validator(mode="after")
@@ -66,6 +68,8 @@ class SaveCapabilityDefinition(BaseModel):
     success_damage: Literal["none", "half"] = "none"
     effects: list[PersistentEffectDefinition] = Field(default_factory=list)
     grapple: GrappleEffectDefinition | None = None
+    resource_id: str | None = None
+    resource_cost: int = Field(default=1, ge=1, le=20)
     animation: str = "save-effect"
 
     @model_validator(mode="after")
