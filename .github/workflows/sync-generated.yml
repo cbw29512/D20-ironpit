@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - audit/raw-combat-log-figures-20260830
+      - feat/target-not-full-hp-advantage
 
 permissions:
   contents: write
