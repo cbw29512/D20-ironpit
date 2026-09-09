@@ -40,6 +40,8 @@ def _registry_row(definition) -> dict[str, object]:
             action.pop("resource_cost", None)
         for effect in action.get("effects", []):
             if isinstance(effect, dict): _strip_default_gate(effect)
+        grapple = action.get("grapple")
+        if isinstance(grapple, dict): _strip_default_gate(grapple)
     for action in row.get("save_actions", []):
         if not action.get("effects"): action.pop("effects", None)
     return row
