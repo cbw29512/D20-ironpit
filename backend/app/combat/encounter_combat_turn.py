@@ -19,6 +19,7 @@ from app.combat.orc import should_use_adrenaline_rush, use_adrenaline_rush
 from app.combat.pit_policy import choose_standard_attack, target_order
 from app.combat.policy import should_use_second_wind
 from app.combat.recharge import resolve_start_turn_recharges
+from app.combat.recharge_action_resolution import resolve_priority_recharge_action
 from app.combat.saving_throws import resolve_save_action
 from app.combat.spell_offense import resolve_best_spell_offense
 from app.combat.standard_attack_action import resolve_standard_attack_action
@@ -101,6 +102,13 @@ def resolve_combat_turn(
         spell_events, sequence = resolve_best_spell_offense(sequence, round_number, attacker, setup, turn_key, dice)
         events.extend(spell_events)
         if not is_available(attacker.state, "action"):
+            return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
+
+        recharge_action_events, sequence, recharge_handled = resolve_priority_recharge_action(
+            sequence, round_number, attacker, setup, dice, turn_key,
+        )
+        events.extend(recharge_action_events)
+        if recharge_handled:
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
         if attacker.state.template.attack_action is not None:
