@@ -62,6 +62,7 @@ class BattleEvent(BaseModel):
     distance_before_ft: int | None = None
     distance_after_ft: int | None = None
     movement_ft: int | None = None
+    movement_cost_ft: int | None = None
     grid_position_before: GridPosition | None = None
     grid_position_after: GridPosition | None = None
     grid_path: list[GridPosition] = Field(default_factory=list)
