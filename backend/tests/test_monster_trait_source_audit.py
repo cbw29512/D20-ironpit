@@ -84,6 +84,17 @@ def test_xorn_environmental_and_utility_traits_are_arena_neutral() -> None:
         raise
 
 
+def test_incorporeal_movement_is_arena_neutral_but_still_fingerprinted() -> None:
+    try:
+        for name in ("Specter", "Wraith"):
+            monster = _monster(name)
+            assert monster.source_trait_names == ["Incorporeal Movement"]
+            assert trait_issues(monster, _row(name)) == []
+    except Exception:
+        logger.exception("Incorporeal Movement arena-neutral certification regression failed.")
+        raise
+
+
 def test_unknown_outcome_changing_trait_fails_closed() -> None:
     try:
         wolf = _monster("Wolf")
