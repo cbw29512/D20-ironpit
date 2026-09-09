@@ -32,6 +32,8 @@ class AttackCapabilityDefinition(BaseModel):
     versatile: bool = False
     attack_ability: AbilityName | None = None
     attack_ability_modifier: int | None = None
+    resource_id: str | None = None
+    resource_cost: int = Field(default=1, ge=1, le=20)
     rage_eligible: bool = False
     conditional_attack_advantage: list[ConditionalAttackAdvantage] = Field(default_factory=list)
     effects: list[AttackEffectDefinition] = Field(default_factory=list)
@@ -64,6 +66,8 @@ class SaveCapabilityDefinition(BaseModel):
     damage_type: DamageType | None = None
     success_damage: Literal["none", "half"] = "none"
     grapple: GrappleEffectDefinition | None = None
+    resource_id: str | None = None
+    resource_cost: int = Field(default=1, ge=1, le=20)
     animation: str = "save-effect"
 
     @model_validator(mode="after")
