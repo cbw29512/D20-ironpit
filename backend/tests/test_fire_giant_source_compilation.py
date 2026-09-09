@@ -1,5 +1,6 @@
 from app.content.monster_catalog import load_monster_rows
 from app.content.monster_simple_source_compiler import compile_simple_monster
+from app.content.monster_source_audit import audit_monster_source
 from app.content.monster_source_classifier import source_blockers
 
 
@@ -30,3 +31,5 @@ def test_fire_giant_uses_existing_universal_push_and_attack_modifier_primitives(
     allowed = {attack_id for slot in giant.attack_action.slots for attack_id in slot.attack_ids}
     assert giant.weapon_attack.id in allowed
     assert hammer.id in allowed
+
+    assert audit_monster_source(giant, row) == []
