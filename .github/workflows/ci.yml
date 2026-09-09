@@ -96,6 +96,7 @@ jobs:
           node frontend/browser-roll-revisions.test.cjs
           node frontend/browser-dice-recording.test.cjs
           node frontend/browser-engine.test.cjs
+          node frontend/browser-recharge.test.cjs
           node frontend/browser-formation.test.cjs
           node frontend/browser-conditional-damage.test.cjs
           node frontend/browser-swarm.test.cjs
