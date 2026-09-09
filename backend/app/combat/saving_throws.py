@@ -4,7 +4,8 @@ from app.combat.action_economy import is_available, spend
 from app.combat.barbarian import end_rage_if_incapacitated
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
-from app.combat.grapple import apply_grapple
+from app.combat.hit_modifiers import apply_modifier_effects
+from app.combat.persistent_effects import apply_persistent_effects
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.zero_hp import apply_damage
 from app.domain.models import BattleEvent, DamageRollComponent, DamageType, DiceRoll, EncounterCombatant, SavingThrowAction
@@ -57,13 +58,27 @@ def resolve_save_action(
         damage_outcome = apply_damage(target.state, applied_total, damage_types=applied_types, dice=dice, affected_states=affected_states)
         end_rage_if_incapacitated(target.state)
     applied_conditions: list[str] = []
-    if not succeeded and target.state.is_alive and not target.state.is_dead and action.grapple_escape_dc is not None:
-        applied_conditions = apply_grapple(target.state, actor.combatant_id, action.grapple_escape_dc, action.range_ft, restrains=action.restrains_while_grappled)
+    if not succeeded and target.state.is_alive and not target.state.is_dead:
+        applied_conditions = apply_persistent_effects(
+            target.state,
+            action.ordered_persistent_effects(),
+            source_id=actor.combatant_id,
+            source_effect_id=action.id,
+            range_ft=action.range_ft,
+            round_number=round_number,
+            affected_states=affected_states,
+        )
+        apply_modifier_effects(
+            target.state,
+            actor.combatant_id,
+            action.id,
+            action.on_failure_modifier_effects,
+        )
     outcome = "SUCCEEDS" if succeeded else "FAILS"
     description = f"{target.state.template.name} {outcome} a DC {action.dc} {action.save_ability.title()} save against {actor.state.template.name}'s {action.name}."
     if damage_outcome == "undead_fortitude": description += f" {target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP."
-    if "grappled" in applied_conditions: description += f" {target.state.template.name} is Grappled."
-    if "restrained" in applied_conditions: description += f" {target.state.template.name} is Restrained while Grappled."
+    for condition in applied_conditions:
+        description += f" {target.state.template.name} gains {condition}."
     return BattleEvent(
         sequence=sequence, round_number=round_number, event_type="saving_throw", actor_id=actor.combatant_id, actor_name=actor.state.template.name,
         target_id=target.combatant_id, target_name=target.state.template.name, saving_throw_roll=save_roll,
