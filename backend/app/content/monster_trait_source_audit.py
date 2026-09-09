@@ -20,8 +20,7 @@ _ARENA_NEUTRAL_TRAITS = frozenset({
     "Agile", "Amphibious", "Beast of Burden", "Earth Glide", "False Appearance", "Flyby", "Hellish Restoration",
     "Hold Breath", "Ice Walk", "Illumination", "Incorporeal Movement", "Jumper", "Keen Hearing", "Keen Hearing and Sight",
     "Keen Hearing and Smell", "Keen Sight", "Keen Smell", "Limited Amphibiousness", "Mimicry",
-    "Running Leap", "Spider Climb", "Standing Leap", "Sunlight Sensitivity", "Training", "Treasure Sense",
-    "Water Breathing", "Web Walker",
+    "Running Leap", "Spider Climb", "Standing Leap", "Training", "Treasure Sense", "Water Breathing", "Web Walker",
 })
 
 
