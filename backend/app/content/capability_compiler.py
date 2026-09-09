@@ -42,7 +42,7 @@ def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
         damage_bonus=damage.bonus if damage else 0,
         damage_type=definition.damage_type.value if definition.damage_type else None,
         success_damage=definition.success_damage,
-        persistent_effects=controls,
+        persistent_effects=[] if legacy_grapple else controls,
         on_failure_modifier_effects=modifiers,
         grapple_escape_dc=legacy_grapple.grapple_escape_dc if legacy_grapple else None,
         restrains_while_grappled=legacy_grapple.restrains_while_grappled if legacy_grapple else False,
