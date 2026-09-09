@@ -60,6 +60,15 @@ def plan_movement_toward(
             members,
             desired_distance_ft,
         )
+        target_position = position_for(target)
+        route_goal_position = route[-1] if route else position_for(mover)
+        route_goal_distance = footprint_distance_ft(
+            route_goal_position,
+            mover.state.template.size,
+            target_position,
+            target.state.template.size,
+        )
+        goal_reachable = route_goal_distance <= desired_distance_ft
         path, cost = _affordable_legal_prefix(
             map_definition,
             mover,
@@ -68,7 +77,6 @@ def plan_movement_toward(
             movement_budget_ft,
         )
         final_position = path[-1] if path else position_for(mover)
-        target_position = position_for(target)
         final_distance = footprint_distance_ft(
             final_position,
             mover.state.template.size,
@@ -79,6 +87,7 @@ def plan_movement_toward(
             path=path,
             movement_cost_ft=cost,
             final_distance_ft=final_distance,
+            goal_reachable=goal_reachable,
         )
     except Exception:
         logger.exception(
