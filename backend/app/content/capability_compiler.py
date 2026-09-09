@@ -11,39 +11,49 @@ logger = logging.getLogger(__name__)
 
 
 def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
-    damage = definition.damage
-    grapple = definition.grapple
-    return SavingThrowAction(
-        id=definition.id,
-        name=definition.name,
-        save_ability=definition.save_ability,
-        dc=definition.dc,
-        range_ft=definition.range_ft,
-        target_max_size=definition.target_max_size or (grapple.max_target_size if grapple else None),
-        damage_dice_count=damage.count if damage else 0,
-        damage_dice_size=damage.size if damage else 6,
-        damage_bonus=damage.bonus if damage else 0,
-        damage_type=definition.damage_type.value if definition.damage_type else None,
-        success_damage=definition.success_damage,
-        grapple_escape_dc=grapple.escape_dc if grapple else None,
-        restrains_while_grappled=grapple.restrains if grapple else False,
-        animation=definition.animation,
-    )
+    try:
+        damage = definition.damage
+        grapple = definition.grapple
+        return SavingThrowAction(
+            id=definition.id,
+            name=definition.name,
+            save_ability=definition.save_ability,
+            dc=definition.dc,
+            range_ft=definition.range_ft,
+            target_max_size=definition.target_max_size or (grapple.max_target_size if grapple else None),
+            damage_dice_count=damage.count if damage else 0,
+            damage_dice_size=damage.size if damage else 6,
+            damage_bonus=damage.bonus if damage else 0,
+            damage_type=definition.damage_type.value if definition.damage_type else None,
+            success_damage=definition.success_damage,
+            grapple_escape_dc=grapple.escape_dc if grapple else None,
+            restrains_while_grappled=grapple.restrains if grapple else False,
+            resource_id=definition.resource_id,
+            resource_cost=definition.resource_cost,
+            animation=definition.animation,
+        )
+    except Exception as exc:
+        logger.exception("Failed to compile save capability %s.", definition.id)
+        raise RuntimeError(f"Save capability {definition.id} could not be compiled.") from exc
 
 
 def _compile_attack_action(definition: CombatantDefinition) -> AttackActionDefinition | None:
-    action = definition.attack_action
-    if action is None:
-        return None
-    return AttackActionDefinition(
-        id=action.id,
-        name=action.name,
-        is_attack_action=action.is_attack_action,
-        slots=[
-            AttackActionSlot(attack_ids=slot.attack_ids, save_action_ids=slot.save_action_ids)
-            for slot in action.slots
-        ],
-    )
+    try:
+        action = definition.attack_action
+        if action is None:
+            return None
+        return AttackActionDefinition(
+            id=action.id,
+            name=action.name,
+            is_attack_action=action.is_attack_action,
+            slots=[
+                AttackActionSlot(attack_ids=slot.attack_ids, save_action_ids=slot.save_action_ids)
+                for slot in action.slots
+            ],
+        )
+    except Exception as exc:
+        logger.exception("Failed to compile attack action for %s.", definition.id)
+        raise RuntimeError(f"Attack action for {definition.id} could not be compiled.") from exc
 
 
 def compile_combatant(definition: CombatantDefinition) -> CombatantTemplate:
