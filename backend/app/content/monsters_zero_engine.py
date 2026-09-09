@@ -39,6 +39,7 @@ _ATTACKS = {
         ("Shortsword", "melee", 5, 1, 6, 3, "piercing", None, 5, None, None, []),
         ("Shortbow", "ranged", 5, 1, 6, 3, "piercing", None, 5, 80, 320, []),
     ],
+    "Specter": [("Life Drain", "melee", 4, 2, 6, 0, "necrotic", None, 5, None, None, [])],
     "Spider": [("Bite", "melee", 4, 0, 2, 0, "piercing", 1, 5, None, None, [("Poison", 1, 4, 0, "poison")])],
     "Tough": [
         ("Mace", "melee", 4, 1, 6, 2, "bludgeoning", None, 5, None, None, []),
@@ -66,6 +67,7 @@ _TRAITS = {
     "Tough": [CombatTrait.PACK_TACTICS],
     "Zombie": [CombatTrait.UNDEAD_FORTITUDE],
 }
+_MAX_HP_DRAIN_ATTACKS = {("Specter", "Life Drain")}
 
 
 def _slug(value: str) -> str:
@@ -96,6 +98,7 @@ def _weapon_attack(monster: str, spec: tuple) -> WeaponAttack:
     return WeaponAttack(
         id=attack_id, weapon=weapon, attack_bonus=bonus, damage_bonus=damage_bonus,
         fixed_damage=fixed, on_hit_damage=on_hit,
+        reduce_max_hp_by_damage_taken=(monster, name) in _MAX_HP_DRAIN_ATTACKS,
     )
 
 
