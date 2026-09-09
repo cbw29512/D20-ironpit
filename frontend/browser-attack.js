@@ -1,8 +1,7 @@
 (() => {
   "use strict";
   const S = () => window.IRON_PIT_BROWSER_STATE, R = () => window.IRON_PIT_BROWSER_ROLLS;
-  const G = () => window.IRON_PIT_BROWSER_GRAPPLE, T = () => window.IRON_PIT_BROWSER_TIMED, Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
-  const P = () => window.IRON_PIT_BROWSER_PERSISTENT_EFFECTS;
+  const G = () => window.IRON_PIT_BROWSER_GRAPPLE, T = () => window.IRON_PIT_BROWSER_TIMED, Z = () => window.IRON_PIT_BROWSER_ZERO_HP, P = () => window.IRON_PIT_BROWSER_PERSISTENT_EFFECTS;
   const SAP = () => window.IRON_PIT_BROWSER_SAP || { applyWeapon: () => false, consume: () => 0, disadvantage: () => 0 };
   const TM = () => window.IRON_PIT_BROWSER_TACTICAL_MASTER || { apply: () => false };
   const GRZ = () => window.IRON_PIT_BROWSER_GRAZE || { rawDamage: () => null };
@@ -96,13 +95,7 @@
       else if (living && attack.controlEffect) {
         const control = attack.controlEffect;
         if (control.grappleEscapeDc && (!control.maxTargetSize || S().sizeAtMost(actualTarget, control.maxTargetSize))) applied.push(...G().apply(actualTarget.state, attacker.combatant_id, control.grappleEscapeDc, attack.reach || 5, Boolean(control.restrainsWhileGrappled)));
-        if (control.conditionId) {
-          const timed = T().apply(actualTarget.state, control.conditionId, attacker.combatant_id, { sourceEffectId: attack.id, appliedRound: round,
-            expiresAtStartOfSourceTurn: Boolean(control.expiresAtStartOfSourceTurn), expiryTiming: control.expiryTiming || null,
-            repeatSaveAbility: control.repeatSaveAbility || null, repeatSaveDc: control.repeatSaveDc || null,
-            repeatSaveTiming: control.repeatSaveTiming || null, allowedRemovalActionIds: control.allowedRemovalActionIds || [] });
-          if (timed) applied.push(timed);
-        }
+        if (control.conditionId) { const timed = T().apply(actualTarget.state, control.conditionId, attacker.combatant_id, { sourceEffectId: attack.id, appliedRound: round, expiresAtStartOfSourceTurn: Boolean(control.expiresAtStartOfSourceTurn), expiryTiming: control.expiryTiming || null, repeatSaveAbility: control.repeatSaveAbility || null, repeatSaveDc: control.repeatSaveDc || null, repeatSaveTiming: control.repeatSaveTiming || null, allowedRemovalActionIds: control.allowedRemovalActionIds || [] }); if (timed) applied.push(timed); }
       }
       if (living) M().applyHitEffects?.(actualTarget.state, attacker.combatant_id, attack);
       topple = TOP().resolve(attacker, actualTarget, attack); if (topple.applied && !applied.includes("prone")) applied.push("prone");
@@ -113,8 +106,7 @@
       const rawGraze = GRZ().rawDamage(attacker.state, attack);
       if (rawGraze !== null) {
         const appliedTotal = adjustedDamage(actualTarget.state, rawGraze, attack.damageType, false);
-        damageComponents = [{ source: `${attack.name} (Graze)`, notation: String(rawGraze), rolls: [], modifier: 0,
-          damage_type: attack.damageType, total: rawGraze, applied_total: appliedTotal }];
+        damageComponents = [{ source: `${attack.name} (Graze)`, notation: String(rawGraze), rolls: [], modifier: 0, damage_type: attack.damageType, total: rawGraze, applied_total: appliedTotal }];
         damageRoll = { notation: String(rawGraze), rolls: [], modifier: 0, selected_roll: null, mode: "normal", total: appliedTotal };
         const affectedStates = states(extra.setup), appliedTypes = appliedTotal > 0 ? [attack.damageType] : [];
         damageOutcome = applyDamage(actualTarget.state, appliedTotal, false, appliedTypes, affectedStates);
