@@ -158,7 +158,11 @@ Example: one hit that resolves `8 Slashing + 6 Fire + 4 Necrotic` is one damage 
 
 If the source actually creates separate damage events, including damage at different timing windows, each separate event can independently trigger its own concentration check according to RAW.
 
-The audit log must identify the damage event that caused each concentration check and preserve the applicable final damage value, derived DC, roll, modifiers, total, margin, and result.
+Temporary HP does not erase the fact that damage was taken. If a final damage packet is greater than 0 and Temporary HP absorbs all of it, current HP loss can be 0 while the damage event still triggers a Concentration saving throw according to RAW. Example: final incoming damage 12, Temp HP 20 -> 8, current HP unchanged; damage taken is still 12 for the concentration trigger.
+
+By contrast, if immunity or another applicable defense reduces the final damage to 0 before Temporary HP/HP application, no damage was taken from that event and it does not trigger a Concentration saving throw merely because raw damage had been rolled.
+
+The audit log must identify the damage event that caused each concentration check and preserve the applicable final damage value, Temporary HP absorption if any, derived DC, roll, modifiers, total, margin, and result.
 
 ## 11. Implementation invariant
 
