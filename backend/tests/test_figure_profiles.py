@@ -23,6 +23,7 @@ def test_anatomically_distinct_monsters_do_not_share_humanoid_fallbacks() -> Non
     expected = {
         "Animated Flying Sword": "weapon",
         "Ankylosaurus": "reptile",
+        "Ape": "primate",
         "Archelon": "aquatic-reptile",
         "Axe Beak": "bird",
         "Baboon": "primate",
@@ -70,6 +71,7 @@ def test_new_batch_has_specific_reviewed_details() -> None:
     expected = {
         "Animated Armor": "animated-armor",
         "Animated Flying Sword": "flying-sword",
+        "Ape": "ape",
         "Awakened Tree": "tree",
         "Blood Hawk": "blood-hawk",
         "Flying Snake": "flying-snake",
