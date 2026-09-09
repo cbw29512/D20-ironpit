@@ -79,16 +79,20 @@ def test_blocked_melee_only_gargantuan_dodges_instead_of_breaking() -> None:
         raise
 
 
-def test_medium_melee_creature_blocked_by_summoned_allies_dodges() -> None:
+def test_medium_melee_creature_surrounded_target_by_summoned_allies_dodges() -> None:
     try:
         mover = _commoner("hero-medium-mover", "heroes", 0, 7)
-        wall = [
-            _commoner("summon-wall-1", "heroes", 2, 0, size=CreatureSize.GARGANTUAN),
-            _commoner("summon-wall-2", "heroes", 2, 4, size=CreatureSize.GARGANTUAN),
-            _commoner("summon-wall-3", "heroes", 2, 8, size=CreatureSize.GARGANTUAN),
-            _commoner("summon-wall-4", "heroes", 2, 12, size=CreatureSize.GARGANTUAN),
+        target = _target(7, 7)
+        occupied_attack_cells = [
+            (6, 6), (7, 6), (8, 6),
+            (6, 7),         (8, 7),
+            (6, 8), (7, 8), (8, 8),
         ]
-        _assert_dodge_only(mover, _target(6, 7), wall)
+        summons = [
+            _commoner(f"summon-{x}-{y}", "heroes", x, y)
+            for x, y in occupied_attack_cells
+        ]
+        _assert_dodge_only(mover, target, summons)
     except Exception:
-        logger.exception("Blocked Medium summon-wall Dodge fallback regression failed.")
+        logger.exception("Blocked Medium summon-ring Dodge fallback regression failed.")
         raise
