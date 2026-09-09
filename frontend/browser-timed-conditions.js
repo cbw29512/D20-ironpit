@@ -7,11 +7,15 @@
   function apply(state, effectId, sourceId, options = {}) {
     if (I().immune(state, effectId)) return null;
     if (effectId === POISONED && state.timed_effects.some((effect) => effect.effect_id === POISONED)) return POISONED;
+    const delayRounds = options.repeatSaveDelayRounds || 0;
+    if (!Number.isInteger(delayRounds) || delayRounds < 0) throw new Error("Repeat-save delay must be a nonnegative integer.");
+    if (delayRounds && options.appliedRound == null) throw new Error("Delayed repeat saves require the application round.");
     const sourceEffectId = options.sourceEffectId || null;
     state.timed_effects = state.timed_effects.filter((effect) => !(
       effect.effect_id === effectId && effect.source_id === sourceId && (effect.source_effect_id || null) === sourceEffectId
     ));
     const expiryTiming = options.expiryTiming || (options.expiresAtStartOfSourceTurn ? "source_turn_start" : null);
+    const hasRepeatSave = options.repeatSaveAbility != null && options.repeatSaveDc != null && options.repeatSaveTiming != null;
     state.timed_effects.push({
       effect_id: effectId,
       source_id: sourceId,
@@ -23,6 +27,7 @@
       repeat_save_ability: options.repeatSaveAbility || null,
       repeat_save_dc: options.repeatSaveDc || null,
       repeat_save_timing: options.repeatSaveTiming || null,
+      repeat_save_eligible_round: hasRepeatSave && options.appliedRound != null ? options.appliedRound + delayRounds : null,
       allowed_removal_action_ids: [...(options.allowedRemovalActionIds || [])],
       turn_behavior: options.turnBehavior || "normal",
       ends_on_damage: Boolean(options.endsOnDamage),
