@@ -61,6 +61,7 @@ def test_anatomically_distinct_monsters_do_not_share_humanoid_fallbacks() -> Non
         "Triceratops": "reptile",
         "Tyrannosaurus Rex": "theropod",
         "Worg": "quadruped",
+        "Xorn": "brute",
     }
     for name, form in expected.items():
         assert MONSTER_FIGURE_PROFILES[name]["form"] == form
@@ -100,6 +101,7 @@ def test_new_batch_has_specific_reviewed_details() -> None:
         "Triceratops": "triceratops",
         "Violet Fungus": "violet-fungus",
         "Worg": "canine",
+        "Xorn": "xorn",
     }
     for name, detail in expected.items():
         assert MONSTER_FIGURE_PROFILES[name]["detail"] == detail
