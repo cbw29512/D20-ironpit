@@ -33,6 +33,7 @@ assert.deepEqual(
   { form: monster("Axe Beak", "large").form, detail: monster("Axe Beak", "large").detail },
   { form: "bird", detail: "beak" },
 );
+assert.deepEqual({ form: monster("Ape").form, detail: monster("Ape").detail }, { form: "primate", detail: "ape" });
 assert.equal(monster("Baboon", "small").form, "primate");
 assert.equal(monster("Plesiosaurus", "large").form, "aquatic-reptile");
 assert.equal(monster("Pteranodon").form, "pterosaur");
