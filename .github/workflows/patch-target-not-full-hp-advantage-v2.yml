@@ -1,0 +1,222 @@
+name: Patch Target-Not-Full-HP Advantage V2
+
+on:
+  push:
+    branches:
+      - feat/target-not-full-hp-advantage
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Apply universal mechanic and shark bindings
+        run: |
+          python - <<'PY'
+          import logging
+          from pathlib import Path
+
+          logging.basicConfig(level=logging.INFO)
+          logger = logging.getLogger("target_not_full_hp_v2")
+
+          def replace_once(path: str, old: str, new: str) -> None:
+              try:
+                  file_path = Path(path)
+                  content = file_path.read_text(encoding="utf-8")
+                  count = content.count(old)
+                  if count != 1:
+                      raise RuntimeError(f"{path}: expected one exact replacement target, found {count}")
+                  file_path.write_text(content.replace(old, new), encoding="utf-8")
+                  logger.info("Patched %s", path)
+              except Exception:
+                  logger.exception("Failed exact replacement in %s", path)
+                  raise
+
+          def write(path: str, content: str) -> None:
+              try:
+                  Path(path).write_text(content, encoding="utf-8")
+                  logger.info("Wrote %s", path)
+              except Exception:
+                  logger.exception("Failed writing %s", path)
+                  raise
+
+          # ---------- State/schema ----------
+          replace_once(
+              "backend/app/domain/weapons.py",
+              '''class OnHitDamage(BaseModel):\n''',
+              '''class ConditionalAttackAdvantage(BaseModel):\n    trigger: Literal["target_not_full_hp"]\n\n\nclass OnHitDamage(BaseModel):\n''',
+          )
+          replace_once(
+              "backend/app/domain/weapons.py",
+              '''    conditional_damage: list[ConditionalDamage] = Field(default_factory=list)\n    on_hit_damage: list[OnHitDamage] = Field(default_factory=list)\n''',
+              '''    conditional_damage: list[ConditionalDamage] = Field(default_factory=list)\n    conditional_attack_advantage: list[ConditionalAttackAdvantage] = Field(default_factory=list)\n    on_hit_damage: list[OnHitDamage] = Field(default_factory=list)\n''',
+          )
+          replace_once(
+              "backend/app/domain/combatants.py",
+              '''    ConditionalDamage,\n    DamageType,\n''',
+              '''    ConditionalAttackAdvantage,\n    ConditionalDamage,\n    DamageType,\n''',
+          )
+          replace_once(
+              "backend/app/domain/models.py",
+              '''    CombatantTemplate,\n    ConditionalDamage,\n''',
+              '''    CombatantTemplate,\n    ConditionalAttackAdvantage,\n    ConditionalDamage,\n''',
+          )
+          replace_once(
+              "backend/app/domain/models.py",
+              '''    "CombatantTemplate",\n    "ConditionRemovalAction",\n    "ConditionalDamage",\n''',
+              '''    "CombatantTemplate",\n    "ConditionRemovalAction",\n    "ConditionalAttackAdvantage",\n    "ConditionalDamage",\n''',
+          )
+          replace_once(
+              "backend/app/domain/capability_attacks.py",
+              '''from app.domain.weapons import DamageType, WeaponAttackKind\n''',
+              '''from app.domain.weapons import ConditionalAttackAdvantage, DamageType, WeaponAttackKind\n''',
+          )
+          replace_once(
+              "backend/app/domain/capability_attacks.py",
+              '''    rage_eligible: bool = False\n    effects: list[AttackEffectDefinition] = Field(default_factory=list)\n''',
+              '''    rage_eligible: bool = False\n    conditional_attack_advantage: list[ConditionalAttackAdvantage] = Field(default_factory=list)\n    effects: list[AttackEffectDefinition] = Field(default_factory=list)\n''',
+          )
+
+          # ---------- Capability registry round-trip ----------
+          replace_once(
+              "backend/app/content/capability_from_template.py",
+              '''        "rage_eligible": attack.rage_eligible,\n        "effects": effects, "forbid_target_grappled_by_self": attack.forbid_target_grappled_by_self,\n''',
+              '''        "rage_eligible": attack.rage_eligible,\n        "conditional_attack_advantage": [spec.model_dump(mode="json") for spec in attack.conditional_attack_advantage],\n        "effects": effects, "forbid_target_grappled_by_self": attack.forbid_target_grappled_by_self,\n''',
+          )
+          replace_once(
+              "backend/app/content/capability_attack_compiler.py",
+              '''        fixed_damage=definition.fixed_damage,\n        conditional_damage=conditional,\n''',
+              '''        fixed_damage=definition.fixed_damage,\n        conditional_damage=conditional,\n        conditional_attack_advantage=definition.conditional_attack_advantage,\n''',
+          )
+
+          # ---------- Python execution ----------
+          write(
+              "backend/app/combat/conditional_attack_advantage.py",
+              '''from __future__ import annotations\n\nimport logging\n\nfrom app.combat.hit_points import effective_max_hp\nfrom app.domain.models import CombatantState, WeaponAttack\n\nlogger = logging.getLogger(__name__)\n\n\ndef conditional_attack_advantage_sources(attack: WeaponAttack, target: CombatantState) -> int:\n    \"\"\"Return declarative attack-roll Advantage sources satisfied by target state.\"\"\"\n    try:\n        total = 0\n        for spec in attack.conditional_attack_advantage:\n            if spec.trigger == "target_not_full_hp":\n                total += int(target.current_hp < effective_max_hp(target))\n                continue\n            raise ValueError(f"Unsupported conditional attack Advantage trigger: {spec.trigger!r}.")\n        return total\n    except Exception:\n        logger.exception("Failed to evaluate conditional attack Advantage for %s.", attack.id)\n        raise\n''',
+          )
+          replace_once(
+              "backend/app/combat/attacks.py",
+              '''from app.combat.conditions import apply_hit_conditions, attack_roll_condition_sources\n''',
+              '''from app.combat.conditions import apply_hit_conditions, attack_roll_condition_sources\nfrom app.combat.conditional_attack_advantage import conditional_attack_advantage_sources\n''',
+          )
+          replace_once(
+              "backend/app/combat/attacks.py",
+              '''                               + reckless_attack_advantage(attacker, attack)\n                               + next_attack_against_advantage_sources(attacker, defender_event_id)),\n''',
+              '''                               + reckless_attack_advantage(attacker, attack)\n                               + conditional_attack_advantage_sources(attack, defender)\n                               + next_attack_against_advantage_sources(attacker, defender_event_id)),\n''',
+          )
+
+          # ---------- Source audit parity ----------
+          write(
+              "backend/app/content/monster_attack_advantage_source_audit.py",
+              '''from __future__ import annotations\n\nimport logging\nimport re\n\nfrom app.domain.models import WeaponAttack\n\nlogger = logging.getLogger(__name__)\n_TARGET_NOT_FULL = r"with\\s+advantage\\s+if\\s+the\\s+target\\s+(?:doesn['’]t|does\\s+not)\\s+have\\s+all\\s+its\\s+hit\\s+points"\n\n\ndef conditional_attack_advantage_issues(attack: WeaponAttack, actions: str) -> list[str]:\n    try:\n        name = re.escape(attack.weapon.name)\n        source_has = bool(re.search(\n            rf"\\b{name}\\.\\s+(?:melee|ranged|melee\\s+or\\s+ranged)\\s+attack\\s+roll:[^.]*?\\(\\s*{_TARGET_NOT_FULL}\\s*\\)",\n            actions, re.IGNORECASE,\n        ))\n        runtime_count = sum(spec.trigger == "target_not_full_hp" for spec in attack.conditional_attack_advantage)\n        issues: list[str] = []\n        if source_has and runtime_count != 1:\n            issues.append(f"conditional-attack-advantage-missing:{attack.id}:target_not_full_hp")\n        if not source_has and runtime_count:\n            issues.append(f"conditional-attack-advantage-source-missing:{attack.id}:target_not_full_hp")\n        return issues\n    except Exception:\n        logger.exception("Failed conditional attack Advantage source audit for %s.", attack.id)\n        raise\n''',
+          )
+          replace_once(
+              "backend/app/content/monster_attack_source_audit.py",
+              '''from app.content.monster_attack_modifier_source_audit import hit_modifier_issues\n''',
+              '''from app.content.monster_attack_advantage_source_audit import conditional_attack_advantage_issues\nfrom app.content.monster_attack_modifier_source_audit import hit_modifier_issues\n''',
+          )
+          replace_once(
+              "backend/app/content/monster_attack_source_audit.py",
+              '''    issues.extend(hit_modifier_issues(attack, actions))\n''',
+              '''    issues.extend(hit_modifier_issues(attack, actions))\n    issues.extend(conditional_attack_advantage_issues(attack, actions))\n''',
+          )
+
+          # ---------- Five source-derived aquatic stat blocks ----------
+          write(
+              "backend/app/content/monsters_target_not_full_hp.py",
+              '''from __future__ import annotations\n\nimport logging\nimport re\n\nfrom app.content.monster_catalog import load_monster_rows\nfrom app.content.monster_defense_source_audit import parse_defense_profile\nfrom app.content.movement_modes import parse_movement_profile, standard_arena_closing_speed\nfrom app.domain.actions import AttackActionDefinition, AttackActionSlot\nfrom app.domain.models import (\n    CombatantTemplate, ConditionalAttackAdvantage, ConditionalDamage, DamageType,\n    VisualLoadout, Weapon, WeaponAttack, WeaponAttackKind,\n)\nfrom app.domain.size import CreatureSize\nfrom app.domain.traits import CombatTrait\n\nlogger = logging.getLogger(__name__)\n_SPECS = {\n    "Giant Shark": (9, 3, 10, 6, None),\n    "Hunter Shark": (6, 3, 6, 4, None),\n    "Piranha": (5, 0, 2, 0, 1),\n    "Reef Shark": (4, 2, 4, 2, None),\n    "Swarm of Piranhas": (5, 2, 4, 3, None),\n}\n_CONDITIONAL_ADVANTAGE = frozenset({"Giant Shark", "Hunter Shark", "Piranha", "Swarm of Piranhas"})\n_TRAITS = {"Reef Shark": [CombatTrait.PACK_TACTICS], "Swarm of Piranhas": [CombatTrait.SWARM]}\n\n\ndef _slug(value: str) -> str:\n    try:\n        return re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")\n    except Exception:\n        logger.exception("Failed to slug monster name %r.", value)\n        raise\n\n\ndef _row(name: str) -> dict[str, object]:\n    try:\n        matches = [row for row in load_monster_rows() if row["name"] == name]\n        if len(matches) != 1:\n            raise ValueError(f"Expected one SRD source row for {name!r}; found {len(matches)}.")\n        return matches[0]\n    except Exception:\n        logger.exception("Failed to load SRD source row for %s.", name)\n        raise\n\n\ndef _attack(name: str) -> WeaponAttack:\n    try:\n        bonus, count, size, damage_bonus, fixed = _SPECS[name]\n        attack_id = f"srd-{_slug(name)}-{'bites' if name == 'Swarm of Piranhas' else 'bite'}"\n        conditional_damage = []\n        if name == "Swarm of Piranhas":\n            conditional_damage = [ConditionalDamage(\n                trigger="attacker_bloodied", mode="replace", dice_count=1, dice_size=4, damage_bonus=3,\n                damage_type=DamageType.PIERCING,\n            )]\n        conditional_advantage = (\n            [ConditionalAttackAdvantage(trigger="target_not_full_hp")] if name in _CONDITIONAL_ADVANTAGE else []\n        )\n        return WeaponAttack(\n            id=attack_id,\n            weapon=Weapon(\n                id=f"{attack_id}-weapon", name="Bites" if name == "Swarm of Piranhas" else "Bite",\n                attack_kind=WeaponAttackKind.MELEE, dice_count=count, dice_size=size,\n                damage_type=DamageType.PIERCING, animation="strike", reach_ft=5,\n            ),\n            attack_bonus=bonus, damage_bonus=damage_bonus, fixed_damage=fixed,\n            conditional_damage=conditional_damage, conditional_attack_advantage=conditional_advantage,\n        )\n    except Exception:\n        logger.exception("Failed to build attack for %s.", name)\n        raise\n\n\ndef _template(name: str) -> CombatantTemplate:\n    try:\n        row = _row(name)\n        attack = _attack(name)\n        defenses = parse_defense_profile(row)\n        initiative = re.search(r"\\bInitiative\\s+([+-]?\\d+)", str(row["rawText"]), re.I)\n        if initiative is None:\n            raise ValueError(f"Missing SRD initiative for {name!r}.")\n        size_name = str(row["size"]).split()[0].lower()\n        multiattack = None\n        if name == "Giant Shark":\n            multiattack = AttackActionDefinition(\n                id="srd-giant-shark-multiattack", name="Multiattack",\n                slots=[AttackActionSlot(attack_ids=[attack.id]), AttackActionSlot(attack_ids=[attack.id])],\n            )\n        return CombatantTemplate(\n            id=f"srd-{_slug(name)}", name=name, archetype="source-certified monster", kind="monster",\n            size=CreatureSize(size_name), armor_class=int(re.search(r"\\d+", str(row["armorClass"])).group()),\n            max_hp=int(re.search(r"\\d+", str(row["hitPoints"])).group()),\n            speed_ft=standard_arena_closing_speed(row["speed"]), movement_modes=parse_movement_profile(row["speed"]),\n            initiative_bonus=int(initiative.group(1)), challenge_rating=str(row["challenge"]).split()[0],\n            weapon_attack=attack, attack_action=multiattack, combat_traits=_TRAITS.get(name, []),\n            damage_vulnerabilities=[DamageType(item) for item in sorted(defenses["damage_vulnerabilities"])],\n            damage_resistances=[DamageType(item) for item in sorted(defenses["damage_resistances"])],\n            damage_immunities=[DamageType(item) for item in sorted(defenses["damage_immunities"])],\n            condition_immunities=sorted(defenses["condition_immunities"]),\n            visual=VisualLoadout(armor="natural", main_hand=attack.weapon.name, body_style="monster"),\n            source=str(row["sourceReference"]),\n        )\n    except Exception:\n        logger.exception("Failed to build target-not-full-HP monster %s.", name)\n        raise\n\n\ndef build_target_not_full_hp_monsters() -> list[CombatantTemplate]:\n    try:\n        return [_template(name) for name in _SPECS]\n    except Exception:\n        logger.exception("Failed to build target-not-full-HP monster tranche.")\n        raise\n''',
+          )
+          replace_once(
+              "backend/app/content/legacy_monster_roster.py",
+              '''from app.content.monsters_swarms import build_swarm_candidates\n''',
+              '''from app.content.monsters_swarms import build_swarm_candidates\nfrom app.content.monsters_target_not_full_hp import build_target_not_full_hp_monsters\n''',
+          )
+          replace_once(
+              "backend/app/content/legacy_monster_roster.py",
+              '''        *build_zero_engine_monsters(), build_worg(), *build_swarm_candidates(), *build_parry_monsters(),\n''',
+              '''        *build_zero_engine_monsters(), *build_target_not_full_hp_monsters(), build_worg(), *build_swarm_candidates(), *build_parry_monsters(),\n''',
+          )
+
+          # ---------- Browser runtime ----------
+          write(
+              "frontend/browser-attack-advantage.js",
+              '''(() => {\n  "use strict";\n  function sources(attack, target) {\n    try {\n      let total = 0;\n      const effectiveMaxHp = target.template.max_hp + (target.max_hp_bonus || 0);\n      for (const spec of attack.conditionalAttackAdvantage || []) {\n        if (spec.trigger === "target_not_full_hp") { total += target.current_hp < effectiveMaxHp ? 1 : 0; continue; }\n        throw new Error(`Unsupported conditional attack Advantage trigger: ${spec.trigger}`);\n      }\n      return total;\n    } catch (error) { console.error("Conditional attack Advantage resolution failed.", error); throw error; }\n  }\n  window.IRON_PIT_BROWSER_ATTACK_ADVANTAGE = { sources };\n})();\n''',
+          )
+          replace_once(
+              "frontend/browser-attack.js",
+              '''  const S = () => window.IRON_PIT_BROWSER_STATE, R = () => window.IRON_PIT_BROWSER_ROLLS;\n''',
+              '''  const S = () => window.IRON_PIT_BROWSER_STATE, R = () => window.IRON_PIT_BROWSER_ROLLS, A = () => window.IRON_PIT_BROWSER_ATTACK_ADVANTAGE || { sources: () => 0 };\n''',
+          )
+          replace_once(
+              "frontend/browser-attack.js",
+              '''    const advantage = (extra.advantage || 0) + conditions.advantage + bloodiedFury(attacker.state, attack)\n      + B2().attackAdvantage(attacker.state, attack) + M().nextAttackAgainstAdvantage(attacker.state, target.combatant_id);\n''',
+              '''    const advantage = (extra.advantage || 0) + conditions.advantage + bloodiedFury(attacker.state, attack)\n      + B2().attackAdvantage(attacker.state, attack) + A().sources(attack, target.state) + M().nextAttackAgainstAdvantage(attacker.state, target.combatant_id);\n''',
+          )
+          replace_once(
+              "scripts/browser_template_serializer.py",
+              '''        if attack.on_hit_damage:\n''',
+              '''        if attack.conditional_attack_advantage:\n            row["conditionalAttackAdvantage"] = [\n                {"trigger": spec.trigger} for spec in attack.conditional_attack_advantage\n            ]\n        if attack.on_hit_damage:\n''',
+          )
+          for html in ("index.html", "frontend/index.html"):
+              replace_once(
+                  html,
+                  '''<script src="browser-attack.js"></script>''',
+                  '''<script src="browser-attack-advantage.js"></script>\n  <script src="browser-attack.js"></script>''',
+              )
+
+          # ---------- Permanent regressions ----------
+          write(
+              "backend/tests/test_conditional_attack_advantage.py",
+              '''from __future__ import annotations\n\nimport logging\n\nfrom app.combat.attacks import resolve_attack\nfrom app.combat.conditional_attack_advantage import conditional_attack_advantage_sources\nfrom app.combat.dice import FixedDiceProvider\nfrom app.combat.state import build_combatant_state\nfrom app.content.demo import build_demo_fighter, build_goblin_warrior\nfrom app.domain.models import ConditionalAttackAdvantage, RollMode\n\nlogger = logging.getLogger(__name__)\n\n\ndef _attack():\n    try:\n        return build_goblin_warrior().weapon_attack.model_copy(update={\n            "conditional_attack_advantage": [ConditionalAttackAdvantage(trigger="target_not_full_hp")],\n        })\n    except Exception:\n        logger.exception("Failed to build conditional-Advantage regression attack.")\n        raise\n\n\ndef test_target_not_full_hp_advantage_uses_effective_max_hp() -> None:\n    try:\n        target = build_combatant_state(build_demo_fighter())\n        attack = _attack()\n        assert conditional_attack_advantage_sources(attack, target) == 0\n        target.max_hp_bonus = 5\n        target.current_hp += 5\n        assert conditional_attack_advantage_sources(attack, target) == 0\n        target.current_hp -= 1\n        assert conditional_attack_advantage_sources(attack, target) == 1\n    except Exception:\n        logger.exception("Target-not-full-HP state regression failed.")\n        raise\n\n\ndef test_target_not_full_hp_advantage_enters_canonical_attack_roll_mode() -> None:\n    try:\n        attacker = build_combatant_state(build_goblin_warrior())\n        defender = build_combatant_state(build_demo_fighter())\n        attack = _attack()\n        defender.current_hp -= 1\n        event = resolve_attack(1, 1, attacker, defender, attack, 5, FixedDiceProvider([3, 17, 2]))\n        assert event.attack_roll.mode is RollMode.ADVANTAGE\n        assert event.attack_roll.accepted == 17\n    except Exception:\n        logger.exception("Canonical attack-roll conditional Advantage regression failed.")\n        raise\n''',
+          )
+          write(
+              "backend/tests/test_target_not_full_hp_monsters.py",
+              '''from __future__ import annotations\n\nimport logging\n\nfrom app.content.legacy_monster_roster import build_legacy_monster_templates\nfrom app.content.monster_catalog import load_monster_rows\nfrom app.content.monster_source_audit import audit_monster_source\n\nlogger = logging.getLogger(__name__)\n_NAMES = {"Giant Shark", "Hunter Shark", "Piranha", "Reef Shark", "Swarm of Piranhas"}\n\n\ndef test_target_not_full_hp_monsters_are_source_complete() -> None:\n    try:\n        templates = {monster.name: monster for monster in build_legacy_monster_templates() if monster.name in _NAMES}\n        rows = {str(row["name"]): row for row in load_monster_rows() if row["name"] in _NAMES}\n        assert set(templates) == _NAMES\n        assert set(rows) == _NAMES\n        for name in sorted(_NAMES):\n            assert audit_monster_source(templates[name], rows[name]) == []\n        assert templates["Giant Shark"].speed_ft == 5\n        assert templates["Giant Shark"].movement_modes.swim_ft == 60\n        assert len(templates["Giant Shark"].attack_action.slots) == 2\n        assert templates["Swarm of Piranhas"].weapon_attack.conditional_damage[0].trigger == "attacker_bloodied"\n    except Exception:\n        logger.exception("Target-not-full-HP monster source regression failed.")\n        raise\n''',
+          )
+          write(
+              "frontend/browser-attack-advantage.test.cjs",
+              '''const assert = require("node:assert/strict");\nconst fs = require("node:fs");\nconst vm = require("node:vm");\n\nglobal.window = {};\nvm.runInThisContext(fs.readFileSync(require.resolve("./browser-attack-advantage.js"), "utf8"), { filename: "browser-attack-advantage.js" });\nconst attack = { conditionalAttackAdvantage: [{ trigger: "target_not_full_hp" }] };\nconst target = (hp, bonus = 0) => ({ current_hp: hp, max_hp_bonus: bonus, template: { max_hp: 20 } });\nassert.equal(window.IRON_PIT_BROWSER_ATTACK_ADVANTAGE.sources(attack, target(20)), 0);\nassert.equal(window.IRON_PIT_BROWSER_ATTACK_ADVANTAGE.sources(attack, target(19)), 1);\nassert.equal(window.IRON_PIT_BROWSER_ATTACK_ADVANTAGE.sources(attack, target(25, 5)), 0);\nassert.equal(window.IRON_PIT_BROWSER_ATTACK_ADVANTAGE.sources(attack, target(24, 5)), 1);\nassert.throws(() => window.IRON_PIT_BROWSER_ATTACK_ADVANTAGE.sources({ conditionalAttackAdvantage: [{ trigger: "bad" }] }, target(19)));\nconsole.log("Browser target-not-full-HP conditional attack Advantage regressions passed.");\n''',
+          )
+          replace_once(
+              ".github/workflows/ci.yml",
+              '''          node frontend/browser-conditional-damage.test.cjs\n''',
+              '''          node frontend/browser-conditional-damage.test.cjs\n          node frontend/browser-attack-advantage.test.cjs\n''',
+          )
+          logger.info("Applied universal target-not-full-HP Advantage and five-monster binding tranche.")
+          PY
+      - name: Verify focused tranche
+        run: |
+          pip install -e './backend[dev]'
+          rm -rf backend/iron_pit_backend.egg-info
+          python scripts/check_source_limits.py
+          pytest -q backend/tests/test_conditional_attack_advantage.py backend/tests/test_target_not_full_hp_monsters.py
+          node frontend/browser-attack-advantage.test.cjs
+          node --check frontend/browser-attack-advantage.js
+          node --check frontend/browser-attack.js
+      - name: Commit implementation
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            .github/workflows/ci.yml \
+            backend/app/domain/weapons.py backend/app/domain/combatants.py backend/app/domain/models.py backend/app/domain/capability_attacks.py \
+            backend/app/combat/conditional_attack_advantage.py backend/app/combat/attacks.py \
+            backend/app/content/capability_from_template.py backend/app/content/capability_attack_compiler.py \
+            backend/app/content/monster_attack_advantage_source_audit.py backend/app/content/monster_attack_source_audit.py \
+            backend/app/content/monsters_target_not_full_hp.py backend/app/content/legacy_monster_roster.py \
+            backend/tests/test_conditional_attack_advantage.py backend/tests/test_target_not_full_hp_monsters.py \
+            frontend/browser-attack-advantage.js frontend/browser-attack.js frontend/browser-attack-advantage.test.cjs \
+            scripts/browser_template_serializer.py index.html frontend/index.html
+          git diff --cached --check
+          git commit -m "feat: add target-not-full-hp attack Advantage"
+          git push origin HEAD:${{ github.ref_name }}
