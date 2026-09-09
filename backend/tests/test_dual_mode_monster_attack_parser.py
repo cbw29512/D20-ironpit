@@ -25,6 +25,6 @@ def test_dual_mode_attack_preserves_reach_range_and_forced_pull() -> None:
     for attack in attacks:
         assert attack.control_effect is not None
         assert attack.control_effect.forced_movement is not None
-        assert attack.control_effect.forced_movement.direction == "toward_source"
+        assert attack.control_effect.forced_movement.direction == "pull"
         assert attack.control_effect.forced_movement.max_distance_ft == 15
         assert attack.control_effect.forced_movement.distance_mode == "up_to"
