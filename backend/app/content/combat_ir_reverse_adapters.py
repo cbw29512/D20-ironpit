@@ -5,9 +5,14 @@ from app.domain.combat_ir import AttackRollResolutionIR, CombatActionIR, SavingT
 
 
 def _resource_parts(action: CombatActionIR) -> tuple[str | None, int]:
-    if action.resource_cost is None:
+    if not action.resource_costs:
         return None, 1
-    return action.resource_cost.resource_id, action.resource_cost.amount
+    if len(action.resource_costs) != 1:
+        raise ValueError(f"Legacy capability {action.id} cannot represent multiple resource costs.")
+    cost = action.resource_costs[0]
+    if cost.mode != "per_use":
+        raise ValueError(f"Legacy capability {action.id} cannot represent {cost.mode} resource costs.")
+    return cost.resource_id, cost.amount
 
 
 def attack_ir_to_capability(action: CombatActionIR) -> AttackCapabilityDefinition:
