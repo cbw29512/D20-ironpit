@@ -8,6 +8,21 @@ from browser_attack_effect_serializer import value
 logger = logging.getLogger(__name__)
 
 
+def area_row(area: Any) -> dict[str, Any]:
+    try:
+        row: dict[str, Any] = {"shape": area.shape, "origin": area.origin}
+        if area.radius_ft is not None:
+            row["radiusFt"] = area.radius_ft
+        if area.length_ft is not None:
+            row["lengthFt"] = area.length_ft
+        if area.width_ft is not None:
+            row["widthFt"] = area.width_ft
+        return row
+    except Exception:
+        logger.exception("Failed to serialize universal area targeting.")
+        raise
+
+
 def save_row(action: Any) -> dict[str, Any]:
     try:
         row: dict[str, Any] = {
@@ -16,6 +31,8 @@ def save_row(action: Any) -> dict[str, Any]:
             "damageDiceSize": action.damage_dice_size, "damageBonus": action.damage_bonus,
             "damageType": action.damage_type, "successDamage": action.success_damage, "animation": action.animation,
         }
+        if action.area is not None:
+            row["area"] = area_row(action.area)
         if action.resource_id is not None:
             row["resourceId"], row["resourceCost"] = action.resource_id, action.resource_cost
         if action.target_max_size:
