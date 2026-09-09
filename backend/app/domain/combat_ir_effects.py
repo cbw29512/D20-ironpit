@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 
 from app.domain.actions import ConditionName
 from app.domain.capability_effects import AttackEffectDefinition
+from app.domain.size import CreatureSize
 
 
 class HealingEffectIR(BaseModel):
@@ -22,4 +23,24 @@ class ConditionRemovalEffectIR(BaseModel):
     expends_spell_slot: bool = False
 
 
-CombatEffectIR: TypeAlias = AttackEffectDefinition | HealingEffectIR | ConditionRemovalEffectIR
+class ArmorClassModifierEffectIR(BaseModel):
+    kind: Literal["armor_class_modifier"] = "armor_class_modifier"
+    amount: int = Field(ge=1, le=20)
+    applies_to_triggering_attack: bool = False
+
+
+class AttackRedirectEffectIR(BaseModel):
+    kind: Literal["attack_redirect"] = "attack_redirect"
+    ally_range_ft: int = Field(ge=1, le=30)
+    ally_max_size: CreatureSize
+    swap_positions: bool = False
+    ally_becomes_target: bool = False
+
+
+CombatEffectIR: TypeAlias = (
+    AttackEffectDefinition
+    | HealingEffectIR
+    | ConditionRemovalEffectIR
+    | ArmorClassModifierEffectIR
+    | AttackRedirectEffectIR
+)
