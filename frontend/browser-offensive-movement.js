@@ -3,24 +3,37 @@
 
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
+  const G = () => window.IRON_PIT_BROWSER_GRID_MOVEMENT;
   const O = () => window.IRON_PIT_BROWSER_OFFENSIVE_RANGES;
   const R = () => window.IRON_PIT_BROWSER_REACTION_MOVEMENT;
   const S = () => window.IRON_PIT_BROWSER_STATE;
 
   function chooseIntent(member, setup, turnKey) {
     try {
-      if (!E().available(member.state, "action")) return null;
+      if (!E().available(member.state, "action") || !setup.map_definition) return null;
+      if (!member.state.position) throw new Error("Grid offensive movement requires an authoritative attacker position.");
+      const members = [...setup.heroes, ...setup.monsters];
       const candidates = [];
       let legalNow = false;
       for (const target of F().targetOrder(member, setup)) {
+        if (!target.state.position) throw new Error("Grid offensive movement requires authoritative target positions.");
         const distance = S().distance(member, target);
         for (const option of O().rangesForTarget(member, target, turnKey)) {
           if (distance <= option.range) {
             legalNow = true;
             continue;
           }
+          const plan = G().planToward(
+            setup.map_definition,
+            member,
+            target,
+            members,
+            option.range,
+            member.state.movement_remaining_ft,
+          );
+          if (plan.final_distance_ft > option.range) continue;
           candidates.push({
-            needed: distance - option.range,
+            cost: plan.movement_cost_ft,
             distance,
             targetId: target.combatant_id,
             family: option.family,
@@ -29,7 +42,7 @@
         }
       }
       if (legalNow || !candidates.length) return null;
-      candidates.sort((a, b) => a.needed - b.needed || a.distance - b.distance
+      candidates.sort((a, b) => a.cost - b.cost || a.distance - b.distance
         || a.targetId.localeCompare(b.targetId) || a.family.localeCompare(b.family) || b.range - a.range);
       const best = candidates[0];
       return { targetId: best.targetId, desiredDistanceFt: best.range, family: best.family };
