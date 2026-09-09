@@ -20,19 +20,18 @@
 
   function saveMode(state, ability) {
     const advantage = (ability === "strength" && state.active_effect_ids.includes("rage") ? 1 : 0)
-      + B2().dangerSenseAdvantage(state, ability)
-      + DG().dexSaveAdvantageSources(state, ability);
+      + B2().dangerSenseAdvantage(state, ability) + DG().dexSaveAdvantageSources(state, ability);
     const disadvantage = ability === "dexterity" && state.active_effect_ids.includes("restrained") ? 1 : 0;
     return R().modeFromSources(advantage, disadvantage);
   }
 
   function indomitableRevision(original, replacement) {
     return {
-      source_effect_id: "indomitable", kind: "full_reroll",
-      original_rolls: [...original.rolls], replacement_rolls: [...replacement.rolls],
-      original_modifier: original.modifier || 0, replacement_modifier: replacement.modifier || 0,
-      original_selected: original.selected_roll, replacement_selected: replacement.selected_roll,
-      original_total: original.total, replacement_total: replacement.total, accepted: "replacement", replaced_die_index: null,
+      source_effect_id: "indomitable", kind: "full_reroll", original_rolls: [...original.rolls],
+      replacement_rolls: [...replacement.rolls], original_modifier: original.modifier || 0,
+      replacement_modifier: replacement.modifier || 0, original_selected: original.selected_roll,
+      replacement_selected: replacement.selected_roll, original_total: original.total,
+      replacement_total: replacement.total, accepted: "replacement", replaced_die_index: null,
     };
   }
 
@@ -56,40 +55,49 @@
   function damageRolls(action, count, shared) {
     if (shared == null) return D().rollMany(count, action.damageDiceSize);
     if (!Array.isArray(shared) || shared.length !== count) throw new Error(`${action.name} shared damage roll count is invalid.`);
-    if (shared.some((roll) => !Number.isInteger(roll) || roll < 1 || roll > action.damageDiceSize)) throw new Error(`${action.name} shared damage rolls contain an invalid die result.`);
+    if (shared.some((roll) => !Number.isInteger(roll) || roll < 1 || roll > action.damageDiceSize)) {
+      throw new Error(`${action.name} shared damage rolls contain an invalid die result.`);
+    }
     return [...shared];
   }
 
   function resolveAction(sequence, round, actor, target, action, distance, options = {}) {
     try {
       const spendAction = options.spendAction !== false;
-      const resourceBacked = Boolean(action.resourceId);
-      const resources = resourceBacked ? RES() : null;
-      if (resourceBacked && !resources) throw new Error("Browser resource API is not loaded.");
+      const spendResourceCost = options.spendResourceCost !== false;
+      const resourceBacked = Boolean(action.resourceId), resources = resourceBacked ? RES() : null;
+      if (resourceBacked && spendResourceCost && !resources) throw new Error("Browser resource API is not loaded.");
       if (spendAction && !E().available(actor.state, "action")) throw new Error("Action is unavailable for saving throw action.");
       if (!legalAction(action, target, distance)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
-      if (resourceBacked && !resources.available(actor.state, action.resourceId, action.resourceCost || 1)) throw new Error(`${action.name} lacks its required resource.`);
+      if (resourceBacked && spendResourceCost && !resources.available(actor.state, action.resourceId, action.resourceCost || 1)) {
+        throw new Error(`${action.name} lacks its required resource.`);
+      }
       const save = resolveSavingThrow(target.state, action.saveAbility, action.dc);
       if (spendAction) E().spend(actor.state, "action");
-      const resourceRemaining = resourceBacked ? resources.spend(actor.state, action.resourceId, action.resourceCost || 1) : null;
+      const resourceRemaining = resourceBacked && spendResourceCost
+        ? resources.spend(actor.state, action.resourceId, action.resourceCost || 1) : null;
       const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
       const deathSuccessBefore = target.state.death_save_successes, deathFailureBefore = target.state.death_save_failures;
       const concentrationBefore = target.state.concentration?.effect_id || null;
       let damageRoll = null, damageComponents = [], damageOutcome = null;
-      const count = action.damageDiceCount || 0;
-      if (count && !(save.succeeded && action.successDamage === "none")) {
+      const count = action.damageDiceCount || 0, capture = options.captureSharedDamageRolls;
+      const establishShared = Array.isArray(capture);
+      if (count && (!(save.succeeded && action.successDamage === "none") || establishShared)) {
         if (!action.damageType) throw new Error(`${action.name} has damage dice but no damage type.`);
         const rolls = damageRolls(action, count, options.sharedDamageRolls);
-        let total = rolls.reduce((sum, roll) => sum + roll, 0) + (action.damageBonus || 0);
-        if (save.succeeded && action.successDamage === "half") total = Math.floor(total / 2);
-        const applied = A().adjustedDamage(target.state, Math.max(0, total), action.damageType);
-        damageComponents = [{ source: action.name, notation: `${count}d${action.damageDiceSize}+${action.damageBonus || 0}`,
-          rolls, modifier: action.damageBonus || 0, damage_type: action.damageType, total: Math.max(0, total), applied_total: applied }];
-        damageRoll = { notation: damageComponents[0].notation, rolls, modifier: action.damageBonus || 0, total: applied };
-        if (applied) {
-          const affectedStates = states(options.setup);
-          damageOutcome = A().applyDamage(target.state, applied, false, [action.damageType], affectedStates);
-          window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(target.state); C()?.endIfIncapacitated(target.state, affectedStates);
+        if (establishShared) capture.splice(0, capture.length, ...rolls);
+        if (!(save.succeeded && action.successDamage === "none")) {
+          let total = rolls.reduce((sum, roll) => sum + roll, 0) + (action.damageBonus || 0);
+          if (save.succeeded && action.successDamage === "half") total = Math.floor(total / 2);
+          const applied = A().adjustedDamage(target.state, Math.max(0, total), action.damageType);
+          damageComponents = [{ source: action.name, notation: `${count}d${action.damageDiceSize}+${action.damageBonus || 0}`,
+            rolls, modifier: action.damageBonus || 0, damage_type: action.damageType, total: Math.max(0, total), applied_total: applied }];
+          damageRoll = { notation: damageComponents[0].notation, rolls, modifier: action.damageBonus || 0, total: applied };
+          if (applied) {
+            const affectedStates = states(options.setup);
+            damageOutcome = A().applyDamage(target.state, applied, false, [action.damageType], affectedStates);
+            window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(target.state); C()?.endIfIncapacitated(target.state, affectedStates);
+          }
         }
       }
       let appliedConditions = [];
@@ -107,8 +115,7 @@
         temporary_hp_before: temporaryHpBefore, temporary_hp_after: target.state.temporary_hp,
         death_save_successes_before: deathSuccessBefore, death_save_failures_before: deathFailureBefore,
         death_save_successes: target.state.death_save_successes, death_save_failures: target.state.death_save_failures,
-        is_stable: target.state.is_stable, is_dead: target.state.is_dead, feature_id: action.id,
-        resource_remaining: resourceRemaining,
+        is_stable: target.state.is_stable, is_dead: target.state.is_dead, feature_id: action.id, resource_remaining: resourceRemaining,
         concentration_ended_effect_id: concentrationBefore && !target.state.concentration ? concentrationBefore : null,
         animation: action.animation || "save-effect", description };
     } catch (error) {
