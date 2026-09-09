@@ -83,14 +83,11 @@ def test_medium_melee_creature_surrounded_target_by_summoned_allies_dodges() -> 
     try:
         mover = _commoner("hero-medium-mover", "heroes", 0, 7)
         target = _target(7, 7)
-        occupied_attack_cells = [
-            (6, 6), (7, 6), (8, 6),
-            (6, 7),         (8, 7),
-            (6, 8), (7, 8), (8, 8),
-        ]
         summons = [
-            _commoner(f"summon-{x}-{y}", "heroes", x, y)
-            for x, y in occupied_attack_cells
+            _commoner("summon-top", "heroes", 6, 4, size=CreatureSize.HUGE),
+            _commoner("summon-left", "heroes", 6, 7),
+            _commoner("summon-right", "heroes", 8, 7),
+            _commoner("summon-bottom", "heroes", 6, 8, size=CreatureSize.HUGE),
         ]
         _assert_dodge_only(mover, target, summons)
     except Exception:
