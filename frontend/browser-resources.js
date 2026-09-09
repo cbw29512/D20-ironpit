@@ -20,9 +20,11 @@
   }
 
   function refresh(state) {
+    if (state.template.kind !== "monster") return [];
+    const recharge = (state.template.resourceDefinitions || []).filter((item) => item.rechargeMinimum != null);
+    if (!recharge.length) return [];
     const results = [];
-    for (const definition of state.template.resourceDefinitions || []) {
-      if (definition.rechargeMinimum == null) continue;
+    for (const definition of recharge) {
       const current = state.resources?.[definition.id] || 0;
       const maxUses = definition.maxUses || 1;
       if (current >= maxUses) continue;
