@@ -2,15 +2,10 @@ from __future__ import annotations
 
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.condition_rules import attacks_have_advantage_against, has_condition
-from app.combat.grapple import (
-    RESTRAINED_EFFECT_ID,
-    apply_grapple,
-    grapple_attack_disadvantage,
-    speed_is_zero,
-)
+from app.combat.grapple import RESTRAINED_EFFECT_ID, grapple_attack_disadvantage, speed_is_zero
 from app.combat.hit_modifiers import apply_hit_modifier_effects
 from app.combat.modifier_stack import effective_speed
-from app.combat.timed_conditions import apply_timed_condition
+from app.combat.persistent_effects import apply_persistent_effects
 from app.domain.models import CombatantState, WeaponAttack
 from app.domain.size import size_at_most
 
@@ -68,7 +63,7 @@ def apply_hit_conditions(
     round_number: int | None = None,
     affected_states: list[CombatantState] | None = None,
 ) -> list[str]:
-    """Apply certified automatic conditions and modifiers from a successful weapon hit."""
+    """Apply declarative persistent effects and modifiers after a successful hit."""
     if defender.is_dead or not defender.is_alive:
         return []
     apply_hit_modifier_effects(defender, source_id, attack)
@@ -82,33 +77,18 @@ def apply_hit_conditions(
         if PRONE_EFFECT_ID not in defender.active_effect_ids:
             defender.active_effect_ids.append(PRONE_EFFECT_ID)
         applied.append(PRONE_EFFECT_ID)
-    control = attack.control_effect
-    if control is not None and control.grapple_escape_dc is not None:
-        if control.max_target_size is None or size_at_most(defender.template.size, control.max_target_size):
-            applied.extend(apply_grapple(
-                defender,
-                source_id,
-                control.grapple_escape_dc,
-                attack.weapon.reach_ft,
-                restrains=control.restrains_while_grappled,
-            ))
-    if control is not None and control.condition_id is not None:
-        timed = apply_timed_condition(
+
+    applied.extend(
+        apply_persistent_effects(
             defender,
-            control.condition_id,
-            source_id,
+            attack.ordered_persistent_effects(),
+            source_id=source_id,
             source_effect_id=attack.id,
-            applied_round=round_number,
-            expires_at_start_of_source_turn=control.expires_at_start_of_source_turn,
-            expiry_timing=control.expiry_timing,
-            repeat_save_ability=control.repeat_save_ability,
-            repeat_save_dc=control.repeat_save_dc,
-            repeat_save_timing=control.repeat_save_timing,
-            allowed_removal_action_ids=control.allowed_removal_action_ids,
+            range_ft=attack.weapon.reach_ft,
+            round_number=round_number,
             affected_states=affected_states,
         )
-        if timed is not None:
-            applied.append(timed)
+    )
     return list(dict.fromkeys(applied))
 
 
