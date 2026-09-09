@@ -25,6 +25,10 @@ _SAVING_THROW = re.compile(
     r"\b(?:Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma)\s+Saving Throw:",
     re.IGNORECASE,
 )
+_MAX_HP_DRAIN = re.compile(
+    r"hit\s+point\s+maximum\s+decreases\s+by\s+an\s+amount\s+equal\s+to\s+the\s+damage\s+taken",
+    re.IGNORECASE,
+)
 
 
 def _first_int(value: object) -> int:
@@ -92,6 +96,10 @@ def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) ->
             issues.append("source-attack-count-mismatch")
         if len(_SAVING_THROW.findall(actions)) != len(template.saving_throw_actions):
             issues.append("source-save-action-count-mismatch")
+        source_max_hp_drains = len(_MAX_HP_DRAIN.findall(actions))
+        runtime_max_hp_drains = sum(attack.reduce_max_hp_by_damage_taken for attack in runtime_attacks)
+        if source_max_hp_drains != runtime_max_hp_drains:
+            issues.append("max-hp-drain-count-mismatch")
         for attack in runtime_attacks:
             issues.extend(attack_issues(attack, actions))
         issues.extend(charge_replacement_issues(template, actions))
