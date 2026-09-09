@@ -22,14 +22,14 @@ assert.deepEqual(hammer.controlEffect?.forcedMovement, {
 });
 assert.deepEqual(hammer.onHitModifiers, [{
   kind: "next-attack-made-disadvantage",
+  consumeOnAttackMade: true,
   expiresAtEndOfTargetTurn: true,
 }]);
-assert.deepEqual(
-  giant.attack_action.slots.map((slot) => slot.attack_ids || slot.attackIds),
-  [
-    giant.attack_action.slots[0].attack_ids || giant.attack_action.slots[0].attackIds,
-    giant.attack_action.slots[1].attack_ids || giant.attack_action.slots[1].attackIds,
-  ],
-  "Fire Giant Multiattack must remain a two-slot universal combination action",
-);
+const slotIds = giant.attack_action.slots.map((slot) => slot.attack_ids || slot.attackIds || []);
+assert.equal(slotIds.length, 2, "Fire Giant Multiattack must preserve two attack slots");
+for (const ids of slotIds) {
+  assert.equal(ids.length, 2, "Each Fire Giant Multiattack slot must allow either printed attack");
+  assert.ok(ids.some((id) => giant.attacks.find((attack) => attack.id === id)?.name === "Flame Sword"));
+  assert.ok(ids.some((id) => giant.attacks.find((attack) => attack.id === id)?.name === "Hammer Throw"));
+}
 console.log("Generated Fire Giant preserves universal forced-movement and timed attack-modifier parity.");
