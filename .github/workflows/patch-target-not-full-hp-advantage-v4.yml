@@ -1,0 +1,66 @@
+name: Patch Target-Not-Full-HP Advantage V4
+
+on:
+  push:
+    branches:
+      - feat/target-not-full-hp-advantage
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Apply corrected V3 implementation script
+        run: |
+          python - <<'PY'
+          import logging
+          from pathlib import Path
+          import textwrap
+
+          logging.basicConfig(level=logging.INFO)
+          logger = logging.getLogger("target_not_full_hp_v4")
+          try:
+              workflow = Path(".github/workflows/patch-target-not-full-hp-advantage-v3.yml").read_text(encoding="utf-8")
+              marker = "          python - <<'PY'\n"
+              start = workflow.index(marker) + len(marker)
+              end = workflow.index("\n          PY\n", start)
+              implementation = textwrap.dedent(workflow[start:end])
+              implementation = implementation.replace(
+                  "event.attack_roll.accepted == 17",
+                  "event.attack_roll.selected_roll == 17",
+              )
+              if "event.attack_roll.selected_roll == 17" not in implementation:
+                  raise RuntimeError("Failed to patch the DiceRoll selected-roll assertion.")
+              exec(compile(implementation, "<target-not-full-hp-v4>", "exec"), {})
+              logger.info("Applied corrected V3 implementation with selected_roll assertion.")
+          except Exception:
+              logger.exception("Failed to apply corrected V3 implementation.")
+              raise
+          PY
+      - name: Verify focused tranche
+        run: |
+          pip install -e './backend[dev]'
+          rm -rf backend/iron_pit_backend.egg-info
+          python scripts/check_source_limits.py
+          pytest -q backend/tests/test_conditional_attack_advantage.py backend/tests/test_target_not_full_hp_monsters.py
+          node frontend/browser-attack-advantage.test.cjs
+          node --check frontend/browser-attack-advantage.js
+          node --check frontend/browser-attack.js
+      - name: Commit implementation
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/workflows/ci.yml backend/app/domain/weapons.py backend/app/domain/combatants.py backend/app/domain/models.py backend/app/domain/capability_attacks.py backend/app/combat/conditional_attack_advantage.py backend/app/combat/attacks.py backend/app/content/capability_from_template.py backend/app/content/capability_attack_compiler.py backend/app/content/monster_attack_advantage_source_audit.py backend/app/content/monster_attack_source_audit.py backend/app/content/monsters_target_not_full_hp.py backend/app/content/legacy_monster_roster.py backend/tests/test_conditional_attack_advantage.py backend/tests/test_target_not_full_hp_monsters.py frontend/browser-attack-advantage.js frontend/browser-attack.js frontend/browser-attack-advantage.test.cjs scripts/browser_template_serializer.py index.html frontend/index.html
+          git diff --cached --check
+          git commit -m "feat: add target-not-full-hp attack Advantage"
+          git push origin HEAD:${{ github.ref_name }}
