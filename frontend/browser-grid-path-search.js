@@ -56,6 +56,7 @@
       const previous = new Map();
       const open = [{
         f: Math.max(0, startDistance - desiredDistanceFt),
+        alignment: Math.abs(start.x - targetPosition.x) + Math.abs(start.y - targetPosition.y),
         cost: 0,
         x: start.x,
         y: start.y,
@@ -110,6 +111,7 @@
           );
           open.push({
             f: nextCost + Math.max(0, nextDistance - desiredDistanceFt),
+            alignment: Math.abs(destination.x - targetPosition.x) + Math.abs(destination.y - targetPosition.y),
             cost: nextCost,
             x: destination.x,
             y: destination.y,
