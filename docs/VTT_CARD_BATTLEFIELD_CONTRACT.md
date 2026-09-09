@@ -28,6 +28,17 @@ The approved standard Iron Pit VTT battlefield is one **24 x 16 square** map.
 - Starting deployment is produced by universal footprint-aware placement inside declarative deployment zones. Creature names never select starting coordinates.
 - The placement engine must be able to fit the legal 1-6 combatants per side, including six Gargantuan creatures, when the configured deployment zone has enough legal footprint area.
 
+### Standard deployment zones
+
+The standard map uses two mirrored 8 x 12 deployment zones and an 8-column open center lane.
+
+- Heroes deploy in `x = 0..7`, `y = 2..13`, with the enemy-facing/front edge to the east.
+- Monsters deploy in `x = 16..23`, `y = 2..13`, with the enemy-facing/front edge to the west.
+- The center lane is `x = 8..15` across the full map height.
+- Starting coordinates are assigned by the universal footprint-aware placement engine; monster/class names never select cells.
+- Frontline/backline preference may influence packing order/placement inside the legal zone, but it never changes grid legality or grants free movement.
+- After combat starts, these zones have no movement restriction. They are setup regions only.
+
 ## Creature footprint
 
 Printed creature size determines occupied grid footprint; monster names never do.
