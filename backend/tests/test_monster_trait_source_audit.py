@@ -73,6 +73,17 @@ def test_environmental_breathing_traits_are_arena_neutral() -> None:
         raise
 
 
+def test_xorn_environmental_and_utility_traits_are_arena_neutral() -> None:
+    try:
+        xorn = _monster("Xorn")
+        assert "Earth Glide" in xorn.source_trait_names
+        assert "Treasure Sense" in xorn.source_trait_names
+        assert trait_issues(xorn, _row("Xorn")) == []
+    except Exception:
+        logger.exception("Xorn arena-neutral trait certification regression failed.")
+        raise
+
+
 def test_unknown_outcome_changing_trait_fails_closed() -> None:
     try:
         wolf = _monster("Wolf")
