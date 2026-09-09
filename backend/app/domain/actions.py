@@ -41,6 +41,7 @@ class HitControlEffect(BaseModel):
     repeat_save_ability: AbilityName | None = None
     repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
     repeat_save_timing: ConditionTiming | None = None
+    repeat_save_delay_rounds: int = Field(default=0, ge=0, le=20)
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
 
     @model_validator(mode="after")
@@ -48,6 +49,8 @@ class HitControlEffect(BaseModel):
         repeat_fields = (self.repeat_save_ability, self.repeat_save_dc, self.repeat_save_timing)
         if any(item is not None for item in repeat_fields) and not all(item is not None for item in repeat_fields):
             raise ValueError("Repeat-save condition lifecycle requires ability, DC, and timing together.")
+        if self.repeat_save_delay_rounds and not all(item is not None for item in repeat_fields):
+            raise ValueError("Repeat-save delay requires a complete repeat-save rule.")
         if self.expires_at_start_of_source_turn and self.expiry_timing not in {None, "source_turn_start"}:
             raise ValueError("Legacy source-start expiry conflicts with explicit condition timing.")
         return self
