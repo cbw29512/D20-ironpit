@@ -104,10 +104,18 @@
       throw error;
     }
   }
+  function chooseRechargeAttack(member, setup) {
+    try {
+      return chooseAttack(member, setup, rechargeAttackIds(member));
+    } catch (error) {
+      console.error("Failed browser Recharge attack choice", { member: member.combatant_id, error });
+      throw error;
+    }
+  }
   function chooseStandardAttack(member, setup) {
     try {
       const ids = attacks(member.state.template).map((attack) => attack.id);
-      const recharge = chooseAttack(member, setup, rechargeAttackIds(member));
+      const recharge = chooseRechargeAttack(member, setup);
       if (recharge) return recharge;
       if (isBackline(member) && alliedFrontlineActive(member, setup)) {
         const ranged = chooseAttack(member, setup, ids, "ranged");
@@ -130,6 +138,7 @@
   window.IRON_PIT_BROWSER_FORMATION = {
     hasRangedWeaponOffense, hasTrueRangeOffense, usesBackline, isBackline, startingPosition,
     targetOrder, hasFrontlineTarget, hasBacklineTarget, alliedFrontlineActive, targetAllowed,
-    attackDistance, saveDistance, chooseAttack, chooseStandardAttack, flexibleSlotHasBoth, backlineHoldsPosition,
+    attackDistance, saveDistance, chooseAttack, chooseRechargeAttack, chooseStandardAttack,
+    flexibleSlotHasBoth, backlineHoldsPosition,
   };
 })();
