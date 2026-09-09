@@ -669,7 +669,595 @@
     }
   ],
   "ruleset": "srd-5.2.1-2024",
-  "schema_version": 2,
+  "schema_version": 3,
+  "subfamilies": {
+    "complex_action_kinds": {
+      "concentration": [
+        "Adult Brass Dragon",
+        "Adult Bronze Dragon",
+        "Adult Copper Dragon",
+        "Adult Gold Dragon",
+        "Adult Silver Dragon",
+        "Ancient Brass Dragon",
+        "Ancient Bronze Dragon",
+        "Ancient Copper Dragon",
+        "Ancient Gold Dragon",
+        "Ancient Silver Dragon",
+        "Couatl",
+        "Darkmantle",
+        "Deva",
+        "Djinni",
+        "Harpy"
+      ],
+      "save-branch": [
+        "Aboleth",
+        "Adult Brass Dragon",
+        "Adult Bronze Dragon",
+        "Adult Copper Dragon",
+        "Adult Gold Dragon",
+        "Adult Silver Dragon",
+        "Air Elemental",
+        "Ancient Brass Dragon",
+        "Ancient Bronze Dragon",
+        "Ancient Copper Dragon",
+        "Ancient Gold Dragon",
+        "Ancient Silver Dragon",
+        "Bearded Devil",
+        "Brass Dragon Wyrmling",
+        "Bulette",
+        "Chain Devil",
+        "Chuul",
+        "Cockatrice",
+        "Copper Dragon Wyrmling",
+        "Death Dog",
+        "Djinni",
+        "Doppelganger",
+        "Dretch",
+        "Dust Mephit",
+        "Erinyes",
+        "Ettercap",
+        "Gelatinous Cube",
+        "Ghast",
+        "Ghost",
+        "Ghoul",
+        "Giant Ape",
+        "Giant Spider",
+        "Gibbering Mouther",
+        "Glabrezu",
+        "Gladiator",
+        "Gold Dragon Wyrmling",
+        "Gorgon",
+        "Guardian Naga",
+        "Half-Dragon",
+        "Harpy",
+        "Homunculus",
+        "Horned Devil",
+        "Invisible Stalker",
+        "Kraken",
+        "Lamia",
+        "Lion",
+        "Mummy",
+        "Mummy Lord",
+        "Otyugh",
+        "Pirate",
+        "Pit Fiend",
+        "Planetar",
+        "Pseudodragon",
+        "Quasit",
+        "Rakshasa",
+        "Rust Monster",
+        "Salamander",
+        "Sea Hag",
+        "Shambling Mound",
+        "Silver Dragon Wyrmling",
+        "Solar",
+        "Sphinx of Lore",
+        "Sphinx of Valor",
+        "Sprite",
+        "Steam Mephit",
+        "Swarm of Ravens",
+        "Tarrasque",
+        "Vampire",
+        "Vampire Spawn",
+        "Vrock",
+        "Water Elemental",
+        "Werebear",
+        "Wereboar",
+        "Wererat",
+        "Weretiger",
+        "Werewolf",
+        "Wight",
+        "Young Brass Dragon",
+        "Young Copper Dragon",
+        "Young Gold Dragon",
+        "Young Silver Dragon"
+      ],
+      "teleport": [
+        "Ancient Silver Dragon",
+        "Archmage",
+        "Nalfeshnee",
+        "Nightmare",
+        "Tarrasque"
+      ],
+      "temporary-hp": [
+        "Adult Brass Dragon",
+        "Adult Bronze Dragon",
+        "Adult Copper Dragon",
+        "Adult Gold Dragon",
+        "Adult Silver Dragon",
+        "Ancient Brass Dragon",
+        "Ancient Bronze Dragon",
+        "Ancient Copper Dragon",
+        "Ancient Gold Dragon",
+        "Ancient Silver Dragon",
+        "Couatl",
+        "Deva"
+      ]
+    },
+    "control_effects": {
+      "blinded": [
+        "Animated Rug of Smothering",
+        "Cloaker",
+        "Darkmantle",
+        "Dust Mephit",
+        "Giant Frog",
+        "Giant Toad",
+        "Gibbering Mouther",
+        "Guardian Naga",
+        "Shambling Mound",
+        "Storm Giant"
+      ],
+      "charmed": [
+        "Aboleth",
+        "Harpy",
+        "Lamia",
+        "Pirate",
+        "Sprite"
+      ],
+      "deafened": [
+        "Storm Giant",
+        "Swarm of Ravens",
+        "Tarrasque"
+      ],
+      "forced-pull": [
+        "Balor",
+        "Roper",
+        "Shambling Mound",
+        "Water Elemental"
+      ],
+      "forced-push": [
+        "Adult Bronze Dragon",
+        "Air Elemental",
+        "Ancient Bronze Dragon",
+        "Bulette"
+      ],
+      "frightened": [
+        "Doppelganger",
+        "Ghost",
+        "Lion",
+        "Mummy",
+        "Oni",
+        "Quasit",
+        "Rakshasa",
+        "Sea Hag",
+        "Sphinx of Valor",
+        "Tarrasque"
+      ],
+      "grappled": [
+        "Aboleth",
+        "Animated Rug of Smothering",
+        "Ankheg",
+        "Behir",
+        "Bugbear Stalker",
+        "Bugbear Warrior",
+        "Chain Devil",
+        "Chuul",
+        "Couatl",
+        "Giant Frog",
+        "Giant Toad",
+        "Glabrezu",
+        "Invisible Stalker",
+        "Kraken",
+        "Marilith",
+        "Mimic",
+        "Otyugh",
+        "Purple Worm",
+        "Remorhaz",
+        "Roper",
+        "Salamander",
+        "Shambling Mound",
+        "Tarrasque",
+        "Vampire",
+        "Vampire Spawn",
+        "Water Elemental"
+      ],
+      "incapacitated": [
+        "Adult Brass Dragon",
+        "Adult Silver Dragon",
+        "Ancient Brass Dragon",
+        "Ancient Silver Dragon",
+        "Brass Dragon Wyrmling",
+        "Cloud Giant",
+        "Ghost",
+        "Harpy",
+        "Rakshasa",
+        "Silver Dragon Wyrmling",
+        "Sphinx of Lore",
+        "Vampire",
+        "Vampire Spawn",
+        "Young Brass Dragon",
+        "Young Silver Dragon"
+      ],
+      "paralyzed": [
+        "Adult Silver Dragon",
+        "Ancient Silver Dragon",
+        "Chuul",
+        "Ghast",
+        "Ghoul",
+        "Lich",
+        "Mummy Lord",
+        "Phase Spider",
+        "Silver Dragon Wyrmling",
+        "Sphinx of Valor",
+        "Vampire Familiar",
+        "Young Silver Dragon"
+      ],
+      "petrified": [
+        "Cockatrice",
+        "Gorgon"
+      ],
+      "poisoned": [
+        "Bone Devil",
+        "Chuul",
+        "Couatl",
+        "Death Dog",
+        "Dretch",
+        "Ettercap",
+        "Homunculus",
+        "Lamia",
+        "Otyugh",
+        "Phase Spider",
+        "Pit Fiend",
+        "Pseudodragon",
+        "Quasit",
+        "Roper",
+        "Vampire Familiar",
+        "Vrock"
+      ],
+      "prone": [
+        "Adult Bronze Dragon",
+        "Air Elemental",
+        "Ancient Bronze Dragon",
+        "Balor",
+        "Bulette",
+        "Djinni",
+        "Elephant",
+        "Giant Ape",
+        "Giant Frog",
+        "Giant Toad",
+        "Gibbering Mouther",
+        "Gorgon",
+        "Kraken",
+        "Mammoth",
+        "Minotaur of Baphomet",
+        "Sphinx of Valor",
+        "Tarrasque",
+        "Water Elemental",
+        "Wereboar"
+      ],
+      "restrained": [
+        "Animated Rug of Smothering",
+        "Behir",
+        "Chain Devil",
+        "Cockatrice",
+        "Couatl",
+        "Djinni",
+        "Erinyes",
+        "Ettercap",
+        "Gelatinous Cube",
+        "Giant Frog",
+        "Giant Spider",
+        "Giant Toad",
+        "Gorgon",
+        "Kraken",
+        "Marilith",
+        "Purple Worm",
+        "Remorhaz",
+        "Salamander",
+        "Shambling Mound",
+        "Tarrasque",
+        "Vampire",
+        "Vampire Spawn",
+        "Water Elemental"
+      ],
+      "stunned": [
+        "Otyugh",
+        "Vrock"
+      ],
+      "swallow": [
+        "Giant Frog",
+        "Giant Toad",
+        "Kraken"
+      ],
+      "unconscious": [
+        "Adult Brass Dragon",
+        "Ancient Brass Dragon",
+        "Brass Dragon Wyrmling",
+        "Homunculus",
+        "Pseudodragon",
+        "Young Brass Dragon"
+      ]
+    },
+    "trait_headings": {
+      "Abduct": [
+        "Bugbear Stalker",
+        "Bugbear Warrior"
+      ],
+      "Aberrant Ground": [
+        "Gibbering Mouther"
+      ],
+      "Acid Absorption": [
+        "Clay Golem"
+      ],
+      "Adhesive (Object Form Only)": [
+        "Mimic"
+      ],
+      "Air Form": [
+        "Air Elemental",
+        "Invisible Stalker"
+      ],
+      "Aura of Authority": [
+        "Hobgoblin Captain"
+      ],
+      "Aversion to Fire": [
+        "Flesh Golem"
+      ],
+      "Barbed Hide": [
+        "Barbed Devil"
+      ],
+      "Berserk": [
+        "Clay Golem",
+        "Flesh Golem"
+      ],
+      "Bloodied Frenzy": [
+        "Berserker"
+      ],
+      "Blurred Form": [
+        "Steam Mephit"
+      ],
+      "Bound": [
+        "Shield Guardian"
+      ],
+      "Celestial Restoration": [
+        "Guardian Naga"
+      ],
+      "Compression": [
+        "Octopus"
+      ],
+      "Confer Fire Resistance": [
+        "Nightmare"
+      ],
+      "Corrosive Form": [
+        "Black Pudding",
+        "Gray Ooze"
+      ],
+      "Coven Magic": [
+        "Green Hag",
+        "Night Hag",
+        "Sea Hag"
+      ],
+      "Death Burst": [
+        "Dust Mephit",
+        "Ice Mephit",
+        "Magma Mephit",
+        "Magmin",
+        "Steam Mephit"
+      ],
+      "Death Throes": [
+        "Balor"
+      ],
+      "Divine Awareness": [
+        "Planetar",
+        "Solar"
+      ],
+      "Draconic Origin": [
+        "Half-Dragon"
+      ],
+      "Eldritch Restoration": [
+        "Aboleth"
+      ],
+      "Elemental Restoration": [
+        "Djinni",
+        "Efreeti"
+      ],
+      "Ephemeral": [
+        "Will-o\u2019-Wisp"
+      ],
+      "Ethereal Sight": [
+        "Ghost",
+        "Phase Spider"
+      ],
+      "Exalted Restoration": [
+        "Deva",
+        "Planetar",
+        "Solar"
+      ],
+      "Fear Aura": [
+        "Pit Fiend"
+      ],
+      "Fiendish Restoration": [
+        "Rakshasa",
+        "Spirit Naga"
+      ],
+      "Fire Absorption": [
+        "Iron Golem"
+      ],
+      "Fire Aura": [
+        "Azer Sentinel",
+        "Balor",
+        "Fire Elemental",
+        "Salamander"
+      ],
+      "Fire Form": [
+        "Fire Elemental"
+      ],
+      "Freeze": [
+        "Water Elemental"
+      ],
+      "Gibbering": [
+        "Gibbering Mouther"
+      ],
+      "Greater Magic Resistance": [
+        "Rakshasa"
+      ],
+      "Heat Aura": [
+        "Remorhaz"
+      ],
+      "Immutable Form": [
+        "Clay Golem",
+        "Flesh Golem",
+        "Iron Golem",
+        "Stone Golem"
+      ],
+      "Incubus Form": [
+        "Succubus"
+      ],
+      "Inscrutable": [
+        "Sphinx of Lore",
+        "Sphinx of Valor"
+      ],
+      "Invisibility": [
+        "Invisible Stalker"
+      ],
+      "Iron Scent": [
+        "Rust Monster"
+      ],
+      "Legendary Resistance (3/Day)": [
+        "Balor",
+        "Unicorn"
+      ],
+      "Legendary Resistance (4/Day)": [
+        "Pit Fiend",
+        "Solar"
+      ],
+      "Legendary Resistance (6/Day)": [
+        "Tarrasque"
+      ],
+      "Light Sensitivity": [
+        "Cloaker"
+      ],
+      "Lightning Absorption": [
+        "Flesh Golem",
+        "Shambling Mound"
+      ],
+      "Loathsome Limbs (4/Day)": [
+        "Troll"
+      ],
+      "Magic Rope": [
+        "Erinyes"
+      ],
+      "Misty Escape": [
+        "Vampire"
+      ],
+      "Mucus Cloud": [
+        "Aboleth"
+      ],
+      "Multiple Heads": [
+        "Hydra"
+      ],
+      "Ooze Cube": [
+        "Gelatinous Cube"
+      ],
+      "Probing Telepathy": [
+        "Aboleth"
+      ],
+      "Reactive": [
+        "Marilith"
+      ],
+      "Reactive Heads": [
+        "Hydra"
+      ],
+      "Reflective Carapace": [
+        "Tarrasque"
+      ],
+      "Regeneration": [
+        "Oni",
+        "Shield Guardian",
+        "Troll",
+        "Troll Limb"
+      ],
+      "Running Water": [
+        "Vampire",
+        "Vampire Spawn"
+      ],
+      "Sense Magic": [
+        "Chuul"
+      ],
+      "Shielded Mind": [
+        "Couatl"
+      ],
+      "Soul Bag": [
+        "Night Hag"
+      ],
+      "Spell Storing": [
+        "Shield Guardian"
+      ],
+      "Spirit Jar": [
+        "Lich"
+      ],
+      "Stake to the Heart": [
+        "Vampire",
+        "Vampire Spawn"
+      ],
+      "Stench": [
+        "Ghast",
+        "Hezrou"
+      ],
+      "Succubus Form": [
+        "Incubus"
+      ],
+      "Sunlight": [
+        "Vampire",
+        "Vampire Spawn"
+      ],
+      "Telepathic Bond": [
+        "Homunculus"
+      ],
+      "Transparent": [
+        "Gelatinous Cube"
+      ],
+      "Troll Spawn": [
+        "Troll Limb"
+      ],
+      "Tunneler": [
+        "Ankheg",
+        "Purple Worm"
+      ],
+      "Undead Restoration": [
+        "Mummy Lord"
+      ],
+      "Vampire Weakness": [
+        "Vampire",
+        "Vampire Spawn"
+      ],
+      "Vampiric Connection": [
+        "Vampire Familiar"
+      ],
+      "Vile Appearance": [
+        "Sea Hag"
+      ],
+      "Water Form": [
+        "Water Elemental"
+      ],
+      "Water Susceptibility": [
+        "Fire Elemental"
+      ],
+      "Wishes": [
+        "Djinni",
+        "Efreeti"
+      ]
+    }
+  },
   "summary": {
     "blocked": 178,
     "blocker_families": 13,
