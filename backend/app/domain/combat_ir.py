@@ -13,11 +13,11 @@ from app.domain.combat_ir_resolution import (
     ResolutionIR,
     SavingThrowResolutionIR,
 )
+from app.domain.combat_ir_triggers import ReactionTriggerIR
 from app.domain.size import CreatureSize
 from app.domain.weapons import DamageType
 
 TargetModeIR = Literal["enemy", "self", "ally", "self_or_ally", "other"]
-ReactionTriggerIR = Literal["condition_applied_to_self", "condition_applied_to_ally"]
 ResourceCostModeIR = Literal["per_use", "per_selected_condition"]
 
 
