@@ -19,11 +19,8 @@ def _condition_name(effect_id: str) -> str:
 def _repeat_save_due(effect, round_number: int, timing: ConditionTiming) -> bool:
     if effect.repeat_save_timing != timing:
         return False
-    return not (
-        effect.effect_id == "poisoned"
-        and effect.applied_round is not None
-        and round_number <= effect.applied_round
-    )
+    eligible_round = effect.repeat_save_eligible_round
+    return eligible_round is None or round_number >= eligible_round
 
 
 def resolve_target_condition_timing(
