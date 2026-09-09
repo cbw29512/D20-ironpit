@@ -49,6 +49,11 @@ class ConditionEffectDefinition(BaseModel):
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
 
 
+PersistentEffectDefinition = Annotated[
+    ProneEffectDefinition | GrappleEffectDefinition | ConditionEffectDefinition | HitModifierEffect,
+    Field(discriminator="kind"),
+]
+
 AttackEffectDefinition = Annotated[
     DamageEffectDefinition | ProneEffectDefinition | GrappleEffectDefinition | ConditionEffectDefinition | HitModifierEffect,
     Field(discriminator="kind"),
