@@ -91,6 +91,8 @@ class WeaponAttack(BaseModel):
     knocks_prone_max_size: CreatureSize | None = None
     control_effect: HitControlEffect | None = None
     persistent_effects: list[HitControlEffect] = Field(default_factory=list)
+    resource_id: str | None = None
+    resource_cost: int = Field(default=1, ge=1, le=20)
     forbid_target_grappled_by_self: bool = False
 
     def ordered_persistent_effects(self) -> list[HitControlEffect]:
