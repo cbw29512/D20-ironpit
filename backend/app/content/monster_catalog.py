@@ -62,7 +62,6 @@ def load_monster_rows() -> list[dict[str, object]]:
         raise
 
 
-@lru_cache(maxsize=1)
 def _runtime_monsters_by_name() -> dict[str, CombatantTemplate]:
     try:
         from app.content.roster import build_arena_roster
