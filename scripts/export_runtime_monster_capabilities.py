@@ -18,12 +18,28 @@ _HERO_ONLY_PROGRESSION_FIELDS = {
 }
 
 
+def _strip_default_gate(effect: dict[str, object]) -> None:
+    gate = effect.get("gate")
+    if not isinstance(gate, dict):
+        return
+    if not gate.get("required_target_tags") and not gate.get("excluded_target_tags") \
+            and not gate.get("excluded_creature_types") and not gate.get("save_ability"):
+        effect.pop("gate", None)
+
+
 def _registry_row(definition) -> dict[str, object]:
     row = definition.model_dump(
         mode="json",
         exclude_none=True,
         exclude={"progression_features": _HERO_ONLY_PROGRESSION_FIELDS},
     )
+    row.pop("creature_type", None)
+    if not row.get("creature_tags"):
+        row.pop("creature_tags", None)
+    for action in [*row.get("attacks", []), *row.get("save_actions", [])]:
+        for effect in action.get("effects", []):
+            if isinstance(effect, dict):
+                _strip_default_gate(effect)
     for action in row.get("save_actions", []):
         if not action.get("effects"):
             action.pop("effects", None)
