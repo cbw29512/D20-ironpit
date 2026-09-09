@@ -4,6 +4,7 @@ import heapq
 import logging
 
 from app.combat.grid_geometry import footprint_distance_ft
+from app.combat.grid_path_search import search_path_toward
 from app.combat.grid_pathing_support import movement_step_cost_ft, overlapping_occupants, position_for, reconstruct_path
 from app.domain.encounters import EncounterCombatant
 from app.domain.grid import BattleMapDefinition, GridPosition
@@ -50,7 +51,7 @@ def search_path_toward(
     members: list[EncounterCombatant],
     desired_distance_ft: int,
 ) -> list[GridPosition]:
-    """Search the full legal map for a route, independent of this turn's movement budget."""
+    """Search the full legal map for a direct, deterministic route toward the target."""
     try:
         if desired_distance_ft < 0:
             raise ValueError("Desired distance cannot be negative.")
@@ -62,14 +63,15 @@ def search_path_toward(
         start_distance = footprint_distance_ft(
             start, mover.state.template.size, target_position, target.state.template.size,
         )
-        queue: list[tuple[int, int, int, int]] = [
-            (max(0, start_distance - desired_distance_ft), 0, start.x, start.y),
+        start_alignment = abs(start.x - target_position.x) + abs(start.y - target_position.y)
+        queue: list[tuple[int, int, int, int, int]] = [
+            (max(0, start_distance - desired_distance_ft), start_alignment, 0, start.x, start.y),
         ]
         best = start_key
         best_score = (max(0, start_distance - desired_distance_ft), start_distance, 0, start.x, start.y)
 
         while queue:
-            _, cost, x, y = heapq.heappop(queue)
+            _, _, cost, x, y = heapq.heappop(queue)
             key = (x, y)
             if cost != costs.get(key):
                 continue
@@ -104,7 +106,8 @@ def search_path_toward(
                     destination, mover.state.template.size, target_position, target.state.template.size,
                 )
                 heuristic = max(0, next_distance - desired_distance_ft)
-                heapq.heappush(queue, (next_cost + heuristic, next_cost, next_x, next_y))
+                alignment = abs(next_x - target_position.x) + abs(next_y - target_position.y)
+                heapq.heappush(queue, (next_cost + heuristic, alignment, next_cost, next_x, next_y))
 
         return reconstruct_path(best, previous)
     except Exception:
