@@ -14,10 +14,10 @@ def save_row(action: Any) -> dict[str, Any]:
             "id": action.id, "name": action.name, "saveAbility": action.save_ability, "dc": action.dc,
             "range": action.range_ft, "damageDiceCount": action.damage_dice_count,
             "damageDiceSize": action.damage_dice_size, "damageBonus": action.damage_bonus,
-            "damageType": action.damage_type, "successDamage": action.success_damage,
-            "resourceId": action.resource_id, "resourceCost": action.resource_cost,
-            "animation": action.animation,
+            "damageType": action.damage_type, "successDamage": action.success_damage, "animation": action.animation,
         }
+        if action.resource_id is not None:
+            row["resourceId"], row["resourceCost"] = action.resource_id, action.resource_cost
         if action.target_max_size:
             row["targetMaxSize"] = value(action.target_max_size)
         if action.grapple_escape_dc is not None:
