@@ -50,6 +50,28 @@ Saving throws are always shared math:
 
 Attack rolls, ability checks, AC, damage defenses, conditions, concentration, and movement follow the same rule: one resolver, different creature data.
 
+## Primitive versus trigger contract
+
+Before adding any new resolver, combat subsystem, or special handler, classify the source behavior first:
+
+1. **Engine primitive:** the universal rule being resolved, such as Advantage/Disadvantage, damage, a Saving Throw, a condition, healing, a resource, concentration, or movement.
+2. **Trigger/source/configuration:** the declarative fact that says when or how that existing primitive applies.
+
+If an existing engine primitive can express the outcome, do not create another mechanic. Add data or a small source predicate that feeds the existing resolver.
+
+Examples:
+
+- Advantage is one engine primitive. Hidden, Pack Tactics, Vex, a target missing any HP, and legal Prone attack geometry are Advantage sources/triggers; they do not get separate Advantage engines.
+- Disadvantage is one engine primitive. Poisoned, Frightened, long range, or other qualifying states are Disadvantage sources/triggers.
+- Damage is one engine primitive. Slashing, Piercing, Fire, and similar values are damage types; resistance, immunity, and vulnerability modify that same damage pipeline.
+- Saving Throw is one engine primitive. Ability, DC, success/failure effect, repeat timing, and recharge/use limits are declarative parameters around the shared save resolver.
+
+A helper dedicated to determining whether a source is active is allowed, but it must not roll dice, choose a separate roll mode, duplicate the primitive's resolution rules, or bypass the canonical resolver.
+
+Permanent tests for a new trigger must prove that it contributes to the existing primitive and that cancellation/stacking/expiry still use the shared engine behavior.
+
+If it is not completely clear whether source wording represents a genuinely new primitive or only another trigger/configuration for an existing one, stop and ask Chris before coding. Record the answer in the appropriate authoritative repository document before implementation.
+
 ## Class -> subclass -> specialization
 
 A class is built once through the levels before subclass choice.
