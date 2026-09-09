@@ -156,14 +156,17 @@ Target physical concept: 15 ft × 10 ft with 5-ft cells. Current implementation 
 Permanent arena rules:
 
 - No voluntary fleeing, long-range kiting loops, or running circles around melee opponents.
-- The Pit deity pushes ordinary combat toward engagement.
+- The Pit deity handles ordinary positioning and closing so combatants can engage; printed movement speed does not prevent a creature from reaching the position required to use an otherwise legal attack.
+- Printed Walk, Fly, Climb, Swim, Burrow, Hover, and base-speed data remain source-derived and must not be rewritten merely to make a creature usable in the Pit.
+- Movement modes must never be roster-eligibility filters. Aquatic, flying, burrowing, climbing, slow, unusual-biology, breathing, and atmosphere requirements are made hospitable by the Pit rather than modeled as survival blockers.
+- Ordinary deity/fixed-formation positioning is an arena abstraction, not a hidden speed buff and not voluntary movement by the combatant.
 - Default automated placement: melee/frontline forward, ranged/casters behind. Future manual legal placement is authoritative when selected by the user.
 - Every card uses one 5-ft footprint for arena occupancy, regardless of normal creature size. Printed size still matters for RAW mechanics such as grapple/target-size restrictions.
 - No environmental cover.
 - Clear line of sight by default; only combat effects such as Darkness, Fog Cloud, Blindness, Invisibility, or similar supported mechanics alter visibility.
 - No default pits, lava, traps, difficult terrain, water, or random arena hazards. A combatant's supported RAW effect may create an area/hazard.
 - Flyers cannot use altitude to become permanently unreachable. A melee flyer must enter its legal reach to attack.
-- Opportunity Attacks, forced movement, Disengage consequences, speed changes, and other combat-relevant movement rules remain RAW where applicable.
+- Opportunity Attacks, forced movement, Disengage consequences, speed changes, Grappled/Prone movement effects, and other combat-relevant movement rules remain RAW where applicable. The deity abstraction must never erase a rule that explicitly keys off movement.
 
 ### AoE/targeting arena simplification
 
