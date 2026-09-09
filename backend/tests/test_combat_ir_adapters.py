@@ -1,12 +1,14 @@
 from app.content.combat_ir_adapters import attack_capability_to_ir, save_capability_to_ir
+from app.content.combat_ir_reverse_adapters import attack_ir_to_capability, save_ir_to_capability
 from app.domain.capability_attacks import AttackCapabilityDefinition, SaveCapabilityDefinition
-from app.domain.capability_effects import DiceSpec, ProneEffectDefinition
+from app.domain.capability_effects import ConditionEffectDefinition, DiceSpec, ProneEffectDefinition
 
 
-def test_attack_capability_normalizes_without_losing_rules_data() -> None:
+def test_attack_capability_round_trips_without_losing_rules_data() -> None:
     attack = AttackCapabilityDefinition(
         id="spear-ranged",
         name="Spear",
+        weapon_id="spear",
         attack_kind="ranged",
         attack_bonus=6,
         damage=DiceSpec(count=1, size=6, bonus=3),
@@ -14,19 +16,24 @@ def test_attack_capability_normalizes_without_losing_rules_data() -> None:
         animation="projectile",
         normal_range_ft=20,
         long_range_ft=60,
+        projectile="spear",
+        mastery_property="sap",
+        light=True,
+        attack_ability="dexterity",
+        attack_ability_modifier=3,
         effects=[ProneEffectDefinition(max_target_size="large")],
         resource_id="spear-use",
     )
     ir = attack_capability_to_ir(attack)
+    rebuilt = attack_ir_to_capability(ir)
     assert ir.targeting.range_ft == 20
     assert ir.resolution.kind == "attack_roll"
-    assert ir.resolution.attack_bonus == 6
-    assert ir.primary_damage is not None and ir.primary_damage.dice == attack.damage
-    assert ir.effects[0].kind == "prone"
-    assert ir.resource_cost is not None and ir.resource_cost.resource_id == "spear-use"
+    assert ir.resolution.weapon_id == "spear"
+    assert ir.resolution.mastery_property == "sap"
+    assert rebuilt.model_dump() == attack.model_dump()
 
 
-def test_save_capability_normalizes_damage_and_failure_control() -> None:
+def test_save_capability_round_trips_damage_and_failure_control() -> None:
     action = SaveCapabilityDefinition(
         id="shockwave",
         name="Shockwave",
@@ -36,13 +43,13 @@ def test_save_capability_normalizes_damage_and_failure_control() -> None:
         damage=DiceSpec(count=3, size=6),
         damage_type="thunder",
         success_damage="half",
-        failure_control=ProneEffectDefinition(max_target_size="large"),
+        failure_control=ConditionEffectDefinition(condition="poisoned"),
         resource_id="shockwave-use",
     )
     ir = save_capability_to_ir(action)
+    rebuilt = save_ir_to_capability(ir)
     assert ir.resolution.kind == "saving_throw"
     assert ir.resolution.dc == 15
     assert ir.resolution.success_damage == "half"
-    assert ir.primary_damage is not None and ir.primary_damage.damage_type.value == "thunder"
-    assert ir.effects[0].kind == "prone"
-    assert ir.resource_cost is not None and ir.resource_cost.amount == 1
+    assert ir.effects[0].kind == "condition"
+    assert rebuilt.model_dump() == action.model_dump()
