@@ -1,0 +1,36 @@
+name: Refresh capability registry
+
+on:
+  push:
+    branches:
+      - feat/monster-recharge-v1
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/monster-recharge-v1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install backend
+        run: pip install -e './backend[dev]'
+      - name: Regenerate capability registry
+        run: python scripts/export_runtime_monster_capabilities.py
+      - name: Commit canonical registry
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add backend/app/content/data/combatant_capabilities_v1.json
+          if git diff --cached --quiet; then
+            echo "Capability registry already current."
+            exit 0
+          fi
+          git commit -m "build: regenerate capability registry"
+          git push origin HEAD:feat/monster-recharge-v1
