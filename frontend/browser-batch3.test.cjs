@@ -89,7 +89,9 @@ assert.deepEqual(multiattackIds("srd-scout", false), ["scout-shortsword", "scout
     combatant_id: "monster-2:infantry", side: "monsters", position_ft: 10,
     state: S.buildState(structuredClone(monsters["srd-warrior-infantry"])),
   };
-  assert.equal(S.packTactics(one, { heroes: [freshHero()], monsters: [one, two] }), true);
+  const hero = freshHero();
+  const setup = { heroes: [hero], monsters: [one, two] };
+  assert.equal(S.packTactics(one, hero, setup), true);
   assert.deepEqual([one.state.template.attacks[1].normal, one.state.template.attacks[1].long], [20, 60]);
 }
 
