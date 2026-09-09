@@ -21,6 +21,23 @@ class BattleMapDefinition(BaseModel):
     cell_size_ft: Literal[5] = 5
 
 
+class DeploymentZone(BaseModel):
+    """Rectangular legal starting area with an explicit enemy-facing edge."""
+
+    x: int = Field(ge=0)
+    y: int = Field(ge=0)
+    width_squares: int = Field(ge=1)
+    height_squares: int = Field(ge=1)
+    front_edge: Literal["west", "east"]
+
+
+class GridPlacementAssignment(BaseModel):
+    """One deterministic starting-position assignment for a combatant."""
+
+    combatant_id: str = Field(min_length=1)
+    position: GridPosition
+
+
 class GridMovementPlan(BaseModel):
     """Deterministic path proposal produced by the universal grid movement planner."""
 
