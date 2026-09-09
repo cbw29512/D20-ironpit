@@ -8348,6 +8348,7 @@
             "condition": "poisoned",
             "expires_at_start_of_source_turn": true,
             "expiry_timing": "source_turn_start",
+            "repeat_save_delay_rounds": 0,
             "allowed_removal_action_ids": []
           }
         ],
@@ -8457,6 +8458,7 @@
             "condition": "poisoned",
             "expires_at_start_of_source_turn": false,
             "expiry_timing": "target_turn_end",
+            "repeat_save_delay_rounds": 0,
             "allowed_removal_action_ids": []
           }
         ],
@@ -8608,6 +8610,7 @@
             "condition": "poisoned",
             "expires_at_start_of_source_turn": true,
             "expiry_timing": "source_turn_start",
+            "repeat_save_delay_rounds": 0,
             "allowed_removal_action_ids": []
           }
         ],
