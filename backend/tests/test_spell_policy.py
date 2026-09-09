@@ -5,6 +5,7 @@ from app.combat.state import build_combatant_state
 from app.content.audited_fighter import build_karnok_stoneward
 from app.domain.combatants import ResourceDefinition
 from app.domain.encounters import EncounterCombatant, EncounterSetup
+from app.domain.grid import BattleMapDefinition, GridPosition
 from app.domain.spells import SpellSaveAction
 
 
@@ -21,20 +22,26 @@ def _caster(spells, slots):
     base = build_karnok_stoneward()
     resources = [ResourceDefinition(id=f"spell-slot-{level}", name=f"Level {level} Slot", max_uses=count) for level, count in slots.items()]
     template = base.model_copy(update={"spell_save_actions": spells, "resources": resources})
-    return EncounterCombatant(combatant_id="caster", side="heroes", position_ft=0, state=build_combatant_state(template))
+    state = build_combatant_state(template)
+    state.position = GridPosition(x=0, y=0)
+    return EncounterCombatant(combatant_id="caster", side="heroes", position_ft=0, state=state)
 
 
 def _monster(index: int, position: int):
+    state = build_combatant_state(build_karnok_stoneward())
+    state.position = GridPosition(x=position // 5, y=0)
     return EncounterCombatant(
         combatant_id=f"monster-{index}", side="monsters", position_ft=position,
-        state=build_combatant_state(build_karnok_stoneward()),
+        state=state,
     )
 
 
 def _ally(index: int, position: int):
+    state = build_combatant_state(build_karnok_stoneward())
+    state.position = GridPosition(x=position // 5, y=0)
     return EncounterCombatant(
         combatant_id=f"ally-{index}", side="heroes", position_ft=position,
-        state=build_combatant_state(build_karnok_stoneward()),
+        state=state,
     )
 
 
@@ -43,6 +50,7 @@ def _setup(caster, monsters, allies=()):
     return EncounterSetup(
         heroes=heroes, monsters=list(monsters), hero_total_levels=len(heroes),
         monster_total_cr="1",
+        map_definition=BattleMapDefinition(id="spell-policy-test", width_squares=24, height_squares=16),
     )
 
 
@@ -63,7 +71,7 @@ def test_point_aoe_edge_places_past_enemy_line_to_spare_adjacent_ally() -> None:
     assert choice is not None
     assert choice.action.id == "fireball"
     assert choice.placement is not None
-    assert choice.placement.friendly_ids == ()
+    assert set(choice.target_ids) == {"monster-0", "monster-1"}
 
 
 def test_short_range_aoe_falls_through_when_safe_edge_placement_is_impossible() -> None:
