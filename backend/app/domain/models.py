@@ -40,6 +40,7 @@ from app.domain.events import (
     RollMode,
     RollRevision,
 )
+from app.domain.grid import BattleMapDefinition, GridPosition
 from app.domain.runtime import ArenaRoster, BattlefieldState, CombatantState, DemoRoster, ResourceState, TimedEffect
 from app.domain.traits import CombatTrait
 from app.domain.turbo import (
@@ -58,6 +59,7 @@ __all__ = [
     "AuditStep",
     "BattleEvent",
     "BattlefieldState",
+    "BattleMapDefinition",
     "BattleResult",
     "CombatTrait",
     "CombatantState",
@@ -79,6 +81,7 @@ __all__ = [
     "EncounterSide",
     "EventAudit",
     "GrappleSource",
+    "GridPosition",
     "HealingAction",
     "HitControlEffect",
     "InitiativeGroup",
