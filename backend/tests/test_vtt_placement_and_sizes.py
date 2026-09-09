@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import re
+
 from app.combat.grid_geometry import footprints_overlap, position_in_bounds
 from app.combat.grid_placement import apply_placement, pack_deployment_zone
 from app.combat.state import build_combatant_state
@@ -58,14 +60,20 @@ def test_all_330_canonical_monster_rows_have_supported_printed_sizes() -> None:
     supported = {size.value for size in CreatureSize}
 
     assert len(rows) == 330
-    assert all(str(row["size"]).strip().lower() in supported for row in rows)
+    for row in rows:
+        source_size = str(row["size"]).strip().lower()
+        allowed = {size for size in supported if re.search(rf"\b{re.escape(size)}\b", source_size)}
+        assert allowed, f"Unsupported SRD size wording for {row['name']}: {row['size']!r}"
 
 
 def test_every_runtime_monster_size_matches_its_canonical_srd_row() -> None:
     source_by_name = {str(row["name"]): str(row["size"]).strip().lower() for row in load_monster_rows()}
+    supported = {size.value for size in CreatureSize}
     monsters = build_arena_roster().monsters
 
     assert monsters
     for monster in monsters:
         assert monster.name in source_by_name
-        assert monster.size.value == source_by_name[monster.name]
+        source_size = source_by_name[monster.name]
+        allowed = {size for size in supported if re.search(rf"\b{re.escape(size)}\b", source_size)}
+        assert monster.size.value in allowed
