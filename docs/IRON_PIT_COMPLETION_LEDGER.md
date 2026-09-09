@@ -15,15 +15,15 @@ Do not mark content complete from this file alone. Certification is earned only 
 
 Branch: `feat/usable-roster-warlock-l1`
 
-Re-anchored generated head before this checkpoint: `21d43fe655e3b129bad12840c1c41fd61334eb6c`
+Re-anchored generated head before this checkpoint: `7f80342213ddd3c7186796f359bef1334ca4f8eb`
 
 ### Monsters
 
 - Canonical SRD monsters: **330**
 - Public-ready in the current generated manifest: **152**
 - Blocked: **178**
-- Merrow is newly machine-earned after the universal simple attack parser was corrected to preserve dual-mode source grammar such as `reach 5 ft. or range 20/60 ft.`.
-- The parser now retains both melee and ranged Harpoon forms plus the existing universal forced-pull rider; no Merrow-specific combat resolver branch was added.
+- Merrow remains machine-earned after the universal simple attack parser was corrected to preserve dual-mode source grammar such as `reach 5 ft. or range 20/60 ft.`.
+- The parser retains both melee and ranged Harpoon forms plus the existing universal forced-pull rider; no Merrow-specific combat resolver branch was added.
 - This total is machine-earned from `data/monster_certification_manifest.json`; no readiness flags were manually advanced.
 - Continue from the generated blocker inventory rather than redoing already-certified monsters.
 
@@ -49,13 +49,23 @@ Re-anchored generated head before this checkpoint: `21d43fe655e3b129bad12840c1c4
 
 ## Latest blocker and resolution
 
-Exact-head CI #7815 failed in Python certification because Merrow's printed Harpoon was absent from the generated runtime. The generic attack parser stopped its range clause at the period in `reach 5 ft. or range 20/60 ft.`, producing only Bite and Claw and triggering `source-attack-count-mismatch` plus `forced-movement-source-mismatch`.
+The certification chain exposed browser test-harness dependency drift after universal attack/save/resource helpers were extracted. The failures were test integration defects, not combat-engine behavior defects.
 
-Affected content: **Merrow directly**; the parser defect could affect any future canonical attack using the same dual-mode reach/range grammar.
+Affected scope: the exact-head certification gate, with stale isolated harnesses for Action IR reactions, generated Constrict compatibility, spell resolution, Champion, Fighter 9, Heroic Inspiration, Ongoing Spell Control, and Roll Revisions. No monster or pregen readiness state was promoted by these fixes.
 
-Classification: **technical parser blocker**, autonomously fixable. No Chris rules/product decision was required.
+Classification: **technical CI/test-contract blocker**, autonomously fixable. No Chris rules/product decision was required.
 
-Resolution: the universal parser now consumes the complete range clause through `. Hit:` rather than assuming no internal period. Permanent Python and browser tests pin both Harpoon modes, exact range/reach values, and the 15-foot `toward_source` forced movement. Generated artifacts promoted Merrow through the normal audits to **152/330**.
+Resolution completed in this workstream:
+
+- Generic Action IR parity now counts declarative supported reactions such as Parry and Redirect Attack rather than assuming only attacks/save/heal/removal actions exist.
+- The Constrictor Snake compatibility fragment no longer duplicates canonical flat grapple-control fields inside a legacy nested `failureControl` object; the shared save helper reconstructs the same control semantics from canonical fields.
+- Browser source-fingerprint coverage now preserves the complete 2024 Specter and Wraith trait sets, including `Incorporeal Movement` and `Sunlight Sensitivity`.
+- The isolated spell-resolution harness now loads the universal resource/save dependency chain instead of relying on an undefined resource helper.
+- `check_browser_harness_dependencies.py` now audits both array-based loader blocks and direct `load("...")` calls, including the resource dependency used by the universal spell resolver.
+- `sync_browser_harness_dependencies.py` now synchronizes direct-load groups as well as array loader blocks. The feature-branch sync workflow used that generalized repair to normalize five additional stale harness closures automatically.
+- Production combat code, RAW behavior, source definitions, and readiness flags were not changed by these harness repairs.
+
+The synchronized bot-authored head `7f80342213ddd3c7186796f359bef1334ca4f8eb` then hit GitHub `action_required` before both exact-head workflows could execute. This checkpoint is a human-authored no-runtime re-anchor so those already-repaired sources can receive a normal exact-head certification run.
 
 ## Next priority
 
