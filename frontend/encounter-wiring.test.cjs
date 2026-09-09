@@ -35,8 +35,9 @@ assert.match(html, /<button id="quick-test" type="button">LOAD SAMPLE<\/button>/
 assert.match(html, /id="step-fight-button"/); assert.match(html, /id="turbo-count"[^>]+value="100"/);
 assert.match(html, /browser-turbo\.js/); assert.match(html, /browser-execution\.js/); assert.match(html, /battle-actions\.js/);
 assert.match(html, /browser-arena-map\.js/); assert.match(html, /browser-grid-geometry\.js/);
-assert.match(html, /browser-grid-movement\.js/); assert.match(html, /browser-grid-placement\.js/);
-assert.match(html, /combatant-art\.js/);
+assert.match(html, /browser-grid-movement-support\.js/); assert.match(html, /browser-grid-path-search-support\.js/);
+assert.match(html, /browser-grid-path-search\.js/); assert.match(html, /browser-grid-movement\.js/);
+assert.match(html, /browser-grid-placement\.js/); assert.match(html, /combatant-art\.js/);
 assert.match(html, /Production combat path · secure Web Crypto dice/);
 assert.match(html, /browser-offense-value\.js/); assert.match(html, /browser-spell-offense\.js/);
 
@@ -76,7 +77,10 @@ assert.ok(html.indexOf("browser-spell-offense.js") < html.indexOf("browser-turn.
 assert.ok(html.indexOf("browser-action-surge.js") < html.indexOf("browser-turn.js"));
 assert.ok(html.indexOf("browser-formation.js") < html.indexOf("browser-arena-map.js"));
 assert.ok(html.indexOf("browser-arena-map.js") < html.indexOf("browser-grid-geometry.js"));
-assert.ok(html.indexOf("browser-grid-geometry.js") < html.indexOf("browser-grid-movement.js"));
+assert.ok(html.indexOf("browser-grid-geometry.js") < html.indexOf("browser-grid-movement-support.js"));
+assert.ok(html.indexOf("browser-grid-movement-support.js") < html.indexOf("browser-grid-path-search-support.js"));
+assert.ok(html.indexOf("browser-grid-path-search-support.js") < html.indexOf("browser-grid-path-search.js"));
+assert.ok(html.indexOf("browser-grid-path-search.js") < html.indexOf("browser-grid-movement.js"));
 assert.ok(html.indexOf("browser-grid-movement.js") < html.indexOf("browser-grid-placement.js"));
 assert.ok(html.indexOf("browser-grid-placement.js") < html.indexOf("browser-engine.js"));
 assert.ok(html.indexOf("figure-portraits.js") < html.indexOf("combatant-art.js"));

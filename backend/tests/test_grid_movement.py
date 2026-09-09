@@ -85,3 +85,33 @@ def test_plan_toward_never_ends_in_an_occupied_space() -> None:
     assert plan.path
     assert (plan.path[-1].x, plan.path[-1].y) != (1, 1)
     assert plan.final_distance_ft == 5
+
+
+def test_full_route_search_moves_sideways_when_short_budget_cannot_immediately_close() -> None:
+    mover = _member("mover", "heroes", 0, 0)
+    target = _member("target", "monsters", 4, 0)
+    blockers = [
+        _member("blocker-a", "monsters", 1, 0),
+        _member("blocker-b", "monsters", 1, 1),
+    ]
+
+    plan = plan_movement_toward(MAP, mover, target, [mover, target, *blockers], 5, 5)
+
+    assert [(step.x, step.y) for step in plan.path] == [(0, 1)]
+    assert plan.movement_cost_ft == 5
+    assert plan.final_distance_ft == 20
+
+
+def test_diagonal_path_cannot_squeeze_between_two_blocked_orthogonal_spaces() -> None:
+    mover = _member("mover", "heroes", 0, 0)
+    target = _member("target", "monsters", 2, 2)
+    blockers = [
+        _member("blocker-east", "monsters", 1, 0),
+        _member("blocker-south", "monsters", 0, 1),
+    ]
+
+    plan = plan_movement_toward(MAP, mover, target, [mover, target, *blockers], 5, 30)
+
+    assert plan.path == []
+    assert plan.movement_cost_ft == 0
+    assert plan.final_distance_ft == 10
