@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import re
 
 from app.content.monster_bonus_action_source_audit import (
@@ -8,7 +9,7 @@ from app.content.monster_bonus_action_source_audit import (
     _base_name,
     parse_bonus_action_names,
 )
-from app.content.monster_catalog import _READY_BY_NAME, load_monster_rows
+from app.content.monster_catalog import build_monster_catalog, load_monster_rows
 from app.content.monster_defense_source_audit import parse_defense_profile
 from app.content.monster_limited_use_source_audit import parse_limited_use_names
 from app.content.monster_reaction_source_audit import (
@@ -18,7 +19,9 @@ from app.content.monster_reaction_source_audit import (
 )
 from app.content.monster_spellcasting_source_audit import arena_neutral_spellcasting, spellcasting_fingerprint
 from app.content.monster_trait_source_audit import _ARENA_NEUTRAL_TRAITS, _MODELED_TRAITS, parse_trait_names
+from app.domain.catalog import CoverageStatus
 
+logger = logging.getLogger(__name__)
 _CONDITION_OR_CONTROL = re.compile(
     r"\b(blinded|charmed|deafened|frightened|grappled|incapacitated|paralyzed|petrified|poisoned|prone|restrained|stunned|unconscious|push(?:es|ed)?|pull(?:s|ed)?|swallow(?:s|ed)?)\b",
     re.I,
@@ -99,68 +102,56 @@ def _source_blockers(row: dict[str, object], monster_names: set[str]) -> list[st
     except ValueError:
         blockers.append("defense-clause")
     actions = str(row.get("actions", ""))
-    if not _ATTACK_ROLL.search(actions):
-        blockers.append("no-attack-roll")
-    if _COMPLEX_ACTION.search(actions):
-        blockers.append("save-or-complex-action")
-    if _CONDITION_OR_CONTROL.search(actions):
-        blockers.append("condition-or-control")
-    if _unmodeled_action_rider(actions):
-        blockers.append("unsupported-action-rider")
-    if _has_neighbor_bleed(row, monster_names):
-        blockers.append("source-neighbor-bleed")
+    if not _ATTACK_ROLL.search(actions): blockers.append("no-attack-roll")
+    if _COMPLEX_ACTION.search(actions): blockers.append("save-or-complex-action")
+    if _CONDITION_OR_CONTROL.search(actions): blockers.append("condition-or-control")
+    if _unmodeled_action_rider(actions): blockers.append("unsupported-action-rider")
+    if _has_neighbor_bleed(row, monster_names): blockers.append("source-neighbor-bleed")
     return blockers
 
 
 def main() -> None:
-    rows = load_monster_rows()
-    monster_names = {str(row["name"]) for row in rows}
-    safe: list[dict[str, object]] = []
-    already_ready: list[str] = []
-    blocker_counts: dict[str, int] = {}
-    blocker_names: dict[str, list[str]] = {}
-    reaction_details: list[dict[str, object]] = []
-    rider_details: list[dict[str, object]] = []
-    for row in rows:
-        name = str(row["name"])
-        blockers = _source_blockers(row, monster_names)
-        for blocker in set(blockers):
-            blocker_counts[blocker] = blocker_counts.get(blocker, 0) + 1
-            blocker_names.setdefault(blocker, []).append(name)
-        if "reaction" in blockers:
-            reaction_details.append({
-                "name": name,
-                "blockers": blockers,
-                "reactions": str(row.get("reactions", "")),
-            })
-        if "unsupported-action-rider" in blockers:
-            rider_details.append({
-                "name": name,
-                "blockers": blockers,
-                "actions": str(row.get("actions", "")),
-            })
-        if blockers:
-            continue
-        if name in _READY_BY_NAME:
-            already_ready.append(name)
-        else:
-            safe.append(row)
-    print(f"ZERO_ENGINE_BASELINE existing={len(already_ready)} missing={len(safe)}")
-    for row in safe:
-        detail = {field: row.get(field, "") for field in _DETAIL_FIELDS}
-        raw = str(row.get("rawText", ""))
-        initiative = re.search(r"\bInitiative\s+([+-]?\d+)", raw, re.I)
-        detail["initiative"] = int(initiative.group(1)) if initiative else None
-        print("ZERO_ENGINE_DETAIL\t" + json.dumps(detail, ensure_ascii=False, separators=(",", ":")))
-    for detail in reaction_details:
-        print("ZERO_ENGINE_REACTION_DETAIL\t" + json.dumps(detail, ensure_ascii=False, separators=(",", ":")))
-    for detail in rider_details:
-        print("ZERO_ENGINE_RIDER_DETAIL\t" + json.dumps(detail, ensure_ascii=False, separators=(",", ":")))
-    for blocker, count in sorted(blocker_counts.items(), key=lambda item: (-item[1], item[0])):
-        print(f"ZERO_ENGINE_BLOCKER\t{blocker}\t{count}")
-        if count <= _DETAIL_BLOCKER_LIMIT:
-            print(f"ZERO_ENGINE_BLOCKER_NAMES\t{blocker}\t" + " | ".join(sorted(blocker_names[blocker])))
+    try:
+        rows = load_monster_rows()
+        monster_names = {str(row["name"]) for row in rows}
+        ready_names = {
+            card.name for card in build_monster_catalog()
+            if card.coverage_status is CoverageStatus.RAW_READY
+        }
+        safe: list[dict[str, object]] = []
+        already_ready: list[str] = []
+        blocker_counts: dict[str, int] = {}
+        blocker_names: dict[str, list[str]] = {}
+        reaction_details: list[dict[str, object]] = []
+        rider_details: list[dict[str, object]] = []
+        for row in rows:
+            name = str(row["name"]); blockers = _source_blockers(row, monster_names)
+            for blocker in set(blockers):
+                blocker_counts[blocker] = blocker_counts.get(blocker, 0) + 1
+                blocker_names.setdefault(blocker, []).append(name)
+            if "reaction" in blockers:
+                reaction_details.append({"name": name, "blockers": blockers, "reactions": str(row.get("reactions", ""))})
+            if "unsupported-action-rider" in blockers:
+                rider_details.append({"name": name, "blockers": blockers, "actions": str(row.get("actions", ""))})
+            if blockers: continue
+            (already_ready if name in ready_names else safe).append(name if name in ready_names else row)
+        print(f"ZERO_ENGINE_BASELINE existing={len(already_ready)} missing={len(safe)}")
+        for row in safe:
+            detail = {field: row.get(field, "") for field in _DETAIL_FIELDS}
+            initiative = re.search(r"\bInitiative\s+([+-]?\d+)", str(row.get("rawText", "")), re.I)
+            detail["initiative"] = int(initiative.group(1)) if initiative else None
+            print("ZERO_ENGINE_DETAIL\t" + json.dumps(detail, ensure_ascii=False, separators=(",", ":")))
+        for detail in reaction_details: print("ZERO_ENGINE_REACTION_DETAIL\t" + json.dumps(detail, ensure_ascii=False, separators=(",", ":")))
+        for detail in rider_details: print("ZERO_ENGINE_RIDER_DETAIL\t" + json.dumps(detail, ensure_ascii=False, separators=(",", ":")))
+        for blocker, count in sorted(blocker_counts.items(), key=lambda item: (-item[1], item[0])):
+            print(f"ZERO_ENGINE_BLOCKER\t{blocker}\t{count}")
+            if count <= _DETAIL_BLOCKER_LIMIT:
+                print(f"ZERO_ENGINE_BLOCKER_NAMES\t{blocker}\t" + " | ".join(sorted(blocker_names[blocker])))
+    except Exception:
+        logger.exception("Zero-engine monster report failed.")
+        raise
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
     main()
