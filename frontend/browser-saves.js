@@ -5,6 +5,7 @@
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
   const S = () => window.IRON_PIT_BROWSER_STATE;
+  const RES = () => window.IRON_PIT_BROWSER_RESOURCES;
   const B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2 || { dangerSenseAdvantage: () => 0 };
   const DG = () => window.IRON_PIT_BROWSER_DODGE || { dexSaveAdvantageSources: () => 0 };
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { applyD20Bonus: (_state, _kind, roll) => roll };
@@ -60,49 +61,58 @@
   }
 
   function resolveAction(sequence, round, actor, target, action, distance, options = {}) {
-    const spendAction = options.spendAction !== false;
-    if (spendAction && !E().available(actor.state, "action")) throw new Error("Action is unavailable for saving throw action.");
-    if (!legalAction(action, target, distance)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
-    const save = resolveSavingThrow(target.state, action.saveAbility, action.dc);
-    if (spendAction) E().spend(actor.state, "action");
-    const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
-    const deathSuccessBefore = target.state.death_save_successes, deathFailureBefore = target.state.death_save_failures;
-    const concentrationBefore = target.state.concentration?.effect_id || null;
-    let damageRoll = null, damageComponents = [], damageOutcome = null;
-    const count = action.damageDiceCount || 0;
-    if (count && !(save.succeeded && action.successDamage === "none")) {
-      if (!action.damageType) throw new Error(`${action.name} has damage dice but no damage type.`);
-      const rolls = damageRolls(action, count, options.sharedDamageRolls);
-      let total = rolls.reduce((sum, roll) => sum + roll, 0) + (action.damageBonus || 0);
-      if (save.succeeded && action.successDamage === "half") total = Math.floor(total / 2);
-      const applied = A().adjustedDamage(target.state, Math.max(0, total), action.damageType);
-      damageComponents = [{ source: action.name, notation: `${count}d${action.damageDiceSize}+${action.damageBonus || 0}`,
-        rolls, modifier: action.damageBonus || 0, damage_type: action.damageType, total: Math.max(0, total), applied_total: applied }];
-      damageRoll = { notation: damageComponents[0].notation, rolls, modifier: action.damageBonus || 0, total: applied };
-      if (applied) {
-        const affectedStates = states(options.setup);
-        damageOutcome = A().applyDamage(target.state, applied, false, [action.damageType], affectedStates);
-        window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(target.state); C()?.endIfIncapacitated(target.state, affectedStates);
+    try {
+      const spendAction = options.spendAction !== false;
+      if (!RES()) throw new Error("Browser resource API is not loaded.");
+      if (spendAction && !E().available(actor.state, "action")) throw new Error("Action is unavailable for saving throw action.");
+      if (!legalAction(action, target, distance)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
+      if (!RES().available(actor.state, action.resourceId, action.resourceCost || 1)) throw new Error(`${action.name} lacks its required resource.`);
+      const save = resolveSavingThrow(target.state, action.saveAbility, action.dc);
+      if (spendAction) E().spend(actor.state, "action");
+      const resourceRemaining = RES().spend(actor.state, action.resourceId, action.resourceCost || 1);
+      const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
+      const deathSuccessBefore = target.state.death_save_successes, deathFailureBefore = target.state.death_save_failures;
+      const concentrationBefore = target.state.concentration?.effect_id || null;
+      let damageRoll = null, damageComponents = [], damageOutcome = null;
+      const count = action.damageDiceCount || 0;
+      if (count && !(save.succeeded && action.successDamage === "none")) {
+        if (!action.damageType) throw new Error(`${action.name} has damage dice but no damage type.`);
+        const rolls = damageRolls(action, count, options.sharedDamageRolls);
+        let total = rolls.reduce((sum, roll) => sum + roll, 0) + (action.damageBonus || 0);
+        if (save.succeeded && action.successDamage === "half") total = Math.floor(total / 2);
+        const applied = A().adjustedDamage(target.state, Math.max(0, total), action.damageType);
+        damageComponents = [{ source: action.name, notation: `${count}d${action.damageDiceSize}+${action.damageBonus || 0}`,
+          rolls, modifier: action.damageBonus || 0, damage_type: action.damageType, total: Math.max(0, total), applied_total: applied }];
+        damageRoll = { notation: damageComponents[0].notation, rolls, modifier: action.damageBonus || 0, total: applied };
+        if (applied) {
+          const affectedStates = states(options.setup);
+          damageOutcome = A().applyDamage(target.state, applied, false, [action.damageType], affectedStates);
+          window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(target.state); C()?.endIfIncapacitated(target.state, affectedStates);
+        }
       }
+      let appliedConditions = [];
+      if (!save.succeeded && target.state.is_alive && !target.state.is_dead && action.grappleEscapeDc) {
+        appliedConditions = G().apply(target.state, actor.combatant_id, action.grappleEscapeDc, action.range, Boolean(action.restrainsWhileGrappled));
+      }
+      let description = `${target.state.template.name} ${save.succeeded ? "SUCCEEDS" : "FAILS"} a DC ${action.dc} ${action.saveAbility} save against ${actor.state.template.name}'s ${action.name}.`;
+      if (damageOutcome === "undead_fortitude") description += ` ${target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP.`;
+      if (appliedConditions.includes("grappled")) description += ` ${target.state.template.name} is Grappled.`;
+      if (appliedConditions.includes("restrained")) description += ` ${target.state.template.name} is Restrained while Grappled.`;
+      return { sequence, round_number: round, event_type: "saving_throw", actor_id: actor.combatant_id, actor_name: actor.state.template.name,
+        target_id: target.combatant_id, target_name: target.state.template.name, saving_throw_roll: save.roll,
+        save_ability: action.saveAbility, save_dc: action.dc, save_succeeded: save.succeeded, damage_roll: damageRoll,
+        damage_components: damageComponents, applied_condition_ids: appliedConditions, hp_before: hpBefore, hp_after: target.state.current_hp,
+        temporary_hp_before: temporaryHpBefore, temporary_hp_after: target.state.temporary_hp,
+        death_save_successes_before: deathSuccessBefore, death_save_failures_before: deathFailureBefore,
+        death_save_successes: target.state.death_save_successes, death_save_failures: target.state.death_save_failures,
+        is_stable: target.state.is_stable, is_dead: target.state.is_dead, feature_id: action.id,
+        resource_remaining: resourceRemaining,
+        concentration_ended_effect_id: concentrationBefore && !target.state.concentration ? concentrationBefore : null,
+        animation: action.animation || "save-effect", description };
+    } catch (error) {
+      console.error("Browser saving-throw action failed", { actor: actor.combatant_id, target: target.combatant_id, action: action.id, error });
+      throw error;
     }
-    let appliedConditions = [];
-    if (!save.succeeded && target.state.is_alive && !target.state.is_dead && action.grappleEscapeDc) {
-      appliedConditions = G().apply(target.state, actor.combatant_id, action.grappleEscapeDc, action.range, Boolean(action.restrainsWhileGrappled));
-    }
-    let description = `${target.state.template.name} ${save.succeeded ? "SUCCEEDS" : "FAILS"} a DC ${action.dc} ${action.saveAbility} save against ${actor.state.template.name}'s ${action.name}.`;
-    if (damageOutcome === "undead_fortitude") description += ` ${target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP.`;
-    if (appliedConditions.includes("grappled")) description += ` ${target.state.template.name} is Grappled.`;
-    if (appliedConditions.includes("restrained")) description += ` ${target.state.template.name} is Restrained while Grappled.`;
-    return { sequence, round_number: round, event_type: "saving_throw", actor_id: actor.combatant_id, actor_name: actor.state.template.name,
-      target_id: target.combatant_id, target_name: target.state.template.name, saving_throw_roll: save.roll,
-      save_ability: action.saveAbility, save_dc: action.dc, save_succeeded: save.succeeded, damage_roll: damageRoll,
-      damage_components: damageComponents, applied_condition_ids: appliedConditions, hp_before: hpBefore, hp_after: target.state.current_hp,
-      temporary_hp_before: temporaryHpBefore, temporary_hp_after: target.state.temporary_hp,
-      death_save_successes_before: deathSuccessBefore, death_save_failures_before: deathFailureBefore,
-      death_save_successes: target.state.death_save_successes, death_save_failures: target.state.death_save_failures,
-      is_stable: target.state.is_stable, is_dead: target.state.is_dead, feature_id: action.id,
-      concentration_ended_effect_id: concentrationBefore && !target.state.concentration ? concentrationBefore : null,
-      animation: action.animation || "save-effect", description };
   }
 
   window.IRON_PIT_BROWSER_SAVES = { legalAction, resolveAction, resolveSavingThrow, saveMode };
