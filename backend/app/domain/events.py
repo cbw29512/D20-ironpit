@@ -32,6 +32,7 @@ class BattleEvent(BaseModel):
     target_ac: int | None = Field(default=None, ge=0)
     attack_roll: DiceRoll | None = None
     saving_throw_roll: DiceRoll | None = None
+    resource_roll: DiceRoll | None = None
     save_ability: str | None = None
     save_dc: int | None = Field(default=None, ge=1)
     save_succeeded: bool | None = None
