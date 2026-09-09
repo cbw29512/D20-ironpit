@@ -35,6 +35,15 @@
     return F().chooseAttack(member, setup, data.attackIds, "melee")
       || F().chooseAttack(member, setup, data.attackIds, "ranged");
   }
+  function slotHasLegalChoice(member, setup, slot) {
+    try {
+      const data = slotData(slot);
+      return Boolean(attackChoice(member, setup, data) || saveChoice(member, setup, data));
+    } catch (error) {
+      console.error("Failed to prove browser Attack/Multiattack slot legality", { member: member.combatant_id, error });
+      throw error;
+    }
+  }
   function useRangedSplit(member, setup, slots) {
     if (F().isBackline(member)) return false;
     if (!F().hasFrontlineTarget(member, setup) || !F().hasBacklineTarget(member, setup)) return false;
@@ -47,6 +56,7 @@
     if (!slots?.length || !E().available(member.state, "action") || !F().targetOrder(member, setup).length) {
       return { events: [], sequence };
     }
+    if (!slots.some((slot) => slotHasLegalChoice(member, setup, slot))) return { events: [], sequence };
     const events = [];
     E().spend(member.state, "action");
     let openingFeature = C()?.openingFeature?.(round, member, setup) || null;
