@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.encounter_turn_support import save_choice
-from app.combat.pit_policy import choose_attack
-from app.combat.resources import is_recharge_resource
+from app.combat.pit_policy import choose_attack, save_distance, target_order
+from app.combat.resources import is_recharge_resource, resource_available
+from app.combat.saving_throws import legal_save_action
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 
 logger = logging.getLogger(__name__)
@@ -24,27 +24,15 @@ def recharge_attack_choice(attacker: EncounterCombatant, setup: EncounterSetup):
 
 def recharge_save_choice(attacker: EncounterCombatant, setup: EncounterSetup):
     try:
-        recharge_ids = {
-            action.id
-            for action in attacker.state.template.saving_throw_actions
-            if is_recharge_resource(attacker.state, action.resource_id)
-        }
-        if not recharge_ids:
-            return None
-        choice = save_choice(attacker, setup)
-        if choice is not None and choice[1].id in recharge_ids:
-            return choice
-        for action in attacker.state.template.saving_throw_actions:
-            if action.id not in recharge_ids:
-                continue
-            original = attacker.state.template.saving_throw_actions
-            try:
-                attacker.state.template.saving_throw_actions = [action]
-                choice = save_choice(attacker, setup)
-            finally:
-                attacker.state.template.saving_throw_actions = original
-            if choice is not None:
-                return choice
+        for target in target_order(attacker, setup):
+            for action in attacker.state.template.saving_throw_actions:
+                if not is_recharge_resource(attacker.state, action.resource_id):
+                    continue
+                if not resource_available(attacker.state, action.resource_id, action.resource_cost):
+                    continue
+                distance = save_distance(attacker, target, action.range_ft)
+                if legal_save_action(action, target, distance):
+                    return target, action, distance
         return None
     except Exception as exc:
         logger.exception("Failed Recharge save choice for %s.", attacker.combatant_id)
