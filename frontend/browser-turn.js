@@ -70,7 +70,7 @@
 
   function resolveTurn(sequence, round, member, setup) {
     enablePitRangePolicy();
-    const events = []; H().cleanup(setup); S().beginTurn(member.state);
+    const events = []; H().cleanup(setup); const recharge = window.IRON_PIT_BROWSER_RESOURCES.buildRechargeEvents(member.state, member, round, sequence, S().beginTurn(member.state)); events.push(...recharge.events); sequence = recharge.sequence;
     const turnKey = `${round}:${member.combatant_id}`;
     if (O()?.forcedRetreatActive(member.state)) {
       events.push(O().event(sequence++, round, member));
