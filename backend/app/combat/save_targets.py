@@ -10,13 +10,14 @@ from app.domain.models import BattleEvent, SavingThrowAction
 logger = logging.getLogger(__name__)
 
 
-def _targets(
+def validate_save_targets(
     actor: EncounterCombatant,
     setup: EncounterSetup,
     action: SavingThrowAction,
     target_ids: tuple[str, ...],
-    skip_range_check: bool,
+    skip_range_check: bool = False,
 ) -> list[EncounterCombatant]:
+    """Fail closed on the complete target set before any cost, die roll, or state mutation."""
     if not target_ids or len(set(target_ids)) != len(target_ids):
         raise ValueError("Multi-target save actions require unique target IDs.")
     members = [*setup.heroes, *setup.monsters]
@@ -51,7 +52,7 @@ def resolve_save_targets(
 ) -> tuple[list[BattleEvent], int]:
     """Resolve independent saves while sharing one damage roll across every target."""
     try:
-        targets = _targets(actor, setup, action, target_ids, skip_range_check)
+        targets = validate_save_targets(actor, setup, action, target_ids, skip_range_check)
         affected_states = [member.state for member in [*setup.heroes, *setup.monsters]]
         events: list[BattleEvent] = []
         shared_damage_rolls: list[int] | None = None
