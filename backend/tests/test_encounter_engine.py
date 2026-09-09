@@ -115,9 +115,11 @@ def test_downed_test_fixture_makes_death_save_while_an_ally_is_still_fighting() 
     assert death_save.actor_id == "hero-1:aldric-vane-l1"
     assert death_save.death_save_roll is not None
     assert death_save.death_save_roll.total == 10
+    assert death_save.death_save_successes == 1
+    assert death_save.is_stable is False
     assert aldric.current_hp == 0
     assert aldric.is_unconscious is True
-    assert aldric.death_save_successes == 1
+    assert aldric.is_dead is False
     assert result.outcome == "heroes_win"
 
 
