@@ -37,6 +37,19 @@ Footprint is derived from immutable size data. Runtime state stores position, no
 - Dash, Disengage, difficult terrain, Grappled, Prone, speed changes, teleports, forced movement, flight, swim, burrow, and other movement rules feed the same movement/position engine.
 - Iron Pit no longer grants free ordinary closing. Arena design and AI policy prevent degenerate fleeing/kiting rather than bypassing printed movement.
 
+### Moving around other creatures — SRD 5.2.1
+
+The universal pathing engine must apply the printed 2024 creature-space rules rather than treating every occupied square as either always open or always blocked.
+
+- A creature can pass through an ally's space.
+- A creature can pass through the space of an Incapacitated creature.
+- A creature can pass through the space of a Tiny creature.
+- A creature can pass through another creature's space when the two creatures are at least two size categories apart.
+- Otherwise, a hostile creature's occupied space blocks voluntary passage unless a more specific rule permits it.
+- Another creature's space is Difficult Terrain unless that creature is Tiny or is the mover's ally.
+- A creature cannot willingly end normal movement in another creature's occupied space.
+- These rules are resolved from side, condition state, and printed creature size. Creature names never select passage behavior.
+
 ## Areas and targeting
 
 Area shape is an engine primitive; the source supplies shape and dimensions.
@@ -102,6 +115,7 @@ Reference sources:
 - https://github.com/bjedrzejewski/battlecast-engine
 - https://github.com/bjedrzejewski/battlecast-engine/blob/main/DESIGN.md
 - https://github.com/bjedrzejewski/battlecast-engine/blob/main/src/engine/combat-geometry.ts
+- SRD 5.2.1 / D&D 2024 Basic Rules, Playing the Game / Moving Around Other Creatures
 
 BattleCast's extracted engine is MIT licensed. This Iron Pit tranche uses the architecture as research/reference; any future direct copied/substantial code must preserve the applicable MIT copyright/license notice and provenance.
 
