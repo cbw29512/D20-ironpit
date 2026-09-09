@@ -91,6 +91,8 @@ class WeaponAttack(BaseModel):
     conditional_attack_advantage: list[ConditionalAttackAdvantage] = Field(default_factory=list)
     on_hit_damage: list[OnHitDamage] = Field(default_factory=list)
     on_hit_modifier_effects: list[HitModifierEffect] = Field(default_factory=list)
+    resource_id: str | None = None
+    resource_cost: int = Field(default=1, ge=1, le=20)
     rage_eligible: bool = False
     sneak_attack_eligible: bool = False
     knocks_prone_max_size: CreatureSize | None = None
