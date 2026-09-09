@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 118,
-    "blocked": 212
+    "public_ready": 123,
+    "blocked": 207
   },
   "monsters": [
     {
@@ -4114,7 +4114,7 @@
       "monster_name": "Giant Shark",
       "srd_source_page": 353,
       "srd_source_reference": "SRD 5.2.1 p. 353",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-giant-shark",
       "detected_combat_mechanics": [
         "attack-roll",
         "multiattack",
@@ -4125,16 +4125,12 @@
         "multiattack",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "monster-combat-mechanics-not-certified"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "monster-combat-mechanics-not-certified"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-giant-spider",
@@ -5199,7 +5195,7 @@
       "monster_name": "Hunter Shark",
       "srd_source_page": 356,
       "srd_source_reference": "SRD 5.2.1 p. 356",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-hunter-shark",
       "detected_combat_mechanics": [
         "attack-roll",
         "trait"
@@ -5208,16 +5204,12 @@
         "attack-roll",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "monster-combat-mechanics-not-certified"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "monster-combat-mechanics-not-certified"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-hydra",
@@ -6689,7 +6681,7 @@
       "monster_name": "Piranha",
       "srd_source_page": 358,
       "srd_source_reference": "SRD 5.2.1 p. 358",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-piranha",
       "detected_combat_mechanics": [
         "attack-roll",
         "trait"
@@ -6698,16 +6690,12 @@
         "attack-roll",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "monster-combat-mechanics-not-certified"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "monster-combat-mechanics-not-certified"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-pirate",
@@ -7241,7 +7229,7 @@
       "monster_name": "Reef Shark",
       "srd_source_page": 360,
       "srd_source_reference": "SRD 5.2.1 p. 360",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-reef-shark",
       "detected_combat_mechanics": [
         "attack-roll",
         "trait"
@@ -7250,16 +7238,12 @@
         "attack-roll",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "monster-combat-mechanics-not-certified"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "monster-combat-mechanics-not-certified"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-remorhaz",
@@ -8452,7 +8436,7 @@
       "monster_name": "Swarm of Piranhas",
       "srd_source_page": 362,
       "srd_source_reference": "SRD 5.2.1 p. 362",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-swarm-of-piranhas",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -8463,16 +8447,12 @@
         "damage-or-condition-defense",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "monster-combat-mechanics-not-certified"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "monster-combat-mechanics-not-certified"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-swarm-of-rats",
