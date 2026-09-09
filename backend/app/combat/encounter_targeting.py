@@ -3,13 +3,33 @@ from __future__ import annotations
 import logging
 
 from app.combat.condition_rules import is_incapacitated
+from app.combat.grid_geometry import footprint_distance_ft
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 
 logger = logging.getLogger(__name__)
 
 
 def combatant_distance(attacker: EncounterCombatant, target: EncounterCombatant) -> int:
-    return abs(attacker.position_ft - target.position_ft)
+    try:
+        attacker_position = attacker.state.position
+        target_position = target.state.position
+        if attacker_position is not None or target_position is not None:
+            if attacker_position is None or target_position is None:
+                raise ValueError("Encounter combatants cannot mix scalar and grid position authority.")
+            return footprint_distance_ft(
+                attacker_position,
+                attacker.state.template.size,
+                target_position,
+                target.state.template.size,
+            )
+        return abs(attacker.position_ft - target.position_ft)
+    except Exception:
+        logger.exception(
+            "Failed to calculate encounter distance between %s and %s.",
+            attacker.combatant_id,
+            target.combatant_id,
+        )
+        raise
 
 
 def _opponents(attacker: EncounterCombatant, setup: EncounterSetup) -> list[EncounterCombatant]:
