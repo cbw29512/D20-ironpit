@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field, model_validator
 from app.domain.actions import AbilityName
 from app.domain.capability_effects import AttackEffectDefinition, DiceSpec, GrappleEffectDefinition
 from app.domain.size import CreatureSize
+from app.domain.targeting import AreaTargeting
 from app.domain.weapons import ConditionalAttackAdvantage, DamageType, WeaponAttackKind
 
 
@@ -62,6 +63,7 @@ class SaveCapabilityDefinition(BaseModel):
     dc: int = Field(ge=1, le=40)
     range_ft: int = Field(ge=0)
     target_max_size: CreatureSize | None = None
+    area: AreaTargeting | None = None
     damage: DiceSpec | None = None
     damage_type: DamageType | None = None
     success_damage: Literal["none", "half"] = "none"
