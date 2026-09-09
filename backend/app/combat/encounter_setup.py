@@ -5,6 +5,7 @@ from fractions import Fraction
 
 from app.combat.formation import starting_position_ft
 from app.combat.state import build_combatant_state
+from app.content.arena_map import build_standard_iron_pit_map
 from app.content.roster import build_arena_roster
 from app.domain.encounters import EncounterCombatant, EncounterSelection, EncounterSetup
 from app.domain.models import CombatantTemplate
@@ -68,6 +69,7 @@ def build_encounter_setup(selection: EncounterSelection) -> EncounterSetup:
             monsters=monster_states,
             hero_total_levels=_hero_level_total(hero_states),
             monster_total_cr=_monster_cr_total(monster_states),
+            map_definition=build_standard_iron_pit_map(),
         )
     except ValueError:
         raise
