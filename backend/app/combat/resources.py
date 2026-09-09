@@ -1,9 +1,13 @@
 from __future__ import annotations
 
+import logging
 from typing import Any, NamedTuple
 
 from app.combat.dice import DiceProvider
+from app.domain.events import AuditPhase, AuditStep, BattleEvent, EventAudit
 from app.domain.runtime import CombatantState, ResourceState
+
+logger = logging.getLogger(__name__)
 
 
 class RechargeResult(NamedTuple):
@@ -65,3 +69,47 @@ def refresh_recharge_resources(state: CombatantState, dice: DiceProvider) -> lis
             resource.current_uses = resource.max_uses
         results.append(RechargeResult(resource.id, roll, recharged))
     return results
+
+
+def build_recharge_events(
+    state: CombatantState,
+    actor_id: str,
+    round_number: int,
+    sequence: int,
+    results: list[RechargeResult],
+) -> tuple[list[BattleEvent], int]:
+    """Convert start-turn Recharge state changes into audit-grade universal events."""
+    try:
+        definitions = {item.id: item for item in state.template.resources}
+        events: list[BattleEvent] = []
+        for result in results:
+            definition = definitions[result.resource_id]
+            runtime = resource_state(state, result.resource_id)
+            remaining = runtime.current_uses if runtime is not None else 0
+            threshold = definition.recharge_minimum
+            outcome = f"recharged to {remaining}" if result.recharged else "did not recharge"
+            roll_label = f"Recharge d{definition.recharge_die_size}: {result.roll} vs {threshold}+"
+            events.append(BattleEvent(
+                sequence=sequence,
+                round_number=round_number,
+                event_type="feature",
+                actor_id=actor_id,
+                actor_name=state.template.name,
+                feature_id=result.resource_id,
+                resource_remaining=remaining,
+                animation="resource",
+                description=f"{state.template.name} rolls {definition.name} {roll_label}; {outcome}.",
+                audit=EventAudit(steps=[
+                    AuditStep(phase=AuditPhase.ROLL, kind="roll", label=roll_label),
+                    AuditStep(
+                        phase=AuditPhase.RESOURCE_CHANGE,
+                        kind="resource",
+                        label=f"{definition.name}: {outcome}",
+                    ),
+                ]),
+            ))
+            sequence += 1
+        return events, sequence
+    except Exception as exc:
+        logger.exception("Failed to build Recharge audit events for %s.", state.template.name)
+        raise RuntimeError("Recharge audit events could not be created.") from exc
