@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName, ConditionTiming, GrappleSource
 from app.domain.combatants import CombatantTemplate, DamageType
+from app.domain.grid import BattleMapDefinition, GridPosition
 from app.domain.modifiers import CombatModifier, ConcentrationState
 
 TimedTurnBehavior = Literal["normal", "forced_retreat"]
@@ -62,6 +63,7 @@ class CombatantState(BaseModel):
     current_hp: int
     max_hp_bonus: int = Field(default=0, ge=0)
     temporary_hp: int = Field(default=0, ge=0)
+    position: GridPosition | None = None
     initiative_roll: int | None = None
     initiative_total: int | None = None
     is_alive: bool = True
@@ -93,5 +95,7 @@ class CombatantState(BaseModel):
 
 
 class BattlefieldState(BaseModel):
+    map_definition: BattleMapDefinition | None = None
+    # Migration-only scalar distance fields. Remove after all canonical paths consume grid positions.
     starting_distance_ft: int = Field(default=5, ge=0)
     distance_ft: int = Field(default=5, ge=0)
