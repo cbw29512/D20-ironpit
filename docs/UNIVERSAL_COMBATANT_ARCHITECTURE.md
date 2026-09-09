@@ -91,6 +91,23 @@ Default Iron Pit voluntary movement policy is intentionally simple:
 
 The 24 x 16 arena therefore uses a capable pathfinder with deliberately simple destination policy. Pathfinding solves **how to reach a legal action position**; it does not invent tactical goals.
 
+### Offensive exhaustion before Dodge
+
+Dodge is the final legal-action fallback, never a substitute for a legal offensive option and never a way to hide an engine error.
+
+Before the Arena AI may choose Dodge, it must establish that the combatant cannot produce a legal offensive action this turn in any supported offensive family, including after legal movement that can make the action usable:
+
+1. no legal melee attack;
+2. no legal ranged attack;
+3. no legal offensive spell;
+4. no other legal offensive attack, SavingThrowAction, Multiattack/signature action, or supported damaging/control ability.
+
+This checklist is a **fallback gate**, not a universal tactical-priority override. A caster may still prefer its legal spell, a ranged combatant may still prefer its legal ranged attack, and a melee combatant may still prefer melee according to its normal Arena policy. The invariant is that Dodge is legal as the automated fallback only after every supported offensive family is unavailable or cannot be made legal with the combatant's remaining legal movement.
+
+If the combatant is physically blocked, lacks sufficient movement, has no valid path, has no target in usable range after movement, or otherwise cannot make any supported offensive option legal without violating RAW, it takes the shared Dodge action if its Action is available. This is an ordinary combat outcome, not an engine exception.
+
+Unsupported mechanics, malformed state, mixed position authority, impossible source data, and other engine/rules errors must still fail closed; they must never be converted into Dodge.
+
 ## Class -> subclass -> specialization
 
 A class is built once through the levels before subclass choice.
