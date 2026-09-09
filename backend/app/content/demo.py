@@ -59,6 +59,10 @@ def build_goblin_warrior() -> CombatantTemplate:
             initiative_bonus=2,
             weapon_attack=build_goblin_scimitar_attack(),
             alternate_weapon_attacks=[build_goblin_shortbow_attack()],
+            saving_throw_bonuses={
+                "strength": -1, "dexterity": 2, "constitution": 0,
+                "intelligence": 0, "wisdom": -1, "charisma": -1,
+            },
             visual=build_goblin_visual_loadout(),
             source="SRD 5.2.1 Goblin Warrior",
         )
