@@ -65,10 +65,14 @@ assert.equal(monster("Manticore", "large").detail, "manticore");
 assert.equal(monster("Pegasus", "large").detail, "pegasus");
 assert.equal(monster("Scorpion", "tiny").form, "scorpion");
 assert.equal(monster("Skeleton").detail, "skeleton");
+assert.equal(monster("Specter").form, "humanoid");
+assert.equal(monster("Specter").detail, "specter");
 assert.equal(monster("Spider", "tiny").form, "spider");
 assert.deepEqual({ form: monster("Swarm of Bats").form, detail: monster("Swarm of Bats").detail }, { form: "swarm", detail: "bats" });
 assert.deepEqual({ form: monster("Swarm of Rats").form, detail: monster("Swarm of Rats").detail }, { form: "swarm", detail: "rats" });
 assert.deepEqual({ form: monster("Swarm of Crawling Claws").form, detail: monster("Swarm of Crawling Claws").detail }, { form: "swarm", detail: "crawling-claws" });
+assert.equal(monster("Wraith").form, "humanoid");
+assert.equal(monster("Wraith").detail, "wraith");
 assert.equal(monster("Xorn").form, "brute");
 assert.equal(monster("Xorn").detail, "xorn");
 
