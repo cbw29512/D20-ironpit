@@ -1,5 +1,6 @@
 name: Sync Generated Certification Artifacts
 
+# Keep generator-owned certification artifacts synchronized on the active certification branch.
 on:
   push:
     branches:
