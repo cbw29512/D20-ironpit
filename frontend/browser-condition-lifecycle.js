@@ -8,7 +8,7 @@
   const label = (id) => id.replaceAll("_", " ").replace(/\b\w/g, (char) => char.toUpperCase());
   function repeatSaveDue(effect, round, timing) {
     if (effect.repeat_save_timing !== timing) return false;
-    return !(effect.effect_id === "poisoned" && effect.applied_round != null && round <= effect.applied_round);
+    return effect.repeat_save_eligible_round == null || round >= effect.repeat_save_eligible_round;
   }
 
   function resolveTargetTiming(sequence, round, target, timing) {
