@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - audit/raw-combat-log-figures-20260830
-      - fix/runtime-derived-monster-certification
 
 permissions:
   contents: write
