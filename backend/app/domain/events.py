@@ -49,7 +49,7 @@ class RollRevision(BaseModel):
 class AuditStep(BaseModel):
     phase: AuditPhase
     kind: Literal[
-        "roll", "revision", "check", "damage", "defense", "hp", "temp_hp",
+        "roll", "revision", "check", "damage", "defense", "hp", "max_hp", "temp_hp",
         "condition", "concentration", "resource", "outcome", "rule",
     ]
     label: str
@@ -115,6 +115,8 @@ class BattleEvent(BaseModel):
     turn_termination_reason: str | None = None
     hp_before: int | None = None
     hp_after: int | None = None
+    max_hp_before: int | None = Field(default=None, ge=0)
+    max_hp_after: int | None = Field(default=None, ge=0)
     temporary_hp_before: int | None = Field(default=None, ge=0)
     temporary_hp_after: int | None = Field(default=None, ge=0)
     death_save_successes_before: int | None = Field(default=None, ge=0, le=3)
