@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-from app.combat.action_economy import is_available, spend
+from app.combat.action_economy import is_available
 from app.combat.charge import resolve_charge_closing
 from app.combat.dice import DiceProvider
+from app.combat.dodge import resolve_dodge_action
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.formation import backline_holds_position
@@ -11,7 +12,6 @@ from app.combat.reaction_movement import move_toward_with_reactions
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, WeaponAttackKind
 
-DODGE_EFFECT_ID = "dodge"
 MELEE_BRAWL_DISTANCE_FT = 5
 
 
@@ -34,18 +34,6 @@ def _reachable_melee_distance(attacker: EncounterCombatant, distance_ft: int) ->
         if distance_ft > reach and distance_ft - reach <= attacker.state.movement_remaining_ft:
             return reach
     return None
-
-
-def _take_dodge(sequence: int, round_number: int, attacker: EncounterCombatant) -> BattleEvent:
-    spend(attacker.state, "action")
-    if DODGE_EFFECT_ID not in attacker.state.active_effect_ids:
-        attacker.state.active_effect_ids.append(DODGE_EFFECT_ID)
-    return BattleEvent(
-        sequence=sequence, round_number=round_number, event_type="feature",
-        actor_id=attacker.combatant_id, actor_name=attacker.state.template.name,
-        feature_id=DODGE_EFFECT_ID, animation="dodge",
-        description=f"{attacker.state.template.name} Dodges while closing to melee.",
-    )
 
 
 def _hold_backline(
@@ -119,7 +107,7 @@ def resolve_simple_closing(
         ))
         sequence += 1
     elif is_available(attacker.state, "action"):
-        events.append(_take_dodge(sequence, round_number, attacker))
+        events.append(resolve_dodge_action(sequence, round_number, attacker))
         sequence += 1
 
     movement_events, sequence, _ = move_toward_with_reactions(
