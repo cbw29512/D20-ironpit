@@ -11,7 +11,8 @@ for (const file of [
   "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-grapple.js", "browser-timed-conditions.js", "browser-modifiers.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
   "browser-zero-hp.js", "browser-attack.js", "browser-saves.js", "browser-offense-value.js", "browser-spellcasting.js", "browser-spell-area.js",
-  "browser-grid-geometry.js", "browser-area-shapes.js", "browser-area-targeting.js", "browser-spell-policy.js", "browser-spell-resolution.js",
+  "browser-grid-geometry.js", "browser-area-shapes.js", "browser-area-targeting.js", "browser-spell-policy.js", "browser-resources.js",
+  "browser-save-targets.js", "browser-spell-resolution.js",
 ]) load(file);
 
 const queuedDice = (values, fallback = 1) => {
