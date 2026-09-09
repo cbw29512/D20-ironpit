@@ -31,25 +31,32 @@ def legal_save_action(action: SavingThrowAction, target: EncounterCombatant, dis
 def resolve_save_action(
     sequence: int, round_number: int, actor: EncounterCombatant, target: EncounterCombatant,
     action: SavingThrowAction, distance_ft: int, dice: DiceProvider, *, spend_action: bool = True,
-    shared_damage_rolls: list[int] | None = None, affected_states: list[CombatantState] | None = None,
+    spend_resource_cost: bool = True, shared_damage_rolls: list[int] | None = None,
+    capture_shared_damage_rolls: list[int] | None = None,
+    affected_states: list[CombatantState] | None = None,
 ) -> BattleEvent:
     try:
         if spend_action and not is_available(actor.state, "action"):
             raise ValueError("Action is not available for a saving throw action.")
         if not legal_save_action(action, target, distance_ft):
             raise ValueError(f"{action.name} has no legal target at {distance_ft} feet.")
-        if not resource_available(actor.state, action.resource_id, action.resource_cost):
+        if spend_resource_cost and not resource_available(actor.state, action.resource_id, action.resource_cost):
             raise ValueError(f"{action.name} does not have its required resource available.")
         save_roll, succeeded = resolve_saving_throw(target.state, action.save_ability, action.dc, dice)
         if spend_action:
             spend(actor.state, "action")
-        resource_remaining = spend_resource(actor.state, action.resource_id, action.resource_cost)
+        resource_remaining = (
+            spend_resource(actor.state, action.resource_id, action.resource_cost)
+            if spend_resource_cost else None
+        )
         hp_before = target.state.current_hp
         temporary_hp_before = target.state.temporary_hp
         death_success_before = target.state.death_save_successes
         death_failure_before = target.state.death_save_failures
         concentration_before = target.state.concentration.effect_id if target.state.concentration else None
-        rolled_components = build_save_damage_components(action, dice, succeeded, shared_damage_rolls)
+        rolled_components = build_save_damage_components(
+            action, dice, succeeded, shared_damage_rolls, capture_shared_damage_rolls,
+        )
         applied_total, damage_components = apply_damage_defenses(target.state, rolled_components)
         damage_roll = None
         damage_outcome = None
