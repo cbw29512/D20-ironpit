@@ -29,6 +29,7 @@ def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
             controls.append(compile_persistent_effect(effect))
         else:
             raise UnsupportedCapabilityError(f"Unsupported save effect: {effect!r}")
+    legacy_grapple = controls[0] if len(controls) == 1 and controls[0].grapple_escape_dc is not None else None
     return SavingThrowAction(
         id=definition.id,
         name=definition.name,
@@ -43,6 +44,8 @@ def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
         success_damage=definition.success_damage,
         persistent_effects=controls,
         on_failure_modifier_effects=modifiers,
+        grapple_escape_dc=legacy_grapple.grapple_escape_dc if legacy_grapple else None,
+        restrains_while_grappled=legacy_grapple.restrains_while_grappled if legacy_grapple else False,
         animation=definition.animation,
     )
 
