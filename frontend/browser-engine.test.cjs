@@ -11,17 +11,17 @@ const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, 
 for (const file of [
   "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js",
   "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
-  "browser-grapple.js", "browser-timed-conditions.js", "browser-weapon-mastery.js",
-  "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js",
+  "browser-resources.js", "browser-recharge.js", "browser-grapple.js", "browser-timed-conditions.js",
+  "browser-weapon-mastery.js", "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js",
   "browser-graze.js", "browser-vex.js", "browser-attack.js", "browser-reactions.js",
   "browser-dodge.js", "browser-saves.js", "browser-condition-lifecycle.js", "browser-charge.js",
   "browser-light-weapons.js", "browser-light-attack.js", "browser-standard-attack-action.js",
   "browser-multiattack.js", "browser-healing.js", "browser-spellcasting.js", "browser-condition-removal.js",
-  "browser-support.js", "browser-formation.js", "browser-arena-map.js", "browser-grid-geometry.js",
-  "browser-grid-movement-support.js", "browser-grid-path-search-support.js", "browser-grid-path-search.js",
-  "browser-grid-movement.js", "browser-grid-reaction-support.js", "browser-reaction-movement.js",
-  "browser-offensive-ranges.js", "browser-offensive-movement.js", "browser-grid-placement.js",
-  "browser-turn.js", "browser-initiative.js", "browser-engine.js",
+  "browser-support.js", "browser-formation.js", "browser-recharge-action.js", "browser-arena-map.js",
+  "browser-grid-geometry.js", "browser-grid-movement-support.js", "browser-grid-path-search-support.js",
+  "browser-grid-path-search.js", "browser-grid-movement.js", "browser-grid-reaction-support.js",
+  "browser-reaction-movement.js", "browser-offensive-ranges.js", "browser-offensive-movement.js",
+  "browser-grid-placement.js", "browser-turn.js", "browser-initiative.js", "browser-engine.js",
 ]) load(file);
 
 function deterministicDice(seed = 12345) {
@@ -45,6 +45,41 @@ function queuedDice(values, fallback = 10) {
 function fight(heroIds, monsterIds, dice = deterministicDice()) {
   window.IRON_PIT_DICE = dice;
   return window.IRON_PIT_BROWSER_ENGINE.runEncounter({ hero_ids: heroIds, monster_ids: monsterIds });
+}
+
+{
+  const member = {
+    combatant_id: "monster-1:recharge-test",
+    state: {
+      resources: { rock: 0 },
+      template: {
+        id: "recharge-test",
+        name: "Recharge Test",
+        resourceDefinitions: {
+          rock: {
+            name: "Rock",
+            maxUses: 1,
+            recharge: { trigger: "start_of_turn", dieSize: 6, minimumRoll: 6 },
+          },
+        },
+      },
+    },
+  };
+  window.IRON_PIT_DICE = queuedDice([5, 6]);
+  let result = window.IRON_PIT_BROWSER_RECHARGE.resolveStartTurn(1, 2, member);
+  assert.equal(member.state.resources.rock, 0, "Recharge 6 must remain expended on a 5");
+  assert.equal(result.events.length, 1);
+  assert.equal(result.events[0].resource_roll.selected_roll, 5);
+  assert.equal(result.events[0].resource_remaining, 0);
+
+  result = window.IRON_PIT_BROWSER_RECHARGE.resolveStartTurn(result.sequence, 3, member);
+  assert.equal(member.state.resources.rock, 1, "Recharge 6 must restore the resource on a 6");
+  assert.equal(result.events[0].resource_roll.selected_roll, 6);
+  assert.equal(result.events[0].resource_remaining, 1);
+
+  window.IRON_PIT_DICE = { roll: () => { throw new Error("available Recharge resource must not roll"); } };
+  result = window.IRON_PIT_BROWSER_RECHARGE.resolveStartTurn(result.sequence, 4, member);
+  assert.deepEqual(result.events, [], "available Recharge resource must skip the Recharge roll");
 }
 
 {
