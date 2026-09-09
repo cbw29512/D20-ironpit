@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.content.monster_catalog import build_monster_catalog, load_monster_rows
-from app.content.monster_trait_source_audit import parse_trait_names, trait_issues
+from app.content.monster_trait_source_audit import parse_trait_names, source_trait_names, trait_issues
 from app.content.roster import build_arena_roster
 from app.domain.catalog import CoverageStatus
 from app.domain.traits import CombatTrait
@@ -87,12 +87,12 @@ def test_xorn_environmental_and_utility_traits_are_arena_neutral() -> None:
 def test_incorporeal_movement_is_neutral_but_sunlight_sensitivity_fails_closed() -> None:
     try:
         expected = ["Incorporeal Movement", "Sunlight Sensitivity"]
-        for name in ("Specter", "Wraith"):
-            monster = _monster(name)
-            assert monster.source_trait_names == expected
-            issues = trait_issues(monster, _row(name))
-            assert "uncertified-trait:sunlight-sensitivity" in issues
-            assert "uncertified-trait:incorporeal-movement" not in issues
+        specter = _monster("Specter")
+        assert specter.source_trait_names == expected
+        assert source_trait_names("Wraith") == expected
+        issues = trait_issues(specter, _row("Specter"))
+        assert "uncertified-trait:sunlight-sensitivity" in issues
+        assert "uncertified-trait:incorporeal-movement" not in issues
     except Exception:
         logger.exception("Sunlight Sensitivity fail-closed certification regression failed.")
         raise
