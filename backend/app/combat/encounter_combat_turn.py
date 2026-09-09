@@ -9,6 +9,7 @@ from app.combat.cleric_channel_support import resolve_channel_support
 from app.combat.condition_removal import choose_condition_removal_action, resolve_condition_removal
 from app.combat.condition_rules import is_incapacitated
 from app.combat.dice import DiceProvider
+from app.combat.dodge import resolve_dodge_action
 from app.combat.encounter_action_surge import resolve_action_surge_attack
 from app.combat.grapple import cleanup_grapples, resolve_escape_grapple, should_escape_grapple
 from app.combat.healing import choose_healing_action, resolve_healing
@@ -71,7 +72,7 @@ def resolve_combat_turn(
     sequence: int, round_number: int, attacker: EncounterCombatant, target: EncounterCombatant,
     setup: EncounterSetup, dice: DiceProvider,
 ) -> tuple[list[BattleEvent], int]:
-    """Resolve a fixed-formation Iron Pit turn; ordinary movement is abstracted away."""
+    """Resolve one Iron Pit turn through the shared combat and fallback policy."""
     events: list[BattleEvent] = []
     cleanup_grapples(setup)
     begin_turn(attacker.state)
@@ -141,4 +142,6 @@ def resolve_combat_turn(
             advantage_sources=1 if pack else 0, feature_id=feature,
         )
         events.extend(more)
+    elif is_available(attacker.state, "action"):
+        events.append(resolve_dodge_action(sequence, round_number, attacker)); sequence += 1
     return _finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
