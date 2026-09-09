@@ -19,7 +19,7 @@ def choose_offensive_movement_intent(
     setup: EncounterSetup,
     turn_key: str,
 ) -> OffensiveMovementIntent | None:
-    """Return the cheapest movement intent that can make supported offense legal this turn."""
+    """Return the cheapest useful movement intent toward a supported offensive position."""
     try:
         if not is_available(attacker.state, "action") or setup.map_definition is None:
             return None
@@ -44,7 +44,9 @@ def choose_offensive_movement_intent(
                     desired_distance,
                     attacker.state.movement_remaining_ft,
                 )
-                if plan.final_distance_ft > desired_distance:
+                if not plan.goal_reachable or not plan.path:
+                    continue
+                if plan.final_distance_ft >= distance:
                     continue
                 candidates.append((
                     plan.movement_cost_ft,
@@ -76,7 +78,7 @@ def move_to_enable_offense(
     turn_key: str,
     dice,
 ) -> tuple[list[BattleEvent], int]:
-    """Move only when legal movement can enable a supported offensive family this turn."""
+    """Advance only along a route that can eventually enable supported offense."""
     try:
         if setup.map_definition is None:
             return [], sequence
