@@ -40,6 +40,10 @@ class ConditionalDamage(BaseModel):
     damage_type: DamageType
 
 
+class ConditionalAttackAdvantage(BaseModel):
+    trigger: Literal["target_not_full_hp"]
+
+
 class OnHitDamage(BaseModel):
     source: str
     dice_count: int = Field(ge=0, le=40)
@@ -84,6 +88,7 @@ class WeaponAttack(BaseModel):
     attack_ability_modifier: int | None = None
     fixed_damage: int | None = Field(default=None, ge=0)
     conditional_damage: list[ConditionalDamage] = Field(default_factory=list)
+    conditional_attack_advantage: list[ConditionalAttackAdvantage] = Field(default_factory=list)
     on_hit_damage: list[OnHitDamage] = Field(default_factory=list)
     on_hit_modifier_effects: list[HitModifierEffect] = Field(default_factory=list)
     rage_eligible: bool = False

@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field, model_validator
 from app.domain.actions import AbilityName
 from app.domain.capability_effects import AttackEffectDefinition, DiceSpec, GrappleEffectDefinition
 from app.domain.size import CreatureSize
-from app.domain.weapons import DamageType, WeaponAttackKind
+from app.domain.weapons import ConditionalAttackAdvantage, DamageType, WeaponAttackKind
 
 
 class AttackCapabilityDefinition(BaseModel):
@@ -33,6 +33,7 @@ class AttackCapabilityDefinition(BaseModel):
     attack_ability: AbilityName | None = None
     attack_ability_modifier: int | None = None
     rage_eligible: bool = False
+    conditional_attack_advantage: list[ConditionalAttackAdvantage] = Field(default_factory=list)
     effects: list[AttackEffectDefinition] = Field(default_factory=list)
     forbid_target_grappled_by_self: bool = False
 
