@@ -60,7 +60,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
     on_hit_modifiers: list[HitModifierEffect] = []
     conditional: list[ConditionalDamage] = []
     prone_size = None
-    control = None
+    controls: list[HitControlEffect] = []
     for effect in definition.effects:
         if isinstance(effect, DamageEffectDefinition):
             if effect.trigger == "on_hit":
@@ -85,7 +85,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
         elif isinstance(effect, HitModifierEffect):
             on_hit_modifiers.append(effect)
         elif isinstance(effect, (GrappleEffectDefinition, ConditionEffectDefinition)):
-            control = _compile_control(effect)
+            controls.append(_compile_control(effect))
         else:
             raise UnsupportedCapabilityError(f"Unsupported attack effect: {effect!r}")
     return WeaponAttack(
@@ -101,6 +101,6 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
         on_hit_damage=on_hit,
         on_hit_modifier_effects=on_hit_modifiers,
         knocks_prone_max_size=prone_size,
-        control_effect=control,
+        persistent_effects=controls,
         forbid_target_grappled_by_self=definition.forbid_target_grappled_by_self,
     )
