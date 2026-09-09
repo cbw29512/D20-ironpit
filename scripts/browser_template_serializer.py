@@ -69,6 +69,9 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             row.update(normal=weapon.normal_range_ft, long=weapon.long_range_ft, projectile=weapon.projectile)
         if attack.fixed_damage is not None:
             row["fixedDamage"] = attack.fixed_damage
+        if attack.resource_id:
+            row["resourceId"] = attack.resource_id
+            row["resourceCost"] = attack.resource_cost
         if attack.rage_eligible:
             row["rageEligible"] = True
         if attack.knocks_prone_max_size is not None:
@@ -143,6 +146,9 @@ def _save(action: Any) -> dict[str, Any]:
     }
     if action.target_max_size:
         row["targetMaxSize"] = _value(action.target_max_size)
+    if action.resource_id:
+        row["resourceId"] = action.resource_id
+        row["resourceCost"] = action.resource_cost
     persistent = _controls(action.ordered_persistent_effects())
     if len(persistent) > 1:
         row["persistentEffects"] = persistent
@@ -274,6 +280,13 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                        "off_hand": template.visual.off_hand, "body_style": template.visual.body_style},
             "source": template.source, **_progression_features(template),
         }
+        rechargeable = [item for item in template.resources if item.recharge_minimum is not None]
+        if rechargeable:
+            row["resourceDefinitions"] = [
+                {"id": item.id, "maxUses": item.max_uses, "rechargeMinimum": item.recharge_minimum,
+                 "rechargeDieSize": item.recharge_die_size}
+                for item in rechargeable
+            ]
         if template.kind == "monster":
             row["source_trait_names"] = list(template.source_trait_names)
             row["source_reaction_names"] = list(template.source_reaction_names)
