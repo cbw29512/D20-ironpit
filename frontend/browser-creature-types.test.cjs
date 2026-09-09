@@ -37,15 +37,14 @@ for (const id of [
   ]);
 }
 
-const incorporealProfiles = [
-  ["srd-specter", ["Incorporeal Movement"]],
-  ["srd-wraith", ["Incorporeal Movement", "Sunlight Sensitivity"]],
-];
-for (const [id, sourceTraitNames] of incorporealProfiles) {
-  const monster = monsters[id];
-  assert.ok(monster, `${id} must be certified when Incorporeal Movement is classified as combat-irrelevant in the standard Pit`);
-  assert.deepEqual(monster.source_trait_names, sourceTraitNames);
-  assert.equal(monster.movement_modes.fly_ft > 0, true, `${id} must preserve its printed flight movement`);
-}
+const specter = monsters["srd-specter"];
+assert.ok(specter, "srd-specter must be certified when Incorporeal Movement is combat-irrelevant in the standard Pit");
+assert.deepEqual(specter.source_trait_names, ["Incorporeal Movement"]);
+assert.equal(specter.movement_modes.fly_ft > 0, true, "srd-specter must preserve its printed flight movement");
 
-console.log("Generated browser monsters preserve source movement/traits, including combat-irrelevant Incorporeal Movement, and export target-missing-hp Advantage declaratively.");
+const wraith = monsters["srd-wraith"];
+assert.ok(wraith, "srd-wraith must preserve its full source trait fingerprint while Incorporeal Movement is arena-irrelevant");
+assert.deepEqual(wraith.source_trait_names, ["Incorporeal Movement", "Sunlight Sensitivity"]);
+assert.equal(wraith.movement_modes.fly_ft > 0, true, "srd-wraith must preserve its printed flight movement");
+
+console.log("Generated browser monsters preserve creature type, movement, combat traits, and complete source trait fingerprints.");
