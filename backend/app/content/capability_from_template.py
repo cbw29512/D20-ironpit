@@ -34,6 +34,12 @@ def _control_effect(control) -> dict[str, object]:
     raise UnsupportedCapabilityError("Runtime control rider has no supported grapple or condition effect.")
 
 
+def _resource_binding(result: dict[str, object], action) -> None:
+    if action.resource_id is not None:
+        result["resource_id"] = action.resource_id
+        result["resource_cost"] = action.resource_cost
+
+
 def _attack(attack: WeaponAttack) -> dict[str, object]:
     weapon = attack.weapon
     effects: list[dict[str, object]] = [
@@ -70,6 +76,7 @@ def _attack(attack: WeaponAttack) -> dict[str, object]:
         "rage_eligible": attack.rage_eligible,
         "effects": effects, "forbid_target_grappled_by_self": attack.forbid_target_grappled_by_self,
     }
+    _resource_binding(result, attack)
     if attack.fixed_damage is None:
         result["damage"] = _dice(weapon.dice_count, weapon.dice_size, attack.damage_bonus)
     else:
@@ -83,6 +90,7 @@ def _save(action) -> dict[str, object]:
         "dc": action.dc, "range_ft": action.range_ft, "target_max_size": action.target_max_size,
         "success_damage": action.success_damage, "animation": action.animation,
     }
+    _resource_binding(result, action)
     if action.damage_dice_count:
         result["damage"] = _dice(action.damage_dice_count, action.damage_dice_size, action.damage_bonus)
         result["damage_type"] = action.damage_type

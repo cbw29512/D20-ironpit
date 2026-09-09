@@ -34,7 +34,7 @@ def _save_choice(attacker, setup, slot):
             if action.id not in allowed:
                 continue
             distance = save_distance(attacker, target, action.range_ft)
-            if legal_save_action(action, target, distance):
+            if legal_save_action(action, target, distance, attacker.state):
                 return target, action, distance
     return None
 
