@@ -6,6 +6,7 @@ import re
 ROOT = Path(__file__).resolve().parents[1]
 FRONTEND = ROOT / "frontend"
 _LOAD_BLOCK = re.compile(r"for \(const file of \[(?P<body>.*?)\]\) load\(file\);", re.S)
+_DIRECT_LOAD = re.compile(r'^(?P<indent>\s*)load\("(?P<name>[^"]+\.js)"\);\s*$')
 _QUOTED_FILE = re.compile(r'"([^"]+\.js)"')
 _SHARED = ["browser-forced-movement.js", "browser-control.js"]
 _ATTACK_ONLY = ["browser-attack-helpers.js"]
@@ -36,7 +37,7 @@ def _sync_files(files: list[str]) -> list[str]:
     return result
 
 
-def _render(files: list[str]) -> str:
+def _render_block(files: list[str]) -> str:
     lines = []
     for index in range(0, len(files), 4):
         chunk = ", ".join(f'"{name}"' for name in files[index:index + 4])
@@ -44,12 +45,35 @@ def _render(files: list[str]) -> str:
     return "for (const file of [\n" + "\n".join(lines) + "\n]) load(file);"
 
 
+def _sync_direct_groups(text: str) -> str:
+    lines = text.splitlines()
+    result: list[str] = []
+    index = 0
+    while index < len(lines):
+        match = _DIRECT_LOAD.match(lines[index])
+        if match is None:
+            result.append(lines[index])
+            index += 1
+            continue
+        indent = match.group("indent")
+        files: list[str] = []
+        while index < len(lines):
+            current = _DIRECT_LOAD.match(lines[index])
+            if current is None or current.group("indent") != indent:
+                break
+            files.append(current.group("name"))
+            index += 1
+        result.extend(f'{indent}load("{name}");' for name in _sync_files(files))
+    suffix = "\n" if text.endswith("\n") else ""
+    return "\n".join(result) + suffix
+
+
 def _sync_text(text: str) -> str:
     def replace(match: re.Match[str]) -> str:
         files = _QUOTED_FILE.findall(match.group("body"))
-        return _render(_sync_files(files))
+        return _render_block(_sync_files(files))
 
-    return _LOAD_BLOCK.sub(replace, text)
+    return _sync_direct_groups(_LOAD_BLOCK.sub(replace, text))
 
 
 def main() -> int:
