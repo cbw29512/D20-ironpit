@@ -9,4 +9,5 @@ FIGURE_PROFILE_EXTENSIONS = {
     **RECHARGE_FIGURE_PROFILES,
     **FORCED_MOVEMENT_FIGURE_PROFILES,
     "Ettin": {"form": "brute", "detail": "ettin"},
+    "Fire Giant": {"form": "brute", "detail": "fire-giant"},
 }
