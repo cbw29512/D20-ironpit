@@ -6,6 +6,7 @@
   const P = () => window.IRON_PIT_BROWSER_PRECOMBAT_SPELLS;
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION, B = () => window.IRON_PIT_BROWSER_SOURCE_BOUND_EFFECTS;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
+  const M = () => window.IRON_PIT_BROWSER_ARENA_MAP;
   const I = () => window.IRON_PIT_BROWSER_INITIATIVE;
   const heroes = () => window.IRON_PIT_BROWSER_HEROES;
   const monsters = () => window.IRON_PIT_BROWSER_MONSTERS;
@@ -13,22 +14,28 @@
   function cloneTemplate(template) { return structuredClone(template); }
 
   function buildSetup(selection) {
-    const heroMembers = selection.hero_ids.map((id, index) => {
-      if (!heroes()[id]) throw new Error(`Unknown certified hero: ${id}`);
-      const template = cloneTemplate(heroes()[id]);
-      return { combatant_id: `hero-${index + 1}:${id}`, side: "heroes", position_ft: F().startingPosition(template, "heroes"), state: S().buildState(template) };
-    });
-    const monsterMembers = selection.monster_ids.map((id, index) => {
-      if (!monsters()[id]) throw new Error(`Unknown certified monster: ${id}`);
-      const template = cloneTemplate(monsters()[id]);
-      return { combatant_id: `monster-${index + 1}:${id}`, side: "monsters", position_ft: F().startingPosition(template, "monsters"), state: S().buildState(template) };
-    });
-    return {
-      heroes: heroMembers,
-      monsters: monsterMembers,
-      hero_total_levels: heroMembers.reduce((sum, item) => sum + item.state.template.level, 0),
-      monster_total_cr: totalCr(monsterMembers.map((item) => item.state.template.challenge_rating)),
-    };
+    try {
+      const heroMembers = selection.hero_ids.map((id, index) => {
+        if (!heroes()[id]) throw new Error(`Unknown certified hero: ${id}`);
+        const template = cloneTemplate(heroes()[id]);
+        return { combatant_id: `hero-${index + 1}:${id}`, side: "heroes", position_ft: F().startingPosition(template, "heroes"), state: S().buildState(template) };
+      });
+      const monsterMembers = selection.monster_ids.map((id, index) => {
+        if (!monsters()[id]) throw new Error(`Unknown certified monster: ${id}`);
+        const template = cloneTemplate(monsters()[id]);
+        return { combatant_id: `monster-${index + 1}:${id}`, side: "monsters", position_ft: F().startingPosition(template, "monsters"), state: S().buildState(template) };
+      });
+      return {
+        heroes: heroMembers,
+        monsters: monsterMembers,
+        hero_total_levels: heroMembers.reduce((sum, item) => sum + item.state.template.level, 0),
+        monster_total_cr: totalCr(monsterMembers.map((item) => item.state.template.challenge_rating)),
+        map_definition: M().buildStandardMap(),
+      };
+    } catch (error) {
+      console.error("Failed to build browser encounter setup", { selection, error });
+      throw error;
+    }
   }
 
   function crNumber(value) {
