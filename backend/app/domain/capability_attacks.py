@@ -5,7 +5,12 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName
-from app.domain.capability_effects import AttackEffectDefinition, DiceSpec, GrappleEffectDefinition
+from app.domain.capability_effects import (
+    AttackEffectDefinition,
+    DiceSpec,
+    GrappleEffectDefinition,
+    PersistentEffectDefinition,
+)
 from app.domain.size import CreatureSize
 from app.domain.weapons import DamageType, WeaponAttackKind
 
@@ -59,6 +64,7 @@ class SaveCapabilityDefinition(BaseModel):
     damage: DiceSpec | None = None
     damage_type: DamageType | None = None
     success_damage: Literal["none", "half"] = "none"
+    effects: list[PersistentEffectDefinition] = Field(default_factory=list)
     grapple: GrappleEffectDefinition | None = None
     animation: str = "save-effect"
 
