@@ -5,7 +5,8 @@ from typing import NamedTuple
 from app.combat.dice import DiceProvider
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.domain.effect_gates import EffectGate
-from app.domain.models import CombatantState, DiceRoll
+from app.domain.events import DiceRoll
+from app.domain.runtime import CombatantState
 
 
 class EffectGateResult(NamedTuple):
@@ -31,5 +32,7 @@ def evaluate_effect_gate(
         return EffectGateResult(True)
     if dice is None:
         raise ValueError("Save-gated effect requires a dice provider.")
-    roll, succeeded = resolve_saving_throw(target, gate.save_ability, gate.save_dc or 0, dice)
+    if gate.save_dc is None:
+        raise ValueError("Save-gated effect requires a save DC.")
+    roll, succeeded = resolve_saving_throw(target, gate.save_ability, gate.save_dc, dice)
     return EffectGateResult(not succeeded, roll, succeeded)

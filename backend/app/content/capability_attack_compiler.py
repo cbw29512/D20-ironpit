@@ -8,6 +8,7 @@ from app.domain.capability_effects import (
     GrappleEffectDefinition,
     ProneEffectDefinition,
 )
+from app.domain.effect_gates import EffectGate
 from app.domain.hit_modifiers import HitModifierEffect
 from app.domain.models import ConditionalDamage, OnHitDamage, Weapon, WeaponAttack
 
@@ -90,7 +91,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
                     damage_bonus=effect.dice.bonus,
                     damage_type=effect.damage_type,
                 ))
-        elif isinstance(effect, ProneEffectDefinition) and effect.gate == effect.gate.__class__():
+        elif isinstance(effect, ProneEffectDefinition) and effect.gate == EffectGate():
             prone_size = effect.max_target_size
         elif isinstance(effect, HitModifierEffect):
             on_hit_modifiers.append(effect)

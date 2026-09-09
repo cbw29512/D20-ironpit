@@ -37,6 +37,8 @@ def _registry_row(definition) -> dict[str, object]:
     if not row.get("creature_tags"):
         row.pop("creature_tags", None)
     for action in [*row.get("attacks", []), *row.get("save_actions", [])]:
+        if action.get("resource_id") is None and action.get("resource_cost") == 1:
+            action.pop("resource_cost", None)
         for effect in action.get("effects", []):
             if isinstance(effect, dict):
                 _strip_default_gate(effect)
