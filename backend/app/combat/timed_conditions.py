@@ -22,6 +22,7 @@ def apply_timed_condition(
     repeat_save_ability: AbilityName | None = None,
     repeat_save_dc: int | None = None,
     repeat_save_timing: ConditionTiming | None = None,
+    repeat_save_delay_rounds: int = 0,
     allowed_removal_action_ids: list[str] | None = None,
     affected_states: list[CombatantState] | None = None,
     turn_behavior: TimedTurnBehavior = "normal",
@@ -31,6 +32,10 @@ def apply_timed_condition(
 ) -> str | None:
     if condition_is_immune(state, effect_id):
         return None
+    if repeat_save_delay_rounds < 0:
+        raise ValueError("Repeat-save delay cannot be negative.")
+    if repeat_save_delay_rounds and applied_round is None:
+        raise ValueError("Delayed repeat saves require the application round.")
     if effect_id == POISONED_EFFECT_ID and any(
         effect.effect_id == POISONED_EFFECT_ID for effect in state.timed_effects
     ):
@@ -43,6 +48,8 @@ def apply_timed_condition(
             and effect.source_effect_id == source_effect_id
         )
     ]
+    repeat_rule = all(item is not None for item in (repeat_save_ability, repeat_save_dc, repeat_save_timing))
+    repeat_eligible = applied_round + repeat_save_delay_rounds if repeat_rule and applied_round is not None else None
     state.timed_effects.append(TimedEffect(
         effect_id=effect_id,
         source_id=source_id,
@@ -54,6 +61,7 @@ def apply_timed_condition(
         repeat_save_ability=repeat_save_ability,
         repeat_save_dc=repeat_save_dc,
         repeat_save_timing=repeat_save_timing,
+        repeat_save_eligible_round=repeat_eligible,
         allowed_removal_action_ids=allowed_removal_action_ids or [],
         turn_behavior=turn_behavior,
         ends_on_damage=ends_on_damage,
