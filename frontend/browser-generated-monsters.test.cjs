@@ -46,7 +46,13 @@ for (const id of [
 assert.ok(generated["srd-tyrannosaurus-rex"]);
 assert.ok(generated["srd-commoner"], "Certified Commoner must be present in the browser runtime");
 assert.ok(generated["srd-lemure"], "Certified Lemure must be present in the browser runtime");
-assert.equal(generated["srd-killer-whale"], undefined, "Aquatic-only Killer Whale must remain deferred from the standard arena");
+const killerWhale = generated["srd-killer-whale"];
+assert.ok(killerWhale, "Killer Whale must be present because Iron Pit environmental hospitality is universal");
+assert.equal(killerWhale.speed_ft, 5, "Killer Whale generic/base speed must preserve the printed 5-foot speed");
+assert.deepEqual(killerWhale.movement_modes, {
+  walk_ft: 5, fly_ft: 0, climb_ft: 0, swim_ft: 60, burrow_ft: 0, hover: false,
+}, "Killer Whale must preserve its printed swim-speed fingerprint without reinterpreting it as generic speed");
+assert.deepEqual(killerWhale.source_trait_names, ["Hold Breath"], "Killer Whale must retain its source trait fingerprint");
 assert.deepEqual(generated["srd-cultist"].attacks[0].onHitDamage, [
   { source: "Necrotic", diceCount: 0, diceSize: 2, damageBonus: 1, damageType: "necrotic" },
 ]);
