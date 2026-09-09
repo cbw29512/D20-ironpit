@@ -8,10 +8,11 @@ def test_all_declarative_combatants_compile_to_action_ir() -> None:
         action_ir = compile_combatant_action_ir(definition)
         assert action_ir.combatant_id == definition.id
         assert action_ir.primary_attack_id == definition.primary_attack_id
-        expected_reaction_ids = {
-            *("parry",) if definition.parry_reaction is not None else (),
-            *("redirect-attack",) if definition.redirect_attack_reaction is not None else (),
-        }
+        expected_reaction_ids = set()
+        if definition.parry_reaction is not None:
+            expected_reaction_ids.add("parry")
+        if definition.redirect_attack_reaction is not None:
+            expected_reaction_ids.add("redirect-attack")
         expected_count = (
             len(definition.attacks)
             + len(definition.save_actions)
