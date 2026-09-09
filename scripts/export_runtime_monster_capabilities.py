@@ -17,20 +17,25 @@ _HERO_ONLY_PROGRESSION_FIELDS = {
 }
 
 
+def _registry_row(definition) -> dict[str, object]:
+    row = definition.model_dump(
+        mode="json",
+        exclude_none=True,
+        exclude={"progression_features": _HERO_ONLY_PROGRESSION_FIELDS},
+    )
+    for action in row.get("save_actions", []):
+        if not action.get("effects"):
+            action.pop("effects", None)
+    return row
+
+
 def render_registry() -> str:
     monsters = build_legacy_monster_templates()
     definitions = [definition_from_template(monster) for monster in monsters]
     ids = [definition.id for definition in definitions]
     if len(ids) != len(set(ids)):
         raise RuntimeError("Legacy runtime monster ids must be unique before capability export.")
-    payload = [
-        definition.model_dump(
-            mode="json",
-            exclude_none=True,
-            exclude={"progression_features": _HERO_ONLY_PROGRESSION_FIELDS},
-        )
-        for definition in definitions
-    ]
+    payload = [_registry_row(definition) for definition in definitions]
     return json.dumps(payload, indent=2, sort_keys=False) + "\n"
 
 
