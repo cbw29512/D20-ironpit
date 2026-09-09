@@ -10,6 +10,7 @@ from app.domain.actions import SavingThrowAction
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.grid import BattleMapDefinition, GridPosition
 from app.domain.runtime import ResourceState
+from app.domain.size import CreatureSize
 from app.domain.targeting import AreaTargeting
 
 
@@ -51,14 +52,8 @@ def test_first_zero_damage_success_still_establishes_one_shared_damage_roll() ->
     first = _member("first", "monsters", 2, 5)
     second = _member("second", "monsters", 3, 5)
     events, next_sequence = resolve_save_targets(
-        1,
-        1,
-        actor,
-        _setup(actor, [first, second]),
-        _action(),
-        ("first", "second"),
-        FixedDiceProvider([20, 4, 1]),
-        skip_range_check=True,
+        1, 1, actor, _setup(actor, [first, second]), _action(), ("first", "second"),
+        FixedDiceProvider([20, 4, 1]), skip_range_check=True,
     )
     assert next_sequence == 3
     assert events[0].save_succeeded is True
@@ -73,16 +68,10 @@ def test_area_save_spends_one_action_and_one_resource_for_multiple_targets() -> 
     first = _member("first", "monsters", 2, 5)
     second = _member("second", "monsters", 3, 5)
     action = _action(
-        resource_id="breath-use",
-        area=AreaTargeting(shape="cone", origin="self", length_ft=15),
+        resource_id="breath-use", area=AreaTargeting(shape="cone", origin="self", length_ft=15),
     )
     events, next_sequence, placement = resolve_area_save_action(
-        10,
-        2,
-        actor,
-        _setup(actor, [first, second]),
-        action,
-        FixedDiceProvider([1, 4, 20]),
+        10, 2, actor, _setup(actor, [first, second]), action, FixedDiceProvider([1, 4, 20]),
     )
     assert placement.target_ids == ("first", "second")
     assert len(events) == 2
@@ -93,6 +82,25 @@ def test_area_save_spends_one_action_and_one_resource_for_multiple_targets() -> 
     assert events[1].resource_remaining is None
     assert events[0].damage_components[0].rolls == [4]
     assert events[1].damage_components == []
+
+
+def test_area_preflight_rejects_illegal_covered_target_without_spending_costs() -> None:
+    actor = _member("actor", "heroes", 1, 5)
+    actor.state.resources.append(ResourceState(id="breath-use", name="Breath", current_uses=1, max_uses=1))
+    target = _member("target", "monsters", 2, 5)
+    action = _action(
+        resource_id="breath-use",
+        target_max_size=CreatureSize.SMALL,
+        area=AreaTargeting(shape="cone", origin="self", length_ft=15),
+    )
+    try:
+        resolve_area_save_action(1, 1, actor, _setup(actor, [target]), action, FixedDiceProvider([1]))
+    except ValueError as exc:
+        assert "cannot legally affect" in str(exc)
+    else:
+        raise AssertionError("Illegal area target resolved instead of failing during preflight.")
+    assert actor.state.action_available is True
+    assert actor.state.resources[0].current_uses == 1
 
 
 def test_multi_target_save_rejects_allies_and_duplicate_targets_before_rolling() -> None:
