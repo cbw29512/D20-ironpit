@@ -1,25 +1,44 @@
 from __future__ import annotations
 
-import heapq
 import logging
 
 from app.combat.grid_geometry import footprint_distance_ft
-from app.combat.grid_pathing_support import (
-    movement_step_cost_ft,
-    overlapping_occupants,
-    position_for,
-    reconstruct_path,
-)
+from app.combat.grid_path_search import search_path_toward
+from app.combat.grid_pathing_support import movement_step_cost_ft, overlapping_occupants, position_for
 from app.domain.encounters import EncounterCombatant
 from app.domain.grid import BattleMapDefinition, GridMovementPlan, GridPosition
 
 logger = logging.getLogger(__name__)
-_NEIGHBOR_OFFSETS = tuple(
-    (dx, dy)
-    for dx in (-1, 0, 1)
-    for dy in (-1, 0, 1)
-    if dx or dy
-)
+
+
+def _affordable_legal_prefix(
+    map_definition: BattleMapDefinition,
+    mover: EncounterCombatant,
+    members: list[EncounterCombatant],
+    route: list[GridPosition],
+    movement_budget_ft: int,
+) -> tuple[list[GridPosition], int]:
+    """Return the farthest legal stopping point along a precomputed full-map route."""
+    try:
+        spent = 0
+        last_legal_index = -1
+        last_legal_cost = 0
+        for index, destination in enumerate(route):
+            step_cost = movement_step_cost_ft(map_definition, mover, destination, members)
+            if step_cost is None:
+                raise ValueError(f"Search returned an illegal movement step at {destination}.")
+            if spent + step_cost > movement_budget_ft:
+                break
+            spent += step_cost
+            if not overlapping_occupants(mover, destination, members):
+                last_legal_index = index
+                last_legal_cost = spent
+        if last_legal_index < 0:
+            return [], 0
+        return route[: last_legal_index + 1], last_legal_cost
+    except Exception:
+        logger.exception("Failed to truncate movement route for %s.", mover.combatant_id)
+        raise
 
 
 def plan_movement_toward(
@@ -30,67 +49,36 @@ def plan_movement_toward(
     desired_distance_ft: int,
     movement_budget_ft: int,
 ) -> GridMovementPlan:
-    """Find the cheapest legal 8-direction grid path toward the requested footprint distance."""
+    """Search the full route first, then walk the affordable legal prefix this turn."""
     try:
         if desired_distance_ft < 0 or movement_budget_ft < 0:
             raise ValueError("Desired distance and movement budget cannot be negative.")
-        start = position_for(mover)
-        target_position = position_for(target)
-        start_key = (start.x, start.y)
-        costs = {start_key: 0}
-        previous: dict[tuple[int, int], tuple[int, int]] = {}
-        queue: list[tuple[int, int, int]] = [(0, start.x, start.y)]
-        best = start_key
-        best_score = (
-            footprint_distance_ft(start, mover.state.template.size, target_position, target.state.template.size),
-            0,
-            start.x,
-            start.y,
+        route = search_path_toward(
+            map_definition,
+            mover,
+            target,
+            members,
+            desired_distance_ft,
         )
-
-        while queue:
-            cost, x, y = heapq.heappop(queue)
-            key = (x, y)
-            if cost != costs.get(key) or cost > movement_budget_ft:
-                continue
-            current = GridPosition(x=x, y=y)
-            final_legal = not overlapping_occupants(mover, current, members)
-            distance = footprint_distance_ft(
-                current,
-                mover.state.template.size,
-                target_position,
-                target.state.template.size,
-            )
-            score = (distance, cost, x, y)
-            if final_legal and score < best_score:
-                best, best_score = key, score
-            if final_legal and distance <= desired_distance_ft:
-                return GridMovementPlan(
-                    path=reconstruct_path(key, previous),
-                    movement_cost_ft=cost,
-                    final_distance_ft=distance,
-                )
-
-            for dx, dy in _NEIGHBOR_OFFSETS:
-                next_x, next_y = x + dx, y + dy
-                if next_x < 0 or next_y < 0:
-                    continue
-                destination = GridPosition(x=next_x, y=next_y)
-                step_cost = movement_step_cost_ft(map_definition, mover, destination, members)
-                if step_cost is None:
-                    continue
-                next_cost = cost + step_cost
-                next_key = (destination.x, destination.y)
-                if next_cost > movement_budget_ft or next_cost >= costs.get(next_key, 10**9):
-                    continue
-                costs[next_key] = next_cost
-                previous[next_key] = key
-                heapq.heappush(queue, (next_cost, destination.x, destination.y))
-
+        path, cost = _affordable_legal_prefix(
+            map_definition,
+            mover,
+            members,
+            route,
+            movement_budget_ft,
+        )
+        final_position = path[-1] if path else position_for(mover)
+        target_position = position_for(target)
+        final_distance = footprint_distance_ft(
+            final_position,
+            mover.state.template.size,
+            target_position,
+            target.state.template.size,
+        )
         return GridMovementPlan(
-            path=reconstruct_path(best, previous),
-            movement_cost_ft=costs[best],
-            final_distance_ft=best_score[0],
+            path=path,
+            movement_cost_ft=cost,
+            final_distance_ft=final_distance,
         )
     except Exception:
         logger.exception(
