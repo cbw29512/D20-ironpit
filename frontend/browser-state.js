@@ -5,6 +5,7 @@
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { effectiveSpeed: (state) => state.template.speed_ft };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { incapacitated: (state) => state.is_unconscious };
+  const GEOM = () => window.IRON_PIT_BROWSER_GRID_GEOMETRY;
   const effectiveMaxHp = (state) => state.template.max_hp + (state.max_hp_bonus || 0);
 
   function buildState(template) {
@@ -57,7 +58,21 @@
     }
   }
 
-  const distance = (a, b) => Math.abs(a.position_ft - b.position_ft);
+  function distance(a, b) {
+    try {
+      const aGrid = a.state.position, bGrid = b.state.position;
+      if (aGrid || bGrid) {
+        if (!aGrid || !bGrid) throw new Error("Encounter combatants cannot mix scalar and grid position authority.");
+        if (!GEOM()) throw new Error("Grid geometry API is not loaded.");
+        return GEOM().footprintDistanceFt(aGrid, a.state.template.size, bGrid, b.state.template.size);
+      }
+      return Math.abs(a.position_ft - b.position_ft);
+    } catch (error) {
+      console.error("Failed browser combatant distance", { a: a.combatant_id, b: b.combatant_id, error });
+      throw error;
+    }
+  }
+
   const active = (member) => member.state.is_alive && !member.state.is_dead
     && member.state.current_hp > 0 && !Q().incapacitated(member.state);
   const downedCharacter = (member) => member.state.template.kind === "character" && member.state.is_alive && !member.state.is_dead && member.state.current_hp === 0;
