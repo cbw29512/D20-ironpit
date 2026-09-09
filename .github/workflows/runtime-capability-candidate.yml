@@ -1,0 +1,36 @@
+name: Runtime Capability Candidate
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: runtime-capability-${{ github.event.pull_request.head.ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  capability-candidate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Python rules reference
+        working-directory: backend
+        run: pip install -e '.[dev]'
+      - name: Generate runtime capability candidate
+        run: python scripts/export_runtime_monster_capabilities.py
+      - name: Upload runtime capability candidate
+        uses: actions/upload-artifact@v4
+        with:
+          name: runtime-capabilities-${{ github.sha }}
+          path: backend/app/content/data/combatant_capabilities_v1.json
+          retention-days: 1
+      - name: Enforce committed runtime capability parity
+        run: git diff --exit-code -- backend/app/content/data/combatant_capabilities_v1.json
