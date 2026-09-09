@@ -6,6 +6,7 @@ from app.combat.attack_legality import attack_allowed_against
 from app.combat.encounter_targeting import combatant_distance, living_opponents
 from app.combat.formation import uses_backline
 from app.combat.range import resolve_attack_roll_mode
+from app.combat.resources import resource_available
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import WeaponAttack, WeaponAttackKind
 
@@ -71,12 +72,18 @@ def save_distance(attacker: EncounterCombatant, target: EncounterCombatant, rang
 
 
 def _attack_profiles(attacker: EncounterCombatant, allowed_ids: list[str], kind: WeaponAttackKind | None):
-    allowed = set(allowed_ids)
-    return [
-        attack
-        for attack in [attacker.state.template.weapon_attack, *attacker.state.template.alternate_weapon_attacks]
-        if attack.id in allowed and (kind is None or attack.weapon.attack_kind is kind)
-    ]
+    try:
+        allowed = set(allowed_ids)
+        return [
+            attack
+            for attack in [attacker.state.template.weapon_attack, *attacker.state.template.alternate_weapon_attacks]
+            if attack.id in allowed
+            and (kind is None or attack.weapon.attack_kind is kind)
+            and resource_available(attacker.state, attack.resource_id, attack.resource_cost)
+        ]
+    except Exception as exc:
+        logger.exception("Failed to collect legal resource attack profiles for %s.", attacker.combatant_id)
+        raise RuntimeError("Resource attack profiles could not be evaluated.") from exc
 
 
 def _attack_in_range(attack: WeaponAttack, distance_ft: int) -> bool:
