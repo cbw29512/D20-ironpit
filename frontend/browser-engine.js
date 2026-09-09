@@ -30,7 +30,7 @@
         monsters: monsterMembers,
         hero_total_levels: heroMembers.reduce((sum, item) => sum + item.state.template.level, 0),
         monster_total_cr: totalCr(monsterMembers.map((item) => item.state.template.challenge_rating)),
-        map_definition: M().buildStandardMap(),
+        map_definition: M()?.buildStandardMap?.() || null,
       };
     } catch (error) {
       console.error("Failed to build browser encounter setup", { selection, error });
