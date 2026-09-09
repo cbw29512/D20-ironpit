@@ -108,6 +108,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
         on_hit_damage=on_hit,
         on_hit_modifier_effects=on_hit_modifiers,
         knocks_prone_max_size=prone_size,
+        control_effect=controls[0] if len(controls) == 1 else None,
         persistent_effects=controls,
         forbid_target_grappled_by_self=definition.forbid_target_grappled_by_self,
     )
