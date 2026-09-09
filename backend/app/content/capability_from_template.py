@@ -65,6 +65,7 @@ def _attack(attack: WeaponAttack) -> dict[str, object]:
         "two_handed": weapon.two_handed, "versatile": weapon.versatile,
         "attack_ability": attack.attack_ability,
         "attack_ability_modifier": attack.attack_ability_modifier,
+        "resource_id": attack.resource_id, "resource_cost": attack.resource_cost,
         "rage_eligible": attack.rage_eligible,
         "conditional_attack_advantage": [spec.model_dump(mode="json") for spec in attack.conditional_attack_advantage],
         "effects": effects, "forbid_target_grappled_by_self": attack.forbid_target_grappled_by_self,
@@ -80,7 +81,9 @@ def _save(action) -> dict[str, object]:
     result: dict[str, object] = {
         "id": action.id, "name": action.name, "save_ability": action.save_ability,
         "dc": action.dc, "range_ft": action.range_ft, "target_max_size": action.target_max_size,
+        "area": action.area.model_dump(mode="json") if action.area else None,
         "success_damage": action.success_damage, "animation": action.animation,
+        "resource_id": action.resource_id, "resource_cost": action.resource_cost,
     }
     if action.damage_dice_count:
         result["damage"] = _dice(action.damage_dice_count, action.damage_dice_size, action.damage_bonus)
