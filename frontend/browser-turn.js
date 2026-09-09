@@ -124,7 +124,7 @@
     }
     const choice = F().chooseStandardAttack(member, setup);
     if (choice && E().available(member.state, "action")) {
-      const pack = S().packTactics(member, setup), opener = C()?.openingFeature?.(round, member, setup) || null;
+      const pack = S().packTactics(member, choice.target, setup), opener = C()?.openingFeature?.(round, member, setup) || null;
       const standard = U().resolve(sequence, round, member, choice.target, choice.attack, choice.distance, setup, turnKey, {
         advantage: pack ? 1 : 0, featureId: opener || (pack ? "pack-tactics" : null),
       });
