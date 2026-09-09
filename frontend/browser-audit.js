@@ -72,6 +72,9 @@
     if (event.hp_before != null && event.hp_after != null && event.hp_before !== event.hp_after) {
       out.push(step("state_change", "hp", `HP ${event.hp_before} → ${event.hp_after}`));
     }
+    if (event.max_hp_before != null && event.max_hp_after != null && event.max_hp_before !== event.max_hp_after) {
+      out.push(step("state_change", "max_hp", `Hit Point maximum ${event.max_hp_before} → ${event.max_hp_after}`));
+    }
     for (const id of event.applied_condition_ids || []) out.push(step("state_change", "condition", `${label(id)} applied`));
     for (const id of event.removed_condition_ids || []) out.push(step("state_change", "condition", `${label(id)} ended`));
     if (event.concentration_started_effect_id) out.push(step("state_change", "concentration", `Concentration started: ${label(event.concentration_started_effect_id)}`));
