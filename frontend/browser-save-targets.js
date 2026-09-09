@@ -3,6 +3,9 @@
 
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const S = () => window.IRON_PIT_BROWSER_STATE;
+  const E = () => window.IRON_PIT_ACTION_ECONOMY;
+  const A = () => window.IRON_PIT_BROWSER_AREA_TARGETING;
+  const RES = () => window.IRON_PIT_BROWSER_RESOURCES;
 
   function targets(actor, setup, action, targetIds, skipRangeCheck) {
     if (!targetIds.length || new Set(targetIds).size !== targetIds.length) {
@@ -49,5 +52,36 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_SAVE_TARGETS = { resolve, targets };
+  function samePlacement(first, second) {
+    const sameDirection = (!first.direction && !second.direction)
+      || (first.direction && second.direction && first.direction[0] === second.direction[0] && first.direction[1] === second.direction[1]);
+    return first.targetIds.join("|") === second.targetIds.join("|")
+      && first.origin[0] === second.origin[0] && first.origin[1] === second.origin[1] && sameDirection;
+  }
+
+  function resolveArea(sequence, round, actor, setup, action, options = {}) {
+    try {
+      if (!action.area) throw new Error(`${action.name} does not define area geometry.`);
+      if (!E().available(actor.state, "action")) throw new Error("Action is unavailable for an area saving-throw action.");
+      if (!RES().available(actor.state, action.resourceId, action.resourceCost || 1)) {
+        throw new Error(`${action.name} lacks its required resource.`);
+      }
+      const legal = A().legalPlacements(actor, setup, action.area, action.range);
+      if (!legal.length) throw new Error(`${action.name} has no legal area placement.`);
+      const requested = options.placement || legal[0];
+      const placement = legal.find((item) => samePlacement(item, requested));
+      if (!placement) throw new Error(`${action.name} received a stale or illegal area placement.`);
+      targets(actor, setup, action, placement.targetIds, true);
+      E().spend(actor.state, "action");
+      const remaining = RES().spend(actor.state, action.resourceId, action.resourceCost || 1);
+      const result = resolve(sequence, round, actor, setup, action, placement.targetIds, { skipRangeCheck: true });
+      if (result.events.length) result.events[0].resource_remaining = remaining;
+      return { ...result, placement };
+    } catch (error) {
+      console.error("Browser area save action failed", { actor: actor?.combatant_id, action: action?.id, error });
+      throw error;
+    }
+  }
+
+  window.IRON_PIT_BROWSER_SAVE_TARGETS = { resolve, resolveArea, targets };
 })();
