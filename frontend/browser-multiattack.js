@@ -71,7 +71,7 @@
       const choice = attackChoice(member, setup, data, splitThis);
       if (choice) {
         if (splitThis && choice.attack.kind === "ranged") rangedSplitUsed = true;
-        const pack = window.IRON_PIT_BROWSER_STATE.packTactics(member, setup);
+        const pack = window.IRON_PIT_BROWSER_STATE.packTactics(member, choice.target, setup);
         const featureId = openingFeature || (pack ? "pack-tactics" : definition.id);
         const event = A().resolveAttack(sequence++, round, member, choice.target, choice.attack, choice.distance, {
           spendAction: false, advantage: pack ? 1 : 0, setup, featureId, turnKey,
