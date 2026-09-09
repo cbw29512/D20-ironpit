@@ -6,7 +6,7 @@ from app.combat.action_economy import is_available, spend
 from app.combat.area_targeting import AreaPlacement, legal_area_placements
 from app.combat.dice import DiceProvider
 from app.combat.resources import resource_available, spend_resource
-from app.combat.save_targets import resolve_save_targets
+from app.combat.save_targets import resolve_save_targets, validate_save_targets
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, SavingThrowAction
 
@@ -23,7 +23,7 @@ def resolve_area_save_action(
     *,
     placement: AreaPlacement | None = None,
 ) -> tuple[list[BattleEvent], int, AreaPlacement]:
-    """Spend one action/resource, then resolve one independent save per covered enemy."""
+    """Preflight geometry/targets, spend once, then resolve one independent save per enemy."""
     try:
         if action.area is None:
             raise ValueError(f"{action.name} does not define area geometry.")
@@ -37,6 +37,7 @@ def resolve_area_save_action(
         selected = placement or legal[0]
         if selected not in legal:
             raise ValueError(f"{action.name} received a stale or illegal area placement.")
+        validate_save_targets(actor, setup, action, selected.target_ids, skip_range_check=True)
         spend(actor.state, "action")
         remaining = spend_resource(actor.state, action.resource_id, action.resource_cost)
         events, next_sequence = resolve_save_targets(
