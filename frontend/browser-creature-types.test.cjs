@@ -38,8 +38,8 @@ for (const id of [
 }
 
 const specter = monsters["srd-specter"];
-assert.ok(specter, "srd-specter must be certified when Incorporeal Movement is combat-irrelevant in the standard Pit");
-assert.deepEqual(specter.source_trait_names, ["Incorporeal Movement"]);
+assert.ok(specter, "srd-specter must preserve its full source trait fingerprint while Incorporeal Movement is arena-irrelevant");
+assert.deepEqual(specter.source_trait_names, ["Incorporeal Movement", "Sunlight Sensitivity"]);
 assert.equal(specter.movement_modes.fly_ft > 0, true, "srd-specter must preserve its printed flight movement");
 
 const wraith = monsters["srd-wraith"];
