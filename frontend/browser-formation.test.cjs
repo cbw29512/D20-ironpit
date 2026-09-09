@@ -1,6 +1,7 @@
 "use strict";
 
 require("./browser-grid-geometry.test.cjs");
+require("./browser-grid-movement.test.cjs");
 
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
