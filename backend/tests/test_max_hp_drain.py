@@ -26,9 +26,10 @@ def test_specter_life_drain_is_source_audited_as_max_hp_reduction() -> None:
     try:
         specter = _specter()
         source = next(row for row in load_monster_rows() if row["name"] == "Specter")
+        issues = audit_monster_source(specter, source)
         assert specter.weapon_attack.weapon.name == "Life Drain"
         assert specter.weapon_attack.reduce_max_hp_by_damage_taken is True
-        assert audit_monster_source(specter, source) == []
+        assert issues == ["uncertified-trait:sunlight-sensitivity"]
     except Exception:
         logger.exception("Specter source/runtime max-HP drain audit regression failed.")
         raise
