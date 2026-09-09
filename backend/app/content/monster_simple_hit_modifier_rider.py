@@ -13,7 +13,7 @@ _ATTACKS_AGAINST_ADVANTAGE = re.compile(
     re.I,
 )
 _NEXT_ATTACK_MADE_DISADVANTAGE = re.compile(
-    r"(?:and )?the target has Disadvantage on the next attack roll it makes before the end of its next turn\.(?=\s|$)",
+    r"(?:(?:and )?the target has|and has) Disadvantage on the next attack roll it makes before the end of its next turn\.(?=\s|$)",
     re.I,
 )
 
