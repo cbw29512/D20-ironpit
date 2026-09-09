@@ -6,6 +6,7 @@ from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
 from app.combat.hit_modifiers import apply_modifier_effects
 from app.combat.persistent_effects import apply_persistent_effects
+from app.combat.resources import can_use_action_resource, spend_action_resource
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.zero_hp import apply_damage
 from app.domain.models import BattleEvent, DamageRollComponent, DamageType, DiceRoll, EncounterCombatant, SavingThrowAction
@@ -13,7 +14,13 @@ from app.domain.runtime import CombatantState
 from app.domain.size import size_at_most
 
 
-def legal_save_action(action: SavingThrowAction, target: EncounterCombatant, distance_ft: int) -> bool:
+def legal_save_action(
+    action: SavingThrowAction,
+    target: EncounterCombatant,
+    distance_ft: int,
+    actor_state: CombatantState | None = None,
+) -> bool:
+    if actor_state is not None and not can_use_action_resource(actor_state, action): return False
     if distance_ft > action.range_ft: return False
     return action.target_max_size is None or size_at_most(target.state.template.size, action.target_max_size)
 
@@ -40,8 +47,9 @@ def resolve_save_action(
     shared_damage_rolls: list[int] | None = None, affected_states: list[CombatantState] | None = None,
 ) -> BattleEvent:
     if spend_action and not is_available(actor.state, "action"): raise ValueError("Action is not available for a saving throw action.")
-    if not legal_save_action(action, target, distance_ft): raise ValueError(f"{action.name} has no legal target at {distance_ft} feet.")
+    if not legal_save_action(action, target, distance_ft, actor.state): raise ValueError(f"{action.name} has no legal target or available resource at {distance_ft} feet.")
     save_roll, succeeded = resolve_saving_throw(target.state, action.save_ability, action.dc, dice)
+    resource_remaining = spend_action_resource(actor.state, action)
     if spend_action: spend(actor.state, "action")
     hp_before = target.state.current_hp; temporary_hp_before = target.state.temporary_hp
     death_success_before = target.state.death_save_successes; death_failure_before = target.state.death_save_failures
@@ -76,6 +84,7 @@ def resolve_save_action(
         )
     outcome = "SUCCEEDS" if succeeded else "FAILS"
     description = f"{target.state.template.name} {outcome} a DC {action.dc} {action.save_ability.title()} save against {actor.state.template.name}'s {action.name}."
+    if resource_remaining is not None: description += f" {action.name} resource remaining: {resource_remaining}."
     if damage_outcome == "undead_fortitude": description += f" {target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP."
     for condition in applied_conditions:
         description += f" {target.state.template.name} gains {condition}."
@@ -89,5 +98,5 @@ def resolve_save_action(
         death_save_successes=target.state.death_save_successes, death_save_failures=target.state.death_save_failures,
         is_stable=target.state.is_stable, is_dead=target.state.is_dead, feature_id=action.id,
         concentration_ended_effect_id=concentration_before if concentration_before and target.state.concentration is None else None,
-        animation=action.animation, description=description,
+        resource_remaining=resource_remaining, animation=action.animation, description=description,
     )
