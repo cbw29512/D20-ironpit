@@ -5,8 +5,8 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.areas import AreaTargeting
-from app.domain.capability_effects import AttackEffectDefinition, DiceSpec
-from app.domain.combat_ir_effects import HealingEffectIR
+from app.domain.capability_effects import DiceSpec
+from app.domain.combat_ir_effects import CombatEffectIR
 from app.domain.combat_ir_resolution import (
     AttackRollResolutionIR,
     AutomaticResolutionIR,
@@ -17,12 +17,14 @@ from app.domain.size import CreatureSize
 from app.domain.weapons import DamageType
 
 TargetModeIR = Literal["enemy", "self", "ally", "self_or_ally", "other"]
-CombatEffectIR = AttackEffectDefinition | HealingEffectIR
+ReactionTriggerIR = Literal["condition_applied_to_self", "condition_applied_to_ally"]
+ResourceCostModeIR = Literal["per_use", "per_selected_condition"]
 
 
 class ResourceCostIR(BaseModel):
     resource_id: str
     amount: int = Field(default=1, ge=1, le=20)
+    mode: ResourceCostModeIR = "per_use"
 
 
 class TargetingIR(BaseModel):
@@ -58,19 +60,24 @@ class CombatActionIR(BaseModel):
     name: str
     action_cost: Literal["action", "bonus_action", "reaction"] = "action"
     trigger: Literal["turn", "reaction"] = "turn"
+    reaction_trigger: ReactionTriggerIR | None = None
     targeting: TargetingIR
     resolution: ResolutionIR
     primary_damage: PrimaryDamageIR | None = None
     effects: list[CombatEffectIR] = Field(default_factory=list)
-    resource_cost: ResourceCostIR | None = None
+    resource_costs: list[ResourceCostIR] = Field(default_factory=list)
     animation: str = "action"
 
     @model_validator(mode="after")
     def validate_cost_and_trigger(self) -> "CombatActionIR":
-        if self.action_cost == "reaction" and self.trigger != "reaction":
-            raise ValueError("Reaction actions require reaction timing.")
-        if self.action_cost != "reaction" and self.trigger == "reaction":
-            raise ValueError("Reaction timing requires reaction action cost.")
+        is_reaction = self.action_cost == "reaction"
+        if is_reaction != (self.trigger == "reaction"):
+            raise ValueError("Reaction action cost and reaction timing must agree.")
+        if (self.reaction_trigger is not None) != is_reaction:
+            raise ValueError("Only Reaction actions can define a reaction trigger, and they require one.")
+        resource_keys = {(cost.resource_id, cost.mode) for cost in self.resource_costs}
+        if len(resource_keys) != len(self.resource_costs):
+            raise ValueError("Combat action resource costs must be unique by resource and mode.")
         return self
 
 
@@ -79,6 +86,7 @@ __all__ = [
     "AutomaticResolutionIR",
     "CombatActionIR",
     "PrimaryDamageIR",
+    "ReactionTriggerIR",
     "ResourceCostIR",
     "ResolutionIR",
     "SavingThrowResolutionIR",
