@@ -602,13 +602,12 @@
     {
       "audit": "partial",
       "browser": "partial",
-      "count": 9,
+      "count": 8,
       "id": "unsupported-action-rider",
       "monsters": [
         "Chimera",
         "Cloaker",
         "Darkmantle",
-        "Fire Giant",
         "Giant Seahorse",
         "Ice Devil",
         "Pirate Captain",
@@ -666,6 +665,19 @@
       "parser": "partial",
       "python": "partial",
       "status": "partial"
+    },
+    {
+      "audit": "source_defect",
+      "browser": "partial",
+      "count": 1,
+      "id": "unclassified-source-audit-gap",
+      "monsters": [
+        "Fire Giant"
+      ],
+      "next_primitive": "trace source-to-IR round trip until the missing family is classified",
+      "parser": "source_defect",
+      "python": "partial",
+      "status": "source_defect"
     }
   ],
   "ruleset": "srd-5.2.1-2024",
@@ -1260,11 +1272,13 @@
   },
   "summary": {
     "blocked": 178,
-    "blocker_families": 13,
+    "blocker_families": 14,
     "catalog_monsters": 330,
     "ready": 152,
-    "unclassified_source_defects": 0,
+    "unclassified_source_defects": 1,
     "unregistered_families": 0
   },
-  "unclassified_source_defects": []
+  "unclassified_source_defects": [
+    "Fire Giant"
+  ]
 }

@@ -3160,12 +3160,11 @@
       "monster_name": "Fire Giant",
       "srd_source_page": 285,
       "srd_source_reference": "SRD 5.2.1 p. 285",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-fire-giant",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "multiattack",
-        "unsupported-action-rider"
+        "multiattack"
       ],
       "supported_mechanics": [
         "attack-roll",
@@ -3173,15 +3172,14 @@
         "multiattack"
       ],
       "unsupported_mechanics": [
-        "unsupported-action-rider"
+        "hit-modifier-mismatch:srd-fire-giant-hammer-throw:next-attack-made-disadvantage"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-compiled",
-        "unsupported-action-rider"
+        "hit-modifier-mismatch:srd-fire-giant-hammer-throw:next-attack-made-disadvantage"
       ]
     },
     {
