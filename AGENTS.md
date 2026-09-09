@@ -29,6 +29,17 @@ Repository truth beats chat summaries, historical counts, old milestone prose, u
 - Do not weaken a valid test to make CI green. Replace an obsolete assertion only when an explicit contract change supersedes it, with equally strong coverage for the new rule.
 - Keep production source modules at or below the repository source-size limit. Split modules rather than growing monoliths.
 
+## Mandatory uncertainty and clarification gate
+
+- If there is any uncertainty about RAW wording, source interpretation, timing, architecture, data mapping, user intent, or whether an existing shared mechanic already covers the behavior, stop before changing code.
+- Do not guess, infer around the uncertainty, create a temporary special case, or keep coding merely to preserve momentum.
+- Ask Chris one precise clarification question that isolates the unresolved decision.
+- After Chris answers, write the decision into the repository before implementation continues. Rules/mechanics decisions belong in `docs/IRON_PIT_RULES_CONTRACT.md`; durable architecture decisions belong in `docs/UNIVERSAL_COMBATANT_ARCHITECTURE.md`; operating/process decisions belong in `AGENTS.md`.
+- If the correct authority file is itself unclear, ask before writing.
+- Re-read the written decision and implement against that repository authority. Do not rely on chat memory alone for a decision that can affect future combat work.
+- If a new clarification conflicts with an existing authoritative rule, stop and reconcile the conflict explicitly in the repository before changing runtime behavior.
+- This gate overrides speed, convenience, and perceived momentum. Asking one targeted question is preferred to implementing the wrong abstraction.
+
 ## Arena/environment invariants
 
 - The Iron Pit magically makes the environment survivable/hospitable for every creature. Breathing, atmosphere, aquatic biology, flight requirements, and similar survival constraints never exclude a combatant.
