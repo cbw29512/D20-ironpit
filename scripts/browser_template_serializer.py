@@ -39,6 +39,10 @@ def _control(effect: Any) -> dict[str, Any] | None:
     return row or None
 
 
+def _controls(effects: Any) -> list[dict[str, Any]]:
+    return [row for row in (_control(effect) for effect in effects) if row]
+
+
 def _hit_modifier(effect: Any) -> dict[str, Any]:
     row: dict[str, Any] = {"kind": effect.kind}
     if effect.flat_bonus:
@@ -95,6 +99,9 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
                     "diceCount": conditional.dice_count, "diceSize": conditional.dice_size,
                     "damageBonus": conditional.damage_bonus, "damageType": conditional.damage_type.value,
                 }
+        persistent = _controls(attack.ordered_persistent_effects())
+        if persistent:
+            row["persistentEffects"] = persistent
         control = _control(attack.control_effect)
         if control:
             row["controlEffect"] = control
@@ -136,6 +143,11 @@ def _save(action: Any) -> dict[str, Any]:
     }
     if action.target_max_size:
         row["targetMaxSize"] = _value(action.target_max_size)
+    persistent = _controls(action.ordered_persistent_effects())
+    if persistent:
+        row["persistentEffects"] = persistent
+    if action.on_failure_modifier_effects:
+        row["onFailureModifiers"] = [_hit_modifier(effect) for effect in action.on_failure_modifier_effects]
     if action.grapple_escape_dc is not None:
         row["grappleEscapeDc"] = action.grapple_escape_dc
     if action.restrains_while_grappled:
