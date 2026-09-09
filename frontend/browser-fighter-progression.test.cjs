@@ -107,7 +107,7 @@ function grappleCheck(d10) {
 
 // Prove the canonical turn finisher actually converts a spent Action into a second Attack.
 window.IRON_PIT_BROWSER_STATE = {
-  beginTurn: (state) => { state.action_available = true; state.bonus_action_available = true; state.movement_remaining_ft = 30; },
+  beginTurn: (state) => { state.action_available = true; state.bonus_action_available = true; state.movement_remaining_ft = 30; return []; },
   nearestTarget: (_member, setup) => setup.monsters[0], distance: () => 5, packTactics: () => false,
 };
 window.IRON_PIT_BROWSER_GRAPPLE = { cleanup: () => {}, shouldEscape: () => false, speedIsZero: () => false };
@@ -129,6 +129,7 @@ window.IRON_PIT_BROWSER_ATTACK = {
 };
 for (const file of [
   "browser-weapon-mastery.js", "browser-light-weapons.js", "browser-light-attack.js", "browser-standard-attack-action.js",
+  "browser-resources.js",
 ]) load(file);
 load("browser-turn.js");
 {
