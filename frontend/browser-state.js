@@ -106,11 +106,22 @@
   }
 
   function hasActiveAlly(member, setup) {
-    const allies = member.side === "heroes" ? setup.heroes : setup.monsters;
-    return allies.some((ally) => ally.combatant_id !== member.combatant_id && active(ally));
+    try {
+      const allies = member.side === "heroes" ? setup.heroes : setup.monsters;
+      return allies.some((ally) => ally.combatant_id !== member.combatant_id && active(ally));
+    } catch (error) { console.error("Failed browser active ally lookup", { member: member.combatant_id, error }); throw error; }
   }
-
-  const packTactics = (member, setup) => member.state.template.traits?.includes("pack-tactics") && hasActiveAlly(member, setup);
+  function hasAdjacentActiveAlly(member, target, setup) {
+    try {
+      if (!target) throw new Error("Pack Tactics requires a target.");
+      const allies = member.side === "heroes" ? setup.heroes : setup.monsters;
+      return allies.some((ally) => ally.combatant_id !== member.combatant_id && active(ally) && distance(ally, target) <= 5);
+    } catch (error) { console.error("Failed browser target-adjacent ally lookup", { member: member.combatant_id, error }); throw error; }
+  }
+  function packTactics(member, target, setup) {
+    try { return member.state.template.traits?.includes("pack-tactics") && hasAdjacentActiveAlly(member, target, setup); }
+    catch (error) { console.error("Failed browser Pack Tactics evaluation", { member: member.combatant_id, error }); throw error; }
+  }
   function moveToward(member, target, desired) {
     const before = distance(member, target);
     const moved = Math.min(Math.max(0, before - desired), member.state.movement_remaining_ft);
@@ -124,6 +135,7 @@
   const canProne = (target, maxSize) => sizeAtMost(target, maxSize);
   window.IRON_PIT_BROWSER_STATE = {
     active, beginTurn, buildState, canProne, distance, downedCharacter, effectiveMaxHp, grantTemporaryHp, hasActiveAlly,
-    moveToward, nearestTarget, packTactics, refreshReaction, refreshStartOfTurn, sizeAtMost, targetPriority, terminateTurn,
+    hasAdjacentActiveAlly, moveToward, nearestTarget, packTactics, refreshReaction, refreshStartOfTurn, sizeAtMost,
+    targetPriority, terminateTurn,
   };
 })();
