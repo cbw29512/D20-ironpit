@@ -7,6 +7,7 @@
   const L = () => window.IRON_PIT_BROWSER_SPELL_OFFENSE, U = () => window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION;
   const F = () => window.IRON_PIT_BROWSER_FORMATION, V = () => window.IRON_PIT_BROWSER_SAVES;
   const DG = () => window.IRON_PIT_BROWSER_DODGE, OM = () => window.IRON_PIT_BROWSER_OFFENSIVE_MOVEMENT;
+  const RES = () => window.IRON_PIT_BROWSER_RESOURCES, RC = () => window.IRON_PIT_BROWSER_RECHARGE;
   const D = () => window.IRON_PIT_DICE;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
     available: (s, c) => c === "action" ? s.action_available : s.bonus_action_available,
@@ -62,6 +63,7 @@
   function saveChoice(member, setup) {
     for (const target of F().targetOrder(member, setup)) {
       for (const action of member.state.template.saving_throw_actions || []) {
+        if (!RES().available(member.state, action.resourceId, action.resourceCost || 1)) continue;
         const distance = F().saveDistance(member, target, action.range);
         if (V().legalAction(action, target, distance)) return { target, action, distance };
       }
@@ -72,6 +74,8 @@
   function resolveTurn(sequence, round, member, setup) {
     enablePitRangePolicy();
     const events = []; H().cleanup(setup); S().beginTurn(member.state);
+    const recharge = RC()?.resolveStartTurn(sequence, round, member);
+    if (recharge) { events.push(...recharge.events); sequence = recharge.sequence; }
     const turnKey = `${round}:${member.combatant_id}`;
     if (O()?.forcedRetreatActive(member.state)) {
       events.push(O().event(sequence++, round, member));
