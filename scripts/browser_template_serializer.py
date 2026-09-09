@@ -100,7 +100,7 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
                     "damageBonus": conditional.damage_bonus, "damageType": conditional.damage_type.value,
                 }
         persistent = _controls(attack.ordered_persistent_effects())
-        if persistent:
+        if len(persistent) > 1:
             row["persistentEffects"] = persistent
         control = _control(attack.control_effect)
         if control:
@@ -144,7 +144,7 @@ def _save(action: Any) -> dict[str, Any]:
     if action.target_max_size:
         row["targetMaxSize"] = _value(action.target_max_size)
     persistent = _controls(action.ordered_persistent_effects())
-    if persistent:
+    if len(persistent) > 1:
         row["persistentEffects"] = persistent
     if action.on_failure_modifier_effects:
         row["onFailureModifiers"] = [_hit_modifier(effect) for effect in action.on_failure_modifier_effects]
