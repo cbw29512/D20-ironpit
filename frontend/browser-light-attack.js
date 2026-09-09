@@ -24,7 +24,7 @@
     if (!inRange(plan.attack, distance)) return { events: [], sequence };
     if (plan.usesBonusAction) E().spend(member.state, "bonus_action");
     L().markUsed(member.state, turnKey);
-    const pack = S().packTactics(member, setup);
+    const pack = S().packTactics(member, target, setup);
     const event = A().resolveAttack(sequence++, round, member, target, plan.attack, distance, {
       spendAction: false, advantage: pack ? 1 : 0, setup,
       featureId: plan.featureId, turnKey, allowReckless: true,
