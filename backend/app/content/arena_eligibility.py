@@ -1,26 +1,39 @@
 from __future__ import annotations
 
+import logging
+
 from app.domain.models import CombatantTemplate
 
-_DEFERRED_ENVIRONMENT_MONSTERS = {
-    "Killer Whale": "aquatic-only",
-}
+logger = logging.getLogger(__name__)
 
 
 def deferred_environment_reason(name: str) -> str | None:
-    return _DEFERRED_ENVIRONMENT_MONSTERS.get(name)
+    """Return no environmental deferral under the permanent Iron Pit contract."""
+    try:
+        _ = name
+        return None
+    except Exception:
+        logger.exception("Failed to evaluate arena environment deferral for %r.", name)
+        raise
 
 
 def standard_arena_eligible(template: CombatantTemplate) -> bool:
-    if template.kind != "monster":
+    """All combatants are environmentally supported by the magical Iron Pit."""
+    try:
+        _ = template.movement_modes
         return True
-    movement = template.movement_modes
-    if movement.fly_ft > 0:
-        return True
-    if movement.swim_ft > 0 and movement.walk_ft <= 5:
-        return False
-    return movement.walk_ft > 0
+    except Exception:
+        logger.exception(
+            "Failed to evaluate standard arena eligibility for %r.",
+            getattr(template, "name", None),
+        )
+        raise
 
 
 def filter_standard_arena_eligible(templates: list[CombatantTemplate]) -> list[CombatantTemplate]:
-    return [template for template in templates if standard_arena_eligible(template)]
+    """Preserve every template; environment compatibility never filters the roster."""
+    try:
+        return [template for template in templates if standard_arena_eligible(template)]
+    except Exception:
+        logger.exception("Failed to apply standard arena environmental hospitality.")
+        raise
