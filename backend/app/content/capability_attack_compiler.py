@@ -16,12 +16,19 @@ class UnsupportedCapabilityError(ValueError):
     pass
 
 
-def _compile_control(effect: GrappleEffectDefinition | ConditionEffectDefinition) -> HitControlEffect:
+def compile_persistent_effect(
+    effect: GrappleEffectDefinition | ConditionEffectDefinition | ProneEffectDefinition,
+) -> HitControlEffect:
     if isinstance(effect, GrappleEffectDefinition):
         return HitControlEffect(
             max_target_size=effect.max_target_size,
             grapple_escape_dc=effect.escape_dc,
             restrains_while_grappled=effect.restrains,
+        )
+    if isinstance(effect, ProneEffectDefinition):
+        return HitControlEffect(
+            max_target_size=effect.max_target_size,
+            condition_id="prone",
         )
     return HitControlEffect(
         max_target_size=effect.max_target_size,
@@ -85,7 +92,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
         elif isinstance(effect, HitModifierEffect):
             on_hit_modifiers.append(effect)
         elif isinstance(effect, (GrappleEffectDefinition, ConditionEffectDefinition)):
-            controls.append(_compile_control(effect))
+            controls.append(compile_persistent_effect(effect))
         else:
             raise UnsupportedCapabilityError(f"Unsupported attack effect: {effect!r}")
     return WeaponAttack(
