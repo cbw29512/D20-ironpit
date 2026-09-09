@@ -4,6 +4,7 @@
   const HERO_BACK = 0, HERO_FRONT = 5, MONSTER_FRONT = 10, MONSTER_BACK = 15;
   const attacks = (template) => template?.attacks || [];
   const alive = (member) => member.state.is_alive && !member.state.is_dead && member.state.current_hp > 0;
+  const U = () => window.IRON_PIT_BROWSER_RESOURCES || { canUse: () => true };
 
   function hasRangedWeaponOffense(template) {
     return attacks(template).some((attack) => attack.kind === "ranged" && Number.isFinite(attack.long) && attack.long > 5);
@@ -61,7 +62,8 @@
   }
   function chooseAttack(member, setup, ids, kind = null, preferBackline = false) {
     const allowed = new Set(ids);
-    const profiles = attacks(member.state.template).filter((attack) => allowed.has(attack.id) && (!kind || attack.kind === kind));
+    const profiles = attacks(member.state.template).filter((attack) =>
+      allowed.has(attack.id) && (!kind || attack.kind === kind) && U().canUse(member.state, attack));
     for (const target of targetOrder(member, setup, preferBackline)) {
       const attack = profiles.find((profile) => targetAllowed(member, target, profile));
       if (attack) return { target, attack, distance: attackDistance(member, target, attack) };
