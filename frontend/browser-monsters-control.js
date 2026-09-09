@@ -34,7 +34,9 @@
          saving_throw_actions: [{
            id: "constrictor-snake-constrict", name: "Constrict", saveAbility: "strength", dc: 12, range: 5,
            targetMaxSize: "medium", damageDiceCount: 3, damageDiceSize: 4, damageBonus: 0,
-           damageType: "bludgeoning", successDamage: "none", grappleEscapeDc: 12, animation: "constrict",
+           damageType: "bludgeoning", successDamage: "none",
+           failureControl: { grappleEscapeDc: 12, maxTargetSize: "medium" },
+           grappleEscapeDc: 12, animation: "constrict",
          }],
        }),
   ];
