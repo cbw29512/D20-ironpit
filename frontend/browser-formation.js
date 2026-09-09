@@ -2,7 +2,7 @@
   "use strict";
 
   const HERO_BACK = 0, HERO_FRONT = 5, MONSTER_FRONT = 10, MONSTER_BACK = 15;
-  const S = () => window.IRON_PIT_BROWSER_STATE;
+  const S = () => window.IRON_PIT_BROWSER_STATE, RES = () => window.IRON_PIT_BROWSER_RESOURCES;
   const attacks = (template) => template?.attacks || [];
   const alive = (member) => member.state.is_alive && !member.state.is_dead && member.state.current_hp > 0;
 
@@ -77,22 +77,47 @@
     }
   }
   function chooseAttack(member, setup, ids, kind = null, preferBackline = false) {
-    const allowed = new Set(ids);
-    const profiles = attacks(member.state.template).filter((attack) => allowed.has(attack.id) && (!kind || attack.kind === kind));
-    for (const target of targetOrder(member, setup, preferBackline)) {
-      const distance = attackDistance(member, target);
-      const attack = profiles.find((profile) => targetAllowed(member, target, profile) && attackInRange(profile, distance));
-      if (attack) return { target, attack, distance };
+    try {
+      const allowed = new Set(ids);
+      const profiles = attacks(member.state.template).filter((attack) =>
+        allowed.has(attack.id) && (!kind || attack.kind === kind)
+        && RES().available(member.state, attack.resourceId || null, attack.resourceCost || 1));
+      for (const target of targetOrder(member, setup, preferBackline)) {
+        const distance = attackDistance(member, target);
+        const attack = profiles.find((profile) => targetAllowed(member, target, profile) && attackInRange(profile, distance));
+        if (attack) return { target, attack, distance };
+      }
+      return null;
+    } catch (error) {
+      console.error("Failed browser attack choice", { member: member.combatant_id, error });
+      throw error;
     }
-    return null;
+  }
+  function rechargeAttackIds(member) {
+    try {
+      const definitions = member.state.template.resourceDefinitions || {};
+      return attacks(member.state.template)
+        .filter((attack) => attack.resourceId && definitions[attack.resourceId]?.recharge)
+        .map((attack) => attack.id);
+    } catch (error) {
+      console.error("Failed browser recharge attack identification", { member: member.combatant_id, error });
+      throw error;
+    }
   }
   function chooseStandardAttack(member, setup) {
-    const ids = attacks(member.state.template).map((attack) => attack.id);
-    if (isBackline(member) && alliedFrontlineActive(member, setup)) {
-      const ranged = chooseAttack(member, setup, ids, "ranged");
-      if (ranged) return ranged;
+    try {
+      const ids = attacks(member.state.template).map((attack) => attack.id);
+      const recharge = chooseAttack(member, setup, rechargeAttackIds(member));
+      if (recharge) return recharge;
+      if (isBackline(member) && alliedFrontlineActive(member, setup)) {
+        const ranged = chooseAttack(member, setup, ids, "ranged");
+        if (ranged) return ranged;
+      }
+      return chooseAttack(member, setup, ids, "melee") || chooseAttack(member, setup, ids, "ranged");
+    } catch (error) {
+      console.error("Failed browser standard attack choice", { member: member.combatant_id, error });
+      throw error;
     }
-    return chooseAttack(member, setup, ids, "melee") || chooseAttack(member, setup, ids, "ranged");
   }
   function flexibleSlotHasBoth(member, ids) {
     const allowed = new Set(ids), kinds = new Set(attacks(member.state.template).filter((a) => allowed.has(a.id)).map((a) => a.kind));
