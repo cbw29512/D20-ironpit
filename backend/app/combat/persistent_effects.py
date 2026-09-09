@@ -48,6 +48,11 @@ def apply_persistent_effects(
 
         if effect.condition_id is None or condition_is_immune(target, effect.condition_id):
             continue
+        if effect.condition_id == "prone":
+            if "prone" not in target.active_effect_ids:
+                target.active_effect_ids.append("prone")
+            applied.append("prone")
+            continue
 
         condition = apply_timed_condition(
             target,
