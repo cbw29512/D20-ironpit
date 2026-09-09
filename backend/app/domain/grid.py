@@ -44,3 +44,11 @@ class GridMovementPlan(BaseModel):
     path: list[GridPosition] = Field(default_factory=list)
     movement_cost_ft: int = Field(default=0, ge=0)
     final_distance_ft: int = Field(ge=0)
+
+
+class OffensiveMovementIntent(BaseModel):
+    """Action-neutral reason for approaching an enemy through the shared movement engine."""
+
+    target_id: str = Field(min_length=1)
+    desired_distance_ft: int = Field(ge=0)
+    family: Literal["melee", "ranged", "spell", "ability"]
