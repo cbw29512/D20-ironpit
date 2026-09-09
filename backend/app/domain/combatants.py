@@ -14,6 +14,7 @@ from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellSave
 from app.domain.traits import CombatTrait
 from app.domain.unarmed import UnarmedStrikeDamage
 from app.domain.weapons import (
+    ConditionalAttackAdvantage,
     ConditionalDamage,
     DamageType,
     OnHitDamage,

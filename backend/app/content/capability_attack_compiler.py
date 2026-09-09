@@ -98,6 +98,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
         rage_eligible=definition.rage_eligible,
         fixed_damage=definition.fixed_damage,
         conditional_damage=conditional,
+        conditional_attack_advantage=definition.conditional_attack_advantage,
         on_hit_damage=on_hit,
         on_hit_modifier_effects=on_hit_modifiers,
         knocks_prone_max_size=prone_size,

@@ -34,6 +34,7 @@ from app.content.monsters_parry import build_parry_monsters
 from app.content.monsters_poison import build_poison_monsters
 from app.content.monsters_simple_beasts import build_baboon, build_camel, build_deer, build_draft_horse, build_giant_badger, build_jackal
 from app.content.monsters_swarms import build_swarm_candidates
+from app.content.monsters_target_not_full_hp import build_target_not_full_hp_monsters
 from app.content.monsters_venom import build_venom_monsters
 from app.content.monsters_wolves import build_dire_wolf, build_wolf
 from app.content.monsters_zero_engine import build_zero_engine_monsters
@@ -53,7 +54,7 @@ def build_legacy_monster_templates() -> list[CombatantTemplate]:
         build_hippogriff(), *build_fixed_damage_monsters(), *build_beast_batch_two(), *build_monster_batch_three(),
         *build_control_monsters(), *build_grapple_expansion(), *build_poison_monsters(), *build_venom_monsters(),
         *build_expansion_four(), build_giant_crocodile(), build_giant_constrictor_snake(), build_tyrannosaurus_rex(),
-        *build_zero_engine_monsters(), build_worg(), *build_swarm_candidates(), *build_parry_monsters(),
+        *build_zero_engine_monsters(), *build_target_not_full_hp_monsters(), build_worg(), *build_swarm_candidates(), *build_parry_monsters(),
     ]
     monsters = complete_monster_movement_modes(monsters)
     monsters = filter_standard_arena_eligible(monsters)

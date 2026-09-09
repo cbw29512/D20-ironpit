@@ -66,6 +66,7 @@ def _attack(attack: WeaponAttack) -> dict[str, object]:
         "attack_ability": attack.attack_ability,
         "attack_ability_modifier": attack.attack_ability_modifier,
         "rage_eligible": attack.rage_eligible,
+        "conditional_attack_advantage": [spec.model_dump(mode="json") for spec in attack.conditional_attack_advantage],
         "effects": effects, "forbid_target_grappled_by_self": attack.forbid_target_grappled_by_self,
     }
     if attack.fixed_damage is None:

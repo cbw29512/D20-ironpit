@@ -9,6 +9,7 @@ from app.domain.actions import (
 )
 from app.domain.combatants import (
     CombatantTemplate,
+    ConditionalAttackAdvantage,
     ConditionalDamage,
     DamageType,
     OnHitDamage,
@@ -62,6 +63,7 @@ __all__ = [
     "CombatantState",
     "CombatantTemplate",
     "ConditionRemovalAction",
+    "ConditionalAttackAdvantage",
     "ConditionalDamage",
     "DamageRollComponent",
     "DamageType",

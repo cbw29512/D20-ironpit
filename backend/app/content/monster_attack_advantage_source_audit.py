@@ -1,0 +1,28 @@
+from __future__ import annotations
+
+import logging
+import re
+
+from app.domain.models import WeaponAttack
+
+logger = logging.getLogger(__name__)
+_TARGET_NOT_FULL = r"with\s+advantage\s+if\s+the\s+target\s+(?:doesn['’]t|does\s+not)\s+have\s+all\s+its\s+hit\s+points"
+
+
+def conditional_attack_advantage_issues(attack: WeaponAttack, actions: str) -> list[str]:
+    try:
+        name = re.escape(attack.weapon.name)
+        source_has = bool(re.search(
+            rf"\b{name}\.\s+(?:melee|ranged|melee\s+or\s+ranged)\s+attack\s+roll:[^.]*?\(\s*{_TARGET_NOT_FULL}\s*\)",
+            actions, re.IGNORECASE,
+        ))
+        runtime_count = sum(spec.trigger == "target_not_full_hp" for spec in attack.conditional_attack_advantage)
+        issues: list[str] = []
+        if source_has and runtime_count != 1:
+            issues.append(f"conditional-attack-advantage-missing:{attack.id}:target_not_full_hp")
+        if not source_has and runtime_count:
+            issues.append(f"conditional-attack-advantage-source-missing:{attack.id}:target_not_full_hp")
+        return issues
+    except Exception:
+        logger.exception("Failed conditional attack Advantage source audit for %s.", attack.id)
+        raise
