@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Literal, TypedDict
 
 FigureForm = Literal[
-    "aquatic-mammal", "aquatic-reptile", "bat", "bear", "bird", "brute", "centipede", "crab", "frog",
+    "aquatic-mammal", "aquatic-reptile", "bat", "bear", "bird", "brute", "centipede", "crab", "fish", "frog",
     "gargoyle", "hippogriff", "hoofed", "humanoid", "insect", "plant", "primate", "pterosaur", "quadruped",
     "reptile", "scorpion", "snake", "spider", "swarm", "theropod", "weapon", "winged-insect",
 ]
@@ -66,6 +66,7 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Giant Owl": _p("bird", "owl"),
     "Giant Rat": _p("quadruped", "rodent"),
     "Giant Scorpion": _p("scorpion", "giant-scorpion"),
+    "Giant Shark": _p("fish", "shark"),
     "Giant Venomous Snake": _p("snake", "snake"),
     "Giant Vulture": _p("bird", "vulture"),
     "Giant Wasp": _p("winged-insect", "wasp"),
@@ -84,6 +85,7 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Hippogriff": _p("hippogriff", "hippogriff"),
     "Hippopotamus": _p("quadruped", "hippopotamus"),
     "Hobgoblin Warrior": _p("humanoid", "hobgoblin"),
+    "Hunter Shark": _p("fish", "shark"),
     "Hyena": _p("quadruped", "hyena"),
     "Jackal": _p("quadruped", "canine"),
     "Killer Whale": _p("aquatic-mammal", "orca"),
@@ -103,12 +105,14 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Owlbear": _p("bear", "owlbear"),
     "Panther": _p("quadruped", "cat"),
     "Pegasus": _p("hoofed", "pegasus"),
+    "Piranha": _p("fish", "piranha"),
     "Plesiosaurus": _p("aquatic-reptile", "plesiosaur"),
     "Polar Bear": _p("bear", "bear"),
     "Pony": _p("hoofed", "equine"),
     "Pteranodon": _p("pterosaur", "pteranodon"),
     "Rat": _p("quadruped", "rodent"),
     "Raven": _p("bird", "corvid"),
+    "Reef Shark": _p("fish", "shark"),
     "Rhinoceros": _p("hoofed", "horn"),
     "Riding Horse": _p("hoofed", "equine"),
     "Saber-Toothed Tiger": _p("quadruped", "sabertooth"),
@@ -119,6 +123,7 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Swarm of Bats": _p("swarm", "bats"),
     "Swarm of Crawling Claws": _p("swarm", "crawling-claws"),
     "Swarm of Insects": _p("swarm", "insects"),
+    "Swarm of Piranhas": _p("swarm", "piranhas"),
     "Swarm of Rats": _p("swarm", "rats"),
     "Swarm of Venomous Snakes": _p("swarm", "venomous-snakes"),
     "Tiger": _p("quadruped", "cat"),
