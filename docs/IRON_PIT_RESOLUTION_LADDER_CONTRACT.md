@@ -148,7 +148,19 @@ Iron Pit AI policy: if a Recharge ability is available, prioritize using it in i
 
 Successful Recharge only restores availability. It never changes the underlying ability's mechanics.
 
-## 10. Implementation invariant
+## 10. Concentration and damage events
+
+Concentration checks are driven by damage events, not by the number of damage types inside one event.
+
+If one attack/effect creates one damage event containing multiple components, resolve every component independently, combine the final components into that event's final damage packet, and make one concentration check if that event legally requires one.
+
+Example: one hit that resolves `8 Slashing + 6 Fire + 4 Necrotic` is one damage event and therefore produces one concentration check after the complete damage event is resolved, not three checks merely because three damage types were present.
+
+If the source actually creates separate damage events, including damage at different timing windows, each separate event can independently trigger its own concentration check according to RAW.
+
+The audit log must identify the damage event that caused each concentration check and preserve the applicable final damage value, derived DC, roll, modifiers, total, margin, and result.
+
+## 11. Implementation invariant
 
 The universal resolver should be modeled as small, composable conditional branches rather than monster-specific scripts:
 
