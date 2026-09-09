@@ -29,14 +29,17 @@ function queuedDice(values, fallback = 10) {
 }
 
 {
-  window.IRON_PIT_DICE = queuedDice([20, 1, 15, 6, 6]);
-  const battle = window.IRON_PIT_BROWSER_ENGINE.runEncounter({
-    hero_ids: ["rokhan-stonefury-l1"], monster_ids: ["srd-commoner"],
-  });
-  const rage = battle.events.find((event) => event.feature_id === "rage");
-  const attack = battle.events.find((event) => event.event_type === "attack" && event.actor_id.startsWith("hero-1:"));
-  assert.ok(rage, "expected Rokhan to activate Rage before attacking");
-  assert.ok(attack?.hit, "expected deterministic Rokhan hit");
+  const barbarian = structuredClone(window.IRON_PIT_BROWSER_HEROES["rokhan-stonefury-l1"]);
+  const bandit = structuredClone(window.IRON_PIT_BROWSER_MONSTERS["srd-bandit"]);
+  const hero = { combatant_id: "hero-rage-melee", side: "heroes", position_ft: 5, state: window.IRON_PIT_BROWSER_STATE.buildState(barbarian) };
+  const monster = { combatant_id: "monster-rage-target", side: "monsters", position_ft: 10, state: window.IRON_PIT_BROWSER_STATE.buildState(bandit) };
+  window.IRON_PIT_BROWSER_STATE.beginTurn(hero.state);
+  const rage = window.IRON_PIT_BROWSER_RAGE.enter(1, 1, hero);
+  assert.ok(rage, "expected Rokhan to activate Rage before a melee attack");
+  const greataxe = barbarian.attacks.find((item) => item.id === "rokhan-greataxe");
+  window.IRON_PIT_DICE = queuedDice([15, 6]);
+  const attack = window.IRON_PIT_BROWSER_ATTACK.resolveAttack(2, 1, hero, monster, greataxe, 5);
+  assert.ok(attack.hit, "expected deterministic Rokhan melee hit");
   assert.equal(attack.weapon_id, "rokhan-greataxe");
   assert.equal(attack.damage_roll.modifier, 5, "expected +3 Strength and +2 Rage damage");
   assert.equal(attack.damage_roll.notation, "1d12+5");
