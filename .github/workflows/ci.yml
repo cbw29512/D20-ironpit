@@ -221,10 +221,10 @@ jobs:
           grep -q 'browser-light-weapons.js' index.html
       - name: Prove live battlefield is wired
         run: |
-          grep -q 'id="battlefield"' index.html
+          grep -q 'class="battlefield"' index.html
           grep -q 'id="battle-log"' index.html
-          grep -q 'battlefield.js' index.html
-          grep -q 'battle-log.js' index.html
+          grep -q 'battlefield-view.js' index.html
+          grep -q 'battle-log-format.js' index.html
       - name: Validate Netlify production-only credit guard
         run: |
           grep -q 'production' netlify.toml
