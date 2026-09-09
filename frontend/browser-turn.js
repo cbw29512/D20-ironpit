@@ -6,6 +6,7 @@
   const T = () => window.IRON_PIT_BROWSER_TACTICAL_SHIFT, O = () => window.IRON_PIT_BROWSER_ONGOING_SPELL_CONTROL;
   const L = () => window.IRON_PIT_BROWSER_SPELL_OFFENSE, U = () => window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION;
   const F = () => window.IRON_PIT_BROWSER_FORMATION, V = () => window.IRON_PIT_BROWSER_SAVES;
+  const DG = () => window.IRON_PIT_BROWSER_DODGE;
   const D = () => window.IRON_PIT_DICE;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
     available: (s, c) => c === "action" ? s.action_available : s.bonus_action_available,
@@ -118,6 +119,8 @@
         advantage: pack ? 1 : 0, featureId: opener || (pack ? "pack-tactics" : null),
       });
       events.push(...standard.events); sequence = standard.sequence;
+    } else if (E().available(member.state, "action")) {
+      events.push(DG().take(sequence++, round, member));
     }
     return finalize(events, sequence, round, member, setup, turnKey);
   }
