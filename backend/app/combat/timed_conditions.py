@@ -7,7 +7,6 @@ from app.domain.models import BattleEvent, CombatantState, EncounterCombatant, E
 from app.domain.runtime import TimedTurnBehavior
 
 POISONED_EFFECT_ID = "poisoned"
-ARENA_POISON_RECOVERY_DC = 10
 
 
 def apply_timed_condition(
@@ -32,14 +31,10 @@ def apply_timed_condition(
 ) -> str | None:
     if condition_is_immune(state, effect_id):
         return None
-    if effect_id == POISONED_EFFECT_ID:
-        if any(effect.effect_id == POISONED_EFFECT_ID for effect in state.timed_effects):
-            return POISONED_EFFECT_ID
-        expires_at_start_of_source_turn = False
-        expiry_timing = None
-        repeat_save_ability = repeat_save_ability or "constitution"
-        repeat_save_dc = repeat_save_dc or ARENA_POISON_RECOVERY_DC
-        repeat_save_timing = "target_turn_start"
+    if effect_id == POISONED_EFFECT_ID and any(
+        effect.effect_id == POISONED_EFFECT_ID for effect in state.timed_effects
+    ):
+        return POISONED_EFFECT_ID
     state.timed_effects = [
         effect for effect in state.timed_effects
         if not (
@@ -112,6 +107,8 @@ def expire_start_of_turn_conditions(
             if effect.source_id == source.combatant_id and _source_start_expired(effect, round_number)
         ]
         for effect in expiring:
+            if effect not in target.state.timed_effects:
+                continue
             removed = remove_effect_group(target.state, effect)
             if not removed:
                 continue
@@ -126,7 +123,10 @@ def expire_start_of_turn_conditions(
                 removed_condition_ids=removed,
                 feature_id=effect.source_effect_id or "condition-ended",
                 animation="condition-ended",
-                description=f"{target.state.template.name} is no longer affected by {effect.source_effect_id or effect.effect_id}.",
+                description=(
+                    f"{target.state.template.name} is no longer affected by "
+                    f"{effect.source_effect_id or effect.effect_id}."
+                ),
             ))
             sequence += 1
     return events, sequence
