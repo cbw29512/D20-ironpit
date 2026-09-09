@@ -34,6 +34,9 @@ assert.equal(ids.has("distance"), false, "formation combat must not expose a sta
 assert.match(html, /<button id="quick-test" type="button">LOAD SAMPLE<\/button>/);
 assert.match(html, /id="step-fight-button"/); assert.match(html, /id="turbo-count"[^>]+value="100"/);
 assert.match(html, /browser-turbo\.js/); assert.match(html, /browser-execution\.js/); assert.match(html, /battle-actions\.js/);
+assert.match(html, /browser-arena-map\.js/); assert.match(html, /browser-grid-geometry\.js/);
+assert.match(html, /browser-grid-movement\.js/); assert.match(html, /browser-grid-placement\.js/);
+assert.match(html, /combatant-art\.js/);
 assert.match(html, /Production combat path · secure Web Crypto dice/);
 assert.match(html, /browser-offense-value\.js/); assert.match(html, /browser-spell-offense\.js/);
 
@@ -51,6 +54,7 @@ const css = fs.readFileSync(path.join(root, "battlefield.css"), "utf8");
 
 assert.match(view, /MAX_SLOTS = 6/); assert.match(app, /MAX_SLOTS = 6/);
 assert.match(view, /card-concentration/); assert.match(replay, /CONCENTRATING/);
+assert.match(view, /IRON_PIT_COMBATANT_ART/);
 assert.match(app, /Iron Pit ready\. Choose cards or load the sample matchup\./);
 assert.match(app, /IRON_PIT_EXECUTION/); assert.match(app, /IRON_PIT_BATTLE_ACTIONS/);
 assert.match(actions, /startLive/); assert.match(actions, /nextEvent/); assert.match(actions, /watchRest/); assert.match(actions, /replayTurbo/);
@@ -62,6 +66,7 @@ assert.match(dice, /crypto\.getRandomValues/); assert.match(dice, /function clea
 assert.match(turbo, /function runSeeded/); assert.match(turbo, /async function runBatch/); assert.match(turbo, /finally \{ window\.IRON_PIT_DICE = prior; \}/);
 assert.match(replay, /bindBattle/); assert.match(replay, /eventStep/); assert.match(replay, /syncFinal/);
 assert.match(engine, /1-6 cards per side/); assert.match(engine, /IRON_PIT_BROWSER_FORMATION/);
+assert.match(engine, /map_definition/); assert.match(engine, /IRON_PIT_BROWSER_ARENA_MAP/);
 assert.match(formation, /HERO_FRONT = 5/); assert.match(formation, /MONSTER_FRONT = 10/);
 assert.match(replay, /initiative-badge/); assert.match(replay, /critical-screen/); assert.match(replay, /fumble-blackout/);
 assert.match(css, /\.battle-card\.turn-active/); assert.match(css, /card-turn-shake/); assert.match(css, /\.battle-card\.battle-dead/);
@@ -69,7 +74,13 @@ assert.ok(html.indexOf("browser-tactical-mind.js") < html.indexOf("browser-grapp
 assert.ok(html.indexOf("browser-offense-value.js") < html.indexOf("browser-spell-offense.js"));
 assert.ok(html.indexOf("browser-spell-offense.js") < html.indexOf("browser-turn.js"));
 assert.ok(html.indexOf("browser-action-surge.js") < html.indexOf("browser-turn.js"));
-assert.ok(html.indexOf("browser-formation.js") < html.indexOf("browser-engine.js"), "formation must load before the combat engine");
+assert.ok(html.indexOf("browser-formation.js") < html.indexOf("browser-arena-map.js"));
+assert.ok(html.indexOf("browser-arena-map.js") < html.indexOf("browser-grid-geometry.js"));
+assert.ok(html.indexOf("browser-grid-geometry.js") < html.indexOf("browser-grid-movement.js"));
+assert.ok(html.indexOf("browser-grid-movement.js") < html.indexOf("browser-grid-placement.js"));
+assert.ok(html.indexOf("browser-grid-placement.js") < html.indexOf("browser-engine.js"));
+assert.ok(html.indexOf("figure-portraits.js") < html.indexOf("combatant-art.js"));
+assert.ok(html.indexOf("combatant-art.js") < html.indexOf("battlefield-view.js"));
 assert.ok(html.indexOf("battlefield-picker.js") < html.indexOf("app.js"));
 assert.ok(html.indexOf("battlefield-view.js") < html.indexOf("app.js"));
 assert.ok(html.indexOf("battlefield-replay.js") < html.indexOf("browser-execution.js"));
