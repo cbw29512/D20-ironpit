@@ -33,6 +33,8 @@ def _weapon_ranges(attacker: EncounterCombatant, target: EncounterCombatant) -> 
         for attack in attacks:
             if not attack_allowed_against(attack, attacker.combatant_id, target.state):
                 continue
+            if not resource_available(attacker.state, attack.resource_id, attack.resource_cost):
+                continue
             if attack.weapon.attack_kind is WeaponAttackKind.MELEE:
                 ranges.append(("melee", attack.weapon.reach_ft))
             else:
