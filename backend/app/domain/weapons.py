@@ -90,4 +90,12 @@ class WeaponAttack(BaseModel):
     sneak_attack_eligible: bool = False
     knocks_prone_max_size: CreatureSize | None = None
     control_effect: HitControlEffect | None = None
+    persistent_effects: list[HitControlEffect] = Field(default_factory=list)
     forbid_target_grappled_by_self: bool = False
+
+    def ordered_persistent_effects(self) -> list[HitControlEffect]:
+        """Return new declarative effects plus the legacy single rider, if any."""
+        effects = list(self.persistent_effects)
+        if self.control_effect is not None and self.control_effect not in effects:
+            effects.append(self.control_effect)
+        return effects
