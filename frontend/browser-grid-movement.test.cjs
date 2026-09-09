@@ -9,6 +9,7 @@ global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 load("browser-grid-geometry.js");
 load("browser-grid-movement-support.js");
+load("browser-grid-path-search-support.js");
 load("browser-grid-path-search.js");
 load("browser-grid-movement.js");
 
