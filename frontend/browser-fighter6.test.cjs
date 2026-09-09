@@ -1,5 +1,6 @@
 "use strict";
 
+// Continuation suite: run through browser-fighter5.test.cjs, which provides the browser harness.
 const assert = require("node:assert/strict");
 
 const fighter = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l6"];
