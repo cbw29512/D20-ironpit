@@ -48,16 +48,16 @@ def test_fly_speed_can_legally_be_faster_than_walk_in_open_pit() -> None:
     try:
         assert standard_arena_closing_speed("10 ft., Fly 60 ft.") == 60
     except Exception:
-        logger.exception("Fly closing-speed regression failed.")
+        logger.exception("Fly source-speed regression failed.")
         raise
 
 
-def test_swim_speed_is_available_in_magically_hospitable_pit() -> None:
+def test_swim_speed_is_not_reinterpreted_as_generic_speed() -> None:
     try:
-        assert standard_arena_closing_speed("5 ft., Swim 60 ft.") == 60
-        assert standard_arena_closing_speed("20 ft., Swim 40 ft.") == 40
+        assert standard_arena_closing_speed("5 ft., Swim 60 ft.") == 5
+        assert standard_arena_closing_speed("20 ft., Swim 40 ft.") == 20
     except Exception:
-        logger.exception("Swim closing-speed hospitality regression failed.")
+        logger.exception("Swim source-speed separation regression failed.")
         raise
 
 
