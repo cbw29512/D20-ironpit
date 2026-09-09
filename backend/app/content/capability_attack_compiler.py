@@ -24,15 +24,18 @@ def compile_persistent_effect(
             max_target_size=effect.max_target_size,
             grapple_escape_dc=effect.escape_dc,
             restrains_while_grappled=effect.restrains,
+            gate=effect.gate,
         )
     if isinstance(effect, ProneEffectDefinition):
         return HitControlEffect(
             max_target_size=effect.max_target_size,
             condition_id="prone",
+            gate=effect.gate,
         )
     return HitControlEffect(
         max_target_size=effect.max_target_size,
         condition_id=effect.condition,
+        gate=effect.gate,
         expires_at_start_of_source_turn=effect.expires_at_start_of_source_turn,
         expiry_timing=effect.expiry_timing,
         repeat_save_ability=effect.repeat_save_ability,
@@ -87,11 +90,11 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
                     damage_bonus=effect.dice.bonus,
                     damage_type=effect.damage_type,
                 ))
-        elif isinstance(effect, ProneEffectDefinition):
+        elif isinstance(effect, ProneEffectDefinition) and effect.gate == effect.gate.__class__():
             prone_size = effect.max_target_size
         elif isinstance(effect, HitModifierEffect):
             on_hit_modifiers.append(effect)
-        elif isinstance(effect, (GrappleEffectDefinition, ConditionEffectDefinition)):
+        elif isinstance(effect, (ProneEffectDefinition, GrappleEffectDefinition, ConditionEffectDefinition)):
             controls.append(compile_persistent_effect(effect))
         else:
             raise UnsupportedCapabilityError(f"Unsupported attack effect: {effect!r}")
