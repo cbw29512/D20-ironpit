@@ -10,7 +10,7 @@ from app.domain.movement import MovementModes
 
 logger = logging.getLogger(__name__)
 _MOVEMENT_MODES = ("walk", "fly", "climb", "swim", "burrow")
-_STANDARD_ARENA_MODES = frozenset({"walk", "fly", "swim"})
+_STANDARD_ARENA_MODES = frozenset({"walk", "fly"})
 _MODE_FIELDS = {
     "walk": "walk_ft",
     "fly": "fly_ft",
@@ -60,7 +60,7 @@ def parse_movement_profile(source_speed: object) -> MovementModes:
 
 
 def standard_arena_closing_speed(source_speed: object) -> int:
-    """Fastest printed mode usable for closing in the magically hospitable Iron Pit."""
+    """Fastest printed mode legal in the open, flat standard Iron Pit."""
     modes = parse_movement_modes(source_speed)
     legal = [speed for mode, speed in modes.items() if mode in _STANDARD_ARENA_MODES]
     if not legal:
