@@ -3,17 +3,20 @@ from app.combat.attacks import resolve_attack
 from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.encounter_targeting import combatant_distance
+from app.domain.grid import GridPosition
 from app.domain.models import CombatTrait, EncounterSelection, RollMode
 
 
-def _rat_pack_setup(starting_distance_ft: int = 5):
+def _rat_pack_setup():
     setup = build_encounter_setup(EncounterSelection(
         hero_ids=["karnok-stoneward-l1"],
         monster_ids=["srd-giant-rat", "srd-giant-rat"],
     ))
-    setup.heroes[0].position_ft = 0
-    for monster in setup.monsters:
-        monster.position_ft = starting_distance_ft
+    target = setup.heroes[0]
+    attacker, ally = setup.monsters
+    target.state.position = GridPosition(x=7, y=6)
+    attacker.state.position = GridPosition(x=8, y=6)
+    ally.state.position = GridPosition(x=7, y=7)
     return setup
 
 
@@ -22,14 +25,17 @@ def test_giant_rat_is_marked_with_pack_tactics() -> None:
     assert CombatTrait.PACK_TACTICS in setup.monsters[0].state.template.combat_traits
 
 
-def test_any_active_ally_counts_as_adjacent_regardless_of_position() -> None:
+def test_only_ally_actually_adjacent_to_target_enables_pack_tactics() -> None:
     setup = _rat_pack_setup()
     attacker, ally = setup.monsters
     target = setup.heroes[0]
 
-    ally.position_ft = 90
-    assert has_adjacent_active_ally(attacker, setup) is True
+    assert has_adjacent_active_ally(attacker, target, setup) is True
     assert pack_tactics_active(attacker, target, setup) is True
+
+    ally.state.position = GridPosition(x=20, y=6)
+    assert has_adjacent_active_ally(attacker, target, setup) is False
+    assert pack_tactics_active(attacker, target, setup) is False
 
 
 def test_downed_or_unconscious_ally_does_not_count_as_adjacent() -> None:
@@ -40,7 +46,7 @@ def test_downed_or_unconscious_ally_does_not_count_as_adjacent() -> None:
     ally.state.current_hp = 0
     ally.state.is_unconscious = True
 
-    assert has_adjacent_active_ally(attacker, setup) is False
+    assert has_adjacent_active_ally(attacker, target, setup) is False
     assert pack_tactics_active(attacker, target, setup) is False
 
 
@@ -50,16 +56,16 @@ def test_incapacitated_ally_does_not_enable_pack_tactics() -> None:
         attacker, ally = setup.monsters
         target = setup.heroes[0]
         ally.state.active_effect_ids.append(condition)
-        assert has_adjacent_active_ally(attacker, setup) is False, condition
+        assert has_adjacent_active_ally(attacker, target, setup) is False, condition
         assert pack_tactics_active(attacker, target, setup) is False, condition
 
 
-def test_partial_debuffed_ally_still_counts_for_pack_tactics() -> None:
+def test_partial_debuffed_adjacent_ally_still_counts_for_pack_tactics() -> None:
     setup = _rat_pack_setup()
     attacker, ally = setup.monsters
     target = setup.heroes[0]
     ally.state.active_effect_ids.append("poisoned")
-    assert has_adjacent_active_ally(attacker, setup) is True
+    assert has_adjacent_active_ally(attacker, target, setup) is True
     assert pack_tactics_active(attacker, target, setup) is True
 
 
@@ -71,7 +77,7 @@ def test_single_combatant_side_has_no_adjacent_ally() -> None:
     attacker = setup.monsters[0]
     target = setup.heroes[0]
 
-    assert has_adjacent_active_ally(attacker, setup) is False
+    assert has_adjacent_active_ally(attacker, target, setup) is False
     assert pack_tactics_active(attacker, target, setup) is False
 
 
