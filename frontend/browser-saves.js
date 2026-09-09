@@ -63,13 +63,15 @@
   function resolveAction(sequence, round, actor, target, action, distance, options = {}) {
     try {
       const spendAction = options.spendAction !== false;
-      if (!RES()) throw new Error("Browser resource API is not loaded.");
+      const resourceBacked = Boolean(action.resourceId);
+      const resources = resourceBacked ? RES() : null;
+      if (resourceBacked && !resources) throw new Error("Browser resource API is not loaded.");
       if (spendAction && !E().available(actor.state, "action")) throw new Error("Action is unavailable for saving throw action.");
       if (!legalAction(action, target, distance)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
-      if (!RES().available(actor.state, action.resourceId, action.resourceCost || 1)) throw new Error(`${action.name} lacks its required resource.`);
+      if (resourceBacked && !resources.available(actor.state, action.resourceId, action.resourceCost || 1)) throw new Error(`${action.name} lacks its required resource.`);
       const save = resolveSavingThrow(target.state, action.saveAbility, action.dc);
       if (spendAction) E().spend(actor.state, "action");
-      const resourceRemaining = RES().spend(actor.state, action.resourceId, action.resourceCost || 1);
+      const resourceRemaining = resourceBacked ? resources.spend(actor.state, action.resourceId, action.resourceCost || 1) : null;
       const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
       const deathSuccessBefore = target.state.death_save_successes, deathFailureBefore = target.state.death_save_failures;
       const concentrationBefore = target.state.concentration?.effect_id || null;
