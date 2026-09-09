@@ -72,6 +72,25 @@ Permanent tests for a new trigger must prove that it contributes to the existing
 
 If it is not completely clear whether source wording represents a genuinely new primitive or only another trigger/configuration for an existing one, stop and ask Chris before coding. Record the answer in the appropriate authoritative repository document before implementation.
 
+## Arena movement policy
+
+Movement mechanics and movement policy are separate.
+
+The movement engine owns legal squares, footprints, pathfinding, movement cost, difficult terrain, collision, Opportunity Attacks, forced movement, and other rules. Arena AI only chooses the simplest legal destination needed to use the combatant's actions.
+
+Default Iron Pit voluntary movement policy is intentionally simple:
+
+1. The combatant's goal is to engage and defeat a living opponent; it does not wander around the arena without an action-driven reason.
+2. A melee combatant moves toward its chosen target until a legal melee attack/reach is available, then stops and attacks.
+3. A ranged combatant that already has a legal ranged attack from its current position stays in place and attacks. It moves toward the chosen target only when movement is needed to enter legal range.
+4. If a ranged combatant is already in melee and has a legal melee option, it uses the legal melee option rather than retreating merely to preserve range.
+5. A caster that can cast its chosen legal spell from its current position stays in place and casts. It moves only when movement is needed to make the chosen spell or other action legal.
+6. A mixed combatant uses its best legal action from its current position and closes only when its desired legal action requires closing.
+7. Default Arena AI does not voluntarily kite, circle, run to map edges, seek cover, disperse, or retreat merely for positional optimization.
+8. Specific printed features, conditions, forced movement, explicit retreat effects, or other RAW mechanics may require movement that overrides this default policy; those effects still use the same universal movement engine.
+
+The 24 x 16 arena therefore uses a capable pathfinder with deliberately simple destination policy. Pathfinding solves **how to reach a legal action position**; it does not invent tactical goals.
+
 ## Class -> subclass -> specialization
 
 A class is built once through the levels before subclass choice.
