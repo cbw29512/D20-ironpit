@@ -5,6 +5,7 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.domain.events import BattleEvent, DiceRoll
+from app.domain.grid import BattleMapDefinition
 from app.domain.runtime import CombatantState
 
 
@@ -31,6 +32,7 @@ class EncounterSetup(BaseModel):
     monsters: list[EncounterCombatant] = Field(min_length=1, max_length=6)
     hero_total_levels: int = Field(ge=1, le=120)
     monster_total_cr: str
+    map_definition: BattleMapDefinition | None = None
 
 
 class InitiativeGroup(BaseModel):
