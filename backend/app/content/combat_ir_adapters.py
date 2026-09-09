@@ -12,10 +12,10 @@ from app.domain.combat_ir import (
 from app.domain.weapons import WeaponAttackKind
 
 
-def _resource(resource_id: str | None, amount: int) -> ResourceCostIR | None:
+def _resources(resource_id: str | None, amount: int) -> list[ResourceCostIR]:
     if resource_id is None:
-        return None
-    return ResourceCostIR(resource_id=resource_id, amount=amount)
+        return []
+    return [ResourceCostIR(resource_id=resource_id, amount=amount)]
 
 
 def attack_capability_to_ir(attack: AttackCapabilityDefinition) -> CombatActionIR:
@@ -54,7 +54,7 @@ def attack_capability_to_ir(attack: AttackCapabilityDefinition) -> CombatActionI
             damage_type=attack.damage_type,
         ),
         effects=list(attack.effects),
-        resource_cost=_resource(attack.resource_id, attack.resource_cost),
+        resource_costs=_resources(attack.resource_id, attack.resource_cost),
         animation=attack.animation,
     )
 
@@ -87,6 +87,6 @@ def save_capability_to_ir(action: SaveCapabilityDefinition) -> CombatActionIR:
         ),
         primary_damage=primary_damage,
         effects=effects,
-        resource_cost=_resource(action.resource_id, action.resource_cost),
+        resource_costs=_resources(action.resource_id, action.resource_cost),
         animation=action.animation,
     )
