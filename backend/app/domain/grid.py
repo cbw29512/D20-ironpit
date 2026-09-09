@@ -19,3 +19,11 @@ class BattleMapDefinition(BaseModel):
     width_squares: int = Field(ge=1)
     height_squares: int = Field(ge=1)
     cell_size_ft: Literal[5] = 5
+
+
+class GridMovementPlan(BaseModel):
+    """Deterministic path proposal produced by the universal grid movement planner."""
+
+    path: list[GridPosition] = Field(default_factory=list)
+    movement_cost_ft: int = Field(default=0, ge=0)
+    final_distance_ft: int = Field(ge=0)
