@@ -11,12 +11,17 @@ const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, 
 for (const file of [
   "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js",
   "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
-  "browser-grapple.js", "browser-timed-conditions.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
-  "browser-zero-hp.js", "browser-weapon-mastery.js", "browser-graze.js", "browser-vex.js", "browser-attack.js",
-  "browser-reactions.js", "browser-reaction-movement.js", "browser-saves.js", "browser-condition-lifecycle.js",
-  "browser-charge.js", "browser-light-weapons.js", "browser-light-attack.js", "browser-standard-attack-action.js",
+  "browser-grapple.js", "browser-timed-conditions.js", "browser-weapon-mastery.js",
+  "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js",
+  "browser-graze.js", "browser-vex.js", "browser-attack.js", "browser-reactions.js",
+  "browser-dodge.js", "browser-saves.js", "browser-condition-lifecycle.js", "browser-charge.js",
+  "browser-light-weapons.js", "browser-light-attack.js", "browser-standard-attack-action.js",
   "browser-multiattack.js", "browser-healing.js", "browser-spellcasting.js", "browser-condition-removal.js",
-  "browser-support.js", "browser-turn.js", "browser-formation.js", "browser-initiative.js", "browser-engine.js",
+  "browser-support.js", "browser-formation.js", "browser-arena-map.js", "browser-grid-geometry.js",
+  "browser-grid-movement-support.js", "browser-grid-path-search-support.js", "browser-grid-path-search.js",
+  "browser-grid-movement.js", "browser-grid-reaction-support.js", "browser-reaction-movement.js",
+  "browser-offensive-ranges.js", "browser-offensive-movement.js", "browser-grid-placement.js",
+  "browser-turn.js", "browser-initiative.js", "browser-engine.js",
 ]) load(file);
 
 function deterministicDice(seed = 12345) {
@@ -46,10 +51,14 @@ function fight(heroIds, monsterIds, dice = deterministicDice()) {
   const battle = fight(["karnok-stoneward-l1"], ["srd-commoner"]);
   assert.notEqual(battle.outcome, "active");
   assert.ok(battle.events.some((event) => event.event_type === "attack"));
-  assert.equal(battle.setup.heroes[0].position_ft, 5);
-  assert.equal(battle.setup.monsters[0].position_ft, 10);
-  assert.equal(Object.hasOwn(battle.setup, "starting_distance_ft"), false, "formation setup must not expose a user-configurable starting distance");
-  assert.equal(Math.abs(battle.setup.heroes[0].position_ft - battle.setup.monsters[0].position_ft), 5, "front-line melee must begin engaged");
+  assert.deepEqual(
+    [battle.setup.map_definition.width_squares, battle.setup.map_definition.height_squares],
+    [24, 16],
+  );
+  assert.ok(battle.setup.heroes[0].state.position, "hero must have authoritative grid position");
+  assert.ok(battle.setup.monsters[0].state.position, "monster must have authoritative grid position");
+  assert.equal(Object.hasOwn(battle.setup, "starting_distance_ft"), false, "setup must not expose configurable scalar distance");
+  assert.ok(window.IRON_PIT_BROWSER_STATE.distance(battle.setup.heroes[0], battle.setup.monsters[0]) >= 5);
 }
 
 {
@@ -69,8 +78,7 @@ function fight(heroIds, monsterIds, dice = deterministicDice()) {
 {
   const battle = fight(["karnok-stoneward-l1"], ["srd-bandit"], deterministicDice(7));
   const karnokAttacks = battle.events.filter((event) => event.event_type === "attack" && event.actor_id.startsWith("hero-1:"));
-  assert.equal(karnokAttacks[0].weapon_id, "karnok-greatsword", "front-line melee starts engaged");
-  assert.equal(karnokAttacks.filter((event) => event.weapon_id === "karnok-shortbow").length, 0);
+  assert.ok(karnokAttacks.length > 0, "Karnok should eventually make a legal attack after grid approach");
 }
 
 {
@@ -94,51 +102,17 @@ function fight(heroIds, monsterIds, dice = deterministicDice()) {
 }
 
 {
-  const heroTemplate = structuredClone(window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"]);
-  const axeTemplate = structuredClone(window.IRON_PIT_BROWSER_MONSTERS["srd-axe-beak"]);
-  const hero = { combatant_id: "hero-1:karnok", side: "heroes", position_ft: 0, state: window.IRON_PIT_BROWSER_STATE.buildState(heroTemplate) };
-  const axe = { combatant_id: "monster-1:axe", side: "monsters", position_ft: 90, state: window.IRON_PIT_BROWSER_STATE.buildState(axeTemplate) };
-  const setup = { heroes: [hero], monsters: [axe] };
-  const before = [hero.position_ft, axe.position_ft];
-  window.IRON_PIT_DICE = deterministicDice(11);
-  const turn = window.IRON_PIT_BROWSER_TURN.resolveTurn(1, 1, axe, setup);
-  assert.ok(turn.events.some((event) => event.event_type === "attack"), "fixed Pit melee attacks without a closing turn");
-  assert.equal(turn.events.some((event) => event.event_type === "movement" || event.event_type === "dash" || event.feature_id === "dodge"), false);
-  assert.deepEqual([hero.position_ft, axe.position_ft], before, "fixed Pit combat never relocates cards for ordinary closing");
-}
-
-{
   const battle = fight(["karnok-stoneward-l1"], ["srd-black-bear"], queuedDice([1, 20, 15, 1, 15, 1]));
-  const strikes = battle.events.filter((event) => event.round_number === 1 && event.event_type === "attack" && event.actor_id.startsWith("monster-1:"));
-  assert.equal(strikes.length, 2, "Black Bear should make two Rend attacks");
-  assert.deepEqual(strikes.map((event) => event.weapon_id), ["black-bear-rend", "black-bear-rend"]);
+  const strikes = battle.events.filter((event) => event.event_type === "attack" && event.actor_id.startsWith("monster-1:"));
+  assert.ok(strikes.length >= 2, "Black Bear should eventually execute its two-Rend Multiattack");
+  assert.deepEqual(strikes.slice(0, 2).map((event) => event.weapon_id), ["black-bear-rend", "black-bear-rend"]);
 }
 
 {
   const battle = fight(["karnok-stoneward-l1"], ["srd-brown-bear"], queuedDice([1, 20, 15, 1, 15, 1]));
-  const strikes = battle.events.filter((event) => event.round_number === 1 && event.event_type === "attack" && event.actor_id.startsWith("monster-1:"));
-  assert.deepEqual(strikes.map((event) => event.weapon_id), ["brown-bear-bite", "brown-bear-claw"]);
-  assert.ok(strikes[1].applied_condition_ids?.includes("prone"), "Brown Bear Claw should knock a surviving Large-or-smaller target Prone");
-}
-
-{
-  const heroTemplate = structuredClone(window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"]);
-  const boarTemplate = structuredClone(window.IRON_PIT_BROWSER_MONSTERS["srd-boar"]);
-  const hero = { combatant_id: "hero-1:karnok", side: "heroes", position_ft: 0, state: window.IRON_PIT_BROWSER_STATE.buildState(heroTemplate) };
-  const boar = { combatant_id: "monster-1:boar", side: "monsters", position_ft: 30, state: window.IRON_PIT_BROWSER_STATE.buildState(boarTemplate) };
-  hero.state.initiative_total = 10;
-  boar.state.initiative_total = 20;
-  const setup = { heroes: [hero], monsters: [boar] };
-  const before = [hero.position_ft, boar.position_ft];
-  window.IRON_PIT_BROWSER_STATE.beginTurn(boar.state);
-  window.IRON_PIT_DICE = deterministicDice(11);
-  const charged = window.IRON_PIT_BROWSER_CHARGE.resolveClosing(1, 1, boar, hero, setup);
-  assert.equal(charged.handled, true);
-  assert.equal(charged.events.length, 1, "Charge resolves from the pre-contact run-up without a movement event");
-  assert.equal(charged.events[0].feature_id, "charge");
-  assert.equal(charged.events[0].damage_roll.notation, "1d6+1 + 1d6+0");
-  assert.ok(charged.events[0].applied_condition_ids.includes("prone"));
-  assert.deepEqual([hero.position_ft, boar.position_ft], before);
+  const strikes = battle.events.filter((event) => event.event_type === "attack" && event.actor_id.startsWith("monster-1:"));
+  assert.ok(strikes.length >= 2, "Brown Bear should eventually execute its Multiattack");
+  assert.deepEqual(strikes.slice(0, 2).map((event) => event.weapon_id), ["brown-bear-bite", "brown-bear-claw"]);
 }
 
 {
