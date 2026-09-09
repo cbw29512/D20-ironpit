@@ -81,7 +81,7 @@
       const allowed = new Set(ids);
       const profiles = attacks(member.state.template).filter((attack) =>
         allowed.has(attack.id) && (!kind || attack.kind === kind)
-        && RES().available(member.state, attack.resourceId || null, attack.resourceCost || 1));
+        && (!attack.resourceId || RES().available(member.state, attack.resourceId, attack.resourceCost || 1)));
       for (const target of targetOrder(member, setup, preferBackline)) {
         const distance = attackDistance(member, target);
         const attack = profiles.find((profile) => targetAllowed(member, target, profile) && attackInRange(profile, distance));
