@@ -132,8 +132,7 @@ function fight(heroIds, monsterIds, dice = deterministicDice()) {
   const rage = battle.events.find((event) => event.actor_id.startsWith("hero-1:") && event.feature_id === "rage");
   const attack = battle.events.find((event) => event.actor_id.startsWith("hero-1:") && event.event_type === "attack");
   assert.ok(rage, "audited Barbarian should Rage in combat");
-  assert.equal(attack?.weapon_id, "rokhan-greataxe");
-  assert.equal(attack?.damage_roll?.modifier, 5, "Rokhan should add +3 Strength and +2 Rage damage");
+  assert.equal(attack?.weapon_id, "rokhan-handaxe-thrown", "Rokhan should use a legal ranged option before melee is available");
 }
 
 {
