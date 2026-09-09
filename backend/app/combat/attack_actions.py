@@ -57,6 +57,14 @@ def _attack_choice(attacker, setup, slot, *, ranged_backline: bool = False):
     return choose_attack(attacker, setup, slot.attack_ids, kind=WeaponAttackKind.RANGED)
 
 
+def _slot_has_legal_choice(attacker: EncounterCombatant, setup: EncounterSetup, slot) -> bool:
+    try:
+        return _attack_choice(attacker, setup, slot) is not None or _save_choice(attacker, setup, slot) is not None
+    except Exception:
+        logger.exception("Failed to prove legal Attack/Multiattack slot for %s.", attacker.combatant_id)
+        raise
+
+
 def _use_ranged_split(attacker, setup, slots, dice: DiceProvider) -> bool:
     """Frontline mixed attackers have a 25% chance for one later shot at the enemy backline."""
     if is_backline(attacker):
@@ -79,6 +87,8 @@ def resolve_attack_action(
         if definition is None or not is_available(attacker.state, "action"):
             raise ValueError("Attack action or Multiattack is not available.")
         if not target_order(attacker, setup):
+            return [], sequence
+        if not any(_slot_has_legal_choice(attacker, setup, slot) for slot in definition.slots):
             return [], sequence
 
         spend(attacker.state, "action")
