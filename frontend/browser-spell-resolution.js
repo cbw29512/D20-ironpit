@@ -3,16 +3,14 @@
 
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
-  const V = () => window.IRON_PIT_BROWSER_SAVES;
-  const S = () => window.IRON_PIT_BROWSER_STATE;
+  const T = () => window.IRON_PIT_BROWSER_SAVE_TARGETS;
 
   function saveAction(choice) {
     const spell = choice.action;
     if (choice.slotLevel !== spell.level) throw new Error("Spell upcasting is not certified; use the spell's printed slot level.");
     return {
-      id: spell.id, name: spell.name, saveAbility: spell.saveAbility, dc: spell.dc,
-      range: spell.range + (spell.areaRadius || 0),
-      damageDiceCount: spell.damageDiceCount,
+      id: spell.id, name: spell.name, saveAbility: spell.saveAbility, dc: spell.dc, range: spell.range,
+      area: spell.area || null, damageDiceCount: spell.damageDiceCount,
       damageDiceSize: spell.damageDiceSize, damageBonus: spell.damageBonus || 0,
       damageType: spell.damageType, successDamage: spell.successDamage || "none",
       animation: spell.animation || "spell-save",
@@ -36,9 +34,7 @@
     E().spend(caster.state, spell.actionCost);
 
     const placement = choice.placement;
-    const detail = placement
-      ? ` Area covers ${placement.enemyIds.length} enemies and ${placement.friendlyIds.length} unprotected allies.`
-      : "";
+    const detail = placement ? ` Area covers ${placement.targetIds.length} enemies.` : "";
     const slotText = choice.slotLevel === 0 ? "cantrip" : `level ${choice.slotLevel} slot`;
     const events = [{
       sequence: sequence++, round_number: round, event_type: "feature",
@@ -47,21 +43,10 @@
       description: `${caster.state.template.name} casts ${spell.name} using a ${slotText}.${detail}`,
     }];
 
-    const members = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));
-    const action = saveAction(choice);
-    let sharedDamageRolls = null;
-    for (const targetId of choice.targetIds) {
-      const target = members.get(targetId);
-      const event = V().resolveAction(
-        sequence++, round, caster, target, action, S().distance(caster, target),
-        { spendAction: false, sharedDamageRolls },
-      );
-      events.push(event);
-      if (sharedDamageRolls == null && event.damage_components?.length) {
-        sharedDamageRolls = [...event.damage_components[0].rolls];
-      }
-    }
-    return { events, sequence };
+    const resolved = T().resolve(sequence, round, caster, setup, saveAction(choice), choice.targetIds,
+      { skipRangeCheck: Boolean(placement) });
+    events.push(...resolved.events);
+    return { events, sequence: resolved.sequence };
   }
 
   window.IRON_PIT_BROWSER_SPELL_RESOLUTION = { resolve, saveAction };
