@@ -62,7 +62,7 @@
     const attack = opportunityAttackWeapon(reactor, mover, before, after, movementSource, options);
     if (!attack) return null;
     E().spend(reactor.state, "reaction");
-    const pack = S().packTactics(reactor, setup);
+    const pack = S().packTactics(reactor, mover, setup);
     return A().resolveAttack(sequence, round, reactor, mover, attack, before, {
       spendAction: false, advantage: pack ? 1 : 0, featureId: "opportunity-attack", setup,
       turnKey: options.turnKey || null, offTurn: true,
