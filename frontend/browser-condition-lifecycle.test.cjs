@@ -26,31 +26,33 @@ window.IRON_PIT_DICE = {
 };
 
 {
-  const target = member("poison-recovery-target");
-  T.apply(target.state, "poisoned", "venom-source", {
-    sourceEffectId: "venom-rider",
+  const target = member("repeat-save-target");
+  T.apply(target.state, "frightened", "fear-source", {
+    sourceEffectId: "fear-rider",
     appliedRound: 2,
+    expiresAtStartOfSourceTurn: false,
     repeatSaveAbility: "constitution",
     repeatSaveDc: 15,
-    repeatSaveTiming: "target_turn_end",
+    repeatSaveTiming: "target_turn_start",
+    repeatSaveDelayRounds: 1,
   });
 
   const sameRound = L.resolveTargetTiming(1, 2, target, "target_turn_start");
-  assert.equal(sameRound.events.length, 0, "Poisoned must last through the round in which it is applied");
-  assert.equal(target.state.active_effect_ids.includes("poisoned"), true);
+  assert.equal(sameRound.events.length, 0, "explicit repeat-save delay must suppress same-round recovery");
+  assert.equal(target.state.active_effect_ids.includes("frightened"), true);
 
   d20 = 1;
   const failed = L.resolveTargetTiming(sameRound.sequence, 3, target, "target_turn_start");
   assert.equal(failed.events.length, 1);
   assert.equal(failed.events[0].save_succeeded, false);
-  assert.equal(target.state.active_effect_ids.includes("poisoned"), true);
+  assert.equal(target.state.active_effect_ids.includes("frightened"), true);
 
   d20 = 20;
   const passed = L.resolveTargetTiming(failed.sequence, 4, target, "target_turn_start");
   assert.equal(passed.events.length, 1);
   assert.equal(passed.events[0].save_succeeded, true);
-  assert.deepEqual(passed.events[0].removed_condition_ids, ["poisoned"]);
-  assert.equal(target.state.active_effect_ids.includes("poisoned"), false);
+  assert.deepEqual(passed.events[0].removed_condition_ids, ["frightened"]);
+  assert.equal(target.state.active_effect_ids.includes("frightened"), false);
 }
 
 {
