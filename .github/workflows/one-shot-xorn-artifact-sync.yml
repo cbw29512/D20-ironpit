@@ -1,0 +1,47 @@
+name: One-shot Xorn Artifact Sync
+
+on:
+  push:
+    branches:
+      - fix/runtime-derived-monster-certification
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.actor != 'github-actions[bot]' && contains(github.event.head_commit.message, '[sync-xorn-artifacts]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/runtime-derived-monster-certification
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Python rules reference
+        working-directory: backend
+        run: pip install -e '.[dev]'
+      - name: Regenerate canonical runtime and certification artifacts
+        run: |
+          python scripts/export_runtime_monster_capabilities.py
+          python scripts/verify_certification_manifests.py --write
+          python scripts/prepare_static_site.py
+      - name: Commit generated artifacts
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add backend/app/content/data/combatant_capabilities_v1.json \
+                  data/hero_certification_manifest.json \
+                  data/monster_certification_manifest.json \
+                  frontend/browser-heroes.js \
+                  frontend/figure-profiles.js \
+                  frontend/browser-monsters-generated.js \
+                  frontend/browser-spell-effects.js \
+                  frontend/data/srd_5_2_1_monsters.json
+          if git diff --cached --quiet; then
+            echo 'Canonical artifacts already synchronized.'
+            exit 0
+          fi
+          git commit -m 'build: regenerate canonical Xorn certification artifacts'
+          git push origin HEAD:fix/runtime-derived-monster-certification
