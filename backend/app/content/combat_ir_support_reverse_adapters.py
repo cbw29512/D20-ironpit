@@ -3,6 +3,7 @@ from __future__ import annotations
 from app.domain.actions import ConditionRemovalAction, HealingAction
 from app.domain.combat_ir import AutomaticResolutionIR, CombatActionIR
 from app.domain.combat_ir_effects import ConditionRemovalEffectIR, HealingEffectIR
+from app.domain.combat_ir_triggers import ConditionAppliedTriggerIR
 
 
 def _single_effect(action: CombatActionIR, effect_type: type):
@@ -40,6 +41,15 @@ def healing_ir_to_action(action: CombatActionIR) -> HealingAction:
     )
 
 
+def _legacy_condition_trigger(action: CombatActionIR) -> str | None:
+    trigger = action.reaction_trigger
+    if trigger is None:
+        return None
+    if not isinstance(trigger, ConditionAppliedTriggerIR):
+        raise ValueError(f"Condition-removal action {action.id} has incompatible reaction trigger {trigger.kind}.")
+    return "condition_applied_to_self" if trigger.subject == "self" else "condition_applied_to_ally"
+
+
 def condition_removal_ir_to_action(action: CombatActionIR) -> ConditionRemovalAction:
     effect = _single_effect(action, ConditionRemovalEffectIR)
     if action.targeting.target_mode not in {"self", "ally", "self_or_ally"}:
@@ -59,7 +69,7 @@ def condition_removal_ir_to_action(action: CombatActionIR) -> ConditionRemovalAc
         max_conditions_per_use=effect.max_conditions_per_use,
         resource_costs=per_use,
         resource_costs_per_condition=per_condition,
-        reaction_trigger=action.reaction_trigger,
+        reaction_trigger=_legacy_condition_trigger(action),
         expends_spell_slot=effect.expends_spell_slot,
         animation=action.animation,
     )
