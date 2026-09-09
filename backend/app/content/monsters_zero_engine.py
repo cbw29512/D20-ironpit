@@ -46,12 +46,20 @@ _ATTACKS = {
     ],
     "Venomous Snake": [("Bite", "melee", 4, 1, 4, 2, "piercing", None, 5, None, None, [("Poison", 1, 6, 0, "poison")])],
     "Violet Fungus": [("Rotting Touch", "melee", 2, 1, 8, 0, "necrotic", None, 10, None, None, [])],
+    "Xorn": [
+        ("Bite", "melee", 6, 4, 6, 3, "piercing", None, 5, None, None, []),
+        ("Claw", "melee", 6, 1, 10, 3, "slashing", None, 5, None, None, []),
+    ],
     "Zombie": [("Slam", "melee", 3, 1, 8, 1, "bludgeoning", None, 5, None, None, [])],
 }
 _MULTI = {
-    "Animated Armor": (2, ("Slam",)), "Gargoyle": (2, ("Claw",)),
-    "Guard Captain": (2, ("Javelin", "Longsword")), "Hippopotamus": (2, ("Bite",)),
-    "Manticore": (3, ("Rend", "Tail Spike")), "Violet Fungus": (2, ("Rotting Touch",)),
+    "Animated Armor": (("Slam",), ("Slam",)),
+    "Gargoyle": (("Claw",), ("Claw",)),
+    "Guard Captain": (("Javelin", "Longsword"), ("Javelin", "Longsword")),
+    "Hippopotamus": (("Bite",), ("Bite",)),
+    "Manticore": (("Rend", "Tail Spike"), ("Rend", "Tail Spike"), ("Rend", "Tail Spike")),
+    "Violet Fungus": (("Rotting Touch",), ("Rotting Touch",)),
+    "Xorn": (("Bite",), ("Claw",), ("Claw",), ("Claw",)),
 }
 _TRAITS = {
     "Ogre Zombie": [CombatTrait.UNDEAD_FORTITUDE],
@@ -95,12 +103,13 @@ def _multiattack(monster: str, attacks: list[WeaponAttack]) -> AttackActionDefin
     profile = _MULTI.get(monster)
     if profile is None:
         return None
-    count, names = profile
-    ids = [attack.id for attack in attacks if attack.weapon.name in names]
-    return AttackActionDefinition(
-        id=f"srd-{_slug(monster)}-multiattack", name="Multiattack",
-        slots=[AttackActionSlot(attack_ids=ids) for _ in range(count)],
-    )
+    slots: list[AttackActionSlot] = []
+    for slot_names in profile:
+        ids = [attack.id for attack in attacks if attack.weapon.name in slot_names]
+        if not ids:
+            raise ValueError(f"Multiattack slot for {monster!r} has no matching attack: {slot_names!r}.")
+        slots.append(AttackActionSlot(attack_ids=ids))
+    return AttackActionDefinition(id=f"srd-{_slug(monster)}-multiattack", name="Multiattack", slots=slots)
 
 
 def _template(name: str) -> CombatantTemplate:
