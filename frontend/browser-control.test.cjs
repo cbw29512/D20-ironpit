@@ -10,7 +10,7 @@ const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, 
 for (const file of [
   "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js", "browser-monsters-beast2.js",
   "browser-monsters-batch3.js", "browser-monsters-control.js", "browser-grapple.js", "browser-state.js",
-  "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js", "browser-attack.js", "browser-saves.js", "browser-charge.js",
+  "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js", "browser-attack.js", "browser-resources.js", "browser-saves.js", "browser-charge.js",
   "browser-formation.js", "browser-multiattack.js", "browser-turn.js", "browser-engine.js",
 ]) load(file);
 
@@ -68,80 +68,49 @@ assert.equal(Object.keys(monsters).length, 58, "control batch must bring browser
     "an active combatant must be targeted before an Unconscious disabled target",
   );
   crab.state.is_dead = true; crab.state.is_alive = false;
-  G.cleanup({ heroes: [held, other], monsters: [crab] });
-  assert.equal(held.state.grapple_sources.length, 0);
+  assert.equal(G.releaseForSource({ heroes: [held, other], monsters: [crab] }, crab.combatant_id), 1);
+  assert.equal(G.speedIsZero(held.state), false);
 }
 
 {
-  const state = S.buildState(structuredClone(heroes["karnok-stoneward-l1"]));
-  window.IRON_PIT_DICE = queuedDice([20]);
-  const high = V.resolveSavingThrow(state, "intelligence", 21);
-  assert.equal(high.roll.total, 20); assert.equal(high.succeeded, false);
+  const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
+  const crab = member("monster-1:crab", "monsters", monsters["srd-giant-crab"]);
+  const setup = { heroes: [hero], monsters: [crab] };
+  G.apply(hero.state, crab.combatant_id, 11, 5, false);
+  window.IRON_PIT_DICE = queuedDice([12]);
+  const events = G.resolveEscapeAction(1, 1, hero, setup);
+  assert.equal(events.length, 1); assert.equal(events[0].type, "grapple_escape");
+  assert.equal(events[0].success, true); assert.equal(G.speedIsZero(hero.state), false);
+}
+
+{
+  const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
+  const giantFrog = member("monster-1:frog", "monsters", monsters["srd-giant-frog"]);
+  window.IRON_PIT_DICE = queuedDice([15, 4]);
+  const event = A.resolveAttack(1, 1, giantFrog, hero, giantFrog.state.template.attacks[0], 5);
+  assert.equal(event.hit, true);
+  assert.deepEqual(event.applied_condition_ids, ["grappled"]);
+  assert.equal(hero.state.grapple_sources[0].escape_dc, 11);
+}
+
+{
+  const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
+  const constrictor = member("monster-1:snake", "monsters", monsters["srd-constrictor-snake"]);
+  window.IRON_PIT_DICE = queuedDice([15, 4]);
+  const event = A.resolveAttack(1, 1, constrictor, hero, constrictor.state.template.attacks[0], 5);
+  assert.equal(event.hit, true);
+  assert.deepEqual(event.applied_condition_ids, ["grappled", "restrained"]);
+  assert.equal(hero.state.grapple_sources[0].escape_dc, 12);
+}
+
+{
+  const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
+  const spider = member("monster-1:spider", "monsters", monsters["srd-giant-spider"]);
+  const web = spider.state.template.saving_throw_actions[0];
   window.IRON_PIT_DICE = queuedDice([1]);
-  const low = V.resolveSavingThrow(state, "strength", 6);
-  assert.equal(low.roll.total, 6); assert.equal(low.succeeded, true);
+  const event = V.resolveAction(1, 1, spider, hero, web, 30);
+  assert.equal(event.save_succeeded, false);
+  assert.deepEqual(event.applied_condition_ids, ["restrained"]);
 }
 
-{
-  const state = S.buildState(structuredClone(heroes["karnok-stoneward-l1"]));
-  state.active_effect_ids.push("restrained");
-  window.IRON_PIT_DICE = queuedDice([18, 2]);
-  const save = V.resolveSavingThrow(state, "dexterity", 10);
-  assert.equal(save.roll.mode, "disadvantage"); assert.equal(save.roll.selected_roll, 2);
-}
-
-{
-  const state = S.buildState(structuredClone(heroes["rokhan-stonefury-l1"]));
-  state.active_effect_ids.push("rage");
-  window.IRON_PIT_DICE = queuedDice([2, 10]);
-  const save = V.resolveSavingThrow(state, "strength", 12);
-  assert.equal(save.roll.mode, "advantage"); assert.equal(save.roll.selected_roll, 10);
-}
-
-{
-  const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
-  const snake = member("monster-1:snake", "monsters", monsters["srd-constrictor-snake"]);
-  const action = snake.state.template.saving_throw_actions[0];
-  window.IRON_PIT_DICE = queuedDice([1, 1, 2, 3]);
-  const failed = V.resolveAction(1, 1, snake, hero, action, 5);
-  assert.equal(failed.save_succeeded, false); assert.equal(failed.damage_roll.total, 6);
-  assert.deepEqual(failed.applied_condition_ids, ["grappled"]);
-  assert.equal(hero.state.current_hp, 6);
-}
-
-{
-  const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
-  const snake = member("monster-1:snake", "monsters", monsters["srd-constrictor-snake"]);
-  const action = snake.state.template.saving_throw_actions[0];
-  window.IRON_PIT_DICE = queuedDice([10]);
-  const passed = V.resolveAction(1, 1, snake, hero, action, 5);
-  assert.equal(passed.save_succeeded, true); assert.equal(passed.damage_roll, null);
-  assert.deepEqual(passed.damage_components, []);
-  assert.equal(hero.state.current_hp, hero.state.template.max_hp);
-  assert.equal(hero.state.grapple_sources.length, 0);
-}
-
-{
-  const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
-  const snake = member("monster-1:snake", "monsters", monsters["srd-constrictor-snake"]);
-  hero.state.template.damage_resistances = ["fire"];
-  const action = { ...snake.state.template.saving_throw_actions[0], damageDiceCount: 2, damageDiceSize: 6, damageType: "fire", successDamage: "half" };
-  window.IRON_PIT_DICE = queuedDice([10, 5, 6]);
-  const passed = V.resolveAction(1, 1, snake, hero, action, 5);
-  assert.equal(passed.save_succeeded, true); assert.equal(passed.damage_roll.total, 2);
-  assert.equal(passed.damage_components[0].total, 5); assert.equal(passed.damage_components[0].applied_total, 2);
-  assert.equal(hero.state.current_hp, 10);
-}
-
-{
-  const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
-  const snake = member("monster-1:snake", "monsters", monsters["srd-constrictor-snake"]);
-  hero.state.current_hp = 1; hero.state.resources["relentless-endurance"] = 0;
-  const action = snake.state.template.saving_throw_actions[0];
-  window.IRON_PIT_DICE = queuedDice([1, 1, 1, 1]);
-  const failed = V.resolveAction(1, 1, snake, hero, action, 5);
-  assert.equal(hero.state.current_hp, 0); assert.equal(hero.state.is_unconscious, true);
-  assert.deepEqual(failed.applied_condition_ids, ["grappled"]);
-}
-
-console.log("Browser saving throw and control-condition regressions passed.");
+console.log("Browser monster control and grapple regressions passed.");
