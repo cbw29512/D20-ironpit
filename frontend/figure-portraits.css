@@ -3,6 +3,7 @@
 .fighter-portrait::before{content:"";position:absolute;inset:7px;border:1px solid currentColor;border-radius:18px;opacity:.2;pointer-events:none}
 .fighter-portrait::after{content:"";position:absolute;left:13px;right:13px;bottom:8px;height:13px;background:radial-gradient(ellipse,rgba(0,0,0,.55),transparent 70%);filter:blur(3px);pointer-events:none}
 .portrait-svg{position:relative;z-index:1;width:82px;height:82px;overflow:visible;filter:drop-shadow(0 5px 4px rgba(0,0,0,.45))}
+.portrait-image{position:relative;z-index:1;width:100%;height:100%;object-fit:cover;object-position:center;border-radius:inherit}
 .portrait-ink{fill:currentColor;stroke:currentColor;stroke-linejoin:round}
 .fighter-portrait[data-size="tiny"] .portrait-svg{transform:scale(.7)}
 .fighter-portrait[data-size="small"] .portrait-svg{transform:scale(.83)}

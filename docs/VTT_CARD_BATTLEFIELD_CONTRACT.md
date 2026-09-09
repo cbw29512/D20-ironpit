@@ -17,6 +17,17 @@ The battlefield card is a visual projection of the immutable combatant template 
 - Movement, reach, range, Opportunity Attacks, forced movement, line of sight, collision, areas of effect, auras, and positioning-sensitive Advantage/Disadvantage all consume the same position state.
 - The old scalar-distance/fixed-formation model is migration scaffolding only and must be removed after all canonical combat paths consume grid state.
 
+## Standard battlefield dimensions
+
+The approved standard Iron Pit VTT battlefield is one **24 x 16 square** map.
+
+- Width: 24 squares = 120 feet.
+- Height: 16 squares = 80 feet.
+- Cell size: 5 feet.
+- Map dimensions are immutable encounter configuration, not monster logic.
+- Starting deployment is produced by universal footprint-aware placement inside declarative deployment zones. Creature names never select starting coordinates.
+- The placement engine must be able to fit the legal 1-6 combatants per side, including six Gargantuan creatures, when the configured deployment zone has enough legal footprint area.
+
 ## Creature footprint
 
 Printed creature size determines occupied grid footprint; monster names never do.
@@ -27,6 +38,8 @@ Printed creature size determines occupied grid footprint; monster names never do
 - Gargantuan: 4 x 4 cells unless a more specific source rule requires a larger space.
 
 Footprint is derived from immutable size data. Runtime state stores position, not a duplicated monster-specific size override unless a supported transformation changes size.
+
+For the canonical 2024 SRD roster, printed `size` comes from the vendored SRD 5.2.1 monster record and is bound to `CombatantTemplate.size`. Source certification must fail on a runtime/source size mismatch rather than silently defaulting the monster to Medium or inventing a VTT-only size.
 
 ## Movement
 
@@ -76,6 +89,17 @@ The moving battlefield representation uses the user's card art and identity.
 - Overlay state is read-only presentation derived from engine state; icons never create, remove, or alter a rule effect.
 - Selecting/clicking the battlefield card opens the full card/stat presentation.
 - The immutable original card remains the source identity; mutable overlays reset with combat state after the fight.
+
+## Visual asset fallback and provenance
+
+Iron Pit supports optional creature artwork without making combat depend on artwork availability.
+
+- A data-driven visual asset registry maps a combatant/template id to an optional image asset.
+- Missing artwork must fall back to the existing reviewed stick-figure/portrait renderer; missing art never blocks combat or certification.
+- Artwork never determines size, footprint, mechanics, targeting, conditions, or any other rule input.
+- External artwork must not be imported merely because a related code repository is open source. The specific visual asset must have a license/permission that allows Iron Pit's intended use.
+- Any imported third-party image must record source/provenance and applicable license/permission before it is added to the registry.
+- BattleCast visual assets remain reference-only until their reuse permission is independently established; BattleCast engine code licensing does not by itself grant rights to separate artwork.
 
 ## Live overlay categories
 
