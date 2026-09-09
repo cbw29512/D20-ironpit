@@ -29,3 +29,25 @@ def test_monster_capability_export_excludes_all_hero_only_progression_fields() -
     for row in rows:
         progression = row.get("progression_features", {})
         assert HERO_ONLY_FIELDS.isdisjoint(progression), row["id"]
+
+
+def test_monster_capability_export_omits_semantically_empty_effect_gates() -> None:
+    module = _load_exporter()
+    rows = json.loads(module.render_registry())
+    for row in rows:
+        for action in [*row.get("attacks", []), *row.get("save_actions", [])]:
+            grapple = action.get("grapple")
+            if isinstance(grapple, dict):
+                assert "gate" not in grapple, (row["id"], action["id"])
+            for effect in action.get("effects", []):
+                if not isinstance(effect, dict):
+                    continue
+                gate = effect.get("gate")
+                if not isinstance(gate, dict):
+                    continue
+                assert any((
+                    gate.get("required_target_tags"),
+                    gate.get("excluded_target_tags"),
+                    gate.get("excluded_creature_types"),
+                    gate.get("save_ability"),
+                )), (row["id"], action["id"], effect.get("kind"))

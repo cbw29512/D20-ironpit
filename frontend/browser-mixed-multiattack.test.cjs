@@ -12,7 +12,7 @@ for (const file of [
   "browser-monsters-batch3.js", "browser-monsters-control.js", "browser-monsters-poison.js", "browser-monsters-venom.js",
   "browser-monsters-mixed.js", "browser-condition-rules.js", "browser-action-economy.js", "browser-grapple.js",
   "browser-timed-conditions.js", "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js",
-  "browser-attack.js", "browser-saves.js", "browser-charge.js", "browser-formation.js", "browser-multiattack.js", "browser-turn.js",
+  "browser-attack.js", "browser-saves.js", "browser-charge.js", "browser-formation.js", "browser-multiattack.js", "browser-resources.js", "browser-turn.js",
 ]) load(file);
 
 const queuedDice = (values, fallback = 10) => {

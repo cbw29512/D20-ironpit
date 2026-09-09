@@ -4,7 +4,9 @@ from app.combat.action_economy import is_available, spend
 from app.combat.barbarian import end_rage_if_incapacitated
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
-from app.combat.grapple import apply_grapple
+from app.combat.hit_modifiers import apply_modifier_effects
+from app.combat.persistent_effects import apply_persistent_effects
+from app.combat.resources import can_use_action_resource, spend_action_resource
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.zero_hp import apply_damage
 from app.domain.models import BattleEvent, DamageRollComponent, DamageType, DiceRoll, EncounterCombatant, SavingThrowAction
@@ -12,7 +14,13 @@ from app.domain.runtime import CombatantState
 from app.domain.size import size_at_most
 
 
-def legal_save_action(action: SavingThrowAction, target: EncounterCombatant, distance_ft: int) -> bool:
+def legal_save_action(
+    action: SavingThrowAction,
+    target: EncounterCombatant,
+    distance_ft: int,
+    actor_state: CombatantState | None = None,
+) -> bool:
+    if actor_state is not None and not can_use_action_resource(actor_state, action): return False
     if distance_ft > action.range_ft: return False
     return action.target_max_size is None or size_at_most(target.state.template.size, action.target_max_size)
 
@@ -39,8 +47,9 @@ def resolve_save_action(
     shared_damage_rolls: list[int] | None = None, affected_states: list[CombatantState] | None = None,
 ) -> BattleEvent:
     if spend_action and not is_available(actor.state, "action"): raise ValueError("Action is not available for a saving throw action.")
-    if not legal_save_action(action, target, distance_ft): raise ValueError(f"{action.name} has no legal target at {distance_ft} feet.")
+    if not legal_save_action(action, target, distance_ft, actor.state): raise ValueError(f"{action.name} has no legal target or available resource at {distance_ft} feet.")
     save_roll, succeeded = resolve_saving_throw(target.state, action.save_ability, action.dc, dice)
+    resource_remaining = spend_action_resource(actor.state, action)
     if spend_action: spend(actor.state, "action")
     hp_before = target.state.current_hp; temporary_hp_before = target.state.temporary_hp
     death_success_before = target.state.death_save_successes; death_failure_before = target.state.death_save_failures
@@ -57,13 +66,23 @@ def resolve_save_action(
         damage_outcome = apply_damage(target.state, applied_total, damage_types=applied_types, dice=dice, affected_states=affected_states)
         end_rage_if_incapacitated(target.state)
     applied_conditions: list[str] = []
-    if not succeeded and target.state.is_alive and not target.state.is_dead and action.grapple_escape_dc is not None:
-        applied_conditions = apply_grapple(target.state, actor.combatant_id, action.grapple_escape_dc, action.range_ft, restrains=action.restrains_while_grappled)
+    if not succeeded and target.state.is_alive and not target.state.is_dead:
+        applied_conditions = apply_persistent_effects(
+            target.state,
+            action.ordered_persistent_effects(),
+            source_id=actor.combatant_id,
+            source_effect_id=action.id,
+            range_ft=action.range_ft,
+            round_number=round_number,
+            affected_states=affected_states,
+            dice=dice,
+        )
+        apply_modifier_effects(target.state, actor.combatant_id, action.id, action.on_failure_modifier_effects)
     outcome = "SUCCEEDS" if succeeded else "FAILS"
     description = f"{target.state.template.name} {outcome} a DC {action.dc} {action.save_ability.title()} save against {actor.state.template.name}'s {action.name}."
+    if resource_remaining is not None: description += f" {action.name} resource remaining: {resource_remaining}."
     if damage_outcome == "undead_fortitude": description += f" {target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP."
-    if "grappled" in applied_conditions: description += f" {target.state.template.name} is Grappled."
-    if "restrained" in applied_conditions: description += f" {target.state.template.name} is Restrained while Grappled."
+    for condition in applied_conditions: description += f" {target.state.template.name} gains {condition}."
     return BattleEvent(
         sequence=sequence, round_number=round_number, event_type="saving_throw", actor_id=actor.combatant_id, actor_name=actor.state.template.name,
         target_id=target.combatant_id, target_name=target.state.template.name, saving_throw_roll=save_roll,
@@ -74,5 +93,5 @@ def resolve_save_action(
         death_save_successes=target.state.death_save_successes, death_save_failures=target.state.death_save_failures,
         is_stable=target.state.is_stable, is_dead=target.state.is_dead, feature_id=action.id,
         concentration_ended_effect_id=concentration_before if concentration_before and target.state.concentration is None else None,
-        animation=action.animation, description=description,
+        resource_remaining=resource_remaining, animation=action.animation, description=description,
     )

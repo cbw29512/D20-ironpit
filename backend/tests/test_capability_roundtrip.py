@@ -22,6 +22,21 @@ def test_registry_preserves_every_legacy_monster_semantics_and_source_audit() ->
         assert audit_monster_source(rebuilt, source_row) == audit_monster_source(original, source_row), original.id
 
 
+def test_single_legacy_save_grapple_is_not_duplicated_as_a_persistent_effect() -> None:
+    compiled = {
+        monster.id: monster for monster in build_monster_templates_from_capabilities()
+    }
+    constrict = next(
+        action
+        for action in compiled["srd-constrictor-snake"].saving_throw_actions
+        if action.id == "constrictor-snake-constrict"
+    )
+
+    assert constrict.grapple_escape_dc == 12
+    assert constrict.restrains_while_grappled is False
+    assert constrict.persistent_effects == []
+
+
 def test_production_roster_uses_the_compiled_capability_monster_set() -> None:
     production = build_arena_roster().monsters
     compiled = build_monster_templates_from_capabilities()

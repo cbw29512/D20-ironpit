@@ -4,6 +4,8 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
+from app.domain.effect_gates import EffectGate
+from app.domain.hit_modifiers import HitModifierEffect
 from app.domain.size import CreatureSize
 
 AbilityName = Literal["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
@@ -12,15 +14,8 @@ HealingTargetMode = Literal["self", "ally", "self_or_ally", "other"]
 ConditionRemovalTargetMode = Literal["self", "ally", "self_or_ally"]
 ConditionReactionTrigger = Literal["condition_applied_to_self", "condition_applied_to_ally"]
 ConditionTiming = Literal["source_turn_start", "source_turn_end", "target_turn_start", "target_turn_end"]
-DamageTypeName = Literal[
-    "acid", "bludgeoning", "cold", "fire", "force", "lightning", "necrotic",
-    "piercing", "poison", "psychic", "radiant", "slashing", "thunder",
-]
-ConditionName = Literal[
-    "blinded", "charmed", "deafened", "exhaustion", "frightened", "grappled",
-    "incapacitated", "invisible", "paralyzed", "petrified", "poisoned", "prone",
-    "restrained", "stunned", "unconscious",
-]
+DamageTypeName = Literal["acid", "bludgeoning", "cold", "fire", "force", "lightning", "necrotic", "piercing", "poison", "psychic", "radiant", "slashing", "thunder"]
+ConditionName = Literal["blinded", "charmed", "deafened", "exhaustion", "frightened", "grappled", "incapacitated", "invisible", "paralyzed", "petrified", "poisoned", "prone", "restrained", "stunned", "unconscious"]
 
 
 class GrappleSource(BaseModel):
@@ -35,6 +30,7 @@ class HitControlEffect(BaseModel):
     grapple_escape_dc: int | None = Field(default=None, ge=1, le=40)
     restrains_while_grappled: bool = False
     condition_id: ConditionName | None = None
+    gate: EffectGate = Field(default_factory=EffectGate)
     expires_at_start_of_source_turn: bool = False
     expiry_timing: ConditionTiming | None = None
     repeat_save_ability: AbilityName | None = None
@@ -53,8 +49,6 @@ class HitControlEffect(BaseModel):
 
 
 class HealingAction(BaseModel):
-    """A printed healing option with its actual action cost and target restrictions."""
-
     id: str
     name: str
     action_cost: ActionCost
@@ -69,8 +63,6 @@ class HealingAction(BaseModel):
 
 
 class ConditionRemovalAction(BaseModel):
-    """A 2024 spell/feature that can legally end one or more named conditions."""
-
     id: str
     name: str
     action_cost: ActionCost
@@ -112,16 +104,24 @@ class SavingThrowAction(BaseModel):
     damage_bonus: int = 0
     damage_type: DamageTypeName | None = None
     success_damage: Literal["none", "half"] = "none"
+    persistent_effects: list[HitControlEffect] = Field(default_factory=list)
+    on_failure_modifier_effects: list[HitModifierEffect] = Field(default_factory=list)
     grapple_escape_dc: int | None = Field(default=None, ge=1, le=40)
     restrains_while_grappled: bool = False
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
     animation: str = "save-effect"
 
+    def ordered_persistent_effects(self) -> list[HitControlEffect]:
+        effects = list(self.persistent_effects)
+        if self.grapple_escape_dc is not None:
+            legacy = HitControlEffect(max_target_size=self.target_max_size, grapple_escape_dc=self.grapple_escape_dc, restrains_while_grappled=self.restrains_while_grappled)
+            if legacy not in effects:
+                effects.append(legacy)
+        return effects
+
 
 class AttackActionSlot(BaseModel):
-    """One ordered weapon/save step inside an Attack action or Multiattack."""
-
     attack_ids: list[str] = Field(default_factory=list, max_length=16)
     save_action_ids: list[str] = Field(default_factory=list, max_length=16)
 
@@ -133,8 +133,6 @@ class AttackActionSlot(BaseModel):
 
 
 class AttackActionDefinition(BaseModel):
-    """One or more ordered strikes/effects; only real Attack actions can trigger Light/Nick."""
-
     id: str
     name: str
     slots: list[AttackActionSlot] = Field(min_length=1, max_length=8)

@@ -8,6 +8,7 @@ from app.domain.capability_effects import (
     GrappleEffectDefinition,
     ProneEffectDefinition,
 )
+from app.domain.effect_gates import EffectGate
 from app.domain.hit_modifiers import HitModifierEffect
 from app.domain.models import ConditionalDamage, OnHitDamage, Weapon, WeaponAttack
 
@@ -16,16 +17,26 @@ class UnsupportedCapabilityError(ValueError):
     pass
 
 
-def _compile_control(effect: GrappleEffectDefinition | ConditionEffectDefinition) -> HitControlEffect:
+def compile_persistent_effect(
+    effect: GrappleEffectDefinition | ConditionEffectDefinition | ProneEffectDefinition,
+) -> HitControlEffect:
     if isinstance(effect, GrappleEffectDefinition):
         return HitControlEffect(
             max_target_size=effect.max_target_size,
             grapple_escape_dc=effect.escape_dc,
             restrains_while_grappled=effect.restrains,
+            gate=effect.gate,
+        )
+    if isinstance(effect, ProneEffectDefinition):
+        return HitControlEffect(
+            max_target_size=effect.max_target_size,
+            condition_id="prone",
+            gate=effect.gate,
         )
     return HitControlEffect(
         max_target_size=effect.max_target_size,
         condition_id=effect.condition,
+        gate=effect.gate,
         expires_at_start_of_source_turn=effect.expires_at_start_of_source_turn,
         expiry_timing=effect.expiry_timing,
         repeat_save_ability=effect.repeat_save_ability,
@@ -60,7 +71,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
     on_hit_modifiers: list[HitModifierEffect] = []
     conditional: list[ConditionalDamage] = []
     prone_size = None
-    control = None
+    controls: list[HitControlEffect] = []
     for effect in definition.effects:
         if isinstance(effect, DamageEffectDefinition):
             if effect.trigger == "on_hit":
@@ -80,14 +91,15 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
                     damage_bonus=effect.dice.bonus,
                     damage_type=effect.damage_type,
                 ))
-        elif isinstance(effect, ProneEffectDefinition):
+        elif isinstance(effect, ProneEffectDefinition) and effect.gate == EffectGate():
             prone_size = effect.max_target_size
         elif isinstance(effect, HitModifierEffect):
             on_hit_modifiers.append(effect)
-        elif isinstance(effect, (GrappleEffectDefinition, ConditionEffectDefinition)):
-            control = _compile_control(effect)
+        elif isinstance(effect, (ProneEffectDefinition, GrappleEffectDefinition, ConditionEffectDefinition)):
+            controls.append(compile_persistent_effect(effect))
         else:
             raise UnsupportedCapabilityError(f"Unsupported attack effect: {effect!r}")
+    single_control = controls[0] if len(controls) == 1 else None
     return WeaponAttack(
         id=definition.id,
         weapon=weapon,
@@ -101,6 +113,9 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
         on_hit_damage=on_hit,
         on_hit_modifier_effects=on_hit_modifiers,
         knocks_prone_max_size=prone_size,
-        control_effect=control,
+        control_effect=single_control,
+        persistent_effects=[] if single_control is not None else controls,
+        resource_id=definition.resource_id,
+        resource_cost=definition.resource_cost,
         forbid_target_grappled_by_self=definition.forbid_target_grappled_by_self,
     )

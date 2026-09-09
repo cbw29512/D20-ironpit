@@ -7,6 +7,7 @@ from app.combat.attacks import resolve_attack
 from app.combat.dice import DiceProvider
 from app.combat.fighter import use_second_wind
 from app.combat.policy import should_use_second_wind
+from app.combat.resources import spend_action_resource
 from app.combat.rolls import roll_d20
 from app.combat.state import begin_turn, build_combatant_state
 from app.combat.turns import prepare_attack
@@ -60,7 +61,7 @@ def run_duel(
                 if attacker.current_hp <= 0 or defender.current_hp <= 0:
                     continue
 
-                begin_turn(attacker)
+                begin_turn(attacker, dice)
                 if attacker is fighter and should_use_second_wind(fighter):
                     events.append(use_second_wind(sequence, round_number, fighter, dice))
                     sequence += 1
@@ -84,6 +85,7 @@ def run_duel(
                     battlefield.distance_ft,
                     dice,
                 )
+                event.resource_remaining = spend_action_resource(attacker, weapon)
                 events.append(event)
                 sequence += 1
 

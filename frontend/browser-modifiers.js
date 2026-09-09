@@ -67,17 +67,21 @@
     return before - state.active_modifiers.length;
   }
 
-  function applyHitEffects(state, sourceId, attack) {
-    for (const [index, effect] of (attack.onHitModifiers || []).entries()) {
-      if (!HIT_KINDS.has(effect.kind)) throw new Error(`Unsupported on-hit modifier kind: ${effect.kind}.`);
+  function applyEffects(state, sourceId, sourceEffectId, effects) {
+    for (const [index, effect] of (effects || []).entries()) {
+      if (!HIT_KINDS.has(effect.kind)) throw new Error(`Unsupported modifier kind: ${effect.kind}.`);
       add(state, {
-        id: `${sourceId}:${attack.id}:hit-modifier:${index}`, source_id: sourceId, source_effect_id: attack.id,
+        id: `${sourceId}:${sourceEffectId}:modifier:${index}`, source_id: sourceId, source_effect_id: sourceEffectId,
         kind: effect.kind, flat_bonus: effect.flatBonus || 0,
         consume_on_attack_against: Boolean(effect.consumeOnAttackAgainst),
         expires_at_start_of_source_turn: Boolean(effect.expiresAtStartOfSourceTurn),
         expires_at_end_of_target_turn: Boolean(effect.expiresAtEndOfTargetTurn),
       });
     }
+  }
+
+  function applyHitEffects(state, sourceId, attack) {
+    applyEffects(state, sourceId, attack.id, attack.onHitModifiers || []);
   }
 
   const flat = (state, kind) => (state.active_modifiers || []).filter((item) => item.kind === kind)
@@ -120,7 +124,7 @@
     && (!item.target_id || item.target_id === targetId));
 
   window.IRON_PIT_BROWSER_MODIFIERS = {
-    add, applyD20Bonus, applyHitEffects, attacksAgainstAdvantage, bonusDamage, consumeAttacksAgainstAdvantage,
+    add, applyD20Bonus, applyEffects, applyHitEffects, attacksAgainstAdvantage, bonusDamage, consumeAttacksAgainstAdvantage,
     consumeNextAttackAgainstAdvantage, effectiveArmorClass, effectiveSpeed, expireSourceTurn, expireSourceTurnStart,
     expireTargetTurn, nextAttackAgainstAdvantage, removeSource, validate,
   };

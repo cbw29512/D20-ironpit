@@ -14,6 +14,7 @@ from app.domain.capability_attacks import (
 from app.domain.character_builds import AbilityScores
 from app.domain.combatants import ResourceDefinition, VisualLoadout
 from app.domain.movement import MovementModes
+from app.domain.passive_effects import RegenerationDefinition
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.reactions import ParryReaction, RedirectAttackReaction
 from app.domain.size import CreatureSize
@@ -31,6 +32,8 @@ class CombatantDefinition(BaseModel):
     level: int | None = Field(default=None, ge=1, le=20)
     challenge_rating: str | None = None
     kind: Literal["character", "monster"]
+    creature_type: str | None = None
+    creature_tags: list[str] = Field(default_factory=list)
     size: CreatureSize = CreatureSize.MEDIUM
     ability_scores: AbilityScores | None = None
     armor_class: int = Field(ge=1)
@@ -48,6 +51,7 @@ class CombatantDefinition(BaseModel):
     defensive_spell_actions: list[DefensiveSpellAction] = Field(default_factory=list)
     healing_actions: list[HealingAction] = Field(default_factory=list)
     condition_removal_actions: list[ConditionRemovalAction] = Field(default_factory=list)
+    regeneration: list[RegenerationDefinition] = Field(default_factory=list)
     saving_throw_bonuses: dict[str, int] = Field(default_factory=dict)
     skill_bonuses: dict[str, int] = Field(default_factory=dict)
     combat_traits: list[CombatTrait] = Field(default_factory=list)
@@ -91,12 +95,18 @@ class CombatantDefinition(BaseModel):
     def validate_references(self) -> "CombatantDefinition":
         attack_ids = {attack.id for attack in self.attacks}
         save_ids = {action.id for action in self.save_actions}
+        resource_ids = {resource.id for resource in self.resources}
         if self.kind == "character" and self.ability_scores is None:
             raise ValueError("Character combatant definitions require ability scores.")
         if len(attack_ids) != len(self.attacks) or len(save_ids) != len(self.save_actions):
             raise ValueError("Capability ids must be unique within their action family.")
+        if len(resource_ids) != len(self.resources):
+            raise ValueError("Resource ids must be unique within a combatant definition.")
         if self.primary_attack_id not in attack_ids:
             raise ValueError("primary_attack_id must reference a declared attack.")
+        for action in [*self.attacks, *self.save_actions]:
+            if action.resource_id is not None and action.resource_id not in resource_ids:
+                raise ValueError(f"Action {action.id} references undeclared resource {action.resource_id}.")
         if self.attack_action:
             for slot in self.attack_action.slots:
                 if not set(slot.attack_ids) <= attack_ids or not set(slot.save_action_ids) <= save_ids:

@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 
 from app.domain.actions import AbilityName, ConditionName, ConditionTiming
 from app.domain.combatants import DamageType
+from app.domain.effect_gates import EffectGate
 from app.domain.hit_modifiers import HitModifierEffect
 from app.domain.size import CreatureSize
 
@@ -28,6 +29,7 @@ class DamageEffectDefinition(BaseModel):
 class ProneEffectDefinition(BaseModel):
     kind: Literal["prone"] = "prone"
     max_target_size: CreatureSize | None = None
+    gate: EffectGate = Field(default_factory=EffectGate)
 
 
 class GrappleEffectDefinition(BaseModel):
@@ -35,12 +37,14 @@ class GrappleEffectDefinition(BaseModel):
     escape_dc: int = Field(ge=1, le=40)
     max_target_size: CreatureSize | None = None
     restrains: bool = False
+    gate: EffectGate = Field(default_factory=EffectGate)
 
 
 class ConditionEffectDefinition(BaseModel):
     kind: Literal["condition"] = "condition"
     condition: ConditionName
     max_target_size: CreatureSize | None = None
+    gate: EffectGate = Field(default_factory=EffectGate)
     expires_at_start_of_source_turn: bool = False
     expiry_timing: ConditionTiming | None = None
     repeat_save_ability: AbilityName | None = None
@@ -48,6 +52,11 @@ class ConditionEffectDefinition(BaseModel):
     repeat_save_timing: ConditionTiming | None = None
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
 
+
+PersistentEffectDefinition = Annotated[
+    ProneEffectDefinition | GrappleEffectDefinition | ConditionEffectDefinition | HitModifierEffect,
+    Field(discriminator="kind"),
+]
 
 AttackEffectDefinition = Annotated[
     DamageEffectDefinition | ProneEffectDefinition | GrappleEffectDefinition | ConditionEffectDefinition | HitModifierEffect,

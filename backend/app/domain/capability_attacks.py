@@ -5,7 +5,12 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName
-from app.domain.capability_effects import AttackEffectDefinition, DiceSpec, GrappleEffectDefinition
+from app.domain.capability_effects import (
+    AttackEffectDefinition,
+    DiceSpec,
+    GrappleEffectDefinition,
+    PersistentEffectDefinition,
+)
 from app.domain.size import CreatureSize
 from app.domain.weapons import DamageType, WeaponAttackKind
 
@@ -34,6 +39,8 @@ class AttackCapabilityDefinition(BaseModel):
     attack_ability_modifier: int | None = None
     rage_eligible: bool = False
     effects: list[AttackEffectDefinition] = Field(default_factory=list)
+    resource_id: str | None = None
+    resource_cost: int = Field(default=1, ge=1, le=20)
     forbid_target_grappled_by_self: bool = False
 
     @model_validator(mode="after")
@@ -46,9 +53,6 @@ class AttackCapabilityDefinition(BaseModel):
             raise ValueError("Ranged attack requires normal and long range.")
         if self.attack_ability_modifier is not None and self.attack_ability is None:
             raise ValueError("Attack ability modifier requires an explicit attack ability.")
-        control_count = sum(effect.kind in {"grapple", "condition"} for effect in self.effects)
-        if control_count > 1:
-            raise ValueError("Current runtime supports one persistent control rider per attack.")
         return self
 
 
@@ -62,7 +66,10 @@ class SaveCapabilityDefinition(BaseModel):
     damage: DiceSpec | None = None
     damage_type: DamageType | None = None
     success_damage: Literal["none", "half"] = "none"
+    effects: list[PersistentEffectDefinition] = Field(default_factory=list)
     grapple: GrappleEffectDefinition | None = None
+    resource_id: str | None = None
+    resource_cost: int = Field(default=1, ge=1, le=20)
     animation: str = "save-effect"
 
     @model_validator(mode="after")

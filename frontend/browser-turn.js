@@ -62,7 +62,7 @@
     for (const target of F().targetOrder(member, setup)) {
       for (const action of member.state.template.saving_throw_actions || []) {
         const distance = F().saveDistance(member, target, action.range);
-        if (V().legalAction(action, target, distance)) return { target, action, distance };
+        if (V().legalAction(action, target, distance, member.state)) return { target, action, distance };
       }
     }
     return null;
@@ -70,7 +70,7 @@
 
   function resolveTurn(sequence, round, member, setup) {
     enablePitRangePolicy();
-    const events = []; H().cleanup(setup); S().beginTurn(member.state);
+    const events = []; H().cleanup(setup); const recharge = window.IRON_PIT_BROWSER_RESOURCES.buildRechargeEvents(member.state, member, round, sequence, S().beginTurn(member.state)); events.push(...recharge.events); sequence = recharge.sequence;
     const turnKey = `${round}:${member.combatant_id}`;
     if (O()?.forcedRetreatActive(member.state)) {
       events.push(O().event(sequence++, round, member));

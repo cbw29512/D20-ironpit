@@ -119,6 +119,7 @@ jobs:
           node frontend/browser-zero-hp-lifecycle.test.cjs
           node frontend/browser-undead-fortitude.test.cjs
           node frontend/browser-control.test.cjs
+          node frontend/browser-universal-effects.test.cjs
           node frontend/browser-poison.test.cjs
           node frontend/browser-mixed-damage.test.cjs
           node frontend/browser-venom.test.cjs
@@ -211,6 +212,7 @@ jobs:
           grep -q 'browser-undead-fortitude.js' index.html
           grep -q 'browser-zero-hp.js' index.html
           grep -q 'browser-timed-conditions.js' index.html
+          grep -q 'browser-persistent-effects.js' index.html
           grep -q 'browser-barbarian2.js' index.html
           grep -q 'browser-barbarian3.js' index.html
           grep -q 'browser-sneak-attack.js' index.html
@@ -283,6 +285,7 @@ jobs:
           grep -q 'browser-undead-fortitude.js' frontend/index.html
           grep -q 'browser-zero-hp.js' frontend/index.html
           grep -q 'browser-timed-conditions.js' frontend/index.html
+          grep -q 'browser-persistent-effects.js' frontend/index.html
           grep -q 'browser-barbarian2.js' frontend/index.html
           grep -q 'browser-barbarian3.js' frontend/index.html
           grep -q 'browser-sneak-attack.js' frontend/index.html

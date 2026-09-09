@@ -14,6 +14,20 @@ def _value(item: Any) -> Any:
     return getattr(item, "value", item)
 
 
+def _gate(gate: Any) -> dict[str, Any] | None:
+    row: dict[str, Any] = {}
+    if gate.required_target_tags:
+        row["requiredTargetTags"] = list(gate.required_target_tags)
+    if gate.excluded_target_tags:
+        row["excludedTargetTags"] = list(gate.excluded_target_tags)
+    if gate.excluded_creature_types:
+        row["excludedCreatureTypes"] = list(gate.excluded_creature_types)
+    if gate.save_ability:
+        row["saveAbility"] = gate.save_ability
+        row["saveDc"] = gate.save_dc
+    return row or None
+
+
 def _control(effect: Any) -> dict[str, Any] | None:
     if effect is None:
         return None
@@ -24,6 +38,9 @@ def _control(effect: Any) -> dict[str, Any] | None:
         row["grappleEscapeDc"] = effect.grapple_escape_dc
     if effect.restrains_while_grappled:
         row["restrainsWhileGrappled"] = True
+    gate = _gate(effect.gate)
+    if gate:
+        row["gate"] = gate
     if effect.condition_id:
         row["conditionId"] = effect.condition_id
         if effect.expires_at_start_of_source_turn:
@@ -37,6 +54,10 @@ def _control(effect: Any) -> dict[str, Any] | None:
         if effect.allowed_removal_action_ids:
             row["allowedRemovalActionIds"] = list(effect.allowed_removal_action_ids)
     return row or None
+
+
+def _controls(effects: Any) -> list[dict[str, Any]]:
+    return [row for row in (_control(effect) for effect in effects) if row]
 
 
 def _hit_modifier(effect: Any) -> dict[str, Any]:
@@ -65,6 +86,9 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             row.update(normal=weapon.normal_range_ft, long=weapon.long_range_ft, projectile=weapon.projectile)
         if attack.fixed_damage is not None:
             row["fixedDamage"] = attack.fixed_damage
+        if attack.resource_id:
+            row["resourceId"] = attack.resource_id
+            row["resourceCost"] = attack.resource_cost
         if attack.rage_eligible:
             row["rageEligible"] = True
         if attack.knocks_prone_max_size is not None:
@@ -83,10 +107,8 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             if len(attack.conditional_damage) != 1:
                 raise ValueError(f"Browser supports one conditional damage rider on {attack.id}.")
             conditional = attack.conditional_damage[0]
-            legacy = (
-                conditional.trigger == "attack_advantage" and conditional.mode == "add"
+            legacy = conditional.trigger == "attack_advantage" and conditional.mode == "add" \
                 and conditional.damage_bonus == 0 and conditional.damage_type == weapon.damage_type
-            )
             if legacy:
                 row["conditionalAdvantage"] = [conditional.dice_count, conditional.dice_size]
             else:
@@ -95,6 +117,9 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
                     "diceCount": conditional.dice_count, "diceSize": conditional.dice_size,
                     "damageBonus": conditional.damage_bonus, "damageType": conditional.damage_type.value,
                 }
+        persistent = _controls(attack.ordered_persistent_effects())
+        if len(persistent) > 1:
+            row["persistentEffects"] = persistent
         control = _control(attack.control_effect)
         if control:
             row["controlEffect"] = control
@@ -102,24 +127,17 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             profile = charge_profile_for_attack_id(attack.id)
             if profile:
                 charge: dict[str, Any] = {"minimumMove": profile.minimum_move_ft}
-                if profile.prone_max_target_size is not None:
-                    charge["proneMaxSize"] = profile.prone_max_target_size.value
+                if profile.prone_max_target_size is not None: charge["proneMaxSize"] = profile.prone_max_target_size.value
                 if profile.max_target_size is not None and profile.max_target_size != profile.prone_max_target_size:
                     charge["targetMaxSize"] = profile.max_target_size.value
                 if profile.bonus_damage is not None:
-                    charge.update(
-                        diceCount=profile.bonus_damage.dice_count,
-                        diceSize=profile.bonus_damage.dice_size,
-                        damageType=profile.bonus_damage.damage_type.value,
-                    )
+                    charge.update(diceCount=profile.bonus_damage.dice_count, diceSize=profile.bonus_damage.dice_size,
+                                  damageType=profile.bonus_damage.damage_type.value)
                 if profile.replacement_damage is not None:
                     replacement = profile.replacement_damage
-                    charge["replacementDamage"] = {
-                        "diceCount": replacement.dice_count, "diceSize": replacement.dice_size,
-                        "damageBonus": replacement.damage_bonus, "damageType": replacement.damage_type.value,
-                    }
-                if profile.follow_up_attack_id:
-                    charge["followUpAttackId"] = profile.follow_up_attack_id
+                    charge["replacementDamage"] = {"diceCount": replacement.dice_count, "diceSize": replacement.dice_size,
+                                                     "damageBonus": replacement.damage_bonus, "damageType": replacement.damage_type.value}
+                if profile.follow_up_attack_id: charge["followUpAttackId"] = profile.follow_up_attack_id
                 row["charge"] = charge
         return row
     except Exception:
@@ -134,12 +152,13 @@ def _save(action: Any) -> dict[str, Any]:
         "damageDiceSize": action.damage_dice_size, "damageBonus": action.damage_bonus,
         "damageType": action.damage_type, "successDamage": action.success_damage, "animation": action.animation,
     }
-    if action.target_max_size:
-        row["targetMaxSize"] = _value(action.target_max_size)
-    if action.grapple_escape_dc is not None:
-        row["grappleEscapeDc"] = action.grapple_escape_dc
-    if action.restrains_while_grappled:
-        row["restrainsWhileGrappled"] = True
+    if action.target_max_size: row["targetMaxSize"] = _value(action.target_max_size)
+    if action.resource_id: row.update(resourceId=action.resource_id, resourceCost=action.resource_cost)
+    persistent = _controls(action.ordered_persistent_effects())
+    if len(persistent) > 1: row["persistentEffects"] = persistent
+    if action.on_failure_modifier_effects: row["onFailureModifiers"] = [_hit_modifier(effect) for effect in action.on_failure_modifier_effects]
+    if action.grapple_escape_dc is not None: row["grappleEscapeDc"] = action.grapple_escape_dc
+    if action.restrains_while_grappled: row["restrainsWhileGrappled"] = True
     return row
 
 
@@ -152,91 +171,67 @@ def _spell(action: Any) -> dict[str, Any]:
         "successDamage": action.success_damage, "upcastDicePerLevel": action.upcast_dice_per_level,
         "concentration": action.concentration, "animation": action.animation,
     }
-    if action.area_radius_ft is not None:
-        row["areaRadius"] = action.area_radius_ft
+    if action.area_radius_ft is not None: row["areaRadius"] = action.area_radius_ft
     return row
 
 
 def _modifier_effect(effect: Any) -> dict[str, Any]:
-    row = {
-        "kind": effect.kind, "flatBonus": effect.flat_bonus, "diceCount": effect.dice_count,
-        "diceSize": effect.dice_size, "damageType": effect.damage_type,
-    }
-    if effect.consume_on_attack_against:
-        row["consumeOnAttackAgainst"] = True
-    if effect.expires_after_source_turns is not None:
-        row["expiresAfterSourceTurns"] = effect.expires_after_source_turns
+    row = {"kind": effect.kind, "flatBonus": effect.flat_bonus, "diceCount": effect.dice_count,
+           "diceSize": effect.dice_size, "damageType": effect.damage_type}
+    if effect.consume_on_attack_against: row["consumeOnAttackAgainst"] = True
+    if effect.expires_after_source_turns is not None: row["expiresAfterSourceTurns"] = effect.expires_after_source_turns
     return row
 
 
 def _spell_attack(action: Any) -> dict[str, Any]:
-    row = {
-        "id": action.id, "name": action.name, "level": action.level, "actionCost": action.action_cost,
-        "range": action.range_ft, "attackBonus": action.attack_bonus,
-        "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
-        "damageBonus": action.damage_bonus, "damageType": action.damage_type,
-        "onHitModifierEffects": [_modifier_effect(effect) for effect in action.on_hit_modifier_effects],
-        "animation": action.animation,
-    }
-    if action.source:
-        row["source"] = action.source
+    row = {"id": action.id, "name": action.name, "level": action.level, "actionCost": action.action_cost,
+           "range": action.range_ft, "attackBonus": action.attack_bonus,
+           "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
+           "damageBonus": action.damage_bonus, "damageType": action.damage_type,
+           "onHitModifierEffects": [_modifier_effect(effect) for effect in action.on_hit_modifier_effects],
+           "animation": action.animation}
+    if action.source: row["source"] = action.source
     return row
 
 
 def _healing(action: Any) -> dict[str, Any]:
-    return {
-        "id": action.id, "name": action.name, "actionCost": action.action_cost,
-        "range": action.range_ft, "targetMode": action.target_mode,
-        "diceCount": action.dice_count, "diceSize": action.dice_size,
-        "healingBonus": action.healing_bonus, "resourceId": action.resource_id,
-        "resourceCost": action.resource_cost, "animation": action.animation,
-    }
+    return {"id": action.id, "name": action.name, "actionCost": action.action_cost, "range": action.range_ft,
+            "targetMode": action.target_mode, "diceCount": action.dice_count, "diceSize": action.dice_size,
+            "healingBonus": action.healing_bonus, "resourceId": action.resource_id,
+            "resourceCost": action.resource_cost, "animation": action.animation}
 
 
 def defense_row(action: Any) -> dict[str, Any]:
-    row = {
-        "id": action.id, "name": action.name, "level": action.level, "actionCost": action.action_cost,
-        "range": action.range_ft, "durationMinutes": action.duration_minutes,
-        "targetPolicy": action.target_policy, "targetCount": action.target_count,
-        "temporaryHp": action.temporary_hp,
-        "temporaryHpPerSlotAbove": action.temporary_hp_per_slot_above,
-        "damageResistances": list(action.damage_resistances),
-        "modifierEffects": [_modifier_effect(effect) for effect in action.modifier_effects],
-        "concentration": action.concentration, "priority": action.priority, "animation": action.animation,
-    }
-    if action.max_hp_increase:
-        row["maxHpIncrease"] = action.max_hp_increase
-    if action.current_hp_increase:
-        row["currentHpIncrease"] = action.current_hp_increase
-    if action.source:
-        row["source"] = action.source
+    row = {"id": action.id, "name": action.name, "level": action.level, "actionCost": action.action_cost,
+           "range": action.range_ft, "durationMinutes": action.duration_minutes,
+           "targetPolicy": action.target_policy, "targetCount": action.target_count,
+           "temporaryHp": action.temporary_hp, "temporaryHpPerSlotAbove": action.temporary_hp_per_slot_above,
+           "damageResistances": list(action.damage_resistances),
+           "modifierEffects": [_modifier_effect(effect) for effect in action.modifier_effects],
+           "concentration": action.concentration, "priority": action.priority, "animation": action.animation}
+    if action.max_hp_increase: row["maxHpIncrease"] = action.max_hp_increase
+    if action.current_hp_increase: row["currentHpIncrease"] = action.current_hp_increase
+    if action.source: row["source"] = action.source
     return row
 
 
 def _removal(action: Any) -> dict[str, Any]:
-    row = {
-        "id": action.id, "name": action.name, "actionCost": action.action_cost, "range": action.range_ft,
-        "targetMode": action.target_mode, "removableConditions": list(action.removable_conditions),
-        "maxConditionsPerUse": action.max_conditions_per_use, "resourceCosts": dict(action.resource_costs),
-        "resourceCostsPerCondition": dict(action.resource_costs_per_condition),
-        "expendsSpellSlot": action.expends_spell_slot, "animation": action.animation,
-    }
-    if action.reaction_trigger:
-        row["reactionTrigger"] = action.reaction_trigger
+    row = {"id": action.id, "name": action.name, "actionCost": action.action_cost, "range": action.range_ft,
+           "targetMode": action.target_mode, "removableConditions": list(action.removable_conditions),
+           "maxConditionsPerUse": action.max_conditions_per_use, "resourceCosts": dict(action.resource_costs),
+           "resourceCostsPerCondition": dict(action.resource_costs_per_condition),
+           "expendsSpellSlot": action.expends_spell_slot, "animation": action.animation}
+    if action.reaction_trigger: row["reactionTrigger"] = action.reaction_trigger
     return row
 
 
 def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
     features = template.progression_features
     row: dict[str, Any] = {}
-    if features.critical_hit_minimum != 20:
-        row["critical_hit_minimum"] = features.critical_hit_minimum
-    if features.initiative_advantage:
-        row["initiative_advantage"] = True
-    if features.athletics_advantage:
-        row["athletics_advantage"] = True
-    if features.critical_move_fraction:
-        row["critical_move_fraction"] = features.critical_move_fraction
+    if features.critical_hit_minimum != 20: row["critical_hit_minimum"] = features.critical_hit_minimum
+    if features.initiative_advantage: row["initiative_advantage"] = True
+    if features.athletics_advantage: row["athletics_advantage"] = True
+    if features.critical_move_fraction: row["critical_move_fraction"] = features.critical_move_fraction
     return row
 
 
@@ -262,6 +257,21 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                        "off_hand": template.visual.off_hand, "body_style": template.visual.body_style},
             "source": template.source, **_progression_features(template),
         }
+        if template.creature_type: row["creature_type"] = template.creature_type
+        if template.creature_tags: row["creature_tags"] = list(template.creature_tags)
+        if template.regeneration:
+            row["regeneration"] = [
+                {"id": effect.id, "healing": effect.healing,
+                 "suppressedByDamageTypes": [item.value for item in effect.suppressed_by_damage_types],
+                 "requiresPositiveHp": effect.requires_positive_hp}
+                for effect in template.regeneration
+            ]
+        rechargeable = [item for item in template.resources if item.recharge_minimum is not None]
+        if rechargeable:
+            row["resourceDefinitions"] = [
+                {"id": item.id, "maxUses": item.max_uses, "rechargeMinimum": item.recharge_minimum,
+                 "rechargeDieSize": item.recharge_die_size} for item in rechargeable
+            ]
         if template.kind == "monster":
             row["source_trait_names"] = list(template.source_trait_names)
             row["source_reaction_names"] = list(template.source_reaction_names)
@@ -269,27 +279,18 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["source_limited_use_names"] = list(template.source_limited_use_names)
             row["source_legendary_action_names"] = list(template.source_legendary_action_names)
             row["source_spellcasting_fingerprint"] = template.source_spellcasting_fingerprint
-        if template.parry_reaction:
-            row["parry_reaction"] = {"ac_bonus": template.parry_reaction.ac_bonus}
+        if template.parry_reaction: row["parry_reaction"] = {"ac_bonus": template.parry_reaction.ac_bonus}
         if template.redirect_attack_reaction:
-            row["redirect_attack_reaction"] = {
-                "ally_range_ft": template.redirect_attack_reaction.ally_range_ft,
-                "ally_max_size": template.redirect_attack_reaction.ally_max_size.value,
-            }
-        if template.spell_save_actions:
-            row["spell_save_actions"] = [_spell(item) for item in template.spell_save_actions]
-        if template.spell_attack_actions:
-            row["spell_attack_actions"] = [_spell_attack(item) for item in template.spell_attack_actions]
-        if template.defensive_spell_actions:
-            row["defensive_spell_actions"] = [defense_row(item) for item in template.defensive_spell_actions]
-        if template.healing_actions:
-            row["healingActions"] = [_healing(item) for item in template.healing_actions]
-        if template.condition_removal_actions:
-            row["condition_removal_actions"] = [_removal(item) for item in template.condition_removal_actions]
+            row["redirect_attack_reaction"] = {"ally_range_ft": template.redirect_attack_reaction.ally_range_ft,
+                                                "ally_max_size": template.redirect_attack_reaction.ally_max_size.value}
+        if template.spell_save_actions: row["spell_save_actions"] = [_spell(item) for item in template.spell_save_actions]
+        if template.spell_attack_actions: row["spell_attack_actions"] = [_spell_attack(item) for item in template.spell_attack_actions]
+        if template.defensive_spell_actions: row["defensive_spell_actions"] = [defense_row(item) for item in template.defensive_spell_actions]
+        if template.healing_actions: row["healingActions"] = [_healing(item) for item in template.healing_actions]
+        if template.condition_removal_actions: row["condition_removal_actions"] = [_removal(item) for item in template.condition_removal_actions]
         if template.attack_action:
             row["attack_action"] = {"id": template.attack_action.id, "name": template.attack_action.name, "slots": [
-                {"attackIds": slot.attack_ids, "saveActionIds": slot.save_action_ids}
-                for slot in template.attack_action.slots
+                {"attackIds": slot.attack_ids, "saveActionIds": slot.save_action_ids} for slot in template.attack_action.slots
             ]}
         return row
     except Exception:

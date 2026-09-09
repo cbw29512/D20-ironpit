@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.range import resolve_attack_roll_mode
+from app.combat.resources import can_use_action_resource
 from app.domain.models import CombatantState, WeaponAttack, WeaponAttackKind
 
 logger = logging.getLogger(__name__)
@@ -27,7 +28,9 @@ def weapon_attack_profiles(state: CombatantState) -> list[WeaponAttack]:
     return [state.template.weapon_attack, *state.template.alternate_weapon_attacks]
 
 
-def _legal_attack(attack: WeaponAttack, distance_ft: int) -> bool:
+def _legal_attack(state: CombatantState, attack: WeaponAttack, distance_ft: int) -> bool:
+    if not can_use_action_resource(state, attack):
+        return False
     try:
         resolve_attack_roll_mode(attack.weapon, distance_ft)
         return True
@@ -46,11 +49,11 @@ def select_allowed_weapon_attack(
         profiles = [attack for attack in weapon_attack_profiles(state) if attack.id in allowed]
         melee = next((
             attack for attack in profiles
-            if attack.weapon.attack_kind is WeaponAttackKind.MELEE and _legal_attack(attack, distance_ft)
+            if attack.weapon.attack_kind is WeaponAttackKind.MELEE and _legal_attack(state, attack, distance_ft)
         ), None)
         if melee is not None:
             return melee
-        return next((attack for attack in profiles if _legal_attack(attack, distance_ft)), None)
+        return next((attack for attack in profiles if _legal_attack(state, attack, distance_ft)), None)
     except Exception as exc:
         logger.exception("Failed to select allowed attack for %s.", state.template.name)
         raise RuntimeError("Allowed attack selection could not be evaluated.") from exc
@@ -66,10 +69,16 @@ def select_weapon_attack(state: CombatantState, distance_ft: int) -> WeaponAttac
 
 
 def preferred_distance_for_attacks(state: CombatantState, allowed_ids: list[str]) -> int:
-    """Use the first allowed profile's melee reach or normal ranged distance as approach range."""
+    """Use the first available allowed profile's melee reach or normal ranged distance."""
     try:
         allowed = set(allowed_ids)
-        attack = next(profile for profile in weapon_attack_profiles(state) if profile.id in allowed)
+        candidates = [
+            profile for profile in weapon_attack_profiles(state)
+            if profile.id in allowed and can_use_action_resource(state, profile)
+        ]
+        attack = candidates[0] if candidates else next(
+            profile for profile in weapon_attack_profiles(state) if profile.id in allowed
+        )
         weapon = attack.weapon
         if weapon.attack_kind is WeaponAttackKind.MELEE:
             return weapon.reach_ft

@@ -7,20 +7,14 @@ from pydantic import BaseModel, Field, model_validator
 from app.domain.actions import AttackActionDefinition, ConditionName, ConditionRemovalAction, HealingAction, SavingThrowAction
 from app.domain.character_builds import AbilityScores
 from app.domain.movement import MovementModes
+from app.domain.passive_effects import RegenerationDefinition
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.reactions import ParryReaction, RedirectAttackReaction
 from app.domain.size import CreatureSize
 from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellSaveAction
 from app.domain.traits import CombatTrait
 from app.domain.unarmed import UnarmedStrikeDamage
-from app.domain.weapons import (
-    ConditionalDamage,
-    DamageType,
-    OnHitDamage,
-    Weapon,
-    WeaponAttack,
-    WeaponAttackKind,
-)
+from app.domain.weapons import ConditionalDamage, DamageType, OnHitDamage, Weapon, WeaponAttack, WeaponAttackKind
 
 
 class VisualLoadout(BaseModel):
@@ -34,6 +28,18 @@ class ResourceDefinition(BaseModel):
     id: str
     name: str
     max_uses: int = Field(ge=0)
+    recharge_minimum: int | None = Field(default=None, ge=2, le=100)
+    recharge_die_size: int = Field(default=6, ge=2, le=100)
+
+    @model_validator(mode="after")
+    def validate_recharge(self) -> "ResourceDefinition":
+        if self.recharge_minimum is None:
+            return self
+        if self.recharge_minimum > self.recharge_die_size:
+            raise ValueError("Recharge minimum cannot exceed the recharge die size.")
+        if self.max_uses != 1:
+            raise ValueError("Recharge resources must model a single available use.")
+        return self
 
 
 class CombatantTemplate(BaseModel):
@@ -44,6 +50,7 @@ class CombatantTemplate(BaseModel):
     challenge_rating: str | None = None
     kind: Literal["character", "monster"]
     creature_type: str | None = None
+    creature_tags: list[str] = Field(default_factory=list)
     size: CreatureSize = CreatureSize.MEDIUM
     ability_scores: AbilityScores | None = None
     armor_class: int = Field(ge=1)
@@ -62,6 +69,7 @@ class CombatantTemplate(BaseModel):
     defensive_spell_actions: list[DefensiveSpellAction] = Field(default_factory=list)
     healing_actions: list[HealingAction] = Field(default_factory=list)
     condition_removal_actions: list[ConditionRemovalAction] = Field(default_factory=list)
+    regeneration: list[RegenerationDefinition] = Field(default_factory=list)
     saving_throw_bonuses: dict[str, int] = Field(default_factory=dict)
     skill_bonuses: dict[str, int] = Field(default_factory=dict)
     combat_traits: list[CombatTrait] = Field(default_factory=list)
@@ -95,9 +103,7 @@ class CombatantTemplate(BaseModel):
         if "movement_modes" not in normalized and "speed_ft" in normalized:
             normalized["movement_modes"] = {"walk_ft": normalized["speed_ft"]}
         style = normalized.get("fighting_style")
-        styles = normalized.get("fighting_styles")
-        if styles is None:
-            styles = []
+        styles = normalized.get("fighting_styles") or []
         if not styles and style:
             normalized["fighting_styles"] = [style]
         elif styles and not style:
