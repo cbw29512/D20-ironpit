@@ -62,7 +62,7 @@ def _save_choice(attacker: EncounterCombatant, setup: EncounterSetup):
     for target in target_order(attacker, setup):
         for action in attacker.state.template.saving_throw_actions:
             distance = save_distance(attacker, target, action.range_ft)
-            if legal_save_action(action, target, distance):
+            if legal_save_action(action, target, distance, attacker.state):
                 return target, action, distance
     return None
 
@@ -74,7 +74,7 @@ def resolve_combat_turn(
     """Resolve a fixed-formation Iron Pit turn; ordinary movement is abstracted away."""
     events: list[BattleEvent] = []
     cleanup_grapples(setup)
-    begin_turn(attacker.state)
+    begin_turn(attacker.state, dice)
     turn_key = f"{round_number}:{attacker.combatant_id}"
     if forced_retreat_active(attacker.state):
         events.append(build_forced_retreat_event(sequence, round_number, attacker.combatant_id, attacker.state)); sequence += 1
