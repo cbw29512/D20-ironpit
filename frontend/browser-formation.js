@@ -2,6 +2,7 @@
   "use strict";
 
   const HERO_BACK = 0, HERO_FRONT = 5, MONSTER_FRONT = 10, MONSTER_BACK = 15;
+  const S = () => window.IRON_PIT_BROWSER_STATE;
   const attacks = (template) => template?.attacks || [];
   const alive = (member) => member.state.is_alive && !member.state.is_dead && member.state.current_hp > 0;
 
@@ -49,22 +50,39 @@
     if (!attack.forbidSelfGrappledTarget) return true;
     return !target.state.grapple_sources.some((source) => source.source_id === member.combatant_id);
   }
-  function attackDistance(member, target, attack) {
-    const actual = Math.abs(member.position_ft - target.position_ft);
-    if (attack.kind === "melee") return Math.min(actual, attack.reach || 5);
-    const normal = Number.isFinite(attack.normal) ? attack.normal : attack.long;
-    if (!Number.isFinite(normal)) throw new Error(`Ranged attack ${attack.id} has no normal range.`);
-    return Math.min(actual, normal);
+  function attackDistance(member, target) {
+    try {
+      return S().distance(member, target);
+    } catch (error) {
+      console.error("Failed browser attack distance", { member: member.combatant_id, target: target.combatant_id, error });
+      throw error;
+    }
   }
   function saveDistance(member, target, range) {
-    return Math.min(Math.abs(member.position_ft - target.position_ft), range);
+    try {
+      if (range < 0) throw new Error("Save-action range cannot be negative.");
+      return S().distance(member, target);
+    } catch (error) {
+      console.error("Failed browser save-action distance", { member: member.combatant_id, target: target.combatant_id, error });
+      throw error;
+    }
+  }
+  function attackInRange(attack, distance) {
+    try {
+      if (attack.kind === "melee") return distance <= (attack.reach || 5);
+      return Number.isFinite(attack.long) && distance <= attack.long;
+    } catch (error) {
+      console.error("Failed browser attack-range legality", { attack: attack.id, error });
+      throw error;
+    }
   }
   function chooseAttack(member, setup, ids, kind = null, preferBackline = false) {
     const allowed = new Set(ids);
     const profiles = attacks(member.state.template).filter((attack) => allowed.has(attack.id) && (!kind || attack.kind === kind));
     for (const target of targetOrder(member, setup, preferBackline)) {
-      const attack = profiles.find((profile) => targetAllowed(member, target, profile));
-      if (attack) return { target, attack, distance: attackDistance(member, target, attack) };
+      const distance = attackDistance(member, target);
+      const attack = profiles.find((profile) => targetAllowed(member, target, profile) && attackInRange(profile, distance));
+      if (attack) return { target, attack, distance };
     }
     return null;
   }
