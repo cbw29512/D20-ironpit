@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.range import resolve_attack_roll_mode
-from app.combat.resources import resource_available
+from app.combat.resources import is_recharge_resource, resource_available
 from app.domain.models import CombatantState, WeaponAttack, WeaponAttackKind
 
 logger = logging.getLogger(__name__)
@@ -50,10 +50,16 @@ def select_allowed_weapon_attack(
     distance_ft: int,
     allowed_ids: list[str],
 ) -> WeaponAttack | None:
-    """Prefer legal melee while engaged; otherwise use the first legal allowed profile."""
+    """Prioritize a legal Recharge attack, then legal melee while engaged, then normal card order."""
     try:
         allowed = set(allowed_ids)
         profiles = [attack for attack in weapon_attack_profiles(state) if attack.id in allowed]
+        recharge = next((
+            attack for attack in profiles
+            if is_recharge_resource(state, attack.resource_id) and _legal_attack(state, attack, distance_ft)
+        ), None)
+        if recharge is not None:
+            return recharge
         melee = next((
             attack for attack in profiles
             if attack.weapon.attack_kind is WeaponAttackKind.MELEE and _legal_attack(state, attack, distance_ft)
@@ -67,7 +73,7 @@ def select_allowed_weapon_attack(
 
 
 def select_weapon_attack(state: CombatantState, distance_ft: int) -> WeaponAttack | None:
-    """Use a melee option when engaged; otherwise preserve the card's attack priority."""
+    """Use Recharge when legal, otherwise melee while engaged, then normal card priority."""
     try:
         return select_allowed_weapon_attack(
             state,
@@ -83,10 +89,13 @@ def preferred_distance_for_attacks(state: CombatantState, allowed_ids: list[str]
     """Use the first available allowed profile's melee reach or normal ranged distance as approach range."""
     try:
         allowed = set(allowed_ids)
-        attack = next(
+        profiles = [
             profile for profile in weapon_attack_profiles(state)
             if profile.id in allowed and resource_available(state, profile.resource_id, profile.resource_cost)
-        )
+        ]
+        attack = next((profile for profile in profiles if is_recharge_resource(state, profile.resource_id)), None)
+        if attack is None:
+            attack = next(iter(profiles))
         weapon = attack.weapon
         if weapon.attack_kind is WeaponAttackKind.MELEE:
             return weapon.reach_ft
