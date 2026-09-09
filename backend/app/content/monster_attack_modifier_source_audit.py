@@ -19,7 +19,7 @@ def _next_attack_made_disadvantage_matches(effect, actions: str) -> bool:
         return False
     if effect.flat_bonus or effect.consume_on_attack_against or effect.expires_at_start_of_source_turn:
         return False
-    pattern = r"target\s+has\s+disadvantage\s+on\s+the\s+next\s+attack\s+roll\s+it\s+makes\s+before\s+the\s+end\s+of\s+its\s+next\s+turn"
+    pattern = r"(?:target\s+has|and\s+has)\s+disadvantage\s+on\s+the\s+next\s+attack\s+roll\s+it\s+makes\s+before\s+the\s+end\s+of\s+its\s+next\s+turn"
     return bool(re.search(pattern, actions, re.IGNORECASE))
 
 
