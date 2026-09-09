@@ -4,6 +4,7 @@ from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.saving_throws import legal_save_action, resolve_save_action, resolve_saving_throw
 from app.domain.models import DamageType, EncounterSelection, RollMode
+from app.domain.traits import CombatTrait
 
 
 def _state(hero_id="karnok-stoneward-l1"):
@@ -42,6 +43,17 @@ def test_rage_strength_save_has_advantage() -> None:
     roll, succeeded = resolve_saving_throw(state, "strength", 12, FixedDiceProvider([2, 10]))
     assert roll is not None and roll.mode is RollMode.ADVANTAGE
     assert roll.selected_roll == 10 and succeeded is True
+
+
+def test_magic_resistance_only_applies_to_spells_and_magical_effects() -> None:
+    state = _state()
+    state.template.combat_traits.append(CombatTrait.MAGIC_RESISTANCE)
+    magical, _ = resolve_saving_throw(
+        state, "wisdom", 30, FixedDiceProvider([2, 18]), source_is_magical=True,
+    )
+    nonmagical, _ = resolve_saving_throw(state, "wisdom", 30, FixedDiceProvider([2]))
+    assert magical is not None and magical.mode is RollMode.ADVANTAGE and magical.selected_roll == 18
+    assert nonmagical is not None and nonmagical.mode is RollMode.NORMAL and nonmagical.selected_roll == 2
 
 
 def test_unconscious_auto_fails_strength_and_dexterity_saves() -> None:

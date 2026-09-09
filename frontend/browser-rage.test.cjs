@@ -12,14 +12,16 @@ for (const htmlPath of [path.join(__dirname, "index.html"), path.join(__dirname,
   assert.match(html, /<script src="browser-barbarian2\.js"><\/script>/, `${htmlPath} must load Barbarian 2 runtime rules`);
 }
 for (const file of [
-  "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js",
-  "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
-  "browser-grapple.js", "browser-timed-conditions.js", "browser-barbarian2.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
-  "browser-zero-hp.js", "browser-weapon-mastery.js", "browser-graze.js", "browser-vex.js", "browser-attack.js",
-  "browser-healing.js", "browser-reactions.js", "browser-reaction-movement.js", "browser-saves.js",
-  "browser-condition-lifecycle.js", "browser-charge.js", "browser-light-weapons.js", "browser-light-attack.js",
-  "browser-standard-attack-action.js", "browser-multiattack.js", "browser-spellcasting.js",
-  "browser-condition-removal.js", "browser-support.js", "browser-turn.js", "browser-formation.js", "browser-initiative.js", "browser-engine.js",
+  "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js", "browser-condition-immunity.js",
+  "browser-condition-rules.js", "browser-action-economy.js", "browser-grapple.js", "browser-timed-conditions.js",
+  "browser-barbarian2.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
+  "browser-zero-hp.js", "browser-weapon-mastery.js", "browser-graze.js", "browser-vex.js",
+  "browser-forced-movement.js", "browser-control.js", "browser-attack-helpers.js", "browser-attack.js",
+  "browser-healing.js", "browser-reactions.js", "browser-reaction-movement.js", "browser-resources.js",
+  "browser-save-helpers.js", "browser-saves.js", "browser-condition-lifecycle.js", "browser-charge.js",
+  "browser-light-weapons.js", "browser-light-attack.js", "browser-standard-attack-action.js", "browser-multiattack.js",
+  "browser-spellcasting.js", "browser-condition-removal.js", "browser-support.js", "browser-turn.js",
+  "browser-formation.js", "browser-initiative.js", "browser-engine.js",
 ]) load(file);
 
 function queuedDice(values, fallback = 10) {

@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 
 from app.domain.actions import AbilityName, ConditionName, ConditionTiming
 from app.domain.combatants import DamageType
+from app.domain.control_effects import ForcedMovementEffect
 from app.domain.hit_modifiers import HitModifierEffect
 from app.domain.size import CreatureSize
 
@@ -30,17 +31,25 @@ class ProneEffectDefinition(BaseModel):
     max_target_size: CreatureSize | None = None
 
 
+class ForcedMovementEffectDefinition(BaseModel):
+    kind: Literal["forced_movement"] = "forced_movement"
+    movement: ForcedMovementEffect
+    max_target_size: CreatureSize | None = None
+
+
 class GrappleEffectDefinition(BaseModel):
     kind: Literal["grapple"] = "grapple"
     escape_dc: int = Field(ge=1, le=40)
     max_target_size: CreatureSize | None = None
     restrains: bool = False
+    forced_movement: ForcedMovementEffect | None = None
 
 
 class ConditionEffectDefinition(BaseModel):
     kind: Literal["condition"] = "condition"
     condition: ConditionName
     max_target_size: CreatureSize | None = None
+    forced_movement: ForcedMovementEffect | None = None
     expires_at_start_of_source_turn: bool = False
     expiry_timing: ConditionTiming | None = None
     repeat_save_ability: AbilityName | None = None
@@ -49,7 +58,13 @@ class ConditionEffectDefinition(BaseModel):
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
 
 
+ControlEffectDefinition = Annotated[
+    GrappleEffectDefinition | ConditionEffectDefinition | ForcedMovementEffectDefinition,
+    Field(discriminator="kind"),
+]
+
 AttackEffectDefinition = Annotated[
-    DamageEffectDefinition | ProneEffectDefinition | GrappleEffectDefinition | ConditionEffectDefinition | HitModifierEffect,
+    DamageEffectDefinition | ProneEffectDefinition | GrappleEffectDefinition
+    | ConditionEffectDefinition | ForcedMovementEffectDefinition | HitModifierEffect,
     Field(discriminator="kind"),
 ]

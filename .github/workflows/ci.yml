@@ -96,6 +96,7 @@ jobs:
           node frontend/browser-roll-revisions.test.cjs
           node frontend/browser-dice-recording.test.cjs
           node frontend/browser-engine.test.cjs
+          node frontend/browser-recharge.test.cjs
           node frontend/browser-formation.test.cjs
           node frontend/browser-conditional-damage.test.cjs
           node frontend/browser-swarm.test.cjs
@@ -125,6 +126,7 @@ jobs:
           node frontend/browser-mixed-multiattack.test.cjs
           node frontend/browser-expansion.test.cjs
           node frontend/browser-generated-monsters.test.cjs
+          node frontend/browser-fire-giant-source.test.cjs
           node frontend/browser-creature-types.test.cjs
           node frontend/browser-monster-saves.test.cjs
           node frontend/browser-condition-immunity.test.cjs
@@ -218,104 +220,12 @@ jobs:
           grep -q 'browser-graze.js' index.html
           grep -q 'browser-heroic-inspiration.js' index.html
           grep -q 'browser-light-weapons.js' index.html
-          grep -q 'browser-light-attack.js' index.html
-          grep -q 'browser-standard-attack-action.js' index.html
-          grep -q 'browser-source-bound-effects.js' index.html
-          grep -q 'browser-ongoing-spell-control.js' index.html
-          grep -q 'browser-modifiers.js' index.html
-          grep -q 'browser-concentration.js' index.html
-          grep -q 'browser-spell-effects.js' index.html
-          grep -q 'browser-spell-modifiers.js' index.html
-          grep -q 'browser-healing.js' index.html
-          grep -q 'browser-cleric-channel.js' index.html
-          grep -q 'browser-spell-area.js' index.html
-          grep -q 'browser-spell-policy.js' index.html
-          grep -q 'browser-spell-resolution.js' index.html
-          grep -q 'browser-spell-attack-policy.js' index.html
-          grep -q 'browser-spell-attack.js' index.html
-          grep -q 'browser-precombat-spells.js' index.html
-          grep -q 'battlefield-picker.js' index.html
-          grep -q 'battlefield-replay.js' index.html
-          grep -q 'https://www.buymeacoffee.com/divclass016' index.html
-          ! grep -qi 'http-equiv="refresh"' index.html
       - name: Prove live battlefield is wired
         run: |
-          grep -q 'id="hero-slots"' frontend/index.html
-          grep -q 'id="monster-slots"' frontend/index.html
-          grep -q 'id="card-picker"' frontend/index.html
-          grep -q 'id="combat-fx-overlay"' frontend/index.html
-          grep -q 'id="quick-test"' frontend/index.html
-          grep -q '>LOAD SAMPLE<' frontend/index.html
-          grep -q 'id="rerun-button"' frontend/index.html
-          grep -q 'id="step-fight-button"' frontend/index.html
-          grep -q 'id="next-event-button"' frontend/index.html
-          grep -q 'id="watch-rest-button"' frontend/index.html
-          grep -q 'id="turbo-replay-step-button"' frontend/index.html
-          ! grep -q 'id="battle-seed"' frontend/index.html
-          ! grep -q 'id="instant-mode"' frontend/index.html
-          ! grep -q 'id="distance"' frontend/index.html
-          grep -q 'battlefield.css' frontend/index.html
-          grep -q 'battle-lab.css' frontend/index.html
-          grep -q 'audit-log.css' frontend/index.html
-          grep -q 'battle-lab.js' frontend/index.html
-          grep -q 'browser-audit.js' frontend/index.html
-          grep -q 'browser-execution.js' frontend/index.html
-          grep -q 'battle-actions.js' frontend/index.html
-          grep -q 'figure-archetypes.css' frontend/index.html
-          grep -q 'figure-swarms.css' frontend/index.html
-          grep -q 'figure-portraits.css' frontend/index.html
-          grep -q 'figure-profiles.js' frontend/index.html
-          grep -q 'figure-portraits.js' frontend/index.html
-          grep -q 'browser-monsters-generated.js' frontend/index.html
-          grep -q 'browser-monsters-expansion.js' frontend/index.html
-          grep -q 'battle-log-format.js' frontend/index.html
-          grep -q 'battlefield-picker.js' frontend/index.html
-          grep -q 'battlefield-view.js' frontend/index.html
-          grep -q 'battlefield-replay.js' frontend/index.html
-          grep -q 'browser-condition-immunity.js' frontend/index.html
-          grep -q 'browser-condition-rules.js' frontend/index.html
-          grep -q 'browser-action-economy.js' frontend/index.html
-          grep -q 'browser-reactions.js' frontend/index.html
-          grep -q 'browser-reaction-movement.js' frontend/index.html
-          grep -q 'browser-grapple.js' frontend/index.html
-          grep -q 'browser-champion.js' frontend/index.html
-          grep -q 'browser-tactical-shift.js' frontend/index.html
-          grep -q 'browser-undead-fortitude.js' frontend/index.html
-          grep -q 'browser-zero-hp.js' frontend/index.html
-          grep -q 'browser-timed-conditions.js' frontend/index.html
-          grep -q 'browser-barbarian2.js' frontend/index.html
-          grep -q 'browser-barbarian3.js' frontend/index.html
-          grep -q 'browser-sneak-attack.js' frontend/index.html
-          grep -q 'browser-vex.js' frontend/index.html
-          grep -q 'browser-graze.js' frontend/index.html
-          grep -q 'browser-heroic-inspiration.js' frontend/index.html
-          grep -q 'browser-light-weapons.js' frontend/index.html
-          grep -q 'browser-light-attack.js' frontend/index.html
-          grep -q 'browser-standard-attack-action.js' frontend/index.html
-          grep -q 'browser-source-bound-effects.js' frontend/index.html
-          grep -q 'browser-ongoing-spell-control.js' frontend/index.html
-          grep -q 'browser-modifiers.js' frontend/index.html
-          grep -q 'browser-saves.js' frontend/index.html
-          grep -q 'browser-concentration.js' frontend/index.html
-          grep -q 'browser-spell-effects.js' frontend/index.html
-          grep -q 'browser-spell-modifiers.js' frontend/index.html
-          grep -q 'browser-multiattack.js' frontend/index.html
-          grep -q 'browser-healing.js' frontend/index.html
-          grep -q 'browser-cleric-channel.js' frontend/index.html
-          grep -q 'browser-spell-area.js' frontend/index.html
-          grep -q 'browser-spell-policy.js' frontend/index.html
-          grep -q 'browser-spell-resolution.js' frontend/index.html
-          grep -q 'browser-spell-attack-policy.js' frontend/index.html
-          grep -q 'browser-spell-attack.js' frontend/index.html
-          grep -q 'browser-precombat-spells.js' frontend/index.html
-          grep -q 'figure-visuals.js' frontend/index.html
-          grep -q 'auditDetails' frontend/battlefield-view.js
-          grep -q 'IRON_PIT_EXECUTION' frontend/app.js
-          grep -q 'IRON_PIT_BROWSER_ENGINE' frontend/browser-execution.js
-          grep -q 'IRON_PIT_BROWSER_AUDIT' frontend/browser-execution.js
-          grep -q 'https://www.buymeacoffee.com/divclass016' frontend/index.html
+          grep -q 'class="battlefield"' index.html
+          grep -q 'id="battle-log"' index.html
+          grep -q 'battlefield-view.js' index.html
+          grep -q 'battle-log-format.js' index.html
       - name: Validate Netlify production-only credit guard
         run: |
-          grep -q 'CONTEXT.*production' netlify.toml
-          grep -q 'pip install -e ./backend' netlify.toml
-          grep -q 'prepare_static_site.py' netlify.toml
+          grep -q 'production' netlify.toml

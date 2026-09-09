@@ -10,6 +10,7 @@
     id: "giant-constrictor-snake-constrict", name: "Constrict", saveAbility: "strength",
     dc: 14, range: 10, targetMaxSize: "large", damageDiceCount: 2, damageDiceSize: 8,
     damageBonus: 4, damageType: "bludgeoning", successDamage: "none",
+    failureControl: { grappleEscapeDc: 14, maxTargetSize: "large" },
     grappleEscapeDc: 14, animation: "constrict",
   };
   const monster = {

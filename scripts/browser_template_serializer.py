@@ -14,6 +14,20 @@ def _value(item: Any) -> Any:
     return getattr(item, "value", item)
 
 
+def _area(area: Any) -> dict[str, Any] | None:
+    if area is None:
+        return None
+    row: dict[str, Any] = {"shape": area.shape}
+    for source, target in (
+        ("length_ft", "lengthFt"), ("width_ft", "widthFt"), ("radius_ft", "radiusFt"),
+        ("height_ft", "heightFt"), ("origin_range_ft", "originRangeFt"),
+    ):
+        value = getattr(area, source)
+        if value:
+            row[target] = value
+    return row
+
+
 def _control(effect: Any) -> dict[str, Any] | None:
     if effect is None:
         return None
@@ -36,6 +50,12 @@ def _control(effect: Any) -> dict[str, Any] | None:
             row["repeatSaveTiming"] = effect.repeat_save_timing
         if effect.allowed_removal_action_ids:
             row["allowedRemovalActionIds"] = list(effect.allowed_removal_action_ids)
+    if effect.forced_movement:
+        row["forcedMovement"] = {
+            "direction": effect.forced_movement.direction,
+            "maxDistanceFt": effect.forced_movement.max_distance_ft,
+            "distanceMode": effect.forced_movement.distance_mode,
+        }
     return row or None
 
 
@@ -45,6 +65,8 @@ def _hit_modifier(effect: Any) -> dict[str, Any]:
         row["flatBonus"] = effect.flat_bonus
     if effect.consume_on_attack_against:
         row["consumeOnAttackAgainst"] = True
+    if effect.consume_on_attack_made:
+        row["consumeOnAttackMade"] = True
     if effect.expires_at_start_of_source_turn:
         row["expiresAtStartOfSourceTurn"] = True
     if effect.expires_at_end_of_target_turn:
@@ -65,12 +87,21 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             row.update(normal=weapon.normal_range_ft, long=weapon.long_range_ft, projectile=weapon.projectile)
         if attack.fixed_damage is not None:
             row["fixedDamage"] = attack.fixed_damage
+        if attack.resource_id:
+            row["resourceId"] = attack.resource_id
+            if attack.resource_cost != 1:
+                row["resourceCost"] = attack.resource_cost
         if attack.rage_eligible:
             row["rageEligible"] = True
         if attack.knocks_prone_max_size is not None:
             row["proneMaxSize"] = attack.knocks_prone_max_size.value
         if attack.forbid_target_grappled_by_self:
             row["forbidSelfGrappledTarget"] = True
+        if attack.conditional_attack_modifiers:
+            row["conditionalAttackModifiers"] = [
+                {"trigger": item.trigger, "mode": item.mode}
+                for item in attack.conditional_attack_modifiers
+            ]
         if attack.on_hit_damage:
             row["onHitDamage"] = [
                 {"source": part.source, "diceCount": part.dice_count, "diceSize": part.dice_size,
@@ -134,6 +165,13 @@ def _save(action: Any) -> dict[str, Any]:
         "damageDiceSize": action.damage_dice_size, "damageBonus": action.damage_bonus,
         "damageType": action.damage_type, "successDamage": action.success_damage, "animation": action.animation,
     }
+    area = _area(action.area)
+    if area:
+        row["area"] = area
+    if action.resource_id:
+        row["resourceId"] = action.resource_id
+        if action.resource_cost != 1:
+            row["resourceCost"] = action.resource_cost
     if action.target_max_size:
         row["targetMaxSize"] = _value(action.target_max_size)
     if action.grapple_escape_dc is not None:
@@ -254,6 +292,10 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             "attacks": [attack_row(item, traits) for item in attacks], "primary_attack_id": template.weapon_attack.id,
             "saving_throw_actions": [_save(item) for item in template.saving_throw_actions],
             "traits": sorted(traits), "resources": {item.id: item.max_uses for item in template.resources},
+            "resource_recharge": {
+                item.id: {"minimum": item.recharge_d6_min, "maxUses": item.max_uses, "name": item.name}
+                for item in template.resources if item.recharge_d6_min is not None
+            },
             "damage_resistances": [item.value for item in template.damage_resistances],
             "damage_vulnerabilities": [item.value for item in template.damage_vulnerabilities],
             "damage_immunities": [item.value for item in template.damage_immunities],
@@ -293,5 +335,5 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             ]}
         return row
     except Exception:
-        logger.exception("Failed to serialize combatant template %s.", template.id)
+        logger.exception("Failed to serialize combatant template %s for browser runtime.", template.id)
         raise

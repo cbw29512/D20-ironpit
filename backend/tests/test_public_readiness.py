@@ -1,7 +1,9 @@
 import pytest
 from pydantic import ValidationError
 
+from app.content.monster_catalog import build_monster_catalog
 from app.content.readiness import assert_public_selection_runnable
+from app.domain.catalog import CoverageStatus
 from app.domain.models import EncounterSelection
 
 
@@ -58,8 +60,14 @@ def test_legacy_uncertified_hero_cannot_bypass_public_readiness() -> None:
 
 
 def test_uncertified_monster_id_is_rejected_before_engine_setup() -> None:
-    with pytest.raises(ValueError, match="srd-specter"):
-        assert_public_selection_runnable(_selection("karnok-stoneward-l1", "srd-specter"))
+    blocked = next(
+        card
+        for card in build_monster_catalog()
+        if card.coverage_status is not CoverageStatus.RAW_READY
+    )
+    assert blocked.runnable_template_id is None
+    with pytest.raises(ValueError, match=blocked.id):
+        assert_public_selection_runnable(_selection("karnok-stoneward-l1", blocked.id))
 
 
 def test_uncertified_hero_is_rejected_before_engine_setup() -> None:

@@ -31,6 +31,11 @@ class WeaponAttackKind(StrEnum):
     RANGED = "ranged"
 
 
+class ConditionalAttackModifier(BaseModel):
+    trigger: Literal["target_missing_hp"]
+    mode: Literal["advantage", "disadvantage"]
+
+
 class ConditionalDamage(BaseModel):
     trigger: Literal["attack_advantage", "attacker_bloodied", "target_bloodied"]
     mode: Literal["add", "replace_weapon"] = "add"
@@ -83,6 +88,7 @@ class WeaponAttack(BaseModel):
     attack_ability: AbilityName | None = None
     attack_ability_modifier: int | None = None
     fixed_damage: int | None = Field(default=None, ge=0)
+    conditional_attack_modifiers: list[ConditionalAttackModifier] = Field(default_factory=list)
     conditional_damage: list[ConditionalDamage] = Field(default_factory=list)
     on_hit_damage: list[OnHitDamage] = Field(default_factory=list)
     on_hit_modifier_effects: list[HitModifierEffect] = Field(default_factory=list)
@@ -91,3 +97,5 @@ class WeaponAttack(BaseModel):
     knocks_prone_max_size: CreatureSize | None = None
     control_effect: HitControlEffect | None = None
     forbid_target_grappled_by_self: bool = False
+    resource_id: str | None = None
+    resource_cost: int = Field(default=1, ge=1)

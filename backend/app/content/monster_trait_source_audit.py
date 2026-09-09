@@ -13,14 +13,19 @@ _CONNECTORS = frozenset({"a", "an", "and", "of", "or", "the", "to"})
 _MODELED_TRAITS = {
     "Pack Tactics": CombatTrait.PACK_TACTICS,
     "Bloodied Fury": CombatTrait.BLOODIED_FURY,
+    "Blood Frenzy": CombatTrait.BLOOD_FRENZY,
     "Swarm": CombatTrait.SWARM,
     "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
+    "Magic Resistance": CombatTrait.MAGIC_RESISTANCE,
+    "Evasion": CombatTrait.EVASION,
 }
 _ARENA_NEUTRAL_TRAITS = frozenset({
-    "Agile", "Amphibious", "Beast of Burden", "False Appearance", "Flyby", "Hellish Restoration",
-    "Hold Breath", "Ice Walk", "Illumination", "Jumper", "Keen Hearing", "Keen Hearing and Sight",
-    "Keen Hearing and Smell", "Keen Sight", "Keen Smell", "Mimicry", "Running Leap", "Spider Climb",
-    "Standing Leap", "Sunlight Sensitivity", "Training", "Web Walker",
+    "Agile", "Amorphous", "Amphibious", "Beast of Burden", "Demonic Restoration", "Diabolical Restoration",
+    "Earth Glide", "False Appearance", "Flyby", "Hellish Restoration", "Hold Breath", "Ice Walk", "Illumination",
+    "Incorporeal Movement", "Jumper", "Keen Hearing", "Keen Hearing and Sight", "Keen Hearing and Smell", "Keen Sight",
+    "Keen Smell", "Limited Amphibiousness", "Mimicry", "Running Leap", "Shark Telepathy", "Siege Monster", "Spider Climb",
+    "Standing Leap", "Sunlight Sensitivity", "Sunlight Weakness", "Training", "Treasure Sense", "Water Breathing",
+    "Web Walker",
 })
 
 

@@ -20,7 +20,7 @@ from app.combat.pit_policy import (
     save_distance,
     target_order,
 )
-from app.combat.saving_throws import legal_save_action, resolve_save_action
+from app.combat.saving_throws import legal_save_action, resolve_save_action, save_action_resource_available
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, WeaponAttack, WeaponAttackKind
 
@@ -31,7 +31,7 @@ def _save_choice(attacker, setup, slot):
     allowed = set(slot.save_action_ids)
     for target in target_order(attacker, setup):
         for action in attacker.state.template.saving_throw_actions:
-            if action.id not in allowed:
+            if action.id not in allowed or not save_action_resource_available(attacker.state, action):
                 continue
             distance = save_distance(attacker, target, action.range_ft)
             if legal_save_action(action, target, distance):

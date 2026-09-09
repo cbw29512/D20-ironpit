@@ -8,8 +8,8 @@ const vm = require("node:vm");
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
-  "browser-condition-rules.js", "browser-action-economy.js", "browser-rolls.js",
-  "browser-tactical-mind.js", "browser-grapple.js", "browser-action-surge.js",
+  "browser-condition-rules.js", "browser-action-economy.js", "browser-rolls.js", "browser-tactical-mind.js",
+  "browser-grapple.js", "browser-action-surge.js",
 ]) load(file);
 
 const E = window.IRON_PIT_ACTION_ECONOMY;

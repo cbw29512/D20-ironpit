@@ -12,6 +12,7 @@ from app.content.level_resources import (
 )
 from app.content.pregen_combat_profiles import PregenCombatProfile
 from app.content.spell_slot_progression import FULL_CASTER_CLASSES, spell_slot_resources
+from app.content.warlock_combat_levels import WARLOCK_COMBAT_LEVELS
 from app.domain.character_builds import CharacterBuildProfile
 from app.domain.models import CombatantTemplate
 
@@ -28,6 +29,7 @@ _CLASS_RULES: dict[str, tuple[ResourceRule, ...]] = {
         ("indomitable", "Indomitable", fighter_indomitable_uses),
     ),
     "rogue": (),
+    "warlock": (),
 }
 _SPECIES_RULES: dict[str, tuple[ResourceRule, ...]] = {
     "orc": (
@@ -46,6 +48,9 @@ def expected_resources(profile: CharacterBuildProfile) -> dict[str, int]:
     resolved = {resource_id: resolver(profile.level) for resource_id, _name, resolver in rules}
     if profile.class_id in FULL_CASTER_CLASSES:
         resolved.update(spell_slot_resources(profile.class_id, profile.level))
+    if profile.class_id == "warlock":
+        row = WARLOCK_COMBAT_LEVELS[profile.level]
+        resolved[f"pact-slot-{row.pact_slot_level}"] = row.pact_slots
     return {resource_id: uses for resource_id, uses in resolved.items() if uses > 0}
 
 

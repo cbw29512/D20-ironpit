@@ -11,6 +11,7 @@ logger = logging.getLogger(__name__)
 _FIELDS = ("traits", "actions", "bonusActions", "reactions")
 _CONNECTORS = frozenset({"a", "an", "and", "of", "or", "the", "to"})
 _MARKER = re.compile(r"\((?:[^)]*(?:Recharge\s+\d(?:\s*[-–]\s*\d)?|\d+\s*/\s*Day)[^)]*)\)", re.I)
+_RECHARGE = re.compile(r"\(\s*Recharge\s+(?P<minimum>\d)(?:\s*[-–]\s*(?P<maximum>\d))?\s*\)", re.I)
 
 
 def _is_heading(value: str) -> bool:
@@ -47,15 +48,43 @@ def parse_limited_use_names(row: dict[str, object]) -> list[str]:
     return names
 
 
+def parse_action_recharges(row: dict[str, object]) -> dict[str, int]:
+    """Return simple action-heading Recharge thresholds keyed by the base action name."""
+    result: dict[str, int] = {}
+    for heading in _limited_headings(row.get("actions", "")):
+        marker = _RECHARGE.search(heading)
+        if marker is None:
+            continue
+        maximum = int(marker.group("maximum") or marker.group("minimum"))
+        if maximum != 6:
+            raise ValueError(f"Recharge heading must recharge on a d6 maximum of 6: {heading!r}")
+        name = _RECHARGE.sub("", heading).strip()
+        result[name] = int(marker.group("minimum"))
+    return result
+
+
 def limited_use_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
-    """No Recharge/N-per-Day feature is RAW-ready until its use economy is implemented."""
+    """Fail closed unless each printed limited use has an exact runtime resource implementation."""
     expected = parse_limited_use_names(row)
+    recharges = parse_action_recharges(row)
     issues: list[str] = []
     if template.source_limited_use_names != expected:
         issues.append("source-limited-use-fingerprint-mismatch")
+    modeled_names = {
+        resource.name: resource.recharge_d6_min
+        for resource in template.resources
+        if resource.recharge_d6_min is not None
+    }
     for name in expected:
+        field, heading = name.split(":", 1)
+        marker = _RECHARGE.search(heading)
+        base = _RECHARGE.sub("", heading).strip() if marker else heading
+        if field == "actions" and marker is not None and modeled_names.get(base) == int(marker.group("minimum")):
+            continue
         slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
         issues.append(f"uncertified-limited-use:{slug}")
+    if set(recharges) - set(modeled_names):
+        issues.append("recharge-runtime-missing")
     return issues
 
 

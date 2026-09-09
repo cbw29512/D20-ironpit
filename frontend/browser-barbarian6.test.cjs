@@ -8,8 +8,8 @@ const vm = require("node:vm");
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
-  "browser-heroes.js", "browser-action-economy.js", "browser-condition-rules.js",
-  "browser-condition-immunity.js", "browser-timed-conditions.js", "browser-state.js", "browser-rage.js",
+  "browser-heroes.js", "browser-action-economy.js", "browser-condition-rules.js", "browser-condition-immunity.js",
+  "browser-timed-conditions.js", "browser-state.js", "browser-rage.js",
 ]) load(file);
 
 const template = structuredClone(window.IRON_PIT_BROWSER_HEROES["rokhan-stonefury-l6"]);

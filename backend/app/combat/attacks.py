@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 import logging
-
 from app.combat.action_economy import is_available, spend
 from app.combat.barbarian import end_rage_if_incapacitated, extend_rage_from_attack
 from app.combat.bloodied import bloodied_fury_advantage
 from app.combat.condition_rules import close_hit_is_automatic_critical
+from app.combat.conditional_attack_modifiers import conditional_attack_advantage_sources, conditional_attack_disadvantage_sources
 from app.combat.conditions import apply_hit_conditions, attack_roll_condition_sources
 from app.combat.damage import BonusDamageSpec, resolve_weapon_damage
 from app.combat.damage_defenses import apply_damage_defenses
@@ -14,11 +14,13 @@ from app.combat.graze import resolve_graze_miss
 from app.combat.heroic_inspiration import reroll_failed_attack_with_heroic_inspiration
 from app.combat.modifier_stack import (
     apply_d20_bonus_dice, attacks_against_advantage_sources, consume_attacks_against_advantage,
-    consume_next_attack_against_advantage, effective_armor_class, next_attack_against_advantage_sources,
+    consume_next_attack_against_advantage, consume_next_attack_made_disadvantage, effective_armor_class,
+    next_attack_against_advantage_sources, next_attack_made_disadvantage_sources,
 )
 from app.combat.parry import resolve_parry_hit
 from app.combat.range import resolve_attack_roll_mode
 from app.combat.reckless_attack import attacks_against_reckless_advantage, reckless_attack_advantage
+from app.combat.resources import attack_resource_available, spend_attack_resource
 from app.combat.rolls import roll_d20
 from app.combat.sap import apply_weapon_sap, consume_sap, sap_disadvantage
 from app.combat.state import terminate_turn
@@ -31,8 +33,6 @@ from app.domain.models import BattleEvent, CombatantState, WeaponAttack
 from app.domain.modifiers import ModifierKind
 
 logger = logging.getLogger(__name__)
-
-
 def resolve_attack(
     sequence: int, round_number: int, attacker: CombatantState, defender: CombatantState,
     attack: WeaponAttack, distance_ft: int, dice: DiceProvider,
@@ -46,22 +46,28 @@ def resolve_attack(
     try:
         if spend_action and not is_available(attacker, "action"):
             raise ValueError("Action is not available for an attack.")
+        if not attack_resource_available(attacker, attack):
+            raise ValueError(f"Resource is not available for attack {attack.id!r}.")
         weapon = attack.weapon; defender_event_id = target_event_id or defender.template.id
         attacker_event_id = actor_event_id or attacker.template.id
         condition_advantage, condition_disadvantage = attack_roll_condition_sources(attacker, defender, distance_ft, defender_event_id)
         mode = resolve_attack_roll_mode(
             weapon, distance_ft,
             advantage_sources=(advantage_sources + condition_advantage + bloodied_fury_advantage(attacker, attack)
+                               + conditional_attack_advantage_sources(attacker, defender, attack)
                                + attacks_against_advantage_sources(defender) + attacks_against_reckless_advantage(defender)
                                + reckless_attack_advantage(attacker, attack)
                                + next_attack_against_advantage_sources(attacker, defender_event_id)),
-            other_disadvantage_sources=other_disadvantage_sources + condition_disadvantage + sap_disadvantage(attacker),
+            other_disadvantage_sources=(other_disadvantage_sources + condition_disadvantage + sap_disadvantage(attacker)
+                                        + conditional_attack_disadvantage_sources(attacker, defender, attack)
+                                        + next_attack_made_disadvantage_sources(attacker)),
             close_enemy_active=close_enemy_active,
         )
+        spend_attack_resource(attacker, attack)
         base_roll = roll_d20(dice, attack.attack_bonus, mode)
         base_roll, heroic_reroll = reroll_failed_attack_with_heroic_inspiration(attacker, base_roll, effective_armor_class(defender), dice)
         attack_roll = apply_d20_bonus_dice(attacker, ModifierKind.ATTACK_ROLL_BONUS_DIE, base_roll, dice)
-        consume_next_attack_against_advantage(attacker, defender_event_id); consume_sap(attacker)
+        consume_next_attack_against_advantage(attacker, defender_event_id); consume_next_attack_made_disadvantage(attacker); consume_sap(attacker)
         consume_attacks_against_advantage(defender); extend_rage_from_attack(attacker, round_number)
         if spend_action: spend(attacker, "action")
         actual_defender, actual_event_id, redirect_used = defender, defender_event_id, False

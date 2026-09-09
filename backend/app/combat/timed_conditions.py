@@ -6,9 +6,6 @@ from app.domain.actions import AbilityName, ConditionTiming
 from app.domain.models import BattleEvent, CombatantState, EncounterCombatant, EncounterSetup, TimedEffect
 from app.domain.runtime import TimedTurnBehavior
 
-POISONED_EFFECT_ID = "poisoned"
-ARENA_POISON_RECOVERY_DC = 10
-
 
 def apply_timed_condition(
     state: CombatantState,
@@ -32,14 +29,6 @@ def apply_timed_condition(
 ) -> str | None:
     if condition_is_immune(state, effect_id):
         return None
-    if effect_id == POISONED_EFFECT_ID:
-        if any(effect.effect_id == POISONED_EFFECT_ID for effect in state.timed_effects):
-            return POISONED_EFFECT_ID
-        expires_at_start_of_source_turn = False
-        expiry_timing = None
-        repeat_save_ability = repeat_save_ability or "constitution"
-        repeat_save_dc = repeat_save_dc or ARENA_POISON_RECOVERY_DC
-        repeat_save_timing = "target_turn_start"
     state.timed_effects = [
         effect for effect in state.timed_effects
         if not (
@@ -92,41 +81,3 @@ def remove_effect_group(state: CombatantState, effect: TimedEffect) -> list[str]
         if remove_effect_instance(state, item):
             removed.append(item.effect_id)
     return removed
-
-
-def _source_start_expired(effect: TimedEffect, round_number: int) -> bool:
-    source_start = effect.expiry_timing == "source_turn_start" or effect.expires_at_start_of_source_turn
-    return source_start and (effect.expires_round is None or round_number >= effect.expires_round)
-
-
-def expire_start_of_turn_conditions(
-    sequence: int,
-    round_number: int,
-    source: EncounterCombatant,
-    setup: EncounterSetup,
-) -> tuple[list[BattleEvent], int]:
-    events: list[BattleEvent] = []
-    for target in [*setup.heroes, *setup.monsters]:
-        expiring = [
-            effect for effect in target.state.timed_effects
-            if effect.source_id == source.combatant_id and _source_start_expired(effect, round_number)
-        ]
-        for effect in expiring:
-            removed = remove_effect_group(target.state, effect)
-            if not removed:
-                continue
-            events.append(BattleEvent(
-                sequence=sequence,
-                round_number=round_number,
-                event_type="feature",
-                actor_id=source.combatant_id,
-                actor_name=source.state.template.name,
-                target_id=target.combatant_id,
-                target_name=target.state.template.name,
-                removed_condition_ids=removed,
-                feature_id=effect.source_effect_id or "condition-ended",
-                animation="condition-ended",
-                description=f"{target.state.template.name} is no longer affected by {effect.source_effect_id or effect.effect_id}.",
-            ))
-            sequence += 1
-    return events, sequence

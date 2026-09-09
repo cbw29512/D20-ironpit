@@ -43,6 +43,18 @@ def canonical_base_class_features(class_id: str, level: int) -> tuple[str, ...]:
     return base_class_combat_features(class_id, level, canonical_class_combat_spine(class_id))
 
 
+def canonical_arena_ignored(class_id: str, level: int) -> tuple[str, ...]:
+    spine = canonical_class_combat_spine(class_id)
+    if level not in spine:
+        raise ValueError(f"{class_id} level {level} must be between 1 and 20.")
+    ignored: list[str] = []
+    for current in range(1, level + 1):
+        for feature in getattr(spine[current], "arena_ignored", ()):
+            if feature not in ignored:
+                ignored.append(feature)
+    return tuple(ignored)
+
+
 def canonical_combat_features(
     class_id: str,
     level: int,

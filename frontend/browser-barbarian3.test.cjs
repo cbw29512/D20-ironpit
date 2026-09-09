@@ -12,11 +12,11 @@ for (const htmlPath of [path.join(__dirname, "index.html"), path.join(__dirname,
   assert.match(html, /<script src="browser-barbarian3\.js"><\/script>/, `${htmlPath} must load Barbarian 3 runtime rules`);
 }
 for (const file of [
-  "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js",
-  "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
-  "browser-grapple.js", "browser-timed-conditions.js", "browser-barbarian2.js", "browser-state.js",
-  "browser-rage.js", "browser-barbarian3.js", "browser-rolls.js", "browser-zero-hp.js", "browser-attack.js",
-  "browser-formation.js", "browser-multiattack.js",
+  "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js", "browser-condition-immunity.js",
+  "browser-condition-rules.js", "browser-action-economy.js", "browser-grapple.js", "browser-timed-conditions.js",
+  "browser-barbarian2.js", "browser-state.js", "browser-rage.js", "browser-barbarian3.js",
+  "browser-rolls.js", "browser-zero-hp.js", "browser-forced-movement.js", "browser-control.js",
+  "browser-attack-helpers.js", "browser-attack.js", "browser-formation.js", "browser-multiattack.js",
 ]) load(file);
 
 function queuedDice(values, fallback = 10) {

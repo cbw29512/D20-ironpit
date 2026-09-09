@@ -133,12 +133,19 @@ A hero/monster record should primarily describe stats, attacks, resources, spell
 
 If the capability already exists, adding a new hero level, combat-build overlay, or monster should be data work plus generated certification, not a bespoke engine implementation.
 
+The mandatory methodology in `IRON_PIT_RULES_CONTRACT.md` section **1A. Universal content-compilation contract** also governs canonical pregens. Class, subclass, species, feat, spell, weapon, mastery, and item names are identities/labels, not resolver selectors. Their outcome-changing differences must compile into shared universal primitives plus immutable RAW parameters.
+
+Pregen implementation is therefore mechanic-family work just like monster implementation: when a level introduces Recharge, Prone, forced movement, a reaction, a damage spell, a condition, a resource, or another mechanic already used elsewhere, extend/reuse that universal mechanic across every compatible monster and pregen rather than creating class- or hero-specific resolver behavior.
+
+Damage-only pregen spells use the same universal attack/save/targeting/damage/resource/timing pipeline as equivalent monster abilities. If a spell has an additional RAW rider, do not discard or approximate it to make the pregen runnable; support the rider universally or leave that spell/build explicitly blocked.
+
 ## Fail-closed RAW rule
 
 Never guess an outcome-changing combat mechanic.
 
 - If RAW wording/timing/targeting/resource behavior is clear, implement it once in the shared engine and reuse it.
-- If a combat-relevant rule is genuinely ambiguous or the automatic tactical choice materially needs user policy, stop that feature and ask the user rather than inventing behavior.
+- If source wording is unclear, verify the authoritative RAW source before making a mapping.
+- If a combat-relevant rule remains genuinely ambiguous after source verification, or the automatic tactical choice materially needs a product policy, stop that feature and ask the user rather than inventing behavior.
 - Unsupported outcome-changing mechanics remain explicit blockers.
 - Noncombat choices do not require this stop condition because they do not affect Iron Pit outcomes.
 

@@ -8,14 +8,23 @@ from app.domain.models import WeaponAttack
 def _advantage_modifier_matches(effect, actions: str) -> bool:
     if effect.consume_on_attack_against is not True or effect.expires_at_start_of_source_turn is not True:
         return False
-    if effect.flat_bonus or effect.expires_at_end_of_target_turn:
+    if effect.flat_bonus or effect.expires_at_end_of_target_turn or effect.consume_on_attack_made:
         return False
     pattern = r"next\s+attack\s+roll\s+made\s+against\s+the\s+target\s+before\s+the\s+start\s+of\s+the\s+[^.]+?[’']s\s+next\s+turn\s+has\s+advantage"
     return bool(re.search(pattern, actions, re.IGNORECASE))
 
 
+def _next_attack_made_disadvantage_matches(effect, actions: str) -> bool:
+    if not effect.consume_on_attack_made or not effect.expires_at_end_of_target_turn:
+        return False
+    if effect.flat_bonus or effect.consume_on_attack_against or effect.expires_at_start_of_source_turn:
+        return False
+    pattern = r"(?:target\s+has|and\s+has)\s+disadvantage\s+on\s+the\s+next\s+attack\s+roll\s+it\s+makes\s+before\s+the\s+end\s+of\s+its\s+next\s+turn"
+    return bool(re.search(pattern, actions, re.IGNORECASE))
+
+
 def _speed_modifier_matches(effect, actions: str) -> bool:
-    if effect.flat_bonus >= 0 or effect.consume_on_attack_against or effect.expires_at_start_of_source_turn:
+    if effect.flat_bonus >= 0 or effect.consume_on_attack_against or effect.expires_at_start_of_source_turn or effect.consume_on_attack_made:
         return False
     if effect.expires_at_end_of_target_turn is not True:
         return False
@@ -29,6 +38,8 @@ def hit_modifier_issues(attack: WeaponAttack, actions: str) -> list[str]:
     for effect in attack.on_hit_modifier_effects:
         if effect.kind == "attacks-against-advantage":
             matched = _advantage_modifier_matches(effect, actions)
+        elif effect.kind == "next-attack-made-disadvantage":
+            matched = _next_attack_made_disadvantage_matches(effect, actions)
         elif effect.kind == "speed":
             matched = _speed_modifier_matches(effect, actions)
         else:

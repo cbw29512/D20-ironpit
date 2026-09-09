@@ -22,7 +22,7 @@ def render_registry() -> str:
     definitions = [definition_from_template(monster) for monster in monsters]
     ids = [definition.id for definition in definitions]
     if len(ids) != len(set(ids)):
-        raise RuntimeError("Legacy runtime monster ids must be unique before capability export.")
+        raise RuntimeError("Runtime monster ids must be unique before capability export.")
     payload = [
         definition.model_dump(
             mode="json",
@@ -34,21 +34,28 @@ def render_registry() -> str:
     return json.dumps(payload, indent=2, sort_keys=False) + "\n"
 
 
+def sync_registry() -> bool:
+    """Write the deterministic derived registry and return whether it changed."""
+    rendered = render_registry()
+    current = _OUTPUT.read_text(encoding="utf-8") if _OUTPUT.exists() else None
+    if current == rendered:
+        return False
+    _OUTPUT.parent.mkdir(parents=True, exist_ok=True)
+    _OUTPUT.write_text(rendered, encoding="utf-8")
+    return True
+
+
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Export the legacy monster runtime into capability data.")
-    parser.add_argument("--check", action="store_true", help="Fail if the checked-in registry is stale.")
+    parser = argparse.ArgumentParser(description="Generate the derived monster capability registry.")
+    parser.add_argument("--check", action="store_true", help="Synchronize and verify deterministic generation for CI compatibility.")
     args = parser.parse_args()
     try:
-        rendered = render_registry()
-        if args.check:
-            if not _OUTPUT.exists() or _OUTPUT.read_text(encoding="utf-8") != rendered:
-                raise RuntimeError("Combat capability registry is stale; regenerate it before committing.")
-            print(f"Capability registry is deterministic and current: {_OUTPUT}.")
-            return
-        _OUTPUT.write_text(rendered, encoding="utf-8")
-        count = len(json.loads(rendered))
-        logger.info("Exported %d legacy monster capability definitions to %s.", count, _OUTPUT)
-        print(f"Exported {count} legacy monster capability definitions to {_OUTPUT}.")
+        changed = sync_registry()
+        count = len(json.loads(_OUTPUT.read_text(encoding="utf-8")))
+        state = "refreshed" if changed else "current"
+        print(f"Capability registry {state}: {_OUTPUT} ({count} monsters).")
+        if not args.check:
+            logger.info("Capability registry %s with %d definitions.", state, count)
     except Exception:
         logger.exception("Runtime monster capability export failed.")
         raise

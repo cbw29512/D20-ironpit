@@ -5,7 +5,7 @@
   const J = () => window.IRON_PIT_BROWSER_ACTION_SURGE, P = () => window.IRON_PIT_BROWSER_SUPPORT;
   const T = () => window.IRON_PIT_BROWSER_TACTICAL_SHIFT, O = () => window.IRON_PIT_BROWSER_ONGOING_SPELL_CONTROL;
   const L = () => window.IRON_PIT_BROWSER_SPELL_OFFENSE, U = () => window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION;
-  const F = () => window.IRON_PIT_BROWSER_FORMATION, V = () => window.IRON_PIT_BROWSER_SAVES;
+  const F = () => window.IRON_PIT_BROWSER_FORMATION, V = () => window.IRON_PIT_BROWSER_SAVES, Z = () => window.IRON_PIT_BROWSER_AREA_SAVES;
   const D = () => window.IRON_PIT_DICE;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
     available: (s, c) => c === "action" ? s.action_available : s.bonus_action_available,
@@ -61,6 +61,7 @@
   function saveChoice(member, setup) {
     for (const target of F().targetOrder(member, setup)) {
       for (const action of member.state.template.saving_throw_actions || []) {
+        if (!V().resourceAvailable(member, action)) continue;
         const distance = F().saveDistance(member, target, action.range);
         if (V().legalAction(action, target, distance)) return { target, action, distance };
       }
@@ -70,7 +71,8 @@
 
   function resolveTurn(sequence, round, member, setup) {
     enablePitRangePolicy();
-    const events = []; H().cleanup(setup); S().beginTurn(member.state);
+    const events = []; H().cleanup(setup); const recharge = S().beginTurn(member.state) || [];
+    for (const item of recharge) { const rule = member.state.template.resource_recharge?.[item.id] || {}; const minimum = Number(rule.minimum || 6); const requirement = minimum < 6 ? `${minimum}–6` : "6"; const name = rule.name || item.id; const result = item.restored ? `Recharge condition met: rolled ${item.roll}, needs ${requirement}. ${name} is restored.` : `Recharge condition not met: rolled ${item.roll}, needs ${requirement}. ${name} remains unavailable.`; events.push({ sequence: sequence++, round_number: round, event_type: "feature", actor_id: member.combatant_id, actor_name: member.state.template.name, feature_id: `recharge:${item.id}`, attack_roll: { notation: "1d6", rolls: [item.roll], selected_roll: item.roll, modifier: 0, mode: "normal", total: item.roll }, resource_remaining: member.state.resources[item.id], animation: "resource", description: `${member.state.template.name}: ${result}`, audit: { schema_version: 1, steps: [{ phase: "roll", kind: "roll", label: `Recharge check: rolled ${item.roll}; needs ${requirement}; ${item.restored ? "met" : "not met"}` }, { phase: "resource_change", kind: "resource", label: `${name}: ${member.state.resources[item.id]}/${rule.maxUses || 1}` }] } }); }
     const turnKey = `${round}:${member.combatant_id}`;
     if (O()?.forcedRetreatActive(member.state)) {
       events.push(O().event(sequence++, round, member));
@@ -92,6 +94,8 @@
     const spell = L()?.resolve(sequence, round, member, setup, turnKey);
     if (spell) { events.push(...spell.events); sequence = spell.sequence; }
     if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
+    const signature = Z()?.resolveSignature(sequence, round, member, setup);
+    if (signature) { events.push(...signature.events); return finalize(events, signature.sequence, round, member, setup, turnKey); }
 
     const targets = F().targetOrder(member, setup);
     if (!targets.length) return finalize(events, sequence, round, member, setup, turnKey);

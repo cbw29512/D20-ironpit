@@ -36,6 +36,7 @@ window.IRON_PIT_BROWSER_GRAPPLE = {
   attackDisadvantage: () => 0,
   speedIsZero: () => false,
   apply: () => [],
+  applyControl: () => [],
 };
 window.IRON_PIT_BROWSER_CONDITION_RULES = {
   has: (state, id) => state.active_effect_ids.includes(id),
@@ -76,7 +77,12 @@ load("browser-weapon-mastery.js");
 load("browser-tactical-master.js");
 load("browser-graze.js");
 load("browser-modifiers.js");
+load("browser-forced-movement.js");
+load("browser-control.js");
+load("browser-attack-helpers.js");
 load("browser-attack.js");
+load("browser-resources.js");
+load("browser-save-helpers.js");
 load("browser-saves.js");
 load("browser-indomitable.js");
 

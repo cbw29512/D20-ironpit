@@ -75,7 +75,10 @@ def test_fighter_level_twelve_is_public_and_level_thirteen_remains_blocked() -> 
     }
     browser = BROWSER_HEROES.read_text(encoding="utf-8")
 
-    assert manifest["summary"]["public_ready"] == counted_ready == 23
+    # Warlock 1 is now an additional certified public snapshot, so the
+    # repository-wide ready total advances from 23 to 24 while Fighter 12
+    # retains the same certification assertions below.
+    assert manifest["summary"]["public_ready"] == counted_ready == 24
     assert level_twelve["runtime_template_id"] == "karnok-stoneward-l12"
     assert required <= set(level_twelve["expected_combat_features"])
     assert required <= set(level_twelve["supported_mechanics"])

@@ -13,6 +13,15 @@ SUPPORTED_HERO_ENGINE_FEATURES = {
     "disciple-of-life", "preserve-life",
 }
 
+# Fully represented by immutable pregen data plus generic combat primitives.
+# Keeping these separate prevents class/build labels from becoming engine branches.
+SUPPORTED_HERO_DATA_FEATURES = {
+    "bard-spellcasting", "druid-spellcasting", "paladin-spellcasting", "ranger-spellcasting",
+    "sorcerer-spellcasting", "wizard-spellcasting", "pact-magic", "eldritch-invocations",
+    "magic-initiate-cleric", "primal-order-warden", "unarmored-defense", "lay-on-hands",
+}
+SUPPORTED_HERO_FEATURES = SUPPORTED_HERO_ENGINE_FEATURES | SUPPORTED_HERO_DATA_FEATURES
+
 _STATIC_PROGRESSION_FIELDS: dict[str, dict[str, object]] = {
     "improved-critical": {"critical_hit_minimum": 19},
     "superior-critical": {"critical_hit_minimum": 18},
@@ -36,7 +45,7 @@ _STATIC_PROGRESSION_FIELDS: dict[str, dict[str, object]] = {
 
 
 def unsupported_hero_engine_features(features: tuple[str, ...] | list[str]) -> tuple[str, ...]:
-    return tuple(feature for feature in features if feature not in SUPPORTED_HERO_ENGINE_FEATURES)
+    return tuple(feature for feature in features if feature not in SUPPORTED_HERO_FEATURES)
 
 
 def compile_progression_feature_fields(features: tuple[str, ...] | list[str], level: int) -> dict[str, object]:

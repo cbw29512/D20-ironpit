@@ -9,6 +9,7 @@ from app.domain.weapons import WeaponAttack
 
 _SUPPORTED_HIT_MODIFIERS = {
     ModifierKind.ATTACKS_AGAINST_ADVANTAGE,
+    ModifierKind.NEXT_ATTACK_MADE_DISADVANTAGE,
     ModifierKind.SPEED,
 }
 
@@ -26,6 +27,7 @@ def apply_hit_modifier_effects(state: CombatantState, source_id: str, attack: We
             kind=kind,
             flat_bonus=effect.flat_bonus,
             consume_on_attack_against=effect.consume_on_attack_against,
+            consume_on_attack_made=effect.consume_on_attack_made,
             expires_at_start_of_source_turn=effect.expires_at_start_of_source_turn,
             expires_at_end_of_target_turn=effect.expires_at_end_of_target_turn,
         ))

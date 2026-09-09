@@ -69,7 +69,7 @@ def test_unused_next_attack_advantage_expires_at_source_turn_end() -> None:
 
 
 def test_only_attack_advantage_can_use_next_attack_consumption() -> None:
-    with pytest.raises(ValueError, match="Only attack-advantage"):
+    with pytest.raises(ValueError, match="Only defender-wide attack Advantage"):
         CombatModifier(
             id="bad", source_id="caster", source_effect_id="bad",
             kind=ModifierKind.SPEED, flat_bonus=5, consume_on_attack_against=True,

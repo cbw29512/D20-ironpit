@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "scope": "2024 monster-engine refactor phases 0-8",
+  "policy": "A phase counts toward completion only when its documented gate in docs/COMBAT_ENGINE_REFACTOR_PLAN.md has passed. In-progress phases receive no completion credit.",
+  "phases": [
+    {"id": 0, "name": "freeze-and-measure", "status": "passed"},
+    {"id": 1, "name": "complete-combat-mechanic-inventory", "status": "passed"},
+    {"id": 2, "name": "normalize-combat-ir", "status": "in_progress"},
+    {"id": 3, "name": "separate-rules-from-tactical-ai", "status": "pending"},
+    {"id": 4, "name": "centralize-lifecycle-resources-reactions", "status": "pending"},
+    {"id": 5, "name": "browser-module-runtime-cleanup", "status": "pending"},
+    {"id": 6, "name": "split-readiness-dimensions", "status": "pending"},
+    {"id": 7, "name": "finish-monsters-by-mechanic-yield", "status": "pending"},
+    {"id": 8, "name": "production-hardening", "status": "pending"}
+  ]
+}

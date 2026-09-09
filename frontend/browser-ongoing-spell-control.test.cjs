@@ -15,6 +15,10 @@ window.IRON_PIT_BROWSER_MODIFIERS = {
 };
 window.IRON_PIT_BROWSER_CONDITION_RULES = { autoFailStrDex: () => false, incapacitated: (state) => Boolean(state.is_unconscious) };
 window.IRON_PIT_BROWSER_CONDITION_IMMUNITY = { immune: () => false };
+load("browser-forced-movement.js");
+load("browser-control.js");
+load("browser-resources.js");
+load("browser-save-helpers.js");
 load("browser-saves.js");
 load("browser-timed-conditions.js");
 load("browser-condition-lifecycle.js");

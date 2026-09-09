@@ -34,7 +34,7 @@ for (const id of [
   "srd-jackal", "srd-archelon", "srd-ankylosaurus", "srd-giant-eagle", "srd-giant-elk", "srd-giant-crocodile",
   "srd-allosaurus", "srd-minotaur-skeleton", "srd-triceratops", "srd-warhorse-skeleton",
   "srd-animated-armor", "srd-animated-flying-sword", "srd-awakened-tree", "srd-cultist", "srd-flying-snake",
-  "srd-gargoyle", "srd-grimlock", "srd-guard-captain", "srd-hippopotamus",
+  "srd-gargoyle", "srd-grimlock", "srd-guard-captain", "srd-hippopotamus", "srd-killer-whale",
   "srd-giant-scorpion", "srd-grick", "srd-griffon", "srd-manticore", "srd-ogre-zombie", "srd-pegasus", "srd-scorpion", "srd-skeleton", "srd-spider",
   "srd-tough", "srd-venomous-snake", "srd-violet-fungus", "srd-bandit-captain", "srd-knight",
   "srd-noble", "srd-warrior-veteran", "srd-goblin-boss", "srd-blood-hawk",
@@ -46,7 +46,16 @@ for (const id of [
 assert.ok(generated["srd-tyrannosaurus-rex"]);
 assert.ok(generated["srd-commoner"], "Certified Commoner must be present in the browser runtime");
 assert.ok(generated["srd-lemure"], "Certified Lemure must be present in the browser runtime");
-assert.equal(generated["srd-killer-whale"], undefined, "Aquatic-only Killer Whale must remain deferred from the standard arena");
+const whaleTemplate = generated["srd-killer-whale"];
+assert.deepEqual(whaleTemplate.movement_modes, {
+  walk_ft: 5, fly_ft: 0, climb_ft: 0, swim_ft: 60, burrow_ft: 0, hover: false,
+}, "Magical hospitality must not rewrite the Killer Whale's printed movement modes");
+assert.deepEqual(whaleTemplate.source_trait_names, ["Hold Breath"]);
+assert.equal(whaleTemplate.attacks[0].bonus, 6);
+assert.equal(whaleTemplate.attacks[0].diceCount, 5);
+assert.equal(whaleTemplate.attacks[0].diceSize, 6);
+assert.equal(whaleTemplate.attacks[0].damageBonus, 4);
+assert.equal(whaleTemplate.attacks[0].damageType, "piercing");
 assert.deepEqual(generated["srd-cultist"].attacks[0].onHitDamage, [
   { source: "Necrotic", diceCount: 0, diceSize: 2, damageBonus: 1, damageType: "necrotic" },
 ]);
@@ -215,8 +224,11 @@ assert.equal(tail.proneMaxSize, "huge");
 
 for (const file of [
   "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
-  "browser-grapple.js", "browser-modifiers.js", "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-timed-conditions.js",
-  "browser-zero-hp.js", "browser-attack.js", "browser-charge.js", "browser-saves.js", "browser-condition-lifecycle.js", "browser-formation.js", "browser-multiattack.js",
+  "browser-grapple.js", "browser-modifiers.js", "browser-state.js", "browser-rage.js",
+  "browser-rolls.js", "browser-timed-conditions.js", "browser-zero-hp.js", "browser-forced-movement.js",
+  "browser-control.js", "browser-attack-helpers.js", "browser-attack.js", "browser-charge.js",
+  "browser-resources.js", "browser-save-helpers.js", "browser-saves.js", "browser-condition-lifecycle.js",
+  "browser-formation.js", "browser-multiattack.js",
 ]) load(file);
 window.IRON_PIT_DICE = {
   roll: (sides) => sides === 20 ? 10 : 1,
@@ -322,4 +334,4 @@ assert.ok(heroOne.state.active_effect_ids.includes("grappled"));
 assert.ok(heroOne.state.active_effect_ids.includes("restrained"));
 assert.ok(heroTwo.state.active_effect_ids.includes("prone"));
 
-console.log(`Generated monster runtime contains ${generatedIds.length} manifest-certified templates, including Commoner and Lemure, timed on-hit Speed modifiers, Charge damage replacement, fixed typed hit riders, and source-turn on-hit Advantage modifiers, with aquatic-only Killer Whale deferred, shared grapple-control monsters, Allosaurus Charge follow-up Bite, native data-only swarms, Charge riders, Prone-only Charge, conditional damage, Redirect Attack, and T. rex retargeting.`);
+console.log(`Generated monster runtime contains ${generatedIds.length} manifest-certified templates, including Commoner, Lemure, and environmentally supported Killer Whale, timed on-hit Speed modifiers, Charge damage replacement, fixed typed hit riders, source-turn on-hit Advantage modifiers, shared grapple-control monsters, Allosaurus Charge follow-up Bite, native data-only swarms, Charge riders, Prone-only Charge, conditional damage, Redirect Attack, and T. rex retargeting.`);

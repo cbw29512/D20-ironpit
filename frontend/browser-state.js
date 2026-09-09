@@ -1,13 +1,16 @@
 (() => {
   "use strict";
-
   const SIZE_RANK = { tiny: 0, small: 1, medium: 2, large: 3, huge: 4, gargantuan: 5 };
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { effectiveSpeed: (state) => state.template.speed_ft };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { incapacitated: (state) => state.is_unconscious };
+  const R = () => window.IRON_PIT_BROWSER_RESOURCES || {
+    attackAvailable: () => true, ensureAttackWrapper: () => {}, rechargeStart: () => [], spendAttack: () => {},
+  };
   const effectiveMaxHp = (state) => state.template.max_hp + (state.max_hp_bonus || 0);
 
   function buildState(template) {
+    R().ensureAttackWrapper();
     return {
       template, current_hp: template.max_hp, max_hp_bonus: 0, temporary_hp: 0, initiative_roll: null, initiative_total: null, is_alive: true,
       is_unconscious: false, is_stable: false, is_dead: false,
@@ -41,11 +44,13 @@
   }
 
   function beginTurn(state) {
+    R().ensureAttackWrapper();
     state.turn_terminated = false; state.turn_termination_reason = null;
     const incapacitated = Q().incapacitated(state);
     state.action_available = !incapacitated;
     state.bonus_action_available = !incapacitated;
     refreshStartOfTurn(state);
+    const recharge = R().rechargeStart(state);
     const speedZero = G()?.speedIsZero(state) || false;
     const speed = M().effectiveSpeed(state);
     state.movement_remaining_ft = speedZero ? 0 : speed;
@@ -54,6 +59,7 @@
       state.movement_remaining_ft = Math.max(0, state.movement_remaining_ft - Math.floor(speed / 2));
       state.active_effect_ids = state.active_effect_ids.filter((id) => id !== "prone");
     }
+    return recharge;
   }
 
   const distance = (a, b) => Math.abs(a.position_ft - b.position_ft);
@@ -107,7 +113,10 @@
   const sizeAtMost = (member, maxSize) => Boolean(maxSize) && SIZE_RANK[member.state.template.size] <= SIZE_RANK[maxSize];
   const canProne = (target, maxSize) => sizeAtMost(target, maxSize);
   window.IRON_PIT_BROWSER_STATE = {
-    active, beginTurn, buildState, canProne, distance, downedCharacter, effectiveMaxHp, grantTemporaryHp, hasActiveAlly,
-    moveToward, nearestTarget, packTactics, refreshReaction, refreshStartOfTurn, sizeAtMost, targetPriority, terminateTurn,
+    active, attackResourceAvailable: (state, attack) => R().attackAvailable(state, attack), beginTurn, buildState,
+    canProne, distance, downedCharacter, effectiveMaxHp, grantTemporaryHp, hasActiveAlly, moveToward,
+    nearestTarget, packTactics, rechargeStart: (state, dice) => R().rechargeStart(state, dice), refreshReaction,
+    refreshStartOfTurn, sizeAtMost, spendAttackResource: (state, attack) => R().spendAttack(state, attack),
+    targetPriority, terminateTurn,
   };
 })();

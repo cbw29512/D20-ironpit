@@ -4,6 +4,7 @@ import re
 from typing import Any
 
 from app.content.monster_attack_modifier_source_audit import hit_modifier_issues
+from app.content.monster_save_action_source_audit import save_action_issues as _save_action_issues
 from app.domain.models import WeaponAttack
 
 
@@ -44,6 +45,12 @@ def _conditional_clause_pattern(conditional: Any) -> re.Pattern[str]:
 
 def _melee_reach_pattern(reach_ft: int) -> re.Pattern[str]:
     return re.compile(rf"\breach\s+{reach_ft}\s*(?:ft\.?|feet)\b", re.IGNORECASE)
+
+
+def _ranged_range_pattern(normal_ft: int, long_ft: int | None) -> re.Pattern[str]:
+    if long_ft is None or long_ft == normal_ft:
+        return re.compile(rf"\brange\s+{normal_ft}\s*(?:ft\.?|feet)\b", re.IGNORECASE)
+    return re.compile(rf"\brange\s+{normal_ft}\s*/\s*{long_ft}\s*(?:ft\.?|feet)\b", re.IGNORECASE)
 
 
 def _max_size_rider_present(actions: str, size: Any, condition: str) -> bool:
@@ -96,8 +103,7 @@ def attack_issues(attack: WeaponAttack, actions: str) -> list[str]:
     if weapon.attack_kind.value == "melee" and not _melee_reach_pattern(weapon.reach_ft).search(actions):
         issues.append(f"melee-reach-mismatch:{attack.id}")
     if weapon.attack_kind.value == "ranged" and weapon.normal_range_ft is not None:
-        ranged = rf"range\s+{weapon.normal_range_ft}\s*/\s*{weapon.long_range_ft}\s*(?:ft\.?|feet)\b"
-        if not re.search(ranged, actions, re.IGNORECASE):
+        if not _ranged_range_pattern(weapon.normal_range_ft, weapon.long_range_ft).search(actions):
             issues.append(f"ranged-range-mismatch:{attack.id}")
     for extra in attack.on_hit_damage:
         if extra.dice_count == 0:
@@ -132,15 +138,4 @@ def attack_issues(attack: WeaponAttack, actions: str) -> list[str]:
 
 
 def save_action_issues(action: Any, actions: str) -> list[str]:
-    issues: list[str] = []
-    if action.name.lower() not in actions:
-        issues.append(f"save-action-name-missing:{action.id}")
-    save = rf"{action.save_ability}\s+Saving Throw:\s*DC\s*{action.dc}\b"
-    if not re.search(save, actions, re.IGNORECASE):
-        issues.append(f"save-dc-mismatch:{action.id}")
-    if action.damage_dice_count and not _dice_pattern(action.damage_dice_count, action.damage_dice_size, action.damage_bonus).search(actions):
-        issues.append(f"save-damage-mismatch:{action.id}")
-    if action.grapple_escape_dc is not None:
-        if "grappled" not in actions or f"escape dc {action.grapple_escape_dc}" not in actions:
-            issues.append(f"save-grapple-rider-mismatch:{action.id}")
-    return issues
+    return _save_action_issues(action, actions, _dice_pattern)

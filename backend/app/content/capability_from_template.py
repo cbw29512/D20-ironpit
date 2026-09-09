@@ -1,37 +1,12 @@
 from __future__ import annotations
 
-from app.content.capability_compiler import UnsupportedCapabilityError
+from app.content.capability_control_from_template import control_definition
 from app.domain.capabilities import CombatantDefinition
 from app.domain.models import CombatantTemplate, WeaponAttack
 
 
 def _dice(count: int, size: int, bonus: int = 0) -> dict[str, int]:
     return {"count": count, "size": size, "bonus": bonus}
-
-
-def _control_effect(control) -> dict[str, object]:
-    has_grapple = control.grapple_escape_dc is not None
-    has_condition = control.condition_id is not None
-    if has_grapple and has_condition:
-        raise UnsupportedCapabilityError("Runtime control rider combines grapple and condition.")
-    if has_grapple:
-        return {
-            "kind": "grapple", "escape_dc": control.grapple_escape_dc,
-            "max_target_size": control.max_target_size,
-            "restrains": control.restrains_while_grappled,
-        }
-    if has_condition:
-        return {
-            "kind": "condition", "condition": control.condition_id,
-            "max_target_size": control.max_target_size,
-            "expires_at_start_of_source_turn": control.expires_at_start_of_source_turn,
-            "expiry_timing": control.expiry_timing,
-            "repeat_save_ability": control.repeat_save_ability,
-            "repeat_save_dc": control.repeat_save_dc,
-            "repeat_save_timing": control.repeat_save_timing,
-            "allowed_removal_action_ids": control.allowed_removal_action_ids,
-        }
-    raise UnsupportedCapabilityError("Runtime control rider has no supported grapple or condition effect.")
 
 
 def _attack(attack: WeaponAttack) -> dict[str, object]:
@@ -53,7 +28,7 @@ def _attack(attack: WeaponAttack) -> dict[str, object]:
     if attack.knocks_prone_max_size is not None:
         effects.append({"kind": "prone", "max_target_size": attack.knocks_prone_max_size})
     if attack.control_effect is not None:
-        effects.append(_control_effect(attack.control_effect))
+        effects.append(control_definition(attack.control_effect))
     result: dict[str, object] = {
         "id": attack.id, "weapon_id": weapon.id, "name": weapon.name,
         "attack_kind": weapon.attack_kind, "attack_bonus": attack.attack_bonus,
@@ -67,7 +42,12 @@ def _attack(attack: WeaponAttack) -> dict[str, object]:
         "attack_ability_modifier": attack.attack_ability_modifier,
         "rage_eligible": attack.rage_eligible,
         "effects": effects, "forbid_target_grappled_by_self": attack.forbid_target_grappled_by_self,
+        "resource_id": attack.resource_id, "resource_cost": attack.resource_cost,
     }
+    if attack.conditional_attack_modifiers:
+        result["conditional_attack_modifiers"] = [
+            item.model_dump(mode="json") for item in attack.conditional_attack_modifiers
+        ]
     if attack.fixed_damage is None:
         result["damage"] = _dice(weapon.dice_count, weapon.dice_size, attack.damage_bonus)
     else:
@@ -78,13 +58,18 @@ def _attack(attack: WeaponAttack) -> dict[str, object]:
 def _save(action) -> dict[str, object]:
     result: dict[str, object] = {
         "id": action.id, "name": action.name, "save_ability": action.save_ability,
-        "dc": action.dc, "range_ft": action.range_ft, "target_max_size": action.target_max_size,
-        "success_damage": action.success_damage, "animation": action.animation,
+        "dc": action.dc, "range_ft": action.range_ft, "area": action.area,
+        "target_max_size": action.target_max_size, "success_damage": action.success_damage,
+        "magical_effect": action.magical_effect,
+        "animation": action.animation, "resource_id": action.resource_id,
+        "resource_cost": action.resource_cost,
     }
     if action.damage_dice_count:
         result["damage"] = _dice(action.damage_dice_count, action.damage_dice_size, action.damage_bonus)
         result["damage_type"] = action.damage_type
-    if action.grapple_escape_dc is not None:
+    if action.failure_control is not None:
+        result["failure_control"] = control_definition(action.failure_control)
+    elif action.grapple_escape_dc is not None:
         result["grapple"] = {
             "kind": "grapple", "escape_dc": action.grapple_escape_dc,
             "max_target_size": action.target_max_size, "restrains": action.restrains_while_grappled,

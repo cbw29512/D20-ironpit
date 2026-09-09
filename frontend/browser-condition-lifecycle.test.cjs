@@ -8,10 +8,11 @@ const vm = require("node:vm");
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
-  "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js",
-  "browser-action-economy.js", "browser-grapple.js", "browser-state.js", "browser-rage.js",
-  "browser-rolls.js", "browser-timed-conditions.js", "browser-zero-hp.js", "browser-attack.js", "browser-saves.js",
-  "browser-condition-lifecycle.js",
+  "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
+  "browser-grapple.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
+  "browser-timed-conditions.js", "browser-zero-hp.js", "browser-forced-movement.js", "browser-control.js",
+  "browser-attack-helpers.js", "browser-attack.js", "browser-resources.js", "browser-save-helpers.js",
+  "browser-saves.js", "browser-condition-lifecycle.js",
 ]) load(file);
 
 const S = window.IRON_PIT_BROWSER_STATE;
@@ -26,31 +27,31 @@ window.IRON_PIT_DICE = {
 };
 
 {
-  const target = member("poison-recovery-target");
-  T.apply(target.state, "poisoned", "venom-source", {
-    sourceEffectId: "venom-rider",
+  const target = member("repeat-save-target");
+  T.apply(target.state, "frightened", "fear-source", {
+    sourceEffectId: "fear-rider",
     appliedRound: 2,
-    repeatSaveAbility: "constitution",
+    repeatSaveAbility: "wisdom",
     repeatSaveDc: 15,
     repeatSaveTiming: "target_turn_end",
   });
 
-  const sameRound = L.resolveTargetTiming(1, 2, target, "target_turn_start");
-  assert.equal(sameRound.events.length, 0, "Poisoned must last through the round in which it is applied");
-  assert.equal(target.state.active_effect_ids.includes("poisoned"), true);
+  const wrongTiming = L.resolveTargetTiming(1, 2, target, "target_turn_start");
+  assert.equal(wrongTiming.events.length, 0, "A target-turn-end save must not fire at target-turn-start");
+  assert.equal(target.state.active_effect_ids.includes("frightened"), true);
 
   d20 = 1;
-  const failed = L.resolveTargetTiming(sameRound.sequence, 3, target, "target_turn_start");
+  const failed = L.resolveTargetTiming(wrongTiming.sequence, 2, target, "target_turn_end");
   assert.equal(failed.events.length, 1);
   assert.equal(failed.events[0].save_succeeded, false);
-  assert.equal(target.state.active_effect_ids.includes("poisoned"), true);
+  assert.equal(target.state.active_effect_ids.includes("frightened"), true);
 
   d20 = 20;
-  const passed = L.resolveTargetTiming(failed.sequence, 4, target, "target_turn_start");
+  const passed = L.resolveTargetTiming(failed.sequence, 3, target, "target_turn_end");
   assert.equal(passed.events.length, 1);
   assert.equal(passed.events[0].save_succeeded, true);
-  assert.deepEqual(passed.events[0].removed_condition_ids, ["poisoned"]);
-  assert.equal(target.state.active_effect_ids.includes("poisoned"), false);
+  assert.deepEqual(passed.events[0].removed_condition_ids, ["frightened"]);
+  assert.equal(target.state.active_effect_ids.includes("frightened"), false);
 }
 
 {
@@ -68,6 +69,24 @@ window.IRON_PIT_DICE = {
 }
 
 {
+  const source = member("fixed-duration-source");
+  const target = member("fixed-duration-target");
+  T.apply(target.state, "frightened", source.combatant_id, {
+    sourceEffectId: "one-minute-fear",
+    expiryTiming: "source_turn_start",
+    expiresRound: 11,
+  });
+  const setup = { heroes: [source, target], monsters: [] };
+  const early = L.resolveSourceTiming(1, 10, source, setup, "source_turn_start");
+  assert.equal(early.events.length, 0, "Explicit source-relative durations must not expire early");
+  assert.equal(target.state.active_effect_ids.includes("frightened"), true);
+  const due = L.resolveSourceTiming(early.sequence, 11, source, setup, "source_turn_start");
+  assert.equal(due.events.length, 1);
+  assert.deepEqual(due.events[0].removed_condition_ids, ["frightened"]);
+  assert.equal(target.state.active_effect_ids.includes("frightened"), false);
+}
+
+{
   const sourceA = member("source-a"), sourceB = member("source-b"), target = member("multi-source-target");
   T.apply(target.state, "frightened", sourceA.combatant_id, { sourceEffectId: "fear-a", expiryTiming: "source_turn_start" });
   T.apply(target.state, "frightened", sourceB.combatant_id, { sourceEffectId: "fear-b", expiryTiming: "source_turn_start" });
@@ -80,4 +99,4 @@ window.IRON_PIT_DICE = {
   assert.equal(target.state.active_effect_ids.includes("frightened"), false);
 }
 
-console.log("Browser condition lifecycle regressions passed.");
+console.log("Browser condition lifecycle exact-timing regressions passed.");

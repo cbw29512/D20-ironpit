@@ -1,70 +1,42 @@
 (() => {
   "use strict";
   const S = () => window.IRON_PIT_BROWSER_STATE, R = () => window.IRON_PIT_BROWSER_ROLLS;
-  const G = () => window.IRON_PIT_BROWSER_GRAPPLE, T = () => window.IRON_PIT_BROWSER_TIMED, Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
+  const H = () => window.IRON_PIT_BROWSER_ATTACK_HELPERS, CTRL = () => window.IRON_PIT_BROWSER_CONTROL;
   const SAP = () => window.IRON_PIT_BROWSER_SAP || { applyWeapon: () => false, consume: () => 0, disadvantage: () => 0 };
   const TM = () => window.IRON_PIT_BROWSER_TACTICAL_MASTER || { apply: () => false };
   const GRZ = () => window.IRON_PIT_BROWSER_GRAZE || { rawDamage: () => null };
   const TOP = () => window.IRON_PIT_BROWSER_TOPPLE || { resolve: () => ({ saveRoll: null, saveDc: null, saveSucceeded: null, applied: false }) };
   const STUDY = () => window.IRON_PIT_BROWSER_STUDIED_ATTACKS || { apply: () => false };
   const HI = () => window.IRON_PIT_BROWSER_HEROIC_INSPIRATION || { rerollFailedAttack: (_state, roll) => ({ roll, used: false }) };
-  const B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2 || { activate: () => false, attackAdvantage: () => 0, attacksAgainstAdvantage: () => 0 };
+  const B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2 || { activate: () => false, attackAdvantage: () => 0 };
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || {
-    attacksAgainstAdvantage: () => 0, consumeAttacksAgainstAdvantage: () => 0, nextAttackAgainstAdvantage: () => 0,
-    consumeNextAttackAgainstAdvantage: () => 0, effectiveArmorClass: (state) => state.template.armor_class,
-    effectiveSpeed: (state) => state.template.speed_ft, applyD20Bonus: (_state, _kind, roll) => roll,
+    consumeAttacksAgainstAdvantage: () => 0, nextAttackAgainstAdvantage: () => 0, consumeNextAttackAgainstAdvantage: () => 0,
+    nextAttackMadeDisadvantage: () => 0, consumeNextAttackMadeDisadvantage: () => 0,
+    effectiveArmorClass: (state) => state.template.armor_class, applyD20Bonus: (_state, _kind, roll) => roll,
   };
-  const C = () => window.IRON_PIT_BROWSER_CONCENTRATION, I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
+  const C = () => window.IRON_PIT_BROWSER_CONCENTRATION;
+  const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || {
-    attackAdvantage: (state) => state.is_unconscious, autoCritical: (state) => state.is_unconscious,
-    has: (state, id) => state.active_effect_ids.includes(id), incapacitated: (state) => state.is_unconscious,
+    autoCritical: (state) => state.is_unconscious, incapacitated: (state) => state.is_unconscious,
   };
-  const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (state, cost) => cost === "action" && state.action_available, spend: (state) => { state.action_available = false; } };
-  const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
-  function conditionSources(attacker, defender, distance, targetId) {
-    let advantage = M().attacksAgainstAdvantage(defender) + B2().attacksAgainstAdvantage(defender), disadvantage = 0;
-    if (Q().has(attacker, "blinded")) disadvantage += 1;
-    if (attacker.active_effect_ids.includes("prone")) disadvantage += 1;
-    if (attacker.active_effect_ids.includes("restrained")) disadvantage += 1;
-    if (attacker.active_effect_ids.includes("poisoned")) disadvantage += 1;
-    disadvantage += G()?.attackDisadvantage(attacker, targetId) || 0;
-    if (defender.active_effect_ids.includes("dodge") && !Q().incapacitated(defender) && M().effectiveSpeed(defender) > 0 && !G()?.speedIsZero(defender)) disadvantage += 1;
-    if (Q().attackAdvantage(defender)) advantage += 1;
-    if (defender.active_effect_ids.includes("restrained")) advantage += 1;
-    if (defender.active_effect_ids.includes("prone")) distance <= 5 ? advantage += 1 : disadvantage += 1;
-    return { advantage, disadvantage };
-  }
-  function rangedCloseThreat(attacker, target, distance, setup) {
-    if (distance > 5 && !setup) return false;
-    if (!setup) return distance <= 5 && !Q().incapacitated(target.state);
-    const enemies = attacker.side === "heroes" ? setup.monsters : setup.heroes;
-    return enemies.some((enemy) => enemy.state.is_alive && !enemy.state.is_dead && enemy.state.current_hp > 0 && !Q().incapacitated(enemy.state) && S().distance(attacker, enemy) <= 5);
-  }
-  const bloodiedFury = (state, attack) => state.template.traits?.includes("bloodied-fury") && attack.kind === "melee" && state.current_hp * 2 <= state.template.max_hp ? 1 : 0;
-  function adjustedDamage(target, amount, type, allowVulnerability = true) {
-    if (target.template.damage_immunities?.includes(type)) return 0;
-    let value = amount;
-    if (target.template.damage_resistances?.includes(type) || target.temporary_damage_resistances?.includes(type) || Q().has(target, "petrified")) value = Math.floor(value / 2);
-    if (allowVulnerability && target.template.damage_vulnerabilities?.includes(type)) value *= 2;
-    return value;
-  }
-  function applyDamage(state, amount, critical = false, damageTypes = [], affectedStates = []) {
-    const lifecycle = Z(); if (!lifecycle) throw new Error("Browser zero-HP runtime is not loaded.");
-    return lifecycle.applyDamage(state, amount, critical, damageTypes, affectedStates);
-  }
+  const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (state) => state.action_available, spend: (state) => { state.action_available = false; } };
+
   function resolveAttack(sequence, round, attacker, target, attack, distance, extra = {}) {
     const spendAction = extra.spendAction !== false;
     if (spendAction && !E().available(attacker.state, "action")) throw new Error("Action is unavailable for attack.");
     const recklessStarted = extra.allowReckless === true && B2().activate(attacker, attack, round);
     if (recklessStarted) window.IRON_PIT_BROWSER_BARBARIAN3?.markRecklessUse(attacker.state, extra.turnKey);
-    const conditions = conditionSources(attacker.state, target.state, distance, target.combatant_id);
-    const advantage = (extra.advantage || 0) + conditions.advantage + bloodiedFury(attacker.state, attack)
-      + B2().attackAdvantage(attacker.state, attack) + M().nextAttackAgainstAdvantage(attacker.state, target.combatant_id);
-    const closeThreat = attack.kind === "ranged" && rangedCloseThreat(attacker, target, distance, extra.setup);
-    const mode = R().attackMode(attack, distance, advantage, conditions.disadvantage + SAP().disadvantage(attacker.state), closeThreat);
+    const conditions = H().conditionSources(attacker.state, target.state, distance, target.combatant_id);
+    const conditional = H().CAM();
+    const advantage = (extra.advantage || 0) + conditions.advantage + H().bloodiedFury(attacker.state, attack)
+      + conditional.advantage(attacker.state, target.state, attack) + B2().attackAdvantage(attacker.state, attack)
+      + M().nextAttackAgainstAdvantage(attacker.state, target.combatant_id);
+    const closeThreat = attack.kind === "ranged" && H().rangedCloseThreat(attacker, target, distance, extra.setup);
+    const mode = R().attackMode(attack, distance, advantage, conditions.disadvantage + SAP().disadvantage(attacker.state)
+      + conditional.disadvantage(attacker.state, target.state, attack) + M().nextAttackMadeDisadvantage(attacker.state), closeThreat);
     const heroic = HI().rerollFailedAttack(attacker.state, R().d20(attack.bonus, mode), M().effectiveArmorClass(target.state));
     const attackRoll = M().applyD20Bonus(attacker.state, "attack-roll-bonus-die", heroic.roll);
-    M().consumeNextAttackAgainstAdvantage(attacker.state, target.combatant_id); SAP().consume(attacker.state);
+    M().consumeNextAttackAgainstAdvantage(attacker.state, target.combatant_id); M().consumeNextAttackMadeDisadvantage(attacker.state); SAP().consume(attacker.state);
     M().consumeAttacksAgainstAdvantage(target.state); window.IRON_PIT_BROWSER_RAGE?.extendFromAttack(attacker.state, round);
     if (spendAction) E().spend(attacker.state, "action");
     const redirected = window.IRON_PIT_BROWSER_REACTIONS?.redirectAttack?.(target, extra.setup) || null, actualTarget = redirected || target;
@@ -74,8 +46,8 @@
     const initialHit = !naturalOne && (naturalTwenty || attackRoll.total >= baseTargetAc);
     const parry = window.IRON_PIT_BROWSER_REACTIONS?.parryHit?.(actualTarget.state, attack, attackRoll, initialHit, baseTargetAc) || { hit: initialHit, used: false };
     const hit = parry.hit, targetAc = baseTargetAc + (parry.used ? actualTarget.state.template.parry_reaction.ac_bonus : 0);
-    const expandedCritical = natural >= (attacker.state.template.critical_hit_minimum || 20);
-    const critical = Boolean(hit && (expandedCritical || (Q().autoCritical(actualTarget.state) && distance <= 5)));
+    const critical = Boolean(hit && (natural >= (attacker.state.template.critical_hit_minimum || 20)
+      || (Q().autoCritical(actualTarget.state) && distance <= 5)));
     const hpBefore = actualTarget.state.current_hp, temporaryHpBefore = actualTarget.state.temporary_hp;
     const deathSuccessBefore = actualTarget.state.death_save_successes, deathFailureBefore = actualTarget.state.death_save_failures;
     const concentrationBefore = actualTarget.state.concentration?.effect_id || null;
@@ -84,21 +56,13 @@
     if (hit) {
       const damage = R().weaponDamage(attacker.state, attack, critical, mode, extra.turnKey || `${round}:${attacker.combatant_id}`,
         extra.bonusDamage || null, actualTarget.state, window.IRON_PIT_BROWSER_SNEAK_ATTACK?.allyAvailable(attacker, extra.setup) || false);
-      damageComponents = damage.components.map((part) => ({ ...part, applied_total: adjustedDamage(actualTarget.state, part.total, part.damage_type) }));
+      damageComponents = damage.components.map((part) => ({ ...part, applied_total: H().adjustedDamage(actualTarget.state, part.total, part.damage_type) }));
       damageRoll = { ...damage.roll, total: damageComponents.reduce((sum, part) => sum + part.applied_total, 0) };
-      const appliedTypes = [...new Set(damageComponents.filter((part) => part.applied_total > 0).map((part) => part.damage_type))], affectedStates = states(extra.setup);
-      damageOutcome = applyDamage(actualTarget.state, damageRoll.total, critical, appliedTypes, affectedStates);
+      const appliedTypes = [...new Set(damageComponents.filter((part) => part.applied_total > 0).map((part) => part.damage_type))], affectedStates = H().states(extra.setup);
+      damageOutcome = H().applyDamage(actualTarget.state, damageRoll.total, critical, appliedTypes, affectedStates);
       const living = actualTarget.state.is_alive && !actualTarget.state.is_dead, proneMax = extra.proneMaxSize || attack.proneMaxSize;
       if (living && S().canProne(actualTarget, proneMax) && !I().immune(actualTarget.state, "prone")) { if (!actualTarget.state.active_effect_ids.includes("prone")) actualTarget.state.active_effect_ids.push("prone"); applied.push("prone"); }
-      const control = attack.controlEffect;
-      if (living && control?.grappleEscapeDc && (!control.maxTargetSize || S().sizeAtMost(actualTarget, control.maxTargetSize))) applied.push(...G().apply(actualTarget.state, attacker.combatant_id, control.grappleEscapeDc, attack.reach || 5, Boolean(control.restrainsWhileGrappled)));
-      if (living && control?.conditionId) {
-        const timed = T().apply(actualTarget.state, control.conditionId, attacker.combatant_id, { sourceEffectId: attack.id, appliedRound: round,
-          expiresAtStartOfSourceTurn: Boolean(control.expiresAtStartOfSourceTurn), expiryTiming: control.expiryTiming || null,
-          repeatSaveAbility: control.repeatSaveAbility || null, repeatSaveDc: control.repeatSaveDc || null,
-          repeatSaveTiming: control.repeatSaveTiming || null, allowedRemovalActionIds: control.allowedRemovalActionIds || [] });
-        if (timed) applied.push(timed);
-      }
+      if (living) applied.push(...CTRL().applyPersistent(actualTarget, attacker.combatant_id, attack.id, attack.controlEffect, attack.reach || 5, round, affectedStates));
       if (living) M().applyHitEffects?.(actualTarget.state, attacker.combatant_id, attack);
       topple = TOP().resolve(attacker, actualTarget, attack); if (topple.applied && !applied.includes("prone")) applied.push("prone");
       if (living) sapApplied = SAP().applyWeapon(attacker, actualTarget, attack, round) ? "weapon" : TM().apply(attacker, actualTarget, attack, round) ? "tactical" : "";
@@ -107,12 +71,11 @@
     } else {
       const rawGraze = GRZ().rawDamage(attacker.state, attack);
       if (rawGraze !== null) {
-        const appliedTotal = adjustedDamage(actualTarget.state, rawGraze, attack.damageType, false);
-        damageComponents = [{ source: `${attack.name} (Graze)`, notation: String(rawGraze), rolls: [], modifier: 0,
-          damage_type: attack.damageType, total: rawGraze, applied_total: appliedTotal }];
+        const appliedTotal = H().adjustedDamage(actualTarget.state, rawGraze, attack.damageType, false);
+        damageComponents = [{ source: `${attack.name} (Graze)`, notation: String(rawGraze), rolls: [], modifier: 0, damage_type: attack.damageType, total: rawGraze, applied_total: appliedTotal }];
         damageRoll = { notation: String(rawGraze), rolls: [], modifier: 0, selected_roll: null, mode: "normal", total: appliedTotal };
-        const affectedStates = states(extra.setup), appliedTypes = appliedTotal > 0 ? [attack.damageType] : [];
-        damageOutcome = applyDamage(actualTarget.state, appliedTotal, false, appliedTypes, affectedStates);
+        const affectedStates = H().states(extra.setup), appliedTypes = appliedTotal > 0 ? [attack.damageType] : [];
+        damageOutcome = H().applyDamage(actualTarget.state, appliedTotal, false, appliedTypes, affectedStates);
         window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(actualTarget.state); C()?.endIfIncapacitated(actualTarget.state, affectedStates);
       }
       studiedApplied = STUDY().apply(attacker.state, attacker.combatant_id, target.combatant_id, round);
@@ -144,7 +107,11 @@
       is_stable: actualTarget.state.is_stable, is_dead: actualTarget.state.is_dead, weapon_id: attack.id, projectile: attack.projectile || null,
       feature_id: extra.featureId || (recklessStarted ? "reckless-attack" : null), concentration_ended_effect_id: concentrationBefore && !actualTarget.state.concentration ? concentrationBefore : null,
       animation: attack.animation || (attack.kind === "ranged" ? "projectile" : "slash"), description };
+    if (hit) CTRL().applyMovement(attacker, actualTarget, attack.controlEffect, event);
     return window.IRON_PIT_BROWSER_CHAMPION?.criticalMove(attacker, extra.setup, event) || event;
   }
-  window.IRON_PIT_BROWSER_ATTACK = { adjustedDamage, applyDamage, conditionSources, rangedCloseThreat, resolveAttack };
+  window.IRON_PIT_BROWSER_ATTACK = {
+    adjustedDamage: (...args) => H().adjustedDamage(...args), applyDamage: (...args) => H().applyDamage(...args),
+    conditionSources: (...args) => H().conditionSources(...args), rangedCloseThreat: (...args) => H().rangedCloseThreat(...args), resolveAttack,
+  };
 })();

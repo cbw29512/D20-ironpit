@@ -7,6 +7,7 @@ from pathlib import Path
 from app.content.monster_catalog import build_monster_catalog
 from app.content.roster import build_arena_roster
 from app.domain.catalog import CoverageStatus
+from browser_control_enrichment import enrich_control_rows
 from browser_template_serializer import template_row
 
 logger = logging.getLogger(__name__)
@@ -31,7 +32,7 @@ def render() -> str:
     try:
         rows = []
         for template in _certified_monsters():
-            row = template_row(template)
+            row = enrich_control_rows(template_row(template), template)
             row["creature_type"] = template.creature_type
             rows.append(row)
         ids = {row["id"] for row in rows}

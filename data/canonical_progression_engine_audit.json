@@ -1,0 +1,4378 @@
+{
+  "blocking_features": [
+    {
+      "id": "abjure-foes",
+      "status": "planned"
+    },
+    {
+      "id": "arcane-apotheosis",
+      "status": "planned"
+    },
+    {
+      "id": "archdruid",
+      "status": "planned"
+    },
+    {
+      "id": "aura-expansion",
+      "status": "planned"
+    },
+    {
+      "id": "aura-of-courage",
+      "status": "planned"
+    },
+    {
+      "id": "aura-of-devotion",
+      "status": "planned"
+    },
+    {
+      "id": "aura-of-protection",
+      "status": "planned"
+    },
+    {
+      "id": "bard-combat-spells-2",
+      "status": "planned"
+    },
+    {
+      "id": "bard-combat-spells-3",
+      "status": "planned"
+    },
+    {
+      "id": "bard-combat-spells-4",
+      "status": "planned"
+    },
+    {
+      "id": "bard-combat-spells-5",
+      "status": "planned"
+    },
+    {
+      "id": "bard-combat-spells-6",
+      "status": "planned"
+    },
+    {
+      "id": "bard-combat-spells-7",
+      "status": "planned"
+    },
+    {
+      "id": "bard-combat-spells-8",
+      "status": "planned"
+    },
+    {
+      "id": "bard-combat-spells-9",
+      "status": "planned"
+    },
+    {
+      "id": "beast-spells",
+      "status": "planned"
+    },
+    {
+      "id": "blessed-healer",
+      "status": "planned"
+    },
+    {
+      "id": "blessed-strikes",
+      "status": "planned"
+    },
+    {
+      "id": "body-and-mind",
+      "status": "planned"
+    },
+    {
+      "id": "boon-combat-prowess",
+      "status": "planned"
+    },
+    {
+      "id": "boon-dimensional-travel",
+      "status": "planned"
+    },
+    {
+      "id": "boon-irresistible-offense",
+      "status": "planned"
+    },
+    {
+      "id": "boon-of-fate",
+      "status": "planned"
+    },
+    {
+      "id": "boon-spell-recall",
+      "status": "planned"
+    },
+    {
+      "id": "brutal-strike",
+      "status": "planned"
+    },
+    {
+      "id": "brutal-strike-2d10",
+      "status": "planned"
+    },
+    {
+      "id": "channel-divinity",
+      "status": "planned"
+    },
+    {
+      "id": "cleric-combat-spells-3",
+      "status": "planned"
+    },
+    {
+      "id": "cleric-combat-spells-4",
+      "status": "planned"
+    },
+    {
+      "id": "cleric-combat-spells-5",
+      "status": "planned"
+    },
+    {
+      "id": "cleric-combat-spells-6",
+      "status": "planned"
+    },
+    {
+      "id": "cleric-combat-spells-7",
+      "status": "planned"
+    },
+    {
+      "id": "cleric-combat-spells-8",
+      "status": "planned"
+    },
+    {
+      "id": "cleric-combat-spells-9",
+      "status": "planned"
+    },
+    {
+      "id": "countercharm",
+      "status": "planned"
+    },
+    {
+      "id": "cunning-action",
+      "status": "planned"
+    },
+    {
+      "id": "cunning-strike",
+      "status": "planned"
+    },
+    {
+      "id": "cutting-words",
+      "status": "planned"
+    },
+    {
+      "id": "dark-ones-blessing",
+      "status": "planned"
+    },
+    {
+      "id": "dark-ones-own-luck",
+      "status": "planned"
+    },
+    {
+      "id": "deflect-attacks",
+      "status": "planned"
+    },
+    {
+      "id": "deflect-energy",
+      "status": "planned"
+    },
+    {
+      "id": "devious-strikes",
+      "status": "planned"
+    },
+    {
+      "id": "devotion-combat-spells-1",
+      "status": "planned"
+    },
+    {
+      "id": "devotion-combat-spells-2",
+      "status": "planned"
+    },
+    {
+      "id": "devotion-combat-spells-3",
+      "status": "planned"
+    },
+    {
+      "id": "devotion-combat-spells-4",
+      "status": "planned"
+    },
+    {
+      "id": "devotion-combat-spells-5",
+      "status": "planned"
+    },
+    {
+      "id": "disciplined-survivor",
+      "status": "planned"
+    },
+    {
+      "id": "divine-intervention",
+      "status": "planned"
+    },
+    {
+      "id": "draconic-resilience",
+      "status": "planned"
+    },
+    {
+      "id": "draconic-spells",
+      "status": "planned"
+    },
+    {
+      "id": "dragon-companion",
+      "status": "planned"
+    },
+    {
+      "id": "dragon-wings",
+      "status": "planned"
+    },
+    {
+      "id": "druid-combat-spells-2",
+      "status": "planned"
+    },
+    {
+      "id": "druid-combat-spells-3",
+      "status": "planned"
+    },
+    {
+      "id": "druid-combat-spells-4",
+      "status": "planned"
+    },
+    {
+      "id": "druid-combat-spells-5",
+      "status": "planned"
+    },
+    {
+      "id": "druid-combat-spells-6",
+      "status": "planned"
+    },
+    {
+      "id": "druid-combat-spells-7",
+      "status": "planned"
+    },
+    {
+      "id": "druid-combat-spells-8",
+      "status": "planned"
+    },
+    {
+      "id": "druid-combat-spells-9",
+      "status": "planned"
+    },
+    {
+      "id": "eldritch-master",
+      "status": "planned"
+    },
+    {
+      "id": "elemental-affinity-fire",
+      "status": "planned"
+    },
+    {
+      "id": "elemental-fury",
+      "status": "planned"
+    },
+    {
+      "id": "elusive",
+      "status": "planned"
+    },
+    {
+      "id": "empowered-evocation",
+      "status": "planned"
+    },
+    {
+      "id": "empowered-strikes",
+      "status": "planned"
+    },
+    {
+      "id": "evasion",
+      "status": "planned"
+    },
+    {
+      "id": "evocation-savant",
+      "status": "planned"
+    },
+    {
+      "id": "faithful-steed",
+      "status": "planned"
+    },
+    {
+      "id": "feral-senses",
+      "status": "planned"
+    },
+    {
+      "id": "fiend-combat-spells-2",
+      "status": "planned"
+    },
+    {
+      "id": "fiend-combat-spells-3",
+      "status": "planned"
+    },
+    {
+      "id": "fiend-combat-spells-4",
+      "status": "planned"
+    },
+    {
+      "id": "fiend-combat-spells-5",
+      "status": "planned"
+    },
+    {
+      "id": "fiendish-resilience",
+      "status": "planned"
+    },
+    {
+      "id": "fighting-style",
+      "status": "planned"
+    },
+    {
+      "id": "fleet-step",
+      "status": "planned"
+    },
+    {
+      "id": "foe-slayer",
+      "status": "planned"
+    },
+    {
+      "id": "font-of-inspiration",
+      "status": "planned"
+    },
+    {
+      "id": "font-of-magic",
+      "status": "planned"
+    },
+    {
+      "id": "greater-divine-intervention",
+      "status": "planned"
+    },
+    {
+      "id": "heightened-focus",
+      "status": "planned"
+    },
+    {
+      "id": "holy-nimbus",
+      "status": "planned"
+    },
+    {
+      "id": "hunter-multiattack-defense",
+      "status": "planned"
+    },
+    {
+      "id": "hunter-prey-colossus-slayer",
+      "status": "planned"
+    },
+    {
+      "id": "hunters-lore",
+      "status": "planned"
+    },
+    {
+      "id": "hunters-mark",
+      "status": "planned"
+    },
+    {
+      "id": "hurl-through-hell",
+      "status": "planned"
+    },
+    {
+      "id": "improved-blessed-strikes",
+      "status": "planned"
+    },
+    {
+      "id": "improved-brutal-strike",
+      "status": "planned"
+    },
+    {
+      "id": "improved-cunning-strike",
+      "status": "planned"
+    },
+    {
+      "id": "improved-elemental-fury",
+      "status": "planned"
+    },
+    {
+      "id": "indomitable-might",
+      "status": "planned"
+    },
+    {
+      "id": "innate-sorcery",
+      "status": "planned"
+    },
+    {
+      "id": "instinctive-pounce",
+      "status": "planned"
+    },
+    {
+      "id": "intimidating-presence",
+      "status": "planned"
+    },
+    {
+      "id": "land-arid-spells",
+      "status": "planned"
+    },
+    {
+      "id": "lands-aid",
+      "status": "planned"
+    },
+    {
+      "id": "magical-cunning",
+      "status": "planned"
+    },
+    {
+      "id": "magical-discoveries",
+      "status": "planned"
+    },
+    {
+      "id": "magical-secrets",
+      "status": "planned"
+    },
+    {
+      "id": "martial-arts",
+      "status": "planned"
+    },
+    {
+      "id": "metamagic",
+      "status": "planned"
+    },
+    {
+      "id": "metamagic-l10",
+      "status": "planned"
+    },
+    {
+      "id": "metamagic-l17",
+      "status": "planned"
+    },
+    {
+      "id": "monks-focus",
+      "status": "planned"
+    },
+    {
+      "id": "mystic-arcanum-6",
+      "status": "planned"
+    },
+    {
+      "id": "mystic-arcanum-7",
+      "status": "planned"
+    },
+    {
+      "id": "mystic-arcanum-8",
+      "status": "planned"
+    },
+    {
+      "id": "mystic-arcanum-9",
+      "status": "planned"
+    },
+    {
+      "id": "natural-recovery",
+      "status": "planned"
+    },
+    {
+      "id": "natures-sanctuary",
+      "status": "planned"
+    },
+    {
+      "id": "natures-veil",
+      "status": "planned"
+    },
+    {
+      "id": "natures-ward-fire",
+      "status": "planned"
+    },
+    {
+      "id": "open-hand-technique",
+      "status": "planned"
+    },
+    {
+      "id": "overchannel",
+      "status": "planned"
+    },
+    {
+      "id": "paladin-epic-boon",
+      "status": "planned"
+    },
+    {
+      "id": "paladins-smite",
+      "status": "planned"
+    },
+    {
+      "id": "peerless-skill",
+      "status": "planned"
+    },
+    {
+      "id": "perfect-focus",
+      "status": "planned"
+    },
+    {
+      "id": "persistent-rage",
+      "status": "planned"
+    },
+    {
+      "id": "potent-cantrip",
+      "status": "planned"
+    },
+    {
+      "id": "precise-hunter",
+      "status": "planned"
+    },
+    {
+      "id": "primal-champion",
+      "status": "planned"
+    },
+    {
+      "id": "quivering-palm",
+      "status": "planned"
+    },
+    {
+      "id": "radiant-strikes",
+      "status": "planned"
+    },
+    {
+      "id": "ranger-combat-spells-2",
+      "status": "planned"
+    },
+    {
+      "id": "ranger-combat-spells-3",
+      "status": "planned"
+    },
+    {
+      "id": "ranger-combat-spells-4",
+      "status": "planned"
+    },
+    {
+      "id": "ranger-combat-spells-5",
+      "status": "planned"
+    },
+    {
+      "id": "ranger-epic-boon",
+      "status": "planned"
+    },
+    {
+      "id": "relentless-hunter",
+      "status": "planned"
+    },
+    {
+      "id": "relentless-rage",
+      "status": "planned"
+    },
+    {
+      "id": "restoring-touch",
+      "status": "planned"
+    },
+    {
+      "id": "retaliation",
+      "status": "planned"
+    },
+    {
+      "id": "rogue-epic-boon",
+      "status": "planned"
+    },
+    {
+      "id": "roving",
+      "status": "planned"
+    },
+    {
+      "id": "sacred-weapon",
+      "status": "planned"
+    },
+    {
+      "id": "sculpt-spells",
+      "status": "planned"
+    },
+    {
+      "id": "sear-undead",
+      "status": "planned"
+    },
+    {
+      "id": "self-restoration",
+      "status": "planned"
+    },
+    {
+      "id": "signature-spells",
+      "status": "planned"
+    },
+    {
+      "id": "slippery-mind",
+      "status": "planned"
+    },
+    {
+      "id": "smite-of-protection",
+      "status": "planned"
+    },
+    {
+      "id": "sorcerer-epic-boon",
+      "status": "planned"
+    },
+    {
+      "id": "sorcerous-restoration",
+      "status": "planned"
+    },
+    {
+      "id": "sorcery-incarnate",
+      "status": "planned"
+    },
+    {
+      "id": "spell-mastery",
+      "status": "planned"
+    },
+    {
+      "id": "steady-aim",
+      "status": "planned"
+    },
+    {
+      "id": "stroke-of-luck",
+      "status": "planned"
+    },
+    {
+      "id": "stunning-strike",
+      "status": "planned"
+    },
+    {
+      "id": "superior-critical",
+      "status": "planned"
+    },
+    {
+      "id": "superior-defense",
+      "status": "planned"
+    },
+    {
+      "id": "superior-hunters-defense",
+      "status": "planned"
+    },
+    {
+      "id": "superior-hunters-prey",
+      "status": "planned"
+    },
+    {
+      "id": "superior-inspiration",
+      "status": "planned"
+    },
+    {
+      "id": "supreme-healing",
+      "status": "planned"
+    },
+    {
+      "id": "survivor-defy-death",
+      "status": "planned"
+    },
+    {
+      "id": "survivor-heroic-rally",
+      "status": "planned"
+    },
+    {
+      "id": "thief-fast-hands",
+      "status": "planned"
+    },
+    {
+      "id": "thief-supreme-sneak",
+      "status": "planned"
+    },
+    {
+      "id": "thief-use-magic-device",
+      "status": "planned"
+    },
+    {
+      "id": "thiefs-reflexes",
+      "status": "planned"
+    },
+    {
+      "id": "tireless",
+      "status": "planned"
+    },
+    {
+      "id": "unarmored-movement",
+      "status": "planned"
+    },
+    {
+      "id": "uncanny-dodge",
+      "status": "planned"
+    },
+    {
+      "id": "uncanny-metabolism",
+      "status": "planned"
+    },
+    {
+      "id": "warlock-epic-boon",
+      "status": "planned"
+    },
+    {
+      "id": "wholeness-of-body",
+      "status": "planned"
+    },
+    {
+      "id": "wild-resurgence",
+      "status": "planned"
+    },
+    {
+      "id": "wild-shape",
+      "status": "planned"
+    },
+    {
+      "id": "wizard-combat-spells-2",
+      "status": "planned"
+    },
+    {
+      "id": "wizard-combat-spells-3",
+      "status": "planned"
+    },
+    {
+      "id": "wizard-combat-spells-4",
+      "status": "planned"
+    },
+    {
+      "id": "wizard-combat-spells-5",
+      "status": "planned"
+    },
+    {
+      "id": "wizard-combat-spells-6",
+      "status": "planned"
+    },
+    {
+      "id": "wizard-combat-spells-7",
+      "status": "planned"
+    },
+    {
+      "id": "wizard-combat-spells-8",
+      "status": "planned"
+    },
+    {
+      "id": "wizard-combat-spells-9",
+      "status": "planned"
+    },
+    {
+      "id": "wizard-epic-boon",
+      "status": "planned"
+    },
+    {
+      "id": "words-of-creation",
+      "status": "planned"
+    }
+  ],
+  "classes": [
+    {
+      "class_id": "barbarian",
+      "first_blocked_level": 7,
+      "hero_name": "Rokhan Stonefury",
+      "level_1_engine_ready": true,
+      "levels": [
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [
+            {
+              "id": "adrenaline-rush",
+              "status": "supported"
+            },
+            {
+              "id": "rage",
+              "status": "supported"
+            },
+            {
+              "id": "relentless-endurance",
+              "status": "supported"
+            },
+            {
+              "id": "savage-attacker",
+              "status": "supported"
+            }
+          ],
+          "level": 1
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [
+            {
+              "id": "danger-sense",
+              "status": "supported"
+            },
+            {
+              "id": "reckless-attack",
+              "status": "supported"
+            }
+          ],
+          "level": 2
+        },
+        {
+          "arena_ignored_introduced": [
+            "primal-knowledge"
+          ],
+          "blockers": [],
+          "introduced_combat_features": [
+            {
+              "id": "frenzy",
+              "status": "supported"
+            }
+          ],
+          "level": 3
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 4
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [
+            {
+              "id": "extra-attack",
+              "status": "supported"
+            },
+            {
+              "id": "fast-movement",
+              "status": "supported"
+            }
+          ],
+          "level": 5
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [
+            {
+              "id": "mindless-rage",
+              "status": "supported"
+            }
+          ],
+          "level": 6
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "instinctive-pounce",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "feral-instinct",
+              "status": "supported"
+            },
+            {
+              "id": "instinctive-pounce",
+              "status": "planned"
+            }
+          ],
+          "level": 7
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 8
+        },
+        {
+          "arena_ignored_introduced": [
+            "hamstring-blow"
+          ],
+          "blockers": [
+            {
+              "id": "brutal-strike",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "brutal-strike",
+              "status": "planned"
+            }
+          ],
+          "level": 9
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "retaliation",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "retaliation",
+              "status": "planned"
+            }
+          ],
+          "level": 10
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "relentless-rage",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "relentless-rage",
+              "status": "planned"
+            }
+          ],
+          "level": 11
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 12
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "improved-brutal-strike",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "improved-brutal-strike",
+              "status": "planned"
+            }
+          ],
+          "level": 13
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "intimidating-presence",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "intimidating-presence",
+              "status": "planned"
+            }
+          ],
+          "level": 14
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "persistent-rage",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "persistent-rage",
+              "status": "planned"
+            }
+          ],
+          "level": 15
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 16
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "brutal-strike-2d10",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "brutal-strike-2d10",
+              "status": "planned"
+            }
+          ],
+          "level": 17
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "indomitable-might",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "indomitable-might",
+              "status": "planned"
+            }
+          ],
+          "level": 18
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "boon-irresistible-offense",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "boon-irresistible-offense",
+              "status": "planned"
+            }
+          ],
+          "level": 19
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "primal-champion",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "primal-champion",
+              "status": "planned"
+            }
+          ],
+          "level": 20
+        }
+      ],
+      "subclass_id": "path-berserker"
+    },
+    {
+      "class_id": "bard",
+      "first_blocked_level": 3,
+      "hero_name": "Lyra Silverstring",
+      "level_1_engine_ready": true,
+      "levels": [
+        {
+          "arena_ignored_introduced": [
+            "bardic-inspiration"
+          ],
+          "blockers": [],
+          "introduced_combat_features": [
+            {
+              "id": "bard-spellcasting",
+              "status": "supported"
+            },
+            {
+              "id": "bardic-inspiration",
+              "status": "arena_out_of_scope"
+            },
+            {
+              "id": "magic-initiate-cleric",
+              "status": "supported"
+            }
+          ],
+          "level": 1
+        },
+        {
+          "arena_ignored_introduced": [
+            "expertise",
+            "jack-of-all-trades"
+          ],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 2
+        },
+        {
+          "arena_ignored_introduced": [
+            "lore-bonus-proficiencies"
+          ],
+          "blockers": [
+            {
+              "id": "bard-combat-spells-2",
+              "status": "planned"
+            },
+            {
+              "id": "cutting-words",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "bard-combat-spells-2",
+              "status": "planned"
+            },
+            {
+              "id": "cutting-words",
+              "status": "planned"
+            }
+          ],
+          "level": 3
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 4
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "bard-combat-spells-3",
+              "status": "planned"
+            },
+            {
+              "id": "font-of-inspiration",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "bard-combat-spells-3",
+              "status": "planned"
+            },
+            {
+              "id": "font-of-inspiration",
+              "status": "planned"
+            }
+          ],
+          "level": 5
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "magical-discoveries",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "magical-discoveries",
+              "status": "planned"
+            }
+          ],
+          "level": 6
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "bard-combat-spells-4",
+              "status": "planned"
+            },
+            {
+              "id": "countercharm",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "bard-combat-spells-4",
+              "status": "planned"
+            },
+            {
+              "id": "countercharm",
+              "status": "planned"
+            }
+          ],
+          "level": 7
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 8
+        },
+        {
+          "arena_ignored_introduced": [
+            "expertise-2"
+          ],
+          "blockers": [
+            {
+              "id": "bard-combat-spells-5",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "bard-combat-spells-5",
+              "status": "planned"
+            }
+          ],
+          "level": 9
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "magical-secrets",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "magical-secrets",
+              "status": "planned"
+            }
+          ],
+          "level": 10
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "bard-combat-spells-6",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "bard-combat-spells-6",
+              "status": "planned"
+            }
+          ],
+          "level": 11
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 12
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "bard-combat-spells-7",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "bard-combat-spells-7",
+              "status": "planned"
+            }
+          ],
+          "level": 13
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "peerless-skill",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "peerless-skill",
+              "status": "planned"
+            }
+          ],
+          "level": 14
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "bard-combat-spells-8",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "bard-combat-spells-8",
+              "status": "planned"
+            }
+          ],
+          "level": 15
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 16
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "bard-combat-spells-9",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "bard-combat-spells-9",
+              "status": "planned"
+            }
+          ],
+          "level": 17
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "superior-inspiration",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "superior-inspiration",
+              "status": "planned"
+            }
+          ],
+          "level": 18
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "boon-spell-recall",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "boon-spell-recall",
+              "status": "planned"
+            }
+          ],
+          "level": 19
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "words-of-creation",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "words-of-creation",
+              "status": "planned"
+            }
+          ],
+          "level": 20
+        }
+      ],
+      "subclass_id": "college-lore"
+    },
+    {
+      "class_id": "cleric",
+      "first_blocked_level": 5,
+      "hero_name": "Seraphine Dawnshield",
+      "level_1_engine_ready": true,
+      "levels": [
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [
+            {
+              "id": "cleric-spellcasting",
+              "status": "supported"
+            },
+            {
+              "id": "divine-order-protector",
+              "status": "supported"
+            }
+          ],
+          "level": 1
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [
+            {
+              "id": "divine-spark",
+              "status": "supported"
+            },
+            {
+              "id": "turn-undead",
+              "status": "supported"
+            }
+          ],
+          "level": 2
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [
+            {
+              "id": "disciple-of-life",
+              "status": "supported"
+            },
+            {
+              "id": "preserve-life",
+              "status": "supported"
+            }
+          ],
+          "level": 3
+        },
+        {
+          "arena_ignored_introduced": [
+            "mending"
+          ],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 4
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "cleric-combat-spells-3",
+              "status": "planned"
+            },
+            {
+              "id": "sear-undead",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "cleric-combat-spells-3",
+              "status": "planned"
+            },
+            {
+              "id": "sear-undead",
+              "status": "planned"
+            }
+          ],
+          "level": 5
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "blessed-healer",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "blessed-healer",
+              "status": "planned"
+            }
+          ],
+          "level": 6
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "blessed-strikes",
+              "status": "planned"
+            },
+            {
+              "id": "cleric-combat-spells-4",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "blessed-strikes",
+              "status": "planned"
+            },
+            {
+              "id": "cleric-combat-spells-4",
+              "status": "planned"
+            }
+          ],
+          "level": 7
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 8
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "cleric-combat-spells-5",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "cleric-combat-spells-5",
+              "status": "planned"
+            }
+          ],
+          "level": 9
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "divine-intervention",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "divine-intervention",
+              "status": "planned"
+            }
+          ],
+          "level": 10
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "cleric-combat-spells-6",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "cleric-combat-spells-6",
+              "status": "planned"
+            }
+          ],
+          "level": 11
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 12
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "cleric-combat-spells-7",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "cleric-combat-spells-7",
+              "status": "planned"
+            }
+          ],
+          "level": 13
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "improved-blessed-strikes",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "improved-blessed-strikes",
+              "status": "planned"
+            }
+          ],
+          "level": 14
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "cleric-combat-spells-8",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "cleric-combat-spells-8",
+              "status": "planned"
+            }
+          ],
+          "level": 15
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 16
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "cleric-combat-spells-9",
+              "status": "planned"
+            },
+            {
+              "id": "supreme-healing",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "cleric-combat-spells-9",
+              "status": "planned"
+            },
+            {
+              "id": "supreme-healing",
+              "status": "planned"
+            }
+          ],
+          "level": 17
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 18
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "boon-of-fate",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "boon-of-fate",
+              "status": "planned"
+            }
+          ],
+          "level": 19
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "greater-divine-intervention",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "greater-divine-intervention",
+              "status": "planned"
+            }
+          ],
+          "level": 20
+        }
+      ],
+      "subclass_id": "life-domain"
+    },
+    {
+      "class_id": "druid",
+      "first_blocked_level": 2,
+      "hero_name": "Thalen Greenbough",
+      "level_1_engine_ready": true,
+      "levels": [
+        {
+          "arena_ignored_introduced": [
+            "druidic",
+            "speak-with-animals"
+          ],
+          "blockers": [],
+          "introduced_combat_features": [
+            {
+              "id": "druid-spellcasting",
+              "status": "supported"
+            },
+            {
+              "id": "magic-initiate-cleric",
+              "status": "supported"
+            },
+            {
+              "id": "primal-order-warden",
+              "status": "supported"
+            }
+          ],
+          "level": 1
+        },
+        {
+          "arena_ignored_introduced": [
+            "wild-companion"
+          ],
+          "blockers": [
+            {
+              "id": "wild-shape",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "wild-shape",
+              "status": "planned"
+            }
+          ],
+          "level": 2
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "druid-combat-spells-2",
+              "status": "planned"
+            },
+            {
+              "id": "land-arid-spells",
+              "status": "planned"
+            },
+            {
+              "id": "lands-aid",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "druid-combat-spells-2",
+              "status": "planned"
+            },
+            {
+              "id": "land-arid-spells",
+              "status": "planned"
+            },
+            {
+              "id": "lands-aid",
+              "status": "planned"
+            }
+          ],
+          "level": 3
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 4
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "druid-combat-spells-3",
+              "status": "planned"
+            },
+            {
+              "id": "wild-resurgence",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "druid-combat-spells-3",
+              "status": "planned"
+            },
+            {
+              "id": "wild-resurgence",
+              "status": "planned"
+            }
+          ],
+          "level": 5
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "natural-recovery",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "natural-recovery",
+              "status": "planned"
+            }
+          ],
+          "level": 6
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "druid-combat-spells-4",
+              "status": "planned"
+            },
+            {
+              "id": "elemental-fury",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "druid-combat-spells-4",
+              "status": "planned"
+            },
+            {
+              "id": "elemental-fury",
+              "status": "planned"
+            }
+          ],
+          "level": 7
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 8
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "druid-combat-spells-5",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "druid-combat-spells-5",
+              "status": "planned"
+            }
+          ],
+          "level": 9
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "natures-ward-fire",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "natures-ward-fire",
+              "status": "planned"
+            }
+          ],
+          "level": 10
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "druid-combat-spells-6",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "druid-combat-spells-6",
+              "status": "planned"
+            }
+          ],
+          "level": 11
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 12
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "druid-combat-spells-7",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "druid-combat-spells-7",
+              "status": "planned"
+            }
+          ],
+          "level": 13
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "natures-sanctuary",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "natures-sanctuary",
+              "status": "planned"
+            }
+          ],
+          "level": 14
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "druid-combat-spells-8",
+              "status": "planned"
+            },
+            {
+              "id": "improved-elemental-fury",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "druid-combat-spells-8",
+              "status": "planned"
+            },
+            {
+              "id": "improved-elemental-fury",
+              "status": "planned"
+            }
+          ],
+          "level": 15
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 16
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "druid-combat-spells-9",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "druid-combat-spells-9",
+              "status": "planned"
+            }
+          ],
+          "level": 17
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "beast-spells",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "beast-spells",
+              "status": "planned"
+            }
+          ],
+          "level": 18
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "boon-dimensional-travel",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "boon-dimensional-travel",
+              "status": "planned"
+            }
+          ],
+          "level": 19
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "archdruid",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "archdruid",
+              "status": "planned"
+            }
+          ],
+          "level": 20
+        }
+      ],
+      "subclass_id": "circle-land"
+    },
+    {
+      "class_id": "fighter",
+      "first_blocked_level": 15,
+      "hero_name": "Karnok Stoneward",
+      "level_1_engine_ready": true,
+      "levels": [
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [
+            {
+              "id": "adrenaline-rush",
+              "status": "supported"
+            },
+            {
+              "id": "relentless-endurance",
+              "status": "supported"
+            },
+            {
+              "id": "savage-attacker",
+              "status": "supported"
+            },
+            {
+              "id": "second-wind",
+              "status": "supported"
+            }
+          ],
+          "level": 1
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [
+            {
+              "id": "action-surge",
+              "status": "supported"
+            },
+            {
+              "id": "tactical-mind",
+              "status": "supported"
+            }
+          ],
+          "level": 2
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [
+            {
+              "id": "improved-critical",
+              "status": "supported"
+            },
+            {
+              "id": "remarkable-athlete",
+              "status": "supported"
+            }
+          ],
+          "level": 3
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 4
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [
+            {
+              "id": "extra-attack",
+              "status": "supported"
+            },
+            {
+              "id": "tactical-shift",
+              "status": "supported"
+            }
+          ],
+          "level": 5
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 6
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [
+            {
+              "id": "great-weapon-fighting",
+              "status": "supported"
+            }
+          ],
+          "level": 7
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 8
+        },
+        {
+          "arena_ignored_introduced": [
+            "tactical-master-push",
+            "tactical-master-slow"
+          ],
+          "blockers": [],
+          "introduced_combat_features": [
+            {
+              "id": "indomitable",
+              "status": "supported"
+            },
+            {
+              "id": "tactical-master",
+              "status": "supported"
+            }
+          ],
+          "level": 9
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [
+            {
+              "id": "heroic-warrior",
+              "status": "supported"
+            }
+          ],
+          "level": 10
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 11
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 12
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [
+            {
+              "id": "studied-attacks",
+              "status": "supported"
+            }
+          ],
+          "level": 13
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 14
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "superior-critical",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "superior-critical",
+              "status": "planned"
+            }
+          ],
+          "level": 15
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 16
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 17
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "survivor-defy-death",
+              "status": "planned"
+            },
+            {
+              "id": "survivor-heroic-rally",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "survivor-defy-death",
+              "status": "planned"
+            },
+            {
+              "id": "survivor-heroic-rally",
+              "status": "planned"
+            }
+          ],
+          "level": 18
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "boon-combat-prowess",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "boon-combat-prowess",
+              "status": "planned"
+            }
+          ],
+          "level": 19
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 20
+        }
+      ],
+      "subclass_id": "champion"
+    },
+    {
+      "class_id": "monk",
+      "first_blocked_level": 1,
+      "hero_name": "Kael Stillwater",
+      "level_1_engine_ready": false,
+      "levels": [
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "martial-arts",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "martial-arts",
+              "status": "planned"
+            },
+            {
+              "id": "unarmored-defense",
+              "status": "supported"
+            }
+          ],
+          "level": 1
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "monks-focus",
+              "status": "planned"
+            },
+            {
+              "id": "unarmored-movement",
+              "status": "planned"
+            },
+            {
+              "id": "uncanny-metabolism",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "monks-focus",
+              "status": "planned"
+            },
+            {
+              "id": "unarmored-movement",
+              "status": "planned"
+            },
+            {
+              "id": "uncanny-metabolism",
+              "status": "planned"
+            }
+          ],
+          "level": 2
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "deflect-attacks",
+              "status": "planned"
+            },
+            {
+              "id": "open-hand-technique",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "deflect-attacks",
+              "status": "planned"
+            },
+            {
+              "id": "open-hand-technique",
+              "status": "planned"
+            }
+          ],
+          "level": 3
+        },
+        {
+          "arena_ignored_introduced": [
+            "slow-fall"
+          ],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 4
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "stunning-strike",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "extra-attack",
+              "status": "supported"
+            },
+            {
+              "id": "stunning-strike",
+              "status": "planned"
+            }
+          ],
+          "level": 5
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "empowered-strikes",
+              "status": "planned"
+            },
+            {
+              "id": "wholeness-of-body",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "empowered-strikes",
+              "status": "planned"
+            },
+            {
+              "id": "wholeness-of-body",
+              "status": "planned"
+            }
+          ],
+          "level": 6
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "evasion",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "evasion",
+              "status": "planned"
+            }
+          ],
+          "level": 7
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 8
+        },
+        {
+          "arena_ignored_introduced": [
+            "acrobatic-movement"
+          ],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 9
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "heightened-focus",
+              "status": "planned"
+            },
+            {
+              "id": "self-restoration",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "heightened-focus",
+              "status": "planned"
+            },
+            {
+              "id": "self-restoration",
+              "status": "planned"
+            }
+          ],
+          "level": 10
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "fleet-step",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "fleet-step",
+              "status": "planned"
+            }
+          ],
+          "level": 11
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 12
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "deflect-energy",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "deflect-energy",
+              "status": "planned"
+            }
+          ],
+          "level": 13
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "disciplined-survivor",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "disciplined-survivor",
+              "status": "planned"
+            }
+          ],
+          "level": 14
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "perfect-focus",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "perfect-focus",
+              "status": "planned"
+            }
+          ],
+          "level": 15
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 16
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "quivering-palm",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "quivering-palm",
+              "status": "planned"
+            }
+          ],
+          "level": 17
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "superior-defense",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "superior-defense",
+              "status": "planned"
+            }
+          ],
+          "level": 18
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "boon-irresistible-offense",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "boon-irresistible-offense",
+              "status": "planned"
+            }
+          ],
+          "level": 19
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "body-and-mind",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "body-and-mind",
+              "status": "planned"
+            }
+          ],
+          "level": 20
+        }
+      ],
+      "subclass_id": "warrior-open-hand"
+    },
+    {
+      "class_id": "paladin",
+      "first_blocked_level": 2,
+      "hero_name": "Aurelia Brightshield",
+      "level_1_engine_ready": true,
+      "levels": [
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [
+            {
+              "id": "lay-on-hands",
+              "status": "supported"
+            },
+            {
+              "id": "paladin-spellcasting",
+              "status": "supported"
+            },
+            {
+              "id": "weapon-mastery",
+              "status": "supported"
+            }
+          ],
+          "level": 1
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "fighting-style",
+              "status": "planned"
+            },
+            {
+              "id": "paladins-smite",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "fighting-style",
+              "status": "planned"
+            },
+            {
+              "id": "paladins-smite",
+              "status": "planned"
+            }
+          ],
+          "level": 2
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "channel-divinity",
+              "status": "planned"
+            },
+            {
+              "id": "devotion-combat-spells-1",
+              "status": "planned"
+            },
+            {
+              "id": "sacred-weapon",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "channel-divinity",
+              "status": "planned"
+            },
+            {
+              "id": "devotion-combat-spells-1",
+              "status": "planned"
+            },
+            {
+              "id": "sacred-weapon",
+              "status": "planned"
+            }
+          ],
+          "level": 3
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 4
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "devotion-combat-spells-2",
+              "status": "planned"
+            },
+            {
+              "id": "faithful-steed",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "devotion-combat-spells-2",
+              "status": "planned"
+            },
+            {
+              "id": "extra-attack",
+              "status": "supported"
+            },
+            {
+              "id": "faithful-steed",
+              "status": "planned"
+            }
+          ],
+          "level": 5
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "aura-of-protection",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "aura-of-protection",
+              "status": "planned"
+            }
+          ],
+          "level": 6
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "aura-of-devotion",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "aura-of-devotion",
+              "status": "planned"
+            }
+          ],
+          "level": 7
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 8
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "abjure-foes",
+              "status": "planned"
+            },
+            {
+              "id": "devotion-combat-spells-3",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "abjure-foes",
+              "status": "planned"
+            },
+            {
+              "id": "devotion-combat-spells-3",
+              "status": "planned"
+            }
+          ],
+          "level": 9
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "aura-of-courage",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "aura-of-courage",
+              "status": "planned"
+            }
+          ],
+          "level": 10
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "radiant-strikes",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "radiant-strikes",
+              "status": "planned"
+            }
+          ],
+          "level": 11
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 12
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "devotion-combat-spells-4",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "devotion-combat-spells-4",
+              "status": "planned"
+            }
+          ],
+          "level": 13
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "restoring-touch",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "restoring-touch",
+              "status": "planned"
+            }
+          ],
+          "level": 14
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "smite-of-protection",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "smite-of-protection",
+              "status": "planned"
+            }
+          ],
+          "level": 15
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 16
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "devotion-combat-spells-5",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "devotion-combat-spells-5",
+              "status": "planned"
+            }
+          ],
+          "level": 17
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "aura-expansion",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "aura-expansion",
+              "status": "planned"
+            }
+          ],
+          "level": 18
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "paladin-epic-boon",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "paladin-epic-boon",
+              "status": "planned"
+            }
+          ],
+          "level": 19
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "holy-nimbus",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "holy-nimbus",
+              "status": "planned"
+            }
+          ],
+          "level": 20
+        }
+      ],
+      "subclass_id": "oath-devotion"
+    },
+    {
+      "class_id": "ranger",
+      "first_blocked_level": 1,
+      "hero_name": "Rowan Ashtrail",
+      "level_1_engine_ready": false,
+      "levels": [
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "hunters-mark",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "hunters-mark",
+              "status": "planned"
+            },
+            {
+              "id": "ranger-spellcasting",
+              "status": "supported"
+            },
+            {
+              "id": "weapon-mastery",
+              "status": "supported"
+            }
+          ],
+          "level": 1
+        },
+        {
+          "arena_ignored_introduced": [
+            "deft-explorer"
+          ],
+          "blockers": [
+            {
+              "id": "fighting-style",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "fighting-style",
+              "status": "planned"
+            }
+          ],
+          "level": 2
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "hunter-prey-colossus-slayer",
+              "status": "planned"
+            },
+            {
+              "id": "hunters-lore",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "hunter-prey-colossus-slayer",
+              "status": "planned"
+            },
+            {
+              "id": "hunters-lore",
+              "status": "planned"
+            }
+          ],
+          "level": 3
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 4
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "ranger-combat-spells-2",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "extra-attack",
+              "status": "supported"
+            },
+            {
+              "id": "ranger-combat-spells-2",
+              "status": "planned"
+            }
+          ],
+          "level": 5
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "roving",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "roving",
+              "status": "planned"
+            }
+          ],
+          "level": 6
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "hunter-multiattack-defense",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "hunter-multiattack-defense",
+              "status": "planned"
+            }
+          ],
+          "level": 7
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 8
+        },
+        {
+          "arena_ignored_introduced": [
+            "expertise"
+          ],
+          "blockers": [
+            {
+              "id": "ranger-combat-spells-3",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "ranger-combat-spells-3",
+              "status": "planned"
+            }
+          ],
+          "level": 9
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "tireless",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "tireless",
+              "status": "planned"
+            }
+          ],
+          "level": 10
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "superior-hunters-prey",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "superior-hunters-prey",
+              "status": "planned"
+            }
+          ],
+          "level": 11
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 12
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "ranger-combat-spells-4",
+              "status": "planned"
+            },
+            {
+              "id": "relentless-hunter",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "ranger-combat-spells-4",
+              "status": "planned"
+            },
+            {
+              "id": "relentless-hunter",
+              "status": "planned"
+            }
+          ],
+          "level": 13
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "natures-veil",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "natures-veil",
+              "status": "planned"
+            }
+          ],
+          "level": 14
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "superior-hunters-defense",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "superior-hunters-defense",
+              "status": "planned"
+            }
+          ],
+          "level": 15
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 16
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "precise-hunter",
+              "status": "planned"
+            },
+            {
+              "id": "ranger-combat-spells-5",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "precise-hunter",
+              "status": "planned"
+            },
+            {
+              "id": "ranger-combat-spells-5",
+              "status": "planned"
+            }
+          ],
+          "level": 17
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "feral-senses",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "feral-senses",
+              "status": "planned"
+            }
+          ],
+          "level": 18
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "ranger-epic-boon",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "ranger-epic-boon",
+              "status": "planned"
+            }
+          ],
+          "level": 19
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "foe-slayer",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "foe-slayer",
+              "status": "planned"
+            }
+          ],
+          "level": 20
+        }
+      ],
+      "subclass_id": "hunter"
+    },
+    {
+      "class_id": "rogue",
+      "first_blocked_level": 2,
+      "hero_name": "Mara Quickstep",
+      "level_1_engine_ready": true,
+      "levels": [
+        {
+          "arena_ignored_introduced": [
+            "expertise",
+            "thieves-cant"
+          ],
+          "blockers": [],
+          "introduced_combat_features": [
+            {
+              "id": "sneak-attack",
+              "status": "supported"
+            },
+            {
+              "id": "weapon-mastery",
+              "status": "supported"
+            }
+          ],
+          "level": 1
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "cunning-action",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "cunning-action",
+              "status": "planned"
+            }
+          ],
+          "level": 2
+        },
+        {
+          "arena_ignored_introduced": [
+            "thief-second-story-work"
+          ],
+          "blockers": [
+            {
+              "id": "steady-aim",
+              "status": "planned"
+            },
+            {
+              "id": "thief-fast-hands",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "steady-aim",
+              "status": "planned"
+            },
+            {
+              "id": "thief-fast-hands",
+              "status": "planned"
+            }
+          ],
+          "level": 3
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 4
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "cunning-strike",
+              "status": "planned"
+            },
+            {
+              "id": "uncanny-dodge",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "cunning-strike",
+              "status": "planned"
+            },
+            {
+              "id": "uncanny-dodge",
+              "status": "planned"
+            }
+          ],
+          "level": 5
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 6
+        },
+        {
+          "arena_ignored_introduced": [
+            "reliable-talent"
+          ],
+          "blockers": [
+            {
+              "id": "evasion",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "evasion",
+              "status": "planned"
+            }
+          ],
+          "level": 7
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 8
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "thief-supreme-sneak",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "thief-supreme-sneak",
+              "status": "planned"
+            }
+          ],
+          "level": 9
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 10
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "improved-cunning-strike",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "improved-cunning-strike",
+              "status": "planned"
+            }
+          ],
+          "level": 11
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 12
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "thief-use-magic-device",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "thief-use-magic-device",
+              "status": "planned"
+            }
+          ],
+          "level": 13
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "devious-strikes",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "devious-strikes",
+              "status": "planned"
+            }
+          ],
+          "level": 14
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "slippery-mind",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "slippery-mind",
+              "status": "planned"
+            }
+          ],
+          "level": 15
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 16
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "thiefs-reflexes",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "thiefs-reflexes",
+              "status": "planned"
+            }
+          ],
+          "level": 17
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "elusive",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "elusive",
+              "status": "planned"
+            }
+          ],
+          "level": 18
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "rogue-epic-boon",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "rogue-epic-boon",
+              "status": "planned"
+            }
+          ],
+          "level": 19
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "stroke-of-luck",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "stroke-of-luck",
+              "status": "planned"
+            }
+          ],
+          "level": 20
+        }
+      ],
+      "subclass_id": "thief"
+    },
+    {
+      "class_id": "sorcerer",
+      "first_blocked_level": 1,
+      "hero_name": "Nyra Emberveil",
+      "level_1_engine_ready": false,
+      "levels": [
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "innate-sorcery",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "innate-sorcery",
+              "status": "planned"
+            },
+            {
+              "id": "sorcerer-spellcasting",
+              "status": "supported"
+            }
+          ],
+          "level": 1
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "font-of-magic",
+              "status": "planned"
+            },
+            {
+              "id": "metamagic",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "font-of-magic",
+              "status": "planned"
+            },
+            {
+              "id": "metamagic",
+              "status": "planned"
+            }
+          ],
+          "level": 2
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "draconic-resilience",
+              "status": "planned"
+            },
+            {
+              "id": "draconic-spells",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "draconic-resilience",
+              "status": "planned"
+            },
+            {
+              "id": "draconic-spells",
+              "status": "planned"
+            }
+          ],
+          "level": 3
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 4
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "sorcerous-restoration",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "sorcerous-restoration",
+              "status": "planned"
+            }
+          ],
+          "level": 5
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "elemental-affinity-fire",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "elemental-affinity-fire",
+              "status": "planned"
+            }
+          ],
+          "level": 6
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "sorcery-incarnate",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "sorcery-incarnate",
+              "status": "planned"
+            }
+          ],
+          "level": 7
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 8
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 9
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "metamagic-l10",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "metamagic-l10",
+              "status": "planned"
+            }
+          ],
+          "level": 10
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 11
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 12
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 13
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "dragon-wings",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "dragon-wings",
+              "status": "planned"
+            }
+          ],
+          "level": 14
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 15
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 16
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "metamagic-l17",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "metamagic-l17",
+              "status": "planned"
+            }
+          ],
+          "level": 17
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "dragon-companion",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "dragon-companion",
+              "status": "planned"
+            }
+          ],
+          "level": 18
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "sorcerer-epic-boon",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "sorcerer-epic-boon",
+              "status": "planned"
+            }
+          ],
+          "level": 19
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "arcane-apotheosis",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "arcane-apotheosis",
+              "status": "planned"
+            }
+          ],
+          "level": 20
+        }
+      ],
+      "subclass_id": "draconic-sorcery"
+    },
+    {
+      "class_id": "warlock",
+      "first_blocked_level": 2,
+      "hero_name": "Varek Ashenmark",
+      "level_1_engine_ready": true,
+      "levels": [
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [
+            {
+              "id": "eldritch-invocations",
+              "status": "supported"
+            },
+            {
+              "id": "pact-magic",
+              "status": "supported"
+            }
+          ],
+          "level": 1
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "magical-cunning",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "magical-cunning",
+              "status": "planned"
+            }
+          ],
+          "level": 2
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "dark-ones-blessing",
+              "status": "planned"
+            },
+            {
+              "id": "fiend-combat-spells-2",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "dark-ones-blessing",
+              "status": "planned"
+            },
+            {
+              "id": "fiend-combat-spells-2",
+              "status": "planned"
+            }
+          ],
+          "level": 3
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 4
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "fiend-combat-spells-3",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "fiend-combat-spells-3",
+              "status": "planned"
+            }
+          ],
+          "level": 5
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "dark-ones-own-luck",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "dark-ones-own-luck",
+              "status": "planned"
+            }
+          ],
+          "level": 6
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "fiend-combat-spells-4",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "fiend-combat-spells-4",
+              "status": "planned"
+            }
+          ],
+          "level": 7
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 8
+        },
+        {
+          "arena_ignored_introduced": [
+            "contact-patron"
+          ],
+          "blockers": [
+            {
+              "id": "fiend-combat-spells-5",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "fiend-combat-spells-5",
+              "status": "planned"
+            }
+          ],
+          "level": 9
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "fiendish-resilience",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "fiendish-resilience",
+              "status": "planned"
+            }
+          ],
+          "level": 10
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "mystic-arcanum-6",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "mystic-arcanum-6",
+              "status": "planned"
+            }
+          ],
+          "level": 11
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 12
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "mystic-arcanum-7",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "mystic-arcanum-7",
+              "status": "planned"
+            }
+          ],
+          "level": 13
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "hurl-through-hell",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "hurl-through-hell",
+              "status": "planned"
+            }
+          ],
+          "level": 14
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "mystic-arcanum-8",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "mystic-arcanum-8",
+              "status": "planned"
+            }
+          ],
+          "level": 15
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 16
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "mystic-arcanum-9",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "mystic-arcanum-9",
+              "status": "planned"
+            }
+          ],
+          "level": 17
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 18
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "warlock-epic-boon",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "warlock-epic-boon",
+              "status": "planned"
+            }
+          ],
+          "level": 19
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "eldritch-master",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "eldritch-master",
+              "status": "planned"
+            }
+          ],
+          "level": 20
+        }
+      ],
+      "subclass_id": "fiend-patron"
+    },
+    {
+      "class_id": "wizard",
+      "first_blocked_level": 3,
+      "hero_name": "Elian Starweaver",
+      "level_1_engine_ready": true,
+      "levels": [
+        {
+          "arena_ignored_introduced": [
+            "arcane-recovery",
+            "ritual-adept"
+          ],
+          "blockers": [],
+          "introduced_combat_features": [
+            {
+              "id": "wizard-spellcasting",
+              "status": "supported"
+            }
+          ],
+          "level": 1
+        },
+        {
+          "arena_ignored_introduced": [
+            "scholar"
+          ],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 2
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "evocation-savant",
+              "status": "planned"
+            },
+            {
+              "id": "potent-cantrip",
+              "status": "planned"
+            },
+            {
+              "id": "wizard-combat-spells-2",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "evocation-savant",
+              "status": "planned"
+            },
+            {
+              "id": "potent-cantrip",
+              "status": "planned"
+            },
+            {
+              "id": "wizard-combat-spells-2",
+              "status": "planned"
+            }
+          ],
+          "level": 3
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 4
+        },
+        {
+          "arena_ignored_introduced": [
+            "memorize-spell"
+          ],
+          "blockers": [
+            {
+              "id": "wizard-combat-spells-3",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "wizard-combat-spells-3",
+              "status": "planned"
+            }
+          ],
+          "level": 5
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "sculpt-spells",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "sculpt-spells",
+              "status": "planned"
+            }
+          ],
+          "level": 6
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "wizard-combat-spells-4",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "wizard-combat-spells-4",
+              "status": "planned"
+            }
+          ],
+          "level": 7
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 8
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "wizard-combat-spells-5",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "wizard-combat-spells-5",
+              "status": "planned"
+            }
+          ],
+          "level": 9
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "empowered-evocation",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "empowered-evocation",
+              "status": "planned"
+            }
+          ],
+          "level": 10
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "wizard-combat-spells-6",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "wizard-combat-spells-6",
+              "status": "planned"
+            }
+          ],
+          "level": 11
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 12
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "wizard-combat-spells-7",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "wizard-combat-spells-7",
+              "status": "planned"
+            }
+          ],
+          "level": 13
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "overchannel",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "overchannel",
+              "status": "planned"
+            }
+          ],
+          "level": 14
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "wizard-combat-spells-8",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "wizard-combat-spells-8",
+              "status": "planned"
+            }
+          ],
+          "level": 15
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [],
+          "introduced_combat_features": [],
+          "level": 16
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "wizard-combat-spells-9",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "wizard-combat-spells-9",
+              "status": "planned"
+            }
+          ],
+          "level": 17
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "spell-mastery",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "spell-mastery",
+              "status": "planned"
+            }
+          ],
+          "level": 18
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "wizard-epic-boon",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "wizard-epic-boon",
+              "status": "planned"
+            }
+          ],
+          "level": 19
+        },
+        {
+          "arena_ignored_introduced": [],
+          "blockers": [
+            {
+              "id": "signature-spells",
+              "status": "planned"
+            }
+          ],
+          "introduced_combat_features": [
+            {
+              "id": "signature-spells",
+              "status": "planned"
+            }
+          ],
+          "level": 20
+        }
+      ],
+      "subclass_id": "evoker"
+    }
+  ],
+  "purpose": "Audit the 12 canonical pregens from level 1 through 20 against universal Iron Pit combat mechanics.",
+  "ruleset": "srd-5.2.1-2024",
+  "schema_version": 1,
+  "summary": {
+    "canonical_classes": 12,
+    "feature_statuses": {
+      "arena_out_of_scope": 1,
+      "planned": 183,
+      "supported": 42
+    },
+    "level_1_engine_ready_classes": 9,
+    "level_slots": 240,
+    "unique_blocking_features": 183,
+    "unique_combat_features": 226
+  }
+}

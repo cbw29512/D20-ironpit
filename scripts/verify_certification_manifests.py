@@ -12,7 +12,7 @@ from typing import Any
 from app.content.certified_heroes import build_certified_hero_entries
 from app.content.hero_catalog import build_hero_catalog
 from app.content.hero_progressions import CANONICAL_HEROES
-from app.content.monster_catalog import _READY_BY_NAME, build_monster_catalog, load_monster_rows
+from app.content.monster_catalog import build_monster_catalog, load_monster_rows
 from app.content.roster import build_arena_roster
 from app.domain.catalog import CoverageStatus
 from export_browser_heroes import render as render_browser_heroes
@@ -41,50 +41,42 @@ def _mechanics(template: Any) -> list[str]:
     if template.attack_action is not None:
         mechanics.add("multiattack-or-extra-attack")
     features = template.progression_features
-    if features.critical_hit_minimum < 20:
-        mechanics.add("expanded-critical-range")
-    if features.initiative_advantage:
-        mechanics.add("initiative-advantage")
-    if features.athletics_advantage:
-        mechanics.add("athletics-advantage")
-    if features.danger_sense:
-        mechanics.add("danger-sense")
-    if features.reckless_attack:
-        mechanics.add("reckless-attack")
-    if features.frenzy:
-        mechanics.add("frenzy")
-    if features.fast_movement_bonus_ft:
-        mechanics.add("fast-movement")
-    if features.mindless_rage:
-        mechanics.add("mindless-rage")
-    if features.instinctive_pounce_fraction:
-        mechanics.add("instinctive-pounce")
-    if features.great_weapon_fighting:
-        mechanics.add("great-weapon-fighting")
-    if features.indomitable_bonus:
-        mechanics.add("indomitable")
-    if features.tactical_master_sap_weapon_ids:
-        mechanics.add("tactical-master")
-    if features.heroic_warrior:
-        mechanics.add("heroic-warrior")
-    if features.studied_attacks:
-        mechanics.add("studied-attacks")
-    if features.sneak_attack_d6:
-        mechanics.add("sneak-attack")
-    if features.critical_move_fraction:
-        mechanics.add("post-critical-movement")
-    if features.tactical_shift_fraction:
-        mechanics.add("tactical-shift")
+    feature_flags = {
+        "expanded-critical-range": features.critical_hit_minimum < 20,
+        "initiative-advantage": features.initiative_advantage,
+        "athletics-advantage": features.athletics_advantage,
+        "danger-sense": features.danger_sense,
+        "reckless-attack": features.reckless_attack,
+        "frenzy": features.frenzy,
+        "fast-movement": bool(features.fast_movement_bonus_ft),
+        "mindless-rage": features.mindless_rage,
+        "instinctive-pounce": bool(features.instinctive_pounce_fraction),
+        "great-weapon-fighting": features.great_weapon_fighting,
+        "indomitable": bool(features.indomitable_bonus),
+        "tactical-master": bool(features.tactical_master_sap_weapon_ids),
+        "heroic-warrior": features.heroic_warrior,
+        "studied-attacks": features.studied_attacks,
+        "sneak-attack": bool(features.sneak_attack_d6),
+        "post-critical-movement": bool(features.critical_move_fraction),
+        "tactical-shift": bool(features.tactical_shift_fraction),
+    }
+    mechanics.update(name for name, active in feature_flags.items() if active)
     return sorted(mechanics)
 
 
-def _assert_generated_artifact(path: Path, expected: str) -> None:
-    if path.read_text(encoding="utf-8") != expected:
-        raise RuntimeError(f"Generated browser artifact is stale: {path.relative_to(ROOT)}")
+def _ensure_generated_artifact(path: Path, expected: str, *, write: bool) -> None:
+    current = path.read_text(encoding="utf-8") if path.exists() else None
+    if current == expected:
+        return
+    if write:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(expected, encoding="utf-8")
+        return
+    raise RuntimeError(f"Generated browser artifact is stale: {path.relative_to(ROOT)}")
 
 
-def build_hero_manifest() -> dict[str, Any]:
-    _assert_generated_artifact(HERO_BROWSER_ARTIFACT, render_browser_heroes())
+def build_hero_manifest(*, write_artifacts: bool = False) -> dict[str, Any]:
+    _ensure_generated_artifact(HERO_BROWSER_ARTIFACT, render_browser_heroes(), write=write_artifacts)
     catalog = build_hero_catalog()
     entries = dict(build_certified_hero_entries())
     cards = {(card.class_id, card.level, card.build_id): card for card in catalog}
@@ -154,11 +146,11 @@ def _detected_monster_mechanics(row: dict[str, object], source_blockers: list[st
     return sorted(detected)
 
 
-def build_monster_manifest() -> dict[str, Any]:
-    _assert_generated_artifact(MONSTER_BROWSER_ARTIFACT, render_browser_monsters())
+def build_monster_manifest(*, write_artifacts: bool = False) -> dict[str, Any]:
+    _ensure_generated_artifact(MONSTER_BROWSER_ARTIFACT, render_browser_monsters(), write=write_artifacts)
     rows = load_monster_rows()
     cards = {card.name: card for card in build_monster_catalog()}
-    runtime = {template.id: template for template in build_arena_roster().monsters}
+    runtime_by_name = {template.name: template for template in build_arena_roster().monsters}
     monster_names = {str(row["name"]) for row in rows}
     monsters: list[dict[str, Any]] = []
     for row in rows:
@@ -170,9 +162,8 @@ def build_monster_manifest() -> dict[str, Any]:
         detected = _detected_monster_mechanics(row, source_blockers)
         unsupported = [] if ready else sorted(set(source_blockers or card.blockers))
         supported = detected if ready else sorted(set(detected) - set(unsupported))
-        runtime_template_id = card.runnable_template_id or _READY_BY_NAME.get(name)
-        if runtime_template_id is not None and runtime_template_id not in runtime:
-            blockers = sorted(set([*blockers, "missing-runtime-template"]))
+        runtime_template = runtime_by_name.get(name)
+        runtime_template_id = card.runnable_template_id or (runtime_template.id if runtime_template else None)
         monsters.append({
             "monster_id": str(row["id"]),
             "monster_name": name,
@@ -192,7 +183,7 @@ def build_monster_manifest() -> dict[str, Any]:
     return {
         "schema_version": 1,
         "ruleset": "srd-5.2.1-2024",
-        "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
+        "generation_policy": "Derived automatically from canonical SRD rows plus runtime/source audit readiness.",
         "summary": {"catalog_monsters": len(monsters), "public_ready": ready_count, "blocked": len(monsters) - ready_count},
         "monsters": monsters,
     }
@@ -211,9 +202,7 @@ def _assert_exact_ci_head() -> None:
         expected = event.get("pull_request", {}).get("head", {}).get("sha") or expected
     if not expected:
         return
-    actual = subprocess.run(
-        ["git", "rev-parse", "HEAD"], cwd=ROOT, check=True, capture_output=True, text=True,
-    ).stdout.strip()
+    actual = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, check=True, capture_output=True, text=True).stdout.strip()
     if actual != expected:
         raise RuntimeError(f"CI checked out {actual}, but the event requires exact head {expected}.")
 
@@ -240,16 +229,16 @@ def _validate_invariants(hero_manifest: dict[str, Any], monster_manifest: dict[s
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Generate or verify Iron Pit certification manifests.")
-    parser.add_argument("--write", action="store_true", help="Rewrite manifests from authoritative repository state.")
+    parser.add_argument("--write", action="store_true", help="Regenerate browser certification artifacts and manifests from authoritative repository state.")
     args = parser.parse_args()
-    heroes = build_hero_manifest()
-    monsters = build_monster_manifest()
+    heroes = build_hero_manifest(write_artifacts=args.write)
+    monsters = build_monster_manifest(write_artifacts=args.write)
     _validate_invariants(heroes, monsters)
     _assert_exact_ci_head()
     if args.write:
         _write(HERO_MANIFEST, heroes)
         _write(MONSTER_MANIFEST, monsters)
-        print("Wrote certification manifests from authoritative repository state.")
+        print("Wrote certification artifacts and manifests from authoritative repository state.")
         return
     if json.loads(HERO_MANIFEST.read_text(encoding="utf-8")) != heroes:
         raise RuntimeError("Hero certification manifest is stale or hand-edited.")

@@ -48,6 +48,10 @@ CANONICAL_CANTRIPS: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
         _cantrip("thaumaturgy", "Thaumaturgy", "utility", "arena-out-of-scope"),
         _later_cantrip("mending", "Mending", "utility", 4, "arena-out-of-scope"),
     ),
+    "warlock": (
+        _cantrip("eldritch-blast", "Eldritch Blast", "damage", "spell-attack", "cantrip-scaling"),
+        _cantrip("prestidigitation", "Prestidigitation", "utility", "arena-out-of-scope"),
+    ),
 }
 
 
@@ -93,8 +97,8 @@ CANONICAL_SPELLS: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
         _spell("detect-magic", "Detect Magic", "utility", "arena-out-of-scope"),
     ),
     "warlock": (
-        _spell("charm-person", "Charm Person", "control", "charmed"),
-        _spell("hex", "Hex", "mixed", "modifier-stack", "bonus-damage", "concentration"),
+        _spell("comprehend-languages", "Comprehend Languages", "utility", "arena-out-of-scope"),
+        _spell("detect-magic", "Detect Magic", "utility", "arena-out-of-scope"),
     ),
     "wizard": (
         _spell("mage-armor", "Mage Armor", "buff", "modifier-stack"),
@@ -126,13 +130,11 @@ def build_class_spell_package(class_id: CasterClassId, character_level: int) -> 
         spell for spell in CANONICAL_CANTRIPS.get(class_id, ())
         if spell.min_character_level <= character_level
     ]
-    if class_id == "cleric":
-        expected_cantrips = 3 + int(character_level >= 4) + int(character_level >= 10)
-        if len(cantrips) != expected_cantrips:
-            raise ValueError(
-                f"Cleric level {character_level} canonical package needs {expected_cantrips} cantrips, "
-                f"has {len(cantrips)}."
-            )
+    expected_cantrips = None
+    if class_id == "cleric": expected_cantrips = 3 + int(character_level >= 4) + int(character_level >= 10)
+    if class_id == "warlock": expected_cantrips = 2 + int(character_level >= 4) + int(character_level >= 10)
+    if expected_cantrips is not None and len(cantrips) != expected_cantrips:
+        raise ValueError(f"{class_id} level {character_level} canonical package needs {expected_cantrips} cantrips, has {len(cantrips)}.")
     return ClassSpellPackage(
         class_id=class_id, casting_ability=CASTING_ABILITIES[class_id],
         cantrips=cantrips, spells=prepared[:expected], always_prepared_spells=always_prepared,

@@ -16,6 +16,7 @@ class ResourceState(BaseModel):
     name: str
     current_uses: int = Field(ge=0)
     max_uses: int = Field(ge=0)
+    recharge_d6_min: int | None = Field(default=None, ge=1, le=6)
 
 
 class TimedEffect(BaseModel):

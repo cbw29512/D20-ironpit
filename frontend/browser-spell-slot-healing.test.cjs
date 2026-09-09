@@ -10,8 +10,9 @@ const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, 
 for (const file of [
   "browser-heroes.js", "browser-condition-rules.js", "browser-action-economy.js", "browser-modifiers.js",
   "browser-state.js", "browser-spellcasting.js", "browser-healing.js", "browser-spell-area.js",
-  "browser-rolls.js", "browser-attack.js", "browser-saves.js", "browser-offense-value.js",
-  "browser-spell-policy.js", "browser-spell-attack-policy.js",
+  "browser-rolls.js", "browser-forced-movement.js", "browser-control.js", "browser-attack-helpers.js",
+  "browser-attack.js", "browser-resources.js", "browser-save-helpers.js", "browser-saves.js",
+  "browser-offense-value.js", "browser-spell-policy.js", "browser-spell-attack-policy.js",
 ]) load(file);
 
 const S = window.IRON_PIT_BROWSER_STATE;

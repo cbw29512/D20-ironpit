@@ -48,6 +48,7 @@ from app.domain.turbo import (
     TurboFightError,
     TurboFightSummary,
 )
+from app.domain.weapons import ConditionalAttackModifier
 
 __all__ = [
     "ArenaRoster",
@@ -62,6 +63,7 @@ __all__ = [
     "CombatantState",
     "CombatantTemplate",
     "ConditionRemovalAction",
+    "ConditionalAttackModifier",
     "ConditionalDamage",
     "DamageRollComponent",
     "DamageType",

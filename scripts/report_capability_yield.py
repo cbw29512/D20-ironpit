@@ -4,10 +4,9 @@ import re
 from collections import defaultdict
 
 from app.content.blocker_yield import build_blocker_signatures, single_family_yields
-from app.content.monster_catalog import build_monster_catalog, load_monster_rows
+from app.content.monster_blocker_inventory import blocker_family_incidence, build_monster_blocker_inventory
+from app.content.monster_source_classifier import _ALLOWED_TRAITS
 from app.content.monster_trait_source_audit import parse_trait_names
-from app.domain.catalog import CoverageStatus
-from report_zero_engine_monsters import _ALLOWED_TRAITS, _source_blockers
 
 _SIGNATURE_LIMIT = 25
 _CONTROL_EFFECT = re.compile(
@@ -26,7 +25,7 @@ def _trait_heading_yields(rows_by_name: dict[str, dict[str, object]], names: lis
     for name in names:
         unsupported = _unsupported_traits(rows_by_name[name])
         if not unsupported:
-            raise RuntimeError(f"Trait-only blocker {name!r} has no unsupported trait heading.")
+            continue
         for trait in unsupported:
             yields[trait].append(name)
     return {
@@ -63,8 +62,6 @@ def _normalize_control_effect(value: str) -> str:
 def _control_effects(row: dict[str, object]) -> tuple[str, ...]:
     actions = str(row.get("actions", ""))
     effects = {_normalize_control_effect(match.group(1)) for match in _CONTROL_EFFECT.finditer(actions)}
-    if not effects:
-        raise RuntimeError(f"Control blocker {row.get('name')!r} has no recognized control effect.")
     return tuple(sorted(effects))
 
 
@@ -86,7 +83,9 @@ def _control_signatures(
 ) -> dict[tuple[str, ...], list[str]]:
     grouped: dict[tuple[str, ...], list[str]] = defaultdict(list)
     for name in names:
-        grouped[_control_effects(rows_by_name[name])].append(name)
+        effects = _control_effects(rows_by_name[name])
+        if effects:
+            grouped[effects].append(name)
     return {
         signature: sorted(monsters)
         for signature, monsters in sorted(grouped.items(), key=lambda item: (-len(item[1]), item[0]))
@@ -94,32 +93,25 @@ def _control_signatures(
 
 
 def main() -> None:
-    rows = load_monster_rows()
-    rows_by_name = {str(row["name"]): row for row in rows}
-    monster_names = set(rows_by_name)
-    ready_names = {
-        card.name
-        for card in build_monster_catalog()
-        if card.coverage_status is CoverageStatus.RAW_READY
-    }
-    blockers_by_name: dict[str, list[str]] = {}
-    for row in rows:
-        name = str(row["name"])
-        if name in ready_names:
-            continue
-        blockers = _source_blockers(row, monster_names)
-        blockers_by_name[name] = blockers or ["unclassified-source-audit-gap"]
-
+    rows_by_name, ready_names, blockers_by_name = build_monster_blocker_inventory()
     signatures = build_blocker_signatures(blockers_by_name)
     singles = single_family_yields(signatures)
     trait_only = singles.get("trait", [])
     control_only = singles.get("condition-or-control", [])
+    all_trait = [name for name, blockers in blockers_by_name.items() if "trait" in blockers]
+    all_control = [name for name, blockers in blockers_by_name.items() if "condition-or-control" in blockers]
     print(
         "CAPABILITY_YIELD_BASELINE"
         f"\tready={len(ready_names)}\tblocked={len(blockers_by_name)}\tsignatures={len(signatures)}"
     )
+    for blocker, names in blocker_family_incidence(blockers_by_name).items():
+        print(f"CAPABILITY_FAMILY_INCIDENCE\t{blocker}\t{len(names)}\t" + " | ".join(names))
     for blocker, names in sorted(singles.items(), key=lambda item: (-len(item[1]), item[0])):
         print(f"CAPABILITY_SINGLE_FAMILY\t{blocker}\t{len(names)}\t" + " | ".join(names))
+    for effect, names in _control_effect_yields(rows_by_name, all_control).items():
+        print(f"CAPABILITY_CONTROL_INCIDENCE\t{effect}\t{len(names)}\t" + " | ".join(names))
+    for trait, names in _trait_heading_yields(rows_by_name, all_trait).items():
+        print(f"CAPABILITY_TRAIT_INCIDENCE\t{trait}\t{len(names)}\t" + " | ".join(names))
     for signature, names in _control_signatures(rows_by_name, control_only).items():
         print(f"CAPABILITY_CONTROL_SIGNATURE\t{'+'.join(signature)}\t{len(names)}\t" + " | ".join(names))
     for effect, names in _control_effect_yields(rows_by_name, control_only).items():

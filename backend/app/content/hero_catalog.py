@@ -1,15 +1,29 @@
 from __future__ import annotations
 
-from app.content.canonical_hero_policy import (
-    CASTER_CLASS_IDS,
-    canonical_spell_package,
-    canonical_template_id,
-)
+from app.content.canonical_class_combat_spines import canonical_arena_ignored, canonical_combat_features
+from app.content.canonical_hero_policy import CASTER_CLASS_IDS, canonical_spell_package, canonical_template_id
 from app.content.certified_heroes import build_certified_hero_registry
+from app.content.hero_combat_feature_registry import unsupported_hero_engine_features
 from app.content.hero_progressions import CANONICAL_BUILD_ID, CANONICAL_BUILD_NAME, CANONICAL_HEROES
 from app.domain.catalog import CoverageStatus, HeroCatalogCard
 
 SOURCE = "SRD 5.2.1 / 2024 Free Rules"
+
+
+def _blocked_reasons(class_id: str, level: int) -> list[str]:
+    ignored = set(canonical_arena_ignored(class_id, level))
+    features = tuple(feature for feature in canonical_combat_features(class_id, level) if feature not in ignored)
+    unsupported = unsupported_hero_engine_features(features)
+    blockers = ["hero-level-not-certified"]
+    blockers.extend(f"unsupported-combat-feature:{feature}" for feature in unsupported)
+    if class_id in CASTER_CLASS_IDS:
+        try:
+            canonical_spell_package(class_id, level)
+        except ValueError:
+            blockers.append("canonical-spell-package-incomplete")
+    if len(blockers) == 1:
+        blockers.append("runtime-template-not-compiled")
+    return blockers
 
 
 def _hero_card(hero, level: int, ready_builds: dict[tuple[str, int, str], tuple[str, str]]) -> HeroCatalogCard:
@@ -44,7 +58,7 @@ def _hero_card(hero, level: int, ready_builds: dict[tuple[str, int, str], tuple[
     return HeroCatalogCard(
         **common,
         coverage_status=CoverageStatus.BLOCKED,
-        blockers=["hero-level-not-certified", "combat-feature-coverage-not-certified"],
+        blockers=_blocked_reasons(hero.class_id, level),
     )
 
 

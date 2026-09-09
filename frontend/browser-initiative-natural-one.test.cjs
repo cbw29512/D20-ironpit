@@ -8,13 +8,14 @@ const vm = require("node:vm");
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
-  "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js",
-  "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
-  "browser-grapple.js", "browser-timed-conditions.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
-  "browser-zero-hp.js", "browser-weapon-mastery.js", "browser-graze.js", "browser-vex.js", "browser-attack.js",
-  "browser-reactions.js", "browser-saves.js", "browser-charge.js", "browser-light-weapons.js", "browser-light-attack.js",
-  "browser-standard-attack-action.js", "browser-multiattack.js", "browser-action-surge.js", "browser-formation.js",
-  "browser-initiative.js",
+  "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js", "browser-condition-immunity.js",
+  "browser-condition-rules.js", "browser-action-economy.js", "browser-grapple.js", "browser-timed-conditions.js",
+  "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js",
+  "browser-weapon-mastery.js", "browser-graze.js", "browser-vex.js", "browser-forced-movement.js",
+  "browser-control.js", "browser-attack-helpers.js", "browser-attack.js", "browser-reactions.js",
+  "browser-resources.js", "browser-save-helpers.js", "browser-saves.js", "browser-charge.js",
+  "browser-light-weapons.js", "browser-light-attack.js", "browser-standard-attack-action.js", "browser-multiattack.js",
+  "browser-action-surge.js", "browser-formation.js", "browser-initiative.js",
 ]) load(file);
 
 function queuedDice(values, fallback = 10) {

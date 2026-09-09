@@ -10,8 +10,9 @@ const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, 
 for (const file of [
   "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js", "browser-monsters-beast2.js",
   "browser-monsters-batch3.js", "browser-monsters-control.js", "browser-monsters-poison.js", "browser-condition-immunity.js",
-  "browser-grapple.js", "browser-timed-conditions.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
-  "browser-zero-hp.js", "browser-attack.js",
+  "browser-grapple.js", "browser-timed-conditions.js", "browser-state.js", "browser-rage.js",
+  "browser-rolls.js", "browser-zero-hp.js", "browser-forced-movement.js", "browser-control.js",
+  "browser-attack-helpers.js", "browser-attack.js",
 ]) load(file);
 
 const queuedDice = (values, fallback = 10) => {
@@ -35,17 +36,15 @@ assert.equal(Object.keys(monsters).length, 59, "poison batch must preserve the l
   const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
   const centipede = member("monster-1:centipede", "monsters", monsters["srd-giant-centipede"]);
   const attack = centipede.state.template.attacks[0];
-  assert.equal(attack.controlEffect.conditionId, "poisoned");
   window.IRON_PIT_DICE = queuedDice([15, 1]);
   const event = A.resolveAttack(1, 1, centipede, hero, attack, 5);
   assert.equal(event.hit, true);
   assert.deepEqual(event.applied_condition_ids, ["poisoned"]);
   const poison = hero.state.timed_effects[0];
-  assert.equal(poison.expiry_timing, null);
-  assert.equal(poison.expires_at_start_of_source_turn, false);
-  assert.equal(poison.repeat_save_ability, "constitution");
-  assert.equal(poison.repeat_save_dc, 10);
-  assert.equal(poison.repeat_save_timing, "target_turn_start");
+  assert.equal(poison.expiry_timing, "source_turn_start");
+  assert.equal(poison.repeat_save_ability, null);
+  assert.equal(poison.repeat_save_dc, null);
+  assert.equal(poison.repeat_save_timing, null);
 
   window.IRON_PIT_DICE = queuedDice([18, 2, 3, 3, 3, 3]);
   const counter = A.resolveAttack(2, 1, hero, centipede, hero.state.template.attacks[0], 5);
@@ -57,10 +56,10 @@ assert.equal(Object.keys(monsters).length, 59, "poison batch must preserve the l
   const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
   const first = member("monster-1:centipede", "monsters", monsters["srd-giant-centipede"]);
   const second = member("monster-2:centipede", "monsters", monsters["srd-giant-centipede"]);
-  T.apply(hero.state, "poisoned", first.combatant_id);
-  T.apply(hero.state, "poisoned", second.combatant_id);
+  T.apply(hero.state, "poisoned", first.combatant_id, { expiryTiming: "source_turn_start" });
+  T.apply(hero.state, "poisoned", second.combatant_id, { expiryTiming: "source_turn_start" });
   assert.equal(hero.state.active_effect_ids.filter((id) => id === "poisoned").length, 1);
-  assert.equal(hero.state.timed_effects.filter((effect) => effect.effect_id === "poisoned").length, 1);
+  assert.equal(hero.state.timed_effects.filter((effect) => effect.effect_id === "poisoned").length, 2);
 }
 
 {
@@ -74,7 +73,7 @@ assert.equal(Object.keys(monsters).length, 59, "poison batch must preserve the l
 {
   const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
   const centipede = member("monster-1:centipede", "monsters", monsters["srd-giant-centipede"]);
-  T.apply(hero.state, "poisoned", centipede.combatant_id);
+  T.apply(hero.state, "poisoned", centipede.combatant_id, { expiryTiming: "source_turn_start" });
   G.apply(hero.state, centipede.combatant_id, 12, 5, true);
   window.IRON_PIT_DICE = queuedDice([18, 2]);
   const escape = G.escape(1, 1, hero);
@@ -82,5 +81,5 @@ assert.equal(Object.keys(monsters).length, 59, "poison batch must preserve the l
   assert.equal(escape.ability_check_roll.selected_roll, 2);
 }
 
-console.log("Browser universal Poisoned policy regressions passed.");
+console.log("Browser source-driven Poisoned regressions passed.");
 require("./browser-poison-expansion.test.cjs");

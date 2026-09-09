@@ -4,52 +4,18 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
+from app.domain.areas import AreaTargeting
+from app.domain.control_effects import AbilityName, ConditionName, ConditionTiming, GrappleSource, HitControlEffect
 from app.domain.size import CreatureSize
 
-AbilityName = Literal["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
 ActionCost = Literal["action", "bonus_action", "reaction"]
 HealingTargetMode = Literal["self", "ally", "self_or_ally", "other"]
 ConditionRemovalTargetMode = Literal["self", "ally", "self_or_ally"]
 ConditionReactionTrigger = Literal["condition_applied_to_self", "condition_applied_to_ally"]
-ConditionTiming = Literal["source_turn_start", "source_turn_end", "target_turn_start", "target_turn_end"]
 DamageTypeName = Literal[
     "acid", "bludgeoning", "cold", "fire", "force", "lightning", "necrotic",
     "piercing", "poison", "psychic", "radiant", "slashing", "thunder",
 ]
-ConditionName = Literal[
-    "blinded", "charmed", "deafened", "exhaustion", "frightened", "grappled",
-    "incapacitated", "invisible", "paralyzed", "petrified", "poisoned", "prone",
-    "restrained", "stunned", "unconscious",
-]
-
-
-class GrappleSource(BaseModel):
-    source_id: str
-    escape_dc: int = Field(ge=1, le=40)
-    range_ft: int = Field(default=5, ge=0)
-    restrains: bool = False
-
-
-class HitControlEffect(BaseModel):
-    max_target_size: CreatureSize | None = None
-    grapple_escape_dc: int | None = Field(default=None, ge=1, le=40)
-    restrains_while_grappled: bool = False
-    condition_id: ConditionName | None = None
-    expires_at_start_of_source_turn: bool = False
-    expiry_timing: ConditionTiming | None = None
-    repeat_save_ability: AbilityName | None = None
-    repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
-    repeat_save_timing: ConditionTiming | None = None
-    allowed_removal_action_ids: list[str] = Field(default_factory=list)
-
-    @model_validator(mode="after")
-    def validate_condition_lifecycle(self) -> "HitControlEffect":
-        repeat_fields = (self.repeat_save_ability, self.repeat_save_dc, self.repeat_save_timing)
-        if any(item is not None for item in repeat_fields) and not all(item is not None for item in repeat_fields):
-            raise ValueError("Repeat-save condition lifecycle requires ability, DC, and timing together.")
-        if self.expires_at_start_of_source_turn and self.expiry_timing not in {None, "source_turn_start"}:
-            raise ValueError("Legacy source-start expiry conflicts with explicit condition timing.")
-        return self
 
 
 class HealingAction(BaseModel):
@@ -106,12 +72,15 @@ class SavingThrowAction(BaseModel):
     save_ability: AbilityName
     dc: int = Field(ge=1, le=40)
     range_ft: int = Field(ge=0)
+    area: AreaTargeting | None = None
     target_max_size: CreatureSize | None = None
     damage_dice_count: int = Field(default=0, ge=0, le=40)
     damage_dice_size: int = Field(default=6, ge=2, le=100)
     damage_bonus: int = 0
     damage_type: DamageTypeName | None = None
     success_damage: Literal["none", "half"] = "none"
+    magical_effect: bool = False
+    failure_control: HitControlEffect | None = None
     grapple_escape_dc: int | None = Field(default=None, ge=1, le=40)
     restrains_while_grappled: bool = False
     resource_id: str | None = None

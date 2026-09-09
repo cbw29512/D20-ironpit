@@ -6,7 +6,7 @@ from collections.abc import Mapping
 from app.content.canonical_class_combat_spines import CANONICAL_CLASS_COMBAT_SPINES
 from app.content.combat_build_choice_overlays import COMBAT_BUILD_CHOICE_OVERLAYS
 from app.content.combat_build_variants import get_combat_build_variant
-from app.content.hero_combat_feature_registry import SUPPORTED_HERO_ENGINE_FEATURES
+from app.content.hero_combat_feature_registry import SUPPORTED_HERO_FEATURES
 from app.content.hero_variant_policy import TARGET_SUBCLASSES
 from app.content.subclass_combat_overlays import SUBCLASS_COMBAT_OVERLAYS, subclass_feature_ids_for_class
 from app.content.subclass_specializations import specializations_for_class
@@ -73,10 +73,10 @@ def derive_roster_mechanic_requirements(
 
     requirements: list[RosterMechanicRequirement] = []
     for mechanic_id, item in items.items():
-        if mechanic_id in capability_statuses:
-            status = capability_statuses[mechanic_id]
-        elif mechanic_id in SUPPORTED_HERO_ENGINE_FEATURES:
+        if mechanic_id in SUPPORTED_HERO_FEATURES:
             status = "supported"
+        elif mechanic_id in capability_statuses:
+            status = capability_statuses[mechanic_id]
         elif not item["active"]:
             status = "arena_out_of_scope"
         else:
