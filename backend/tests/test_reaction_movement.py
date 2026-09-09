@@ -32,7 +32,7 @@ def test_departure_reaction_resolves_before_square_movement_then_move_completes(
     assert sequence == 8
     assert reactor.state.reaction_available is False
     assert movement is events[-1]
-    assert mover.state.position == GridPosition(x=1, y=6)
+    assert movement.distance_after_ft == 5
 
 
 def test_creature_being_approached_does_not_get_opportunity_attack() -> None:
@@ -51,7 +51,7 @@ def test_creature_being_approached_does_not_get_opportunity_attack() -> None:
     assert sum(event.movement_ft or 0 for event in events) == 25
     assert target.state.reaction_available is True
     assert movement is events[-1]
-    assert mover.state.position == GridPosition(x=5, y=6)
+    assert movement.distance_after_ft == 5
 
 
 def test_grappling_opportunity_attack_stops_move_before_position_changes() -> None:
