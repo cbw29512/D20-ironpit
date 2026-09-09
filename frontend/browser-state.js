@@ -19,7 +19,7 @@
       active_effect_ids: [], active_buff_effect_ids: [], opening_buff_spell_id: null,
       grapple_sources: [], timed_effects: [], active_modifiers: [], concentration: null,
       feature_last_turn_keys: {}, spell_slot_expended_turn_key: null,
-      temporary_damage_resistances: [], rage_expires_round: null, rage_max_round: null,
+      temporary_damage_resistances: [], damage_types_since_last_turn: [], rage_expires_round: null, rage_max_round: null,
     };
   }
 
@@ -28,6 +28,22 @@
     if (state.template.traits?.includes("swarm")) return state.temporary_hp;
     state.temporary_hp = Math.max(state.temporary_hp, amount);
     return state.temporary_hp;
+  }
+
+  function resolveRegeneration(state) {
+    const damageTypes = new Set(state.damage_types_since_last_turn || []), results = [];
+    for (const effect of state.template.regeneration || []) {
+      const suppressed = (effect.suppressedByDamageTypes || []).some((type) => damageTypes.has(type));
+      const eligible = state.is_alive && !state.is_dead && (state.current_hp > 0 || effect.requiresPositiveHp === false);
+      const before = state.current_hp;
+      if (eligible && !suppressed && !state.template.traits?.includes("swarm")) {
+        state.current_hp = Math.min(effectiveMaxHp(state), state.current_hp + effect.healing);
+        if (state.current_hp > 0) { state.is_unconscious = false; state.is_stable = false; state.death_save_successes = 0; state.death_save_failures = 0; }
+      }
+      results.push({ effectId: effect.id, healed: state.current_hp - before, suppressed });
+    }
+    state.damage_types_since_last_turn = [];
+    return results;
   }
 
   function terminateTurn(state, reason) {
@@ -39,6 +55,7 @@
   function refreshStartOfTurn(state) {
     refreshReaction(state);
     window.IRON_PIT_BROWSER_HEROIC_INSPIRATION?.grant(state);
+    resolveRegeneration(state);
     return U().refresh(state);
   }
 
@@ -111,6 +128,6 @@
   const canProne = (target, maxSize) => sizeAtMost(target, maxSize);
   window.IRON_PIT_BROWSER_STATE = {
     active, beginTurn, buildState, canProne, distance, downedCharacter, effectiveMaxHp, grantTemporaryHp, hasActiveAlly,
-    moveToward, nearestTarget, packTactics, refreshReaction, refreshStartOfTurn, sizeAtMost, targetPriority, terminateTurn,
+    moveToward, nearestTarget, packTactics, refreshReaction, refreshStartOfTurn, resolveRegeneration, sizeAtMost, targetPriority, terminateTurn,
   };
 })();

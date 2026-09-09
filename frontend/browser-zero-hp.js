@@ -57,6 +57,8 @@
   function applyDamage(state, amount, critical = false, damageTypes = [], affectedStates = []) {
     const incoming = amount;
     if (!incoming || state.is_dead) return "damaged";
+    state.damage_types_since_last_turn ||= [];
+    for (const type of damageTypes) if (!state.damage_types_since_last_turn.includes(type)) state.damage_types_since_last_turn.push(type);
     const absorbed = Math.min(state.temporary_hp, amount);
     state.temporary_hp -= absorbed;
     amount -= absorbed;
