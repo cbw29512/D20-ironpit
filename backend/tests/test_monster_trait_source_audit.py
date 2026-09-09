@@ -84,18 +84,17 @@ def test_xorn_environmental_and_utility_traits_are_arena_neutral() -> None:
         raise
 
 
-def test_incorporeal_movement_is_arena_neutral_but_still_fingerprinted() -> None:
+def test_incorporeal_movement_is_neutral_but_sunlight_sensitivity_fails_closed() -> None:
     try:
-        expected_traits = {
-            "Specter": ["Incorporeal Movement"],
-            "Wraith": ["Incorporeal Movement", "Sunlight Sensitivity"],
-        }
-        for name, expected in expected_traits.items():
+        expected = ["Incorporeal Movement", "Sunlight Sensitivity"]
+        for name in ("Specter", "Wraith"):
             monster = _monster(name)
             assert monster.source_trait_names == expected
-            assert trait_issues(monster, _row(name)) == []
+            issues = trait_issues(monster, _row(name))
+            assert "uncertified-trait:sunlight-sensitivity" in issues
+            assert "uncertified-trait:incorporeal-movement" not in issues
     except Exception:
-        logger.exception("Incorporeal Movement arena-neutral certification regression failed.")
+        logger.exception("Sunlight Sensitivity fail-closed certification regression failed.")
         raise
 
 
