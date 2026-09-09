@@ -4,6 +4,7 @@ import logging
 
 from app.combat.action_economy import is_available
 from app.combat.attack_legality import attack_allowed_against
+from app.combat.resources import resource_available
 from app.combat.spellcasting import slot_spell_available
 from app.domain.encounters import EncounterCombatant
 from app.domain.weapons import WeaponAttackKind
@@ -13,26 +14,13 @@ logger = logging.getLogger(__name__)
 OffensiveRange = tuple[str, int]
 
 
-def _resource_available(member: EncounterCombatant, resource_id: str | None, cost: int = 1) -> bool:
-    try:
-        if resource_id is None:
-            return True
-        matches = [item for item in member.state.resources if item.id == resource_id]
-        if len(matches) != 1:
-            return False
-        return matches[0].current_uses >= cost
-    except Exception:
-        logger.exception("Failed resource availability probe for %s.", member.combatant_id)
-        raise
-
-
 def _spell_level_available(member: EncounterCombatant, level: int, turn_key: str) -> bool:
     try:
         if level == 0:
             return True
         if not slot_spell_available(member.state, turn_key):
             return False
-        return _resource_available(member, f"spell-slot-{level}")
+        return resource_available(member.state, f"spell-slot-{level}")
     except Exception:
         logger.exception("Failed spell-level availability probe for %s.", member.combatant_id)
         raise
@@ -63,7 +51,7 @@ def _save_action_ranges(attacker: EncounterCombatant, target: EncounterCombatant
         for action in attacker.state.template.saving_throw_actions:
             if action.target_max_size is not None and not size_at_most(target.state.template.size, action.target_max_size):
                 continue
-            if not _resource_available(attacker, action.resource_id, action.resource_cost):
+            if not resource_available(attacker.state, action.resource_id, action.resource_cost):
                 continue
             ranges.append(("ability", action.range_ft))
         return ranges
