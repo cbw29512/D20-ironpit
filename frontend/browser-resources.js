@@ -36,5 +36,28 @@
     return results;
   }
 
-  window.IRON_PIT_BROWSER_RESOURCES = { canUse, refresh, spend };
+  function buildRechargeEvents(state, member, round, sequence, results) {
+    const definitions = new Map((state.template.resourceDefinitions || []).map((item) => [item.id, item]));
+    const events = [];
+    for (const result of results) {
+      const definition = definitions.get(result.resourceId);
+      if (!definition) throw new Error(`Recharge definition ${result.resourceId} is missing.`);
+      const remaining = state.resources?.[result.resourceId] || 0;
+      const outcome = result.recharged ? `recharged to ${remaining}` : "did not recharge";
+      const rollLabel = `Recharge d${definition.rechargeDieSize || 6}: ${result.roll} vs ${definition.rechargeMinimum}+`;
+      events.push({
+        sequence: sequence++, round_number: round, event_type: "feature",
+        actor_id: member.combatant_id, actor_name: state.template.name,
+        feature_id: result.resourceId, resource_remaining: remaining, animation: "resource",
+        description: `${state.template.name} rolls ${definition.name} ${rollLabel}; ${outcome}.`,
+        audit: { schema_version: 1, steps: [
+          { phase: "roll", kind: "roll", label: rollLabel },
+          { phase: "resource_change", kind: "resource", label: `${definition.name}: ${outcome}` },
+        ] },
+      });
+    }
+    return { events, sequence };
+  }
+
+  window.IRON_PIT_BROWSER_RESOURCES = { buildRechargeEvents, canUse, refresh, spend };
 })();
