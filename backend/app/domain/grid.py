@@ -44,6 +44,7 @@ class GridMovementPlan(BaseModel):
     path: list[GridPosition] = Field(default_factory=list)
     movement_cost_ft: int = Field(default=0, ge=0)
     final_distance_ft: int = Field(ge=0)
+    goal_reachable: bool
 
 
 class OffensiveMovementIntent(BaseModel):
