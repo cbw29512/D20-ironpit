@@ -54,6 +54,8 @@ def _attack(attack: WeaponAttack) -> dict[str, object]:
         effects.append({"kind": "prone", "max_target_size": attack.knocks_prone_max_size})
     if attack.control_effect is not None:
         effects.append(_control_effect(attack.control_effect))
+    elif attack.persistent_effects:
+        effects.extend(_control_effect(effect) for effect in attack.persistent_effects)
     result: dict[str, object] = {
         "id": attack.id, "weapon_id": weapon.id, "name": weapon.name,
         "attack_kind": weapon.attack_kind, "attack_bonus": attack.attack_bonus,
@@ -84,7 +86,12 @@ def _save(action) -> dict[str, object]:
     if action.damage_dice_count:
         result["damage"] = _dice(action.damage_dice_count, action.damage_dice_size, action.damage_bonus)
         result["damage_type"] = action.damage_type
-    if action.grapple_escape_dc is not None:
+    persistent = [_control_effect(effect) for effect in action.persistent_effects]
+    if len(persistent) == 1 and persistent[0]["kind"] == "grapple" and not action.on_failure_modifier_effects:
+        result["grapple"] = persistent[0]
+    elif persistent or action.on_failure_modifier_effects:
+        result["effects"] = [*persistent, *(effect.model_dump(mode="json") for effect in action.on_failure_modifier_effects)]
+    elif action.grapple_escape_dc is not None:
         result["grapple"] = {
             "kind": "grapple", "escape_dc": action.grapple_escape_dc,
             "max_target_size": action.target_max_size, "restrains": action.restrains_while_grappled,
