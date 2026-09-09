@@ -1,12 +1,13 @@
 import pytest
 
 from app.combat.attack_actions import resolve_attack_action
+from app.combat.encounter_setup import build_encounter_setup
 from app.combat.light_weapons import mark_light_extra_attack_used, plan_light_extra_attack
 from app.combat.state import begin_turn, build_combatant_state
 from app.content.audited_fighter import build_karnok_stoneward
 from app.content.equipment import build_scimitar
 from app.content.rogue_equipment import build_shortsword
-from app.combat.encounter_setup import build_encounter_setup
+from app.domain.grid import GridPosition
 from app.domain.models import AttackActionDefinition, AttackActionSlot, EncounterSelection, WeaponAttack
 
 
@@ -128,8 +129,8 @@ def _nick_extra_attack_setup(is_attack_action=True):
         hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-ogre"],
     ))
     attacker = setup.heroes[0]
-    attacker.position_ft = 0
-    setup.monsters[0].position_ft = 5
+    attacker.state.position = GridPosition(x=7, y=6)
+    setup.monsters[0].state.position = GridPosition(x=8, y=6)
     shortsword = _attack("test-shortsword", build_shortsword())
     scimitar = _attack("test-scimitar", build_scimitar())
     attacker.state.template.weapon_attack = shortsword
