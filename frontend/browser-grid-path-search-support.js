@@ -52,7 +52,8 @@
 
   function compareNodes(left, right) {
     try {
-      return left.f - right.f || left.cost - right.cost || left.x - right.x || left.y - right.y;
+      return left.f - right.f || left.alignment - right.alignment
+        || left.cost - right.cost || left.x - right.x || left.y - right.y;
     } catch (error) {
       console.error("Failed to compare A* nodes", { left, right, error });
       throw error;
