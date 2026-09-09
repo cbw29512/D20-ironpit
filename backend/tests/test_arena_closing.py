@@ -23,7 +23,7 @@ def _disable_adrenaline_rush(hero) -> None:
     resource.current_uses = 0
 
 
-def test_melee_only_creature_closes_by_speed_then_dodges_when_still_out_of_reach() -> None:
+def test_melee_only_creature_dodges_when_speed_cannot_enable_offense() -> None:
     setup = build_encounter_setup(EncounterSelection(
         hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-giant-lizard"],
     ))
@@ -34,10 +34,10 @@ def test_melee_only_creature_closes_by_speed_then_dodges_when_still_out_of_reach
 
     events, _ = resolve_combat_turn(1, 1, hero, monster, setup, FixedDiceProvider([2]))
 
-    assert any(event.event_type == "movement" for event in events)
+    assert not any(event.event_type == "movement" for event in events)
     assert not any(event.event_type == "attack" for event in events)
-    assert events[-1].event_type == "dodge"
-    assert hero.state.position != before
+    assert events[-1].feature_id == "dodge"
+    assert hero.state.position == before
     assert "dodge" in hero.state.active_effect_ids
 
 
