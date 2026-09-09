@@ -17,6 +17,7 @@ from app.combat.opening_burst import opening_feature_id
 from app.combat.orc import should_use_adrenaline_rush, use_adrenaline_rush
 from app.combat.pit_policy import choose_standard_attack, save_distance, target_order
 from app.combat.policy import should_use_second_wind
+from app.combat.resources import build_recharge_events
 from app.combat.saving_throws import legal_save_action, resolve_save_action
 from app.combat.spell_offense import resolve_best_spell_offense
 from app.combat.standard_attack_action import resolve_standard_attack_action
@@ -70,7 +71,11 @@ def resolve_combat_turn(
     """Resolve a fixed-formation Iron Pit turn; ordinary movement is abstracted away."""
     events: list[BattleEvent] = []
     cleanup_grapples(setup)
-    begin_turn(attacker.state, dice)
+    recharge_results = begin_turn(attacker.state, dice)
+    recharge_events, sequence = build_recharge_events(
+        attacker.state, attacker.combatant_id, round_number, sequence, recharge_results,
+    )
+    events.extend(recharge_events)
     if attacker.state.is_dead: return events, sequence
     turn_key = f"{round_number}:{attacker.combatant_id}"
     if forced_retreat_active(attacker.state):
