@@ -13,6 +13,7 @@ from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
 from app.combat.graze import resolve_graze_miss
 from app.combat.heroic_inspiration import reroll_failed_attack_with_heroic_inspiration
+from app.combat.hit_points import effective_max_hp, reduce_max_hp
 from app.combat.modifier_stack import (
     apply_d20_bonus_dice, attacks_against_advantage_sources, consume_attacks_against_advantage,
     consume_next_attack_against_advantage, effective_armor_class, next_attack_against_advantage_sources,
@@ -80,11 +81,13 @@ def resolve_attack(
         hit, parry_used = resolve_parry_hit(actual_defender, attack, attack_roll.total, natural, hit)
         if parry_used: target_ac += actual_defender.template.parry_reaction.ac_bonus
         critical = bool(hit and (expanded_critical or (close_hit_is_automatic_critical(actual_defender) and distance_ft <= 5)))
-        hp_before = actual_defender.current_hp; temporary_hp_before = actual_defender.temporary_hp
+        hp_before = actual_defender.current_hp; max_hp_before = effective_max_hp(actual_defender)
+        temporary_hp_before = actual_defender.temporary_hp
         death_success_before = actual_defender.death_save_successes; death_failure_before = actual_defender.death_save_failures
         concentration_before = actual_defender.concentration.effect_id if actual_defender.concentration else None
         damage_roll = None; damage_components = []; damage_outcome = None; applied_conditions: list[str] = []; topple = None
         weapon_sap_applied = False; tactical_sap_applied = False; vex_applied = False; studied_applied = False
+        max_hp_reduced = 0
         if hit:
             active_turn_key = turn_key or f"{round_number}:{attacker_event_id}"
             damage_roll, rolled_components = resolve_weapon_damage(
@@ -94,6 +97,8 @@ def resolve_attack(
             applied_total, damage_components = apply_damage_defenses(actual_defender, rolled_components); damage_roll.total = applied_total
             applied_types = {part.damage_type for part in damage_components if part.applied_total > 0}
             damage_outcome = apply_damage(actual_defender, applied_total, critical=critical, damage_types=applied_types, dice=dice, affected_states=affected_states)
+            if attack.reduce_max_hp_by_damage_taken and applied_total > 0:
+                max_hp_reduced = reduce_max_hp(actual_defender, applied_total)
             applied_conditions = apply_hit_conditions(attack, actual_defender, attacker_event_id, round_number, affected_states)
             topple = resolve_topple_hit(attacker, actual_defender, attack, dice)
             if topple.applied and "prone" not in applied_conditions: applied_conditions.append("prone")
@@ -122,6 +127,7 @@ def resolve_attack(
         if topple and topple.save_dc is not None: description += f" Topple save DC {topple.save_dc}: {actual_defender.template.name} {'succeeds' if topple.save_succeeded else 'fails'}."
         if damage_outcome == "relentless_endurance": description += f" {actual_defender.template.name} uses Relentless Endurance and remains at 1 HP."
         if damage_outcome == "undead_fortitude": description += f" {actual_defender.template.name} succeeds on Undead Fortitude and remains at 1 HP."
+        if max_hp_reduced: description += f" {actual_defender.template.name}'s Hit Point maximum decreases by {max_hp_reduced}."
         if "prone" in applied_conditions: description += f" {actual_defender.template.name} is knocked Prone."
         if "grappled" in applied_conditions: description += f" {actual_defender.template.name} is Grappled."
         if "restrained" in applied_conditions: description += f" {actual_defender.template.name} is Restrained while Grappled."
@@ -134,6 +140,7 @@ def resolve_attack(
             hit=hit, critical=critical, turn_terminated=natural_1_ends_turn,
             turn_termination_reason="iron-pit-natural-1-attack" if natural_1_ends_turn else None,
             hp_before=hp_before, hp_after=actual_defender.current_hp,
+            max_hp_before=max_hp_before, max_hp_after=effective_max_hp(actual_defender),
             temporary_hp_before=temporary_hp_before, temporary_hp_after=actual_defender.temporary_hp,
             death_save_successes_before=death_success_before, death_save_failures_before=death_failure_before,
             death_save_successes=actual_defender.death_save_successes, death_save_failures=actual_defender.death_save_failures,
