@@ -52,14 +52,18 @@ def test_certified_zombies_pass_public_readiness(monster_id: str) -> None:
     assert_public_selection_runnable(_selection("karnok-stoneward-l1", monster_id))
 
 
+def test_specter_passes_public_readiness_after_full_certification() -> None:
+    assert_public_selection_runnable(_selection("karnok-stoneward-l1", "srd-specter"))
+
+
 def test_legacy_uncertified_hero_cannot_bypass_public_readiness() -> None:
     with pytest.raises(ValueError, match="aldric-vane-l1"):
         assert_public_selection_runnable(_selection("aldric-vane-l1"))
 
 
 def test_uncertified_monster_id_is_rejected_before_engine_setup() -> None:
-    with pytest.raises(ValueError, match="srd-specter"):
-        assert_public_selection_runnable(_selection("karnok-stoneward-l1", "srd-specter"))
+    with pytest.raises(ValueError, match="srd-wraith"):
+        assert_public_selection_runnable(_selection("karnok-stoneward-l1", "srd-wraith"))
 
 
 def test_uncertified_hero_is_rejected_before_engine_setup() -> None:
