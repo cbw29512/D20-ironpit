@@ -4,22 +4,13 @@
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const S = () => window.IRON_PIT_BROWSER_STATE;
-
-  function resourceAvailable(member, resourceId, cost = 1) {
-    try {
-      if (!resourceId) return true;
-      return (member.state.resources?.[resourceId] || 0) >= cost;
-    } catch (error) {
-      console.error("Failed browser offensive resource probe", { member: member.combatant_id, error });
-      throw error;
-    }
-  }
+  const RES = () => window.IRON_PIT_BROWSER_RESOURCES;
 
   function spellLevelAvailable(member, level, turnKey) {
     try {
       if (level === 0) return true;
       if (!C().slotSpellAvailable(member.state, turnKey)) return false;
-      return resourceAvailable(member, `spell-slot-${level}`);
+      return RES().available(member.state, `spell-slot-${level}`);
     } catch (error) {
       console.error("Failed browser offensive spell-level probe", { member: member.combatant_id, error });
       throw error;
@@ -47,7 +38,7 @@
       const ranges = [];
       for (const action of member.state.template.saving_throw_actions || []) {
         if (action.targetMaxSize && !S().sizeAtMost(target, action.targetMaxSize)) continue;
-        if (!resourceAvailable(member, action.resourceId, action.resourceCost || 1)) continue;
+        if (!RES().available(member.state, action.resourceId, action.resourceCost || 1)) continue;
         ranges.push({ family: "ability", range: action.range || 0 });
       }
       return ranges;
