@@ -25,6 +25,11 @@ class DamageEffectDefinition(BaseModel):
     mode: Literal["add", "replace_weapon"] = "add"
 
 
+class MaxHpReductionEffectDefinition(BaseModel):
+    kind: Literal["max_hp_reduction"] = "max_hp_reduction"
+    amount: Literal["damage_taken"] = "damage_taken"
+
+
 class ProneEffectDefinition(BaseModel):
     kind: Literal["prone"] = "prone"
     max_target_size: CreatureSize | None = None
@@ -50,6 +55,6 @@ class ConditionEffectDefinition(BaseModel):
 
 
 AttackEffectDefinition = Annotated[
-    DamageEffectDefinition | ProneEffectDefinition | GrappleEffectDefinition | ConditionEffectDefinition | HitModifierEffect,
+    DamageEffectDefinition | MaxHpReductionEffectDefinition | ProneEffectDefinition | GrappleEffectDefinition | ConditionEffectDefinition | HitModifierEffect,
     Field(discriminator="kind"),
 ]
