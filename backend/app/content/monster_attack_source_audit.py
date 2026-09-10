@@ -1,7 +1,6 @@
 from __future__ import annotations
 import re
 from typing import Any
-
 from app.content.monster_attack_advantage_source_audit import conditional_attack_advantage_issues
 from app.content.monster_attack_modifier_source_audit import hit_modifier_issues
 from app.content.monster_save_area_source_audit import area_save_issues
