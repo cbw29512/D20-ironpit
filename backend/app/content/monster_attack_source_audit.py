@@ -55,6 +55,18 @@ def _max_size_rider_present(actions: str, size: Any, condition: str) -> bool:
     )
 
 
+def _push_rider_present(attack: WeaponAttack, actions: str) -> bool:
+    distance = attack.push_target_away_ft
+    if distance <= 0:
+        return True
+    push = rf"push(?:es)?\s+the\s+target\s+up\s+to\s+{distance}\s*(?:ft\.?|feet)\s+straight\s+away"
+    maximum = attack.push_target_max_size
+    if maximum is None:
+        return bool(re.search(push, actions, re.IGNORECASE))
+    size_name = re.escape(maximum.value)
+    return bool(re.search(rf"\b{size_name}\s+or\s+smaller\b[^.]*{push}", actions, re.IGNORECASE))
+
+
 def _condition_timing_present(actions: str, control: Any) -> bool:
     condition = control.condition_id
     if condition is None:
@@ -116,6 +128,8 @@ def attack_issues(attack: WeaponAttack, actions: str, traits: str = "") -> list[
     issues.extend(conditional_attack_advantage_issues(attack, actions, traits))
     if attack.knocks_prone_max_size is not None and not _max_size_rider_present(actions, attack.knocks_prone_max_size, "prone"):
         issues.append(f"prone-rider-mismatch:{attack.id}")
+    if attack.push_target_away_ft and not _push_rider_present(attack, actions):
+        issues.append(f"push-rider-mismatch:{attack.id}")
     if attack.forbid_target_grappled_by_self:
         untargetable = re.search(r"can(?:not|'t|’t)\s+be\s+targeted", actions, re.IGNORECASE)
         if not untargetable or weapon.name.lower() not in actions:
