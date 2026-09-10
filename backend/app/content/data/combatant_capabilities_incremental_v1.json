@@ -135,5 +135,88 @@
       "body_style": "humanoid"
     },
     "source": "SRD 5.2.1 p. 263"
+  },
+  {
+    "schema_version": 1,
+    "id": "srd-tough-boss",
+    "name": "Tough Boss",
+    "archetype": "source-certified bruiser",
+    "challenge_rating": "4",
+    "kind": "monster",
+    "size": "medium",
+    "armor_class": 16,
+    "max_hp": 82,
+    "speed_ft": 30,
+    "movement_modes": {
+      "walk_ft": 30,
+      "fly_ft": 0,
+      "climb_ft": 0,
+      "swim_ft": 0,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": 2,
+    "attacks": [
+      {
+        "id": "srd-tough-boss-warhammer",
+        "name": "Warhammer",
+        "weapon_id": "srd-tough-boss-warhammer-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 5,
+        "damage": {"count": 2, "size": 8, "bonus": 3},
+        "damage_type": "bludgeoning",
+        "animation": "strike",
+        "reach_ft": 5,
+        "push_target_away_ft": 10,
+        "push_target_max_size": "large"
+      },
+      {
+        "id": "srd-tough-boss-heavy-crossbow",
+        "name": "Heavy Crossbow",
+        "weapon_id": "srd-tough-boss-heavy-crossbow-weapon",
+        "attack_kind": "ranged",
+        "attack_bonus": 4,
+        "damage": {"count": 2, "size": 10, "bonus": 2},
+        "damage_type": "piercing",
+        "animation": "projectile",
+        "normal_range_ft": 100,
+        "long_range_ft": 400,
+        "projectile": "bolt"
+      }
+    ],
+    "primary_attack_id": "srd-tough-boss-warhammer",
+    "unarmed_opportunity_attack": {"attack_bonus": 5, "damage": 4},
+    "attack_action": {
+      "id": "srd-tough-boss-multiattack",
+      "name": "Multiattack",
+      "is_attack_action": false,
+      "slots": [
+        {
+          "attack_ids": ["srd-tough-boss-warhammer", "srd-tough-boss-heavy-crossbow"],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": ["srd-tough-boss-warhammer", "srd-tough-boss-heavy-crossbow"],
+          "save_action_ids": []
+        }
+      ]
+    },
+    "saving_throw_bonuses": {
+      "strength": 5,
+      "dexterity": 2,
+      "constitution": 5,
+      "intelligence": 0,
+      "wisdom": 0,
+      "charisma": 2
+    },
+    "combat_traits": ["pack-tactics"],
+    "source_trait_names": ["Pack Tactics"],
+    "visual": {
+      "armor": "medium",
+      "main_hand": "warhammer",
+      "off_hand": "heavy-crossbow",
+      "body_style": "humanoid"
+    },
+    "source": "SRD 5.2.1 p. 332"
   }
 ]
