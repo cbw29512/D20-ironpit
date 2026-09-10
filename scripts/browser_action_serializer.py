@@ -139,17 +139,24 @@ def _spell_modifier_row(effect: Any) -> dict[str, Any]:
 
 
 def defense_row(action: Any) -> dict[str, Any]:
-    return {
+    row = {
         "id": action.id, "name": action.name, "level": action.level,
         "actionCost": action.action_cost, "range": action.range_ft,
         "durationMinutes": action.duration_minutes, "targetPolicy": action.target_policy,
-        "targetCount": action.target_count, "targetCountPerSlotAbove": action.target_count_per_slot_above,
+        "targetCount": action.target_count,
         "temporaryHp": action.temporary_hp, "temporaryHpPerSlotAbove": action.temporary_hp_per_slot_above,
-        "maxHpIncrease": action.max_hp_increase, "currentHpIncrease": action.current_hp_increase,
         "damageResistances": list(action.damage_resistances),
         "modifierEffects": [_spell_modifier_row(effect) for effect in action.modifier_effects],
         "concentration": action.concentration, "priority": action.priority, "animation": action.animation,
+        "source": action.source,
     }
+    if action.target_count_per_slot_above:
+        row["targetCountPerSlotAbove"] = action.target_count_per_slot_above
+    if action.max_hp_increase:
+        row["maxHpIncrease"] = action.max_hp_increase
+    if action.current_hp_increase:
+        row["currentHpIncrease"] = action.current_hp_increase
+    return row
 
 
 def healing_row(action: Any) -> dict[str, Any]:
