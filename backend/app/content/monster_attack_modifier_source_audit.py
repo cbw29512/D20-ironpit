@@ -20,7 +20,7 @@ def _next_attack_disadvantage_matches(effect, actions: str) -> bool:
     if effect.expires_at_end_of_target_turn is not True:
         return False
     pattern = (
-        r"(?:the\s+target|it)\s+has\s+disadvantage\s+on\s+the\s+next\s+attack\s+roll\s+"
+        r"has\s+disadvantage\s+on\s+the\s+next\s+attack\s+roll\s+"
         r"(?:it|the\s+target)\s+makes\s+before\s+the\s+end\s+of\s+its\s+next\s+turn"
     )
     return bool(re.search(pattern, actions, re.IGNORECASE))
