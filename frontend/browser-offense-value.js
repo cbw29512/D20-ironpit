@@ -66,7 +66,7 @@
 
   function spellAttack(caster, target, spell, setup) {
     const distance = S().distance(caster, target);
-    const conditions = A().conditionSources(caster.state, target.state, distance, target.combatant_id);
+    const conditions = A().conditionSources(caster.state, target.state, distance, target.combatant_id, setup);
     const closeThreat = A().rangedCloseThreat(caster, target, distance, setup);
     const mode = R().modeFromSources(conditions.advantage + M().attacksAgainstAdvantage(target.state),
       conditions.disadvantage + (closeThreat ? 1 : 0));
