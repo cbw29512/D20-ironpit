@@ -51,7 +51,7 @@ function fight(firstRoll) {
 }
 
 {
-  const result = fight(1);
+  const result = fight(2);
   assert.equal(result.attacks[0].hit, false);
   assert.equal(result.target.position_ft, 15);
   assert.equal(result.attacks[1].attack_roll.mode, "disadvantage");
