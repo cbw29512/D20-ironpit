@@ -18,7 +18,7 @@
       turn_terminated: false, turn_termination_reason: null,
       movement_remaining_ft: 0, resources: { ...(template.resources || {}) }, heroic_inspiration: false,
       active_effect_ids: [], active_buff_effect_ids: [], opening_buff_spell_id: null,
-      grapple_sources: [], timed_effects: [], active_modifiers: [], concentration: null,
+      grapple_sources: [], swallowed: null, timed_effects: [], active_modifiers: [], concentration: null,
       feature_last_turn_keys: {}, spell_slot_expended_turn_key: null,
       temporary_damage_resistances: [], rage_expires_round: null, rage_max_round: null,
     };
