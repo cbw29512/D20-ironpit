@@ -30,6 +30,8 @@
       repeat_save_eligible_round: hasRepeatSave && options.appliedRound != null ? options.appliedRound + delayRounds : null,
       allowed_removal_action_ids: [...(options.allowedRemovalActionIds || [])],
       turn_behavior: options.turnBehavior || "normal",
+      action_or_bonus_only: Boolean(options.actionOrBonusOnly),
+      reactions_disabled: Boolean(options.reactionsDisabled),
       ends_on_damage: Boolean(options.endsOnDamage),
       ends_if_source_incapacitated: Boolean(options.endsIfSourceIncapacitated),
       ends_if_source_dead: Boolean(options.endsIfSourceDead),
