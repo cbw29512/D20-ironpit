@@ -26,7 +26,11 @@
         "weapon_id": "srd-swarm-of-insects-bites-weapon",
         "attack_kind": "melee",
         "attack_bonus": 3,
-        "damage": {"count": 2, "size": 4, "bonus": 1},
+        "damage": {
+          "count": 2,
+          "size": 4,
+          "bonus": 1
+        },
         "damage_type": "poison",
         "animation": "swarm",
         "reach_ft": 5,
@@ -34,7 +38,11 @@
           {
             "kind": "damage",
             "source": "conditional:attacker_bloodied",
-            "dice": {"count": 1, "size": 4, "bonus": 1},
+            "dice": {
+              "count": 1,
+              "size": 4,
+              "bonus": 1
+            },
             "damage_type": "poison",
             "trigger": "attacker_bloodied",
             "mode": "replace_weapon"
@@ -43,7 +51,10 @@
       }
     ],
     "primary_attack_id": "srd-swarm-of-insects-bites",
-    "unarmed_opportunity_attack": {"attack_bonus": -2, "damage": 0},
+    "unarmed_opportunity_attack": {
+      "attack_bonus": -2,
+      "damage": 0
+    },
     "saving_throw_bonuses": {
       "strength": -4,
       "dexterity": 1,
@@ -52,13 +63,33 @@
       "wisdom": -2,
       "charisma": -5
     },
-    "combat_traits": ["swarm"],
-    "source_trait_names": ["Spider Climb", "Swarm"],
-    "damage_resistances": ["bludgeoning", "piercing", "slashing"],
-    "condition_immunities": [
-      "charmed", "frightened", "grappled", "paralyzed", "petrified", "prone", "restrained", "stunned"
+    "combat_traits": [
+      "swarm"
     ],
-    "visual": {"armor": "none", "main_hand": "Bites", "body_style": "swarm"},
+    "source_trait_names": [
+      "Spider Climb",
+      "Swarm"
+    ],
+    "damage_resistances": [
+      "bludgeoning",
+      "piercing",
+      "slashing"
+    ],
+    "condition_immunities": [
+      "charmed",
+      "frightened",
+      "grappled",
+      "paralyzed",
+      "petrified",
+      "prone",
+      "restrained",
+      "stunned"
+    ],
+    "visual": {
+      "armor": "none",
+      "main_hand": "Bites",
+      "body_style": "swarm"
+    },
     "source": "SRD 5.2.1 p. 361"
   },
   {
@@ -88,7 +119,11 @@
         "weapon_id": "srd-swarm-of-venomous-snakes-bites-weapon",
         "attack_kind": "melee",
         "attack_bonus": 6,
-        "damage": {"count": 1, "size": 8, "bonus": 4},
+        "damage": {
+          "count": 1,
+          "size": 8,
+          "bonus": 4
+        },
         "damage_type": "piercing",
         "animation": "swarm",
         "reach_ft": 5,
@@ -96,7 +131,11 @@
           {
             "kind": "damage",
             "source": "Poison",
-            "dice": {"count": 3, "size": 6, "bonus": 0},
+            "dice": {
+              "count": 3,
+              "size": 6,
+              "bonus": 0
+            },
             "damage_type": "poison",
             "trigger": "on_hit",
             "mode": "add"
@@ -104,7 +143,11 @@
           {
             "kind": "damage",
             "source": "conditional:attacker_bloodied",
-            "dice": {"count": 1, "size": 4, "bonus": 4},
+            "dice": {
+              "count": 1,
+              "size": 4,
+              "bonus": 4
+            },
             "damage_type": "piercing",
             "trigger": "attacker_bloodied",
             "mode": "replace_weapon"
@@ -113,7 +156,10 @@
       }
     ],
     "primary_attack_id": "srd-swarm-of-venomous-snakes-bites",
-    "unarmed_opportunity_attack": {"attack_bonus": 1, "damage": 0},
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 1,
+      "damage": 0
+    },
     "saving_throw_bonuses": {
       "strength": -1,
       "dexterity": 4,
@@ -122,13 +168,32 @@
       "wisdom": 0,
       "charisma": -4
     },
-    "combat_traits": ["swarm"],
-    "source_trait_names": ["Swarm"],
-    "damage_resistances": ["bludgeoning", "piercing", "slashing"],
-    "condition_immunities": [
-      "charmed", "frightened", "grappled", "paralyzed", "petrified", "prone", "restrained", "stunned"
+    "combat_traits": [
+      "swarm"
     ],
-    "visual": {"armor": "none", "main_hand": "Bites", "body_style": "swarm"},
+    "source_trait_names": [
+      "Swarm"
+    ],
+    "damage_resistances": [
+      "bludgeoning",
+      "piercing",
+      "slashing"
+    ],
+    "condition_immunities": [
+      "charmed",
+      "frightened",
+      "grappled",
+      "paralyzed",
+      "petrified",
+      "prone",
+      "restrained",
+      "stunned"
+    ],
+    "visual": {
+      "armor": "none",
+      "main_hand": "Bites",
+      "body_style": "swarm"
+    },
     "source": "SRD 5.2.1 p. 362"
   },
   {
@@ -166,7 +231,11 @@
         "weapon_id": "ape-fist",
         "attack_kind": "melee",
         "attack_bonus": 5,
-        "damage": {"count": 1, "size": 4, "bonus": 3},
+        "damage": {
+          "count": 1,
+          "size": 4,
+          "bonus": 3
+        },
         "damage_type": "bludgeoning",
         "animation": "bludgeon",
         "reach_ft": 5
@@ -177,7 +246,11 @@
         "weapon_id": "ape-rock",
         "attack_kind": "ranged",
         "attack_bonus": 5,
-        "damage": {"count": 2, "size": 6, "bonus": 3},
+        "damage": {
+          "count": 2,
+          "size": 6,
+          "bonus": 3
+        },
         "damage_type": "bludgeoning",
         "animation": "projectile",
         "reach_ft": 5,
@@ -189,14 +262,27 @@
       }
     ],
     "primary_attack_id": "ape-fist",
-    "unarmed_opportunity_attack": {"attack_bonus": 5, "damage": 4},
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 5,
+      "damage": 4
+    },
     "attack_action": {
       "id": "ape-multiattack",
       "name": "Multiattack",
       "is_attack_action": false,
       "slots": [
-        {"attack_ids": ["ape-fist"], "save_action_ids": []},
-        {"attack_ids": ["ape-fist"], "save_action_ids": []}
+        {
+          "attack_ids": [
+            "ape-fist"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "ape-fist"
+          ],
+          "save_action_ids": []
+        }
       ]
     },
     "saving_throw_bonuses": {
@@ -207,21 +293,35 @@
       "wisdom": 1,
       "charisma": -2
     },
-    "skill_bonuses": {"athletics": 5, "perception": 3},
+    "skill_bonuses": {
+      "athletics": 5,
+      "perception": 3
+    },
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
-    "source_limited_use_names": ["actions:Rock (Recharge 6)"],
+    "source_limited_use_names": [
+      "actions:Rock (Recharge 6)"
+    ],
     "source_legendary_action_names": [],
     "resources": [
       {
         "id": "ape-rock-recharge",
         "name": "Rock",
         "max_uses": 1,
-        "recharge": {"trigger": "start_of_turn", "die_size": 6, "minimum_roll": 6}
+        "recharge": {
+          "trigger": "start_of_turn",
+          "die_size": 6,
+          "minimum_roll": 6
+        }
       }
     ],
-    "visual": {"armor": "none", "main_hand": "Fist", "off_hand": "Rock", "body_style": "beast"},
+    "visual": {
+      "armor": "none",
+      "main_hand": "Fist",
+      "off_hand": "Rock",
+      "body_style": "beast"
+    },
     "source": "SRD 5.2.1 p. 344"
   },
   {
@@ -259,21 +359,40 @@
         "weapon_id": "lion-rend",
         "attack_kind": "melee",
         "attack_bonus": 5,
-        "damage": {"count": 1, "size": 8, "bonus": 3},
+        "damage": {
+          "count": 1,
+          "size": 8,
+          "bonus": 3
+        },
         "damage_type": "slashing",
         "animation": "slash",
         "reach_ft": 5
       }
     ],
     "primary_attack_id": "lion-rend",
-    "unarmed_opportunity_attack": {"attack_bonus": 5, "damage": 4},
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 5,
+      "damage": 4
+    },
     "attack_action": {
       "id": "lion-multiattack",
       "name": "Multiattack",
       "is_attack_action": false,
       "slots": [
-        {"attack_ids": ["lion-rend"], "save_action_ids": ["lion-roar"]},
-        {"attack_ids": ["lion-rend"], "save_action_ids": []}
+        {
+          "attack_ids": [
+            "lion-rend"
+          ],
+          "save_action_ids": [
+            "lion-roar"
+          ]
+        },
+        {
+          "attack_ids": [
+            "lion-rend"
+          ],
+          "save_action_ids": []
+        }
       ]
     },
     "save_actions": [
@@ -301,14 +420,26 @@
       "wisdom": 1,
       "charisma": -1
     },
-    "skill_bonuses": {"perception": 3, "stealth": 4},
-    "combat_traits": ["pack-tactics"],
-    "source_trait_names": ["Pack Tactics", "Running Leap"],
+    "skill_bonuses": {
+      "perception": 3,
+      "stealth": 4
+    },
+    "combat_traits": [
+      "pack-tactics"
+    ],
+    "source_trait_names": [
+      "Pack Tactics",
+      "Running Leap"
+    ],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
     "source_legendary_action_names": [],
-    "visual": {"armor": "none", "main_hand": "Rend", "body_style": "beast"},
+    "visual": {
+      "armor": "none",
+      "main_hand": "Rend",
+      "body_style": "beast"
+    },
     "source": "SRD 5.2.1 p. 356"
   },
   {
@@ -346,12 +477,19 @@
         "weapon_id": "hill-giant-tree-club",
         "attack_kind": "melee",
         "attack_bonus": 8,
-        "damage": {"count": 3, "size": 8, "bonus": 5},
+        "damage": {
+          "count": 3,
+          "size": 8,
+          "bonus": 5
+        },
         "damage_type": "bludgeoning",
         "animation": "bludgeon",
         "reach_ft": 10,
         "effects": [
-          {"kind": "prone", "max_target_size": "large"}
+          {
+            "kind": "prone",
+            "max_target_size": "large"
+          }
         ]
       },
       {
@@ -360,7 +498,11 @@
         "weapon_id": "hill-giant-trash-lob",
         "attack_kind": "ranged",
         "attack_bonus": 8,
-        "damage": {"count": 2, "size": 10, "bonus": 5},
+        "damage": {
+          "count": 2,
+          "size": 10,
+          "bonus": 5
+        },
         "damage_type": "bludgeoning",
         "animation": "projectile",
         "reach_ft": 5,
@@ -368,19 +510,38 @@
         "long_range_ft": 240,
         "projectile": "debris",
         "effects": [
-          {"kind": "condition", "condition": "poisoned", "expiry_timing": "target_turn_end"}
+          {
+            "kind": "condition",
+            "condition": "poisoned",
+            "expiry_timing": "target_turn_end"
+          }
         ]
       }
     ],
     "primary_attack_id": "hill-giant-tree-club",
-    "unarmed_opportunity_attack": {"attack_bonus": 8, "damage": 6},
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 8,
+      "damage": 6
+    },
     "attack_action": {
       "id": "hill-giant-multiattack",
       "name": "Multiattack",
       "is_attack_action": false,
       "slots": [
-        {"attack_ids": ["hill-giant-tree-club", "hill-giant-trash-lob"], "save_action_ids": []},
-        {"attack_ids": ["hill-giant-tree-club", "hill-giant-trash-lob"], "save_action_ids": []}
+        {
+          "attack_ids": [
+            "hill-giant-tree-club",
+            "hill-giant-trash-lob"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "hill-giant-tree-club",
+            "hill-giant-trash-lob"
+          ],
+          "save_action_ids": []
+        }
       ]
     },
     "saving_throw_bonuses": {
@@ -391,13 +552,20 @@
       "wisdom": -1,
       "charisma": -2
     },
-    "skill_bonuses": {"perception": 2},
+    "skill_bonuses": {
+      "perception": 2
+    },
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
     "source_legendary_action_names": [],
-    "visual": {"armor": "none", "main_hand": "Tree Club", "off_hand": "Trash Lob", "body_style": "brute"},
+    "visual": {
+      "armor": "none",
+      "main_hand": "Tree Club",
+      "off_hand": "Trash Lob",
+      "body_style": "brute"
+    },
     "source": "SRD 5.2.1 p. 298"
   },
   {
@@ -435,24 +603,43 @@
         "weapon_id": "sahuagin-warrior-claw",
         "attack_kind": "melee",
         "attack_bonus": 3,
-        "damage": {"count": 1, "size": 6, "bonus": 1},
+        "damage": {
+          "count": 1,
+          "size": 6,
+          "bonus": 1
+        },
         "damage_type": "slashing",
         "animation": "slash",
         "reach_ft": 5,
         "conditional_attack_advantage": [
-          {"trigger": "target_not_full_hp"}
+          {
+            "trigger": "target_not_full_hp"
+          }
         ]
       }
     ],
     "primary_attack_id": "sahuagin-warrior-claw",
-    "unarmed_opportunity_attack": {"attack_bonus": 3, "damage": 2},
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 3,
+      "damage": 2
+    },
     "attack_action": {
       "id": "sahuagin-warrior-multiattack",
       "name": "Multiattack",
       "is_attack_action": false,
       "slots": [
-        {"attack_ids": ["sahuagin-warrior-claw"], "save_action_ids": []},
-        {"attack_ids": ["sahuagin-warrior-claw"], "save_action_ids": []}
+        {
+          "attack_ids": [
+            "sahuagin-warrior-claw"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "sahuagin-warrior-claw"
+          ],
+          "save_action_ids": []
+        }
       ]
     },
     "saving_throw_bonuses": {
@@ -463,14 +650,163 @@
       "wisdom": 1,
       "charisma": -1
     },
-    "skill_bonuses": {"perception": 5},
-    "source_trait_names": ["Blood Frenzy", "Limited Amphibiousness", "Shark Telepathy"],
+    "skill_bonuses": {
+      "perception": 5
+    },
+    "source_trait_names": [
+      "Blood Frenzy",
+      "Limited Amphibiousness",
+      "Shark Telepathy"
+    ],
     "source_reaction_names": [],
-    "source_bonus_action_names": ["Aquatic Charge"],
+    "source_bonus_action_names": [
+      "Aquatic Charge"
+    ],
     "source_limited_use_names": [],
     "source_legendary_action_names": [],
-    "damage_resistances": ["acid", "cold"],
-    "visual": {"armor": "none", "main_hand": "Claw", "body_style": "monster"},
+    "damage_resistances": [
+      "acid",
+      "cold"
+    ],
+    "visual": {
+      "armor": "none",
+      "main_hand": "Claw",
+      "body_style": "monster"
+    },
     "source": "SRD 5.2.1 p. 321"
+  },
+  {
+    "schema_version": 1,
+    "id": "srd-xorn",
+    "name": "Xorn",
+    "archetype": "source-certified elemental",
+    "challenge_rating": "5",
+    "kind": "monster",
+    "size": "medium",
+    "ability_scores": {
+      "strength": 17,
+      "dexterity": 10,
+      "constitution": 22,
+      "intelligence": 11,
+      "wisdom": 10,
+      "charisma": 11
+    },
+    "armor_class": 19,
+    "max_hp": 84,
+    "speed_ft": 20,
+    "movement_modes": {
+      "walk_ft": 20,
+      "fly_ft": 0,
+      "climb_ft": 0,
+      "swim_ft": 0,
+      "burrow_ft": 20,
+      "hover": false
+    },
+    "initiative_bonus": 0,
+    "attacks": [
+      {
+        "id": "xorn-bite",
+        "name": "Bite",
+        "weapon_id": "xorn-bite",
+        "attack_kind": "melee",
+        "attack_bonus": 6,
+        "damage": {
+          "count": 4,
+          "size": 6,
+          "bonus": 3
+        },
+        "damage_type": "piercing",
+        "animation": "bite",
+        "reach_ft": 5
+      },
+      {
+        "id": "xorn-claw",
+        "name": "Claw",
+        "weapon_id": "xorn-claw",
+        "attack_kind": "melee",
+        "attack_bonus": 6,
+        "damage": {
+          "count": 1,
+          "size": 10,
+          "bonus": 3
+        },
+        "damage_type": "slashing",
+        "animation": "slash",
+        "reach_ft": 5
+      }
+    ],
+    "primary_attack_id": "xorn-bite",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 6,
+      "damage": 4
+    },
+    "attack_action": {
+      "id": "xorn-multiattack",
+      "name": "Multiattack",
+      "is_attack_action": false,
+      "slots": [
+        {
+          "attack_ids": [
+            "xorn-bite"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "xorn-claw"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "xorn-claw"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "xorn-claw"
+          ],
+          "save_action_ids": []
+        }
+      ]
+    },
+    "saving_throw_bonuses": {
+      "strength": 3,
+      "dexterity": 0,
+      "constitution": 6,
+      "intelligence": 0,
+      "wisdom": 0,
+      "charisma": 0
+    },
+    "skill_bonuses": {
+      "perception": 6,
+      "stealth": 6
+    },
+    "source_trait_names": [
+      "Earth Glide",
+      "Treasure Sense"
+    ],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [
+      "Charge"
+    ],
+    "source_limited_use_names": [],
+    "source_legendary_action_names": [],
+    "damage_immunities": [
+      "poison"
+    ],
+    "condition_immunities": [
+      "paralyzed",
+      "petrified",
+      "poisoned"
+    ],
+    "visual": {
+      "armor": "none",
+      "main_hand": "Claw",
+      "off_hand": "Bite",
+      "body_style": "elemental"
+    },
+    "source": "SRD 5.2.1 p. 343"
   }
 ]
