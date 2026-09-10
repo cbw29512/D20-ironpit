@@ -15,6 +15,19 @@ def _dice_pattern(count: int, size: int, bonus: int) -> re.Pattern[str]:
     return re.compile(base + rf"\s*{sign}\s*{abs(bonus)}", re.IGNORECASE)
 
 
+def _push_present(action: Any, actions: str) -> bool:
+    if not action.push_target_away_ft:
+        return True
+    distance = action.push_target_away_ft
+    pattern = rf"push(?:es|ed)?\s+(?:the\s+)?target\s+up\s+to\s+{distance}\s+(?:feet|ft\.?).*?straight\s+away"
+    if not re.search(pattern, actions, re.IGNORECASE):
+        return False
+    if action.push_target_max_size is None:
+        return True
+    maximum = getattr(action.push_target_max_size, "value", action.push_target_max_size)
+    return bool(re.search(rf"\b{re.escape(str(maximum))}\s+or\s+smaller\b", actions, re.IGNORECASE))
+
+
 def save_action_issues(action: Any, actions: str) -> list[str]:
     issues: list[str] = []
     if action.name.lower() not in actions:
@@ -28,6 +41,8 @@ def save_action_issues(action: Any, actions: str) -> list[str]:
         action.damage_bonus,
     ).search(actions):
         issues.append(f"save-damage-mismatch:{action.id}")
+    if not _push_present(action, actions):
+        issues.append(f"save-push-rider-mismatch:{action.id}")
     if action.grapple_escape_dc is not None:
         if "grappled" not in actions or f"escape dc {action.grapple_escape_dc}" not in actions:
             issues.append(f"save-grapple-rider-mismatch:{action.id}")
