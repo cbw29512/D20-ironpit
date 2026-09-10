@@ -3,7 +3,7 @@
 
   const DIE_KINDS = new Set(["attack-roll-bonus-die", "saving-throw-bonus-die", "bonus-damage"]);
   const KINDS = new Set(["armor-class", ...DIE_KINDS, "attacks-against-advantage", "next-attack-against-advantage", "speed"]);
-  const HIT_KINDS = new Set(["attacks-against-advantage", "speed"]);
+  const EFFECT_KINDS = new Set(["attacks-against-advantage", "speed"]);
   const D = () => window.IRON_PIT_DICE;
 
   function validate(item) {
@@ -67,16 +67,20 @@
     return before - state.active_modifiers.length;
   }
 
+  function applyEffect(state, sourceId, sourceEffectId, effect, index, trigger) {
+    if (!EFFECT_KINDS.has(effect.kind)) throw new Error(`Unsupported combat modifier effect kind: ${effect.kind}.`);
+    add(state, {
+      id: `${sourceId}:${sourceEffectId}:${trigger}-modifier:${index}`, source_id: sourceId, source_effect_id: sourceEffectId,
+      kind: effect.kind, flat_bonus: effect.flatBonus || 0,
+      consume_on_attack_against: Boolean(effect.consumeOnAttackAgainst),
+      expires_at_start_of_source_turn: Boolean(effect.expiresAtStartOfSourceTurn),
+      expires_at_end_of_target_turn: Boolean(effect.expiresAtEndOfTargetTurn),
+    });
+  }
+
   function applyHitEffects(state, sourceId, attack) {
     for (const [index, effect] of (attack.onHitModifiers || []).entries()) {
-      if (!HIT_KINDS.has(effect.kind)) throw new Error(`Unsupported on-hit modifier kind: ${effect.kind}.`);
-      add(state, {
-        id: `${sourceId}:${attack.id}:hit-modifier:${index}`, source_id: sourceId, source_effect_id: attack.id,
-        kind: effect.kind, flat_bonus: effect.flatBonus || 0,
-        consume_on_attack_against: Boolean(effect.consumeOnAttackAgainst),
-        expires_at_start_of_source_turn: Boolean(effect.expiresAtStartOfSourceTurn),
-        expires_at_end_of_target_turn: Boolean(effect.expiresAtEndOfTargetTurn),
-      });
+      applyEffect(state, sourceId, attack.id, effect, index, "hit");
     }
   }
 
@@ -120,7 +124,7 @@
     && (!item.target_id || item.target_id === targetId));
 
   window.IRON_PIT_BROWSER_MODIFIERS = {
-    add, applyD20Bonus, applyHitEffects, attacksAgainstAdvantage, bonusDamage, consumeAttacksAgainstAdvantage,
+    add, applyD20Bonus, applyEffect, applyHitEffects, attacksAgainstAdvantage, bonusDamage, consumeAttacksAgainstAdvantage,
     consumeNextAttackAgainstAdvantage, effectiveArmorClass, effectiveSpeed, expireSourceTurn, expireSourceTurnStart,
     expireTargetTurn, nextAttackAgainstAdvantage, removeSource, validate,
   };
