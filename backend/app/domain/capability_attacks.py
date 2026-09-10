@@ -53,10 +53,10 @@ class AttackCapabilityDefinition(BaseModel):
     def validate_attack_shape(self) -> "AttackCapabilityDefinition":
         if (self.damage is None) == (self.fixed_damage is None):
             raise ValueError("Attack must declare exactly one of damage or fixed_damage.")
-        if self.attack_kind == WeaponAttackKind.RANGED and (
+        if self.attack_kind in {WeaponAttackKind.RANGED, WeaponAttackKind.MELEE_OR_RANGED} and (
             self.normal_range_ft is None or self.long_range_ft is None
         ):
-            raise ValueError("Ranged attack requires normal and long range.")
+            raise ValueError("Ranged-capable attack requires normal and long range.")
         if self.attack_ability_modifier is not None and self.attack_ability is None:
             raise ValueError("Attack ability modifier requires an explicit attack ability.")
         if self.push_target_away_ft and self.pull_target_toward_ft:
