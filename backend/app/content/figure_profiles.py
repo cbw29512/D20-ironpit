@@ -33,6 +33,7 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Deer": _p("hoofed", "antlers"),
     "Dire Wolf": _p("quadruped", "canine"),
     "Draft Horse": _p("hoofed", "equine"),
+    "Dretch": _p("humanoid", "dretch"),
     "Eagle": _p("bird", "raptor"),
     "Elk": _p("hoofed", "antlers"),
     "Flying Snake": _p("snake", "flying-snake"),
