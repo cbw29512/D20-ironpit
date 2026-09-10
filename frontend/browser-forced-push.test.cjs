@@ -5,6 +5,9 @@ const vm = require("node:vm");
 
 global.window = {};
 window.IRON_PIT_BROWSER_STATE = {
+  distance(a, b) {
+    return Math.abs(a.position_ft - b.position_ft);
+  },
   sizeAtMost(member, maximum) {
     const order = { tiny: 0, small: 1, medium: 2, large: 3, huge: 4, gargantuan: 5 };
     return order[member.state.template.size] <= order[maximum];
@@ -47,6 +50,8 @@ function member(id, side, position, size) {
   const attack = { name: "Warhammer", pushTargetAwayFt: 10, pushTargetMaxSize: "large" };
   const event = window.IRON_PIT_BROWSER_ATTACK.resolveAttack(1, 1, attacker, target, attack, 5, {});
   assert.equal(target.position_ft, 15);
+  assert.equal(event.distance_before_ft, 5);
+  assert.equal(event.distance_after_ft, 15);
   assert.match(event.description, /pushed 10 feet straight away/);
 }
 
