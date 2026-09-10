@@ -79,7 +79,7 @@ def test_frightened_movement_restriction_does_not_require_visibility() -> None:
     assert approaches_fear_source(target, GridPosition(x=0, y=5), setup) is False
 
 
-def test_frightened_itself_invents_no_recovery_save() -> None:
+def test_frightened_itself_invents_no_recovery_or_expiry() -> None:
     target = _member("target", "heroes", 0)
     source = _member("source", "monsters", 6)
     _fear(target, source)
@@ -87,3 +87,5 @@ def test_frightened_itself_invents_no_recovery_save() -> None:
     assert effect.repeat_save_ability is None
     assert effect.repeat_save_dc is None
     assert effect.repeat_save_timing is None
+    assert effect.expiry_timing is None
+    assert effect.expires_at_start_of_source_turn is False
