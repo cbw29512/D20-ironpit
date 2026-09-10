@@ -21,5 +21,31 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_FORCED_MOVEMENT = { applyAttackPush };
+  function installAttackHook() {
+    try {
+      const engine = window.IRON_PIT_BROWSER_ATTACK;
+      if (!engine?.resolveAttack || engine.__forcedMovementHookInstalled) return false;
+      const baseResolveAttack = engine.resolveAttack.bind(engine);
+      engine.resolveAttack = function resolveAttackWithForcedMovement(
+        sequence, round, attacker, target, attack, distance, extra = {},
+      ) {
+        const event = baseResolveAttack(sequence, round, attacker, target, attack, distance, extra);
+        const members = extra.setup ? [...extra.setup.heroes, ...extra.setup.monsters] : [target];
+        const actualTarget = members.find((member) => member.combatant_id === event.target_id) || target;
+        const moved = applyAttackPush(attacker, actualTarget, attack, event.hit === true);
+        if (moved > 0) {
+          event.description += ` ${actualTarget.state.template.name} is pushed ${moved} feet straight away.`;
+        }
+        return event;
+      };
+      engine.__forcedMovementHookInstalled = true;
+      return true;
+    } catch (error) {
+      console.error("Forced movement attack hook installation failed.", error);
+      throw new Error("Forced movement attack hook installation failed.");
+    }
+  }
+
+  window.IRON_PIT_BROWSER_FORCED_MOVEMENT = { applyAttackPush, installAttackHook };
+  installAttackHook();
 })();
