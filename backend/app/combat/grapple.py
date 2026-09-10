@@ -27,14 +27,17 @@ def _sync_effect_ids(state: CombatantState) -> None:
         state.active_effect_ids.append(RESTRAINED_EFFECT_ID)
     elif not restrained and RESTRAINED_EFFECT_ID in state.active_effect_ids:
         state.active_effect_ids.remove(RESTRAINED_EFFECT_ID)
-    linked = {condition for source in state.grapple_sources for condition in source.linked_conditions}
-    timed = {effect.effect_id for effect in state.timed_effects}
-    known_linked = {condition for condition in state.active_effect_ids if condition in linked or condition == POISONED_EFFECT_ID}
-    for condition in linked:
+    for condition in {item for source in state.grapple_sources for item in source.linked_conditions}:
         if condition not in state.active_effect_ids:
             state.active_effect_ids.append(condition)
-    for condition in known_linked - linked - timed:
-        state.active_effect_ids.remove(condition)
+
+
+def _drop_orphaned_linked_conditions(state: CombatantState, removed: set[str]) -> None:
+    remaining = {item for source in state.grapple_sources for item in source.linked_conditions}
+    timed = {effect.effect_id for effect in state.timed_effects}
+    for condition in removed - remaining - timed:
+        if condition in state.active_effect_ids:
+            state.active_effect_ids.remove(condition)
 
 
 def apply_grapple(
@@ -43,6 +46,7 @@ def apply_grapple(
 ) -> list[str]:
     if condition_is_immune(state, GRAPPLED_EFFECT_ID):
         return []
+    replaced = [source for source in state.grapple_sources if source.source_id == source_id]
     state.grapple_sources = [source for source in state.grapple_sources if source.source_id != source_id]
     restrains = restrains and not condition_is_immune(state, RESTRAINED_EFFECT_ID)
     linked = [condition for condition in (linked_conditions or []) if not condition_is_immune(state, condition)]
@@ -50,6 +54,7 @@ def apply_grapple(
         source_id=source_id, escape_dc=escape_dc, range_ft=range_ft,
         restrains=restrains, linked_conditions=linked,
     ))
+    _drop_orphaned_linked_conditions(state, {item for source in replaced for item in source.linked_conditions})
     _sync_effect_ids(state)
     applied = [GRAPPLED_EFFECT_ID]
     if restrains:
@@ -58,7 +63,9 @@ def apply_grapple(
 
 
 def release_grapple(state: CombatantState, source_id: str) -> None:
+    removed_sources = [source for source in state.grapple_sources if source.source_id == source_id]
     state.grapple_sources = [source for source in state.grapple_sources if source.source_id != source_id]
+    _drop_orphaned_linked_conditions(state, {item for source in removed_sources for item in source.linked_conditions})
     _sync_effect_ids(state)
 
 
@@ -76,14 +83,17 @@ def cleanup_grapples(setup: EncounterSetup) -> None:
     members = {member.combatant_id: member for member in [*setup.heroes, *setup.monsters]}
     for target in members.values():
         retained: list[GrappleSource] = []
+        removed: set[str] = set()
         for source in target.state.grapple_sources:
             grappler = members.get(source.source_id)
-            if grappler is None or grappler.state.is_dead or grappler.state.is_unconscious:
-                continue
-            if abs(grappler.position_ft - target.position_ft) > source.range_ft:
-                continue
-            retained.append(source)
+            valid = grappler is not None and not grappler.state.is_dead and not grappler.state.is_unconscious
+            valid = valid and abs(grappler.position_ft - target.position_ft) <= source.range_ft
+            if valid:
+                retained.append(source)
+            else:
+                removed.update(source.linked_conditions)
         target.state.grapple_sources = retained
+        _drop_orphaned_linked_conditions(target.state, removed)
         _sync_effect_ids(target.state)
 
 
