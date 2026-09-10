@@ -8,6 +8,7 @@ from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
 from app.combat.grapple import apply_grapple
 from app.combat.resources import resource_available, spend_resource
+from app.combat.save_failure_effects import apply_save_failure_effects
 from app.combat.saving_throw_damage import build_save_damage_components
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.zero_hp import apply_damage
@@ -74,11 +75,22 @@ def resolve_save_action(
             )
             end_rage_if_incapacitated(target.state)
         applied_conditions: list[str] = []
-        if not succeeded and target.state.is_alive and not target.state.is_dead and action.grapple_escape_dc is not None:
-            applied_conditions = apply_grapple(
-                target.state, actor.combatant_id, action.grapple_escape_dc, action.range_ft,
-                restrains=action.restrains_while_grappled,
-            )
+        if not succeeded and target.state.is_alive and not target.state.is_dead:
+            applied_conditions.extend(apply_save_failure_effects(
+                target.state,
+                actor.combatant_id,
+                action.id,
+                action.failure_effects,
+                round_number=round_number,
+                range_ft=action.range_ft,
+                affected_states=affected_states,
+            ))
+            if action.grapple_escape_dc is not None:
+                applied_conditions.extend(apply_grapple(
+                    target.state, actor.combatant_id, action.grapple_escape_dc, action.range_ft,
+                    restrains=action.restrains_while_grappled,
+                ))
+        applied_conditions = list(dict.fromkeys(applied_conditions))
         outcome = "SUCCEEDS" if succeeded else "FAILS"
         description = (
             f"{target.state.template.name} {outcome} a DC {action.dc} {action.save_ability.title()} save "
@@ -86,10 +98,13 @@ def resolve_save_action(
         )
         if damage_outcome == "undead_fortitude":
             description += f" {target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP."
-        if "grappled" in applied_conditions:
-            description += f" {target.state.template.name} is Grappled."
-        if "restrained" in applied_conditions:
-            description += f" {target.state.template.name} is Restrained while Grappled."
+        for condition in applied_conditions:
+            if condition == "grappled":
+                description += f" {target.state.template.name} is Grappled."
+            elif condition == "restrained":
+                description += f" {target.state.template.name} is Restrained while Grappled."
+            else:
+                description += f" {target.state.template.name} is {condition.title()}."
         return BattleEvent(
             sequence=sequence, round_number=round_number, event_type="saving_throw",
             actor_id=actor.combatant_id, actor_name=actor.state.template.name,
