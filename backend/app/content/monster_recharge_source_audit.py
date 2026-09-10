@@ -17,11 +17,20 @@ def _normalized_name(value: str) -> str:
 
 
 def _resource_bound_actions(template: CombatantTemplate) -> list[tuple[str, int, str]]:
+    """Enumerate every action family using the universal resource contract."""
     bindings: list[tuple[str, int, str]] = []
     for attack in [template.weapon_attack, *template.alternate_weapon_attacks]:
         if attack.resource_id:
             bindings.append((attack.resource_id, attack.resource_cost, attack.weapon.name))
     for action in template.saving_throw_actions:
+        if action.resource_id:
+            bindings.append((action.resource_id, action.resource_cost, action.name))
+    for action in [
+        *template.spell_attack_actions,
+        *template.spell_save_actions,
+        *template.defensive_spell_actions,
+        *template.healing_actions,
+    ]:
         if action.resource_id:
             bindings.append((action.resource_id, action.resource_cost, action.name))
     return bindings
