@@ -7,6 +7,7 @@ from app.combat.condition_rules import close_hit_is_automatic_critical
 from app.combat.conditions import attack_roll_condition_sources
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.encounter_targeting import close_ranged_threat_exists, combatant_distance
+from app.combat.frightened import frightened_d20_disadvantage
 from app.combat.heroic_inspiration import reroll_failed_attack_with_heroic_inspiration
 from app.combat.modifier_stack import (
     add_modifier, apply_d20_bonus_dice, attacks_against_advantage_sources,
@@ -67,7 +68,8 @@ def resolve_spell_attack(
         advantage += attacks_against_reckless_advantage(target.state)
         advantage += next_attack_against_advantage_sources(caster.state, target.combatant_id)
         close_threat = spell.attack_kind == "ranged" and close_ranged_threat_exists(caster, setup)
-        mode = resolve_roll_mode(advantage, condition_disadvantage + sap_disadvantage(caster.state) + int(close_threat))
+        fear_disadvantage = frightened_d20_disadvantage(caster.state, setup)
+        mode = resolve_roll_mode(advantage, condition_disadvantage + fear_disadvantage + sap_disadvantage(caster.state) + int(close_threat))
         target_ac = effective_armor_class(target.state)
         base_roll = roll_d20(dice, spell.attack_bonus, mode)
         base_roll, heroic_reroll = reroll_failed_attack_with_heroic_inspiration(caster.state, base_roll, target_ac, dice)
