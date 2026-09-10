@@ -53,6 +53,7 @@ def test_hell_hound_uses_breath_then_failed_recharge_falls_back_to_two_bites() -
 
     second_turn, _ = resolve_combat_turn(
         sequence, 2, hound, hero, setup,
+        # Noncritical hits keep this fixture focused on Recharge fallback, not crit dice expansion.
         FixedDiceProvider([4, 19, 1, 1, 19, 1, 1]),
     )
     recharge = [event for event in second_turn if event.resource_roll is not None]
