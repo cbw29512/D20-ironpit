@@ -110,6 +110,7 @@ class SavingThrowAction(BaseModel):
     damage_type: DamageTypeName | None = None
     success_damage: Literal["none", "half"] = "none"
     failure_effects: list[SaveFailureEffectDefinition] = Field(default_factory=list)
+    forbid_target_affected_by_action: bool = False
     push_target_away_ft: int = Field(default=0, ge=0, le=200)
     push_target_max_size: CreatureSize | None = None
     grapple_escape_dc: int | None = Field(default=None, ge=1, le=40)
