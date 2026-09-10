@@ -82,7 +82,7 @@ jobs:
           for file in frontend/*.js; do node --check "$file"; done
           for test_file in frontend/*.test.cjs; do node "$test_file"; done
       - name: Dispatch canonical CI for generated exact head
-        if: steps.generated_sync.outputs.changed == 'true'
+        if: always() && steps.generated_sync.outputs.changed == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REF_NAME: ${{ github.ref_name }}
