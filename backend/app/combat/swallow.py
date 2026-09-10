@@ -6,6 +6,7 @@ from app.combat.action_economy import is_available, spend
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.damage import aggregate_damage_components, roll_damage_component
 from app.combat.damage_defenses import apply_damage_defenses
+from app.combat.dice import DiceProvider
 from app.combat.grapple import release_grapple
 from app.combat.zero_hp import apply_damage
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -48,12 +49,12 @@ def choose_swallow(source: EncounterCombatant, setup: EncounterSetup) -> tuple[E
         raise RuntimeError("Swallow choice could not be evaluated.") from exc
 
 
-def resolve_swallow(sequence: int, round_number: int, source: EncounterCombatant, target: EncounterCombatant, action: SwallowAction) -> BattleEvent:
+def resolve_swallow(
+    sequence: int, round_number: int, source: EncounterCombatant, target: EncounterCombatant,
+    action: SwallowAction, setup: EncounterSetup,
+) -> BattleEvent:
     try:
-        choice = choose_swallow(source, EncounterSetup(
-            heroes=[source] if source.side == "heroes" else [target],
-            monsters=[target] if source.side == "heroes" else [source],
-        ))
+        choice = choose_swallow(source, setup)
         if choice is None or choice[0].combatant_id != target.combatant_id or choice[1].id != action.id:
             raise ValueError("Swallow requires one eligible target grappled by the source.")
         applied = []
@@ -98,7 +99,9 @@ def release_swallowed(source: EncounterCombatant, target: EncounterCombatant, *,
         raise RuntimeError("Swallowed target could not be released.") from exc
 
 
-def resolve_swallow_turn_end(sequence: int, round_number: int, source: EncounterCombatant, setup: EncounterSetup, dice) -> tuple[list[BattleEvent], int]:
+def resolve_swallow_turn_end(
+    sequence: int, round_number: int, source: EncounterCombatant, setup: EncounterSetup, dice: DiceProvider,
+) -> tuple[list[BattleEvent], int]:
     try:
         events: list[BattleEvent] = []
         actions = {action.id: action for action in source.state.template.swallow_actions}
@@ -110,7 +113,10 @@ def resolve_swallow_turn_end(sequence: int, round_number: int, source: Encounter
             action = actions.get(swallowed.action_id)
             if action is None:
                 raise ValueError(f"Missing Swallow action {swallowed.action_id!r} on {source.state.template.name}.")
-            component = roll_damage_component(dice, action.name, action.damage_dice_count, action.damage_dice_size, action.damage_bonus, action.damage_type, False)
+            component = roll_damage_component(
+                dice, action.name, action.damage_dice_count, action.damage_dice_size,
+                action.damage_bonus, action.damage_type, False,
+            )
             total, components = apply_damage_defenses(target.state, [component])
             hp_before = target.state.current_hp
             apply_damage(target.state, total, damage_types={action.damage_type}, dice=dice, affected_states=affected_states)
