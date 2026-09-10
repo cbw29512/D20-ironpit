@@ -131,7 +131,7 @@
     "size": "large",
     "armor_class": 17,
     "max_hp": 119,
-    "speed_ft": 40,
+    "speed_ft": 80,
     "movement_modes": {"walk_ft": 40, "fly_ft": 80, "climb_ft": 40, "swim_ft": 0, "burrow_ft": 0, "hover": false},
     "initiative_bonus": 4,
     "attacks": [{"id": "srd-young-copper-dragon-rend", "name": "Rend", "weapon_id": "srd-young-copper-dragon-rend-weapon", "attack_kind": "melee", "attack_bonus": 7, "damage": {"count": 2, "size": 10, "bonus": 4}, "damage_type": "slashing", "animation": "claw", "reach_ft": 10}],
