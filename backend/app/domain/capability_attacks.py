@@ -89,6 +89,8 @@ class SaveCapabilityDefinition(BaseModel):
     damage_type: DamageType | None = None
     success_damage: Literal["none", "half"] = "none"
     failure_effects: list[SaveFailureEffectDefinition] = Field(default_factory=list)
+    push_target_away_ft: int = Field(default=0, ge=0, le=200)
+    push_target_max_size: CreatureSize | None = None
     grapple: GrappleEffectDefinition | None = None
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
@@ -103,6 +105,10 @@ class SaveCapabilityDefinition(BaseModel):
                 raise ValueError("Save target size and grapple target size cannot disagree.")
         if self.grapple and any(effect.kind == "grapple" for effect in self.failure_effects):
             raise ValueError("Use either legacy grapple or failure_effects grapple, not both.")
+        if self.push_target_max_size is not None and self.push_target_away_ft <= 0:
+            raise ValueError("Save-action push size limit requires positive push distance.")
+        if self.push_target_away_ft % 5:
+            raise ValueError("Save-action forced movement must use 5-foot increments.")
         return self
 
 
