@@ -8230,6 +8230,7 @@
         "damage_type": "bludgeoning",
         "success_damage": "none",
         "failure_effects": [],
+        "forbid_target_affected_by_action": false,
         "push_target_away_ft": 0,
         "grapple": {
           "kind": "grapple",
@@ -10318,6 +10319,7 @@
         "damage_type": "bludgeoning",
         "success_damage": "none",
         "failure_effects": [],
+        "forbid_target_affected_by_action": false,
         "push_target_away_ft": 0,
         "grapple": {
           "kind": "grapple",
