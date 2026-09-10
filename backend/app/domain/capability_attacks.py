@@ -43,6 +43,8 @@ class AttackCapabilityDefinition(BaseModel):
     rage_eligible: bool = False
     conditional_attack_advantage: list[ConditionalAttackAdvantage] = Field(default_factory=list)
     effects: list[AttackEffectDefinition] = Field(default_factory=list)
+    push_target_away_ft: int = Field(default=0, ge=0, le=120)
+    push_target_max_size: CreatureSize | None = None
     forbid_target_grappled_by_self: bool = False
 
     @model_validator(mode="after")
@@ -55,6 +57,10 @@ class AttackCapabilityDefinition(BaseModel):
             raise ValueError("Ranged attack requires normal and long range.")
         if self.attack_ability_modifier is not None and self.attack_ability is None:
             raise ValueError("Attack ability modifier requires an explicit attack ability.")
+        if self.push_target_max_size is not None and self.push_target_away_ft == 0:
+            raise ValueError("Push target size requires a positive push distance.")
+        if self.push_target_away_ft % 5:
+            raise ValueError("Push distance must use 5-foot increments.")
         control_count = sum(effect.kind in {"grapple", "condition"} for effect in self.effects)
         if control_count > 1:
             raise ValueError("Current runtime supports one persistent control rider per attack.")
