@@ -7,6 +7,7 @@ from app.content.monster_attack_source_audit import attack_issues, normalized, s
 from app.content.monster_bonus_action_source_audit import bonus_action_issues
 from app.content.monster_charge_source_audit import charge_replacement_issues
 from app.content.monster_defense_source_audit import defense_issues
+from app.content.monster_forced_movement_action_source_audit import forced_movement_action_issues
 from app.content.monster_legendary_source_audit import legendary_action_issues
 from app.content.monster_limited_use_source_audit import limited_use_issues
 from app.content.monster_reaction_source_audit import reaction_issues
@@ -99,6 +100,8 @@ def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) ->
         issues.extend(charge_replacement_issues(template, actions))
         for action in template.saving_throw_actions:
             issues.extend(save_action_issues(action, actions))
+        for action in template.forced_movement_actions:
+            issues.extend(forced_movement_action_issues(action, actions))
         if template.attack_action is not None and "multiattack" not in actions:
             issues.append("multiattack-source-missing")
         return issues
