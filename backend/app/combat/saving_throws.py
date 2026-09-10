@@ -25,6 +25,10 @@ def legal_save_action(action: SavingThrowAction, target: EncounterCombatant, dis
     try:
         if distance_ft > action.range_ft:
             return False
+        if action.forbid_target_affected_by_action and any(
+            effect.source_effect_id == action.id for effect in target.state.timed_effects
+        ):
+            return False
         return action.target_max_size is None or size_at_most(target.state.template.size, action.target_max_size)
     except Exception:
         logger.exception("Failed save-action legality check for %s.", action.id)
