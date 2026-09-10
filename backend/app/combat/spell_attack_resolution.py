@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available, spend
+from app.combat.attack_roll_modifiers import consume_next_attack_disadvantage, next_attack_disadvantage_sources
 from app.combat.condition_rules import close_hit_is_automatic_critical
 from app.combat.conditions import attack_roll_condition_sources
 from app.combat.damage_defenses import apply_damage_defenses
@@ -69,12 +70,13 @@ def resolve_spell_attack(
         advantage += next_attack_against_advantage_sources(caster.state, target.combatant_id)
         close_threat = spell.attack_kind == "ranged" and close_ranged_threat_exists(caster, setup)
         fear_disadvantage = frightened_d20_disadvantage(caster.state, setup)
-        mode = resolve_roll_mode(advantage, condition_disadvantage + fear_disadvantage + sap_disadvantage(caster.state) + int(close_threat))
+        disadvantage = condition_disadvantage + fear_disadvantage + sap_disadvantage(caster.state)
+        mode = resolve_roll_mode(advantage, disadvantage + next_attack_disadvantage_sources(caster.state) + int(close_threat))
         target_ac = effective_armor_class(target.state)
         base_roll = roll_d20(dice, spell.attack_bonus, mode)
         base_roll, heroic_reroll = reroll_failed_attack_with_heroic_inspiration(caster.state, base_roll, target_ac, dice)
         attack_roll = apply_d20_bonus_dice(caster.state, ModifierKind.ATTACK_ROLL_BONUS_DIE, base_roll, dice)
-        consume_next_attack_against_advantage(caster.state, target.combatant_id)
+        consume_next_attack_against_advantage(caster.state, target.combatant_id); consume_next_attack_disadvantage(caster.state)
         consume_sap(caster.state); consume_attacks_against_advantage(target.state)
         if resource is not None:
             mark_slot_spell_cast(caster.state, turn_key); resource.current_uses -= 1
