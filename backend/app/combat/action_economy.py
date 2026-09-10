@@ -8,12 +8,17 @@ from app.domain.models import CombatantState
 ActionCost = Literal["action", "bonus_action", "reaction"]
 
 
+def _restriction_active(state: CombatantState, effect) -> bool:
+    required = effect.requires_active_effect_id
+    return required is None or required in state.active_effect_ids
+
+
 def _action_or_bonus_only(state: CombatantState) -> bool:
-    return any(effect.action_or_bonus_only for effect in state.timed_effects)
+    return any(effect.action_or_bonus_only and _restriction_active(state, effect) for effect in state.timed_effects)
 
 
 def _reactions_disabled(state: CombatantState) -> bool:
-    return any(effect.reactions_disabled for effect in state.timed_effects)
+    return any(effect.reactions_disabled and _restriction_active(state, effect) for effect in state.timed_effects)
 
 
 def is_available(state: CombatantState, cost: ActionCost) -> bool:
