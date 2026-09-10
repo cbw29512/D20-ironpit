@@ -15,6 +15,7 @@ _DATA_DIR = Path(__file__).with_name("data")
 _GENERATED_PATH = _DATA_DIR / "combatant_capabilities_v1.json"
 _NATIVE_PATH = _DATA_DIR / "combatant_capabilities_native_v1.json"
 _INCREMENTAL_PATH = _DATA_DIR / "combatant_capabilities_incremental_v1.json"
+_RECHARGE_BATCH_PATH = _DATA_DIR / "combatant_capabilities_recharge_batch_v1.json"
 
 
 def parse_capability_definitions(rows: object) -> dict[str, CombatantDefinition]:
@@ -45,11 +46,16 @@ def _load_registry(path: Path) -> dict[str, CombatantDefinition]:
 @lru_cache(maxsize=1)
 def load_capability_definitions() -> dict[str, CombatantDefinition]:
     try:
-        generated = _load_registry(_GENERATED_PATH)
-        native = _load_registry(_NATIVE_PATH)
-        incremental = _load_registry(_INCREMENTAL_PATH)
-        baseline = merge_capability_definitions(generated, native)
-        return merge_capability_definitions(baseline, incremental)
+        registries = [
+            _load_registry(_GENERATED_PATH),
+            _load_registry(_NATIVE_PATH),
+            _load_registry(_INCREMENTAL_PATH),
+            _load_registry(_RECHARGE_BATCH_PATH),
+        ]
+        merged: dict[str, CombatantDefinition] = {}
+        for registry in registries:
+            merged = merge_capability_definitions(merged, registry)
+        return merged
     except Exception as exc:
         logger.exception("Failed to load declarative combat capability registries.")
         raise RuntimeError("Combat capability registry could not be loaded.") from exc
