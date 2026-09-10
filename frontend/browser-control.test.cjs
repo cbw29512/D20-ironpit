@@ -8,8 +8,7 @@ const vm = require("node:vm");
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
-  "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js", "browser-monsters-beast2.js",
-  "browser-monsters-batch3.js", "browser-monsters-control.js", "browser-condition-immunity.js", "browser-condition-rules.js",
+  "browser-heroes.js", "browser-monsters-generated.js", "browser-condition-immunity.js", "browser-condition-rules.js",
   "browser-action-economy.js", "browser-grapple.js", "browser-timed-conditions.js", "browser-modifiers.js", "browser-state.js",
   "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js", "browser-attack.js", "browser-resources.js",
   "browser-save-failure-effects.js", "browser-saves.js", "browser-charge.js", "browser-formation.js", "browser-multiattack.js",
@@ -32,7 +31,10 @@ const member = (id, side, template, position = side === "heroes" ? 0 : 5) => ({
   combatant_id: id, side, position_ft: position, state: S.buildState(structuredClone(template)),
 });
 
-assert.equal(Object.keys(monsters).length, 58, "control batch must bring browser roster to 58 monsters");
+assert.equal(window.IRON_PIT_CANONICAL_MONSTERS_READY, true, "control regressions must use the canonical generated roster");
+for (const id of ["srd-crocodile", "srd-giant-crab", "srd-constrictor-snake", "srd-commoner"]) {
+  assert.ok(monsters[id], `${id} must exist in the generated certified roster`);
+}
 
 {
   const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
@@ -205,4 +207,4 @@ assert.equal(Object.keys(monsters).length, 58, "control batch must bring browser
   assert.equal(result.events[1].event_type, "attack");
 }
 
-console.log("Browser saving throw and control-condition regressions passed.");
+console.log("Canonical generated saving throw and control-condition regressions passed.");
