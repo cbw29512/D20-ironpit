@@ -99,4 +99,18 @@ class WeaponAttack(BaseModel):
     control_effect: HitControlEffect | None = None
     push_target_away_ft: int = Field(default=0, ge=0, le=120)
     push_target_max_size: CreatureSize | None = None
+    pull_target_toward_ft: int = Field(default=0, ge=0, le=120)
+    pull_target_max_size: CreatureSize | None = None
     forbid_target_grappled_by_self: bool = False
+
+    @model_validator(mode="after")
+    def validate_forced_movement(self) -> "WeaponAttack":
+        if self.push_target_away_ft and self.pull_target_toward_ft:
+            raise ValueError("An attack cannot both push and pull the same target on hit.")
+        if self.push_target_max_size is not None and self.push_target_away_ft == 0:
+            raise ValueError("Push target size requires a positive push distance.")
+        if self.pull_target_max_size is not None and self.pull_target_toward_ft == 0:
+            raise ValueError("Pull target size requires a positive pull distance.")
+        if self.push_target_away_ft % 5 or self.pull_target_toward_ft % 5:
+            raise ValueError("Forced movement distance must use 5-foot increments.")
+        return self
