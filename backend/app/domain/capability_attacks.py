@@ -5,7 +5,12 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName
-from app.domain.capability_effects import AttackEffectDefinition, DiceSpec, GrappleEffectDefinition
+from app.domain.capability_effects import (
+    AttackEffectDefinition,
+    DiceSpec,
+    GrappleEffectDefinition,
+    SaveFailureEffectDefinition,
+)
 from app.domain.size import CreatureSize
 from app.domain.targeting import AreaTargeting
 from app.domain.weapons import ConditionalAttackAdvantage, DamageType, WeaponAttackKind
@@ -67,6 +72,7 @@ class SaveCapabilityDefinition(BaseModel):
     damage: DiceSpec | None = None
     damage_type: DamageType | None = None
     success_damage: Literal["none", "half"] = "none"
+    failure_effects: list[SaveFailureEffectDefinition] = Field(default_factory=list)
     grapple: GrappleEffectDefinition | None = None
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
@@ -79,6 +85,8 @@ class SaveCapabilityDefinition(BaseModel):
         if self.grapple and self.grapple.max_target_size and self.target_max_size:
             if self.grapple.max_target_size != self.target_max_size:
                 raise ValueError("Save target size and grapple target size cannot disagree.")
+        if self.grapple and any(effect.kind == "grapple" for effect in self.failure_effects):
+            raise ValueError("Use either legacy grapple or failure_effects grapple, not both.")
         return self
 
 
