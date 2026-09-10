@@ -5,6 +5,7 @@ from app.combat.attacks import resolve_attack
 from app.combat.champion import apply_critical_closing_move
 from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
+from app.combat.encounter_targeting import combatant_distance
 from app.combat.forced_movement import apply_attack_push
 from app.combat.frenzy import mark_reckless_use_while_raging
 from app.combat.frightened import frightened_d20_disadvantage
@@ -65,7 +66,14 @@ def resolve_encounter_attack(
     if redirect is not None and event.target_id == redirect.combatant_id:
         swap_redirect_positions(target, redirect)
         actual_target = redirect
+    before_push = combatant_distance(attacker, actual_target)
     pushed_ft = apply_attack_push(attacker, actual_target, attack, hit=event.hit)
     if pushed_ft:
-        event.description += f" {actual_target.state.template.name} is pushed {pushed_ft} feet straight away."
+        after_push = combatant_distance(attacker, actual_target)
+        event.distance_before_ft = before_push
+        event.distance_after_ft = after_push
+        event.description += (
+            f" {actual_target.state.template.name} is pushed {pushed_ft} feet straight away."
+            f" Target is pushed {pushed_ft} ft. away ({before_push} ft. to {after_push} ft.)."
+        )
     return apply_critical_closing_move(attacker, setup, event)
