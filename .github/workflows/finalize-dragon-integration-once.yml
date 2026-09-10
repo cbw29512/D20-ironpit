@@ -1,0 +1,99 @@
+name: Finalize Dragon Integration Once
+
+on:
+  push:
+    branches:
+      - feat/monster-recharge-v1
+
+permissions:
+  contents: write
+
+concurrency:
+  group: finalize-dragon-integration-once
+  cancel-in-progress: true
+
+jobs:
+  finalize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/monster-recharge-v1
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Python rules reference
+        working-directory: backend
+        run: pip install -e '.[dev]'
+      - name: Wire generated unarmed registry into CI parity
+        run: |
+          python - <<'PY'
+          import logging
+          from pathlib import Path
+
+          logging.basicConfig(level=logging.INFO)
+          logger = logging.getLogger("wire_unarmed_registry")
+          path = Path(".github/workflows/ci.yml")
+          text = path.read_text(encoding="utf-8")
+          replacements = [
+              (
+                  "            frontend/browser-monsters-generated.js\n            frontend/browser-spell-effects.js",
+                  "            frontend/browser-monsters-generated.js\n            frontend/browser-unarmed-opportunity.js\n            frontend/browser-spell-effects.js",
+              ),
+              (
+                  "frontend/figure-profiles.js frontend/browser-monsters-generated.js frontend/browser-spell-effects.js",
+                  "frontend/figure-profiles.js frontend/browser-monsters-generated.js frontend/browser-unarmed-opportunity.js frontend/browser-spell-effects.js",
+              ),
+              (
+                  "frontend/browser-monsters-generated.js frontend/browser-spell-effects.js frontend/data/srd_5_2_1_monsters.json)",
+                  "frontend/browser-monsters-generated.js frontend/browser-unarmed-opportunity.js frontend/browser-spell-effects.js frontend/data/srd_5_2_1_monsters.json)",
+              ),
+          ]
+          try:
+              for old, new in replacements:
+                  count = text.count(old)
+                  if count != 1:
+                      raise RuntimeError(f"Expected one CI parity anchor, found {count}: {old}")
+                  text = text.replace(old, new, 1)
+              path.write_text(text, encoding="utf-8")
+              logger.info("Wired browser Unarmed Strike registry into durable CI parity.")
+          except Exception:
+              logger.exception("Failed to wire browser Unarmed Strike registry into CI parity.")
+              raise
+          PY
+      - name: Regenerate canonical browser artifacts
+        run: python scripts/prepare_static_site.py
+      - name: Prove dragon integration regressions
+        working-directory: backend
+        run: |
+          pytest -q \
+            tests/test_browser_unarmed_opportunity.py \
+            tests/test_figure_profiles.py \
+            tests/test_chromatic_wyrmling_recharge_combat.py \
+            tests/test_young_chromatic_dragon_recharge_combat.py \
+            tests/test_recharge_area_engine.py
+      - name: Prove browser consumers
+        run: |
+          node frontend/figure-visuals.test.cjs
+          node frontend/browser-reactions.test.cjs
+          python scripts/check_source_limits.py
+      - name: Commit durable integration and remove temporary diagnostics
+        run: |
+          rm -f .github/workflows/diagnose-python-once.yml
+          rm -f .github/workflows/finalize-dragon-integration-once.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            .github/workflows/ci.yml \
+            .github/workflows/diagnose-python-once.yml \
+            .github/workflows/finalize-dragon-integration-once.yml \
+            frontend/browser-unarmed-opportunity.js \
+            frontend/figure-profiles.js
+          if git diff --cached --quiet; then
+            echo "No integration changes to commit."
+            exit 0
+          fi
+          git commit -m "fix: keep certified dragons in browser parity"
+          git push origin HEAD:feat/monster-recharge-v1
