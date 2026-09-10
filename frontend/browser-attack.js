@@ -14,19 +14,20 @@
     consumeNextAttackAgainstAdvantage: () => 0, effectiveArmorClass: (state) => state.template.armor_class,
     effectiveSpeed: (state) => state.template.speed_ft, applyD20Bonus: (_state, _kind, roll) => roll,
   };
-  const C = () => window.IRON_PIT_BROWSER_CONCENTRATION, I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
+  const C = () => window.IRON_PIT_BROWSER_CONCENTRATION, I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false }, F = () => window.IRON_PIT_BROWSER_FRIGHTENED;
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || {
     attackAdvantage: (state) => state.is_unconscious, autoCritical: (state) => state.is_unconscious,
     has: (state, id) => state.active_effect_ids.includes(id), incapacitated: (state) => state.is_unconscious,
   };
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (state, cost) => cost === "action" && state.action_available, spend: (state) => { state.action_available = false; } }, RES = () => window.IRON_PIT_BROWSER_RESOURCES;
   const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
-  function conditionSources(attacker, defender, distance, targetId) {
+  function conditionSources(attacker, defender, distance, targetId, setup = null) {
     let advantage = M().attacksAgainstAdvantage(defender) + B2().attacksAgainstAdvantage(defender), disadvantage = 0;
     if (Q().has(attacker, "blinded")) disadvantage += 1;
     if (attacker.active_effect_ids.includes("prone")) disadvantage += 1;
     if (attacker.active_effect_ids.includes("restrained")) disadvantage += 1;
     if (attacker.active_effect_ids.includes("poisoned")) disadvantage += 1;
+    if (setup && Q().has(attacker, "frightened")) { if (!F()) throw new Error("Browser Frightened runtime is not loaded."); disadvantage += F().d20Disadvantage(attacker, setup); }
     disadvantage += G()?.attackDisadvantage(attacker, targetId) || 0;
     if (defender.active_effect_ids.includes("dodge") && !Q().incapacitated(defender) && M().effectiveSpeed(defender) > 0 && !G()?.speedIsZero(defender)) disadvantage += 1;
     if (Q().attackAdvantage(defender)) advantage += 1;
@@ -57,7 +58,7 @@
     if (spendAction && !E().available(attacker.state, "action")) throw new Error("Action is unavailable for attack.");
     const recklessStarted = extra.allowReckless === true && B2().activate(attacker, attack, round);
     if (recklessStarted) window.IRON_PIT_BROWSER_BARBARIAN3?.markRecklessUse(attacker.state, extra.turnKey);
-    const conditions = conditionSources(attacker.state, target.state, distance, target.combatant_id);
+    const conditions = conditionSources(attacker.state, target.state, distance, target.combatant_id, extra.setup);
     const advantage = (extra.advantage || 0) + conditions.advantage + bloodiedFury(attacker.state, attack)
       + B2().attackAdvantage(attacker.state, attack) + A().sources(attack, target.state) + M().nextAttackAgainstAdvantage(attacker.state, target.combatant_id);
     const closeThreat = attack.kind === "ranged" && rangedCloseThreat(attacker, target, distance, extra.setup);
