@@ -90,6 +90,7 @@
       {"id": "srd-merrow-harpoon", "name": "Harpoon", "weapon_id": "srd-merrow-harpoon-weapon", "attack_kind": "melee_or_ranged", "attack_bonus": 6, "damage": {"count": 2, "size": 6, "bonus": 4}, "damage_type": "piercing", "animation": "projectile", "reach_ft": 5, "normal_range_ft": 20, "long_range_ft": 60, "projectile": "harpoon", "pull_target_toward_ft": 15, "pull_target_max_size": "large"}
     ],
     "primary_attack_id": "srd-merrow-harpoon",
+    "unarmed_opportunity_attack": {"attack_bonus": 6, "damage": 5},
     "attack_action": {"id": "srd-merrow-multiattack", "name": "Multiattack", "is_attack_action": false, "slots": [{"attack_ids": ["srd-merrow-bite", "srd-merrow-claw", "srd-merrow-harpoon"], "save_action_ids": []}, {"attack_ids": ["srd-merrow-bite", "srd-merrow-claw", "srd-merrow-harpoon"], "save_action_ids": []}]},
     "saving_throw_bonuses": {"strength": 4, "dexterity": 2, "constitution": 2, "intelligence": -1, "wisdom": 0, "charisma": -1},
     "source_trait_names": ["Amphibious"],
@@ -114,6 +115,7 @@
       {"id": "srd-roper-bite", "name": "Bite", "weapon_id": "srd-roper-bite-weapon", "attack_kind": "melee", "attack_bonus": 7, "damage": {"count": 3, "size": 8, "bonus": 4}, "damage_type": "piercing", "animation": "bite", "reach_ft": 5}
     ],
     "primary_attack_id": "srd-roper-tentacle",
+    "unarmed_opportunity_attack": {"attack_bonus": 7, "damage": 5},
     "forced_movement_actions": [{"id": "srd-roper-reel", "name": "Reel", "direction": "toward_source", "distance_ft": 30, "target_mode": "creatures_grappled_by_self", "animation": "reel"}],
     "attack_action": {"id": "srd-roper-multiattack", "name": "Multiattack", "is_attack_action": false, "slots": [{"attack_ids": ["srd-roper-tentacle"]}, {"attack_ids": ["srd-roper-tentacle"]}, {"forced_movement_action_ids": ["srd-roper-reel"]}, {"attack_ids": ["srd-roper-bite"]}, {"attack_ids": ["srd-roper-bite"]}]},
     "saving_throw_bonuses": {"strength": 4, "dexterity": -1, "constitution": 3, "intelligence": -2, "wisdom": 3, "charisma": -2},
@@ -136,6 +138,7 @@
     "initiative_bonus": 1,
     "attacks": [{"id": "srd-giant-frog-bite", "name": "Bite", "weapon_id": "srd-giant-frog-bite-weapon", "attack_kind": "melee", "attack_bonus": 3, "damage": {"count": 1, "size": 6, "bonus": 2}, "damage_type": "piercing", "animation": "bite", "reach_ft": 5, "effects": [{"kind": "grapple", "escape_dc": 11, "max_target_size": "medium"}]}],
     "primary_attack_id": "srd-giant-frog-bite",
+    "unarmed_opportunity_attack": {"attack_bonus": 3, "damage": 2},
     "swallow_actions": [{"id": "srd-giant-frog-swallow", "name": "Swallow", "max_target_size": "small", "damage_dice_count": 2, "damage_dice_size": 4, "damage_bonus": 0, "damage_type": "acid", "first_tick_delay_rounds": 1, "disgorge_after_first_tick": true, "forbidden_attack_ids_while_active": ["srd-giant-frog-bite"]}],
     "saving_throw_bonuses": {"strength": 1, "dexterity": 1, "constitution": 0, "intelligence": -4, "wisdom": 0, "charisma": -4},
     "skill_bonuses": {"perception": 2, "stealth": 4},
@@ -158,6 +161,7 @@
     "initiative_bonus": 1,
     "attacks": [{"id": "srd-giant-toad-bite", "name": "Bite", "weapon_id": "srd-giant-toad-bite-weapon", "attack_kind": "melee", "attack_bonus": 4, "damage": {"count": 1, "size": 6, "bonus": 2}, "damage_type": "piercing", "animation": "bite", "reach_ft": 5, "effects": [{"kind": "damage", "source": "Poison", "dice": {"count": 2, "size": 4, "bonus": 0}, "damage_type": "poison", "trigger": "on_hit", "mode": "add"}, {"kind": "grapple", "escape_dc": 12, "max_target_size": "medium"}]}],
     "primary_attack_id": "srd-giant-toad-bite",
+    "unarmed_opportunity_attack": {"attack_bonus": 4, "damage": 3},
     "swallow_actions": [{"id": "srd-giant-toad-swallow", "name": "Swallow", "max_target_size": "medium", "damage_dice_count": 3, "damage_dice_size": 6, "damage_bonus": 0, "damage_type": "acid", "first_tick_delay_rounds": 0, "disgorge_after_first_tick": false, "forbidden_attack_ids_while_active": ["srd-giant-toad-bite"]}],
     "saving_throw_bonuses": {"strength": 2, "dexterity": 1, "constitution": 1, "intelligence": -4, "wisdom": 0, "charisma": -4},
     "source_trait_names": ["Amphibious", "Standing Leap"],
