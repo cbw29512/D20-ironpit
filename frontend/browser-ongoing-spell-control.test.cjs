@@ -13,8 +13,18 @@ window.IRON_PIT_BROWSER_MODIFIERS = {
   expireTargetTurn: () => 0,
   removeSource: () => {},
 };
-window.IRON_PIT_BROWSER_CONDITION_RULES = { autoFailStrDex: () => false, incapacitated: (state) => Boolean(state.is_unconscious) };
+window.IRON_PIT_BROWSER_CONDITION_RULES = {
+  autoFailStrDex: () => false,
+  incapacitated: (state) => Boolean(state.is_unconscious),
+  has: (state, id) => state.active_effect_ids?.includes(id) === true,
+};
 window.IRON_PIT_BROWSER_CONDITION_IMMUNITY = { immune: () => false };
+window.IRON_PIT_BROWSER_GRID_GEOMETRY = {
+  footprintDistanceFt: (a, _aSize, b, _bSize) => Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y)) * 5,
+};
+load("browser-visibility.js");
+load("browser-frightened.js");
+load("browser-grid-reaction-support.js");
 load("browser-saves.js");
 load("browser-timed-conditions.js");
 load("browser-condition-lifecycle.js");
@@ -23,11 +33,11 @@ load("browser-concentration.js");
 
 function target(name = "Fighter") {
   return {
-    combatant_id: name.toLowerCase(),
+    combatant_id: name.toLowerCase(), side: "heroes",
     state: {
-      template: { name, saving_throw_bonuses: { wisdom: 2, constitution: 2 } },
-      active_effect_ids: [], timed_effects: [], active_modifiers: [], concentration: null,
-      is_dead: false, is_unconscious: false,
+      template: { name, size: "Medium", saving_throw_bonuses: { wisdom: 2, constitution: 2 } },
+      active_effect_ids: [], active_buff_effect_ids: [], timed_effects: [], active_modifiers: [], concentration: null,
+      position: { x: 0, y: 6 }, is_dead: false, is_unconscious: false,
     },
   };
 }
@@ -80,6 +90,48 @@ function target(name = "Fighter") {
   assert.deepEqual(member.state.timed_effects, []);
   assert.deepEqual(member.state.active_effect_ids, []);
   assert.equal(window.IRON_PIT_BROWSER_ONGOING_SPELL_CONTROL.forcedRetreatActive(member.state), false);
+}
+
+{
+  const member = target("Target"), visible = target("Visible"), hidden = target("Hidden");
+  visible.side = hidden.side = "monsters";
+  visible.state.position = { x: 6, y: 6 }; hidden.state.position = { x: 7, y: 6 };
+  const setup = { heroes: [member], monsters: [visible, hidden] };
+  member.state.active_effect_ids.push("frightened");
+  member.state.timed_effects.push(
+    { effect_id: "frightened", source_id: visible.combatant_id },
+    { effect_id: "frightened", source_id: hidden.combatant_id },
+  );
+  hidden.state.active_buff_effect_ids.push("invisibility");
+  assert.equal(window.IRON_PIT_BROWSER_VISIBILITY.hasLineOfSight(member.state, visible.state), true);
+  assert.equal(window.IRON_PIT_BROWSER_FRIGHTENED.d20Disadvantage(member.state, setup), 1);
+  visible.state.active_buff_effect_ids.push("invisibility");
+  assert.equal(window.IRON_PIT_BROWSER_FRIGHTENED.d20Disadvantage(member.state, setup), 0);
+  visible.state.active_buff_effect_ids.length = 0;
+  member.state.active_effect_ids.push("blinded");
+  assert.equal(window.IRON_PIT_BROWSER_FRIGHTENED.d20Disadvantage(member.state, setup), 0);
+}
+
+{
+  const member = target("Mover"), source = target("Source");
+  source.side = "monsters"; source.state.position = { x: 6, y: 6 };
+  source.state.active_buff_effect_ids.push("invisibility");
+  member.state.active_effect_ids.push("frightened");
+  member.state.timed_effects.push({ effect_id: "frightened", source_id: source.combatant_id });
+  const setup = { heroes: [member], monsters: [source] };
+  assert.equal(window.IRON_PIT_BROWSER_FRIGHTENED.d20Disadvantage(member.state, setup), 0);
+  assert.equal(window.IRON_PIT_BROWSER_GRID_REACTION_SUPPORT.approachesFearSource(member, { x: 1, y: 6 }, setup), true);
+  assert.equal(window.IRON_PIT_BROWSER_GRID_REACTION_SUPPORT.approachesFearSource(member, { x: 0, y: 5 }, setup), false);
+}
+
+{
+  const member = target("Orphan");
+  member.state.active_effect_ids.push("frightened");
+  member.state.timed_effects.push({ effect_id: "frightened", source_id: "missing" });
+  assert.throws(
+    () => window.IRON_PIT_BROWSER_FRIGHTENED.d20Disadvantage(member.state, { heroes: [member], monsters: [] }),
+    /missing from the encounter/,
+  );
 }
 
 console.log("Browser ongoing spell control regression passed.");
