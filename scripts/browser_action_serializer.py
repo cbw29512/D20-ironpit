@@ -85,6 +85,10 @@ def save_row(action: Any) -> dict[str, Any]:
             row["resourceId"], row["resourceCost"] = action.resource_id, action.resource_cost
         if action.target_max_size:
             row["targetMaxSize"] = value(action.target_max_size)
+        if action.push_target_away_ft:
+            row["pushTargetAwayFt"] = action.push_target_away_ft
+        if action.push_target_max_size:
+            row["pushTargetMaxSize"] = value(action.push_target_max_size)
         if action.grapple_escape_dc is not None:
             row["grappleEscapeDc"] = action.grapple_escape_dc
         if action.restrains_while_grappled:
