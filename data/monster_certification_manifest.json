@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 144,
-    "blocked": 186
+    "public_ready": 146,
+    "blocked": 184
   },
   "monsters": [
     {
@@ -3874,7 +3874,7 @@
       "monster_name": "Giant Frog",
       "srd_source_page": 351,
       "srd_source_reference": "SRD 5.2.1 p. 351",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-giant-frog",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -3882,19 +3882,15 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "condition-or-control"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "condition-or-control",
-        "monster-combat-mechanics-not-certified"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-giant-goat",
@@ -4159,7 +4155,7 @@
       "monster_name": "Giant Toad",
       "srd_source_page": 354,
       "srd_source_reference": "SRD 5.2.1 p. 354",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-giant-toad",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -4167,19 +4163,15 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "condition-or-control"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "condition-or-control",
-        "monster-combat-mechanics-not-certified"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-giant-venomous-snake",
