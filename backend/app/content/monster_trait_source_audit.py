@@ -13,6 +13,7 @@ _CONNECTORS = frozenset({"a", "an", "and", "of", "or", "the", "to"})
 _MODELED_TRAITS = {
     "Pack Tactics": CombatTrait.PACK_TACTICS,
     "Bloodied Fury": CombatTrait.BLOODIED_FURY,
+    "Bloodied Frenzy": CombatTrait.BLOODIED_FRENZY,
     "Swarm": CombatTrait.SWARM,
     "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
 }
