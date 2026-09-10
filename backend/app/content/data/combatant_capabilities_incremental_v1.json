@@ -95,5 +95,30 @@
     "source_trait_names": ["Amphibious"],
     "visual": {"armor": "natural", "main_hand": "harpoon", "off_hand": "claw", "body_style": "humanoid"},
     "source": "SRD 5.2.1 p. 308"
+  },
+  {
+    "schema_version": 1,
+    "id": "srd-roper",
+    "name": "Roper",
+    "archetype": "source-certified controller",
+    "challenge_rating": "5",
+    "kind": "monster",
+    "size": "large",
+    "armor_class": 20,
+    "max_hp": 93,
+    "speed_ft": 10,
+    "movement_modes": {"walk_ft": 10, "fly_ft": 0, "climb_ft": 20, "swim_ft": 0, "burrow_ft": 0, "hover": false},
+    "initiative_bonus": 5,
+    "attacks": [
+      {"id": "srd-roper-tentacle", "name": "Tentacle", "weapon_id": "srd-roper-tentacle-weapon", "attack_kind": "melee", "attack_bonus": 7, "damage_type": "bludgeoning", "animation": "tentacle", "reach_ft": 60, "effects": [{"kind": "grapple", "escape_dc": 14, "linked_conditions": ["poisoned"]}]},
+      {"id": "srd-roper-bite", "name": "Bite", "weapon_id": "srd-roper-bite-weapon", "attack_kind": "melee", "attack_bonus": 7, "damage": {"count": 3, "size": 8, "bonus": 4}, "damage_type": "piercing", "animation": "bite", "reach_ft": 5}
+    ],
+    "primary_attack_id": "srd-roper-tentacle",
+    "forced_movement_actions": [{"id": "srd-roper-reel", "name": "Reel", "direction": "toward_source", "distance_ft": 30, "target_mode": "creatures_grappled_by_self", "animation": "reel"}],
+    "attack_action": {"id": "srd-roper-multiattack", "name": "Multiattack", "is_attack_action": false, "slots": [{"attack_ids": ["srd-roper-tentacle"]}, {"attack_ids": ["srd-roper-tentacle"]}, {"forced_movement_action_ids": ["srd-roper-reel"]}, {"attack_ids": ["srd-roper-bite"]}, {"attack_ids": ["srd-roper-bite"]}]},
+    "saving_throw_bonuses": {"strength": 4, "dexterity": -1, "constitution": 3, "intelligence": -2, "wisdom": 3, "charisma": -2},
+    "source_trait_names": ["Spider Climb"],
+    "visual": {"armor": "natural", "main_hand": "tentacle", "body_style": "brute"},
+    "source": "SRD 5.2.1 p. 320"
   }
 ]
