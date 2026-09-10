@@ -55,7 +55,7 @@
     for (const state of states || []) {
       const before = state.active_modifiers.length;
       state.active_modifiers = state.active_modifiers.filter((item) => !(item.source_id === sourceId
-        && item.expires_source_turn_end_round != null && item.expires_source_turn_end_round <= round));
+        && item.source_effect_id === effectId && (!concentrationOnly || item.concentration_required)));
       removed += before - state.active_modifiers.length;
     }
     return removed;
@@ -87,7 +87,10 @@
   const flat = (state, kind) => (state.active_modifiers || []).filter((item) => item.kind === kind)
     .reduce((sum, item) => sum + (item.flat_bonus || 0), 0);
   const effectiveArmorClass = (state) => Math.max(0, state.template.armor_class + flat(state, "armor-class"));
-  const effectiveSpeed = (state) => Math.max(0, state.template.speed_ft + flat(state, "speed"));
+  const speedMultiplier = (state) => Math.min(1, ...(state.timed_effects || []).filter((effect) =>
+    effect.speed_multiplier !== 1 && (!effect.requires_active_effect_id || state.active_effect_ids.includes(effect.requires_active_effect_id)))
+    .map((effect) => effect.speed_multiplier));
+  const effectiveSpeed = (state) => Math.max(0, Math.trunc((state.template.speed_ft + flat(state, "speed")) * speedMultiplier(state)));
   const attacksAgainstAdvantage = (state) => (state.active_modifiers || []).filter((item) => item.kind === "attacks-against-advantage").length;
   const nextAttackAgainstAdvantage = (state, targetId) => (state.active_modifiers || [])
     .filter((item) => item.kind === "next-attack-against-advantage" && item.target_id === targetId).length;
