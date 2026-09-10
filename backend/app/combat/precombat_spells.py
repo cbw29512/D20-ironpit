@@ -2,15 +2,21 @@ from __future__ import annotations
 
 from app.combat.defensive_spell_resolution import resolve_defensive_spell
 from app.combat.friendly_buff_targeting import select_friendly_buff_targets
+from app.combat.resources import resolved_resource_id, resource_state
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 from app.domain.spells import DefensiveSpellAction
 
 
 def _slot_resource(member: EncounterCombatant, spell: DefensiveSpellAction):
-    resource_id = f"spell-slot-{spell.level}"
-    resource = next((item for item in member.state.resources if item.id == resource_id), None)
-    if resource is None or resource.current_uses < 1:
+    """Compatibility name; explicit action resources now take precedence over slot fallback."""
+    fallback_id = f"spell-slot-{spell.level}"
+    resource_id = resolved_resource_id(spell.resource_id, fallback_id)
+    try:
+        resource = resource_state(member.state, resource_id)
+    except ValueError:
+        return None
+    if resource.current_uses < spell.resource_cost:
         return None
     return spell.level, resource
 
