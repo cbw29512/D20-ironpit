@@ -60,7 +60,7 @@
     const advantage = (extra.advantage || 0) + conditions.advantage + R().bloodiedAttackAdvantage(attacker.state, attack)
       + B2().attackAdvantage(attacker.state, attack) + A().sources(attack, target.state) + M().nextAttackAgainstAdvantage(attacker.state, target.combatant_id);
     const closeThreat = attack.kind === "ranged" && rangedCloseThreat(attacker, target, distance, extra.setup);
-    const mode = R().attackMode(attack, distance, advantage, conditions.disadvantage + SAP().disadvantage(attacker.state), closeThreat);
+    const mode = R().attackMode(attack, distance, advantage, conditions.disadvantage + SAP().disadvantage(attacker.state) + (attack.attackAbility ? T().d20Disadvantage(attacker.state, attack.attackAbility) : 0), closeThreat);
     const resourceRemaining = attack.resourceId ? RES().spend(attacker.state, attack.resourceId, attack.resourceCost || 1) : null; const heroic = HI().rerollFailedAttack(attacker.state, R().d20(attack.bonus, mode), M().effectiveArmorClass(target.state));
     const attackRoll = M().applyD20Bonus(attacker.state, "attack-roll-bonus-die", heroic.roll);
     M().consumeNextAttackAgainstAdvantage(attacker.state, target.combatant_id); SAP().consume(attacker.state);
