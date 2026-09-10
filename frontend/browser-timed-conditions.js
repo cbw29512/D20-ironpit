@@ -63,6 +63,19 @@
     return state.timed_effects.filter((effect) => effect.d20_disadvantage_ability === ability).length;
   }
 
+  function applyDamageRollPenalty(state, components) {
+    const specs = state.timed_effects.filter((effect) => effect.damage_penalty_dice_count > 0);
+    for (const component of components) {
+      if (!(component.rolls || []).length || component.total <= 0) continue;
+      for (const effect of specs) {
+        const rolls = window.IRON_PIT_DICE.rollMany(effect.damage_penalty_dice_count, effect.damage_penalty_dice_size);
+        const reduction = Math.min(component.total, rolls.reduce((sum, roll) => sum + roll, 0));
+        component.total -= reduction; component.modifier -= reduction; component.notation += ` - ${reduction}`;
+      }
+    }
+    return components;
+  }
+
   function affectedByAction(state, actionId) {
     return state.timed_effects.some((effect) => effect.source_effect_id === actionId);
   }
@@ -108,6 +121,7 @@
   }
 
   window.IRON_PIT_BROWSER_TIMED = {
-    affectedByAction, apply, applyPenalty, d20Disadvantage, expireSourceStart, removeEffect, removeGroup,
+    affectedByAction, apply, applyDamageRollPenalty, applyPenalty, d20Disadvantage,
+    expireSourceStart, removeEffect, removeGroup,
   };
 })();
