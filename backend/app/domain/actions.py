@@ -24,12 +24,14 @@ class GrappleSource(BaseModel):
     escape_dc: int = Field(ge=1, le=40)
     range_ft: int = Field(default=5, ge=0)
     restrains: bool = False
+    linked_conditions: list[ConditionName] = Field(default_factory=list)
 
 
 class HitControlEffect(BaseModel):
     max_target_size: CreatureSize | None = None
     grapple_escape_dc: int | None = Field(default=None, ge=1, le=40)
     restrains_while_grappled: bool = False
+    conditions_while_grappled: list[ConditionName] = Field(default_factory=list)
     condition_id: ConditionName | None = None
     expires_at_start_of_source_turn: bool = False
     expiry_timing: ConditionTiming | None = None
@@ -48,6 +50,8 @@ class HitControlEffect(BaseModel):
             raise ValueError("Repeat-save delay requires a complete repeat-save rule.")
         if self.expires_at_start_of_source_turn and self.expiry_timing not in {None, "source_turn_start"}:
             raise ValueError("Legacy source-start expiry conflicts with explicit condition timing.")
+        if self.conditions_while_grappled and self.grapple_escape_dc is None:
+            raise ValueError("Grapple-linked conditions require a grapple escape DC.")
         return self
 
 
