@@ -71,9 +71,10 @@ class AttackCapabilityDefinition(BaseModel):
             raise ValueError("Pull target size requires a positive pull distance.")
         if self.push_target_away_ft % 5 or self.pull_target_toward_ft % 5:
             raise ValueError("Forced movement distance must use 5-foot increments.")
-        control_count = sum(effect.kind in {"grapple", "condition"} for effect in self.effects)
-        if control_count > 1:
-            raise ValueError("Current runtime supports one persistent control rider per attack.")
+        grapple_count = sum(effect.kind == "grapple" for effect in self.effects)
+        condition_count = sum(effect.kind == "condition" for effect in self.effects)
+        if grapple_count > 1 or condition_count > 1:
+            raise ValueError("An attack supports at most one grapple rider and one timed condition rider.")
         return self
 
 
