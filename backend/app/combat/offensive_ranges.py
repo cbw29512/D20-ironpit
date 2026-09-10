@@ -35,9 +35,10 @@ def _weapon_ranges(attacker: EncounterCombatant, target: EncounterCombatant) -> 
                 continue
             if not resource_available(attacker.state, attack.resource_id, attack.resource_cost):
                 continue
-            if attack.weapon.attack_kind is WeaponAttackKind.MELEE:
+            kind = attack.weapon.attack_kind
+            if kind in {WeaponAttackKind.MELEE, WeaponAttackKind.MELEE_OR_RANGED}:
                 ranges.append(("melee", attack.weapon.reach_ft))
-            else:
+            if kind in {WeaponAttackKind.RANGED, WeaponAttackKind.MELEE_OR_RANGED}:
                 maximum = attack.weapon.long_range_ft or attack.weapon.normal_range_ft
                 if maximum is not None:
                     ranges.append(("ranged", maximum))
