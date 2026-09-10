@@ -9,9 +9,11 @@ global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
   "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js", "browser-monsters-beast2.js",
-  "browser-monsters-batch3.js", "browser-monsters-control.js", "browser-grapple.js", "browser-state.js",
-  "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js", "browser-attack.js", "browser-resources.js", "browser-saves.js", "browser-charge.js",
-  "browser-formation.js", "browser-multiattack.js", "browser-turn.js", "browser-engine.js",
+  "browser-monsters-batch3.js", "browser-monsters-control.js", "browser-condition-immunity.js", "browser-condition-rules.js",
+  "browser-action-economy.js", "browser-grapple.js", "browser-timed-conditions.js", "browser-modifiers.js", "browser-state.js",
+  "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js", "browser-attack.js", "browser-resources.js",
+  "browser-save-failure-effects.js", "browser-saves.js", "browser-charge.js", "browser-formation.js", "browser-multiattack.js",
+  "browser-turn.js", "browser-engine.js",
 ]) load(file);
 
 const queuedDice = (values, fallback = 10) => {
@@ -22,6 +24,7 @@ const queuedDice = (values, fallback = 10) => {
 const S = window.IRON_PIT_BROWSER_STATE;
 const A = window.IRON_PIT_BROWSER_ATTACK;
 const G = window.IRON_PIT_BROWSER_GRAPPLE;
+const M = window.IRON_PIT_BROWSER_MODIFIERS;
 const V = window.IRON_PIT_BROWSER_SAVES;
 const heroes = window.IRON_PIT_BROWSER_HEROES;
 const monsters = window.IRON_PIT_BROWSER_MONSTERS;
@@ -142,6 +145,41 @@ assert.equal(Object.keys(monsters).length, 58, "control batch must bring browser
   const failed = V.resolveAction(1, 1, snake, hero, action, 5);
   assert.equal(hero.state.current_hp, 0); assert.equal(hero.state.is_unconscious, true);
   assert.deepEqual(failed.applied_condition_ids, ["grappled"]);
+}
+
+{
+  const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
+  const commoner = member("monster-1:commoner", "monsters", monsters["srd-commoner"]);
+  const action = {
+    id: "test-failed-save-riders", name: "Test Failed Save Riders", saveAbility: "dexterity", dc: 30, range: 30,
+    damageDiceCount: 0, damageDiceSize: 6, damageBonus: 0, damageType: null, successDamage: "none",
+    failureEffects: [
+      { kind: "prone" },
+      { kind: "condition", condition: "frightened", expiryTiming: "target_turn_end" },
+      { kind: "speed", flatBonus: -10, expiresAtEndOfTargetTurn: true },
+    ], animation: "save-effect",
+  };
+  window.IRON_PIT_DICE = queuedDice([1]);
+  const failed = V.resolveAction(1, 1, commoner, hero, action, 5, { spendAction: false });
+  assert.deepEqual(failed.applied_condition_ids, ["prone", "frightened"]);
+  assert.deepEqual(hero.state.active_effect_ids.slice(-2), ["prone", "frightened"]);
+  assert.equal(M.effectiveSpeed(hero.state), hero.state.template.speed_ft - 10);
+  assert.match(hero.state.active_modifiers[0].id, /failed-save-modifier:2$/);
+}
+
+{
+  const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
+  const commoner = member("monster-1:commoner", "monsters", monsters["srd-commoner"]);
+  const action = {
+    id: "test-failed-save-riders", name: "Test Failed Save Riders", saveAbility: "dexterity", dc: 1, range: 30,
+    damageDiceCount: 0, damageDiceSize: 6, damageBonus: 0, damageType: null, successDamage: "none",
+    failureEffects: [{ kind: "prone" }, { kind: "speed", flatBonus: -10 }], animation: "save-effect",
+  };
+  window.IRON_PIT_DICE = queuedDice([20]);
+  const passed = V.resolveAction(1, 1, commoner, hero, action, 5, { spendAction: false });
+  assert.deepEqual(passed.applied_condition_ids, []);
+  assert.equal(hero.state.active_effect_ids.includes("prone"), false);
+  assert.deepEqual(hero.state.active_modifiers, []);
 }
 
 console.log("Browser saving throw and control-condition regressions passed.");
