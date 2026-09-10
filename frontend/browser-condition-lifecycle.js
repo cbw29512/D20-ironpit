@@ -10,11 +10,26 @@
     if (effect.repeat_save_timing !== timing) return false;
     return effect.repeat_save_eligible_round == null || round >= effect.repeat_save_eligible_round;
   }
+  const autoSuccessDue = (effect, round, timing) => effect.automatic_success_round != null
+    && round >= effect.automatic_success_round && effect.repeat_save_timing === timing;
 
   function resolveTargetTiming(sequence, round, target, timing) {
     const events = [];
     for (const effect of [...target.state.timed_effects]) {
       if (!target.state.timed_effects.includes(effect)) continue;
+      if (autoSuccessDue(effect, round, timing)) {
+        const removed = T().removeGroup(target.state, effect);
+        events.push({
+          sequence: sequence++, round_number: round, event_type: "saving_throw",
+          actor_id: target.combatant_id, actor_name: target.state.template.name,
+          target_id: target.combatant_id, target_name: target.state.template.name,
+          saving_throw_roll: null, save_ability: effect.repeat_save_ability,
+          save_dc: effect.repeat_save_dc, save_succeeded: true, removed_condition_ids: removed,
+          feature_id: effect.source_effect_id || "timed-effect-auto-success", animation: "condition-save",
+          description: `${target.state.template.name} automatically succeeds against ${label(effect.source_effect_id || effect.effect_id)} when its maximum duration ends.`,
+        });
+        continue;
+      }
       if (repeatSaveDue(effect, round, timing)) {
         const save = V().resolveSavingThrow(target.state, effect.repeat_save_ability, effect.repeat_save_dc);
         const removed = save.succeeded ? T().removeGroup(target.state, effect) : [];
