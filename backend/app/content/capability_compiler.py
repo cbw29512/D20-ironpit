@@ -49,7 +49,11 @@ def _compile_attack_action(definition: CombatantDefinition) -> AttackActionDefin
             name=action.name,
             is_attack_action=action.is_attack_action,
             slots=[
-                AttackActionSlot(attack_ids=slot.attack_ids, save_action_ids=slot.save_action_ids)
+                AttackActionSlot(
+                    attack_ids=slot.attack_ids,
+                    save_action_ids=slot.save_action_ids,
+                    forced_movement_action_ids=slot.forced_movement_action_ids,
+                )
                 for slot in action.slots
             ],
         )
@@ -70,7 +74,7 @@ def compile_combatant(definition: CombatantDefinition) -> CombatantTemplate:
         primary = attack_by_id[definition.primary_attack_id]
         kwargs = definition.model_dump(exclude={
             "schema_version", "attacks", "primary_attack_id", "attack_action", "save_actions",
-            "unsupported_capabilities", "movement_modes",
+            "unsupported_capabilities", "movement_modes", "forced_movement_actions",
         })
         if definition.movement_modes is not None:
             kwargs["movement_modes"] = definition.movement_modes
@@ -80,6 +84,7 @@ def compile_combatant(definition: CombatantDefinition) -> CombatantTemplate:
             alternate_weapon_attacks=[attack for attack in attacks if attack.id != primary.id],
             attack_action=_compile_attack_action(definition),
             saving_throw_actions=[_compile_save(item) for item in definition.save_actions],
+            forced_movement_actions=list(definition.forced_movement_actions),
         )
     except UnsupportedCapabilityError:
         raise
