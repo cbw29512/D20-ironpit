@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+import logging
+
 from app.combat.condition_immunity import condition_is_immune
 from app.domain.models import CombatantState
 
+logger = logging.getLogger(__name__)
 BLINDED = "blinded"
 INCAPACITATED = "incapacitated"
 PARALYZED = "paralyzed"
@@ -12,7 +15,16 @@ STUNNED = "stunned"
 
 
 def has_condition(state: CombatantState, condition_id: str) -> bool:
-    return condition_id in state.active_effect_ids and not condition_is_immune(state, condition_id)
+    try:
+        swallowed = state.swallowed
+        swallowed_applies = swallowed is not None and condition_id in swallowed.applied_condition_ids
+        return (
+            (condition_id in state.active_effect_ids or swallowed_applies)
+            and not condition_is_immune(state, condition_id)
+        )
+    except Exception as exc:
+        logger.exception("Failed to inspect condition %s for %s.", condition_id, state.template.name)
+        raise RuntimeError("Condition state could not be evaluated.") from exc
 
 
 def is_incapacitated(state: CombatantState) -> bool:
