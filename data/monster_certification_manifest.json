@@ -3609,7 +3609,7 @@
       "monster_name": "Giant Ape",
       "srd_source_page": 349,
       "srd_source_reference": "SRD 5.2.1 p. 349",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-giant-ape",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -3637,8 +3637,10 @@
       "blockers": [
         "condition-or-control",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
+        "save-area-mismatch:srd-giant-ape-boulder-toss",
+        "save-damage-type-mismatch:srd-giant-ape-boulder-toss",
+        "save-or-complex-action",
+        "save-success-damage-mismatch:srd-giant-ape-boulder-toss"
       ]
     },
     {
