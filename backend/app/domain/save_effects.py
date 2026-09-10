@@ -65,6 +65,7 @@ class TimedPenaltyEffectDefinition(BaseModel):
     """Reusable failed-save penalty with repeat-save recovery."""
 
     kind: Literal["timed-penalty"] = "timed-penalty"
+    effect_family: str | None = None
     d20_disadvantage_ability: AbilityName | None = None
     damage_penalty_dice_count: int = Field(default=0, ge=0, le=4)
     damage_penalty_dice_size: int = Field(default=6, ge=2, le=20)
