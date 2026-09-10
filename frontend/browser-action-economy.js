@@ -5,7 +5,11 @@
     incapacitated: (state) => Boolean(state.is_unconscious),
   };
 
-  const restricted = (state, key) => (state.timed_effects || []).some((effect) => Boolean(effect[key]));
+  const restrictionActive = (state, effect) => !effect.requires_active_effect_id
+    || (state.active_effect_ids || []).includes(effect.requires_active_effect_id);
+  const restricted = (state, key) => (state.timed_effects || []).some((effect) =>
+    Boolean(effect[key]) && restrictionActive(state, effect),
+  );
 
   function available(state, cost) {
     if (state.is_dead || Q().incapacitated(state)) return false;
