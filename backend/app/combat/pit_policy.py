@@ -79,7 +79,7 @@ def _attack_profiles(attacker: EncounterCombatant, allowed_ids: list[str], kind:
             attack
             for attack in [attacker.state.template.weapon_attack, *attacker.state.template.alternate_weapon_attacks]
             if attack.id in allowed
-            and (kind is None or attack.weapon.attack_kind is kind)
+            and (kind is None or attack.weapon.attack_kind is kind or attack.weapon.attack_kind is WeaponAttackKind.MELEE_OR_RANGED)
             and resource_available(attacker.state, attack.resource_id, attack.resource_cost)
         ]
     except Exception as exc:
@@ -126,10 +126,7 @@ def choose_standard_attack(
     setup: EncounterSetup,
 ) -> tuple[EncounterCombatant, WeaponAttack, int] | None:
     """Use legal range now: ranged holds position; melee is preferred when engaged."""
-    ids = [
-        attacker.state.template.weapon_attack.id,
-        *(attack.id for attack in attacker.state.template.alternate_weapon_attacks),
-    ]
+    ids = [attacker.state.template.weapon_attack.id, *(attack.id for attack in attacker.state.template.alternate_weapon_attacks)]
     if is_backline(attacker) and allied_frontline_active(attacker, setup):
         ranged = choose_attack(attacker, setup, ids, kind=WeaponAttackKind.RANGED)
         if ranged is not None:
@@ -143,4 +140,4 @@ def choose_standard_attack(
 def flexible_slot_has_both(attacker: EncounterCombatant, allowed_ids: list[str]) -> bool:
     profiles = _attack_profiles(attacker, allowed_ids, None)
     kinds = {attack.weapon.attack_kind for attack in profiles}
-    return WeaponAttackKind.MELEE in kinds and WeaponAttackKind.RANGED in kinds
+    return WeaponAttackKind.MELEE_OR_RANGED in kinds or {WeaponAttackKind.MELEE, WeaponAttackKind.RANGED} <= kinds
