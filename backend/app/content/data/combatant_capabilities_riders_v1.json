@@ -10,14 +10,7 @@
     "armor_class": 12,
     "max_hp": 85,
     "speed_ft": 40,
-    "movement_modes": {
-      "walk_ft": 40,
-      "fly_ft": 0,
-      "climb_ft": 0,
-      "swim_ft": 0,
-      "burrow_ft": 0,
-      "hover": false
-    },
+    "movement_modes": {"walk_ft": 40, "fly_ft": 0, "climb_ft": 0, "swim_ft": 0, "burrow_ft": 0, "hover": false},
     "initiative_bonus": -1,
     "attacks": [
       {
@@ -30,9 +23,7 @@
         "damage_type": "slashing",
         "animation": "heavy-strike",
         "reach_ft": 5,
-        "effects": [
-          {"kind": "prone", "max_target_size": "large"}
-        ]
+        "effects": [{"kind": "prone", "max_target_size": "large"}]
       },
       {
         "id": "srd-ettin-morningstar",
@@ -44,12 +35,7 @@
         "damage_type": "piercing",
         "animation": "heavy-strike",
         "reach_ft": 5,
-        "effects": [
-          {
-            "kind": "next-attack-disadvantage",
-            "expires_at_end_of_target_turn": true
-          }
-        ]
+        "effects": [{"kind": "next-attack-disadvantage", "expires_at_end_of_target_turn": true}]
       }
     ],
     "primary_attack_id": "srd-ettin-battleaxe",
@@ -63,22 +49,74 @@
         {"attack_ids": ["srd-ettin-morningstar"]}
       ]
     },
-    "saving_throw_bonuses": {
-      "strength": 5,
-      "dexterity": -1,
-      "constitution": 3,
-      "intelligence": -2,
-      "wisdom": 0,
-      "charisma": -1
-    },
+    "saving_throw_bonuses": {"strength": 5, "dexterity": -1, "constitution": 3, "intelligence": -2, "wisdom": 0, "charisma": -1},
     "skill_bonuses": {"perception": 4},
     "condition_immunities": ["blinded", "charmed", "deafened", "frightened", "stunned", "unconscious"],
-    "visual": {
-      "armor": "natural",
-      "main_hand": "battleaxe",
-      "off_hand": "morningstar",
-      "body_style": "giant"
-    },
+    "visual": {"armor": "natural", "main_hand": "battleaxe", "off_hand": "morningstar", "body_style": "giant"},
     "source": "SRD 5.2.1 p. 284"
+  },
+  {
+    "schema_version": 1,
+    "id": "srd-fire-giant",
+    "name": "Fire Giant",
+    "archetype": "source-certified giant artillery bruiser",
+    "challenge_rating": "9",
+    "kind": "monster",
+    "size": "huge",
+    "armor_class": 18,
+    "max_hp": 162,
+    "speed_ft": 30,
+    "movement_modes": {"walk_ft": 30, "fly_ft": 0, "climb_ft": 0, "swim_ft": 0, "burrow_ft": 0, "hover": false},
+    "initiative_bonus": 3,
+    "attacks": [
+      {
+        "id": "srd-fire-giant-flame-sword",
+        "name": "Flame Sword",
+        "weapon_id": "srd-fire-giant-flame-sword-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 11,
+        "damage": {"count": 4, "size": 6, "bonus": 7},
+        "damage_type": "slashing",
+        "animation": "heavy-strike",
+        "reach_ft": 10,
+        "effects": [
+          {"kind": "damage", "source": "Fire", "dice": {"count": 3, "size": 6, "bonus": 0}, "damage_type": "fire"}
+        ]
+      },
+      {
+        "id": "srd-fire-giant-hammer-throw",
+        "name": "Hammer Throw",
+        "weapon_id": "srd-fire-giant-hammer-throw-weapon",
+        "attack_kind": "ranged",
+        "attack_bonus": 11,
+        "damage": {"count": 3, "size": 10, "bonus": 7},
+        "damage_type": "bludgeoning",
+        "animation": "projectile",
+        "normal_range_ft": 60,
+        "long_range_ft": 240,
+        "projectile": "hammer",
+        "push_target_away_ft": 15,
+        "effects": [
+          {"kind": "damage", "source": "Fire", "dice": {"count": 1, "size": 8, "bonus": 0}, "damage_type": "fire"},
+          {"kind": "next-attack-disadvantage", "expires_at_end_of_target_turn": true}
+        ]
+      }
+    ],
+    "primary_attack_id": "srd-fire-giant-flame-sword",
+    "unarmed_opportunity_attack": {"attack_bonus": 11, "damage": 8},
+    "attack_action": {
+      "id": "srd-fire-giant-multiattack",
+      "name": "Multiattack",
+      "is_attack_action": false,
+      "slots": [
+        {"attack_ids": ["srd-fire-giant-flame-sword", "srd-fire-giant-hammer-throw"]},
+        {"attack_ids": ["srd-fire-giant-flame-sword", "srd-fire-giant-hammer-throw"]}
+      ]
+    },
+    "saving_throw_bonuses": {"strength": 7, "dexterity": 3, "constitution": 10, "intelligence": 0, "wisdom": 2, "charisma": 5},
+    "skill_bonuses": {"athletics": 11, "perception": 6},
+    "damage_immunities": ["fire"],
+    "visual": {"armor": "plate", "main_hand": "flame-sword", "off_hand": "hammer", "body_style": "giant"},
+    "source": "SRD 5.2.1 p. 286"
   }
 ]
