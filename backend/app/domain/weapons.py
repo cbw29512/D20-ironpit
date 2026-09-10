@@ -6,6 +6,7 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName, HitControlEffect
+from app.domain.charge import ChargeProfile
 from app.domain.hit_modifiers import HitModifierEffect
 from app.domain.size import CreatureSize
 
@@ -98,6 +99,7 @@ class WeaponAttack(BaseModel):
     sneak_attack_eligible: bool = False
     knocks_prone_max_size: CreatureSize | None = None
     control_effect: HitControlEffect | None = None
+    charge_profile: ChargeProfile | None = None
     push_target_away_ft: int = Field(default=0, ge=0, le=120)
     push_target_max_size: CreatureSize | None = None
     pull_target_toward_ft: int = Field(default=0, ge=0, le=120)
