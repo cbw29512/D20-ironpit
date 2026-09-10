@@ -53,6 +53,25 @@ def _resource_definitions(template: CombatantTemplate) -> dict[str, Any]:
         raise
 
 
+def _swallow_row(action: Any) -> dict[str, Any]:
+    return {
+        "id": action.id,
+        "name": action.name,
+        "maxTargetSize": action.max_target_size.value,
+        "damageDiceCount": action.damage_dice_count,
+        "damageDiceSize": action.damage_dice_size,
+        "damageBonus": action.damage_bonus,
+        "damageType": action.damage_type.value,
+        "firstTickDelayRounds": action.first_tick_delay_rounds,
+        "tickTiming": action.tick_timing,
+        "disgorgeAfterFirstTick": action.disgorge_after_first_tick,
+        "appliesBlinded": action.applies_blinded,
+        "appliesRestrained": action.applies_restrained,
+        "totalCoverFromOutside": action.total_cover_from_outside,
+        "forbiddenAttackIdsWhileActive": list(action.forbidden_attack_ids_while_active),
+    }
+
+
 def template_row(template: CombatantTemplate) -> dict[str, Any]:
     try:
         traits = {item.value for item in template.combat_traits}
@@ -87,6 +106,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                 }
                 for action in template.forced_movement_actions
             ]
+        if template.swallow_actions:
+            row["swallow_actions"] = [_swallow_row(action) for action in template.swallow_actions]
         if template.kind == "monster":
             row["source_trait_names"] = list(template.source_trait_names)
             row["source_reaction_names"] = list(template.source_reaction_names)
