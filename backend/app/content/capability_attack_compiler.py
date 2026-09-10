@@ -45,6 +45,40 @@ def _compile_control(effect: GrappleEffectDefinition | ConditionEffectDefinition
         raise
 
 
+def _merge_controls(controls: list[HitControlEffect]) -> HitControlEffect | None:
+    try:
+        if not controls:
+            return None
+        if len(controls) == 1:
+            return controls[0]
+        grapple = next((item for item in controls if item.grapple_escape_dc is not None), None)
+        condition = next((item for item in controls if item.condition_id is not None), None)
+        if grapple is None or condition is None or len(controls) != 2:
+            raise UnsupportedCapabilityError("Attack control riders cannot be composed by the shared control model.")
+        size_limits = [item.max_target_size for item in controls if item.max_target_size is not None]
+        if len(set(size_limits)) > 1:
+            raise UnsupportedCapabilityError("Composable attack control riders must share the same target-size limit.")
+        return HitControlEffect(
+            max_target_size=size_limits[0] if size_limits else None,
+            grapple_escape_dc=grapple.grapple_escape_dc,
+            restrains_while_grappled=grapple.restrains_while_grappled,
+            conditions_while_grappled=grapple.conditions_while_grappled,
+            condition_id=condition.condition_id,
+            expires_at_start_of_source_turn=condition.expires_at_start_of_source_turn,
+            expiry_timing=condition.expiry_timing,
+            repeat_save_ability=condition.repeat_save_ability,
+            repeat_save_dc=condition.repeat_save_dc,
+            repeat_save_timing=condition.repeat_save_timing,
+            repeat_save_delay_rounds=condition.repeat_save_delay_rounds,
+            allowed_removal_action_ids=condition.allowed_removal_action_ids,
+        )
+    except UnsupportedCapabilityError:
+        raise
+    except Exception:
+        logger.exception("Failed to merge attack control riders.")
+        raise
+
+
 def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
     try:
         damage = definition.damage
@@ -71,7 +105,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
         on_hit_modifiers: list[HitModifierEffect] = []
         conditional: list[ConditionalDamage] = []
         prone_size = None
-        control = None
+        controls: list[HitControlEffect] = []
         for effect in definition.effects:
             if isinstance(effect, DamageEffectDefinition):
                 if effect.trigger == "on_hit":
@@ -96,7 +130,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
             elif isinstance(effect, HitModifierEffect):
                 on_hit_modifiers.append(effect)
             elif isinstance(effect, (GrappleEffectDefinition, ConditionEffectDefinition)):
-                control = _compile_control(effect)
+                controls.append(_compile_control(effect))
             else:
                 raise UnsupportedCapabilityError(f"Unsupported attack effect: {effect!r}")
         return WeaponAttack(
@@ -115,7 +149,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
             on_hit_damage=on_hit,
             on_hit_modifier_effects=on_hit_modifiers,
             knocks_prone_max_size=prone_size,
-            control_effect=control,
+            control_effect=_merge_controls(controls),
             charge_profile=definition.charge_profile,
             push_target_away_ft=definition.push_target_away_ft,
             push_target_max_size=definition.push_target_max_size,
