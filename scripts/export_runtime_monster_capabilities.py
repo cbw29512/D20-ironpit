@@ -27,7 +27,10 @@ def render_registry() -> str:
         definition.model_dump(
             mode="json",
             exclude_none=True,
-            exclude={"progression_features": _HERO_ONLY_PROGRESSION_FIELDS},
+            exclude={
+                "progression_features": _HERO_ONLY_PROGRESSION_FIELDS,
+                "movement_modes": {"pass_through_creatures_as_difficult_terrain"},
+            },
         )
         for definition in definitions
     ]
