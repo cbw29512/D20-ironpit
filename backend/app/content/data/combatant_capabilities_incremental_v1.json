@@ -92,7 +92,8 @@
     "primary_attack_id": "srd-merrow-harpoon",
     "attack_action": {"id": "srd-merrow-multiattack", "name": "Multiattack", "is_attack_action": false, "slots": [{"attack_ids": ["srd-merrow-bite", "srd-merrow-claw", "srd-merrow-harpoon"], "save_action_ids": []}, {"attack_ids": ["srd-merrow-bite", "srd-merrow-claw", "srd-merrow-harpoon"], "save_action_ids": []}]},
     "saving_throw_bonuses": {"strength": 4, "dexterity": 2, "constitution": 2, "intelligence": -1, "wisdom": 0, "charisma": -1},
+    "source_trait_names": ["Amphibious"],
     "visual": {"armor": "natural", "main_hand": "harpoon", "off_hand": "claw", "body_style": "humanoid"},
-    "source": "SRD 5.2.1"
+    "source": "SRD 5.2.1 p. 308"
   }
 ]
