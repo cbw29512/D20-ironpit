@@ -38,6 +38,7 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Flying Snake": _p("snake", "flying-snake"),
     "Frog": _p("frog", "frog"),
     "Gargoyle": _p("gargoyle", "gargoyle"),
+    "Giant Ape": _p("primate", "giant-ape"),
     "Giant Badger": _p("quadruped", "badger"),
     "Giant Bat": _p("bat", "bat"),
     "Giant Boar": _p("quadruped", "tusks"),
