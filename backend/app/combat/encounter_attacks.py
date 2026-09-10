@@ -66,14 +66,15 @@ def resolve_encounter_attack(
     if redirect is not None and event.target_id == redirect.combatant_id:
         swap_redirect_positions(target, redirect)
         actual_target = redirect
-    before_push = combatant_distance(attacker, actual_target)
-    pushed_ft = apply_attack_push(attacker, actual_target, attack, hit=event.hit)
-    if pushed_ft:
-        after_push = combatant_distance(attacker, actual_target)
-        event.distance_before_ft = before_push
-        event.distance_after_ft = after_push
-        event.description += (
-            f" {actual_target.state.template.name} is pushed {pushed_ft} feet straight away."
-            f" Target is pushed {pushed_ft} ft. away ({before_push} ft. to {after_push} ft.)."
-        )
+    if event.hit and attack.push_target_away_ft > 0:
+        before_push = combatant_distance(attacker, actual_target)
+        pushed_ft = apply_attack_push(attacker, actual_target, attack, hit=True)
+        if pushed_ft:
+            after_push = combatant_distance(attacker, actual_target)
+            event.distance_before_ft = before_push
+            event.distance_after_ft = after_push
+            event.description += (
+                f" {actual_target.state.template.name} is pushed {pushed_ft} feet straight away."
+                f" Target is pushed {pushed_ft} ft. away ({before_push} ft. to {after_push} ft.)."
+            )
     return apply_critical_closing_move(attacker, setup, event)
