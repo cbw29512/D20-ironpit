@@ -65,11 +65,8 @@ assert.equal(Object.keys(monsters).length, 58, "control batch must bring browser
   const crab = member("monster-1:crab", "monsters", monsters["srd-giant-crab"]);
   G.apply(held.state, crab.combatant_id, 11, 5, false);
   held.state.current_hp = 0; held.state.is_unconscious = true;
-  assert.equal(
-    S.nearestTarget(crab, { heroes: [held, other], monsters: [crab] }),
-    other,
-    "an active combatant must be targeted before an Unconscious disabled target",
-  );
+  assert.equal(S.nearestTarget(crab, { heroes: [held, other], monsters: [crab] }), other,
+    "an active combatant must be targeted before an Unconscious disabled target");
   crab.state.is_dead = true; crab.state.is_alive = false;
   G.cleanup({ heroes: [held, other], monsters: [crab] });
   assert.equal(held.state.grapple_sources.length, 0);
@@ -180,6 +177,32 @@ assert.equal(Object.keys(monsters).length, 58, "control batch must bring browser
   assert.deepEqual(passed.applied_condition_ids, []);
   assert.equal(hero.state.active_effect_ids.includes("prone"), false);
   assert.deepEqual(hero.state.active_modifiers, []);
+}
+
+{
+  const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
+  const actor = member("monster-1:commoner", "monsters", monsters["srd-commoner"]);
+  const attack = actor.state.template.attacks[0];
+  actor.state.template.saving_throw_actions = [{
+    id: "test-roar", name: "Test Roar", saveAbility: "wisdom", dc: 30, range: 15,
+    damageDiceCount: 0, damageDiceSize: 6, damageBonus: 0, damageType: null, successDamage: "none",
+    failureEffects: [{ kind: "condition", condition: "frightened", expiryTiming: "source_turn_start" }],
+    animation: "roar",
+  }];
+  actor.state.template.attack_action = {
+    id: "test-mixed-multiattack", isAttackAction: false,
+    slots: [
+      { attackIds: [attack.id], saveActionIds: ["test-roar"] },
+      { attackIds: [attack.id], saveActionIds: [] },
+    ],
+  };
+  window.IRON_PIT_DICE = queuedDice([1, 20, 1]);
+  const result = window.IRON_PIT_BROWSER_MULTIATTACK.resolveAttackAction(1, 1, actor, { heroes: [hero], monsters: [actor] });
+  assert.equal(result.events.length, 2);
+  assert.equal(result.events[0].feature_id, "test-roar");
+  assert.equal(result.events[0].save_succeeded, false);
+  assert.deepEqual(result.events[0].applied_condition_ids, ["frightened"]);
+  assert.equal(result.events[1].event_type, "attack");
 }
 
 console.log("Browser saving throw and control-condition regressions passed.");
