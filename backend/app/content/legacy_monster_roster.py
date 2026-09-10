@@ -14,7 +14,6 @@ from app.content.monster_merfolk_skirmisher import build_merfolk_skirmisher
 from app.content.monster_reaction_source_audit import complete_monster_reaction_fingerprints
 from app.content.monster_saving_throws import complete_monster_saving_throws
 from app.content.monster_spellcasting_source_audit import complete_monster_spellcasting_fingerprints
-from app.content.monster_tough_boss import build_tough_boss
 from app.content.monster_trait_source_audit import complete_monster_trait_fingerprints
 from app.content.monster_tyrannosaurus import build_tyrannosaurus_rex
 from app.content.monster_worg import build_worg
@@ -56,7 +55,6 @@ def build_legacy_monster_templates() -> list[CombatantTemplate]:
         *build_control_monsters(), *build_grapple_expansion(), *build_poison_monsters(), *build_venom_monsters(),
         *build_expansion_four(), build_giant_crocodile(), build_giant_constrictor_snake(), build_tyrannosaurus_rex(),
         *build_zero_engine_monsters(), *build_target_not_full_hp_monsters(), build_worg(), *build_swarm_candidates(), *build_parry_monsters(),
-        build_tough_boss(),
     ]
     monsters = complete_monster_movement_modes(monsters)
     monsters = filter_standard_arena_eligible(monsters)
@@ -64,7 +62,7 @@ def build_legacy_monster_templates() -> list[CombatantTemplate]:
     monsters = complete_monster_reaction_fingerprints(monsters)
     monsters = complete_monster_bonus_action_fingerprints(monsters)
     monsters = complete_monster_limited_use_fingerprints(monsters)
-    monsters = complete_monster_legendary_fingerprints(monsters)
+    monsters = complete_monster_legendary_source_audit.complete_monster_legendary_fingerprints(monsters)
     monsters = complete_monster_spellcasting_fingerprints(monsters)
     monsters = complete_monster_saving_throws(monsters)
     return complete_unarmed_opportunity_profiles(monsters)
