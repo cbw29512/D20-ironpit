@@ -6,6 +6,7 @@ from app.combat.action_economy import is_available, spend
 from app.combat.barbarian import end_rage_if_incapacitated
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
+from app.combat.forced_movement import apply_save_failure_push
 from app.combat.grapple import apply_grapple
 from app.combat.resources import resource_available, spend_resource
 from app.combat.save_failure_effects import apply_save_failure_effects
@@ -55,6 +56,7 @@ def resolve_save_action(
         death_success_before = target.state.death_save_successes
         death_failure_before = target.state.death_save_failures
         concentration_before = target.state.concentration.effect_id if target.state.concentration else None
+        distance_before = abs(target.position_ft - actor.position_ft)
         rolled_components = build_save_damage_components(
             action, dice, succeeded, shared_damage_rolls, capture_shared_damage_rolls,
         )
@@ -75,6 +77,7 @@ def resolve_save_action(
             )
             end_rage_if_incapacitated(target.state)
         applied_conditions: list[str] = []
+        movement_ft = 0
         if not succeeded and target.state.is_alive and not target.state.is_dead:
             applied_conditions.extend(apply_save_failure_effects(
                 target.state,
@@ -85,17 +88,21 @@ def resolve_save_action(
                 range_ft=action.range_ft,
                 affected_states=affected_states,
             ))
+            movement_ft = apply_save_failure_push(actor, target, action, save_failed=True)
             if action.grapple_escape_dc is not None:
                 applied_conditions.extend(apply_grapple(
                     target.state, actor.combatant_id, action.grapple_escape_dc, action.range_ft,
                     restrains=action.restrains_while_grappled,
                 ))
         applied_conditions = list(dict.fromkeys(applied_conditions))
+        distance_after = abs(target.position_ft - actor.position_ft)
         outcome = "SUCCEEDS" if succeeded else "FAILS"
         description = (
             f"{target.state.template.name} {outcome} a DC {action.dc} {action.save_ability.title()} save "
             f"against {actor.state.template.name}'s {action.name}."
         )
+        if movement_ft:
+            description += f" {target.state.template.name} is pushed {movement_ft} ft. straight away."
         if damage_outcome == "undead_fortitude":
             description += f" {target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP."
         for condition in applied_conditions:
@@ -116,7 +123,8 @@ def resolve_save_action(
             death_save_successes_before=death_success_before, death_save_failures_before=death_failure_before,
             death_save_successes=target.state.death_save_successes, death_save_failures=target.state.death_save_failures,
             is_stable=target.state.is_stable, is_dead=target.state.is_dead, feature_id=action.id,
-            resource_remaining=resource_remaining,
+            resource_remaining=resource_remaining, movement_ft=movement_ft,
+            distance_before_ft=distance_before, distance_after_ft=distance_after,
             concentration_ended_effect_id=(
                 concentration_before if concentration_before and target.state.concentration is None else None
             ),
