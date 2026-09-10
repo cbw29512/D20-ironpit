@@ -38,6 +38,8 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             row["proneMaxSize"] = attack.knocks_prone_max_size.value
         if attack.push_target_away_ft:
             row["pushTargetAwayFt"] = attack.push_target_away_ft
+            if attack.push_target_max_size is not None:
+                row["pushTargetMaxSize"] = attack.push_target_max_size.value
         if attack.forbid_target_grappled_by_self:
             row["forbidSelfGrappledTarget"] = True
         if attack.conditional_attack_advantage:
