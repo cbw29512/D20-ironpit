@@ -9,7 +9,7 @@ from app.combat.attack_action_rules import validate_attack_action_slots
 from app.combat.cleave import resolve_cleave_extra_attack
 from app.combat.dice import DiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
-from app.combat.encounter_targeting import close_ranged_threat_exists, combatant_distance
+from app.combat.encounter_targeting import close_ranged_threat_exists
 from app.combat.light_attack_resolution import resolve_light_extra_attack
 from app.combat.mixed_slot_policy import prefer_save_replacement
 from app.combat.opening_burst import opening_feature_id
@@ -19,41 +19,6 @@ from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, WeaponAttack, WeaponAttackKind
 
 logger = logging.getLogger(__name__)
-
-
-def _apply_immediate_push(
-    attacker: EncounterCombatant,
-    target: EncounterCombatant,
-    attack: WeaponAttack,
-    event: BattleEvent,
-) -> None:
-    push_ft = attack.push_target_away_ft
-    if not event.hit or push_ft <= 0 or target.state.is_dead:
-        return
-    if push_ft % 5:
-        raise ValueError("Immediate push distance must use 5-foot increments.")
-    before = combatant_distance(attacker, target)
-    source_position = attacker.state.position
-    target_position = target.state.position
-    if source_position is not None or target_position is not None:
-        if source_position is None or target_position is None:
-            raise ValueError("Immediate push cannot mix scalar and grid position authority.")
-        dx = target_position.x - source_position.x
-        dy = target_position.y - source_position.y
-        step_x = 0 if dx == 0 else (1 if dx > 0 else -1)
-        step_y = 0 if dy == 0 else (1 if dy > 0 else -1)
-        if step_x == step_y == 0:
-            step_x = 1
-        squares = push_ft // 5
-        target_position.x = max(0, target_position.x + step_x * squares)
-        target_position.y = max(0, target_position.y + step_y * squares)
-    else:
-        direction = 1 if target.position_ft >= attacker.position_ft else -1
-        target.position_ft = max(0, target.position_ft + direction * push_ft)
-    after = combatant_distance(attacker, target)
-    event.distance_before_ft = before
-    event.distance_after_ft = after
-    event.description += f" Target is pushed {push_ft} ft. away ({before} ft. to {after} ft.)."
 
 
 def resolve_attack_action(
@@ -112,7 +77,6 @@ def resolve_attack_action(
                     feature_id=feature_id, turn_key=turn_key, allow_reckless=True,
                     close_enemy_active=close_ranged_threat_exists(attacker, setup),
                 )
-                _apply_immediate_push(attacker, target, attack, event)
                 events.append(event)
                 sequence += 1
                 if attacker.state.turn_terminated:
