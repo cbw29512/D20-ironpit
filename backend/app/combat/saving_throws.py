@@ -57,7 +57,8 @@ def resolve_save_action(
         death_success_before = target.state.death_save_successes
         death_failure_before = target.state.death_save_failures
         concentration_before = target.state.concentration.effect_id if target.state.concentration else None
-        distance_before = abs(target.position_ft - actor.position_ft)
+        tracks_push = action.push_target_away_ft > 0
+        distance_before = abs(target.position_ft - actor.position_ft) if tracks_push else None
         rolled_components = build_save_damage_components(
             action, dice, succeeded, shared_damage_rolls, capture_shared_damage_rolls,
         )
@@ -96,7 +97,7 @@ def resolve_save_action(
                     restrains=action.restrains_while_grappled,
                 ))
         applied_conditions = list(dict.fromkeys(applied_conditions))
-        distance_after = abs(target.position_ft - actor.position_ft)
+        distance_after = abs(target.position_ft - actor.position_ft) if tracks_push else None
         description = describe_save_outcome(
             target_name=target.state.template.name,
             actor_name=actor.state.template.name,
