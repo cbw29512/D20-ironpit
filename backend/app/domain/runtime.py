@@ -36,6 +36,7 @@ class TimedEffect(BaseModel):
     turn_behavior: TimedTurnBehavior = "normal"
     action_or_bonus_only: bool = False
     reactions_disabled: bool = False
+    speed_multiplier: float = Field(default=1.0, gt=0, le=1.0)
     requires_active_effect_id: str | None = None
     ends_on_damage: bool = False
     ends_if_source_incapacitated: bool = False
