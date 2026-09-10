@@ -29,8 +29,20 @@ class DamageEffectDefinition(BaseModel):
     mode: Literal["add", "replace_weapon"] = "add"
 
 
+class MaxHpReductionEffectDefinition(BaseModel):
+    """Reduce max HP by applied attack damage, optionally limited to one damage type."""
+
+    kind: Literal["max-hp-reduction"] = "max-hp-reduction"
+    damage_type: DamageType | None = None
+
+
 AttackEffectDefinition = Annotated[
-    DamageEffectDefinition | ProneEffectDefinition | GrappleEffectDefinition | ConditionEffectDefinition | CombatModifierEffect,
+    DamageEffectDefinition
+    | ProneEffectDefinition
+    | GrappleEffectDefinition
+    | ConditionEffectDefinition
+    | CombatModifierEffect
+    | MaxHpReductionEffectDefinition,
     Field(discriminator="kind"),
 ]
 
@@ -42,6 +54,7 @@ __all__ = [
     "DiceSpec",
     "GrappleEffectDefinition",
     "HitModifierEffect",
+    "MaxHpReductionEffectDefinition",
     "ProneEffectDefinition",
     "SaveFailureEffectDefinition",
 ]
