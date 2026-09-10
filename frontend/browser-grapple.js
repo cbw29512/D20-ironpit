@@ -5,6 +5,7 @@
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { speedZero: (state) => state.active_effect_ids.includes("restrained") };
   const T = () => window.IRON_PIT_BROWSER_TACTICAL_MIND;
+  const F = () => window.IRON_PIT_BROWSER_FRIGHTENED;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
     available: (state, cost) => cost === "action" && state.action_available,
     spend: (state) => { state.action_available = false; },
@@ -54,7 +55,7 @@
   }
 
   const shouldEscape = (state) => E().available(state, "action") && state.grapple_sources.some((source) => source.restrains);
-  function escape(sequence, round, member) {
+  function escape(sequence, round, member, setup = null) {
     const state = member.state;
     if (!E().available(state, "action")) throw new Error("Action is unavailable to escape grapple.");
     const source = state.grapple_sources.find((item) => item.restrains) || state.grapple_sources[0];
@@ -64,7 +65,8 @@
     const useAthletics = athletics != null && (acrobatics == null || athletics >= acrobatics);
     const bonus = useAthletics ? athletics : acrobatics;
     const advantage = useAthletics && (state.active_effect_ids.includes("rage") || state.template.athletics_advantage) ? 1 : 0;
-    const disadvantage = state.active_effect_ids.includes("poisoned") || state.active_effect_ids.includes("frightened") ? 1 : 0;
+    let disadvantage = state.active_effect_ids.includes("poisoned") ? 1 : 0;
+    if (state.active_effect_ids.includes("frightened")) { if (!setup || !F()) throw new Error("Frightened grapple check requires encounter context."); disadvantage += F().d20Disadvantage(state, setup); }
     let roll = R().d20(bonus, R().modeFromSources(advantage, disadvantage));
     let success = roll.total >= source.escape_dc, tactical = null;
     if (!success && T()) {
