@@ -253,7 +253,8 @@ jobs:
 
               second_turn, _ = resolve_combat_turn(
                   sequence, 2, dragon, hero, setup,
-                  FixedDiceProvider([4] + [19, 1, 1, 1] * 3),
+                  # Force ordinary misses so this proof is independent of target HP and critical expansion.
+                  FixedDiceProvider([4] + [2] * 12),
               )
               recharge = [event for event in second_turn if event.resource_roll is not None]
               assert len(recharge) == 1
