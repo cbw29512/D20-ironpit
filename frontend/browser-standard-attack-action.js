@@ -36,8 +36,14 @@
         const event = baseResolveAttack(sequence, round, attacker, target, attack, distance, extra);
         const members = extra.setup ? [...extra.setup.heroes, ...extra.setup.monsters] : [target];
         const actualTarget = members.find((member) => member.combatant_id === event.target_id) || target;
+        const before = S().distance(attacker, actualTarget);
         const moved = applyAttackPush(attacker, actualTarget, attack, event.hit === true);
-        if (moved > 0) event.description += ` ${actualTarget.state.template.name} is pushed ${moved} feet straight away.`;
+        if (moved > 0) {
+          const after = S().distance(attacker, actualTarget);
+          event.distance_before_ft = before;
+          event.distance_after_ft = after;
+          event.description += ` ${actualTarget.state.template.name} is pushed ${moved} feet straight away. Target is pushed ${moved} ft. away (${before} ft. to ${after} ft.).`;
+        }
         return event;
       };
       engine.__forcedMovementHookInstalled = true;
