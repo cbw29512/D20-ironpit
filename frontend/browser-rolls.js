@@ -19,8 +19,10 @@
   }
 
   function attackMode(attack, distance, advantage = 0, disadvantage = 0, closeCombatThreat = distance <= 5) {
-    if (attack.kind === "melee") {
-      if (distance > (attack.reach || 5)) throw new Error(`${attack.name} is out of melee reach.`);
+    const reach = attack.reach || 5;
+    const usesMeleeMode = attack.kind === "melee" || (attack.kind === "melee_or_ranged" && distance <= reach);
+    if (usesMeleeMode) {
+      if (distance > reach) throw new Error(`${attack.name} is out of melee reach.`);
     } else {
       if (!attack.normal || !attack.long || distance > attack.long) throw new Error(`${attack.name} is out of range.`);
       if (distance > attack.normal) disadvantage += 1;
