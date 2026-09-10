@@ -11,9 +11,11 @@ from app.combat.grapple_conditions import (
     drop_orphaned_linked_conditions,
     sync_grapple_effect_ids,
 )
+from app.combat.modifier_stack import apply_d20_bonus_dice
 from app.combat.rolls import roll_d20
 from app.combat.tactical_mind import apply_tactical_mind
 from app.domain.models import BattleEvent, CombatantState, EncounterSetup, GrappleSource, RollMode
+from app.domain.modifiers import ModifierKind
 
 POISONED_EFFECT_ID = "poisoned"
 
@@ -108,6 +110,7 @@ def resolve_escape_grapple(
     source = next((item for item in state.grapple_sources if item.restrains), state.grapple_sources[0])
     check_name, bonus, mode = _escape_choice(state, other_disadvantage_sources)
     check = roll_d20(dice, bonus, mode)
+    check = apply_d20_bonus_dice(state, ModifierKind.ABILITY_CHECK_BONUS_DIE, check, dice)
     success = check.total >= source.escape_dc
     tactical_used = False
     if not success:
