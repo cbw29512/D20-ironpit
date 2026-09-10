@@ -310,5 +310,94 @@
     "source_legendary_action_names": [],
     "visual": {"armor": "none", "main_hand": "Rend", "body_style": "beast"},
     "source": "SRD 5.2.1 p. 356"
+  },
+  {
+    "schema_version": 1,
+    "id": "srd-hill-giant",
+    "name": "Hill Giant",
+    "archetype": "source-certified giant",
+    "challenge_rating": "5",
+    "kind": "monster",
+    "size": "huge",
+    "ability_scores": {
+      "strength": 21,
+      "dexterity": 8,
+      "constitution": 19,
+      "intelligence": 5,
+      "wisdom": 9,
+      "charisma": 6
+    },
+    "armor_class": 13,
+    "max_hp": 105,
+    "speed_ft": 40,
+    "movement_modes": {
+      "walk_ft": 40,
+      "fly_ft": 0,
+      "climb_ft": 0,
+      "swim_ft": 0,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": 2,
+    "attacks": [
+      {
+        "id": "hill-giant-tree-club",
+        "name": "Tree Club",
+        "weapon_id": "hill-giant-tree-club",
+        "attack_kind": "melee",
+        "attack_bonus": 8,
+        "damage": {"count": 3, "size": 8, "bonus": 5},
+        "damage_type": "bludgeoning",
+        "animation": "bludgeon",
+        "reach_ft": 10,
+        "effects": [
+          {"kind": "prone", "max_target_size": "large"}
+        ]
+      },
+      {
+        "id": "hill-giant-trash-lob",
+        "name": "Trash Lob",
+        "weapon_id": "hill-giant-trash-lob",
+        "attack_kind": "ranged",
+        "attack_bonus": 8,
+        "damage": {"count": 2, "size": 10, "bonus": 5},
+        "damage_type": "bludgeoning",
+        "animation": "projectile",
+        "reach_ft": 5,
+        "normal_range_ft": 60,
+        "long_range_ft": 240,
+        "projectile": "debris",
+        "effects": [
+          {"kind": "condition", "condition": "poisoned", "expiry_timing": "target_turn_end"}
+        ]
+      }
+    ],
+    "primary_attack_id": "hill-giant-tree-club",
+    "unarmed_opportunity_attack": {"attack_bonus": 8, "damage": 6},
+    "attack_action": {
+      "id": "hill-giant-multiattack",
+      "name": "Multiattack",
+      "is_attack_action": false,
+      "slots": [
+        {"attack_ids": ["hill-giant-tree-club", "hill-giant-trash-lob"], "save_action_ids": []},
+        {"attack_ids": ["hill-giant-tree-club", "hill-giant-trash-lob"], "save_action_ids": []}
+      ]
+    },
+    "saving_throw_bonuses": {
+      "strength": 5,
+      "dexterity": -1,
+      "constitution": 4,
+      "intelligence": -3,
+      "wisdom": -1,
+      "charisma": -2
+    },
+    "skill_bonuses": {"perception": 2},
+    "source_trait_names": [],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [],
+    "source_limited_use_names": [],
+    "source_legendary_action_names": [],
+    "visual": {"armor": "none", "main_hand": "Tree Club", "off_hand": "Trash Lob", "body_style": "brute"},
+    "source": "SRD 5.2.1 p. 298"
   }
 ]
