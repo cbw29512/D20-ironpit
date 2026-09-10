@@ -49,6 +49,11 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
                 row["pullTargetMaxSize"] = attack.pull_target_max_size.value
         if attack.forbid_target_grappled_by_self:
             row["forbidSelfGrappledTarget"] = True
+        if attack.max_hp_reduction_on_hit is not None:
+            row["maxHpReductionOnHit"] = {
+                "damageType": attack.max_hp_reduction_on_hit.damage_type.value
+                if attack.max_hp_reduction_on_hit.damage_type is not None else None,
+            }
         if attack.conditional_attack_advantage:
             row["conditionalAttackAdvantage"] = [
                 {"trigger": spec.trigger} for spec in attack.conditional_attack_advantage
