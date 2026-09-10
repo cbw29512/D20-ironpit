@@ -150,7 +150,7 @@ jobs:
 
               second_turn, _ = resolve_combat_turn(
                   sequence, 2, hound, hero, setup,
-                  FixedDiceProvider([4, 20, 1, 1, 20, 1, 1]),
+                  FixedDiceProvider([4, 19, 1, 1, 19, 1, 1]),
               )
               recharge = [event for event in second_turn if event.resource_roll is not None]
               assert len(recharge) == 1
