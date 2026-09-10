@@ -7,21 +7,52 @@ from app.combat.grapple import apply_grapple
 from app.combat.hit_modifiers import apply_modifier_effect
 from app.combat.timed_conditions import apply_timed_condition
 from app.domain.hit_modifiers import CombatModifierEffect
-from app.domain.runtime import CombatantState
+from app.domain.runtime import CombatantState, TimedEffect
 from app.domain.save_effects import (
     ConditionEffectDefinition,
     GrappleEffectDefinition,
     ProneEffectDefinition,
     SaveFailureEffectDefinition,
+    TurnRestrictionEffectDefinition,
 )
 from app.domain.size import size_at_most
 
 logger = logging.getLogger(__name__)
 PRONE_EFFECT_ID = "prone"
+TURN_RESTRICTION_EFFECT_ID = "turn-restriction"
 
 
 def _size_allowed(state: CombatantState, maximum) -> bool:
     return maximum is None or size_at_most(state.template.size, maximum)
+
+
+def _apply_turn_restriction(
+    target: CombatantState,
+    source_id: str,
+    source_effect_id: str,
+    effect: TurnRestrictionEffectDefinition,
+    round_number: int,
+) -> str:
+    target.timed_effects = [
+        item for item in target.timed_effects
+        if not (
+            item.effect_id == TURN_RESTRICTION_EFFECT_ID
+            and item.source_id == source_id
+            and item.source_effect_id == source_effect_id
+        )
+    ]
+    target.timed_effects.append(TimedEffect(
+        effect_id=TURN_RESTRICTION_EFFECT_ID,
+        source_id=source_id,
+        source_effect_id=source_effect_id,
+        applied_round=round_number,
+        expiry_timing=effect.expiry_timing,
+        action_or_bonus_only=effect.action_or_bonus_only,
+        reactions_disabled=effect.reactions_disabled,
+    ))
+    if TURN_RESTRICTION_EFFECT_ID not in target.active_effect_ids:
+        target.active_effect_ids.append(TURN_RESTRICTION_EFFECT_ID)
+    return TURN_RESTRICTION_EFFECT_ID
 
 
 def apply_save_failure_effects(
@@ -34,7 +65,7 @@ def apply_save_failure_effects(
     range_ft: int,
     affected_states: list[CombatantState] | None = None,
 ) -> list[str]:
-    """Apply failed-save effects in source order and return applied condition ids."""
+    """Apply failed-save effects in source order and return applied effect ids."""
     try:
         if target.is_dead or not target.is_alive:
             return []
@@ -70,6 +101,10 @@ def apply_save_failure_effects(
                 )
                 if condition is not None:
                     applied.append(condition)
+            elif isinstance(effect, TurnRestrictionEffectDefinition):
+                applied.append(_apply_turn_restriction(
+                    target, source_id, source_effect_id, effect, round_number,
+                ))
             elif isinstance(effect, CombatModifierEffect):
                 apply_modifier_effect(
                     target, source_id, source_effect_id, effect, index, trigger="failed-save",
