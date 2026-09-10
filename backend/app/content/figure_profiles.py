@@ -120,6 +120,7 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Swarm of Venomous Snakes": _p("swarm", "venomous-snakes"),
     "Tiger": _p("quadruped", "cat"),
     "Tough": _p("humanoid", "tough"),
+    "Tough Boss": _p("humanoid", "tough-boss"),
     "Triceratops": _p("reptile", "triceratops"),
     "Tyrannosaurus Rex": _p("theropod", "tyrannosaurus"),
     "Venomous Snake": _p("snake", "snake"),
