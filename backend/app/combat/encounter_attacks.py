@@ -5,6 +5,7 @@ from app.combat.attacks import resolve_attack
 from app.combat.champion import apply_critical_closing_move
 from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
+from app.combat.forced_movement import apply_attack_push
 from app.combat.frenzy import mark_reckless_use_while_raging
 from app.combat.frightened import frightened_d20_disadvantage
 from app.combat.reckless_attack import activate_reckless_attack
@@ -60,6 +61,11 @@ def resolve_encounter_attack(
         event.description += f" {attacker.state.template.name} uses Reckless Attack."
         if event.feature_id is None:
             event.feature_id = "reckless-attack"
+    actual_target = target
     if redirect is not None and event.target_id == redirect.combatant_id:
         swap_redirect_positions(target, redirect)
+        actual_target = redirect
+    pushed_ft = apply_attack_push(attacker, actual_target, attack, hit=event.hit)
+    if pushed_ft:
+        event.description += f" {actual_target.state.template.name} is pushed {pushed_ft} feet straight away."
     return apply_critical_closing_move(attacker, setup, event)
