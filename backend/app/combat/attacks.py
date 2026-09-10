@@ -4,6 +4,7 @@ import logging
 
 from app.combat.action_economy import is_available, spend
 from app.combat.attack_description import build_attack_description
+from app.combat.attack_roll_modifiers import consume_next_attack_disadvantage, next_attack_disadvantage_sources
 from app.combat.barbarian import end_rage_if_incapacitated, extend_rage_from_attack
 from app.combat.bloodied import bloodied_fury_advantage
 from app.combat.condition_rules import close_hit_is_automatic_critical
@@ -61,14 +62,15 @@ def resolve_attack(
                                + reckless_attack_advantage(attacker, attack)
                                + conditional_attack_advantage_sources(attack, defender)
                                + next_attack_against_advantage_sources(attacker, defender_event_id)),
-            other_disadvantage_sources=other_disadvantage_sources + condition_disadvantage + sap_disadvantage(attacker) + strength_penalty,
+            other_disadvantage_sources=(other_disadvantage_sources + condition_disadvantage + sap_disadvantage(attacker)
+                                        + strength_penalty + next_attack_disadvantage_sources(attacker)),
             close_enemy_active=close_enemy_active,
         )
         resource_remaining = spend_resource(attacker, attack.resource_id, attack.resource_cost)
         base_roll = roll_d20(dice, attack.attack_bonus, mode)
         base_roll, heroic_reroll = reroll_failed_attack_with_heroic_inspiration(attacker, base_roll, effective_armor_class(defender), dice)
         attack_roll = apply_d20_bonus_dice(attacker, ModifierKind.ATTACK_ROLL_BONUS_DIE, base_roll, dice)
-        consume_next_attack_against_advantage(attacker, defender_event_id); consume_sap(attacker)
+        consume_next_attack_against_advantage(attacker, defender_event_id); consume_next_attack_disadvantage(attacker); consume_sap(attacker)
         consume_attacks_against_advantage(defender); extend_rage_from_attack(attacker, round_number)
         if spend_action: spend(attacker, "action")
         actual_defender, actual_event_id, redirect_used = defender, defender_event_id, False
