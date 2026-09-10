@@ -223,5 +223,92 @@
     ],
     "visual": {"armor": "none", "main_hand": "Fist", "off_hand": "Rock", "body_style": "beast"},
     "source": "SRD 5.2.1 p. 344"
+  },
+  {
+    "schema_version": 1,
+    "id": "srd-lion",
+    "name": "Lion",
+    "archetype": "source-certified beast",
+    "challenge_rating": "1",
+    "kind": "monster",
+    "size": "large",
+    "ability_scores": {
+      "strength": 17,
+      "dexterity": 15,
+      "constitution": 11,
+      "intelligence": 3,
+      "wisdom": 12,
+      "charisma": 8
+    },
+    "armor_class": 12,
+    "max_hp": 22,
+    "speed_ft": 50,
+    "movement_modes": {
+      "walk_ft": 50,
+      "fly_ft": 0,
+      "climb_ft": 0,
+      "swim_ft": 0,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": 2,
+    "attacks": [
+      {
+        "id": "lion-rend",
+        "name": "Rend",
+        "weapon_id": "lion-rend",
+        "attack_kind": "melee",
+        "attack_bonus": 5,
+        "damage": {"count": 1, "size": 8, "bonus": 3},
+        "damage_type": "slashing",
+        "animation": "slash",
+        "reach_ft": 5
+      }
+    ],
+    "primary_attack_id": "lion-rend",
+    "unarmed_opportunity_attack": {"attack_bonus": 5, "damage": 4},
+    "attack_action": {
+      "id": "lion-multiattack",
+      "name": "Multiattack",
+      "is_attack_action": false,
+      "slots": [
+        {"attack_ids": ["lion-rend"], "save_action_ids": ["lion-roar"]},
+        {"attack_ids": ["lion-rend"], "save_action_ids": []}
+      ]
+    },
+    "save_actions": [
+      {
+        "id": "lion-roar",
+        "name": "Roar",
+        "save_ability": "wisdom",
+        "dc": 11,
+        "range_ft": 15,
+        "failure_effects": [
+          {
+            "kind": "condition",
+            "condition": "frightened",
+            "expiry_timing": "source_turn_start"
+          }
+        ],
+        "animation": "roar"
+      }
+    ],
+    "saving_throw_bonuses": {
+      "strength": 3,
+      "dexterity": 2,
+      "constitution": 0,
+      "intelligence": -4,
+      "wisdom": 1,
+      "charisma": -1
+    },
+    "skill_bonuses": {"perception": 3, "stealth": 4},
+    "combat_traits": ["pack-tactics"],
+    "source_trait_names": ["Pack Tactics", "Running Leap"],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [],
+    "source_limited_use_names": [],
+    "source_legendary_action_names": [],
+    "visual": {"armor": "none", "main_hand": "Rend", "body_style": "beast"},
+    "source": "SRD 5.2.1 p. 356"
   }
 ]
