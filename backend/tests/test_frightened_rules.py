@@ -61,8 +61,9 @@ def test_frightened_d20_penalty_requires_any_visible_fear_source() -> None:
 def test_frightened_missing_source_fails_closed() -> None:
     target = _member("target", "heroes", 0)
     source = _member("source", "monsters", 6)
+    other = _member("other", "monsters", 7)
     _fear(target, source)
-    setup = EncounterSetup(heroes=[target], monsters=[], hero_total_levels=1, monster_total_cr="0")
+    setup = EncounterSetup(heroes=[target], monsters=[other], hero_total_levels=1, monster_total_cr="0")
     with pytest.raises(ValueError, match="missing from the encounter"):
         frightened_d20_disadvantage(target.state, setup)
 
