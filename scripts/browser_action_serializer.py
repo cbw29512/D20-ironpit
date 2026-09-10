@@ -125,12 +125,30 @@ def spell_attack_row(action: Any) -> dict[str, Any]:
     }
 
 
+def _spell_modifier_row(effect: Any) -> dict[str, Any]:
+    row = {
+        "kind": effect.kind, "flatBonus": effect.flat_bonus,
+        "diceCount": effect.dice_count, "diceSize": effect.dice_size,
+        "damageType": effect.damage_type,
+    }
+    if effect.consume_on_attack_against:
+        row["consumeOnAttackAgainst"] = True
+    if effect.expires_after_source_turns is not None:
+        row["expiresAfterSourceTurns"] = effect.expires_after_source_turns
+    return row
+
+
 def defense_row(action: Any) -> dict[str, Any]:
     return {
-        "id": action.id, "name": action.name, "actionCost": action.action_cost,
-        "armorClassBonus": action.armor_class_bonus, "resourceId": action.resource_id,
-        "resourceCost": action.resource_cost, "durationRounds": action.duration_rounds,
-        "concentrationRequired": action.concentration_required, "animation": action.animation,
+        "id": action.id, "name": action.name, "level": action.level,
+        "actionCost": action.action_cost, "range": action.range_ft,
+        "durationMinutes": action.duration_minutes, "targetPolicy": action.target_policy,
+        "targetCount": action.target_count, "targetCountPerSlotAbove": action.target_count_per_slot_above,
+        "temporaryHp": action.temporary_hp, "temporaryHpPerSlotAbove": action.temporary_hp_per_slot_above,
+        "maxHpIncrease": action.max_hp_increase, "currentHpIncrease": action.current_hp_increase,
+        "damageResistances": list(action.damage_resistances),
+        "modifierEffects": [_spell_modifier_row(effect) for effect in action.modifier_effects],
+        "concentration": action.concentration, "priority": action.priority, "animation": action.animation,
     }
 
 
