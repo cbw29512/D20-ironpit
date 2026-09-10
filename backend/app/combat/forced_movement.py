@@ -9,6 +9,12 @@ from app.domain.size import size_at_most
 logger = logging.getLogger(__name__)
 
 
+def _eligible(target: EncounterCombatant, maximum) -> bool:
+    if not target.state.is_alive or target.state.is_dead:
+        return False
+    return maximum is None or size_at_most(target.state.template.size, maximum)
+
+
 def apply_attack_push(
     attacker: EncounterCombatant,
     target: EncounterCombatant,
@@ -16,13 +22,10 @@ def apply_attack_push(
     *,
     hit: bool,
 ) -> int:
-    """Apply a declarative straight-away push and return feet moved."""
+    """Apply declarative straight-away movement and return feet moved."""
     try:
         distance = attack.push_target_away_ft
-        if not hit or distance <= 0 or not target.state.is_alive or target.state.is_dead:
-            return 0
-        maximum = attack.push_target_max_size
-        if maximum is not None and not size_at_most(target.state.template.size, maximum):
+        if not hit or distance <= 0 or not _eligible(target, attack.push_target_max_size):
             return 0
         direction = 1 if target.position_ft >= attacker.position_ft else -1
         destination = max(0, target.position_ft + direction * distance)
@@ -30,10 +33,29 @@ def apply_attack_push(
         target.position_ft = destination
         return moved
     except Exception as exc:
-        logger.exception(
-            "Forced push failed: %s -> %s via %s.",
-            attacker.state.template.name,
-            target.state.template.name,
-            attack.weapon.name,
-        )
-        raise RuntimeError("Forced movement resolution failed.") from exc
+        logger.exception("Forced push failed for %s.", attack.id)
+        raise RuntimeError("Forced push resolution failed.") from exc
+
+
+def apply_attack_pull(
+    attacker: EncounterCombatant,
+    target: EncounterCombatant,
+    attack: WeaponAttack,
+    *,
+    hit: bool,
+) -> int:
+    """Apply declarative straight-toward movement and return feet moved."""
+    try:
+        distance = attack.pull_target_toward_ft
+        if not hit or distance <= 0 or not _eligible(target, attack.pull_target_max_size):
+            return 0
+        separation = abs(target.position_ft - attacker.position_ft)
+        moved = min(distance, separation)
+        if moved <= 0:
+            return 0
+        direction = -1 if target.position_ft >= attacker.position_ft else 1
+        target.position_ft = max(0, target.position_ft + direction * moved)
+        return moved
+    except Exception as exc:
+        logger.exception("Forced pull failed for %s.", attack.id)
+        raise RuntimeError("Forced pull resolution failed.") from exc
