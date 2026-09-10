@@ -5,6 +5,7 @@ from app.domain.runtime import CombatantState
 
 BLINDED_EFFECT_ID = "blinded"
 INVISIBLE_EFFECT_ID = "invisible"
+INVISIBILITY_BUFF_ID = "invisibility"
 
 
 def has_line_of_sight(
@@ -19,5 +20,7 @@ def has_line_of_sight(
     if has_condition(observer, BLINDED_EFFECT_ID):
         return False
     if has_condition(target, INVISIBLE_EFFECT_ID):
+        return False
+    if INVISIBILITY_BUFF_ID in target.active_buff_effect_ids:
         return False
     return True
