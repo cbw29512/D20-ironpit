@@ -5,39 +5,17 @@ from app.combat.barbarian import rage_active
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.condition_rules import condition_speed_is_zero, has_condition
 from app.combat.dice import DiceProvider
+from app.combat.grapple_conditions import (
+    GRAPPLED_EFFECT_ID,
+    RESTRAINED_EFFECT_ID,
+    drop_orphaned_linked_conditions,
+    sync_grapple_effect_ids,
+)
 from app.combat.rolls import roll_d20
 from app.combat.tactical_mind import apply_tactical_mind
 from app.domain.models import BattleEvent, CombatantState, EncounterSetup, GrappleSource, RollMode
 
-GRAPPLED_EFFECT_ID = "grappled"
 POISONED_EFFECT_ID = "poisoned"
-RESTRAINED_EFFECT_ID = "restrained"
-
-
-def _sync_effect_ids(state: CombatantState) -> None:
-    if state.grapple_sources:
-        if GRAPPLED_EFFECT_ID not in state.active_effect_ids:
-            state.active_effect_ids.append(GRAPPLED_EFFECT_ID)
-        if "dodge" in state.active_effect_ids:
-            state.active_effect_ids.remove("dodge")
-    elif GRAPPLED_EFFECT_ID in state.active_effect_ids:
-        state.active_effect_ids.remove(GRAPPLED_EFFECT_ID)
-    restrained = any(source.restrains for source in state.grapple_sources)
-    if restrained and RESTRAINED_EFFECT_ID not in state.active_effect_ids:
-        state.active_effect_ids.append(RESTRAINED_EFFECT_ID)
-    elif not restrained and RESTRAINED_EFFECT_ID in state.active_effect_ids:
-        state.active_effect_ids.remove(RESTRAINED_EFFECT_ID)
-    for condition in {item for source in state.grapple_sources for item in source.linked_conditions}:
-        if condition not in state.active_effect_ids:
-            state.active_effect_ids.append(condition)
-
-
-def _drop_orphaned_linked_conditions(state: CombatantState, removed: set[str]) -> None:
-    remaining = {item for source in state.grapple_sources for item in source.linked_conditions}
-    timed = {effect.effect_id for effect in state.timed_effects}
-    for condition in removed - remaining - timed:
-        if condition in state.active_effect_ids:
-            state.active_effect_ids.remove(condition)
 
 
 def apply_grapple(
@@ -54,8 +32,8 @@ def apply_grapple(
         source_id=source_id, escape_dc=escape_dc, range_ft=range_ft,
         restrains=restrains, linked_conditions=linked,
     ))
-    _drop_orphaned_linked_conditions(state, {item for source in replaced for item in source.linked_conditions})
-    _sync_effect_ids(state)
+    drop_orphaned_linked_conditions(state, {item for source in replaced for item in source.linked_conditions})
+    sync_grapple_effect_ids(state)
     applied = [GRAPPLED_EFFECT_ID]
     if restrains:
         applied.append(RESTRAINED_EFFECT_ID)
@@ -65,8 +43,8 @@ def apply_grapple(
 def release_grapple(state: CombatantState, source_id: str) -> None:
     removed_sources = [source for source in state.grapple_sources if source.source_id == source_id]
     state.grapple_sources = [source for source in state.grapple_sources if source.source_id != source_id]
-    _drop_orphaned_linked_conditions(state, {item for source in removed_sources for item in source.linked_conditions})
-    _sync_effect_ids(state)
+    drop_orphaned_linked_conditions(state, {item for source in removed_sources for item in source.linked_conditions})
+    sync_grapple_effect_ids(state)
 
 
 def speed_is_zero(state: CombatantState) -> bool:
@@ -93,8 +71,8 @@ def cleanup_grapples(setup: EncounterSetup) -> None:
             else:
                 removed.update(source.linked_conditions)
         target.state.grapple_sources = retained
-        _drop_orphaned_linked_conditions(target.state, removed)
-        _sync_effect_ids(target.state)
+        drop_orphaned_linked_conditions(target.state, removed)
+        sync_grapple_effect_ids(target.state)
 
 
 def should_escape_grapple(state: CombatantState) -> bool:
