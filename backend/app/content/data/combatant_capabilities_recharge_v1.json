@@ -120,5 +120,34 @@
     "resources": [{"id": "srd-dretch-fetid-cloud", "name": "Fetid Cloud", "max_uses": 1}],
     "visual": {"armor": "natural", "main_hand": "claw", "body_style": "humanoid"},
     "source": "SRD 5.2.1 Dretch"
+  },
+  {
+    "schema_version": 1,
+    "id": "srd-young-copper-dragon",
+    "name": "Young Copper Dragon",
+    "archetype": "source-certified metallic dragon",
+    "challenge_rating": "7",
+    "kind": "monster",
+    "size": "large",
+    "armor_class": 17,
+    "max_hp": 119,
+    "speed_ft": 40,
+    "movement_modes": {"walk_ft": 40, "fly_ft": 80, "climb_ft": 40, "swim_ft": 0, "burrow_ft": 0, "hover": false},
+    "initiative_bonus": 4,
+    "attacks": [{"id": "srd-young-copper-dragon-rend", "name": "Rend", "weapon_id": "srd-young-copper-dragon-rend-weapon", "attack_kind": "melee", "attack_bonus": 7, "damage": {"count": 2, "size": 10, "bonus": 4}, "damage_type": "slashing", "animation": "claw", "reach_ft": 10}],
+    "primary_attack_id": "srd-young-copper-dragon-rend",
+    "unarmed_opportunity_attack": {"attack_bonus": 7, "damage": 5},
+    "save_actions": [
+      {"id": "srd-young-copper-dragon-acid-breath", "name": "Acid Breath", "save_ability": "dexterity", "dc": 14, "range_ft": 0, "area": {"shape": "line", "origin": "self", "length_ft": 40, "width_ft": 5}, "damage": {"count": 9, "size": 8, "bonus": 0}, "damage_type": "acid", "success_damage": "half", "resource_id": "srd-young-copper-dragon-acid-breath", "resource_cost": 1, "animation": "acid-breath"},
+      {"id": "srd-young-copper-dragon-slowing-breath", "name": "Slowing Breath", "save_ability": "constitution", "dc": 14, "range_ft": 0, "area": {"shape": "cone", "origin": "self", "length_ft": 30}, "failure_effects": [{"kind": "turn-restriction", "action_or_bonus_only": true, "reactions_disabled": true, "speed_multiplier": 0.5, "expiry_timing": "target_turn_end"}], "animation": "slowing-breath"}
+    ],
+    "attack_action": {"id": "srd-young-copper-dragon-multiattack", "name": "Multiattack", "is_attack_action": false, "slots": [{"attack_ids": ["srd-young-copper-dragon-rend"], "save_action_ids": ["srd-young-copper-dragon-slowing-breath"]}, {"attack_ids": ["srd-young-copper-dragon-rend"]}, {"attack_ids": ["srd-young-copper-dragon-rend"]}]},
+    "saving_throw_bonuses": {"strength": 4, "dexterity": 4, "constitution": 3, "intelligence": 3, "wisdom": 4, "charisma": 2},
+    "skill_bonuses": {"deception": 5, "perception": 7, "stealth": 4},
+    "damage_immunities": ["acid"],
+    "source_limited_use_names": ["actions:Acid Breath (Recharge 5-6)"],
+    "resources": [{"id": "srd-young-copper-dragon-acid-breath", "name": "Acid Breath", "max_uses": 1, "recharge": {"trigger": "start_of_turn", "die_size": 6, "minimum_roll": 5}}],
+    "visual": {"armor": "natural", "main_hand": "claw", "body_style": "dragon"},
+    "source": "SRD 5.2.1 Young Copper Dragon"
   }
 ]
