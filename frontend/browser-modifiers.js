@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const DIE_KINDS = new Set(["attack-roll-bonus-die", "saving-throw-bonus-die", "bonus-damage"]);
+  const DIE_KINDS = new Set(["attack-roll-bonus-die", "saving-throw-bonus-die", "ability-check-bonus-die", "bonus-damage"]);
   const KINDS = new Set(["armor-class", ...DIE_KINDS, "attacks-against-advantage", "next-attack-against-advantage", "speed"]);
   const EFFECT_KINDS = new Set(["attacks-against-advantage", "speed"]);
   const D = () => window.IRON_PIT_DICE;
@@ -108,7 +108,7 @@
   }
 
   function applyD20Bonus(state, kind, roll) {
-    if (!new Set(["attack-roll-bonus-die", "saving-throw-bonus-die"]).has(kind)) throw new Error(`${kind} is not a D20 bonus modifier.`);
+    if (!new Set(["attack-roll-bonus-die", "saving-throw-bonus-die", "ability-check-bonus-die"]).has(kind)) throw new Error(`${kind} is not a D20 bonus modifier.`);
     const modifiers = (state.active_modifiers || []).filter((item) => item.kind === kind);
     if (!modifiers.length) return roll;
     const bonusDice = modifiers.map((item) => {
