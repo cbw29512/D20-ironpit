@@ -24,6 +24,16 @@ def parse_capability_definitions(rows: object) -> dict[str, CombatantDefinition]
     by_id = {definition.id: definition for definition in definitions}
     if len(by_id) != len(definitions):
         raise ValueError("Combat capability registry ids must be unique.")
+    missing_unarmed = [
+        definition.id
+        for definition in definitions
+        if definition.kind == "monster" and definition.unarmed_opportunity_attack is None
+    ]
+    if missing_unarmed:
+        raise ValueError(
+            "Monster capability definitions require certified unarmed opportunity profiles: "
+            + ", ".join(sorted(missing_unarmed))
+        )
     return by_id
 
 
