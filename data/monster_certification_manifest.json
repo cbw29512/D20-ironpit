@@ -7804,7 +7804,7 @@
       "monster_name": "Specter",
       "srd_source_page": 327,
       "srd_source_reference": "SRD 5.2.1 p. 327",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-specter",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -7824,7 +7824,7 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-certified",
+        "arena-speed-mismatch",
         "trait",
         "unsupported-action-rider"
       ]

@@ -16,7 +16,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 2,
     "progression_features": {
@@ -179,7 +180,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 2,
     "progression_features": {
@@ -313,7 +315,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 3,
     "progression_features": {
@@ -462,7 +465,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 2,
     "progression_features": {
@@ -599,7 +603,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 2,
     "progression_features": {
@@ -791,7 +796,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 1,
     "progression_features": {
@@ -924,7 +930,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 0,
     "progression_features": {
@@ -1028,7 +1035,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 1,
     "progression_features": {
@@ -1160,7 +1168,8 @@
       "climb_ft": 30,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 3,
     "progression_features": {
@@ -1266,7 +1275,8 @@
       "climb_ft": 30,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 3,
     "progression_features": {
@@ -1368,7 +1378,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 2,
     "progression_features": {
@@ -1487,7 +1498,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 1,
     "progression_features": {
@@ -1589,7 +1601,8 @@
       "climb_ft": 40,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 1,
     "progression_features": {
@@ -1693,7 +1706,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 2,
     "progression_features": {
@@ -1804,7 +1818,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 2,
     "progression_features": {
@@ -1915,7 +1930,8 @@
       "climb_ft": 30,
       "swim_ft": 30,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 1,
     "progression_features": {
@@ -2038,7 +2054,8 @@
       "climb_ft": 30,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 1,
     "progression_features": {
@@ -2193,7 +2210,8 @@
       "climb_ft": 30,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 2,
     "progression_features": {
@@ -2299,7 +2317,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": -1,
     "progression_features": {
@@ -2401,7 +2420,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 3,
     "progression_features": {
@@ -2505,7 +2525,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 0,
     "progression_features": {
@@ -2607,7 +2628,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 10,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 0,
     "progression_features": {
@@ -2711,7 +2733,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 2,
     "progression_features": {
@@ -2813,7 +2836,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 0,
     "progression_features": {
@@ -2931,7 +2955,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 0,
     "progression_features": {
@@ -3046,7 +3071,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 0,
     "progression_features": {
@@ -3164,7 +3190,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 0,
     "progression_features": {
@@ -3313,7 +3340,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": -1,
     "progression_features": {
@@ -3449,7 +3477,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 1,
     "progression_features": {
@@ -3565,7 +3594,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 1,
     "progression_features": {
@@ -3704,7 +3734,8 @@
       "climb_ft": 30,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 0,
     "progression_features": {
@@ -3813,7 +3844,8 @@
       "climb_ft": 0,
       "swim_ft": 40,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 1,
     "progression_features": {
@@ -3987,7 +4019,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 1,
     "progression_features": {
@@ -4112,7 +4145,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": -1,
     "progression_features": {
@@ -4214,7 +4248,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 5,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 0,
     "progression_features": {
@@ -4314,7 +4349,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 2,
     "progression_features": {
@@ -4412,7 +4448,8 @@
       "climb_ft": 40,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 2,
     "progression_features": {
@@ -4512,7 +4549,8 @@
       "climb_ft": 0,
       "swim_ft": 20,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 0,
     "progression_features": {
@@ -4612,7 +4650,8 @@
       "climb_ft": 0,
       "swim_ft": 20,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 1,
     "progression_features": {
@@ -4713,7 +4752,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 3,
     "progression_features": {
@@ -4811,7 +4851,8 @@
       "climb_ft": 20,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 0,
     "progression_features": {
@@ -4911,7 +4952,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 1,
     "progression_features": {
@@ -5011,7 +5053,8 @@
       "climb_ft": 20,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 0,
     "progression_features": {
@@ -5111,7 +5154,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 2,
     "progression_features": {
@@ -5211,7 +5255,8 @@
       "climb_ft": 30,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 3,
     "progression_features": {
@@ -5309,7 +5354,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 2,
     "progression_features": {
@@ -5411,7 +5457,8 @@
       "climb_ft": 40,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 3,
     "progression_features": {
@@ -5515,7 +5562,8 @@
       "climb_ft": 0,
       "swim_ft": 40,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 2,
     "progression_features": {
@@ -5619,7 +5667,8 @@
       "climb_ft": 0,
       "swim_ft": 40,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 2,
     "progression_features": {
@@ -5744,7 +5793,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 0,
     "progression_features": {
@@ -5846,7 +5896,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 2,
     "progression_features": {
@@ -5950,7 +6001,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 1,
     "progression_features": {
@@ -6052,7 +6104,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 3,
     "progression_features": {
@@ -6161,7 +6214,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 0,
     "progression_features": {
@@ -6267,7 +6321,8 @@
       "climb_ft": 30,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 0,
     "progression_features": {
@@ -6369,7 +6424,8 @@
       "climb_ft": 30,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 1,
     "progression_features": {
@@ -6484,7 +6540,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 2,
     "progression_features": {
@@ -6592,7 +6649,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 1,
     "progression_features": {
@@ -6698,7 +6756,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 3,
     "progression_features": {
@@ -6800,7 +6859,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 2,
     "progression_features": {
@@ -6907,7 +6967,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 0,
     "progression_features": {
@@ -7011,7 +7072,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": -1,
     "progression_features": {
@@ -7126,7 +7188,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 1,
     "progression_features": {
@@ -7241,7 +7304,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": -1,
     "progression_features": {
@@ -7399,7 +7463,8 @@
       "climb_ft": 40,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 1,
     "progression_features": {
@@ -7522,7 +7587,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 3,
     "progression_features": {
@@ -7649,7 +7715,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 2,
     "progression_features": {
@@ -7803,7 +7870,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 0,
     "progression_features": {
@@ -7938,7 +8006,8 @@
       "climb_ft": 0,
       "swim_ft": 30,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 0,
     "progression_features": {
@@ -8053,7 +8122,8 @@
       "climb_ft": 0,
       "swim_ft": 30,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 1,
     "progression_features": {
@@ -8168,7 +8238,8 @@
       "climb_ft": 0,
       "swim_ft": 30,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 2,
     "progression_features": {
@@ -8301,7 +8372,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 1,
     "progression_features": {
@@ -8482,7 +8554,8 @@
       "climb_ft": 30,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 2,
     "progression_features": {
@@ -8644,7 +8717,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 2,
     "progression_features": {
@@ -8779,7 +8853,8 @@
       "climb_ft": 30,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 2,
     "progression_features": {
@@ -8893,7 +8968,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 0,
     "progression_features": {
@@ -9012,7 +9088,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 0,
     "progression_features": {
@@ -9185,7 +9262,8 @@
       "climb_ft": 0,
       "swim_ft": 40,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 4,
     "progression_features": {
@@ -9304,7 +9382,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 2,
     "progression_features": {
@@ -9424,7 +9503,8 @@
       "climb_ft": 40,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 3,
     "progression_features": {
@@ -9546,7 +9626,8 @@
       "climb_ft": 0,
       "swim_ft": 80,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 3,
     "progression_features": {
@@ -9671,7 +9752,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 0,
     "progression_features": {
@@ -9799,7 +9881,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 3,
     "progression_features": {
@@ -9938,7 +10021,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 6,
     "progression_features": {
@@ -10069,7 +10153,8 @@
       "climb_ft": 0,
       "swim_ft": 50,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": -1,
     "progression_features": {
@@ -10236,7 +10321,8 @@
       "climb_ft": 0,
       "swim_ft": 30,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 2,
     "progression_features": {
@@ -10391,7 +10477,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 3,
     "progression_features": {
@@ -10556,7 +10643,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 2,
     "progression_features": {
@@ -10690,7 +10778,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": true
+      "hover": true,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 4,
     "progression_features": {
@@ -10803,7 +10892,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": -2,
     "progression_features": {
@@ -10910,7 +11000,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 1,
     "progression_features": {
@@ -11025,7 +11116,8 @@
       "climb_ft": 0,
       "swim_ft": 30,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 2,
     "progression_features": {
@@ -11138,7 +11230,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 2,
     "progression_features": {
@@ -11269,7 +11362,8 @@
       "climb_ft": 30,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 1,
     "progression_features": {
@@ -11384,7 +11478,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 4,
     "progression_features": {
@@ -11567,7 +11662,8 @@
       "climb_ft": 0,
       "swim_ft": 30,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": -2,
     "progression_features": {
@@ -11692,7 +11788,8 @@
       "climb_ft": 0,
       "swim_ft": 60,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 2,
     "progression_features": {
@@ -11796,7 +11893,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": -3,
     "progression_features": {
@@ -11909,7 +12007,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 3,
     "progression_features": {
@@ -12071,7 +12170,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": -2,
     "progression_features": {
@@ -12182,7 +12282,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 2,
     "progression_features": {
@@ -12297,7 +12398,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 0,
     "progression_features": {
@@ -12408,7 +12510,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 3,
     "progression_features": {
@@ -12546,7 +12649,8 @@
       "climb_ft": 20,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 2,
     "progression_features": {
@@ -12660,7 +12764,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 1,
     "progression_features": {
@@ -12795,7 +12900,8 @@
       "climb_ft": 0,
       "swim_ft": 30,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 2,
     "progression_features": {
@@ -12910,7 +13016,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": -5,
     "progression_features": {
@@ -13038,7 +13145,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": -2,
     "progression_features": {
@@ -13149,7 +13257,8 @@
       "climb_ft": 0,
       "swim_ft": 60,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 3,
     "progression_features": {
@@ -13278,7 +13387,8 @@
       "climb_ft": 0,
       "swim_ft": 40,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 2,
     "progression_features": {
@@ -13386,7 +13496,8 @@
       "climb_ft": 0,
       "swim_ft": 40,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 3,
     "progression_features": {
@@ -13490,7 +13601,8 @@
       "climb_ft": 0,
       "swim_ft": 30,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 2,
     "progression_features": {
@@ -13597,7 +13709,8 @@
       "climb_ft": 0,
       "swim_ft": 40,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 3,
     "progression_features": {
@@ -13734,7 +13847,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 1,
     "progression_features": {
@@ -13846,7 +13960,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 2,
     "progression_features": {
@@ -13978,7 +14093,8 @@
       "climb_ft": 30,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 0,
     "progression_features": {
@@ -14110,7 +14226,8 @@
       "climb_ft": 30,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 2,
     "progression_features": {
@@ -14252,7 +14369,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 3,
     "progression_features": {
@@ -14412,7 +14530,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 0,
     "progression_features": {
@@ -14600,7 +14719,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 1,
     "progression_features": {
@@ -14707,7 +14827,8 @@
       "climb_ft": 0,
       "swim_ft": 0,
       "burrow_ft": 0,
-      "hover": false
+      "hover": false,
+      "pass_through_creatures_as_difficult_terrain": false
     },
     "initiative_bonus": 3,
     "progression_features": {
