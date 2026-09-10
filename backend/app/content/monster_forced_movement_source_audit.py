@@ -17,12 +17,18 @@ def forced_movement_issues(attack: WeaponAttack, actions: str) -> list[str]:
     issues: list[str] = []
     push = attack.push_target_away_ft
     if push > 0:
-        phrase = rf"push(?:es)?\s+the\s+target\s+up\s+to\s+{push}\s*(?:ft\.?|feet)\s+straight\s+away"
+        phrase = (
+            rf"(?:push(?:es)?\s+the\s+target|the\s+target\s+is\s+pushed)\s+up\s+to\s+{push}\s*"
+            rf"(?:ft\.?|feet)\s+straight\s+away"
+        )
         if not _matches(actions, phrase, attack.push_target_max_size):
             issues.append(f"push-rider-mismatch:{attack.id}")
     pull = attack.pull_target_toward_ft
     if pull > 0:
-        phrase = rf"pull(?:s)?\s+the\s+target\s+up\s+to\s+{pull}\s*(?:ft\.?|feet)\s+(?:straight\s+)?toward"
+        phrase = (
+            rf"(?:pull(?:s)?\s+the\s+target|the\s+target\s+is\s+pulled)\s+up\s+to\s+{pull}\s*"
+            rf"(?:ft\.?|feet)\s+(?:straight\s+)?toward"
+        )
         if not _matches(actions, phrase, attack.pull_target_max_size):
             issues.append(f"pull-rider-mismatch:{attack.id}")
     return issues
