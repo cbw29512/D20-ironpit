@@ -25,6 +25,7 @@ from app.combat.saving_throws import resolve_save_action
 from app.combat.spell_offense import resolve_best_spell_offense
 from app.combat.standard_attack_action import resolve_standard_attack_action
 from app.combat.state import begin_turn
+from app.combat.swallow_action_resolution import resolve_priority_swallow_action
 from app.combat.tactical_shift import resolve_tactical_shift
 from app.combat.fighter import use_second_wind
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -109,6 +110,13 @@ def resolve_combat_turn(
         )
         events.extend(recharge_action_events)
         if recharge_handled:
+            return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
+
+        swallow_events, sequence, swallow_handled = resolve_priority_swallow_action(
+            sequence, round_number, attacker, setup,
+        )
+        events.extend(swallow_events)
+        if swallow_handled:
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
         if attacker.state.template.attack_action is not None:
