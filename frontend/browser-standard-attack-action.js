@@ -65,9 +65,10 @@
         if (moved > 0) {
           const after = S().distance(attacker, actualTarget);
           const verb = hasPush ? "pushed" : "pulled";
+          const direction = hasPush ? "straight away" : "straight toward the attacker";
           event.distance_before_ft = before;
           event.distance_after_ft = after;
-          event.description += ` ${actualTarget.state.template.name} is ${verb} ${moved} feet. Target is ${verb} ${moved} ft. (${before} ft. to ${after} ft.).`;
+          event.description += ` ${actualTarget.state.template.name} is ${verb} ${moved} feet ${direction}. Target is ${verb} ${moved} ft. (${before} ft. to ${after} ft.).`;
         }
         return event;
       };
