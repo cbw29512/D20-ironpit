@@ -19,6 +19,7 @@ class GrappleEffectDefinition(BaseModel):
     escape_dc: int = Field(ge=1, le=40)
     max_target_size: CreatureSize | None = None
     restrains: bool = False
+    linked_conditions: list[ConditionName] = Field(default_factory=list)
 
 
 class ConditionEffectDefinition(BaseModel):
