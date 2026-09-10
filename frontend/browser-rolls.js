@@ -129,6 +129,7 @@
     const frenzy = window.IRON_PIT_BROWSER_BARBARIAN3?.bonusDamage(attacker, attack, turnKey);
     if (frenzy) components.push(bonusComponent(frenzy, critical));
     if (bonusDamage) components.push(bonusComponent(bonusDamage, critical));
+    window.IRON_PIT_BROWSER_TIMED?.applyDamageRollPenalty(attacker, components);
     const total = components.reduce((sum, item) => sum + item.total, 0);
     return {
       roll: {
