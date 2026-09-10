@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from app.content.arena_eligibility import filter_standard_arena_eligible
 from app.content.demo import build_goblin_warrior
+from app.content.legacy_charge_profiles import apply_legacy_charge_profiles
 from app.content.monster_blood_hawk import build_blood_hawk
 from app.content.monster_bonus_action_source_audit import complete_monster_bonus_action_fingerprints
 from app.content.monster_giant_crocodile import build_giant_crocodile
@@ -56,6 +57,7 @@ def build_legacy_monster_templates() -> list[CombatantTemplate]:
         *build_expansion_four(), build_giant_crocodile(), build_giant_constrictor_snake(), build_tyrannosaurus_rex(),
         *build_zero_engine_monsters(), *build_target_not_full_hp_monsters(), build_worg(), *build_swarm_candidates(), *build_parry_monsters(),
     ]
+    monsters = apply_legacy_charge_profiles(monsters)
     monsters = complete_monster_movement_modes(monsters)
     monsters = filter_standard_arena_eligible(monsters)
     monsters = complete_monster_trait_fingerprints(monsters)
