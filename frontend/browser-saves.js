@@ -21,7 +21,8 @@
 
   function saveMode(state, ability) {
     const advantage = (ability === "strength" && state.active_effect_ids.includes("rage") ? 1 : 0)
-      + B2().dangerSenseAdvantage(state, ability) + DG().dexSaveAdvantageSources(state, ability);
+      + B2().dangerSenseAdvantage(state, ability) + DG().dexSaveAdvantageSources(state, ability)
+      + R().bloodiedSaveAdvantage(state);
     const disadvantage = ability === "dexterity" && state.active_effect_ids.includes("restrained") ? 1 : 0;
     return R().modeFromSources(advantage, disadvantage);
   }
