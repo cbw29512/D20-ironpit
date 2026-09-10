@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.barbarian import finalize_rage_turn
 from app.combat.cleric_channel_support import resolve_channel_support
 from app.combat.condition_removal import choose_condition_removal_action, resolve_condition_removal
 from app.combat.encounter_action_surge import resolve_action_surge_attack
@@ -9,7 +10,7 @@ from app.combat.healing import choose_healing_action, resolve_healing
 from app.combat.pit_policy import save_distance, target_order
 from app.combat.resources import resource_available
 from app.combat.saving_throws import legal_save_action
-from app.combat.barbarian import finalize_rage_turn
+from app.combat.swallow import resolve_swallow_turn_end
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 
@@ -23,6 +24,10 @@ def finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key,
                 sequence, round_number, attacker, setup, dice, turn_key,
             )
             events.extend(surge_events)
+        swallow_events, sequence = resolve_swallow_turn_end(
+            sequence, round_number, attacker, setup, dice,
+        )
+        events.extend(swallow_events)
         rage_event, sequence = finalize_rage_turn(
             sequence, round_number, attacker.state, attacker.combatant_id,
         )
