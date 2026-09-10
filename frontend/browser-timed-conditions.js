@@ -3,15 +3,18 @@
 
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const POISONED = "poisoned", TIMED_PENALTY = "timed-penalty";
+  const effects = (state) => state.timed_effects || [];
 
   function apply(state, effectId, sourceId, options = {}) {
+    state.timed_effects ||= [];
+    state.active_effect_ids ||= [];
     if (I().immune(state, effectId)) return null;
-    if (effectId === POISONED && state.timed_effects.some((effect) => effect.effect_id === POISONED)) return POISONED;
+    if (effectId === POISONED && effects(state).some((effect) => effect.effect_id === POISONED)) return POISONED;
     const delayRounds = options.repeatSaveDelayRounds || 0;
     if (!Number.isInteger(delayRounds) || delayRounds < 0) throw new Error("Repeat-save delay must be a nonnegative integer.");
     if (delayRounds && options.appliedRound == null) throw new Error("Delayed repeat saves require the application round.");
     const sourceEffectId = options.sourceEffectId || null;
-    state.timed_effects = state.timed_effects.filter((effect) => !(
+    state.timed_effects = effects(state).filter((effect) => !(
       effect.effect_id === effectId && effect.source_id === sourceId && (effect.source_effect_id || null) === sourceEffectId
     ));
     const expiryTiming = options.expiryTiming || (options.expiresAtStartOfSourceTurn ? "source_turn_start" : null);
@@ -20,6 +23,7 @@
       effect_id: effectId,
       source_id: sourceId,
       source_effect_id: sourceEffectId,
+      effect_family: options.effectFamily || null,
       applied_round: options.appliedRound || null,
       expires_round: options.expiresRound || null,
       expires_at_start_of_source_turn: expiryTiming === "source_turn_start",
@@ -49,7 +53,7 @@
   function applyPenalty(state, sourceId, sourceEffectId, round, effect) {
     const autoAfter = effect.automaticSuccessAfterRounds;
     return apply(state, TIMED_PENALTY, sourceId, {
-      sourceEffectId, appliedRound: round, trackActiveEffect: false,
+      sourceEffectId, effectFamily: effect.effectFamily || null, appliedRound: round, trackActiveEffect: false,
       repeatSaveAbility: effect.repeatSaveAbility, repeatSaveDc: effect.repeatSaveDc,
       repeatSaveTiming: effect.repeatSaveTiming,
       d20DisadvantageAbility: effect.d20DisadvantageAbility,
@@ -60,11 +64,11 @@
   }
 
   function d20Disadvantage(state, ability) {
-    return state.timed_effects.filter((effect) => effect.d20_disadvantage_ability === ability).length;
+    return effects(state).filter((effect) => effect.d20_disadvantage_ability === ability).length;
   }
 
   function applyDamageRollPenalty(state, components) {
-    const specs = state.timed_effects.filter((effect) => effect.damage_penalty_dice_count > 0);
+    const specs = effects(state).filter((effect) => effect.damage_penalty_dice_count > 0);
     for (const component of components) {
       if (!(component.rolls || []).length || component.total <= 0) continue;
       for (const effect of specs) {
@@ -77,19 +81,23 @@
   }
 
   function affectedByAction(state, actionId) {
-    return state.timed_effects.some((effect) => effect.source_effect_id === actionId);
+    return effects(state).some((effect) => effect.source_effect_id === actionId);
+  }
+
+  function affectedByFamily(state, effectFamily) {
+    return Boolean(effectFamily) && effects(state).some((effect) => effect.effect_family === effectFamily);
   }
 
   function removeEffect(state, effect) {
-    state.timed_effects = state.timed_effects.filter((item) => item !== effect);
+    state.timed_effects = effects(state).filter((item) => item !== effect);
     const stillActive = state.timed_effects.some((item) => item.effect_id === effect.effect_id);
-    if (!stillActive) state.active_effect_ids = state.active_effect_ids.filter((id) => id !== effect.effect_id);
+    if (!stillActive) state.active_effect_ids = (state.active_effect_ids || []).filter((id) => id !== effect.effect_id);
     return !stillActive;
   }
 
   function removeGroup(state, effect) {
     if (!effect.source_effect_id) return removeEffect(state, effect) ? [effect.effect_id] : [];
-    const grouped = state.timed_effects.filter((item) =>
+    const grouped = effects(state).filter((item) =>
       item.source_id === effect.source_id && item.source_effect_id === effect.source_effect_id,
     );
     const removed = [];
@@ -100,13 +108,13 @@
   function expireSourceStart(sequence, round, source, setup) {
     const events = [];
     for (const target of [...setup.heroes, ...setup.monsters]) {
-      const expiring = target.state.timed_effects.filter((effect) =>
+      const expiring = effects(target.state).filter((effect) =>
         effect.source_id === source.combatant_id
         && (effect.expiry_timing === "source_turn_start" || effect.expires_at_start_of_source_turn)
         && (!effect.expires_round || round >= effect.expires_round),
       );
       for (const effect of expiring) {
-        if (!target.state.timed_effects.includes(effect)) continue;
+        if (!effects(target.state).includes(effect)) continue;
         const removed = removeGroup(target.state, effect); if (!removed.length) continue;
         events.push({
           sequence: sequence++, round_number: round, event_type: "feature",
@@ -121,7 +129,7 @@
   }
 
   window.IRON_PIT_BROWSER_TIMED = {
-    affectedByAction, apply, applyDamageRollPenalty, applyPenalty, d20Disadvantage,
+    affectedByAction, affectedByFamily, apply, applyDamageRollPenalty, applyPenalty, d20Disadvantage,
     expireSourceStart, removeEffect, removeGroup,
   };
 })();
