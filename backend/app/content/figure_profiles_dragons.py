@@ -5,6 +5,7 @@ from app.content.figure_profile_schema import FigureProfile, figure_profile
 DRAGON_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Black Dragon Wyrmling": figure_profile("reptile", "black-dragon-wyrmling"),
     "Blue Dragon Wyrmling": figure_profile("reptile", "blue-dragon-wyrmling"),
+    "Dragon Turtle": figure_profile("aquatic-reptile", "dragon-turtle"),
     "Green Dragon Wyrmling": figure_profile("reptile", "green-dragon-wyrmling"),
     "Red Dragon Wyrmling": figure_profile("reptile", "red-dragon-wyrmling"),
     "White Dragon Wyrmling": figure_profile("reptile", "white-dragon-wyrmling"),
