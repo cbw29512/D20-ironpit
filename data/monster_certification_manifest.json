@@ -9666,7 +9666,7 @@
       "monster_name": "Young Bronze Dragon",
       "srd_source_page": 270,
       "srd_source_reference": "SRD 5.2.1 p. 270",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-young-bronze-dragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -9696,8 +9696,8 @@
       "blockers": [
         "condition-or-control",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
+        "save-or-complex-action",
+        "save-push-rider-mismatch:srd-young-bronze-dragon-repulsion-breath"
       ]
     },
     {
