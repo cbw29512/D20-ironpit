@@ -2,7 +2,19 @@
   "use strict";
 
   const dice = () => window.IRON_PIT_DICE;
-  const bloodied = (state) => state.current_hp * 2 <= state.template.max_hp;
+  const effectiveMaxHp = (state) => window.IRON_PIT_BROWSER_MAX_HP_REDUCTION?.effectiveMaxHp(state)
+    ?? Math.max(0, state.template.max_hp + (state.max_hp_bonus || 0) - (state.max_hp_reduction || 0));
+  const bloodied = (state) => state.current_hp * 2 <= effectiveMaxHp(state);
+
+  function bloodiedAttackAdvantage(state, attack) {
+    if (!bloodied(state)) return 0;
+    if (state.template.traits?.includes("bloodied-frenzy")) return 1;
+    return state.template.traits?.includes("bloodied-fury") && attack.kind === "melee" ? 1 : 0;
+  }
+
+  function bloodiedSaveAdvantage(state) {
+    return state.template.traits?.includes("bloodied-frenzy") && bloodied(state) ? 1 : 0;
+  }
 
   function modeFromSources(advantage = 0, disadvantage = 0) {
     if ((advantage > 0) === (disadvantage > 0)) return "normal";
@@ -136,5 +148,7 @@
     };
   }
 
-  window.IRON_PIT_BROWSER_ROLLS = { attackMode, d20, modeFromSources, weaponDamage };
+  window.IRON_PIT_BROWSER_ROLLS = {
+    attackMode, bloodiedAttackAdvantage, bloodiedSaveAdvantage, d20, modeFromSources, weaponDamage,
+  };
 })();
