@@ -3,6 +3,7 @@
 
   const HERO_BACK = 0, HERO_FRONT = 5, MONSTER_FRONT = 10, MONSTER_BACK = 15;
   const S = () => window.IRON_PIT_BROWSER_STATE, RES = () => window.IRON_PIT_BROWSER_RESOURCES;
+  const SW = () => window.IRON_PIT_BROWSER_SWALLOW;
   const attacks = (template) => template?.attacks || [];
   const alive = (member) => member.state.is_alive && !member.state.is_dead && member.state.current_hp > 0;
 
@@ -80,8 +81,10 @@
   function chooseAttack(member, setup, ids, kind = null, preferBackline = false) {
     try {
       const allowed = new Set(ids);
+      const forbidden = SW()?.forbiddenAttacks(member, setup) || new Set();
       const profiles = attacks(member.state.template).filter((attack) =>
-        allowed.has(attack.id) && (!kind || attack.kind === kind || attack.kind === "melee_or_ranged")
+        allowed.has(attack.id) && !forbidden.has(attack.id)
+        && (!kind || attack.kind === kind || attack.kind === "melee_or_ranged")
         && (!attack.resourceId || RES().available(member.state, attack.resourceId, attack.resourceCost || 1)));
       for (const target of targetOrder(member, setup, preferBackline)) {
         const distance = attackDistance(member, target);
