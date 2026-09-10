@@ -35,9 +35,10 @@ def apply_damage_roll_penalty(state: CombatantState, components: list, dice) -> 
 
 def apply_timed_penalty(
     state: CombatantState, source_id: str, source_effect_id: str, *, round_number: int,
-    d20_disadvantage_ability: str | None, damage_penalty_dice_count: int,
-    damage_penalty_dice_size: int, repeat_save_ability: str, repeat_save_dc: int,
-    repeat_save_timing: str, automatic_success_after_rounds: int | None,
+    effect_family: str | None, d20_disadvantage_ability: str | None,
+    damage_penalty_dice_count: int, damage_penalty_dice_size: int,
+    repeat_save_ability: str, repeat_save_dc: int, repeat_save_timing: str,
+    automatic_success_after_rounds: int | None,
 ) -> str:
     state.timed_effects = [effect for effect in state.timed_effects if not (
         effect.effect_id == TIMED_PENALTY_EFFECT_ID
@@ -45,7 +46,7 @@ def apply_timed_penalty(
     )]
     state.timed_effects.append(TimedEffect(
         effect_id=TIMED_PENALTY_EFFECT_ID, source_id=source_id, source_effect_id=source_effect_id,
-        applied_round=round_number, repeat_save_ability=repeat_save_ability,
+        effect_family=effect_family, applied_round=round_number, repeat_save_ability=repeat_save_ability,
         repeat_save_dc=repeat_save_dc, repeat_save_timing=repeat_save_timing,
         repeat_save_eligible_round=round_number, d20_disadvantage_ability=d20_disadvantage_ability,
         damage_penalty_dice_count=damage_penalty_dice_count, damage_penalty_dice_size=damage_penalty_dice_size,
