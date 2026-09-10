@@ -60,6 +60,12 @@ class OnHitDamage(BaseModel):
         return self
 
 
+class MaxHpReductionOnHit(BaseModel):
+    """Reduce maximum HP by applied attack damage, optionally from one damage type only."""
+
+    damage_type: DamageType | None = None
+
+
 class Weapon(BaseModel):
     id: str
     name: str
@@ -93,6 +99,7 @@ class WeaponAttack(BaseModel):
     conditional_attack_advantage: list[ConditionalAttackAdvantage] = Field(default_factory=list)
     on_hit_damage: list[OnHitDamage] = Field(default_factory=list)
     on_hit_modifier_effects: list[HitModifierEffect] = Field(default_factory=list)
+    max_hp_reduction_on_hit: MaxHpReductionOnHit | None = None
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
     rage_eligible: bool = False
