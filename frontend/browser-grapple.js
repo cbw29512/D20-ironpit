@@ -11,6 +11,11 @@
     spend: (state) => { state.action_available = false; },
   };
 
+  function dropOrphanedLinked(state, removed) {
+    const remaining = new Set(state.grapple_sources.flatMap((source) => source.linked_conditions || []));
+    const timed = new Set((state.timed_effects || []).map((effect) => effect.effect_id));
+    state.active_effect_ids = state.active_effect_ids.filter((id) => !removed.has(id) || remaining.has(id) || timed.has(id));
+  }
   function sync(state) {
     const grappled = state.grapple_sources.length > 0;
     const restrained = state.grapple_sources.some((source) => source.restrains);
@@ -20,19 +25,27 @@
       state.active_effect_ids = state.active_effect_ids.filter((id) => id !== "dodge");
     }
     if (restrained) state.active_effect_ids.push("restrained");
+    for (const condition of new Set(state.grapple_sources.flatMap((source) => source.linked_conditions || []))) {
+      if (!state.active_effect_ids.includes(condition)) state.active_effect_ids.push(condition);
+    }
   }
 
-  function apply(state, sourceId, escapeDc, rangeFt, restrains = false) {
+  function apply(state, sourceId, escapeDc, rangeFt, restrains = false, linkedConditions = []) {
     if (I().immune(state, "grappled")) return [];
+    const replaced = state.grapple_sources.filter((source) => source.source_id === sourceId);
     state.grapple_sources = state.grapple_sources.filter((source) => source.source_id !== sourceId);
     const effectiveRestrains = restrains && !I().immune(state, "restrained");
-    state.grapple_sources.push({ source_id: sourceId, escape_dc: escapeDc, range_ft: rangeFt, restrains: effectiveRestrains });
+    const linked = linkedConditions.filter((condition) => !I().immune(state, condition));
+    state.grapple_sources.push({ source_id: sourceId, escape_dc: escapeDc, range_ft: rangeFt, restrains: effectiveRestrains, linked_conditions: linked });
+    dropOrphanedLinked(state, new Set(replaced.flatMap((source) => source.linked_conditions || [])));
     sync(state);
-    return effectiveRestrains ? ["grappled", "restrained"] : ["grappled"];
+    return ["grappled", ...(effectiveRestrains ? ["restrained"] : []), ...linked];
   }
 
   function release(state, sourceId) {
+    const removed = state.grapple_sources.filter((source) => source.source_id === sourceId);
     state.grapple_sources = state.grapple_sources.filter((source) => source.source_id !== sourceId);
+    dropOrphanedLinked(state, new Set(removed.flatMap((source) => source.linked_conditions || [])));
     sync(state);
   }
 
@@ -45,11 +58,15 @@
   function cleanup(setup) {
     const members = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));
     for (const target of members.values()) {
+      const removed = new Set();
       target.state.grapple_sources = target.state.grapple_sources.filter((source) => {
         const grappler = members.get(source.source_id);
-        if (!grappler || grappler.state.is_dead || grappler.state.is_unconscious) return false;
-        return Math.abs(grappler.position_ft - target.position_ft) <= source.range_ft;
+        const keep = Boolean(grappler && !grappler.state.is_dead && !grappler.state.is_unconscious
+          && Math.abs(grappler.position_ft - target.position_ft) <= source.range_ft);
+        if (!keep) for (const condition of source.linked_conditions || []) removed.add(condition);
+        return keep;
       });
+      dropOrphanedLinked(target.state, removed);
       sync(target.state);
     }
   }
