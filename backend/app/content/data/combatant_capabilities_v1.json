@@ -14320,7 +14320,8 @@
         "rage_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
-        "push_target_away_ft": 0,
+        "push_target_away_ft": 10,
+        "push_target_max_size": "large",
         "forbid_target_grappled_by_self": false
       },
       {
