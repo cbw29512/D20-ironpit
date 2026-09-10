@@ -34,6 +34,8 @@ class TimedEffect(BaseModel):
     repeat_save_eligible_round: int | None = Field(default=None, ge=1)
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
     turn_behavior: TimedTurnBehavior = "normal"
+    action_or_bonus_only: bool = False
+    reactions_disabled: bool = False
     ends_on_damage: bool = False
     ends_if_source_incapacitated: bool = False
     ends_if_source_dead: bool = False
