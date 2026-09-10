@@ -52,6 +52,8 @@ class BattleEvent(BaseModel):
     turn_termination_reason: str | None = None
     hp_before: int | None = None
     hp_after: int | None = None
+    max_hp_before: int | None = Field(default=None, ge=0)
+    max_hp_after: int | None = Field(default=None, ge=0)
     temporary_hp_before: int | None = Field(default=None, ge=0)
     temporary_hp_after: int | None = Field(default=None, ge=0)
     death_save_successes_before: int | None = Field(default=None, ge=0, le=3)
