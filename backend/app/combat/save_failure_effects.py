@@ -52,6 +52,7 @@ def _apply_turn_restriction(
         expiry_timing=effect.expiry_timing,
         action_or_bonus_only=effect.action_or_bonus_only,
         reactions_disabled=effect.reactions_disabled,
+        speed_multiplier=effect.speed_multiplier,
         requires_active_effect_id=required,
     ))
     return TURN_RESTRICTION_EFFECT_ID
