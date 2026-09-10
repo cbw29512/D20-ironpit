@@ -46,7 +46,24 @@ class ConditionEffectDefinition(BaseModel):
         return self
 
 
+class TurnRestrictionEffectDefinition(BaseModel):
+    kind: Literal["turn-restriction"] = "turn-restriction"
+    action_or_bonus_only: bool = False
+    reactions_disabled: bool = False
+    expiry_timing: ConditionTiming
+
+    @model_validator(mode="after")
+    def require_restriction(self) -> "TurnRestrictionEffectDefinition":
+        if not self.action_or_bonus_only and not self.reactions_disabled:
+            raise ValueError("Turn restriction must disable or restrict at least one action type.")
+        return self
+
+
 SaveFailureEffectDefinition = Annotated[
-    ProneEffectDefinition | GrappleEffectDefinition | ConditionEffectDefinition | CombatModifierEffect,
+    ProneEffectDefinition
+    | GrappleEffectDefinition
+    | ConditionEffectDefinition
+    | TurnRestrictionEffectDefinition
+    | CombatModifierEffect,
     Field(discriminator="kind"),
 ]
