@@ -4,7 +4,12 @@ import re
 from typing import Any
 
 from app.domain.hit_modifiers import CombatModifierEffect
-from app.domain.save_effects import ConditionEffectDefinition, GrappleEffectDefinition, ProneEffectDefinition
+from app.domain.save_effects import (
+    ConditionEffectDefinition,
+    GrappleEffectDefinition,
+    ProneEffectDefinition,
+    TurnRestrictionEffectDefinition,
+)
 
 
 def _size_present(text: str, size: Any) -> bool:
@@ -14,10 +19,7 @@ def _size_present(text: str, size: Any) -> bool:
     return bool(re.search(rf"\b{re.escape(str(value))}\s+or\s+smaller\b", text, re.IGNORECASE))
 
 
-def _condition_timing_present(text: str, effect: ConditionEffectDefinition) -> bool:
-    timing = effect.expiry_timing
-    if timing is None and effect.expires_at_start_of_source_turn:
-        timing = "source_turn_start"
+def _timing_present(text: str, timing: str | None) -> bool:
     target = {
         "target_turn_start": r"until\s+the\s+start\s+of\s+its\s+next\s+turn",
         "target_turn_end": r"until\s+the\s+end\s+of\s+its\s+next\s+turn",
@@ -34,6 +36,13 @@ def _condition_timing_present(text: str, effect: ConditionEffectDefinition) -> b
     return True
 
 
+def _condition_timing_present(text: str, effect: ConditionEffectDefinition) -> bool:
+    timing = effect.expiry_timing
+    if timing is None and effect.expires_at_start_of_source_turn:
+        timing = "source_turn_start"
+    return _timing_present(text, timing)
+
+
 def _repeat_save_present(action: Any, text: str, effect: ConditionEffectDefinition) -> bool:
     if effect.repeat_save_timing is None:
         return True
@@ -47,6 +56,19 @@ def _repeat_save_present(action: Any, text: str, effect: ConditionEffectDefiniti
         return True
     explicit = rf"DC\s*{effect.repeat_save_dc}\s+{effect.repeat_save_ability}\s+Saving Throw"
     return bool(re.search(explicit, text, re.IGNORECASE))
+
+
+def _turn_restriction_present(text: str, effect: TurnRestrictionEffectDefinition) -> bool:
+    ok = _timing_present(text, effect.expiry_timing)
+    if effect.action_or_bonus_only:
+        ok = ok and bool(re.search(
+            r"(?:take|takes)\s+either\s+an?\s+action\s+or\s+(?:a\s+)?bonus\s+action.*?not\s+both",
+            text,
+            re.IGNORECASE,
+        ))
+    if effect.reactions_disabled:
+        ok = ok and bool(re.search(r"can(?:not|['’]t)\s+take\s+reactions?", text, re.IGNORECASE))
+    return ok
 
 
 def failure_effect_issues(action: Any, actions: str) -> list[str]:
@@ -71,6 +93,9 @@ def failure_effect_issues(action: Any, actions: str) -> list[str]:
             if effect.repeat_save_delay_rounds and "next turn" not in actions:
                 ok = False
             if not ok:
+                issues.append(prefix)
+        elif isinstance(effect, TurnRestrictionEffectDefinition):
+            if not _turn_restriction_present(actions, effect):
                 issues.append(prefix)
         elif isinstance(effect, CombatModifierEffect):
             amount = abs(effect.flat_bonus)
