@@ -78,6 +78,15 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             },
             "source": template.source, **_progression_features(template),
         }
+        if template.forced_movement_actions:
+            row["forced_movement_actions"] = [
+                {
+                    "id": action.id, "name": action.name, "direction": action.direction,
+                    "distanceFt": action.distance_ft, "targetMode": action.target_mode,
+                    "animation": action.animation,
+                }
+                for action in template.forced_movement_actions
+            ]
         if template.kind == "monster":
             row["source_trait_names"] = list(template.source_trait_names)
             row["source_reaction_names"] = list(template.source_reaction_names)
@@ -107,7 +116,11 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                 "id": template.attack_action.id,
                 "name": template.attack_action.name,
                 "slots": [
-                    {"attackIds": slot.attack_ids, "saveActionIds": slot.save_action_ids}
+                    {
+                        "attackIds": slot.attack_ids,
+                        "saveActionIds": slot.save_action_ids,
+                        "forcedMovementActionIds": slot.forced_movement_action_ids,
+                    }
                     for slot in template.attack_action.slots
                 ],
             }
