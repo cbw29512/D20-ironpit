@@ -6,6 +6,7 @@ from app.combat.champion import apply_critical_closing_move
 from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
 from app.combat.frenzy import mark_reckless_use_while_raging
+from app.combat.frightened import frightened_d20_disadvantage
 from app.combat.reckless_attack import activate_reckless_attack
 from app.combat.redirect_attack import select_redirect_ally, swap_redirect_positions
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -43,11 +44,12 @@ def resolve_encounter_attack(
         close_enemy = False if setup is not None else True
     affected_states = [member.state for member in [*setup.heroes, *setup.monsters]] if setup is not None else None
     sneak_ally = setup is not None and bool(active_allies(attacker, setup))
+    fear_disadvantage = frightened_d20_disadvantage(attacker.state, setup) if setup is not None else 0
     event = resolve_attack(
         sequence, round_number, attacker.state, target.state, attack, distance_ft, dice,
         actor_event_id=attacker.combatant_id, target_event_id=target.combatant_id,
         spend_action=spend_action, advantage_sources=advantage_sources,
-        other_disadvantage_sources=other_disadvantage_sources, feature_id=feature_id,
+        other_disadvantage_sources=other_disadvantage_sources + fear_disadvantage, feature_id=feature_id,
         turn_key=turn_key, bonus_damage=bonus_damage, close_enemy_active=close_enemy,
         redirect_target=redirect.state if redirect is not None else None,
         redirect_target_event_id=redirect.combatant_id if redirect is not None else None,
