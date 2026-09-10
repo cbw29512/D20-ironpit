@@ -1,9 +1,7 @@
 from __future__ import annotations
 
 from typing import Literal
-
 from pydantic import BaseModel, Field, model_validator
-
 from app.domain.rule_types import AbilityName, ConditionName, ConditionTiming
 from app.domain.save_effects import SaveFailureEffectDefinition
 from app.domain.size import CreatureSize
@@ -13,10 +11,7 @@ ActionCost = Literal["action", "bonus_action", "reaction"]
 HealingTargetMode = Literal["self", "ally", "self_or_ally", "other"]
 ConditionRemovalTargetMode = Literal["self", "ally", "self_or_ally"]
 ConditionReactionTrigger = Literal["condition_applied_to_self", "condition_applied_to_ally"]
-DamageTypeName = Literal[
-    "acid", "bludgeoning", "cold", "fire", "force", "lightning", "necrotic",
-    "piercing", "poison", "psychic", "radiant", "slashing", "thunder",
-]
+DamageTypeName = Literal["acid", "bludgeoning", "cold", "fire", "force", "lightning", "necrotic", "piercing", "poison", "psychic", "radiant", "slashing", "thunder"]
 
 
 class GrappleSource(BaseModel):
@@ -57,7 +52,6 @@ class HitControlEffect(BaseModel):
 
 class HealingAction(BaseModel):
     """A printed healing option with its actual action cost and target restrictions."""
-
     id: str
     name: str
     action_cost: ActionCost
@@ -73,7 +67,6 @@ class HealingAction(BaseModel):
 
 class ConditionRemovalAction(BaseModel):
     """A 2024 spell/feature that can legally end one or more named conditions."""
-
     id: str
     name: str
     action_cost: ActionCost
@@ -127,14 +120,13 @@ class SavingThrowAction(BaseModel):
 
     @model_validator(mode="after")
     def validate_push(self) -> "SavingThrowAction":
-        if self.push_target_max_size is not None and self.push_target_away_ft <= 0:
+        if self.push_target_max_size is not None and not self.push_target_away_ft:
             raise ValueError("Save-action push size limit requires positive push distance.")
         return self
 
 
 class AttackActionSlot(BaseModel):
     """One ordered weapon/save/forced-movement step inside an Attack action or Multiattack."""
-
     attack_ids: list[str] = Field(default_factory=list, max_length=16)
     save_action_ids: list[str] = Field(default_factory=list, max_length=16)
     forced_movement_action_ids: list[str] = Field(default_factory=list, max_length=16)
@@ -148,7 +140,6 @@ class AttackActionSlot(BaseModel):
 
 class AttackActionDefinition(BaseModel):
     """One or more ordered strikes/effects; only real Attack actions can trigger Light/Nick."""
-
     id: str
     name: str
     slots: list[AttackActionSlot] = Field(min_length=1, max_length=8)
