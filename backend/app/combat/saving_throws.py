@@ -11,6 +11,7 @@ from app.combat.grapple import apply_grapple
 from app.combat.resources import resource_available, spend_resource
 from app.combat.save_failure_effects import apply_save_failure_effects
 from app.combat.saving_throw_damage import build_save_damage_components
+from app.combat.saving_throw_description import describe_save_outcome
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.zero_hp import apply_damage
 from app.domain.models import BattleEvent, DiceRoll, EncounterCombatant, SavingThrowAction
@@ -96,22 +97,17 @@ def resolve_save_action(
                 ))
         applied_conditions = list(dict.fromkeys(applied_conditions))
         distance_after = abs(target.position_ft - actor.position_ft)
-        outcome = "SUCCEEDS" if succeeded else "FAILS"
-        description = (
-            f"{target.state.template.name} {outcome} a DC {action.dc} {action.save_ability.title()} save "
-            f"against {actor.state.template.name}'s {action.name}."
+        description = describe_save_outcome(
+            target_name=target.state.template.name,
+            actor_name=actor.state.template.name,
+            action_name=action.name,
+            dc=action.dc,
+            save_ability=action.save_ability,
+            succeeded=succeeded,
+            movement_ft=movement_ft,
+            damage_outcome=damage_outcome,
+            applied_conditions=applied_conditions,
         )
-        if movement_ft:
-            description += f" {target.state.template.name} is pushed {movement_ft} ft. straight away."
-        if damage_outcome == "undead_fortitude":
-            description += f" {target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP."
-        for condition in applied_conditions:
-            if condition == "grappled":
-                description += f" {target.state.template.name} is Grappled."
-            elif condition == "restrained":
-                description += f" {target.state.template.name} is Restrained while Grappled."
-            else:
-                description += f" {target.state.template.name} is {condition.title()}."
         return BattleEvent(
             sequence=sequence, round_number=round_number, event_type="saving_throw",
             actor_id=actor.combatant_id, actor_name=actor.state.template.name,
