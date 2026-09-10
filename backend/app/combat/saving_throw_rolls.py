@@ -11,6 +11,7 @@ from app.combat.dodge import dodge_dex_save_advantage_sources
 from app.combat.grapple import RESTRAINED_EFFECT_ID
 from app.combat.modifier_stack import apply_d20_bonus_dice
 from app.combat.rolls import roll_d20
+from app.combat.timed_penalties import d20_disadvantage_sources
 from app.domain.models import CombatantState, DiceRoll, RollMode, RollRevision
 from app.domain.modifiers import ModifierKind
 
@@ -25,7 +26,10 @@ def saving_throw_mode(state: CombatantState, ability: str) -> RollMode:
             + dodge_dex_save_advantage_sources(state, ability)
             + bloodied_saving_throw_advantage(state)
         )
-        disadvantage = 1 if ability == "dexterity" and RESTRAINED_EFFECT_ID in state.active_effect_ids else 0
+        disadvantage = (
+            int(ability == "dexterity" and RESTRAINED_EFFECT_ID in state.active_effect_ids)
+            + d20_disadvantage_sources(state, ability)
+        )
         if (advantage > 0) == (disadvantage > 0):
             return RollMode.NORMAL
         return RollMode.ADVANTAGE if advantage else RollMode.DISADVANTAGE
