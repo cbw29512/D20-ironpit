@@ -8,7 +8,7 @@ from pydantic import BaseModel, model_validator
 class CombatModifierEffect(BaseModel):
     """Source-neutral modifier effect applied by an attack, save, spell, or feature."""
 
-    kind: Literal["attacks-against-advantage", "next-attack-disadvantage", "speed"]
+    kind: Literal["attacks-against-advantage", "next-attack-advantage", "next-attack-disadvantage", "speed"]
     flat_bonus: int = 0
     consume_on_attack_against: bool = False
     expires_at_start_of_source_turn: bool = False
@@ -16,7 +16,7 @@ class CombatModifierEffect(BaseModel):
 
     @model_validator(mode="after")
     def validate_payload(self) -> "CombatModifierEffect":
-        if self.kind in {"attacks-against-advantage", "next-attack-disadvantage"} and self.flat_bonus:
+        if self.kind in {"attacks-against-advantage", "next-attack-advantage", "next-attack-disadvantage"} and self.flat_bonus:
             raise ValueError("Attack roll-mode modifiers do not accept a flat bonus.")
         if self.kind == "speed" and self.flat_bonus == 0:
             raise ValueError("Speed modifiers require a nonzero flat bonus.")
