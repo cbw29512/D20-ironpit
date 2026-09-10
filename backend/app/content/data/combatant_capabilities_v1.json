@@ -2849,6 +2849,17 @@
         "rage_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
+        "charge_profile": {
+          "minimum_move_ft": 20,
+          "max_target_size": "medium",
+          "prone_max_target_size": "medium",
+          "bonus_damage": {
+            "dice_count": 1,
+            "dice_size": 6,
+            "damage_type": "piercing",
+            "damage_bonus": 0
+          }
+        },
         "push_target_away_ft": 0,
         "pull_target_toward_ft": 0,
         "forbid_target_grappled_by_self": false
@@ -2956,6 +2967,17 @@
         "rage_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
+        "charge_profile": {
+          "minimum_move_ft": 20,
+          "max_target_size": "large",
+          "prone_max_target_size": "large",
+          "bonus_damage": {
+            "dice_count": 1,
+            "dice_size": 6,
+            "damage_type": "bludgeoning",
+            "damage_bonus": 0
+          }
+        },
         "push_target_away_ft": 0,
         "pull_target_toward_ft": 0,
         "forbid_target_grappled_by_self": false
@@ -3060,6 +3082,17 @@
         "rage_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
+        "charge_profile": {
+          "minimum_move_ft": 20,
+          "max_target_size": "large",
+          "prone_max_target_size": "large",
+          "bonus_damage": {
+            "dice_count": 2,
+            "dice_size": 6,
+            "damage_type": "piercing",
+            "damage_bonus": 0
+          }
+        },
         "push_target_away_ft": 0,
         "pull_target_toward_ft": 0,
         "forbid_target_grappled_by_self": false
@@ -3167,6 +3200,17 @@
         "rage_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
+        "charge_profile": {
+          "minimum_move_ft": 20,
+          "max_target_size": "large",
+          "prone_max_target_size": "large",
+          "bonus_damage": {
+            "dice_count": 2,
+            "dice_size": 8,
+            "damage_type": "piercing",
+            "damage_bonus": 0
+          }
+        },
         "push_target_away_ft": 0,
         "pull_target_toward_ft": 0,
         "forbid_target_grappled_by_self": false
@@ -3305,6 +3349,17 @@
         "rage_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
+        "charge_profile": {
+          "minimum_move_ft": 20,
+          "max_target_size": "huge",
+          "prone_max_target_size": "huge",
+          "bonus_damage": {
+            "dice_count": 2,
+            "dice_size": 8,
+            "damage_type": "piercing",
+            "damage_bonus": 0
+          }
+        },
         "push_target_away_ft": 0,
         "pull_target_toward_ft": 0,
         "forbid_target_grappled_by_self": false
@@ -3430,6 +3485,11 @@
         "rage_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
+        "charge_profile": {
+          "minimum_move_ft": 20,
+          "max_target_size": "large",
+          "prone_max_target_size": "large"
+        },
         "push_target_away_ft": 0,
         "pull_target_toward_ft": 0,
         "forbid_target_grappled_by_self": false
@@ -3568,6 +3628,12 @@
         "rage_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
+        "charge_profile": {
+          "minimum_move_ft": 30,
+          "max_target_size": "large",
+          "prone_max_target_size": "large",
+          "follow_up_attack_id": "allosaurus-bite"
+        },
         "push_target_away_ft": 0,
         "pull_target_toward_ft": 0,
         "forbid_target_grappled_by_self": false
@@ -3670,6 +3736,15 @@
         "rage_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
+        "charge_profile": {
+          "minimum_move_ft": 20,
+          "replacement_damage": {
+            "dice_count": 1,
+            "dice_size": 4,
+            "damage_type": "bludgeoning",
+            "damage_bonus": 0
+          }
+        },
         "push_target_away_ft": 0,
         "pull_target_toward_ft": 0,
         "forbid_target_grappled_by_self": false
@@ -6330,6 +6405,17 @@
         "rage_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
+        "charge_profile": {
+          "minimum_move_ft": 20,
+          "max_target_size": "large",
+          "prone_max_target_size": "large",
+          "bonus_damage": {
+            "dice_count": 2,
+            "dice_size": 4,
+            "damage_type": "bludgeoning",
+            "damage_bonus": 0
+          }
+        },
         "push_target_away_ft": 0,
         "pull_target_toward_ft": 0,
         "forbid_target_grappled_by_self": false
@@ -6961,6 +7047,17 @@
         "rage_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
+        "charge_profile": {
+          "minimum_move_ft": 20,
+          "max_target_size": "large",
+          "prone_max_target_size": "large",
+          "bonus_damage": {
+            "dice_count": 2,
+            "dice_size": 8,
+            "damage_type": "piercing",
+            "damage_bonus": 0
+          }
+        },
         "push_target_away_ft": 0,
         "pull_target_toward_ft": 0,
         "forbid_target_grappled_by_self": false
@@ -7065,6 +7162,17 @@
         "rage_eligible": false,
         "conditional_attack_advantage": [],
         "effects": [],
+        "charge_profile": {
+          "minimum_move_ft": 20,
+          "max_target_size": "large",
+          "prone_max_target_size": "large",
+          "bonus_damage": {
+            "dice_count": 2,
+            "dice_size": 4,
+            "damage_type": "bludgeoning",
+            "damage_bonus": 0
+          }
+        },
         "push_target_away_ft": 0,
         "pull_target_toward_ft": 0,
         "forbid_target_grappled_by_self": false
@@ -9877,6 +9985,17 @@
             "mode": "add"
           }
         ],
+        "charge_profile": {
+          "minimum_move_ft": 20,
+          "max_target_size": "huge",
+          "prone_max_target_size": "huge",
+          "bonus_damage": {
+            "dice_count": 2,
+            "dice_size": 4,
+            "damage_type": "bludgeoning",
+            "damage_bonus": 0
+          }
+        },
         "push_target_away_ft": 0,
         "pull_target_toward_ft": 0,
         "forbid_target_grappled_by_self": false
