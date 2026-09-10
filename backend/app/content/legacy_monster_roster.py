@@ -39,8 +39,16 @@ from app.content.monsters_venom import build_venom_monsters
 from app.content.monsters_wolves import build_dire_wolf, build_wolf
 from app.content.monsters_zero_engine import build_zero_engine_monsters
 from app.content.movement_modes import complete_monster_movement_modes
-from app.content.unarmed_opportunity_profiles import complete_unarmed_opportunity_profiles
 from app.domain.models import CombatantTemplate
+
+
+def _require_source_complete_unarmed(monsters: list[CombatantTemplate]) -> None:
+    missing = sorted(monster.name for monster in monsters if monster.unarmed_opportunity_attack is None)
+    if missing:
+        raise ValueError(
+            "Legacy monster builders must emit source-derived unarmed opportunity profiles: "
+            + ", ".join(missing)
+        )
 
 
 def build_legacy_monster_templates() -> list[CombatantTemplate]:
@@ -56,6 +64,7 @@ def build_legacy_monster_templates() -> list[CombatantTemplate]:
         *build_expansion_four(), build_giant_crocodile(), build_giant_constrictor_snake(), build_tyrannosaurus_rex(),
         *build_zero_engine_monsters(), *build_target_not_full_hp_monsters(), build_worg(), *build_swarm_candidates(), *build_parry_monsters(),
     ]
+    _require_source_complete_unarmed(monsters)
     monsters = complete_monster_movement_modes(monsters)
     monsters = filter_standard_arena_eligible(monsters)
     monsters = complete_monster_trait_fingerprints(monsters)
@@ -64,5 +73,4 @@ def build_legacy_monster_templates() -> list[CombatantTemplate]:
     monsters = complete_monster_limited_use_fingerprints(monsters)
     monsters = complete_monster_legendary_fingerprints(monsters)
     monsters = complete_monster_spellcasting_fingerprints(monsters)
-    monsters = complete_monster_saving_throws(monsters)
-    return complete_unarmed_opportunity_profiles(monsters)
+    return complete_monster_saving_throws(monsters)
