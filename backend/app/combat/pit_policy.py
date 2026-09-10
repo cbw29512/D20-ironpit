@@ -7,6 +7,7 @@ from app.combat.encounter_targeting import combatant_distance, living_opponents
 from app.combat.formation import uses_backline
 from app.combat.range import resolve_attack_roll_mode
 from app.combat.resources import resource_available
+from app.combat.swallow_policy import forbidden_attacks_while_swallowing
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import WeaponAttack, WeaponAttackKind
 
@@ -86,26 +87,6 @@ def _attack_profiles(attacker: EncounterCombatant, allowed_ids: list[str], kind:
         raise RuntimeError("Resource attack profiles could not be evaluated.") from exc
 
 
-def _forbidden_while_swallowing(attacker: EncounterCombatant, setup: EncounterSetup) -> set[str]:
-    try:
-        members = [*setup.heroes, *setup.monsters]
-        swallowed = next(
-            (member.state.swallowed for member in members if member.state.swallowed and member.state.swallowed.source_id == attacker.combatant_id),
-            None,
-        )
-        if swallowed is None:
-            return set()
-        action = next((item for item in attacker.state.template.swallow_actions if item.id == swallowed.action_id), None)
-        if action is None:
-            raise ValueError(f"Missing active Swallow action {swallowed.action_id!r}.")
-        return set(action.forbidden_attack_ids_while_active)
-    except ValueError:
-        raise
-    except Exception as exc:
-        logger.exception("Failed to inspect swallowed attack restrictions for %s.", attacker.combatant_id)
-        raise RuntimeError("Swallow attack restrictions could not be evaluated.") from exc
-
-
 def _attack_in_range(attack: WeaponAttack, distance_ft: int) -> bool:
     try:
         resolve_attack_roll_mode(attack.weapon, distance_ft, close_enemy_active=False)
@@ -127,7 +108,7 @@ def choose_attack(
 ) -> tuple[EncounterCombatant, WeaponAttack, int] | None:
     """Choose an actually legal attack at the combatants' current battlefield positions."""
     try:
-        forbidden = _forbidden_while_swallowing(attacker, setup)
+        forbidden = forbidden_attacks_while_swallowing(attacker, setup)
         profiles = [attack for attack in _attack_profiles(attacker, allowed_ids, kind) if attack.id not in forbidden]
         for target in target_order(attacker, setup, prefer_backline=prefer_backline):
             distance = combatant_distance(attacker, target)
