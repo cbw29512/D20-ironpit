@@ -70,6 +70,8 @@ def _attack(attack: WeaponAttack) -> dict[str, object]:
         "rage_eligible": attack.rage_eligible,
         "conditional_attack_advantage": [spec.model_dump(mode="json") for spec in attack.conditional_attack_advantage],
         "effects": effects, "forbid_target_grappled_by_self": attack.forbid_target_grappled_by_self,
+        "push_target_away_ft": attack.push_target_away_ft,
+        "push_target_max_size": attack.push_target_max_size,
     }
     if attack.fixed_damage is None:
         result["damage"] = _dice(weapon.dice_count, weapon.dice_size, attack.damage_bonus)
