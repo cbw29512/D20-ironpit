@@ -48,6 +48,9 @@
           trackActiveEffect: false,
         });
         if (restriction) applied.push(restriction);
+      } else if (effect.kind === "timed-penalty") {
+        const penalty = T().applyPenalty(target.state, sourceId, sourceEffectId, options.round, effect);
+        if (penalty) applied.push(penalty);
       } else if (MODIFIER_KINDS.has(effect.kind)) {
         M().applyEffect(target.state, sourceId, sourceEffectId, effect, index, "failed-save");
       } else {
