@@ -1,0 +1,87 @@
+[
+  {
+    "schema_version": 1,
+    "id": "srd-spy",
+    "name": "Spy",
+    "archetype": "source-certified skirmisher",
+    "challenge_rating": "1",
+    "kind": "monster",
+    "size": "medium",
+    "armor_class": 12,
+    "max_hp": 27,
+    "speed_ft": 30,
+    "movement_modes": {
+      "walk_ft": 30,
+      "fly_ft": 0,
+      "climb_ft": 30,
+      "swim_ft": 0,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": 4,
+    "attacks": [
+      {
+        "id": "spy-hand-crossbow",
+        "name": "Hand Crossbow",
+        "weapon_id": "spy-hand-crossbow-weapon",
+        "attack_kind": "ranged",
+        "attack_bonus": 4,
+        "damage": {"count": 1, "size": 6, "bonus": 2},
+        "damage_type": "piercing",
+        "animation": "projectile",
+        "normal_range_ft": 30,
+        "long_range_ft": 120,
+        "projectile": "bolt",
+        "effects": [
+          {
+            "kind": "damage",
+            "source": "Poison",
+            "dice": {"count": 2, "size": 6, "bonus": 0},
+            "damage_type": "poison",
+            "trigger": "on_hit",
+            "mode": "add"
+          }
+        ]
+      },
+      {
+        "id": "spy-shortsword",
+        "name": "Shortsword",
+        "weapon_id": "spy-shortsword-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 4,
+        "damage": {"count": 1, "size": 6, "bonus": 2},
+        "damage_type": "piercing",
+        "animation": "thrust",
+        "reach_ft": 5,
+        "effects": [
+          {
+            "kind": "damage",
+            "source": "Poison",
+            "dice": {"count": 2, "size": 6, "bonus": 0},
+            "damage_type": "poison",
+            "trigger": "on_hit",
+            "mode": "add"
+          }
+        ]
+      }
+    ],
+    "primary_attack_id": "spy-hand-crossbow",
+    "unarmed_opportunity_attack": {"attack_bonus": 2, "damage": 1},
+    "saving_throw_bonuses": {
+      "strength": 0,
+      "dexterity": 2,
+      "constitution": 0,
+      "intelligence": 1,
+      "wisdom": 2,
+      "charisma": 3
+    },
+    "source_bonus_action_names": ["Cunning Action"],
+    "visual": {
+      "armor": "light",
+      "main_hand": "hand-crossbow",
+      "off_hand": "shortsword",
+      "body_style": "humanoid"
+    },
+    "source": "SRD 5.2.1 p. 329"
+  }
+]
