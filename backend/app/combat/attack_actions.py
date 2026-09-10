@@ -4,12 +4,13 @@ import logging
 
 from app.combat.action_economy import is_available, spend
 from app.combat.ally_context import pack_tactics_active
-from app.combat.attack_action_choices import attack_choice, save_choice, slot_has_legal_choice, use_ranged_split
+from app.combat.attack_action_choices import attack_choice, forced_movement_choice, save_choice, slot_has_legal_choice, use_ranged_split
 from app.combat.attack_action_rules import validate_attack_action_slots
 from app.combat.cleave import resolve_cleave_extra_attack
 from app.combat.dice import DiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.encounter_targeting import close_ranged_threat_exists
+from app.combat.forced_movement_actions import resolve_action as resolve_forced_movement_action
 from app.combat.light_attack_resolution import resolve_light_extra_attack
 from app.combat.mixed_slot_policy import prefer_save_replacement
 from app.combat.opening_burst import opening_feature_id
@@ -46,6 +47,13 @@ def resolve_attack_action(
         for index, slot in enumerate(definition.slots):
             if attacker.state.is_dead or attacker.state.is_unconscious or attacker.state.turn_terminated:
                 break
+            movement_action = forced_movement_choice(attacker, setup, slot)
+            if movement_action is not None:
+                moved_events, sequence = resolve_forced_movement_action(
+                    sequence, round_number, attacker, setup, movement_action,
+                )
+                events.extend(moved_events)
+                continue
             split_this_slot = (
                 index > 0
                 and ranged_split
