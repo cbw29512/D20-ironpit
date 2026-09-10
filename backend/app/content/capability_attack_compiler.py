@@ -13,10 +13,12 @@ from app.domain.capability_effects import (
     ConditionEffectDefinition,
     DamageEffectDefinition,
     GrappleEffectDefinition,
+    MaxHpReductionEffectDefinition,
     ProneEffectDefinition,
 )
 from app.domain.hit_modifiers import HitModifierEffect
 from app.domain.models import ConditionalDamage, OnHitDamage, Weapon, WeaponAttack
+from app.domain.weapons import MaxHpReductionOnHit
 
 logger = logging.getLogger(__name__)
 
@@ -50,6 +52,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
         on_hit: list[OnHitDamage] = []
         on_hit_modifiers: list[HitModifierEffect] = []
         conditional: list[ConditionalDamage] = []
+        max_hp_reduction: MaxHpReductionOnHit | None = None
         prone_size = None
         controls: list[HitControlEffect] = []
         for effect in definition.effects:
@@ -75,6 +78,10 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
                 prone_size = effect.max_target_size
             elif isinstance(effect, HitModifierEffect):
                 on_hit_modifiers.append(effect)
+            elif isinstance(effect, MaxHpReductionEffectDefinition):
+                if max_hp_reduction is not None:
+                    raise UnsupportedCapabilityError("An attack supports at most one max-HP-reduction rider.")
+                max_hp_reduction = MaxHpReductionOnHit(damage_type=effect.damage_type)
             elif isinstance(effect, (GrappleEffectDefinition, ConditionEffectDefinition)):
                 controls.append(compile_control(effect))
             else:
@@ -94,6 +101,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
             conditional_attack_advantage=definition.conditional_attack_advantage,
             on_hit_damage=on_hit,
             on_hit_modifier_effects=on_hit_modifiers,
+            max_hp_reduction_on_hit=max_hp_reduction,
             knocks_prone_max_size=prone_size,
             control_effect=merge_controls(controls),
             charge_profile=definition.charge_profile,
