@@ -16,7 +16,6 @@ from app.domain.models import CombatantState, WeaponAttack
 from app.domain.size import size_at_most
 
 BLINDED_EFFECT_ID = "blinded"
-FRIGHTENED_EFFECT_ID = "frightened"
 POISONED_EFFECT_ID = "poisoned"
 PRONE_EFFECT_ID = "prone"
 
@@ -27,12 +26,10 @@ def attack_roll_condition_sources(
     distance_ft: int,
     target_id: str | None = None,
 ) -> tuple[int, int]:
-    """Return Advantage and Disadvantage sources from supported conditions."""
+    """Return context-free Advantage and Disadvantage sources from supported conditions."""
     advantage = 0
     disadvantage = 0
     if has_condition(attacker, BLINDED_EFFECT_ID):
-        disadvantage += 1
-    if has_condition(attacker, FRIGHTENED_EFFECT_ID):
         disadvantage += 1
     if PRONE_EFFECT_ID in attacker.active_effect_ids:
         disadvantage += 1
