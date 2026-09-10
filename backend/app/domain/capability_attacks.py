@@ -51,8 +51,10 @@ class AttackCapabilityDefinition(BaseModel):
 
     @model_validator(mode="after")
     def validate_attack_shape(self) -> "AttackCapabilityDefinition":
-        if (self.damage is None) == (self.fixed_damage is None):
-            raise ValueError("Attack must declare exactly one of damage or fixed_damage.")
+        if self.damage is not None and self.fixed_damage is not None:
+            raise ValueError("Attack cannot declare both rolled and fixed damage.")
+        if self.damage is None and self.fixed_damage is None and not self.effects:
+            raise ValueError("Damage-free attack requires at least one on-hit effect.")
         if self.attack_kind in {WeaponAttackKind.RANGED, WeaponAttackKind.MELEE_OR_RANGED} and (
             self.normal_range_ft is None or self.long_range_ft is None
         ):
