@@ -1,17 +1,17 @@
 from __future__ import annotations
 
 from app.combat.action_economy import is_available, spend
+from app.combat.resources import action_resource_available, resolved_resource_id, spend_action_resource
 from app.combat.save_targets import resolve_save_targets
 from app.combat.spell_policy import SpellChoice
-from app.combat.spellcasting import mark_slot_spell_cast
+from app.combat.spellcasting import mark_slot_spell_cast, slot_spell_available
 from app.domain.actions import SavingThrowAction
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 
 
-def _resource(state, level: int):
-    resource_id = f"spell-slot-{level}"
-    return next((item for item in state.resources if item.id == resource_id), None)
+def _fallback_slot_id(level: int) -> str | None:
+    return f"spell-slot-{level}" if level > 0 else None
 
 
 def _save_action(choice: SpellChoice) -> SavingThrowAction:
@@ -51,19 +51,26 @@ def resolve_spell(
     if not is_available(caster.state, spell.action_cost):
         raise ValueError(f"{spell.action_cost} is unavailable for {spell.name}.")
 
-    remaining = None
-    if choice.slot_level > 0:
-        resource = _resource(caster.state, choice.slot_level)
-        if resource is None or resource.current_uses < 1:
-            raise ValueError(f"No level {choice.slot_level} spell slot remains.")
+    fallback_id = _fallback_slot_id(choice.slot_level)
+    resource_id = resolved_resource_id(spell.resource_id, fallback_id)
+    uses_spell_slot = bool(resource_id and resource_id.startswith("spell-slot-"))
+    if uses_spell_slot and not slot_spell_available(caster.state, turn_key):
+        raise ValueError(f"A leveled spell was already cast this turn before {spell.name}.")
+    if not action_resource_available(
+        caster.state, spell.resource_id, spell.resource_cost, fallback_resource_id=fallback_id,
+    ):
+        raise ValueError(f"Resource {resource_id!r} is unavailable for {spell.name}.")
+
+    remaining = spend_action_resource(
+        caster.state, spell.resource_id, spell.resource_cost, fallback_resource_id=fallback_id,
+    )
+    if uses_spell_slot:
         mark_slot_spell_cast(caster.state, turn_key)
-        resource.current_uses -= 1
-        remaining = resource.current_uses
     spend(caster.state, spell.action_cost)
 
     placement = choice.placement
     detail = f" Area covers {len(placement.target_ids)} enemies." if placement is not None else ""
-    slot_text = "cantrip" if choice.slot_level == 0 else f"level {choice.slot_level} slot"
+    resource_text = "cantrip" if resource_id is None else resource_id
     events = [BattleEvent(
         sequence=sequence,
         round_number=round_number,
@@ -73,7 +80,7 @@ def resolve_spell(
         feature_id=spell.id,
         resource_remaining=remaining,
         animation=spell.animation,
-        description=f"{caster.state.template.name} casts {spell.name} using a {slot_text}.{detail}",
+        description=f"{caster.state.template.name} casts {spell.name} using {resource_text}.{detail}",
     )]
     sequence += 1
 
