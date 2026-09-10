@@ -1,7 +1,7 @@
 (() => {
   "use strict";
   const S = () => window.IRON_PIT_BROWSER_STATE, R = () => window.IRON_PIT_BROWSER_ROLLS, A = () => window.IRON_PIT_BROWSER_ATTACK_ADVANTAGE || { sources: () => 0 };
-  const G = () => window.IRON_PIT_BROWSER_GRAPPLE, T = () => window.IRON_PIT_BROWSER_TIMED, TD = (state, ability) => window.IRON_PIT_BROWSER_TIMED?.d20Disadvantage(state, ability) || 0, Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
+  const G = () => window.IRON_PIT_BROWSER_GRAPPLE, T = () => window.IRON_PIT_BROWSER_TIMED, TD = (state, ability) => window.IRON_PIT_BROWSER_TIMED?.d20Disadvantage(state, ability) || 0, Z = () => window.IRON_PIT_BROWSER_ZERO_HP, H = () => window.IRON_PIT_BROWSER_MAX_HP_REDUCTION;
   const SAP = () => window.IRON_PIT_BROWSER_SAP || { applyWeapon: () => false, consume: () => 0, disadvantage: () => 0 };
   const TM = () => window.IRON_PIT_BROWSER_TACTICAL_MASTER || { apply: () => false };
   const GRZ = () => window.IRON_PIT_BROWSER_GRAZE || { rawDamage: () => null };
@@ -78,7 +78,7 @@
     const hpBefore = actualTarget.state.current_hp, temporaryHpBefore = actualTarget.state.temporary_hp;
     const deathSuccessBefore = actualTarget.state.death_save_successes, deathFailureBefore = actualTarget.state.death_save_failures;
     const concentrationBefore = actualTarget.state.concentration?.effect_id || null;
-    let damageRoll = null, damageComponents = [], damageOutcome = null, sapApplied = "", vexApplied = false, studiedApplied = false;
+    let damageRoll = null, damageComponents = [], damageOutcome = null, maxHpBefore = null, maxHpAfter = null, sapApplied = "", vexApplied = false, studiedApplied = false;
     let topple = { saveRoll: null, saveDc: null, saveSucceeded: null, applied: false }; const applied = [];
     if (hit) {
       const damage = R().weaponDamage(attacker.state, attack, critical, mode, extra.turnKey || `${round}:${attacker.combatant_id}`,
@@ -87,6 +87,7 @@
       damageRoll = { ...damage.roll, total: damageComponents.reduce((sum, part) => sum + part.applied_total, 0) };
       const appliedTypes = [...new Set(damageComponents.filter((part) => part.applied_total > 0).map((part) => part.damage_type))], affectedStates = states(extra.setup);
       damageOutcome = applyDamage(actualTarget.state, damageRoll.total, critical, appliedTypes, affectedStates);
+      if (attack.maxHpReductionOnHit) { const type = attack.maxHpReductionOnHit.damageType, amount = damageComponents.filter((part) => !type || part.damage_type === type).reduce((sum, part) => sum + part.applied_total, 0), result = H()?.apply(actualTarget.state, amount); if (!result) throw new Error("Browser max HP reduction runtime is not loaded."); maxHpBefore = result.before; maxHpAfter = result.after; }
       const living = actualTarget.state.is_alive && !actualTarget.state.is_dead, proneMax = extra.proneMaxSize || attack.proneMaxSize;
       if (living && S().canProne(actualTarget, proneMax) && !I().immune(actualTarget.state, "prone")) { if (!actualTarget.state.active_effect_ids.includes("prone")) actualTarget.state.active_effect_ids.push("prone"); applied.push("prone"); }
       const control = attack.controlEffect;
@@ -137,7 +138,7 @@
       attack_roll: attackRoll, saving_throw_roll: topple.saveRoll, save_ability: topple.saveDc === null ? null : "constitution", save_dc: topple.saveDc, save_succeeded: topple.saveSucceeded,
       damage_roll: damageRoll, damage_components: damageComponents, applied_condition_ids: [...new Set(applied)], hit, critical,
       turn_terminated: naturalOneEndsTurn, turn_termination_reason: naturalOneEndsTurn ? "iron-pit-natural-1-attack" : null,
-      hp_before: hpBefore, hp_after: actualTarget.state.current_hp, temporary_hp_before: temporaryHpBefore, temporary_hp_after: actualTarget.state.temporary_hp,
+      hp_before: hpBefore, hp_after: actualTarget.state.current_hp, max_hp_before: maxHpBefore, max_hp_after: maxHpAfter, temporary_hp_before: temporaryHpBefore, temporary_hp_after: actualTarget.state.temporary_hp,
       death_save_successes_before: deathSuccessBefore, death_save_failures_before: deathFailureBefore,
       death_save_successes: actualTarget.state.death_save_successes, death_save_failures: actualTarget.state.death_save_failures,
       is_stable: actualTarget.state.is_stable, is_dead: actualTarget.state.is_dead, weapon_id: attack.id, projectile: attack.projectile || null,
