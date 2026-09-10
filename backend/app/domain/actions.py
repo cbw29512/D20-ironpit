@@ -121,15 +121,16 @@ class SavingThrowAction(BaseModel):
 
 
 class AttackActionSlot(BaseModel):
-    """One ordered weapon/save step inside an Attack action or Multiattack."""
+    """One ordered weapon/save/forced-movement step inside an Attack action or Multiattack."""
 
     attack_ids: list[str] = Field(default_factory=list, max_length=16)
     save_action_ids: list[str] = Field(default_factory=list, max_length=16)
+    forced_movement_action_ids: list[str] = Field(default_factory=list, max_length=16)
 
     @model_validator(mode="after")
     def require_choice(self) -> "AttackActionSlot":
-        if not self.attack_ids and not self.save_action_ids:
-            raise ValueError("Attack-action slot must contain a weapon attack or saving-throw action.")
+        if not self.attack_ids and not self.save_action_ids and not self.forced_movement_action_ids:
+            raise ValueError("Attack-action slot must contain a weapon, save, or forced-movement action.")
         return self
 
 
