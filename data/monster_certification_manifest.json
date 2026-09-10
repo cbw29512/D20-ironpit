@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 146,
-    "blocked": 184
+    "public_ready": 135,
+    "blocked": 195
   },
   "monsters": [
     {
@@ -1675,18 +1675,25 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "unsupported_mechanics": [
+        "limited-use",
+        "save-or-complex-action"
+      ],
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "limited-use",
+        "save-area-mismatch:black-dragon-wyrmling-acid-breath",
+        "save-damage-type-mismatch:black-dragon-wyrmling-acid-breath",
+        "save-or-complex-action",
+        "save-success-damage-mismatch:black-dragon-wyrmling-acid-breath"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-black-pudding",
@@ -1787,17 +1794,24 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "unsupported_mechanics": [
+        "limited-use",
+        "save-or-complex-action"
+      ],
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "limited-use",
+        "save-area-mismatch:blue-dragon-wyrmling-lightning-breath",
+        "save-damage-type-mismatch:blue-dragon-wyrmling-lightning-breath",
+        "save-or-complex-action",
+        "save-success-damage-mismatch:blue-dragon-wyrmling-lightning-breath"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-boar",
@@ -4630,18 +4644,25 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "unsupported_mechanics": [
+        "limited-use",
+        "save-or-complex-action"
+      ],
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "limited-use",
+        "save-area-mismatch:green-dragon-wyrmling-poison-breath",
+        "save-damage-type-mismatch:green-dragon-wyrmling-poison-breath",
+        "save-or-complex-action",
+        "save-success-damage-mismatch:green-dragon-wyrmling-poison-breath"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-green-hag",
@@ -4927,18 +4948,25 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "unsupported_mechanics": [
+        "limited-use",
+        "save-or-complex-action"
+      ],
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "limited-use",
+        "save-area-mismatch:hell-hound-fire-breath",
+        "save-damage-type-mismatch:hell-hound-fire-breath",
+        "save-or-complex-action",
+        "save-success-damage-mismatch:hell-hound-fire-breath"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-hezrou",
@@ -7177,17 +7205,24 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "unsupported_mechanics": [
+        "limited-use",
+        "save-or-complex-action"
+      ],
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "limited-use",
+        "save-area-mismatch:red-dragon-wyrmling-fire-breath",
+        "save-damage-type-mismatch:red-dragon-wyrmling-fire-breath",
+        "save-or-complex-action",
+        "save-success-damage-mismatch:red-dragon-wyrmling-fire-breath"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-reef-shark",
@@ -9350,18 +9385,25 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "unsupported_mechanics": [
+        "limited-use",
+        "save-or-complex-action"
+      ],
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "limited-use",
+        "save-area-mismatch:white-dragon-wyrmling-cold-breath",
+        "save-damage-type-mismatch:white-dragon-wyrmling-cold-breath",
+        "save-or-complex-action",
+        "save-success-damage-mismatch:white-dragon-wyrmling-cold-breath"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-wight",
@@ -9608,18 +9650,25 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "unsupported_mechanics": [
+        "limited-use",
+        "save-or-complex-action"
+      ],
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "limited-use",
+        "save-area-mismatch:young-black-dragon-acid-breath",
+        "save-damage-type-mismatch:young-black-dragon-acid-breath",
+        "save-or-complex-action",
+        "save-success-damage-mismatch:young-black-dragon-acid-breath"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-young-blue-dragon",
@@ -9638,17 +9687,24 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "unsupported_mechanics": [
+        "limited-use",
+        "save-or-complex-action"
+      ],
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "limited-use",
+        "save-area-mismatch:young-blue-dragon-lightning-breath",
+        "save-damage-type-mismatch:young-blue-dragon-lightning-breath",
+        "save-or-complex-action",
+        "save-success-damage-mismatch:young-blue-dragon-lightning-breath"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-young-brass-dragon",
@@ -9814,18 +9870,25 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "unsupported_mechanics": [
+        "limited-use",
+        "save-or-complex-action"
+      ],
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "limited-use",
+        "save-area-mismatch:young-green-dragon-poison-breath",
+        "save-damage-type-mismatch:young-green-dragon-poison-breath",
+        "save-or-complex-action",
+        "save-success-damage-mismatch:young-green-dragon-poison-breath"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-young-red-dragon",
@@ -9844,17 +9907,24 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "unsupported_mechanics": [
+        "limited-use",
+        "save-or-complex-action"
+      ],
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "limited-use",
+        "save-area-mismatch:young-red-dragon-fire-breath",
+        "save-damage-type-mismatch:young-red-dragon-fire-breath",
+        "save-or-complex-action",
+        "save-success-damage-mismatch:young-red-dragon-fire-breath"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-young-silver-dragon",
@@ -9911,18 +9981,25 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "unsupported_mechanics": [
+        "limited-use",
+        "save-or-complex-action"
+      ],
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "limited-use",
+        "save-area-mismatch:young-white-dragon-cold-breath",
+        "save-damage-type-mismatch:young-white-dragon-cold-breath",
+        "save-or-complex-action",
+        "save-success-damage-mismatch:young-white-dragon-cold-breath"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-zombie",
