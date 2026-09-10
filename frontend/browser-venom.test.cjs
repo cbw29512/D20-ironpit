@@ -8,19 +8,16 @@ const vm = require("node:vm");
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
-  "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js", "browser-monsters-beast2.js",
-  "browser-monsters-batch3.js", "browser-monsters-control.js", "browser-monsters-poison.js", "browser-monsters-venom.js",
-  "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js", "browser-grapple.js",
-  "browser-timed-conditions.js", "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js",
-  "browser-weapon-mastery.js", "browser-attack.js", "browser-reactions.js", "browser-saves.js",
-  "browser-condition-lifecycle.js", "browser-charge.js", "browser-light-weapons.js", "browser-light-attack.js",
-  "browser-standard-attack-action.js", "browser-multiattack.js", "browser-healing.js", "browser-spellcasting.js",
-  "browser-condition-removal.js", "browser-support.js", "browser-dodge.js", "browser-formation.js",
-  "browser-arena-map.js", "browser-grid-geometry.js", "browser-grid-movement-support.js",
-  "browser-grid-path-search-support.js", "browser-grid-path-search.js", "browser-grid-movement.js",
-  "browser-grid-reaction-support.js", "browser-reaction-movement.js", "browser-offensive-ranges.js",
-  "browser-offensive-movement.js", "browser-grid-placement.js", "browser-turn.js", "browser-initiative.js",
-  "browser-engine.js",
+  "browser-heroes.js", "browser-monsters-generated.js", "browser-condition-immunity.js", "browser-condition-rules.js",
+  "browser-action-economy.js", "browser-grapple.js", "browser-timed-conditions.js", "browser-state.js", "browser-rage.js",
+  "browser-rolls.js", "browser-zero-hp.js", "browser-weapon-mastery.js", "browser-attack.js", "browser-reactions.js",
+  "browser-saves.js", "browser-condition-lifecycle.js", "browser-charge.js", "browser-light-weapons.js",
+  "browser-light-attack.js", "browser-standard-attack-action.js", "browser-multiattack.js", "browser-healing.js",
+  "browser-spellcasting.js", "browser-condition-removal.js", "browser-support.js", "browser-dodge.js", "browser-formation.js",
+  "browser-arena-map.js", "browser-grid-geometry.js", "browser-grid-movement-support.js", "browser-grid-path-search-support.js",
+  "browser-grid-path-search.js", "browser-grid-movement.js", "browser-grid-reaction-support.js", "browser-reaction-movement.js",
+  "browser-offensive-ranges.js", "browser-offensive-movement.js", "browser-grid-placement.js", "browser-turn.js",
+  "browser-initiative.js", "browser-engine.js",
 ]) load(file);
 
 const queuedDice = (values, fallback = 10) => {
@@ -36,7 +33,10 @@ const member = (id, side, template, position = side === "heroes" ? 0 : 5) => ({
   combatant_id: id, side, position_ft: position, state: S.buildState(structuredClone(template)),
 });
 
-assert.equal(Object.keys(monsters).length, 62, "venom batch must bring browser roster to 62 monsters");
+assert.equal(window.IRON_PIT_CANONICAL_MONSTERS_READY, true, "venom regressions must use the canonical generated roster");
+for (const id of ["srd-giant-venomous-snake", "srd-giant-wasp", "srd-giant-wolf-spider"]) {
+  assert.ok(monsters[id], `${id} must exist in the generated certified roster`);
+}
 
 {
   const snake = monsters["srd-giant-venomous-snake"], bite = snake.attacks[0];
@@ -91,4 +91,4 @@ assert.equal(Object.keys(monsters).length, 62, "venom batch must bring browser r
   assert.ok(battle.events.some((event) => event.damage_components?.some((part) => part.damage_type === "poison")), "expected a venomous Bite in the end-to-end encounter log");
 }
 
-console.log("Browser SRD venom monster regressions passed.");
+console.log("Canonical generated SRD venom monster regressions passed.");
