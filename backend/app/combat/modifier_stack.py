@@ -113,7 +113,12 @@ def consume_next_attack_against_advantage(state: CombatantState, target_id: str)
 
 
 def _die_modifiers(state: CombatantState, kind: ModifierKind) -> list[CombatModifier]:
-    if kind not in {ModifierKind.ATTACK_ROLL_BONUS_DIE, ModifierKind.SAVING_THROW_BONUS_DIE}:
+    supported = {
+        ModifierKind.ATTACK_ROLL_BONUS_DIE,
+        ModifierKind.SAVING_THROW_BONUS_DIE,
+        ModifierKind.ABILITY_CHECK_BONUS_DIE,
+    }
+    if kind not in supported:
         raise ValueError(f"{kind.value} is not a D20 bonus-die modifier.")
     return [item for item in state.active_modifiers if item.kind is kind]
 
