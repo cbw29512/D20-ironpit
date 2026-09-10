@@ -87,13 +87,14 @@ def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) ->
         issues.extend(legendary_action_issues(template, row))
         issues.extend(spellcasting_issues(template, row))
         actions = normalized(row.get("actions", ""))
+        traits = normalized(row.get("traits", ""))
         runtime_attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
         if _source_attack_mode_count(actions) != len(runtime_attacks):
             issues.append("source-attack-count-mismatch")
         if len(_SAVING_THROW.findall(actions)) != len(template.saving_throw_actions):
             issues.append("source-save-action-count-mismatch")
         for attack in runtime_attacks:
-            issues.extend(attack_issues(attack, actions))
+            issues.extend(attack_issues(attack, actions, traits))
         issues.extend(charge_replacement_issues(template, actions))
         for action in template.saving_throw_actions:
             issues.extend(save_action_issues(action, actions))
