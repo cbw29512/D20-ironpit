@@ -52,7 +52,7 @@ def test_delayed_swallow_disgorges_prone_after_first_tick() -> None:
     assert target_order(target, setup) == [source]
     assert choose_standard_attack(source, setup) is None
 
-    events, sequence = resolve_swallow_turn_end(2, 1, source, setup, FixedDiceProvider([]))
+    events, sequence = resolve_swallow_turn_end(2, 1, source, setup, FixedDiceProvider([1]))
     assert (events, sequence, target.state.current_hp) == ([], 2, target.state.template.max_hp)
 
     events, sequence = resolve_swallow_turn_end(2, 2, source, setup, FixedDiceProvider([2, 3]))
