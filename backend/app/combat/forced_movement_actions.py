@@ -40,15 +40,21 @@ def resolve_action(
         events: list[BattleEvent] = []
         for target in legal_targets(source, setup, action):
             before = combatant_distance(source, target)
-            moved = min(action.distance_ft, before)
-            if moved <= 0:
+            toward = action.direction == "toward_source"
+            requested = min(action.distance_ft, before) if toward else action.distance_ft
+            if requested <= 0:
                 continue
             sign = -1 if target.position_ft >= source.position_ft else 1
-            if action.direction == "away_from_source":
+            if not toward:
                 sign *= -1
-            target.position_ft = max(0, target.position_ft + sign * moved)
+            start = target.position_ft
+            target.position_ft = max(0, start + sign * requested)
+            moved = abs(target.position_ft - start)
+            if moved <= 0:
+                continue
             after = combatant_distance(source, target)
-            direction = "toward" if action.direction == "toward_source" else "away from"
+            verb = "pulling" if toward else "pushing"
+            direction = "toward" if toward else "away from"
             events.append(BattleEvent(
                 sequence=sequence,
                 round_number=round_number,
@@ -62,7 +68,10 @@ def resolve_action(
                 distance_after_ft=after,
                 movement_ft=moved,
                 animation=action.animation,
-                description=f"{source.state.template.name} uses {action.name}, pulling {target.state.template.name} {moved} ft. {direction} itself.",
+                description=(
+                    f"{source.state.template.name} uses {action.name}, {verb} "
+                    f"{target.state.template.name} {moved} ft. {direction} itself."
+                ),
             ))
             sequence += 1
         return events, sequence
