@@ -90,7 +90,7 @@
       const shift = T()?.resolve(sequence, round, member, setup); if (shift) { events.push(shift); sequence += 1; }
     }
     if (H().shouldEscape(member.state)) {
-      events.push(H().escape(sequence++, round, member));
+      events.push(H().escape(sequence++, round, member, setup));
       return finalize(events, sequence, round, member, setup, turnKey);
     }
     const rush = P()?.adrenaline(sequence, round, member); if (rush) { events.push(rush); sequence += 1; }
