@@ -32,7 +32,10 @@ def _apply_turn_restriction(
     source_effect_id: str,
     effect: TurnRestrictionEffectDefinition,
     round_number: int,
-) -> str:
+) -> str | None:
+    required = effect.requires_condition
+    if required is not None and required not in target.active_effect_ids:
+        return None
     target.timed_effects = [
         item for item in target.timed_effects
         if not (
@@ -49,9 +52,8 @@ def _apply_turn_restriction(
         expiry_timing=effect.expiry_timing,
         action_or_bonus_only=effect.action_or_bonus_only,
         reactions_disabled=effect.reactions_disabled,
+        requires_active_effect_id=required,
     ))
-    if TURN_RESTRICTION_EFFECT_ID not in target.active_effect_ids:
-        target.active_effect_ids.append(TURN_RESTRICTION_EFFECT_ID)
     return TURN_RESTRICTION_EFFECT_ID
 
 
@@ -102,9 +104,11 @@ def apply_save_failure_effects(
                 if condition is not None:
                     applied.append(condition)
             elif isinstance(effect, TurnRestrictionEffectDefinition):
-                applied.append(_apply_turn_restriction(
+                restriction = _apply_turn_restriction(
                     target, source_id, source_effect_id, effect, round_number,
-                ))
+                )
+                if restriction is not None:
+                    applied.append(restriction)
             elif isinstance(effect, CombatModifierEffect):
                 apply_modifier_effect(
                     target, source_id, source_effect_id, effect, index, trigger="failed-save",
