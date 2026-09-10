@@ -20,20 +20,25 @@
       const events = [];
       for (const target of legalTargets(member, setup, action)) {
         const before = S().distance(member, target);
-        const moved = Math.min(action.distanceFt, before);
-        if (moved <= 0) continue;
+        const toward = action.direction === "toward_source";
+        const requested = toward ? Math.min(action.distanceFt, before) : action.distanceFt;
+        if (requested <= 0) continue;
         let sign = target.position_ft >= member.position_ft ? -1 : 1;
-        if (action.direction === "away_from_source") sign *= -1;
-        target.position_ft = Math.max(0, target.position_ft + sign * moved);
+        if (!toward) sign *= -1;
+        const start = target.position_ft;
+        target.position_ft = Math.max(0, start + sign * requested);
+        const moved = Math.abs(target.position_ft - start);
+        if (moved <= 0) continue;
         const after = S().distance(member, target);
-        const direction = action.direction === "toward_source" ? "toward" : "away from";
+        const verb = toward ? "pulling" : "pushing";
+        const direction = toward ? "toward" : "away from";
         events.push({
           sequence: sequence++, round_number: round, event_type: "movement",
           actor_id: member.combatant_id, actor_name: member.state.template.name,
           target_id: target.combatant_id, target_name: target.state.template.name,
           attack_name: action.name, distance_before_ft: before, distance_after_ft: after,
           movement_ft: moved, animation: action.animation,
-          description: `${member.state.template.name} uses ${action.name}, moving ${target.state.template.name} ${moved} ft. ${direction} itself.`,
+          description: `${member.state.template.name} uses ${action.name}, ${verb} ${target.state.template.name} ${moved} ft. ${direction} itself.`,
         });
       }
       return { events, sequence };
