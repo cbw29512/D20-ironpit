@@ -3,6 +3,7 @@ name: CI
 on:
   push:
   pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -164,6 +165,12 @@ jobs:
           done
           grep -q 'auditDetails' frontend/battlefield-view.js
           grep -q 'IRON_PIT_EXECUTION' frontend/app.js
+
+      - name: Enforce generated exact-head CI wiring
+        run: |
+          grep -q 'workflow_dispatch:' .github/workflows/ci.yml
+          grep -q 'actions: write' .github/workflows/sync-generated.yml
+          grep -q 'actions/workflows/ci.yml/dispatches' .github/workflows/sync-generated.yml
 
       - name: Validate Netlify production-only credit guard
         run: |
