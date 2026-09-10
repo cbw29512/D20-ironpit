@@ -21,9 +21,11 @@
 
   function approachesFearSource(mover, destination, setup) {
     try {
+      if (!mover.state.active_effect_ids.includes("frightened")) return false;
       if (!mover.state.position) throw new Error(`${mover.combatant_id} has no grid position.`);
-      if (!frightened()) throw new Error("Browser Frightened runtime is not loaded.");
-      for (const source of frightened().sources(mover.state, setup)) {
+      const rules = frightened();
+      if (!rules) throw new Error("Browser Frightened runtime is not loaded.");
+      for (const source of rules.sources(mover.state, setup)) {
         if (!source.state.position) throw new Error(`Frightened source ${source.combatant_id} has no grid position.`);
         const before = geometry().footprintDistanceFt(
           mover.state.position,
