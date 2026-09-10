@@ -7789,6 +7789,7 @@
         },
         "damage_type": "bludgeoning",
         "success_damage": "none",
+        "failure_effects": [],
         "grapple": {
           "kind": "grapple",
           "escape_dc": 12,
@@ -9772,6 +9773,7 @@
         },
         "damage_type": "bludgeoning",
         "success_damage": "none",
+        "failure_effects": [],
         "grapple": {
           "kind": "grapple",
           "escape_dc": 14,
