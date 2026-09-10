@@ -69,6 +69,8 @@ def resolve_spell_attack(
         if not action_resource_available(
             caster.state, spell.resource_id, spell.resource_cost, fallback_resource_id=fallback_id,
         ):
+            if uses_spell_slot:
+                raise ValueError(f"No level {spell.level} spell slot remains for {spell.name}.")
             raise ValueError(f"Resource {resource_id!r} is unavailable for {spell.name}.")
         condition_advantage, condition_disadvantage = attack_roll_condition_sources(
             caster.state, target.state, distance, target.combatant_id,
