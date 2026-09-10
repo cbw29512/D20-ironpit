@@ -117,11 +117,19 @@ class SavingThrowAction(BaseModel):
     damage_type: DamageTypeName | None = None
     success_damage: Literal["none", "half"] = "none"
     failure_effects: list[SaveFailureEffectDefinition] = Field(default_factory=list)
+    push_target_away_ft: int = Field(default=0, ge=0, le=200)
+    push_target_max_size: CreatureSize | None = None
     grapple_escape_dc: int | None = Field(default=None, ge=1, le=40)
     restrains_while_grappled: bool = False
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
     animation: str = "save-effect"
+
+    @model_validator(mode="after")
+    def validate_push(self) -> "SavingThrowAction":
+        if self.push_target_max_size is not None and self.push_target_away_ft <= 0:
+            raise ValueError("Save-action push size limit requires positive push distance.")
+        return self
 
 
 class AttackActionSlot(BaseModel):
