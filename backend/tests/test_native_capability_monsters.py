@@ -15,6 +15,10 @@ NATIVE = {
     "srd-swarm-of-insects": "Swarm of Insects",
     "srd-swarm-of-venomous-snakes": "Swarm of Venomous Snakes",
     "srd-ape": "Ape",
+    "srd-lion": "Lion",
+    "srd-hill-giant": "Hill Giant",
+    "srd-sahuagin-warrior": "Sahuagin Warrior",
+    "srd-xorn": "Xorn",
 }
 
 
