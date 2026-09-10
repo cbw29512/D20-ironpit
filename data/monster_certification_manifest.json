@@ -6014,7 +6014,7 @@
       "monster_name": "Merrow",
       "srd_source_page": 308,
       "srd_source_reference": "SRD 5.2.1 p. 308",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-merrow",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -6035,7 +6035,8 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "monster-combat-mechanics-not-certified"
+        "source-attack-count-mismatch",
+        "source-trait-fingerprint-mismatch"
       ]
     },
     {
