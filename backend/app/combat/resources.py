@@ -57,8 +57,18 @@ def action_resource_available(
     *,
     fallback_resource_id: str | None = None,
 ) -> bool:
-    """Shared availability check for attacks, saves, spells, bonus actions, and reactions."""
-    return resource_available(state, resolved_resource_id(resource_id, fallback_resource_id), cost)
+    """Return action legality without exposing low-level missing-resource errors."""
+    if cost < 1:
+        raise ValueError("Resource cost must be positive.")
+    resolved = resolved_resource_id(resource_id, fallback_resource_id)
+    if resolved is None:
+        return True
+    matches = [resource for resource in state.resources if resource.id == resolved]
+    if len(matches) > 1:
+        raise ValueError(
+            f"Expected at most one runtime resource {resolved!r} on {state.template.name}; found {len(matches)}."
+        )
+    return bool(matches and matches[0].current_uses >= cost)
 
 
 def is_recharge_resource(state: CombatantState, resource_id: str | None) -> bool:
