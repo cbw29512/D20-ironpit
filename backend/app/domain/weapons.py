@@ -97,4 +97,5 @@ class WeaponAttack(BaseModel):
     sneak_attack_eligible: bool = False
     knocks_prone_max_size: CreatureSize | None = None
     control_effect: HitControlEffect | None = None
+    push_target_away_ft: int = Field(default=0, ge=0, le=120)
     forbid_target_grappled_by_self: bool = False
