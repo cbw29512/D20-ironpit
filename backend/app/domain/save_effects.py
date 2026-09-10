@@ -61,11 +61,31 @@ class TurnRestrictionEffectDefinition(BaseModel):
         return self
 
 
+class TimedPenaltyEffectDefinition(BaseModel):
+    """Reusable failed-save penalty with repeat-save recovery."""
+
+    kind: Literal["timed-penalty"] = "timed-penalty"
+    d20_disadvantage_ability: AbilityName | None = None
+    damage_penalty_dice_count: int = Field(default=0, ge=0, le=4)
+    damage_penalty_dice_size: int = Field(default=6, ge=2, le=20)
+    repeat_save_ability: AbilityName
+    repeat_save_dc: int = Field(ge=1, le=40)
+    repeat_save_timing: ConditionTiming
+    automatic_success_after_rounds: int | None = Field(default=None, ge=1, le=100)
+
+    @model_validator(mode="after")
+    def require_penalty(self) -> "TimedPenaltyEffectDefinition":
+        if self.d20_disadvantage_ability is None and not self.damage_penalty_dice_count:
+            raise ValueError("Timed penalty must affect a D20 Test or damage roll.")
+        return self
+
+
 SaveFailureEffectDefinition = Annotated[
     ProneEffectDefinition
     | GrappleEffectDefinition
     | ConditionEffectDefinition
     | TurnRestrictionEffectDefinition
+    | TimedPenaltyEffectDefinition
     | CombatModifierEffect,
     Field(discriminator="kind"),
 ]
