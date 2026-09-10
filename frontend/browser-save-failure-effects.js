@@ -36,6 +36,14 @@
           allowedRemovalActionIds: effect.allowedRemovalActionIds || [],
         });
         if (condition) applied.push(condition);
+      } else if (effect.kind === "turn-restriction") {
+        const restriction = T().apply(target.state, "turn-restriction", sourceId, {
+          sourceEffectId, appliedRound: options.round,
+          expiryTiming: effect.expiryTiming,
+          actionOrBonusOnly: Boolean(effect.actionOrBonusOnly),
+          reactionsDisabled: Boolean(effect.reactionsDisabled),
+        });
+        if (restriction) applied.push(restriction);
       } else if (MODIFIER_KINDS.has(effect.kind)) {
         M().applyEffect(target.state, sourceId, sourceEffectId, effect, index, "failed-save");
       } else {
