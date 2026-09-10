@@ -1,0 +1,71 @@
+[
+  {
+    "schema_version": 1,
+    "id": "srd-giant-ape",
+    "name": "Giant Ape",
+    "archetype": "source-certified bruiser",
+    "challenge_rating": "7",
+    "kind": "monster",
+    "size": "huge",
+    "armor_class": 12,
+    "max_hp": 168,
+    "speed_ft": 40,
+    "movement_modes": {"walk_ft": 40, "fly_ft": 0, "climb_ft": 40, "swim_ft": 0, "burrow_ft": 0, "hover": false},
+    "initiative_bonus": 5,
+    "attacks": [
+      {
+        "id": "srd-giant-ape-fist",
+        "name": "Fist",
+        "weapon_id": "srd-giant-ape-fist-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 9,
+        "damage": {"count": 3, "size": 10, "bonus": 6},
+        "damage_type": "bludgeoning",
+        "animation": "strike",
+        "reach_ft": 10
+      }
+    ],
+    "primary_attack_id": "srd-giant-ape-fist",
+    "unarmed_opportunity_attack": {"attack_bonus": 9, "damage": 7},
+    "attack_action": {
+      "id": "srd-giant-ape-multiattack",
+      "name": "Multiattack",
+      "is_attack_action": false,
+      "slots": [
+        {"attack_ids": ["srd-giant-ape-fist"]},
+        {"attack_ids": ["srd-giant-ape-fist"]}
+      ]
+    },
+    "save_actions": [
+      {
+        "id": "srd-giant-ape-boulder-toss",
+        "name": "Boulder Toss",
+        "save_ability": "dexterity",
+        "dc": 17,
+        "range_ft": 90,
+        "area": {"shape": "radius", "origin": "point", "radius_ft": 5},
+        "damage": {"count": 7, "size": 6, "bonus": 0},
+        "damage_type": "bludgeoning",
+        "success_damage": "half",
+        "failure_effects": [{"kind": "prone", "max_target_size": "large"}],
+        "resource_id": "srd-giant-ape-boulder-toss",
+        "resource_cost": 1,
+        "animation": "boulder"
+      }
+    ],
+    "saving_throw_bonuses": {"strength": 6, "dexterity": 2, "constitution": 4, "intelligence": -3, "wisdom": 1, "charisma": -2},
+    "skill_bonuses": {"athletics": 9, "perception": 4, "survival": 4},
+    "source_bonus_action_names": ["Leap"],
+    "source_limited_use_names": ["actions:Boulder Toss (Recharge 6)"],
+    "resources": [
+      {
+        "id": "srd-giant-ape-boulder-toss",
+        "name": "Boulder Toss",
+        "max_uses": 1,
+        "recharge": {"trigger": "start_of_turn", "die_size": 6, "minimum_roll": 6}
+      }
+    ],
+    "visual": {"armor": "natural", "main_hand": "fist", "body_style": "primate"},
+    "source": "SRD 5.2.1 Giant Ape"
+  }
+]
