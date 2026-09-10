@@ -45,6 +45,8 @@ class AttackCapabilityDefinition(BaseModel):
     effects: list[AttackEffectDefinition] = Field(default_factory=list)
     push_target_away_ft: int = Field(default=0, ge=0, le=120)
     push_target_max_size: CreatureSize | None = None
+    pull_target_toward_ft: int = Field(default=0, ge=0, le=120)
+    pull_target_max_size: CreatureSize | None = None
     forbid_target_grappled_by_self: bool = False
 
     @model_validator(mode="after")
@@ -57,10 +59,14 @@ class AttackCapabilityDefinition(BaseModel):
             raise ValueError("Ranged attack requires normal and long range.")
         if self.attack_ability_modifier is not None and self.attack_ability is None:
             raise ValueError("Attack ability modifier requires an explicit attack ability.")
+        if self.push_target_away_ft and self.pull_target_toward_ft:
+            raise ValueError("An attack cannot both push and pull the same target on hit.")
         if self.push_target_max_size is not None and self.push_target_away_ft == 0:
             raise ValueError("Push target size requires a positive push distance.")
-        if self.push_target_away_ft % 5:
-            raise ValueError("Push distance must use 5-foot increments.")
+        if self.pull_target_max_size is not None and self.pull_target_toward_ft == 0:
+            raise ValueError("Pull target size requires a positive pull distance.")
+        if self.push_target_away_ft % 5 or self.pull_target_toward_ft % 5:
+            raise ValueError("Forced movement distance must use 5-foot increments.")
         control_count = sum(effect.kind in {"grapple", "condition"} for effect in self.effects)
         if control_count > 1:
             raise ValueError("Current runtime supports one persistent control rider per attack.")
