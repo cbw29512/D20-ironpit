@@ -19,8 +19,9 @@ def _push_present(action: Any, actions: str) -> bool:
     if not action.push_target_away_ft:
         return True
     distance = action.push_target_away_ft
-    pattern = rf"push(?:es|ed)?\s+(?:the\s+)?target\s+up\s+to\s+{distance}\s+(?:feet|ft\.?).*?straight\s+away"
-    if not re.search(pattern, actions, re.IGNORECASE):
+    active = rf"push(?:es|ed)?\s+(?:the\s+)?target\s+up\s+to\s+{distance}\s+(?:feet|ft\.?).*?straight\s+away"
+    passive = rf"(?:the\s+)?target\s+is\s+pushed\s+up\s+to\s+{distance}\s+(?:feet|ft\.?).*?straight\s+away"
+    if not re.search(rf"(?:{active}|{passive})", actions, re.IGNORECASE):
         return False
     if action.push_target_max_size is None:
         return True
