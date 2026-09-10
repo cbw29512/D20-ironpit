@@ -105,11 +105,12 @@ class SaveCapabilityDefinition(BaseModel):
 class CapabilityActionSlot(BaseModel):
     attack_ids: list[str] = Field(default_factory=list, max_length=16)
     save_action_ids: list[str] = Field(default_factory=list, max_length=16)
+    forced_movement_action_ids: list[str] = Field(default_factory=list, max_length=16)
 
     @model_validator(mode="after")
     def require_choice(self) -> "CapabilityActionSlot":
-        if not self.attack_ids and not self.save_action_ids:
-            raise ValueError("Attack-action slot requires an attack or save action.")
+        if not self.attack_ids and not self.save_action_ids and not self.forced_movement_action_ids:
+            raise ValueError("Attack-action slot requires an attack, save, or forced-movement action.")
         return self
 
 
