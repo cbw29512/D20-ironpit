@@ -3,6 +3,7 @@ import re
 from typing import Any
 from app.content.monster_attack_advantage_source_audit import conditional_attack_advantage_issues
 from app.content.monster_attack_modifier_source_audit import hit_modifier_issues
+from app.content.monster_forced_movement_source_audit import forced_movement_issues
 from app.content.monster_save_area_source_audit import area_save_issues
 from app.content.monster_save_failure_source_audit import failure_effect_issues
 from app.domain.models import WeaponAttack
@@ -53,18 +54,6 @@ def _max_size_rider_present(actions: str, size: Any, condition: str) -> bool:
         re.search(rf"\b{re.escape(str(size_name))}\s+or\s+smaller\b", actions, re.IGNORECASE)
         and condition.lower() in actions
     )
-
-
-def _push_rider_present(attack: WeaponAttack, actions: str) -> bool:
-    distance = attack.push_target_away_ft
-    if distance <= 0:
-        return True
-    push = rf"push(?:es)?\s+the\s+target\s+up\s+to\s+{distance}\s*(?:ft\.?|feet)\s+straight\s+away"
-    maximum = attack.push_target_max_size
-    if maximum is None:
-        return bool(re.search(push, actions, re.IGNORECASE))
-    size_name = re.escape(maximum.value)
-    return bool(re.search(rf"\b{size_name}\s+or\s+smaller\b[^.]*{push}", actions, re.IGNORECASE))
 
 
 def _condition_timing_present(actions: str, control: Any) -> bool:
@@ -126,10 +115,9 @@ def attack_issues(attack: WeaponAttack, actions: str, traits: str = "") -> list[
             issues.append(f"conditional-damage-mismatch:{attack.id}:{conditional.trigger}")
     issues.extend(hit_modifier_issues(attack, actions))
     issues.extend(conditional_attack_advantage_issues(attack, actions, traits))
+    issues.extend(forced_movement_issues(attack, actions))
     if attack.knocks_prone_max_size is not None and not _max_size_rider_present(actions, attack.knocks_prone_max_size, "prone"):
         issues.append(f"prone-rider-mismatch:{attack.id}")
-    if attack.push_target_away_ft and not _push_rider_present(attack, actions):
-        issues.append(f"push-rider-mismatch:{attack.id}")
     if attack.forbid_target_grappled_by_self:
         untargetable = re.search(r"can(?:not|'t|’t)\s+be\s+targeted", actions, re.IGNORECASE)
         if not untargetable or weapon.name.lower() not in actions:
