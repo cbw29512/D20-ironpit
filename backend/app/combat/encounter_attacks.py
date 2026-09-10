@@ -6,7 +6,7 @@ from app.combat.champion import apply_critical_closing_move
 from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
 from app.combat.encounter_targeting import combatant_distance
-from app.combat.forced_movement import apply_attack_push
+from app.combat.forced_movement import apply_attack_pull, apply_attack_push
 from app.combat.frenzy import mark_reckless_use_while_raging
 from app.combat.frightened import frightened_d20_disadvantage
 from app.combat.reckless_attack import activate_reckless_attack
@@ -66,15 +66,21 @@ def resolve_encounter_attack(
     if redirect is not None and event.target_id == redirect.combatant_id:
         swap_redirect_positions(target, redirect)
         actual_target = redirect
+    movement_kind = None
+    moved_ft = 0
     if event.hit and attack.push_target_away_ft > 0:
-        before_push = combatant_distance(attacker, actual_target)
-        pushed_ft = apply_attack_push(attacker, actual_target, attack, hit=True)
-        if pushed_ft:
-            after_push = combatant_distance(attacker, actual_target)
-            event.distance_before_ft = before_push
-            event.distance_after_ft = after_push
-            event.description += (
-                f" {actual_target.state.template.name} is pushed {pushed_ft} feet straight away."
-                f" Target is pushed {pushed_ft} ft. away ({before_push} ft. to {after_push} ft.)."
-            )
+        movement_kind = "pushed"
+        moved_ft = apply_attack_push(attacker, actual_target, attack, hit=True)
+    elif event.hit and attack.pull_target_toward_ft > 0:
+        movement_kind = "pulled"
+        moved_ft = apply_attack_pull(attacker, actual_target, attack, hit=True)
+    if moved_ft:
+        before = event.distance_after_ft if event.distance_after_ft is not None else distance_ft
+        after = combatant_distance(attacker, actual_target)
+        event.distance_before_ft = before
+        event.distance_after_ft = after
+        event.description += (
+            f" {actual_target.state.template.name} is {movement_kind} {moved_ft} feet."
+            f" Target is {movement_kind} {moved_ft} ft. ({before} ft. to {after} ft.)."
+        )
     return apply_critical_closing_move(attacker, setup, event)
