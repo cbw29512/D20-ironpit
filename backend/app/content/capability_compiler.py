@@ -28,6 +28,7 @@ def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
             damage_type=definition.damage_type.value if definition.damage_type else None,
             success_damage=definition.success_damage,
             failure_effects=list(definition.failure_effects),
+            forbid_target_affected_by_action=definition.forbid_target_affected_by_action,
             push_target_away_ft=definition.push_target_away_ft,
             push_target_max_size=definition.push_target_max_size,
             grapple_escape_dc=grapple.escape_dc if grapple else None,
