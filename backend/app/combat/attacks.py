@@ -4,7 +4,10 @@ import logging
 
 from app.combat.action_economy import is_available, spend
 from app.combat.attack_description import build_attack_description
-from app.combat.attack_roll_modifiers import consume_next_attack_disadvantage, next_attack_disadvantage_sources
+from app.combat.attack_roll_modifiers import (
+    consume_next_attack_advantage, consume_next_attack_disadvantage,
+    next_attack_advantage_sources, next_attack_disadvantage_sources,
+)
 from app.combat.barbarian import end_rage_if_incapacitated, extend_rage_from_attack
 from app.combat.bloodied import bloodied_fury_advantage
 from app.combat.condition_rules import close_hit_is_automatic_critical
@@ -59,7 +62,7 @@ def resolve_attack(
             weapon, distance_ft,
             advantage_sources=(advantage_sources + condition_advantage + bloodied_fury_advantage(attacker, attack)
                                + attacks_against_advantage_sources(defender) + attacks_against_reckless_advantage(defender)
-                               + reckless_attack_advantage(attacker, attack)
+                               + reckless_attack_advantage(attacker, attack) + next_attack_advantage_sources(attacker)
                                + conditional_attack_advantage_sources(attack, defender)
                                + next_attack_against_advantage_sources(attacker, defender_event_id)),
             other_disadvantage_sources=(other_disadvantage_sources + condition_disadvantage + sap_disadvantage(attacker)
@@ -70,7 +73,7 @@ def resolve_attack(
         base_roll = roll_d20(dice, attack.attack_bonus, mode)
         base_roll, heroic_reroll = reroll_failed_attack_with_heroic_inspiration(attacker, base_roll, effective_armor_class(defender), dice)
         attack_roll = apply_d20_bonus_dice(attacker, ModifierKind.ATTACK_ROLL_BONUS_DIE, base_roll, dice)
-        consume_next_attack_against_advantage(attacker, defender_event_id); consume_next_attack_disadvantage(attacker); consume_sap(attacker)
+        consume_next_attack_against_advantage(attacker, defender_event_id); consume_next_attack_advantage(attacker); consume_next_attack_disadvantage(attacker); consume_sap(attacker)
         consume_attacks_against_advantage(defender); extend_rage_from_attack(attacker, round_number)
         if spend_action: spend(attacker, "action")
         actual_defender, actual_event_id, redirect_used = defender, defender_event_id, False
