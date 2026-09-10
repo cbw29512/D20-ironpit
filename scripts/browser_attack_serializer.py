@@ -24,6 +24,10 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             "reach": weapon.reach_ft,
             "animation": weapon.animation,
         }
+        if attack.attack_ability is not None:
+            row["attackAbility"] = attack.attack_ability
+        if attack.attack_ability_modifier is not None:
+            row["attackAbilityModifier"] = attack.attack_ability_modifier
         if weapon.normal_range_ft is not None:
             row.update(normal=weapon.normal_range_ft, long=weapon.long_range_ft, projectile=weapon.projectile)
         if attack.resource_id is not None:
