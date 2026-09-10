@@ -17,7 +17,6 @@ class FigureProfile(TypedDict):
 def _p(form: FigureForm, detail: str) -> FigureProfile:
     return {"form": form, "detail": detail}
 
-
 MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Allosaurus": _p("theropod", "allosaurus"),
     "Animated Armor": _p("humanoid", "animated-armor"),
@@ -83,6 +82,7 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Guard": _p("humanoid", "guard"),
     "Guard Captain": _p("humanoid", "guard-captain"),
     "Hawk": _p("bird", "raptor"),
+    "Hell Hound": _p("quadruped", "canine"),
     "Hill Giant": _p("brute", "hill-giant"),
     "Hippogriff": _p("hippogriff", "hippogriff"),
     "Hippopotamus": _p("quadruped", "hippopotamus"),

@@ -21,6 +21,8 @@
     try {
       const ranges = [];
       for (const attack of member.state.template.attacks || []) {
+        // Expended attacks cannot prevent movement toward a usable fallback attack.
+        if (attack.resourceId && !RES().available(member.state, attack.resourceId, attack.resourceCost || 1)) continue;
         if (attack.forbidSelfGrappledTarget
           && target.state.grapple_sources.some((source) => source.source_id === member.combatant_id)) continue;
         if (attack.kind === "melee") ranges.push({ family: "melee", range: attack.reach || 5 });
