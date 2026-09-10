@@ -56,7 +56,6 @@ def resolve_combat_turn(
         events.extend(support_events)
         if is_incapacitated(attacker.state):
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-
         rage_event = enter_rage(sequence, round_number, attacker.state, attacker.combatant_id)
         if rage_event is not None:
             events.append(rage_event)
@@ -77,12 +76,10 @@ def resolve_combat_turn(
             if adrenaline_event is not None:
                 events.append(adrenaline_event)
                 sequence += 1
-
         spell_events, sequence = resolve_best_spell_offense(sequence, round_number, attacker, setup, turn_key, dice)
         events.extend(spell_events)
         if not is_available(attacker.state, "action"):
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-
         targets = target_order(attacker, setup)
         if not targets:
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
@@ -92,39 +89,33 @@ def resolve_combat_turn(
         events.extend(charge_events)
         if charged or attacker.state.is_dead or attacker.state.is_unconscious:
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-
         movement_events, sequence = move_to_enable_offense(
             sequence, round_number, attacker, setup, turn_key, dice,
         )
         events.extend(movement_events)
         if attacker.state.is_dead or attacker.state.is_unconscious or is_incapacitated(attacker.state):
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-
         spell_events, sequence = resolve_best_spell_offense(sequence, round_number, attacker, setup, turn_key, dice)
         events.extend(spell_events)
         if not is_available(attacker.state, "action"):
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-
         recharge_action_events, sequence, recharge_handled = resolve_priority_recharge_action(
             sequence, round_number, attacker, setup, dice, turn_key,
         )
         events.extend(recharge_action_events)
         if recharge_handled:
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-
         swallow_events, sequence, swallow_handled = resolve_priority_swallow_action(
             sequence, round_number, attacker, setup,
         )
         events.extend(swallow_events)
         if swallow_handled:
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-
         if attacker.state.template.attack_action is not None:
             action_events, sequence = resolve_attack_action(sequence, round_number, attacker, setup, dice)
             events.extend(action_events)
             if action_events or not is_available(attacker.state, "action"):
                 return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-
         chosen_save = save_choice(attacker, setup)
         if chosen_save is not None and is_available(attacker.state, "action"):
             save_target, save_action, distance = chosen_save
@@ -135,7 +126,6 @@ def resolve_combat_turn(
             ))
             sequence += 1
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-
         attack_choice = choose_standard_attack(attacker, setup)
         if attack_choice is not None and is_available(attacker.state, "action"):
             attack_target, attack, distance = attack_choice
