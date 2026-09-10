@@ -82,6 +82,14 @@ def _condition_timing_present(actions: str, control: Any) -> bool:
     return True
 
 
+def _max_hp_reduction_present(actions: str, rider: Any) -> bool:
+    damage = r"damage"
+    if rider.damage_type is not None:
+        damage = rf"{re.escape(rider.damage_type.value)}\s+damage"
+    pattern = rf"hit\s+point\s+maximum\s+decreases\s+by\s+an\s+amount\s+equal\s+to\s+the\s+{damage}\s+taken"
+    return bool(re.search(pattern, actions, re.IGNORECASE))
+
+
 def attack_issues(attack: WeaponAttack, actions: str, traits: str = "") -> list[str]:
     issues: list[str] = []
     weapon = attack.weapon
@@ -117,6 +125,8 @@ def attack_issues(attack: WeaponAttack, actions: str, traits: str = "") -> list[
     for conditional in attack.conditional_damage:
         if not _conditional_clause_pattern(conditional).search(actions):
             issues.append(f"conditional-damage-mismatch:{attack.id}:{conditional.trigger}")
+    if attack.max_hp_reduction_on_hit is not None and not _max_hp_reduction_present(actions, attack.max_hp_reduction_on_hit):
+        issues.append(f"max-hp-reduction-rider-mismatch:{attack.id}")
     issues.extend(hit_modifier_issues(attack, actions))
     issues.extend(conditional_attack_advantage_issues(attack, actions, traits))
     issues.extend(forced_movement_issues(attack, actions))
