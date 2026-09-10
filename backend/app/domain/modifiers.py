@@ -11,6 +11,7 @@ class ModifierKind(StrEnum):
     ARMOR_CLASS = "armor-class"
     ATTACK_ROLL_BONUS_DIE = "attack-roll-bonus-die"
     SAVING_THROW_BONUS_DIE = "saving-throw-bonus-die"
+    ABILITY_CHECK_BONUS_DIE = "ability-check-bonus-die"
     ATTACKS_AGAINST_ADVANTAGE = "attacks-against-advantage"
     NEXT_ATTACK_AGAINST_ADVANTAGE = "next-attack-against-advantage"
     BONUS_DAMAGE = "bonus-damage"
@@ -38,6 +39,7 @@ class CombatModifier(BaseModel):
         die_kind = self.kind in {
             ModifierKind.ATTACK_ROLL_BONUS_DIE,
             ModifierKind.SAVING_THROW_BONUS_DIE,
+            ModifierKind.ABILITY_CHECK_BONUS_DIE,
             ModifierKind.BONUS_DAMAGE,
         }
         if die_kind and (self.dice_count < 1 or self.dice_size < 2):
