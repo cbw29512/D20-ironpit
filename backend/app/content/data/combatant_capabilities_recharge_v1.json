@@ -129,5 +129,87 @@
     ],
     "visual": {"armor": "natural", "main_hand": "bite", "body_style": "canine"},
     "source": "SRD 5.2.1 Winter Wolf"
+  },
+  {
+    "schema_version": 1,
+    "id": "srd-dragon-turtle",
+    "name": "Dragon Turtle",
+    "archetype": "source-certified aquatic dragon",
+    "challenge_rating": "17",
+    "kind": "monster",
+    "size": "gargantuan",
+    "armor_class": 20,
+    "max_hp": 356,
+    "speed_ft": 20,
+    "movement_modes": {"walk_ft": 20, "fly_ft": 0, "climb_ft": 0, "swim_ft": 50, "burrow_ft": 0, "hover": false},
+    "initiative_bonus": 6,
+    "attacks": [
+      {
+        "id": "srd-dragon-turtle-bite",
+        "name": "Bite",
+        "weapon_id": "srd-dragon-turtle-bite-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 13,
+        "damage": {"count": 3, "size": 10, "bonus": 7},
+        "damage_type": "piercing",
+        "animation": "bite",
+        "reach_ft": 15,
+        "effects": [{"kind": "damage", "source": "Fire", "dice": {"count": 2, "size": 6, "bonus": 0}, "damage_type": "fire", "trigger": "on_hit", "mode": "add"}]
+      },
+      {
+        "id": "srd-dragon-turtle-tail",
+        "name": "Tail",
+        "weapon_id": "srd-dragon-turtle-tail-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 13,
+        "damage": {"count": 2, "size": 10, "bonus": 7},
+        "damage_type": "bludgeoning",
+        "animation": "tail",
+        "reach_ft": 15,
+        "effects": [{"kind": "prone", "max_target_size": "huge"}]
+      }
+    ],
+    "primary_attack_id": "srd-dragon-turtle-bite",
+    "unarmed_opportunity_attack": {"attack_bonus": 13, "damage": 8},
+    "attack_action": {
+      "id": "srd-dragon-turtle-multiattack",
+      "name": "Multiattack",
+      "is_attack_action": false,
+      "slots": [
+        {"attack_ids": ["srd-dragon-turtle-bite", "srd-dragon-turtle-tail"]},
+        {"attack_ids": ["srd-dragon-turtle-bite"]},
+        {"attack_ids": ["srd-dragon-turtle-bite"]}
+      ]
+    },
+    "save_actions": [
+      {
+        "id": "srd-dragon-turtle-steam-breath",
+        "name": "Steam Breath",
+        "save_ability": "constitution",
+        "dc": 19,
+        "range_ft": 0,
+        "area": {"shape": "cone", "origin": "self", "length_ft": 60},
+        "damage": {"count": 16, "size": 6, "bonus": 0},
+        "damage_type": "fire",
+        "success_damage": "half",
+        "resource_id": "srd-dragon-turtle-steam-breath",
+        "resource_cost": 1,
+        "animation": "steam-breath"
+      }
+    ],
+    "saving_throw_bonuses": {"strength": 7, "dexterity": 0, "constitution": 11, "intelligence": 0, "wisdom": 7, "charisma": 1},
+    "damage_resistances": ["fire"],
+    "source_trait_names": ["Amphibious"],
+    "source_limited_use_names": ["actions:Steam Breath (Recharge 5-6)"],
+    "resources": [
+      {
+        "id": "srd-dragon-turtle-steam-breath",
+        "name": "Steam Breath",
+        "max_uses": 1,
+        "recharge": {"trigger": "start_of_turn", "die_size": 6, "minimum_roll": 5}
+      }
+    ],
+    "visual": {"armor": "natural", "main_hand": "bite", "off_hand": "tail", "body_style": "aquatic-reptile"},
+    "source": "SRD 5.2.1 Dragon Turtle"
   }
 ]
