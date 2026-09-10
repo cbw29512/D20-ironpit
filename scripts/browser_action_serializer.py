@@ -55,6 +55,15 @@ def failure_effect_row(effect: Any) -> dict[str, Any]:
                 row["speedMultiplier"] = effect.speed_multiplier
             if effect.requires_condition:
                 row["requiresCondition"] = effect.requires_condition
+        elif effect.kind == "timed-penalty":
+            row["d20DisadvantageAbility"] = effect.d20_disadvantage_ability
+            row["damagePenaltyDiceCount"] = effect.damage_penalty_dice_count
+            row["damagePenaltyDiceSize"] = effect.damage_penalty_dice_size
+            row["repeatSaveAbility"] = effect.repeat_save_ability
+            row["repeatSaveDc"] = effect.repeat_save_dc
+            row["repeatSaveTiming"] = effect.repeat_save_timing
+            if effect.automatic_success_after_rounds is not None:
+                row["automaticSuccessAfterRounds"] = effect.automatic_success_after_rounds
         elif effect.kind in {"attacks-against-advantage", "speed"}:
             row["flatBonus"] = effect.flat_bonus
             if effect.consume_on_attack_against:
@@ -81,6 +90,8 @@ def save_row(action: Any) -> dict[str, Any]:
             row["area"] = area_row(action.area)
         if action.failure_effects:
             row["failureEffects"] = [failure_effect_row(effect) for effect in action.failure_effects]
+        if action.forbid_target_affected_by_action:
+            row["forbidTargetAffectedByAction"] = True
         if action.resource_id is not None:
             row["resourceId"], row["resourceCost"] = action.resource_id, action.resource_cost
         if action.target_max_size:
