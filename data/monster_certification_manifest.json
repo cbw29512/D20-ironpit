@@ -1894,7 +1894,7 @@
       "monster_name": "Bronze Dragon Wyrmling",
       "srd_source_page": 269,
       "srd_source_reference": "SRD 5.2.1 p. 269",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-bronze-dragon-wyrmling",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -1924,8 +1924,8 @@
       "blockers": [
         "condition-or-control",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
+        "save-or-complex-action",
+        "save-push-rider-mismatch:srd-bronze-dragon-wyrmling-repulsion-breath"
       ]
     },
     {
