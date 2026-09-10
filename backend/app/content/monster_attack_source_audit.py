@@ -5,6 +5,7 @@ from typing import Any
 
 from app.content.monster_attack_advantage_source_audit import conditional_attack_advantage_issues
 from app.content.monster_attack_modifier_source_audit import hit_modifier_issues
+from app.content.monster_save_area_source_audit import area_save_issues
 from app.content.monster_save_failure_source_audit import failure_effect_issues
 from app.domain.models import WeaponAttack
 
@@ -146,5 +147,6 @@ def save_action_issues(action: Any, actions: str) -> list[str]:
     if action.grapple_escape_dc is not None:
         if "grappled" not in actions or f"escape dc {action.grapple_escape_dc}" not in actions:
             issues.append(f"save-grapple-rider-mismatch:{action.id}")
+    issues.extend(area_save_issues(action, actions))
     issues.extend(failure_effect_issues(action, actions))
     return issues
