@@ -2,7 +2,7 @@
   "use strict";
 
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
-  const POISONED = "poisoned";
+  const POISONED = "poisoned", TIMED_PENALTY = "timed-penalty";
 
   function apply(state, effectId, sourceId, options = {}) {
     if (I().immune(state, effectId)) return null;
@@ -37,9 +37,34 @@
       ends_on_damage: Boolean(options.endsOnDamage),
       ends_if_source_incapacitated: Boolean(options.endsIfSourceIncapacitated),
       ends_if_source_dead: Boolean(options.endsIfSourceDead),
+      d20_disadvantage_ability: options.d20DisadvantageAbility || null,
+      damage_penalty_dice_count: options.damagePenaltyDiceCount || 0,
+      damage_penalty_dice_size: options.damagePenaltyDiceSize || 6,
+      automatic_success_round: options.automaticSuccessRound || null,
     });
     if (options.trackActiveEffect !== false && !state.active_effect_ids.includes(effectId)) state.active_effect_ids.push(effectId);
     return effectId;
+  }
+
+  function applyPenalty(state, sourceId, sourceEffectId, round, effect) {
+    const autoAfter = effect.automaticSuccessAfterRounds;
+    return apply(state, TIMED_PENALTY, sourceId, {
+      sourceEffectId, appliedRound: round, trackActiveEffect: false,
+      repeatSaveAbility: effect.repeatSaveAbility, repeatSaveDc: effect.repeatSaveDc,
+      repeatSaveTiming: effect.repeatSaveTiming,
+      d20DisadvantageAbility: effect.d20DisadvantageAbility,
+      damagePenaltyDiceCount: effect.damagePenaltyDiceCount || 0,
+      damagePenaltyDiceSize: effect.damagePenaltyDiceSize || 6,
+      automaticSuccessRound: autoAfter == null ? null : round + autoAfter,
+    });
+  }
+
+  function d20Disadvantage(state, ability) {
+    return state.timed_effects.filter((effect) => effect.d20_disadvantage_ability === ability).length;
+  }
+
+  function affectedByAction(state, actionId) {
+    return state.timed_effects.some((effect) => effect.source_effect_id === actionId);
   }
 
   function removeEffect(state, effect) {
@@ -82,5 +107,7 @@
     return { events, sequence };
   }
 
-  window.IRON_PIT_BROWSER_TIMED = { apply, expireSourceStart, removeEffect, removeGroup };
+  window.IRON_PIT_BROWSER_TIMED = {
+    affectedByAction, apply, applyPenalty, d20Disadvantage, expireSourceStart, removeEffect, removeGroup,
+  };
 })();
