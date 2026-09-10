@@ -4,6 +4,7 @@ import logging
 
 from app.combat.action_economy import is_available, spend
 from app.combat.attack_description import build_attack_description
+from app.combat.attack_max_hp_reduction import resolve_attack_max_hp_reduction
 from app.combat.attack_roll_modifiers import (
     consume_next_attack_advantage, consume_next_attack_disadvantage,
     next_attack_advantage_sources, next_attack_disadvantage_sources,
@@ -93,7 +94,7 @@ def resolve_attack(
         hp_before = actual_defender.current_hp; temporary_hp_before = actual_defender.temporary_hp
         death_success_before = actual_defender.death_save_successes; death_failure_before = actual_defender.death_save_failures
         concentration_before = actual_defender.concentration.effect_id if actual_defender.concentration else None
-        damage_roll = None; damage_components = []; damage_outcome = None; applied_conditions: list[str] = []; topple = None
+        damage_roll = None; damage_components = []; damage_outcome = None; max_hp_before = max_hp_after = None; applied_conditions: list[str] = []; topple = None
         weapon_sap_applied = False; tactical_sap_applied = False; vex_applied = False; studied_applied = False
         if hit:
             active_turn_key = turn_key or f"{round_number}:{attacker_event_id}"
@@ -104,6 +105,7 @@ def resolve_attack(
             applied_total, damage_components = apply_damage_defenses(actual_defender, rolled_components); damage_roll.total = applied_total
             applied_types = {part.damage_type for part in damage_components if part.applied_total > 0}
             damage_outcome = apply_damage(actual_defender, applied_total, critical=critical, damage_types=applied_types, dice=dice, affected_states=affected_states)
+            max_hp_before, max_hp_after = resolve_attack_max_hp_reduction(attack, actual_defender, damage_components)
             applied_conditions = apply_hit_conditions(attack, actual_defender, attacker_event_id, round_number, affected_states)
             topple = resolve_topple_hit(attacker, actual_defender, attack, dice)
             if topple.applied and "prone" not in applied_conditions: applied_conditions.append("prone")
@@ -132,7 +134,7 @@ def resolve_attack(
             damage_roll=damage_roll, damage_components=damage_components, applied_condition_ids=applied_conditions,
             hit=hit, critical=critical, turn_terminated=natural_1_ends_turn,
             turn_termination_reason="iron-pit-natural-1-attack" if natural_1_ends_turn else None,
-            hp_before=hp_before, hp_after=actual_defender.current_hp,
+            hp_before=hp_before, hp_after=actual_defender.current_hp, max_hp_before=max_hp_before, max_hp_after=max_hp_after,
             temporary_hp_before=temporary_hp_before, temporary_hp_after=actual_defender.temporary_hp,
             death_save_successes_before=death_success_before, death_save_failures_before=death_failure_before,
             death_save_successes=actual_defender.death_save_successes, death_save_failures=actual_defender.death_save_failures,
