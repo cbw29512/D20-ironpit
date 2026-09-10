@@ -9,7 +9,6 @@ from app.combat.rolls import roll_d20
 from app.combat.tactical_mind import apply_tactical_mind
 from app.domain.models import BattleEvent, CombatantState, EncounterSetup, GrappleSource, RollMode
 
-FRIGHTENED_EFFECT_ID = "frightened"
 GRAPPLED_EFFECT_ID = "grappled"
 POISONED_EFFECT_ID = "poisoned"
 RESTRAINED_EFFECT_ID = "restrained"
@@ -78,33 +77,34 @@ def should_escape_grapple(state: CombatantState) -> bool:
     return is_available(state, "action") and any(source.restrains for source in state.grapple_sources)
 
 
-def _check_mode(state: CombatantState, strength_check: bool) -> RollMode:
+def _check_mode(state: CombatantState, strength_check: bool, other_disadvantage_sources: int = 0) -> RollMode:
     advantage = strength_check and (
         rage_active(state) or state.template.progression_features.athletics_advantage
     )
-    disadvantage = has_condition(state, POISONED_EFFECT_ID) or has_condition(state, FRIGHTENED_EFFECT_ID)
+    disadvantage = has_condition(state, POISONED_EFFECT_ID) or other_disadvantage_sources > 0
     if advantage == disadvantage:
         return RollMode.NORMAL
     return RollMode.ADVANTAGE if advantage else RollMode.DISADVANTAGE
 
 
-def _escape_choice(state: CombatantState) -> tuple[str, int, RollMode]:
+def _escape_choice(state: CombatantState, other_disadvantage_sources: int = 0) -> tuple[str, int, RollMode]:
     athletics = state.template.skill_bonuses.get("athletics")
     acrobatics = state.template.skill_bonuses.get("acrobatics")
     if athletics is None and acrobatics is None:
         raise ValueError(f"{state.template.name} lacks certified Athletics/Acrobatics bonuses.")
     if athletics is not None and (acrobatics is None or athletics >= acrobatics):
-        return "strength (athletics)", athletics, _check_mode(state, True)
-    return "dexterity (acrobatics)", int(acrobatics), _check_mode(state, False)
+        return "strength (athletics)", athletics, _check_mode(state, True, other_disadvantage_sources)
+    return "dexterity (acrobatics)", int(acrobatics), _check_mode(state, False, other_disadvantage_sources)
 
 
 def resolve_escape_grapple(
     sequence: int, round_number: int, actor_id: str, state: CombatantState, dice: DiceProvider,
+    *, other_disadvantage_sources: int = 0,
 ) -> BattleEvent:
     if not is_available(state, "action"):
         raise ValueError("Action is not available to escape a grapple.")
     source = next((item for item in state.grapple_sources if item.restrains), state.grapple_sources[0])
-    check_name, bonus, mode = _escape_choice(state)
+    check_name, bonus, mode = _escape_choice(state, other_disadvantage_sources)
     check = roll_d20(dice, bonus, mode)
     success = check.total >= source.escape_dc
     tactical_used = False
