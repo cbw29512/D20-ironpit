@@ -9,7 +9,7 @@ global.window = globalThis;
 
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
-  "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js",
+  "browser-heroes.js", "browser-monsters-generated.js",
   "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-resources.js", "browser-recharge.js", "browser-grapple.js", "browser-timed-conditions.js",
   "browser-weapon-mastery.js", "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js",
@@ -181,5 +181,5 @@ function fight(heroIds, monsterIds, dice = deterministicDice()) {
   assert.throws(() => fight(Array(7).fill("karnok-stoneward-l1"), ["srd-wolf"]), /1-6 cards per side/);
 }
 
-console.log("Browser combat regressions passed.");
+console.log("Browser combat regressions passed against canonical generated monsters.");
 require("./browser-initiative-natural-one.test.cjs");
