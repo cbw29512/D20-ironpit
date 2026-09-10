@@ -37,6 +37,10 @@ class TimedEffect(BaseModel):
     action_or_bonus_only: bool = False
     reactions_disabled: bool = False
     speed_multiplier: float = Field(default=1.0, gt=0, le=1.0)
+    d20_disadvantage_ability: AbilityName | None = None
+    damage_penalty_dice_count: int = Field(default=0, ge=0, le=4)
+    damage_penalty_dice_size: int = Field(default=6, ge=2, le=20)
+    automatic_success_round: int | None = Field(default=None, ge=1)
     requires_active_effect_id: str | None = None
     ends_on_damage: bool = False
     ends_if_source_incapacitated: bool = False
@@ -51,6 +55,8 @@ class TimedEffect(BaseModel):
             raise ValueError("Repeat-save eligibility requires a complete repeat-save rule.")
         if self.expires_round is not None and self.applied_round is not None and self.expires_round <= self.applied_round:
             raise ValueError("Timed effect expiry round must follow its applied round.")
+        if self.automatic_success_round is not None and self.applied_round is not None and self.automatic_success_round <= self.applied_round:
+            raise ValueError("Automatic-success round must follow application.")
         if self.expiry_timing is not None:
             self.expires_at_start_of_source_turn = self.expiry_timing == "source_turn_start"
         return self
@@ -106,6 +112,5 @@ class CombatantState(BaseModel):
 
 class BattlefieldState(BaseModel):
     map_definition: BattleMapDefinition | None = None
-    # Migration-only scalar distance fields. Remove after all canonical paths consume grid positions.
     starting_distance_ft: int = Field(default=5, ge=0)
     distance_ft: int = Field(default=5, ge=0)
