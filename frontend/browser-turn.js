@@ -8,7 +8,7 @@
   const F = () => window.IRON_PIT_BROWSER_FORMATION, V = () => window.IRON_PIT_BROWSER_SAVES;
   const DG = () => window.IRON_PIT_BROWSER_DODGE, OM = () => window.IRON_PIT_BROWSER_OFFENSIVE_MOVEMENT;
   const RES = () => window.IRON_PIT_BROWSER_RESOURCES, RC = () => window.IRON_PIT_BROWSER_RECHARGE, RA = () => window.IRON_PIT_BROWSER_RECHARGE_ACTION;
-  const D = () => window.IRON_PIT_DICE;
+  const SW = () => window.IRON_PIT_BROWSER_SWALLOW, D = () => window.IRON_PIT_DICE;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
     available: (s, c) => c === "action" ? s.action_available : s.bonus_action_available,
   };
@@ -23,7 +23,6 @@
       rawAttackMode(attack, distance, advantage, disadvantage, false);
     rolls.fixedFormationActive = true;
   }
-
   function deathSave(sequence, round, member) {
     const state = member.state, natural = D().roll(20);
     const successesBefore = state.death_save_successes, failuresBefore = state.death_save_failures;
@@ -52,14 +51,14 @@
       description: `${state.template.name} makes a Death Save: ${result}.`,
     };
   }
-
   function finalize(events, sequence, round, member, setup, turnKey, allowSurge = true) {
     const surge = allowSurge ? J()?.resolveAttack(sequence, round, member, setup, turnKey) : null;
     if (surge) { events.push(...surge.events); sequence = surge.sequence; }
+    const swallowed = SW()?.turnEnd(sequence, round, member, setup);
+    if (swallowed) { events.push(...swallowed.events); sequence = swallowed.sequence; }
     const rage = G()?.finalize(sequence, round, member); if (rage?.event) events.push(rage.event);
     return { events, sequence: rage?.sequence ?? sequence };
   }
-
   function saveChoice(member, setup) {
     for (const target of F().targetOrder(member, setup)) {
       for (const action of member.state.template.saving_throw_actions || []) {
@@ -70,7 +69,6 @@
     }
     return null;
   }
-
   function resolveTurn(sequence, round, member, setup) {
     enablePitRangePolicy();
     const events = []; H().cleanup(setup); S().beginTurn(member.state);
@@ -97,7 +95,6 @@
     const spell = L()?.resolve(sequence, round, member, setup, turnKey);
     if (spell) { events.push(...spell.events); sequence = spell.sequence; }
     if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
-
     const targets = F().targetOrder(member, setup);
     if (!targets.length) return finalize(events, sequence, round, member, setup, turnKey);
     const charged = C()?.resolveClosing(sequence, round, member, targets[0], setup);
@@ -105,19 +102,21 @@
       events.push(...charged.events);
       return finalize(events, charged.sequence, round, member, setup, turnKey);
     }
-
     const movement = OM()?.move(sequence, round, member, setup, turnKey);
     if (movement) { events.push(...movement.events); sequence = movement.sequence; }
     if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
-
     const movedSpell = L()?.resolve(sequence, round, member, setup, turnKey);
     if (movedSpell) { events.push(...movedSpell.events); sequence = movedSpell.sequence; }
     if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
-
     const rechargeAction = RA()?.resolve(sequence, round, member, setup, turnKey);
     if (rechargeAction?.handled) {
       events.push(...rechargeAction.events);
       return finalize(events, rechargeAction.sequence, round, member, setup, turnKey);
+    }
+    const swallow = SW()?.resolve(sequence, round, member, setup);
+    if (swallow?.handled) {
+      events.push(...swallow.events);
+      return finalize(events, swallow.sequence, round, member, setup, turnKey);
     }
     if (member.state.template.attack_action) {
       const multi = M().resolveAttackAction(sequence, round, member, setup);
@@ -143,6 +142,5 @@
     }
     return finalize(events, sequence, round, member, setup, turnKey);
   }
-
   window.IRON_PIT_BROWSER_TURN = { deathSave, resolveTurn };
 })();
