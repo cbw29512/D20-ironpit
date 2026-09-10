@@ -13,6 +13,7 @@ from app.content.monster_limited_use_source_audit import limited_use_issues
 from app.content.monster_reaction_source_audit import reaction_issues
 from app.content.monster_saving_throws import parse_saving_throw_bonuses
 from app.content.monster_spellcasting_source_audit import spellcasting_issues
+from app.content.monster_swallow_source_audit import swallow_action_issues
 from app.content.monster_trait_source_audit import trait_issues
 from app.content.movement_modes import movement_mode_issues, standard_arena_closing_speed
 from app.domain.models import CombatantTemplate, WeaponAttackKind
@@ -102,6 +103,8 @@ def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) ->
             issues.extend(save_action_issues(action, actions))
         for action in template.forced_movement_actions:
             issues.extend(forced_movement_action_issues(action, actions))
+        for action in template.swallow_actions:
+            issues.extend(swallow_action_issues(action, actions))
         if template.attack_action is not None and "multiattack" not in actions:
             issues.append("multiattack-source-missing")
         return issues
