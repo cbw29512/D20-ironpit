@@ -16,6 +16,7 @@ _GENERATED_PATH = _DATA_DIR / "combatant_capabilities_v1.json"
 _NATIVE_PATH = _DATA_DIR / "combatant_capabilities_native_v1.json"
 _INCREMENTAL_PATH = _DATA_DIR / "combatant_capabilities_incremental_v1.json"
 _RECHARGE_PATH = _DATA_DIR / "combatant_capabilities_recharge_v1.json"
+_RECHARGE_BATCH3_PATH = _DATA_DIR / "combatant_capabilities_recharge_batch3_v1.json"
 
 
 def parse_capability_definitions(rows: object) -> dict[str, CombatantDefinition]:
@@ -61,6 +62,7 @@ def load_capability_definitions() -> dict[str, CombatantDefinition]:
             _load_registry(_NATIVE_PATH),
             _load_registry(_INCREMENTAL_PATH),
             _load_registry(_RECHARGE_PATH),
+            _load_registry(_RECHARGE_BATCH3_PATH),
         ]
         merged: dict[str, CombatantDefinition] = {}
         for registry in registries:
