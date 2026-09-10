@@ -19,7 +19,7 @@ def apply_attack_push(
     """Apply a declarative straight-away push and return feet moved."""
     try:
         distance = attack.push_target_away_ft
-        if not hit or distance <= 0:
+        if not hit or distance <= 0 or not target.state.is_alive or target.state.is_dead:
             return 0
         maximum = attack.push_target_max_size
         if maximum is not None and not size_at_most(target.state.template.size, maximum):
