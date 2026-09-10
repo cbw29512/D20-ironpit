@@ -12,6 +12,7 @@ const saveRolls = [1, 20];
 let damageRollCalls = 0;
 window.IRON_PIT_BROWSER_ROLLS = {
   modeFromSources: () => "normal",
+  bloodiedSaveAdvantage: () => 0,
   d20: (bonus) => {
     const natural = saveRolls.shift();
     return { natural, total: natural + bonus, mode: "normal", rolls: [natural], modifier: bonus };
