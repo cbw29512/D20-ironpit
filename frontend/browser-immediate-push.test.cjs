@@ -31,9 +31,9 @@ function fight(firstRoll) {
       { attackIds: ["bandit-light-crossbow"], saveActionIds: [] },
     ],
   };
-  const attacker = { combatant_id: "monster-1:bandit", side: "monsters", position_ft: 5, state: S.buildState(template) };
+  const attacker = { combatant_id: "monster-1:bandit", side: "monsters", position_ft: 20, state: S.buildState(template) };
   const target = {
-    combatant_id: "hero-1:karnok", side: "heroes", position_ft: 0,
+    combatant_id: "hero-1:karnok", side: "heroes", position_ft: 15,
     state: S.buildState(structuredClone(window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"])),
   };
   S.beginTurn(attacker.state);
@@ -44,7 +44,7 @@ function fight(firstRoll) {
 {
   const result = fight(15);
   assert.equal(result.attacks[0].hit, true);
-  assert.equal(result.target.position_ft, 15);
+  assert.equal(result.target.position_ft, 5);
   assert.equal(result.attacks[0].distance_before_ft, 5);
   assert.equal(result.attacks[0].distance_after_ft, 15);
   assert.equal(result.attacks[1].attack_roll.mode, "normal");
@@ -53,7 +53,7 @@ function fight(firstRoll) {
 {
   const result = fight(1);
   assert.equal(result.attacks[0].hit, false);
-  assert.equal(result.target.position_ft, 0);
+  assert.equal(result.target.position_ft, 15);
   assert.equal(result.attacks[1].attack_roll.mode, "disadvantage");
 }
 
