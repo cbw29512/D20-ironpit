@@ -32,7 +32,12 @@ function member(id, side, position, size) {
     combatant_id: id,
     side,
     position_ft: position,
-    state: { template: { name: id, size, kind: "monster" }, turn_terminated: false },
+    state: {
+      template: { name: id, size, kind: "monster" },
+      is_alive: true,
+      is_dead: false,
+      turn_terminated: false,
+    },
   };
 }
 
