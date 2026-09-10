@@ -37,7 +37,7 @@
       ends_if_source_incapacitated: Boolean(options.endsIfSourceIncapacitated),
       ends_if_source_dead: Boolean(options.endsIfSourceDead),
     });
-    if (!state.active_effect_ids.includes(effectId)) state.active_effect_ids.push(effectId);
+    if (options.trackActiveEffect !== false && !state.active_effect_ids.includes(effectId)) state.active_effect_ids.push(effectId);
     return effectId;
   }
 
