@@ -17,10 +17,11 @@ def test_every_compiled_monster_unarmed_opportunity_profile_matches_source() -> 
             mismatches.append(f"{monster.id}:missing-source-row")
             continue
         expected = monster_unarmed_profile(row)
-        if monster.unarmed_opportunity_attack != expected:
+        actual = monster.unarmed_opportunity_attack
+        if actual != expected:
+            actual_dump = actual.model_dump() if actual is not None else None
             mismatches.append(
-                f"{monster.id}:actual={monster.unarmed_opportunity_attack.model_dump()}:"
-                f"expected={expected.model_dump()}"
+                f"{monster.id}:actual={actual_dump}:expected={expected.model_dump()}"
             )
 
     assert mismatches == [], "\n".join(mismatches)
