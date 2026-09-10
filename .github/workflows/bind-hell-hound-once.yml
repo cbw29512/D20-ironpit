@@ -1,0 +1,181 @@
+name: Bind Hell Hound Once
+
+on:
+  push:
+    branches:
+      - feat/monster-recharge-v1
+
+permissions:
+  contents: write
+
+concurrency:
+  group: bind-hell-hound-once
+  cancel-in-progress: true
+
+jobs:
+  bind:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/monster-recharge-v1
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Bind Hell Hound declaratively
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path('backend/app/content/data/combatant_capabilities_native_v1.json')
+          rows = json.loads(path.read_text())
+          assert not any(row['id'] == 'srd-hell-hound' for row in rows)
+          rows.append({
+            'schema_version': 1,
+            'id': 'srd-hell-hound',
+            'name': 'Hell Hound',
+            'archetype': 'source-certified fiend',
+            'challenge_rating': '3',
+            'kind': 'monster',
+            'size': 'medium',
+            'ability_scores': {'strength': 17, 'dexterity': 12, 'constitution': 14, 'intelligence': 6, 'wisdom': 13, 'charisma': 6},
+            'armor_class': 15,
+            'max_hp': 58,
+            'speed_ft': 50,
+            'movement_modes': {'walk_ft': 50, 'fly_ft': 0, 'climb_ft': 0, 'swim_ft': 0, 'burrow_ft': 0, 'hover': False},
+            'initiative_bonus': 1,
+            'attacks': [{
+              'id': 'hell-hound-bite', 'name': 'Bite', 'weapon_id': 'hell-hound-bite',
+              'attack_kind': 'melee', 'attack_bonus': 5,
+              'damage': {'count': 1, 'size': 8, 'bonus': 3}, 'damage_type': 'piercing',
+              'animation': 'bite', 'reach_ft': 5,
+              'effects': [{
+                'kind': 'damage', 'source': 'Fire', 'dice': {'count': 1, 'size': 6, 'bonus': 0},
+                'damage_type': 'fire', 'trigger': 'on_hit', 'mode': 'add'
+              }]
+            }],
+            'primary_attack_id': 'hell-hound-bite',
+            'unarmed_opportunity_attack': {'attack_bonus': 5, 'damage': 4},
+            'attack_action': {
+              'id': 'hell-hound-multiattack', 'name': 'Multiattack', 'is_attack_action': False,
+              'slots': [
+                {'attack_ids': ['hell-hound-bite'], 'save_action_ids': []},
+                {'attack_ids': ['hell-hound-bite'], 'save_action_ids': []}
+              ]
+            },
+            'save_actions': [{
+              'id': 'hell-hound-fire-breath', 'name': 'Fire Breath', 'save_ability': 'dexterity',
+              'dc': 12, 'range_ft': 0,
+              'area': {'shape': 'cone', 'origin': 'self', 'length_ft': 15},
+              'damage': {'count': 5, 'size': 6, 'bonus': 0}, 'damage_type': 'fire',
+              'success_damage': 'half', 'resource_id': 'hell-hound-fire-breath-recharge',
+              'resource_cost': 1, 'animation': 'fire'
+            }],
+            'saving_throw_bonuses': {'strength': 3, 'dexterity': 1, 'constitution': 2, 'intelligence': -2, 'wisdom': 1, 'charisma': -2},
+            'skill_bonuses': {'perception': 5},
+            'combat_traits': ['pack-tactics'],
+            'source_trait_names': ['Pack Tactics'],
+            'source_reaction_names': [],
+            'source_bonus_action_names': [],
+            'source_limited_use_names': ['actions:Fire Breath (Recharge 5-6)'],
+            'source_legendary_action_names': [],
+            'damage_immunities': ['fire'],
+            'resources': [{
+              'id': 'hell-hound-fire-breath-recharge', 'name': 'Fire Breath', 'max_uses': 1,
+              'recharge': {'trigger': 'start_of_turn', 'die_size': 6, 'minimum_roll': 5}
+            }],
+            'visual': {'armor': 'none', 'main_hand': 'Bite', 'off_hand': 'Fire Breath', 'body_style': 'beast'},
+            'source': 'SRD 5.2.1 p. 297'
+          })
+          path.write_text(json.dumps(rows, indent=2) + '\n')
+          PY
+      - name: Add actual-monster Recharge regression
+        run: |
+          cat > backend/tests/test_hell_hound_recharge_combat.py <<'PYTEST'
+          from app.combat.dice import FixedDiceProvider
+          from app.combat.encounter_combat_turn import resolve_combat_turn
+          from app.combat.encounter_setup import build_encounter_setup
+          from app.combat.resources import resource_state
+          from app.content.capability_registry import build_combatant_from_capabilities
+          from app.content.monster_catalog import load_monster_rows
+          from app.content.monster_source_audit import audit_monster_source
+          from app.domain.grid import GridPosition
+          from app.domain.models import EncounterSelection
+
+
+          def _fixture():
+              setup = build_encounter_setup(EncounterSelection(
+                  hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-hell-hound"],
+              ))
+              hero, hound = setup.heroes[0], setup.monsters[0]
+              hero.state.position = GridPosition(x=0, y=6)
+              hound.state.position = GridPosition(x=1, y=6)
+              hero.state.initiative_total = 10
+              hound.state.initiative_total = 20
+              return setup, hero, hound
+
+
+          def test_hell_hound_binding_matches_srd_and_area_semantics() -> None:
+              hound = build_combatant_from_capabilities("srd-hell-hound")
+              row = next(row for row in load_monster_rows() if row["name"] == "Hell Hound")
+              assert audit_monster_source(hound, row) == []
+              assert hound.attack_action is not None
+              assert [slot.attack_ids for slot in hound.attack_action.slots] == [
+                  ["hell-hound-bite"], ["hell-hound-bite"],
+              ]
+              breath = hound.saving_throw_actions[0]
+              assert (breath.save_ability, breath.dc, breath.success_damage) == ("dexterity", 12, "half")
+              assert breath.area is not None
+              assert (breath.area.shape, breath.area.origin, breath.area.length_ft) == ("cone", "self", 15)
+              assert (breath.damage_dice_count, breath.damage_dice_size, breath.damage_type) == (5, 6, "fire")
+              assert breath.resource_id == "hell-hound-fire-breath-recharge"
+
+
+          def test_hell_hound_uses_breath_then_failed_recharge_falls_back_to_two_bites() -> None:
+              setup, hero, hound = _fixture()
+              resource = resource_state(hound.state, "hell-hound-fire-breath-recharge")
+              assert resource.current_uses == 1
+
+              first_turn, sequence = resolve_combat_turn(
+                  1, 1, hound, hero, setup, FixedDiceProvider([20, 1, 1, 1, 1, 1]),
+              )
+              saves = [event for event in first_turn if event.event_type == "saving_throw"]
+              assert len(saves) == 1
+              assert saves[0].feature_id == "hell-hound-fire-breath"
+              assert saves[0].save_succeeded is True
+              assert resource.current_uses == 0
+
+              second_turn, _ = resolve_combat_turn(
+                  sequence, 2, hound, hero, setup,
+                  FixedDiceProvider([4, 20, 1, 1, 20, 1, 1]),
+              )
+              recharge = [event for event in second_turn if event.resource_roll is not None]
+              assert len(recharge) == 1
+              assert recharge[0].resource_roll.selected_roll == 4
+              assert resource.current_uses == 0
+              attacks = [event for event in second_turn if event.event_type == "attack"]
+              assert [event.weapon_id for event in attacks] == ["hell-hound-bite", "hell-hound-bite"]
+          PYTEST
+      - name: Install rules reference
+        working-directory: backend
+        run: pip install -e '.[dev]'
+      - name: Prove actual Hell Hound binding
+        working-directory: backend
+        run: pytest -q tests/test_hell_hound_recharge_combat.py tests/test_recharge_area_engine.py
+      - name: Regenerate canonical artifacts
+        run: |
+          rm -rf backend/iron_pit_backend.egg-info
+          python scripts/verify_certification_manifests.py --write
+          python scripts/check_source_limits.py
+      - name: Commit certified Hell Hound and remove helper
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          rm .github/workflows/bind-hell-hound-once.yml
+          git add -A
+          git diff --cached --check
+          git commit -m "feat: certify Hell Hound Recharge cone breath"
+          git push origin HEAD:feat/monster-recharge-v1
