@@ -32,6 +32,7 @@
       turn_behavior: options.turnBehavior || "normal",
       action_or_bonus_only: Boolean(options.actionOrBonusOnly),
       reactions_disabled: Boolean(options.reactionsDisabled),
+      speed_multiplier: options.speedMultiplier == null ? 1 : options.speedMultiplier,
       requires_active_effect_id: options.requiresActiveEffectId || null,
       ends_on_damage: Boolean(options.endsOnDamage),
       ends_if_source_incapacitated: Boolean(options.endsIfSourceIncapacitated),
