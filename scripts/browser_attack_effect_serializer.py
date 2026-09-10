@@ -3,8 +3,6 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from app.combat.charge import charge_profile_for_attack_id
-
 logger = logging.getLogger(__name__)
 
 
@@ -66,21 +64,20 @@ def hit_modifier_row(effect: Any) -> dict[str, Any]:
         raise
 
 
-def charge_row(attack_id: str) -> dict[str, Any] | None:
+def charge_row(profile: Any) -> dict[str, Any] | None:
     try:
-        profile = charge_profile_for_attack_id(attack_id)
         if profile is None:
             return None
         row: dict[str, Any] = {"minimumMove": profile.minimum_move_ft}
         if profile.prone_max_target_size is not None:
-            row["proneMaxSize"] = profile.prone_max_target_size.value
+            row["proneMaxSize"] = value(profile.prone_max_target_size)
         if profile.max_target_size is not None and profile.max_target_size != profile.prone_max_target_size:
-            row["targetMaxSize"] = profile.max_target_size.value
+            row["targetMaxSize"] = value(profile.max_target_size)
         if profile.bonus_damage is not None:
             row.update(
                 diceCount=profile.bonus_damage.dice_count,
                 diceSize=profile.bonus_damage.dice_size,
-                damageType=profile.bonus_damage.damage_type.value,
+                damageType=value(profile.bonus_damage.damage_type),
             )
         if profile.replacement_damage is not None:
             replacement = profile.replacement_damage
@@ -88,11 +85,11 @@ def charge_row(attack_id: str) -> dict[str, Any] | None:
                 "diceCount": replacement.dice_count,
                 "diceSize": replacement.dice_size,
                 "damageBonus": replacement.damage_bonus,
-                "damageType": replacement.damage_type.value,
+                "damageType": value(replacement.damage_type),
             }
         if profile.follow_up_attack_id:
             row["followUpAttackId"] = profile.follow_up_attack_id
         return row
     except Exception:
-        logger.exception("Failed to serialize browser charge profile for %s.", attack_id)
+        logger.exception("Failed to serialize browser charge profile.")
         raise
