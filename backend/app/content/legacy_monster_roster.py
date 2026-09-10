@@ -62,7 +62,7 @@ def build_legacy_monster_templates() -> list[CombatantTemplate]:
     monsters = complete_monster_reaction_fingerprints(monsters)
     monsters = complete_monster_bonus_action_fingerprints(monsters)
     monsters = complete_monster_limited_use_fingerprints(monsters)
-    monsters = complete_monster_legendary_source_audit.complete_monster_legendary_fingerprints(monsters)
+    monsters = complete_monster_legendary_fingerprints(monsters)
     monsters = complete_monster_spellcasting_fingerprints(monsters)
     monsters = complete_monster_saving_throws(monsters)
     return complete_unarmed_opportunity_profiles(monsters)
