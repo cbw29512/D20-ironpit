@@ -49,3 +49,16 @@ def test_attack_push_does_nothing_on_miss() -> None:
 
     assert moved == 0
     assert target.position_ft == 5
+
+
+def test_attack_push_does_not_move_dead_target() -> None:
+    attacker = _member("attacker", "heroes", 0, build_demo_fighter())
+    target = _member("target", "monsters", 5, build_goblin_warrior())
+    target.state.current_hp = 0
+    target.state.is_alive = False
+    target.state.is_dead = True
+
+    moved = apply_attack_push(attacker, target, _push_attack(CreatureSize.LARGE), hit=True)
+
+    assert moved == 0
+    assert target.position_ft == 5
