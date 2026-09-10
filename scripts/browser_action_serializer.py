@@ -47,6 +47,10 @@ def failure_effect_row(effect: Any) -> dict[str, Any]:
                 row["repeatSaveDelayRounds"] = effect.repeat_save_delay_rounds
             if effect.allowed_removal_action_ids:
                 row["allowedRemovalActionIds"] = list(effect.allowed_removal_action_ids)
+        elif effect.kind == "turn-restriction":
+            row["actionOrBonusOnly"] = effect.action_or_bonus_only
+            row["reactionsDisabled"] = effect.reactions_disabled
+            row["expiryTiming"] = effect.expiry_timing
         elif effect.kind in {"attacks-against-advantage", "speed"}:
             row["flatBonus"] = effect.flat_bonus
             if effect.consume_on_attack_against:
