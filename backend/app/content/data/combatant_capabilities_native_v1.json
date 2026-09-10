@@ -808,5 +808,158 @@
       "body_style": "elemental"
     },
     "source": "SRD 5.2.1 p. 343"
+  },
+  {
+    "schema_version": 1,
+    "id": "srd-hell-hound",
+    "name": "Hell Hound",
+    "archetype": "source-certified fiend",
+    "challenge_rating": "3",
+    "kind": "monster",
+    "size": "medium",
+    "ability_scores": {
+      "strength": 17,
+      "dexterity": 12,
+      "constitution": 14,
+      "intelligence": 6,
+      "wisdom": 13,
+      "charisma": 6
+    },
+    "armor_class": 15,
+    "max_hp": 58,
+    "speed_ft": 50,
+    "movement_modes": {
+      "walk_ft": 50,
+      "fly_ft": 0,
+      "climb_ft": 0,
+      "swim_ft": 0,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": 1,
+    "attacks": [
+      {
+        "id": "hell-hound-bite",
+        "name": "Bite",
+        "weapon_id": "hell-hound-bite",
+        "attack_kind": "melee",
+        "attack_bonus": 5,
+        "damage": {
+          "count": 1,
+          "size": 8,
+          "bonus": 3
+        },
+        "damage_type": "piercing",
+        "animation": "bite",
+        "reach_ft": 5,
+        "effects": [
+          {
+            "kind": "damage",
+            "source": "Fire",
+            "dice": {
+              "count": 1,
+              "size": 6,
+              "bonus": 0
+            },
+            "damage_type": "fire",
+            "trigger": "on_hit",
+            "mode": "add"
+          }
+        ]
+      }
+    ],
+    "primary_attack_id": "hell-hound-bite",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 5,
+      "damage": 4
+    },
+    "attack_action": {
+      "id": "hell-hound-multiattack",
+      "name": "Multiattack",
+      "is_attack_action": false,
+      "slots": [
+        {
+          "attack_ids": [
+            "hell-hound-bite"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "hell-hound-bite"
+          ],
+          "save_action_ids": []
+        }
+      ]
+    },
+    "save_actions": [
+      {
+        "id": "hell-hound-fire-breath",
+        "name": "Fire Breath",
+        "save_ability": "dexterity",
+        "dc": 12,
+        "range_ft": 0,
+        "area": {
+          "shape": "cone",
+          "origin": "self",
+          "length_ft": 15
+        },
+        "damage": {
+          "count": 5,
+          "size": 6,
+          "bonus": 0
+        },
+        "damage_type": "fire",
+        "success_damage": "half",
+        "resource_id": "hell-hound-fire-breath-recharge",
+        "resource_cost": 1,
+        "animation": "fire"
+      }
+    ],
+    "saving_throw_bonuses": {
+      "strength": 3,
+      "dexterity": 1,
+      "constitution": 2,
+      "intelligence": -2,
+      "wisdom": 1,
+      "charisma": -2
+    },
+    "skill_bonuses": {
+      "perception": 5
+    },
+    "combat_traits": [
+      "pack-tactics"
+    ],
+    "source_trait_names": [
+      "Pack Tactics"
+    ],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [],
+    "source_limited_use_names": [
+      "actions:Fire Breath (Recharge 5-6)"
+    ],
+    "source_legendary_action_names": [],
+    "damage_immunities": [
+      "fire"
+    ],
+    "resources": [
+      {
+        "id": "hell-hound-fire-breath-recharge",
+        "name": "Fire Breath",
+        "max_uses": 1,
+        "recharge": {
+          "trigger": "start_of_turn",
+          "die_size": 6,
+          "minimum_roll": 5
+        }
+      }
+    ],
+    "visual": {
+      "armor": "none",
+      "main_hand": "Bite",
+      "off_hand": "Fire Breath",
+      "body_style": "beast"
+    },
+    "source": "SRD 5.2.1 p. 297"
   }
 ]
