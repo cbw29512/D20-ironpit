@@ -1,0 +1,32 @@
+name: Inspect save pilot candidates
+
+on:
+  push:
+    branches:
+      - feat/monster-recharge-v1
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/monster-recharge-v1
+      - name: Print candidate SRD rows
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          rows = json.loads(Path('backend/app/content/data/srd_5_2_1_monsters.json').read_text())
+          wanted = {'Dretch', 'Winter Wolf', 'Brass Dragon Wyrmling', 'Giant Spider'}
+          for row in rows:
+              if row.get('name') in wanted:
+                  print('===', row['name'], '===')
+                  for key in ('size','armorClass','hitPoints','speed','challenge','abilities','skills','saves','traits','actions','bonusActions','reactions','legendaryActions','rawText'):
+                      if key in row:
+                          print(f'{key}: {row[key]}')
+          PY
