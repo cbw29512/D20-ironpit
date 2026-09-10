@@ -17,19 +17,19 @@ def damage_penalty_specs(state: CombatantState) -> list[tuple[int, int]]:
 
 
 def apply_damage_roll_penalty(state: CombatantState, components: list, dice) -> list[int]:
-    """Subtract each active penalty once from the attack's complete damage roll."""
+    """Apply each active penalty to each actual damage roll before defenses."""
     penalty_rolls: list[int] = []
-    for count, size in damage_penalty_specs(state):
-        penalty_rolls.extend(dice.roll(size) for _ in range(count))
-    remaining = sum(penalty_rolls)
+    specs = damage_penalty_specs(state)
     for component in components:
-        if remaining <= 0:
-            break
-        reduction = min(component.total, remaining)
-        component.total -= reduction
-        component.modifier -= reduction
-        component.notation += f" - {reduction}"
-        remaining -= reduction
+        if not component.rolls or component.total <= 0:
+            continue
+        for count, size in specs:
+            rolls = [dice.roll(size) for _ in range(count)]
+            penalty_rolls.extend(rolls)
+            reduction = min(component.total, sum(rolls))
+            component.total -= reduction
+            component.modifier -= reduction
+            component.notation += f" - {reduction}"
     return penalty_rolls
 
 
