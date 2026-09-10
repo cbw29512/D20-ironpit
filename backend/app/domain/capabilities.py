@@ -13,6 +13,7 @@ from app.domain.capability_attacks import (
 )
 from app.domain.character_builds import AbilityScores
 from app.domain.combatants import ResourceDefinition, VisualLoadout
+from app.domain.forced_movement_actions import ForcedMovementAction
 from app.domain.movement import MovementModes
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.reactions import ParryReaction, RedirectAttackReaction
@@ -44,6 +45,7 @@ class CombatantDefinition(BaseModel):
     unarmed_opportunity_attack: UnarmedStrikeDamage | None = None
     attack_action: MultiattackCapabilityDefinition | None = None
     save_actions: list[SaveCapabilityDefinition] = Field(default_factory=list)
+    forced_movement_actions: list[ForcedMovementAction] = Field(default_factory=list)
     spell_save_actions: list[SpellSaveAction] = Field(default_factory=list)
     defensive_spell_actions: list[DefensiveSpellAction] = Field(default_factory=list)
     healing_actions: list[HealingAction] = Field(default_factory=list)
@@ -91,14 +93,17 @@ class CombatantDefinition(BaseModel):
     def validate_references(self) -> "CombatantDefinition":
         attack_ids = {attack.id for attack in self.attacks}
         save_ids = {action.id for action in self.save_actions}
+        movement_ids = {action.id for action in self.forced_movement_actions}
         if self.kind == "character" and self.ability_scores is None:
             raise ValueError("Character combatant definitions require ability scores.")
-        if len(attack_ids) != len(self.attacks) or len(save_ids) != len(self.save_actions):
+        if len(attack_ids) != len(self.attacks) or len(save_ids) != len(self.save_actions) or len(movement_ids) != len(self.forced_movement_actions):
             raise ValueError("Capability ids must be unique within their action family.")
         if self.primary_attack_id not in attack_ids:
             raise ValueError("primary_attack_id must reference a declared attack.")
         if self.attack_action:
             for slot in self.attack_action.slots:
-                if not set(slot.attack_ids) <= attack_ids or not set(slot.save_action_ids) <= save_ids:
+                valid = set(slot.attack_ids) <= attack_ids and set(slot.save_action_ids) <= save_ids
+                valid = valid and set(slot.forced_movement_action_ids) <= movement_ids
+                if not valid:
                     raise ValueError("Multiattack slot references an undeclared capability id.")
         return self
