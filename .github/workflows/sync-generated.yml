@@ -64,7 +64,6 @@ jobs:
           git push origin HEAD:${{ github.ref_name }}
           echo "changed=true" >> "$GITHUB_OUTPUT"
       - name: Certify generated exact head
-        if: steps.generated_sync.outputs.changed == 'true'
         run: |
           remote_head="$(git ls-remote origin "refs/heads/${{ github.ref_name }}" | awk '{print $1}')"
           local_head="$(git rev-parse HEAD)"
@@ -74,7 +73,7 @@ jobs:
           python scripts/check_combat_engine_coverage.py
           python scripts/export_roster_mechanic_checklist.py --check
           python scripts/export_runtime_monster_capabilities.py --check
-          python scripts/verify_certification_manifests.py --write
+          env -u GITHUB_EVENT_PATH GITHUB_SHA="$local_head" python scripts/verify_certification_manifests.py --write
           git diff --exit-code -- data/hero_certification_manifest.json data/monster_certification_manifest.json
           python scripts/prepare_static_site.py
           git diff --exit-code -- frontend/browser-heroes.js frontend/figure-profiles.js frontend/browser-monsters-generated.js frontend/browser-spell-effects.js frontend/data/srd_5_2_1_monsters.json
