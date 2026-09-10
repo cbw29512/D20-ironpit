@@ -4,7 +4,6 @@ import logging
 from typing import Any
 
 from app.domain.models import WeaponAttack
-from app.domain.traits import CombatTrait
 from browser_attack_effect_serializer import charge_row, control_row, hit_modifier_row
 
 logger = logging.getLogger(__name__)
@@ -87,10 +86,9 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
         control = control_row(attack.control_effect)
         if control:
             row["controlEffect"] = control
-        if CombatTrait.CHARGE.value in traits:
-            charge = charge_row(attack.id)
-            if charge:
-                row["charge"] = charge
+        charge = charge_row(attack.charge_profile)
+        if charge:
+            row["charge"] = charge
         return row
     except Exception:
         logger.exception("Failed to serialize attack %s for browser runtime.", attack.id)
