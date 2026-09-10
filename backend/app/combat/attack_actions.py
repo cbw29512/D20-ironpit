@@ -20,6 +20,24 @@ from app.domain.models import BattleEvent, WeaponAttack, WeaponAttackKind
 logger = logging.getLogger(__name__)
 
 
+def _apply_immediate_push(
+    attacker: EncounterCombatant,
+    target: EncounterCombatant,
+    attack: WeaponAttack,
+    event: BattleEvent,
+) -> None:
+    push_ft = attack.push_target_away_ft
+    if not event.hit or push_ft <= 0 or target.state.is_dead:
+        return
+    before = abs(target.position_ft - attacker.position_ft)
+    direction = 1 if target.position_ft >= attacker.position_ft else -1
+    target.position_ft = max(0, target.position_ft + direction * push_ft)
+    after = abs(target.position_ft - attacker.position_ft)
+    event.distance_before_ft = before
+    event.distance_after_ft = after
+    event.description += f" Target is pushed {push_ft} ft. away ({before} ft. to {after} ft.)."
+
+
 def resolve_attack_action(
     sequence: int, round_number: int, attacker: EncounterCombatant,
     setup: EncounterSetup, dice: DiceProvider,
@@ -76,6 +94,7 @@ def resolve_attack_action(
                     feature_id=feature_id, turn_key=turn_key, allow_reckless=True,
                     close_enemy_active=False,
                 )
+                _apply_immediate_push(attacker, target, attack, event)
                 events.append(event)
                 sequence += 1
                 if attacker.state.turn_terminated:
