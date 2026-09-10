@@ -12,10 +12,8 @@
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { applyD20Bonus: (_state, _kind, roll) => roll };
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION;
   const D = () => window.IRON_PIT_DICE;
-  const E = () => window.IRON_PIT_ACTION_ECONOMY || {
-    available: (state, cost) => cost === "action" && state.action_available,
-    spend: (state) => { state.action_available = false; },
-  };
+  const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (state, cost) => cost === "action" && state.action_available,
+    spend: (state) => { state.action_available = false; } };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { autoFailStrDex: (state) => state.is_unconscious };
   const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
 
@@ -58,8 +56,7 @@
     const distance = action.pushTargetAwayFt || 0;
     if (!distance || !target.state.is_alive || target.state.is_dead) return 0;
     if (action.pushTargetMaxSize && !S().sizeAtMost(target, action.pushTargetMaxSize)) return 0;
-    const direction = target.position_ft >= actor.position_ft ? 1 : -1;
-    const start = target.position_ft;
+    const start = target.position_ft, direction = start >= actor.position_ft ? 1 : -1;
     target.position_ft = Math.max(0, start + direction * distance);
     return Math.abs(target.position_ft - start);
   }
@@ -67,34 +64,27 @@
   function damageRolls(action, count, shared) {
     if (shared == null) return D().rollMany(count, action.damageDiceSize);
     if (!Array.isArray(shared) || shared.length !== count) throw new Error(`${action.name} shared damage roll count is invalid.`);
-    if (shared.some((roll) => !Number.isInteger(roll) || roll < 1 || roll > action.damageDiceSize)) {
-      throw new Error(`${action.name} shared damage rolls contain an invalid die result.`);
-    }
+    if (shared.some((roll) => !Number.isInteger(roll) || roll < 1 || roll > action.damageDiceSize)) throw new Error(`${action.name} shared damage rolls contain an invalid die result.`);
     return [...shared];
   }
 
   function resolveAction(sequence, round, actor, target, action, distance, options = {}) {
     try {
-      const spendAction = options.spendAction !== false;
-      const spendResourceCost = options.spendResourceCost !== false;
+      const spendAction = options.spendAction !== false, spendResourceCost = options.spendResourceCost !== false;
       const resourceBacked = Boolean(action.resourceId), resources = resourceBacked ? RES() : null;
       if (resourceBacked && spendResourceCost && !resources) throw new Error("Browser resource API is not loaded.");
       if (spendAction && !E().available(actor.state, "action")) throw new Error("Action is unavailable for saving throw action.");
       if (!legalAction(action, target, distance)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
-      if (resourceBacked && spendResourceCost && !resources.available(actor.state, action.resourceId, action.resourceCost || 1)) {
-        throw new Error(`${action.name} lacks its required resource.`);
-      }
+      if (resourceBacked && spendResourceCost && !resources.available(actor.state, action.resourceId, action.resourceCost || 1)) throw new Error(`${action.name} lacks its required resource.`);
       const save = resolveSavingThrow(target.state, action.saveAbility, action.dc);
       if (spendAction) E().spend(actor.state, "action");
-      const resourceRemaining = resourceBacked && spendResourceCost
-        ? resources.spend(actor.state, action.resourceId, action.resourceCost || 1) : null;
+      const resourceRemaining = resourceBacked && spendResourceCost ? resources.spend(actor.state, action.resourceId, action.resourceCost || 1) : null;
       const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
       const deathSuccessBefore = target.state.death_save_successes, deathFailureBefore = target.state.death_save_failures;
       const concentrationBefore = target.state.concentration?.effect_id || null;
-      const distanceBefore = Math.abs(target.position_ft - actor.position_ft);
+      const tracksPush = Boolean(action.pushTargetAwayFt), distanceBefore = tracksPush ? Math.abs(target.position_ft - actor.position_ft) : null;
       let damageRoll = null, damageComponents = [], damageOutcome = null;
-      const count = action.damageDiceCount || 0, capture = options.captureSharedDamageRolls;
-      const establishShared = Array.isArray(capture);
+      const count = action.damageDiceCount || 0, capture = options.captureSharedDamageRolls, establishShared = Array.isArray(capture);
       if (count && (!(save.succeeded && action.successDamage === "none") || establishShared)) {
         if (!action.damageType) throw new Error(`${action.name} has damage dice but no damage type.`);
         const rolls = damageRolls(action, count, options.sharedDamageRolls);
@@ -120,27 +110,23 @@
           appliedConditions.push(...F().apply(target, actor.combatant_id, action.id, action.failureEffects, { round, range: action.range }));
         }
         movementFt = pushAway(actor, target, action);
-        if (action.grappleEscapeDc) appliedConditions.push(...G().apply(
-          target.state, actor.combatant_id, action.grappleEscapeDc, action.range, Boolean(action.restrainsWhileGrappled),
-        ));
+        if (action.grappleEscapeDc) appliedConditions.push(...G().apply(target.state, actor.combatant_id, action.grappleEscapeDc, action.range, Boolean(action.restrainsWhileGrappled)));
         const affectedStates = states(options.setup);
         window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(target.state); C()?.endIfIncapacitated(target.state, affectedStates);
       }
       appliedConditions = [...new Set(appliedConditions)];
-      const distanceAfter = Math.abs(target.position_ft - actor.position_ft);
+      const distanceAfter = tracksPush ? Math.abs(target.position_ft - actor.position_ft) : null;
       let description = `${target.state.template.name} ${save.succeeded ? "SUCCEEDS" : "FAILS"} a DC ${action.dc} ${action.saveAbility} save against ${actor.state.template.name}'s ${action.name}.`;
       if (movementFt) description += ` ${target.state.template.name} is pushed ${movementFt} ft. straight away.`;
       if (damageOutcome === "undead_fortitude") description += ` ${target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP.`;
       for (const condition of appliedConditions) description += ` ${target.state.template.name} is ${condition === "grappled" ? "Grappled" : condition === "restrained" ? "Restrained while Grappled" : condition[0].toUpperCase() + condition.slice(1)}.`;
       return { sequence, round_number: round, event_type: "saving_throw", actor_id: actor.combatant_id, actor_name: actor.state.template.name,
-        target_id: target.combatant_id, target_name: target.state.template.name, saving_throw_roll: save.roll,
-        save_ability: action.saveAbility, save_dc: action.dc, save_succeeded: save.succeeded, damage_roll: damageRoll,
-        damage_components: damageComponents, applied_condition_ids: appliedConditions, hp_before: hpBefore, hp_after: target.state.current_hp,
-        temporary_hp_before: temporaryHpBefore, temporary_hp_after: target.state.temporary_hp,
-        death_save_successes_before: deathSuccessBefore, death_save_failures_before: deathFailureBefore,
-        death_save_successes: target.state.death_save_successes, death_save_failures: target.state.death_save_failures,
-        is_stable: target.state.is_stable, is_dead: target.state.is_dead, feature_id: action.id, resource_remaining: resourceRemaining,
-        movement_ft: movementFt, distance_before_ft: distanceBefore, distance_after_ft: distanceAfter,
+        target_id: target.combatant_id, target_name: target.state.template.name, saving_throw_roll: save.roll, save_ability: action.saveAbility, save_dc: action.dc,
+        save_succeeded: save.succeeded, damage_roll: damageRoll, damage_components: damageComponents, applied_condition_ids: appliedConditions,
+        hp_before: hpBefore, hp_after: target.state.current_hp, temporary_hp_before: temporaryHpBefore, temporary_hp_after: target.state.temporary_hp,
+        death_save_successes_before: deathSuccessBefore, death_save_failures_before: deathFailureBefore, death_save_successes: target.state.death_save_successes,
+        death_save_failures: target.state.death_save_failures, is_stable: target.state.is_stable, is_dead: target.state.is_dead, feature_id: action.id,
+        resource_remaining: resourceRemaining, movement_ft: movementFt, distance_before_ft: distanceBefore, distance_after_ft: distanceAfter,
         concentration_ended_effect_id: concentrationBefore && !target.state.concentration ? concentrationBefore : null,
         animation: action.animation || "save-effect", description };
     } catch (error) {
