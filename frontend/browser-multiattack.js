@@ -5,16 +5,22 @@
   const C = () => window.IRON_PIT_BROWSER_CHARGE;
   const D = () => window.IRON_PIT_DICE;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
+  const FM = () => window.IRON_PIT_BROWSER_FORCED_MOVEMENT_ACTION;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const R = () => window.IRON_PIT_BROWSER_LIGHT_ATTACK;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const RES = () => window.IRON_PIT_BROWSER_RESOURCES;
   const WM = () => window.IRON_PIT_BROWSER_WEAPON_MASTERY || { resolveCleave: (sequence) => ({ events: [], sequence }) };
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (s) => s.action_available, spend: (s) => { s.action_available = false; } };
-  const slotData = (slot) => Array.isArray(slot) ? { attackIds: slot, saveActionIds: [] }
-    : { attackIds: slot.attackIds || [], saveActionIds: slot.saveActionIds || [] };
+  const slotData = (slot) => Array.isArray(slot) ? { attackIds: slot, saveActionIds: [], forcedMovementActionIds: [] }
+    : { attackIds: slot.attackIds || [], saveActionIds: slot.saveActionIds || [], forcedMovementActionIds: slot.forcedMovementActionIds || [] };
   const sizeAllowed = (target, maximum) => !maximum || window.IRON_PIT_BROWSER_STATE.sizeAtMost(target, maximum);
 
+  function movementChoice(member, setup, data) {
+    const allowed = new Set(data.forcedMovementActionIds);
+    return (member.state.template.forced_movement_actions || []).find((action) =>
+      allowed.has(action.id) && FM()?.legalTargets(member, setup, action).length) || null;
+  }
   function saveEffectIsNew(member, target, action, effect) {
     if (effect.kind === "prone") return sizeAllowed(target, effect.maxTargetSize) && !target.state.active_effect_ids.includes("prone") && !I().immune(target.state, "prone");
     if (effect.kind === "grapple") return sizeAllowed(target, effect.maxTargetSize) && !(target.state.grapple_sources || []).some((source) => source.source_id === member.combatant_id);
@@ -63,7 +69,7 @@
   function slotHasLegalChoice(member, setup, slot) {
     try {
       const data = slotData(slot);
-      return Boolean(attackChoice(member, setup, data) || saveChoice(member, setup, data));
+      return Boolean(movementChoice(member, setup, data) || attackChoice(member, setup, data) || saveChoice(member, setup, data));
     } catch (error) {
       console.error("Failed to prove browser Attack/Multiattack slot legality", { member: member.combatant_id, error });
       throw error;
@@ -88,7 +94,12 @@
 
     for (let index = 0; index < slots.length; index += 1) {
       if (member.state.is_dead || member.state.is_unconscious || member.state.turn_terminated) break;
-      const data = slotData(slots[index]);
+      const data = slotData(slots[index]), movement = movementChoice(member, setup, data);
+      if (movement) {
+        const moved = FM().resolve(sequence, round, member, setup, movement);
+        events.push(...moved.events); sequence = moved.sequence;
+        continue;
+      }
       const splitThis = index > 0 && rangedSplit && !rangedSplitUsed && F().flexibleSlotHasBoth(member, data.attackIds);
       const choice = attackChoice(member, setup, data, splitThis), saved = saveChoice(member, setup, data);
       if (saved && (!choice || preferSaveReplacement(member, saved.target, saved.save))) {
