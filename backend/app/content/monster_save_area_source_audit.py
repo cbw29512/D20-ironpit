@@ -9,9 +9,9 @@ logger = logging.getLogger(__name__)
 
 def _header(action: Any) -> str:
     name = re.escape(str(action.name))
-    recharge = r"(?:\s+\(Recharge\s+\d(?:\s*[-–]\s*\d)?\))?"
+    limited = r"(?:\s+\((?:Recharge\s+\d(?:\s*[-–]\s*\d)?|\d+\s*/\s*Day)\))?"
     save = rf"{re.escape(str(action.save_ability))}\s+Saving Throw:\s*DC\s*{action.dc}\b"
-    return rf"\b{name}{recharge}\..{{0,300}}?{save}"
+    return rf"\b{name}{limited}\..{{0,300}}?{save}"
 
 
 def _targeting_pattern(action: Any) -> str | None:
@@ -42,9 +42,10 @@ def _point_range_present(action: Any, actions: str) -> bool:
     area = action.area
     if area is None or area.shape != "radius":
         return True
+    limited = r"(?:\s+\((?:Recharge\s+\d(?:\s*[-–]\s*\d)?|\d+\s*/\s*Day)\))?"
     prefix = _header(action)
     before_save = (
-        rf"\b{re.escape(str(action.name))}(?:\s+\(Recharge\s+\d(?:\s*[-–]\s*\d)?\))?\."
+        rf"\b{re.escape(str(action.name))}{limited}\."
         rf".{{0,250}}?\bpoint\b.{{0,100}}?\bwithin\s+{action.range_ft}\s+feet\b"
     )
     target_range = rf"centered on a point within {action.range_ft} feet\b"
