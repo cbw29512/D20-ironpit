@@ -17,6 +17,7 @@ from app.content.monster_swallow_source_audit import swallow_action_issues
 from app.content.monster_trait_source_audit import trait_issues
 from app.content.movement_modes import movement_mode_issues, standard_arena_closing_speed
 from app.domain.models import CombatantTemplate, WeaponAttackKind
+from app.domain.traits import CombatTrait
 
 logger = logging.getLogger(__name__)
 _SIZE_NAMES = ("tiny", "small", "medium", "large", "huge", "gargantuan")
@@ -61,6 +62,13 @@ def _unarmed_opportunity_matches(template: CombatantTemplate, row: dict[str, obj
     return template.unarmed_opportunity_attack == monster_unarmed_profile(row)
 
 
+def _charge_contract_issues(template: CombatantTemplate) -> list[str]:
+    attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
+    has_profile = any(attack.charge_profile is not None for attack in attacks)
+    has_trait = CombatTrait.CHARGE in template.combat_traits
+    return [] if has_profile == has_trait else ["charge-trait-profile-mismatch"]
+
+
 def _source_attack_mode_count(actions: str) -> int:
     """Count legal attack modes; one combined melee/ranged action exposes two modes."""
     combined = len(_COMBINED_ATTACK_ROLL.findall(actions))
@@ -88,6 +96,7 @@ def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) ->
             (_unarmed_opportunity_matches(template, row), "unarmed-opportunity-mismatch"),
         )
         issues = [label for passed, label in checks if not passed]
+        issues.extend(_charge_contract_issues(template))
         issues.extend(movement_mode_issues(template, row))
         issues.extend(defense_issues(template, row))
         issues.extend(trait_issues(template, row))
