@@ -19,6 +19,7 @@ from app.combat.modifier_stack import (
     effective_armor_class, next_attack_against_advantage_sources,
 )
 from app.combat.reckless_attack import attacks_against_reckless_advantage
+from app.combat.resources import action_resource_available, resolved_resource_id, spend_action_resource
 from app.combat.rolls import resolve_roll_mode, roll_d20
 from app.combat.sap import consume_sap, sap_disadvantage
 from app.combat.spell_modifiers import build_spell_modifier
@@ -33,10 +34,8 @@ from app.domain.spells import SpellAttackAction
 logger = logging.getLogger(__name__)
 
 
-def _slot_resource(caster: EncounterCombatant, spell: SpellAttackAction, turn_key: str):
-    if spell.level == 0 or not slot_spell_available(caster.state, turn_key):
-        return None
-    return next((item for item in caster.state.resources if item.id == f"spell-slot-{spell.level}" and item.current_uses > 0), None)
+def _fallback_slot_id(spell: SpellAttackAction) -> str | None:
+    return f"spell-slot-{spell.level}" if spell.level > 0 else None
 
 
 def _damage(spell: SpellAttackAction, critical: bool, dice):
@@ -62,16 +61,22 @@ def resolve_spell_attack(
         distance = combatant_distance(caster, target)
         if distance > spell.range_ft:
             raise ValueError(f"{spell.name} target is out of range.")
-        resource = _slot_resource(caster, spell, turn_key)
-        if spell.level > 0 and resource is None:
-            raise ValueError(f"No level {spell.level} spell slot remains for {spell.name}.")
+        fallback_id = _fallback_slot_id(spell)
+        resource_id = resolved_resource_id(spell.resource_id, fallback_id)
+        uses_spell_slot = bool(resource_id and resource_id.startswith("spell-slot-"))
+        if uses_spell_slot and not slot_spell_available(caster.state, turn_key):
+            raise ValueError(f"A leveled spell was already cast this turn before {spell.name}.")
+        if not action_resource_available(
+            caster.state, spell.resource_id, spell.resource_cost, fallback_resource_id=fallback_id,
+        ):
+            raise ValueError(f"Resource {resource_id!r} is unavailable for {spell.name}.")
         condition_advantage, condition_disadvantage = attack_roll_condition_sources(
             caster.state, target.state, distance, target.combatant_id,
         )
         advantage = condition_advantage + attacks_against_advantage_sources(target.state)
         advantage += attacks_against_reckless_advantage(target.state)
-        advantage += next_attack_advantage_sources(caster.state)
         advantage += next_attack_against_advantage_sources(caster.state, target.combatant_id)
+        advantage += next_attack_advantage_sources(caster.state)
         close_threat = spell.attack_kind == "ranged" and close_ranged_threat_exists(caster, setup)
         fear_disadvantage = frightened_d20_disadvantage(caster.state, setup)
         disadvantage = condition_disadvantage + fear_disadvantage + sap_disadvantage(caster.state)
@@ -80,10 +85,14 @@ def resolve_spell_attack(
         base_roll = roll_d20(dice, spell.attack_bonus, mode)
         base_roll, heroic_reroll = reroll_failed_attack_with_heroic_inspiration(caster.state, base_roll, target_ac, dice)
         attack_roll = apply_d20_bonus_dice(caster.state, ModifierKind.ATTACK_ROLL_BONUS_DIE, base_roll, dice)
-        consume_next_attack_against_advantage(caster.state, target.combatant_id); consume_next_attack_advantage(caster.state); consume_next_attack_disadvantage(caster.state)
+        consume_next_attack_against_advantage(caster.state, target.combatant_id)
+        consume_next_attack_advantage(caster.state); consume_next_attack_disadvantage(caster.state)
         consume_sap(caster.state); consume_attacks_against_advantage(target.state)
-        if resource is not None:
-            mark_slot_spell_cast(caster.state, turn_key); resource.current_uses -= 1
+        remaining = spend_action_resource(
+            caster.state, spell.resource_id, spell.resource_cost, fallback_resource_id=fallback_id,
+        )
+        if uses_spell_slot:
+            mark_slot_spell_cast(caster.state, turn_key)
         spend(caster.state, spell.action_cost)
         natural = attack_roll.selected_roll or 0
         hit = natural != 1 and (natural == 20 or attack_roll.total >= target_ac)
@@ -103,7 +112,6 @@ def resolve_spell_attack(
                     add_modifier(target.state, build_spell_modifier(
                         caster.combatant_id, target.combatant_id, spell.id, effect, index, round_number=round_number,
                     ))
-        remaining = resource.current_uses if resource is not None else None
         outcome = "CRITICAL HIT" if critical else "HIT" if hit else "MISS"
         description = f"{caster.state.template.name}: {outcome} with {spell.name}."
         if heroic_reroll:
