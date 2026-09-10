@@ -68,6 +68,10 @@ def _turn_restriction_present(text: str, effect: TurnRestrictionEffectDefinition
         ))
     if effect.reactions_disabled:
         ok = ok and bool(re.search(r"can(?:not|['’]t)\s+take\s+reactions?", text, re.IGNORECASE))
+    if effect.speed_multiplier != 1.0:
+        if effect.speed_multiplier != 0.5:
+            return False
+        ok = ok and bool(re.search(r"\bits\s+speed\s+is\s+halved\b", text, re.IGNORECASE))
     return ok
 
 
