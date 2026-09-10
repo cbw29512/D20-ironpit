@@ -9705,7 +9705,7 @@
       "monster_name": "Young Copper Dragon",
       "srd_source_page": 276,
       "srd_source_reference": "SRD 5.2.1 p. 276",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-young-copper-dragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -9729,8 +9729,8 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
+        "arena-speed-mismatch",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action"
       ]
     },
