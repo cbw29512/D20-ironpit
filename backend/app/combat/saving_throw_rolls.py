@@ -3,9 +3,10 @@ from __future__ import annotations
 import logging
 
 from app.combat.barbarian import rage_active
+from app.combat.bloodied import bloodied_saving_throw_advantage
 from app.combat.condition_rules import automatically_fails_strength_dexterity_save
-from app.combat.danger_sense import danger_sense_advantage
 from app.combat.dice import DiceProvider
+from app.combat.danger_sense import danger_sense_advantage
 from app.combat.dodge import dodge_dex_save_advantage_sources
 from app.combat.grapple import RESTRAINED_EFFECT_ID
 from app.combat.modifier_stack import apply_d20_bonus_dice
@@ -22,6 +23,7 @@ def saving_throw_mode(state: CombatantState, ability: str) -> RollMode:
             int(ability == "strength" and rage_active(state))
             + danger_sense_advantage(state, ability)
             + dodge_dex_save_advantage_sources(state, ability)
+            + bloodied_saving_throw_advantage(state)
         )
         disadvantage = 1 if ability == "dexterity" and RESTRAINED_EFFECT_ID in state.active_effect_ids else 0
         if (advantage > 0) == (disadvantage > 0):
