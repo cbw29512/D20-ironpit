@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - audit/raw-combat-log-figures-20260830
+      # Active certification branch: keep authoritative ledgers current after every engine increment.
       - feat/monster-recharge-v1
 
 permissions:
