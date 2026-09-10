@@ -54,6 +54,16 @@
     return !action.targetMaxSize || S().sizeAtMost(target, action.targetMaxSize);
   }
 
+  function pushAway(actor, target, action) {
+    const distance = action.pushTargetAwayFt || 0;
+    if (!distance || !target.state.is_alive || target.state.is_dead) return 0;
+    if (action.pushTargetMaxSize && !S().sizeAtMost(target, action.pushTargetMaxSize)) return 0;
+    const direction = target.position_ft >= actor.position_ft ? 1 : -1;
+    const start = target.position_ft;
+    target.position_ft = Math.max(0, start + direction * distance);
+    return Math.abs(target.position_ft - start);
+  }
+
   function damageRolls(action, count, shared) {
     if (shared == null) return D().rollMany(count, action.damageDiceSize);
     if (!Array.isArray(shared) || shared.length !== count) throw new Error(`${action.name} shared damage roll count is invalid.`);
@@ -81,6 +91,7 @@
       const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
       const deathSuccessBefore = target.state.death_save_successes, deathFailureBefore = target.state.death_save_failures;
       const concentrationBefore = target.state.concentration?.effect_id || null;
+      const distanceBefore = Math.abs(target.position_ft - actor.position_ft);
       let damageRoll = null, damageComponents = [], damageOutcome = null;
       const count = action.damageDiceCount || 0, capture = options.captureSharedDamageRolls;
       const establishShared = Array.isArray(capture);
@@ -102,12 +113,13 @@
           }
         }
       }
-      let appliedConditions = [];
+      let appliedConditions = [], movementFt = 0;
       if (!save.succeeded && target.state.is_alive && !target.state.is_dead) {
         if ((action.failureEffects || []).length) {
           if (!F()) throw new Error("Browser failed-save effect API is not loaded.");
           appliedConditions.push(...F().apply(target, actor.combatant_id, action.id, action.failureEffects, { round, range: action.range }));
         }
+        movementFt = pushAway(actor, target, action);
         if (action.grappleEscapeDc) appliedConditions.push(...G().apply(
           target.state, actor.combatant_id, action.grappleEscapeDc, action.range, Boolean(action.restrainsWhileGrappled),
         ));
@@ -115,7 +127,9 @@
         window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(target.state); C()?.endIfIncapacitated(target.state, affectedStates);
       }
       appliedConditions = [...new Set(appliedConditions)];
+      const distanceAfter = Math.abs(target.position_ft - actor.position_ft);
       let description = `${target.state.template.name} ${save.succeeded ? "SUCCEEDS" : "FAILS"} a DC ${action.dc} ${action.saveAbility} save against ${actor.state.template.name}'s ${action.name}.`;
+      if (movementFt) description += ` ${target.state.template.name} is pushed ${movementFt} ft. straight away.`;
       if (damageOutcome === "undead_fortitude") description += ` ${target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP.`;
       for (const condition of appliedConditions) description += ` ${target.state.template.name} is ${condition === "grappled" ? "Grappled" : condition === "restrained" ? "Restrained while Grappled" : condition[0].toUpperCase() + condition.slice(1)}.`;
       return { sequence, round_number: round, event_type: "saving_throw", actor_id: actor.combatant_id, actor_name: actor.state.template.name,
@@ -126,6 +140,7 @@
         death_save_successes_before: deathSuccessBefore, death_save_failures_before: deathFailureBefore,
         death_save_successes: target.state.death_save_successes, death_save_failures: target.state.death_save_failures,
         is_stable: target.state.is_stable, is_dead: target.state.is_dead, feature_id: action.id, resource_remaining: resourceRemaining,
+        movement_ft: movementFt, distance_before_ft: distanceBefore, distance_after_ft: distanceAfter,
         concentration_ended_effect_id: concentrationBefore && !target.state.concentration ? concentrationBefore : null,
         animation: action.animation || "save-effect", description };
     } catch (error) {
