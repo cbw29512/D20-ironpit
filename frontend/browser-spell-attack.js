@@ -25,7 +25,7 @@
     if (distance > spell.range) throw new Error(`${spell.name} target is out of range.`);
     const resourceId = slotResource(caster, spell, turnKey);
     if (spell.level > 0 && !resourceId) throw new Error(`No level ${spell.level} spell slot remains for ${spell.name}.`);
-    const conditions = A().conditionSources(caster.state, target.state, distance, target.combatant_id);
+    const conditions = A().conditionSources(caster.state, target.state, distance, target.combatant_id, setup);
     const advantage = conditions.advantage + M().nextAttackAgainstAdvantage(caster.state, target.combatant_id);
     const closeThreat = (spell.attackKind || "ranged") === "ranged" && A().rangedCloseThreat(caster, target, distance, setup);
     const mode = R().modeFromSources(advantage, conditions.disadvantage + SAP().disadvantage(caster.state) + (closeThreat ? 1 : 0));
