@@ -123,6 +123,10 @@ jobs:
           grep -q 'browser-monsters-generated.js' index.html
           ! grep -Eq "$legacy" frontend/index.html
           ! grep -Eq "$legacy" index.html
+          if grep -nE "$legacy" frontend/*.test.cjs; then
+            echo "Legacy monster fixture packs remain referenced by browser tests." >&2
+            exit 1
+          fi
           grep -q 'IRON_PIT_CANONICAL_MONSTERS_READY' frontend/app.js
 
       - name: Prove production fight path is backend-free
