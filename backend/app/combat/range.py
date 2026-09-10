@@ -21,7 +21,10 @@ def resolve_attack_roll_mode(
             raise ValueError("Distance cannot be negative.")
 
         disadvantage_sources = other_disadvantage_sources
-        if weapon.attack_kind is WeaponAttackKind.MELEE:
+        uses_melee_mode = weapon.attack_kind is WeaponAttackKind.MELEE or (
+            weapon.attack_kind is WeaponAttackKind.MELEE_OR_RANGED and distance_ft <= weapon.reach_ft
+        )
+        if uses_melee_mode:
             if distance_ft > weapon.reach_ft:
                 raise ValueError(f"{weapon.name} target is outside melee reach.")
         else:
