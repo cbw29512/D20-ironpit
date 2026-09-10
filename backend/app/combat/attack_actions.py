@@ -10,6 +10,7 @@ from app.combat.cleave import resolve_cleave_extra_attack
 from app.combat.dice import DiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.light_attack_resolution import resolve_light_extra_attack
+from app.combat.mixed_slot_policy import prefer_save_replacement
 from app.combat.opening_burst import opening_feature_id
 from app.combat.pit_policy import flexible_slot_has_both
 from app.combat.saving_throws import resolve_save_action
@@ -51,6 +52,18 @@ def resolve_attack_action(
                 and flexible_slot_has_both(attacker, slot.attack_ids)
             )
             chosen_attack = attack_choice(attacker, setup, slot, ranged_backline=split_this_slot)
+            chosen_save = save_choice(attacker, setup, slot)
+            if chosen_save is not None and (
+                chosen_attack is None
+                or prefer_save_replacement(attacker, chosen_save[0], chosen_save[1])
+            ):
+                target, save_action, distance = chosen_save
+                events.append(resolve_save_action(
+                    sequence, round_number, attacker, target, save_action,
+                    distance, dice, spend_action=False, affected_states=affected_states,
+                ))
+                sequence += 1
+                continue
             if chosen_attack is not None:
                 target, attack, distance = chosen_attack
                 if split_this_slot and attack.weapon.attack_kind is WeaponAttackKind.RANGED:
@@ -74,16 +87,6 @@ def resolve_attack_action(
                 if definition.is_attack_action and light_trigger is None and attack.weapon.light:
                     light_trigger = attack
                 opening_feature = None
-                continue
-
-            chosen_save = save_choice(attacker, setup, slot)
-            if chosen_save is not None:
-                target, save_action, distance = chosen_save
-                events.append(resolve_save_action(
-                    sequence, round_number, attacker, target, save_action,
-                    distance, dice, spend_action=False, affected_states=affected_states,
-                ))
-                sequence += 1
 
         if definition.is_attack_action and light_trigger is not None and not attacker.state.turn_terminated:
             more, sequence = resolve_light_extra_attack(
