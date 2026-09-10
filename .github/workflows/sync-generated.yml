@@ -8,7 +8,6 @@ on:
       - feat/monster-recharge-v1
 
 permissions:
-  actions: write
   contents: write
 
 concurrency:
@@ -66,6 +65,19 @@ jobs:
           echo "changed=true" >> "$GITHUB_OUTPUT"
       - name: Certify generated exact head
         if: steps.generated_sync.outputs.changed == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh workflow run ci.yml --ref "${{ github.ref_name }}"
+        run: |
+          remote_head="$(git ls-remote origin "refs/heads/${{ github.ref_name }}" | awk '{print $1}')"
+          local_head="$(git rev-parse HEAD)"
+          test "$local_head" = "$remote_head"
+          echo "Certifying generated exact head: $local_head"
+          python scripts/check_source_limits.py
+          python scripts/check_combat_engine_coverage.py
+          python scripts/export_roster_mechanic_checklist.py --check
+          python scripts/export_runtime_monster_capabilities.py --check
+          python scripts/verify_certification_manifests.py --write
+          git diff --exit-code -- data/hero_certification_manifest.json data/monster_certification_manifest.json
+          python scripts/prepare_static_site.py
+          git diff --exit-code -- frontend/browser-heroes.js frontend/figure-profiles.js frontend/browser-monsters-generated.js frontend/browser-spell-effects.js frontend/data/srd_5_2_1_monsters.json
+          (cd backend && pytest -q)
+          for file in frontend/*.js; do node --check "$file"; done
+          for test_file in frontend/*.test.cjs; do node "$test_file"; done
