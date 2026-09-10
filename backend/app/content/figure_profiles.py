@@ -86,6 +86,7 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Manticore": _p("quadruped", "manticore"),
     "Mastiff": _p("quadruped", "canine"),
     "Merfolk Skirmisher": _p("humanoid", "merfolk-skirmisher"),
+    "Merrow": _p("humanoid", "merrow"),
     "Minotaur Skeleton": _p("brute", "minotaur-skeleton"),
     "Mule": _p("hoofed", "equine"),
     "Noble": _p("humanoid", "noble"),
