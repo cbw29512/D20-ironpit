@@ -14,7 +14,7 @@ from app.content.monster_saving_throws import parse_saving_throw_bonuses
 from app.content.monster_spellcasting_source_audit import spellcasting_issues
 from app.content.monster_trait_source_audit import trait_issues
 from app.content.movement_modes import movement_mode_issues, standard_arena_closing_speed
-from app.domain.models import CombatantTemplate
+from app.domain.models import CombatantTemplate, WeaponAttackKind
 
 logger = logging.getLogger(__name__)
 _SIZE_NAMES = ("tiny", "small", "medium", "large", "huge", "gargantuan")
@@ -54,14 +54,15 @@ def _size_matches(runtime_size: str, source_size: object) -> bool:
 
 
 def _source_attack_mode_count(actions: str) -> int:
-    """Count legal attack modes; one combined melee/ranged action exposes two runtime modes."""
+    """Count legal attack modes; one combined melee/ranged action exposes two modes."""
     combined = len(_COMBINED_ATTACK_ROLL.findall(actions))
     standalone = _COMBINED_ATTACK_ROLL.sub("", actions)
-    return (
-        len(_MELEE_ATTACK_ROLL.findall(standalone))
-        + len(_RANGED_ATTACK_ROLL.findall(standalone))
-        + 2 * combined
-    )
+    return len(_MELEE_ATTACK_ROLL.findall(standalone)) + len(_RANGED_ATTACK_ROLL.findall(standalone)) + 2 * combined
+
+
+def _runtime_attack_mode_count(template: CombatantTemplate) -> int:
+    attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
+    return sum(2 if attack.weapon.attack_kind is WeaponAttackKind.MELEE_OR_RANGED else 1 for attack in attacks)
 
 
 def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
@@ -89,7 +90,7 @@ def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) ->
         actions = normalized(row.get("actions", ""))
         traits = normalized(row.get("traits", ""))
         runtime_attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
-        if _source_attack_mode_count(actions) != len(runtime_attacks):
+        if _source_attack_mode_count(actions) != _runtime_attack_mode_count(template):
             issues.append("source-attack-count-mismatch")
         if len(_SAVING_THROW.findall(actions)) != len(template.saving_throw_actions):
             issues.append("source-save-action-count-mismatch")
