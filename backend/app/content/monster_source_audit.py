@@ -55,6 +55,12 @@ def _size_matches(runtime_size: str, source_size: object) -> bool:
     return runtime_size.lower() in allowed
 
 
+def _unarmed_opportunity_matches(template: CombatantTemplate, row: dict[str, object]) -> bool:
+    from app.content.unarmed_opportunity_profiles import monster_unarmed_profile
+
+    return template.unarmed_opportunity_attack == monster_unarmed_profile(row)
+
+
 def _source_attack_mode_count(actions: str) -> int:
     """Count legal attack modes; one combined melee/ranged action exposes two modes."""
     combined = len(_COMBINED_ATTACK_ROLL.findall(actions))
@@ -79,6 +85,7 @@ def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) ->
             (template.challenge_rating == _challenge(row), "challenge-rating-mismatch"),
             (template.initiative_bonus == _initiative(row), "initiative-mismatch"),
             (template.saving_throw_bonuses == parse_saving_throw_bonuses(row), "saving-throws-mismatch"),
+            (_unarmed_opportunity_matches(template, row), "unarmed-opportunity-mismatch"),
         )
         issues = [label for passed, label in checks if not passed]
         issues.extend(movement_mode_issues(template, row))
