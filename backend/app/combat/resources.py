@@ -33,6 +33,11 @@ def resource_definition(state: CombatantState, resource_id: str) -> ResourceDefi
         raise
 
 
+def resolved_resource_id(resource_id: str | None, fallback_resource_id: str | None = None) -> str | None:
+    """Resolve an action's explicit resource before any legacy/inferred fallback."""
+    return resource_id if resource_id is not None else fallback_resource_id
+
+
 def resource_available(state: CombatantState, resource_id: str | None, cost: int = 1) -> bool:
     try:
         if resource_id is None:
@@ -43,6 +48,17 @@ def resource_available(state: CombatantState, resource_id: str | None, cost: int
     except Exception:
         logger.exception("Failed to check resource %s availability for %s.", resource_id, state.template.name)
         raise
+
+
+def action_resource_available(
+    state: CombatantState,
+    resource_id: str | None,
+    cost: int = 1,
+    *,
+    fallback_resource_id: str | None = None,
+) -> bool:
+    """Shared availability check for attacks, saves, spells, bonus actions, and reactions."""
+    return resource_available(state, resolved_resource_id(resource_id, fallback_resource_id), cost)
 
 
 def is_recharge_resource(state: CombatantState, resource_id: str | None) -> bool:
@@ -69,3 +85,14 @@ def spend_resource(state: CombatantState, resource_id: str | None, cost: int = 1
     except Exception:
         logger.exception("Failed to spend resource %s for %s.", resource_id, state.template.name)
         raise
+
+
+def spend_action_resource(
+    state: CombatantState,
+    resource_id: str | None,
+    cost: int = 1,
+    *,
+    fallback_resource_id: str | None = None,
+) -> int | None:
+    """Shared resource spend path for every action family."""
+    return spend_resource(state, resolved_resource_id(resource_id, fallback_resource_id), cost)
