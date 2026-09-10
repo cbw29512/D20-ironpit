@@ -36,8 +36,8 @@ assert.ok(monsters["srd-giant-constrictor-snake"], "Giant Constrictor Snake must
   assert.equal(snake.armor_class, 12);
   assert.equal(snake.max_hp, 60);
   assert.deepEqual(snake.attack_action.slots, [
-    { attackIds: ["giant-constrictor-snake-bite"], saveActionIds: [] },
-    { attackIds: [], saveActionIds: ["giant-constrictor-snake-constrict"] },
+    { attackIds: ["giant-constrictor-snake-bite"], forcedMovementActionIds: [], saveActionIds: [] },
+    { attackIds: [], forcedMovementActionIds: [], saveActionIds: ["giant-constrictor-snake-constrict"] },
   ]);
 }
 
