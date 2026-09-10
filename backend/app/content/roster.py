@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 def build_arena_roster() -> ArenaRoster:
     try:
         characters = complete_unarmed_opportunity_profiles(build_certified_hero_templates())
-        monsters = complete_unarmed_opportunity_profiles(build_monster_templates_from_capabilities())
+        monsters = build_monster_templates_from_capabilities()
         return ArenaRoster(
             characters=characters,
             monsters=monsters,
