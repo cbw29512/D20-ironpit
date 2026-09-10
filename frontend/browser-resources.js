@@ -1,6 +1,8 @@
 (() => {
   "use strict";
 
+  const resolvedId = (resourceId, fallbackResourceId = null) => resourceId || fallbackResourceId || null;
+
   function current(state, resourceId) {
     try {
       if (!resourceId) return null;
@@ -26,6 +28,10 @@
     }
   }
 
+  function actionAvailable(state, resourceId, cost = 1, fallbackResourceId = null) {
+    return available(state, resolvedId(resourceId, fallbackResourceId), cost);
+  }
+
   function spend(state, resourceId, cost = 1) {
     try {
       if (!resourceId) return null;
@@ -40,5 +46,11 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_RESOURCES = { available, current, spend };
+  function spendAction(state, resourceId, cost = 1, fallbackResourceId = null) {
+    return spend(state, resolvedId(resourceId, fallbackResourceId), cost);
+  }
+
+  window.IRON_PIT_BROWSER_RESOURCES = {
+    actionAvailable, available, current, resolvedId, spend, spendAction,
+  };
 })();
