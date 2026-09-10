@@ -56,6 +56,16 @@ def parse_trait_names(source_traits: object) -> list[str]:
     return names
 
 
+def _movement_trait_issues(template: CombatantTemplate, expected: list[str]) -> list[str]:
+    source_has = "Incorporeal Movement" in expected
+    runtime_has = template.movement_modes.pass_through_creatures_as_difficult_terrain
+    if source_has and not runtime_has:
+        return ["trait-runtime-missing:incorporeal-movement"]
+    if runtime_has and not source_has:
+        return ["trait-source-missing:incorporeal-movement"]
+    return []
+
+
 def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
     expected = parse_trait_names(row.get("traits", ""))
     issues: list[str] = []
@@ -68,7 +78,8 @@ def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[st
             issues.append(f"trait-runtime-missing:{runtime_trait.value}")
         elif runtime_has and not source_has:
             issues.append(f"trait-source-missing:{runtime_trait.value}")
-    certified = set(_MODELED_TRAITS) | set(_DECLARATIVE_ATTACK_TRAITS) | set(_ARENA_NEUTRAL_TRAITS)
+    issues.extend(_movement_trait_issues(template, expected))
+    certified = set(_MODELED_TRAITS) | set(_DECLARATIVE_ATTACK_TRAITS) | set(_ARENA_NEUTRAL_TRAITS) | {"Incorporeal Movement"}
     for name in expected:
         if name not in certified:
             slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
@@ -95,6 +106,6 @@ def complete_monster_trait_fingerprints(templates: list[CombatantTemplate]) -> l
             if template.kind == "monster" else template
             for template in templates
         ]
-    except Exception:
+    except Exception as exc:
         logger.exception("Failed to derive canonical monster trait fingerprints from SRD source.")
-        raise
+        raise RuntimeError("Monster trait fingerprints could not be completed.") from exc
