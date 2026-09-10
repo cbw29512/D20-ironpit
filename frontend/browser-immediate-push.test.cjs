@@ -10,7 +10,7 @@ const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, 
 for (const file of [
   "browser-heroes.js", "browser-monsters.js", "browser-state.js", "browser-rage.js",
   "browser-rolls.js", "browser-zero-hp.js", "browser-attack.js", "browser-charge.js",
-  "browser-formation.js", "browser-multiattack.js",
+  "browser-formation.js", "browser-standard-attack-action.js", "browser-multiattack.js",
 ]) load(file);
 
 function queuedDice(values, fallback = 10) {
