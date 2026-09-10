@@ -103,8 +103,15 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
             pull_target_max_size=definition.pull_target_max_size,
             forbid_target_grappled_by_self=definition.forbid_target_grappled_by_self,
         )
-    except (UnsupportedCapabilityError, UnsupportedAttackControlError):
+    except UnsupportedCapabilityError:
         raise
+    except UnsupportedAttackControlError as exc:
+        logger.error(
+            "Unsupported attack control composition for %s: %s",
+            definition.id,
+            exc,
+        )
+        raise UnsupportedCapabilityError(str(exc)) from exc
     except Exception:
         logger.exception("Failed to compile attack capability %s.", definition.id)
         raise
