@@ -3,13 +3,12 @@ from __future__ import annotations
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.size import CreatureSize
-from app.domain.weapons import DamageType
 
 
 class ChargeDamage(BaseModel):
     dice_count: int = Field(ge=0, le=20)
     dice_size: int = Field(ge=2, le=100)
-    damage_type: DamageType
+    damage_type: str
     damage_bonus: int = 0
 
 
