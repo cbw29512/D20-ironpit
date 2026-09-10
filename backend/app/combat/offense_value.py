@@ -3,6 +3,7 @@ from __future__ import annotations
 from app.combat.condition_rules import automatically_fails_strength_dexterity_save, close_hit_is_automatic_critical
 from app.combat.conditions import attack_roll_condition_sources
 from app.combat.encounter_targeting import close_ranged_threat_exists, combatant_distance
+from app.combat.frightened import frightened_d20_disadvantage
 from app.combat.modifier_stack import attacks_against_advantage_sources, effective_armor_class
 from app.combat.rolls import resolve_roll_mode
 from app.combat.saving_throw_rolls import saving_throw_mode
@@ -74,6 +75,7 @@ def spell_attack_expected_damage(
     distance = combatant_distance(caster, target)
     advantage, disadvantage = attack_roll_condition_sources(caster.state, target.state, distance, target.combatant_id)
     advantage += attacks_against_advantage_sources(target.state)
+    disadvantage += frightened_d20_disadvantage(caster.state, setup)
     disadvantage += int(close_ranged_threat_exists(caster, setup))
     mode = resolve_roll_mode(advantage, disadvantage)
     hit, critical = _attack_probabilities(caster.state, spell.attack_bonus, effective_armor_class(target.state), mode)
