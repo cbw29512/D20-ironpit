@@ -11,6 +11,7 @@ from app.domain.capability_effects import (
     GrappleEffectDefinition,
     SaveFailureEffectDefinition,
 )
+from app.domain.charge import ChargeProfile
 from app.domain.size import CreatureSize
 from app.domain.targeting import AreaTargeting
 from app.domain.weapons import ConditionalAttackAdvantage, DamageType, WeaponAttackKind
@@ -43,6 +44,7 @@ class AttackCapabilityDefinition(BaseModel):
     rage_eligible: bool = False
     conditional_attack_advantage: list[ConditionalAttackAdvantage] = Field(default_factory=list)
     effects: list[AttackEffectDefinition] = Field(default_factory=list)
+    charge_profile: ChargeProfile | None = None
     push_target_away_ft: int = Field(default=0, ge=0, le=120)
     push_target_max_size: CreatureSize | None = None
     pull_target_toward_ft: int = Field(default=0, ge=0, le=120)
