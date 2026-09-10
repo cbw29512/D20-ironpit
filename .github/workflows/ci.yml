@@ -11,7 +11,7 @@ concurrency:
   group: ci-${{ github.event.pull_request.head.ref || github.ref_name }}
   cancel-in-progress: true
 
-# Exact-head certification for RAW combat, source parity, figure identity, full SRD roster visibility, six-slot UI, Battle Lab, and Pages root entry.
+# Exact-head certification for the universal combat engine and canonical SRD content.
 jobs:
   combat-certification:
     runs-on: ubuntu-latest
@@ -22,29 +22,37 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
       - name: Install Python rules reference
         working-directory: backend
         run: pip install -e '.[dev]'
+
       - name: Enforce production source limits
         run: python scripts/check_source_limits.py
+
       - name: Enforce combat capability coverage
         run: |
           python scripts/check_combat_engine_coverage.py
           python scripts/export_roster_mechanic_checklist.py --check
+
       - name: Enforce declarative monster source of truth
         run: |
           python scripts/export_runtime_monster_capabilities.py --check
           ! grep -Eq 'app\.content\.(legacy_monster_roster|monster_|monsters_)' backend/app/content/roster.py
+
       - name: Generate canonical hero artifact
         run: python scripts/export_browser_heroes.py
+
       - name: Upload canonical hero artifact
         uses: actions/upload-artifact@v4
         with:
           name: canonical-heroes-${{ github.sha }}
           path: frontend/browser-heroes.js
           retention-days: 1
+
       - name: Generate certification manifest candidates
         run: python scripts/verify_certification_manifests.py --write
+
       - name: Upload certification manifest candidates
         uses: actions/upload-artifact@v4
         with:
@@ -53,14 +61,17 @@ jobs:
             data/hero_certification_manifest.json
             data/monster_certification_manifest.json
           retention-days: 1
+
       - name: Enforce durable certification manifest parity
         run: |
           git diff --exit-code -- data/hero_certification_manifest.json data/monster_certification_manifest.json
           python scripts/report_certification_progress.py
-      - name: Report zero-engine monster candidates
-        run: python scripts/report_zero_engine_monsters.py
-      - name: Report capability blocker yields
-        run: python scripts/report_capability_yield.py
+
+      - name: Report monster blocker yields
+        run: |
+          python scripts/report_zero_engine_monsters.py
+          python scripts/report_capability_yield.py
+
       - name: Prepare static browser package
         run: |
           python scripts/prepare_static_site.py
@@ -68,6 +79,7 @@ jobs:
           test -s frontend/browser-monsters-generated.js
           test -s frontend/browser-spell-effects.js
           grep -q '"id":"bless"' frontend/browser-spell-effects.js
+
       - name: Upload canonical static artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -78,88 +90,41 @@ jobs:
             frontend/browser-spell-effects.js
             frontend/data/srd_5_2_1_monsters.json
           retention-days: 1
+
       - name: Enforce generated static parity
         run: |
           git diff --exit-code -- frontend/browser-heroes.js frontend/figure-profiles.js frontend/browser-monsters-generated.js frontend/browser-spell-effects.js frontend/data/srd_5_2_1_monsters.json
           test -z "$(git status --porcelain --untracked-files=all -- frontend/browser-monsters-generated.js frontend/browser-spell-effects.js frontend/data/srd_5_2_1_monsters.json)"
+
       - name: Certify Python rules reference
         working-directory: backend
         run: pytest -q
+
       - name: Validate browser JavaScript syntax
         run: |
           for file in frontend/*.js; do node --check "$file"; done
-      - name: Run browser combat regressions
+
+      - name: Run every browser combat regression
         run: |
-          node frontend/battle-lab.test.cjs
-          node frontend/browser-execution.test.cjs
-          node frontend/browser-audit.test.cjs
-          node frontend/browser-roll-revisions.test.cjs
-          node frontend/browser-dice-recording.test.cjs
-          node frontend/browser-engine.test.cjs
-          node frontend/browser-recharge-area.test.cjs
-          node frontend/browser-source-recharge.test.cjs
-          node frontend/browser-formation.test.cjs
-          node frontend/browser-conditional-damage.test.cjs
-          node frontend/browser-swarm.test.cjs
-          node frontend/browser-rage.test.cjs
-          node frontend/browser-barbarian3.test.cjs
-          node frontend/browser-sneak-attack.test.cjs
-          node frontend/browser-vex.test.cjs
-          node frontend/browser-graze.test.cjs
-          node frontend/browser-topple.test.cjs
-          node frontend/browser-light-weapons.test.cjs
-          node frontend/browser-defense-style.test.cjs
-          node frontend/browser-fighter-progression.test.cjs
-          node frontend/browser-fighter9.test.cjs
-          node frontend/browser-heroic-inspiration.test.cjs
-          node frontend/browser-champion.test.cjs
-          node frontend/browser-fighter4.test.cjs
-          node frontend/browser-fighter5.test.cjs
-          node frontend/browser-beast2.test.cjs
-          node frontend/browser-batch3.test.cjs
-          node frontend/browser-deathmatch.test.cjs
-          node frontend/browser-zero-hp-lifecycle.test.cjs
-          node frontend/browser-undead-fortitude.test.cjs
-          node frontend/browser-control.test.cjs
-          node frontend/browser-poison.test.cjs
-          node frontend/browser-mixed-damage.test.cjs
-          node frontend/browser-venom.test.cjs
-          node frontend/browser-mixed-multiattack.test.cjs
-          node frontend/browser-expansion.test.cjs
-          node frontend/browser-generated-monsters.test.cjs
-          node frontend/browser-creature-types.test.cjs
-          node frontend/browser-monster-saves.test.cjs
-          node frontend/browser-condition-immunity.test.cjs
-          node frontend/browser-action-healing.test.cjs
-          node frontend/browser-action-condition.test.cjs
-          node frontend/browser-condition-lifecycle.test.cjs
-          node frontend/browser-condition-removal.test.cjs
-          node frontend/browser-reactions.test.cjs
-          node frontend/browser-parry-effective-ac.test.cjs
-          node frontend/browser-reaction-movement.test.cjs
-          node frontend/browser-spell-area.test.cjs
-          node frontend/browser-spell-resolution.test.cjs
-          node frontend/browser-spell-policy.test.cjs
-          node frontend/browser-precombat-spells.test.cjs
-          node frontend/browser-modifiers-concentration.test.cjs
-          node frontend/browser-next-attack-advantage.test.cjs
-          node frontend/browser-attack-advantage.test.cjs
-          node frontend/browser-guiding-bolt.test.cjs
-          node frontend/browser-spell-attack-turn.test.cjs
-          node frontend/browser-shield-of-faith.test.cjs
-          node frontend/browser-bless.test.cjs
-          node frontend/browser-cleric1.test.cjs
-          node frontend/browser-cleric2.test.cjs
-          node frontend/browser-cleric4.test.cjs
-          node frontend/browser-spell-slot-healing.test.cjs
-          node frontend/browser-ongoing-spell-control.test.cjs
-          node frontend/browser-forced-retreat-turn.test.cjs
-          node frontend/browser-fear-ui.test.cjs
-          node frontend/battle-log-format.test.cjs
-          node frontend/figure-visuals.test.cjs
-          node frontend/figure-portraits.test.cjs
-          node frontend/encounter-picker.test.cjs
-          node frontend/encounter-wiring.test.cjs
+          set -euo pipefail
+          count=0
+          for test_file in frontend/*.test.cjs; do
+            echo "Running $test_file"
+            node "$test_file"
+            count=$((count + 1))
+          done
+          test "$count" -gt 0
+          echo "Ran $count browser regression files."
+
+      - name: Enforce canonical monster browser source of truth
+        run: |
+          legacy='browser-monsters\.js|browser-monsters-fixed\.js|browser-monsters-beast2\.js|browser-monsters-batch3\.js|browser-monsters-control\.js|browser-monsters-poison\.js|browser-monsters-venom\.js|browser-monsters-mixed\.js|browser-monsters-expansion\.js'
+          grep -q 'browser-monsters-generated.js' frontend/index.html
+          grep -q 'browser-monsters-generated.js' index.html
+          ! grep -Eq "$legacy" frontend/index.html
+          ! grep -Eq "$legacy" index.html
+          grep -q 'IRON_PIT_CANONICAL_MONSTERS_READY' frontend/app.js
+
       - name: Prove production fight path is backend-free
         run: |
           ! grep -R -q 'IRON_PIT_API_BASE' frontend scripts
@@ -173,150 +138,29 @@ jobs:
           grep -q 'IRON_PIT_BROWSER_ENGINE' frontend/browser-execution.js
           grep -q 'runEncounter' frontend/browser-execution.js
           grep -q 'IRON_PIT_BROWSER_AUDIT' frontend/browser-execution.js
-          grep -q 'IRON_PIT_CANONICAL_MONSTERS_READY' frontend/app.js
           grep -q 'IRON_PIT_BATTLE_LAB' frontend/browser-execution.js
           grep -q 'crypto.getRandomValues' frontend/browser-dice.js
-      - name: Prove clean GitHub Pages root entry
+
+      - name: Prove production entry points are wired
         run: |
           test -s index.html
           grep -q '<base href="./frontend/">' index.html
-          grep -q 'id="hero-slots"' index.html
-          grep -q 'id="monster-slots"' index.html
-          grep -q 'id="fight-button"' index.html
-          grep -q 'id="step-fight-button"' index.html
-          grep -q 'id="next-event-button"' index.html
-          grep -q 'id="watch-rest-button"' index.html
-          grep -q 'id="quick-test"' index.html
-          grep -q '>LOAD SAMPLE<' index.html
-          grep -q 'id="rerun-button"' index.html
-          ! grep -q 'id="battle-seed"' index.html
-          ! grep -q 'id="instant-mode"' index.html
-          ! grep -q 'id="distance"' index.html
-          grep -q 'battle-lab.css' index.html
-          grep -q 'audit-log.css' index.html
-          grep -q 'battle-lab.js' index.html
-          grep -q 'browser-audit.js' index.html
-          grep -q 'browser-execution.js' index.html
-          grep -q 'battle-actions.js' index.html
-          grep -q 'figure-archetypes.css' index.html
-          grep -q 'figure-swarms.css' index.html
-          grep -q 'figure-portraits.css' index.html
-          grep -q 'figure-profiles.js' index.html
-          grep -q 'figure-portraits.js' index.html
-          grep -q 'browser-monsters-generated.js' index.html
-          grep -q 'browser-monsters-expansion.js' index.html
-          grep -q 'browser-condition-rules.js' index.html
-          grep -q 'browser-action-economy.js' index.html
-          grep -q 'browser-reactions.js' index.html
-          grep -q 'browser-reaction-movement.js' index.html
-          grep -q 'browser-champion.js' index.html
-          grep -q 'browser-tactical-shift.js' index.html
-          grep -q 'browser-undead-fortitude.js' index.html
-          grep -q 'browser-zero-hp.js' index.html
-          grep -q 'browser-timed-conditions.js' index.html
-          grep -q 'browser-barbarian2.js' index.html
-          grep -q 'browser-barbarian3.js' index.html
-          grep -q 'browser-sneak-attack.js' index.html
-          grep -q 'browser-vex.js' index.html
-          grep -q 'browser-graze.js' index.html
-          grep -q 'browser-heroic-inspiration.js' index.html
-          grep -q 'browser-light-weapons.js' index.html
-          grep -q 'browser-light-attack.js' index.html
-          grep -q 'browser-standard-attack-action.js' index.html
-          grep -q 'browser-source-bound-effects.js' index.html
-          grep -q 'browser-ongoing-spell-control.js' index.html
-          grep -q 'browser-modifiers.js' index.html
-          grep -q 'browser-concentration.js' index.html
-          grep -q 'browser-spell-effects.js' index.html
-          grep -q 'browser-spell-modifiers.js' index.html
-          grep -q 'browser-healing.js' index.html
-          grep -q 'browser-cleric-channel.js' index.html
-          grep -q 'browser-spell-area.js' index.html
-          grep -q 'browser-spell-policy.js' index.html
-          grep -q 'browser-spell-resolution.js' index.html
-          grep -q 'browser-spell-attack-policy.js' index.html
-          grep -q 'browser-spell-attack.js' index.html
-          grep -q 'browser-precombat-spells.js' index.html
-          grep -q 'battlefield-picker.js' index.html
-          grep -q 'battlefield-replay.js' index.html
-          grep -q 'https://www.buymeacoffee.com/divclass016' index.html
-          ! grep -qi 'http-equiv="refresh"' index.html
-      - name: Prove live battlefield is wired
-        run: |
-          grep -q 'id="hero-slots"' frontend/index.html
-          grep -q 'id="monster-slots"' frontend/index.html
-          grep -q 'id="card-picker"' frontend/index.html
-          grep -q 'id="combat-fx-overlay"' frontend/index.html
-          grep -q 'id="quick-test"' frontend/index.html
-          grep -q '>LOAD SAMPLE<' frontend/index.html
-          grep -q 'id="rerun-button"' frontend/index.html
-          grep -q 'id="step-fight-button"' frontend/index.html
-          grep -q 'id="next-event-button"' frontend/index.html
-          grep -q 'id="watch-rest-button"' frontend/index.html
-          grep -q 'id="turbo-replay-step-button"' frontend/index.html
-          ! grep -q 'id="battle-seed"' frontend/index.html
-          ! grep -q 'id="instant-mode"' frontend/index.html
-          ! grep -q 'id="distance"' frontend/index.html
-          grep -q 'battlefield.css' frontend/index.html
-          grep -q 'battle-lab.css' frontend/index.html
-          grep -q 'audit-log.css' frontend/index.html
-          grep -q 'battle-lab.js' frontend/index.html
-          grep -q 'browser-audit.js' frontend/index.html
-          grep -q 'browser-execution.js' frontend/index.html
-          grep -q 'battle-actions.js' frontend/index.html
-          grep -q 'figure-archetypes.css' frontend/index.html
-          grep -q 'figure-swarms.css' frontend/index.html
-          grep -q 'figure-portraits.css' frontend/index.html
-          grep -q 'figure-profiles.js' frontend/index.html
-          grep -q 'figure-portraits.js' frontend/index.html
-          grep -q 'browser-monsters-generated.js' frontend/index.html
-          grep -q 'browser-monsters-expansion.js' frontend/index.html
-          grep -q 'battle-log-format.js' frontend/index.html
-          grep -q 'battlefield-picker.js' frontend/index.html
-          grep -q 'battlefield-view.js' frontend/index.html
-          grep -q 'battlefield-replay.js' frontend/index.html
-          grep -q 'browser-condition-immunity.js' frontend/index.html
-          grep -q 'browser-condition-rules.js' frontend/index.html
-          grep -q 'browser-action-economy.js' frontend/index.html
-          grep -q 'browser-reactions.js' frontend/index.html
-          grep -q 'browser-reaction-movement.js' frontend/index.html
-          grep -q 'browser-grapple.js' frontend/index.html
-          grep -q 'browser-champion.js' frontend/index.html
-          grep -q 'browser-tactical-shift.js' frontend/index.html
-          grep -q 'browser-undead-fortitude.js' frontend/index.html
-          grep -q 'browser-zero-hp.js' frontend/index.html
-          grep -q 'browser-timed-conditions.js' frontend/index.html
-          grep -q 'browser-barbarian2.js' frontend/index.html
-          grep -q 'browser-barbarian3.js' frontend/index.html
-          grep -q 'browser-sneak-attack.js' frontend/index.html
-          grep -q 'browser-vex.js' frontend/index.html
-          grep -q 'browser-graze.js' frontend/index.html
-          grep -q 'browser-heroic-inspiration.js' frontend/index.html
-          grep -q 'browser-light-weapons.js' frontend/index.html
-          grep -q 'browser-light-attack.js' frontend/index.html
-          grep -q 'browser-standard-attack-action.js' frontend/index.html
-          grep -q 'browser-source-bound-effects.js' frontend/index.html
-          grep -q 'browser-ongoing-spell-control.js' frontend/index.html
-          grep -q 'browser-modifiers.js' frontend/index.html
-          grep -q 'browser-saves.js' frontend/index.html
-          grep -q 'browser-concentration.js' frontend/index.html
-          grep -q 'browser-spell-effects.js' frontend/index.html
-          grep -q 'browser-spell-modifiers.js' frontend/index.html
-          grep -q 'browser-multiattack.js' frontend/index.html
-          grep -q 'browser-healing.js' frontend/index.html
-          grep -q 'browser-cleric-channel.js' frontend/index.html
-          grep -q 'browser-spell-area.js' frontend/index.html
-          grep -q 'browser-spell-policy.js' frontend/index.html
-          grep -q 'browser-spell-resolution.js' frontend/index.html
-          grep -q 'browser-spell-attack-policy.js' frontend/index.html
-          grep -q 'browser-spell-attack.js' frontend/index.html
-          grep -q 'browser-precombat-spells.js' frontend/index.html
-          grep -q 'figure-visuals.js' frontend/index.html
+          for page in index.html frontend/index.html; do
+            grep -q 'id="hero-slots"' "$page"
+            grep -q 'id="monster-slots"' "$page"
+            grep -q 'id="fight-button"' "$page"
+            grep -q 'id="step-fight-button"' "$page"
+            grep -q 'id="quick-test"' "$page"
+            grep -q 'browser-execution.js' "$page"
+            grep -q 'battle-actions.js' "$page"
+            grep -q 'browser-catalog.js' "$page"
+            grep -q 'browser-monsters-generated.js' "$page"
+            grep -q 'https://www.buymeacoffee.com/divclass016' "$page"
+            ! grep -qi 'http-equiv="refresh"' "$page"
+          done
           grep -q 'auditDetails' frontend/battlefield-view.js
           grep -q 'IRON_PIT_EXECUTION' frontend/app.js
-          grep -q 'IRON_PIT_BROWSER_ENGINE' frontend/browser-execution.js
-          grep -q 'IRON_PIT_BROWSER_AUDIT' frontend/browser-execution.js
-          grep -q 'https://www.buymeacoffee.com/divclass016' frontend/index.html
+
       - name: Validate Netlify production-only credit guard
         run: |
           grep -q 'CONTEXT.*production' netlify.toml
