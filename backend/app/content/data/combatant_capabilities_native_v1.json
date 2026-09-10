@@ -399,5 +399,78 @@
     "source_legendary_action_names": [],
     "visual": {"armor": "none", "main_hand": "Tree Club", "off_hand": "Trash Lob", "body_style": "brute"},
     "source": "SRD 5.2.1 p. 298"
+  },
+  {
+    "schema_version": 1,
+    "id": "srd-sahuagin-warrior",
+    "name": "Sahuagin Warrior",
+    "archetype": "source-certified fiend",
+    "challenge_rating": "1/2",
+    "kind": "monster",
+    "size": "medium",
+    "ability_scores": {
+      "strength": 13,
+      "dexterity": 11,
+      "constitution": 12,
+      "intelligence": 12,
+      "wisdom": 13,
+      "charisma": 9
+    },
+    "armor_class": 12,
+    "max_hp": 22,
+    "speed_ft": 30,
+    "movement_modes": {
+      "walk_ft": 30,
+      "fly_ft": 0,
+      "climb_ft": 0,
+      "swim_ft": 40,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": 0,
+    "attacks": [
+      {
+        "id": "sahuagin-warrior-claw",
+        "name": "Claw",
+        "weapon_id": "sahuagin-warrior-claw",
+        "attack_kind": "melee",
+        "attack_bonus": 3,
+        "damage": {"count": 1, "size": 6, "bonus": 1},
+        "damage_type": "slashing",
+        "animation": "slash",
+        "reach_ft": 5,
+        "conditional_attack_advantage": [
+          {"trigger": "target_not_full_hp"}
+        ]
+      }
+    ],
+    "primary_attack_id": "sahuagin-warrior-claw",
+    "unarmed_opportunity_attack": {"attack_bonus": 3, "damage": 2},
+    "attack_action": {
+      "id": "sahuagin-warrior-multiattack",
+      "name": "Multiattack",
+      "is_attack_action": false,
+      "slots": [
+        {"attack_ids": ["sahuagin-warrior-claw"], "save_action_ids": []},
+        {"attack_ids": ["sahuagin-warrior-claw"], "save_action_ids": []}
+      ]
+    },
+    "saving_throw_bonuses": {
+      "strength": 1,
+      "dexterity": 0,
+      "constitution": 1,
+      "intelligence": 1,
+      "wisdom": 1,
+      "charisma": -1
+    },
+    "skill_bonuses": {"perception": 5},
+    "source_trait_names": ["Blood Frenzy", "Limited Amphibiousness", "Shark Telepathy"],
+    "source_reaction_names": [],
+    "source_bonus_action_names": ["Aquatic Charge"],
+    "source_limited_use_names": [],
+    "source_legendary_action_names": [],
+    "damage_resistances": ["acid", "cold"],
+    "visual": {"armor": "none", "main_hand": "Claw", "body_style": "monster"},
+    "source": "SRD 5.2.1 p. 321"
   }
 ]
