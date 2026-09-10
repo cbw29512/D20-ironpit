@@ -27,6 +27,7 @@ from app.combat.sap import apply_weapon_sap, consume_sap, sap_disadvantage
 from app.combat.state import terminate_turn
 from app.combat.studied_attacks import apply_studied_attack_miss
 from app.combat.tactical_master import apply_tactical_master_sap
+from app.combat.timed_penalties import d20_disadvantage_sources
 from app.combat.topple import resolve_topple_hit
 from app.combat.vex import apply_vex_mastery
 from app.combat.zero_hp import apply_damage
@@ -52,6 +53,7 @@ def resolve_attack(
         weapon = attack.weapon; defender_event_id = target_event_id or defender.template.id
         attacker_event_id = actor_event_id or attacker.template.id
         condition_advantage, condition_disadvantage = attack_roll_condition_sources(attacker, defender, distance_ft, defender_event_id)
+        strength_penalty = d20_disadvantage_sources(attacker, "strength") if attack.attack_ability == "strength" else 0
         mode = resolve_attack_roll_mode(
             weapon, distance_ft,
             advantage_sources=(advantage_sources + condition_advantage + bloodied_fury_advantage(attacker, attack)
@@ -59,7 +61,7 @@ def resolve_attack(
                                + reckless_attack_advantage(attacker, attack)
                                + conditional_attack_advantage_sources(attack, defender)
                                + next_attack_against_advantage_sources(attacker, defender_event_id)),
-            other_disadvantage_sources=other_disadvantage_sources + condition_disadvantage + sap_disadvantage(attacker),
+            other_disadvantage_sources=other_disadvantage_sources + condition_disadvantage + sap_disadvantage(attacker) + strength_penalty,
             close_enemy_active=close_enemy_active,
         )
         resource_remaining = spend_resource(attacker, attack.resource_id, attack.resource_cost)
