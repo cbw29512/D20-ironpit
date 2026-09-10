@@ -66,7 +66,7 @@ jobs:
                   "traits": ["Amphibious"], "immunity": "poison", "condition_immunities": ["poisoned"],
                   "attack_bonus": 4, "attack_dice": [1, 10, 2], "rider": [1, 6, "poison"],
                   "breath": "Poison Breath", "save": "constitution", "dc": 11,
-                  "shape": "cone", "length": 15, "width": null, "breath_dice": [6, 6, "poison"],
+                  "shape": "cone", "length": 15, "width": None, "breath_dice": [6, 6, "poison"],
               },
               {
                   "slug": "red-dragon-wyrmling", "name": "Red Dragon Wyrmling", "cr": "4",
@@ -77,7 +77,7 @@ jobs:
                   "traits": [], "immunity": "fire", "condition_immunities": [],
                   "attack_bonus": 6, "attack_dice": [1, 10, 4], "rider": [1, 6, "fire"],
                   "breath": "Fire Breath", "save": "dexterity", "dc": 13,
-                  "shape": "cone", "length": 15, "width": null, "breath_dice": [7, 6, "fire"],
+                  "shape": "cone", "length": 15, "width": None, "breath_dice": [7, 6, "fire"],
               },
               {
                   "slug": "white-dragon-wyrmling", "name": "White Dragon Wyrmling", "cr": "2",
@@ -88,7 +88,7 @@ jobs:
                   "traits": ["Ice Walk"], "immunity": "cold", "condition_immunities": [],
                   "attack_bonus": 4, "attack_dice": [1, 8, 2], "rider": [1, 4, "cold"],
                   "breath": "Cold Breath", "save": "constitution", "dc": 12,
-                  "shape": "cone", "length": 15, "width": null, "breath_dice": [5, 8, "cold"],
+                  "shape": "cone", "length": 15, "width": None, "breath_dice": [5, 8, "cold"],
               },
           ]
           ABILITIES = ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
