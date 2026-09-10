@@ -17,8 +17,13 @@ def validate_attack_action_slots(attacker: EncounterCombatant) -> None:
         *(attack.id for attack in attacker.state.template.alternate_weapon_attacks),
     }
     saves = {action.id for action in attacker.state.template.saving_throw_actions}
+    movements = {action.id for action in attacker.state.template.forced_movement_actions}
     for slot in definition.slots:
-        unknown = (set(slot.attack_ids) - attacks) | (set(slot.save_action_ids) - saves)
+        unknown = (
+            (set(slot.attack_ids) - attacks)
+            | (set(slot.save_action_ids) - saves)
+            | (set(slot.forced_movement_action_ids) - movements)
+        )
         if unknown:
             raise ValueError(f"Unknown Multiattack IDs in {definition.name}: {sorted(unknown)}")
 
@@ -52,5 +57,5 @@ def preferred_attack_action_distance(
         if action.id in allowed
     ]
     if not ranges:
-        raise ValueError("Multiattack slot has no known action range.")
+        raise ValueError("Multiattack slot has no known approach range.")
     return max(ranges)
