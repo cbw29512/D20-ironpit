@@ -45,12 +45,14 @@ class SpellModifierEffect(BaseModel):
 
 
 class DefensiveSpellAction(BaseModel):
-    """A certified precombat defensive/buff spell with deterministic arena targeting."""
+    """A certified defensive/buff spell using the shared action/resource contract."""
 
     id: str
     name: str
     level: int = Field(ge=1, le=9)
     action_cost: ActionCost = "action"
+    resource_id: str | None = None
+    resource_cost: int = Field(default=1, ge=1, le=20)
     range_ft: int = Field(default=0, ge=0)
     duration_minutes: int = Field(ge=1)
     target_policy: SpellTargetPolicy = "self"
@@ -80,12 +82,14 @@ class DefensiveSpellAction(BaseModel):
 
 
 class SpellAttackAction(BaseModel):
-    """A spell resolved with an attack roll rather than a saving throw."""
+    """A spell attack using the shared action/resource contract."""
 
     id: str
     name: str
     level: int = Field(ge=0, le=9)
     action_cost: ActionCost = "action"
+    resource_id: str | None = None
+    resource_cost: int = Field(default=1, ge=1, le=20)
     attack_kind: SpellAttackKind = "ranged"
     range_ft: int = Field(ge=0)
     attack_bonus: int
@@ -105,12 +109,14 @@ class SpellAttackAction(BaseModel):
 
 
 class SpellSaveAction(BaseModel):
-    """A spell whose certified combat resolution is a saving throw and optional damage."""
+    """A saving-throw spell using the shared action/resource contract."""
 
     id: str
     name: str
     level: int = Field(ge=0, le=9)
     action_cost: ActionCost = "action"
+    resource_id: str | None = None
+    resource_cost: int = Field(default=1, ge=1, le=20)
     range_ft: int = Field(ge=0)
     area_radius_ft: int | None = Field(default=None, ge=5)
     area: AreaTargeting | None = None
