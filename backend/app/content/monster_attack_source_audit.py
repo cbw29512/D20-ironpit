@@ -47,6 +47,10 @@ def _melee_reach_pattern(reach_ft: int) -> re.Pattern[str]:
     return re.compile(rf"\breach\s+{reach_ft}\s*(?:ft\.?|feet)\b", re.IGNORECASE)
 
 
+def _ranged_pattern(normal_ft: int, long_ft: int) -> re.Pattern[str]:
+    return re.compile(rf"\brange\s+{normal_ft}\s*/\s*{long_ft}\s*(?:ft\.?|feet)\b", re.IGNORECASE)
+
+
 def _max_size_rider_present(actions: str, size: Any, condition: str) -> bool:
     size_name = getattr(size, "value", size)
     return bool(
@@ -94,12 +98,14 @@ def attack_issues(attack: WeaponAttack, actions: str, traits: str = "") -> list[
         issues.append(f"damage-dice-mismatch:{attack.id}")
     if weapon.damage_type.value.lower() not in actions:
         issues.append(f"damage-type-missing:{attack.id}")
-    if weapon.attack_kind.value == "melee" and not _melee_reach_pattern(weapon.reach_ft).search(actions):
+    kind = weapon.attack_kind.value
+    if kind in {"melee", "melee_or_ranged"} and not _melee_reach_pattern(weapon.reach_ft).search(actions):
         issues.append(f"melee-reach-mismatch:{attack.id}")
-    if weapon.attack_kind.value == "ranged" and weapon.normal_range_ft is not None:
-        ranged = rf"range\s+{weapon.normal_range_ft}\s*/\s*{weapon.long_range_ft}\s*(?:ft\.?|feet)\b"
-        if not re.search(ranged, actions, re.IGNORECASE):
+    if kind in {"ranged", "melee_or_ranged"} and weapon.normal_range_ft is not None:
+        if not _ranged_pattern(weapon.normal_range_ft, weapon.long_range_ft).search(actions):
             issues.append(f"ranged-range-mismatch:{attack.id}")
+    if kind == "melee_or_ranged" and not re.search(r"Melee\s+or\s+Ranged\s+Attack\s+Roll", actions, re.IGNORECASE):
+        issues.append(f"hybrid-attack-kind-mismatch:{attack.id}")
     for extra in attack.on_hit_damage:
         if extra.dice_count == 0:
             fixed = rf"\bplus\s+{extra.damage_bonus}\s+{extra.damage_type.value}\s+damage\b"
