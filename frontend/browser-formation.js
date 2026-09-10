@@ -7,11 +7,11 @@
   const alive = (member) => member.state.is_alive && !member.state.is_dead && member.state.current_hp > 0;
 
   function hasRangedWeaponOffense(template) {
-    return attacks(template).some((attack) => attack.kind === "ranged" && Number.isFinite(attack.long) && attack.long > 5);
+    return attacks(template).some((attack) => ["ranged", "melee_or_ranged"].includes(attack.kind) && Number.isFinite(attack.long) && attack.long > 5);
   }
   function primaryWeaponIsRanged(template) {
     const primary = attacks(template).find((attack) => attack.id === template?.primary_attack_id) || attacks(template)[0];
-    return primary?.kind === "ranged" && Number.isFinite(primary.long) && primary.long > 5;
+    return ["ranged", "melee_or_ranged"].includes(primary?.kind) && Number.isFinite(primary.long) && primary.long > 5;
   }
   function hasRangedSpellOffense(template) {
     if ((template?.spell_attack_actions || []).some((action) => action.attackKind === "ranged" && (action.range || 0) > 5)) return true;
@@ -70,6 +70,7 @@
   function attackInRange(attack, distance) {
     try {
       if (attack.kind === "melee") return distance <= (attack.reach || 5);
+      if (attack.kind === "melee_or_ranged" && distance <= (attack.reach || 5)) return true;
       return Number.isFinite(attack.long) && distance <= attack.long;
     } catch (error) {
       console.error("Failed browser attack-range legality", { attack: attack.id, error });
@@ -80,7 +81,7 @@
     try {
       const allowed = new Set(ids);
       const profiles = attacks(member.state.template).filter((attack) =>
-        allowed.has(attack.id) && (!kind || attack.kind === kind)
+        allowed.has(attack.id) && (!kind || attack.kind === kind || attack.kind === "melee_or_ranged")
         && (!attack.resourceId || RES().available(member.state, attack.resourceId, attack.resourceCost || 1)));
       for (const target of targetOrder(member, setup, preferBackline)) {
         const distance = attackDistance(member, target);
@@ -129,7 +130,7 @@
   }
   function flexibleSlotHasBoth(member, ids) {
     const allowed = new Set(ids), kinds = new Set(attacks(member.state.template).filter((a) => allowed.has(a.id)).map((a) => a.kind));
-    return kinds.has("melee") && kinds.has("ranged");
+    return kinds.has("melee_or_ranged") || (kinds.has("melee") && kinds.has("ranged"));
   }
   function backlineHoldsPosition(member, setup) {
     return isBackline(member) && alliedFrontlineActive(member, setup) && hasRangedWeaponOffense(member.state.template);
