@@ -27,6 +27,8 @@ def control_row(effect: Any) -> dict[str, Any] | None:
             row["grappleEscapeDc"] = effect.grapple_escape_dc
         if effect.restrains_while_grappled:
             row["restrainsWhileGrappled"] = True
+        if effect.conditions_while_grappled:
+            row["conditionsWhileGrappled"] = list(effect.conditions_while_grappled)
         if effect.condition_id:
             row["conditionId"] = effect.condition_id
             if effect.expires_at_start_of_source_turn:
