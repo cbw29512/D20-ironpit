@@ -4,6 +4,7 @@ from typing import Any
 from app.content.monster_attack_advantage_source_audit import conditional_attack_advantage_issues
 from app.content.monster_attack_modifier_source_audit import hit_modifier_issues
 from app.content.monster_forced_movement_source_audit import forced_movement_issues
+from app.content.monster_grapple_source_audit import grapple_issues
 from app.content.monster_save_action_source_audit import save_action_issues
 from app.domain.models import WeaponAttack
 
@@ -74,10 +75,7 @@ def _condition_timing_present(actions: str, control: Any) -> bool:
     }.get(timing)
     if target:
         return bool(re.search(target, actions, re.IGNORECASE))
-    source = {
-        "source_turn_start": "start",
-        "source_turn_end": "end",
-    }.get(timing)
+    source = {"source_turn_start": "start", "source_turn_end": "end"}.get(timing)
     if source:
         pattern = rf"until\s+the\s+{source}\s+of\s+the\s+[^.]+?[’']s\s+next\s+turn"
         return bool(re.search(pattern, actions, re.IGNORECASE))
@@ -91,12 +89,13 @@ def attack_issues(attack: WeaponAttack, actions: str, traits: str = "") -> list[
         issues.append(f"attack-name-missing:{attack.id}")
     if not re.search(rf"Attack Roll:\s*\+?{attack.attack_bonus}\b", actions, re.IGNORECASE):
         issues.append(f"attack-bonus-mismatch:{attack.id}")
+    deals_damage = attack.fixed_damage is not None or weapon.dice_count > 0
     if attack.fixed_damage is not None:
         if not re.search(rf"Hit:\s*{attack.fixed_damage}\b", actions, re.IGNORECASE):
             issues.append(f"fixed-damage-mismatch:{attack.id}")
-    elif not _dice_pattern(weapon.dice_count, weapon.dice_size, attack.damage_bonus).search(actions):
+    elif weapon.dice_count > 0 and not _dice_pattern(weapon.dice_count, weapon.dice_size, attack.damage_bonus).search(actions):
         issues.append(f"damage-dice-mismatch:{attack.id}")
-    if weapon.damage_type.value.lower() not in actions:
+    if deals_damage and weapon.damage_type.value.lower() not in actions:
         issues.append(f"damage-type-missing:{attack.id}")
     kind = weapon.attack_kind.value
     if kind in {"melee", "melee_or_ranged"} and not _melee_reach_pattern(weapon.reach_ft).search(actions):
@@ -121,6 +120,7 @@ def attack_issues(attack: WeaponAttack, actions: str, traits: str = "") -> list[
     issues.extend(hit_modifier_issues(attack, actions))
     issues.extend(conditional_attack_advantage_issues(attack, actions, traits))
     issues.extend(forced_movement_issues(attack, actions))
+    issues.extend(grapple_issues(attack, actions))
     if attack.knocks_prone_max_size is not None and not _max_size_rider_present(actions, attack.knocks_prone_max_size, "prone"):
         issues.append(f"prone-rider-mismatch:{attack.id}")
     if attack.forbid_target_grappled_by_self:
@@ -128,13 +128,6 @@ def attack_issues(attack: WeaponAttack, actions: str, traits: str = "") -> list[
         if not untargetable or weapon.name.lower() not in actions:
             issues.append(f"grappled-target-restriction-mismatch:{attack.id}")
     control = attack.control_effect
-    if control and control.grapple_escape_dc is not None:
-        if "grappled" not in actions or f"escape dc {control.grapple_escape_dc}" not in actions:
-            issues.append(f"grapple-rider-mismatch:{attack.id}")
-        if control.max_target_size is not None and not _max_size_rider_present(actions, control.max_target_size, "grappled"):
-            issues.append(f"grapple-size-mismatch:{attack.id}")
-        if control.restrains_while_grappled and "restrained" not in actions:
-            issues.append(f"restrained-rider-mismatch:{attack.id}")
     if control and control.condition_id is not None and not _condition_timing_present(actions, control):
         issues.append(f"condition-rider-mismatch:{attack.id}:{control.condition_id}")
     return issues
