@@ -73,6 +73,24 @@ def test_environmental_breathing_traits_are_arena_neutral() -> None:
         raise
 
 
+def test_sunlight_sensitivity_is_inactive_without_explicit_sunlight() -> None:
+    try:
+        wolf = _monster("Wolf")
+        row = {
+            "traits": (
+                "Sunlight Sensitivity. While in sunlight, the creature has Disadvantage on attack rolls."
+            )
+        }
+        synthetic = wolf.model_copy(
+            update={"source_trait_names": ["Sunlight Sensitivity"], "combat_traits": []}
+        )
+        assert trait_issues(synthetic, row) == []
+        assert synthetic.source_trait_names == ["Sunlight Sensitivity"]
+    except Exception:
+        logger.exception("Default no-sunlight certification regression failed.")
+        raise
+
+
 def test_unknown_outcome_changing_trait_fails_closed() -> None:
     try:
         wolf = _monster("Wolf")
