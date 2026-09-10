@@ -74,7 +74,7 @@ def compile_combatant(definition: CombatantDefinition) -> CombatantTemplate:
         primary = attack_by_id[definition.primary_attack_id]
         kwargs = definition.model_dump(exclude={
             "schema_version", "attacks", "primary_attack_id", "attack_action", "save_actions",
-            "unsupported_capabilities", "movement_modes", "forced_movement_actions",
+            "unsupported_capabilities", "movement_modes", "forced_movement_actions", "swallow_actions",
         })
         if definition.movement_modes is not None:
             kwargs["movement_modes"] = definition.movement_modes
@@ -85,6 +85,7 @@ def compile_combatant(definition: CombatantDefinition) -> CombatantTemplate:
             attack_action=_compile_attack_action(definition),
             saving_throw_actions=[_compile_save(item) for item in definition.save_actions],
             forced_movement_actions=list(definition.forced_movement_actions),
+            swallow_actions=list(definition.swallow_actions),
         )
     except UnsupportedCapabilityError:
         raise
