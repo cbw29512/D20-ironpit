@@ -5,6 +5,7 @@
   const C = () => window.IRON_PIT_BROWSER_CHARGE;
   const D = () => window.IRON_PIT_DICE;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
+  const P = () => window.IRON_PIT_BROWSER_MIXED_SLOT_POLICY;
   const R = () => window.IRON_PIT_BROWSER_LIGHT_ATTACK;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const RES = () => window.IRON_PIT_BROWSER_RESOURCES;
@@ -76,6 +77,11 @@
       const data = slotData(slots[index]);
       const splitThis = index > 0 && rangedSplit && !rangedSplitUsed && F().flexibleSlotHasBoth(member, data.attackIds);
       const choice = attackChoice(member, setup, data, splitThis);
+      const saved = saveChoice(member, setup, data);
+      if (saved && (!choice || P().preferSaveReplacement(member, saved.target, saved.save))) {
+        events.push(V().resolveAction(sequence++, round, member, saved.target, saved.save, saved.distance, { spendAction: false }));
+        continue;
+      }
       if (choice) {
         if (splitThis && choice.attack.kind === "ranged") rangedSplitUsed = true;
         const pack = window.IRON_PIT_BROWSER_STATE.packTactics(member, choice.target, setup);
@@ -90,10 +96,7 @@
         events.push(...cleave.events); sequence = cleave.sequence;
         if (definition.isAttackAction && !lightTrigger && choice.attack.light) lightTrigger = choice.attack;
         openingFeature = null;
-        continue;
       }
-      const saved = saveChoice(member, setup, data);
-      if (saved) events.push(V().resolveAction(sequence++, round, member, saved.target, saved.save, saved.distance, { spendAction: false }));
     }
 
     if (definition.isAttackAction && lightTrigger && !member.state.turn_terminated) {
