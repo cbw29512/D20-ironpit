@@ -2,8 +2,8 @@
   "use strict";
 
   const DIE_KINDS = new Set(["attack-roll-bonus-die", "saving-throw-bonus-die", "ability-check-bonus-die", "bonus-damage"]);
-  const KINDS = new Set(["armor-class", ...DIE_KINDS, "attacks-against-advantage", "next-attack-against-advantage", "next-attack-disadvantage", "speed"]);
-  const EFFECT_KINDS = new Set(["attacks-against-advantage", "next-attack-disadvantage", "speed"]);
+  const KINDS = new Set(["armor-class", ...DIE_KINDS, "attacks-against-advantage", "next-attack-advantage", "next-attack-against-advantage", "next-attack-disadvantage", "speed"]);
+  const EFFECT_KINDS = new Set(["attacks-against-advantage", "next-attack-advantage", "next-attack-disadvantage", "speed"]);
   const D = () => window.IRON_PIT_DICE;
 
   function validate(item) {
@@ -11,7 +11,7 @@
     const count = item.dice_count || 0, sides = item.dice_size || 0;
     if (DIE_KINDS.has(item.kind) ? count < 1 || sides < 2 : count || sides) throw new Error(`Invalid dice for ${item.kind}.`);
     if (item.kind === "bonus-damage" ? !item.damage_type : item.damage_type) throw new Error(`Invalid damage type for ${item.kind}.`);
-    if (new Set(["attacks-against-advantage", "next-attack-against-advantage", "next-attack-disadvantage"]).has(item.kind) && (item.flat_bonus || 0)) throw new Error("Attack roll-mode modifiers do not accept a flat bonus.");
+    if (new Set(["attacks-against-advantage", "next-attack-advantage", "next-attack-against-advantage", "next-attack-disadvantage"]).has(item.kind) && (item.flat_bonus || 0)) throw new Error("Attack roll-mode modifiers do not accept a flat bonus.");
     if (item.kind === "speed" && !(item.flat_bonus || 0)) throw new Error("Speed modifiers require a nonzero flat bonus.");
     if (item.kind === "next-attack-against-advantage" && !item.target_id) throw new Error("Target-scoped attack Advantage requires a target id.");
     if (item.consume_on_attack_against && item.kind !== "attacks-against-advantage") throw new Error("Only defender-wide attack Advantage can use consume_on_attack_against.");
@@ -92,6 +92,7 @@
     .map((effect) => effect.speed_multiplier));
   const effectiveSpeed = (state) => Math.max(0, Math.trunc((state.template.speed_ft + flat(state, "speed")) * speedMultiplier(state)));
   const attacksAgainstAdvantage = (state) => (state.active_modifiers || []).filter((item) => item.kind === "attacks-against-advantage").length;
+  const nextAttackAdvantage = (state) => (state.active_modifiers || []).filter((item) => item.kind === "next-attack-advantage").length;
   const nextAttackAgainstAdvantage = (state, targetId) => (state.active_modifiers || [])
     .filter((item) => item.kind === "next-attack-against-advantage" && item.target_id === targetId).length;
   const nextAttackDisadvantage = (state) => (state.active_modifiers || []).filter((item) => item.kind === "next-attack-disadvantage").length;
@@ -107,6 +108,7 @@
     state.active_modifiers = state.active_modifiers.filter((item) => !(item.kind === "next-attack-against-advantage" && item.target_id === targetId));
     return before - state.active_modifiers.length;
   }
+  function consumeNextAttackAdvantage(state) { const before = state.active_modifiers.length; state.active_modifiers = state.active_modifiers.filter((item) => item.kind !== "next-attack-advantage"); return before - state.active_modifiers.length; }
   function consumeNextAttackDisadvantage(state) { const before = state.active_modifiers.length; state.active_modifiers = state.active_modifiers.filter((item) => item.kind !== "next-attack-disadvantage"); return before - state.active_modifiers.length; }
 
   function applyD20Bonus(state, kind, roll) {
@@ -130,7 +132,7 @@
 
   window.IRON_PIT_BROWSER_MODIFIERS = {
     add, applyD20Bonus, applyEffect, applyHitEffects, attacksAgainstAdvantage, bonusDamage, consumeAttacksAgainstAdvantage,
-    consumeNextAttackAgainstAdvantage, consumeNextAttackDisadvantage, effectiveArmorClass, effectiveSpeed, expireSourceTurn, expireSourceTurnStart,
-    expireTargetTurn, nextAttackAgainstAdvantage, nextAttackDisadvantage, removeSource, validate,
+    consumeNextAttackAdvantage, consumeNextAttackAgainstAdvantage, consumeNextAttackDisadvantage, effectiveArmorClass, effectiveSpeed, expireSourceTurn, expireSourceTurnStart,
+    expireTargetTurn, nextAttackAdvantage, nextAttackAgainstAdvantage, nextAttackDisadvantage, removeSource, validate,
   };
 })();
