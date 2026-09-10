@@ -16,20 +16,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: feat/monster-recharge-v1
-      - name: Print simple save-condition candidates
+      - name: Print Lion source row
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
           rows = json.loads(Path('backend/app/content/data/srd_5_2_1_monsters.json').read_text())
-          for row in rows:
-              actions = str(row.get('actions', ''))
-              if 'Saving Throw:' not in actions or 'condition' not in actions:
-                  continue
-              complexity = sum(term.lower() in actions.lower() for term in (
-                  'second failure', 'destroyed', 'while poisoned', 'minute', 'hour', 'action to', 'magic action',
-              ))
-              if complexity <= 1:
-                  print(f"=== {row['name']} | CR {row['challenge']} | complexity {complexity} ===")
-                  print(actions)
+          row = next(item for item in rows if item.get('name') == 'Lion')
+          print(json.dumps(row, indent=2, sort_keys=True))
           PY
