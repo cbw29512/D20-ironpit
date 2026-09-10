@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 _DATA_DIR = Path(__file__).with_name("data")
 _GENERATED_PATH = _DATA_DIR / "combatant_capabilities_v1.json"
 _NATIVE_PATH = _DATA_DIR / "combatant_capabilities_native_v1.json"
+_INCREMENTAL_PATH = _DATA_DIR / "combatant_capabilities_incremental_v1.json"
 
 
 def parse_capability_definitions(rows: object) -> dict[str, CombatantDefinition]:
@@ -33,7 +34,7 @@ def merge_capability_definitions(
     overlap = set(generated) & set(native)
     if overlap:
         duplicate = ", ".join(sorted(overlap))
-        raise ValueError(f"Generated and native combat capability ids overlap: {duplicate}.")
+        raise ValueError(f"Combat capability registry ids overlap: {duplicate}.")
     return {**generated, **native}
 
 
@@ -46,7 +47,9 @@ def load_capability_definitions() -> dict[str, CombatantDefinition]:
     try:
         generated = _load_registry(_GENERATED_PATH)
         native = _load_registry(_NATIVE_PATH)
-        return merge_capability_definitions(generated, native)
+        incremental = _load_registry(_INCREMENTAL_PATH)
+        baseline = merge_capability_definitions(generated, native)
+        return merge_capability_definitions(baseline, incremental)
     except Exception as exc:
         logger.exception("Failed to load declarative combat capability registries.")
         raise RuntimeError("Combat capability registry could not be loaded.") from exc
