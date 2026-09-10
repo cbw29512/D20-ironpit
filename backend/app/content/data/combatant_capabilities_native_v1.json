@@ -961,5 +961,770 @@
       "body_style": "beast"
     },
     "source": "SRD 5.2.1 p. 297"
+  },
+  {
+    "schema_version": 1,
+    "id": "srd-black-dragon-wyrmling",
+    "name": "Black Dragon Wyrmling",
+    "archetype": "source-certified chromatic wyrmling",
+    "challenge_rating": "2",
+    "kind": "monster",
+    "size": "medium",
+    "ability_scores": {
+      "strength": 15,
+      "dexterity": 14,
+      "constitution": 13,
+      "intelligence": 10,
+      "wisdom": 11,
+      "charisma": 13
+    },
+    "armor_class": 17,
+    "max_hp": 33,
+    "speed_ft": 60,
+    "movement_modes": {
+      "walk_ft": 30,
+      "fly_ft": 60,
+      "climb_ft": 0,
+      "swim_ft": 30,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": 4,
+    "attacks": [
+      {
+        "id": "black-dragon-wyrmling-rend",
+        "name": "Rend",
+        "weapon_id": "black-dragon-wyrmling-rend",
+        "attack_kind": "melee",
+        "attack_bonus": 4,
+        "damage": {
+          "count": 1,
+          "size": 6,
+          "bonus": 2
+        },
+        "damage_type": "slashing",
+        "animation": "claw",
+        "reach_ft": 5,
+        "effects": [
+          {
+            "kind": "damage",
+            "source": "Acid",
+            "dice": {
+              "count": 1,
+              "size": 4,
+              "bonus": 0
+            },
+            "damage_type": "acid",
+            "trigger": "on_hit",
+            "mode": "add"
+          }
+        ]
+      }
+    ],
+    "primary_attack_id": "black-dragon-wyrmling-rend",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 4,
+      "damage": 3
+    },
+    "attack_action": {
+      "id": "black-dragon-wyrmling-multiattack",
+      "name": "Multiattack",
+      "is_attack_action": false,
+      "slots": [
+        {
+          "attack_ids": [
+            "black-dragon-wyrmling-rend"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "black-dragon-wyrmling-rend"
+          ],
+          "save_action_ids": []
+        }
+      ]
+    },
+    "save_actions": [
+      {
+        "id": "black-dragon-wyrmling-acid-breath",
+        "name": "Acid Breath",
+        "save_ability": "dexterity",
+        "dc": 11,
+        "range_ft": 0,
+        "area": {
+          "shape": "line",
+          "origin": "self",
+          "length_ft": 15,
+          "width_ft": 5
+        },
+        "damage": {
+          "count": 5,
+          "size": 8,
+          "bonus": 0
+        },
+        "damage_type": "acid",
+        "success_damage": "half",
+        "resource_id": "black-dragon-wyrmling-acid-breath-recharge",
+        "resource_cost": 1,
+        "animation": "acid"
+      }
+    ],
+    "saving_throw_bonuses": {
+      "strength": 2,
+      "dexterity": 4,
+      "constitution": 1,
+      "intelligence": 0,
+      "wisdom": 2,
+      "charisma": 1
+    },
+    "skill_bonuses": {
+      "perception": 4,
+      "stealth": 4
+    },
+    "combat_traits": [],
+    "source_trait_names": [
+      "Amphibious"
+    ],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [],
+    "source_limited_use_names": [
+      "actions:Acid Breath (Recharge 5-6)"
+    ],
+    "source_legendary_action_names": [],
+    "damage_immunities": [
+      "acid"
+    ],
+    "condition_immunities": [],
+    "resources": [
+      {
+        "id": "black-dragon-wyrmling-acid-breath-recharge",
+        "name": "Acid Breath",
+        "max_uses": 1,
+        "recharge": {
+          "trigger": "start_of_turn",
+          "die_size": 6,
+          "minimum_roll": 5
+        }
+      }
+    ],
+    "visual": {
+      "armor": "natural",
+      "main_hand": "Rend",
+      "off_hand": "Acid Breath",
+      "body_style": "dragon"
+    },
+    "source": "SRD 5.2.1 p. 263"
+  },
+  {
+    "schema_version": 1,
+    "id": "srd-blue-dragon-wyrmling",
+    "name": "Blue Dragon Wyrmling",
+    "archetype": "source-certified chromatic wyrmling",
+    "challenge_rating": "3",
+    "kind": "monster",
+    "size": "medium",
+    "ability_scores": {
+      "strength": 17,
+      "dexterity": 10,
+      "constitution": 15,
+      "intelligence": 12,
+      "wisdom": 11,
+      "charisma": 15
+    },
+    "armor_class": 17,
+    "max_hp": 65,
+    "speed_ft": 60,
+    "movement_modes": {
+      "walk_ft": 30,
+      "fly_ft": 60,
+      "climb_ft": 0,
+      "swim_ft": 0,
+      "burrow_ft": 15,
+      "hover": false
+    },
+    "initiative_bonus": 2,
+    "attacks": [
+      {
+        "id": "blue-dragon-wyrmling-rend",
+        "name": "Rend",
+        "weapon_id": "blue-dragon-wyrmling-rend",
+        "attack_kind": "melee",
+        "attack_bonus": 5,
+        "damage": {
+          "count": 1,
+          "size": 10,
+          "bonus": 3
+        },
+        "damage_type": "slashing",
+        "animation": "claw",
+        "reach_ft": 5,
+        "effects": [
+          {
+            "kind": "damage",
+            "source": "Lightning",
+            "dice": {
+              "count": 1,
+              "size": 6,
+              "bonus": 0
+            },
+            "damage_type": "lightning",
+            "trigger": "on_hit",
+            "mode": "add"
+          }
+        ]
+      }
+    ],
+    "primary_attack_id": "blue-dragon-wyrmling-rend",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 5,
+      "damage": 4
+    },
+    "attack_action": {
+      "id": "blue-dragon-wyrmling-multiattack",
+      "name": "Multiattack",
+      "is_attack_action": false,
+      "slots": [
+        {
+          "attack_ids": [
+            "blue-dragon-wyrmling-rend"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "blue-dragon-wyrmling-rend"
+          ],
+          "save_action_ids": []
+        }
+      ]
+    },
+    "save_actions": [
+      {
+        "id": "blue-dragon-wyrmling-lightning-breath",
+        "name": "Lightning Breath",
+        "save_ability": "dexterity",
+        "dc": 12,
+        "range_ft": 0,
+        "area": {
+          "shape": "line",
+          "origin": "self",
+          "length_ft": 30,
+          "width_ft": 5
+        },
+        "damage": {
+          "count": 6,
+          "size": 6,
+          "bonus": 0
+        },
+        "damage_type": "lightning",
+        "success_damage": "half",
+        "resource_id": "blue-dragon-wyrmling-lightning-breath-recharge",
+        "resource_cost": 1,
+        "animation": "lightning"
+      }
+    ],
+    "saving_throw_bonuses": {
+      "strength": 3,
+      "dexterity": 2,
+      "constitution": 2,
+      "intelligence": 1,
+      "wisdom": 2,
+      "charisma": 2
+    },
+    "skill_bonuses": {
+      "perception": 4,
+      "stealth": 2
+    },
+    "combat_traits": [],
+    "source_trait_names": [],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [],
+    "source_limited_use_names": [
+      "actions:Lightning Breath (Recharge 5-6)"
+    ],
+    "source_legendary_action_names": [],
+    "damage_immunities": [
+      "lightning"
+    ],
+    "condition_immunities": [],
+    "resources": [
+      {
+        "id": "blue-dragon-wyrmling-lightning-breath-recharge",
+        "name": "Lightning Breath",
+        "max_uses": 1,
+        "recharge": {
+          "trigger": "start_of_turn",
+          "die_size": 6,
+          "minimum_roll": 5
+        }
+      }
+    ],
+    "visual": {
+      "armor": "natural",
+      "main_hand": "Rend",
+      "off_hand": "Lightning Breath",
+      "body_style": "dragon"
+    },
+    "source": "SRD 5.2.1 p. 266"
+  },
+  {
+    "schema_version": 1,
+    "id": "srd-green-dragon-wyrmling",
+    "name": "Green Dragon Wyrmling",
+    "archetype": "source-certified chromatic wyrmling",
+    "challenge_rating": "2",
+    "kind": "monster",
+    "size": "medium",
+    "ability_scores": {
+      "strength": 15,
+      "dexterity": 12,
+      "constitution": 13,
+      "intelligence": 14,
+      "wisdom": 11,
+      "charisma": 13
+    },
+    "armor_class": 17,
+    "max_hp": 38,
+    "speed_ft": 60,
+    "movement_modes": {
+      "walk_ft": 30,
+      "fly_ft": 60,
+      "climb_ft": 0,
+      "swim_ft": 30,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": 3,
+    "attacks": [
+      {
+        "id": "green-dragon-wyrmling-rend",
+        "name": "Rend",
+        "weapon_id": "green-dragon-wyrmling-rend",
+        "attack_kind": "melee",
+        "attack_bonus": 4,
+        "damage": {
+          "count": 1,
+          "size": 10,
+          "bonus": 2
+        },
+        "damage_type": "slashing",
+        "animation": "claw",
+        "reach_ft": 5,
+        "effects": [
+          {
+            "kind": "damage",
+            "source": "Poison",
+            "dice": {
+              "count": 1,
+              "size": 6,
+              "bonus": 0
+            },
+            "damage_type": "poison",
+            "trigger": "on_hit",
+            "mode": "add"
+          }
+        ]
+      }
+    ],
+    "primary_attack_id": "green-dragon-wyrmling-rend",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 4,
+      "damage": 3
+    },
+    "attack_action": {
+      "id": "green-dragon-wyrmling-multiattack",
+      "name": "Multiattack",
+      "is_attack_action": false,
+      "slots": [
+        {
+          "attack_ids": [
+            "green-dragon-wyrmling-rend"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "green-dragon-wyrmling-rend"
+          ],
+          "save_action_ids": []
+        }
+      ]
+    },
+    "save_actions": [
+      {
+        "id": "green-dragon-wyrmling-poison-breath",
+        "name": "Poison Breath",
+        "save_ability": "constitution",
+        "dc": 11,
+        "range_ft": 0,
+        "area": {
+          "shape": "cone",
+          "origin": "self",
+          "length_ft": 15
+        },
+        "damage": {
+          "count": 6,
+          "size": 6,
+          "bonus": 0
+        },
+        "damage_type": "poison",
+        "success_damage": "half",
+        "resource_id": "green-dragon-wyrmling-poison-breath-recharge",
+        "resource_cost": 1,
+        "animation": "poison"
+      }
+    ],
+    "saving_throw_bonuses": {
+      "strength": 2,
+      "dexterity": 3,
+      "constitution": 1,
+      "intelligence": 2,
+      "wisdom": 2,
+      "charisma": 1
+    },
+    "skill_bonuses": {
+      "perception": 4,
+      "stealth": 3
+    },
+    "combat_traits": [],
+    "source_trait_names": [
+      "Amphibious"
+    ],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [],
+    "source_limited_use_names": [
+      "actions:Poison Breath (Recharge 5-6)"
+    ],
+    "source_legendary_action_names": [],
+    "damage_immunities": [
+      "poison"
+    ],
+    "condition_immunities": [
+      "poisoned"
+    ],
+    "resources": [
+      {
+        "id": "green-dragon-wyrmling-poison-breath-recharge",
+        "name": "Poison Breath",
+        "max_uses": 1,
+        "recharge": {
+          "trigger": "start_of_turn",
+          "die_size": 6,
+          "minimum_roll": 5
+        }
+      }
+    ],
+    "visual": {
+      "armor": "natural",
+      "main_hand": "Rend",
+      "off_hand": "Poison Breath",
+      "body_style": "dragon"
+    },
+    "source": "SRD 5.2.1 p. 293"
+  },
+  {
+    "schema_version": 1,
+    "id": "srd-red-dragon-wyrmling",
+    "name": "Red Dragon Wyrmling",
+    "archetype": "source-certified chromatic wyrmling",
+    "challenge_rating": "4",
+    "kind": "monster",
+    "size": "medium",
+    "ability_scores": {
+      "strength": 19,
+      "dexterity": 10,
+      "constitution": 17,
+      "intelligence": 12,
+      "wisdom": 11,
+      "charisma": 15
+    },
+    "armor_class": 17,
+    "max_hp": 75,
+    "speed_ft": 60,
+    "movement_modes": {
+      "walk_ft": 30,
+      "fly_ft": 60,
+      "climb_ft": 30,
+      "swim_ft": 0,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": 2,
+    "attacks": [
+      {
+        "id": "red-dragon-wyrmling-rend",
+        "name": "Rend",
+        "weapon_id": "red-dragon-wyrmling-rend",
+        "attack_kind": "melee",
+        "attack_bonus": 6,
+        "damage": {
+          "count": 1,
+          "size": 10,
+          "bonus": 4
+        },
+        "damage_type": "slashing",
+        "animation": "claw",
+        "reach_ft": 5,
+        "effects": [
+          {
+            "kind": "damage",
+            "source": "Fire",
+            "dice": {
+              "count": 1,
+              "size": 6,
+              "bonus": 0
+            },
+            "damage_type": "fire",
+            "trigger": "on_hit",
+            "mode": "add"
+          }
+        ]
+      }
+    ],
+    "primary_attack_id": "red-dragon-wyrmling-rend",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 6,
+      "damage": 5
+    },
+    "attack_action": {
+      "id": "red-dragon-wyrmling-multiattack",
+      "name": "Multiattack",
+      "is_attack_action": false,
+      "slots": [
+        {
+          "attack_ids": [
+            "red-dragon-wyrmling-rend"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "red-dragon-wyrmling-rend"
+          ],
+          "save_action_ids": []
+        }
+      ]
+    },
+    "save_actions": [
+      {
+        "id": "red-dragon-wyrmling-fire-breath",
+        "name": "Fire Breath",
+        "save_ability": "dexterity",
+        "dc": 13,
+        "range_ft": 0,
+        "area": {
+          "shape": "cone",
+          "origin": "self",
+          "length_ft": 15
+        },
+        "damage": {
+          "count": 7,
+          "size": 6,
+          "bonus": 0
+        },
+        "damage_type": "fire",
+        "success_damage": "half",
+        "resource_id": "red-dragon-wyrmling-fire-breath-recharge",
+        "resource_cost": 1,
+        "animation": "fire"
+      }
+    ],
+    "saving_throw_bonuses": {
+      "strength": 4,
+      "dexterity": 2,
+      "constitution": 3,
+      "intelligence": 1,
+      "wisdom": 2,
+      "charisma": 2
+    },
+    "skill_bonuses": {
+      "perception": 4,
+      "stealth": 2
+    },
+    "combat_traits": [],
+    "source_trait_names": [],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [],
+    "source_limited_use_names": [
+      "actions:Fire Breath (Recharge 5-6)"
+    ],
+    "source_legendary_action_names": [],
+    "damage_immunities": [
+      "fire"
+    ],
+    "condition_immunities": [],
+    "resources": [
+      {
+        "id": "red-dragon-wyrmling-fire-breath-recharge",
+        "name": "Fire Breath",
+        "max_uses": 1,
+        "recharge": {
+          "trigger": "start_of_turn",
+          "die_size": 6,
+          "minimum_roll": 5
+        }
+      }
+    ],
+    "visual": {
+      "armor": "natural",
+      "main_hand": "Rend",
+      "off_hand": "Fire Breath",
+      "body_style": "dragon"
+    },
+    "source": "SRD 5.2.1 p. 318"
+  },
+  {
+    "schema_version": 1,
+    "id": "srd-white-dragon-wyrmling",
+    "name": "White Dragon Wyrmling",
+    "archetype": "source-certified chromatic wyrmling",
+    "challenge_rating": "2",
+    "kind": "monster",
+    "size": "medium",
+    "ability_scores": {
+      "strength": 14,
+      "dexterity": 10,
+      "constitution": 14,
+      "intelligence": 5,
+      "wisdom": 10,
+      "charisma": 11
+    },
+    "armor_class": 16,
+    "max_hp": 32,
+    "speed_ft": 60,
+    "movement_modes": {
+      "walk_ft": 30,
+      "fly_ft": 60,
+      "climb_ft": 0,
+      "swim_ft": 30,
+      "burrow_ft": 15,
+      "hover": false
+    },
+    "initiative_bonus": 2,
+    "attacks": [
+      {
+        "id": "white-dragon-wyrmling-rend",
+        "name": "Rend",
+        "weapon_id": "white-dragon-wyrmling-rend",
+        "attack_kind": "melee",
+        "attack_bonus": 4,
+        "damage": {
+          "count": 1,
+          "size": 8,
+          "bonus": 2
+        },
+        "damage_type": "slashing",
+        "animation": "claw",
+        "reach_ft": 5,
+        "effects": [
+          {
+            "kind": "damage",
+            "source": "Cold",
+            "dice": {
+              "count": 1,
+              "size": 4,
+              "bonus": 0
+            },
+            "damage_type": "cold",
+            "trigger": "on_hit",
+            "mode": "add"
+          }
+        ]
+      }
+    ],
+    "primary_attack_id": "white-dragon-wyrmling-rend",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 4,
+      "damage": 3
+    },
+    "attack_action": {
+      "id": "white-dragon-wyrmling-multiattack",
+      "name": "Multiattack",
+      "is_attack_action": false,
+      "slots": [
+        {
+          "attack_ids": [
+            "white-dragon-wyrmling-rend"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "white-dragon-wyrmling-rend"
+          ],
+          "save_action_ids": []
+        }
+      ]
+    },
+    "save_actions": [
+      {
+        "id": "white-dragon-wyrmling-cold-breath",
+        "name": "Cold Breath",
+        "save_ability": "constitution",
+        "dc": 12,
+        "range_ft": 0,
+        "area": {
+          "shape": "cone",
+          "origin": "self",
+          "length_ft": 15
+        },
+        "damage": {
+          "count": 5,
+          "size": 8,
+          "bonus": 0
+        },
+        "damage_type": "cold",
+        "success_damage": "half",
+        "resource_id": "white-dragon-wyrmling-cold-breath-recharge",
+        "resource_cost": 1,
+        "animation": "cold"
+      }
+    ],
+    "saving_throw_bonuses": {
+      "strength": 2,
+      "dexterity": 2,
+      "constitution": 2,
+      "intelligence": -3,
+      "wisdom": 2,
+      "charisma": 0
+    },
+    "skill_bonuses": {
+      "perception": 4,
+      "stealth": 2
+    },
+    "combat_traits": [],
+    "source_trait_names": [
+      "Ice Walk"
+    ],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [],
+    "source_limited_use_names": [
+      "actions:Cold Breath (Recharge 5-6)"
+    ],
+    "source_legendary_action_names": [],
+    "damage_immunities": [
+      "cold"
+    ],
+    "condition_immunities": [],
+    "resources": [
+      {
+        "id": "white-dragon-wyrmling-cold-breath-recharge",
+        "name": "Cold Breath",
+        "max_uses": 1,
+        "recharge": {
+          "trigger": "start_of_turn",
+          "die_size": 6,
+          "minimum_roll": 5
+        }
+      }
+    ],
+    "visual": {
+      "armor": "natural",
+      "main_hand": "Rend",
+      "off_hand": "Cold Breath",
+      "body_style": "dragon"
+    },
+    "source": "SRD 5.2.1 p. 339"
   }
 ]
