@@ -115,6 +115,8 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
             on_hit_modifier_effects=on_hit_modifiers,
             knocks_prone_max_size=prone_size,
             control_effect=control,
+            push_target_away_ft=definition.push_target_away_ft,
+            push_target_max_size=definition.push_target_max_size,
             forbid_target_grappled_by_self=definition.forbid_target_grappled_by_self,
         )
     except UnsupportedCapabilityError:
