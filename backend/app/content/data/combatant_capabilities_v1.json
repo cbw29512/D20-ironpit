@@ -121,6 +121,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -254,6 +255,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -399,6 +401,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -533,6 +536,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -705,18 +709,21 @@
             "goblin-boss-scimitar",
             "goblin-boss-shortbow"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         },
         {
           "attack_ids": [
             "goblin-boss-scimitar",
             "goblin-boss-shortbow"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         }
       ]
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -857,6 +864,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -957,6 +965,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -1089,6 +1098,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -1189,6 +1199,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -1293,6 +1304,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -1406,6 +1418,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -1510,6 +1523,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -1610,6 +1624,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -1717,6 +1732,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -1826,6 +1842,7 @@
       "damage": 4
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -1938,17 +1955,20 @@
           "attack_ids": [
             "black-bear-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         },
         {
           "attack_ids": [
             "black-bear-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         }
       ]
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -2089,17 +2109,20 @@
           "attack_ids": [
             "brown-bear-bite"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         },
         {
           "attack_ids": [
             "brown-bear-claw"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         }
       ]
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -2200,6 +2223,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -2304,6 +2328,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -2404,6 +2429,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -2506,6 +2532,7 @@
       "damage": 5
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -2606,6 +2633,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -2708,6 +2736,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -2808,6 +2837,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -2913,6 +2943,7 @@
       "damage": 4
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -3015,6 +3046,7 @@
       "damage": 4
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -3147,6 +3179,7 @@
       "damage": 5
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -3264,17 +3297,20 @@
           "attack_ids": [
             "triceratops-gore"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         },
         {
           "attack_ids": [
             "triceratops-gore"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         }
       ]
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -3377,6 +3413,7 @@
       "damage": 5
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -3513,6 +3550,7 @@
       "damage": 5
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -3613,6 +3651,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -3785,6 +3824,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -3895,17 +3935,20 @@
           "attack_ids": [
             "hippogriff-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         },
         {
           "attack_ids": [
             "hippogriff-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         }
       ]
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -4004,6 +4047,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -4104,6 +4148,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -4202,6 +4247,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -4298,6 +4344,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -4396,6 +4443,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -4494,6 +4542,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -4593,6 +4642,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -4689,6 +4739,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -4787,6 +4838,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -4885,6 +4937,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -4983,6 +5036,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -5081,6 +5135,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -5181,6 +5236,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -5281,6 +5337,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -5383,6 +5440,7 @@
       "damage": 5
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -5493,17 +5551,20 @@
           "attack_ids": [
             "polar-bear-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         },
         {
           "attack_ids": [
             "polar-bear-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         }
       ]
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -5606,6 +5667,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -5706,6 +5768,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -5808,6 +5871,7 @@
       "damage": 4
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -5913,6 +5977,7 @@
       "damage": 4
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -6015,6 +6080,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -6115,6 +6181,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -6219,6 +6286,7 @@
       "damage": 4
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -6321,6 +6389,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -6427,6 +6496,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -6531,6 +6601,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -6636,6 +6707,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -6736,6 +6808,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -6838,6 +6911,7 @@
       "damage": 6
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -6940,6 +7014,7 @@
       "damage": 5
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -7098,6 +7173,7 @@
       "damage": 5
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -7206,17 +7282,20 @@
           "attack_ids": [
             "owlbear-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         },
         {
           "attack_ids": [
             "owlbear-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         }
       ]
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -7325,17 +7404,20 @@
           "attack_ids": [
             "saber-toothed-tiger-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         },
         {
           "attack_ids": [
             "saber-toothed-tiger-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         }
       ]
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -7478,18 +7560,21 @@
             "scout-longbow",
             "scout-shortsword"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         },
         {
           "attack_ids": [
             "scout-longbow",
             "scout-shortsword"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         }
       ]
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -7619,6 +7704,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -7730,6 +7816,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -7842,6 +7929,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -7972,6 +8060,7 @@
         "animation": "constrict"
       }
     ],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -8130,23 +8219,27 @@
           "attack_ids": [
             "srd-giant-scorpion-claw"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         },
         {
           "attack_ids": [
             "srd-giant-scorpion-claw"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         },
         {
           "attack_ids": [
             "srd-giant-scorpion-sting"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         }
       ]
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -8292,17 +8385,20 @@
           "attack_ids": [
             "srd-grick-beak"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         },
         {
           "attack_ids": [
             "srd-grick-tentacles"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         }
       ]
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -8422,17 +8518,20 @@
           "attack_ids": [
             "srd-griffon-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         },
         {
           "attack_ids": [
             "srd-griffon-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         }
       ]
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -8546,6 +8645,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -8658,6 +8758,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -8822,17 +8923,20 @@
           "attack_ids": [
             "wyvern-bite"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         },
         {
           "attack_ids": [
             "wyvern-sting"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         }
       ]
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -8948,6 +9052,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -9065,6 +9170,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -9183,6 +9289,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -9298,17 +9405,20 @@
           "attack_ids": [
             "archelon-bite"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         },
         {
           "attack_ids": [
             "archelon-bite"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         }
       ]
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -9424,17 +9534,20 @@
           "attack_ids": [
             "ankylosaurus-tail"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         },
         {
           "attack_ids": [
             "ankylosaurus-tail"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         }
       ]
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -9556,17 +9669,20 @@
           "attack_ids": [
             "giant-eagle-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         },
         {
           "attack_ids": [
             "giant-eagle-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         }
       ]
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -9683,6 +9799,7 @@
       "damage": 5
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -9835,17 +9952,20 @@
           "attack_ids": [
             "giant-crocodile-bite"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         },
         {
           "attack_ids": [
             "giant-crocodile-tail"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         }
       ]
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -9958,13 +10078,15 @@
           "attack_ids": [
             "giant-constrictor-snake-bite"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         },
         {
           "attack_ids": [],
           "save_action_ids": [
             "giant-constrictor-snake-constrict"
-          ]
+          ],
+          "forced_movement_action_ids": []
         }
       ]
     },
@@ -9994,6 +10116,7 @@
         "animation": "constrict"
       }
     ],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -10145,17 +10268,20 @@
           "attack_ids": [
             "tyrannosaurus-rex-bite"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         },
         {
           "attack_ids": [
             "tyrannosaurus-rex-tail"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         }
       ]
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -10266,17 +10392,20 @@
           "attack_ids": [
             "srd-animated-armor-slam"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         },
         {
           "attack_ids": [
             "srd-animated-armor-slam"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         }
       ]
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -10388,6 +10517,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -10499,6 +10629,7 @@
       "damage": 5
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -10617,6 +10748,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -10726,6 +10858,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -10836,17 +10969,20 @@
           "attack_ids": [
             "srd-gargoyle-claw"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         },
         {
           "attack_ids": [
             "srd-gargoyle-claw"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         }
       ]
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -10968,6 +11104,7 @@
       "damage": 4
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -11134,7 +11271,8 @@
             "srd-guard-captain-javelin-ranged",
             "srd-guard-captain-longsword"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         },
         {
           "attack_ids": [
@@ -11142,11 +11280,13 @@
             "srd-guard-captain-javelin-ranged",
             "srd-guard-captain-longsword"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         }
       ]
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -11255,17 +11395,20 @@
           "attack_ids": [
             "srd-hippopotamus-bite"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         },
         {
           "attack_ids": [
             "srd-hippopotamus-bite"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         }
       ]
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -11368,6 +11511,7 @@
       "damage": 5
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -11470,6 +11614,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -11619,25 +11764,29 @@
             "srd-manticore-rend",
             "srd-manticore-tail-spike"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         },
         {
           "attack_ids": [
             "srd-manticore-rend",
             "srd-manticore-tail-spike"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         },
         {
           "attack_ids": [
             "srd-manticore-rend",
             "srd-manticore-tail-spike"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         }
       ]
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -11738,6 +11887,7 @@
       "damage": 5
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -11860,6 +12010,7 @@
       "damage": 5
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -11969,6 +12120,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -12098,6 +12250,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -12214,6 +12367,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -12346,6 +12500,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -12463,6 +12618,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -12571,17 +12727,20 @@
           "attack_ids": [
             "srd-violet-fungus-rotting-touch"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         },
         {
           "attack_ids": [
             "srd-violet-fungus-rotting-touch"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         }
       ]
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -12687,6 +12846,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -12808,17 +12968,20 @@
           "attack_ids": [
             "srd-giant-shark-bite"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         },
         {
           "attack_ids": [
             "srd-giant-shark-bite"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         }
       ]
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -12925,6 +13088,7 @@
       "damage": 5
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -13027,6 +13191,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -13129,6 +13294,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -13251,6 +13417,7 @@
       "damage": 2
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -13377,6 +13544,7 @@
       "damage": 4
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -13492,6 +13660,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -13622,6 +13791,7 @@
       "damage": 0
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -13756,6 +13926,7 @@
       "damage": 3
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -13918,18 +14089,21 @@
             "srd-bandit-captain-scimitar",
             "srd-bandit-captain-pistol"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         },
         {
           "attack_ids": [
             "srd-bandit-captain-scimitar",
             "srd-bandit-captain-pistol"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         }
       ]
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -14100,18 +14274,21 @@
             "srd-knight-greatsword",
             "srd-knight-heavy-crossbow"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         },
         {
           "attack_ids": [
             "srd-knight-greatsword",
             "srd-knight-heavy-crossbow"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         }
       ]
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -14219,6 +14396,7 @@
       "damage": 1
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
@@ -14363,18 +14541,21 @@
             "srd-warrior-veteran-greatsword",
             "srd-warrior-veteran-heavy-crossbow"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         },
         {
           "attack_ids": [
             "srd-warrior-veteran-greatsword",
             "srd-warrior-veteran-heavy-crossbow"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "forced_movement_action_ids": []
         }
       ]
     },
     "save_actions": [],
+    "forced_movement_actions": [],
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
