@@ -98,4 +98,5 @@ class WeaponAttack(BaseModel):
     knocks_prone_max_size: CreatureSize | None = None
     control_effect: HitControlEffect | None = None
     push_target_away_ft: int = Field(default=0, ge=0, le=120)
+    push_target_max_size: CreatureSize | None = None
     forbid_target_grappled_by_self: bool = False
