@@ -50,6 +50,7 @@ class TurnRestrictionEffectDefinition(BaseModel):
     kind: Literal["turn-restriction"] = "turn-restriction"
     action_or_bonus_only: bool = False
     reactions_disabled: bool = False
+    requires_condition: ConditionName | None = None
     expiry_timing: ConditionTiming
 
     @model_validator(mode="after")
