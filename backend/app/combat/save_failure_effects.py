@@ -87,6 +87,7 @@ def apply_save_failure_effects(
             elif isinstance(effect, TimedPenaltyEffectDefinition):
                 applied.append(apply_timed_penalty(
                     target, source_id, source_effect_id, round_number=round_number,
+                    effect_family=effect.effect_family,
                     d20_disadvantage_ability=effect.d20_disadvantage_ability,
                     damage_penalty_dice_count=effect.damage_penalty_dice_count,
                     damage_penalty_dice_size=effect.damage_penalty_dice_size,
