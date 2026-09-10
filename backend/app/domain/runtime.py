@@ -66,6 +66,7 @@ class CombatantState(BaseModel):
     template: CombatantTemplate
     current_hp: int
     max_hp_bonus: int = Field(default=0, ge=0)
+    max_hp_reduction: int = Field(default=0, ge=0)
     temporary_hp: int = Field(default=0, ge=0)
     position: GridPosition | None = None
     initiative_roll: int | None = None
