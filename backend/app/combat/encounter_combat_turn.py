@@ -11,6 +11,7 @@ from app.combat.condition_rules import is_incapacitated
 from app.combat.dice import DiceProvider
 from app.combat.dodge import resolve_dodge_action
 from app.combat.encounter_turn_support import finish_turn, resolve_support_actions, save_choice
+from app.combat.frightened import frightened_d20_disadvantage
 from app.combat.grapple import cleanup_grapples, resolve_escape_grapple, should_escape_grapple
 from app.combat.ongoing_spell_control import build_forced_retreat_event, forced_retreat_active
 from app.combat.opening_burst import opening_feature_id
@@ -50,7 +51,6 @@ def resolve_combat_turn(
             events.append(build_forced_retreat_event(sequence, round_number, attacker.combatant_id, attacker.state))
             sequence += 1
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key, allow_surge=False)
-
         support_events, sequence = resolve_support_actions(sequence, round_number, attacker, setup, dice, turn_key)
         events.extend(support_events)
         if is_incapacitated(attacker.state):
@@ -68,7 +68,7 @@ def resolve_combat_turn(
                 events.append(shift_event)
                 sequence += 1
         if should_escape_grapple(attacker.state):
-            events.append(resolve_escape_grapple(sequence, round_number, attacker.combatant_id, attacker.state, dice))
+            events.append(resolve_escape_grapple(sequence, round_number, attacker.combatant_id, attacker.state, dice, other_disadvantage_sources=frightened_d20_disadvantage(attacker.state, setup)))
             sequence += 1
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
         if should_use_adrenaline_rush(attacker.state):
