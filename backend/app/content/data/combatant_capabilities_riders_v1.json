@@ -1,0 +1,84 @@
+[
+  {
+    "schema_version": 1,
+    "id": "srd-ettin",
+    "name": "Ettin",
+    "archetype": "source-certified two-headed bruiser",
+    "challenge_rating": "4",
+    "kind": "monster",
+    "size": "large",
+    "armor_class": 12,
+    "max_hp": 85,
+    "speed_ft": 40,
+    "movement_modes": {
+      "walk_ft": 40,
+      "fly_ft": 0,
+      "climb_ft": 0,
+      "swim_ft": 0,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": -1,
+    "attacks": [
+      {
+        "id": "srd-ettin-battleaxe",
+        "name": "Battleaxe",
+        "weapon_id": "srd-ettin-battleaxe-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 7,
+        "damage": {"count": 2, "size": 8, "bonus": 5},
+        "damage_type": "slashing",
+        "animation": "heavy-strike",
+        "reach_ft": 5,
+        "effects": [
+          {"kind": "prone", "max_target_size": "large"}
+        ]
+      },
+      {
+        "id": "srd-ettin-morningstar",
+        "name": "Morningstar",
+        "weapon_id": "srd-ettin-morningstar-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 7,
+        "damage": {"count": 2, "size": 8, "bonus": 5},
+        "damage_type": "piercing",
+        "animation": "heavy-strike",
+        "reach_ft": 5,
+        "effects": [
+          {
+            "kind": "next-attack-disadvantage",
+            "expires_at_end_of_target_turn": true
+          }
+        ]
+      }
+    ],
+    "primary_attack_id": "srd-ettin-battleaxe",
+    "unarmed_opportunity_attack": {"attack_bonus": 7, "damage": 6},
+    "attack_action": {
+      "id": "srd-ettin-multiattack",
+      "name": "Multiattack",
+      "is_attack_action": false,
+      "slots": [
+        {"attack_ids": ["srd-ettin-battleaxe"]},
+        {"attack_ids": ["srd-ettin-morningstar"]}
+      ]
+    },
+    "saving_throw_bonuses": {
+      "strength": 5,
+      "dexterity": -1,
+      "constitution": 3,
+      "intelligence": -2,
+      "wisdom": 0,
+      "charisma": -1
+    },
+    "skill_bonuses": {"perception": 4},
+    "condition_immunities": ["blinded", "charmed", "deafened", "frightened", "stunned", "unconscious"],
+    "visual": {
+      "armor": "natural",
+      "main_hand": "battleaxe",
+      "off_hand": "morningstar",
+      "body_style": "giant"
+    },
+    "source": "SRD 5.2.1 p. 284"
+  }
+]
