@@ -55,7 +55,7 @@
     for (const state of states || []) {
       const before = state.active_modifiers.length;
       state.active_modifiers = state.active_modifiers.filter((item) => !(item.source_id === sourceId
-        && item.source_effect_id === effectId && (!concentrationOnly || item.concentration_required)));
+        && item.expires_source_turn_end_round != null && item.expires_source_turn_end_round <= round));
       removed += before - state.active_modifiers.length;
     }
     return removed;
