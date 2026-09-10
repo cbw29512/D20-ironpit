@@ -44,6 +44,7 @@
           actionOrBonusOnly: Boolean(effect.actionOrBonusOnly),
           reactionsDisabled: Boolean(effect.reactionsDisabled),
           requiresActiveEffectId: effect.requiresCondition || null,
+          trackActiveEffect: false,
         });
         if (restriction) applied.push(restriction);
       } else if (MODIFIER_KINDS.has(effect.kind)) {
