@@ -6,6 +6,7 @@
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
   const F = () => window.IRON_PIT_BROWSER_SAVE_FAILURE_EFFECTS;
   const S = () => window.IRON_PIT_BROWSER_STATE;
+  const T = () => window.IRON_PIT_BROWSER_TIMED;
   const RES = () => window.IRON_PIT_BROWSER_RESOURCES;
   const B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2 || { dangerSenseAdvantage: () => 0 };
   const DG = () => window.IRON_PIT_BROWSER_DODGE || { dexSaveAdvantageSources: () => 0 };
@@ -21,7 +22,8 @@
     const advantage = (ability === "strength" && state.active_effect_ids.includes("rage") ? 1 : 0)
       + B2().dangerSenseAdvantage(state, ability) + DG().dexSaveAdvantageSources(state, ability)
       + R().bloodiedSaveAdvantage(state);
-    const disadvantage = ability === "dexterity" && state.active_effect_ids.includes("restrained") ? 1 : 0;
+    const disadvantage = (ability === "dexterity" && state.active_effect_ids.includes("restrained") ? 1 : 0)
+      + (T()?.d20Disadvantage(state, ability) || 0);
     return R().modeFromSources(advantage, disadvantage);
   }
 
@@ -49,6 +51,7 @@
 
   function legalAction(action, target, distance) {
     if (distance > action.range) return false;
+    if (action.forbidTargetAffectedByAction && T()?.affectedByAction(target.state, action.id)) return false;
     return !action.targetMaxSize || S().sizeAtMost(target, action.targetMaxSize);
   }
 
