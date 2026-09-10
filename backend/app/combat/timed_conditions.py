@@ -17,7 +17,7 @@ def apply_timed_condition(
     source_effect_id: str | None = None,
     applied_round: int | None = None,
     expires_round: int | None = None,
-    expires_at_start_of_source_turn: bool = True,
+    expires_at_start_of_source_turn: bool = False,
     expiry_timing: ConditionTiming | None = None,
     repeat_save_ability: AbilityName | None = None,
     repeat_save_dc: int | None = None,
