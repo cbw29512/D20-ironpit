@@ -81,7 +81,7 @@ def _condition_timing_present(actions: str, control: Any) -> bool:
     return True
 
 
-def attack_issues(attack: WeaponAttack, actions: str) -> list[str]:
+def attack_issues(attack: WeaponAttack, actions: str, traits: str = "") -> list[str]:
     issues: list[str] = []
     weapon = attack.weapon
     if weapon.name.lower() not in actions:
@@ -114,7 +114,7 @@ def attack_issues(attack: WeaponAttack, actions: str) -> list[str]:
         if not _conditional_clause_pattern(conditional).search(actions):
             issues.append(f"conditional-damage-mismatch:{attack.id}:{conditional.trigger}")
     issues.extend(hit_modifier_issues(attack, actions))
-    issues.extend(conditional_attack_advantage_issues(attack, actions))
+    issues.extend(conditional_attack_advantage_issues(attack, actions, traits))
     if attack.knocks_prone_max_size is not None and not _max_size_rider_present(actions, attack.knocks_prone_max_size, "prone"):
         issues.append(f"prone-rider-mismatch:{attack.id}")
     if attack.forbid_target_grappled_by_self:
