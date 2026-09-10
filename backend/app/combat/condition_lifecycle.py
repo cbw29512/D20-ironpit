@@ -5,6 +5,7 @@ import logging
 from app.combat.modifier_stack import expire_target_turn_modifiers
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.timed_conditions import remove_effect_group
+from app.combat.timed_effect_recovery import automatic_success_due, resolve_automatic_success
 from app.domain.actions import ConditionTiming
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
@@ -35,6 +36,10 @@ def resolve_target_condition_timing(
         events: list[BattleEvent] = []
         for effect in list(target.state.timed_effects):
             if effect not in target.state.timed_effects:
+                continue
+            if automatic_success_due(effect, round_number, timing):
+                events.append(resolve_automatic_success(sequence, round_number, target, effect))
+                sequence += 1
                 continue
             if _repeat_save_due(effect, round_number, timing):
                 roll, succeeded = resolve_saving_throw(
