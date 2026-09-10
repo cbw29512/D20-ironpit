@@ -8,11 +8,10 @@ const vm = require("node:vm");
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
-  "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js", "browser-monsters-beast2.js",
-  "browser-monsters-batch3.js", "browser-monsters-control.js", "browser-monsters-poison.js", "browser-monsters-venom.js",
-  "browser-monsters-mixed.js", "browser-condition-rules.js", "browser-action-economy.js", "browser-grapple.js",
-  "browser-timed-conditions.js", "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js",
-  "browser-attack.js", "browser-resources.js", "browser-saves.js", "browser-charge.js", "browser-formation.js", "browser-multiattack.js", "browser-turn.js",
+  "browser-heroes.js", "browser-monsters-generated.js", "browser-condition-rules.js", "browser-action-economy.js",
+  "browser-grapple.js", "browser-timed-conditions.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
+  "browser-zero-hp.js", "browser-attack.js", "browser-resources.js", "browser-saves.js", "browser-charge.js",
+  "browser-formation.js", "browser-multiattack.js", "browser-turn.js",
 ]) load(file);
 
 const queuedDice = (values, fallback = 10) => {
@@ -28,7 +27,8 @@ const member = (id, side, template, position) => ({
   combatant_id: id, side, position_ft: position, state: S.buildState(structuredClone(template)),
 });
 
-assert.equal(Object.keys(monsters).length, 63, "mixed Multiattack batch must bring browser roster to 63 monsters");
+assert.equal(window.IRON_PIT_CANONICAL_MONSTERS_READY, true, "mixed Multiattack regressions must use the canonical generated roster");
+assert.ok(monsters["srd-giant-constrictor-snake"], "Giant Constrictor Snake must be generated and certified");
 
 {
   const snake = monsters["srd-giant-constrictor-snake"];
@@ -138,4 +138,4 @@ function rangedHybridSetup(protectedByFrontline) {
   assert.deepEqual(attacks.map((event) => event.weapon_id), ["sword", "sword"], "adjacent unscreened ranged Multiattack switches to melee");
 }
 
-console.log("Browser range-aware mixed Multiattack regressions passed.");
+console.log("Canonical generated range-aware mixed Multiattack regressions passed.");
