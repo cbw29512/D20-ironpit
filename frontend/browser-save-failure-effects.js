@@ -43,6 +43,7 @@
           expiryTiming: effect.expiryTiming,
           actionOrBonusOnly: Boolean(effect.actionOrBonusOnly),
           reactionsDisabled: Boolean(effect.reactionsDisabled),
+          speedMultiplier: effect.speedMultiplier == null ? 1 : effect.speedMultiplier,
           requiresActiveEffectId: effect.requiresCondition || null,
           trackActiveEffect: false,
         });
