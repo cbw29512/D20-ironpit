@@ -23,6 +23,44 @@ def area_row(area: Any) -> dict[str, Any]:
         raise
 
 
+def failure_effect_row(effect: Any) -> dict[str, Any]:
+    try:
+        row: dict[str, Any] = {"kind": effect.kind}
+        maximum = getattr(effect, "max_target_size", None)
+        if maximum is not None:
+            row["maxTargetSize"] = value(maximum)
+        if effect.kind == "grapple":
+            row["escapeDc"] = effect.escape_dc
+            if effect.restrains:
+                row["restrains"] = True
+        elif effect.kind == "condition":
+            row["condition"] = effect.condition
+            if effect.expires_at_start_of_source_turn:
+                row["expiresAtStartOfSourceTurn"] = True
+            if effect.expiry_timing:
+                row["expiryTiming"] = effect.expiry_timing
+            if effect.repeat_save_ability:
+                row["repeatSaveAbility"] = effect.repeat_save_ability
+                row["repeatSaveDc"] = effect.repeat_save_dc
+                row["repeatSaveTiming"] = effect.repeat_save_timing
+            if effect.repeat_save_delay_rounds:
+                row["repeatSaveDelayRounds"] = effect.repeat_save_delay_rounds
+            if effect.allowed_removal_action_ids:
+                row["allowedRemovalActionIds"] = list(effect.allowed_removal_action_ids)
+        elif effect.kind in {"attacks-against-advantage", "speed"}:
+            row["flatBonus"] = effect.flat_bonus
+            if effect.consume_on_attack_against:
+                row["consumeOnAttackAgainst"] = True
+            if effect.expires_at_start_of_source_turn:
+                row["expiresAtStartOfSourceTurn"] = True
+            if effect.expires_at_end_of_target_turn:
+                row["expiresAtEndOfTargetTurn"] = True
+        return row
+    except Exception:
+        logger.exception("Failed to serialize failed-save effect.")
+        raise
+
+
 def save_row(action: Any) -> dict[str, Any]:
     try:
         row: dict[str, Any] = {
@@ -33,6 +71,8 @@ def save_row(action: Any) -> dict[str, Any]:
         }
         if action.area is not None:
             row["area"] = area_row(action.area)
+        if action.failure_effects:
+            row["failureEffects"] = [failure_effect_row(effect) for effect in action.failure_effects]
         if action.resource_id is not None:
             row["resourceId"], row["resourceCost"] = action.resource_id, action.resource_cost
         if action.target_max_size:
