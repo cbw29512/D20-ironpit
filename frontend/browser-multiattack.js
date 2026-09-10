@@ -15,6 +15,18 @@
     : { attackIds: slot.attackIds || [], saveActionIds: slot.saveActionIds || [] };
   const sizeAllowed = (target, maximum) => !maximum || window.IRON_PIT_BROWSER_STATE.sizeAtMost(target, maximum);
 
+  function immediatePush(member, target, attack, event) {
+    const push = attack.pushTargetAwayFt || 0;
+    if (!event.hit || push <= 0 || target.state.is_dead) return;
+    const before = Math.abs(target.position_ft - member.position_ft);
+    const direction = target.position_ft >= member.position_ft ? 1 : -1;
+    target.position_ft = Math.max(0, target.position_ft + (direction * push));
+    const after = Math.abs(target.position_ft - member.position_ft);
+    event.distance_before_ft = before;
+    event.distance_after_ft = after;
+    event.description += ` Target is pushed ${push} ft. away (${before} ft. to ${after} ft.).`;
+  }
+
   function saveEffectIsNew(member, target, action, effect) {
     if (effect.kind === "prone") return sizeAllowed(target, effect.maxTargetSize) && !target.state.active_effect_ids.includes("prone") && !I().immune(target.state, "prone");
     if (effect.kind === "grapple") return sizeAllowed(target, effect.maxTargetSize) && !(target.state.grapple_sources || []).some((source) => source.source_id === member.combatant_id);
@@ -100,6 +112,7 @@
         const pack = window.IRON_PIT_BROWSER_STATE.packTactics(member, choice.target, setup);
         const featureId = openingFeature || (pack ? "pack-tactics" : definition.id);
         const event = A().resolveAttack(sequence++, round, member, choice.target, choice.attack, choice.distance, { spendAction: false, advantage: pack ? 1 : 0, setup, featureId, turnKey, allowReckless: true, ignoreCloseThreat: true });
+        immediatePush(member, choice.target, choice.attack, event);
         events.push(event);
         if (member.state.turn_terminated) break;
         const cleave = WM().resolveCleave(sequence, round, member, event, choice.attack, setup, turnKey);
