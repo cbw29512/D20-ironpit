@@ -6,6 +6,7 @@
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { speedZero: (state) => state.active_effect_ids.includes("restrained") };
   const T = () => window.IRON_PIT_BROWSER_TACTICAL_MIND;
   const F = () => window.IRON_PIT_BROWSER_FRIGHTENED;
+  const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
     available: (state, cost) => cost === "action" && state.action_available,
     spend: (state) => { state.action_available = false; },
@@ -85,6 +86,7 @@
     let disadvantage = state.active_effect_ids.includes("poisoned") ? 1 : 0;
     if (state.active_effect_ids.includes("frightened")) { if (!setup || !F()) throw new Error("Frightened grapple check requires encounter context."); disadvantage += F().d20Disadvantage(state, setup); }
     let roll = R().d20(bonus, R().modeFromSources(advantage, disadvantage));
+    if (M()) roll = M().applyD20Bonus(state, "ability-check-bonus-die", roll);
     let success = roll.total >= source.escape_dc, tactical = null;
     if (!success && T()) {
       tactical = T().apply(state, roll, source.escape_dc);
