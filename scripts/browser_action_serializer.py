@@ -51,6 +51,8 @@ def failure_effect_row(effect: Any) -> dict[str, Any]:
             row["actionOrBonusOnly"] = effect.action_or_bonus_only
             row["reactionsDisabled"] = effect.reactions_disabled
             row["expiryTiming"] = effect.expiry_timing
+            if effect.requires_condition:
+                row["requiresCondition"] = effect.requires_condition
         elif effect.kind in {"attacks-against-advantage", "speed"}:
             row["flatBonus"] = effect.flat_bonus
             if effect.consume_on_attack_against:
