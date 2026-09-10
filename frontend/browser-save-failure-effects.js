@@ -37,11 +37,13 @@
         });
         if (condition) applied.push(condition);
       } else if (effect.kind === "turn-restriction") {
+        if (effect.requiresCondition && !target.state.active_effect_ids.includes(effect.requiresCondition)) continue;
         const restriction = T().apply(target.state, "turn-restriction", sourceId, {
           sourceEffectId, appliedRound: options.round,
           expiryTiming: effect.expiryTiming,
           actionOrBonusOnly: Boolean(effect.actionOrBonusOnly),
           reactionsDisabled: Boolean(effect.reactionsDisabled),
+          requiresActiveEffectId: effect.requiresCondition || null,
         });
         if (restriction) applied.push(restriction);
       } else if (MODIFIER_KINDS.has(effect.kind)) {
