@@ -117,6 +117,6 @@
     "skill_bonuses": {"athletics": 11, "perception": 6},
     "damage_immunities": ["fire"],
     "visual": {"armor": "plate", "main_hand": "flame-sword", "off_hand": "hammer", "body_style": "giant"},
-    "source": "SRD 5.2.1 p. 286"
+    "source": "SRD 5.2.1 p. 285"
   }
 ]
