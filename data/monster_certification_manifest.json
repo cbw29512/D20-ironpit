@@ -7327,7 +7327,7 @@
       "monster_name": "Roper",
       "srd_source_page": 320,
       "srd_source_reference": "SRD 5.2.1 p. 320",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-roper",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -7348,7 +7348,8 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "monster-combat-mechanics-not-certified"
+        "damage-dice-mismatch:srd-roper-tentacle",
+        "damage-type-missing:srd-roper-tentacle"
       ]
     },
     {
