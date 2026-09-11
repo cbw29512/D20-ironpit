@@ -1545,7 +1545,11 @@
       "blockers": [
         "bonus-action",
         "limited-use",
-        "uncertified-bonus-action:petrifying-gaze",
+        "save-action-name-missing:srd-basilisk-petrifying-gaze",
+        "save-area-mismatch:srd-basilisk-petrifying-gaze",
+        "save-dc-mismatch:srd-basilisk-petrifying-gaze",
+        "save-failure-effect-mismatch:srd-basilisk-petrifying-gaze:0:condition",
+        "source-save-action-count-mismatch",
         "uncertified-limited-use:bonusactions-petrifying-gaze-recharge-4-6"
       ]
     },
@@ -4640,8 +4644,9 @@
         "save-action-name-missing:srd-gorgon-trample",
         "save-damage-mismatch:srd-gorgon-trample",
         "save-dc-mismatch:srd-gorgon-trample",
+        "save-failure-effect-mismatch:srd-gorgon-petrifying-breath:0:condition",
         "save-or-complex-action",
-        "uncertified-limited-use:actions-petrifying-breath-recharge-5-6"
+        "source-save-action-count-mismatch"
       ]
     },
     {
@@ -6081,7 +6086,11 @@
       "blockers": [
         "bonus-action",
         "limited-use",
-        "uncertified-bonus-action:petrifying-gaze",
+        "save-action-name-missing:srd-medusa-petrifying-gaze",
+        "save-area-mismatch:srd-medusa-petrifying-gaze",
+        "save-dc-mismatch:srd-medusa-petrifying-gaze",
+        "save-failure-effect-mismatch:srd-medusa-petrifying-gaze:0:condition",
+        "source-save-action-count-mismatch",
         "uncertified-limited-use:bonusactions-petrifying-gaze-recharge-5-6"
       ]
     },
