@@ -29,6 +29,11 @@ _COMBINED_ATTACK_ROLL = re.compile(r"\bMelee\s+or\s+Ranged\s+Attack Roll:", re.I
 _SAVING_THROW = re.compile(
     r"\b(?:Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma)\s+Saving Throw:", re.IGNORECASE,
 )
+_SAVE_SOURCE_FIELD = {
+    "action": "actions",
+    "bonus_action": "bonusActions",
+    "reaction": "reactions",
+}
 
 
 def _first_int(value: object) -> int:
@@ -90,6 +95,11 @@ def _runtime_attack_mode_count(template: CombatantTemplate) -> int:
     )
 
 
+def _save_source(row: dict[str, object], action_cost: str) -> str:
+    field = _SAVE_SOURCE_FIELD.get(action_cost)
+    return normalized(row.get(field, "")) if field is not None else ""
+
+
 def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
     try:
         checks = (
@@ -118,17 +128,17 @@ def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) ->
         runtime_attacks = _source_bound_attacks(template)
         if _source_attack_mode_count(actions) != _runtime_attack_mode_count(template):
             issues.append("source-attack-count-mismatch")
-        runtime_save_count = len(template.saving_throw_actions) + sum(
-            attack.on_hit_saving_throw is not None for attack in runtime_attacks
-        )
-        if len(_SAVING_THROW.findall(actions)) != runtime_save_count:
+        runtime_action_save_count = sum(
+            action.action_cost == "action" for action in template.saving_throw_actions
+        ) + sum(attack.on_hit_saving_throw is not None for attack in runtime_attacks)
+        if len(_SAVING_THROW.findall(actions)) != runtime_action_save_count:
             issues.append("source-save-action-count-mismatch")
         for attack in runtime_attacks:
             issues.extend(attack_issues(attack, actions, traits))
             issues.extend(on_hit_save_issues(attack, actions))
         issues.extend(charge_replacement_issues(template, actions))
         for action in template.saving_throw_actions:
-            issues.extend(save_action_issues(action, actions))
+            issues.extend(save_action_issues(action, _save_source(row, action.action_cost)))
         for action in template.forced_movement_actions:
             issues.extend(forced_movement_action_issues(action, actions))
         for action in template.swallow_actions:
