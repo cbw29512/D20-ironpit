@@ -14,7 +14,11 @@ class RogueCombatLevel:
 
 _ROWS = {
     1: (2, 1, ("sneak-attack", "weapon-mastery"), ("expertise", "thieves-cant")),
-    2: (2, 1, ("cunning-action",), ()),
+    # Cunning Action changes movement/action economy, but the standard Iron Pit has
+    # no tactical objective that makes Dash, Disengage, or Hide alter Mara's
+    # certified attack loop. Keep it explicit and audited instead of pretending
+    # the engine resolves a mechanic that is intentionally arena-neutral here.
+    2: (2, 1, (), ("cunning-action",)),
     3: (2, 2, ("steady-aim",), ()),
     4: (2, 2, (), ()),
     5: (3, 3, ("cunning-strike", "uncanny-dodge"), ()),
