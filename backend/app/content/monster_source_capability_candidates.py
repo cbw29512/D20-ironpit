@@ -24,6 +24,11 @@ _ATTACK = re.compile(
     r"(?P<tail>[^.]*)\.", re.I,
 )
 _EXTRA = re.compile(r"plus\s+\d+\s*\((\d+)d(\d+)(?:\s*([+-])\s*(\d+))?\)\s+([A-Za-z]+)\s+damage", re.I)
+_ON_HIT_SAVE_BLOCK = re.compile(
+    r"(?:(?:If|The target)[^.]*following effect\.\s*)?"
+    r"(?:Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) Saving Throw:\s*DC\s*\d+[^.]*\.\s*"
+    r"Failure:\s*[^.]+\.", re.I,
+)
 _MULTI_COUNT = re.compile(r"Multiattack\.\s+The\s+[^.]+?\s+makes\s+(one|two|three|four|five|six)\s+([A-Za-z’' -]+?)\s+attacks?\.", re.I)
 _MULTI_GENERIC = re.compile(r"Multiattack\.\s+The\s+[^.]+?\s+makes\s+(one|two|three|four|five|six)\s+attacks?,\s+using\s+([^.]+?)\s+in any combination\.", re.I)
 _WORD_COUNT = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6}
@@ -49,6 +54,9 @@ def _ranges(text: str) -> tuple[int, int | None, int | None]:
 def _rider_text(actions: str, match: re.Match[str]) -> str:
     text = match.group("tail") or ""
     following = actions[match.end():].lstrip()
+    save_block = _ON_HIT_SAVE_BLOCK.match(following)
+    if save_block:
+        return text + ". " + save_block.group(0)
     if re.match(r"(?:If|Until|The target|Whenever|While)\b", following, re.I):
         text += ". " + following.split(".", 1)[0]
     return text
