@@ -20,6 +20,7 @@
       repeatSaveTiming: effect.repeatSaveTiming || null,
       repeatSaveDelayRounds: effect.repeatSaveDelayRounds || 0,
       repeatSaveFailureCondition: effect.repeatSaveFailureCondition || null,
+      automaticSuccessAfterRounds: effect.automaticSuccessAfterRounds ?? null,
       allowedRemovalActionIds: effect.allowedRemovalActionIds || [],
       periodicDamage: effect.periodicDamage || null,
     });
