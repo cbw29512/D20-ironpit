@@ -28,7 +28,7 @@ _CONTROL_SAVE = re.compile(
     r"(?P<ability>Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) Saving Throw:\s+DC\s+(?P<dc>\d+),\s+"
     r"(?P<target>[^.]+)\.\s+Failure:\s+(?P<failure>The target has the "
     r"(?:Blinded|Charmed|Deafened|Frightened|Incapacitated|Paralyzed|Poisoned|Prone|Restrained|Stunned|Unconscious) condition "
-    r"until the (?:start|end) of (?:its|the [^.]+?[’']s) next turn)\.", re.I,
+    r"until the (?:start|end) of (?:its|the [^.]+?[’']s) next turn(?:\.\s+While [^.]+)?)\.", re.I,
 )
 _RESTRICTION_SAVE = re.compile(
     r"(?P<name>[A-Z][A-Za-z0-9’' -]*?)\.\s+(?P<ability>\w+) Saving Throw:\s+DC\s+(?P<dc>\d+),\s+"
