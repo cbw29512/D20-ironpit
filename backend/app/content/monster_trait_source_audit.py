@@ -49,18 +49,31 @@ def _is_heading(value: str) -> bool:
     return all(word.lower() in _CONNECTORS or re.fullmatch(r"[A-Z][A-Za-z’'\-]*", word) for word in words)
 
 
+@lru_cache(maxsize=512)
+def _parse_trait_names_cached(text: str) -> tuple[str, ...]:
+    try:
+        if not text:
+            return ()
+        names: list[str] = []
+        for sentence in re.split(r"(?<=\.)\s+", text):
+            candidate = sentence[:-1].strip() if sentence.endswith(".") else ""
+            if _is_heading(candidate):
+                names.append(_heading_name(candidate))
+        if not names:
+            raise ValueError(f"SRD trait headings could not be parsed from: {text!r}")
+        return tuple(names)
+    except Exception:
+        logger.exception("Failed to parse SRD trait headings.")
+        raise
+
+
 def parse_trait_names(source_traits: object) -> list[str]:
-    text = str(source_traits or "").strip()
-    if not text:
-        return []
-    names: list[str] = []
-    for sentence in re.split(r"(?<=\.)\s+", text):
-        candidate = sentence[:-1].strip() if sentence.endswith(".") else ""
-        if _is_heading(candidate):
-            names.append(_heading_name(candidate))
-    if not names:
-        raise ValueError(f"SRD trait headings could not be parsed from: {text!r}")
-    return names
+    try:
+        text = str(source_traits or "").strip()
+        return list(_parse_trait_names_cached(text))
+    except Exception:
+        logger.exception("Failed to resolve cached SRD trait headings.")
+        raise
 
 
 def _movement_trait_issues(template: CombatantTemplate, expected: list[str]) -> list[str]:
