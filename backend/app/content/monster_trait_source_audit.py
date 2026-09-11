@@ -5,6 +5,7 @@ import re
 from functools import lru_cache
 
 from app.content.monster_catalog import load_monster_rows
+from app.content.monster_legendary_resistance_source import legendary_resistance_trait_issues
 from app.content.monster_regeneration_source import regeneration_trait_issues
 from app.content.monster_trait_aura_audit import aura_trait_issues
 from app.domain.models import CombatantTemplate
@@ -94,9 +95,13 @@ def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[st
     issues.extend(_movement_trait_issues(template, expected))
     issues.extend(_magic_resistance_issues(template, expected))
     issues.extend(regeneration_trait_issues(template, row))
+    legendary_issues, legendary_certified = legendary_resistance_trait_issues(template, expected)
+    issues.extend(legendary_issues)
     aura_issues, aura_certified = aura_trait_issues(template, row, expected)
     issues.extend(aura_issues)
     certified = set(_MODELED_TRAITS) | set(_DECLARATIVE_ATTACK_TRAITS) | set(_ARENA_NEUTRAL_TRAITS) | {"Incorporeal Movement", "Magic Resistance", "Regeneration"} | aura_certified
+    if legendary_certified:
+        certified.add("Legendary Resistance")
     for name in expected:
         if name not in certified:
             slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
