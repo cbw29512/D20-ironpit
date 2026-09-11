@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from app.content.figure_profile_schema import FigureForm, FigureProfile, figure_profile as _p
 from app.content.figure_profiles_dragons import DRAGON_FIGURE_PROFILES
+from app.content.figure_profiles_riders import RIDER_FIGURE_PROFILES
 
 MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Allosaurus": _p("theropod", "allosaurus"),
@@ -143,7 +144,7 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Wyvern": _p("reptile", "wyvern"),
     "Xorn": _p("brute", "xorn"),
     "Zombie": _p("humanoid", "zombie"),
-    **DRAGON_FIGURE_PROFILES,
+    **DRAGON_FIGURE_PROFILES, **RIDER_FIGURE_PROFILES,
 }
 
 __all__ = ["FigureForm", "FigureProfile", "MONSTER_FIGURE_PROFILES"]
