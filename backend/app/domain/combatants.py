@@ -79,6 +79,7 @@ class CombatantTemplate(BaseModel):
     saving_throw_bonuses: dict[str, int] = Field(default_factory=dict)
     skill_bonuses: dict[str, int] = Field(default_factory=dict)
     combat_traits: list[CombatTrait] = Field(default_factory=list)
+    magic_resistance: bool = False
     source_trait_names: list[str] = Field(default_factory=list)
     source_reaction_names: list[str] = Field(default_factory=list)
     source_bonus_action_names: list[str] = Field(default_factory=list)
