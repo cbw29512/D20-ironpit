@@ -14,6 +14,7 @@ NEW_READY_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Elephant": _p("quadruped", "elephant"),
     "Ghast": _p("humanoid", "ghast"),
     "Ghoul": _p("humanoid", "ghoul"),
+    "Gladiator": _p("humanoid", "gladiator"),
     "Gold Dragon Wyrmling": _p("reptile", "gold-dragon"),
     "Gorgon": _p("quadruped", "gorgon"),
     "Horned Devil": _p("humanoid", "horned-devil"),
