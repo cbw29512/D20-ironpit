@@ -39,6 +39,12 @@ _SAVE_FAILURE_CONDITION = re.compile(
     rf"until the (?P<edge>start|end) of (?P<owner>its|the [^.]+?[’']s) next turn",
     re.I,
 )
+_STAGED_SAVE = re.compile(
+    rf"(?P<ability>Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) Saving Throw:\s*DC\s*(?P<dc>\d+)[^.]*\.\s*"
+    rf"First Failure:\s*(?:The\s+)?target has the (?P<condition>{_CONDITIONS}) condition(?P<body>.*?)"
+    rf"Second Failure:\s*(?:The\s+)?target has the (?P<second>{_CONDITIONS}) condition",
+    re.I | re.S,
+)
 _MAX_HP_TYPED = re.compile(
     r"Hit Point maximum decreases by an amount equal to the (Acid|Cold|Fire|Force|Lightning|Necrotic|Poison|Psychic|Radiant|Thunder|Bludgeoning|Piercing|Slashing) damage taken",
     re.I,
@@ -73,7 +79,28 @@ def _target_filter(text: str) -> TargetFilter:
     return TargetFilter(excluded_creature_types=sorted(excluded_types), excluded_tags=sorted(excluded_tags))
 
 
+def _staged_save(text: str, maximum: CreatureSize | None) -> HitSavingThrowEffectDefinition | None:
+    match = _STAGED_SAVE.search(text)
+    if match is None:
+        return None
+    body = match.group("body").lower()
+    if "repeats the save" not in body or "end of its next turn" not in body or "success" not in body:
+        return None
+    failure = ConditionEffectDefinition(
+        condition=match.group("condition").lower(), max_target_size=maximum,
+        repeat_save_ability=match.group("ability").lower(), repeat_save_dc=int(match.group("dc")),
+        repeat_save_timing="target_turn_end", repeat_save_failure_condition=match.group("second").lower(),
+    )
+    return HitSavingThrowEffectDefinition(
+        save_ability=match.group("ability").lower(), dc=int(match.group("dc")),
+        target_filter=_target_filter(text), failure_effects=[failure],
+    )
+
+
 def _hit_save(text: str, maximum: CreatureSize | None) -> HitSavingThrowEffectDefinition | None:
+    staged = _staged_save(text, maximum)
+    if staged is not None:
+        return staged
     match = _SAVE_CONDITION.search(text) or _SAVE_FAILURE_CONDITION.search(text)
     if match is None:
         return None
