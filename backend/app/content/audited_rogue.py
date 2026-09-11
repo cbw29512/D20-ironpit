@@ -12,10 +12,18 @@ from app.domain.models import CombatantTemplate, ResourceDefinition
 from app.domain.traits import CombatTrait
 
 
+_MARA_ARENA_NEUTRAL_FEATURES_BY_LEVEL: dict[int, frozenset[str]] = {
+    2: frozenset({"cunning-action"}),
+}
+
+
 def mara_rogue_features(level: int) -> tuple[str, ...]:
     if level < 3:
-        return base_class_combat_features("rogue", level, ROGUE_COMBAT_LEVELS)
-    return compose_class_subclass_features("rogue", "thief", level, ROGUE_COMBAT_LEVELS)
+        features = base_class_combat_features("rogue", level, ROGUE_COMBAT_LEVELS)
+    else:
+        features = compose_class_subclass_features("rogue", "thief", level, ROGUE_COMBAT_LEVELS)
+    ignored = _MARA_ARENA_NEUTRAL_FEATURES_BY_LEVEL.get(level, frozenset())
+    return tuple(feature_id for feature_id in features if feature_id not in ignored)
 
 
 def unsupported_mara_rogue_features(level: int) -> tuple[str, ...]:
