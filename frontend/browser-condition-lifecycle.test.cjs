@@ -19,10 +19,10 @@ const T = window.IRON_PIT_BROWSER_TIMED;
 const L = window.IRON_PIT_BROWSER_CONDITION_LIFECYCLE;
 const template = () => structuredClone(window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"]);
 const member = (id, side = "heroes") => ({ combatant_id: id, side, position_ft: 0, state: S.buildState(template()) });
-let d20 = 1;
+let d20 = 1, damageDie = 1;
 window.IRON_PIT_DICE = {
-  roll: (sides) => sides === 20 ? d20 : 1,
-  rollMany: (count, sides) => Array.from({ length: count }, () => sides === 20 ? d20 : 1),
+  roll: (sides) => sides === 20 ? d20 : damageDie,
+  rollMany: (count, sides) => Array.from({ length: count }, () => sides === 20 ? d20 : damageDie),
 };
 
 {
@@ -80,6 +80,25 @@ window.IRON_PIT_DICE = {
   const second = L.resolveSourceTiming(first.sequence, 5, sourceB, setup, "source_turn_start");
   assert.equal(second.events.length, 1);
   assert.equal(target.state.active_effect_ids.includes("frightened"), false);
+}
+
+{
+  const target = member("periodic-target");
+  const hpBefore = target.state.current_hp;
+  T.apply(target.state, "poisoned", "vrock-source", {
+    sourceEffectId: "spores", appliedRound: 1,
+    repeatSaveAbility: "constitution", repeatSaveDc: 14, repeatSaveTiming: "target_turn_end",
+    periodicDamage: { timing: "target_turn_start", diceCount: 1, diceSize: 10, damageBonus: 0, damageType: "poison" },
+  });
+  damageDie = 9;
+  const tick = L.resolveTargetTiming(1, 2, target, "target_turn_start");
+  assert.equal(tick.events.length, 1);
+  assert.equal(tick.events[0].damage_components[0].applied_total, 9);
+  assert.equal(target.state.current_hp, hpBefore - 9);
+  d20 = 20;
+  const recovery = L.resolveTargetTiming(tick.sequence, 2, target, "target_turn_end");
+  assert.equal(recovery.events[0].save_succeeded, true);
+  assert.deepEqual(recovery.events[0].removed_condition_ids, ["poisoned"]);
 }
 
 console.log("Browser condition lifecycle regressions passed.");
