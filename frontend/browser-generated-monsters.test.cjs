@@ -34,7 +34,10 @@ for (const monster of Object.values(generated)) {
   assert.ok(Array.isArray(monster.source_legendary_action_names), `${monster.id}: legendary fingerprint missing`);
   assert.deepEqual(
     Object.keys(monster.movement_modes).sort(),
-    ["burrow_ft", "climb_ft", "fly_ft", "hover", "swim_ft", "walk_ft"],
+    [
+      "burrow_ft", "climb_ft", "fly_ft", "hover",
+      "pass_through_creatures_as_difficult_terrain", "swim_ft", "walk_ft",
+    ],
     `${monster.id}: movement fingerprint incomplete`,
   );
 }
