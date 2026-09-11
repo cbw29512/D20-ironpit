@@ -25,7 +25,22 @@ def _slug(name: str) -> str:
 
 
 def parse_bonus_action_names(source_bonus_actions: object) -> list[str]:
-    return parse_trait_names(source_bonus_actions)
+    """Preserve printed limited-use markers while reusing the proven heading parser."""
+    text = str(source_bonus_actions or "").strip()
+    if not text:
+        return []
+    base_names = parse_trait_names(text)
+    names: list[str] = []
+    cursor = 0
+    for base_name in base_names:
+        pattern = re.compile(rf"{re.escape(base_name)}(?P<marker>\s*\([^)]*\))?\.")
+        match = pattern.search(text, cursor)
+        if match is None:
+            raise ValueError(f"SRD bonus-action heading {base_name!r} could not be recovered from: {text!r}")
+        marker = match.group("marker") or ""
+        names.append(f"{base_name}{marker}")
+        cursor = match.end()
+    return names
 
 
 def bonus_action_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
