@@ -55,7 +55,7 @@ def test_start_turn_aura_does_not_reach_beyond_emanation() -> None:
         heroes=[wolf], monsters=[hezrou], hero_total_levels=1, monster_total_cr="8",
     )
     events, sequence = resolve_start_turn_save_condition_auras(
-        1, 1, wolf, setup, FixedDiceProvider([]),
+        1, 1, wolf, setup, FixedDiceProvider([1]),
     )
     assert events == [] and sequence == 1
     assert "poisoned" not in wolf.state.active_effect_ids
