@@ -71,7 +71,7 @@ def test_fighter_level_seventeen_is_public_and_level_eighteen_remains_blocked() 
     )
     required = {
         "heroic-warrior", "indomitable", "tactical-master", "studied-attacks",
-        "superior-critical", "great-weapon-fighting", "multiattack-or-extra-attack",
+        "expanded-critical-range", "great-weapon-fighting", "multiattack-or-extra-attack",
     }
     browser = BROWSER_HEROES.read_text(encoding="utf-8")
 
