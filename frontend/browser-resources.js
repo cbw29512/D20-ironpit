@@ -29,7 +29,20 @@
   }
 
   function actionAvailable(state, resourceId, cost = 1, fallbackResourceId = null) {
-    return available(state, resolvedId(resourceId, fallbackResourceId), cost);
+    try {
+      if (!Number.isInteger(cost) || cost < 1) throw new Error("Resource cost must be a positive integer.");
+      const resolved = resolvedId(resourceId, fallbackResourceId);
+      if (!resolved) return true;
+      const value = state.resources?.[resolved];
+      if (value === undefined) return false;
+      if (!Number.isInteger(value) || value < 0) {
+        throw new Error(`Invalid runtime resource ${resolved}.`);
+      }
+      return value >= cost;
+    } catch (error) {
+      console.error("Failed browser action resource availability check", { resourceId, fallbackResourceId, cost, error });
+      throw error;
+    }
   }
 
   function spend(state, resourceId, cost = 1) {
