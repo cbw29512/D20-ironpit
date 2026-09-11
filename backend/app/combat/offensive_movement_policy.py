@@ -5,7 +5,7 @@ import logging
 from app.combat.action_economy import is_available
 from app.combat.encounter_targeting import combatant_distance, living_opponents
 from app.combat.grid_pathing import plan_movement_toward
-from app.combat.offensive_ranges import ranked_offensive_ranges_for_target
+from app.combat.offensive_ranges import ranked_offensive_range_profiles_for_target
 from app.combat.reaction_movement import move_toward_with_reactions
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.grid import OffensiveMovementIntent
@@ -19,7 +19,7 @@ def choose_offensive_movement_intent(
     setup: EncounterSetup,
     turn_key: str,
 ) -> OffensiveMovementIntent | None:
-    """Move toward the highest-priority offense whenever movement makes useful progress."""
+    """Move toward the highest-priority offense when movement improves its use."""
     try:
         if not is_available(attacker.state, "action") or setup.map_definition is None:
             return None
@@ -31,10 +31,16 @@ def choose_offensive_movement_intent(
             if target.state.position is None:
                 raise ValueError("Grid offensive movement requires authoritative target positions.")
             distance = combatant_distance(attacker, target)
-            for priority, family, desired_distance in ranked_offensive_ranges_for_target(attacker, target, turn_key):
-                if distance <= desired_distance:
+            profiles = ranked_offensive_range_profiles_for_target(attacker, target, turn_key)
+            for profile in profiles:
+                if distance <= profile.preferred_range_ft:
                     candidates.append((
-                        priority, 0, distance, target.combatant_id, family, desired_distance,
+                        profile.priority,
+                        0,
+                        distance,
+                        target.combatant_id,
+                        profile.family,
+                        profile.preferred_range_ft,
                     ))
                     continue
                 plan = plan_movement_toward(
@@ -42,19 +48,28 @@ def choose_offensive_movement_intent(
                     attacker,
                     target,
                     members,
-                    desired_distance,
+                    profile.preferred_range_ft,
                     attacker.state.movement_remaining_ft,
                 )
-                if not plan.goal_reachable or not plan.path or plan.final_distance_ft >= distance:
+                if plan.goal_reachable and plan.path and plan.final_distance_ft < distance:
+                    candidates.append((
+                        profile.priority,
+                        plan.movement_cost_ft,
+                        distance,
+                        target.combatant_id,
+                        profile.family,
+                        profile.preferred_range_ft,
+                    ))
                     continue
-                candidates.append((
-                    priority,
-                    plan.movement_cost_ft,
-                    distance,
-                    target.combatant_id,
-                    family,
-                    desired_distance,
-                ))
+                if distance <= profile.max_range_ft:
+                    candidates.append((
+                        profile.priority,
+                        0,
+                        distance,
+                        target.combatant_id,
+                        profile.family,
+                        profile.preferred_range_ft,
+                    ))
         if not candidates:
             return None
         _, movement_cost, _, target_id, family, desired_distance = min(candidates)
@@ -80,7 +95,7 @@ def move_to_enable_offense(
     turn_key: str,
     dice,
 ) -> tuple[list[BattleEvent], int]:
-    """Advance along a legal route that enables or approaches the preferred supported offense."""
+    """Advance along a legal route that enables or improves the preferred offense."""
     try:
         if setup.map_definition is None:
             return [], sequence
