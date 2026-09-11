@@ -5,6 +5,7 @@ import logging
 from app.combat.action_economy import is_available, spend
 from app.combat.aura_modifiers import saving_throw_advantage_sources
 from app.combat.barbarian import end_rage_if_incapacitated
+from app.combat.condition_rules import has_condition
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
 from app.combat.forced_movement import apply_save_failure_push
@@ -31,6 +32,8 @@ def legal_save_action(action: SavingThrowAction, target: EncounterCombatant, dis
     try:
         if distance_ft > action.range_ft:
             return False
+        if action.required_target_condition and not has_condition(target.state, action.required_target_condition):
+            return False
         if action.forbid_target_affected_by_action:
             families = _forbidden_effect_families(action)
             if families and any(effect.effect_family in families for effect in target.state.timed_effects):
@@ -51,8 +54,8 @@ def resolve_save_action(
     affected_states: list[CombatantState] | None = None, setup: EncounterSetup | None = None,
 ) -> BattleEvent:
     try:
-        if spend_action and not is_available(actor.state, "action"):
-            raise ValueError("Action is not available for a saving throw action.")
+        if spend_action and not is_available(actor.state, action.action_cost):
+            raise ValueError(f"{action.action_cost.replace('_', ' ').title()} is not available for a saving throw action.")
         if not legal_save_action(action, target, distance_ft):
             raise ValueError(f"{action.name} has no legal target at {distance_ft} feet.")
         if spend_resource_cost and not resource_available(actor.state, action.resource_id, action.resource_cost):
@@ -62,7 +65,7 @@ def resolve_save_action(
             advantage_sources=saving_throw_advantage_sources(target, setup),
         )
         if spend_action:
-            spend(actor.state, "action")
+            spend(actor.state, action.action_cost)
         resource_remaining = (
             spend_resource(actor.state, action.resource_id, action.resource_cost)
             if spend_resource_cost else None
