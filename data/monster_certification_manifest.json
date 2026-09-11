@@ -1549,8 +1549,7 @@
         "save-area-mismatch:srd-basilisk-petrifying-gaze",
         "save-dc-mismatch:srd-basilisk-petrifying-gaze",
         "save-failure-effect-mismatch:srd-basilisk-petrifying-gaze:0:condition",
-        "source-save-action-count-mismatch",
-        "uncertified-limited-use:bonusactions-petrifying-gaze-recharge-4-6"
+        "source-save-action-count-mismatch"
       ]
     },
     {
@@ -6090,8 +6089,7 @@
         "save-area-mismatch:srd-medusa-petrifying-gaze",
         "save-dc-mismatch:srd-medusa-petrifying-gaze",
         "save-failure-effect-mismatch:srd-medusa-petrifying-gaze:0:condition",
-        "source-save-action-count-mismatch",
-        "uncertified-limited-use:bonusactions-petrifying-gaze-recharge-5-6"
+        "source-save-action-count-mismatch"
       ]
     },
     {
@@ -6381,7 +6379,6 @@
         "save-or-complex-action",
         "source-save-action-count-mismatch",
         "trait",
-        "uncertified-limited-use:bonusactions-horror-nimbus-recharge-5-6",
         "uncertified-reaction:pursuit"
       ]
     },
