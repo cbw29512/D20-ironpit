@@ -33,6 +33,7 @@ class StartTurnSaveConditionAura(BaseModel):
     expiry_timing: ConditionTiming = "target_turn_start"
     magical_effect: bool = False
     disabled_while_incapacitated: bool = False
+    success_grants_source_immunity: bool = False
 
 
 class RollAdvantageAura(BaseModel):
