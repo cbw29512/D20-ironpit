@@ -91,6 +91,16 @@ def test_sunlight_sensitivity_is_inactive_without_explicit_sunlight() -> None:
         raise
 
 
+def test_shadow_open_arena_traits_are_source_fingerprinted_but_inactive() -> None:
+    try:
+        shadow = _monster("Shadow")
+        assert shadow.source_trait_names == ["Amorphous", "Sunlight Weakness"]
+        assert trait_issues(shadow, _row("Shadow")) == []
+    except Exception:
+        logger.exception("Shadow arena-neutral trait regression failed.")
+        raise
+
+
 def test_recognized_magic_resistance_trait_fails_closed_without_runtime_support() -> None:
     try:
         wolf = _monster("Wolf")
