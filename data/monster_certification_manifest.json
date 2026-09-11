@@ -1525,8 +1525,7 @@
       "blockers": [
         "condition-or-control",
         "trait",
-        "uncertified-trait:barbed-hide",
-        "uncertified-trait:diabolical-restoration"
+        "uncertified-trait:barbed-hide"
       ]
     },
     {
@@ -1895,8 +1894,7 @@
       "blockers": [
         "condition-or-control",
         "source-attack-count-mismatch",
-        "trait",
-        "uncertified-trait:diabolical-restoration"
+        "trait"
       ]
     },
     {
@@ -2197,8 +2195,7 @@
         "save-or-complex-action",
         "source-save-action-count-mismatch",
         "trait",
-        "uncertified-reaction:unnerving-gaze",
-        "uncertified-trait:diabolical-restoration"
+        "uncertified-reaction:unnerving-gaze"
       ]
     },
     {
@@ -2738,8 +2735,7 @@
         "trait",
         "uncertified-bonus-action:divine-aid",
         "uncertified-limited-use:bonusactions-divine-aid-2-day",
-        "uncertified-monster-spellcasting",
-        "uncertified-trait:exalted-restoration"
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -3247,7 +3243,6 @@
         "source-save-action-count-mismatch",
         "trait",
         "uncertified-reaction:parry",
-        "uncertified-trait:diabolical-restoration",
         "uncertified-trait:magic-rope"
       ]
     },
@@ -5227,8 +5222,7 @@
       "blockers": [
         "save-or-complex-action",
         "source-save-action-count-mismatch",
-        "trait",
-        "uncertified-trait:diabolical-restoration"
+        "trait"
       ]
     },
     {
@@ -5340,7 +5334,6 @@
         "trait",
         "uncertified-limited-use:actions-ice-wall-recharge-6",
         "uncertified-monster-spellcasting",
-        "uncertified-trait:diabolical-restoration",
         "unsupported-action-rider"
       ]
     },
@@ -6904,7 +6897,6 @@
         "trait",
         "uncertified-limited-use:actions-hellfire-spellcasting-recharge-4-6",
         "uncertified-monster-spellcasting",
-        "uncertified-trait:diabolical-restoration",
         "uncertified-trait:fear-aura"
       ]
     },
@@ -6948,8 +6940,7 @@
         "trait",
         "uncertified-bonus-action:divine-aid",
         "uncertified-limited-use:bonusactions-divine-aid-2-day",
-        "uncertified-trait:divine-awareness",
-        "uncertified-trait:exalted-restoration"
+        "uncertified-trait:divine-awareness"
       ]
     },
     {
@@ -7987,8 +7978,7 @@
         "uncertified-bonus-action:divine-aid",
         "uncertified-legendary-action-economy",
         "uncertified-limited-use:bonusactions-divine-aid-3-day",
-        "uncertified-trait:divine-awareness",
-        "uncertified-trait:exalted-restoration"
+        "uncertified-trait:divine-awareness"
       ]
     },
     {
