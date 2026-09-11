@@ -1,4 +1,5 @@
 from __future__ import annotations
+from functools import lru_cache
 import re
 from typing import Any
 from app.content.monster_ability_reduction_source_audit import ability_reduction_issues
@@ -15,6 +16,7 @@ def normalized(text: object) -> str:
     return re.sub(r"\s+", " ", str(text)).strip().lower()
 
 
+@lru_cache(maxsize=256)
 def _dice_pattern(count: int, size: int, bonus: int) -> re.Pattern[str]:
     base = rf"{count}\s*d\s*{size}"
     if bonus == 0:
@@ -23,6 +25,7 @@ def _dice_pattern(count: int, size: int, bonus: int) -> re.Pattern[str]:
     return re.compile(base + rf"\s*{sign}\s*{abs(bonus)}", re.IGNORECASE)
 
 
+@lru_cache(maxsize=256)
 def _dice_text(count: int, size: int, bonus: int) -> str:
     base = rf"{count}\s*d\s*{size}"
     if bonus == 0:
@@ -46,10 +49,12 @@ def _conditional_clause_pattern(conditional: Any) -> re.Pattern[str]:
     )
 
 
+@lru_cache(maxsize=64)
 def _melee_reach_pattern(reach_ft: int) -> re.Pattern[str]:
     return re.compile(rf"\breach\s+{reach_ft}\s*(?:ft\.?|feet)\b", re.IGNORECASE)
 
 
+@lru_cache(maxsize=128)
 def _ranged_pattern(normal_ft: int, long_ft: int) -> re.Pattern[str]:
     if normal_ft == long_ft:
         return re.compile(rf"\brange\s+{normal_ft}(?:\s*/\s*{long_ft})?\s*(?:ft\.?|feet)\b", re.IGNORECASE)
