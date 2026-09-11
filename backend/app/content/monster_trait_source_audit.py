@@ -17,6 +17,7 @@ _MODELED_TRAITS = {
     "Pack Tactics": CombatTrait.PACK_TACTICS,
     "Bloodied Fury": CombatTrait.BLOODIED_FURY,
     "Bloodied Frenzy": CombatTrait.BLOODIED_FRENZY,
+    "Evasion": CombatTrait.EVASION,
     "Swarm": CombatTrait.SWARM,
     "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
 }
@@ -128,8 +129,13 @@ def complete_monster_trait_fingerprints(templates: list[CombatantTemplate]) -> l
                 completed.append(template)
                 continue
             names = source_trait_names(template.name)
+            traits = list(template.combat_traits)
+            for source_name, runtime_trait in _MODELED_TRAITS.items():
+                if source_name in names and runtime_trait not in traits:
+                    traits.append(runtime_trait)
             completed.append(template.model_copy(update={
                 "source_trait_names": names,
+                "combat_traits": traits,
                 "magic_resistance": "Magic Resistance" in names,
             }))
         return completed
