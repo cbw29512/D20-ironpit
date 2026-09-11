@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import re
 
 from app.content.monster_catalog import load_monster_rows
@@ -18,6 +19,8 @@ from app.domain.combatants import VisualLoadout
 from app.domain.size import CreatureSize
 from app.domain.traits import CombatTrait
 from app.domain.weapons import DamageType, WeaponAttackKind
+
+logger = logging.getLogger(__name__)
 
 _ATTACK = re.compile(
     r"(?P<name>[A-Z][A-Za-z0-9’' -]*?)\.\s+(?P<kind>Melee|Ranged|Melee or Ranged) Attack Roll:\s*"
@@ -136,6 +139,7 @@ def source_candidate_definitions(excluded_ids: set[str]) -> dict[str, CombatantD
                 damage_immunities=sorted(defenses["damage_immunities"]), condition_immunities=sorted(defenses["condition_immunities"]),
                 visual=VisualLoadout(armor="natural", main_hand=attacks[0].name, body_style="monster"), source=str(row["sourceReference"]),
             )
-        except (AttributeError, TypeError, ValueError):
+        except (AttributeError, TypeError, ValueError) as exc:
+            logger.warning("Skipping source candidate %s: %s", row.get("name", definition_id), exc)
             continue
     return candidates
