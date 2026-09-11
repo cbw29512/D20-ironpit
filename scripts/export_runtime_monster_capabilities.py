@@ -105,7 +105,7 @@ def _build_registry(*, selector: str | None = None, jobs: int = 0, force: bool =
 
 def render_registry() -> str:
     try:
-        rendered, _, _, _ = _build_registry(force=True)
+        rendered, _, _, _ = _build_registry(force=True, jobs=1)
         return rendered
     except Exception:
         logger.exception("Deterministic full monster registry render failed.")
@@ -130,7 +130,8 @@ def main() -> None:
             print(f"Capability registry is deterministic and current: {_OUTPUT} ({compiled} compiled, {reused} reused).")
             return
         _OUTPUT.write_text(rendered, encoding="utf-8")
-        write_cache(entries, pipeline_hash())
+        if target is None:
+            write_cache(entries, pipeline_hash())
         print(f"Exported {len(entries)} capability definitions to {_OUTPUT} ({compiled} compiled, {reused} reused).")
     except Exception:
         logger.exception("Runtime monster capability export failed.")
