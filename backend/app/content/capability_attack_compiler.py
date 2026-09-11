@@ -93,6 +93,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
                     periodic_damage_bonus=effect.periodic_damage_bonus,
                     periodic_damage_type=effect.periodic_damage_type,
                     forbids_source_attack_ids=effect.forbids_source_attack_ids,
+                    detachable_by_source_movement_ft=effect.detachable_by_source_movement_ft,
                     detachable_by_target_action=effect.detachable_by_target_action,
                     detachable_by_adjacent_action=effect.detachable_by_adjacent_action,
                 )
