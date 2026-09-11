@@ -91,15 +91,17 @@ def test_sunlight_sensitivity_is_inactive_without_explicit_sunlight() -> None:
         raise
 
 
-def test_unknown_outcome_changing_trait_fails_closed() -> None:
+def test_recognized_magic_resistance_trait_fails_closed_without_runtime_support() -> None:
     try:
         wolf = _monster("Wolf")
         row = dict(_row("Wolf"))
         row["traits"] = "Magic Resistance. The wolf has Advantage on saving throws against spells and magical effects."
-        drifted = wolf.model_copy(update={"source_trait_names": ["Magic Resistance"], "combat_traits": []})
-        assert "uncertified-trait:magic-resistance" in trait_issues(drifted, row)
+        drifted = wolf.model_copy(
+            update={"source_trait_names": ["Magic Resistance"], "combat_traits": [], "magic_resistance": False}
+        )
+        assert "trait-runtime-missing:magic-resistance" in trait_issues(drifted, row)
     except Exception:
-        logger.exception("Unknown outcome-changing trait fail-closed regression failed.")
+        logger.exception("Magic Resistance runtime fail-closed regression failed.")
         raise
 
 
