@@ -52,7 +52,7 @@ def failure_effect_row(effect: Any) -> dict[str, Any]:
                 row["periodicDamage"] = {
                     "timing": periodic.timing, "diceCount": periodic.dice_count,
                     "diceSize": periodic.dice_size, "damageBonus": periodic.damage_bonus,
-                    "damageType": periodic.damage_type.value,
+                    "damageType": value(periodic.damage_type),
                 }
         elif effect.kind == "turn-restriction":
             row["actionOrBonusOnly"] = effect.action_or_bonus_only
