@@ -42,6 +42,11 @@ def _slug(value: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
 
 
+def _breath_name(value: str) -> str:
+    words = value.strip().split()
+    return " ".join(words[-2:]) if words and words[-1].lower() == "breath" and len(words) >= 2 else value.strip()
+
+
 def _area(target: str) -> tuple[int, AreaTargeting | None]:
     cone = re.search(r"(\d+)-foot Cone", target, re.I)
     if cone:
@@ -73,7 +78,7 @@ def _resource(monster: str, name: str, limit: str | None) -> ResourceDefinition 
 
 
 def _base_control(monster: str, match: re.Match[str], effects: list[object]) -> SaveCapabilityDefinition:
-    name = match.group("name").strip()
+    name = _breath_name(match.group("name"))
     range_ft, area = _area(match.group("target"))
     return SaveCapabilityDefinition(
         id=f"srd-{_slug(monster)}-{_slug(name)}", name=name, save_ability=match.group("ability").lower(),
@@ -104,8 +109,7 @@ def source_save_candidates(row: dict[str, object]) -> tuple[list[SaveCapabilityD
     existing = {action.id for action in actions}
     for match in _CONTROL_SAVE.finditer(text):
         riders = common_failure_riders(match.group("target"), match.group("failure"))
-        action = _base_control(monster, match, list(riders.pop("failure_effects")))
-        action = action.model_copy(update=riders)
+        action = _base_control(monster, match, list(riders.pop("failure_effects"))).model_copy(update=riders)
         if action.id not in existing:
             actions.append(action)
             existing.add(action.id)
@@ -118,9 +122,9 @@ def source_save_candidates(row: dict[str, object]) -> tuple[list[SaveCapabilityD
             actions.append(action)
             existing.add(action.id)
     for match in _PENALTY_SAVE.finditer(text):
+        name = _breath_name(match.group("name"))
         penalty = TimedPenaltyEffectDefinition(
-            effect_family=f"{_slug(monster)}-{_slug(match.group('name'))}",
-            d20_disadvantage_ability=match.group("penalty_ability").lower(),
+            effect_family=f"{_slug(monster)}-{_slug(name)}", d20_disadvantage_ability=match.group("penalty_ability").lower(),
             damage_penalty_dice_count=int(match.group("count")), damage_penalty_dice_size=int(match.group("size")),
             repeat_save_ability=match.group("ability").lower(), repeat_save_dc=int(match.group("dc")),
             repeat_save_timing="target_turn_end", automatic_success_after_rounds=int(match.group("minutes")) * 10,
