@@ -43,8 +43,10 @@ _MAX_HP_TYPED = re.compile(
 )
 _MAX_HP_ALL = re.compile(r"Hit Point maximum decreases by an amount equal to the damage taken", re.I)
 _NEXT_AGAINST = re.compile(
-    r"next attack roll made against the target before the start of the [^.]+?[’']s next turn has Advantage",
-    re.I,
+    r"next attack roll made against the target before the start of the [^.]+?[’']s next turn has Advantage", re.I,
+)
+_NEXT_ATTACK_DISADVANTAGE = re.compile(
+    r"target has Disadvantage on the next attack roll it makes before the end of its next turn", re.I,
 )
 
 
@@ -63,8 +65,7 @@ def _hit_save(text: str, maximum: CreatureSize | None) -> HitSavingThrowEffectDe
     if match is None:
         return None
     failure = ConditionEffectDefinition(
-        condition=match.group("condition").lower(),
-        max_target_size=maximum,
+        condition=match.group("condition").lower(), max_target_size=maximum,
         expiry_timing=_timing(match.group("owner"), match.group("edge")),
     )
     return HitSavingThrowEffectDefinition(
@@ -83,8 +84,7 @@ def parse_attack_riders(text: str) -> list[object]:
         failed_condition = hit_save.failure_effects[0].condition
     for extra in _FLAT_EXTRA_DAMAGE.finditer(text):
         effects.append(DamageEffectDefinition(
-            source="source-extra-damage",
-            dice=DiceSpec(count=0, bonus=int(extra.group("amount"))),
+            source="source-extra-damage", dice=DiceSpec(count=0, bonus=int(extra.group("amount"))),
             damage_type=DamageType(extra.group("type").lower()),
         ))
     if failed_condition != "prone" and re.search(r"\bProne condition\b", text, re.I):
@@ -100,6 +100,8 @@ def parse_attack_riders(text: str) -> list[object]:
         effects.append(CombatModifierEffect(
             kind="speed", flat_bonus=-int(speed.group(1)), expires_at_end_of_target_turn=True,
         ))
+    if _NEXT_ATTACK_DISADVANTAGE.search(text):
+        effects.append(CombatModifierEffect(kind="next-attack-disadvantage", expires_at_end_of_target_turn=True))
     typed = _MAX_HP_TYPED.search(text)
     if typed:
         effects.append(MaxHpReductionEffectDefinition(damage_type=DamageType(typed.group(1).lower())))
@@ -107,7 +109,6 @@ def parse_attack_riders(text: str) -> list[object]:
         effects.append(MaxHpReductionEffectDefinition())
     if _NEXT_AGAINST.search(text):
         effects.append(CombatModifierEffect(
-            kind="attacks-against-advantage", consume_on_attack_against=True,
-            expires_at_start_of_source_turn=True,
+            kind="attacks-against-advantage", consume_on_attack_against=True, expires_at_start_of_source_turn=True,
         ))
     return effects
