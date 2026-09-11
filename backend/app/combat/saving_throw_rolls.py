@@ -51,21 +51,20 @@ def saving_throw_mode(
 def _indomitable_revision(original: DiceRoll, replacement: DiceRoll) -> RollRevision:
     try:
         return RollRevision(
-            source_effect_id="indomitable",
-            kind="full_reroll",
-            original_rolls=list(original.rolls),
-            replacement_rolls=list(replacement.rolls),
-            original_modifier=original.modifier,
-            replacement_modifier=replacement.modifier,
-            original_selected=original.selected_roll,
-            replacement_selected=replacement.selected_roll,
-            original_total=original.total,
-            replacement_total=replacement.total,
-            accepted="replacement",
+            source_effect_id="indomitable", kind="full_reroll",
+            original_rolls=list(original.rolls), replacement_rolls=list(replacement.rolls),
+            original_modifier=original.modifier, replacement_modifier=replacement.modifier,
+            original_selected=original.selected_roll, replacement_selected=replacement.selected_roll,
+            original_total=original.total, replacement_total=replacement.total, accepted="replacement",
         )
     except Exception as exc:
         logger.exception("Failed to build Indomitable revision evidence.")
         raise RuntimeError("Indomitable revision could not be recorded.") from exc
+
+
+def _legendary_override(state: CombatantState) -> bool:
+    from app.combat.legendary_resistance import use_legendary_resistance
+    return use_legendary_resistance(state)
 
 
 def resolve_saving_throw(
@@ -78,28 +77,25 @@ def resolve_saving_throw(
 ) -> tuple[DiceRoll | None, bool]:
     try:
         if ability in {"strength", "dexterity"} and automatically_fails_strength_dexterity_save(state):
-            return None, False
+            return None, _legendary_override(state)
         if ability not in state.template.saving_throw_bonuses:
             raise ValueError(f"{state.template.name} lacks a certified {ability.title()} saving throw bonus.")
         ability_name = cast(AbilityName, ability)
         save_bonus = state.template.saving_throw_bonuses[ability] + ability_modifier_delta(state, ability_name)
         roll = apply_d20_bonus_dice(
-            state,
-            ModifierKind.SAVING_THROW_BONUS_DIE,
-            roll_d20(
-                dice, save_bonus,
-                saving_throw_mode(state, ability, magical_effect, advantage_sources),
-            ),
-            dice,
+            state, ModifierKind.SAVING_THROW_BONUS_DIE,
+            roll_d20(dice, save_bonus, saving_throw_mode(state, ability, magical_effect, advantage_sources)), dice,
         )
         if roll.total < dc:
             from app.combat.indomitable import use_indomitable
-
             reroll = use_indomitable(state, ability, dice)
             if reroll is not None:
                 revision = _indomitable_revision(roll, reroll)
                 roll = reroll.model_copy(update={"revisions": [*reroll.revisions, revision]})
-        return roll, roll.total >= dc
+        succeeded = roll.total >= dc
+        if not succeeded:
+            succeeded = _legendary_override(state)
+        return roll, succeeded
     except ValueError:
         raise
     except Exception as exc:
