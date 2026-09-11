@@ -7,6 +7,26 @@
   const members = (setup) => [...setup.heroes, ...setup.monsters];
   const incapacitated = (state) => state.active_effect_ids?.includes("incapacitated") || state.is_unconscious || state.is_dead;
 
+  function eligible(source, subject, aura) {
+    if (source.combatant_id === subject.combatant_id) return aura.target_scope === "self" || aura.target_scope === "self-and-allies";
+    return source.side === subject.side && (aura.target_scope === "allies" || aura.target_scope === "self-and-allies");
+  }
+  function advantageSources(subject, setup, key) {
+    if (!setup) return 0;
+    let total = 0;
+    for (const source of members(setup)) {
+      if (source.state.is_dead || !source.state.is_alive) continue;
+      for (const aura of source.state.template.roll_advantage_auras || []) {
+        if (!aura[key] || !eligible(source, subject, aura)) continue;
+        if (aura.disabled_while_incapacitated && incapacitated(source.state)) continue;
+        if (S().distance(source, subject) <= aura.radius_ft) total += 1;
+      }
+    }
+    return total;
+  }
+  const attackAdvantageSources = (subject, setup) => advantageSources(subject, setup, "attack_roll_advantage");
+  const savingThrowAdvantageSources = (subject, setup) => advantageSources(subject, setup, "saving_throw_advantage");
+
   function turnStart(sequence, round, target, setup) {
     const events = [];
     for (const source of members(setup)) {
@@ -14,7 +34,9 @@
       for (const aura of source.state.template.start_turn_save_condition_auras || []) {
         if (aura.disabled_while_incapacitated && incapacitated(source.state)) continue;
         if (S().distance(source, target) > aura.radius_ft) continue;
-        const save = V().resolveSavingThrow(target.state, aura.save_ability, aura.dc, Boolean(aura.magical_effect));
+        const save = V().resolveSavingThrow(
+          target.state, aura.save_ability, aura.dc, Boolean(aura.magical_effect), savingThrowAdvantageSources(target, setup),
+        );
         const applied = [];
         if (!save.succeeded) {
           const condition = T().apply(target.state, aura.condition, source.combatant_id, {
@@ -54,5 +76,5 @@
     return { events, sequence };
   }
 
-  window.IRON_PIT_BROWSER_AURAS = { turnEnd, turnStart };
+  window.IRON_PIT_BROWSER_AURAS = { attackAdvantageSources, savingThrowAdvantageSources, turnEnd, turnStart };
 })();
