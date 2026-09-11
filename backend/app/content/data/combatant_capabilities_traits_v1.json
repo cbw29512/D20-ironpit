@@ -36,5 +36,55 @@
     "source_trait_names": ["Fire Aura", "Illumination"],
     "visual": {"armor": "plate", "main_hand": "burning-hammer", "off_hand": null, "body_style": "azer"},
     "source": "SRD 5.2.1 p. 261"
+  },
+  {
+    "schema_version": 1,
+    "id": "srd-hezrou",
+    "name": "Hezrou",
+    "archetype": "source-certified demonic bruiser",
+    "challenge_rating": "8",
+    "kind": "monster",
+    "size": "large",
+    "armor_class": 18,
+    "max_hp": 157,
+    "speed_ft": 30,
+    "movement_modes": {"walk_ft": 30, "fly_ft": 0, "climb_ft": 0, "swim_ft": 0, "burrow_ft": 0, "hover": false},
+    "initiative_bonus": 6,
+    "attacks": [
+      {
+        "id": "srd-hezrou-rend",
+        "name": "Rend",
+        "weapon_id": "srd-hezrou-rend-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 7,
+        "damage": {"count": 1, "size": 4, "bonus": 4},
+        "damage_type": "slashing",
+        "animation": "claw",
+        "reach_ft": 5,
+        "effects": [
+          {"kind": "damage", "source": "Poison", "dice": {"count": 2, "size": 8, "bonus": 0}, "damage_type": "poison"}
+        ]
+      }
+    ],
+    "primary_attack_id": "srd-hezrou-rend",
+    "unarmed_opportunity_attack": {"attack_bonus": 7, "damage": 5},
+    "attack_action": {
+      "id": "srd-hezrou-multiattack",
+      "name": "Multiattack",
+      "is_attack_action": true,
+      "slots": [
+        {"attack_ids": ["srd-hezrou-rend"]},
+        {"attack_ids": ["srd-hezrou-rend"]},
+        {"attack_ids": ["srd-hezrou-rend"]}
+      ]
+    },
+    "saving_throw_bonuses": {"strength": 7, "dexterity": 3, "constitution": 8, "intelligence": -3, "wisdom": 4, "charisma": 1},
+    "damage_resistances": ["cold", "fire", "lightning"],
+    "damage_immunities": ["poison"],
+    "condition_immunities": ["poisoned"],
+    "source_trait_names": ["Demonic Restoration", "Magic Resistance", "Stench"],
+    "source_bonus_action_names": ["Leap"],
+    "visual": {"armor": "hide", "main_hand": "claws", "off_hand": null, "body_style": "hezrou"},
+    "source": "SRD 5.2.1 p. 298"
   }
 ]
