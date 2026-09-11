@@ -69,7 +69,7 @@ def resolve_attack_action(
                 target, save_action, distance = chosen_save
                 events.append(resolve_save_action(
                     sequence, round_number, attacker, target, save_action,
-                    distance, dice, spend_action=False, affected_states=affected_states,
+                    distance, dice, spend_action=False, affected_states=affected_states, setup=setup,
                 ))
                 sequence += 1
                 continue
