@@ -5,7 +5,7 @@ import re
 from functools import lru_cache
 
 from app.content.monster_catalog import load_monster_rows
-from app.domain.auras import EndTurnDamageAura, StartTurnSaveConditionAura
+from app.domain.auras import EndTurnDamageAura, RollAdvantageAura, StartTurnSaveConditionAura
 from app.domain.models import CombatantTemplate, DamageType
 
 logger = logging.getLogger(__name__)
@@ -21,6 +21,11 @@ _START_TURN_CONDITION_AURA = re.compile(
     r"Saving Throw: DC (?P<dc>\d+), any creature that starts its turn in a (?P<radius>\d+)-foot Emanation "
     r"originating from the [^.]+\. Failure: The target has the (?P<condition>Poisoned|Frightened) condition "
     r"until the start of its next turn\.", re.IGNORECASE,
+)
+_ROLL_ADVANTAGE_AURA = re.compile(
+    r"(?P<name>[A-Z][A-Za-z '\-]+)\.\s+While in a (?P<radius>\d+)-foot Emanation originating from the [^,]+, "
+    r"the [^ ]+ and its allies have Advantage on attack rolls and saving throws, provided the [^ ]+ doesn’t have "
+    r"the Incapacitated condition\.", re.IGNORECASE,
 )
 
 
@@ -66,12 +71,26 @@ def source_start_turn_condition_auras(name: str) -> list[StartTurnSaveConditionA
     )]
 
 
+def source_roll_advantage_auras(name: str) -> list[RollAdvantageAura]:
+    match = _ROLL_ADVANTAGE_AURA.search(_traits(name))
+    if not match:
+        return []
+    heading = match.group("name").strip()
+    return [RollAdvantageAura(
+        id=re.sub(r"[^a-z0-9]+", "-", heading.lower()).strip("-"), name=heading,
+        radius_ft=int(match.group("radius")), target_scope="self-and-allies",
+        attack_roll_advantage=True, saving_throw_advantage=True,
+        disabled_while_incapacitated=True,
+    )]
+
+
 def complete_monster_auras(templates: list[CombatantTemplate]) -> list[CombatantTemplate]:
     try:
         return [
             template.model_copy(update={
                 "end_turn_damage_auras": source_end_turn_damage_auras(template.name),
                 "start_turn_save_condition_auras": source_start_turn_condition_auras(template.name),
+                "roll_advantage_auras": source_roll_advantage_auras(template.name),
             }) if template.kind == "monster" else template
             for template in templates
         ]
