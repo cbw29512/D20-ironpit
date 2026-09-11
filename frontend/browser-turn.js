@@ -93,9 +93,14 @@
       return finalize(events, sequence, round, member, setup, turnKey);
     }
     const rush = P()?.adrenaline(sequence, round, member); if (rush) { events.push(rush); sequence += 1; }
-    const spell = L()?.resolve(sequence, round, member, setup, turnKey);
-    if (spell) { events.push(...spell.events); sequence = spell.sequence; }
+
+    const readyRecharge = RA()?.resolve(sequence, round, member, setup, turnKey);
+    if (readyRecharge?.handled) {
+      events.push(...readyRecharge.events);
+      return finalize(events, readyRecharge.sequence, round, member, setup, turnKey);
+    }
     if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
+
     const targets = F().targetOrder(member, setup);
     if (!targets.length) return finalize(events, sequence, round, member, setup, turnKey);
     const charged = C()?.resolveClosing(sequence, round, member, targets[0], setup);
@@ -103,17 +108,21 @@
       events.push(...charged.events);
       return finalize(events, charged.sequence, round, member, setup, turnKey);
     }
+
     const movement = OM()?.move(sequence, round, member, setup, turnKey);
     if (movement) { events.push(...movement.events); sequence = movement.sequence; }
     if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
-    const movedSpell = L()?.resolve(sequence, round, member, setup, turnKey);
-    if (movedSpell) { events.push(...movedSpell.events); sequence = movedSpell.sequence; }
-    if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
+
     const rechargeAction = RA()?.resolve(sequence, round, member, setup, turnKey);
     if (rechargeAction?.handled) {
       events.push(...rechargeAction.events);
       return finalize(events, rechargeAction.sequence, round, member, setup, turnKey);
     }
+
+    const movedSpell = L()?.resolve(sequence, round, member, setup, turnKey);
+    if (movedSpell) { events.push(...movedSpell.events); sequence = movedSpell.sequence; }
+    if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
+
     const swallow = SW()?.resolve(sequence, round, member, setup);
     if (swallow?.handled) {
       events.push(...swallow.events);
