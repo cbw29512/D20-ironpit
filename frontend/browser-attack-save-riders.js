@@ -26,10 +26,42 @@
       A().savingThrowAdvantageSources(target, setup),
     );
     const applied = save.succeeded ? [] : F().apply(
-      target, attacker.combatant_id, attack.id, rider.failureEffects || [], { round, range: attack.reach || 0 },
+      target, attacker.combatant_id, attack.id, rider.failureEffects || [], { round, range: attack.reach || distance },
     );
     return { targetEligible: true, saveRoll: save.roll, saveAbility: rider.saveAbility, saveDc: rider.dc, saveSucceeded: save.succeeded, applied };
   }
 
-  window.IRON_PIT_BROWSER_ATTACK_SAVE_RIDERS = { eligible, resolve };
+  function targetForEvent(target, setup, event) {
+    if (target.combatant_id === event.target_id || !setup) return target;
+    return [...setup.heroes, ...setup.monsters].find((member) => member.combatant_id === event.target_id) || target;
+  }
+
+  function install() {
+    const api = window.IRON_PIT_BROWSER_ATTACK;
+    if (!api || api.__hitSaveRidersInstalled) return false;
+    const base = api.resolveAttack;
+    api.resolveAttack = function (...args) {
+      const [, round, attacker, target, attack, distance, extra = {}] = args;
+      const event = base(...args);
+      if (!event.hit || !attack.onHitSavingThrow) return event;
+      const actualTarget = targetForEvent(target, extra.setup, event);
+      const outcome = resolve(attacker, actualTarget, attack, round, distance, extra.setup || null);
+      if (!outcome) return event;
+      if (!outcome.targetEligible) {
+        event.description += ` ${actualTarget.state.template.name} is ineligible for the attached saving throw effect.`;
+        return event;
+      }
+      event.saving_throw_roll = outcome.saveRoll;
+      event.save_ability = outcome.saveAbility;
+      event.save_dc = outcome.saveDc;
+      event.save_succeeded = outcome.saveSucceeded;
+      event.applied_condition_ids = [...new Set([...(event.applied_condition_ids || []), ...outcome.applied])];
+      event.description += ` ${actualTarget.state.template.name} ${outcome.saveSucceeded ? "succeeds" : "fails"} the DC ${outcome.saveDc} ${outcome.saveAbility} hit-effect save.`;
+      return event;
+    };
+    api.__hitSaveRidersInstalled = true;
+    return true;
+  }
+
+  window.IRON_PIT_BROWSER_ATTACK_SAVE_RIDERS = { eligible, install, resolve };
 })();
