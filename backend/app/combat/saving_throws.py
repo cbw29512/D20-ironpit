@@ -75,7 +75,7 @@ def resolve_save_action(
         tracks_push = action.push_target_away_ft > 0
         distance_before = abs(target.position_ft - actor.position_ft) if tracks_push else None
         rolled_components = build_save_damage_components(
-            action, dice, succeeded, shared_damage_rolls, capture_shared_damage_rolls,
+            action, dice, succeeded, shared_damage_rolls, capture_shared_damage_rolls, target.state,
         )
         applied_total, damage_components = apply_damage_defenses(target.state, rolled_components)
         damage_roll = None
