@@ -51,6 +51,7 @@ from app.content.fighter_progression_profile import (
     build_karnok_stoneward_level4_profile,
     build_karnok_stoneward_level5_profile,
 )
+from app.content.rogue_progression_profile import build_mara_quickstep_level2_profile
 from app.domain.character_builds import CharacterBuildProfile
 from app.domain.models import CombatantTemplate
 
@@ -125,7 +126,10 @@ CERTIFIED_HERO_PROGRESSIONS: tuple[CertifiedHeroProgression, ...] = (
     CertifiedHeroProgression(
         class_id="rogue",
         template_builder=build_mara_quickstep_level,
-        profile_builders=(build_mara_quickstep_profile,),
+        profile_builders=(
+            build_mara_quickstep_profile,
+            build_mara_quickstep_level2_profile,
+        ),
     ),
 )
 
