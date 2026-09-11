@@ -5,11 +5,29 @@ import re
 from app.domain.models import WeaponAttack
 
 
-def on_hit_save_issues(attack: WeaponAttack, actions: str) -> list[str]:
+def _filter_issues(attack: WeaponAttack, actions: str) -> list[str]:
     rider = attack.on_hit_saving_throw
     if rider is None:
         return []
     issues: list[str] = []
+    for creature_type in rider.target_filter.excluded_creature_types:
+        patterns = (
+            rf"\bnon-{re.escape(creature_type)}\s+creature\b",
+            rf"\bisn[’']t\s+an?\s+{re.escape(creature_type)}\b",
+        )
+        if not any(re.search(pattern, actions, re.I) for pattern in patterns):
+            issues.append(f"on-hit-save-target-filter-mismatch:{attack.id}:type:{creature_type}")
+    for tag in rider.target_filter.excluded_tags:
+        if not re.search(rf"\bor\s+{re.escape(tag)}\b", actions, re.I):
+            issues.append(f"on-hit-save-target-filter-mismatch:{attack.id}:tag:{tag}")
+    return issues
+
+
+def on_hit_save_issues(attack: WeaponAttack, actions: str) -> list[str]:
+    rider = attack.on_hit_saving_throw
+    if rider is None:
+        return []
+    issues = _filter_issues(attack, actions)
     save_pattern = rf"\b{rider.save_ability}\s+Saving Throw:\s*DC\s*{rider.dc}\b"
     if not re.search(save_pattern, actions, re.I):
         issues.append(f"on-hit-save-mismatch:{attack.id}")
