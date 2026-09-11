@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.content.monster_source_save_candidates import source_save_candidates
+from app.content.monster_source_save_riders import common_failure_riders
 from app.domain.size import CreatureSize
 
 logger = logging.getLogger(__name__)
@@ -43,6 +44,21 @@ def test_damage_save_derives_timed_condition_rider() -> None:
         assert effect.expiry_timing == "target_turn_end"
     except Exception:
         logger.exception("Shared timed-condition save-rider regression failed.")
+        raise
+
+
+def test_source_owned_condition_uses_source_turn_timing() -> None:
+    try:
+        riders = common_failure_riders(
+            "one creature within 30 feet",
+            "The target has the Charmed condition until the start of the pirate’s next turn",
+        )
+        effect = riders["failure_effects"][0]
+        assert effect.kind == "condition"
+        assert effect.condition == "charmed"
+        assert effect.expiry_timing == "source_turn_start"
+    except Exception:
+        logger.exception("Source-owned condition timing regression failed.")
         raise
 
 
