@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 171,
-    "blocked": 159
+    "public_ready": 174,
+    "blocked": 156
   },
   "monsters": [
     {
@@ -281,7 +281,6 @@
         "limited-use",
         "save-area-mismatch:srd-adult-copper-dragon-acid-breath",
         "save-or-complex-action",
-        "source-save-action-count-mismatch",
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
@@ -327,7 +326,6 @@
         "legendary",
         "limited-use",
         "save-or-complex-action",
-        "source-save-action-count-mismatch",
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
@@ -802,7 +800,6 @@
         "limited-use",
         "save-area-mismatch:srd-ancient-copper-dragon-acid-breath",
         "save-or-complex-action",
-        "source-save-action-count-mismatch",
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
@@ -2479,21 +2476,16 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "saving-throw-action"
-      ],
-      "unsupported_mechanics": [
-        "limited-use",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
         "limited-use",
         "save-or-complex-action",
-        "source-save-action-count-mismatch"
-      ]
+        "saving-throw-action"
+      ],
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-couatl",
@@ -3057,6 +3049,7 @@
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
+        "uncertified-limited-use:actions-blinding-breath-recharge-6",
         "uncertified-limited-use:actions-sleep-1-day",
         "uncertified-monster-spellcasting",
         "uncertified-trait:death-burst"
@@ -4581,23 +4574,18 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
+        "limited-use",
         "multiattack",
+        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "limited-use",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "limited-use",
-        "save-or-complex-action",
-        "source-save-action-count-mismatch"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-gorgon",
@@ -9897,23 +9885,18 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
+        "limited-use",
         "multiattack",
+        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "limited-use",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "limited-use",
-        "save-or-complex-action",
-        "source-save-action-count-mismatch"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-young-green-dragon",
