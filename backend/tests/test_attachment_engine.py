@@ -53,12 +53,12 @@ def test_attachment_hit_locks_attack_and_ticks_through_normal_damage_pipeline() 
     assert stirge.state.attachment.target_id == "hero"
     assert attack_available_for_source(attack, stirge.state) is False
 
-    hp_before = hero.state.current_hp
     events, sequence = resolve_attachment_start_turn(2, 2, stirge, setup, FixedDiceProvider([4, 3]))
     assert sequence == 3
     assert len(events) == 1
     assert events[0].damage_roll is not None and events[0].damage_roll.total == 7
-    assert hero.state.current_hp == hp_before - 7
+    assert hero.state.current_hp == 1
+    assert next(item for item in hero.state.resources if item.id == "relentless-endurance").current_uses == 0
 
 
 def test_target_action_and_source_movement_can_detach() -> None:
