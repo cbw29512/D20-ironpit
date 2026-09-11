@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.combat.attachments import apply_attachment
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.condition_rules import attacks_have_advantage_against, has_condition
 from app.combat.dodge import DODGE_EFFECT_ID, dodge_benefits_active
@@ -59,12 +60,19 @@ def apply_hit_conditions(
     source_id: str,
     round_number: int | None = None,
     affected_states: list[CombatantState] | None = None,
+    source_state: CombatantState | None = None,
+    target_id: str | None = None,
 ) -> list[str]:
     """Apply certified automatic conditions and modifiers from a successful weapon hit."""
     if defender.is_dead or not defender.is_alive:
         return []
     apply_hit_modifier_effects(defender, source_id, attack)
     applied: list[str] = []
+    if attack.attachment_on_hit is not None:
+        if source_state is None or target_id is None or round_number is None:
+            raise ValueError("Attachment hits require source state, target id, and round number.")
+        if apply_attachment(source_state, source_id, target_id, attack, round_number):
+            applied.append("attached")
     maximum = attack.knocks_prone_max_size
     if (
         maximum is not None
