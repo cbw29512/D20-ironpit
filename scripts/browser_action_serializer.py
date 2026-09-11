@@ -45,6 +45,8 @@ def failure_effect_row(effect: Any) -> dict[str, Any]:
                 row["repeatSaveTiming"] = effect.repeat_save_timing
             if effect.repeat_save_delay_rounds:
                 row["repeatSaveDelayRounds"] = effect.repeat_save_delay_rounds
+            if effect.repeat_save_failure_condition:
+                row["repeatSaveFailureCondition"] = effect.repeat_save_failure_condition
             if effect.allowed_removal_action_ids:
                 row["allowedRemovalActionIds"] = list(effect.allowed_removal_action_ids)
             if effect.periodic_damage:
