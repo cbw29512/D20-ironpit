@@ -1697,6 +1697,14 @@
     "challenge_rating": "1/4",
     "kind": "monster",
     "size": "medium",
+    "ability_scores": {
+      "strength": 14,
+      "dexterity": 15,
+      "constitution": 12,
+      "intelligence": 3,
+      "wisdom": 12,
+      "charisma": 6
+    },
     "armor_class": 12,
     "max_hp": 11,
     "speed_ft": 40,
@@ -1809,6 +1817,14 @@
     "challenge_rating": "1",
     "kind": "monster",
     "size": "large",
+    "ability_scores": {
+      "strength": 17,
+      "dexterity": 15,
+      "constitution": 15,
+      "intelligence": 3,
+      "wisdom": 12,
+      "charisma": 7
+    },
     "armor_class": 14,
     "max_hp": 22,
     "speed_ft": 50,
@@ -10313,6 +10329,14 @@
     "challenge_rating": "2",
     "kind": "monster",
     "size": "huge",
+    "ability_scores": {
+      "strength": 19,
+      "dexterity": 14,
+      "constitution": 12,
+      "intelligence": 1,
+      "wisdom": 10,
+      "charisma": 3
+    },
     "armor_class": 12,
     "max_hp": 60,
     "speed_ft": 30,
