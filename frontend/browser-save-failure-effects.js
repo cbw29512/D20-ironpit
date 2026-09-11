@@ -33,6 +33,7 @@
           repeatSaveDc: effect.repeatSaveDc || null,
           repeatSaveTiming: effect.repeatSaveTiming || null,
           repeatSaveDelayRounds: effect.repeatSaveDelayRounds || 0,
+          repeatSaveFailureCondition: effect.repeatSaveFailureCondition || null,
           allowedRemovalActionIds: effect.allowedRemovalActionIds || [],
           periodicDamage: effect.periodicDamage || null,
         });
