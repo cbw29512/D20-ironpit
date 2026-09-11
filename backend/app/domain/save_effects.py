@@ -36,6 +36,7 @@ class ConditionEffectDefinition(BaseModel):
     kind: Literal["condition"] = "condition"
     condition: ConditionName
     max_target_size: CreatureSize | None = None
+    linked_conditions: list[ConditionName] = Field(default_factory=list)
     expires_at_start_of_source_turn: bool = False
     expiry_timing: ConditionTiming | None = None
     repeat_save_ability: AbilityName | None = None
@@ -55,6 +56,8 @@ class ConditionEffectDefinition(BaseModel):
             raise ValueError("Condition repeat-save delay requires a complete repeat-save rule.")
         if self.repeat_save_failure_condition and not all(item is not None for item in repeat):
             raise ValueError("Repeat-save failure condition requires a complete repeat-save rule.")
+        if self.condition in self.linked_conditions:
+            raise ValueError("A linked condition cannot duplicate its owning condition.")
         if self.expires_at_start_of_source_turn and self.expiry_timing not in {None, "source_turn_start"}:
             raise ValueError("Legacy source-start expiry conflicts with explicit condition timing.")
         return self
