@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 ROOT = Path(__file__).resolve().parents[3]
 CACHE_PATH = ROOT / ".cache" / "ironpit" / "monster_registry_state.json"
 PIPELINE_FILES = (
+    ROOT / "scripts" / "export_runtime_monster_capabilities.py",
     ROOT / "backend" / "app" / "content" / "capability_from_template.py",
     ROOT / "backend" / "app" / "domain" / "capabilities.py",
 )
