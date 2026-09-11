@@ -95,7 +95,7 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             "attacks": [attack_row(item, traits) for item in attacks], "primary_attack_id": template.weapon_attack.id,
             "saving_throw_actions": [save_row(item) for item in template.saving_throw_actions],
             "traits": sorted(traits), "resources": {item.id: item.max_uses for item in template.resources},
-            "resourceDefinitions": _resource_definitions(template),
+            "resourceDefinitions": _resource_definitions(template), "magic_resistance": template.magic_resistance,
             "damage_resistances": [item.value for item in template.damage_resistances],
             "damage_vulnerabilities": [item.value for item in template.damage_vulnerabilities],
             "damage_immunities": [item.value for item in template.damage_immunities],
