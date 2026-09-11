@@ -14,6 +14,7 @@ from app.domain.weapons import DamageType
 
 _SAVE = re.compile(
     r"(?P<name>[A-Z][A-Za-z0-9’' -]*?)(?:\s+\((?P<limit>Recharge\s+\d(?:-\d)?|\d+/Day)\))?\.\s+"
+    r"(?:[^.]+\.\s+)?"
     r"(?P<ability>Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) Saving Throw:\s+DC\s+(?P<dc>\d+),\s+"
     r"(?P<target>[^.]+)\.\s+Failure:\s+(?P<average>\d+)\s+\((?P<count>\d+)d(?P<size>\d+)"
     r"(?:\s*(?P<sign>[+-])\s*(?P<mod>\d+))?\)\s+(?P<dtype>[A-Za-z]+) damage"
