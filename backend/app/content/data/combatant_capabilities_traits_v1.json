@@ -1,0 +1,40 @@
+[
+  {
+    "schema_version": 1,
+    "id": "srd-azer-sentinel",
+    "name": "Azer Sentinel",
+    "archetype": "source-certified fire aura sentinel",
+    "challenge_rating": "2",
+    "kind": "monster",
+    "size": "medium",
+    "armor_class": 17,
+    "max_hp": 39,
+    "speed_ft": 30,
+    "movement_modes": {"walk_ft": 30, "fly_ft": 0, "climb_ft": 0, "swim_ft": 0, "burrow_ft": 0, "hover": false},
+    "initiative_bonus": 1,
+    "attacks": [
+      {
+        "id": "srd-azer-sentinel-burning-hammer",
+        "name": "Burning Hammer",
+        "weapon_id": "srd-azer-sentinel-burning-hammer-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 5,
+        "damage": {"count": 1, "size": 10, "bonus": 3},
+        "damage_type": "bludgeoning",
+        "animation": "heavy-strike",
+        "reach_ft": 5,
+        "effects": [
+          {"kind": "damage", "source": "Fire", "dice": {"count": 1, "size": 6, "bonus": 0}, "damage_type": "fire"}
+        ]
+      }
+    ],
+    "primary_attack_id": "srd-azer-sentinel-burning-hammer",
+    "unarmed_opportunity_attack": {"attack_bonus": 5, "damage": 4},
+    "saving_throw_bonuses": {"strength": 3, "dexterity": 1, "constitution": 4, "intelligence": 1, "wisdom": 1, "charisma": 0},
+    "damage_immunities": ["fire", "poison"],
+    "condition_immunities": ["poisoned"],
+    "source_trait_names": ["Fire Aura", "Illumination"],
+    "visual": {"armor": "plate", "main_hand": "burning-hammer", "off_hand": null, "body_style": "azer"},
+    "source": "SRD 5.2.1 p. 261"
+  }
+]
