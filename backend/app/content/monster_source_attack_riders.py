@@ -13,9 +13,11 @@ from app.domain.capability_effects import (
 )
 from app.domain.hit_modifiers import CombatModifierEffect
 from app.domain.size import CreatureSize
+from app.domain.target_filters import TargetFilter
 from app.domain.weapons import DamageType
 
 _CONDITIONS = "Blinded|Charmed|Deafened|Frightened|Incapacitated|Paralyzed|Petrified|Poisoned|Prone|Restrained|Stunned|Unconscious"
+_CREATURE_TYPES = {"aberration", "beast", "celestial", "construct", "dragon", "elemental", "fey", "fiend", "giant", "humanoid", "monstrosity", "ooze", "plant", "undead"}
 _SIZE = re.compile(r"\b(Tiny|Small|Medium|Large|Huge|Gargantuan)\s+or\s+smaller\b", re.I)
 _SPEED = re.compile(r"target[’']s Speed decreases by (\d+) feet until the end of its next turn", re.I)
 _GRAPPLE = re.compile(r"Grappled condition\s*\(escape DC\s*(\d+)\)", re.I)
@@ -42,12 +44,8 @@ _MAX_HP_TYPED = re.compile(
     re.I,
 )
 _MAX_HP_ALL = re.compile(r"Hit Point maximum decreases by an amount equal to the damage taken", re.I)
-_NEXT_AGAINST = re.compile(
-    r"next attack roll made against the target before the start of the [^.]+?[’']s next turn has Advantage", re.I,
-)
-_NEXT_ATTACK_DISADVANTAGE = re.compile(
-    r"target has Disadvantage on the next attack roll it makes before the end of its next turn", re.I,
-)
+_NEXT_AGAINST = re.compile(r"next attack roll made against the target before the start of the [^.]+?[’']s next turn has Advantage", re.I)
+_NEXT_ATTACK_DISADVANTAGE = re.compile(r"target has Disadvantage on the next attack roll it makes before the end of its next turn", re.I)
 
 
 def _maximum(text: str) -> CreatureSize | None:
@@ -60,6 +58,21 @@ def _timing(owner: str, edge: str) -> str:
     return f"{actor}_turn_{edge.lower()}"
 
 
+def _target_filter(text: str) -> TargetFilter:
+    excluded_types: set[str] = set()
+    excluded_tags: set[str] = set()
+    for match in re.finditer(r"\bnon-([A-Za-z]+)\s+creature\b", text, re.I):
+        excluded_types.add(match.group(1).lower())
+    match = re.search(r"\bisn[’']t\s+an?\s+([A-Za-z]+)(?:\s+or\s+([A-Za-z]+))?", text, re.I)
+    if match:
+        for value in (match.group(1), match.group(2)):
+            if not value:
+                continue
+            normalized = value.lower()
+            (excluded_types if normalized in _CREATURE_TYPES else excluded_tags).add(normalized)
+    return TargetFilter(excluded_creature_types=sorted(excluded_types), excluded_tags=sorted(excluded_tags))
+
+
 def _hit_save(text: str, maximum: CreatureSize | None) -> HitSavingThrowEffectDefinition | None:
     match = _SAVE_CONDITION.search(text) or _SAVE_FAILURE_CONDITION.search(text)
     if match is None:
@@ -69,7 +82,8 @@ def _hit_save(text: str, maximum: CreatureSize | None) -> HitSavingThrowEffectDe
         expiry_timing=_timing(match.group("owner"), match.group("edge")),
     )
     return HitSavingThrowEffectDefinition(
-        save_ability=match.group("ability").lower(), dc=int(match.group("dc")), failure_effects=[failure],
+        save_ability=match.group("ability").lower(), dc=int(match.group("dc")),
+        target_filter=_target_filter(text), failure_effects=[failure],
     )
 
 
@@ -97,9 +111,7 @@ def parse_attack_riders(text: str) -> list[object]:
         effects.append(ConditionEffectDefinition(condition=condition.group(1).lower(), max_target_size=maximum))
     speed = _SPEED.search(text)
     if speed:
-        effects.append(CombatModifierEffect(
-            kind="speed", flat_bonus=-int(speed.group(1)), expires_at_end_of_target_turn=True,
-        ))
+        effects.append(CombatModifierEffect(kind="speed", flat_bonus=-int(speed.group(1)), expires_at_end_of_target_turn=True))
     if _NEXT_ATTACK_DISADVANTAGE.search(text):
         effects.append(CombatModifierEffect(kind="next-attack-disadvantage", expires_at_end_of_target_turn=True))
     typed = _MAX_HP_TYPED.search(text)
