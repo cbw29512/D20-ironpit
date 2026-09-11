@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from app.combat.dice import FixedDiceProvider
+from app.combat.encounter_combat_turn import resolve_combat_turn
+from app.combat.offensive_movement_policy import choose_offensive_movement_intent
 from app.combat.recharge_action_policy import recharge_action_choice
 from app.combat.recharge_action_resolution import resolve_priority_recharge_action
 from app.combat.state import build_combatant_state
@@ -74,3 +76,37 @@ def test_recharge_area_resolution_spends_once_and_resolves_independent_saves() -
     assert actor.state.resources[0].current_uses == 0
     assert events[0].resource_remaining == 0
     assert events[1].resource_remaining is None
+
+
+def test_movement_prefers_reachable_recharge_cone_over_legal_ranged_fallback() -> None:
+    actor = _fixture("actor", "monsters", 1, 5)
+    target = _fixture("target", "heroes", 6, 5)
+    setup = EncounterSetup(
+        heroes=[target], monsters=[actor], hero_total_levels=1, monster_total_cr="1",
+        map_definition=BattleMapDefinition(id="recharge-movement", width_squares=24, height_squares=16),
+    )
+
+    intent = choose_offensive_movement_intent(actor, setup, "1:actor")
+
+    assert intent is not None
+    assert intent.target_id == "target"
+    assert intent.family == "ability"
+    assert intent.desired_distance_ft == 15
+
+
+def test_turn_moves_for_recharge_cone_then_uses_it_before_normal_attack() -> None:
+    actor = _fixture("actor", "monsters", 1, 5)
+    target = _fixture("target", "heroes", 6, 5)
+    setup = EncounterSetup(
+        heroes=[target], monsters=[actor], hero_total_levels=1, monster_total_cr="1",
+        map_definition=BattleMapDefinition(id="recharge-turn", width_squares=24, height_squares=16),
+    )
+
+    events, _ = resolve_combat_turn(1, 1, actor, target, setup, FixedDiceProvider([1, 4]))
+
+    assert actor.state.position.x > 1
+    offense = [event for event in events if event.event_type in {"attack", "saving_throw"}]
+    assert len(offense) == 1
+    assert offense[0].event_type == "saving_throw"
+    assert offense[0].feature_id == "recharge-area"
+    assert actor.state.resources[0].current_uses == 0
