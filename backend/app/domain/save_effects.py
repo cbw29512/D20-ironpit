@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field, model_validator
 from app.domain.hit_modifiers import CombatModifierEffect
 from app.domain.rule_types import AbilityName, ConditionName, ConditionTiming
 from app.domain.size import CreatureSize
+from app.domain.weapons import DamageType
 
 
 class ProneEffectDefinition(BaseModel):
@@ -22,6 +23,16 @@ class GrappleEffectDefinition(BaseModel):
     linked_conditions: list[ConditionName] = Field(default_factory=list)
 
 
+class PeriodicDamageEffectDefinition(BaseModel):
+    """Damage that repeats while its owning timed condition remains active."""
+
+    timing: Literal["target_turn_start", "target_turn_end"]
+    dice_count: int = Field(ge=1, le=40)
+    dice_size: int = Field(ge=2, le=100)
+    damage_bonus: int = 0
+    damage_type: DamageType
+
+
 class ConditionEffectDefinition(BaseModel):
     kind: Literal["condition"] = "condition"
     condition: ConditionName
@@ -33,6 +44,7 @@ class ConditionEffectDefinition(BaseModel):
     repeat_save_timing: ConditionTiming | None = None
     repeat_save_delay_rounds: int = Field(default=0, ge=0, le=20)
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
+    periodic_damage: PeriodicDamageEffectDefinition | None = None
 
     @model_validator(mode="after")
     def validate_lifecycle(self) -> "ConditionEffectDefinition":
