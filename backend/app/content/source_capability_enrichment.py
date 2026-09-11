@@ -52,7 +52,7 @@ def _merge_save_actions(existing: list, source: list, resource_rebinds: dict[str
     merged = []
     for current in existing:
         derived = source_by_key.get(_save_key(current))
-        if derived is None:
+        if derived is None or (current.resource_id is None and derived.resource_id is None):
             merged.append(current)
             continue
         resource_id = derived.resource_id
