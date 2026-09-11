@@ -25,6 +25,10 @@ _REDIRECT_ATTACK = re.compile(
     r"The goblin and that ally swap places, and the ally becomes the target of the attack instead\.",
     re.IGNORECASE,
 )
+# These reactions only create sensory/alert information. In the isolated Iron Pit
+# every combatant is already engaged, so they cannot change movement, damage,
+# targeting, action economy, defenses, or any other fight outcome.
+_ARENA_NEUTRAL_REACTIONS = frozenset({"Shriek"})
 
 
 def _slug(name: str) -> str:
@@ -85,6 +89,8 @@ def reaction_issues(template: CombatantTemplate, row: dict[str, object]) -> list
     if template.redirect_attack_reaction is not None and "Redirect Attack" not in expected:
         issues.append("unexpected-redirect-attack-reaction")
     for name in expected:
+        if name in _ARENA_NEUTRAL_REACTIONS:
+            continue
         if name == "Parry" and _parry_matches(template, source):
             continue
         if name == "Redirect Attack" and _redirect_matches(template, source):
