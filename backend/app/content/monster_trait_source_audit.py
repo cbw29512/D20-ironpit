@@ -23,11 +23,13 @@ _MODELED_TRAITS = {
 }
 _DECLARATIVE_ATTACK_TRAITS = frozenset({"Blood Frenzy"})
 _ARENA_NEUTRAL_TRAITS = frozenset({
-    "Agile", "Amorphous", "Amphibious", "Beast of Burden", "Demonic Restoration", "Diabolical Restoration", "Earth Glide", "Exalted Restoration", "False Appearance", "Flyby",
+    "Agile", "Amorphous", "Amphibious", "Beast of Burden", "Demonic Restoration", "Diabolical Restoration", "Earth Glide",
+    "Eldritch Restoration", "Elemental Restoration", "Exalted Restoration", "False Appearance", "Flyby",
     "Hellish Restoration", "Hold Breath", "Ice Walk", "Illumination", "Jumper", "Keen Hearing",
     "Keen Hearing and Sight", "Keen Hearing and Smell", "Keen Sight", "Keen Smell", "Limited Amphibiousness",
-    "Mimicry", "Running Leap", "Shark Telepathy", "Siege Monster", "Spider Climb", "Standing Leap", "Sunlight Sensitivity", "Sunlight Weakness",
-    "Training", "Treasure Sense", "Troll Spawn", "Water Breathing", "Web Walker",
+    "Mimicry", "Probing Telepathy", "Running Leap", "Sense Magic", "Shark Telepathy", "Siege Monster", "Spider Climb",
+    "Standing Leap", "Sunlight Sensitivity", "Sunlight Weakness", "Telepathic Bond", "Training", "Treasure Sense", "Troll Spawn",
+    "Water Breathing", "Web Walker",
 })
 
 
