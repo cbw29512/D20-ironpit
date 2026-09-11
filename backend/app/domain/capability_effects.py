@@ -5,6 +5,7 @@ from typing import Annotated, Literal
 from pydantic import BaseModel, Field
 
 from app.domain.ability_reduction import AbilityScoreReductionEffectDefinition
+from app.domain.actions import AbilityName
 from app.domain.attachments import AttachmentEffectDefinition
 from app.domain.combatants import DamageType
 from app.domain.hit_modifiers import CombatModifierEffect, HitModifierEffect
@@ -38,6 +39,16 @@ class MaxHpReductionEffectDefinition(BaseModel):
     damage_type: DamageType | None = None
 
 
+class HitSavingThrowEffectDefinition(BaseModel):
+    """Saving throw caused by a successful attack hit before applying generic failure effects."""
+
+    kind: Literal["saving-throw"] = "saving-throw"
+    save_ability: AbilityName
+    dc: int = Field(ge=1, le=40)
+    magical_effect: bool = False
+    failure_effects: list[SaveFailureEffectDefinition] = Field(default_factory=list)
+
+
 AttackEffectDefinition = Annotated[
     DamageEffectDefinition
     | ProneEffectDefinition
@@ -46,7 +57,8 @@ AttackEffectDefinition = Annotated[
     | CombatModifierEffect
     | MaxHpReductionEffectDefinition
     | AttachmentEffectDefinition
-    | AbilityScoreReductionEffectDefinition,
+    | AbilityScoreReductionEffectDefinition
+    | HitSavingThrowEffectDefinition,
     Field(discriminator="kind"),
 ]
 
@@ -60,6 +72,7 @@ __all__ = [
     "DiceSpec",
     "GrappleEffectDefinition",
     "HitModifierEffect",
+    "HitSavingThrowEffectDefinition",
     "MaxHpReductionEffectDefinition",
     "ProneEffectDefinition",
     "SaveFailureEffectDefinition",
