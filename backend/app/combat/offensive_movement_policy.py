@@ -19,7 +19,7 @@ def choose_offensive_movement_intent(
     setup: EncounterSetup,
     turn_key: str,
 ) -> OffensiveMovementIntent | None:
-    """Move only when the highest-priority reachable offense needs movement."""
+    """Move only when the highest-priority offense can become legal this turn."""
     try:
         if not is_available(attacker.state, "action") or setup.map_definition is None:
             return None
@@ -34,12 +34,7 @@ def choose_offensive_movement_intent(
             for priority, family, desired_distance in ranked_offensive_ranges_for_target(attacker, target, turn_key):
                 if distance <= desired_distance:
                     candidates.append((
-                        priority,
-                        0,
-                        distance,
-                        target.combatant_id,
-                        family,
-                        desired_distance,
+                        priority, 0, distance, target.combatant_id, family, desired_distance,
                     ))
                     continue
                 plan = plan_movement_toward(
@@ -50,9 +45,7 @@ def choose_offensive_movement_intent(
                     desired_distance,
                     attacker.state.movement_remaining_ft,
                 )
-                if not plan.goal_reachable or not plan.path:
-                    continue
-                if plan.final_distance_ft >= distance:
+                if not plan.path or plan.final_distance_ft > desired_distance:
                     continue
                 candidates.append((
                     priority,
@@ -87,7 +80,7 @@ def move_to_enable_offense(
     turn_key: str,
     dice,
 ) -> tuple[list[BattleEvent], int]:
-    """Advance only along a route that can enable the preferred supported offense."""
+    """Advance only along a route that enables the preferred supported offense this turn."""
     try:
         if setup.map_definition is None:
             return [], sequence
