@@ -66,6 +66,18 @@ class MaxHpReductionOnHit(BaseModel):
     damage_type: DamageType | None = None
 
 
+class AttachmentOnHit(BaseModel):
+    """Create a source-owned attachment relation after this attack hits."""
+
+    periodic_damage_count: int = Field(ge=0, le=40)
+    periodic_damage_size: int = Field(default=6, ge=2, le=100)
+    periodic_damage_bonus: int = 0
+    periodic_damage_type: DamageType
+    forbids_source_attack_ids: list[str] = Field(default_factory=list)
+    detachable_by_target_action: bool = True
+    detachable_by_adjacent_action: bool = True
+
+
 class Weapon(BaseModel):
     id: str
     name: str
@@ -100,6 +112,7 @@ class WeaponAttack(BaseModel):
     on_hit_damage: list[OnHitDamage] = Field(default_factory=list)
     on_hit_modifier_effects: list[HitModifierEffect] = Field(default_factory=list)
     max_hp_reduction_on_hit: MaxHpReductionOnHit | None = None
+    attachment_on_hit: AttachmentOnHit | None = None
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
     rage_eligible: bool = False
