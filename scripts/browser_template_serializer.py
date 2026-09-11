@@ -53,6 +53,23 @@ def _resource_definitions(template: CombatantTemplate) -> dict[str, Any]:
         raise
 
 
+def _automatic_spell_row(action: Any) -> dict[str, Any]:
+    row = {
+        "id": action.id, "name": action.name, "level": action.level, "actionCost": action.action_cost,
+        "range": action.range_ft, "applications": action.applications,
+        "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
+        "damageBonus": action.damage_bonus, "damageType": action.damage_type,
+        "allowSplitTargets": action.allow_split_targets, "animation": action.animation,
+    }
+    if action.applications_per_slot_above:
+        row["applicationsPerSlotAbove"] = action.applications_per_slot_above
+    if action.resource_id is not None:
+        row["resourceId"], row["resourceCost"] = action.resource_id, action.resource_cost
+    if action.source:
+        row["source"] = action.source
+    return row
+
+
 def _swallow_row(action: Any) -> dict[str, Any]:
     return {
         "id": action.id, "name": action.name, "maxTargetSize": action.max_target_size.value,
@@ -60,7 +77,8 @@ def _swallow_row(action: Any) -> dict[str, Any]:
         "damageBonus": action.damage_bonus, "damageType": action.damage_type.value,
         "firstTickDelayRounds": action.first_tick_delay_rounds, "tickTiming": action.tick_timing,
         "disgorgeAfterFirstTick": action.disgorge_after_first_tick, "appliesBlinded": action.applies_blinded,
-        "appliesRestrained": action.applies_restrained, "totalCoverFromOutside": action.total_cover_from_outside,
+        "appliesRestrained": action.restrains_while_grappled if hasattr(action, "restrains_while_grappled") else action.applies_restrained,
+        "totalCoverFromOutside": action.total_cover_from_outside,
         "forbiddenAttackIdsWhileActive": list(action.forbidden_attack_ids_while_active),
     }
 
@@ -159,6 +177,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["spell_save_actions"] = [spell_save_row(item) for item in template.spell_save_actions]
         if template.spell_attack_actions:
             row["spell_attack_actions"] = [spell_attack_row(item) for item in template.spell_attack_actions]
+        if template.automatic_spell_actions:
+            row["automatic_spell_actions"] = [_automatic_spell_row(item) for item in template.automatic_spell_actions]
         if template.defensive_spell_actions:
             row["defensive_spell_actions"] = [defense_row(item) for item in template.defensive_spell_actions]
         if template.healing_actions:
