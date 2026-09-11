@@ -122,7 +122,7 @@ def resolve_combat_turn(
             affected = [member.state for member in [*setup.heroes, *setup.monsters]]
             events.append(resolve_save_action(
                 sequence, round_number, attacker, save_target, save_action, distance, dice,
-                affected_states=affected,
+                affected_states=affected, setup=setup,
             ))
             sequence += 1
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
