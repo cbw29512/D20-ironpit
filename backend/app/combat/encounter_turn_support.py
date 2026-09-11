@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.attachments import resolve_detach_action
+from app.combat.auras import resolve_end_turn_damage_auras
 from app.combat.barbarian import finalize_rage_turn
 from app.combat.cleric_channel_support import resolve_channel_support
 from app.combat.condition_removal import choose_condition_removal_action, resolve_condition_removal
@@ -29,6 +30,10 @@ def finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key,
             sequence, round_number, attacker, setup, dice,
         )
         events.extend(swallow_events)
+        aura_events, sequence = resolve_end_turn_damage_auras(
+            sequence, round_number, attacker, setup, dice,
+        )
+        events.extend(aura_events)
         rage_event, sequence = finalize_rage_turn(
             sequence, round_number, attacker.state, attacker.combatant_id,
         )
