@@ -9,6 +9,7 @@ from app.domain.ability_reduction import AbilityScoreReductionOnHit
 from app.domain.actions import AbilityName, HitControlEffect
 from app.domain.charge import ChargeProfile
 from app.domain.hit_modifiers import HitModifierEffect
+from app.domain.save_effects import SaveFailureEffectDefinition
 from app.domain.size import CreatureSize
 
 
@@ -80,6 +81,13 @@ class AttachmentOnHit(BaseModel):
     detachable_by_adjacent_action: bool = True
 
 
+class OnHitSavingThrow(BaseModel):
+    save_ability: AbilityName
+    dc: int = Field(ge=1, le=40)
+    magical_effect: bool = False
+    failure_effects: list[SaveFailureEffectDefinition] = Field(default_factory=list)
+
+
 class Weapon(BaseModel):
     id: str
     name: str
@@ -113,6 +121,7 @@ class WeaponAttack(BaseModel):
     conditional_attack_advantage: list[ConditionalAttackAdvantage] = Field(default_factory=list)
     on_hit_damage: list[OnHitDamage] = Field(default_factory=list)
     on_hit_modifier_effects: list[HitModifierEffect] = Field(default_factory=list)
+    on_hit_saving_throw: OnHitSavingThrow | None = None
     max_hp_reduction_on_hit: MaxHpReductionOnHit | None = None
     ability_score_reduction_on_hit: AbilityScoreReductionOnHit | None = None
     attachment_on_hit: AttachmentOnHit | None = None
