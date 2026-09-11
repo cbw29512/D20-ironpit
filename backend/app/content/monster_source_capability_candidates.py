@@ -11,8 +11,10 @@ from app.content.unarmed_opportunity_profiles import monster_unarmed_profile
 from app.domain.capabilities import CombatantDefinition
 from app.domain.capability_attacks import AttackCapabilityDefinition, CapabilityActionSlot, MultiattackCapabilityDefinition
 from app.domain.capability_effects import DamageEffectDefinition, DiceSpec
+from app.domain.charge import ChargeDamage, ChargeProfile
 from app.domain.combatants import VisualLoadout
 from app.domain.size import CreatureSize
+from app.domain.traits import CombatTrait
 from app.domain.weapons import DamageType, WeaponAttackKind
 
 _ATTACK = re.compile(
@@ -24,6 +26,11 @@ _ATTACK = re.compile(
     r"(?P<tail>[^.]*)\.", re.I,
 )
 _EXTRA = re.compile(r"plus\s+\d+\s*\((\d+)d(\d+)(?:\s*([+-])\s*(\d+))?\)\s+([A-Za-z]+)\s+damage", re.I)
+_CHARGE_REPLACEMENT = re.compile(
+    r"\bor\s+\d+\s*\((?P<count>\d+)d(?P<size>\d+)(?:\s*(?P<sign>[+-])\s*(?P<mod>\d+))?\)\s*"
+    r"(?P<type>[A-Za-z]+) damage if the [^.]+? moved (?P<distance>\d+)\+ feet straight toward the target immediately before the hit",
+    re.I,
+)
 _ON_HIT_SAVE_BLOCK = re.compile(
     r"(?:(?:If|The target)[^.]*following effect\.\s*)?"
     r"(?:Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) Saving Throw:\s*DC\s*\d+[^.]*\.\s*"
@@ -62,25 +69,38 @@ def _rider_text(actions: str, match: re.Match[str]) -> str:
     return text
 
 
+def _charge(text: str) -> ChargeProfile | None:
+    match = _CHARGE_REPLACEMENT.search(text)
+    if match is None:
+        return None
+    bonus = int(match.group("mod") or 0) * (-1 if match.group("sign") == "-" else 1)
+    return ChargeProfile(
+        minimum_move_ft=int(match.group("distance")),
+        replacement_damage=ChargeDamage(
+            dice_count=int(match.group("count")), dice_size=int(match.group("size")),
+            damage_bonus=bonus, damage_type=match.group("type").lower(),
+        ),
+    )
+
+
 def _attack(row: dict[str, object], actions: str, match: re.Match[str]) -> AttackCapabilityDefinition:
     name = match.group("name").strip()
-    kind = WeaponAttackKind(match.group("kind").lower().replace(" ", "_"))
     reach, normal, long = _ranges(match.group("range"))
-    effects = parse_attack_riders(_rider_text(actions, match))
+    rider_text = _rider_text(actions, match)
+    effects = parse_attack_riders(rider_text)
     extra = _EXTRA.search(match.group("extra") or "")
     if extra:
         mod = int(extra.group(4) or 0) * (-1 if extra.group(3) == "-" else 1)
-        effects.insert(0, DamageEffectDefinition(
-            source="Source extra damage", dice=DiceSpec(count=int(extra.group(1)), size=int(extra.group(2)), bonus=mod),
-            damage_type=DamageType(extra.group(5).lower()),
-        ))
+        effects.insert(0, DamageEffectDefinition(source="Source extra damage", dice=DiceSpec(
+            count=int(extra.group(1)), size=int(extra.group(2)), bonus=mod,
+        ), damage_type=DamageType(extra.group(5).lower())))
     attack_id = f"srd-{_slug(str(row['name']))}-{_slug(name)}"
     return AttackCapabilityDefinition(
-        id=attack_id, name=name, weapon_id=f"{attack_id}-weapon", attack_kind=kind,
-        attack_bonus=int(match.group("bonus")),
+        id=attack_id, name=name, weapon_id=f"{attack_id}-weapon",
+        attack_kind=WeaponAttackKind(match.group("kind").lower().replace(" ", "_")), attack_bonus=int(match.group("bonus")),
         damage=DiceSpec(count=int(match.group("count")), size=int(match.group("size")), bonus=_bonus(match)),
         damage_type=DamageType(match.group("dtype").lower()), animation="strike", reach_ft=reach,
-        normal_range_ft=normal, long_range_ft=long, effects=effects,
+        normal_range_ft=normal, long_range_ft=long, effects=effects, charge_profile=_charge(rider_text),
     )
 
 
@@ -123,6 +143,7 @@ def source_candidate_definitions(excluded_ids: set[str]) -> dict[str, CombatantD
                 speed_ft=standard_arena_closing_speed(row["speed"]), movement_modes=parse_movement_profile(row["speed"]),
                 initiative_bonus=int(initiative.group(1)), attacks=attacks, primary_attack_id=attacks[0].id,
                 attack_action=_multiattack(row, attacks), save_actions=save_actions, resources=resources,
+                combat_traits=[CombatTrait.CHARGE] if any(item.charge_profile for item in attacks) else [],
                 unarmed_opportunity_attack=monster_unarmed_profile(row),
                 damage_vulnerabilities=sorted(defenses["damage_vulnerabilities"]), damage_resistances=sorted(defenses["damage_resistances"]),
                 damage_immunities=sorted(defenses["damage_immunities"]), condition_immunities=sorted(defenses["condition_immunities"]),
