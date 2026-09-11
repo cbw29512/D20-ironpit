@@ -26,7 +26,7 @@ def choose_offensive_movement_intent(
         if attacker.state.position is None:
             raise ValueError("Grid offensive movement requires an authoritative attacker position.")
         members = [*setup.heroes, *setup.monsters]
-        candidates: list[tuple[int, int, int, str, str, int]] = []
+        candidates: list[tuple[int, int, int, int, str, str, int]] = []
         for target in living_opponents(attacker, setup):
             if target.state.position is None:
                 raise ValueError("Grid offensive movement requires authoritative target positions.")
@@ -36,6 +36,7 @@ def choose_offensive_movement_intent(
                 if distance <= profile.preferred_range_ft:
                     candidates.append((
                         profile.priority,
+                        profile.execution_rank,
                         0,
                         distance,
                         target.combatant_id,
@@ -54,6 +55,7 @@ def choose_offensive_movement_intent(
                 if plan.goal_reachable and plan.path and plan.final_distance_ft < distance:
                     candidates.append((
                         profile.priority,
+                        profile.execution_rank,
                         plan.movement_cost_ft,
                         distance,
                         target.combatant_id,
@@ -64,6 +66,7 @@ def choose_offensive_movement_intent(
                 if distance <= profile.max_range_ft:
                     candidates.append((
                         profile.priority,
+                        profile.execution_rank,
                         0,
                         distance,
                         target.combatant_id,
@@ -72,7 +75,7 @@ def choose_offensive_movement_intent(
                     ))
         if not candidates:
             return None
-        _, movement_cost, _, target_id, family, desired_distance = min(candidates)
+        _, _, movement_cost, _, target_id, family, desired_distance = min(candidates)
         if movement_cost == 0:
             return None
         return OffensiveMovementIntent(
