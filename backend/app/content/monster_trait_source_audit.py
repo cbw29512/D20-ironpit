@@ -67,6 +67,15 @@ def _movement_trait_issues(template: CombatantTemplate, expected: list[str]) -> 
     return []
 
 
+def _magic_resistance_issues(template: CombatantTemplate, expected: list[str]) -> list[str]:
+    source_has = "Magic Resistance" in expected
+    if source_has and not template.magic_resistance:
+        return ["trait-runtime-missing:magic-resistance"]
+    if template.magic_resistance and not source_has:
+        return ["trait-source-missing:magic-resistance"]
+    return []
+
+
 def _aura_trait_issues(
     template: CombatantTemplate, row: dict[str, object], expected: list[str],
 ) -> tuple[list[str], set[str]]:
@@ -93,9 +102,10 @@ def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[st
         elif runtime_has and not source_has:
             issues.append(f"trait-source-missing:{runtime_trait.value}")
     issues.extend(_movement_trait_issues(template, expected))
+    issues.extend(_magic_resistance_issues(template, expected))
     aura_issues, aura_certified = _aura_trait_issues(template, row, expected)
     issues.extend(aura_issues)
-    certified = set(_MODELED_TRAITS) | set(_DECLARATIVE_ATTACK_TRAITS) | set(_ARENA_NEUTRAL_TRAITS) | {"Incorporeal Movement"} | aura_certified
+    certified = set(_MODELED_TRAITS) | set(_DECLARATIVE_ATTACK_TRAITS) | set(_ARENA_NEUTRAL_TRAITS) | {"Incorporeal Movement", "Magic Resistance"} | aura_certified
     for name in expected:
         if name not in certified:
             slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
@@ -117,11 +127,17 @@ def source_trait_names(name: str) -> list[str]:
 
 def complete_monster_trait_fingerprints(templates: list[CombatantTemplate]) -> list[CombatantTemplate]:
     try:
-        return [
-            template.model_copy(update={"source_trait_names": source_trait_names(template.name)})
-            if template.kind == "monster" else template
-            for template in templates
-        ]
+        completed: list[CombatantTemplate] = []
+        for template in templates:
+            if template.kind != "monster":
+                completed.append(template)
+                continue
+            names = source_trait_names(template.name)
+            completed.append(template.model_copy(update={
+                "source_trait_names": names,
+                "magic_resistance": "Magic Resistance" in names,
+            }))
+        return completed
     except Exception as exc:
         logger.exception("Failed to derive canonical monster trait fingerprints from SRD source.")
         raise RuntimeError("Monster trait fingerprints could not be completed.") from exc
