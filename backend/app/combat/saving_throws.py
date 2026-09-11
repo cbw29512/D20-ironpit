@@ -70,10 +70,8 @@ def resolve_save_action(
             spend_resource(actor.state, action.resource_id, action.resource_cost)
             if spend_resource_cost else None
         )
-        hp_before = target.state.current_hp
-        temporary_hp_before = target.state.temporary_hp
-        death_success_before = target.state.death_save_successes
-        death_failure_before = target.state.death_save_failures
+        hp_before, temporary_hp_before = target.state.current_hp, target.state.temporary_hp
+        death_success_before, death_failure_before = target.state.death_save_successes, target.state.death_save_failures
         concentration_before = target.state.concentration.effect_id if target.state.concentration else None
         tracks_push = action.push_target_away_ft > 0
         distance_before = abs(target.position_ft - actor.position_ft) if tracks_push else None
