@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.attachments import resolve_detach_action
 from app.combat.barbarian import finalize_rage_turn
 from app.combat.cleric_channel_support import resolve_channel_support
 from app.combat.condition_removal import choose_condition_removal_action, resolve_condition_removal
@@ -42,6 +43,9 @@ def finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key,
 def resolve_support_actions(sequence, round_number, member, setup, dice, turn_key):
     try:
         events: list[BattleEvent] = []
+        detach_event = resolve_detach_action(sequence, round_number, member, setup)
+        if detach_event is not None:
+            return [detach_event], sequence + 1
         healing_choice = choose_healing_action(member, setup, turn_key)
         if healing_choice is not None and healing_choice[1].state.current_hp == 0:
             action, target = healing_choice
