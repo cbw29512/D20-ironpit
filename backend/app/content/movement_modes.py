@@ -44,7 +44,7 @@ def parse_movement_modes(source_speed: object) -> dict[str, int]:
 
 
 def parse_movement_profile(source_speed: object) -> MovementModes:
-    """Convert printed SRD Speed text into the canonical six-part fingerprint."""
+    """Convert printed SRD Speed text into the canonical movement fingerprint."""
     modes = parse_movement_modes(source_speed)
     hover = bool(re.search(r"\bhover\b", str(source_speed), re.IGNORECASE))
     if hover and "fly" not in modes:
@@ -69,7 +69,7 @@ def standard_arena_closing_speed(source_speed: object) -> int:
 
 
 def movement_mode_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
-    """Return a blocker for every movement fingerprint component that drifts from SRD."""
+    """Return a blocker for every printed Speed fingerprint component that drifts from SRD."""
     expected = parse_movement_profile(row["speed"])
     issues = [
         f"movement-{mode}-mismatch"
@@ -90,7 +90,11 @@ def source_movement_modes(name: str) -> MovementModes:
     row = _rows_by_name().get(name)
     if row is None:
         raise ValueError(f"No SRD 5.2.1 source row for monster {name!r}.")
-    return parse_movement_profile(row["speed"])
+    profile = parse_movement_profile(row["speed"])
+    incorporeal = bool(re.search(r"\bIncorporeal Movement\b", str(row.get("traits", "")), re.IGNORECASE))
+    return profile.model_copy(update={
+        "pass_through_creatures_as_difficult_terrain": incorporeal,
+    })
 
 
 def with_source_movement_modes(template: CombatantTemplate) -> CombatantTemplate:
