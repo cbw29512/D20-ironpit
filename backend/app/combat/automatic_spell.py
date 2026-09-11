@@ -82,7 +82,14 @@ def resolve_automatic_spell(sequence: int, round_number: int, caster: EncounterC
         raise ValueError(f"{action.name} requires exactly {action.applications} automatic applications.")
     for target_id in choice.target_ids:
         target = members.get(target_id)
-        if target is None or combatant_distance(caster, target) > action.range_ft:
+        if (
+            target is None
+            or target.side == caster.side
+            or not target.state.is_alive
+            or target.state.is_dead
+            or target.state.current_hp <= 0
+            or combatant_distance(caster, target) > action.range_ft
+        ):
             raise ValueError(f"Illegal automatic spell target {target_id!r} for {action.name}.")
 
     remaining = spend_action_resource(caster.state, action.resource_id, action.resource_cost, fallback_resource_id=fallback_id)
