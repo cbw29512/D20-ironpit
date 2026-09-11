@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.attack_legality import attack_allowed_against
+from app.combat.attack_legality import attack_allowed_against, attack_available_for_source
 from app.combat.encounter_targeting import combatant_distance, living_opponents
 from app.combat.formation import uses_backline
 from app.combat.range import resolve_attack_roll_mode
@@ -81,6 +81,7 @@ def _attack_profiles(attacker: EncounterCombatant, allowed_ids: list[str], kind:
             if attack.id in allowed
             and (kind is None or attack.weapon.attack_kind is kind or attack.weapon.attack_kind is WeaponAttackKind.MELEE_OR_RANGED)
             and resource_available(attacker.state, attack.resource_id, attack.resource_cost)
+            and attack_available_for_source(attack, attacker.state)
         ]
     except Exception as exc:
         logger.exception("Failed to collect legal resource attack profiles for %s.", attacker.combatant_id)
