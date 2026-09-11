@@ -33,6 +33,7 @@
       repeat_save_dc: options.repeatSaveDc || null,
       repeat_save_timing: options.repeatSaveTiming || null,
       repeat_save_eligible_round: hasRepeatSave && options.appliedRound != null ? options.appliedRound + delayRounds : null,
+      repeat_save_failure_condition: options.repeatSaveFailureCondition || null,
       allowed_removal_action_ids: [...(options.allowedRemovalActionIds || [])],
       periodic_damage_timing: periodic?.timing || null,
       periodic_damage_dice_count: periodic?.diceCount || 0,
