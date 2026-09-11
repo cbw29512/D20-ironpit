@@ -14,7 +14,7 @@ from app.domain.weapons import DamageType
 
 _SAVE = re.compile(
     r"(?:^|(?<=\.)\s+)(?P<name>[A-Z][A-Za-z0-9’' -]*?)(?:\s+\((?P<limit>Recharge\s+\d(?:\s*[-–]\s*\d)?|\d+\s*/\s*Day)\))?\.\s+"
-    r"(?:[^.]+\.\s+)?"
+    r"(?:(?P<lead>[^.]+)\.\s+)?"
     r"(?P<ability>Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) Saving Throw:\s+DC\s+(?P<dc>\d+),\s+"
     r"(?P<target>[^.]+)\.\s+Failure:\s+(?P<average>\d+)\s+\((?P<count>\d+)d(?P<size>\d+)"
     r"(?:\s*(?P<sign>[+-])\s*(?P<mod>\d+))?\)\s+(?P<dtype>[A-Za-z]+) damage"
@@ -98,7 +98,7 @@ def _parse_text(monster: str, text: str, action_cost: ActionCost) -> tuple[list[
     for match in _SAVE.finditer(text):
         name = match.group("name").strip(); target = match.group("target")
         bonus = int(match.group("mod") or 0) * (-1 if match.group("sign") == "-" else 1)
-        range_ft, area = _area(target); resource = _resource(monster, name, match.group("limit"))
+        range_ft, area = _area(f"{match.group('lead') or ''} {target}"); resource = _resource(monster, name, match.group("limit"))
         if resource: resources.append(resource)
         success = "half" if (match.group("success") or "").lower() == "half damage" else "none"
         riders = common_failure_riders(target, match.group("failure_tail") or "")
