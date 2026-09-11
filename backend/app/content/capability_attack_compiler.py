@@ -8,6 +8,7 @@ from app.content.capability_attack_control_compiler import (
     merge_controls,
 )
 from app.domain.actions import HitControlEffect
+from app.domain.attachments import AttachmentEffectDefinition
 from app.domain.capabilities import AttackCapabilityDefinition
 from app.domain.capability_effects import (
     ConditionEffectDefinition,
@@ -18,7 +19,7 @@ from app.domain.capability_effects import (
 )
 from app.domain.hit_modifiers import HitModifierEffect
 from app.domain.models import ConditionalDamage, OnHitDamage, Weapon, WeaponAttack
-from app.domain.weapons import MaxHpReductionOnHit
+from app.domain.weapons import AttachmentOnHit, MaxHpReductionOnHit
 
 logger = logging.getLogger(__name__)
 
@@ -53,6 +54,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
         on_hit_modifiers: list[HitModifierEffect] = []
         conditional: list[ConditionalDamage] = []
         max_hp_reduction: MaxHpReductionOnHit | None = None
+        attachment: AttachmentOnHit | None = None
         prone_size = None
         controls: list[HitControlEffect] = []
         for effect in definition.effects:
@@ -82,6 +84,18 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
                 if max_hp_reduction is not None:
                     raise UnsupportedCapabilityError("An attack supports at most one max-HP-reduction rider.")
                 max_hp_reduction = MaxHpReductionOnHit(damage_type=effect.damage_type)
+            elif isinstance(effect, AttachmentEffectDefinition):
+                if attachment is not None:
+                    raise UnsupportedCapabilityError("An attack supports at most one attachment rider.")
+                attachment = AttachmentOnHit(
+                    periodic_damage_count=effect.periodic_damage_count,
+                    periodic_damage_size=effect.periodic_damage_size,
+                    periodic_damage_bonus=effect.periodic_damage_bonus,
+                    periodic_damage_type=effect.periodic_damage_type,
+                    forbids_source_attack_ids=effect.forbids_source_attack_ids,
+                    detachable_by_target_action=effect.detachable_by_target_action,
+                    detachable_by_adjacent_action=effect.detachable_by_adjacent_action,
+                )
             elif isinstance(effect, (GrappleEffectDefinition, ConditionEffectDefinition)):
                 controls.append(compile_control(effect))
             else:
@@ -102,6 +116,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
             on_hit_damage=on_hit,
             on_hit_modifier_effects=on_hit_modifiers,
             max_hp_reduction_on_hit=max_hp_reduction,
+            attachment_on_hit=attachment,
             knocks_prone_max_size=prone_size,
             control_effect=merge_controls(controls),
             charge_profile=definition.charge_profile,
@@ -114,11 +129,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
     except UnsupportedCapabilityError:
         raise
     except UnsupportedAttackControlError as exc:
-        logger.error(
-            "Unsupported attack control composition for %s: %s",
-            definition.id,
-            exc,
-        )
+        logger.error("Unsupported attack control composition for %s: %s", definition.id, exc)
         raise UnsupportedCapabilityError(str(exc)) from exc
     except Exception:
         logger.exception("Failed to compile attack capability %s.", definition.id)
