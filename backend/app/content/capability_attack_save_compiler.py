@@ -9,5 +9,6 @@ def compile_hit_save(effect: HitSavingThrowEffectDefinition) -> OnHitSavingThrow
         save_ability=effect.save_ability,
         dc=effect.dc,
         magical_effect=effect.magical_effect,
+        target_filter=effect.target_filter,
         failure_effects=effect.failure_effects,
     )
