@@ -13,6 +13,7 @@ from app.content.monster_general_action_fallback import is_general_rule_attack_i
 from app.content.monster_legendary_source_audit import legendary_action_issues
 from app.content.monster_limited_use_source_audit import limited_use_issues
 from app.content.monster_reaction_source_audit import reaction_issues
+from app.content.monster_save_action_source_section import save_action_source
 from app.content.monster_saving_throws import parse_saving_throw_bonuses
 from app.content.monster_spellcasting_source_audit import spellcasting_issues
 from app.content.monster_swallow_source_audit import swallow_action_issues
@@ -29,11 +30,6 @@ _COMBINED_ATTACK_ROLL = re.compile(r"\bMelee\s+or\s+Ranged\s+Attack Roll:", re.I
 _SAVING_THROW = re.compile(
     r"\b(?:Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma)\s+Saving Throw:", re.IGNORECASE,
 )
-_SAVE_SOURCE_FIELD = {
-    "action": "actions",
-    "bonus_action": "bonusActions",
-    "reaction": "reactions",
-}
 
 
 def _first_int(value: object) -> int:
@@ -95,11 +91,6 @@ def _runtime_attack_mode_count(template: CombatantTemplate) -> int:
     )
 
 
-def _save_source(row: dict[str, object], action_cost: str) -> str:
-    field = _SAVE_SOURCE_FIELD.get(action_cost)
-    return normalized(row.get(field, "")) if field is not None else ""
-
-
 def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
     try:
         checks = (
@@ -138,7 +129,7 @@ def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) ->
             issues.extend(on_hit_save_issues(attack, actions))
         issues.extend(charge_replacement_issues(template, actions))
         for action in template.saving_throw_actions:
-            issues.extend(save_action_issues(action, _save_source(row, action.action_cost)))
+            issues.extend(save_action_issues(action, save_action_source(row, action.action_cost)))
         for action in template.forced_movement_actions:
             issues.extend(forced_movement_action_issues(action, actions))
         for action in template.swallow_actions:
