@@ -15,6 +15,8 @@ _TIMED_CONDITION = re.compile(
     r"has the (Blinded|Charmed|Deafened|Frightened|Incapacitated|Paralyzed|Poisoned|Prone|Restrained|Stunned|Unconscious) condition "
     r"until the (start|end) of (?P<owner>its|the [^.]+?['’]s) next turn", re.I,
 )
+_ACTION_OR_BONUS = re.compile(r"(?:take either|take) an action or a Bonus Action", re.I)
+_NO_REACTIONS = re.compile(r"can[’']t take Reactions", re.I)
 
 
 def target_max_size(target_text: str) -> CreatureSize | None:
@@ -46,9 +48,15 @@ def common_failure_riders(target_text: str, failure_text: str) -> dict[str, obje
         )
     timed = _TIMED_CONDITION.search(failure_text)
     if timed and timed.group(1).lower() != "prone":
-        effects.append(ConditionEffectDefinition(
-            condition=timed.group(1).lower(), expiry_timing=_condition_timing(timed),
-        ))
+        condition = timed.group(1).lower()
+        effects.append(ConditionEffectDefinition(condition=condition, expiry_timing=_condition_timing(timed)))
+        if _ACTION_OR_BONUS.search(failure_text) and _NO_REACTIONS.search(failure_text):
+            effects.append(TurnRestrictionEffectDefinition(
+                action_or_bonus_only=True,
+                reactions_disabled=True,
+                requires_condition=condition,
+                expiry_timing=_condition_timing(timed),
+            ))
     speed = _SPEED.search(failure_text)
     if speed:
         effects.append(CombatModifierEffect(
