@@ -4,6 +4,7 @@ import re
 
 from app.content.monster_catalog import load_monster_rows
 from app.content.monster_defense_source_audit import parse_defense_profile
+from app.content.monster_source_attack_riders import parse_attack_riders
 from app.content.monster_source_save_candidates import source_save_candidates
 from app.content.movement_modes import parse_movement_profile, standard_arena_closing_speed
 from app.content.unarmed_opportunity_profiles import monster_unarmed_profile
@@ -19,7 +20,8 @@ _ATTACK = re.compile(
     r"(?P<bonus>[+-]?\d+),\s*(?P<range>reach\s+\d+\s*ft\.|range\s+\d+(?:/\d+)?\s*ft\."
     r"|reach\s+\d+\s*ft\.\s+or\s+range\s+\d+(?:/\d+)?\s*ft\.)\s*Hit:\s*"
     r"(?P<average>\d+)\s*\((?P<count>\d+)d(?P<size>\d+)(?:\s*(?P<sign>[+-])\s*(?P<mod>\d+))?\)\s*"
-    r"(?P<dtype>[A-Za-z]+) damage(?P<extra>\s+plus\s+\d+\s*\(\d+d\d+(?:\s*[+-]\s*\d+)?\)\s+[A-Za-z]+\s+damage)?\.", re.I,
+    r"(?P<dtype>[A-Za-z]+) damage(?P<extra>\s+plus\s+\d+\s*\(\d+d\d+(?:\s*[+-]\s*\d+)?\)\s+[A-Za-z]+\s+damage)?"
+    r"(?P<tail>[^.]*)\.", re.I,
 )
 _EXTRA = re.compile(r"plus\s+\d+\s*\((\d+)d(\d+)(?:\s*([+-])\s*(\d+))?\)\s+([A-Za-z]+)\s+damage", re.I)
 _MULTI_COUNT = re.compile(r"Multiattack\.\s+The\s+[^.]+?\s+makes\s+(one|two|three|four|five|six)\s+([A-Za-z’' -]+?)\s+attacks?\.", re.I)
@@ -44,15 +46,23 @@ def _ranges(text: str) -> tuple[int, int | None, int | None]:
     return int(reach.group(1)) if reach else 5, normal, long
 
 
-def _attack(row: dict[str, object], match: re.Match[str]) -> AttackCapabilityDefinition:
+def _rider_text(actions: str, match: re.Match[str]) -> str:
+    text = match.group("tail") or ""
+    following = actions[match.end():].lstrip()
+    if re.match(r"(?:If|Until|The target|Whenever|While)\b", following, re.I):
+        text += ". " + following.split(".", 1)[0]
+    return text
+
+
+def _attack(row: dict[str, object], actions: str, match: re.Match[str]) -> AttackCapabilityDefinition:
     name = match.group("name").strip()
     kind = WeaponAttackKind(match.group("kind").lower().replace(" ", "_"))
     reach, normal, long = _ranges(match.group("range"))
-    effects = []
+    effects = parse_attack_riders(_rider_text(actions, match))
     extra = _EXTRA.search(match.group("extra") or "")
     if extra:
         mod = int(extra.group(4) or 0) * (-1 if extra.group(3) == "-" else 1)
-        effects.append(DamageEffectDefinition(
+        effects.insert(0, DamageEffectDefinition(
             source="Source extra damage", dice=DiceSpec(count=int(extra.group(1)), size=int(extra.group(2)), bonus=mod),
             damage_type=DamageType(extra.group(5).lower()),
         ))
@@ -89,7 +99,8 @@ def source_candidate_definitions(excluded_ids: set[str]) -> dict[str, CombatantD
         if definition_id in excluded_ids:
             continue
         try:
-            attacks = [_attack(row, match) for match in _ATTACK.finditer(str(row.get("actions", "")))]
+            action_text = str(row.get("actions", ""))
+            attacks = [_attack(row, action_text, match) for match in _ATTACK.finditer(action_text)]
             if not attacks:
                 continue
             save_actions, resources = source_save_candidates(row)
