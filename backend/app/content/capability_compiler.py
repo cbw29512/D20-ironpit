@@ -17,10 +17,12 @@ def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
         return SavingThrowAction(
             id=definition.id,
             name=definition.name,
+            action_cost=definition.action_cost,
             save_ability=definition.save_ability,
             dc=definition.dc,
             range_ft=definition.range_ft,
             target_max_size=definition.target_max_size or (grapple.max_target_size if grapple else None),
+            required_target_condition=definition.required_target_condition,
             area=definition.area,
             damage_dice_count=damage.count if damage else 0,
             damage_dice_size=damage.size if damage else 6,
