@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 
+from app.content.monster_source_save_riders import common_failure_riders
 from app.domain.capability_attacks import SaveCapabilityDefinition
 from app.domain.capability_effects import DiceSpec
 from app.domain.combatants import RechargeRule, ResourceDefinition
@@ -12,8 +13,9 @@ _SAVE = re.compile(
     r"(?P<name>[A-Z][A-Za-z0-9’' -]*?)(?:\s+\((?P<limit>Recharge\s+\d(?:-\d)?|\d+/Day)\))?\.\s+"
     r"(?P<ability>Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) Saving Throw:\s+DC\s+(?P<dc>\d+),\s+"
     r"(?P<target>[^.]+)\.\s+Failure:\s+(?P<average>\d+)\s+\((?P<count>\d+)d(?P<size>\d+)"
-    r"(?:\s*(?P<sign>[+-])\s*(?P<mod>\d+))?\)\s+(?P<dtype>[A-Za-z]+) damage\."
-    r"(?:\s+Success:\s+(?P<success>Half damage|No damage)\.)?", re.I,
+    r"(?:\s*(?P<sign>[+-])\s*(?P<mod>\d+))?\)\s+(?P<dtype>[A-Za-z]+) damage"
+    r"(?P<failure_tail>(?:,\s+and\s+[^.]+|\.\s+If\s+the\s+target\s+[^.]+)*)\."
+    r"(?:\s+Success:\s+(?P<success>Half damage|No damage)(?:\s+only)?\.)?", re.I,
 )
 
 
@@ -65,10 +67,11 @@ def source_save_candidates(row: dict[str, object]) -> tuple[list[SaveCapabilityD
         if resource:
             resources.append(resource)
         success = "half" if (match.group("success") or "").lower() == "half damage" else "none"
+        riders = common_failure_riders(match.group("target"), match.group("failure_tail") or "")
         actions.append(SaveCapabilityDefinition(
             id=action_id, name=name, save_ability=match.group("ability").lower(), dc=int(match.group("dc")),
             range_ft=range_ft, area=area, damage=DiceSpec(count=int(match.group("count")), size=int(match.group("size")), bonus=bonus),
             damage_type=DamageType(match.group("dtype").lower()), success_damage=success,
-            resource_id=resource.id if resource else None, animation="save-effect",
+            resource_id=resource.id if resource else None, animation="save-effect", **riders,
         ))
     return actions, resources
