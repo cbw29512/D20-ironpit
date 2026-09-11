@@ -48,13 +48,22 @@ def _repeat_save_present(action: Any, text: str, effect: Any) -> bool:
     turn_point = "start" if effect.repeat_save_timing == "target_turn_start" else "end"
     if effect.repeat_save_timing not in {"target_turn_start", "target_turn_end"}:
         return False
-    repeat = rf"repeat(?:s|ing)?\s+(?:the\s+)?(?:saving\s+throw|save).*?{turn_point}\s+of\s+(?:each|its)\s+(?:of\s+its\s+)?turns?"
-    if not re.search(repeat, text, re.IGNORECASE):
+    recurring = rf"repeat(?:s|ing)?\s+(?:the\s+)?(?:saving\s+throw|save).*?{turn_point}\s+of\s+(?:each|its)\s+(?:of\s+its\s+)?turns?"
+    next_turn = rf"repeat(?:s|ing)?\s+(?:the\s+)?(?:saving\s+throw|save).*?at\s+the\s+{turn_point}\s+of\s+its\s+next\s+turn"
+    if not re.search(rf"(?:{recurring}|{next_turn})", text, re.IGNORECASE):
         return False
     if effect.repeat_save_ability == action.save_ability and effect.repeat_save_dc == action.dc:
         return True
     explicit = rf"DC\s*{effect.repeat_save_dc}\s+{effect.repeat_save_ability}\s+Saving Throw"
     return bool(re.search(explicit, text, re.IGNORECASE))
+
+
+def _repeat_failure_condition_present(text: str, effect: ConditionEffectDefinition) -> bool:
+    condition = effect.repeat_save_failure_condition
+    if condition is None:
+        return True
+    pattern = rf"Second\s+Failure:.*?\b{re.escape(condition)}\s+condition\b"
+    return bool(re.search(pattern, text, re.IGNORECASE))
 
 
 def _turn_restriction_present(text: str, effect: TurnRestrictionEffectDefinition) -> bool:
@@ -105,6 +114,7 @@ def failure_effect_issues(action: Any, actions: str) -> list[str]:
             ok = ok and _size_present(actions, effect.max_target_size)
             ok = ok and _condition_timing_present(actions, effect)
             ok = ok and _repeat_save_present(action, actions, effect)
+            ok = ok and _repeat_failure_condition_present(actions, effect)
             if effect.repeat_save_delay_rounds and "next turn" not in actions:
                 ok = False
             if not ok:
