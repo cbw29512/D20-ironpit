@@ -6,6 +6,7 @@
   const P = () => window.IRON_PIT_BROWSER_PRECOMBAT_SPELLS;
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION, B = () => window.IRON_PIT_BROWSER_SOURCE_BOUND_EFFECTS;
   const AT = () => window.IRON_PIT_BROWSER_ATTACHMENTS, AU = () => window.IRON_PIT_BROWSER_AURAS;
+  const R = () => window.IRON_PIT_BROWSER_REGENERATION;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const M = () => window.IRON_PIT_BROWSER_ARENA_MAP;
   const G = () => window.IRON_PIT_BROWSER_GRID_PLACEMENT;
@@ -39,7 +40,7 @@
   }
   function crNumber(value) { const text = String(value || "0"); if (!text.includes("/")) return Number(text) || 0; const [a, b] = text.split("/").map(Number); return a / b; }
   function totalCr(values) { const quarters = Math.round(values.reduce((sum, value) => sum + crNumber(value), 0) * 4); if (quarters % 4 === 0) return String(quarters / 4); const divisor = quarters % 2 === 0 ? 2 : 4; return `${quarters / (4 / divisor)}/${divisor}`; }
-  function defeatedMember(member) { const state = member.state; if (state.template.kind === "character") return state.is_dead || !state.is_alive; return state.current_hp <= 0 || state.is_dead || !state.is_alive; }
+  function defeatedMember(member) { const state = member.state; if (state.template.kind === "character") return state.is_dead || !state.is_alive; if (R()?.defersDeath(state) && state.current_hp <= 0 && !state.is_dead) return false; return state.current_hp <= 0 || state.is_dead || !state.is_alive; }
   function outcome(setup) { const defeated = (side) => side.every(defeatedMember), heroesDead = defeated(setup.heroes), monstersDead = defeated(setup.monsters); if (heroesDead && monstersDead) return "draw"; if (monstersDead) return "heroes_win"; if (heroesDead) return "monsters_win"; return "active"; }
   function lifecycle(sequence, round, member, setup, targetTiming, sourceTiming) {
     const target = L().resolveTargetTiming(sequence, round, member, targetTiming);
@@ -57,7 +58,7 @@
       for (const id of init.turn_order) {
         const current = outcome(setup); if (current !== "active") return finish(setup, init, events, current, round, sequence);
         const member = byId.get(id); B()?.cleanupDisabledSources(setup); window.IRON_PIT_BROWSER_MODIFIERS?.expireSourceTurnStart(states, member.combatant_id);
-        S().refreshStartOfTurn(member.state); C()?.endIfExpired(member.state, round, states);
+        S().refreshStartOfTurn(member.state); R()?.startTurn(member.state); C()?.endIfExpired(member.state, round, states);
         const attachment = AT()?.startTurn(sequence, round, member, setup) || { events: [], sequence };
         events.push(...attachment.events); sequence = attachment.sequence;
         const start = lifecycle(sequence, round, member, setup, "target_turn_start", "source_turn_start"); events.push(...start.events); sequence = start.sequence;
