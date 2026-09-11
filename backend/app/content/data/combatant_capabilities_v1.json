@@ -11197,34 +11197,6 @@
         "animation": "save-effect"
       },
       {
-        "id": "srd-giant-constrictor-snake-constrict",
-        "name": "Constrict",
-        "save_ability": "strength",
-        "dc": 14,
-        "range_ft": 10,
-        "target_max_size": "large",
-        "damage": {
-          "count": 2,
-          "size": 8,
-          "bonus": 4
-        },
-        "damage_type": "bludgeoning",
-        "success_damage": "none",
-        "failure_effects": [],
-        "forbid_target_affected_by_action": false,
-        "push_target_away_ft": 0,
-        "grapple": {
-          "kind": "grapple",
-          "escape_dc": 14,
-          "max_target_size": "large",
-          "restrains": false,
-          "linked_conditions": []
-        },
-        "resource_cost": 1,
-        "magical_effect": false,
-        "animation": "save-effect"
-      },
-      {
         "id": "srd-giant-constrictor-snake-piercing-damage",
         "name": "Piercing damage",
         "save_ability": "strength",
