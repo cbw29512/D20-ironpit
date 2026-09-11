@@ -7,6 +7,14 @@
     "challenge_rating": "1/4",
     "kind": "monster",
     "size": "small",
+    "ability_scores": {
+      "strength": 8,
+      "dexterity": 15,
+      "constitution": 10,
+      "intelligence": 10,
+      "wisdom": 8,
+      "charisma": 8
+    },
     "armor_class": 15,
     "max_hp": 10,
     "speed_ft": 30,
