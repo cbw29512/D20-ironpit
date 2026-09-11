@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 
+from app.content.monster_source_save_heading import promoted_save_heading
 from app.content.monster_source_save_riders import common_failure_riders, slowing_breath_rider
 from app.content.monster_source_staged_save_candidates import staged_condition_save_candidates
 from app.domain.actions import ActionCost, ConditionName
@@ -96,9 +97,9 @@ def _base_control(monster: str, match: re.Match[str], effects: list[object], act
 def _parse_text(monster: str, text: str, action_cost: ActionCost) -> tuple[list[SaveCapabilityDefinition], list[ResourceDefinition]]:
     actions: list[SaveCapabilityDefinition] = []; resources: list[ResourceDefinition] = []
     for match in _SAVE.finditer(text):
-        name = match.group("name").strip(); target = match.group("target")
+        name, limit, lead = promoted_save_heading(match.group("name"), match.group("limit"), match.group("lead")); target = match.group("target")
         bonus = int(match.group("mod") or 0) * (-1 if match.group("sign") == "-" else 1)
-        range_ft, area = _area(f"{match.group('lead') or ''} {target}"); resource = _resource(monster, name, match.group("limit"))
+        range_ft, area = _area(f"{lead} {target}"); resource = _resource(monster, name, limit)
         if resource: resources.append(resource)
         success = "half" if (match.group("success") or "").lower() == "half damage" else "none"
         riders = common_failure_riders(target, match.group("failure_tail") or "")
