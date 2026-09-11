@@ -56,6 +56,30 @@ window.IRON_PIT_DICE = {
 }
 
 {
+  const target = member("staged-repeat-save-target");
+  T.apply(target.state, "incapacitated", "silver-dragon", {
+    sourceEffectId: "paralyzing-breath", appliedRound: 3,
+    repeatSaveAbility: "constitution", repeatSaveDc: 13, repeatSaveTiming: "target_turn_end",
+    repeatSaveFailureCondition: "paralyzed", automaticSuccessAfterRounds: 10,
+  });
+  d20 = 1;
+  const escalated = L.resolveTargetTiming(1, 4, target, "target_turn_end");
+  assert.deepEqual(escalated.events[0].removed_condition_ids, ["incapacitated"]);
+  assert.deepEqual(escalated.events[0].applied_condition_ids, ["paralyzed"]);
+  const effect = target.state.timed_effects.find((item) => item.effect_id === "paralyzed");
+  assert.ok(effect);
+  assert.equal(effect.repeat_save_ability, "constitution");
+  assert.equal(effect.repeat_save_dc, 13);
+  assert.equal(effect.repeat_save_timing, "target_turn_end");
+  assert.equal(effect.repeat_save_failure_condition, null);
+  assert.equal(effect.automatic_success_round, 13);
+  d20 = 20;
+  const recovered = L.resolveTargetTiming(escalated.sequence, 5, target, "target_turn_end");
+  assert.equal(recovered.events[0].save_succeeded, true);
+  assert.deepEqual(recovered.events[0].removed_condition_ids, ["paralyzed"]);
+}
+
+{
   const source = member("source");
   const target = member("expiry-target");
   T.apply(target.state, "frightened", source.combatant_id, {
