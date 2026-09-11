@@ -62,6 +62,35 @@ def test_source_owned_condition_uses_source_turn_timing() -> None:
         raise
 
 
+def test_condition_only_save_compiles_when_timing_is_finite() -> None:
+    try:
+        actions, resources = source_save_candidates(_row(
+            "Enthralling Panache. Wisdom Saving Throw: DC 12, one creature the pirate can see within 30 feet. "
+            "Failure: The target has the Charmed condition until the start of the pirate’s next turn."
+        ))
+        assert resources == []
+        assert len(actions) == 1
+        assert actions[0].damage is None
+        effect = actions[0].failure_effects[0]
+        assert effect.condition == "charmed"
+        assert effect.expiry_timing == "source_turn_start"
+    except Exception:
+        logger.exception("Finite condition-only save candidate regression failed.")
+        raise
+
+
+def test_multistage_condition_save_remains_uncompiled() -> None:
+    try:
+        actions, _ = source_save_candidates(_row(
+            "Petrifying Gaze. Constitution Saving Throw: DC 11, one creature within 30 feet. "
+            "First Failure: The target has the Restrained condition. Second Failure: The target has the Petrified condition."
+        ))
+        assert actions == []
+    except Exception:
+        logger.exception("Multistage save fail-closed regression failed.")
+        raise
+
+
 def test_pure_damage_save_remains_rider_free() -> None:
     try:
         actions, _ = source_save_candidates(_row(
