@@ -2324,10 +2324,14 @@
       "blockers": [
         "bonus-action",
         "condition-or-control",
+        "save-action-name-missing:srd-cloaker-moan",
+        "save-area-mismatch:srd-cloaker-moan",
+        "save-dc-mismatch:srd-cloaker-moan",
+        "save-failure-effect-mismatch:srd-cloaker-moan:0:condition",
+        "source-save-action-count-mismatch",
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
-        "uncertified-bonus-action:moan",
         "uncertified-bonus-action:phantasms",
         "uncertified-monster-spellcasting",
         "uncertified-trait:light-sensitivity",
@@ -3159,7 +3163,10 @@
       "blockers": [
         "bonus-action",
         "condition-or-control",
-        "uncertified-bonus-action:trample"
+        "save-action-name-missing:srd-elephant-trample",
+        "save-damage-mismatch:srd-elephant-trample",
+        "save-dc-mismatch:srd-elephant-trample",
+        "source-save-action-count-mismatch"
       ]
     },
     {
@@ -4604,9 +4611,10 @@
         "bonus-action",
         "condition-or-control",
         "limited-use",
+        "save-action-name-missing:srd-gorgon-trample",
+        "save-damage-mismatch:srd-gorgon-trample",
+        "save-dc-mismatch:srd-gorgon-trample",
         "save-or-complex-action",
-        "source-save-action-count-mismatch",
-        "uncertified-bonus-action:trample",
         "uncertified-limited-use:actions-petrifying-breath-recharge-5-6"
       ]
     },
@@ -5908,7 +5916,10 @@
       "blockers": [
         "bonus-action",
         "condition-or-control",
-        "uncertified-bonus-action:trample"
+        "save-action-name-missing:srd-mammoth-trample",
+        "save-damage-mismatch:srd-mammoth-trample",
+        "save-dc-mismatch:srd-mammoth-trample",
+        "source-save-action-count-mismatch"
       ]
     },
     {
@@ -6312,9 +6323,14 @@
         "bonus-action",
         "limited-use",
         "reaction",
+        "save-action-name-missing:srd-nalfeshnee-horror-nimbus",
+        "save-area-mismatch:srd-nalfeshnee-horror-nimbus",
+        "save-damage-mismatch:srd-nalfeshnee-horror-nimbus",
+        "save-damage-type-mismatch:srd-nalfeshnee-horror-nimbus",
+        "save-dc-mismatch:srd-nalfeshnee-horror-nimbus",
         "save-or-complex-action",
+        "source-save-action-count-mismatch",
         "trait",
-        "uncertified-bonus-action:horror-nimbus",
         "uncertified-limited-use:bonusactions-horror-nimbus-recharge-5-6",
         "uncertified-reaction:pursuit"
       ]
@@ -6789,7 +6805,10 @@
       "blockers": [
         "bonus-action",
         "reaction",
-        "uncertified-bonus-action:captain-s-charm",
+        "save-action-name-missing:srd-pirate-captain-captain-s-charm",
+        "save-dc-mismatch:srd-pirate-captain-captain-s-charm",
+        "save-failure-effect-mismatch:srd-pirate-captain-captain-s-charm:0:condition",
+        "source-save-action-count-mismatch",
         "uncertified-reaction:riposte",
         "unsupported-action-rider"
       ]

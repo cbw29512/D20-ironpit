@@ -8930,6 +8930,7 @@
       {
         "id": "constrictor-snake-constrict",
         "name": "Constrict",
+        "action_cost": "action",
         "save_ability": "strength",
         "dc": 12,
         "range_ft": 5,
@@ -11171,6 +11172,7 @@
       {
         "id": "giant-constrictor-snake-constrict",
         "name": "Constrict",
+        "action_cost": "action",
         "save_ability": "strength",
         "dc": 14,
         "range_ft": 10,
