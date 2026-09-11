@@ -137,6 +137,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [
@@ -272,6 +273,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [
@@ -421,6 +423,7 @@
     "combat_traits": [
       "pack-tactics"
     ],
+    "magic_resistance": false,
     "source_trait_names": [
       "Pack Tactics"
     ],
@@ -557,6 +560,7 @@
     "combat_traits": [
       "pack-tactics"
     ],
+    "magic_resistance": false,
     "source_trait_names": [
       "Pack Tactics",
       "Sunlight Sensitivity"
@@ -743,6 +747,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [
       "Redirect Attack"
@@ -885,6 +890,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -987,6 +993,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [
       "Training"
     ],
@@ -1121,6 +1128,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -1225,6 +1233,7 @@
     "combat_traits": [
       "pack-tactics"
     ],
+    "magic_resistance": false,
     "source_trait_names": [
       "Pack Tactics"
     ],
@@ -1329,6 +1338,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -1446,6 +1456,7 @@
     "combat_traits": [
       "pack-tactics"
     ],
+    "magic_resistance": false,
     "source_trait_names": [
       "Pack Tactics"
     ],
@@ -1550,6 +1561,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -1652,6 +1664,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [
       "Spider Climb"
     ],
@@ -1763,6 +1776,7 @@
     "combat_traits": [
       "pack-tactics"
     ],
+    "magic_resistance": false,
     "source_trait_names": [
       "Pack Tactics"
     ],
@@ -1874,6 +1888,7 @@
     "combat_traits": [
       "pack-tactics"
     ],
+    "magic_resistance": false,
     "source_trait_names": [
       "Pack Tactics"
     ],
@@ -1999,6 +2014,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -2154,6 +2170,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -2258,6 +2275,7 @@
     "combat_traits": [
       "pack-tactics"
     ],
+    "magic_resistance": false,
     "source_trait_names": [
       "Pack Tactics"
     ],
@@ -2362,6 +2380,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -2464,6 +2483,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [
       "Agile"
     ],
@@ -2568,6 +2588,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -2670,6 +2691,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -2774,6 +2796,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -2890,6 +2913,7 @@
       "charge",
       "bloodied-fury"
     ],
+    "magic_resistance": false,
     "source_trait_names": [
       "Bloodied Fury"
     ],
@@ -3007,6 +3031,7 @@
     "combat_traits": [
       "charge"
     ],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -3123,6 +3148,7 @@
       "charge",
       "bloodied-fury"
     ],
+    "magic_resistance": false,
     "source_trait_names": [
       "Bloodied Fury"
     ],
@@ -3267,6 +3293,7 @@
     "combat_traits": [
       "charge"
     ],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -3410,6 +3437,7 @@
     "combat_traits": [
       "charge"
     ],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -3519,6 +3547,7 @@
     "combat_traits": [
       "charge"
     ],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -3665,6 +3694,7 @@
     "combat_traits": [
       "charge"
     ],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -3774,6 +3804,7 @@
     "combat_traits": [
       "charge"
     ],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -3946,6 +3977,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [
       "Amphibious"
     ],
@@ -4071,6 +4103,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [
       "Flyby"
     ],
@@ -4171,6 +4204,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -4273,6 +4307,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -4373,6 +4408,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -4471,6 +4507,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [
       "Jumper"
     ],
@@ -4571,6 +4608,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [
       "Amphibious"
     ],
@@ -4671,6 +4709,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [
       "Amphibious",
       "Standing Leap"
@@ -4772,6 +4811,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -4870,6 +4910,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [
       "Spider Climb"
     ],
@@ -4970,6 +5011,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [
       "Flyby"
     ],
@@ -5070,6 +5112,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [
       "Agile"
     ],
@@ -5170,6 +5213,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [
       "Mimicry"
     ],
@@ -5270,6 +5314,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -5372,6 +5417,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -5474,6 +5520,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [
@@ -5578,6 +5625,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [
       "Hold Breath"
     ],
@@ -5703,6 +5751,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -5807,6 +5856,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -5909,6 +5959,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [
       "Flyby"
     ],
@@ -6013,6 +6064,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -6120,6 +6172,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [
@@ -6226,6 +6279,7 @@
     "combat_traits": [
       "pack-tactics"
     ],
+    "magic_resistance": false,
     "source_trait_names": [
       "Pack Tactics"
     ],
@@ -6326,6 +6380,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [
       "Illumination"
     ],
@@ -6445,6 +6500,7 @@
     "combat_traits": [
       "charge"
     ],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -6547,6 +6603,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [
       "Flyby"
     ],
@@ -6657,6 +6714,7 @@
     "combat_traits": [
       "pack-tactics"
     ],
+    "magic_resistance": false,
     "source_trait_names": [
       "Pack Tactics"
     ],
@@ -6761,6 +6819,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -6868,6 +6927,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -6970,6 +7030,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [
       "Beast of Burden"
     ],
@@ -7087,6 +7148,7 @@
     "combat_traits": [
       "charge"
     ],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -7202,6 +7264,7 @@
     "combat_traits": [
       "charge"
     ],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -7360,6 +7423,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -7483,6 +7547,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -7606,6 +7671,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [
       "Running Leap"
     ],
@@ -7764,6 +7830,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -7897,6 +7964,7 @@
     "combat_traits": [
       "pack-tactics"
     ],
+    "magic_resistance": false,
     "source_trait_names": [
       "Pack Tactics"
     ],
@@ -8012,6 +8080,7 @@
       "acrobatics": 0
     },
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [
       "Hold Breath"
     ],
@@ -8127,6 +8196,7 @@
       "acrobatics": 1
     },
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [
       "Amphibious"
     ],
@@ -8240,6 +8310,7 @@
           "linked_conditions": []
         },
         "resource_cost": 1,
+        "magical_effect": false,
         "animation": "constrict"
       }
     ],
@@ -8262,6 +8333,7 @@
       "acrobatics": 2
     },
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -8443,6 +8515,7 @@
       "acrobatics": 1
     },
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -8605,6 +8678,7 @@
       "stealth": 4
     },
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -8740,6 +8814,7 @@
       "perception": 5
     },
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -8854,6 +8929,7 @@
       "acrobatics": 2
     },
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -8969,6 +9045,7 @@
     "combat_traits": [
       "pack-tactics"
     ],
+    "magic_resistance": false,
     "source_trait_names": [
       "Pack Tactics"
     ],
@@ -9146,6 +9223,7 @@
       "perception": 4
     },
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -9265,6 +9343,7 @@
       "perception": 2
     },
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -9383,6 +9462,7 @@
       "acrobatics": 2
     },
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [
       "Flyby"
     ],
@@ -9505,6 +9585,7 @@
       "stealth": 7
     },
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [
       "Spider Climb"
     ],
@@ -9630,6 +9711,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [
       "Amphibious"
     ],
@@ -9760,6 +9842,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -9896,6 +9979,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -10027,6 +10111,7 @@
     "combat_traits": [
       "charge"
     ],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -10195,6 +10280,7 @@
       "stealth": 5
     },
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [
       "Hold Breath"
     ],
@@ -10329,6 +10415,7 @@
           "linked_conditions": []
         },
         "resource_cost": 1,
+        "magical_effect": false,
         "animation": "constrict"
       }
     ],
@@ -10352,6 +10439,7 @@
       "perception": 2
     },
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -10517,6 +10605,7 @@
       "perception": 4
     },
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -10640,6 +10729,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -10753,6 +10843,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -10866,6 +10957,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -10986,6 +11078,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -11097,6 +11190,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [
       "Flyby"
     ],
@@ -11222,6 +11316,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [
       "Flyby"
     ],
@@ -11345,6 +11440,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -11528,6 +11624,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -11651,6 +11748,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [
       "Hold Breath"
     ],
@@ -11755,6 +11853,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [
       "Hold Breath"
     ],
@@ -11859,6 +11958,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [
       "Hellish Restoration"
     ],
@@ -12032,6 +12132,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -12136,6 +12237,7 @@
     "combat_traits": [
       "undead-fortitude"
     ],
+    "magic_resistance": false,
     "source_trait_names": [
       "Undead Fortitude"
     ],
@@ -12258,6 +12360,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -12369,6 +12472,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -12500,6 +12604,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -12618,6 +12723,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [
       "Spider Climb",
       "Web Walker"
@@ -12754,6 +12860,7 @@
     "combat_traits": [
       "pack-tactics"
     ],
+    "magic_resistance": false,
     "source_trait_names": [
       "Pack Tactics"
     ],
@@ -12871,6 +12978,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -12994,6 +13102,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -13103,6 +13212,7 @@
     "combat_traits": [
       "undead-fortitude"
     ],
+    "magic_resistance": false,
     "source_trait_names": [
       "Undead Fortitude"
     ],
@@ -13237,6 +13347,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [
       "Water Breathing"
     ],
@@ -13345,6 +13456,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [
       "Water Breathing"
     ],
@@ -13449,6 +13561,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [
       "Water Breathing"
     ],
@@ -13555,6 +13668,7 @@
     "combat_traits": [
       "pack-tactics"
     ],
+    "magic_resistance": false,
     "source_trait_names": [
       "Pack Tactics",
       "Water Breathing"
@@ -13679,6 +13793,7 @@
     "combat_traits": [
       "swarm"
     ],
+    "magic_resistance": false,
     "source_trait_names": [
       "Swarm",
       "Water Breathing"
@@ -13807,6 +13922,7 @@
       "perception": 4
     },
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -13924,6 +14040,7 @@
     "combat_traits": [
       "swarm"
     ],
+    "magic_resistance": false,
     "source_trait_names": [
       "Swarm"
     ],
@@ -14056,6 +14173,7 @@
     "combat_traits": [
       "swarm"
     ],
+    "magic_resistance": false,
     "source_trait_names": [
       "Swarm"
     ],
@@ -14192,6 +14310,7 @@
     "combat_traits": [
       "swarm"
     ],
+    "magic_resistance": false,
     "source_trait_names": [
       "Swarm"
     ],
@@ -14368,6 +14487,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [
       "Parry"
@@ -14554,6 +14674,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [
       "Parry"
@@ -14663,6 +14784,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [
       "Parry"
@@ -14823,6 +14945,7 @@
     },
     "skill_bonuses": {},
     "combat_traits": [],
+    "magic_resistance": false,
     "source_trait_names": [],
     "source_reaction_names": [
       "Parry"
