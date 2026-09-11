@@ -48,6 +48,34 @@ def _apply_turn_restriction(
     return TURN_RESTRICTION_EFFECT_ID
 
 
+def _apply_condition(
+    target: CombatantState, source_id: str, source_effect_id: str,
+    effect: ConditionEffectDefinition, round_number: int,
+    affected_states: list[CombatantState] | None,
+) -> list[str]:
+    condition = apply_timed_condition(
+        target, effect.condition, source_id, source_effect_id=source_effect_id,
+        applied_round=round_number, expires_at_start_of_source_turn=effect.expires_at_start_of_source_turn,
+        expiry_timing=effect.expiry_timing, repeat_save_ability=effect.repeat_save_ability,
+        repeat_save_dc=effect.repeat_save_dc, repeat_save_timing=effect.repeat_save_timing,
+        repeat_save_delay_rounds=effect.repeat_save_delay_rounds,
+        repeat_save_failure_condition=effect.repeat_save_failure_condition,
+        allowed_removal_action_ids=effect.allowed_removal_action_ids,
+        periodic_damage=effect.periodic_damage, affected_states=affected_states,
+    )
+    if condition is None:
+        return []
+    applied = [condition]
+    for linked in effect.linked_conditions:
+        linked_id = apply_timed_condition(
+            target, linked, source_id, source_effect_id=source_effect_id,
+            applied_round=round_number, affected_states=affected_states,
+        )
+        if linked_id is not None:
+            applied.append(linked_id)
+    return applied
+
+
 def apply_save_failure_effects(
     target: CombatantState, source_id: str, source_effect_id: str,
     effects: list[SaveFailureEffectDefinition], *, round_number: int, range_ft: int,
@@ -68,20 +96,8 @@ def apply_save_failure_effects(
                 if _size_allowed(target, effect.max_target_size):
                     applied.extend(apply_grapple(target, source_id, effect.escape_dc, range_ft, restrains=effect.restrains))
             elif isinstance(effect, ConditionEffectDefinition):
-                if not _size_allowed(target, effect.max_target_size):
-                    continue
-                condition = apply_timed_condition(
-                    target, effect.condition, source_id, source_effect_id=source_effect_id,
-                    applied_round=round_number, expires_at_start_of_source_turn=effect.expires_at_start_of_source_turn,
-                    expiry_timing=effect.expiry_timing, repeat_save_ability=effect.repeat_save_ability,
-                    repeat_save_dc=effect.repeat_save_dc, repeat_save_timing=effect.repeat_save_timing,
-                    repeat_save_delay_rounds=effect.repeat_save_delay_rounds,
-                    repeat_save_failure_condition=effect.repeat_save_failure_condition,
-                    allowed_removal_action_ids=effect.allowed_removal_action_ids,
-                    periodic_damage=effect.periodic_damage, affected_states=affected_states,
-                )
-                if condition is not None:
-                    applied.append(condition)
+                if _size_allowed(target, effect.max_target_size):
+                    applied.extend(_apply_condition(target, source_id, source_effect_id, effect, round_number, affected_states))
             elif isinstance(effect, TurnRestrictionEffectDefinition):
                 restriction = _apply_turn_restriction(target, source_id, source_effect_id, effect, round_number)
                 if restriction is not None:
