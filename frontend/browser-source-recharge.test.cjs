@@ -7,7 +7,7 @@ const vm = require("node:vm");
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
-  "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js",
+  "browser-heroes.js",
   "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-resources.js", "browser-recharge.js", "browser-grapple.js", "browser-timed-conditions.js",
   "browser-weapon-mastery.js", "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js",
@@ -21,7 +21,6 @@ for (const file of [
   "browser-reaction-movement.js", "browser-offensive-ranges.js", "browser-offensive-movement.js",
   "browser-grid-placement.js", "browser-turn.js", "browser-initiative.js", "browser-engine.js",
 ]) load(file);
-
 
 for (const file of ["browser-monsters-generated.js", "browser-area-shapes.js",
   "browser-area-targeting.js", "browser-save-targets.js", "browser-offense-value.js"]) load(file);
