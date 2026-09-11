@@ -9,6 +9,7 @@ from app.content.monster_bonus_action_source_audit import bonus_action_issues
 from app.content.monster_charge_source_audit import charge_replacement_issues
 from app.content.monster_defense_source_audit import defense_issues
 from app.content.monster_forced_movement_action_source_audit import forced_movement_action_issues
+from app.content.monster_general_action_fallback import is_general_rule_attack_id
 from app.content.monster_legendary_source_audit import legendary_action_issues
 from app.content.monster_limited_use_source_audit import limited_use_issues
 from app.content.monster_reaction_source_audit import reaction_issues
@@ -75,9 +76,18 @@ def _source_attack_mode_count(actions: str) -> int:
     return len(_MELEE_ATTACK_ROLL.findall(standalone)) + len(_RANGED_ATTACK_ROLL.findall(standalone)) + 2 * combined
 
 
+def _source_bound_attacks(template: CombatantTemplate) -> list[object]:
+    return [
+        attack for attack in [template.weapon_attack, *template.alternate_weapon_attacks]
+        if not is_general_rule_attack_id(attack.id)
+    ]
+
+
 def _runtime_attack_mode_count(template: CombatantTemplate) -> int:
-    attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
-    return sum(2 if attack.weapon.attack_kind is WeaponAttackKind.MELEE_OR_RANGED else 1 for attack in attacks)
+    return sum(
+        2 if attack.weapon.attack_kind is WeaponAttackKind.MELEE_OR_RANGED else 1
+        for attack in _source_bound_attacks(template)
+    )
 
 
 def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
@@ -105,7 +115,7 @@ def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) ->
         issues.extend(spellcasting_issues(template, row))
         actions = normalized(row.get("actions", ""))
         traits = normalized(row.get("traits", ""))
-        runtime_attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
+        runtime_attacks = _source_bound_attacks(template)
         if _source_attack_mode_count(actions) != _runtime_attack_mode_count(template):
             issues.append("source-attack-count-mismatch")
         runtime_save_count = len(template.saving_throw_actions) + sum(
