@@ -87,7 +87,6 @@ class OnHitSavingThrow(BaseModel):
     magical_effect: bool = False
     failure_effects: list[SaveFailureEffectDefinition] = Field(default_factory=list)
 
-
 class Weapon(BaseModel):
     id: str
     name: str
