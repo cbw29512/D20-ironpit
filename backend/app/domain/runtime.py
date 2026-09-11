@@ -4,7 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
-from app.domain.actions import AbilityName, ConditionTiming, GrappleSource
+from app.domain.actions import AbilityName, ConditionName, ConditionTiming, GrappleSource
 from app.domain.attachments import AttachmentState
 from app.domain.combatants import CombatantTemplate, DamageType
 from app.domain.grid import BattleMapDefinition, GridPosition
@@ -34,6 +34,7 @@ class TimedEffect(BaseModel):
     repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
     repeat_save_timing: ConditionTiming | None = None
     repeat_save_eligible_round: int | None = Field(default=None, ge=1)
+    repeat_save_failure_condition: ConditionName | None = None
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
     periodic_damage_timing: Literal["target_turn_start", "target_turn_end"] | None = None
     periodic_damage_dice_count: int = Field(default=0, ge=0, le=40)
@@ -60,6 +61,8 @@ class TimedEffect(BaseModel):
             raise ValueError("Timed effect repeat save requires ability, DC, and timing together.")
         if self.repeat_save_eligible_round is not None and not all(item is not None for item in repeat_fields):
             raise ValueError("Repeat-save eligibility requires a complete repeat-save rule.")
+        if self.repeat_save_failure_condition is not None and not all(item is not None for item in repeat_fields):
+            raise ValueError("Repeat-save failure condition requires a complete repeat-save rule.")
         periodic = (self.periodic_damage_timing, self.periodic_damage_type)
         if any(item is not None for item in periodic) and not all(item is not None for item in periodic):
             raise ValueError("Periodic damage requires timing and damage type together.")
