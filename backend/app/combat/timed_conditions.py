@@ -5,6 +5,7 @@ from app.combat.condition_immunity import condition_is_immune
 from app.domain.actions import AbilityName, ConditionTiming
 from app.domain.models import BattleEvent, CombatantState, EncounterCombatant, EncounterSetup, TimedEffect
 from app.domain.runtime import TimedTurnBehavior
+from app.domain.save_effects import PeriodicDamageEffectDefinition
 
 POISONED_EFFECT_ID = "poisoned"
 
@@ -24,6 +25,7 @@ def apply_timed_condition(
     repeat_save_timing: ConditionTiming | None = None,
     repeat_save_delay_rounds: int = 0,
     allowed_removal_action_ids: list[str] | None = None,
+    periodic_damage: PeriodicDamageEffectDefinition | None = None,
     affected_states: list[CombatantState] | None = None,
     turn_behavior: TimedTurnBehavior = "normal",
     ends_on_damage: bool = False,
@@ -50,6 +52,7 @@ def apply_timed_condition(
     ]
     repeat_rule = all(item is not None for item in (repeat_save_ability, repeat_save_dc, repeat_save_timing))
     repeat_eligible = applied_round + repeat_save_delay_rounds if repeat_rule and applied_round is not None else None
+    periodic = periodic_damage
     state.timed_effects.append(TimedEffect(
         effect_id=effect_id,
         source_id=source_id,
@@ -63,6 +66,11 @@ def apply_timed_condition(
         repeat_save_timing=repeat_save_timing,
         repeat_save_eligible_round=repeat_eligible,
         allowed_removal_action_ids=allowed_removal_action_ids or [],
+        periodic_damage_timing=periodic.timing if periodic else None,
+        periodic_damage_dice_count=periodic.dice_count if periodic else 0,
+        periodic_damage_dice_size=periodic.dice_size if periodic else 6,
+        periodic_damage_bonus=periodic.damage_bonus if periodic else 0,
+        periodic_damage_type=periodic.damage_type if periodic else None,
         turn_behavior=turn_behavior,
         ends_on_damage=ends_on_damage,
         ends_if_source_incapacitated=ends_if_source_incapacitated,
