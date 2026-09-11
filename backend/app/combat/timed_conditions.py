@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from app.combat.concentration import end_concentration_if_incapacitated
 from app.combat.condition_immunity import condition_is_immune
-from app.domain.actions import AbilityName, ConditionTiming
+from app.domain.actions import AbilityName, ConditionName, ConditionTiming
 from app.domain.models import CombatantState, TimedEffect
 from app.domain.runtime import TimedTurnBehavior
 from app.domain.save_effects import PeriodicDamageEffectDefinition
@@ -24,6 +24,7 @@ def apply_timed_condition(
     repeat_save_dc: int | None = None,
     repeat_save_timing: ConditionTiming | None = None,
     repeat_save_delay_rounds: int = 0,
+    repeat_save_failure_condition: ConditionName | None = None,
     allowed_removal_action_ids: list[str] | None = None,
     periodic_damage: PeriodicDamageEffectDefinition | None = None,
     affected_states: list[CombatantState] | None = None,
@@ -65,6 +66,7 @@ def apply_timed_condition(
         repeat_save_dc=repeat_save_dc,
         repeat_save_timing=repeat_save_timing,
         repeat_save_eligible_round=repeat_eligible,
+        repeat_save_failure_condition=repeat_save_failure_condition,
         allowed_removal_action_ids=allowed_removal_action_ids or [],
         periodic_damage_timing=periodic.timing if periodic else None,
         periodic_damage_dice_count=periodic.dice_count if periodic else 0,
