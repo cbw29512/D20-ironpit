@@ -34,6 +34,16 @@
     };
   }
 
+  function transition(target, effect, save, round) {
+    if (save.succeeded) return { removed: T().removeGroup(target.state, effect), applied: [] };
+    if (!effect.repeat_save_failure_condition) return { removed: [], applied: [] };
+    const removed = T().removeGroup(target.state, effect);
+    const next = T().apply(target.state, effect.repeat_save_failure_condition, effect.source_id, {
+      sourceEffectId: effect.source_effect_id || null, appliedRound: round,
+    });
+    return { removed, applied: next ? [next] : [] };
+  }
+
   function resolveTargetTiming(sequence, round, target, timing) {
     const events = [];
     for (const effect of [...target.state.timed_effects]) {
@@ -55,18 +65,18 @@
       }
       if (repeatSaveDue(effect, round, timing)) {
         const save = V().resolveSavingThrow(target.state, effect.repeat_save_ability, effect.repeat_save_dc);
-        const removed = save.succeeded ? T().removeGroup(target.state, effect) : [];
+        const result = transition(target, effect, save, round);
         events.push({
           sequence: sequence++, round_number: round, event_type: "saving_throw",
           actor_id: target.combatant_id, actor_name: target.state.template.name,
           target_id: target.combatant_id, target_name: target.state.template.name,
           saving_throw_roll: save.roll, save_ability: effect.repeat_save_ability,
           save_dc: effect.repeat_save_dc, save_succeeded: save.succeeded,
-          removed_condition_ids: removed,
+          applied_condition_ids: result.applied, removed_condition_ids: result.removed,
           feature_id: effect.source_effect_id || "condition-repeat-save", animation: "condition-save",
           description: `${target.state.template.name} repeats the ${effect.repeat_save_ability} save against ${label(effect.source_effect_id || effect.effect_id)}: ${save.succeeded ? "SUCCESS" : "FAILURE"}.`,
         });
-        if (save.succeeded) continue;
+        if (save.succeeded || result.applied.length) continue;
       }
       if (effect.expiry_timing === timing) {
         const removed = T().removeGroup(target.state, effect); if (!removed.length) continue;
