@@ -2,6 +2,7 @@
   "use strict";
 
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const AU = () => window.IRON_PIT_BROWSER_AURAS || { attackAdvantageSources: () => 0 };
   const AT = () => window.IRON_PIT_BROWSER_ATTACHMENTS;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const L = () => window.IRON_PIT_BROWSER_LIGHT_ATTACK;
@@ -61,8 +62,9 @@
     engine.__standardPostHitHookInstalled = true;
   }
   function resolve(sequence, round, member, target, attack, distance, setup, turnKey, options = {}) {
+    const auraAdvantage = AU().attackAdvantageSources(member, setup);
     const event = A().resolveAttack(sequence++, round, member, target, attack, distance, {
-      advantage: options.advantage || 0, featureId: options.featureId || null, setup,
+      advantage: (options.advantage || 0) + auraAdvantage, featureId: options.featureId || null, setup,
       allowReckless: options.allowReckless !== false, turnKey,
     });
     const events = [event];
