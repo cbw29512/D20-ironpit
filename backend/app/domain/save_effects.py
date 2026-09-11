@@ -5,9 +5,8 @@ from typing import Annotated, Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.hit_modifiers import CombatModifierEffect
-from app.domain.rule_types import AbilityName, ConditionName, ConditionTiming
+from app.domain.rule_types import AbilityName, ConditionName, ConditionTiming, DamageTypeName
 from app.domain.size import CreatureSize
-from app.domain.weapons import DamageType
 
 
 class ProneEffectDefinition(BaseModel):
@@ -30,7 +29,7 @@ class PeriodicDamageEffectDefinition(BaseModel):
     dice_count: int = Field(ge=1, le=40)
     dice_size: int = Field(ge=2, le=100)
     damage_bonus: int = 0
-    damage_type: DamageType
+    damage_type: DamageTypeName
 
 
 class ConditionEffectDefinition(BaseModel):
