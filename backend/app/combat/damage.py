@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.ability_scores import ability_modifier_delta
 from app.combat.barbarian import rage_damage_bonus
 from app.combat.conditional_damage import active_replacement_damage, conditional_damage_active
 from app.combat.dice import DiceProvider
@@ -62,7 +63,8 @@ def resolve_weapon_damage(
         elif attack.fixed_damage is not None:
             components = [fixed_damage_component(weapon.name, attack.fixed_damage, weapon.damage_type)]
         else:
-            weapon_modifier = attack.damage_bonus + rage_damage_bonus(attacker, attack)
+            score_delta = ability_modifier_delta(attacker, attack.attack_ability) if attack.attack_ability else 0
+            weapon_modifier = attack.damage_bonus + score_delta + rage_damage_bonus(attacker, attack)
             components = [roll_weapon_component(
                 attacker, dice, source=weapon.name, dice_count=weapon.dice_count, dice_size=weapon.dice_size,
                 modifier=weapon_modifier, damage_type=weapon.damage_type, critical=critical,
