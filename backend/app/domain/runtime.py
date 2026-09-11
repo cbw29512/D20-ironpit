@@ -5,6 +5,7 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName, ConditionTiming, GrappleSource
+from app.domain.attachments import AttachmentState
 from app.domain.combatants import CombatantTemplate, DamageType
 from app.domain.grid import BattleMapDefinition, GridPosition
 from app.domain.modifiers import CombatModifier, ConcentrationState
@@ -101,6 +102,7 @@ class CombatantState(BaseModel):
     opening_buff_spell_id: str | None = None
     grapple_sources: list[GrappleSource] = Field(default_factory=list)
     swallowed: SwallowedState | None = None
+    attachment: AttachmentState | None = None
     timed_effects: list[TimedEffect] = Field(default_factory=list)
     active_modifiers: list[CombatModifier] = Field(default_factory=list)
     concentration: ConcentrationState | None = None
