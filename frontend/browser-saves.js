@@ -1,6 +1,5 @@
 (() => {
   "use strict";
-
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const AU = () => window.IRON_PIT_BROWSER_AURAS || { savingThrowAdvantageSources: () => 0 };
@@ -27,7 +26,6 @@
       + (T()?.d20Disadvantage(state, ability) || 0);
     return R().modeFromSources(advantage, disadvantage);
   }
-
   function indomitableRevision(original, replacement) {
     return {
       source_effect_id: "indomitable", kind: "full_reroll", original_rolls: [...original.rolls],
@@ -37,9 +35,7 @@
       replacement_total: replacement.total, accepted: "replacement", replaced_die_index: null,
     };
   }
-
   function legendaryOverride(state) { return Boolean(window.IRON_PIT_BROWSER_LEGENDARY_RESISTANCE?.use(state)); }
-
   function resolveSavingThrow(state, ability, dc, magicalEffect = false, advantageSources = 0) {
     if ((ability === "strength" || ability === "dexterity") && Q().autoFailStrDex(state)) return { roll: null, succeeded: legendaryOverride(state) };
     const bonus = state.template.saving_throw_bonuses?.[ability];
@@ -51,13 +47,11 @@
     }
     return { roll, succeeded: roll.total >= dc || legendaryOverride(state) };
   }
-
   function legalAction(action, target, distance) {
     if (distance > action.range) return false;
     if (action.forbidTargetAffectedByAction && T()?.affectedByAction(target.state, action.id)) return false;
     return !action.targetMaxSize || S().sizeAtMost(target, action.targetMaxSize);
   }
-
   function pushAway(actor, target, action) {
     const distance = action.pushTargetAwayFt || 0;
     if (!distance || !target.state.is_alive || target.state.is_dead) return 0;
@@ -66,21 +60,16 @@
     target.position_ft = Math.max(0, start + direction * distance);
     return Math.abs(target.position_ft - start);
   }
-
   function damageRolls(action, count, shared) {
     if (shared == null) return D().rollMany(count, action.damageDiceSize);
     if (!Array.isArray(shared) || shared.length !== count) throw new Error(`${action.name} shared damage roll count is invalid.`);
     if (shared.some((roll) => !Number.isInteger(roll) || roll < 1 || roll > action.damageDiceSize)) throw new Error(`${action.name} shared damage rolls contain an invalid die result.`);
     return [...shared];
   }
-
   function evasionApplies(action, target) {
-    return target.state.template.traits?.includes("evasion")
-      && action.saveAbility === "dexterity"
-      && action.successDamage === "half"
-      && !Q().incapacitated(target.state);
+    return target.state.template.traits?.includes("evasion") && action.saveAbility === "dexterity"
+      && action.successDamage === "half" && !Q().incapacitated(target.state);
   }
-
   function resolveAction(sequence, round, actor, target, action, distance, options = {}) {
     try {
       const spendAction = options.spendAction !== false, spendResourceCost = options.spendResourceCost !== false;
@@ -150,6 +139,5 @@
       throw error;
     }
   }
-
   window.IRON_PIT_BROWSER_SAVES = { legalAction, resolveAction, resolveSavingThrow, saveMode };
 })();
