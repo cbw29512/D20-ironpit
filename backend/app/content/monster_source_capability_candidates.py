@@ -35,7 +35,7 @@ def _bonus(match: re.Match[str]) -> int:
     return -value if match.group("sign") == "-" else value
 
 
-def _ranges(text: str, kind: WeaponAttackKind) -> tuple[int, int | None, int | None]:
+def _ranges(text: str) -> tuple[int, int | None, int | None]:
     reach = re.search(r"reach\s+(\d+)", text, re.I)
     ranged = re.search(r"range\s+(\d+)(?:/(\d+))?", text, re.I)
     normal = int(ranged.group(1)) if ranged else None
@@ -46,7 +46,7 @@ def _ranges(text: str, kind: WeaponAttackKind) -> tuple[int, int | None, int | N
 def _attack(row: dict[str, object], match: re.Match[str]) -> AttackCapabilityDefinition:
     name = match.group("name").strip()
     kind = WeaponAttackKind(match.group("kind").lower().replace(" ", "_"))
-    reach, normal, long = _ranges(match.group("range"), kind)
+    reach, normal, long = _ranges(match.group("range"))
     effects = []
     extra = _EXTRA.search(match.group("extra") or "")
     if extra:
@@ -75,8 +75,7 @@ def _multiattack(row: dict[str, object], attacks: list[AttackCapabilityDefinitio
             return MultiattackCapabilityDefinition(id=f"srd-{_slug(str(row['name']))}-multiattack", slots=[CapabilityActionSlot(attack_ids=ids) for _ in range(_WORD_COUNT[match.group(1).lower()])])
     match = _MULTI_GENERIC.search(text)
     if match:
-        names = {item.name.lower(): item.id for item in attacks}
-        ids = [attack_id for name, attack_id in names.items() if re.search(rf"\b{re.escape(name)}\b", match.group(2), re.I)]
+        ids = [item.id for item in attacks if re.search(rf"\b{re.escape(item.name)}\b", match.group(2), re.I)]
         if ids:
             return MultiattackCapabilityDefinition(id=f"srd-{_slug(str(row['name']))}-multiattack", slots=[CapabilityActionSlot(attack_ids=ids) for _ in range(_WORD_COUNT[match.group(1).lower()])])
     return None
@@ -88,22 +87,25 @@ def source_candidate_definitions(excluded_ids: set[str]) -> dict[str, CombatantD
         definition_id = f"srd-{_slug(str(row['name']))}"
         if definition_id in excluded_ids:
             continue
-        attacks = [_attack(row, match) for match in _ATTACK.finditer(str(row.get("actions", "")))]
-        if not attacks:
+        try:
+            attacks = [_attack(row, match) for match in _ATTACK.finditer(str(row.get("actions", "")))]
+            if not attacks:
+                continue
+            defenses = parse_defense_profile(row)
+            initiative = re.search(r"\bInitiative\s+([+-]?\d+)", str(row.get("rawText", "")), re.I)
+            if initiative is None:
+                continue
+            candidates[definition_id] = CombatantDefinition(
+                id=definition_id, name=str(row["name"]), archetype="source-derived candidate", kind="monster",
+                challenge_rating=str(row["challenge"]).split()[0], size=CreatureSize(str(row["size"]).split()[0].lower()),
+                armor_class=int(re.search(r"\d+", str(row["armorClass"])).group()), max_hp=int(re.search(r"\d+", str(row["hitPoints"])).group()),
+                speed_ft=standard_arena_closing_speed(row["speed"]), movement_modes=parse_movement_profile(row["speed"]),
+                initiative_bonus=int(initiative.group(1)), attacks=attacks, primary_attack_id=attacks[0].id,
+                attack_action=_multiattack(row, attacks), unarmed_opportunity_attack=monster_unarmed_profile(row),
+                damage_vulnerabilities=sorted(defenses["damage_vulnerabilities"]), damage_resistances=sorted(defenses["damage_resistances"]),
+                damage_immunities=sorted(defenses["damage_immunities"]), condition_immunities=sorted(defenses["condition_immunities"]),
+                visual=VisualLoadout(armor="natural", main_hand=attacks[0].name, body_style="monster"), source=str(row["sourceReference"]),
+            )
+        except (AttributeError, TypeError, ValueError):
             continue
-        defenses = parse_defense_profile(row)
-        initiative = re.search(r"\bInitiative\s+([+-]?\d+)", str(row.get("rawText", "")), re.I)
-        if initiative is None:
-            continue
-        candidates[definition_id] = CombatantDefinition(
-            id=definition_id, name=str(row["name"]), archetype="source-derived candidate", kind="monster",
-            challenge_rating=str(row["challenge"]).split()[0], size=CreatureSize(str(row["size"]).split()[0].lower()),
-            armor_class=int(re.search(r"\d+", str(row["armorClass"])).group()), max_hp=int(re.search(r"\d+", str(row["hitPoints"])).group()),
-            speed_ft=standard_arena_closing_speed(row["speed"]), movement_modes=parse_movement_profile(row["speed"]),
-            initiative_bonus=int(initiative.group(1)), attacks=attacks, primary_attack_id=attacks[0].id,
-            attack_action=_multiattack(row, attacks), unarmed_opportunity_attack=monster_unarmed_profile(row),
-            damage_vulnerabilities=sorted(defenses["damage_vulnerabilities"]), damage_resistances=sorted(defenses["damage_resistances"]),
-            damage_immunities=sorted(defenses["damage_immunities"]), condition_immunities=sorted(defenses["condition_immunities"]),
-            visual=VisualLoadout(armor="natural", main_hand=attacks[0].name, body_style="monster"), source=str(row["sourceReference"]),
-        )
     return candidates
