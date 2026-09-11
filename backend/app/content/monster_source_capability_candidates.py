@@ -4,6 +4,7 @@ import re
 
 from app.content.monster_catalog import load_monster_rows
 from app.content.monster_defense_source_audit import parse_defense_profile
+from app.content.monster_source_save_candidates import source_save_candidates
 from app.content.movement_modes import parse_movement_profile, standard_arena_closing_speed
 from app.content.unarmed_opportunity_profiles import monster_unarmed_profile
 from app.domain.capabilities import CombatantDefinition
@@ -91,6 +92,7 @@ def source_candidate_definitions(excluded_ids: set[str]) -> dict[str, CombatantD
             attacks = [_attack(row, match) for match in _ATTACK.finditer(str(row.get("actions", "")))]
             if not attacks:
                 continue
+            save_actions, resources = source_save_candidates(row)
             defenses = parse_defense_profile(row)
             initiative = re.search(r"\bInitiative\s+([+-]?\d+)", str(row.get("rawText", "")), re.I)
             if initiative is None:
@@ -101,7 +103,8 @@ def source_candidate_definitions(excluded_ids: set[str]) -> dict[str, CombatantD
                 armor_class=int(re.search(r"\d+", str(row["armorClass"])).group()), max_hp=int(re.search(r"\d+", str(row["hitPoints"])).group()),
                 speed_ft=standard_arena_closing_speed(row["speed"]), movement_modes=parse_movement_profile(row["speed"]),
                 initiative_bonus=int(initiative.group(1)), attacks=attacks, primary_attack_id=attacks[0].id,
-                attack_action=_multiattack(row, attacks), unarmed_opportunity_attack=monster_unarmed_profile(row),
+                attack_action=_multiattack(row, attacks), save_actions=save_actions, resources=resources,
+                unarmed_opportunity_attack=monster_unarmed_profile(row),
                 damage_vulnerabilities=sorted(defenses["damage_vulnerabilities"]), damage_resistances=sorted(defenses["damage_resistances"]),
                 damage_immunities=sorted(defenses["damage_immunities"]), condition_immunities=sorted(defenses["condition_immunities"]),
                 visual=VisualLoadout(armor="natural", main_hand=attacks[0].name, body_style="monster"), source=str(row["sourceReference"]),
