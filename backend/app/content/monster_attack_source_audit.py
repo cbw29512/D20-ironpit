@@ -51,6 +51,8 @@ def _melee_reach_pattern(reach_ft: int) -> re.Pattern[str]:
 
 
 def _ranged_pattern(normal_ft: int, long_ft: int) -> re.Pattern[str]:
+    if normal_ft == long_ft:
+        return re.compile(rf"\brange\s+{normal_ft}(?:\s*/\s*{long_ft})?\s*(?:ft\.?|feet)\b", re.IGNORECASE)
     return re.compile(rf"\brange\s+{normal_ft}\s*/\s*{long_ft}\s*(?:ft\.?|feet)\b", re.IGNORECASE)
 
 
