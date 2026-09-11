@@ -11,6 +11,7 @@ from app.domain.charge import ChargeProfile
 from app.domain.hit_modifiers import HitModifierEffect
 from app.domain.save_effects import SaveFailureEffectDefinition
 from app.domain.size import CreatureSize
+from app.domain.target_filters import TargetFilter
 
 
 class DamageType(StrEnum):
@@ -85,8 +86,8 @@ class OnHitSavingThrow(BaseModel):
     save_ability: AbilityName
     dc: int = Field(ge=1, le=40)
     magical_effect: bool = False
+    target_filter: TargetFilter = Field(default_factory=TargetFilter)
     failure_effects: list[SaveFailureEffectDefinition] = Field(default_factory=list)
-
 class Weapon(BaseModel):
     id: str
     name: str
