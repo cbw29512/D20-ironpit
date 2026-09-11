@@ -18,13 +18,14 @@ from app.domain.modifiers import ModifierKind
 logger = logging.getLogger(__name__)
 
 
-def saving_throw_mode(state: CombatantState, ability: str) -> RollMode:
+def saving_throw_mode(state: CombatantState, ability: str, magical_effect: bool = False) -> RollMode:
     try:
         advantage = (
             int(ability == "strength" and rage_active(state))
             + danger_sense_advantage(state, ability)
             + dodge_dex_save_advantage_sources(state, ability)
             + bloodied_saving_throw_advantage(state)
+            + int(magical_effect and state.template.magic_resistance)
         )
         disadvantage = (
             int(ability == "dexterity" and RESTRAINED_EFFECT_ID in state.active_effect_ids)
@@ -63,6 +64,7 @@ def resolve_saving_throw(
     ability: str,
     dc: int,
     dice: DiceProvider,
+    magical_effect: bool = False,
 ) -> tuple[DiceRoll | None, bool]:
     try:
         if ability in {"strength", "dexterity"} and automatically_fails_strength_dexterity_save(state):
@@ -72,7 +74,7 @@ def resolve_saving_throw(
         roll = apply_d20_bonus_dice(
             state,
             ModifierKind.SAVING_THROW_BONUS_DIE,
-            roll_d20(dice, state.template.saving_throw_bonuses[ability], saving_throw_mode(state, ability)),
+            roll_d20(dice, state.template.saving_throw_bonuses[ability], saving_throw_mode(state, ability, magical_effect)),
             dice,
         )
         if roll.total < dc:
