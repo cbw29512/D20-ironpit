@@ -56,15 +56,16 @@ def _weapon_profiles(attacker: EncounterCombatant, target: EncounterCombatant) -
             if not resource_available(attacker.state, attack.resource_id, attack.resource_cost):
                 continue
             priority = _priority_for_resource(attacker, attack.resource_id)
+            execution_rank = 0 if priority == 0 else 2
             kind = attack.weapon.attack_kind
             if kind in {WeaponAttackKind.MELEE, WeaponAttackKind.MELEE_OR_RANGED}:
                 reach = attack.weapon.reach_ft
-                profiles.append(OffensiveRangeProfile(priority, "melee", reach, reach))
+                profiles.append(OffensiveRangeProfile(priority, "melee", reach, reach, execution_rank))
             if kind in {WeaponAttackKind.RANGED, WeaponAttackKind.MELEE_OR_RANGED}:
                 normal = attack.weapon.normal_range_ft
                 maximum = attack.weapon.long_range_ft or normal
                 if normal is not None and maximum is not None:
-                    profiles.append(OffensiveRangeProfile(priority, "ranged", maximum, normal))
+                    profiles.append(OffensiveRangeProfile(priority, "ranged", maximum, normal, execution_rank))
         return profiles
     except Exception:
         logger.exception("Failed weapon offensive-range probe for %s.", attacker.combatant_id)
@@ -80,7 +81,9 @@ def _save_action_profiles(attacker: EncounterCombatant, target: EncounterCombata
             if not resource_available(attacker.state, action.resource_id, action.resource_cost):
                 continue
             distance = _save_action_range(action)
-            profiles.append(OffensiveRangeProfile(_priority_for_resource(attacker, action.resource_id), "ability", distance, distance))
+            priority = _priority_for_resource(attacker, action.resource_id)
+            execution_rank = 0 if priority == 0 else 3
+            profiles.append(OffensiveRangeProfile(priority, "ability", distance, distance, execution_rank))
         return profiles
     except Exception:
         logger.exception("Failed save-action offensive-range probe for %s.", attacker.combatant_id)
@@ -94,13 +97,13 @@ def _spell_profiles(attacker: EncounterCombatant, turn_key: str) -> list[Offensi
             if action.action_cost == "reaction" or not is_available(attacker.state, action.action_cost):
                 continue
             if _spell_level_available(attacker, action.level, turn_key):
-                profiles.append(OffensiveRangeProfile(1, "spell", action.range_ft, action.range_ft))
+                profiles.append(OffensiveRangeProfile(1, "spell", action.range_ft, action.range_ft, 1))
         for action in attacker.state.template.spell_save_actions:
             if action.action_cost == "reaction" or action.concentration or not is_available(attacker.state, action.action_cost):
                 continue
             if _spell_level_available(attacker, action.level, turn_key):
                 distance = action.range_ft + (action.area_radius_ft or 0)
-                profiles.append(OffensiveRangeProfile(1, "spell", distance, distance))
+                profiles.append(OffensiveRangeProfile(1, "spell", distance, distance, 1))
         return profiles
     except Exception:
         logger.exception("Failed spell offensive-range probe for %s.", attacker.combatant_id)
