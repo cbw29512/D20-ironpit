@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from enum import StrEnum
 from typing import Literal
-
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.ability_reduction import AbilityScoreReductionOnHit
