@@ -30,9 +30,11 @@ _ARENA_NEUTRAL_TRAITS = frozenset({
 
 
 def _is_heading(value: str) -> bool:
-    if not value or len(value) > 80 or any(mark in value for mark in ",:;!?"):
+    if not value or len(value) > 80:
         return False
     plain = re.sub(r"\s*\([^)]*\)$", "", value).strip()
+    if any(mark in plain for mark in ",:;!?"):
+        return False
     words = plain.split()
     if not words:
         return False
