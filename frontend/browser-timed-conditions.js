@@ -19,6 +19,7 @@
     ));
     const expiryTiming = options.expiryTiming || (options.expiresAtStartOfSourceTurn ? "source_turn_start" : null);
     const hasRepeatSave = options.repeatSaveAbility != null && options.repeatSaveDc != null && options.repeatSaveTiming != null;
+    const periodic = options.periodicDamage || null;
     state.timed_effects.push({
       effect_id: effectId,
       source_id: sourceId,
@@ -33,6 +34,11 @@
       repeat_save_timing: options.repeatSaveTiming || null,
       repeat_save_eligible_round: hasRepeatSave && options.appliedRound != null ? options.appliedRound + delayRounds : null,
       allowed_removal_action_ids: [...(options.allowedRemovalActionIds || [])],
+      periodic_damage_timing: periodic?.timing || null,
+      periodic_damage_dice_count: periodic?.diceCount || 0,
+      periodic_damage_dice_size: periodic?.diceSize || 6,
+      periodic_damage_bonus: periodic?.damageBonus || 0,
+      periodic_damage_type: periodic?.damageType || null,
       turn_behavior: options.turnBehavior || "normal",
       action_or_bonus_only: Boolean(options.actionOrBonusOnly),
       reactions_disabled: Boolean(options.reactionsDisabled),
