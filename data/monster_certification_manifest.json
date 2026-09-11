@@ -8104,7 +8104,7 @@
       "monster_name": "Stirge",
       "srd_source_page": 329,
       "srd_source_reference": "SRD 5.2.1 p. 329",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-stirge",
       "detected_combat_mechanics": [
         "attack-roll",
         "unsupported-action-rider"
@@ -8120,7 +8120,7 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-certified",
+        "arena-speed-mismatch",
         "unsupported-action-rider"
       ]
     },
