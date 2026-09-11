@@ -13,8 +13,10 @@ _FIELDS = ("traits", "actions", "bonusActions", "reactions")
 _CONNECTORS = frozenset({"a", "an", "and", "of", "or", "the", "to"})
 _MARKER = re.compile(r"\((?:[^)]*(?:Recharge\s+\d(?:\s*[-–]\s*\d)?|\d+\s*/\s*Day)[^)]*)\)", re.I)
 _DAILY_FINGERPRINT = re.compile(
-    r"^(?P<section>[^:]+):(?P<name>.+?)\s+\((?P<uses>\d+)\s*/\s*Day\)$",
-    re.IGNORECASE,
+    r"^(?P<section>[^:]+):(?P<name>.+?)\s+\((?P<uses>\d+)\s*/\s*Day\)$", re.I,
+)
+_LEGENDARY_RESISTANCE = re.compile(
+    r"^traits:Legendary Resistance\s*\((?P<uses>\d+)\s*/\s*Day(?:,\s*or\s*\d+\s*/\s*Day\s+in\s+Lair)?\)$", re.I,
 )
 
 
@@ -54,7 +56,6 @@ def _normalized_name(value: str) -> str:
 
 
 def _resource_action_bindings(template: CombatantTemplate) -> list[tuple[str, int, str]]:
-    """Enumerate source-visible actions using the shared runtime resource contract."""
     rows: list[tuple[str, int, str]] = []
     for attack in [template.weapon_attack, *template.alternate_weapon_attacks]:
         if attack.resource_id:
@@ -63,10 +64,8 @@ def _resource_action_bindings(template: CombatantTemplate) -> list[tuple[str, in
         if action.resource_id:
             rows.append((action.resource_id, action.resource_cost, action.name))
     for action in [
-        *template.spell_attack_actions,
-        *template.spell_save_actions,
-        *template.defensive_spell_actions,
-        *template.healing_actions,
+        *template.spell_attack_actions, *template.spell_save_actions,
+        *template.defensive_spell_actions, *template.healing_actions,
     ]:
         if action.resource_id:
             rows.append((action.resource_id, action.resource_cost, action.name))
@@ -81,8 +80,7 @@ def _daily_fingerprint_implemented(template: CombatantTemplate, fingerprint: str
     uses = int(match.group("uses"))
     bindings = _resource_action_bindings(template)
     return any(
-        definition.max_uses == uses
-        and definition.recharge is None
+        definition.max_uses == uses and definition.recharge is None
         and _normalized_name(definition.name) == source_name
         and any(
             resource_id == definition.id and cost == 1 and _normalized_name(action_name) == source_name
@@ -92,14 +90,28 @@ def _daily_fingerprint_implemented(template: CombatantTemplate, fingerprint: str
     )
 
 
+def _legendary_resistance_implemented(template: CombatantTemplate, fingerprint: str) -> bool:
+    match = _LEGENDARY_RESISTANCE.fullmatch(fingerprint.strip())
+    if match is None:
+        return False
+    uses = int(match.group("uses"))
+    return any(
+        item.id == "legendary-resistance" and item.max_uses == uses and item.recharge is None
+        for item in template.resources
+    )
+
+
 def limited_use_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
-    """Fail closed unless a source limited-use feature has matching runtime use economy."""
     expected = parse_limited_use_names(row)
     issues: list[str] = []
     if template.source_limited_use_names != expected:
         issues.append("source-limited-use-fingerprint-mismatch")
     for name in expected:
-        if recharge_fingerprint_implemented(template, name) or _daily_fingerprint_implemented(template, name):
+        if (
+            recharge_fingerprint_implemented(template, name)
+            or _daily_fingerprint_implemented(template, name)
+            or _legendary_resistance_implemented(template, name)
+        ):
             continue
         slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
         issues.append(f"uncertified-limited-use:{slug}")
