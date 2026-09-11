@@ -1,6 +1,7 @@
 from __future__ import annotations
 import re
 from typing import Any
+from app.content.monster_attachment_source_audit import attachment_issues
 from app.content.monster_attack_advantage_source_audit import conditional_attack_advantage_issues
 from app.content.monster_attack_modifier_source_audit import hit_modifier_issues
 from app.content.monster_forced_movement_source_audit import forced_movement_issues
@@ -127,6 +128,7 @@ def attack_issues(attack: WeaponAttack, actions: str, traits: str = "") -> list[
             issues.append(f"conditional-damage-mismatch:{attack.id}:{conditional.trigger}")
     if attack.max_hp_reduction_on_hit is not None and not _max_hp_reduction_present(actions, attack.max_hp_reduction_on_hit):
         issues.append(f"max-hp-reduction-rider-mismatch:{attack.id}")
+    issues.extend(attachment_issues(attack, actions))
     issues.extend(hit_modifier_issues(attack, actions))
     issues.extend(conditional_attack_advantage_issues(attack, actions, traits))
     issues.extend(forced_movement_issues(attack, actions))
