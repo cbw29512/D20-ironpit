@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 188,
-    "blocked": 142
+    "public_ready": 189,
+    "blocked": 141
   },
   "monsters": [
     {
@@ -3033,7 +3033,6 @@
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
-        "uncertified-limited-use:actions-blinding-breath-recharge-6",
         "uncertified-limited-use:actions-sleep-1-day",
         "uncertified-monster-spellcasting",
         "uncertified-trait:death-burst"
@@ -8490,25 +8489,19 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "damage-or-condition-defense",
+        "limited-use",
+        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "condition-or-control",
-        "limited-use",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "condition-or-control",
-        "limited-use",
-        "save-or-complex-action",
-        "uncertified-limited-use:actions-cacophony-recharge-6"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-swarm-of-venomous-snakes",
