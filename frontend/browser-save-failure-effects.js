@@ -34,6 +34,7 @@
           repeatSaveTiming: effect.repeatSaveTiming || null,
           repeatSaveDelayRounds: effect.repeatSaveDelayRounds || 0,
           allowedRemovalActionIds: effect.allowedRemovalActionIds || [],
+          periodicDamage: effect.periodicDamage || null,
         });
         if (condition) applied.push(condition);
       } else if (effect.kind === "turn-restriction") {
