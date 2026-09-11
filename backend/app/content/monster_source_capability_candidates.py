@@ -5,13 +5,14 @@ import re
 from app.content.monster_catalog import load_monster_rows
 from app.content.monster_defense_source_audit import parse_defense_profile
 from app.content.monster_source_attack_riders import parse_attack_riders
+from app.content.monster_source_charge_riders import parse_charge_replacement
+from app.content.monster_source_fixed_attack_candidates import source_fixed_attack_candidates
 from app.content.monster_source_save_candidates import source_save_candidates
 from app.content.movement_modes import parse_movement_profile, standard_arena_closing_speed
 from app.content.unarmed_opportunity_profiles import monster_unarmed_profile
 from app.domain.capabilities import CombatantDefinition
 from app.domain.capability_attacks import AttackCapabilityDefinition, CapabilityActionSlot, MultiattackCapabilityDefinition
 from app.domain.capability_effects import DamageEffectDefinition, DiceSpec
-from app.domain.charge import ChargeDamage, ChargeProfile
 from app.domain.combatants import VisualLoadout
 from app.domain.size import CreatureSize
 from app.domain.traits import CombatTrait
@@ -26,11 +27,6 @@ _ATTACK = re.compile(
     r"(?P<tail>[^.]*)\.", re.I,
 )
 _EXTRA = re.compile(r"plus\s+\d+\s*\((\d+)d(\d+)(?:\s*([+-])\s*(\d+))?\)\s+([A-Za-z]+)\s+damage", re.I)
-_CHARGE_REPLACEMENT = re.compile(
-    r"\bor\s+\d+\s*\((?P<count>\d+)d(?P<size>\d+)(?:\s*(?P<sign>[+-])\s*(?P<mod>\d+))?\)\s*"
-    r"(?P<type>[A-Za-z]+) damage if the [^.]+? moved (?P<distance>\d+)\+ feet straight toward the target immediately before the hit",
-    re.I,
-)
 _ON_HIT_SAVE_BLOCK = re.compile(
     r"(?:(?:If|The target)[^.]*following effect\.\s*)?"
     r"(?:Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) Saving Throw:\s*DC\s*\d+[^.]*\.\s*"
@@ -69,20 +65,6 @@ def _rider_text(actions: str, match: re.Match[str]) -> str:
     return text
 
 
-def _charge(text: str) -> ChargeProfile | None:
-    match = _CHARGE_REPLACEMENT.search(text)
-    if match is None:
-        return None
-    bonus = int(match.group("mod") or 0) * (-1 if match.group("sign") == "-" else 1)
-    return ChargeProfile(
-        minimum_move_ft=int(match.group("distance")),
-        replacement_damage=ChargeDamage(
-            dice_count=int(match.group("count")), dice_size=int(match.group("size")),
-            damage_bonus=bonus, damage_type=match.group("type").lower(),
-        ),
-    )
-
-
 def _attack(row: dict[str, object], actions: str, match: re.Match[str]) -> AttackCapabilityDefinition:
     name = match.group("name").strip()
     reach, normal, long = _ranges(match.group("range"))
@@ -100,7 +82,8 @@ def _attack(row: dict[str, object], actions: str, match: re.Match[str]) -> Attac
         attack_kind=WeaponAttackKind(match.group("kind").lower().replace(" ", "_")), attack_bonus=int(match.group("bonus")),
         damage=DiceSpec(count=int(match.group("count")), size=int(match.group("size")), bonus=_bonus(match)),
         damage_type=DamageType(match.group("dtype").lower()), animation="strike", reach_ft=reach,
-        normal_range_ft=normal, long_range_ft=long, effects=effects, charge_profile=_charge(rider_text),
+        normal_range_ft=normal, long_range_ft=long, effects=effects,
+        charge_profile=parse_charge_replacement(rider_text),
     )
 
 
@@ -129,6 +112,7 @@ def source_candidate_definitions(excluded_ids: set[str]) -> dict[str, CombatantD
         try:
             action_text = str(row.get("actions", ""))
             attacks = [_attack(row, action_text, match) for match in _ATTACK.finditer(action_text)]
+            attacks.extend(source_fixed_attack_candidates(row, action_text))
             if not attacks:
                 continue
             save_actions, resources = source_save_candidates(row)
