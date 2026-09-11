@@ -4,6 +4,7 @@ import logging
 from typing import Any
 
 from app.domain.models import WeaponAttack
+from browser_action_serializer import failure_effect_row
 from browser_attack_effect_serializer import charge_row, control_row, hit_modifier_row
 
 logger = logging.getLogger(__name__)
@@ -35,6 +36,13 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
         if attack.forbid_target_grappled_by_self: row["forbidSelfGrappledTarget"] = True
         if attack.max_hp_reduction_on_hit is not None:
             row["maxHpReductionOnHit"] = {"damageType": attack.max_hp_reduction_on_hit.damage_type.value if attack.max_hp_reduction_on_hit.damage_type is not None else None}
+        if attack.on_hit_saving_throw is not None:
+            rider = attack.on_hit_saving_throw
+            row["onHitSavingThrow"] = {
+                "saveAbility": rider.save_ability, "dc": rider.dc, "magicalEffect": rider.magical_effect,
+                "targetFilter": {"excludedCreatureTypes": list(rider.target_filter.excluded_creature_types), "excludedTags": list(rider.target_filter.excluded_tags)},
+                "failureEffects": [failure_effect_row(effect) for effect in rider.failure_effects],
+            }
         if attack.attachment_on_hit is not None:
             effect = attack.attachment_on_hit
             row["attachmentOnHit"] = {
