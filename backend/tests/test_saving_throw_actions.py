@@ -44,6 +44,21 @@ def test_rage_strength_save_has_advantage() -> None:
     assert roll.selected_roll == 10 and succeeded is True
 
 
+def test_magic_resistance_advantage_applies_only_to_magical_effects() -> None:
+    state = _state()
+    state.template = state.template.model_copy(update={"magic_resistance": True})
+    magical_roll, _ = resolve_saving_throw(
+        state, "wisdom", 99, FixedDiceProvider([2, 18]), magical_effect=True,
+    )
+    nonmagical_roll, _ = resolve_saving_throw(
+        state, "wisdom", 99, FixedDiceProvider([7]), magical_effect=False,
+    )
+    assert magical_roll is not None and magical_roll.mode is RollMode.ADVANTAGE
+    assert magical_roll.selected_roll == 18
+    assert nonmagical_roll is not None and nonmagical_roll.mode is RollMode.NORMAL
+    assert nonmagical_roll.selected_roll == 7
+
+
 def test_unconscious_auto_fails_strength_and_dexterity_saves() -> None:
     state = _state()
     state.current_hp = 0
