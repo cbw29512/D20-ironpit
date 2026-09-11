@@ -15,12 +15,13 @@ from app.domain.capability_effects import (
     ConditionEffectDefinition,
     DamageEffectDefinition,
     GrappleEffectDefinition,
+    HitSavingThrowEffectDefinition,
     MaxHpReductionEffectDefinition,
     ProneEffectDefinition,
 )
 from app.domain.hit_modifiers import HitModifierEffect
 from app.domain.models import ConditionalDamage, OnHitDamage, Weapon, WeaponAttack
-from app.domain.weapons import AttachmentOnHit, MaxHpReductionOnHit
+from app.domain.weapons import AttachmentOnHit, MaxHpReductionOnHit, OnHitSavingThrow
 
 logger = logging.getLogger(__name__)
 
@@ -57,6 +58,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
         max_hp_reduction: MaxHpReductionOnHit | None = None
         ability_reduction: AbilityScoreReductionOnHit | None = None
         attachment: AttachmentOnHit | None = None
+        hit_save: OnHitSavingThrow | None = None
         prone_size = None
         controls: list[HitControlEffect] = []
         for effect in definition.effects:
@@ -82,6 +84,15 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
                 prone_size = effect.max_target_size
             elif isinstance(effect, HitModifierEffect):
                 on_hit_modifiers.append(effect)
+            elif isinstance(effect, HitSavingThrowEffectDefinition):
+                if hit_save is not None:
+                    raise UnsupportedCapabilityError("An attack supports at most one on-hit saving throw.")
+                hit_save = OnHitSavingThrow(
+                    save_ability=effect.save_ability,
+                    dc=effect.dc,
+                    magical_effect=effect.magical_effect,
+                    failure_effects=effect.failure_effects,
+                )
             elif isinstance(effect, MaxHpReductionEffectDefinition):
                 if max_hp_reduction is not None:
                     raise UnsupportedCapabilityError("An attack supports at most one max-HP-reduction rider.")
@@ -122,6 +133,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
             conditional_attack_advantage=definition.conditional_attack_advantage,
             on_hit_damage=on_hit,
             on_hit_modifier_effects=on_hit_modifiers,
+            on_hit_saving_throw=hit_save,
             max_hp_reduction_on_hit=max_hp_reduction,
             ability_score_reduction_on_hit=ability_reduction,
             attachment_on_hit=attachment,
