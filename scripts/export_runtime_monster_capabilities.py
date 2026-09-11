@@ -6,7 +6,7 @@ import logging
 from pathlib import Path
 
 from app.content.legacy_monster_roster import build_legacy_monster_templates
-from monster_registry_build import (
+from app.content.monster_registry_build import (
     compile_payloads,
     is_clean,
     load_cache,
