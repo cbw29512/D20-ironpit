@@ -10,4 +10,5 @@ RIDER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Shadow": _p("humanoid", "shadow"),
     "Specter": _p("humanoid", "specter"),
     "Stirge": _p("winged-insect", "stirge"),
+    "Troll Limb": _p("brute", "troll-limb"),
 }
