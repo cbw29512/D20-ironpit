@@ -2,6 +2,7 @@
   "use strict";
 
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const AU = () => window.IRON_PIT_BROWSER_AURAS || { attackAdvantageSources: () => 0 };
   const C = () => window.IRON_PIT_BROWSER_CHARGE;
   const D = () => window.IRON_PIT_DICE;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
@@ -109,8 +110,9 @@
       if (choice) {
         if (splitThis && choice.attack.kind === "ranged") rangedSplitUsed = true;
         const pack = window.IRON_PIT_BROWSER_STATE.packTactics(member, choice.target, setup);
+        const advantage = (pack ? 1 : 0) + AU().attackAdvantageSources(member, setup);
         const featureId = openingFeature || (pack ? "pack-tactics" : definition.id);
-        const event = A().resolveAttack(sequence++, round, member, choice.target, choice.attack, choice.distance, { spendAction: false, advantage: pack ? 1 : 0, setup, featureId, turnKey, allowReckless: true, ignoreCloseThreat: true });
+        const event = A().resolveAttack(sequence++, round, member, choice.target, choice.attack, choice.distance, { spendAction: false, advantage, setup, featureId, turnKey, allowReckless: true, ignoreCloseThreat: true });
         events.push(event);
         if (member.state.turn_terminated) break;
         const cleave = WM().resolveCleave(sequence, round, member, event, choice.attack, setup, turnKey);
