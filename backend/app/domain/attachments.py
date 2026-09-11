@@ -17,6 +17,7 @@ class AttachmentEffectDefinition(BaseModel):
     periodic_damage_type: DamageType
     timing: Literal["source_turn_start"] = "source_turn_start"
     forbids_source_attack_ids: list[str] = Field(default_factory=list)
+    detachable_by_source_movement_ft: int | None = Field(default=None, ge=5, le=120)
     detachable_by_target_action: bool = True
     detachable_by_adjacent_action: bool = True
 
@@ -33,5 +34,6 @@ class AttachmentState(BaseModel):
     periodic_damage_bonus: int = 0
     periodic_damage_type: DamageType
     forbids_source_attack_ids: list[str] = Field(default_factory=list)
+    detachable_by_source_movement_ft: int | None = Field(default=None, ge=5, le=120)
     detachable_by_target_action: bool = True
     detachable_by_adjacent_action: bool = True
