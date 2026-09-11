@@ -16,7 +16,7 @@ def _resource(resource_id: str) -> ResourceDefinition:
     )
 
 
-def _save(action_id: str, resource_id: str, *, area: bool = False) -> SaveCapabilityDefinition:
+def _save(action_id: str, resource_id: str | None, *, area: bool = False) -> SaveCapabilityDefinition:
     return SaveCapabilityDefinition(
         id=action_id,
         name="Fire Breath",
@@ -60,3 +60,13 @@ def test_source_only_save_rebinds_to_existing_semantic_resource() -> None:
     assert len(actions) == 1
     assert actions[0].id == "srd-young-dragon-fire-breath"
     assert actions[0].resource_id == "young-dragon-fire-breath-recharge"
+
+
+def test_resource_free_semantic_save_duplicate_keeps_canonical_action() -> None:
+    existing_actions = [_save("legacy-fire-breath", None)]
+    source_actions = [_save("srd-fire-breath", None)]
+
+    actions = _merge_save_actions(existing_actions, source_actions, {})
+
+    assert len(actions) == 1
+    assert actions[0].id == "legacy-fire-breath"
