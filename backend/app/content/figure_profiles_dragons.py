@@ -9,6 +9,7 @@ DRAGON_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Dragon Turtle": figure_profile("aquatic-reptile", "dragon-turtle"),
     "Green Dragon Wyrmling": figure_profile("reptile", "green-dragon-wyrmling"),
     "Red Dragon Wyrmling": figure_profile("reptile", "red-dragon-wyrmling"),
+    "Silver Dragon Wyrmling": figure_profile("reptile", "silver-dragon-wyrmling"),
     "White Dragon Wyrmling": figure_profile("reptile", "white-dragon-wyrmling"),
     "Young Black Dragon": figure_profile("reptile", "young-black-dragon"),
     "Young Blue Dragon": figure_profile("reptile", "young-blue-dragon"),
@@ -16,5 +17,6 @@ DRAGON_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Young Copper Dragon": figure_profile("reptile", "young-copper-dragon"),
     "Young Green Dragon": figure_profile("reptile", "young-green-dragon"),
     "Young Red Dragon": figure_profile("reptile", "young-red-dragon"),
+    "Young Silver Dragon": figure_profile("reptile", "young-silver-dragon"),
     "Young White Dragon": figure_profile("reptile", "young-white-dragon"),
 }
