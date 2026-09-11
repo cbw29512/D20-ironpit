@@ -15,6 +15,7 @@ from app.content.monster_legendary_source_audit import complete_monster_legendar
 from app.content.monster_limited_use_source_audit import complete_monster_limited_use_fingerprints
 from app.content.monster_reaction_source_audit import complete_monster_reaction_fingerprints
 from app.content.monster_regeneration_source import complete_monster_regeneration
+from app.content.monster_save_action_reconciliation import reconcile_monster_save_actions
 from app.content.monster_saving_throws import complete_monster_saving_throws
 from app.content.monster_source_capability_candidates import source_candidate_definitions
 from app.content.monster_spellcasting_source_audit import complete_monster_spellcasting_fingerprints
@@ -92,6 +93,7 @@ def get_capability_definition(combatant_id: str) -> CombatantDefinition:
 
 
 def _complete_monster_batch(monsters: list[CombatantTemplate]) -> list[CombatantTemplate]:
+    monsters = reconcile_monster_save_actions(monsters)
     monsters = complete_monster_creature_types(monsters)
     monsters = complete_monster_ability_scores(monsters)
     monsters = complete_monster_saving_throws(monsters)
