@@ -7,7 +7,11 @@ from app.content.roster import build_arena_roster
 
 @pytest.mark.parametrize(
     "name",
-    ["Bearded Devil", "Chuul", "Death Dog", "Harpy", "Homunculus", "Salamander"],
+    [
+        "Bearded Devil", "Brass Dragon Wyrmling", "Chuul", "Death Dog", "Harpy",
+        "Homunculus", "Salamander", "Silver Dragon Wyrmling", "Young Brass Dragon",
+        "Young Silver Dragon",
+    ],
 )
 def test_source_and_runtime_save_counts_match(name: str) -> None:
     row = next(row for row in load_monster_rows() if row["name"] == name)
