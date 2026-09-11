@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 155,
-    "blocked": 175
+    "public_ready": 157,
+    "blocked": 173
   },
   "monsters": [
     {
@@ -7813,21 +7813,16 @@
       ],
       "supported_mechanics": [
         "attack-roll",
-        "damage-or-condition-defense"
-      ],
-      "unsupported_mechanics": [
+        "damage-or-condition-defense",
         "trait",
         "unsupported-action-rider"
       ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "arena-speed-mismatch",
-        "trait",
-        "unsupported-action-rider"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-sphinx-of-lore",
@@ -8110,19 +8105,15 @@
         "unsupported-action-rider"
       ],
       "supported_mechanics": [
-        "attack-roll"
-      ],
-      "unsupported_mechanics": [
+        "attack-roll",
         "unsupported-action-rider"
       ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "arena-speed-mismatch",
-        "unsupported-action-rider"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-stone-giant",
