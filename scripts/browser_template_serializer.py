@@ -72,6 +72,15 @@ def _swallow_row(action: Any) -> dict[str, Any]:
     }
 
 
+def _aura_row(aura: Any) -> dict[str, Any]:
+    return {
+        "id": aura.id, "name": aura.name, "radius_ft": aura.radius_ft,
+        "damage_dice_count": aura.damage_dice_count, "damage_dice_size": aura.damage_dice_size,
+        "damage_bonus": aura.damage_bonus, "damage_type": aura.damage_type.value,
+        "disabled_while_incapacitated": aura.disabled_while_incapacitated,
+    }
+
+
 def template_row(template: CombatantTemplate) -> dict[str, Any]:
     try:
         traits = {item.value for item in template.combat_traits}
@@ -108,6 +117,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             ]
         if template.swallow_actions:
             row["swallow_actions"] = [_swallow_row(action) for action in template.swallow_actions]
+        if template.end_turn_damage_auras:
+            row["end_turn_damage_auras"] = [_aura_row(aura) for aura in template.end_turn_damage_auras]
         if template.kind == "monster":
             row["source_trait_names"] = list(template.source_trait_names)
             row["source_reaction_names"] = list(template.source_reaction_names)
