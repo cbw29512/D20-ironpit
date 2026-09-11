@@ -4,13 +4,13 @@ import logging
 
 from app.combat.modifier_stack import expire_target_turn_modifiers
 from app.combat.periodic_damage import periodic_damage_due, resolve_periodic_damage
+from app.combat.repeat_save_transition import resolve_repeat_save_transition
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.timed_conditions import remove_effect_group
 from app.combat.timed_effect_recovery import automatic_success_due, resolve_automatic_success
 from app.domain.actions import ConditionTiming
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
-
 logger = logging.getLogger(__name__)
 
 
@@ -54,7 +54,7 @@ def resolve_target_condition_timing(
                     effect.repeat_save_dc,
                     dice,
                 )
-                removed = remove_effect_group(target.state, effect) if succeeded else []
+                removed, escalated = resolve_repeat_save_transition(target.state, effect, succeeded, round_number)
                 events.append(BattleEvent(
                     sequence=sequence,
                     round_number=round_number,
@@ -67,6 +67,7 @@ def resolve_target_condition_timing(
                     save_ability=effect.repeat_save_ability,
                     save_dc=effect.repeat_save_dc,
                     save_succeeded=succeeded,
+                    applied_condition_ids=escalated,
                     removed_condition_ids=removed,
                     feature_id=effect.source_effect_id or "condition-repeat-save",
                     animation="condition-save",
@@ -77,7 +78,7 @@ def resolve_target_condition_timing(
                     ),
                 ))
                 sequence += 1
-                if succeeded:
+                if succeeded or escalated:
                     continue
             if effect.expiry_timing == timing:
                 removed = remove_effect_group(target.state, effect)
