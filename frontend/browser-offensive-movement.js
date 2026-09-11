@@ -37,8 +37,7 @@
             option.range,
             member.state.movement_remaining_ft,
           );
-          if (!plan.goal_reachable || !plan.path.length) continue;
-          if (plan.final_distance_ft >= distance) continue;
+          if (!plan.path.length || plan.final_distance_ft > option.range) continue;
           candidates.push({ ...base, cost: plan.movement_cost_ft });
         }
       }
