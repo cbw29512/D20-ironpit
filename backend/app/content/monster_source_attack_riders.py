@@ -4,6 +4,8 @@ import re
 
 from app.domain.capability_effects import (
     ConditionEffectDefinition,
+    DamageEffectDefinition,
+    DiceSpec,
     GrappleEffectDefinition,
     HitSavingThrowEffectDefinition,
     MaxHpReductionEffectDefinition,
@@ -18,6 +20,10 @@ _SPEED = re.compile(r"target[’']s Speed decreases by (\d+) feet until the end 
 _GRAPPLE = re.compile(r"Grappled condition\s*\(escape DC\s*(\d+)\)", re.I)
 _CONDITION = re.compile(
     r"target has the (Blinded|Charmed|Deafened|Frightened|Incapacitated|Paralyzed|Poisoned|Prone|Restrained|Stunned|Unconscious) condition",
+    re.I,
+)
+_FLAT_EXTRA_DAMAGE = re.compile(
+    r"\bplus\s+(?P<amount>\d+)\s+(?P<type>Acid|Cold|Fire|Force|Lightning|Necrotic|Poison|Psychic|Radiant|Thunder|Bludgeoning|Piercing|Slashing) damage\b",
     re.I,
 )
 _SAVE_CONDITION = re.compile(
@@ -74,6 +80,12 @@ def parse_attack_riders(text: str) -> list[object]:
     if hit_save is not None:
         effects.append(hit_save)
         failed_condition = hit_save.failure_effects[0].condition
+    for extra in _FLAT_EXTRA_DAMAGE.finditer(text):
+        effects.append(DamageEffectDefinition(
+            source="source-extra-damage",
+            dice=DiceSpec(count=0, bonus=int(extra.group("amount"))),
+            damage_type=DamageType(extra.group("type").lower()),
+        ))
     if failed_condition != "prone" and re.search(r"\bProne condition\b", text, re.I):
         effects.append(ProneEffectDefinition(max_target_size=maximum))
     grapple = _GRAPPLE.search(text)
