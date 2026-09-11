@@ -54,4 +54,13 @@ assert.equal(window.IRON_PIT_BROWSER_ROLLS.bloodiedAttackAdvantage(oldFuryState,
 assert.equal(window.IRON_PIT_BROWSER_ROLLS.bloodiedAttackAdvantage(oldFuryState, { kind: "ranged" }), 0,
   "Existing Bloodied Fury remains melee-only");
 
-console.log("Generated RAW-certified browser monsters expose all six SRD saving throws and Berserker Bloodied Frenzy parity.");
+const magicResistanceState = {
+  template: { max_hp: 20, traits: [], magic_resistance: true }, current_hp: 20,
+  max_hp_bonus: 0, max_hp_reduction: 0, active_effect_ids: [],
+};
+assert.equal(window.IRON_PIT_BROWSER_SAVES.saveMode(magicResistanceState, "wisdom", true), "advantage",
+  "Magic Resistance must grant advantage against magical saving throws");
+assert.equal(window.IRON_PIT_BROWSER_SAVES.saveMode(magicResistanceState, "wisdom", false), "normal",
+  "Magic Resistance must not grant advantage against nonmagical saving throws");
+
+console.log("Generated RAW-certified browser monsters expose complete saves, Bloodied Frenzy parity, and Magic Resistance save parity.");
