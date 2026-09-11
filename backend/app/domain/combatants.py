@@ -56,6 +56,7 @@ class CombatantTemplate(BaseModel):
     challenge_rating: str | None = None
     kind: Literal["character", "monster"]
     creature_type: str | None = None
+    creature_tags: list[str] = Field(default_factory=list)
     size: CreatureSize = CreatureSize.MEDIUM
     ability_scores: AbilityScores | None = None
     armor_class: int = Field(ge=1)
