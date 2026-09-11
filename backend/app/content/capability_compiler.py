@@ -23,6 +23,7 @@ def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
             range_ft=definition.range_ft,
             target_max_size=definition.target_max_size or (grapple.max_target_size if grapple else None),
             required_target_condition=definition.required_target_condition,
+            required_target_grappled_by_self=definition.required_target_grappled_by_self,
             area=definition.area,
             damage_dice_count=damage.count if damage else 0,
             damage_dice_size=damage.size if damage else 6,
