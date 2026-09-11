@@ -10,21 +10,28 @@ _RECHARGE_FINGERPRINT = re.compile(
     r"^(?P<section>[^:]+):(?P<name>.+?)\s+\(Recharge\s+(?P<minimum>\d)(?:\s*[-–]\s*(?P<maximum>\d))?\)$",
     re.IGNORECASE,
 )
+_ACTION_COST_SECTION = {
+    "action": "actions",
+    "bonus_action": "bonusactions",
+    "reaction": "reactions",
+}
 
 
 def _normalized_name(value: str) -> str:
     return re.sub(r"[^a-z0-9]+", " ", value.lower()).strip()
 
 
-def _resource_bound_actions(template: CombatantTemplate) -> list[tuple[str, int, str]]:
-    """Enumerate every action family using the universal resource contract."""
-    bindings: list[tuple[str, int, str]] = []
+def _resource_bound_actions(template: CombatantTemplate) -> list[tuple[str, int, str, str]]:
+    """Enumerate resource-backed actions together with their source action-economy section."""
+    bindings: list[tuple[str, int, str, str]] = []
     for attack in [template.weapon_attack, *template.alternate_weapon_attacks]:
         if attack.resource_id:
-            bindings.append((attack.resource_id, attack.resource_cost, attack.weapon.name))
+            bindings.append((attack.resource_id, attack.resource_cost, attack.weapon.name, "actions"))
     for action in template.saving_throw_actions:
         if action.resource_id:
-            bindings.append((action.resource_id, action.resource_cost, action.name))
+            section = _ACTION_COST_SECTION.get(action.action_cost)
+            if section is not None:
+                bindings.append((action.resource_id, action.resource_cost, action.name, section))
     for action in [
         *template.spell_attack_actions,
         *template.spell_save_actions,
@@ -32,7 +39,9 @@ def _resource_bound_actions(template: CombatantTemplate) -> list[tuple[str, int,
         *template.healing_actions,
     ]:
         if action.resource_id:
-            bindings.append((action.resource_id, action.resource_cost, action.name))
+            section = _ACTION_COST_SECTION.get(action.action_cost)
+            if section is not None:
+                bindings.append((action.resource_id, action.resource_cost, action.name, section))
     return bindings
 
 
@@ -40,7 +49,10 @@ def recharge_fingerprint_implemented(template: CombatantTemplate, fingerprint: s
     """Return True only when a source Recharge action is bound to matching runtime economy."""
     try:
         match = _RECHARGE_FINGERPRINT.fullmatch(fingerprint.strip())
-        if match is None or match.group("section").lower() != "actions":
+        if match is None:
+            return False
+        section = match.group("section").lower()
+        if section not in set(_ACTION_COST_SECTION.values()):
             return False
         minimum = int(match.group("minimum"))
         maximum = int(match.group("maximum") or match.group("minimum"))
@@ -60,7 +72,8 @@ def recharge_fingerprint_implemented(template: CombatantTemplate, fingerprint: s
                 resource_id == definition.id
                 and cost == 1
                 and _normalized_name(action_name) == source_name
-                for resource_id, cost, action_name in bindings
+                and action_section == section
+                for resource_id, cost, action_name, action_section in bindings
             ):
                 return True
         return False
