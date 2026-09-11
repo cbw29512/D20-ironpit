@@ -1,6 +1,5 @@
 (() => {
   "use strict";
-
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const S = () => window.IRON_PIT_BROWSER_STATE;
@@ -16,7 +15,16 @@
       throw error;
     }
   }
-
+  function saveActionRange(action) {
+    try {
+      if (!action.area) return action.range || 0;
+      if (action.area.origin === "self") return action.area.lengthFt || action.area.radiusFt || action.range || 0;
+      return (action.range || 0) + (action.area.radiusFt || 0);
+    } catch (error) {
+      console.error("Failed browser save-action effective range probe", { action: action.id, error });
+      throw error;
+    }
+  }
   function spellLevelAvailable(member, level, turnKey) {
     try {
       if (level === 0) return true;
@@ -27,21 +35,15 @@
       throw error;
     }
   }
-
   function weaponRanges(member, target) {
     try {
       const ranges = [];
       for (const attack of member.state.template.attacks || []) {
         if (attack.resourceId && !RES().available(member.state, attack.resourceId, attack.resourceCost || 1)) continue;
-        if (attack.forbidSelfGrappledTarget
-          && target.state.grapple_sources.some((source) => source.source_id === member.combatant_id)) continue;
+        if (attack.forbidSelfGrappledTarget && target.state.grapple_sources.some((source) => source.source_id === member.combatant_id)) continue;
         const priority = rechargePriority(member, attack.resourceId);
-        if (attack.kind === "melee" || attack.kind === "melee_or_ranged") {
-          ranges.push({ family: "melee", range: attack.reach || 5, priority });
-        }
-        if ((attack.kind === "ranged" || attack.kind === "melee_or_ranged") && Number.isFinite(attack.long)) {
-          ranges.push({ family: "ranged", range: attack.long, priority });
-        }
+        if (attack.kind === "melee" || attack.kind === "melee_or_ranged") ranges.push({ family: "melee", range: attack.reach || 5, priority });
+        if ((attack.kind === "ranged" || attack.kind === "melee_or_ranged") && Number.isFinite(attack.long)) ranges.push({ family: "ranged", range: attack.long, priority });
       }
       return ranges;
     } catch (error) {
@@ -49,18 +51,13 @@
       throw error;
     }
   }
-
   function saveActionRanges(member, target) {
     try {
       const ranges = [];
       for (const action of member.state.template.saving_throw_actions || []) {
         if (action.targetMaxSize && !S().sizeAtMost(target, action.targetMaxSize)) continue;
         if (!RES().available(member.state, action.resourceId, action.resourceCost || 1)) continue;
-        ranges.push({
-          family: "ability",
-          range: action.range || 0,
-          priority: rechargePriority(member, action.resourceId),
-        });
+        ranges.push({ family: "ability", range: saveActionRange(action), priority: rechargePriority(member, action.resourceId) });
       }
       return ranges;
     } catch (error) {
@@ -68,15 +65,12 @@
       throw error;
     }
   }
-
   function spellRanges(member, turnKey) {
     try {
       const ranges = [];
       for (const action of member.state.template.spell_attack_actions || []) {
         if (action.actionCost === "reaction" || !E().available(member.state, action.actionCost)) continue;
-        if (spellLevelAvailable(member, action.level, turnKey)) {
-          ranges.push({ family: "spell", range: action.range || 0, priority: 1 });
-        }
+        if (spellLevelAvailable(member, action.level, turnKey)) ranges.push({ family: "spell", range: action.range || 0, priority: 1 });
       }
       for (const action of member.state.template.spell_save_actions || []) {
         if (action.actionCost === "reaction" || action.concentration || !E().available(member.state, action.actionCost)) continue;
@@ -89,7 +83,6 @@
       throw error;
     }
   }
-
   function rangesForTarget(member, target, turnKey) {
     try {
       return [...weaponRanges(member, target), ...spellRanges(member, turnKey), ...saveActionRanges(member, target)];
@@ -98,6 +91,5 @@
       throw error;
     }
   }
-
   window.IRON_PIT_BROWSER_OFFENSIVE_RANGES = { rangesForTarget };
 })();
