@@ -4,6 +4,7 @@ import logging
 import re
 from functools import lru_cache
 
+from app.content.monster_aura_source import fire_aura_source_is_fully_modeled, source_end_turn_damage_auras
 from app.content.monster_catalog import load_monster_rows
 from app.domain.models import CombatantTemplate
 from app.domain.traits import CombatTrait
@@ -66,6 +67,19 @@ def _movement_trait_issues(template: CombatantTemplate, expected: list[str]) -> 
     return []
 
 
+def _aura_trait_issues(
+    template: CombatantTemplate, row: dict[str, object], expected: list[str],
+) -> tuple[list[str], set[str]]:
+    if "Fire Aura" not in expected:
+        return [], set()
+    source_auras = source_end_turn_damage_auras(template.name)
+    if template.end_turn_damage_auras != source_auras:
+        return ["trait-runtime-mismatch:fire-aura"], set()
+    if not fire_aura_source_is_fully_modeled(row):
+        return ["trait-unmodeled-clause:fire-aura"], set()
+    return [], {"Fire Aura"}
+
+
 def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
     expected = parse_trait_names(row.get("traits", ""))
     issues: list[str] = []
@@ -79,7 +93,9 @@ def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[st
         elif runtime_has and not source_has:
             issues.append(f"trait-source-missing:{runtime_trait.value}")
     issues.extend(_movement_trait_issues(template, expected))
-    certified = set(_MODELED_TRAITS) | set(_DECLARATIVE_ATTACK_TRAITS) | set(_ARENA_NEUTRAL_TRAITS) | {"Incorporeal Movement"}
+    aura_issues, aura_certified = _aura_trait_issues(template, row, expected)
+    issues.extend(aura_issues)
+    certified = set(_MODELED_TRAITS) | set(_DECLARATIVE_ATTACK_TRAITS) | set(_ARENA_NEUTRAL_TRAITS) | {"Incorporeal Movement"} | aura_certified
     for name in expected:
         if name not in certified:
             slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
