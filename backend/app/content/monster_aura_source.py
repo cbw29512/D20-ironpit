@@ -58,10 +58,9 @@ def complete_monster_end_turn_damage_auras(
 
 
 def fire_aura_source_is_fully_modeled(row: dict[str, object]) -> bool:
-    """Damage-only aura is modeled; ignition/other clauses remain fail-closed."""
+    """Only the pure damage aura is certified; ignition/burning clauses remain blockers."""
     text = str(row.get("traits", ""))
-    match = _FIRE_AURA.search(text)
-    if not match:
+    if not _FIRE_AURA.search(text):
         return False
-    tail = match.group("tail").lower()
-    return not any(term in tail for term in ("burning", "ignit", "catches fire"))
+    lowered = text.lower()
+    return not any(term in lowered for term in ("burning", "ignite", "ignites", "catches fire"))
