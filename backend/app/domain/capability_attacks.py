@@ -96,6 +96,7 @@ class SaveCapabilityDefinition(BaseModel):
     grapple: GrappleEffectDefinition | None = None
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
+    magical_effect: bool = False
     animation: str = "save-effect"
 
     @model_validator(mode="after")
