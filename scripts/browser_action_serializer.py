@@ -47,6 +47,13 @@ def failure_effect_row(effect: Any) -> dict[str, Any]:
                 row["repeatSaveDelayRounds"] = effect.repeat_save_delay_rounds
             if effect.allowed_removal_action_ids:
                 row["allowedRemovalActionIds"] = list(effect.allowed_removal_action_ids)
+            if effect.periodic_damage:
+                periodic = effect.periodic_damage
+                row["periodicDamage"] = {
+                    "timing": periodic.timing, "diceCount": periodic.dice_count,
+                    "diceSize": periodic.dice_size, "damageBonus": periodic.damage_bonus,
+                    "damageType": periodic.damage_type.value,
+                }
         elif effect.kind == "turn-restriction":
             row["actionOrBonusOnly"] = effect.action_or_bonus_only
             row["reactionsDisabled"] = effect.reactions_disabled
