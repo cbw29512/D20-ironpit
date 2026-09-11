@@ -5,6 +5,7 @@ import re
 from app.domain.capability_effects import (
     ConditionEffectDefinition,
     GrappleEffectDefinition,
+    HitSavingThrowEffectDefinition,
     MaxHpReductionEffectDefinition,
     ProneEffectDefinition,
 )
@@ -17,6 +18,13 @@ _SPEED = re.compile(r"target[’']s Speed decreases by (\d+) feet until the end 
 _GRAPPLE = re.compile(r"Grappled condition\s*\(escape DC\s*(\d+)\)", re.I)
 _CONDITION = re.compile(
     r"target has the (Blinded|Charmed|Deafened|Frightened|Incapacitated|Paralyzed|Poisoned|Prone|Restrained|Stunned|Unconscious) condition",
+    re.I,
+)
+_SAVE_CONDITION = re.compile(
+    r"(?:the\s+)?target[^.]{0,240}?must succeed on a DC\s*(?P<dc>\d+)\s*"
+    r"(?P<ability>Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) saving throw or "
+    r"(?:have|gain) the (?P<condition>Blinded|Charmed|Deafened|Frightened|Incapacitated|Paralyzed|Poisoned|Prone|Restrained|Stunned|Unconscious) condition "
+    r"until the (?P<edge>start|end) of (?P<owner>its|the [^.]+?[’']s) next turn",
     re.I,
 )
 _MAX_HP_TYPED = re.compile(
@@ -35,17 +43,44 @@ def _maximum(text: str) -> CreatureSize | None:
     return CreatureSize(match.group(1).lower()) if match else None
 
 
+def _timing(owner: str, edge: str) -> str:
+    actor = "target" if owner.lower() == "its" else "source"
+    return f"{actor}_turn_{edge.lower()}"
+
+
+def _hit_save(text: str, maximum: CreatureSize | None) -> HitSavingThrowEffectDefinition | None:
+    match = _SAVE_CONDITION.search(text)
+    if match is None:
+        return None
+    condition = match.group("condition").lower()
+    failure = ConditionEffectDefinition(
+        condition=condition,
+        max_target_size=maximum,
+        expiry_timing=_timing(match.group("owner"), match.group("edge")),
+    )
+    return HitSavingThrowEffectDefinition(
+        save_ability=match.group("ability").lower(),
+        dc=int(match.group("dc")),
+        failure_effects=[failure],
+    )
+
+
 def parse_attack_riders(text: str) -> list[object]:
     """Translate source hit-result sentences into source-neutral engine effects."""
     effects: list[object] = []
     maximum = _maximum(text)
-    if re.search(r"\bProne condition\b", text, re.I):
+    hit_save = _hit_save(text, maximum)
+    failed_condition = None
+    if hit_save is not None:
+        effects.append(hit_save)
+        failed_condition = hit_save.failure_effects[0].condition
+    if failed_condition != "prone" and re.search(r"\bProne condition\b", text, re.I):
         effects.append(ProneEffectDefinition(max_target_size=maximum))
     grapple = _GRAPPLE.search(text)
     if grapple:
         effects.append(GrappleEffectDefinition(escape_dc=int(grapple.group(1)), max_target_size=maximum))
     condition = _CONDITION.search(text)
-    if condition and condition.group(1).lower() != "prone" and not grapple:
+    if condition and condition.group(1).lower() not in {"prone", failed_condition} and not grapple:
         effects.append(ConditionEffectDefinition(condition=condition.group(1).lower(), max_target_size=maximum))
     speed = _SPEED.search(text)
     if speed:
