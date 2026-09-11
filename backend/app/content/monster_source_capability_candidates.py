@@ -9,7 +9,7 @@ from app.content.monster_source_attack_riders import parse_attack_riders
 from app.content.monster_source_charge_riders import parse_charge_replacement
 from app.content.monster_source_fixed_attack_candidates import source_fixed_attack_candidates
 from app.content.monster_source_save_candidates import source_save_candidates
-from app.content.movement_modes import parse_movement_profile, standard_arena_closing_speed
+from app.content.movement_modes import source_movement_modes, standard_arena_closing_speed
 from app.content.unarmed_opportunity_profiles import monster_unarmed_profile
 from app.domain.capabilities import CombatantDefinition
 from app.domain.capability_attacks import AttackCapabilityDefinition, CapabilityActionSlot, MultiattackCapabilityDefinition
@@ -127,7 +127,7 @@ def source_candidate_definitions(excluded_ids: set[str]) -> dict[str, CombatantD
                 creature_type=str(row.get("type", "")).split(" (")[0].lower() or None,
                 challenge_rating=str(row["challenge"]).split()[0], size=CreatureSize(str(row["size"]).split()[0].lower()),
                 armor_class=int(re.search(r"\d+", str(row["armorClass"])).group()), max_hp=int(re.search(r"\d+", str(row["hitPoints"])).group()),
-                speed_ft=standard_arena_closing_speed(row["speed"]), movement_modes=parse_movement_profile(row["speed"]),
+                speed_ft=standard_arena_closing_speed(row["speed"]), movement_modes=source_movement_modes(str(row["name"])),
                 initiative_bonus=int(initiative.group(1)), attacks=attacks, primary_attack_id=attacks[0].id,
                 attack_action=_multiattack(row, attacks), save_actions=save_actions, resources=resources,
                 combat_traits=[CombatTrait.CHARGE] if any(item.charge_profile for item in attacks) else [],
