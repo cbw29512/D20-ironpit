@@ -40,6 +40,13 @@
     const removed = T().removeGroup(target.state, effect);
     const next = T().apply(target.state, effect.repeat_save_failure_condition, effect.source_id, {
       sourceEffectId: effect.source_effect_id || null, appliedRound: round,
+      repeatSaveAbility: effect.repeat_save_ability, repeatSaveDc: effect.repeat_save_dc,
+      repeatSaveTiming: effect.repeat_save_timing,
+      automaticSuccessRound: effect.automatic_success_round || null,
+      allowedRemovalActionIds: [...(effect.allowed_removal_action_ids || [])],
+      endsOnDamage: Boolean(effect.ends_on_damage),
+      endsIfSourceIncapacitated: Boolean(effect.ends_if_source_incapacitated),
+      endsIfSourceDead: Boolean(effect.ends_if_source_dead),
     });
     return { removed, applied: next ? [next] : [] };
   }
