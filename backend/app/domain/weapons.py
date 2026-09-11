@@ -5,6 +5,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
+from app.domain.ability_reduction import AbilityScoreReductionOnHit
 from app.domain.actions import AbilityName, HitControlEffect
 from app.domain.charge import ChargeProfile
 from app.domain.hit_modifiers import HitModifierEffect
@@ -113,6 +114,7 @@ class WeaponAttack(BaseModel):
     on_hit_damage: list[OnHitDamage] = Field(default_factory=list)
     on_hit_modifier_effects: list[HitModifierEffect] = Field(default_factory=list)
     max_hp_reduction_on_hit: MaxHpReductionOnHit | None = None
+    ability_score_reduction_on_hit: AbilityScoreReductionOnHit | None = None
     attachment_on_hit: AttachmentOnHit | None = None
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
