@@ -35,6 +35,7 @@ def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
             restrains_while_grappled=grapple.restrains if grapple else False,
             resource_id=definition.resource_id,
             resource_cost=definition.resource_cost,
+            magical_effect=definition.magical_effect,
             animation=definition.animation,
         )
     except Exception as exc:
