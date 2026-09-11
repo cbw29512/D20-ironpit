@@ -81,7 +81,7 @@ class AttackCapabilityDefinition(BaseModel):
 class SaveCapabilityDefinition(BaseModel):
     id: str
     name: str
-    action_cost: ActionCost = "action"
+    action_cost: ActionCost = Field(default="action", exclude_if=lambda value: value == "action")
     save_ability: Literal["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
     dc: int = Field(ge=1, le=40)
     range_ft: int = Field(ge=0)
