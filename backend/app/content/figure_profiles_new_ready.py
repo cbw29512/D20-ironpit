@@ -10,6 +10,11 @@ NEW_READY_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Pirate": _p("humanoid", "pirate"),
     "Pseudodragon": _p("reptile", "pseudodragon"),
     "Wight": _p("humanoid", "wight"),
+    "Winter Wolf": _p("quadruped", "canine"),
+    "Wolf": _p("quadruped", "canine"),
+    "Worg": _p("quadruped", "canine"),
+    "Wyvern": _p("reptile", "wyvern"),
+    "Xorn": _p("brute", "xorn"),
 }
 
 __all__ = ["NEW_READY_FIGURE_PROFILES"]
