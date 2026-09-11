@@ -103,7 +103,7 @@
       const splitThis = index > 0 && rangedSplit && !rangedSplitUsed && F().flexibleSlotHasBoth(member, data.attackIds);
       const choice = attackChoice(member, setup, data, splitThis), saved = saveChoice(member, setup, data);
       if (saved && (!choice || preferSaveReplacement(member, saved.target, saved.save))) {
-        events.push(V().resolveAction(sequence++, round, member, saved.target, saved.save, saved.distance, { spendAction: false }));
+        events.push(V().resolveAction(sequence++, round, member, saved.target, saved.save, saved.distance, { spendAction: false, setup }));
         continue;
       }
       if (choice) {
