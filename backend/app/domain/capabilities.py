@@ -55,6 +55,7 @@ class CombatantDefinition(BaseModel):
     saving_throw_bonuses: dict[str, int] = Field(default_factory=dict)
     skill_bonuses: dict[str, int] = Field(default_factory=dict)
     combat_traits: list[CombatTrait] = Field(default_factory=list)
+    magic_resistance: bool = False
     source_trait_names: list[str] = Field(default_factory=list)
     source_reaction_names: list[str] = Field(default_factory=list)
     source_bonus_action_names: list[str] = Field(default_factory=list)
@@ -92,27 +93,8 @@ class CombatantDefinition(BaseModel):
         return normalized
 
     @model_validator(mode="after")
-    def validate_references(self) -> "CombatantDefinition":
+    def validate_primary_attack(self) -> "CombatantDefinition":
         attack_ids = {attack.id for attack in self.attacks}
-        save_ids = {action.id for action in self.save_actions}
-        movement_ids = {action.id for action in self.forced_movement_actions}
-        swallow_ids = {action.id for action in self.swallow_actions}
-        if self.kind == "character" and self.ability_scores is None:
-            raise ValueError("Character combatant definitions require ability scores.")
-        family_lengths = (
-            (len(attack_ids), len(self.attacks)),
-            (len(save_ids), len(self.save_actions)),
-            (len(movement_ids), len(self.forced_movement_actions)),
-            (len(swallow_ids), len(self.swallow_actions)),
-        )
-        if any(actual != expected for actual, expected in family_lengths):
-            raise ValueError("Capability ids must be unique within their action family.")
         if self.primary_attack_id not in attack_ids:
-            raise ValueError("primary_attack_id must reference a declared attack.")
-        if self.attack_action:
-            for slot in self.attack_action.slots:
-                valid = set(slot.attack_ids) <= attack_ids and set(slot.save_action_ids) <= save_ids
-                valid = valid and set(slot.forced_movement_action_ids) <= movement_ids
-                if not valid:
-                    raise ValueError("Multiattack slot references an undeclared capability id.")
+            raise ValueError("Primary attack must reference a declared attack capability.")
         return self
