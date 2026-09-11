@@ -25,6 +25,7 @@ def apply_timed_condition(
     repeat_save_timing: ConditionTiming | None = None,
     repeat_save_delay_rounds: int = 0,
     repeat_save_failure_condition: ConditionName | None = None,
+    automatic_success_after_rounds: int | None = None,
     allowed_removal_action_ids: list[str] | None = None,
     periodic_damage: PeriodicDamageEffectDefinition | None = None,
     affected_states: list[CombatantState] | None = None,
@@ -39,6 +40,10 @@ def apply_timed_condition(
         raise ValueError("Repeat-save delay cannot be negative.")
     if repeat_save_delay_rounds and applied_round is None:
         raise ValueError("Delayed repeat saves require the application round.")
+    if automatic_success_after_rounds is not None and automatic_success_after_rounds < 1:
+        raise ValueError("Automatic-success delay must be positive.")
+    if automatic_success_after_rounds is not None and applied_round is None:
+        raise ValueError("Automatic repeat-save success requires the application round.")
     if effect_id == POISONED_EFFECT_ID and any(
         effect.effect_id == POISONED_EFFECT_ID for effect in state.timed_effects
     ):
@@ -53,6 +58,11 @@ def apply_timed_condition(
     ]
     repeat_rule = all(item is not None for item in (repeat_save_ability, repeat_save_dc, repeat_save_timing))
     repeat_eligible = applied_round + repeat_save_delay_rounds if repeat_rule and applied_round is not None else None
+    automatic_success_round = (
+        applied_round + automatic_success_after_rounds
+        if automatic_success_after_rounds is not None and applied_round is not None
+        else None
+    )
     periodic = periodic_damage
     state.timed_effects.append(TimedEffect(
         effect_id=effect_id,
@@ -67,6 +77,7 @@ def apply_timed_condition(
         repeat_save_timing=repeat_save_timing,
         repeat_save_eligible_round=repeat_eligible,
         repeat_save_failure_condition=repeat_save_failure_condition,
+        automatic_success_round=automatic_success_round,
         allowed_removal_action_ids=allowed_removal_action_ids or [],
         periodic_damage_timing=periodic.timing if periodic else None,
         periodic_damage_dice_count=periodic.dice_count if periodic else 0,
