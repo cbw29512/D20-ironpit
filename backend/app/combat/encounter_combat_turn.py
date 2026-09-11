@@ -1,7 +1,5 @@
 from __future__ import annotations
-
 import logging
-
 from app.combat.action_economy import is_available
 from app.combat.ally_context import pack_tactics_active
 from app.combat.attack_actions import resolve_attack_action
@@ -30,7 +28,6 @@ from app.combat.tactical_shift import resolve_tactical_shift
 from app.combat.fighter import use_second_wind
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
-
 logger = logging.getLogger(__name__)
 
 
@@ -76,7 +73,6 @@ def resolve_combat_turn(
             if adrenaline_event is not None:
                 events.append(adrenaline_event)
                 sequence += 1
-
         recharge_action_events, sequence, recharge_handled = resolve_priority_recharge_action(
             sequence, round_number, attacker, setup, dice, turn_key,
         )
@@ -85,39 +81,28 @@ def resolve_combat_turn(
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
         if not is_available(attacker.state, "action"):
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-
         targets = target_order(attacker, setup)
         if not targets:
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-        charge_events, sequence, charged = resolve_charge_closing(
-            sequence, round_number, attacker, targets[0], dice, setup,
-        )
+        charge_events, sequence, charged = resolve_charge_closing(sequence, round_number, attacker, targets[0], dice, setup)
         events.extend(charge_events)
         if charged or attacker.state.is_dead or attacker.state.is_unconscious:
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-
-        movement_events, sequence = move_to_enable_offense(
-            sequence, round_number, attacker, setup, turn_key, dice,
-        )
+        movement_events, sequence = move_to_enable_offense(sequence, round_number, attacker, setup, turn_key, dice)
         events.extend(movement_events)
         if attacker.state.is_dead or attacker.state.is_unconscious or is_incapacitated(attacker.state):
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-
         recharge_action_events, sequence, recharge_handled = resolve_priority_recharge_action(
             sequence, round_number, attacker, setup, dice, turn_key,
         )
         events.extend(recharge_action_events)
         if recharge_handled:
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-
         spell_events, sequence = resolve_best_spell_offense(sequence, round_number, attacker, setup, turn_key, dice)
         events.extend(spell_events)
         if not is_available(attacker.state, "action"):
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-
-        swallow_events, sequence, swallow_handled = resolve_priority_swallow_action(
-            sequence, round_number, attacker, setup,
-        )
+        swallow_events, sequence, swallow_handled = resolve_priority_swallow_action(sequence, round_number, attacker, setup)
         events.extend(swallow_events)
         if swallow_handled:
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
