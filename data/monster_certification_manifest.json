@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 158,
-    "blocked": 172
+    "public_ready": 159,
+    "blocked": 171
   },
   "monsters": [
     {
@@ -4905,7 +4905,7 @@
       "monster_name": "Hezrou",
       "srd_source_page": 298,
       "srd_source_reference": "SRD 5.2.1 p. 298",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-hezrou",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -4917,19 +4917,15 @@
         "attack-roll",
         "bonus-action",
         "damage-or-condition-defense",
-        "multiattack"
-      ],
-      "unsupported_mechanics": [
+        "multiattack",
         "trait"
       ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "monster-combat-mechanics-not-certified",
-        "trait"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-hill-giant",
