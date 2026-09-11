@@ -49,9 +49,14 @@ def _save_key(action: object) -> tuple[str, str]:
 def _merge_save_actions(existing: list, source: list, resource_rebinds: dict[str, str]) -> list:
     source_by_key = {_save_key(action): action for action in source}
     existing_keys = {_save_key(action) for action in existing}
+    seen_existing: set[tuple[str, str]] = set()
     merged = []
     for current in existing:
-        derived = source_by_key.get(_save_key(current))
+        key = _save_key(current)
+        if key in seen_existing:
+            continue
+        seen_existing.add(key)
+        derived = source_by_key.get(key)
         if derived is None or (current.resource_id is None and derived.resource_id is None):
             merged.append(current)
             continue
