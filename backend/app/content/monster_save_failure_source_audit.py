@@ -8,6 +8,7 @@ from app.domain.save_effects import (
     ConditionEffectDefinition,
     GrappleEffectDefinition,
     ProneEffectDefinition,
+    TimedPenaltyEffectDefinition,
     TurnRestrictionEffectDefinition,
 )
 
@@ -29,9 +30,7 @@ def _timing_present(text: str, timing: str | None) -> bool:
     source = {"source_turn_start": "start", "source_turn_end": "end"}.get(timing)
     if source:
         return bool(re.search(
-            rf"until\s+the\s+{source}\s+of\s+the\s+[^.]+?[’']s\s+next\s+turn",
-            text,
-            re.IGNORECASE,
+            rf"until\s+the\s+{source}\s+of\s+the\s+[^.]+?[’']s\s+next\s+turn", text, re.IGNORECASE,
         ))
     return True
 
@@ -43,7 +42,7 @@ def _condition_timing_present(text: str, effect: ConditionEffectDefinition) -> b
     return _timing_present(text, timing)
 
 
-def _repeat_save_present(action: Any, text: str, effect: ConditionEffectDefinition) -> bool:
+def _repeat_save_present(action: Any, text: str, effect: Any) -> bool:
     if effect.repeat_save_timing is None:
         return True
     turn_point = "start" if effect.repeat_save_timing == "target_turn_start" else "end"
@@ -62,9 +61,7 @@ def _turn_restriction_present(text: str, effect: TurnRestrictionEffectDefinition
     ok = _timing_present(text, effect.expiry_timing)
     if effect.action_or_bonus_only:
         ok = ok and bool(re.search(
-            r"(?:take|takes)\s+either\s+an?\s+action\s+or\s+(?:a\s+)?bonus\s+action.*?not\s+both",
-            text,
-            re.IGNORECASE,
+            r"(?:take|takes)\s+either\s+an?\s+action\s+or\s+(?:a\s+)?bonus\s+action.*?not\s+both", text, re.IGNORECASE,
         ))
     if effect.reactions_disabled:
         ok = ok and bool(re.search(r"can(?:not|['’]t)\s+take\s+reactions?", text, re.IGNORECASE))
@@ -72,6 +69,20 @@ def _turn_restriction_present(text: str, effect: TurnRestrictionEffectDefinition
         if effect.speed_multiplier != 0.5:
             return False
         ok = ok and bool(re.search(r"\bits\s+speed\s+is\s+halved\b", text, re.IGNORECASE))
+    return ok
+
+
+def _timed_penalty_present(action: Any, text: str, effect: TimedPenaltyEffectDefinition) -> bool:
+    ability = re.escape(effect.d20_disadvantage_ability or "")
+    ok = bool(ability and re.search(rf"Disadvantage\s+on\s+{ability}-based\s+D20\s+Tests", text, re.IGNORECASE))
+    ok = ok and bool(re.search(
+        rf"subtracts\s+\d+\s*\(\s*{effect.damage_penalty_dice_count}d{effect.damage_penalty_dice_size}\s*\)\s+from\s+its\s+damage\s+rolls",
+        text, re.IGNORECASE,
+    ))
+    ok = ok and _repeat_save_present(action, text, effect)
+    if effect.automatic_success_after_rounds is not None:
+        minutes = effect.automatic_success_after_rounds // 10
+        ok = ok and bool(re.search(rf"After\s+{minutes}\s+minute(?:s)?,\s+it\s+succeeds\s+automatically", text, re.IGNORECASE))
     return ok
 
 
@@ -100,6 +111,9 @@ def failure_effect_issues(action: Any, actions: str) -> list[str]:
                 issues.append(prefix)
         elif isinstance(effect, TurnRestrictionEffectDefinition):
             if not _turn_restriction_present(actions, effect):
+                issues.append(prefix)
+        elif isinstance(effect, TimedPenaltyEffectDefinition):
+            if not _timed_penalty_present(action, actions, effect):
                 issues.append(prefix)
         elif isinstance(effect, CombatModifierEffect):
             amount = abs(effect.flat_bonus)
