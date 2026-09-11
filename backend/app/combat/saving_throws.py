@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available, spend
+from app.combat.aura_modifiers import saving_throw_advantage_sources
 from app.combat.barbarian import end_rage_if_incapacitated
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
@@ -14,7 +15,7 @@ from app.combat.saving_throw_damage import build_save_damage_components
 from app.combat.saving_throw_description import describe_save_outcome
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.zero_hp import apply_damage
-from app.domain.models import BattleEvent, DiceRoll, EncounterCombatant, SavingThrowAction
+from app.domain.models import BattleEvent, DiceRoll, EncounterCombatant, EncounterSetup, SavingThrowAction
 from app.domain.runtime import CombatantState
 from app.domain.size import size_at_most
 
@@ -49,7 +50,7 @@ def resolve_save_action(
     action: SavingThrowAction, distance_ft: int, dice: DiceProvider, *, spend_action: bool = True,
     spend_resource_cost: bool = True, shared_damage_rolls: list[int] | None = None,
     capture_shared_damage_rolls: list[int] | None = None,
-    affected_states: list[CombatantState] | None = None,
+    affected_states: list[CombatantState] | None = None, setup: EncounterSetup | None = None,
 ) -> BattleEvent:
     try:
         if spend_action and not is_available(actor.state, "action"):
@@ -60,6 +61,7 @@ def resolve_save_action(
             raise ValueError(f"{action.name} does not have its required resource available.")
         save_roll, succeeded = resolve_saving_throw(
             target.state, action.save_ability, action.dc, dice, magical_effect=action.magical_effect,
+            advantage_sources=saving_throw_advantage_sources(target, setup),
         )
         if spend_action:
             spend(actor.state, "action")
