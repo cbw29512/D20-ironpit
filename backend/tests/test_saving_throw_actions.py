@@ -4,6 +4,7 @@ from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.saving_throws import legal_save_action, resolve_save_action, resolve_saving_throw
 from app.domain.models import DamageType, EncounterSelection, RollMode
+from app.domain.traits import CombatTrait
 
 
 def _state(hero_id="karnok-stoneward-l1"):
@@ -18,6 +19,18 @@ def _constrict_setup():
         hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-constrictor-snake"],
     ))
     return setup, setup.heroes[0], setup.monsters[0]
+
+
+def _dex_half_action(snake, *, dc: int):
+    return snake.state.template.saving_throw_actions[0].model_copy(update={
+        "save_ability": "dexterity",
+        "dc": dc,
+        "damage_dice_count": 2,
+        "damage_dice_size": 6,
+        "damage_bonus": 0,
+        "damage_type": "fire",
+        "success_damage": "half",
+    })
 
 
 def test_saving_throws_do_not_use_attack_nat_one_or_nat_twenty_rules() -> None:
@@ -112,6 +125,34 @@ def test_half_damage_on_success_precedes_resistance() -> None:
     assert event.damage_components[0].total == 5
     assert event.damage_components[0].applied_total == 2
     assert hero.state.current_hp == 10
+
+
+def test_evasion_success_takes_no_dex_save_damage() -> None:
+    _, hero, snake = _constrict_setup()
+    hero.state.template = hero.state.template.model_copy(update={"combat_traits": [CombatTrait.EVASION]})
+    event = resolve_save_action(1, 1, snake, hero, _dex_half_action(snake, dc=1), 5, FixedDiceProvider([20]))
+    assert event.save_succeeded is True
+    assert event.damage_roll is None and event.damage_components == []
+    assert hero.state.current_hp == hero.state.template.max_hp
+
+
+def test_evasion_failure_takes_half_dex_save_damage() -> None:
+    _, hero, snake = _constrict_setup()
+    hero.state.template = hero.state.template.model_copy(update={"combat_traits": [CombatTrait.EVASION]})
+    event = resolve_save_action(1, 1, snake, hero, _dex_half_action(snake, dc=99), 5, FixedDiceProvider([1, 6, 6]))
+    assert event.save_succeeded is False
+    assert event.damage_components[0].total == 6
+    assert hero.state.current_hp == hero.state.template.max_hp - 6
+
+
+def test_evasion_is_disabled_while_incapacitated() -> None:
+    _, hero, snake = _constrict_setup()
+    hero.state.template = hero.state.template.model_copy(update={"combat_traits": [CombatTrait.EVASION]})
+    hero.state.active_effect_ids.append("incapacitated")
+    event = resolve_save_action(1, 1, snake, hero, _dex_half_action(snake, dc=1), 5, FixedDiceProvider([20, 6, 6]))
+    assert event.save_succeeded is True
+    assert event.damage_components[0].total == 6
+    assert hero.state.current_hp == hero.state.template.max_hp - 6
 
 
 def test_constrict_rider_still_applies_when_damage_knocks_character_unconscious() -> None:
