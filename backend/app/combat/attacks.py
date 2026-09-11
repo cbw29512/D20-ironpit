@@ -5,6 +5,7 @@ import logging
 from app.combat.action_economy import is_available, spend
 from app.combat.attack_ability_effects import effective_attack_bonus, resolve_attack_ability_reduction
 from app.combat.attack_description import build_attack_description
+from app.combat.attack_event import build_attack_event
 from app.combat.attack_max_hp_reduction import resolve_attack_max_hp_reduction
 from app.combat.attack_roll_modifiers import consume_next_attack_advantage, consume_next_attack_disadvantage, next_attack_advantage_sources, next_attack_disadvantage_sources
 from app.combat.attack_save_riders import AttackSaveRiderOutcome, resolve_attack_save_rider
@@ -108,26 +109,16 @@ def resolve_attack(
         description = build_attack_description(attacker, defender, actual_defender, attack, hit=hit, critical=critical, natural_1=natural_1, natural_1_ends_turn=natural_1_ends_turn, heroic_reroll=heroic_reroll,
             damage_total=damage_roll.total if damage_roll is not None else None, studied_applied=studied_applied, redirect_used=redirect_used, parry_used=parry_used, weapon_sap_applied=weapon_sap_applied,
             tactical_sap_applied=tactical_sap_applied, vex_applied=vex_applied, topple=topple, damage_outcome=damage_outcome, applied_conditions=applied_conditions)
-        if hit_save.save_ability is not None:
-            total = hit_save.save_roll.total if hit_save.save_roll is not None else "automatic"; result = "succeeds" if hit_save.save_succeeded else "fails"
-            description += f" {actual_defender.template.name} {result} DC {hit_save.save_dc} {hit_save.save_ability.title()} save ({total})."
-        save_roll = hit_save.save_roll if hit_save.save_ability is not None else (topple.save_roll if topple else None)
-        save_ability = hit_save.save_ability if hit_save.save_ability is not None else ("constitution" if topple and topple.save_dc is not None else None)
-        save_dc = hit_save.save_dc if hit_save.save_ability is not None else (topple.save_dc if topple else None); save_succeeded = hit_save.save_succeeded if hit_save.save_ability is not None else (topple.save_succeeded if topple else None)
-        return BattleEvent(
-            sequence=sequence, round_number=round_number, event_type="attack", actor_id=attacker_event_id, actor_name=attacker.template.name,
-            target_id=actual_event_id, target_name=actual_defender.template.name, attack_name=weapon.name, target_ac=target_ac,
-            attack_roll=attack_roll, saving_throw_roll=save_roll, save_ability=save_ability, save_dc=save_dc, save_succeeded=save_succeeded,
-            damage_roll=damage_roll, damage_components=damage_components, applied_condition_ids=applied_conditions, hit=hit, critical=critical,
-            turn_terminated=natural_1_ends_turn, turn_termination_reason="iron-pit-natural-1-attack" if natural_1_ends_turn else None,
-            hp_before=hp_before, hp_after=actual_defender.current_hp, max_hp_before=max_hp_before, max_hp_after=max_hp_after,
-            temporary_hp_before=temporary_hp_before, temporary_hp_after=actual_defender.temporary_hp,
-            death_save_successes_before=death_success_before, death_save_failures_before=death_failure_before,
-            death_save_successes=actual_defender.death_save_successes, death_save_failures=actual_defender.death_save_failures,
-            is_stable=actual_defender.is_stable, is_dead=actual_defender.is_dead, weapon_id=weapon.id, projectile=weapon.projectile,
+        return build_attack_event(
+            sequence=sequence, round_number=round_number, attacker=attacker, actual_defender=actual_defender,
+            attack=attack, attacker_event_id=attacker_event_id, actual_event_id=actual_event_id,
+            target_ac=target_ac, attack_roll=attack_roll, hit_save=hit_save, topple=topple,
+            damage_roll=damage_roll, damage_components=damage_components, applied_conditions=applied_conditions,
+            hit=hit, critical=critical, natural_1_ends_turn=natural_1_ends_turn, hp_before=hp_before,
+            max_hp_before=max_hp_before, max_hp_after=max_hp_after, temporary_hp_before=temporary_hp_before,
+            death_success_before=death_success_before, death_failure_before=death_failure_before,
             feature_id=feature_id, resource_remaining=resource_remaining,
-            concentration_ended_effect_id=concentration_before if concentration_before and actual_defender.concentration is None else None,
-            animation=weapon.animation, description=description,
+            concentration_before=concentration_before, description=description,
         )
     except Exception as exc:
         logger.exception("Attack failed: %s -> %s.", attacker.template.name, defender.template.name)
