@@ -16,7 +16,7 @@
   const D = () => window.IRON_PIT_DICE;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (state, cost) => cost === "action" && state.action_available,
     spend: (state) => { state.action_available = false; } };
-  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { autoFailStrDex: (state) => state.is_unconscious };
+  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { autoFailStrDex: (state) => state.is_unconscious, incapacitated: (state) => state.is_unconscious };
   const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
 
   function saveMode(state, ability, magicalEffect = false, advantageSources = 0) {
@@ -74,6 +74,13 @@
     return [...shared];
   }
 
+  function evasionApplies(action, target) {
+    return target.state.template.traits?.includes("evasion")
+      && action.saveAbility === "dexterity"
+      && action.successDamage === "half"
+      && !Q().incapacitated(target.state);
+  }
+
   function resolveAction(sequence, round, actor, target, action, distance, options = {}) {
     try {
       const spendAction = options.spendAction !== false, spendResourceCost = options.spendResourceCost !== false;
@@ -93,13 +100,14 @@
       const tracksPush = Boolean(action.pushTargetAwayFt), distanceBefore = tracksPush ? Math.abs(target.position_ft - actor.position_ft) : null;
       let damageRoll = null, damageComponents = [], damageOutcome = null;
       const count = action.damageDiceCount || 0, capture = options.captureSharedDamageRolls, establishShared = Array.isArray(capture);
-      if (count && (!(save.succeeded && action.successDamage === "none") || establishShared)) {
+      const evasion = evasionApplies(action, target);
+      if (count && (!(save.succeeded && (action.successDamage === "none" || evasion)) || establishShared)) {
         if (!action.damageType) throw new Error(`${action.name} has damage dice but no damage type.`);
         const rolls = damageRolls(action, count, options.sharedDamageRolls);
         if (establishShared) capture.splice(0, capture.length, ...rolls);
-        if (!(save.succeeded && action.successDamage === "none")) {
+        if (!(save.succeeded && (action.successDamage === "none" || evasion))) {
           let total = rolls.reduce((sum, roll) => sum + roll, 0) + (action.damageBonus || 0);
-          if (save.succeeded && action.successDamage === "half") total = Math.floor(total / 2);
+          if ((save.succeeded && action.successDamage === "half") || (evasion && !save.succeeded)) total = Math.floor(total / 2);
           const applied = A().adjustedDamage(target.state, Math.max(0, total), action.damageType);
           damageComponents = [{ source: action.name, notation: `${count}d${action.damageDiceSize}+${action.damageBonus || 0}`,
             rolls, modifier: action.damageBonus || 0, damage_type: action.damageType, total: Math.max(0, total), applied_total: applied }];
