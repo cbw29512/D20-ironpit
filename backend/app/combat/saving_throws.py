@@ -58,7 +58,9 @@ def resolve_save_action(
             raise ValueError(f"{action.name} has no legal target at {distance_ft} feet.")
         if spend_resource_cost and not resource_available(actor.state, action.resource_id, action.resource_cost):
             raise ValueError(f"{action.name} does not have its required resource available.")
-        save_roll, succeeded = resolve_saving_throw(target.state, action.save_ability, action.dc, dice)
+        save_roll, succeeded = resolve_saving_throw(
+            target.state, action.save_ability, action.dc, dice, magical_effect=action.magical_effect,
+        )
         if spend_action:
             spend(actor.state, "action")
         resource_remaining = (
