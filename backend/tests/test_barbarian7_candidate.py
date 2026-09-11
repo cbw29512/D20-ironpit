@@ -17,7 +17,7 @@ def _member(template, combatant_id: str, side: str) -> EncounterCombatant:
     )
 
 
-def test_barbarian_seven_candidate_has_deterministic_raw_progression_without_public_promotion() -> None:
+def test_barbarian_seven_candidate_has_deterministic_raw_progression_and_public_promotion() -> None:
     template = build_rokhan_stonefury_level7_candidate()
     assert (template.id, template.level, template.max_hp, template.armor_class, template.speed_ft) == (
         "rokhan-stonefury-l7", 7, 75, 14, 40,
@@ -31,10 +31,12 @@ def test_barbarian_seven_candidate_has_deterministic_raw_progression_without_pub
     assert features.mindless_rage is True
     assert features.fast_movement_bonus_ft == 10
     assert features.frenzy is True and features.reckless_attack is True and features.danger_sense is True
-    assert ("barbarian", 7, "canonical") not in build_certified_hero_registry()
+    assert build_certified_hero_registry()[("barbarian", 7, "canonical")] == (
+        "Rokhan Stonefury", "rokhan-stonefury-l7",
+    )
 
 
-def test_feral_instinct_reuses_shared_initiative_advantage_engine_without_approving_pounce_policy() -> None:
+def test_feral_instinct_reuses_shared_initiative_advantage_engine_with_pounce_supported() -> None:
     rokhan = _member(build_rokhan_stonefury_level7_candidate(), "rokhan", "heroes")
     opponent = _member(build_karnok_stoneward(), "opponent", "monsters")
     setup = EncounterSetup(
