@@ -3019,7 +3019,7 @@
       "monster_name": "Earth Elemental",
       "srd_source_page": 282,
       "srd_source_reference": "SRD 5.2.1 p. 282",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-earth-elemental",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -3030,11 +3030,11 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "multiattack"
+        "multiattack",
+        "trait"
       ],
       "unsupported_mechanics": [
-        "condition-or-control",
-        "trait"
+        "condition-or-control"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -3042,8 +3042,7 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
-        "trait"
+        "ranged-range-mismatch:srd-earth-elemental-rock-launch"
       ]
     },
     {
@@ -5508,14 +5507,14 @@
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action"
+        "saving-throw-action",
+        "trait"
       ],
       "unsupported_mechanics": [
         "condition-or-control",
         "legendary",
         "limited-use",
-        "save-or-complex-action",
-        "trait"
+        "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -5526,8 +5525,7 @@
         "legendary",
         "limited-use",
         "monster-combat-mechanics-not-certified",
-        "save-or-complex-action",
-        "trait"
+        "save-or-complex-action"
       ]
     },
     {
@@ -8559,11 +8557,11 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "multiattack"
+        "multiattack",
+        "trait"
       ],
       "unsupported_mechanics": [
-        "limited-use",
-        "trait"
+        "limited-use"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -8571,8 +8569,7 @@
       "public_ready_status": "blocked",
       "blockers": [
         "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "trait"
+        "monster-combat-mechanics-not-certified"
       ]
     },
     {
