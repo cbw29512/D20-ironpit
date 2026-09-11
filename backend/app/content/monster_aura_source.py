@@ -13,15 +13,15 @@ _FIRE_AURA = re.compile(
     r"Fire Aura\.\s+At the end of each of the [^.]+ turns, each creature(?: of the [^.]+ choice)? "
     r"in a (?P<radius>\d+)-foot Emanation originating from the [^.]+ takes "
     r"(?P<average>\d+) \((?P<count>\d+)d(?P<size>\d+)(?:\s*(?P<sign>[+-])\s*(?P<bonus>\d+))?\) "
-    r"(?P<dtype>[A-Za-z]+) damage(?P<tail>[^.]*)\.",
-    re.IGNORECASE,
+    r"(?P<dtype>[A-Za-z]+) damage(?P<tail>[^.]*)\.", re.IGNORECASE,
 )
 _START_TURN_CONDITION_AURA = re.compile(
     r"(?P<name>[A-Z][A-Za-z '\-]+)\.\s+(?P<ability>Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) "
     r"Saving Throw: DC (?P<dc>\d+), any creature that starts its turn in a (?P<radius>\d+)-foot Emanation "
     r"originating from the [^.]+\. Failure: The target has the (?P<condition>Poisoned|Frightened) condition "
-    r"until the start of its next turn\.", re.IGNORECASE,
+    r"until the start of its next turn\.(?P<tail>[^\n]*)", re.IGNORECASE,
 )
+_SOURCE_IMMUNITY = re.compile(r"Success:\s+The target is immune to this [^’']+[’']s [^.]+ for 24 hours\.", re.IGNORECASE)
 _ROLL_ADVANTAGE_AURA = re.compile(
     r"(?P<name>[A-Z][A-Za-z '\-]+)\.\s+While in a (?P<radius>\d+)-foot Emanation originating from the [^,]+, "
     r"the [^ ]+ and its allies have Advantage on attack rolls and saving throws, provided the [^ ]+ doesn’t have "
@@ -68,6 +68,7 @@ def source_start_turn_condition_auras(name: str) -> list[StartTurnSaveConditionA
         radius_ft=int(match.group("radius")), save_ability=match.group("ability").lower(),
         dc=int(match.group("dc")), condition=match.group("condition").lower(),
         expiry_timing="target_turn_start",
+        success_grants_source_immunity=bool(_SOURCE_IMMUNITY.search(match.group("tail") or "")),
     )]
 
 
