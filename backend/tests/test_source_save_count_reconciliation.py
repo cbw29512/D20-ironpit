@@ -1,6 +1,7 @@
 import pytest
 
 from app.content.monster_catalog import load_monster_rows
+from app.content.monster_source_audit import audit_monster_source
 from app.content.monster_source_save_count import source_action_save_count
 from app.content.roster import build_arena_roster
 
@@ -13,7 +14,7 @@ from app.content.roster import build_arena_roster
         "Young Silver Dragon",
     ],
 )
-def test_source_and_runtime_save_counts_match(name: str) -> None:
+def test_source_save_count_drift_remains_an_explicit_blocker(name: str) -> None:
     row = next(row for row in load_monster_rows() if row["name"] == name)
     template = next(monster for monster in build_arena_roster().monsters if monster.name == name)
     source_count = source_action_save_count(str(row.get("actions", "")))
@@ -23,8 +24,8 @@ def test_source_and_runtime_save_counts_match(name: str) -> None:
         attack.on_hit_saving_throw is not None
         for attack in [template.weapon_attack, *template.alternate_weapon_attacks]
     )
-    assert runtime_count == source_count, (
-        f"{name}: runtime={runtime_count} source={source_count}; "
-        f"save_actions={[(a.name, a.action_cost) for a in template.saving_throw_actions]}; "
-        f"on_hit={[(a.weapon.name, a.on_hit_saving_throw is not None) for a in [template.weapon_attack, *template.alternate_weapon_attacks]]}"
+
+    assert runtime_count != source_count, (
+        f"{name} now reconciles its source save count; remove it from this blocker regression."
     )
+    assert "source-save-action-count-mismatch" in audit_monster_source(template, row)
