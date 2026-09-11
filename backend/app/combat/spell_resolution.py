@@ -30,6 +30,7 @@ def _save_action(choice: SpellChoice) -> SavingThrowAction:
         damage_bonus=spell.damage_bonus,
         damage_type=spell.damage_type,
         success_damage=spell.success_damage,
+        magical_effect=True,
         animation=spell.animation,
     )
 
