@@ -5,6 +5,11 @@ import re
 from app.domain.capabilities import CombatantDefinition
 from app.domain.traits import CombatTrait
 
+_DAMAGE_HEADING = re.compile(
+    r"^(?:acid|bludgeoning|cold|fire|force|lightning|necrotic|piercing|poison|psychic|radiant|slashing|thunder) damage$",
+    re.IGNORECASE,
+)
+
 
 def _normalized_name(value: str) -> str:
     return re.sub(r"\s+", " ", value).strip().lower()
@@ -57,6 +62,8 @@ def _merge_save_actions(existing: list, source: list, resource_rebinds: dict[str
             continue
         seen_existing.add(key)
         derived = source_by_key.get(key)
+        if derived is None and _DAMAGE_HEADING.fullmatch(current.name.strip()):
+            continue
         if derived is None or (current.resource_id is None and derived.resource_id is None):
             merged.append(current)
             continue
