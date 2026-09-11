@@ -3,9 +3,9 @@ from app.combat.dice import FixedDiceProvider
 from app.combat.state import build_combatant_state
 from app.content.audited_fighter import build_karnok_stoneward
 from app.content.capability_registry import build_combatant_from_capabilities
+from app.content.monster_aura_source import fire_aura_source_is_fully_modeled, source_end_turn_damage_auras
 from app.content.monster_catalog import load_monster_rows
 from app.content.monster_source_audit import audit_monster_source
-from app.content.monster_trait_source_audit import trait_issues
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 
 
@@ -47,6 +47,7 @@ def test_fire_aura_uses_shared_damage_pipeline_at_end_of_turn() -> None:
 
 
 def test_fire_elemental_extra_fire_aura_clause_remains_fail_closed() -> None:
-    elemental = build_combatant_from_capabilities("srd-fire-elemental")
-    issues = trait_issues(elemental, _row("Fire Elemental"))
-    assert "trait-unmodeled-clause:fire-aura" in issues
+    auras = source_end_turn_damage_auras("Fire Elemental")
+    assert len(auras) == 1
+    assert (auras[0].radius_ft, auras[0].damage_dice_count, auras[0].damage_dice_size) == (10, 1, 10)
+    assert fire_aura_source_is_fully_modeled(_row("Fire Elemental")) is False
