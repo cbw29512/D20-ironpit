@@ -8,7 +8,7 @@
   const F = () => window.IRON_PIT_BROWSER_FORMATION, V = () => window.IRON_PIT_BROWSER_SAVES;
   const DG = () => window.IRON_PIT_BROWSER_DODGE, OM = () => window.IRON_PIT_BROWSER_OFFENSIVE_MOVEMENT;
   const RES = () => window.IRON_PIT_BROWSER_RESOURCES, RC = () => window.IRON_PIT_BROWSER_RECHARGE, RA = () => window.IRON_PIT_BROWSER_RECHARGE_ACTION;
-  const SW = () => window.IRON_PIT_BROWSER_SWALLOW, D = () => window.IRON_PIT_DICE;
+  const SW = () => window.IRON_PIT_BROWSER_SWALLOW, AU = () => window.IRON_PIT_BROWSER_AURAS, D = () => window.IRON_PIT_DICE;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
     available: (s, c) => c === "action" ? s.action_available : s.bonus_action_available,
   };
@@ -56,6 +56,7 @@
     if (surge) { events.push(...surge.events); sequence = surge.sequence; }
     const swallowed = SW()?.turnEnd(sequence, round, member, setup);
     if (swallowed) { events.push(...swallowed.events); sequence = swallowed.sequence; }
+    const aura = AU()?.turnEnd(sequence, round, member, setup); if (aura) { events.push(...aura.events); sequence = aura.sequence; }
     const rage = G()?.finalize(sequence, round, member); if (rage?.event) events.push(rage.event);
     return { events, sequence: rage?.sequence ?? sequence };
   }
