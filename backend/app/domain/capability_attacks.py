@@ -87,6 +87,7 @@ class SaveCapabilityDefinition(BaseModel):
     range_ft: int = Field(ge=0)
     target_max_size: CreatureSize | None = None
     required_target_condition: ConditionName | None = None
+    required_target_grappled_by_self: bool = False
     area: AreaTargeting | None = None
     damage: DiceSpec | None = None
     damage_type: DamageType | None = None
@@ -113,7 +114,7 @@ class SaveCapabilityDefinition(BaseModel):
         if self.push_target_max_size is not None and self.push_target_away_ft <= 0:
             raise ValueError("Save-action push size limit requires positive push distance.")
         if self.push_target_away_ft % 5:
-            raise ValueError("Save-action forced movement must use 5-foot increments.")
+            raise ValueError("Save-action forced movement distance must use 5-foot increments.")
         return self
 
 
