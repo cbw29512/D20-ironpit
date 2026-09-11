@@ -61,5 +61,50 @@
     return [...new Set(applied)];
   }
 
-  window.IRON_PIT_BROWSER_SAVE_FAILURE_EFFECTS = { apply };
+  function eligible(state, filter = {}) {
+    const creatureType = String(state.template.creature_type || "").toLowerCase();
+    const tags = new Set((state.template.creature_tags || []).map((item) => String(item).toLowerCase()));
+    if ((filter.excludedCreatureTypes || []).some((item) => String(item).toLowerCase() === creatureType)) return false;
+    return !(filter.excludedTags || []).some((item) => tags.has(String(item).toLowerCase()));
+  }
+
+  function hitSave(attacker, target, attack, round, distance, setup = null) {
+    const rider = attack.onHitSavingThrow;
+    if (!rider || target.state.is_dead || !target.state.is_alive) return null;
+    if (!eligible(target.state, rider.targetFilter)) return { eligible: false, applied: [] };
+    const saves = window.IRON_PIT_BROWSER_SAVES;
+    if (!saves) throw new Error("Browser save resolver is not loaded.");
+    const aura = window.IRON_PIT_BROWSER_AURAS || { savingThrowAdvantageSources: () => 0 };
+    const result = saves.resolveSavingThrow(
+      target.state, rider.saveAbility, rider.dc, Boolean(rider.magicalEffect), aura.savingThrowAdvantageSources(target, setup),
+    );
+    const applied = result.succeeded ? [] : apply(
+      target, attacker.combatant_id, attack.id, rider.failureEffects || [], { round, range: attack.reach || distance },
+    );
+    return { eligible: true, roll: result.roll, ability: rider.saveAbility, dc: rider.dc, succeeded: result.succeeded, applied };
+  }
+
+  function installHitSaveBridge() {
+    const attackApi = window.IRON_PIT_BROWSER_ATTACK;
+    if (!attackApi || attackApi.__hitSaveBridgeInstalled) return;
+    const base = attackApi.resolveAttack;
+    attackApi.resolveAttack = function (...args) {
+      const [, round, attacker, target, attack, distance, extra = {}] = args;
+      const event = base(...args);
+      if (!event.hit || !attack.onHitSavingThrow) return event;
+      const members = extra.setup ? [...extra.setup.heroes, ...extra.setup.monsters] : [];
+      const actual = members.find((item) => item.combatant_id === event.target_id) || target;
+      const outcome = hitSave(attacker, actual, attack, round, distance, extra.setup || null);
+      if (!outcome?.eligible) return event;
+      event.saving_throw_roll = outcome.roll; event.save_ability = outcome.ability;
+      event.save_dc = outcome.dc; event.save_succeeded = outcome.succeeded;
+      event.applied_condition_ids = [...new Set([...(event.applied_condition_ids || []), ...outcome.applied])];
+      event.description += ` ${actual.state.template.name} ${outcome.succeeded ? "succeeds" : "fails"} the DC ${outcome.dc} ${outcome.ability} hit-effect save.`;
+      return event;
+    };
+    attackApi.__hitSaveBridgeInstalled = true;
+  }
+
+  window.IRON_PIT_BROWSER_SAVE_FAILURE_EFFECTS = { apply, eligible, hitSave };
+  installHitSaveBridge();
 })();
