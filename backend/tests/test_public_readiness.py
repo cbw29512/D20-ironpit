@@ -1,15 +1,50 @@
 import pytest
+from pydantic import ValidationError
 
-from app.combat.public_readiness import assert_public_selection_runnable
-from app.domain.encounters import EncounterSelection
+from app.content.readiness import assert_public_selection_runnable
+from app.domain.models import EncounterSelection
 
 
 def _selection(hero_id: str, monster_id: str = "srd-goblin-warrior") -> EncounterSelection:
     return EncounterSelection(hero_ids=[hero_id], monster_ids=[monster_id])
 
 
-def test_certified_goblin_passes_public_readiness() -> None:
-    assert_public_selection_runnable(_selection("karnok-stoneward-l1"))
+def test_starting_distance_is_not_a_public_selection_option() -> None:
+    with pytest.raises(ValidationError):
+        EncounterSelection(
+            hero_ids=["karnok-stoneward-l1"],
+            monster_ids=["srd-goblin-warrior"],
+            starting_distance_ft=30,
+        )
+
+
+@pytest.mark.parametrize(
+    "hero_id",
+    ["karnok-stoneward-l1", "karnok-stoneward-l2", "karnok-stoneward-l3", "karnok-stoneward-l4", "karnok-stoneward-l5"],
+)
+def test_audited_karnok_levels_and_certified_monster_pass_public_readiness(hero_id: str) -> None:
+    assert_public_selection_runnable(_selection(hero_id))
+
+
+def test_goblin_boss_passes_public_readiness() -> None:
+    assert_public_selection_runnable(_selection("karnok-stoneward-l1", "srd-goblin-boss"))
+
+
+def test_blood_hawk_passes_public_readiness() -> None:
+    assert_public_selection_runnable(_selection("karnok-stoneward-l1", "srd-blood-hawk"))
+
+
+@pytest.mark.parametrize("monster_id", ["srd-swarm-of-bats", "srd-swarm-of-rats", "srd-swarm-of-crawling-claws"])
+def test_certified_swarms_pass_public_readiness(monster_id: str) -> None:
+    assert_public_selection_runnable(_selection("karnok-stoneward-l1", monster_id))
+
+
+@pytest.mark.parametrize(
+    "monster_id",
+    ["srd-bandit-captain", "srd-knight", "srd-noble", "srd-warrior-veteran"],
+)
+def test_certified_parry_monsters_pass_public_readiness(monster_id: str) -> None:
+    assert_public_selection_runnable(_selection("karnok-stoneward-l1", monster_id))
 
 
 @pytest.mark.parametrize("monster_id", ["srd-zombie", "srd-ogre-zombie"])
