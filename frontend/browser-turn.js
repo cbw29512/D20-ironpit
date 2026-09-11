@@ -47,7 +47,21 @@
       description: `${state.template.name} makes a Death Save: ${result}.`,
     };
   }
+  function saveChoice(member, setup, actionCost = "action") {
+    if (!E().available(member.state, actionCost)) return null;
+    for (const target of F().targetOrder(member, setup)) {
+      for (const action of member.state.template.saving_throw_actions || []) {
+        if ((action.actionCost || "action") !== actionCost) continue;
+        if (!RES().available(member.state, action.resourceId, action.resourceCost || 1)) continue;
+        const distance = F().saveDistance(member, target, action.range);
+        if (V().legalAction(action, target, distance)) return { target, action, distance };
+      }
+    }
+    return null;
+  }
   function finalize(events, sequence, round, member, setup, turnKey, allowSurge = true) {
+    const bonus = saveChoice(member, setup, "bonus_action");
+    if (bonus) events.push(V().resolveAction(sequence++, round, member, bonus.target, bonus.action, bonus.distance, { setup }));
     const surge = allowSurge ? J()?.resolveAttack(sequence, round, member, setup, turnKey) : null;
     if (surge) { events.push(...surge.events); sequence = surge.sequence; }
     const swallowed = SW()?.turnEnd(sequence, round, member, setup);
@@ -55,16 +69,6 @@
     const aura = AU()?.turnEnd(sequence, round, member, setup); if (aura) { events.push(...aura.events); sequence = aura.sequence; }
     const rage = G()?.finalize(sequence, round, member); if (rage?.event) events.push(rage.event);
     return { events, sequence: rage?.sequence ?? sequence };
-  }
-  function saveChoice(member, setup) {
-    for (const target of F().targetOrder(member, setup)) {
-      for (const action of member.state.template.saving_throw_actions || []) {
-        if (!RES().available(member.state, action.resourceId, action.resourceCost || 1)) continue;
-        const distance = F().saveDistance(member, target, action.range);
-        if (V().legalAction(action, target, distance)) return { target, action, distance };
-      }
-    }
-    return null;
   }
   function resolveTurn(sequence, round, member, setup) {
     enablePitRangePolicy();
