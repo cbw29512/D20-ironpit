@@ -63,3 +63,27 @@ def test_repeat_save_and_modifier_drift_fail_closed() -> None:
     issues = save_action_issues(action, source)
     assert "save-failure-effect-mismatch:test-fear:0:condition" not in issues
     assert "save-failure-effect-mismatch:test-fear:1:speed" in issues
+
+
+def test_staged_next_turn_save_requires_second_failure_condition() -> None:
+    action = SavingThrowAction(
+        id="test-gaze", name="Test Gaze", action_cost="bonus_action",
+        save_ability="constitution", dc=12, range_ft=30,
+        failure_effects=[ConditionEffectDefinition(
+            condition="restrained",
+            repeat_save_ability="constitution",
+            repeat_save_dc=12,
+            repeat_save_timing="target_turn_end",
+            repeat_save_delay_rounds=1,
+            repeat_save_failure_condition="petrified",
+        )],
+    )
+    good = (
+        "test gaze. constitution saving throw: dc 12. first failure: the target has the restrained condition "
+        "and repeats the save at the end of its next turn if it is still restrained. second failure: "
+        "the target has the petrified condition instead of the restrained condition."
+    )
+    assert save_action_issues(action, good) == []
+
+    missing_second_stage = good.replace("second failure: the target has the petrified condition", "second failure: the effect continues")
+    assert "save-failure-effect-mismatch:test-gaze:0:condition" in save_action_issues(action, missing_second_stage)
