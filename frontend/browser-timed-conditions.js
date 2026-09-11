@@ -11,8 +11,11 @@
     if (I().immune(state, effectId)) return null;
     if (effectId === POISONED && effects(state).some((effect) => effect.effect_id === POISONED)) return POISONED;
     const delayRounds = options.repeatSaveDelayRounds || 0;
+    const autoAfter = options.automaticSuccessAfterRounds;
     if (!Number.isInteger(delayRounds) || delayRounds < 0) throw new Error("Repeat-save delay must be a nonnegative integer.");
     if (delayRounds && options.appliedRound == null) throw new Error("Delayed repeat saves require the application round.");
+    if (autoAfter != null && (!Number.isInteger(autoAfter) || autoAfter < 1)) throw new Error("Automatic-success delay must be a positive integer.");
+    if (autoAfter != null && options.appliedRound == null) throw new Error("Automatic repeat-save success requires the application round.");
     const sourceEffectId = options.sourceEffectId || null;
     state.timed_effects = effects(state).filter((effect) => !(
       effect.effect_id === effectId && effect.source_id === sourceId && (effect.source_effect_id || null) === sourceEffectId
@@ -51,14 +54,13 @@
       d20_disadvantage_ability: options.d20DisadvantageAbility || null,
       damage_penalty_dice_count: options.damagePenaltyDiceCount || 0,
       damage_penalty_dice_size: options.damagePenaltyDiceSize || 6,
-      automatic_success_round: options.automaticSuccessRound || null,
+      automatic_success_round: options.automaticSuccessRound || (autoAfter == null ? null : options.appliedRound + autoAfter),
     });
     if (options.trackActiveEffect !== false && !state.active_effect_ids.includes(effectId)) state.active_effect_ids.push(effectId);
     return effectId;
   }
 
   function applyPenalty(state, sourceId, sourceEffectId, round, effect) {
-    const autoAfter = effect.automaticSuccessAfterRounds;
     return apply(state, TIMED_PENALTY, sourceId, {
       sourceEffectId, effectFamily: effect.effectFamily || null, appliedRound: round, trackActiveEffect: false,
       repeatSaveAbility: effect.repeatSaveAbility, repeatSaveDc: effect.repeatSaveDc,
@@ -66,7 +68,7 @@
       d20DisadvantageAbility: effect.d20DisadvantageAbility,
       damagePenaltyDiceCount: effect.damagePenaltyDiceCount || 0,
       damagePenaltyDiceSize: effect.damagePenaltyDiceSize || 6,
-      automaticSuccessRound: autoAfter == null ? null : round + autoAfter,
+      automaticSuccessAfterRounds: effect.automaticSuccessAfterRounds ?? null,
     });
   }
 
