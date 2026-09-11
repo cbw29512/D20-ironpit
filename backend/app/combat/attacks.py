@@ -106,7 +106,7 @@ def resolve_attack(
             applied_types = {part.damage_type for part in damage_components if part.applied_total > 0}
             damage_outcome = apply_damage(actual_defender, applied_total, critical=critical, damage_types=applied_types, dice=dice, affected_states=affected_states)
             max_hp_before, max_hp_after = resolve_attack_max_hp_reduction(attack, actual_defender, damage_components)
-            applied_conditions = apply_hit_conditions(attack, actual_defender, attacker_event_id, round_number, affected_states)
+            applied_conditions = apply_hit_conditions(attack, actual_defender, attacker_event_id, round_number, affected_states, attacker, actual_event_id)
             topple = resolve_topple_hit(attacker, actual_defender, attack, dice)
             if topple.applied and "prone" not in applied_conditions: applied_conditions.append("prone")
             weapon_sap_applied = apply_weapon_sap(attacker, attacker_event_id, actual_defender, attack, round_number)
