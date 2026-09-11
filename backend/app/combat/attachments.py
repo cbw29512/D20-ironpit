@@ -6,6 +6,7 @@ from app.combat.action_economy import is_available, spend
 from app.combat.damage import aggregate_damage_components, roll_damage_component
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
+from app.combat.encounter_targeting import combatant_distance
 from app.combat.zero_hp import apply_damage
 from app.domain.attachments import AttachmentState
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -34,6 +35,7 @@ def apply_attachment(
             periodic_damage_bonus=rule.periodic_damage_bonus,
             periodic_damage_type=rule.periodic_damage_type,
             forbids_source_attack_ids=rule.forbids_source_attack_ids,
+            detachable_by_source_movement_ft=rule.detachable_by_source_movement_ft,
             detachable_by_target_action=rule.detachable_by_target_action,
             detachable_by_adjacent_action=rule.detachable_by_adjacent_action,
         )
@@ -41,15 +43,6 @@ def apply_attachment(
     except Exception as exc:
         logger.exception("Failed to apply attachment from %s.", source_id)
         raise RuntimeError("Attachment could not be applied.") from exc
-
-
-def attack_is_available(source: CombatantState, attack: WeaponAttack) -> bool:
-    try:
-        relation = source.attachment
-        return relation is None or attack.id not in relation.forbids_source_attack_ids
-    except Exception as exc:
-        logger.exception("Failed to evaluate attachment attack lockout for %s.", attack.id)
-        raise RuntimeError("Attachment attack legality could not be evaluated.") from exc
 
 
 def attached_source_for(target_id: str, setup: EncounterSetup) -> EncounterCombatant | None:
@@ -67,21 +60,51 @@ def resolve_detach_action(
     try:
         if not is_available(actor.state, "action"):
             return None
-        source = attached_source_for(actor.combatant_id, setup)
-        if source is None or not source.state.attachment or not source.state.attachment.detachable_by_target_action:
-            return None
-        source.state.attachment = None
-        spend(actor.state, "action")
-        return BattleEvent(
-            sequence=sequence, round_number=round_number, event_type="feature",
-            actor_id=actor.combatant_id, actor_name=actor.state.template.name,
-            target_id=source.combatant_id, target_name=source.state.template.name,
-            feature_id="detach-attachment", animation="detach",
-            description=f"{actor.state.template.name} detaches {source.state.template.name}.",
-        )
+        all_members = members(setup)
+        for source in all_members:
+            relation = source.state.attachment
+            if relation is None:
+                continue
+            target = next((member for member in all_members if member.combatant_id == relation.target_id), None)
+            if target is None:
+                continue
+            target_detach = actor.combatant_id == target.combatant_id and relation.detachable_by_target_action
+            adjacent_detach = (
+                actor.combatant_id != target.combatant_id
+                and relation.detachable_by_adjacent_action
+                and combatant_distance(actor, target) <= 5
+            )
+            if not (target_detach or adjacent_detach):
+                continue
+            source.state.attachment = None
+            spend(actor.state, "action")
+            return BattleEvent(
+                sequence=sequence, round_number=round_number, event_type="feature",
+                actor_id=actor.combatant_id, actor_name=actor.state.template.name,
+                target_id=source.combatant_id, target_name=source.state.template.name,
+                feature_id="detach-attachment", animation="detach",
+                description=f"{actor.state.template.name} detaches {source.state.template.name}.",
+            )
+        return None
     except Exception as exc:
         logger.exception("Failed detach action for %s.", actor.combatant_id)
         raise RuntimeError("Attachment detach action could not be resolved.") from exc
+
+
+def detach_source_by_movement(source: CombatantState) -> int:
+    try:
+        relation = source.attachment
+        if relation is None or relation.detachable_by_source_movement_ft is None:
+            return 0
+        cost = relation.detachable_by_source_movement_ft
+        if source.movement_remaining_ft < cost:
+            return 0
+        source.movement_remaining_ft -= cost
+        source.attachment = None
+        return cost
+    except Exception as exc:
+        logger.exception("Failed source movement detach for %s.", source.template.name)
+        raise RuntimeError("Source movement detach could not be resolved.") from exc
 
 
 def resolve_attachment_start_turn(
@@ -118,6 +141,8 @@ def resolve_attachment_start_turn(
             description=(f"{source.state.template.name}'s attached effect deals {total} "
                          f"{relation.periodic_damage_type.value} damage to {target.state.template.name}."),
         )
+        if target.state.is_dead:
+            source.state.attachment = None
         return [event], sequence + 1
     except Exception as exc:
         logger.exception("Failed attachment start-turn resolution for %s.", source.combatant_id)
