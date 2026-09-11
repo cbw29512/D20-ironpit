@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.concentration import end_concentration_if_incapacitated
 from app.combat.dice import DiceProvider
 from app.domain.ability_reduction import AbilityScoreReductionOnHit
 from app.domain.actions import AbilityName
@@ -32,6 +31,8 @@ def ability_modifier_delta(state: CombatantState, ability: AbilityName) -> int:
 
 
 def _kill_from_reduction(state: CombatantState, affected_states: list[CombatantState] | None) -> None:
+    from app.combat.concentration import end_concentration_if_incapacitated
+
     state.current_hp = 0
     state.is_alive = False
     state.is_dead = True
