@@ -41,3 +41,20 @@ def test_ghast_stench_success_grants_source_specific_immunity() -> None:
     assert aura.condition == "poisoned"
     assert aura.dc == 10
     assert aura.success_grants_source_immunity is True
+
+
+def test_staged_hit_save_transitions_restrained_to_petrified() -> None:
+    rider = _hit_save(
+        "If the target is a creature, it is subjected to the following effect. "
+        "Constitution Saving Throw: DC 11. First Failure: The target has the Restrained condition. "
+        "The target repeats the save at the end of its next turn if it is still Restrained, ending the effect on itself on a success. "
+        "Second Failure: The target has the Petrified condition, instead of the Restrained condition, for 24 hours."
+    )
+    failure = rider.failure_effects[0]
+    assert rider.save_ability == "constitution"
+    assert rider.dc == 11
+    assert failure.condition == "restrained"
+    assert failure.repeat_save_ability == "constitution"
+    assert failure.repeat_save_dc == 11
+    assert failure.repeat_save_timing == "target_turn_end"
+    assert failure.repeat_save_failure_condition == "petrified"
