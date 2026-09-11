@@ -23,7 +23,10 @@
     const fallbackId = fallbackSlotId(spell), resourceId = RES().resolvedId(spell.resourceId, fallbackId);
     const usesSlot = Boolean(resourceId?.startsWith("spell-slot-"));
     if (usesSlot && !C().slotSpellAvailable(caster.state, turnKey)) throw new Error(`A leveled spell was already cast this turn before ${spell.name}.`);
-    if (!RES().actionAvailable(caster.state, spell.resourceId, spell.resourceCost || 1, fallbackId)) throw new Error(`Resource ${resourceId} is unavailable for ${spell.name}.`);
+    if (!RES().actionAvailable(caster.state, spell.resourceId, spell.resourceCost || 1, fallbackId)) {
+      if (usesSlot) throw new Error(`No level ${spell.level} spell slot remains for ${spell.name}.`);
+      throw new Error(`Resource ${resourceId} is unavailable for ${spell.name}.`);
+    }
     const conditions = A().conditionSources(caster.state, target.state, distance, target.combatant_id, setup);
     const advantage = conditions.advantage + (M().nextAttackAdvantage?.(caster.state) || 0) + M().nextAttackAgainstAdvantage(caster.state, target.combatant_id);
     const closeThreat = (spell.attackKind || "ranged") === "ranged" && A().rangedCloseThreat(caster, target, distance, setup);
