@@ -12,6 +12,10 @@ from app.domain.models import BattleEvent
 logger = logging.getLogger(__name__)
 
 
+def _immunity_key(source_id: str, aura_id: str) -> str:
+    return f"{source_id}:{aura_id}"
+
+
 def resolve_start_turn_save_condition_auras(
     sequence: int, round_number: int, target: EncounterCombatant,
     setup: EncounterSetup, dice,
@@ -27,6 +31,9 @@ def resolve_start_turn_save_condition_auras(
             for aura in source.state.template.start_turn_save_condition_auras:
                 if aura.disabled_while_incapacitated and is_incapacitated(source.state):
                     continue
+                immunity_key = _immunity_key(source.combatant_id, aura.id)
+                if immunity_key in target.state.source_effect_immunities:
+                    continue
                 if combatant_distance(source, target) > aura.radius_ft:
                     continue
                 roll, succeeded = resolve_saving_throw(
@@ -34,7 +41,9 @@ def resolve_start_turn_save_condition_auras(
                     magical_effect=aura.magical_effect,
                 )
                 applied: list[str] = []
-                if not succeeded:
+                if succeeded and aura.success_grants_source_immunity:
+                    target.state.source_effect_immunities.append(immunity_key)
+                elif not succeeded:
                     condition = apply_timed_condition(
                         target.state, aura.condition, source.combatant_id,
                         source_effect_id=aura.id, applied_round=round_number,
