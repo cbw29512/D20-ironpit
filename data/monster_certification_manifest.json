@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 169,
-    "blocked": 161
+    "public_ready": 171,
+    "blocked": 159
   },
   "monsters": [
     {
@@ -2185,7 +2185,6 @@
       "blockers": [
         "condition-or-control",
         "reaction",
-        "save-failure-effect-mismatch:srd-chain-devil-the-devil-conjures-a-fiery-chain-to-bind-a-creature:0:condition",
         "save-or-complex-action",
         "trait",
         "uncertified-reaction:unnerving-gaze"
@@ -3055,11 +3054,9 @@
         "condition-or-control",
         "limited-use",
         "save-or-complex-action",
-        "source-save-action-count-mismatch",
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
-        "uncertified-limited-use:actions-blinding-breath-recharge-6",
         "uncertified-limited-use:actions-sleep-1-day",
         "uncertified-monster-spellcasting",
         "uncertified-trait:death-burst"
@@ -3618,7 +3615,6 @@
       "blockers": [
         "condition-or-control",
         "limited-use",
-        "save-failure-effect-mismatch:srd-ghost-horrific-visage:0:condition",
         "save-or-complex-action",
         "source-save-action-count-mismatch",
         "spell-concentration-source-not-vendored",
@@ -4368,7 +4364,6 @@
       "blockers": [
         "condition-or-control",
         "limited-use",
-        "save-failure-effect-mismatch:srd-gibbering-mouther-blinding-spittle:0:condition",
         "save-or-complex-action",
         "trait",
         "uncertified-trait:aberrant-ground",
@@ -4878,7 +4873,6 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "save-failure-effect-mismatch:srd-guardian-naga-poisonous-spittle:0:condition",
         "save-or-complex-action",
         "spell-concentration-source-not-vendored",
         "spellcasting",
@@ -6237,25 +6231,19 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action"
-      ],
-      "unsupported_mechanics": [
-        "condition-or-control",
         "save-or-complex-action",
+        "saving-throw-action",
         "unsupported-action-rider"
       ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "condition-or-control",
-        "save-or-complex-action",
-        "source-save-action-count-mismatch",
-        "unsupported-action-rider"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-mummy-lord",
@@ -6302,7 +6290,6 @@
         "legendary",
         "limited-use",
         "reaction",
-        "save-failure-effect-mismatch:srd-mummy-lord-dreadful-glare:0:condition",
         "save-or-complex-action",
         "spell-concentration-source-not-vendored",
         "spellcasting",
@@ -6628,7 +6615,6 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "save-failure-effect-mismatch:srd-otyugh-tentacle-slam:0:condition",
         "save-or-complex-action",
         "source-attack-count-mismatch",
         "source-save-action-count-mismatch",
@@ -6787,22 +6773,17 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "multiattack",
+        "save-or-complex-action",
         "saving-throw-action"
       ],
-      "unsupported_mechanics": [
-        "condition-or-control",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "condition-or-control",
-        "save-or-complex-action",
-        "source-save-action-count-mismatch"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-pirate-captain",
@@ -8027,7 +8008,6 @@
         "legendary",
         "limited-use",
         "save-area-mismatch:srd-sphinx-of-lore-mind-rending-roar",
-        "save-failure-effect-mismatch:srd-sphinx-of-lore-mind-rending-roar:0:condition",
         "save-or-complex-action",
         "spell-concentration-source-not-vendored",
         "spellcasting",
@@ -9148,7 +9128,6 @@
       "blockers": [
         "condition-or-control",
         "limited-use",
-        "save-failure-effect-mismatch:srd-vrock-stunning-screech:0:condition",
         "save-or-complex-action",
         "source-save-action-count-mismatch",
         "trait",
