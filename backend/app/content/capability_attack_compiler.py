@@ -7,6 +7,7 @@ from app.content.capability_attack_control_compiler import (
     compile_control,
     merge_controls,
 )
+from app.domain.ability_reduction import AbilityScoreReductionEffectDefinition, AbilityScoreReductionOnHit
 from app.domain.actions import HitControlEffect
 from app.domain.attachments import AttachmentEffectDefinition
 from app.domain.capabilities import AttackCapabilityDefinition
@@ -54,6 +55,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
         on_hit_modifiers: list[HitModifierEffect] = []
         conditional: list[ConditionalDamage] = []
         max_hp_reduction: MaxHpReductionOnHit | None = None
+        ability_reduction: AbilityScoreReductionOnHit | None = None
         attachment: AttachmentOnHit | None = None
         prone_size = None
         controls: list[HitControlEffect] = []
@@ -84,6 +86,10 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
                 if max_hp_reduction is not None:
                     raise UnsupportedCapabilityError("An attack supports at most one max-HP-reduction rider.")
                 max_hp_reduction = MaxHpReductionOnHit(damage_type=effect.damage_type)
+            elif isinstance(effect, AbilityScoreReductionEffectDefinition):
+                if ability_reduction is not None:
+                    raise UnsupportedCapabilityError("An attack supports at most one ability-score-reduction rider.")
+                ability_reduction = AbilityScoreReductionOnHit(**effect.model_dump(exclude={"kind"}))
             elif isinstance(effect, AttachmentEffectDefinition):
                 if attachment is not None:
                     raise UnsupportedCapabilityError("An attack supports at most one attachment rider.")
@@ -117,6 +123,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
             on_hit_damage=on_hit,
             on_hit_modifier_effects=on_hit_modifiers,
             max_hp_reduction_on_hit=max_hp_reduction,
+            ability_score_reduction_on_hit=ability_reduction,
             attachment_on_hit=attachment,
             knocks_prone_max_size=prone_size,
             control_effect=merge_controls(controls),
