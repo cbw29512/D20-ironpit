@@ -20,8 +20,6 @@ from app.domain.runtime import CombatantState
 from app.domain.size import size_at_most
 
 logger = logging.getLogger(__name__)
-
-
 def _forbidden_effect_families(action: SavingThrowAction) -> set[str]:
     return {
         effect.effect_family for effect in action.failure_effects
