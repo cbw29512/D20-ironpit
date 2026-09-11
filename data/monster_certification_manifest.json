@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 169,
-    "blocked": 161
+    "public_ready": 185,
+    "blocked": 145
   },
   "monsters": [
     {
@@ -1532,21 +1532,16 @@
         "limited-use"
       ],
       "supported_mechanics": [
-        "attack-roll"
-      ],
-      "unsupported_mechanics": [
+        "attack-roll",
         "bonus-action",
         "limited-use"
       ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "bonus-action",
-        "limited-use",
-        "save-failure-effect-mismatch:srd-basilisk-petrifying-gaze:0:condition"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-bat",
@@ -1704,23 +1699,18 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
+        "limited-use",
         "multiattack",
+        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "limited-use",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "limited-use",
-        "save-or-complex-action",
-        "source-save-action-count-mismatch"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-black-pudding",
@@ -1825,22 +1815,17 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
+        "limited-use",
         "multiattack",
+        "save-or-complex-action",
         "saving-throw-action"
       ],
-      "unsupported_mechanics": [
-        "limited-use",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "limited-use",
-        "save-or-complex-action",
-        "source-save-action-count-mismatch"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-boar",
@@ -2439,21 +2424,16 @@
       ],
       "supported_mechanics": [
         "attack-roll",
-        "saving-throw-action"
-      ],
-      "unsupported_mechanics": [
-        "condition-or-control",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
         "condition-or-control",
         "save-or-complex-action",
-        "source-save-action-count-mismatch"
-      ]
+        "saving-throw-action"
+      ],
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-copper-dragon-wyrmling",
@@ -4606,26 +4586,19 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "bonus-action",
+        "condition-or-control",
         "damage-or-condition-defense",
+        "limited-use",
+        "save-or-complex-action",
         "saving-throw-action"
       ],
-      "unsupported_mechanics": [
-        "bonus-action",
-        "condition-or-control",
-        "limited-use",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "bonus-action",
-        "condition-or-control",
-        "limited-use",
-        "save-failure-effect-mismatch:srd-gorgon-petrifying-breath:0:condition",
-        "save-or-complex-action"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-gray-ooze",
@@ -4677,23 +4650,18 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
+        "limited-use",
         "multiattack",
+        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "limited-use",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "limited-use",
-        "save-or-complex-action",
-        "source-save-action-count-mismatch"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-green-hag",
@@ -4983,23 +4951,18 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
+        "limited-use",
         "multiattack",
+        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "limited-use",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "limited-use",
-        "save-or-complex-action",
-        "source-save-action-count-mismatch"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-hezrou",
@@ -5767,23 +5730,18 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "multiattack",
+        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "condition-or-control",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "condition-or-control",
-        "save-or-complex-action",
-        "source-save-action-count-mismatch"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-lizard",
@@ -6043,21 +6001,16 @@
       ],
       "supported_mechanics": [
         "attack-roll",
-        "multiattack"
-      ],
-      "unsupported_mechanics": [
-        "bonus-action",
-        "limited-use"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
         "bonus-action",
         "limited-use",
-        "save-failure-effect-mismatch:srd-medusa-petrifying-gaze:0:condition"
-      ]
+        "multiattack"
+      ],
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-merfolk-skirmisher",
@@ -7273,22 +7226,17 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
+        "limited-use",
         "multiattack",
+        "save-or-complex-action",
         "saving-throw-action"
       ],
-      "unsupported_mechanics": [
-        "limited-use",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "limited-use",
-        "save-or-complex-action",
-        "source-save-action-count-mismatch"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-reef-shark",
@@ -9493,23 +9441,18 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
+        "limited-use",
         "multiattack",
+        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "limited-use",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "limited-use",
-        "save-or-complex-action",
-        "source-save-action-count-mismatch"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-wight",
@@ -9748,23 +9691,18 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
+        "limited-use",
         "multiattack",
+        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "limited-use",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "limited-use",
-        "save-or-complex-action",
-        "source-save-action-count-mismatch"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-young-blue-dragon",
@@ -9783,22 +9721,17 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
+        "limited-use",
         "multiattack",
+        "save-or-complex-action",
         "saving-throw-action"
       ],
-      "unsupported_mechanics": [
-        "limited-use",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "limited-use",
-        "save-or-complex-action",
-        "source-save-action-count-mismatch"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-young-brass-dragon",
@@ -9948,23 +9881,18 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
+        "limited-use",
         "multiattack",
+        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "limited-use",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "limited-use",
-        "save-or-complex-action",
-        "source-save-action-count-mismatch"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-young-red-dragon",
@@ -9983,22 +9911,17 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
+        "limited-use",
         "multiattack",
+        "save-or-complex-action",
         "saving-throw-action"
       ],
-      "unsupported_mechanics": [
-        "limited-use",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "limited-use",
-        "save-or-complex-action",
-        "source-save-action-count-mismatch"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-young-silver-dragon",
@@ -10055,23 +9978,18 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
+        "limited-use",
         "multiattack",
+        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "limited-use",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "limited-use",
-        "save-or-complex-action",
-        "source-save-action-count-mismatch"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-zombie",
