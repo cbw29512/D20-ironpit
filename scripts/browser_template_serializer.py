@@ -81,6 +81,15 @@ def _aura_row(aura: Any) -> dict[str, Any]:
     }
 
 
+def _start_turn_aura_row(aura: Any) -> dict[str, Any]:
+    return {
+        "id": aura.id, "name": aura.name, "radius_ft": aura.radius_ft,
+        "save_ability": aura.save_ability, "dc": aura.dc, "condition": aura.condition,
+        "expiry_timing": aura.expiry_timing, "magical_effect": aura.magical_effect,
+        "disabled_while_incapacitated": aura.disabled_while_incapacitated,
+    }
+
+
 def template_row(template: CombatantTemplate) -> dict[str, Any]:
     try:
         traits = {item.value for item in template.combat_traits}
@@ -119,6 +128,10 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["swallow_actions"] = [_swallow_row(action) for action in template.swallow_actions]
         if template.end_turn_damage_auras:
             row["end_turn_damage_auras"] = [_aura_row(aura) for aura in template.end_turn_damage_auras]
+        if template.start_turn_save_condition_auras:
+            row["start_turn_save_condition_auras"] = [
+                _start_turn_aura_row(aura) for aura in template.start_turn_save_condition_auras
+            ]
         if template.kind == "monster":
             row["source_trait_names"] = list(template.source_trait_names)
             row["source_reaction_names"] = list(template.source_reaction_names)
