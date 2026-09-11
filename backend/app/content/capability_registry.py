@@ -19,6 +19,7 @@ from app.content.monster_saving_throws import complete_monster_saving_throws
 from app.content.monster_source_capability_candidates import source_candidate_definitions
 from app.content.monster_spellcasting_source_audit import complete_monster_spellcasting_fingerprints
 from app.content.monster_trait_source_audit import complete_monster_trait_fingerprints
+from app.content.source_capability_enrichment import enrich_registry
 from app.domain.capabilities import CombatantDefinition
 from app.domain.models import CombatantTemplate
 
@@ -77,7 +78,7 @@ def load_capability_definitions() -> dict[str, CombatantDefinition]:
         merged: dict[str, CombatantDefinition] = {}
         for path in paths:
             merged = merge_capability_definitions(merged, _load_registry(path))
-        return merge_capability_definitions(merged, source_candidate_definitions(set(merged)))
+        return enrich_registry(merged, source_candidate_definitions(set()))
     except Exception as exc:
         logger.exception("Failed to load declarative combat capability registries.")
         raise RuntimeError("Combat capability registry could not be loaded.") from exc
