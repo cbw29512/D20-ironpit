@@ -17,6 +17,7 @@ class AttackSaveRiderOutcome:
     save_ability: str | None = None
     save_dc: int | None = None
     save_succeeded: bool | None = None
+    target_eligible: bool | None = None
     applied_effect_ids: list[str] = field(default_factory=list)
 
 
@@ -37,6 +38,11 @@ def resolve_attack_save_rider(
         rider = attack.on_hit_saving_throw
         if rider is None or defender.is_dead or not defender.is_alive:
             return AttackSaveRiderOutcome()
+        eligible = rider.target_filter.allows(defender.template.creature_type, defender.template.creature_tags)
+        if not eligible:
+            return AttackSaveRiderOutcome(
+                save_ability=rider.save_ability, save_dc=rider.dc, target_eligible=False,
+            )
         roll, succeeded = resolve_saving_throw(
             defender,
             rider.save_ability,
@@ -61,6 +67,7 @@ def resolve_attack_save_rider(
             save_ability=rider.save_ability,
             save_dc=rider.dc,
             save_succeeded=succeeded,
+            target_eligible=True,
             applied_effect_ids=applied,
         )
     except ValueError:
