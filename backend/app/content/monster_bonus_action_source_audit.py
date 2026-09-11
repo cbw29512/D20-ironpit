@@ -43,6 +43,11 @@ def parse_bonus_action_names(source_bonus_actions: object) -> list[str]:
     return names
 
 
+def _runtime_bonus_save(template: CombatantTemplate, name: str) -> bool:
+    base = _base_name(name)
+    return any(action.name == base and action.action_cost == "bonus_action" for action in template.saving_throw_actions)
+
+
 def bonus_action_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
     """Fail closed when a printed outcome-changing bonus action lacks runtime semantics."""
     expected = parse_bonus_action_names(row.get("bonusActions", ""))
@@ -50,8 +55,9 @@ def bonus_action_issues(template: CombatantTemplate, row: dict[str, object]) -> 
     if template.source_bonus_action_names != expected:
         issues.append("source-bonus-action-fingerprint-mismatch")
     for name in expected:
-        if _base_name(name) not in _ARENA_NEUTRAL_BONUS_ACTIONS:
-            issues.append(f"uncertified-bonus-action:{_slug(name)}")
+        if _base_name(name) in _ARENA_NEUTRAL_BONUS_ACTIONS or _runtime_bonus_save(template, name):
+            continue
+        issues.append(f"uncertified-bonus-action:{_slug(name)}")
     return issues
 
 
