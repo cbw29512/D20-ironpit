@@ -3,6 +3,7 @@ from app.content.figure_profile_schema import FigureProfile, figure_profile as _
 
 RIDER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Azer Sentinel": _p("humanoid", "azer-sentinel"),
+    "Earth Elemental": _p("brute", "earth-elemental"),
     "Ettin": _p("brute", "ettin"),
     "Fire Giant": _p("brute", "fire-giant"),
     "Hezrou": _p("brute", "hezrou"),
