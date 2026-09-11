@@ -17,6 +17,7 @@ from app.combat.hit_modifiers import expire_source_turn_start_modifiers
 from app.combat.modifier_stack import expire_source_turn_modifiers
 from app.combat.precombat_spells import prepare_defenses
 from app.combat.source_bound_effects import cleanup_disabled_source_effects
+from app.combat.start_turn_auras import resolve_start_turn_save_condition_auras
 from app.combat.state import refresh_start_of_turn
 from app.combat.timed_conditions import expire_start_of_turn_conditions
 from app.domain.encounters import EncounterBattleResult, EncounterCombatant, EncounterSelection
@@ -93,6 +94,10 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                     sequence, round_number, member, "target_turn_start", dice,
                 )
                 events.extend(lifecycle_events)
+                aura_events, sequence = resolve_start_turn_save_condition_auras(
+                    sequence, round_number, member, setup, dice,
+                )
+                events.extend(aura_events)
                 attachment_events, sequence = resolve_attachment_start_turn(
                     sequence, round_number, member, setup, dice,
                 )
