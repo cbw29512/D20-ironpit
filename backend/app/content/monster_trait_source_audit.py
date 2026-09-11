@@ -24,7 +24,7 @@ _ARENA_NEUTRAL_TRAITS = frozenset({
     "Agile", "Amorphous", "Amphibious", "Beast of Burden", "Demonic Restoration", "Earth Glide", "False Appearance", "Flyby",
     "Hellish Restoration", "Hold Breath", "Ice Walk", "Illumination", "Jumper", "Keen Hearing",
     "Keen Hearing and Sight", "Keen Hearing and Smell", "Keen Sight", "Keen Smell", "Limited Amphibiousness",
-    "Mimicry", "Running Leap", "Shark Telepathy", "Spider Climb", "Standing Leap", "Sunlight Sensitivity", "Sunlight Weakness",
+    "Mimicry", "Running Leap", "Shark Telepathy", "Siege Monster", "Spider Climb", "Standing Leap", "Sunlight Sensitivity", "Sunlight Weakness",
     "Training", "Treasure Sense", "Troll Spawn", "Water Breathing", "Web Walker",
 })
 
