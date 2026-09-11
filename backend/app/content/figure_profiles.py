@@ -2,13 +2,13 @@ from __future__ import annotations
 
 from app.content.figure_profile_schema import FigureForm, FigureProfile, figure_profile as _p
 from app.content.figure_profiles_dragons import DRAGON_FIGURE_PROFILES
+from app.content.figure_profiles_new_ready import NEW_READY_FIGURE_PROFILES
 from app.content.figure_profiles_riders import RIDER_FIGURE_PROFILES
 
 MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Allosaurus": _p("theropod", "allosaurus"),
     "Animated Armor": _p("humanoid", "animated-armor"),
     "Animated Flying Sword": _p("weapon", "flying-sword"),
-    "Animated Rug of Smothering": _p("weapon", "animated-rug"),
     "Ankylosaurus": _p("reptile", "ankylosaurus"),
     "Ape": _p("primate", "ape"),
     "Archelon": _p("aquatic-reptile", "archelon"),
@@ -25,7 +25,6 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Blood Hawk": _p("bird", "blood-hawk"),
     "Boar": _p("quadruped", "tusks"),
     "Brown Bear": _p("bear", "bear"),
-    "Bulette": _p("quadruped", "bulette"),
     "Camel": _p("hoofed", "camel"),
     "Cat": _p("quadruped", "cat"),
     "Commoner": _p("humanoid", "commoner"),
@@ -81,7 +80,6 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Hippogriff": _p("hippogriff", "hippogriff"),
     "Hippopotamus": _p("quadruped", "hippopotamus"),
     "Hobgoblin Warrior": _p("humanoid", "hobgoblin"),
-    "Horned Devil": _p("humanoid", "horned-devil"),
     "Hunter Shark": _p("fish", "shark"),
     "Hyena": _p("quadruped", "hyena"),
     "Jackal": _p("quadruped", "canine"),
@@ -97,7 +95,6 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Merrow": _p("humanoid", "merrow"),
     "Minotaur Skeleton": _p("brute", "minotaur-skeleton"),
     "Mule": _p("hoofed", "equine"),
-    "Mummy": _p("humanoid", "mummy"),
     "Noble": _p("humanoid", "noble"),
     "Ogre": _p("brute", "ogre"),
     "Ogre Zombie": _p("brute", "ogre-zombie"),
@@ -106,11 +103,9 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Panther": _p("quadruped", "cat"),
     "Pegasus": _p("hoofed", "pegasus"),
     "Piranha": _p("fish", "piranha"),
-    "Pirate": _p("humanoid", "pirate"),
     "Plesiosaurus": _p("aquatic-reptile", "plesiosaur"),
     "Polar Bear": _p("bear", "bear"),
     "Pony": _p("hoofed", "equine"),
-    "Pseudodragon": _p("reptile", "pseudodragon"),
     "Pteranodon": _p("pterosaur", "pteranodon"),
     "Rat": _p("quadruped", "rodent"),
     "Raven": _p("bird", "corvid"),
@@ -144,14 +139,15 @@ MONSTER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Warrior Infantry": _p("humanoid", "infantry"),
     "Warrior Veteran": _p("humanoid", "veteran"),
     "Weasel": _p("quadruped", "mustelid"),
-    "Wight": _p("humanoid", "wight"),
     "Winter Wolf": _p("quadruped", "canine"),
     "Wolf": _p("quadruped", "canine"),
     "Worg": _p("quadruped", "canine"),
     "Wyvern": _p("reptile", "wyvern"),
     "Xorn": _p("brute", "xorn"),
     "Zombie": _p("humanoid", "zombie"),
-    **DRAGON_FIGURE_PROFILES, **RIDER_FIGURE_PROFILES,
+    **DRAGON_FIGURE_PROFILES,
+    **RIDER_FIGURE_PROFILES,
+    **NEW_READY_FIGURE_PROFILES,
 }
 
 __all__ = ["FigureForm", "FigureProfile", "MONSTER_FIGURE_PROFILES"]
