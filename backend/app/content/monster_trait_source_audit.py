@@ -5,6 +5,7 @@ import re
 from functools import lru_cache
 
 from app.content.monster_catalog import load_monster_rows
+from app.content.monster_regeneration_source import regeneration_trait_issues
 from app.content.monster_trait_aura_audit import aura_trait_issues
 from app.domain.models import CombatantTemplate
 from app.domain.traits import CombatTrait
@@ -24,7 +25,7 @@ _ARENA_NEUTRAL_TRAITS = frozenset({
     "Hellish Restoration", "Hold Breath", "Ice Walk", "Illumination", "Jumper", "Keen Hearing",
     "Keen Hearing and Sight", "Keen Hearing and Smell", "Keen Sight", "Keen Smell", "Limited Amphibiousness",
     "Mimicry", "Running Leap", "Shark Telepathy", "Spider Climb", "Standing Leap", "Sunlight Sensitivity", "Sunlight Weakness",
-    "Training", "Treasure Sense", "Water Breathing", "Web Walker",
+    "Training", "Treasure Sense", "Troll Spawn", "Water Breathing", "Web Walker",
 })
 
 
@@ -90,9 +91,10 @@ def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[st
             issues.append(f"trait-source-missing:{runtime_trait.value}")
     issues.extend(_movement_trait_issues(template, expected))
     issues.extend(_magic_resistance_issues(template, expected))
+    issues.extend(regeneration_trait_issues(template, row))
     aura_issues, aura_certified = aura_trait_issues(template, row, expected)
     issues.extend(aura_issues)
-    certified = set(_MODELED_TRAITS) | set(_DECLARATIVE_ATTACK_TRAITS) | set(_ARENA_NEUTRAL_TRAITS) | {"Incorporeal Movement", "Magic Resistance"} | aura_certified
+    certified = set(_MODELED_TRAITS) | set(_DECLARATIVE_ATTACK_TRAITS) | set(_ARENA_NEUTRAL_TRAITS) | {"Incorporeal Movement", "Magic Resistance", "Regeneration"} | aura_certified
     for name in expected:
         if name not in certified:
             slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
