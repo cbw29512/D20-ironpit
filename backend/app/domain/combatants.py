@@ -11,6 +11,7 @@ from app.domain.forced_movement_actions import ForcedMovementAction
 from app.domain.movement import MovementModes
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.reactions import ParryReaction, RedirectAttackReaction
+from app.domain.regeneration import RegenerationRule
 from app.domain.size import CreatureSize
 from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellSaveAction
 from app.domain.swallow import SwallowAction
@@ -73,6 +74,7 @@ class CombatantTemplate(BaseModel):
     end_turn_damage_auras: list[EndTurnDamageAura] = Field(default_factory=list)
     start_turn_save_condition_auras: list[StartTurnSaveConditionAura] = Field(default_factory=list)
     roll_advantage_auras: list[RollAdvantageAura] = Field(default_factory=list)
+    regeneration: RegenerationRule | None = None
     spell_save_actions: list[SpellSaveAction] = Field(default_factory=list)
     spell_attack_actions: list[SpellAttackAction] = Field(default_factory=list)
     defensive_spell_actions: list[DefensiveSpellAction] = Field(default_factory=list)
