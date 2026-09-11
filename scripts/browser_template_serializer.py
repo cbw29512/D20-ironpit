@@ -80,6 +80,7 @@ def _start_turn_aura_row(aura: Any) -> dict[str, Any]:
         "save_ability": aura.save_ability, "dc": aura.dc, "condition": aura.condition,
         "expiry_timing": aura.expiry_timing, "magical_effect": aura.magical_effect,
         "disabled_while_incapacitated": aura.disabled_while_incapacitated,
+        "success_grants_source_immunity": aura.success_grants_source_immunity,
     }
 
 
