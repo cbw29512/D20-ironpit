@@ -4,6 +4,7 @@ from typing import Annotated, Literal
 
 from pydantic import BaseModel, Field
 
+from app.domain.attachments import AttachmentEffectDefinition
 from app.domain.combatants import DamageType
 from app.domain.hit_modifiers import CombatModifierEffect, HitModifierEffect
 from app.domain.save_effects import (
@@ -42,11 +43,13 @@ AttackEffectDefinition = Annotated[
     | GrappleEffectDefinition
     | ConditionEffectDefinition
     | CombatModifierEffect
-    | MaxHpReductionEffectDefinition,
+    | MaxHpReductionEffectDefinition
+    | AttachmentEffectDefinition,
     Field(discriminator="kind"),
 ]
 
 __all__ = [
+    "AttachmentEffectDefinition",
     "AttackEffectDefinition",
     "CombatModifierEffect",
     "ConditionEffectDefinition",
