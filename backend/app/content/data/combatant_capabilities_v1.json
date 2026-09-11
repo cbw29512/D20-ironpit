@@ -6,6 +6,7 @@
     "archetype": "Goblin Warrior",
     "challenge_rating": "1/4",
     "kind": "monster",
+    "creature_tags": [],
     "size": "small",
     "ability_scores": {
       "strength": 8,
@@ -178,6 +179,7 @@
     "archetype": "Goblin Minion",
     "challenge_rating": "1/8",
     "kind": "monster",
+    "creature_tags": [],
     "size": "small",
     "ability_scores": {
       "strength": 8,
@@ -321,6 +323,7 @@
     "archetype": "Hobgoblin Warrior",
     "challenge_rating": "1/2",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 13,
@@ -479,6 +482,7 @@
     "archetype": "Kobold Warrior",
     "challenge_rating": "1/8",
     "kind": "monster",
+    "creature_tags": [],
     "size": "small",
     "ability_scores": {
       "strength": 7,
@@ -625,6 +629,7 @@
     "archetype": "Goblin Boss",
     "challenge_rating": "1",
     "kind": "monster",
+    "creature_tags": [],
     "size": "small",
     "ability_scores": {
       "strength": 10,
@@ -826,6 +831,7 @@
     "archetype": "Bandit",
     "challenge_rating": "1/8",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 11,
@@ -968,6 +974,7 @@
     "archetype": "Commoner",
     "challenge_rating": "0",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 10,
@@ -1081,6 +1088,7 @@
     "archetype": "Guard",
     "challenge_rating": "1/8",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 13,
@@ -1222,6 +1230,7 @@
     "archetype": "Giant Rat",
     "challenge_rating": "1/8",
     "kind": "monster",
+    "creature_tags": [],
     "size": "small",
     "ability_scores": {
       "strength": 7,
@@ -1337,6 +1346,7 @@
     "archetype": "Giant Weasel",
     "challenge_rating": "1/8",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 11,
@@ -1448,6 +1458,7 @@
     "archetype": "source-certified blood hunter",
     "challenge_rating": "1/8",
     "kind": "monster",
+    "creature_tags": [],
     "size": "small",
     "ability_scores": {
       "strength": 6,
@@ -1576,6 +1587,7 @@
     "archetype": "Axe Beak",
     "challenge_rating": "1/4",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 14,
@@ -1687,6 +1699,7 @@
     "archetype": "Giant Lizard",
     "challenge_rating": "1/4",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 15,
@@ -1800,6 +1813,8 @@
     "archetype": "Wolf",
     "challenge_rating": "1/4",
     "kind": "monster",
+    "creature_type": "Beast",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 14,
@@ -1920,6 +1935,8 @@
     "archetype": "Dire Wolf",
     "challenge_rating": "1",
     "kind": "monster",
+    "creature_type": "Beast",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 17,
@@ -2040,6 +2057,7 @@
     "archetype": "Black Bear",
     "challenge_rating": "1/2",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 15,
@@ -2172,6 +2190,7 @@
     "archetype": "Brown Bear",
     "challenge_rating": "1",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 17,
@@ -2336,6 +2355,7 @@
     "archetype": "Baboon",
     "challenge_rating": "0",
     "kind": "monster",
+    "creature_tags": [],
     "size": "small",
     "ability_scores": {
       "strength": 8,
@@ -2451,6 +2471,7 @@
     "archetype": "Camel",
     "challenge_rating": "1/8",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 15,
@@ -2562,6 +2583,7 @@
     "archetype": "Deer",
     "challenge_rating": "0",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 11,
@@ -2675,6 +2697,7 @@
     "archetype": "Draft Horse",
     "challenge_rating": "1/4",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 18,
@@ -2786,6 +2809,7 @@
     "archetype": "Giant Badger",
     "challenge_rating": "1/4",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 13,
@@ -2899,6 +2923,7 @@
     "archetype": "Jackal",
     "challenge_rating": "0",
     "kind": "monster",
+    "creature_tags": [],
     "size": "small",
     "ability_scores": {
       "strength": 8,
@@ -3010,6 +3035,7 @@
     "archetype": "Boar",
     "challenge_rating": "1/4",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 13,
@@ -3137,6 +3163,7 @@
     "archetype": "Elk",
     "challenge_rating": "1/4",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 16,
@@ -3261,6 +3288,7 @@
     "archetype": "Giant Boar",
     "challenge_rating": "2",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 17,
@@ -3388,6 +3416,7 @@
     "archetype": "Minotaur Skeleton",
     "challenge_rating": "2",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 18,
@@ -3546,6 +3575,7 @@
     "archetype": "Triceratops",
     "challenge_rating": "5",
     "kind": "monster",
+    "creature_tags": [],
     "size": "huge",
     "ability_scores": {
       "strength": 22,
@@ -3691,6 +3721,7 @@
     "archetype": "Warhorse Skeleton",
     "challenge_rating": "1/2",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 18,
@@ -3816,6 +3847,7 @@
     "archetype": "Allosaurus",
     "challenge_rating": "2",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 19,
@@ -3964,6 +3996,7 @@
     "archetype": "source-certified charging beast",
     "challenge_rating": "0",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 11,
@@ -4082,6 +4115,8 @@
     "archetype": "source-certified aquatic skirmisher",
     "challenge_rating": "1/8",
     "kind": "monster",
+    "creature_type": "elemental",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 10,
@@ -4265,6 +4300,7 @@
     "archetype": "Hippogriff",
     "challenge_rating": "1",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 17,
@@ -4399,6 +4435,7 @@
     "archetype": "Awakened Shrub",
     "challenge_rating": "0",
     "kind": "monster",
+    "creature_tags": [],
     "size": "small",
     "ability_scores": {
       "strength": 3,
@@ -4510,6 +4547,7 @@
     "archetype": "Badger",
     "challenge_rating": "0",
     "kind": "monster",
+    "creature_tags": [],
     "size": "tiny",
     "ability_scores": {
       "strength": 10,
@@ -4619,6 +4657,7 @@
     "archetype": "Bat",
     "challenge_rating": "0",
     "kind": "monster",
+    "creature_tags": [],
     "size": "tiny",
     "ability_scores": {
       "strength": 2,
@@ -4726,6 +4765,7 @@
     "archetype": "Cat",
     "challenge_rating": "0",
     "kind": "monster",
+    "creature_tags": [],
     "size": "tiny",
     "ability_scores": {
       "strength": 3,
@@ -4835,6 +4875,7 @@
     "archetype": "Crab",
     "challenge_rating": "0",
     "kind": "monster",
+    "creature_tags": [],
     "size": "tiny",
     "ability_scores": {
       "strength": 6,
@@ -4944,6 +4985,7 @@
     "archetype": "Frog",
     "challenge_rating": "0",
     "kind": "monster",
+    "creature_tags": [],
     "size": "tiny",
     "ability_scores": {
       "strength": 1,
@@ -5054,6 +5096,7 @@
     "archetype": "Hawk",
     "challenge_rating": "0",
     "kind": "monster",
+    "creature_tags": [],
     "size": "tiny",
     "ability_scores": {
       "strength": 5,
@@ -5161,6 +5204,7 @@
     "archetype": "Lizard",
     "challenge_rating": "0",
     "kind": "monster",
+    "creature_tags": [],
     "size": "tiny",
     "ability_scores": {
       "strength": 2,
@@ -5270,6 +5314,7 @@
     "archetype": "Owl",
     "challenge_rating": "0",
     "kind": "monster",
+    "creature_tags": [],
     "size": "tiny",
     "ability_scores": {
       "strength": 3,
@@ -5379,6 +5424,7 @@
     "archetype": "Rat",
     "challenge_rating": "0",
     "kind": "monster",
+    "creature_tags": [],
     "size": "tiny",
     "ability_scores": {
       "strength": 2,
@@ -5488,6 +5534,7 @@
     "archetype": "Raven",
     "challenge_rating": "0",
     "kind": "monster",
+    "creature_tags": [],
     "size": "tiny",
     "ability_scores": {
       "strength": 2,
@@ -5597,6 +5644,7 @@
     "archetype": "Weasel",
     "challenge_rating": "0",
     "kind": "monster",
+    "creature_tags": [],
     "size": "tiny",
     "ability_scores": {
       "strength": 3,
@@ -5704,6 +5752,7 @@
     "archetype": "Eagle",
     "challenge_rating": "0",
     "kind": "monster",
+    "creature_tags": [],
     "size": "small",
     "ability_scores": {
       "strength": 6,
@@ -5815,6 +5864,7 @@
     "archetype": "Panther",
     "challenge_rating": "1/4",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 14,
@@ -5928,6 +5978,7 @@
     "archetype": "Plesiosaurus",
     "challenge_rating": "2",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 18,
@@ -6041,6 +6092,7 @@
     "archetype": "Polar Bear",
     "challenge_rating": "2",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 20,
@@ -6175,6 +6227,7 @@
     "archetype": "Pony",
     "challenge_rating": "1/8",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 15,
@@ -6286,6 +6339,7 @@
     "archetype": "Pteranodon",
     "challenge_rating": "1/4",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 12,
@@ -6399,6 +6453,7 @@
     "archetype": "Riding Horse",
     "challenge_rating": "1/4",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 16,
@@ -6510,6 +6565,7 @@
     "archetype": "Tiger",
     "challenge_rating": "1",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 17,
@@ -6628,6 +6684,7 @@
     "archetype": "Vulture",
     "challenge_rating": "0",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 7,
@@ -6743,6 +6800,7 @@
     "archetype": "Giant Fire Beetle",
     "challenge_rating": "0",
     "kind": "monster",
+    "creature_tags": [],
     "size": "small",
     "ability_scores": {
       "strength": 8,
@@ -6854,6 +6912,7 @@
     "archetype": "Giant Goat",
     "challenge_rating": "1/2",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 17,
@@ -6978,6 +7037,7 @@
     "archetype": "Giant Owl",
     "challenge_rating": "1/4",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 13,
@@ -7095,6 +7155,7 @@
     "archetype": "Hyena",
     "challenge_rating": "0",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 11,
@@ -7210,6 +7271,7 @@
     "archetype": "Giant Bat",
     "challenge_rating": "1/4",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 15,
@@ -7321,6 +7383,7 @@
     "archetype": "Mastiff",
     "challenge_rating": "1/8",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 13,
@@ -7437,6 +7500,7 @@
     "archetype": "Mule",
     "challenge_rating": "1/8",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 14,
@@ -7550,6 +7614,7 @@
     "archetype": "Rhinoceros",
     "challenge_rating": "2",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 21,
@@ -7674,6 +7739,7 @@
     "archetype": "Warhorse",
     "challenge_rating": "1/2",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 18,
@@ -7798,6 +7864,7 @@
     "archetype": "Ogre",
     "challenge_rating": "2",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 19,
@@ -7965,6 +8032,7 @@
     "archetype": "Owlbear",
     "challenge_rating": "3",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 20,
@@ -8097,6 +8165,7 @@
     "archetype": "Saber-Toothed Tiger",
     "challenge_rating": "2",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 18,
@@ -8233,6 +8302,7 @@
     "archetype": "Scout",
     "challenge_rating": "1/2",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 11,
@@ -8396,6 +8466,7 @@
     "archetype": "Warrior Infantry",
     "challenge_rating": "1/8",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 13,
@@ -8540,6 +8611,7 @@
     "archetype": "Crocodile",
     "challenge_rating": "1/2",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 15,
@@ -8664,6 +8736,7 @@
     "archetype": "Giant Crab",
     "challenge_rating": "1/8",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 13,
@@ -8788,6 +8861,7 @@
     "archetype": "Constrictor Snake",
     "challenge_rating": "1/4",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 15,
@@ -8931,6 +9005,7 @@
     "archetype": "source-certified grapple monster",
     "challenge_rating": "3",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 16,
@@ -9121,6 +9196,7 @@
     "archetype": "source-certified grapple monster",
     "challenge_rating": "2",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 14,
@@ -9292,6 +9368,7 @@
     "archetype": "source-certified grapple monster",
     "challenge_rating": "2",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 18,
@@ -9436,6 +9513,7 @@
     "archetype": "Giant Centipede",
     "challenge_rating": "1/4",
     "kind": "monster",
+    "creature_tags": [],
     "size": "small",
     "ability_scores": {
       "strength": 5,
@@ -9559,6 +9637,7 @@
     "archetype": "Giant Vulture",
     "challenge_rating": "1",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 15,
@@ -9687,6 +9766,7 @@
     "archetype": "Wyvern",
     "challenge_rating": "6",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 19,
@@ -9869,6 +9949,7 @@
     "archetype": "Giant Venomous Snake",
     "challenge_rating": "1/4",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 10,
@@ -9997,6 +10078,7 @@
     "archetype": "Giant Wasp",
     "challenge_rating": "1/2",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 10,
@@ -10126,6 +10208,7 @@
     "archetype": "Giant Wolf Spider",
     "challenge_rating": "1/4",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 12,
@@ -10257,6 +10340,7 @@
     "archetype": "Archelon",
     "challenge_rating": "4",
     "kind": "monster",
+    "creature_tags": [],
     "size": "huge",
     "ability_scores": {
       "strength": 18,
@@ -10391,6 +10475,7 @@
     "archetype": "Ankylosaurus",
     "challenge_rating": "3",
     "kind": "monster",
+    "creature_tags": [],
     "size": "huge",
     "ability_scores": {
       "strength": 19,
@@ -10528,6 +10613,7 @@
     "archetype": "Giant Eagle",
     "challenge_rating": "1",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 16,
@@ -10676,6 +10762,7 @@
     "archetype": "Giant Elk",
     "challenge_rating": "2",
     "kind": "monster",
+    "creature_tags": [],
     "size": "huge",
     "ability_scores": {
       "strength": 19,
@@ -10816,6 +10903,7 @@
     "archetype": "Giant Crocodile",
     "challenge_rating": "5",
     "kind": "monster",
+    "creature_tags": [],
     "size": "huge",
     "ability_scores": {
       "strength": 21,
@@ -10992,6 +11080,8 @@
     "archetype": "Giant Constrictor Snake",
     "challenge_rating": "2",
     "kind": "monster",
+    "creature_type": "Beast",
+    "creature_tags": [],
     "size": "huge",
     "ability_scores": {
       "strength": 19,
@@ -11157,6 +11247,7 @@
     "archetype": "Tyrannosaurus Rex",
     "challenge_rating": "8",
     "kind": "monster",
+    "creature_tags": [],
     "size": "huge",
     "ability_scores": {
       "strength": 25,
@@ -11331,6 +11422,7 @@
     "archetype": "source-certified monster",
     "challenge_rating": "1",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 14,
@@ -11474,6 +11566,7 @@
     "archetype": "source-certified monster",
     "challenge_rating": "1/4",
     "kind": "monster",
+    "creature_tags": [],
     "size": "small",
     "ability_scores": {
       "strength": 12,
@@ -11596,6 +11689,7 @@
     "archetype": "source-certified monster",
     "challenge_rating": "2",
     "kind": "monster",
+    "creature_tags": [],
     "size": "huge",
     "ability_scores": {
       "strength": 19,
@@ -11712,6 +11806,7 @@
     "archetype": "source-certified monster",
     "challenge_rating": "1/8",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 11,
@@ -11836,6 +11931,7 @@
     "archetype": "source-certified monster",
     "challenge_rating": "1/8",
     "kind": "monster",
+    "creature_tags": [],
     "size": "tiny",
     "ability_scores": {
       "strength": 4,
@@ -11958,6 +12054,7 @@
     "archetype": "source-certified monster",
     "challenge_rating": "2",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 15,
@@ -12098,6 +12195,7 @@
     "archetype": "source-certified monster",
     "challenge_rating": "1/4",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 16,
@@ -12222,6 +12320,7 @@
     "archetype": "source-certified monster",
     "challenge_rating": "4",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 18,
@@ -12414,6 +12513,7 @@
     "archetype": "source-certified monster",
     "challenge_rating": "4",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 21,
@@ -12548,6 +12648,7 @@
     "archetype": "source-certified monster",
     "challenge_rating": "3",
     "kind": "monster",
+    "creature_tags": [],
     "size": "huge",
     "ability_scores": {
       "strength": 19,
@@ -12661,6 +12762,7 @@
     "archetype": "source-certified monster",
     "challenge_rating": "0",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 10,
@@ -12783,6 +12885,7 @@
     "archetype": "source-certified monster",
     "challenge_rating": "3",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 17,
@@ -12954,6 +13057,7 @@
     "archetype": "source-certified monster",
     "challenge_rating": "2",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 19,
@@ -13074,6 +13178,7 @@
     "archetype": "source-certified monster",
     "challenge_rating": "2",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 18,
@@ -13198,6 +13303,7 @@
     "archetype": "source-certified monster",
     "challenge_rating": "0",
     "kind": "monster",
+    "creature_tags": [],
     "size": "tiny",
     "ability_scores": {
       "strength": 2,
@@ -13318,6 +13424,7 @@
     "archetype": "source-certified monster",
     "challenge_rating": "1/4",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 10,
@@ -13465,6 +13572,7 @@
     "archetype": "source-certified monster",
     "challenge_rating": "0",
     "kind": "monster",
+    "creature_tags": [],
     "size": "tiny",
     "ability_scores": {
       "strength": 2,
@@ -13588,6 +13696,7 @@
     "archetype": "source-certified monster",
     "challenge_rating": "1/2",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 15,
@@ -13732,6 +13841,7 @@
     "archetype": "source-certified monster",
     "challenge_rating": "1/8",
     "kind": "monster",
+    "creature_tags": [],
     "size": "tiny",
     "ability_scores": {
       "strength": 2,
@@ -13856,6 +13966,7 @@
     "archetype": "source-certified monster",
     "challenge_rating": "1/4",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 3,
@@ -13993,6 +14104,7 @@
     "archetype": "source-certified monster",
     "challenge_rating": "1/4",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 13,
@@ -14113,6 +14225,7 @@
     "archetype": "source-certified monster",
     "challenge_rating": "5",
     "kind": "monster",
+    "creature_tags": [],
     "size": "huge",
     "ability_scores": {
       "strength": 23,
@@ -14251,6 +14364,7 @@
     "archetype": "source-certified monster",
     "challenge_rating": "2",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 18,
@@ -14368,6 +14482,7 @@
     "archetype": "source-certified monster",
     "challenge_rating": "0",
     "kind": "monster",
+    "creature_tags": [],
     "size": "tiny",
     "ability_scores": {
       "strength": 2,
@@ -14481,6 +14596,7 @@
     "archetype": "source-certified monster",
     "challenge_rating": "1/2",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 14,
@@ -14597,6 +14713,7 @@
     "archetype": "source-certified monster",
     "challenge_rating": "1",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 13,
@@ -14743,6 +14860,7 @@
     "archetype": "source-certified pack predator",
     "challenge_rating": "1/2",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 16,
@@ -14864,6 +14982,7 @@
     "archetype": "source-certified swarm candidate",
     "challenge_rating": "1/4",
     "kind": "monster",
+    "creature_tags": [],
     "size": "large",
     "ability_scores": {
       "strength": 5,
@@ -15005,6 +15124,7 @@
     "archetype": "source-certified swarm candidate",
     "challenge_rating": "1/4",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 9,
@@ -15146,6 +15266,7 @@
     "archetype": "source-certified swarm candidate",
     "challenge_rating": "3",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 14,
@@ -15297,6 +15418,7 @@
     "archetype": "source-certified Parry monster",
     "challenge_rating": "2",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 15,
@@ -15466,6 +15588,7 @@
     "archetype": "source-certified Parry monster",
     "challenge_rating": "3",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 16,
@@ -15663,6 +15786,7 @@
     "archetype": "source-certified Parry monster",
     "challenge_rating": "1/8",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 11,
@@ -15779,6 +15903,7 @@
     "archetype": "source-certified Parry monster",
     "challenge_rating": "3",
     "kind": "monster",
+    "creature_tags": [],
     "size": "medium",
     "ability_scores": {
       "strength": 16,
