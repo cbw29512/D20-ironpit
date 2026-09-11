@@ -8,6 +8,7 @@ from pathlib import Path
 from app.content.capability_compiler import compile_combatant
 from app.content.monster_aura_source import complete_monster_end_turn_damage_auras
 from app.content.monster_creature_types import complete_monster_creature_types
+from app.content.monster_trait_source_audit import complete_monster_trait_fingerprints
 from app.domain.capabilities import CombatantDefinition
 from app.domain.models import CombatantTemplate
 
@@ -86,8 +87,9 @@ def get_capability_definition(combatant_id: str) -> CombatantDefinition:
 
 
 def _complete_monster(template: CombatantTemplate) -> CombatantTemplate:
-    typed = complete_monster_creature_types([template])
-    return complete_monster_end_turn_damage_auras(typed)[0]
+    completed = complete_monster_creature_types([template])
+    completed = complete_monster_end_turn_damage_auras(completed)
+    return complete_monster_trait_fingerprints(completed)[0]
 
 
 def build_combatant_from_capabilities(combatant_id: str) -> CombatantTemplate:
@@ -101,7 +103,8 @@ def build_monster_templates_from_capabilities() -> list[CombatantTemplate]:
         if not monsters:
             raise ValueError("Combat capability registry contains no monsters.")
         monsters = complete_monster_creature_types(monsters)
-        return complete_monster_end_turn_damage_auras(monsters)
+        monsters = complete_monster_end_turn_damage_auras(monsters)
+        return complete_monster_trait_fingerprints(monsters)
     except Exception as exc:
         logger.exception("Failed to compile monster roster from combat capability registry.")
         raise RuntimeError("Declarative monster roster could not be created.") from exc
