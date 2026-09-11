@@ -64,4 +64,5 @@
   }
 
   window.IRON_PIT_BROWSER_ATTACK_SAVE_RIDERS = { eligible, install, resolve };
+  install();
 })();
