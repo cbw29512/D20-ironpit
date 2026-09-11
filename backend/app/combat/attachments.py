@@ -66,7 +66,7 @@ def resolve_detach_action(
             if relation is None:
                 continue
             target = next((member for member in all_members if member.combatant_id == relation.target_id), None)
-            if target is None:
+            if target is None or target.side != actor.side:
                 continue
             target_detach = actor.combatant_id == target.combatant_id and relation.detachable_by_target_action
             adjacent_detach = (
