@@ -117,31 +117,18 @@ class SavingThrowAction(BaseModel):
     restrains_while_grappled: bool = False
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
+    magical_effect: bool = False
     animation: str = "save-effect"
-
-    @model_validator(mode="after")
-    def validate_push(self) -> "SavingThrowAction":
-        if self.push_target_max_size is not None and not self.push_target_away_ft:
-            raise ValueError("Save-action push size limit requires positive push distance.")
-        return self
 
 
 class AttackActionSlot(BaseModel):
-    """One ordered weapon/save/forced-movement step inside an Attack action or Multiattack."""
-    attack_ids: list[str] = Field(default_factory=list, max_length=16)
-    save_action_ids: list[str] = Field(default_factory=list, max_length=16)
-    forced_movement_action_ids: list[str] = Field(default_factory=list, max_length=16)
-
-    @model_validator(mode="after")
-    def require_choice(self) -> "AttackActionSlot":
-        if not self.attack_ids and not self.save_action_ids and not self.forced_movement_action_ids:
-            raise ValueError("Attack-action slot must contain a weapon, save, or forced-movement action.")
-        return self
+    attack_ids: list[str] = Field(default_factory=list)
+    save_action_ids: list[str] = Field(default_factory=list)
+    forced_movement_action_ids: list[str] = Field(default_factory=list)
 
 
 class AttackActionDefinition(BaseModel):
-    """One or more ordered strikes/effects; only real Attack actions can trigger Light/Nick."""
     id: str
     name: str
-    slots: list[AttackActionSlot] = Field(min_length=1, max_length=8)
     is_attack_action: bool = False
+    slots: list[AttackActionSlot] = Field(default_factory=list)
