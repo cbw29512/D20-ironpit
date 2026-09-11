@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 186,
-    "blocked": 144
+    "public_ready": 188,
+    "blocked": 142
   },
   "monsters": [
     {
@@ -3205,11 +3205,9 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "parry-source-mismatch",
         "save-or-complex-action",
         "source-save-action-count-mismatch",
         "trait",
-        "uncertified-reaction:parry",
         "uncertified-trait:magic-rope"
       ]
     },
@@ -3753,22 +3751,17 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "multiattack",
+        "save-or-complex-action",
         "saving-throw-action"
       ],
-      "unsupported_mechanics": [
-        "condition-or-control",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "condition-or-control",
-        "save-or-complex-action",
-        "source-save-action-count-mismatch"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-giant-crab",
@@ -4395,24 +4388,18 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "multiattack",
         "reaction",
+        "save-or-complex-action",
         "saving-throw-action"
       ],
-      "unsupported_mechanics": [
-        "condition-or-control",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "condition-or-control",
-        "parry-source-mismatch",
-        "save-or-complex-action",
-        "uncertified-reaction:parry"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-gnoll-warrior",
@@ -5950,12 +5937,10 @@
         "bonus-action",
         "condition-or-control",
         "limited-use",
-        "parry-source-mismatch",
         "save-or-complex-action",
         "trait",
         "uncertified-bonus-action:teleport",
         "uncertified-limited-use:bonusactions-teleport-recharge-5-6",
-        "uncertified-reaction:parry",
         "uncertified-trait:reactive"
       ]
     },
