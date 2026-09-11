@@ -17,25 +17,35 @@ def _rows() -> dict[str, dict[str, object]]:
     return {str(row["name"]): row for row in load_monster_rows()}
 
 
-def source_regeneration(name: str) -> RegenerationRule | None:
-    row = _rows().get(name)
-    if row is None:
-        raise ValueError(f"No SRD source row for {name!r}.")
-    text = str(row.get("traits", ""))
+def _parse_regeneration(text: str) -> RegenerationRule | None:
     match = _REGEN.search(text)
     if match is None:
         return None
     suppression = _SUPPRESS.search(text)
-    types: list[DamageType] = []
-    if suppression:
-        for raw in suppression.groups():
-            if raw:
-                types.append(DamageType(raw.lower()))
+    types = [DamageType(raw.lower()) for raw in suppression.groups() if raw] if suppression else []
     return RegenerationRule(
         hit_points=int(match.group(1)),
         suppressed_by_damage_types=types,
         dies_at_start_turn_if_zero_and_suppressed=bool(_DEFERRED_DEATH.search(text)),
     )
+
+
+def source_regeneration(name: str) -> RegenerationRule | None:
+    row = _rows().get(name)
+    if row is None:
+        raise ValueError(f"No SRD source row for {name!r}.")
+    return _parse_regeneration(str(row.get("traits", "")))
+
+
+def regeneration_trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
+    expected = _parse_regeneration(str(row.get("traits", "")))
+    if expected == template.regeneration:
+        return []
+    if expected is not None and template.regeneration is None:
+        return ["trait-runtime-missing:regeneration"]
+    if expected is None and template.regeneration is not None:
+        return ["trait-source-missing:regeneration"]
+    return ["trait-runtime-mismatch:regeneration"]
 
 
 def complete_monster_regeneration(templates: list[CombatantTemplate]) -> list[CombatantTemplate]:
