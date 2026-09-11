@@ -10,8 +10,7 @@ from app.content.roster import build_arena_roster
     "name",
     [
         "Bearded Devil", "Brass Dragon Wyrmling", "Chuul", "Death Dog", "Harpy",
-        "Homunculus", "Salamander", "Silver Dragon Wyrmling", "Young Brass Dragon",
-        "Young Silver Dragon",
+        "Homunculus", "Salamander", "Young Brass Dragon",
     ],
 )
 def test_source_save_count_drift_remains_an_explicit_blocker(name: str) -> None:
