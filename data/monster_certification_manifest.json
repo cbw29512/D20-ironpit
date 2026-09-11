@@ -6818,8 +6818,7 @@
         "save-or-complex-action",
         "trait",
         "uncertified-bonus-action:divine-aid",
-        "uncertified-limited-use:bonusactions-divine-aid-2-day",
-        "uncertified-trait:divine-awareness"
+        "uncertified-limited-use:bonusactions-divine-aid-2-day"
       ]
     },
     {
@@ -7844,8 +7843,7 @@
         "trait",
         "uncertified-bonus-action:divine-aid",
         "uncertified-legendary-action-economy",
-        "uncertified-limited-use:bonusactions-divine-aid-3-day",
-        "uncertified-trait:divine-awareness"
+        "uncertified-limited-use:bonusactions-divine-aid-3-day"
       ]
     },
     {
@@ -7919,8 +7917,7 @@
         "spellcasting",
         "trait",
         "uncertified-legendary-action-economy",
-        "uncertified-monster-spellcasting",
-        "uncertified-trait:inscrutable"
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -7971,8 +7968,7 @@
         "trait",
         "uncertified-legendary-action-economy",
         "uncertified-limited-use:actions-roar-3-day",
-        "uncertified-monster-spellcasting",
-        "uncertified-trait:inscrutable"
+        "uncertified-monster-spellcasting"
       ]
     },
     {
