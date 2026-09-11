@@ -17,6 +17,15 @@ _HERO_ONLY_PROGRESSION_FIELDS = {
 }
 
 
+def _legacy_save_shape(row: dict[str, object]) -> dict[str, object]:
+    for action in row.get("save_actions", []):
+        if action.get("action_cost") == "action":
+            action.pop("action_cost")
+        if action.get("required_target_condition") is None:
+            action.pop("required_target_condition", None)
+    return row
+
+
 def render_registry() -> str:
     monsters = build_legacy_monster_templates()
     definitions = [definition_from_template(monster) for monster in monsters]
@@ -24,14 +33,14 @@ def render_registry() -> str:
     if len(ids) != len(set(ids)):
         raise RuntimeError("Legacy runtime monster ids must be unique before capability export.")
     payload = [
-        definition.model_dump(
+        _legacy_save_shape(definition.model_dump(
             mode="json",
             exclude_none=True,
             exclude={
                 "progression_features": _HERO_ONLY_PROGRESSION_FIELDS,
                 "movement_modes": {"pass_through_creatures_as_difficult_terrain"},
             },
-        )
+        ))
         for definition in definitions
     ]
     return json.dumps(payload, indent=2, sort_keys=False) + "\n"
