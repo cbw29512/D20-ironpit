@@ -115,6 +115,7 @@
       }
     ],
     "primary_attack_id": "srd-stirge-proboscis",
+    "unarmed_opportunity_attack": {"attack_bonus": -1, "damage": 0},
     "saving_throw_bonuses": {"strength": -3, "dexterity": 3, "constitution": 0, "intelligence": -4, "wisdom": -1, "charisma": -2},
     "visual": {"armor": "natural", "main_hand": "proboscis", "off_hand": null, "body_style": "stirge"},
     "source": "SRD 5.2.1 p. 329"
