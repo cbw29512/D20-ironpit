@@ -10,6 +10,7 @@ from app.content.monster_ability_scores import complete_monster_ability_scores
 from app.content.monster_aura_source import complete_monster_end_turn_damage_auras
 from app.content.monster_bonus_action_source_audit import complete_monster_bonus_action_fingerprints
 from app.content.monster_creature_types import complete_monster_creature_types
+from app.content.monster_legendary_resistance_source import complete_monster_legendary_resistance
 from app.content.monster_legendary_source_audit import complete_monster_legendary_fingerprints
 from app.content.monster_limited_use_source_audit import complete_monster_limited_use_fingerprints
 from app.content.monster_reaction_source_audit import complete_monster_reaction_fingerprints
@@ -76,8 +77,7 @@ def load_capability_definitions() -> dict[str, CombatantDefinition]:
         merged: dict[str, CombatantDefinition] = {}
         for path in paths:
             merged = merge_capability_definitions(merged, _load_registry(path))
-        candidates = source_candidate_definitions(set(merged))
-        return merge_capability_definitions(merged, candidates)
+        return merge_capability_definitions(merged, source_candidate_definitions(set(merged)))
     except Exception as exc:
         logger.exception("Failed to load declarative combat capability registries.")
         raise RuntimeError("Combat capability registry could not be loaded.") from exc
@@ -96,6 +96,7 @@ def _complete_monster_batch(monsters: list[CombatantTemplate]) -> list[Combatant
     monsters = complete_monster_saving_throws(monsters)
     monsters = complete_monster_end_turn_damage_auras(monsters)
     monsters = complete_monster_regeneration(monsters)
+    monsters = complete_monster_legendary_resistance(monsters)
     monsters = complete_monster_trait_fingerprints(monsters)
     monsters = complete_monster_reaction_fingerprints(monsters)
     monsters = complete_monster_bonus_action_fingerprints(monsters)
