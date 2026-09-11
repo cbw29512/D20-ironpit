@@ -18,7 +18,7 @@
       turn_terminated: false, turn_termination_reason: null,
       movement_remaining_ft: 0, resources: { ...(template.resources || {}) }, heroic_inspiration: false,
       active_effect_ids: [], active_buff_effect_ids: [], opening_buff_spell_id: null,
-      grapple_sources: [], swallowed: null, timed_effects: [], active_modifiers: [], concentration: null,
+      grapple_sources: [], swallowed: null, attachment: null, timed_effects: [], active_modifiers: [], concentration: null,
       feature_last_turn_keys: {}, spell_slot_expended_turn_key: null,
       temporary_damage_resistances: [], rage_expires_round: null, rage_max_round: null,
     };
@@ -106,25 +106,16 @@
   }
 
   function hasActiveAlly(member, setup) {
-    try {
-      const allies = member.side === "heroes" ? setup.heroes : setup.monsters;
-      return allies.some((ally) => ally.combatant_id !== member.combatant_id && active(ally));
-    } catch (error) { console.error("Failed browser active ally lookup", { member: member.combatant_id, error }); throw error; }
+    const allies = member.side === "heroes" ? setup.heroes : setup.monsters;
+    return allies.some((ally) => ally.combatant_id !== member.combatant_id && active(ally));
   }
   function hasAdjacentActiveAlly(member, target, setup) {
-    try {
-      if (!target) throw new Error("Pack Tactics requires a target.");
-      const allies = member.side === "heroes" ? setup.heroes : setup.monsters;
-      return allies.some((ally) => ally.combatant_id !== member.combatant_id && active(ally) && distance(ally, target) <= 5);
-    } catch (error) { console.error("Failed browser target-adjacent ally lookup", { member: member.combatant_id, error }); throw error; }
+    const allies = member.side === "heroes" ? setup.heroes : setup.monsters;
+    return allies.some((ally) => ally.combatant_id !== member.combatant_id && active(ally) && distance(ally, target) <= 5);
   }
-  function packTactics(member, target, setup) {
-    try { return member.state.template.traits?.includes("pack-tactics") && hasAdjacentActiveAlly(member, target, setup); }
-    catch (error) { console.error("Failed browser Pack Tactics evaluation", { member: member.combatant_id, error }); throw error; }
-  }
+  function packTactics(member, target, setup) { return member.state.template.traits?.includes("pack-tactics") && hasAdjacentActiveAlly(member, target, setup); }
   function moveToward(member, target, desired) {
-    const before = distance(member, target);
-    const moved = Math.min(Math.max(0, before - desired), member.state.movement_remaining_ft);
+    const before = distance(member, target), moved = Math.min(Math.max(0, before - desired), member.state.movement_remaining_ft);
     if (!moved) return null;
     member.position_ft += (member.position_ft < target.position_ft ? 1 : -1) * moved;
     member.state.movement_remaining_ft -= moved;
