@@ -15,6 +15,7 @@ from app.content.monster_limited_use_source_audit import limited_use_issues
 from app.content.monster_reaction_source_audit import reaction_issues
 from app.content.monster_save_action_source_section import save_action_source
 from app.content.monster_saving_throws import parse_saving_throw_bonuses
+from app.content.monster_source_save_count import source_action_save_count
 from app.content.monster_spellcasting_source_audit import spellcasting_issues
 from app.content.monster_swallow_source_audit import swallow_action_issues
 from app.content.monster_trait_source_audit import trait_issues
@@ -27,9 +28,6 @@ _SIZE_NAMES = ("tiny", "small", "medium", "large", "huge", "gargantuan")
 _MELEE_ATTACK_ROLL = re.compile(r"\bMelee\s+Attack Roll:", re.IGNORECASE)
 _RANGED_ATTACK_ROLL = re.compile(r"\bRanged\s+Attack Roll:", re.IGNORECASE)
 _COMBINED_ATTACK_ROLL = re.compile(r"\bMelee\s+or\s+Ranged\s+Attack Roll:", re.IGNORECASE)
-_SAVING_THROW = re.compile(
-    r"\b(?:Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma)\s+Saving Throw:", re.IGNORECASE,
-)
 
 
 def _first_int(value: object) -> int:
@@ -122,7 +120,7 @@ def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) ->
         runtime_action_save_count = sum(
             action.action_cost == "action" for action in template.saving_throw_actions
         ) + sum(attack.on_hit_saving_throw is not None for attack in runtime_attacks)
-        if len(_SAVING_THROW.findall(actions)) != runtime_action_save_count:
+        if source_action_save_count(actions) != runtime_action_save_count:
             issues.append("source-save-action-count-mismatch")
         for attack in runtime_attacks:
             issues.extend(attack_issues(attack, actions, traits))
