@@ -14,13 +14,19 @@
       if (!member.state.position) throw new Error("Grid offensive movement requires an authoritative attacker position.");
       const members = [...setup.heroes, ...setup.monsters];
       const candidates = [];
-      let legalNow = false;
       for (const target of F().targetOrder(member, setup)) {
         if (!target.state.position) throw new Error("Grid offensive movement requires authoritative target positions.");
         const distance = S().distance(member, target);
         for (const option of O().rangesForTarget(member, target, turnKey)) {
+          const base = {
+            priority: Number.isFinite(option.priority) ? option.priority : 1,
+            distance,
+            targetId: target.combatant_id,
+            family: option.family,
+            range: option.range,
+          };
           if (distance <= option.range) {
-            legalNow = true;
+            candidates.push({ ...base, cost: 0 });
             continue;
           }
           const plan = G().planToward(
@@ -33,19 +39,14 @@
           );
           if (!plan.goal_reachable || !plan.path.length) continue;
           if (plan.final_distance_ft >= distance) continue;
-          candidates.push({
-            cost: plan.movement_cost_ft,
-            distance,
-            targetId: target.combatant_id,
-            family: option.family,
-            range: option.range,
-          });
+          candidates.push({ ...base, cost: plan.movement_cost_ft });
         }
       }
-      if (legalNow || !candidates.length) return null;
-      candidates.sort((a, b) => a.cost - b.cost || a.distance - b.distance
+      if (!candidates.length) return null;
+      candidates.sort((a, b) => a.priority - b.priority || a.cost - b.cost || a.distance - b.distance
         || a.targetId.localeCompare(b.targetId) || a.family.localeCompare(b.family) || b.range - a.range);
       const best = candidates[0];
+      if (best.cost === 0) return null;
       return { targetId: best.targetId, desiredDistanceFt: best.range, family: best.family };
     } catch (error) {
       console.error("Failed browser offensive movement intent", { member: member.combatant_id, error });
