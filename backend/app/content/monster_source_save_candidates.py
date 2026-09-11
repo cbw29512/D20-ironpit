@@ -2,13 +2,14 @@ from __future__ import annotations
 
 import re
 
+from app.content.monster_source_limited_resources import source_limited_resource
 from app.content.monster_source_save_heading import promoted_save_heading
 from app.content.monster_source_save_riders import common_failure_riders, slowing_breath_rider
 from app.content.monster_source_staged_save_candidates import staged_condition_save_candidates
 from app.domain.actions import ActionCost, ConditionName
 from app.domain.capability_attacks import SaveCapabilityDefinition
 from app.domain.capability_effects import DiceSpec
-from app.domain.combatants import RechargeRule, ResourceDefinition
+from app.domain.combatants import ResourceDefinition
 from app.domain.save_effects import TimedPenaltyEffectDefinition
 from app.domain.targeting import AreaTargeting
 from app.domain.weapons import DamageType
@@ -23,7 +24,7 @@ _SAVE = re.compile(
     r"(?:\s+Success:\s+(?P<success>Half damage|No damage)(?:\s+only)?\.)?", re.I,
 )
 _CONTROL_SAVE = re.compile(
-    r"(?P<name>[A-Z][A-Za-z0-9’' -]*?)(?:\s+\((?P<limit>Recharge\s+\d(?:-\d)?|\d+/Day)\))?\.\s+"
+    r"(?P<name>[A-Z][A-Za-z0-9’' -]*?)(?:\s+\((?P<limit>Recharge\s+\d(?:\s*[-–]\s*\d)?|\d+\s*/\s*Day)\))?\.\s+"
     r"(?P<ability>Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) Saving Throw:\s+DC\s+(?P<dc>\d+),\s+"
     r"(?P<target>[^.]+)\.\s+Failure:\s+(?P<failure>The target has the "
     r"(?:Blinded|Charmed|Deafened|Frightened|Incapacitated|Paralyzed|Poisoned|Prone|Restrained|Stunned|Unconscious) condition "
@@ -74,14 +75,7 @@ def _required_condition(target: str) -> ConditionName | None:
 
 
 def _resource(monster: str, name: str, limit: str | None) -> ResourceDefinition | None:
-    if not limit:
-        return None
-    resource_id = f"srd-{_slug(monster)}-{_slug(name)}"
-    recharge = re.fullmatch(r"Recharge\s+(\d)(?:\s*[-–]\s*(\d))?", limit, re.I)
-    if recharge:
-        return ResourceDefinition(id=resource_id, name=name, max_uses=1, recharge=RechargeRule(minimum_roll=int(recharge.group(1))))
-    per_day = re.fullmatch(r"(\d+)\s*/\s*Day", limit, re.I)
-    return ResourceDefinition(id=resource_id, name=name, max_uses=int(per_day.group(1))) if per_day else None
+    return source_limited_resource(f"srd-{_slug(monster)}-{_slug(name)}", name, limit)
 
 
 def _base_control(monster: str, match: re.Match[str], effects: list[object], action_cost: ActionCost) -> SaveCapabilityDefinition:
@@ -113,8 +107,10 @@ def _parse_text(monster: str, text: str, action_cost: ActionCost) -> tuple[list[
         ))
     existing = {action.id for action in actions}
     for match in _CONTROL_SAVE.finditer(text):
+        name = _breath_name(match.group("name")); resource = _resource(monster, name, match.group("limit"))
+        if resource: resources.append(resource)
         riders = common_failure_riders(match.group("target"), match.group("failure"))
-        action = _base_control(monster, match, list(riders.pop("failure_effects")), action_cost).model_copy(update=riders)
+        action = _base_control(monster, match, list(riders.pop("failure_effects")), action_cost).model_copy(update={**riders, "resource_id": resource.id if resource else None})
         if action.id not in existing: actions.append(action); existing.add(action.id)
     for match in _RESTRICTION_SAVE.finditer(text):
         restriction = slowing_breath_rider(match.group("failure"))
