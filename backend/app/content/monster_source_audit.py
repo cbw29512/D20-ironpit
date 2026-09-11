@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 import re
 
+from app.content.monster_attack_save_source_audit import on_hit_save_issues
 from app.content.monster_attack_source_audit import attack_issues, normalized, save_action_issues
 from app.content.monster_bonus_action_source_audit import bonus_action_issues
 from app.content.monster_charge_source_audit import charge_replacement_issues
@@ -25,8 +26,7 @@ _MELEE_ATTACK_ROLL = re.compile(r"\bMelee\s+Attack Roll:", re.IGNORECASE)
 _RANGED_ATTACK_ROLL = re.compile(r"\bRanged\s+Attack Roll:", re.IGNORECASE)
 _COMBINED_ATTACK_ROLL = re.compile(r"\bMelee\s+or\s+Ranged\s+Attack Roll:", re.IGNORECASE)
 _SAVING_THROW = re.compile(
-    r"\b(?:Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma)\s+Saving Throw:",
-    re.IGNORECASE,
+    r"\b(?:Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma)\s+Saving Throw:", re.IGNORECASE,
 )
 
 
@@ -70,7 +70,6 @@ def _charge_contract_issues(template: CombatantTemplate) -> list[str]:
 
 
 def _source_attack_mode_count(actions: str) -> int:
-    """Count legal attack modes; one combined melee/ranged action exposes two modes."""
     combined = len(_COMBINED_ATTACK_ROLL.findall(actions))
     standalone = _COMBINED_ATTACK_ROLL.sub("", actions)
     return len(_MELEE_ATTACK_ROLL.findall(standalone)) + len(_RANGED_ATTACK_ROLL.findall(standalone)) + 2 * combined
@@ -82,7 +81,6 @@ def _runtime_attack_mode_count(template: CombatantTemplate) -> int:
 
 
 def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
-    """Reconcile combat semantics against the vendored SRD 5.2.1 record before source metadata enrichment."""
     try:
         checks = (
             (template.name == str(row["name"]), "name-mismatch"),
@@ -110,10 +108,14 @@ def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) ->
         runtime_attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
         if _source_attack_mode_count(actions) != _runtime_attack_mode_count(template):
             issues.append("source-attack-count-mismatch")
-        if len(_SAVING_THROW.findall(actions)) != len(template.saving_throw_actions):
+        runtime_save_count = len(template.saving_throw_actions) + sum(
+            attack.on_hit_saving_throw is not None for attack in runtime_attacks
+        )
+        if len(_SAVING_THROW.findall(actions)) != runtime_save_count:
             issues.append("source-save-action-count-mismatch")
         for attack in runtime_attacks:
             issues.extend(attack_issues(attack, actions, traits))
+            issues.extend(on_hit_save_issues(attack, actions))
         issues.extend(charge_replacement_issues(template, actions))
         for action in template.saving_throw_actions:
             issues.extend(save_action_issues(action, actions))
