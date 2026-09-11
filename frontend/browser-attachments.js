@@ -1,8 +1,7 @@
 (() => {
   "use strict";
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
-  const D = () => window.IRON_PIT_DICE;
-  const Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
+  const O = () => window.IRON_PIT_BROWSER_ONGOING_DAMAGE;
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const members = (setup) => [...setup.heroes, ...setup.monsters];
 
@@ -53,14 +52,6 @@
       description: `${source.state.template.name} spends ${cost} ft. of movement to detach.` };
   }
 
-  function adjusted(state, amount, type) {
-    if (state.template.damage_immunities?.includes(type)) return 0;
-    let result = amount;
-    if (state.template.damage_resistances?.includes(type) || state.temporary_damage_resistances?.includes(type)) result = Math.floor(result / 2);
-    if (state.template.damage_vulnerabilities?.includes(type)) result *= 2;
-    return result;
-  }
-
   function startTurn(sequence, round, source, setup) {
     const relation = source.state.attachment;
     if (!relation) return { events: [], sequence };
@@ -68,17 +59,12 @@
     if (!target || source.state.is_dead || !source.state.is_alive || target.state.is_dead) {
       source.state.attachment = null; return { events: [], sequence };
     }
-    const rolls = Array.from({ length: relation.periodic_damage_count }, () => D().roll(relation.periodic_damage_size));
-    const raw = rolls.reduce((sum, value) => sum + value, 0) + relation.periodic_damage_bonus;
-    const total = adjusted(target.state, raw, relation.periodic_damage_type), hpBefore = target.state.current_hp;
-    Z().applyDamage(target.state, total, false, total > 0 ? [relation.periodic_damage_type] : [], members(setup).map((member) => member.state));
-    const component = { source: source.state.template.name, notation: `${relation.periodic_damage_count}d${relation.periodic_damage_size}${relation.periodic_damage_bonus ? `+${relation.periodic_damage_bonus}` : ""}`,
-      rolls, modifier: relation.periodic_damage_bonus, damage_type: relation.periodic_damage_type, total: raw, applied_total: total };
-    const event = { sequence, round_number: round, event_type: "feature", actor_id: source.combatant_id,
-      actor_name: source.state.template.name, target_id: target.combatant_id, target_name: target.state.template.name,
-      feature_id: relation.source_effect_id, damage_roll: { notation: component.notation, rolls, modifier: relation.periodic_damage_bonus, total },
-      damage_components: [component], hp_before: hpBefore, hp_after: target.state.current_hp, animation: "attachment-damage",
-      description: `${source.state.template.name}'s attached effect deals ${total} ${relation.periodic_damage_type} damage to ${target.state.template.name}.` };
+    const event = O().resolve(sequence, round, source, target, setup, {
+      featureId: relation.source_effect_id, featureName: "attached effect",
+      diceCount: relation.periodic_damage_count, diceSize: relation.periodic_damage_size,
+      damageBonus: relation.periodic_damage_bonus, damageType: relation.periodic_damage_type,
+      animation: "attachment-damage",
+    });
     if (target.state.is_dead) source.state.attachment = null;
     return { events: [event], sequence: sequence + 1 };
   }
