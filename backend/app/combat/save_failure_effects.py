@@ -60,6 +60,7 @@ def _apply_condition(
         repeat_save_dc=effect.repeat_save_dc, repeat_save_timing=effect.repeat_save_timing,
         repeat_save_delay_rounds=effect.repeat_save_delay_rounds,
         repeat_save_failure_condition=effect.repeat_save_failure_condition,
+        automatic_success_after_rounds=effect.automatic_success_after_rounds,
         allowed_removal_action_ids=effect.allowed_removal_action_ids,
         periodic_damage=effect.periodic_damage, affected_states=affected_states,
     )
