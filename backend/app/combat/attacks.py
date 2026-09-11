@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available, spend
+from app.combat.attack_ability_effects import effective_attack_bonus, resolve_attack_ability_reduction
 from app.combat.attack_description import build_attack_description
 from app.combat.attack_max_hp_reduction import resolve_attack_max_hp_reduction
 from app.combat.attack_roll_modifiers import (
@@ -71,7 +72,7 @@ def resolve_attack(
             close_enemy_active=close_enemy_active,
         )
         resource_remaining = spend_resource(attacker, attack.resource_id, attack.resource_cost)
-        base_roll = roll_d20(dice, attack.attack_bonus, mode)
+        base_roll = roll_d20(dice, effective_attack_bonus(attacker, attack), mode)
         base_roll, heroic_reroll = reroll_failed_attack_with_heroic_inspiration(attacker, base_roll, effective_armor_class(defender), dice)
         attack_roll = apply_d20_bonus_dice(attacker, ModifierKind.ATTACK_ROLL_BONUS_DIE, base_roll, dice)
         consume_next_attack_against_advantage(attacker, defender_event_id); consume_next_attack_advantage(attacker); consume_next_attack_disadvantage(attacker); consume_sap(attacker)
@@ -106,6 +107,7 @@ def resolve_attack(
             applied_types = {part.damage_type for part in damage_components if part.applied_total > 0}
             damage_outcome = apply_damage(actual_defender, applied_total, critical=critical, damage_types=applied_types, dice=dice, affected_states=affected_states)
             max_hp_before, max_hp_after = resolve_attack_max_hp_reduction(attack, actual_defender, damage_components)
+            resolve_attack_ability_reduction(attack, actual_defender, dice, affected_states)
             applied_conditions = apply_hit_conditions(attack, actual_defender, attacker_event_id, round_number, affected_states, attacker, actual_event_id)
             topple = resolve_topple_hit(attacker, actual_defender, attack, dice)
             if topple.applied and "prone" not in applied_conditions: applied_conditions.append("prone")
