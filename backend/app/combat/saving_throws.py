@@ -5,12 +5,12 @@ import logging
 from app.combat.action_economy import is_available, spend
 from app.combat.aura_modifiers import saving_throw_advantage_sources
 from app.combat.barbarian import end_rage_if_incapacitated
-from app.combat.condition_rules import has_condition
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
 from app.combat.forced_movement import apply_save_failure_push
 from app.combat.grapple import apply_grapple
 from app.combat.resources import resource_available, spend_resource
+from app.combat.save_action_legality import legal_save_action
 from app.combat.save_failure_effects import apply_save_failure_effects
 from app.combat.saving_throw_damage import build_save_damage_components
 from app.combat.saving_throw_description import describe_save_outcome
@@ -18,32 +18,8 @@ from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.zero_hp import apply_damage
 from app.domain.models import BattleEvent, DiceRoll, EncounterCombatant, EncounterSetup, SavingThrowAction
 from app.domain.runtime import CombatantState
-from app.domain.size import size_at_most
 
 logger = logging.getLogger(__name__)
-def _forbidden_effect_families(action: SavingThrowAction) -> set[str]:
-    return {
-        effect.effect_family for effect in action.failure_effects
-        if getattr(effect, "effect_family", None)
-    }
-
-
-def legal_save_action(action: SavingThrowAction, target: EncounterCombatant, distance_ft: int) -> bool:
-    try:
-        if distance_ft > action.range_ft:
-            return False
-        if action.required_target_condition and not has_condition(target.state, action.required_target_condition):
-            return False
-        if action.forbid_target_affected_by_action:
-            families = _forbidden_effect_families(action)
-            if families and any(effect.effect_family in families for effect in target.state.timed_effects):
-                return False
-            if not families and any(effect.source_effect_id == action.id for effect in target.state.timed_effects):
-                return False
-        return action.target_max_size is None or size_at_most(target.state.template.size, action.target_max_size)
-    except Exception:
-        logger.exception("Failed save-action legality check for %s.", action.id)
-        raise
 
 
 def resolve_save_action(
@@ -56,7 +32,7 @@ def resolve_save_action(
     try:
         if spend_action and not is_available(actor.state, action.action_cost):
             raise ValueError(f"{action.action_cost.replace('_', ' ').title()} is not available for a saving throw action.")
-        if not legal_save_action(action, target, distance_ft):
+        if not legal_save_action(action, target, distance_ft, actor):
             raise ValueError(f"{action.name} has no legal target at {distance_ft} feet.")
         if spend_resource_cost and not resource_available(actor.state, action.resource_id, action.resource_cost):
             raise ValueError(f"{action.name} does not have its required resource available.")
@@ -148,3 +124,6 @@ def resolve_save_action(
     except Exception as exc:
         logger.exception("Saving-throw action failed: %s -> %s.", actor.combatant_id, target.combatant_id)
         raise RuntimeError("Saving-throw action resolution failed.") from exc
+
+
+__all__ = ["legal_save_action", "resolve_save_action"]
