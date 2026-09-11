@@ -7,7 +7,7 @@ SUPPORTED_HERO_ENGINE_FEATURES = {
     "improved-critical", "superior-critical", "remarkable-athlete", "tactical-shift", "great-weapon-fighting",
     "indomitable", "tactical-master", "heroic-warrior", "studied-attacks",
     "rage", "danger-sense", "reckless-attack", "frenzy", "fast-movement", "mindless-rage",
-    "feral-instinct",
+    "feral-instinct", "instinctive-pounce",
     "sneak-attack", "weapon-mastery",
     "cleric-spellcasting", "divine-order-protector", "divine-spark", "turn-undead",
     "disciple-of-life", "preserve-life",
