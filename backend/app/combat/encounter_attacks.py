@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from app.combat.ally_context import active_allies
 from app.combat.attacks import resolve_attack
+from app.combat.aura_modifiers import attack_advantage_sources
 from app.combat.champion import apply_critical_closing_move
 from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
@@ -47,10 +48,11 @@ def resolve_encounter_attack(
     affected_states = [member.state for member in [*setup.heroes, *setup.monsters]] if setup is not None else None
     sneak_ally = setup is not None and bool(active_allies(attacker, setup))
     fear_disadvantage = frightened_d20_disadvantage(attacker.state, setup) if setup is not None else 0
+    aura_advantage = attack_advantage_sources(attacker, setup)
     event = resolve_attack(
         sequence, round_number, attacker.state, target.state, attack, distance_ft, dice,
         actor_event_id=attacker.combatant_id, target_event_id=target.combatant_id,
-        spend_action=spend_action, advantage_sources=advantage_sources,
+        spend_action=spend_action, advantage_sources=advantage_sources + aura_advantage,
         other_disadvantage_sources=other_disadvantage_sources + fear_disadvantage, feature_id=feature_id,
         turn_key=turn_key, bonus_damage=bonus_damage, close_enemy_active=close_enemy,
         redirect_target=redirect.state if redirect is not None else None,
