@@ -7,6 +7,7 @@ from app.content.monster_catalog import load_monster_rows
 from app.domain.models import CombatantTemplate, DamageType
 from app.domain.regeneration import RegenerationRule
 
+_REGEN_HEADING = re.compile(r"(?:^|\s)Regeneration\.", re.I)
 _REGEN = re.compile(r"Regeneration\.\s+The\s+[^.]+?\s+regains\s+(\d+)\s+Hit Points at the start of each of its turns\.", re.I)
 _SUPPRESS = re.compile(r"If the [^.]+ takes ([A-Za-z]+)(?: or ([A-Za-z]+))? damage, this trait doesn[’']t function on the [^.]+ next turn", re.I)
 _DEFERRED_DEATH = re.compile(r"dies only if it starts its turn with 0 Hit Points and doesn[’']t regenerate", re.I)
@@ -38,7 +39,11 @@ def source_regeneration(name: str) -> RegenerationRule | None:
 
 
 def regeneration_trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
-    expected = _parse_regeneration(str(row.get("traits", "")))
+    text = str(row.get("traits", ""))
+    source_has = bool(_REGEN_HEADING.search(text))
+    expected = _parse_regeneration(text)
+    if source_has and expected is None:
+        return ["trait-source-unsupported:regeneration"]
     if expected == template.regeneration:
         return []
     if expected is not None and template.regeneration is None:
