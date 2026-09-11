@@ -6,6 +6,7 @@
   const T = () => window.IRON_PIT_BROWSER_TIMED;
   const members = (setup) => [...setup.heroes, ...setup.monsters];
   const incapacitated = (state) => state.active_effect_ids?.includes("incapacitated") || state.is_unconscious || state.is_dead;
+  const immunityKey = (source, aura) => `${source.combatant_id}:${aura.id}`;
 
   function eligible(source, subject, aura) {
     if (source.combatant_id === subject.combatant_id) return aura.target_scope === "self" || aura.target_scope === "self-and-allies";
@@ -33,12 +34,16 @@
       if (source.combatant_id === target.combatant_id || source.state.is_dead || !source.state.is_alive) continue;
       for (const aura of source.state.template.start_turn_save_condition_auras || []) {
         if (aura.disabled_while_incapacitated && incapacitated(source.state)) continue;
+        const immunity = immunityKey(source, aura);
+        if ((target.state.source_effect_immunities || []).includes(immunity)) continue;
         if (S().distance(source, target) > aura.radius_ft) continue;
         const save = V().resolveSavingThrow(
           target.state, aura.save_ability, aura.dc, Boolean(aura.magical_effect), savingThrowAdvantageSources(target, setup),
         );
         const applied = [];
-        if (!save.succeeded) {
+        if (save.succeeded && aura.success_grants_source_immunity) {
+          target.state.source_effect_immunities.push(immunity);
+        } else if (!save.succeeded) {
           const condition = T().apply(target.state, aura.condition, source.combatant_id, {
             sourceEffectId: aura.id, appliedRound: round, expiryTiming: aura.expiry_timing,
           });
