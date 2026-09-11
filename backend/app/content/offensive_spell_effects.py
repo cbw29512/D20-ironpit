@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from app.domain.spells import SpellAttackAction, SpellModifierEffect, SpellSaveAction
+from app.domain.spells import AutomaticSpellAction, SpellAttackAction, SpellModifierEffect, SpellSaveAction
 
 
 def cantrip_damage_dice(character_level: int) -> int:
@@ -41,6 +41,27 @@ def build_inflict_wounds(save_dc: int) -> SpellSaveAction:
         success_damage="half",
         upcast_dice_per_level=1,
         animation="inflict-wounds",
+    )
+
+
+def build_magic_missile(slot_level: int = 1) -> AutomaticSpellAction:
+    if not 1 <= slot_level <= 9:
+        raise ValueError("Magic Missile requires a spell slot level from 1 to 9.")
+    return AutomaticSpellAction(
+        id="magic-missile",
+        name="Magic Missile",
+        level=slot_level,
+        action_cost="action",
+        range_ft=120,
+        applications=2 + slot_level,
+        applications_per_slot_above=1,
+        damage_dice_count=1,
+        damage_dice_size=4,
+        damage_bonus=1,
+        damage_type="force",
+        allow_split_targets=True,
+        animation="magic-missile",
+        source="SRD 5.2.1 Magic Missile",
     )
 
 
