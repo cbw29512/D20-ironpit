@@ -1,6 +1,8 @@
 (() => {
   "use strict";
 
+  const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const D = () => window.IRON_PIT_DICE;
   const T = () => window.IRON_PIT_BROWSER_TIMED;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
@@ -13,10 +15,31 @@
   const autoSuccessDue = (effect, round, timing) => effect.automatic_success_round != null
     && round >= effect.automatic_success_round && effect.repeat_save_timing === timing;
 
+  function periodicDamage(sequence, round, target, effect, timing) {
+    if (effect.periodic_damage_timing !== timing) return null;
+    if (!effect.periodic_damage_type || !effect.periodic_damage_dice_count) throw new Error("Periodic damage state is incomplete.");
+    const rolls = D().rollMany(effect.periodic_damage_dice_count, effect.periodic_damage_dice_size);
+    const raw = Math.max(0, rolls.reduce((sum, value) => sum + value, 0) + (effect.periodic_damage_bonus || 0));
+    const applied = A().adjustedDamage(target.state, raw, effect.periodic_damage_type), before = target.state.current_hp;
+    if (applied) A().applyDamage(target.state, applied, false, [effect.periodic_damage_type]);
+    return {
+      sequence, round_number: round, event_type: "feature", actor_id: target.combatant_id,
+      actor_name: target.state.template.name, target_id: target.combatant_id, target_name: target.state.template.name,
+      damage_roll: { notation: `${effect.periodic_damage_dice_count}d${effect.periodic_damage_dice_size}+${effect.periodic_damage_bonus || 0}`, rolls,
+        modifier: effect.periodic_damage_bonus || 0, total: applied },
+      damage_components: [{ source: effect.source_effect_id || effect.effect_id, damage_type: effect.periodic_damage_type,
+        rolls, modifier: effect.periodic_damage_bonus || 0, total: raw, applied_total: applied }],
+      hp_before: before, hp_after: target.state.current_hp, feature_id: effect.source_effect_id || "periodic-damage",
+      animation: "damage", description: `${target.state.template.name} takes ${applied} ${effect.periodic_damage_type} damage from ${effect.source_effect_id || effect.effect_id}.`,
+    };
+  }
+
   function resolveTargetTiming(sequence, round, target, timing) {
     const events = [];
     for (const effect of [...target.state.timed_effects]) {
       if (!target.state.timed_effects.includes(effect)) continue;
+      const damage = periodicDamage(sequence, round, target, effect, timing);
+      if (damage) { events.push(damage); sequence += 1; if (target.state.is_dead) continue; }
       if (autoSuccessDue(effect, round, timing)) {
         const removed = T().removeGroup(target.state, effect);
         events.push({
