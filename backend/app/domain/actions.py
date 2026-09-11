@@ -99,10 +99,12 @@ class ConditionRemovalAction(BaseModel):
 class SavingThrowAction(BaseModel):
     id: str
     name: str
+    action_cost: ActionCost = "action"
     save_ability: AbilityName
     dc: int = Field(ge=1, le=40)
     range_ft: int = Field(ge=0)
     target_max_size: CreatureSize | None = None
+    required_target_condition: ConditionName | None = None
     area: AreaTargeting | None = None
     damage_dice_count: int = Field(default=0, ge=0, le=40)
     damage_dice_size: int = Field(default=6, ge=2, le=100)
