@@ -27,3 +27,40 @@ def test_save_parser_accepts_one_descriptive_sentence_before_save_clause() -> No
     assert len(resources) == 1
     assert resources[0].recharge is not None
     assert resources[0].recharge.minimum_roll == 6
+
+
+def test_save_parser_accepts_canonical_unicode_recharge_dash() -> None:
+    row = {
+        "name": "Test Drake",
+        "actions": (
+            "Fire Breath (Recharge 5–6). Constitution Saving Throw: DC 14, each creature in a 15-foot Cone. "
+            "Failure: 14 (4d6) Fire damage. Success: Half damage only."
+        ),
+        "bonusActions": "",
+    }
+
+    actions, resources = source_save_candidates(row)
+
+    assert len(actions) == 1
+    assert actions[0].name == "Fire Breath"
+    assert actions[0].resource_id == "srd-test-drake-fire-breath"
+    assert len(resources) == 1
+    assert resources[0].recharge is not None
+    assert resources[0].recharge.minimum_roll == 5
+
+
+def test_save_parser_does_not_promote_attack_damage_text_to_action_heading() -> None:
+    row = {
+        "name": "Test Snake",
+        "actions": (
+            "Bite. Melee Attack Roll: +6, reach 10 ft. Hit: 13 (2d8 + 4) Piercing damage. "
+            "Strength Saving Throw: DC 14, one Large or smaller creature. "
+            "Failure: 13 (2d8 + 4) Bludgeoning damage."
+        ),
+        "bonusActions": "",
+    }
+
+    actions, resources = source_save_candidates(row)
+
+    assert actions == []
+    assert resources == []
