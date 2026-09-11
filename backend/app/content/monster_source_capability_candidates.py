@@ -30,7 +30,8 @@ _EXTRA = re.compile(r"plus\s+\d+\s*\((\d+)d(\d+)(?:\s*([+-])\s*(\d+))?\)\s+([A-Z
 _ON_HIT_SAVE_BLOCK = re.compile(
     r"(?:(?:If|The target)[^.]*following effect\.\s*)?"
     r"(?:Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) Saving Throw:\s*DC\s*\d+[^.]*\.\s*"
-    r"Failure:\s*[^.]+\.", re.I,
+    r"(?:(?:First )?Failure):\s*[^.]+\."
+    r"(?:\s*[^.]*repeats the save[^.]*\.)?(?:\s*Second Failure:\s*[^.]+\.)?", re.I,
 )
 _MULTI_COUNT = re.compile(r"Multiattack\.\s+The\s+[^.]+?\s+makes\s+(one|two|three|four|five|six)\s+([A-Za-z’' -]+?)\s+attacks?\.", re.I)
 _MULTI_GENERIC = re.compile(r"Multiattack\.\s+The\s+[^.]+?\s+makes\s+(one|two|three|four|five|six)\s+attacks?,\s+using\s+([^.]+?)\s+in any combination\.", re.I)
