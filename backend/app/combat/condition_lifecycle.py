@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.modifier_stack import expire_target_turn_modifiers
+from app.combat.periodic_damage import periodic_damage_due, resolve_periodic_damage
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.timed_conditions import remove_effect_group
 from app.combat.timed_effect_recovery import automatic_success_due, resolve_automatic_success
@@ -31,12 +32,17 @@ def resolve_target_condition_timing(
     timing: ConditionTiming,
     dice,
 ) -> tuple[list[BattleEvent], int]:
-    """Resolve expiry and one repeat save per grouped source effect on the affected creature's turn."""
+    """Resolve periodic damage, expiry, and repeat saves on the affected creature's turn."""
     try:
         events: list[BattleEvent] = []
         for effect in list(target.state.timed_effects):
             if effect not in target.state.timed_effects:
                 continue
+            if periodic_damage_due(effect, timing):
+                events.append(resolve_periodic_damage(sequence, round_number, target, effect, dice))
+                sequence += 1
+                if target.state.is_dead:
+                    continue
             if automatic_success_due(effect, round_number, timing):
                 events.append(resolve_automatic_success(sequence, round_number, target, effect))
                 sequence += 1
