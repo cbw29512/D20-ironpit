@@ -55,19 +55,12 @@ def _resource_definitions(template: CombatantTemplate) -> dict[str, Any]:
 
 def _swallow_row(action: Any) -> dict[str, Any]:
     return {
-        "id": action.id,
-        "name": action.name,
-        "maxTargetSize": action.max_target_size.value,
-        "damageDiceCount": action.damage_dice_count,
-        "damageDiceSize": action.damage_dice_size,
-        "damageBonus": action.damage_bonus,
-        "damageType": action.damage_type.value,
-        "firstTickDelayRounds": action.first_tick_delay_rounds,
-        "tickTiming": action.tick_timing,
-        "disgorgeAfterFirstTick": action.disgorge_after_first_tick,
-        "appliesBlinded": action.applies_blinded,
-        "appliesRestrained": action.applies_restrained,
-        "totalCoverFromOutside": action.total_cover_from_outside,
+        "id": action.id, "name": action.name, "maxTargetSize": action.max_target_size.value,
+        "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
+        "damageBonus": action.damage_bonus, "damageType": action.damage_type.value,
+        "firstTickDelayRounds": action.first_tick_delay_rounds, "tickTiming": action.tick_timing,
+        "disgorgeAfterFirstTick": action.disgorge_after_first_tick, "appliesBlinded": action.applies_blinded,
+        "appliesRestrained": action.applies_restrained, "totalCoverFromOutside": action.total_cover_from_outside,
         "forbiddenAttackIdsWhileActive": list(action.forbidden_attack_ids_while_active),
     }
 
@@ -92,11 +85,18 @@ def _start_turn_aura_row(aura: Any) -> dict[str, Any]:
 
 def _roll_advantage_aura_row(aura: Any) -> dict[str, Any]:
     return {
-        "id": aura.id, "name": aura.name, "radius_ft": aura.radius_ft,
-        "target_scope": aura.target_scope,
+        "id": aura.id, "name": aura.name, "radius_ft": aura.radius_ft, "target_scope": aura.target_scope,
         "attack_roll_advantage": aura.attack_roll_advantage,
         "saving_throw_advantage": aura.saving_throw_advantage,
         "disabled_while_incapacitated": aura.disabled_while_incapacitated,
+    }
+
+
+def _regeneration_row(rule: Any) -> dict[str, Any]:
+    return {
+        "hitPoints": rule.hit_points,
+        "suppressedByDamageTypes": [item.value for item in rule.suppressed_by_damage_types],
+        "diesAtStartTurnIfZeroAndSuppressed": rule.dies_at_start_turn_if_zero_and_suppressed,
     }
 
 
@@ -119,19 +119,16 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             "damage_vulnerabilities": [item.value for item in template.damage_vulnerabilities],
             "damage_immunities": [item.value for item in template.damage_immunities],
             "condition_immunities": list(template.condition_immunities),
-            "visual": {
-                "armor": template.visual.armor, "main_hand": template.visual.main_hand,
-                "off_hand": template.visual.off_hand, "body_style": template.visual.body_style,
-            },
+            "visual": {"armor": template.visual.armor, "main_hand": template.visual.main_hand,
+                       "off_hand": template.visual.off_hand, "body_style": template.visual.body_style},
             "source": template.source, **_progression_features(template),
         }
+        if template.regeneration:
+            row["regeneration"] = _regeneration_row(template.regeneration)
         if template.forced_movement_actions:
             row["forced_movement_actions"] = [
-                {
-                    "id": action.id, "name": action.name, "direction": action.direction,
-                    "distanceFt": action.distance_ft, "targetMode": action.target_mode,
-                    "animation": action.animation,
-                }
+                {"id": action.id, "name": action.name, "direction": action.direction,
+                 "distanceFt": action.distance_ft, "targetMode": action.target_mode, "animation": action.animation}
                 for action in template.forced_movement_actions
             ]
         if template.swallow_actions:
@@ -139,9 +136,7 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
         if template.end_turn_damage_auras:
             row["end_turn_damage_auras"] = [_aura_row(aura) for aura in template.end_turn_damage_auras]
         if template.start_turn_save_condition_auras:
-            row["start_turn_save_condition_auras"] = [
-                _start_turn_aura_row(aura) for aura in template.start_turn_save_condition_auras
-            ]
+            row["start_turn_save_condition_auras"] = [_start_turn_aura_row(aura) for aura in template.start_turn_save_condition_auras]
         if template.roll_advantage_auras:
             row["roll_advantage_auras"] = [_roll_advantage_aura_row(aura) for aura in template.roll_advantage_auras]
         if template.kind == "monster":
@@ -170,16 +165,10 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["condition_removal_actions"] = [removal_row(item) for item in template.condition_removal_actions]
         if template.attack_action:
             row["attack_action"] = {
-                "id": template.attack_action.id,
-                "name": template.attack_action.name,
-                "slots": [
-                    {
-                        "attackIds": slot.attack_ids,
-                        "saveActionIds": slot.save_action_ids,
-                        "forcedMovementActionIds": slot.forced_movement_action_ids,
-                    }
-                    for slot in template.attack_action.slots
-                ],
+                "id": template.attack_action.id, "name": template.attack_action.name,
+                "slots": [{"attackIds": slot.attack_ids, "saveActionIds": slot.save_action_ids,
+                           "forcedMovementActionIds": slot.forced_movement_action_ids}
+                          for slot in template.attack_action.slots],
             }
         return row
     except Exception:
