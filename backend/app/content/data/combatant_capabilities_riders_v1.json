@@ -61,7 +61,7 @@
     "size": "medium",
     "armor_class": 12,
     "max_hp": 22,
-    "speed_ft": 30,
+    "speed_ft": 50,
     "movement_modes": {"walk_ft": 30, "fly_ft": 50, "climb_ft": 0, "swim_ft": 0, "burrow_ft": 0, "hover": true, "pass_through_creatures_as_difficult_terrain": true},
     "initiative_bonus": 2,
     "attacks": [
@@ -87,7 +87,7 @@
     "size": "tiny",
     "armor_class": 13,
     "max_hp": 5,
-    "speed_ft": 10,
+    "speed_ft": 40,
     "movement_modes": {"walk_ft": 10, "fly_ft": 40, "climb_ft": 0, "swim_ft": 0, "burrow_ft": 0, "hover": false},
     "initiative_bonus": 3,
     "attacks": [
