@@ -9,6 +9,7 @@ from app.content.capability_compiler import compile_combatant
 from app.content.monster_ability_scores import complete_monster_ability_scores
 from app.content.monster_aura_source import complete_monster_end_turn_damage_auras
 from app.content.monster_creature_types import complete_monster_creature_types
+from app.content.monster_regeneration_source import complete_monster_regeneration
 from app.content.monster_trait_source_audit import complete_monster_trait_fingerprints
 from app.domain.capabilities import CombatantDefinition
 from app.domain.models import CombatantTemplate
@@ -91,6 +92,7 @@ def _complete_monster(template: CombatantTemplate) -> CombatantTemplate:
     completed = complete_monster_creature_types([template])
     completed = complete_monster_ability_scores(completed)
     completed = complete_monster_end_turn_damage_auras(completed)
+    completed = complete_monster_regeneration(completed)
     return complete_monster_trait_fingerprints(completed)[0]
 
 
@@ -107,6 +109,7 @@ def build_monster_templates_from_capabilities() -> list[CombatantTemplate]:
         monsters = complete_monster_creature_types(monsters)
         monsters = complete_monster_ability_scores(monsters)
         monsters = complete_monster_end_turn_damage_auras(monsters)
+        monsters = complete_monster_regeneration(monsters)
         return complete_monster_trait_fingerprints(monsters)
     except Exception as exc:
         logger.exception("Failed to compile monster roster from combat capability registry.")
