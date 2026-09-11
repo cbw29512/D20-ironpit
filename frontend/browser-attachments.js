@@ -26,13 +26,22 @@
 
   function detachAction(sequence, round, actor, setup) {
     if (!E().available(actor.state, "action")) return null;
-    const source = sourceFor(actor.combatant_id, setup), relation = source?.state.attachment;
-    if (!relation || !relation.detachable_by_target_action) return null;
-    source.state.attachment = null; E().spend(actor.state, "action");
-    return { sequence, round_number: round, event_type: "feature", actor_id: actor.combatant_id,
-      actor_name: actor.state.template.name, target_id: source.combatant_id, target_name: source.state.template.name,
-      feature_id: "detach-attachment", animation: "detach",
-      description: `${actor.state.template.name} detaches ${source.state.template.name}.` };
+    const all = members(setup);
+    for (const source of all) {
+      const relation = source.state.attachment;
+      if (!relation) continue;
+      const target = all.find((member) => member.combatant_id === relation.target_id);
+      if (!target || target.side !== actor.side) continue;
+      const targetDetach = actor.combatant_id === target.combatant_id && relation.detachable_by_target_action;
+      const adjacentDetach = actor.combatant_id !== target.combatant_id && relation.detachable_by_adjacent_action && S().distance(actor, target) <= 5;
+      if (!targetDetach && !adjacentDetach) continue;
+      source.state.attachment = null; E().spend(actor.state, "action");
+      return { sequence, round_number: round, event_type: "feature", actor_id: actor.combatant_id,
+        actor_name: actor.state.template.name, target_id: source.combatant_id, target_name: source.state.template.name,
+        feature_id: "detach-attachment", animation: "detach",
+        description: `${actor.state.template.name} detaches ${source.state.template.name}.` };
+    }
+    return null;
   }
 
   function detachBySourceMovement(sequence, round, source) {
@@ -70,6 +79,7 @@
       feature_id: relation.source_effect_id, damage_roll: { notation: component.notation, rolls, modifier: relation.periodic_damage_bonus, total },
       damage_components: [component], hp_before: hpBefore, hp_after: target.state.current_hp, animation: "attachment-damage",
       description: `${source.state.template.name}'s attached effect deals ${total} ${relation.periodic_damage_type} damage to ${target.state.template.name}.` };
+    if (target.state.is_dead) source.state.attachment = null;
     return { events: [event], sequence: sequence + 1 };
   }
 
