@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Literal
+
 from pydantic import BaseModel, Field
 
 from app.domain.actions import AbilityName, ConditionName, ConditionTiming
@@ -30,4 +32,16 @@ class StartTurnSaveConditionAura(BaseModel):
     condition: ConditionName
     expiry_timing: ConditionTiming = "target_turn_start"
     magical_effect: bool = False
+    disabled_while_incapacitated: bool = False
+
+
+class RollAdvantageAura(BaseModel):
+    """Source-neutral emanation granting roll Advantage to eligible nearby creatures."""
+
+    id: str
+    name: str
+    radius_ft: int = Field(gt=0)
+    target_scope: Literal["self", "allies", "self-and-allies"] = "self-and-allies"
+    attack_roll_advantage: bool = False
+    saving_throw_advantage: bool = False
     disabled_while_incapacitated: bool = False
