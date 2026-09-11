@@ -59,7 +59,7 @@ class HealingAction(BaseModel):
     target_mode: HealingTargetMode = "self_or_ally"
     dice_count: int = Field(default=0, ge=0, le=40)
     dice_size: int = Field(default=6, ge=2, le=100)
-    healing_bonus: int = Field(default=0, ge=0)
+    healing_bonus: int = 0
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
     animation: str = "healing"
@@ -105,6 +105,7 @@ class SavingThrowAction(BaseModel):
     range_ft: int = Field(ge=0)
     target_max_size: CreatureSize | None = None
     required_target_condition: ConditionName | None = None
+    required_target_grappled_by_self: bool = False
     area: AreaTargeting | None = None
     damage_dice_count: int = Field(default=0, ge=0, le=40)
     damage_dice_size: int = Field(default=6, ge=2, le=100)
