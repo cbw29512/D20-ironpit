@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 185,
-    "blocked": 145
+    "public_ready": 164,
+    "blocked": 166
   },
   "monsters": [
     {
@@ -96,6 +96,7 @@
         "spellcasting",
         "trait",
         "uncertified-legendary-action-economy",
+        "uncertified-limited-use:actions-acid-breath-recharge-5-6",
         "uncertified-monster-spellcasting"
       ]
     },
@@ -141,6 +142,7 @@
         "spellcasting",
         "trait",
         "uncertified-legendary-action-economy",
+        "uncertified-limited-use:actions-lightning-breath-recharge-5-6",
         "uncertified-monster-spellcasting"
       ]
     },
@@ -190,6 +192,7 @@
         "spellcasting",
         "trait",
         "uncertified-legendary-action-economy",
+        "uncertified-limited-use:actions-fire-breath-recharge-5-6",
         "uncertified-monster-spellcasting"
       ]
     },
@@ -239,6 +242,7 @@
         "spellcasting",
         "trait",
         "uncertified-legendary-action-economy",
+        "uncertified-limited-use:actions-lightning-breath-recharge-5-6",
         "uncertified-monster-spellcasting"
       ]
     },
@@ -279,12 +283,13 @@
       "blockers": [
         "legendary",
         "limited-use",
-        "save-area-mismatch:srd-adult-copper-dragon-acid-breath",
+        "save-area-mismatch:srd-adult-copper-dragon-acid-damage",
         "save-or-complex-action",
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
         "uncertified-legendary-action-economy",
+        "uncertified-limited-use:actions-acid-breath-recharge-5-6",
         "uncertified-monster-spellcasting"
       ]
     },
@@ -330,6 +335,7 @@
         "spellcasting",
         "trait",
         "uncertified-legendary-action-economy",
+        "uncertified-limited-use:actions-fire-breath-recharge-5-6",
         "uncertified-monster-spellcasting"
       ]
     },
@@ -375,6 +381,7 @@
         "spellcasting",
         "trait",
         "uncertified-legendary-action-economy",
+        "uncertified-limited-use:actions-poison-breath-recharge-5-6",
         "uncertified-monster-spellcasting"
       ]
     },
@@ -420,6 +427,7 @@
         "spellcasting",
         "trait",
         "uncertified-legendary-action-economy",
+        "uncertified-limited-use:actions-fire-breath-recharge-5-6",
         "uncertified-monster-spellcasting"
       ]
     },
@@ -469,6 +477,7 @@
         "spellcasting",
         "trait",
         "uncertified-legendary-action-economy",
+        "uncertified-limited-use:actions-cold-breath-recharge-5-6",
         "uncertified-monster-spellcasting"
       ]
     },
@@ -509,7 +518,8 @@
         "limited-use",
         "save-or-complex-action",
         "trait",
-        "uncertified-legendary-action-economy"
+        "uncertified-legendary-action-economy",
+        "uncertified-limited-use:actions-cold-breath-recharge-5-6"
       ]
     },
     {
@@ -549,6 +559,7 @@
         "limited-use",
         "save-or-complex-action",
         "trait",
+        "uncertified-limited-use:actions-whirlwind-recharge-4-6",
         "uncertified-trait:air-form"
       ]
     },
@@ -615,6 +626,7 @@
         "spellcasting",
         "trait",
         "uncertified-legendary-action-economy",
+        "uncertified-limited-use:actions-acid-breath-recharge-5-6",
         "uncertified-monster-spellcasting"
       ]
     },
@@ -660,6 +672,7 @@
         "spellcasting",
         "trait",
         "uncertified-legendary-action-economy",
+        "uncertified-limited-use:actions-lightning-breath-recharge-5-6",
         "uncertified-monster-spellcasting"
       ]
     },
@@ -709,6 +722,7 @@
         "spellcasting",
         "trait",
         "uncertified-legendary-action-economy",
+        "uncertified-limited-use:actions-fire-breath-recharge-5-6",
         "uncertified-monster-spellcasting"
       ]
     },
@@ -758,6 +772,7 @@
         "spellcasting",
         "trait",
         "uncertified-legendary-action-economy",
+        "uncertified-limited-use:actions-lightning-breath-recharge-5-6",
         "uncertified-monster-spellcasting"
       ]
     },
@@ -798,12 +813,13 @@
       "blockers": [
         "legendary",
         "limited-use",
-        "save-area-mismatch:srd-ancient-copper-dragon-acid-breath",
+        "save-area-mismatch:srd-ancient-copper-dragon-acid-damage",
         "save-or-complex-action",
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
         "uncertified-legendary-action-economy",
+        "uncertified-limited-use:actions-acid-breath-recharge-5-6",
         "uncertified-monster-spellcasting"
       ]
     },
@@ -850,6 +866,7 @@
         "spellcasting",
         "trait",
         "uncertified-legendary-action-economy",
+        "uncertified-limited-use:actions-fire-breath-recharge-5-6",
         "uncertified-monster-spellcasting"
       ]
     },
@@ -895,6 +912,7 @@
         "spellcasting",
         "trait",
         "uncertified-legendary-action-economy",
+        "uncertified-limited-use:actions-poison-breath-recharge-5-6",
         "uncertified-monster-spellcasting"
       ]
     },
@@ -940,6 +958,7 @@
         "spellcasting",
         "trait",
         "uncertified-legendary-action-economy",
+        "uncertified-limited-use:actions-fire-breath-recharge-5-6",
         "uncertified-monster-spellcasting"
       ]
     },
@@ -989,6 +1008,7 @@
         "spellcasting",
         "trait",
         "uncertified-legendary-action-economy",
+        "uncertified-limited-use:actions-cold-breath-recharge-5-6",
         "uncertified-monster-spellcasting"
       ]
     },
@@ -1029,7 +1049,8 @@
         "limited-use",
         "save-or-complex-action",
         "trait",
-        "uncertified-legendary-action-economy"
+        "uncertified-legendary-action-economy",
+        "uncertified-limited-use:actions-cold-breath-recharge-5-6"
       ]
     },
     {
@@ -1636,7 +1657,8 @@
         "condition-or-control",
         "limited-use",
         "save-or-complex-action",
-        "uncertified-bonus-action:swallow"
+        "uncertified-bonus-action:swallow",
+        "uncertified-limited-use:actions-lightning-breath-recharge-5-6"
       ]
     },
     {
@@ -1699,18 +1721,23 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "unsupported_mechanics": [
+        "limited-use",
+        "save-or-complex-action"
+      ],
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "limited-use",
+        "save-or-complex-action",
+        "source-save-action-count-mismatch"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-black-pudding",
@@ -1815,17 +1842,22 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "unsupported_mechanics": [
+        "limited-use",
+        "save-or-complex-action"
+      ],
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "limited-use",
+        "save-or-complex-action",
+        "source-save-action-count-mismatch"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-boar",
@@ -1909,7 +1941,8 @@
         "condition-or-control",
         "limited-use",
         "save-or-complex-action",
-        "source-save-action-count-mismatch"
+        "source-save-action-count-mismatch",
+        "uncertified-limited-use:actions-fire-breath-recharge-5-6"
       ]
     },
     {
@@ -1930,20 +1963,26 @@
       ],
       "supported_mechanics": [
         "attack-roll",
-        "condition-or-control",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "unsupported_mechanics": [
+        "condition-or-control",
+        "limited-use",
+        "save-or-complex-action"
+      ],
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "condition-or-control",
+        "limited-use",
+        "save-or-complex-action",
+        "source-save-action-count-mismatch"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-brown-bear",
@@ -2189,19 +2228,26 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "multiattack",
+        "saving-throw-action"
+      ],
+      "unsupported_mechanics": [
         "condition-or-control",
         "limited-use",
-        "multiattack",
         "save-or-complex-action",
-        "saving-throw-action",
         "unsupported-action-rider"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "condition-or-control",
+        "limited-use",
+        "save-or-complex-action",
+        "uncertified-limited-use:actions-fire-breath-recharge-5-6",
+        "unsupported-action-rider"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-chuul",
@@ -2424,16 +2470,21 @@
       ],
       "supported_mechanics": [
         "attack-roll",
-        "condition-or-control",
-        "save-or-complex-action",
         "saving-throw-action"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "unsupported_mechanics": [
+        "condition-or-control",
+        "save-or-complex-action"
+      ],
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "condition-or-control",
+        "save-or-complex-action",
+        "source-save-action-count-mismatch"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-copper-dragon-wyrmling",
@@ -2451,16 +2502,21 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
-        "save-or-complex-action",
         "saving-throw-action"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "unsupported_mechanics": [
+        "limited-use",
+        "save-or-complex-action"
+      ],
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "limited-use",
+        "save-or-complex-action",
+        "uncertified-limited-use:actions-acid-breath-recharge-5-6"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-couatl",
@@ -2854,20 +2910,26 @@
       ],
       "supported_mechanics": [
         "attack-roll",
-        "condition-or-control",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "unsupported_mechanics": [
+        "condition-or-control",
+        "limited-use",
+        "save-or-complex-action"
+      ],
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "condition-or-control",
+        "limited-use",
+        "save-or-complex-action",
+        "source-save-action-count-mismatch"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-dretch",
@@ -3207,7 +3269,6 @@
         "condition-or-control",
         "parry-source-mismatch",
         "save-or-complex-action",
-        "source-save-action-count-mismatch",
         "trait",
         "uncertified-reaction:parry",
         "uncertified-trait:magic-rope"
@@ -3509,7 +3570,6 @@
       "blockers": [
         "condition-or-control",
         "save-or-complex-action",
-        "source-save-action-count-mismatch",
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
@@ -3642,24 +3702,18 @@
       "supported_mechanics": [
         "attack-roll",
         "bonus-action",
+        "condition-or-control",
+        "limited-use",
         "multiattack",
+        "save-or-complex-action",
         "saving-throw-action"
       ],
-      "unsupported_mechanics": [
-        "condition-or-control",
-        "limited-use",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "condition-or-control",
-        "limited-use",
-        "save-or-complex-action",
-        "source-save-action-count-mismatch"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-giant-badger",
@@ -4341,6 +4395,7 @@
         "limited-use",
         "save-or-complex-action",
         "trait",
+        "uncertified-limited-use:actions-blinding-spittle-recharge-5-6",
         "uncertified-trait:aberrant-ground",
         "uncertified-trait:gibbering"
       ]
@@ -4556,18 +4611,23 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "unsupported_mechanics": [
+        "limited-use",
+        "save-or-complex-action"
+      ],
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "limited-use",
+        "save-or-complex-action",
+        "uncertified-limited-use:actions-fire-breath-recharge-5-6"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-gorgon",
@@ -4650,18 +4710,23 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "unsupported_mechanics": [
+        "limited-use",
+        "save-or-complex-action"
+      ],
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "limited-use",
+        "save-or-complex-action",
+        "source-save-action-count-mismatch"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-green-hag",
@@ -4951,18 +5016,23 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "unsupported_mechanics": [
+        "limited-use",
+        "save-or-complex-action"
+      ],
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "limited-use",
+        "save-or-complex-action",
+        "source-save-action-count-mismatch"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-hezrou",
@@ -5318,6 +5388,7 @@
         "spellcasting",
         "trait",
         "uncertified-limited-use:actions-fog-cloud-1-day",
+        "uncertified-limited-use:actions-frost-breath-recharge-6",
         "uncertified-monster-spellcasting",
         "uncertified-trait:death-burst"
       ]
@@ -5472,6 +5543,7 @@
         "limited-use",
         "save-or-complex-action",
         "trait",
+        "uncertified-limited-use:actions-poison-breath-recharge-6",
         "uncertified-trait:fire-absorption",
         "uncertified-trait:immutable-form"
       ]
@@ -5837,6 +5909,7 @@
         "limited-use",
         "save-or-complex-action",
         "trait",
+        "uncertified-limited-use:actions-fire-breath-recharge-6",
         "uncertified-trait:death-burst"
       ]
     },
@@ -6852,7 +6925,7 @@
       "blockers": [
         "bonus-action",
         "limited-use",
-        "save-area-mismatch:srd-planetar-holy-burst",
+        "save-area-mismatch:srd-planetar-radiant-damage",
         "save-or-complex-action",
         "trait",
         "uncertified-bonus-action:divine-aid",
@@ -7226,17 +7299,22 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "unsupported_mechanics": [
+        "limited-use",
+        "save-or-complex-action"
+      ],
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "limited-use",
+        "save-or-complex-action",
+        "source-save-action-count-mismatch"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-reef-shark",
@@ -7538,17 +7616,23 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "saving-throw-action"
+      ],
+      "unsupported_mechanics": [
         "condition-or-control",
         "save-or-complex-action",
-        "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "condition-or-control",
+        "save-or-complex-action",
+        "source-save-action-count-mismatch",
+        "trait"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-scorpion",
@@ -7815,7 +7899,8 @@
         "condition-or-control",
         "limited-use",
         "save-or-complex-action",
-        "source-save-action-count-mismatch"
+        "source-save-action-count-mismatch",
+        "uncertified-limited-use:actions-cold-breath-recharge-5-6"
       ]
     },
     {
@@ -7951,12 +8036,13 @@
         "condition-or-control",
         "legendary",
         "limited-use",
-        "save-area-mismatch:srd-sphinx-of-lore-mind-rending-roar",
+        "save-area-mismatch:srd-sphinx-of-lore-slashing-damage",
         "save-or-complex-action",
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
         "uncertified-legendary-action-economy",
+        "uncertified-limited-use:actions-mind-rending-roar-recharge-5-6",
         "uncertified-monster-spellcasting",
         "uncertified-trait:inscrutable"
       ]
@@ -8001,7 +8087,7 @@
         "condition-or-control",
         "legendary",
         "limited-use",
-        "save-area-mismatch:srd-sphinx-of-valor-third-roar",
+        "save-area-mismatch:srd-sphinx-of-valor-it-succeeds-automatically",
         "save-or-complex-action",
         "source-save-action-count-mismatch",
         "spell-concentration-source-not-vendored",
@@ -8192,6 +8278,7 @@
         "limited-use",
         "save-or-complex-action",
         "trait",
+        "uncertified-limited-use:actions-steam-breath-recharge-6",
         "uncertified-trait:blurred-form",
         "uncertified-trait:death-burst",
         "unsupported-action-rider"
@@ -8334,6 +8421,7 @@
         "save-or-complex-action",
         "spell-concentration-source-not-vendored",
         "spellcasting",
+        "uncertified-limited-use:actions-lightning-storm-recharge-5-6",
         "uncertified-monster-spellcasting"
       ]
     },
@@ -8604,11 +8692,12 @@
         "condition-or-control",
         "legendary",
         "limited-use",
-        "save-area-mismatch:srd-tarrasque-thunderous-bellow",
+        "save-area-mismatch:srd-tarrasque-it-has-the-prone-condition",
         "save-or-complex-action",
         "trait",
         "uncertified-bonus-action:swallow",
         "uncertified-legendary-action-economy",
+        "uncertified-limited-use:actions-thunderous-bellow-recharge-5-6",
         "uncertified-trait:reflective-carapace"
       ]
     },
@@ -9084,7 +9173,8 @@
         "save-or-complex-action",
         "source-save-action-count-mismatch",
         "trait",
-        "uncertified-limited-use:actions-spores-recharge-6"
+        "uncertified-limited-use:actions-spores-recharge-6",
+        "uncertified-limited-use:actions-stunning-screech-1-day"
       ]
     },
     {
@@ -9233,6 +9323,7 @@
         "limited-use",
         "save-or-complex-action",
         "trait",
+        "uncertified-limited-use:actions-whelm-recharge-4-6",
         "uncertified-trait:freeze",
         "uncertified-trait:water-form"
       ]
@@ -9441,18 +9532,23 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "unsupported_mechanics": [
+        "limited-use",
+        "save-or-complex-action"
+      ],
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "limited-use",
+        "save-or-complex-action",
+        "source-save-action-count-mismatch"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-wight",
@@ -9535,19 +9631,25 @@
       ],
       "supported_mechanics": [
         "attack-roll",
-        "condition-or-control",
         "damage-or-condition-defense",
-        "limited-use",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "unsupported_mechanics": [
+        "condition-or-control",
+        "limited-use",
+        "save-or-complex-action"
+      ],
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "condition-or-control",
+        "limited-use",
+        "save-or-complex-action",
+        "source-save-action-count-mismatch"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-wolf",
@@ -9691,18 +9793,23 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "unsupported_mechanics": [
+        "limited-use",
+        "save-or-complex-action"
+      ],
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "limited-use",
+        "save-or-complex-action",
+        "source-save-action-count-mismatch"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-young-blue-dragon",
@@ -9721,17 +9828,22 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "unsupported_mechanics": [
+        "limited-use",
+        "save-or-complex-action"
+      ],
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "limited-use",
+        "save-or-complex-action",
+        "source-save-action-count-mismatch"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-young-brass-dragon",
@@ -9767,7 +9879,8 @@
         "condition-or-control",
         "limited-use",
         "save-or-complex-action",
-        "source-save-action-count-mismatch"
+        "source-save-action-count-mismatch",
+        "uncertified-limited-use:actions-fire-breath-recharge-5-6"
       ]
     },
     {
@@ -9788,20 +9901,26 @@
       ],
       "supported_mechanics": [
         "attack-roll",
-        "condition-or-control",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "unsupported_mechanics": [
+        "condition-or-control",
+        "limited-use",
+        "save-or-complex-action"
+      ],
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "condition-or-control",
+        "limited-use",
+        "save-or-complex-action",
+        "source-save-action-count-mismatch"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-young-copper-dragon",
@@ -9820,17 +9939,22 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "unsupported_mechanics": [
+        "limited-use",
+        "save-or-complex-action"
+      ],
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "limited-use",
+        "save-or-complex-action",
+        "source-save-action-count-mismatch"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-young-gold-dragon",
@@ -9850,18 +9974,23 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "unsupported_mechanics": [
+        "limited-use",
+        "save-or-complex-action"
+      ],
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "limited-use",
+        "save-or-complex-action",
+        "uncertified-limited-use:actions-fire-breath-recharge-5-6"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-young-green-dragon",
@@ -9881,18 +10010,23 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "unsupported_mechanics": [
+        "limited-use",
+        "save-or-complex-action"
+      ],
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "limited-use",
+        "save-or-complex-action",
+        "source-save-action-count-mismatch"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-young-red-dragon",
@@ -9911,17 +10045,22 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "unsupported_mechanics": [
+        "limited-use",
+        "save-or-complex-action"
+      ],
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "limited-use",
+        "save-or-complex-action",
+        "source-save-action-count-mismatch"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-young-silver-dragon",
@@ -9957,7 +10096,8 @@
         "condition-or-control",
         "limited-use",
         "save-or-complex-action",
-        "source-save-action-count-mismatch"
+        "source-save-action-count-mismatch",
+        "uncertified-limited-use:actions-cold-breath-recharge-5-6"
       ]
     },
     {
@@ -9978,18 +10118,23 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "unsupported_mechanics": [
+        "limited-use",
+        "save-or-complex-action"
+      ],
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "limited-use",
+        "save-or-complex-action",
+        "source-save-action-count-mismatch"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-zombie",
