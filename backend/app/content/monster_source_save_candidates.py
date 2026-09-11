@@ -3,6 +3,7 @@ from __future__ import annotations
 import re
 
 from app.content.monster_source_save_riders import common_failure_riders, slowing_breath_rider
+from app.content.monster_source_staged_save_candidates import staged_condition_save_candidates
 from app.domain.actions import ActionCost, ConditionName
 from app.domain.capability_attacks import SaveCapabilityDefinition
 from app.domain.capability_effects import DiceSpec
@@ -134,8 +135,11 @@ def _parse_text(monster: str, text: str, action_cost: ActionCost) -> tuple[list[
 def source_save_candidates(row: dict[str, object]) -> tuple[list[SaveCapabilityDefinition], list[ResourceDefinition]]:
     monster = str(row["name"]); actions: list[SaveCapabilityDefinition] = []; resources: list[ResourceDefinition] = []
     for field, cost in (("actions", "action"), ("bonusActions", "bonus_action")):
-        parsed, parsed_resources = _parse_text(monster, str(row.get(field, "")), cost)
+        text = str(row.get(field, ""))
+        parsed, parsed_resources = _parse_text(monster, text, cost)
+        staged, staged_resources = staged_condition_save_candidates(monster, text, cost)
         actions.extend(parsed); resources.extend(parsed_resources)
+        actions.extend(staged); resources.extend(staged_resources)
     unique_actions = {action.id: action for action in actions}
     unique_resources = {resource.id: resource for resource in resources}
     return list(unique_actions.values()), list(unique_resources.values())
