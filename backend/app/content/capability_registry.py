@@ -6,6 +6,7 @@ import logging
 from pathlib import Path
 
 from app.content.capability_compiler import compile_combatant
+from app.content.monster_aura_source import complete_monster_end_turn_damage_auras
 from app.content.monster_creature_types import complete_monster_creature_types
 from app.domain.capabilities import CombatantDefinition
 from app.domain.models import CombatantTemplate
@@ -82,9 +83,13 @@ def get_capability_definition(combatant_id: str) -> CombatantDefinition:
     return definition
 
 
+def _complete_monster(template: CombatantTemplate) -> CombatantTemplate:
+    typed = complete_monster_creature_types([template])
+    return complete_monster_end_turn_damage_auras(typed)[0]
+
+
 def build_combatant_from_capabilities(combatant_id: str) -> CombatantTemplate:
-    template = compile_combatant(get_capability_definition(combatant_id))
-    return complete_monster_creature_types([template])[0]
+    return _complete_monster(compile_combatant(get_capability_definition(combatant_id)))
 
 
 def build_monster_templates_from_capabilities() -> list[CombatantTemplate]:
@@ -93,7 +98,8 @@ def build_monster_templates_from_capabilities() -> list[CombatantTemplate]:
         monsters = [compile_combatant(item) for item in definitions if item.kind == "monster"]
         if not monsters:
             raise ValueError("Combat capability registry contains no monsters.")
-        return complete_monster_creature_types(monsters)
+        monsters = complete_monster_creature_types(monsters)
+        return complete_monster_end_turn_damage_auras(monsters)
     except Exception as exc:
         logger.exception("Failed to compile monster roster from combat capability registry.")
         raise RuntimeError("Declarative monster roster could not be created.") from exc
