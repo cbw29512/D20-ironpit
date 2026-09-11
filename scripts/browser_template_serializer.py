@@ -77,8 +77,7 @@ def _swallow_row(action: Any) -> dict[str, Any]:
         "damageBonus": action.damage_bonus, "damageType": action.damage_type.value,
         "firstTickDelayRounds": action.first_tick_delay_rounds, "tickTiming": action.tick_timing,
         "disgorgeAfterFirstTick": action.disgorge_after_first_tick, "appliesBlinded": action.applies_blinded,
-        "appliesRestrained": action.restrains_while_grappled if hasattr(action, "restrains_while_grappled") else action.applies_restrained,
-        "totalCoverFromOutside": action.total_cover_from_outside,
+        "appliesRestrained": action.applies_restrained, "totalCoverFromOutside": action.total_cover_from_outside,
         "forbiddenAttackIdsWhileActive": list(action.forbidden_attack_ids_while_active),
     }
 
