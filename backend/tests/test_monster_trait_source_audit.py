@@ -92,6 +92,21 @@ def test_information_only_traits_do_not_block_combat_certification() -> None:
         raise
 
 
+def test_real_srd_information_traits_are_fingerprinted_without_trait_blockers() -> None:
+    try:
+        for monster_name, trait_slug in (
+            ("Planetar", "divine-awareness"),
+            ("Solar", "divine-awareness"),
+            ("Sphinx of Lore", "inscrutable"),
+            ("Sphinx of Valor", "inscrutable"),
+        ):
+            issues = trait_issues(_monster(monster_name), _row(monster_name))
+            assert f"uncertified-trait:{trait_slug}" not in issues
+    except Exception:
+        logger.exception("Real SRD information-only trait regression failed.")
+        raise
+
+
 def test_sunlight_sensitivity_is_inactive_without_explicit_sunlight() -> None:
     try:
         wolf = _monster("Wolf")
