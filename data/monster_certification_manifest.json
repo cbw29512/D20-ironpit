@@ -47,12 +47,9 @@
         "save-or-complex-action",
         "source-save-action-count-mismatch",
         "trait",
-        "trait-source-missing:legendary-resistance",
         "uncertified-legendary-action-economy",
         "uncertified-limited-use:actions-dominate-mind-2-day",
-        "uncertified-limited-use:traits-legendary-resistance-3-day-or-4-day-in-lair",
         "uncertified-trait:eldritch-restoration",
-        "uncertified-trait:legendary-resistance-3-day-or-4-day-in-lair",
         "uncertified-trait:mucus-cloud",
         "uncertified-trait:probing-telepathy"
       ]
@@ -98,11 +95,8 @@
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
-        "trait-source-missing:legendary-resistance",
         "uncertified-legendary-action-economy",
-        "uncertified-limited-use:traits-legendary-resistance-3-day-or-4-day-in-lair",
-        "uncertified-monster-spellcasting",
-        "uncertified-trait:legendary-resistance-3-day-or-4-day-in-lair"
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -146,11 +140,8 @@
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
-        "trait-source-missing:legendary-resistance",
         "uncertified-legendary-action-economy",
-        "uncertified-limited-use:traits-legendary-resistance-3-day-or-4-day-in-lair",
-        "uncertified-monster-spellcasting",
-        "uncertified-trait:legendary-resistance-3-day-or-4-day-in-lair"
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -198,11 +189,8 @@
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
-        "trait-source-missing:legendary-resistance",
         "uncertified-legendary-action-economy",
-        "uncertified-limited-use:traits-legendary-resistance-3-day-or-4-day-in-lair",
-        "uncertified-monster-spellcasting",
-        "uncertified-trait:legendary-resistance-3-day-or-4-day-in-lair"
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -250,11 +238,8 @@
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
-        "trait-source-missing:legendary-resistance",
         "uncertified-legendary-action-economy",
-        "uncertified-limited-use:traits-legendary-resistance-3-day-or-4-day-in-lair",
-        "uncertified-monster-spellcasting",
-        "uncertified-trait:legendary-resistance-3-day-or-4-day-in-lair"
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -300,11 +285,8 @@
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
-        "trait-source-missing:legendary-resistance",
         "uncertified-legendary-action-economy",
-        "uncertified-limited-use:traits-legendary-resistance-3-day-or-4-day-in-lair",
-        "uncertified-monster-spellcasting",
-        "uncertified-trait:legendary-resistance-3-day-or-4-day-in-lair"
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -349,11 +331,8 @@
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
-        "trait-source-missing:legendary-resistance",
         "uncertified-legendary-action-economy",
-        "uncertified-limited-use:traits-legendary-resistance-3-day-or-4-day-in-lair",
-        "uncertified-monster-spellcasting",
-        "uncertified-trait:legendary-resistance-3-day-or-4-day-in-lair"
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -397,11 +376,8 @@
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
-        "trait-source-missing:legendary-resistance",
         "uncertified-legendary-action-economy",
-        "uncertified-limited-use:traits-legendary-resistance-3-day-or-4-day-in-lair",
-        "uncertified-monster-spellcasting",
-        "uncertified-trait:legendary-resistance-3-day-or-4-day-in-lair"
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -445,11 +421,8 @@
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
-        "trait-source-missing:legendary-resistance",
         "uncertified-legendary-action-economy",
-        "uncertified-limited-use:traits-legendary-resistance-3-day-or-4-day-in-lair",
-        "uncertified-monster-spellcasting",
-        "uncertified-trait:legendary-resistance-3-day-or-4-day-in-lair"
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -497,11 +470,8 @@
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
-        "trait-source-missing:legendary-resistance",
         "uncertified-legendary-action-economy",
-        "uncertified-limited-use:traits-legendary-resistance-3-day-or-4-day-in-lair",
-        "uncertified-monster-spellcasting",
-        "uncertified-trait:legendary-resistance-3-day-or-4-day-in-lair"
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -541,10 +511,7 @@
         "limited-use",
         "save-or-complex-action",
         "trait",
-        "trait-source-missing:legendary-resistance",
-        "uncertified-legendary-action-economy",
-        "uncertified-limited-use:traits-legendary-resistance-3-day-or-4-day-in-lair",
-        "uncertified-trait:legendary-resistance-3-day-or-4-day-in-lair"
+        "uncertified-legendary-action-economy"
       ]
     },
     {
@@ -651,11 +618,8 @@
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
-        "trait-source-missing:legendary-resistance",
         "uncertified-legendary-action-economy",
-        "uncertified-limited-use:traits-legendary-resistance-4-day-or-5-day-in-lair",
-        "uncertified-monster-spellcasting",
-        "uncertified-trait:legendary-resistance-4-day-or-5-day-in-lair"
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -699,11 +663,8 @@
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
-        "trait-source-missing:legendary-resistance",
         "uncertified-legendary-action-economy",
-        "uncertified-limited-use:traits-legendary-resistance-4-day-or-5-day-in-lair",
-        "uncertified-monster-spellcasting",
-        "uncertified-trait:legendary-resistance-4-day-or-5-day-in-lair"
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -751,11 +712,8 @@
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
-        "trait-source-missing:legendary-resistance",
         "uncertified-legendary-action-economy",
-        "uncertified-limited-use:traits-legendary-resistance-4-day-or-5-day-in-lair",
-        "uncertified-monster-spellcasting",
-        "uncertified-trait:legendary-resistance-4-day-or-5-day-in-lair"
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -803,11 +761,8 @@
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
-        "trait-source-missing:legendary-resistance",
         "uncertified-legendary-action-economy",
-        "uncertified-limited-use:traits-legendary-resistance-4-day-or-5-day-in-lair",
-        "uncertified-monster-spellcasting",
-        "uncertified-trait:legendary-resistance-4-day-or-5-day-in-lair"
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -853,11 +808,8 @@
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
-        "trait-source-missing:legendary-resistance",
         "uncertified-legendary-action-economy",
-        "uncertified-limited-use:traits-legendary-resistance-4-day-or-5-day-in-lair",
-        "uncertified-monster-spellcasting",
-        "uncertified-trait:legendary-resistance-4-day-or-5-day-in-lair"
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -944,11 +896,8 @@
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
-        "trait-source-missing:legendary-resistance",
         "uncertified-legendary-action-economy",
-        "uncertified-limited-use:traits-legendary-resistance-4-day-or-5-day-in-lair",
-        "uncertified-monster-spellcasting",
-        "uncertified-trait:legendary-resistance-4-day-or-5-day-in-lair"
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -992,11 +941,8 @@
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
-        "trait-source-missing:legendary-resistance",
         "uncertified-legendary-action-economy",
-        "uncertified-limited-use:traits-legendary-resistance-4-day-or-5-day-in-lair",
-        "uncertified-monster-spellcasting",
-        "uncertified-trait:legendary-resistance-4-day-or-5-day-in-lair"
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -1044,11 +990,8 @@
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
-        "trait-source-missing:legendary-resistance",
         "uncertified-legendary-action-economy",
-        "uncertified-limited-use:traits-legendary-resistance-4-day-or-5-day-in-lair",
-        "uncertified-monster-spellcasting",
-        "uncertified-trait:legendary-resistance-4-day-or-5-day-in-lair"
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -1088,10 +1031,7 @@
         "limited-use",
         "save-or-complex-action",
         "trait",
-        "trait-source-missing:legendary-resistance",
-        "uncertified-legendary-action-economy",
-        "uncertified-limited-use:traits-legendary-resistance-4-day-or-5-day-in-lair",
-        "uncertified-trait:legendary-resistance-4-day-or-5-day-in-lair"
+        "uncertified-legendary-action-economy"
       ]
     },
     {
@@ -1510,11 +1450,8 @@
         "limited-use",
         "source-attack-count-mismatch",
         "trait",
-        "trait-source-missing:legendary-resistance",
         "uncertified-bonus-action:teleport",
-        "uncertified-limited-use:traits-legendary-resistance-3-day",
-        "uncertified-trait:death-throes",
-        "uncertified-trait:legendary-resistance-3-day"
+        "uncertified-trait:death-throes"
       ]
     },
     {
@@ -5726,10 +5663,7 @@
         "save-or-complex-action",
         "source-save-action-count-mismatch",
         "trait",
-        "trait-source-missing:legendary-resistance",
-        "uncertified-legendary-action-economy",
-        "uncertified-limited-use:traits-legendary-resistance-4-day-or-5-day-in-lair",
-        "uncertified-trait:legendary-resistance-4-day-or-5-day-in-lair"
+        "uncertified-legendary-action-economy"
       ]
     },
     {
@@ -5837,12 +5771,9 @@
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
-        "trait-source-missing:legendary-resistance",
         "uncertified-legendary-action-economy",
-        "uncertified-limited-use:traits-legendary-resistance-4-day-or-5-day-in-lair",
         "uncertified-monster-spellcasting",
         "uncertified-reaction:protective-magic",
-        "uncertified-trait:legendary-resistance-4-day-or-5-day-in-lair",
         "uncertified-trait:spirit-jar"
       ]
     },
@@ -6235,7 +6166,7 @@
         "source-attack-count-mismatch",
         "trait",
         "uncertified-bonus-action:shape-shift",
-        "uncertified-trait:adhesive-object-form-only"
+        "uncertified-trait:adhesive"
       ]
     },
     {
@@ -6398,12 +6329,9 @@
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
-        "trait-source-missing:legendary-resistance",
         "uncertified-legendary-action-economy",
-        "uncertified-limited-use:traits-legendary-resistance-3-day-or-4-day-in-lair",
         "uncertified-monster-spellcasting",
         "uncertified-reaction:whirlwind-of-sand",
-        "uncertified-trait:legendary-resistance-3-day-or-4-day-in-lair",
         "uncertified-trait:undead-restoration",
         "unsupported-action-rider"
       ]
@@ -6974,13 +6902,10 @@
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
-        "trait-source-missing:legendary-resistance",
         "uncertified-limited-use:actions-hellfire-spellcasting-recharge-4-6",
-        "uncertified-limited-use:traits-legendary-resistance-4-day",
         "uncertified-monster-spellcasting",
         "uncertified-trait:diabolical-restoration",
-        "uncertified-trait:fear-aura",
-        "uncertified-trait:legendary-resistance-4-day"
+        "uncertified-trait:fear-aura"
       ]
     },
     {
@@ -8059,14 +7984,11 @@
         "save-or-complex-action",
         "source-save-action-count-mismatch",
         "trait",
-        "trait-source-missing:legendary-resistance",
         "uncertified-bonus-action:divine-aid",
         "uncertified-legendary-action-economy",
         "uncertified-limited-use:bonusactions-divine-aid-3-day",
-        "uncertified-limited-use:traits-legendary-resistance-4-day",
         "uncertified-trait:divine-awareness",
-        "uncertified-trait:exalted-restoration",
-        "uncertified-trait:legendary-resistance-4-day"
+        "uncertified-trait:exalted-restoration"
       ]
     },
     {
@@ -8139,13 +8061,10 @@
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
-        "trait-source-missing:legendary-resistance",
         "uncertified-legendary-action-economy",
         "uncertified-limited-use:actions-mind-rending-roar-recharge-5-6",
-        "uncertified-limited-use:traits-legendary-resistance-3-day-or-4-day-in-lair",
         "uncertified-monster-spellcasting",
-        "uncertified-trait:inscrutable",
-        "uncertified-trait:legendary-resistance-3-day-or-4-day-in-lair"
+        "uncertified-trait:inscrutable"
       ]
     },
     {
@@ -8193,13 +8112,10 @@
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
-        "trait-source-missing:legendary-resistance",
         "uncertified-legendary-action-economy",
         "uncertified-limited-use:actions-roar-3-day",
-        "uncertified-limited-use:traits-legendary-resistance-3-day-or-4-day-in-lair",
         "uncertified-monster-spellcasting",
-        "uncertified-trait:inscrutable",
-        "uncertified-trait:legendary-resistance-3-day-or-4-day-in-lair"
+        "uncertified-trait:inscrutable"
       ]
     },
     {
@@ -8801,12 +8717,9 @@
         "source-attack-count-mismatch",
         "source-save-action-count-mismatch",
         "trait",
-        "trait-source-missing:legendary-resistance",
         "uncertified-bonus-action:swallow",
         "uncertified-legendary-action-economy",
         "uncertified-limited-use:actions-thunderous-bellow-recharge-5-6",
-        "uncertified-limited-use:traits-legendary-resistance-6-day",
-        "uncertified-trait:legendary-resistance-6-day",
         "uncertified-trait:reflective-carapace"
       ]
     },
@@ -8963,7 +8876,7 @@
         "limited-use",
         "trait",
         "uncertified-limited-use:traits-loathsome-limbs-4-day",
-        "uncertified-trait:loathsome-limbs-4-day"
+        "uncertified-trait:loathsome-limbs"
       ]
     },
     {
@@ -9049,13 +8962,10 @@
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
-        "trait-source-missing:legendary-resistance",
         "uncertified-bonus-action:unicorn-s-blessing",
         "uncertified-legendary-action-economy",
         "uncertified-limited-use:bonusactions-unicorn-s-blessing-3-day",
-        "uncertified-limited-use:traits-legendary-resistance-3-day",
-        "uncertified-monster-spellcasting",
-        "uncertified-trait:legendary-resistance-3-day"
+        "uncertified-monster-spellcasting"
       ]
     },
     {
