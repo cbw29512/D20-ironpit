@@ -42,6 +42,7 @@ class ConditionEffectDefinition(BaseModel):
     repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
     repeat_save_timing: ConditionTiming | None = None
     repeat_save_delay_rounds: int = Field(default=0, ge=0, le=20)
+    repeat_save_failure_condition: ConditionName | None = None
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
     periodic_damage: PeriodicDamageEffectDefinition | None = None
 
@@ -52,6 +53,8 @@ class ConditionEffectDefinition(BaseModel):
             raise ValueError("Condition repeat save requires ability, DC, and timing together.")
         if self.repeat_save_delay_rounds and not all(item is not None for item in repeat):
             raise ValueError("Condition repeat-save delay requires a complete repeat-save rule.")
+        if self.repeat_save_failure_condition and not all(item is not None for item in repeat):
+            raise ValueError("Repeat-save failure condition requires a complete repeat-save rule.")
         if self.expires_at_start_of_source_turn and self.expiry_timing not in {None, "source_turn_start"}:
             raise ValueError("Legacy source-start expiry conflicts with explicit condition timing.")
         return self
