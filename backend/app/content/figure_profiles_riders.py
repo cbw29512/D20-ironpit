@@ -7,6 +7,7 @@ RIDER_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Fire Giant": _p("brute", "fire-giant"),
     "Hezrou": _p("brute", "hezrou"),
     "Hobgoblin Captain": _p("humanoid", "hobgoblin-captain"),
+    "Satyr": _p("humanoid", "satyr"),
     "Shadow": _p("humanoid", "shadow"),
     "Specter": _p("humanoid", "specter"),
     "Stirge": _p("winged-insect", "stirge"),
