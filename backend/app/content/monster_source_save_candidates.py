@@ -2,10 +2,11 @@ from __future__ import annotations
 
 import re
 
-from app.content.monster_source_save_riders import common_failure_riders
+from app.content.monster_source_save_riders import common_failure_riders, slowing_breath_rider
 from app.domain.capability_attacks import SaveCapabilityDefinition
 from app.domain.capability_effects import DiceSpec
 from app.domain.combatants import RechargeRule, ResourceDefinition
+from app.domain.save_effects import TimedPenaltyEffectDefinition
 from app.domain.targeting import AreaTargeting
 from app.domain.weapons import DamageType
 
@@ -23,6 +24,17 @@ _CONTROL_SAVE = re.compile(
     r"(?P<target>[^.]+)\.\s+Failure:\s+(?P<failure>The target has the "
     r"(?:Blinded|Charmed|Deafened|Frightened|Incapacitated|Paralyzed|Poisoned|Prone|Restrained|Stunned|Unconscious) condition "
     r"until the (?:start|end) of (?:its|the [^.]+?[’']s) next turn)\.", re.I,
+)
+_RESTRICTION_SAVE = re.compile(
+    r"(?P<name>[A-Z][A-Za-z0-9’' -]*?)\.\s+(?P<ability>\w+) Saving Throw:\s+DC\s+(?P<dc>\d+),\s+"
+    r"(?P<target>[^.]+)\.\s+Failure:\s+(?P<failure>The target can[’']t take Reactions;[^.]+\.\s+"
+    r"This effect lasts until the end of its next turn)\.", re.I,
+)
+_PENALTY_SAVE = re.compile(
+    r"(?P<name>[A-Z][A-Za-z0-9’' -]*?)\.\s+(?P<ability>\w+) Saving Throw:\s+DC\s+(?P<dc>\d+),\s+"
+    r"(?P<target>[^.]+)\.\s+Failure:\s+The target has Disadvantage on (?P<penalty_ability>\w+)-based D20 Tests "
+    r"and subtracts \d+ \((?P<count>\d+)d(?P<size>\d+)\) from its damage rolls\.\s+It repeats the save at the end "
+    r"of each of its turns, ending the effect on itself on a success\.\s+After (?P<minutes>\d+) minute(?:s)?, it succeeds automatically\.", re.I,
 )
 
 
@@ -60,16 +72,13 @@ def _resource(monster: str, name: str, limit: str | None) -> ResourceDefinition 
     return None
 
 
-def _control_action(monster: str, match: re.Match[str]) -> tuple[SaveCapabilityDefinition, ResourceDefinition | None]:
+def _base_control(monster: str, match: re.Match[str], effects: list[object]) -> SaveCapabilityDefinition:
     name = match.group("name").strip()
-    resource = _resource(monster, name, match.group("limit"))
     range_ft, area = _area(match.group("target"))
-    riders = common_failure_riders(match.group("target"), match.group("failure"))
     return SaveCapabilityDefinition(
         id=f"srd-{_slug(monster)}-{_slug(name)}", name=name, save_ability=match.group("ability").lower(),
-        dc=int(match.group("dc")), range_ft=range_ft, area=area,
-        resource_id=resource.id if resource else None, animation="save-effect", **riders,
-    ), resource
+        dc=int(match.group("dc")), range_ft=range_ft, area=area, failure_effects=effects, animation="save-effect",
+    )
 
 
 def source_save_candidates(row: dict[str, object]) -> tuple[list[SaveCapabilityDefinition], list[ResourceDefinition]]:
@@ -94,10 +103,30 @@ def source_save_candidates(row: dict[str, object]) -> tuple[list[SaveCapabilityD
         ))
     existing = {action.id for action in actions}
     for match in _CONTROL_SAVE.finditer(text):
-        action, resource = _control_action(monster, match)
-        if action.id in existing:
+        riders = common_failure_riders(match.group("target"), match.group("failure"))
+        action = _base_control(monster, match, list(riders.pop("failure_effects")))
+        action = action.model_copy(update=riders)
+        if action.id not in existing:
+            actions.append(action)
+            existing.add(action.id)
+    for match in _RESTRICTION_SAVE.finditer(text):
+        restriction = slowing_breath_rider(match.group("failure"))
+        if restriction is None:
             continue
-        actions.append(action)
-        if resource:
-            resources.append(resource)
+        action = _base_control(monster, match, [restriction])
+        if action.id not in existing:
+            actions.append(action)
+            existing.add(action.id)
+    for match in _PENALTY_SAVE.finditer(text):
+        penalty = TimedPenaltyEffectDefinition(
+            effect_family=f"{_slug(monster)}-{_slug(match.group('name'))}",
+            d20_disadvantage_ability=match.group("penalty_ability").lower(),
+            damage_penalty_dice_count=int(match.group("count")), damage_penalty_dice_size=int(match.group("size")),
+            repeat_save_ability=match.group("ability").lower(), repeat_save_dc=int(match.group("dc")),
+            repeat_save_timing="target_turn_end", automatic_success_after_rounds=int(match.group("minutes")) * 10,
+        )
+        action = _base_control(monster, match, [penalty]).model_copy(update={"forbid_target_affected_by_action": True})
+        if action.id not in existing:
+            actions.append(action)
+            existing.add(action.id)
     return actions, resources
