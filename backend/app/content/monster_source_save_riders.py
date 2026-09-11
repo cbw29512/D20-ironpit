@@ -3,12 +3,14 @@ from __future__ import annotations
 import re
 
 from app.domain.capability_effects import GrappleEffectDefinition, ProneEffectDefinition
+from app.domain.hit_modifiers import CombatModifierEffect
 from app.domain.save_effects import ConditionEffectDefinition, TurnRestrictionEffectDefinition
 from app.domain.size import CreatureSize
 
 _SIZE = re.compile(r"\b(Tiny|Small|Medium|Large|Huge|Gargantuan)\s+or\s+smaller\b", re.I)
 _PUSH = re.compile(r"pushed\s+up\s+to\s+(\d+)\s+feet\s+straight\s+away", re.I)
 _GRAPPLE = re.compile(r"Grappled condition\s*\(escape DC\s*(\d+)\)", re.I)
+_SPEED = re.compile(r"target[’']s Speed decreases by (\d+) feet until the end of (?:its|the [^.]+?[’']s) next turn", re.I)
 _TIMED_CONDITION = re.compile(
     r"has the (Blinded|Charmed|Deafened|Frightened|Incapacitated|Paralyzed|Poisoned|Prone|Restrained|Stunned|Unconscious) condition "
     r"until the (start|end) of (?P<owner>its|the [^.]+?['’]s) next turn", re.I,
@@ -46,6 +48,14 @@ def common_failure_riders(target_text: str, failure_text: str) -> dict[str, obje
     if timed and timed.group(1).lower() != "prone":
         effects.append(ConditionEffectDefinition(
             condition=timed.group(1).lower(), expiry_timing=_condition_timing(timed),
+        ))
+    speed = _SPEED.search(failure_text)
+    if speed:
+        source_relative = bool(re.search(r"end of the [^.]+?[’']s next turn", speed.group(0), re.I))
+        effects.append(CombatModifierEffect(
+            kind="speed", flat_bonus=-int(speed.group(1)),
+            expires_at_start_of_source_turn=False,
+            expires_at_end_of_target_turn=not source_relative,
         ))
     return result
 
