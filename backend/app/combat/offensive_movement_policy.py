@@ -5,7 +5,7 @@ import logging
 from app.combat.action_economy import is_available
 from app.combat.encounter_targeting import combatant_distance, living_opponents
 from app.combat.grid_pathing import plan_movement_toward
-from app.combat.offensive_ranges import offensive_ranges_for_target
+from app.combat.offensive_ranges import ranked_offensive_ranges_for_target
 from app.combat.reaction_movement import move_toward_with_reactions
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.grid import OffensiveMovementIntent
@@ -19,22 +19,28 @@ def choose_offensive_movement_intent(
     setup: EncounterSetup,
     turn_key: str,
 ) -> OffensiveMovementIntent | None:
-    """Return the cheapest useful movement intent toward a supported offensive position."""
+    """Move only when the highest-priority reachable offense needs movement."""
     try:
         if not is_available(attacker.state, "action") or setup.map_definition is None:
             return None
         if attacker.state.position is None:
             raise ValueError("Grid offensive movement requires an authoritative attacker position.")
         members = [*setup.heroes, *setup.monsters]
-        candidates: list[tuple[int, int, str, str, int]] = []
-        offense_legal_now = False
+        candidates: list[tuple[int, int, int, str, str, int]] = []
         for target in living_opponents(attacker, setup):
             if target.state.position is None:
                 raise ValueError("Grid offensive movement requires authoritative target positions.")
             distance = combatant_distance(attacker, target)
-            for family, desired_distance in offensive_ranges_for_target(attacker, target, turn_key):
+            for priority, family, desired_distance in ranked_offensive_ranges_for_target(attacker, target, turn_key):
                 if distance <= desired_distance:
-                    offense_legal_now = True
+                    candidates.append((
+                        priority,
+                        0,
+                        distance,
+                        target.combatant_id,
+                        family,
+                        desired_distance,
+                    ))
                     continue
                 plan = plan_movement_toward(
                     setup.map_definition,
@@ -49,15 +55,18 @@ def choose_offensive_movement_intent(
                 if plan.final_distance_ft >= distance:
                     continue
                 candidates.append((
+                    priority,
                     plan.movement_cost_ft,
                     distance,
                     target.combatant_id,
                     family,
                     desired_distance,
                 ))
-        if offense_legal_now or not candidates:
+        if not candidates:
             return None
-        _, _, target_id, family, desired_distance = min(candidates)
+        _, movement_cost, _, target_id, family, desired_distance = min(candidates)
+        if movement_cost == 0:
+            return None
         return OffensiveMovementIntent(
             target_id=target_id,
             desired_distance_ft=desired_distance,
@@ -78,7 +87,7 @@ def move_to_enable_offense(
     turn_key: str,
     dice,
 ) -> tuple[list[BattleEvent], int]:
-    """Advance only along a route that can eventually enable supported offense."""
+    """Advance only along a route that can enable the preferred supported offense."""
     try:
         if setup.map_definition is None:
             return [], sequence
