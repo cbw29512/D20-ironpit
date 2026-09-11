@@ -128,7 +128,7 @@
     }
     const saved = saveChoice(member, setup);
     if (saved && E().available(member.state, "action")) {
-      events.push(V().resolveAction(sequence++, round, member, saved.target, saved.action, saved.distance));
+      events.push(V().resolveAction(sequence++, round, member, saved.target, saved.action, saved.distance, { setup }));
       return finalize(events, sequence, round, member, setup, turnKey);
     }
     const choice = F().chooseStandardAttack(member, setup);
