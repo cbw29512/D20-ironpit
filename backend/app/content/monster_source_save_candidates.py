@@ -13,7 +13,7 @@ from app.domain.targeting import AreaTargeting
 from app.domain.weapons import DamageType
 
 _SAVE = re.compile(
-    r"(?P<name>[A-Z][A-Za-z0-9’' -]*?)(?:\s+\((?P<limit>Recharge\s+\d(?:-\d)?|\d+/Day)\))?\.\s+"
+    r"(?:^|(?<=\.)\s+)(?P<name>[A-Z][A-Za-z0-9’' -]*?)(?:\s+\((?P<limit>Recharge\s+\d(?:\s*[-–]\s*\d)?|\d+\s*/\s*Day)\))?\.\s+"
     r"(?:[^.]+\.\s+)?"
     r"(?P<ability>Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) Saving Throw:\s+DC\s+(?P<dc>\d+),\s+"
     r"(?P<target>[^.]+)\.\s+Failure:\s+(?P<average>\d+)\s+\((?P<count>\d+)d(?P<size>\d+)"
@@ -76,10 +76,10 @@ def _resource(monster: str, name: str, limit: str | None) -> ResourceDefinition 
     if not limit:
         return None
     resource_id = f"srd-{_slug(monster)}-{_slug(name)}"
-    recharge = re.fullmatch(r"Recharge\s+(\d)(?:-(\d))?", limit, re.I)
+    recharge = re.fullmatch(r"Recharge\s+(\d)(?:\s*[-–]\s*(\d))?", limit, re.I)
     if recharge:
         return ResourceDefinition(id=resource_id, name=name, max_uses=1, recharge=RechargeRule(minimum_roll=int(recharge.group(1))))
-    per_day = re.fullmatch(r"(\d+)/Day", limit, re.I)
+    per_day = re.fullmatch(r"(\d+)\s*/\s*Day", limit, re.I)
     return ResourceDefinition(id=resource_id, name=name, max_uses=int(per_day.group(1))) if per_day else None
 
 
