@@ -2,8 +2,11 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.condition_rules import is_incapacitated
 from app.combat.dice import DiceProvider
 from app.domain.models import DamageRollComponent, DamageType, SavingThrowAction
+from app.domain.runtime import CombatantState
+from app.domain.traits import CombatTrait
 
 logger = logging.getLogger(__name__)
 
@@ -26,18 +29,30 @@ def _damage_rolls(
         raise
 
 
+def _evasion_applies(action: SavingThrowAction, target: CombatantState | None) -> bool:
+    return bool(
+        target is not None
+        and CombatTrait.EVASION in target.template.combat_traits
+        and action.save_ability == "dexterity"
+        and action.success_damage == "half"
+        and not is_incapacitated(target)
+    )
+
+
 def build_save_damage_components(
     action: SavingThrowAction,
     dice: DiceProvider,
     succeeded: bool,
     shared_damage_rolls: list[int] | None = None,
     capture_shared_damage_rolls: list[int] | None = None,
+    target: CombatantState | None = None,
 ) -> list[DamageRollComponent]:
     try:
         if action.damage_dice_count == 0:
             return []
         needs_shared_roll = capture_shared_damage_rolls is not None
-        if succeeded and action.success_damage == "none" and not needs_shared_roll:
+        evasion = _evasion_applies(action, target)
+        if succeeded and (action.success_damage == "none" or evasion) and not needs_shared_roll:
             return []
         if action.damage_type is None:
             raise ValueError(f"{action.name} has damage dice but no damage type.")
@@ -45,10 +60,10 @@ def build_save_damage_components(
         if capture_shared_damage_rolls is not None:
             capture_shared_damage_rolls.clear()
             capture_shared_damage_rolls.extend(rolls)
-        if succeeded and action.success_damage == "none":
+        if succeeded and (action.success_damage == "none" or evasion):
             return []
         total = sum(rolls) + action.damage_bonus
-        if succeeded and action.success_damage == "half":
+        if (succeeded and action.success_damage == "half") or (evasion and not succeeded):
             total //= 2
         return [DamageRollComponent(
             source=action.name,
