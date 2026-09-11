@@ -45,7 +45,7 @@ def choose_offensive_movement_intent(
                     desired_distance,
                     attacker.state.movement_remaining_ft,
                 )
-                if not plan.path or plan.final_distance_ft >= distance:
+                if not plan.goal_reachable or not plan.path or plan.final_distance_ft >= distance:
                     continue
                 candidates.append((
                     priority,
