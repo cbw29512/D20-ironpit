@@ -5,7 +5,7 @@ import re
 from functools import lru_cache
 
 from app.content.monster_catalog import load_monster_rows
-from app.domain.auras import EndTurnDamageAura
+from app.domain.auras import EndTurnDamageAura, StartTurnSaveConditionAura
 from app.domain.models import CombatantTemplate, DamageType
 
 logger = logging.getLogger(__name__)
@@ -16,6 +16,12 @@ _FIRE_AURA = re.compile(
     r"(?P<dtype>[A-Za-z]+) damage(?P<tail>[^.]*)\.",
     re.IGNORECASE,
 )
+_START_TURN_CONDITION_AURA = re.compile(
+    r"(?P<name>[A-Z][A-Za-z '\-]+)\.\s+(?P<ability>Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) "
+    r"Saving Throw: DC (?P<dc>\d+), any creature that starts its turn in a (?P<radius>\d+)-foot Emanation "
+    r"originating from the [^.]+\. Failure: The target has the (?P<condition>Poisoned|Frightened) condition "
+    r"until the start of its next turn\.", re.IGNORECASE,
+)
 
 
 @lru_cache(maxsize=1)
@@ -23,12 +29,15 @@ def _rows_by_name() -> dict[str, dict[str, object]]:
     return {str(row["name"]): row for row in load_monster_rows()}
 
 
-def source_end_turn_damage_auras(name: str) -> list[EndTurnDamageAura]:
-    """Compile supported printed end-turn damage auras; runtime remains source-name agnostic."""
+def _traits(name: str) -> str:
     row = _rows_by_name().get(name)
     if row is None:
         raise ValueError(f"No SRD 5.2.1 source row for monster {name!r}.")
-    text = str(row.get("traits", ""))
+    return str(row.get("traits", ""))
+
+
+def source_end_turn_damage_auras(name: str) -> list[EndTurnDamageAura]:
+    text = _traits(name)
     match = _FIRE_AURA.search(text)
     if not match:
         return []
@@ -43,22 +52,39 @@ def source_end_turn_damage_auras(name: str) -> list[EndTurnDamageAura]:
     )]
 
 
-def complete_monster_end_turn_damage_auras(
-    templates: list[CombatantTemplate],
-) -> list[CombatantTemplate]:
+def source_start_turn_condition_auras(name: str) -> list[StartTurnSaveConditionAura]:
+    text = _traits(name)
+    match = _START_TURN_CONDITION_AURA.search(text)
+    if not match:
+        return []
+    heading = match.group("name").strip()
+    return [StartTurnSaveConditionAura(
+        id=re.sub(r"[^a-z0-9]+", "-", heading.lower()).strip("-"), name=heading,
+        radius_ft=int(match.group("radius")), save_ability=match.group("ability").lower(),
+        dc=int(match.group("dc")), condition=match.group("condition").lower(),
+        expiry_timing="target_turn_start",
+    )]
+
+
+def complete_monster_auras(templates: list[CombatantTemplate]) -> list[CombatantTemplate]:
     try:
         return [
-            template.model_copy(update={"end_turn_damage_auras": source_end_turn_damage_auras(template.name)})
-            if template.kind == "monster" else template
+            template.model_copy(update={
+                "end_turn_damage_auras": source_end_turn_damage_auras(template.name),
+                "start_turn_save_condition_auras": source_start_turn_condition_auras(template.name),
+            }) if template.kind == "monster" else template
             for template in templates
         ]
     except Exception as exc:
-        logger.exception("Failed to derive monster end-turn damage auras from SRD source.")
+        logger.exception("Failed to derive monster auras from SRD source.")
         raise RuntimeError("Monster aura source compilation failed.") from exc
 
 
+def complete_monster_end_turn_damage_auras(templates: list[CombatantTemplate]) -> list[CombatantTemplate]:
+    return complete_monster_auras(templates)
+
+
 def fire_aura_source_is_fully_modeled(row: dict[str, object]) -> bool:
-    """Only the pure damage aura is certified; ignition/burning clauses remain blockers."""
     text = str(row.get("traits", ""))
     if not _FIRE_AURA.search(text):
         return False
