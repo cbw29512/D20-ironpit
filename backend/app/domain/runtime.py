@@ -81,6 +81,7 @@ class CombatantState(BaseModel):
     max_hp_reduction: int = Field(default=0, ge=0)
     temporary_hp: int = Field(default=0, ge=0)
     ability_score_reductions: dict[AbilityName, int] = Field(default_factory=dict)
+    damage_types_since_last_turn: list[DamageType] = Field(default_factory=list)
     position: GridPosition | None = None
     initiative_roll: int | None = None
     initiative_total: int | None = None
