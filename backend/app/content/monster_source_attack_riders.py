@@ -15,22 +15,26 @@ from app.domain.hit_modifiers import CombatModifierEffect
 from app.domain.size import CreatureSize
 from app.domain.weapons import DamageType
 
+_CONDITIONS = "Blinded|Charmed|Deafened|Frightened|Incapacitated|Paralyzed|Petrified|Poisoned|Prone|Restrained|Stunned|Unconscious"
 _SIZE = re.compile(r"\b(Tiny|Small|Medium|Large|Huge|Gargantuan)\s+or\s+smaller\b", re.I)
 _SPEED = re.compile(r"target[’']s Speed decreases by (\d+) feet until the end of its next turn", re.I)
 _GRAPPLE = re.compile(r"Grappled condition\s*\(escape DC\s*(\d+)\)", re.I)
-_CONDITION = re.compile(
-    r"target has the (Blinded|Charmed|Deafened|Frightened|Incapacitated|Paralyzed|Poisoned|Prone|Restrained|Stunned|Unconscious) condition",
-    re.I,
-)
+_CONDITION = re.compile(rf"target has the ({_CONDITIONS}) condition", re.I)
 _FLAT_EXTRA_DAMAGE = re.compile(
     r"\bplus\s+(?P<amount>\d+)\s+(?P<type>Acid|Cold|Fire|Force|Lightning|Necrotic|Poison|Psychic|Radiant|Thunder|Bludgeoning|Piercing|Slashing) damage\b",
     re.I,
 )
 _SAVE_CONDITION = re.compile(
-    r"(?:the\s+)?target[^.]{0,240}?must succeed on a DC\s*(?P<dc>\d+)\s*"
-    r"(?P<ability>Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) saving throw or "
-    r"(?:have|gain) the (?P<condition>Blinded|Charmed|Deafened|Frightened|Incapacitated|Paralyzed|Poisoned|Prone|Restrained|Stunned|Unconscious) condition "
-    r"until the (?P<edge>start|end) of (?P<owner>its|the [^.]+?[’']s) next turn",
+    rf"(?:the\s+)?target[^.]{{0,240}}?must succeed on a DC\s*(?P<dc>\d+)\s*"
+    rf"(?P<ability>Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) saving throw or "
+    rf"(?:have|gain) the (?P<condition>{_CONDITIONS}) condition "
+    rf"until the (?P<edge>start|end) of (?P<owner>its|the [^.]+?[’']s) next turn",
+    re.I,
+)
+_SAVE_FAILURE_CONDITION = re.compile(
+    rf"(?P<ability>Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) Saving Throw:\s*DC\s*(?P<dc>\d+)[^.]*\.\s*"
+    rf"Failure:\s*(?:The\s+)?target has the (?P<condition>{_CONDITIONS}) condition "
+    rf"until the (?P<edge>start|end) of (?P<owner>its|the [^.]+?[’']s) next turn",
     re.I,
 )
 _MAX_HP_TYPED = re.compile(
@@ -55,19 +59,16 @@ def _timing(owner: str, edge: str) -> str:
 
 
 def _hit_save(text: str, maximum: CreatureSize | None) -> HitSavingThrowEffectDefinition | None:
-    match = _SAVE_CONDITION.search(text)
+    match = _SAVE_CONDITION.search(text) or _SAVE_FAILURE_CONDITION.search(text)
     if match is None:
         return None
-    condition = match.group("condition").lower()
     failure = ConditionEffectDefinition(
-        condition=condition,
+        condition=match.group("condition").lower(),
         max_target_size=maximum,
         expiry_timing=_timing(match.group("owner"), match.group("edge")),
     )
     return HitSavingThrowEffectDefinition(
-        save_ability=match.group("ability").lower(),
-        dc=int(match.group("dc")),
-        failure_effects=[failure],
+        save_ability=match.group("ability").lower(), dc=int(match.group("dc")), failure_effects=[failure],
     )
 
 
