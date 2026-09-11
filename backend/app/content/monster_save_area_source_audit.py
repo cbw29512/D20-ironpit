@@ -14,25 +14,31 @@ def _header(action: Any) -> str:
     return rf"\b{name}{limited}\..{{0,300}}?{save}"
 
 
+def _creature_target_prefix() -> str:
+    """Allow source predicates between 'creature' and the actual area geometry."""
+    return r"each creature(?:\s+that\s+[^.]{0,140}?)?\s+in a "
+
+
 def _targeting_pattern(action: Any) -> str | None:
     area = action.area
     if area is None:
         return None
+    prefix = _creature_target_prefix()
     if area.shape == "cone":
         if action.range_ft != 0:
             return r"(?!)"
-        return rf"each creature in a {area.length_ft}-foot Cone\b"
+        return rf"{prefix}{area.length_ft}-foot Cone\b"
     if area.shape == "line":
         if action.range_ft != 0:
             return r"(?!)"
-        return rf"each creature in a {area.length_ft}-foot-long,\s*{area.width_ft}-foot-wide Line\b"
+        return rf"{prefix}{area.length_ft}-foot-long,\s*{area.width_ft}-foot-wide Line\b"
     if area.shape == "emanation":
         if action.range_ft != 0:
             return r"(?!)"
-        return rf"each creature in a {area.radius_ft}-foot Emanation originating from\b"
+        return rf"{prefix}{area.radius_ft}-foot Emanation originating from\b"
     if area.shape == "radius":
         return (
-            rf"each creature in a {area.radius_ft}-foot-radius Sphere centered on "
+            rf"{prefix}{area.radius_ft}-foot-radius Sphere centered on "
             rf"(?:that point|a point(?: within {action.range_ft} feet)?)\b"
         )
     raise ValueError(f"Unsupported source-audit area shape: {area.shape!r}.")
