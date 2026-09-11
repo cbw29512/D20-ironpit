@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 179,
-    "blocked": 151
+    "public_ready": 180,
+    "blocked": 150
   },
   "monsters": [
     {
@@ -812,7 +812,7 @@
       "monster_name": "Ancient Gold Dragon",
       "srd_source_page": 292,
       "srd_source_reference": "SRD 5.2.1 p. 292",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-ancient-gold-dragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -844,10 +844,13 @@
       "blockers": [
         "legendary",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
+        "source-attack-count-mismatch",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait"
+        "trait",
+        "uncertified-legendary-action-economy",
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -1101,7 +1104,7 @@
       "monster_name": "Ankheg",
       "srd_source_page": 259,
       "srd_source_reference": "SRD 5.2.1 p. 259",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-ankheg",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -1127,9 +1130,10 @@
       "blockers": [
         "condition-or-control",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "trait"
+        "source-attack-count-mismatch",
+        "trait",
+        "uncertified-trait:tunneler"
       ]
     },
     {
@@ -2737,7 +2741,7 @@
       "monster_name": "Djinni",
       "srd_source_page": 280,
       "srd_source_reference": "SRD 5.2.1 p. 280",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-djinni",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -2766,10 +2770,15 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
+        "source-attack-count-mismatch",
+        "source-save-action-count-mismatch",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait"
+        "trait",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:elemental-restoration",
+        "uncertified-trait:wishes"
       ]
     },
     {
@@ -2777,7 +2786,7 @@
       "monster_name": "Doppelganger",
       "srd_source_page": 280,
       "srd_source_reference": "SRD 5.2.1 p. 280",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-doppelganger",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -2810,9 +2819,14 @@
         "bonus-action",
         "condition-or-control",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "spellcasting"
+        "source-attack-count-mismatch",
+        "source-save-action-count-mismatch",
+        "spell-concentration-source-not-vendored",
+        "spellcasting",
+        "uncertified-bonus-action:shape-shift",
+        "uncertified-limited-use:actions-unsettling-visage-recharge-6",
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -7654,25 +7668,21 @@
       "monster_name": "Seahorse",
       "srd_source_page": 361,
       "srd_source_reference": "SRD 5.2.1 p. 361",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-seahorse",
       "detected_combat_mechanics": [
         "no-attack-roll",
         "trait"
       ],
       "supported_mechanics": [
+        "no-attack-roll",
         "trait"
       ],
-      "unsupported_mechanics": [
-        "no-attack-roll"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "monster-combat-mechanics-not-certified",
-        "no-attack-roll"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-shadow",
@@ -7782,7 +7792,7 @@
       "monster_name": "Shrieker Fungus",
       "srd_source_page": 286,
       "srd_source_reference": "SRD 5.2.1 p. 286",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-shrieker-fungus",
       "detected_combat_mechanics": [
         "damage-or-condition-defense",
         "no-attack-roll",
@@ -7800,9 +7810,9 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-certified",
         "no-attack-roll",
-        "reaction"
+        "reaction",
+        "uncertified-reaction:shriek"
       ]
     },
     {
@@ -8887,7 +8897,7 @@
       "monster_name": "Vampire",
       "srd_source_page": 335,
       "srd_source_reference": "SRD 5.2.1 p. 335",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-vampire",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -8925,10 +8935,22 @@
         "condition-or-control",
         "legendary",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
+        "source-attack-count-mismatch",
+        "source-save-action-count-mismatch",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait"
+        "trait",
+        "uncertified-bonus-action:charm",
+        "uncertified-bonus-action:shape-shift",
+        "uncertified-legendary-action-economy",
+        "uncertified-limited-use:bonusactions-charm-recharge-5-6",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:misty-escape",
+        "uncertified-trait:running-water",
+        "uncertified-trait:stake-to-the-heart",
+        "uncertified-trait:sunlight",
+        "uncertified-trait:vampire-weakness"
       ]
     },
     {
