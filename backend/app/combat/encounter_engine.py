@@ -16,6 +16,7 @@ from app.combat.encounter_targeting import select_nearest_target
 from app.combat.hit_modifiers import expire_source_turn_start_modifiers
 from app.combat.modifier_stack import expire_source_turn_modifiers
 from app.combat.precombat_spells import prepare_defenses
+from app.combat.regeneration import resolve_start_turn_regeneration
 from app.combat.source_bound_effects import cleanup_disabled_source_effects
 from app.combat.start_turn_auras import resolve_start_turn_save_condition_auras
 from app.combat.state import refresh_start_of_turn
@@ -32,10 +33,7 @@ def _combatant_index(combatants: list[EncounterCombatant]) -> dict[str, Encounte
 
 
 def _resolve_zero_hp_turn(
-    sequence: int,
-    round_number: int,
-    combatant: EncounterCombatant,
-    dice: DiceProvider,
+    sequence: int, round_number: int, combatant: EncounterCombatant, dice: DiceProvider,
 ) -> tuple[BattleEvent | None, int]:
     state = combatant.state
     if state.template.kind != "character" or state.current_hp != 0:
@@ -73,22 +71,19 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
         affected_states = [member.state for member in combatants]
         initiative_events, sequence = build_initiative_events(initiative, sequence)
         events.extend(initiative_events)
-
         for round_number in range(1, MAX_ENCOUNTER_ROUNDS + 1):
             for combatant_id in initiative.turn_order:
                 outcome = resolve_encounter_outcome(setup)
                 if outcome != "active":
                     events.append(build_finish_event(sequence, round_number, outcome))
                     return build_encounter_result(setup, initiative, events, outcome, round_number)
-
                 member = by_id[combatant_id]
                 cleanup_disabled_source_effects(setup)
                 expire_source_turn_start_modifiers(affected_states, member.combatant_id)
                 refresh_start_of_turn(member.state)
+                resolve_start_turn_regeneration(member.state)
                 end_concentration_if_expired(member.state, round_number, affected_states)
-                expiry_events, sequence = expire_start_of_turn_conditions(
-                    sequence, round_number, member, setup,
-                )
+                expiry_events, sequence = expire_start_of_turn_conditions(sequence, round_number, member, setup)
                 events.extend(expiry_events)
                 lifecycle_events, sequence = resolve_target_condition_timing(
                     sequence, round_number, member, "target_turn_start", dice,
@@ -102,7 +97,6 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                     sequence, round_number, member, setup, dice,
                 )
                 events.extend(attachment_events)
-
                 death_event, sequence = _resolve_zero_hp_turn(sequence, round_number, member, dice)
                 if death_event is not None:
                     events.append(death_event)
@@ -110,7 +104,6 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                     end_events, sequence = _end_turn_lifecycle(sequence, round_number, member, setup, dice)
                     events.extend(end_events)
                     continue
-
                 target = select_nearest_target(member, setup)
                 if target is not None:
                     turn_events, sequence = resolve_combat_turn(
@@ -119,12 +112,10 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                     events.extend(turn_events)
                 end_events, sequence = _end_turn_lifecycle(sequence, round_number, member, setup, dice)
                 events.extend(end_events)
-
             outcome = resolve_encounter_outcome(setup)
             if outcome != "active":
                 events.append(build_finish_event(sequence, round_number, outcome))
                 return build_encounter_result(setup, initiative, events, outcome, round_number)
-
         events.append(build_finish_event(sequence, MAX_ENCOUNTER_ROUNDS, "draw"))
         return build_encounter_result(setup, initiative, events, "draw", MAX_ENCOUNTER_ROUNDS)
     except ValueError:
