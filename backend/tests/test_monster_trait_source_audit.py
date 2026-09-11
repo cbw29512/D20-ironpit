@@ -73,6 +73,25 @@ def test_environmental_breathing_traits_are_arena_neutral() -> None:
         raise
 
 
+def test_information_only_traits_do_not_block_combat_certification() -> None:
+    try:
+        wolf = _monster("Wolf")
+        for trait_name, description in (
+            ("Divine Awareness", "The creature knows if it hears a lie."),
+            (
+                "Inscrutable",
+                "No magic can observe the creature remotely or detect its thoughts without permission.",
+            ),
+        ):
+            row = {"traits": f"{trait_name}. {description}"}
+            synthetic = wolf.model_copy(update={"source_trait_names": [trait_name], "combat_traits": []})
+            assert trait_issues(synthetic, row) == []
+            assert synthetic.source_trait_names == [trait_name]
+    except Exception:
+        logger.exception("Information-only trait neutrality regression failed.")
+        raise
+
+
 def test_sunlight_sensitivity_is_inactive_without_explicit_sunlight() -> None:
     try:
         wolf = _monster("Wolf")
