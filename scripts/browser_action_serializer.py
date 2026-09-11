@@ -90,7 +90,8 @@ def failure_effect_row(effect: Any) -> dict[str, Any]:
 def save_row(action: Any) -> dict[str, Any]:
     try:
         row: dict[str, Any] = {
-            "id": action.id, "name": action.name, "saveAbility": action.save_ability, "dc": action.dc,
+            "id": action.id, "name": action.name, "actionCost": action.action_cost,
+            "saveAbility": action.save_ability, "dc": action.dc,
             "range": action.range_ft, "damageDiceCount": action.damage_dice_count,
             "damageDiceSize": action.damage_dice_size, "damageBonus": action.damage_bonus,
             "damageType": action.damage_type, "successDamage": action.success_damage, "animation": action.animation,
@@ -107,6 +108,8 @@ def save_row(action: Any) -> dict[str, Any]:
             row["magicalEffect"] = True
         if action.target_max_size:
             row["targetMaxSize"] = value(action.target_max_size)
+        if action.required_target_condition:
+            row["requiredTargetCondition"] = action.required_target_condition
         if action.push_target_away_ft:
             row["pushTargetAwayFt"] = action.push_target_away_ft
         if action.push_target_max_size:
