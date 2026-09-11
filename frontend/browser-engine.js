@@ -5,7 +5,7 @@
   const L = () => window.IRON_PIT_BROWSER_CONDITION_LIFECYCLE;
   const P = () => window.IRON_PIT_BROWSER_PRECOMBAT_SPELLS;
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION, B = () => window.IRON_PIT_BROWSER_SOURCE_BOUND_EFFECTS;
-  const AT = () => window.IRON_PIT_BROWSER_ATTACHMENTS;
+  const AT = () => window.IRON_PIT_BROWSER_ATTACHMENTS, AU = () => window.IRON_PIT_BROWSER_AURAS;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const M = () => window.IRON_PIT_BROWSER_ARENA_MAP;
   const G = () => window.IRON_PIT_BROWSER_GRID_PLACEMENT;
@@ -61,6 +61,7 @@
         const attachment = AT()?.startTurn(sequence, round, member, setup) || { events: [], sequence };
         events.push(...attachment.events); sequence = attachment.sequence;
         const start = lifecycle(sequence, round, member, setup, "target_turn_start", "source_turn_start"); events.push(...start.events); sequence = start.sequence;
+        const aura = AU()?.turnStart(sequence, round, member, setup) || { events: [], sequence }; events.push(...aura.events); sequence = aura.sequence;
         if (member.state.template.kind === "character" && member.state.current_hp === 0 && !member.state.is_dead && !member.state.is_stable) events.push(T().deathSave(sequence++, round, member));
         if (member.state.current_hp > 0 && !member.state.is_dead) { const turn = T().resolveTurn(sequence, round, member, setup); events.push(...turn.events); sequence = turn.sequence; }
         const end = lifecycle(sequence, round, member, setup, "target_turn_end", "source_turn_end"); events.push(...end.events); sequence = end.sequence;
