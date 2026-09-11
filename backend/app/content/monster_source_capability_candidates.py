@@ -122,6 +122,7 @@ def source_candidate_definitions(excluded_ids: set[str]) -> dict[str, CombatantD
                 continue
             candidates[definition_id] = CombatantDefinition(
                 id=definition_id, name=str(row["name"]), archetype="source-derived candidate", kind="monster",
+                creature_type=str(row.get("type", "")).split(" (")[0].lower() or None,
                 challenge_rating=str(row["challenge"]).split()[0], size=CreatureSize(str(row["size"]).split()[0].lower()),
                 armor_class=int(re.search(r"\d+", str(row["armorClass"])).group()), max_hp=int(re.search(r"\d+", str(row["hitPoints"])).group()),
                 speed_ft=standard_arena_closing_speed(row["speed"]), movement_modes=parse_movement_profile(row["speed"]),
