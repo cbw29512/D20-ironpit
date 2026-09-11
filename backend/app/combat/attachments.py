@@ -3,11 +3,9 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available, spend
-from app.combat.damage import aggregate_damage_components, roll_damage_component
-from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
 from app.combat.encounter_targeting import combatant_distance
-from app.combat.zero_hp import apply_damage
+from app.combat.ongoing_damage import encounter_members, resolve_ongoing_damage
 from app.domain.attachments import AttachmentState
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, CombatantState, WeaponAttack
@@ -16,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 def members(setup: EncounterSetup) -> list[EncounterCombatant]:
-    return [*setup.heroes, *setup.monsters]
+    return encounter_members(setup)
 
 
 def apply_attachment(
@@ -119,27 +117,12 @@ def resolve_attachment_start_turn(
         if target is None or source.state.is_dead or not source.state.is_alive or target.state.is_dead:
             source.state.attachment = None
             return [], sequence
-        component = roll_damage_component(
-            dice, source.state.template.name, relation.periodic_damage_count,
-            relation.periodic_damage_size, relation.periodic_damage_bonus,
-            relation.periodic_damage_type, False,
-        )
-        total, components = apply_damage_defenses(target.state, [component])
-        hp_before = target.state.current_hp
-        affected_states = [member.state for member in members(setup)]
-        apply_damage(
-            target.state, total, damage_types={relation.periodic_damage_type},
-            dice=dice, affected_states=affected_states,
-        )
-        event = BattleEvent(
-            sequence=sequence, round_number=round_number, event_type="feature",
-            actor_id=source.combatant_id, actor_name=source.state.template.name,
-            target_id=target.combatant_id, target_name=target.state.template.name,
-            feature_id=relation.source_effect_id,
-            damage_roll=aggregate_damage_components(components), damage_components=components,
-            hp_before=hp_before, hp_after=target.state.current_hp, animation="attachment-damage",
-            description=(f"{source.state.template.name}'s attached effect deals {total} "
-                         f"{relation.periodic_damage_type.value} damage to {target.state.template.name}."),
+        event = resolve_ongoing_damage(
+            sequence, round_number, source, target, setup, dice,
+            feature_id=relation.source_effect_id, feature_name="attached effect",
+            dice_count=relation.periodic_damage_count, dice_size=relation.periodic_damage_size,
+            damage_bonus=relation.periodic_damage_bonus, damage_type=relation.periodic_damage_type,
+            animation="attachment-damage",
         )
         if target.state.is_dead:
             source.state.attachment = None
