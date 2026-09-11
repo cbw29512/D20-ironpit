@@ -15,6 +15,7 @@ from app.domain.save_effects import (
     ProneEffectDefinition,
     SaveFailureEffectDefinition,
 )
+from app.domain.target_filters import TargetFilter
 
 
 class DiceSpec(BaseModel):
@@ -46,6 +47,7 @@ class HitSavingThrowEffectDefinition(BaseModel):
     save_ability: AbilityName
     dc: int = Field(ge=1, le=40)
     magical_effect: bool = False
+    target_filter: TargetFilter = Field(default_factory=TargetFilter)
     failure_effects: list[SaveFailureEffectDefinition] = Field(default_factory=list)
 
 
