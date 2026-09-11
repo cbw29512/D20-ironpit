@@ -4,6 +4,7 @@ import re
 
 from app.content.monster_catalog import load_monster_rows
 from app.content.monster_defense_source_audit import parse_defense_profile
+from app.content.monster_general_action_fallback import general_unarmed_attack
 from app.content.monster_source_attack_riders import parse_attack_riders
 from app.content.monster_source_charge_riders import parse_charge_replacement
 from app.content.monster_source_fixed_attack_candidates import source_fixed_attack_candidates
@@ -115,7 +116,7 @@ def source_candidate_definitions(excluded_ids: set[str]) -> dict[str, CombatantD
             attacks = [_attack(row, action_text, match) for match in _ATTACK.finditer(action_text)]
             attacks.extend(source_fixed_attack_candidates(row, action_text))
             if not attacks:
-                continue
+                attacks = [general_unarmed_attack(row, definition_id)]
             save_actions, resources = source_save_candidates(row)
             defenses = parse_defense_profile(row)
             initiative = re.search(r"\bInitiative\s+([+-]?\d+)", str(row.get("rawText", "")), re.I)
