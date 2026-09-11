@@ -20,3 +20,21 @@ def test_ignores_long_rest_triggered_save() -> None:
     )
 
     assert source_action_save_count(actions) == 1
+
+
+def test_ignores_repeat_save_in_same_action_lifecycle() -> None:
+    actions = (
+        "Paralyzing Tentacles. Constitution Saving Throw: DC 13, one creature. "
+        "At the end of each of its turns, the target repeats the Constitution Saving Throw: DC 13."
+    )
+
+    assert source_action_save_count(actions) == 1
+
+
+def test_counts_distinct_initial_action_saves() -> None:
+    actions = (
+        "First Effect. Dexterity Saving Throw: DC 14. "
+        "Second Effect. Wisdom Saving Throw: DC 14."
+    )
+
+    assert source_action_save_count(actions) == 2
