@@ -80,6 +80,7 @@ class CombatantState(BaseModel):
     max_hp_bonus: int = Field(default=0, ge=0)
     max_hp_reduction: int = Field(default=0, ge=0)
     temporary_hp: int = Field(default=0, ge=0)
+    ability_score_reductions: dict[AbilityName, int] = Field(default_factory=dict)
     position: GridPosition | None = None
     initiative_roll: int | None = None
     initiative_total: int | None = None
