@@ -51,24 +51,19 @@
     "source_trait_names":["Amorphous","Sunlight Weakness"],"source_bonus_action_names":["Shadow Stealth"],"visual":{"armor":"none","main_hand":"draining-claw","off_hand":null,"body_style":"shadow"},"source":"SRD 5.2.1 p. 322"
   },
   {
-    "schema_version":1,
-    "id":"srd-troll-limb",
-    "name":"Troll Limb",
-    "archetype":"source-certified regenerative severed limb",
-    "challenge_rating":"1/2",
-    "kind":"monster",
-    "size":"small",
-    "armor_class":13,
-    "max_hp":14,
-    "speed_ft":20,
-    "movement_modes":{"walk_ft":20,"fly_ft":0,"climb_ft":0,"swim_ft":0,"burrow_ft":0,"hover":false},
-    "initiative_bonus":1,
+    "schema_version":1,"id":"srd-troll-limb","name":"Troll Limb","archetype":"source-certified regenerative severed limb","challenge_rating":"1/2","kind":"monster","size":"small","armor_class":13,"max_hp":14,"speed_ft":20,
+    "movement_modes":{"walk_ft":20,"fly_ft":0,"climb_ft":0,"swim_ft":0,"burrow_ft":0,"hover":false},"initiative_bonus":1,
     "attacks":[{"id":"srd-troll-limb-rend","name":"Rend","weapon_id":"srd-troll-limb-rend-weapon","attack_kind":"melee","attack_bonus":6,"damage":{"count":2,"size":4,"bonus":4},"damage_type":"slashing","animation":"claw","reach_ft":5,"attack_ability":"strength","attack_ability_modifier":4}],
-    "primary_attack_id":"srd-troll-limb-rend",
-    "unarmed_opportunity_attack":{"attack_bonus":6,"damage":5},
-    "saving_throw_bonuses":{"strength":4,"dexterity":1,"constitution":0,"intelligence":-5,"wisdom":-1,"charisma":-5},
-    "source_trait_names":["Regeneration","Troll Spawn"],
-    "visual":{"armor":"none","main_hand":"claw","off_hand":null,"body_style":"troll-limb"},
-    "source":"SRD 5.2.1 p. 333"
+    "primary_attack_id":"srd-troll-limb-rend","unarmed_opportunity_attack":{"attack_bonus":6,"damage":5},"saving_throw_bonuses":{"strength":4,"dexterity":1,"constitution":0,"intelligence":-5,"wisdom":-1,"charisma":-5},
+    "source_trait_names":["Regeneration","Troll Spawn"],"visual":{"armor":"none","main_hand":"claw","off_hand":null,"body_style":"troll-limb"},"source":"SRD 5.2.1 p. 333"
+  },
+  {
+    "schema_version":1,"id":"srd-satyr","name":"Satyr","archetype":"source-certified magical skirmisher","challenge_rating":"1/2","kind":"monster","size":"medium","armor_class":13,"max_hp":31,"speed_ft":40,
+    "movement_modes":{"walk_ft":40,"fly_ft":0,"climb_ft":0,"swim_ft":0,"burrow_ft":0,"hover":false},"initiative_bonus":3,
+    "attacks":[{"id":"srd-satyr-hooves","name":"Hooves","weapon_id":"srd-satyr-hooves-weapon","attack_kind":"melee","attack_bonus":5,"damage":{"count":1,"size":4,"bonus":3},"damage_type":"bludgeoning","animation":"strike","reach_ft":5,"attack_ability":"dexterity","attack_ability_modifier":3,"push_target_away_ft":10,"push_target_max_size":"medium"}],
+    "primary_attack_id":"srd-satyr-hooves","unarmed_opportunity_attack":{"attack_bonus":3,"damage":2},
+    "save_actions":[{"id":"srd-satyr-mockery","name":"Mockery","save_ability":"wisdom","dc":12,"range_ft":90,"damage":{"count":1,"size":6,"bonus":2},"damage_type":"psychic","success_damage":"none","animation":"mockery"}],
+    "saving_throw_bonuses":{"strength":1,"dexterity":3,"constitution":0,"intelligence":1,"wisdom":0,"charisma":2},
+    "source_trait_names":["Magic Resistance"],"visual":{"armor":"none","main_hand":"hooves","off_hand":null,"body_style":"satyr"},"source":"SRD 5.2.1 p. 321"
   }
 ]
