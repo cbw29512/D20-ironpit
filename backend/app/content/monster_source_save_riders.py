@@ -11,13 +11,19 @@ _PUSH = re.compile(r"pushed\s+up\s+to\s+(\d+)\s+feet\s+straight\s+away", re.I)
 _GRAPPLE = re.compile(r"Grappled condition\s*\(escape DC\s*(\d+)\)", re.I)
 _TIMED_CONDITION = re.compile(
     r"has the (Blinded|Charmed|Deafened|Frightened|Incapacitated|Paralyzed|Poisoned|Prone|Restrained|Stunned|Unconscious) condition "
-    r"until the (start|end) of (?:its|the [^.]+?['’]s) next turn", re.I,
+    r"until the (start|end) of (?P<owner>its|the [^.]+?['’]s) next turn", re.I,
 )
 
 
 def target_max_size(target_text: str) -> CreatureSize | None:
     match = _SIZE.search(target_text)
     return CreatureSize(match.group(1).lower()) if match else None
+
+
+def _condition_timing(match: re.Match[str]) -> str:
+    owner = match.group("owner").lower()
+    actor = "target" if owner == "its" else "source"
+    return f"{actor}_turn_{match.group(2).lower()}"
 
 
 def common_failure_riders(target_text: str, failure_text: str) -> dict[str, object]:
@@ -38,8 +44,9 @@ def common_failure_riders(target_text: str, failure_text: str) -> dict[str, obje
         )
     timed = _TIMED_CONDITION.search(failure_text)
     if timed and timed.group(1).lower() != "prone":
-        timing = f"target_turn_{timed.group(2).lower()}"
-        effects.append(ConditionEffectDefinition(condition=timed.group(1).lower(), expiry_timing=timing))
+        effects.append(ConditionEffectDefinition(
+            condition=timed.group(1).lower(), expiry_timing=_condition_timing(timed),
+        ))
     return result
 
 
