@@ -8,8 +8,15 @@ from pathlib import Path
 from app.content.capability_compiler import compile_combatant
 from app.content.monster_ability_scores import complete_monster_ability_scores
 from app.content.monster_aura_source import complete_monster_end_turn_damage_auras
+from app.content.monster_bonus_action_source_audit import complete_monster_bonus_action_fingerprints
 from app.content.monster_creature_types import complete_monster_creature_types
+from app.content.monster_legendary_source_audit import complete_monster_legendary_fingerprints
+from app.content.monster_limited_use_source_audit import complete_monster_limited_use_fingerprints
+from app.content.monster_reaction_source_audit import complete_monster_reaction_fingerprints
 from app.content.monster_regeneration_source import complete_monster_regeneration
+from app.content.monster_saving_throws import complete_monster_saving_throws
+from app.content.monster_source_capability_candidates import source_candidate_definitions
+from app.content.monster_spellcasting_source_audit import complete_monster_spellcasting_fingerprints
 from app.content.monster_trait_source_audit import complete_monster_trait_fingerprints
 from app.domain.capabilities import CombatantDefinition
 from app.domain.models import CombatantTemplate
@@ -34,8 +41,7 @@ def parse_capability_definitions(rows: object) -> dict[str, CombatantDefinition]
     if len(by_id) != len(definitions):
         raise ValueError("Combat capability registry ids must be unique.")
     missing_unarmed = [
-        definition.id
-        for definition in definitions
+        definition.id for definition in definitions
         if definition.kind == "monster" and definition.unarmed_opportunity_attack is None
     ]
     if missing_unarmed:
@@ -47,8 +53,7 @@ def parse_capability_definitions(rows: object) -> dict[str, CombatantDefinition]
 
 
 def merge_capability_definitions(
-    generated: dict[str, CombatantDefinition],
-    native: dict[str, CombatantDefinition],
+    generated: dict[str, CombatantDefinition], native: dict[str, CombatantDefinition],
 ) -> dict[str, CombatantDefinition]:
     overlap = set(generated) & set(native)
     if overlap:
@@ -64,20 +69,15 @@ def _load_registry(path: Path) -> dict[str, CombatantDefinition]:
 @lru_cache(maxsize=1)
 def load_capability_definitions() -> dict[str, CombatantDefinition]:
     try:
-        registries = [
-            _load_registry(_GENERATED_PATH),
-            _load_registry(_NATIVE_PATH),
-            _load_registry(_INCREMENTAL_PATH),
-            _load_registry(_RECHARGE_PATH),
-            _load_registry(_RECHARGE_BATCH3_PATH),
-            _load_registry(_RIDERS_PATH),
-            _load_registry(_TRAITS_PATH),
-            _load_registry(_TRAITS_BATCH2_PATH),
-        ]
+        paths = (
+            _GENERATED_PATH, _NATIVE_PATH, _INCREMENTAL_PATH, _RECHARGE_PATH,
+            _RECHARGE_BATCH3_PATH, _RIDERS_PATH, _TRAITS_PATH, _TRAITS_BATCH2_PATH,
+        )
         merged: dict[str, CombatantDefinition] = {}
-        for registry in registries:
-            merged = merge_capability_definitions(merged, registry)
-        return merged
+        for path in paths:
+            merged = merge_capability_definitions(merged, _load_registry(path))
+        candidates = source_candidate_definitions(set(merged))
+        return merge_capability_definitions(merged, candidates)
     except Exception as exc:
         logger.exception("Failed to load declarative combat capability registries.")
         raise RuntimeError("Combat capability registry could not be loaded.") from exc
@@ -90,12 +90,22 @@ def get_capability_definition(combatant_id: str) -> CombatantDefinition:
     return definition
 
 
+def _complete_monster_batch(monsters: list[CombatantTemplate]) -> list[CombatantTemplate]:
+    monsters = complete_monster_creature_types(monsters)
+    monsters = complete_monster_ability_scores(monsters)
+    monsters = complete_monster_saving_throws(monsters)
+    monsters = complete_monster_end_turn_damage_auras(monsters)
+    monsters = complete_monster_regeneration(monsters)
+    monsters = complete_monster_trait_fingerprints(monsters)
+    monsters = complete_monster_reaction_fingerprints(monsters)
+    monsters = complete_monster_bonus_action_fingerprints(monsters)
+    monsters = complete_monster_limited_use_fingerprints(monsters)
+    monsters = complete_monster_legendary_fingerprints(monsters)
+    return complete_monster_spellcasting_fingerprints(monsters)
+
+
 def _complete_monster(template: CombatantTemplate) -> CombatantTemplate:
-    completed = complete_monster_creature_types([template])
-    completed = complete_monster_ability_scores(completed)
-    completed = complete_monster_end_turn_damage_auras(completed)
-    completed = complete_monster_regeneration(completed)
-    return complete_monster_trait_fingerprints(completed)[0]
+    return _complete_monster_batch([template])[0]
 
 
 def build_combatant_from_capabilities(combatant_id: str) -> CombatantTemplate:
@@ -108,11 +118,7 @@ def build_monster_templates_from_capabilities() -> list[CombatantTemplate]:
         monsters = [compile_combatant(item) for item in definitions if item.kind == "monster"]
         if not monsters:
             raise ValueError("Combat capability registry contains no monsters.")
-        monsters = complete_monster_creature_types(monsters)
-        monsters = complete_monster_ability_scores(monsters)
-        monsters = complete_monster_end_turn_damage_auras(monsters)
-        monsters = complete_monster_regeneration(monsters)
-        return complete_monster_trait_fingerprints(monsters)
+        return _complete_monster_batch(monsters)
     except Exception as exc:
         logger.exception("Failed to compile monster roster from combat capability registry.")
         raise RuntimeError("Declarative monster roster could not be created.") from exc
