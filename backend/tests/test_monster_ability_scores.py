@@ -10,6 +10,5 @@ def test_every_runtime_monster_has_source_derived_ability_scores() -> None:
 
 
 def test_shadow_strength_score_is_canonical_source_value() -> None:
-    shadow = next(monster for monster in build_monster_templates_from_capabilities() if monster.name == "Shadow")
-    assert shadow.ability_scores is not None
-    assert shadow.ability_scores.strength == 6
+    shadow = next(row for row in load_monster_rows() if row["name"] == "Shadow")
+    assert parse_ability_scores(shadow).strength == 6
