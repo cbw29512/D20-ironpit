@@ -10,6 +10,30 @@
 
   const sizeAllowed = (target, maximum) => !maximum || S().sizeAtMost(target, maximum);
 
+  function applyCondition(target, sourceId, sourceEffectId, effect, options) {
+    const condition = T().apply(target.state, effect.condition, sourceId, {
+      sourceEffectId, appliedRound: options.round,
+      expiresAtStartOfSourceTurn: Boolean(effect.expiresAtStartOfSourceTurn),
+      expiryTiming: effect.expiryTiming || null,
+      repeatSaveAbility: effect.repeatSaveAbility || null,
+      repeatSaveDc: effect.repeatSaveDc || null,
+      repeatSaveTiming: effect.repeatSaveTiming || null,
+      repeatSaveDelayRounds: effect.repeatSaveDelayRounds || 0,
+      repeatSaveFailureCondition: effect.repeatSaveFailureCondition || null,
+      allowedRemovalActionIds: effect.allowedRemovalActionIds || [],
+      periodicDamage: effect.periodicDamage || null,
+    });
+    if (!condition) return [];
+    const applied = [condition];
+    for (const linked of (effect.linkedConditions || [])) {
+      const linkedId = T().apply(target.state, linked, sourceId, {
+        sourceEffectId, appliedRound: options.round,
+      });
+      if (linkedId) applied.push(linkedId);
+    }
+    return applied;
+  }
+
   function apply(target, sourceId, sourceEffectId, effects, options = {}) {
     if (target.state.is_dead || !target.state.is_alive) return [];
     const applied = [];
@@ -25,19 +49,7 @@
         }
       } else if (effect.kind === "condition") {
         if (!sizeAllowed(target, effect.maxTargetSize)) continue;
-        const condition = T().apply(target.state, effect.condition, sourceId, {
-          sourceEffectId, appliedRound: options.round,
-          expiresAtStartOfSourceTurn: Boolean(effect.expiresAtStartOfSourceTurn),
-          expiryTiming: effect.expiryTiming || null,
-          repeatSaveAbility: effect.repeatSaveAbility || null,
-          repeatSaveDc: effect.repeatSaveDc || null,
-          repeatSaveTiming: effect.repeatSaveTiming || null,
-          repeatSaveDelayRounds: effect.repeatSaveDelayRounds || 0,
-          repeatSaveFailureCondition: effect.repeatSaveFailureCondition || null,
-          allowedRemovalActionIds: effect.allowedRemovalActionIds || [],
-          periodicDamage: effect.periodicDamage || null,
-        });
-        if (condition) applied.push(condition);
+        applied.push(...applyCondition(target, sourceId, sourceEffectId, effect, options));
       } else if (effect.kind === "turn-restriction") {
         if (effect.requiresCondition && !target.state.active_effect_ids.includes(effect.requiresCondition)) continue;
         const restriction = T().apply(target.state, "turn-restriction", sourceId, {
