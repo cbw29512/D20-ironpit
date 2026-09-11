@@ -15,7 +15,7 @@
   const D = () => window.IRON_PIT_DICE;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (state, cost) => cost === "action" && state.action_available,
     spend: (state) => { state.action_available = false; } };
-  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { autoFailStrDex: (state) => state.is_unconscious, incapacitated: (state) => state.is_unconscious };
+  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { autoFailStrDex: (state) => state.is_unconscious, incapacitated: (state) => state.is_unconscious, has: () => false };
   const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
 
   function saveMode(state, ability, magicalEffect = false, advantageSources = 0) {
@@ -49,6 +49,7 @@
   }
   function legalAction(action, target, distance) {
     if (distance > action.range) return false;
+    if (action.requiredTargetCondition && !Q().has(target.state, action.requiredTargetCondition)) return false;
     if (action.forbidTargetAffectedByAction && T()?.affectedByAction(target.state, action.id)) return false;
     return !action.targetMaxSize || S().sizeAtMost(target, action.targetMaxSize);
   }
@@ -74,14 +75,15 @@
     try {
       const spendAction = options.spendAction !== false, spendResourceCost = options.spendResourceCost !== false;
       const resourceBacked = Boolean(action.resourceId), resources = resourceBacked ? RES() : null;
+      const actionCost = action.actionCost || "action";
       if (resourceBacked && spendResourceCost && !resources) throw new Error("Browser resource API is not loaded.");
-      if (spendAction && !E().available(actor.state, "action")) throw new Error("Action is unavailable for saving throw action.");
+      if (spendAction && !E().available(actor.state, actionCost)) throw new Error(`${actionCost.replace("_", " ")} is unavailable for saving throw action.`);
       if (!legalAction(action, target, distance)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
       if (resourceBacked && spendResourceCost && !resources.available(actor.state, action.resourceId, action.resourceCost || 1)) throw new Error(`${action.name} lacks its required resource.`);
       const save = resolveSavingThrow(
         target.state, action.saveAbility, action.dc, Boolean(action.magicalEffect), AU().savingThrowAdvantageSources(target, options.setup),
       );
-      if (spendAction) E().spend(actor.state, "action");
+      if (spendAction) E().spend(actor.state, actionCost);
       const resourceRemaining = resourceBacked && spendResourceCost ? resources.spend(actor.state, action.resourceId, action.resourceCost || 1) : null;
       const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
       const deathSuccessBefore = target.state.death_save_successes, deathFailureBefore = target.state.death_save_failures;
