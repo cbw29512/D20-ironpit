@@ -5,7 +5,7 @@ from app.combat.encounter_combat_turn import resolve_combat_turn
 from app.combat.offensive_movement_policy import choose_offensive_movement_intent
 from app.combat.recharge_action_policy import recharge_action_choice
 from app.combat.recharge_action_resolution import resolve_priority_recharge_action
-from app.combat.state import build_combatant_state
+from app.combat.state import begin_turn, build_combatant_state
 from app.content.audited_fighter import build_karnok_stoneward
 from app.content.demo import build_goblin_warrior
 from app.domain.actions import SavingThrowAction
@@ -85,6 +85,7 @@ def test_movement_prefers_reachable_recharge_cone_over_legal_ranged_fallback() -
         heroes=[target], monsters=[actor], hero_total_levels=1, monster_total_cr="1",
         map_definition=BattleMapDefinition(id="recharge-movement", width_squares=24, height_squares=16),
     )
+    begin_turn(actor.state)
 
     intent = choose_offensive_movement_intent(actor, setup, "1:actor")
 
