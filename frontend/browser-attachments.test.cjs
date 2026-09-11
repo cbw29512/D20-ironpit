@@ -7,7 +7,7 @@ const vm = require("node:vm");
 
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
-for (const file of ["browser-action-economy.js", "browser-state.js", "browser-zero-hp.js", "browser-attachments.js"]) load(file);
+for (const file of ["browser-action-economy.js", "browser-state.js", "browser-zero-hp.js", "browser-ongoing-damage.js", "browser-attachments.js"]) load(file);
 
 const capabilityRows = JSON.parse(fs.readFileSync(path.join(__dirname, "../backend/app/content/data/combatant_capabilities_riders_v1.json"), "utf8"));
 const stirge = capabilityRows.find((row) => row.id === "srd-stirge");
