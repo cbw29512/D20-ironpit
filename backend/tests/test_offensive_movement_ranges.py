@@ -48,6 +48,7 @@ def test_ranged_profile_separates_legal_and_preferred_range(monkeypatch) -> None
             family="ranged",
             max_range_ft=320,
             preferred_range_ft=80,
+            execution_rank=2,
         )
     ]
 
