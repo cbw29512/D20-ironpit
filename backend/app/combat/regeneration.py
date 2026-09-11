@@ -3,9 +3,15 @@ from __future__ import annotations
 import logging
 
 from app.combat.hit_points import effective_max_hp
-from app.domain.models import CombatantState
+from app.domain.models import CombatantState, DamageType
 
 logger = logging.getLogger(__name__)
+
+
+def note_damage_types(state: CombatantState, damage_types: set[DamageType]) -> None:
+    for damage_type in damage_types:
+        if damage_type not in state.damage_types_since_last_turn:
+            state.damage_types_since_last_turn.append(damage_type)
 
 
 def regeneration_defers_death(state: CombatantState) -> bool:
