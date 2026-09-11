@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 164,
-    "blocked": 166
+    "public_ready": 165,
+    "blocked": 165
   },
   "monsters": [
     {
@@ -13,7 +13,7 @@
       "monster_name": "Aboleth",
       "srd_source_page": 258,
       "srd_source_reference": "SRD 5.2.1 p. 258",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-aboleth",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -44,9 +44,17 @@
         "condition-or-control",
         "legendary",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "trait"
+        "source-save-action-count-mismatch",
+        "trait",
+        "trait-source-missing:legendary-resistance",
+        "uncertified-legendary-action-economy",
+        "uncertified-limited-use:actions-dominate-mind-2-day",
+        "uncertified-limited-use:traits-legendary-resistance-3-day-or-4-day-in-lair",
+        "uncertified-trait:eldritch-restoration",
+        "uncertified-trait:legendary-resistance-3-day-or-4-day-in-lair",
+        "uncertified-trait:mucus-cloud",
+        "uncertified-trait:probing-telepathy"
       ]
     },
     {
@@ -54,7 +62,7 @@
       "monster_name": "Adult Black Dragon",
       "srd_source_page": 264,
       "srd_source_reference": "SRD 5.2.1 p. 264",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-adult-black-dragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -70,14 +78,14 @@
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "legendary",
         "limited-use",
         "save-or-complex-action",
-        "spellcasting"
+        "spellcasting",
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -86,9 +94,15 @@
       "blockers": [
         "legendary",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "spellcasting"
+        "spell-concentration-source-not-vendored",
+        "spellcasting",
+        "trait",
+        "trait-source-missing:legendary-resistance",
+        "uncertified-legendary-action-economy",
+        "uncertified-limited-use:traits-legendary-resistance-3-day-or-4-day-in-lair",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:legendary-resistance-3-day-or-4-day-in-lair"
       ]
     },
     {
@@ -96,7 +110,7 @@
       "monster_name": "Adult Blue Dragon",
       "srd_source_page": 266,
       "srd_source_reference": "SRD 5.2.1 p. 266",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-adult-blue-dragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -106,22 +120,20 @@
         "save-or-complex-action",
         "saving-throw-action",
         "spellcasting",
-        "trait",
-        "trait-parse"
+        "trait"
       ],
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "legendary",
         "limited-use",
         "save-or-complex-action",
         "spellcasting",
-        "trait-parse"
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -130,10 +142,15 @@
       "blockers": [
         "legendary",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait-parse"
+        "trait",
+        "trait-source-missing:legendary-resistance",
+        "uncertified-legendary-action-economy",
+        "uncertified-limited-use:traits-legendary-resistance-3-day-or-4-day-in-lair",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:legendary-resistance-3-day-or-4-day-in-lair"
       ]
     },
     {
@@ -141,7 +158,7 @@
       "monster_name": "Adult Brass Dragon",
       "srd_source_page": 268,
       "srd_source_reference": "SRD 5.2.1 p. 268",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-adult-brass-dragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -152,15 +169,13 @@
         "save-or-complex-action",
         "saving-throw-action",
         "spellcasting",
-        "trait",
-        "trait-parse"
+        "trait"
       ],
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "condition-or-control",
@@ -168,7 +183,7 @@
         "limited-use",
         "save-or-complex-action",
         "spellcasting",
-        "trait-parse"
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -178,10 +193,16 @@
         "condition-or-control",
         "legendary",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
+        "source-save-action-count-mismatch",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait-parse"
+        "trait",
+        "trait-source-missing:legendary-resistance",
+        "uncertified-legendary-action-economy",
+        "uncertified-limited-use:traits-legendary-resistance-3-day-or-4-day-in-lair",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:legendary-resistance-3-day-or-4-day-in-lair"
       ]
     },
     {
@@ -189,7 +210,7 @@
       "monster_name": "Adult Bronze Dragon",
       "srd_source_page": 270,
       "srd_source_reference": "SRD 5.2.1 p. 270",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-adult-bronze-dragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -206,15 +227,15 @@
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "condition-or-control",
         "legendary",
         "limited-use",
         "save-or-complex-action",
-        "spellcasting"
+        "spellcasting",
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -224,9 +245,16 @@
         "condition-or-control",
         "legendary",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "spellcasting"
+        "source-save-action-count-mismatch",
+        "spell-concentration-source-not-vendored",
+        "spellcasting",
+        "trait",
+        "trait-source-missing:legendary-resistance",
+        "uncertified-legendary-action-economy",
+        "uncertified-limited-use:traits-legendary-resistance-3-day-or-4-day-in-lair",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:legendary-resistance-3-day-or-4-day-in-lair"
       ]
     },
     {
@@ -234,7 +262,7 @@
       "monster_name": "Adult Copper Dragon",
       "srd_source_page": 276,
       "srd_source_reference": "SRD 5.2.1 p. 276",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-adult-copper-dragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -244,22 +272,20 @@
         "save-or-complex-action",
         "saving-throw-action",
         "spellcasting",
-        "trait",
-        "trait-parse"
+        "trait"
       ],
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "legendary",
         "limited-use",
         "save-or-complex-action",
         "spellcasting",
-        "trait-parse"
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -268,10 +294,17 @@
       "blockers": [
         "legendary",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
+        "save-area-mismatch:srd-adult-copper-dragon-acid-breath",
         "save-or-complex-action",
+        "source-save-action-count-mismatch",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait-parse"
+        "trait",
+        "trait-source-missing:legendary-resistance",
+        "uncertified-legendary-action-economy",
+        "uncertified-limited-use:traits-legendary-resistance-3-day-or-4-day-in-lair",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:legendary-resistance-3-day-or-4-day-in-lair"
       ]
     },
     {
@@ -279,7 +312,7 @@
       "monster_name": "Adult Gold Dragon",
       "srd_source_page": 291,
       "srd_source_reference": "SRD 5.2.1 p. 291",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-adult-gold-dragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -295,14 +328,14 @@
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "legendary",
         "limited-use",
         "save-or-complex-action",
-        "spellcasting"
+        "spellcasting",
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -311,9 +344,16 @@
       "blockers": [
         "legendary",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "spellcasting"
+        "source-save-action-count-mismatch",
+        "spell-concentration-source-not-vendored",
+        "spellcasting",
+        "trait",
+        "trait-source-missing:legendary-resistance",
+        "uncertified-legendary-action-economy",
+        "uncertified-limited-use:traits-legendary-resistance-3-day-or-4-day-in-lair",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:legendary-resistance-3-day-or-4-day-in-lair"
       ]
     },
     {
@@ -321,7 +361,7 @@
       "monster_name": "Adult Green Dragon",
       "srd_source_page": 294,
       "srd_source_reference": "SRD 5.2.1 p. 294",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-adult-green-dragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -337,14 +377,14 @@
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "legendary",
         "limited-use",
         "save-or-complex-action",
-        "spellcasting"
+        "spellcasting",
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -353,9 +393,15 @@
       "blockers": [
         "legendary",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "spellcasting"
+        "spell-concentration-source-not-vendored",
+        "spellcasting",
+        "trait",
+        "trait-source-missing:legendary-resistance",
+        "uncertified-legendary-action-economy",
+        "uncertified-limited-use:traits-legendary-resistance-3-day-or-4-day-in-lair",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:legendary-resistance-3-day-or-4-day-in-lair"
       ]
     },
     {
@@ -363,7 +409,7 @@
       "monster_name": "Adult Red Dragon",
       "srd_source_page": 318,
       "srd_source_reference": "SRD 5.2.1 p. 318",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-adult-red-dragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -373,22 +419,20 @@
         "save-or-complex-action",
         "saving-throw-action",
         "spellcasting",
-        "trait",
-        "trait-parse"
+        "trait"
       ],
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "legendary",
         "limited-use",
         "save-or-complex-action",
         "spellcasting",
-        "trait-parse"
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -397,10 +441,15 @@
       "blockers": [
         "legendary",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait-parse"
+        "trait",
+        "trait-source-missing:legendary-resistance",
+        "uncertified-legendary-action-economy",
+        "uncertified-limited-use:traits-legendary-resistance-3-day-or-4-day-in-lair",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:legendary-resistance-3-day-or-4-day-in-lair"
       ]
     },
     {
@@ -408,7 +457,7 @@
       "monster_name": "Adult Silver Dragon",
       "srd_source_page": 324,
       "srd_source_reference": "SRD 5.2.1 p. 324",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-adult-silver-dragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -419,15 +468,13 @@
         "save-or-complex-action",
         "saving-throw-action",
         "spellcasting",
-        "trait",
-        "trait-parse"
+        "trait"
       ],
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "condition-or-control",
@@ -435,7 +482,7 @@
         "limited-use",
         "save-or-complex-action",
         "spellcasting",
-        "trait-parse"
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -445,10 +492,16 @@
         "condition-or-control",
         "legendary",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
+        "source-save-action-count-mismatch",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait-parse"
+        "trait",
+        "trait-source-missing:legendary-resistance",
+        "uncertified-legendary-action-economy",
+        "uncertified-limited-use:traits-legendary-resistance-3-day-or-4-day-in-lair",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:legendary-resistance-3-day-or-4-day-in-lair"
       ]
     },
     {
@@ -456,7 +509,7 @@
       "monster_name": "Adult White Dragon",
       "srd_source_page": 340,
       "srd_source_reference": "SRD 5.2.1 p. 340",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-adult-white-dragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -471,13 +524,13 @@
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "legendary",
         "limited-use",
-        "save-or-complex-action"
+        "save-or-complex-action",
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -486,8 +539,12 @@
       "blockers": [
         "legendary",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
+        "save-or-complex-action",
+        "trait",
+        "trait-source-missing:legendary-resistance",
+        "uncertified-legendary-action-economy",
+        "uncertified-limited-use:traits-legendary-resistance-3-day-or-4-day-in-lair",
+        "uncertified-trait:legendary-resistance-3-day-or-4-day-in-lair"
       ]
     },
     {
@@ -495,7 +552,7 @@
       "monster_name": "Air Elemental",
       "srd_source_page": 258,
       "srd_source_reference": "SRD 5.2.1 p. 258",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-air-elemental",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -525,9 +582,11 @@
       "blockers": [
         "condition-or-control",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "trait"
+        "source-save-action-count-mismatch",
+        "trait",
+        "uncertified-limited-use:actions-whirlwind-recharge-4-6",
+        "uncertified-trait:air-form"
       ]
     },
     {
@@ -556,7 +615,7 @@
       "monster_name": "Ancient Black Dragon",
       "srd_source_page": 265,
       "srd_source_reference": "SRD 5.2.1 p. 265",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-ancient-black-dragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -572,14 +631,14 @@
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "legendary",
         "limited-use",
         "save-or-complex-action",
-        "spellcasting"
+        "spellcasting",
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -588,9 +647,15 @@
       "blockers": [
         "legendary",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "spellcasting"
+        "spell-concentration-source-not-vendored",
+        "spellcasting",
+        "trait",
+        "trait-source-missing:legendary-resistance",
+        "uncertified-legendary-action-economy",
+        "uncertified-limited-use:traits-legendary-resistance-4-day-or-5-day-in-lair",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:legendary-resistance-4-day-or-5-day-in-lair"
       ]
     },
     {
@@ -598,7 +663,7 @@
       "monster_name": "Ancient Blue Dragon",
       "srd_source_page": 267,
       "srd_source_reference": "SRD 5.2.1 p. 267",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-ancient-blue-dragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -608,22 +673,20 @@
         "save-or-complex-action",
         "saving-throw-action",
         "spellcasting",
-        "trait",
-        "trait-parse"
+        "trait"
       ],
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "legendary",
         "limited-use",
         "save-or-complex-action",
         "spellcasting",
-        "trait-parse"
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -632,10 +695,15 @@
       "blockers": [
         "legendary",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait-parse"
+        "trait",
+        "trait-source-missing:legendary-resistance",
+        "uncertified-legendary-action-economy",
+        "uncertified-limited-use:traits-legendary-resistance-4-day-or-5-day-in-lair",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:legendary-resistance-4-day-or-5-day-in-lair"
       ]
     },
     {
@@ -643,7 +711,7 @@
       "monster_name": "Ancient Brass Dragon",
       "srd_source_page": 269,
       "srd_source_reference": "SRD 5.2.1 p. 269",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-ancient-brass-dragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -654,15 +722,13 @@
         "save-or-complex-action",
         "saving-throw-action",
         "spellcasting",
-        "trait",
-        "trait-parse"
+        "trait"
       ],
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "condition-or-control",
@@ -670,7 +736,7 @@
         "limited-use",
         "save-or-complex-action",
         "spellcasting",
-        "trait-parse"
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -680,10 +746,16 @@
         "condition-or-control",
         "legendary",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
+        "source-save-action-count-mismatch",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait-parse"
+        "trait",
+        "trait-source-missing:legendary-resistance",
+        "uncertified-legendary-action-economy",
+        "uncertified-limited-use:traits-legendary-resistance-4-day-or-5-day-in-lair",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:legendary-resistance-4-day-or-5-day-in-lair"
       ]
     },
     {
@@ -691,7 +763,7 @@
       "monster_name": "Ancient Bronze Dragon",
       "srd_source_page": 271,
       "srd_source_reference": "SRD 5.2.1 p. 271",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-ancient-bronze-dragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -708,15 +780,15 @@
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "condition-or-control",
         "legendary",
         "limited-use",
         "save-or-complex-action",
-        "spellcasting"
+        "spellcasting",
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -726,9 +798,16 @@
         "condition-or-control",
         "legendary",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "spellcasting"
+        "source-save-action-count-mismatch",
+        "spell-concentration-source-not-vendored",
+        "spellcasting",
+        "trait",
+        "trait-source-missing:legendary-resistance",
+        "uncertified-legendary-action-economy",
+        "uncertified-limited-use:traits-legendary-resistance-4-day-or-5-day-in-lair",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:legendary-resistance-4-day-or-5-day-in-lair"
       ]
     },
     {
@@ -736,7 +815,7 @@
       "monster_name": "Ancient Copper Dragon",
       "srd_source_page": 277,
       "srd_source_reference": "SRD 5.2.1 p. 277",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-ancient-copper-dragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -746,22 +825,20 @@
         "save-or-complex-action",
         "saving-throw-action",
         "spellcasting",
-        "trait",
-        "trait-parse"
+        "trait"
       ],
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "legendary",
         "limited-use",
         "save-or-complex-action",
         "spellcasting",
-        "trait-parse"
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -770,10 +847,17 @@
       "blockers": [
         "legendary",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
+        "save-area-mismatch:srd-ancient-copper-dragon-acid-breath",
         "save-or-complex-action",
+        "source-save-action-count-mismatch",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait-parse"
+        "trait",
+        "trait-source-missing:legendary-resistance",
+        "uncertified-legendary-action-economy",
+        "uncertified-limited-use:traits-legendary-resistance-4-day-or-5-day-in-lair",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:legendary-resistance-4-day-or-5-day-in-lair"
       ]
     },
     {
@@ -797,14 +881,14 @@
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "legendary",
         "limited-use",
         "save-or-complex-action",
-        "spellcasting"
+        "spellcasting",
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -815,7 +899,8 @@
         "limited-use",
         "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "spellcasting"
+        "spellcasting",
+        "trait"
       ]
     },
     {
@@ -823,7 +908,7 @@
       "monster_name": "Ancient Green Dragon",
       "srd_source_page": 294,
       "srd_source_reference": "SRD 5.2.1 p. 294",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-ancient-green-dragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -839,14 +924,14 @@
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "legendary",
         "limited-use",
         "save-or-complex-action",
-        "spellcasting"
+        "spellcasting",
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -855,9 +940,15 @@
       "blockers": [
         "legendary",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "spellcasting"
+        "spell-concentration-source-not-vendored",
+        "spellcasting",
+        "trait",
+        "trait-source-missing:legendary-resistance",
+        "uncertified-legendary-action-economy",
+        "uncertified-limited-use:traits-legendary-resistance-4-day-or-5-day-in-lair",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:legendary-resistance-4-day-or-5-day-in-lair"
       ]
     },
     {
@@ -865,7 +956,7 @@
       "monster_name": "Ancient Red Dragon",
       "srd_source_page": 319,
       "srd_source_reference": "SRD 5.2.1 p. 319",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-ancient-red-dragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -875,22 +966,20 @@
         "save-or-complex-action",
         "saving-throw-action",
         "spellcasting",
-        "trait",
-        "trait-parse"
+        "trait"
       ],
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "legendary",
         "limited-use",
         "save-or-complex-action",
         "spellcasting",
-        "trait-parse"
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -899,10 +988,15 @@
       "blockers": [
         "legendary",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait-parse"
+        "trait",
+        "trait-source-missing:legendary-resistance",
+        "uncertified-legendary-action-economy",
+        "uncertified-limited-use:traits-legendary-resistance-4-day-or-5-day-in-lair",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:legendary-resistance-4-day-or-5-day-in-lair"
       ]
     },
     {
@@ -910,7 +1004,7 @@
       "monster_name": "Ancient Silver Dragon",
       "srd_source_page": 325,
       "srd_source_reference": "SRD 5.2.1 p. 325",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-ancient-silver-dragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -921,15 +1015,13 @@
         "save-or-complex-action",
         "saving-throw-action",
         "spellcasting",
-        "trait",
-        "trait-parse"
+        "trait"
       ],
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "condition-or-control",
@@ -937,7 +1029,7 @@
         "limited-use",
         "save-or-complex-action",
         "spellcasting",
-        "trait-parse"
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -947,10 +1039,16 @@
         "condition-or-control",
         "legendary",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
+        "source-save-action-count-mismatch",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait-parse"
+        "trait",
+        "trait-source-missing:legendary-resistance",
+        "uncertified-legendary-action-economy",
+        "uncertified-limited-use:traits-legendary-resistance-4-day-or-5-day-in-lair",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:legendary-resistance-4-day-or-5-day-in-lair"
       ]
     },
     {
@@ -958,7 +1056,7 @@
       "monster_name": "Ancient White Dragon",
       "srd_source_page": 341,
       "srd_source_reference": "SRD 5.2.1 p. 341",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-ancient-white-dragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -973,13 +1071,13 @@
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "legendary",
         "limited-use",
-        "save-or-complex-action"
+        "save-or-complex-action",
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -988,8 +1086,12 @@
       "blockers": [
         "legendary",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
+        "save-or-complex-action",
+        "trait",
+        "trait-source-missing:legendary-resistance",
+        "uncertified-legendary-action-economy",
+        "uncertified-limited-use:traits-legendary-resistance-4-day-or-5-day-in-lair",
+        "uncertified-trait:legendary-resistance-4-day-or-5-day-in-lair"
       ]
     },
     {
@@ -1041,7 +1143,7 @@
       "monster_name": "Animated Rug of Smothering",
       "srd_source_page": 259,
       "srd_source_reference": "SRD 5.2.1 p. 259",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-animated-rug-of-smothering",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -1049,19 +1151,15 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "damage-or-condition-defense"
       ],
-      "unsupported_mechanics": [
-        "condition-or-control"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "condition-or-control",
-        "monster-combat-mechanics-not-certified"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-ankheg",
@@ -1220,7 +1318,7 @@
       "monster_name": "Assassin",
       "srd_source_page": 260,
       "srd_source_reference": "SRD 5.2.1 p. 260",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-assassin",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -1245,8 +1343,9 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
-        "trait"
+        "source-attack-count-mismatch",
+        "trait",
+        "uncertified-trait:evasion"
       ]
     },
     {
@@ -1380,7 +1479,7 @@
       "monster_name": "Balor",
       "srd_source_page": 261,
       "srd_source_reference": "SRD 5.2.1 p. 261",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-balor",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -1409,8 +1508,13 @@
         "bonus-action",
         "condition-or-control",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "trait"
+        "source-attack-count-mismatch",
+        "trait",
+        "trait-source-missing:legendary-resistance",
+        "uncertified-bonus-action:teleport",
+        "uncertified-limited-use:traits-legendary-resistance-3-day",
+        "uncertified-trait:death-throes",
+        "uncertified-trait:legendary-resistance-3-day"
       ]
     },
     {
@@ -1460,7 +1564,7 @@
       "monster_name": "Barbed Devil",
       "srd_source_page": 262,
       "srd_source_reference": "SRD 5.2.1 p. 262",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-barbed-devil",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -1483,8 +1587,9 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
-        "trait"
+        "trait",
+        "uncertified-trait:barbed-hide",
+        "uncertified-trait:diabolical-restoration"
       ]
     },
     {
@@ -1492,7 +1597,7 @@
       "monster_name": "Basilisk",
       "srd_source_page": 262,
       "srd_source_reference": "SRD 5.2.1 p. 262",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-basilisk",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -1512,7 +1617,8 @@
       "blockers": [
         "bonus-action",
         "limited-use",
-        "monster-combat-mechanics-not-certified"
+        "uncertified-bonus-action:petrifying-gaze",
+        "uncertified-limited-use:bonusactions-petrifying-gaze-recharge-4-6"
       ]
     },
     {
@@ -1539,7 +1645,7 @@
       "monster_name": "Bearded Devil",
       "srd_source_page": 262,
       "srd_source_reference": "SRD 5.2.1 p. 262",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-bearded-devil",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -1566,8 +1672,9 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
+        "source-attack-count-mismatch",
+        "source-save-action-count-mismatch",
         "trait"
       ]
     },
@@ -1576,7 +1683,7 @@
       "monster_name": "Behir",
       "srd_source_page": 263,
       "srd_source_reference": "SRD 5.2.1 p. 263",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-behir",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -1607,8 +1714,8 @@
         "bonus-action",
         "condition-or-control",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
+        "save-or-complex-action",
+        "uncertified-bonus-action:swallow"
       ]
     },
     {
@@ -1689,7 +1796,7 @@
       "monster_name": "Black Pudding",
       "srd_source_page": 265,
       "srd_source_reference": "SRD 5.2.1 p. 265",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-black-pudding",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -1711,10 +1818,13 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-certified",
         "reaction",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait"
+        "trait",
+        "uncertified-monster-spellcasting",
+        "uncertified-reaction:split",
+        "uncertified-trait:corrosive-form"
       ]
     },
     {
@@ -1722,7 +1832,7 @@
       "monster_name": "Blink Dog",
       "srd_source_page": 266,
       "srd_source_reference": "SRD 5.2.1 p. 266",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-blink-dog",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -1742,7 +1852,8 @@
       "blockers": [
         "bonus-action",
         "limited-use",
-        "monster-combat-mechanics-not-certified"
+        "uncertified-bonus-action:teleport",
+        "uncertified-limited-use:bonusactions-teleport-recharge-4-6"
       ]
     },
     {
@@ -1823,7 +1934,7 @@
       "monster_name": "Bone Devil",
       "srd_source_page": 267,
       "srd_source_reference": "SRD 5.2.1 p. 267",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-bone-devil",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -1846,8 +1957,9 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
-        "trait"
+        "source-attack-count-mismatch",
+        "trait",
+        "uncertified-trait:diabolical-restoration"
       ]
     },
     {
@@ -1855,7 +1967,7 @@
       "monster_name": "Brass Dragon Wyrmling",
       "srd_source_page": 268,
       "srd_source_reference": "SRD 5.2.1 p. 268",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-brass-dragon-wyrmling",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -1881,8 +1993,8 @@
       "blockers": [
         "condition-or-control",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
+        "save-or-complex-action",
+        "source-save-action-count-mismatch"
       ]
     },
     {
@@ -1946,7 +2058,7 @@
       "monster_name": "Bugbear Stalker",
       "srd_source_page": 271,
       "srd_source_reference": "SRD 5.2.1 p. 271",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-bugbear-stalker",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -1970,8 +2082,10 @@
       "blockers": [
         "bonus-action",
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
-        "trait"
+        "source-attack-count-mismatch",
+        "trait",
+        "uncertified-bonus-action:quick-grapple",
+        "uncertified-trait:abduct"
       ]
     },
     {
@@ -1979,7 +2093,7 @@
       "monster_name": "Bugbear Warrior",
       "srd_source_page": 272,
       "srd_source_reference": "SRD 5.2.1 p. 272",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-bugbear-warrior",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -1998,8 +2112,9 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
-        "trait"
+        "source-attack-count-mismatch",
+        "trait",
+        "uncertified-trait:abduct"
       ]
     },
     {
@@ -2007,7 +2122,7 @@
       "monster_name": "Bulette",
       "srd_source_page": 272,
       "srd_source_reference": "SRD 5.2.1 p. 272",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-bulette",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -2032,8 +2147,8 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
+        "save-or-complex-action",
+        "source-save-action-count-mismatch"
       ]
     },
     {
@@ -2081,7 +2196,7 @@
       "monster_name": "Centaur Trooper",
       "srd_source_page": 272,
       "srd_source_reference": "SRD 5.2.1 p. 272",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-centaur-trooper",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -2103,7 +2218,8 @@
       "blockers": [
         "bonus-action",
         "limited-use",
-        "monster-combat-mechanics-not-certified"
+        "uncertified-bonus-action:trampling-charge",
+        "uncertified-limited-use:bonusactions-trampling-charge-recharge-5-6"
       ]
     },
     {
@@ -2111,7 +2227,7 @@
       "monster_name": "Chain Devil",
       "srd_source_page": 272,
       "srd_source_reference": "SRD 5.2.1 p. 272",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-chain-devil",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -2140,10 +2256,12 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
         "reaction",
         "save-or-complex-action",
-        "trait"
+        "source-save-action-count-mismatch",
+        "trait",
+        "uncertified-reaction:unnerving-gaze",
+        "uncertified-trait:diabolical-restoration"
       ]
     },
     {
@@ -2151,7 +2269,7 @@
       "monster_name": "Chimera",
       "srd_source_page": 273,
       "srd_source_reference": "SRD 5.2.1 p. 273",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-chimera",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -2179,8 +2297,8 @@
       "blockers": [
         "condition-or-control",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
+        "source-attack-count-mismatch",
         "unsupported-action-rider"
       ]
     },
@@ -2189,7 +2307,7 @@
       "monster_name": "Chuul",
       "srd_source_page": 273,
       "srd_source_reference": "SRD 5.2.1 p. 273",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-chuul",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -2216,9 +2334,10 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "trait"
+        "source-save-action-count-mismatch",
+        "trait",
+        "uncertified-trait:sense-magic"
       ]
     },
     {
@@ -2264,7 +2383,7 @@
       "monster_name": "Cloaker",
       "srd_source_page": 274,
       "srd_source_reference": "SRD 5.2.1 p. 274",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-cloaker",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -2294,9 +2413,13 @@
       "blockers": [
         "bonus-action",
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
+        "uncertified-bonus-action:moan",
+        "uncertified-bonus-action:phantasms",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:light-sensitivity",
         "unsupported-action-rider"
       ]
     },
@@ -2305,7 +2428,7 @@
       "monster_name": "Cloud Giant",
       "srd_source_page": 275,
       "srd_source_reference": "SRD 5.2.1 p. 275",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-cloud-giant",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -2329,8 +2452,11 @@
       "blockers": [
         "bonus-action",
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
-        "spellcasting"
+        "source-attack-count-mismatch",
+        "spell-concentration-source-not-vendored",
+        "spellcasting",
+        "uncertified-bonus-action:misty-step",
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -2338,7 +2464,7 @@
       "monster_name": "Cockatrice",
       "srd_source_page": 275,
       "srd_source_reference": "SRD 5.2.1 p. 275",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-cockatrice",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -2361,8 +2487,8 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
+        "save-or-complex-action",
+        "source-save-action-count-mismatch"
       ]
     },
     {
@@ -2416,7 +2542,7 @@
       "monster_name": "Copper Dragon Wyrmling",
       "srd_source_page": 275,
       "srd_source_reference": "SRD 5.2.1 p. 275",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-copper-dragon-wyrmling",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -2439,8 +2565,8 @@
       "public_ready_status": "blocked",
       "blockers": [
         "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
+        "save-or-complex-action",
+        "source-save-action-count-mismatch"
       ]
     },
     {
@@ -2513,7 +2639,7 @@
       "monster_name": "Cultist Fanatic",
       "srd_source_page": 278,
       "srd_source_reference": "SRD 5.2.1 p. 278",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-cultist-fanatic",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -2535,8 +2661,11 @@
       "blockers": [
         "bonus-action",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "spellcasting"
+        "spell-concentration-source-not-vendored",
+        "spellcasting",
+        "uncertified-bonus-action:spiritual-weapon",
+        "uncertified-limited-use:bonusactions-spiritual-weapon-2-day",
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -2578,7 +2707,7 @@
       "monster_name": "Death Dog",
       "srd_source_page": 279,
       "srd_source_reference": "SRD 5.2.1 p. 279",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-death-dog",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -2605,8 +2734,8 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
+        "source-save-action-count-mismatch",
         "unsupported-action-rider"
       ]
     },
@@ -2636,7 +2765,7 @@
       "monster_name": "Deva",
       "srd_source_page": 279,
       "srd_source_reference": "SRD 5.2.1 p. 279",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-deva",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -2666,10 +2795,14 @@
       "blockers": [
         "bonus-action",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait"
+        "trait",
+        "uncertified-bonus-action:divine-aid",
+        "uncertified-limited-use:bonusactions-divine-aid-2-day",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:exalted-restoration"
       ]
     },
     {
@@ -2864,7 +2997,7 @@
       "monster_name": "Drider",
       "srd_source_page": 281,
       "srd_source_reference": "SRD 5.2.1 p. 281",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-drider",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -2890,8 +3023,11 @@
       "blockers": [
         "bonus-action",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "spellcasting"
+        "spell-concentration-source-not-vendored",
+        "spellcasting",
+        "uncertified-bonus-action:magic-of-the-spider-queen",
+        "uncertified-limited-use:bonusactions-magic-of-the-spider-queen-recharge-5-6",
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -2899,7 +3035,7 @@
       "monster_name": "Druid",
       "srd_source_page": 282,
       "srd_source_reference": "SRD 5.2.1 p. 282",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-druid",
       "detected_combat_mechanics": [
         "attack-roll",
         "multiattack",
@@ -2917,8 +3053,9 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-certified",
-        "spellcasting"
+        "spell-concentration-source-not-vendored",
+        "spellcasting",
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -2926,7 +3063,7 @@
       "monster_name": "Dryad",
       "srd_source_page": 282,
       "srd_source_reference": "SRD 5.2.1 p. 282",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-dryad",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -2949,9 +3086,11 @@
       "public_ready_status": "blocked",
       "blockers": [
         "bonus-action",
-        "monster-combat-mechanics-not-certified",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait"
+        "trait",
+        "uncertified-bonus-action:tree-stride",
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -2959,7 +3098,7 @@
       "monster_name": "Dust Mephit",
       "srd_source_page": 307,
       "srd_source_reference": "SRD 5.2.1 p. 307",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-dust-mephit",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -2989,10 +3128,15 @@
       "blockers": [
         "condition-or-control",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
+        "source-save-action-count-mismatch",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait"
+        "trait",
+        "uncertified-limited-use:actions-blinding-breath-recharge-6",
+        "uncertified-limited-use:actions-sleep-1-day",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:death-burst"
       ]
     },
     {
@@ -3046,7 +3190,7 @@
       "monster_name": "Efreeti",
       "srd_source_page": 283,
       "srd_source_reference": "SRD 5.2.1 p. 283",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-efreeti",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -3068,9 +3212,12 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-certified",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait"
+        "trait",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:elemental-restoration",
+        "uncertified-trait:wishes"
       ]
     },
     {
@@ -3078,7 +3225,7 @@
       "monster_name": "Elephant",
       "srd_source_page": 348,
       "srd_source_reference": "SRD 5.2.1 p. 348",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-elephant",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -3100,7 +3247,7 @@
       "blockers": [
         "bonus-action",
         "condition-or-control",
-        "monster-combat-mechanics-not-certified"
+        "uncertified-bonus-action:trample"
       ]
     },
     {
@@ -3129,7 +3276,7 @@
       "monster_name": "Erinyes",
       "srd_source_page": 283,
       "srd_source_reference": "SRD 5.2.1 p. 283",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-erinyes",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -3158,9 +3305,13 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
+        "parry-source-mismatch",
         "save-or-complex-action",
-        "trait"
+        "source-save-action-count-mismatch",
+        "trait",
+        "uncertified-reaction:parry",
+        "uncertified-trait:diabolical-restoration",
+        "uncertified-trait:magic-rope"
       ]
     },
     {
@@ -3168,7 +3319,7 @@
       "monster_name": "Ettercap",
       "srd_source_page": 284,
       "srd_source_reference": "SRD 5.2.1 p. 284",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-ettercap",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -3199,8 +3350,11 @@
         "bonus-action",
         "condition-or-control",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
+        "save-or-complex-action",
+        "source-attack-count-mismatch",
+        "source-save-action-count-mismatch",
+        "uncertified-bonus-action:reel",
+        "uncertified-limited-use:actions-web-strand-recharge-5-6"
       ]
     },
     {
@@ -3235,7 +3389,7 @@
       "monster_name": "Fire Elemental",
       "srd_source_page": 284,
       "srd_source_reference": "SRD 5.2.1 p. 284",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-fire-elemental",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -3255,8 +3409,11 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-certified",
-        "trait"
+        "trait",
+        "trait-unmodeled-clause:fire-aura",
+        "uncertified-trait:fire-aura",
+        "uncertified-trait:fire-form",
+        "uncertified-trait:water-susceptibility"
       ]
     },
     {
@@ -3291,7 +3448,7 @@
       "monster_name": "Flesh Golem",
       "srd_source_page": 285,
       "srd_source_reference": "SRD 5.2.1 p. 285",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-flesh-golem",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -3311,8 +3468,11 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-certified",
-        "trait"
+        "trait",
+        "uncertified-trait:aversion-to-fire",
+        "uncertified-trait:berserk",
+        "uncertified-trait:immutable-form",
+        "uncertified-trait:lightning-absorption"
       ]
     },
     {
@@ -3362,7 +3522,7 @@
       "monster_name": "Frost Giant",
       "srd_source_page": 285,
       "srd_source_reference": "SRD 5.2.1 p. 285",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-frost-giant",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -3388,7 +3548,9 @@
       "blockers": [
         "bonus-action",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
+        "source-attack-count-mismatch",
+        "uncertified-bonus-action:war-cry",
+        "uncertified-limited-use:bonusactions-war-cry-recharge-5-6",
         "unsupported-action-rider"
       ]
     },
@@ -3422,7 +3584,7 @@
       "monster_name": "Gelatinous Cube",
       "srd_source_page": 286,
       "srd_source_reference": "SRD 5.2.1 p. 286",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-gelatinous-cube",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -3449,10 +3611,14 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
+        "source-save-action-count-mismatch",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait"
+        "trait",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:ooze-cube",
+        "uncertified-trait:transparent"
       ]
     },
     {
@@ -3460,7 +3626,7 @@
       "monster_name": "Ghast",
       "srd_source_page": 287,
       "srd_source_reference": "SRD 5.2.1 p. 287",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-ghast",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -3485,8 +3651,8 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
+        "source-save-action-count-mismatch",
         "trait"
       ]
     },
@@ -3495,7 +3661,7 @@
       "monster_name": "Ghost",
       "srd_source_page": 287,
       "srd_source_reference": "SRD 5.2.1 p. 287",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-ghost",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -3527,10 +3693,15 @@
       "blockers": [
         "condition-or-control",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
+        "source-save-action-count-mismatch",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait"
+        "trait",
+        "trait-runtime-missing:incorporeal-movement",
+        "uncertified-limited-use:actions-possession-recharge-6",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:ethereal-sight"
       ]
     },
     {
@@ -3538,7 +3709,7 @@
       "monster_name": "Ghoul",
       "srd_source_page": 288,
       "srd_source_reference": "SRD 5.2.1 p. 288",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-ghoul",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -3563,8 +3734,8 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
+        "save-or-complex-action",
+        "source-save-action-count-mismatch"
       ]
     },
     {
@@ -3875,7 +4046,7 @@
       "monster_name": "Giant Hyena",
       "srd_source_page": 352,
       "srd_source_reference": "SRD 5.2.1 p. 352",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-giant-hyena",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -3895,7 +4066,8 @@
       "blockers": [
         "bonus-action",
         "limited-use",
-        "monster-combat-mechanics-not-certified"
+        "uncertified-bonus-action:rampage",
+        "uncertified-limited-use:bonusactions-rampage-1-day"
       ]
     },
     {
@@ -3924,7 +4096,7 @@
       "monster_name": "Giant Octopus",
       "srd_source_page": 352,
       "srd_source_reference": "SRD 5.2.1 p. 352",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-giant-octopus",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -3948,8 +4120,9 @@
       "blockers": [
         "condition-or-control",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "reaction"
+        "reaction",
+        "uncertified-limited-use:reactions-ink-cloud-1-day",
+        "uncertified-reaction:ink-cloud-1-day"
       ]
     },
     {
@@ -4077,7 +4250,7 @@
       "monster_name": "Giant Spider",
       "srd_source_page": 353,
       "srd_source_reference": "SRD 5.2.1 p. 353",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-giant-spider",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -4103,8 +4276,9 @@
       "blockers": [
         "condition-or-control",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
+        "save-or-complex-action",
+        "source-save-action-count-mismatch",
+        "uncertified-limited-use:actions-web-recharge-5-6"
       ]
     },
     {
@@ -4240,7 +4414,7 @@
       "monster_name": "Gibbering Mouther",
       "srd_source_page": 288,
       "srd_source_reference": "SRD 5.2.1 p. 288",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-gibbering-mouther",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -4268,9 +4442,12 @@
       "blockers": [
         "condition-or-control",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "trait"
+        "source-save-action-count-mismatch",
+        "trait",
+        "uncertified-limited-use:actions-blinding-spittle-recharge-5-6",
+        "uncertified-trait:aberrant-ground",
+        "uncertified-trait:gibbering"
       ]
     },
     {
@@ -4278,7 +4455,7 @@
       "monster_name": "Glabrezu",
       "srd_source_page": 289,
       "srd_source_reference": "SRD 5.2.1 p. 289",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-glabrezu",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -4307,10 +4484,11 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait"
+        "trait",
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -4318,7 +4496,7 @@
       "monster_name": "Gladiator",
       "srd_source_page": 289,
       "srd_source_reference": "SRD 5.2.1 p. 289",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-gladiator",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -4343,8 +4521,9 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
+        "parry-source-mismatch",
+        "save-or-complex-action",
+        "uncertified-reaction:parry"
       ]
     },
     {
@@ -4352,7 +4531,7 @@
       "monster_name": "Gnoll Warrior",
       "srd_source_page": 289,
       "srd_source_reference": "SRD 5.2.1 p. 289",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-gnoll-warrior",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -4372,7 +4551,8 @@
       "blockers": [
         "bonus-action",
         "limited-use",
-        "monster-combat-mechanics-not-certified"
+        "uncertified-bonus-action:rampage",
+        "uncertified-limited-use:bonusactions-rampage-1-day"
       ]
     },
     {
@@ -4468,7 +4648,7 @@
       "monster_name": "Gold Dragon Wyrmling",
       "srd_source_page": 290,
       "srd_source_reference": "SRD 5.2.1 p. 290",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-gold-dragon-wyrmling",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -4495,8 +4675,8 @@
       "public_ready_status": "blocked",
       "blockers": [
         "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
+        "save-or-complex-action",
+        "source-save-action-count-mismatch"
       ]
     },
     {
@@ -4504,7 +4684,7 @@
       "monster_name": "Gorgon",
       "srd_source_page": 292,
       "srd_source_reference": "SRD 5.2.1 p. 292",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-gorgon",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -4533,8 +4713,10 @@
         "bonus-action",
         "condition-or-control",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
+        "save-or-complex-action",
+        "source-save-action-count-mismatch",
+        "uncertified-bonus-action:trample",
+        "uncertified-limited-use:actions-petrifying-breath-recharge-5-6"
       ]
     },
     {
@@ -4542,7 +4724,7 @@
       "monster_name": "Gray Ooze",
       "srd_source_page": 293,
       "srd_source_reference": "SRD 5.2.1 p. 293",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-gray-ooze",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -4562,9 +4744,11 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-certified",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait"
+        "trait",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:corrosive-form"
       ]
     },
     {
@@ -4603,7 +4787,7 @@
       "monster_name": "Green Hag",
       "srd_source_page": 295,
       "srd_source_reference": "SRD 5.2.1 p. 295",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-green-hag",
       "detected_combat_mechanics": [
         "attack-roll",
         "multiattack",
@@ -4623,9 +4807,11 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-certified",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait"
+        "trait",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:coven-magic"
       ]
     },
     {
@@ -4738,7 +4924,7 @@
       "monster_name": "Guardian Naga",
       "srd_source_page": 296,
       "srd_source_reference": "SRD 5.2.1 p. 296",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-guardian-naga",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -4767,10 +4953,13 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
+        "source-save-action-count-mismatch",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait"
+        "trait",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:celestial-restoration"
       ]
     },
     {
@@ -4820,7 +5009,7 @@
       "monster_name": "Harpy",
       "srd_source_page": 297,
       "srd_source_reference": "SRD 5.2.1 p. 297",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-harpy",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -4841,8 +5030,8 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
+        "save-or-complex-action",
+        "source-save-action-count-mismatch"
       ]
     },
     {
@@ -5075,7 +5264,7 @@
       "monster_name": "Horned Devil",
       "srd_source_page": 299,
       "srd_source_reference": "SRD 5.2.1 p. 299",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-horned-devil",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -5099,9 +5288,10 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "trait"
+        "source-save-action-count-mismatch",
+        "trait",
+        "uncertified-trait:diabolical-restoration"
       ]
     },
     {
@@ -5130,7 +5320,7 @@
       "monster_name": "Hydra",
       "srd_source_page": 300,
       "srd_source_reference": "SRD 5.2.1 p. 300",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-hydra",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -5150,8 +5340,9 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-certified",
-        "trait"
+        "trait",
+        "uncertified-trait:multiple-heads",
+        "uncertified-trait:reactive-heads"
       ]
     },
     {
@@ -5180,7 +5371,7 @@
       "monster_name": "Ice Devil",
       "srd_source_page": 300,
       "srd_source_reference": "SRD 5.2.1 p. 300",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-ice-devil",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -5207,9 +5398,12 @@
       "public_ready_status": "blocked",
       "blockers": [
         "limited-use",
-        "monster-combat-mechanics-not-certified",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
+        "uncertified-limited-use:actions-ice-wall-recharge-6",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:diabolical-restoration",
         "unsupported-action-rider"
       ]
     },
@@ -5218,7 +5412,7 @@
       "monster_name": "Ice Mephit",
       "srd_source_page": 307,
       "srd_source_reference": "SRD 5.2.1 p. 307",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-ice-mephit",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -5245,10 +5439,13 @@
       "public_ready_status": "blocked",
       "blockers": [
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait"
+        "trait",
+        "uncertified-limited-use:actions-fog-cloud-1-day",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:death-burst"
       ]
     },
     {
@@ -5256,7 +5453,7 @@
       "monster_name": "Imp",
       "srd_source_page": 300,
       "srd_source_reference": "SRD 5.2.1 p. 300",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-imp",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -5276,9 +5473,10 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-certified",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait"
+        "trait",
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -5324,7 +5522,7 @@
       "monster_name": "Invisible Stalker",
       "srd_source_page": 301,
       "srd_source_reference": "SRD 5.2.1 p. 301",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-invisible-stalker",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -5353,10 +5551,14 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
+        "source-save-action-count-mismatch",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait"
+        "trait",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:air-form",
+        "uncertified-trait:invisibility"
       ]
     },
     {
@@ -5364,7 +5566,7 @@
       "monster_name": "Iron Golem",
       "srd_source_page": 302,
       "srd_source_reference": "SRD 5.2.1 p. 302",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-iron-golem",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -5391,9 +5593,10 @@
       "public_ready_status": "blocked",
       "blockers": [
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "trait"
+        "trait",
+        "uncertified-trait:fire-absorption",
+        "uncertified-trait:immutable-form"
       ]
     },
     {
@@ -5487,7 +5690,7 @@
       "monster_name": "Kraken",
       "srd_source_page": 303,
       "srd_source_reference": "SRD 5.2.1 p. 303",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-kraken",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -5503,14 +5706,14 @@
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "condition-or-control",
         "legendary",
         "limited-use",
-        "save-or-complex-action"
+        "save-or-complex-action",
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -5520,8 +5723,13 @@
         "condition-or-control",
         "legendary",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
+        "save-or-complex-action",
+        "source-save-action-count-mismatch",
+        "trait",
+        "trait-source-missing:legendary-resistance",
+        "uncertified-legendary-action-economy",
+        "uncertified-limited-use:traits-legendary-resistance-4-day-or-5-day-in-lair",
+        "uncertified-trait:legendary-resistance-4-day-or-5-day-in-lair"
       ]
     },
     {
@@ -5529,7 +5737,7 @@
       "monster_name": "Lamia",
       "srd_source_page": 303,
       "srd_source_reference": "SRD 5.2.1 p. 303",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-lamia",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -5556,9 +5764,11 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "spellcasting"
+        "source-save-action-count-mismatch",
+        "spell-concentration-source-not-vendored",
+        "spellcasting",
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -5589,7 +5799,7 @@
       "monster_name": "Lich",
       "srd_source_page": 304,
       "srd_source_reference": "SRD 5.2.1 p. 304",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-lich",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -5622,10 +5832,18 @@
         "condition-or-control",
         "legendary",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "reaction",
+        "source-attack-count-mismatch",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait"
+        "trait",
+        "trait-source-missing:legendary-resistance",
+        "uncertified-legendary-action-economy",
+        "uncertified-limited-use:traits-legendary-resistance-4-day-or-5-day-in-lair",
+        "uncertified-monster-spellcasting",
+        "uncertified-reaction:protective-magic",
+        "uncertified-trait:legendary-resistance-4-day-or-5-day-in-lair",
+        "uncertified-trait:spirit-jar"
       ]
     },
     {
@@ -5683,7 +5901,7 @@
       "monster_name": "Mage",
       "srd_source_page": 305,
       "srd_source_reference": "SRD 5.2.1 p. 305",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-mage",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -5709,9 +5927,14 @@
       "blockers": [
         "bonus-action",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "reaction",
-        "spellcasting"
+        "spell-concentration-source-not-vendored",
+        "spellcasting",
+        "uncertified-bonus-action:misty-step",
+        "uncertified-limited-use:bonusactions-misty-step-3-day",
+        "uncertified-limited-use:reactions-protective-magic-3-day",
+        "uncertified-monster-spellcasting",
+        "uncertified-reaction:protective-magic-3-day"
       ]
     },
     {
@@ -5719,7 +5942,7 @@
       "monster_name": "Magma Mephit",
       "srd_source_page": 307,
       "srd_source_reference": "SRD 5.2.1 p. 307",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-magma-mephit",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -5744,9 +5967,9 @@
       "public_ready_status": "blocked",
       "blockers": [
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "trait"
+        "trait",
+        "uncertified-trait:death-burst"
       ]
     },
     {
@@ -5754,7 +5977,7 @@
       "monster_name": "Magmin",
       "srd_source_page": 305,
       "srd_source_reference": "SRD 5.2.1 p. 305",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-magmin",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -5775,8 +5998,9 @@
       "public_ready_status": "blocked",
       "blockers": [
         "bonus-action",
-        "monster-combat-mechanics-not-certified",
-        "trait"
+        "trait",
+        "uncertified-bonus-action:ignited-illumination",
+        "uncertified-trait:death-burst"
       ]
     },
     {
@@ -5784,7 +6008,7 @@
       "monster_name": "Mammoth",
       "srd_source_page": 357,
       "srd_source_reference": "SRD 5.2.1 p. 357",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-mammoth",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -5806,7 +6030,7 @@
       "blockers": [
         "bonus-action",
         "condition-or-control",
-        "monster-combat-mechanics-not-certified"
+        "uncertified-bonus-action:trample"
       ]
     },
     {
@@ -5835,7 +6059,7 @@
       "monster_name": "Marilith",
       "srd_source_page": 306,
       "srd_source_reference": "SRD 5.2.1 p. 306",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-marilith",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -5870,9 +6094,13 @@
         "bonus-action",
         "condition-or-control",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
+        "parry-source-mismatch",
         "save-or-complex-action",
-        "trait"
+        "trait",
+        "uncertified-bonus-action:teleport",
+        "uncertified-limited-use:bonusactions-teleport-recharge-5-6",
+        "uncertified-reaction:parry",
+        "uncertified-trait:reactive"
       ]
     },
     {
@@ -5901,7 +6129,7 @@
       "monster_name": "Medusa",
       "srd_source_page": 306,
       "srd_source_reference": "SRD 5.2.1 p. 306",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-medusa",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -5923,7 +6151,8 @@
       "blockers": [
         "bonus-action",
         "limited-use",
-        "monster-combat-mechanics-not-certified"
+        "uncertified-bonus-action:petrifying-gaze",
+        "uncertified-limited-use:bonusactions-petrifying-gaze-recharge-5-6"
       ]
     },
     {
@@ -5979,7 +6208,7 @@
       "monster_name": "Mimic",
       "srd_source_page": 308,
       "srd_source_reference": "SRD 5.2.1 p. 308",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-mimic",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -6003,8 +6232,10 @@
       "blockers": [
         "bonus-action",
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
-        "trait"
+        "source-attack-count-mismatch",
+        "trait",
+        "uncertified-bonus-action:shape-shift",
+        "uncertified-trait:adhesive-object-form-only"
       ]
     },
     {
@@ -6035,7 +6266,7 @@
       "monster_name": "Minotaur of Baphomet",
       "srd_source_page": 309,
       "srd_source_reference": "SRD 5.2.1 p. 309",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-minotaur-of-baphomet",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -6055,7 +6286,8 @@
       "blockers": [
         "condition-or-control",
         "limited-use",
-        "monster-combat-mechanics-not-certified"
+        "source-attack-count-mismatch",
+        "uncertified-limited-use:actions-gore-recharge-5-6"
       ]
     },
     {
@@ -6084,7 +6316,7 @@
       "monster_name": "Mummy",
       "srd_source_page": 309,
       "srd_source_reference": "SRD 5.2.1 p. 309",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-mummy",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -6111,8 +6343,8 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
+        "source-save-action-count-mismatch",
         "unsupported-action-rider"
       ]
     },
@@ -6121,7 +6353,7 @@
       "monster_name": "Mummy Lord",
       "srd_source_page": 309,
       "srd_source_reference": "SRD 5.2.1 p. 309",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-mummy-lord",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -6160,11 +6392,19 @@
         "condition-or-control",
         "legendary",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "reaction",
         "save-or-complex-action",
+        "source-save-action-count-mismatch",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
+        "trait-source-missing:legendary-resistance",
+        "uncertified-legendary-action-economy",
+        "uncertified-limited-use:traits-legendary-resistance-3-day-or-4-day-in-lair",
+        "uncertified-monster-spellcasting",
+        "uncertified-reaction:whirlwind-of-sand",
+        "uncertified-trait:legendary-resistance-3-day-or-4-day-in-lair",
+        "uncertified-trait:undead-restoration",
         "unsupported-action-rider"
       ]
     },
@@ -6173,7 +6413,7 @@
       "monster_name": "Nalfeshnee",
       "srd_source_page": 310,
       "srd_source_reference": "SRD 5.2.1 p. 310",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-nalfeshnee",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -6203,10 +6443,12 @@
       "blockers": [
         "bonus-action",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "reaction",
         "save-or-complex-action",
-        "trait"
+        "trait",
+        "uncertified-bonus-action:horror-nimbus",
+        "uncertified-limited-use:bonusactions-horror-nimbus-recharge-5-6",
+        "uncertified-reaction:pursuit"
       ]
     },
     {
@@ -6214,7 +6456,7 @@
       "monster_name": "Night Hag",
       "srd_source_page": 311,
       "srd_source_reference": "SRD 5.2.1 p. 311",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-night-hag",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -6244,9 +6486,14 @@
       "blockers": [
         "bonus-action",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
+        "uncertified-bonus-action:shape-shift",
+        "uncertified-limited-use:actions-nightmare-haunting-1-day-requires-soul-bag",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:coven-magic",
+        "uncertified-trait:soul-bag",
         "unsupported-action-rider"
       ]
     },
@@ -6255,7 +6502,7 @@
       "monster_name": "Nightmare",
       "srd_source_page": 311,
       "srd_source_reference": "SRD 5.2.1 p. 311",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-nightmare",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -6275,9 +6522,9 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "trait"
+        "trait",
+        "uncertified-trait:confer-fire-resistance"
       ]
     },
     {
@@ -6306,7 +6553,7 @@
       "monster_name": "Ochre Jelly",
       "srd_source_page": 312,
       "srd_source_reference": "SRD 5.2.1 p. 312",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-ochre-jelly",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -6326,8 +6573,8 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-certified",
-        "reaction"
+        "reaction",
+        "uncertified-reaction:split"
       ]
     },
     {
@@ -6408,7 +6655,7 @@
       "monster_name": "Oni",
       "srd_source_page": 312,
       "srd_source_reference": "SRD 5.2.1 p. 312",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-oni",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -6436,9 +6683,13 @@
       "blockers": [
         "bonus-action",
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
+        "source-attack-count-mismatch",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait"
+        "trait",
+        "trait-source-unsupported:regeneration",
+        "uncertified-bonus-action:invisibility",
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -6446,7 +6697,7 @@
       "monster_name": "Otyugh",
       "srd_source_page": 313,
       "srd_source_reference": "SRD 5.2.1 p. 313",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-otyugh",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -6471,8 +6722,9 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
+        "source-attack-count-mismatch",
+        "source-save-action-count-mismatch",
         "unsupported-action-rider"
       ]
     },
@@ -6563,7 +6815,7 @@
       "monster_name": "Phase Spider",
       "srd_source_page": 313,
       "srd_source_reference": "SRD 5.2.1 p. 313",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-phase-spider",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -6587,8 +6839,9 @@
       "blockers": [
         "bonus-action",
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
-        "trait"
+        "trait",
+        "uncertified-bonus-action:ethereal-jaunt",
+        "uncertified-trait:ethereal-sight"
       ]
     },
     {
@@ -6617,7 +6870,7 @@
       "monster_name": "Pirate",
       "srd_source_page": 314,
       "srd_source_reference": "SRD 5.2.1 p. 314",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-pirate",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -6640,8 +6893,8 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
+        "save-or-complex-action",
+        "source-save-action-count-mismatch"
       ]
     },
     {
@@ -6649,7 +6902,7 @@
       "monster_name": "Pirate Captain",
       "srd_source_page": 314,
       "srd_source_reference": "SRD 5.2.1 p. 314",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-pirate-captain",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -6672,8 +6925,10 @@
       "public_ready_status": "blocked",
       "blockers": [
         "bonus-action",
-        "monster-combat-mechanics-not-certified",
         "reaction",
+        "source-attack-count-mismatch",
+        "uncertified-bonus-action:captain-s-charm",
+        "uncertified-reaction:riposte",
         "unsupported-action-rider"
       ]
     },
@@ -6682,7 +6937,7 @@
       "monster_name": "Pit Fiend",
       "srd_source_page": 314,
       "srd_source_reference": "SRD 5.2.1 p. 314",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-pit-fiend",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -6714,10 +6969,18 @@
       "blockers": [
         "condition-or-control",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
+        "source-save-action-count-mismatch",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait"
+        "trait",
+        "trait-source-missing:legendary-resistance",
+        "uncertified-limited-use:actions-hellfire-spellcasting-recharge-4-6",
+        "uncertified-limited-use:traits-legendary-resistance-4-day",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:diabolical-restoration",
+        "uncertified-trait:fear-aura",
+        "uncertified-trait:legendary-resistance-4-day"
       ]
     },
     {
@@ -6725,7 +6988,7 @@
       "monster_name": "Planetar",
       "srd_source_page": 315,
       "srd_source_reference": "SRD 5.2.1 p. 315",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-planetar",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -6755,9 +7018,13 @@
       "blockers": [
         "bonus-action",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
+        "save-area-mismatch:srd-planetar-holy-burst",
         "save-or-complex-action",
-        "trait"
+        "trait",
+        "uncertified-bonus-action:divine-aid",
+        "uncertified-limited-use:bonusactions-divine-aid-2-day",
+        "uncertified-trait:divine-awareness",
+        "uncertified-trait:exalted-restoration"
       ]
     },
     {
@@ -6828,7 +7095,7 @@
       "monster_name": "Priest",
       "srd_source_page": 316,
       "srd_source_reference": "SRD 5.2.1 p. 316",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-priest",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -6852,8 +7119,11 @@
       "blockers": [
         "bonus-action",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "spellcasting"
+        "spell-concentration-source-not-vendored",
+        "spellcasting",
+        "uncertified-bonus-action:divine-aid",
+        "uncertified-limited-use:bonusactions-divine-aid-3-day",
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -6861,7 +7131,7 @@
       "monster_name": "Priest Acolyte",
       "srd_source_page": 316,
       "srd_source_reference": "SRD 5.2.1 p. 316",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-priest-acolyte",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -6883,8 +7153,11 @@
       "blockers": [
         "bonus-action",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "spellcasting"
+        "spell-concentration-source-not-vendored",
+        "spellcasting",
+        "uncertified-bonus-action:divine-aid",
+        "uncertified-limited-use:bonusactions-divine-aid-1-day",
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -6892,7 +7165,7 @@
       "monster_name": "Pseudodragon",
       "srd_source_page": 316,
       "srd_source_reference": "SRD 5.2.1 p. 316",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-pseudodragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -6917,8 +7190,8 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
+        "source-save-action-count-mismatch",
         "trait"
       ]
     },
@@ -6948,7 +7221,7 @@
       "monster_name": "Purple Worm",
       "srd_source_page": 316,
       "srd_source_reference": "SRD 5.2.1 p. 316",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-purple-worm",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -6972,8 +7245,9 @@
       "blockers": [
         "bonus-action",
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
-        "trait"
+        "trait",
+        "uncertified-bonus-action:swallow",
+        "uncertified-trait:tunneler"
       ]
     },
     {
@@ -7160,7 +7434,7 @@
       "monster_name": "Remorhaz",
       "srd_source_page": 319,
       "srd_source_reference": "SRD 5.2.1 p. 319",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-remorhaz",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -7184,8 +7458,9 @@
       "blockers": [
         "bonus-action",
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
-        "trait"
+        "trait",
+        "uncertified-bonus-action:swallow",
+        "uncertified-trait:heat-aura"
       ]
     },
     {
@@ -7233,7 +7508,7 @@
       "monster_name": "Roc",
       "srd_source_page": 320,
       "srd_source_reference": "SRD 5.2.1 p. 320",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-roc",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -7258,7 +7533,8 @@
         "bonus-action",
         "condition-or-control",
         "limited-use",
-        "monster-combat-mechanics-not-certified"
+        "uncertified-bonus-action:swoop",
+        "uncertified-limited-use:bonusactions-swoop-recharge-5-6"
       ]
     },
     {
@@ -7291,7 +7567,7 @@
       "monster_name": "Rust Monster",
       "srd_source_page": 320,
       "srd_source_reference": "SRD 5.2.1 p. 320",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-rust-monster",
       "detected_combat_mechanics": [
         "attack-roll",
         "multiattack",
@@ -7317,11 +7593,15 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-certified",
         "reaction",
         "save-or-complex-action",
+        "source-save-action-count-mismatch",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait"
+        "trait",
+        "uncertified-monster-spellcasting",
+        "uncertified-reaction:reflexive-antennae",
+        "uncertified-trait:iron-scent"
       ]
     },
     {
@@ -7381,7 +7661,7 @@
       "monster_name": "Salamander",
       "srd_source_page": 321,
       "srd_source_reference": "SRD 5.2.1 p. 321",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-salamander",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -7408,8 +7688,8 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
+        "source-save-action-count-mismatch",
         "trait"
       ]
     },
@@ -7485,7 +7765,7 @@
       "monster_name": "Sea Hag",
       "srd_source_page": 322,
       "srd_source_reference": "SRD 5.2.1 p. 322",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-sea-hag",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -7513,10 +7793,15 @@
       "blockers": [
         "condition-or-control",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
+        "source-save-action-count-mismatch",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait"
+        "trait",
+        "uncertified-limited-use:actions-death-glare-recharge-5-6",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:coven-magic",
+        "uncertified-trait:vile-appearance"
       ]
     },
     {
@@ -7574,7 +7859,7 @@
       "monster_name": "Shambling Mound",
       "srd_source_page": 323,
       "srd_source_reference": "SRD 5.2.1 p. 323",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-shambling-mound",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -7601,9 +7886,10 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "trait"
+        "source-save-action-count-mismatch",
+        "trait",
+        "uncertified-trait:lightning-absorption"
       ]
     },
     {
@@ -7611,7 +7897,7 @@
       "monster_name": "Shield Guardian",
       "srd_source_page": 323,
       "srd_source_reference": "SRD 5.2.1 p. 323",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-shield-guardian",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -7635,10 +7921,15 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-certified",
         "reaction",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait"
+        "trait",
+        "trait-source-unsupported:regeneration",
+        "uncertified-monster-spellcasting",
+        "uncertified-reaction:protection",
+        "uncertified-trait:bound",
+        "uncertified-trait:spell-storing"
       ]
     },
     {
@@ -7674,7 +7965,7 @@
       "monster_name": "Silver Dragon Wyrmling",
       "srd_source_page": 324,
       "srd_source_reference": "SRD 5.2.1 p. 324",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-silver-dragon-wyrmling",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -7702,8 +7993,8 @@
       "blockers": [
         "condition-or-control",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
+        "save-or-complex-action",
+        "source-save-action-count-mismatch"
       ]
     },
     {
@@ -7732,7 +8023,7 @@
       "monster_name": "Solar",
       "srd_source_page": 326,
       "srd_source_reference": "SRD 5.2.1 p. 326",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-solar",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -7765,9 +8056,17 @@
         "bonus-action",
         "legendary",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "trait"
+        "source-save-action-count-mismatch",
+        "trait",
+        "trait-source-missing:legendary-resistance",
+        "uncertified-bonus-action:divine-aid",
+        "uncertified-legendary-action-economy",
+        "uncertified-limited-use:bonusactions-divine-aid-3-day",
+        "uncertified-limited-use:traits-legendary-resistance-4-day",
+        "uncertified-trait:divine-awareness",
+        "uncertified-trait:exalted-restoration",
+        "uncertified-trait:legendary-resistance-4-day"
       ]
     },
     {
@@ -7800,7 +8099,7 @@
       "monster_name": "Sphinx of Lore",
       "srd_source_page": 327,
       "srd_source_reference": "SRD 5.2.1 p. 327",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-sphinx-of-lore",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -7835,10 +8134,18 @@
         "condition-or-control",
         "legendary",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
+        "source-save-action-count-mismatch",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait"
+        "trait",
+        "trait-source-missing:legendary-resistance",
+        "uncertified-legendary-action-economy",
+        "uncertified-limited-use:actions-mind-rending-roar-recharge-5-6",
+        "uncertified-limited-use:traits-legendary-resistance-3-day-or-4-day-in-lair",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:inscrutable",
+        "uncertified-trait:legendary-resistance-3-day-or-4-day-in-lair"
       ]
     },
     {
@@ -7846,7 +8153,7 @@
       "monster_name": "Sphinx of Valor",
       "srd_source_page": 328,
       "srd_source_reference": "SRD 5.2.1 p. 328",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-sphinx-of-valor",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -7881,10 +8188,18 @@
         "condition-or-control",
         "legendary",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
+        "source-save-action-count-mismatch",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait"
+        "trait",
+        "trait-source-missing:legendary-resistance",
+        "uncertified-legendary-action-economy",
+        "uncertified-limited-use:actions-roar-3-day",
+        "uncertified-limited-use:traits-legendary-resistance-3-day-or-4-day-in-lair",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:inscrutable",
+        "uncertified-trait:legendary-resistance-3-day-or-4-day-in-lair"
       ]
     },
     {
@@ -7892,7 +8207,7 @@
       "monster_name": "Sphinx of Wonder",
       "srd_source_page": 327,
       "srd_source_reference": "SRD 5.2.1 p. 327",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-sphinx-of-wonder",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -7915,9 +8230,10 @@
       "public_ready_status": "blocked",
       "blockers": [
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "reaction",
-        "trait"
+        "trait",
+        "uncertified-limited-use:reactions-burst-of-ingenuity-2-day",
+        "uncertified-reaction:burst-of-ingenuity-2-day"
       ]
     },
     {
@@ -7946,7 +8262,7 @@
       "monster_name": "Spirit Naga",
       "srd_source_page": 329,
       "srd_source_reference": "SRD 5.2.1 p. 329",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-spirit-naga",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -7968,9 +8284,11 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-certified",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait"
+        "trait",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:fiendish-restoration"
       ]
     },
     {
@@ -7978,7 +8296,7 @@
       "monster_name": "Sprite",
       "srd_source_page": 329,
       "srd_source_reference": "SRD 5.2.1 p. 329",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-sprite",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -8001,9 +8319,12 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "spellcasting"
+        "source-attack-count-mismatch",
+        "source-save-action-count-mismatch",
+        "spell-concentration-source-not-vendored",
+        "spellcasting",
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -8032,7 +8353,7 @@
       "monster_name": "Steam Mephit",
       "srd_source_page": 308,
       "srd_source_reference": "SRD 5.2.1 p. 308",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-steam-mephit",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -8059,9 +8380,12 @@
       "public_ready_status": "blocked",
       "blockers": [
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
+        "source-save-action-count-mismatch",
         "trait",
+        "uncertified-limited-use:actions-steam-breath-recharge-6",
+        "uncertified-trait:blurred-form",
+        "uncertified-trait:death-burst",
         "unsupported-action-rider"
       ]
     },
@@ -8091,7 +8415,7 @@
       "monster_name": "Stone Giant",
       "srd_source_page": 330,
       "srd_source_reference": "SRD 5.2.1 p. 330",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-stone-giant",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -8115,8 +8439,9 @@
       "blockers": [
         "condition-or-control",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "reaction"
+        "reaction",
+        "uncertified-limited-use:reactions-deflect-missile-recharge-5-6",
+        "uncertified-reaction:deflect-missile-recharge-5-6"
       ]
     },
     {
@@ -8124,7 +8449,7 @@
       "monster_name": "Stone Golem",
       "srd_source_page": 330,
       "srd_source_reference": "SRD 5.2.1 p. 330",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-stone-golem",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -8152,9 +8477,13 @@
       "blockers": [
         "bonus-action",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait"
+        "trait",
+        "uncertified-bonus-action:slow",
+        "uncertified-limited-use:bonusactions-slow-recharge-5-6",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:immutable-form"
       ]
     },
     {
@@ -8162,7 +8491,7 @@
       "monster_name": "Storm Giant",
       "srd_source_page": 330,
       "srd_source_reference": "SRD 5.2.1 p. 330",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-storm-giant",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -8194,9 +8523,11 @@
       "blockers": [
         "condition-or-control",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "spellcasting"
+        "source-attack-count-mismatch",
+        "spell-concentration-source-not-vendored",
+        "spellcasting",
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -8204,7 +8535,7 @@
       "monster_name": "Succubus",
       "srd_source_page": 331,
       "srd_source_reference": "SRD 5.2.1 p. 331",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-succubus",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -8238,10 +8569,13 @@
       "blockers": [
         "bonus-action",
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
+        "uncertified-bonus-action:shape-shift",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:incubus-form",
         "unsupported-action-rider"
       ]
     },
@@ -8427,7 +8761,7 @@
       "monster_name": "Tarrasque",
       "srd_source_page": 331,
       "srd_source_reference": "SRD 5.2.1 p. 331",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-tarrasque",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -8463,9 +8797,17 @@
         "condition-or-control",
         "legendary",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "trait"
+        "source-attack-count-mismatch",
+        "source-save-action-count-mismatch",
+        "trait",
+        "trait-source-missing:legendary-resistance",
+        "uncertified-bonus-action:swallow",
+        "uncertified-legendary-action-economy",
+        "uncertified-limited-use:actions-thunderous-bellow-recharge-5-6",
+        "uncertified-limited-use:traits-legendary-resistance-6-day",
+        "uncertified-trait:legendary-resistance-6-day",
+        "uncertified-trait:reflective-carapace"
       ]
     },
     {
@@ -8542,7 +8884,7 @@
       "monster_name": "Treant",
       "srd_source_page": 333,
       "srd_source_reference": "SRD 5.2.1 p. 333",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-treant",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -8565,7 +8907,7 @@
       "public_ready_status": "blocked",
       "blockers": [
         "limited-use",
-        "monster-combat-mechanics-not-certified"
+        "uncertified-limited-use:actions-animate-trees-1-day"
       ]
     },
     {
@@ -8596,7 +8938,7 @@
       "monster_name": "Troll",
       "srd_source_page": 333,
       "srd_source_reference": "SRD 5.2.1 p. 333",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-troll",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -8619,8 +8961,9 @@
       "public_ready_status": "blocked",
       "blockers": [
         "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "trait"
+        "trait",
+        "uncertified-limited-use:traits-loathsome-limbs-4-day",
+        "uncertified-trait:loathsome-limbs-4-day"
       ]
     },
     {
@@ -8672,7 +9015,7 @@
       "monster_name": "Unicorn",
       "srd_source_page": 334,
       "srd_source_reference": "SRD 5.2.1 p. 334",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-unicorn",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -8703,9 +9046,16 @@
         "bonus-action",
         "legendary",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
+        "spell-concentration-source-not-vendored",
         "spellcasting",
-        "trait"
+        "trait",
+        "trait-source-missing:legendary-resistance",
+        "uncertified-bonus-action:unicorn-s-blessing",
+        "uncertified-legendary-action-economy",
+        "uncertified-limited-use:bonusactions-unicorn-s-blessing-3-day",
+        "uncertified-limited-use:traits-legendary-resistance-3-day",
+        "uncertified-monster-spellcasting",
+        "uncertified-trait:legendary-resistance-3-day"
       ]
     },
     {
@@ -8800,7 +9150,7 @@
       "monster_name": "Vampire Spawn",
       "srd_source_page": 334,
       "srd_source_reference": "SRD 5.2.1 p. 334",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-vampire-spawn",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -8832,9 +9182,14 @@
       "blockers": [
         "bonus-action",
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
+        "source-save-action-count-mismatch",
         "trait",
+        "uncertified-bonus-action:deathless-agility",
+        "uncertified-trait:running-water",
+        "uncertified-trait:stake-to-the-heart",
+        "uncertified-trait:sunlight",
+        "uncertified-trait:vampire-weakness",
         "unsupported-action-rider"
       ]
     },
@@ -8885,7 +9240,7 @@
       "monster_name": "Vrock",
       "srd_source_page": 336,
       "srd_source_reference": "SRD 5.2.1 p. 336",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-vrock",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -8915,9 +9270,11 @@
       "blockers": [
         "condition-or-control",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "trait"
+        "source-save-action-count-mismatch",
+        "trait",
+        "uncertified-limited-use:actions-spores-recharge-6",
+        "uncertified-limited-use:actions-stunning-screech-1-day"
       ]
     },
     {
@@ -9034,7 +9391,7 @@
       "monster_name": "Water Elemental",
       "srd_source_page": 337,
       "srd_source_reference": "SRD 5.2.1 p. 337",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-water-elemental",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -9064,9 +9421,10 @@
       "blockers": [
         "condition-or-control",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "trait"
+        "trait",
+        "uncertified-trait:freeze",
+        "uncertified-trait:water-form"
       ]
     },
     {
@@ -9160,7 +9518,7 @@
       "monster_name": "Wererat",
       "srd_source_page": 338,
       "srd_source_reference": "SRD 5.2.1 p. 338",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-wererat",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -9183,8 +9541,10 @@
       "public_ready_status": "blocked",
       "blockers": [
         "bonus-action",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
+        "save-or-complex-action",
+        "source-attack-count-mismatch",
+        "source-save-action-count-mismatch",
+        "uncertified-bonus-action:shape-shift"
       ]
     },
     {
@@ -9289,7 +9649,7 @@
       "monster_name": "Wight",
       "srd_source_page": 341,
       "srd_source_reference": "SRD 5.2.1 p. 341",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-wight",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -9315,8 +9675,8 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
+        "source-save-action-count-mismatch",
         "unsupported-action-rider"
       ]
     },
@@ -9325,7 +9685,7 @@
       "monster_name": "Will-o’-Wisp",
       "srd_source_page": 341,
       "srd_source_reference": "SRD 5.2.1 p. 341",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-will-o-wisp",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -9346,8 +9706,11 @@
       "public_ready_status": "blocked",
       "blockers": [
         "bonus-action",
-        "monster-combat-mechanics-not-certified",
-        "trait"
+        "trait",
+        "trait-runtime-missing:incorporeal-movement",
+        "uncertified-bonus-action:consume-life",
+        "uncertified-bonus-action:vanish",
+        "uncertified-trait:ephemeral"
       ]
     },
     {
@@ -9430,7 +9793,7 @@
       "monster_name": "Wraith",
       "srd_source_page": 342,
       "srd_source_reference": "SRD 5.2.1 p. 342",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-wraith",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -9450,8 +9813,8 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "monster-combat-mechanics-not-certified",
         "trait",
+        "trait-runtime-missing:incorporeal-movement",
         "unsupported-action-rider"
       ]
     },
@@ -9570,7 +9933,7 @@
       "monster_name": "Young Brass Dragon",
       "srd_source_page": 268,
       "srd_source_reference": "SRD 5.2.1 p. 268",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-young-brass-dragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -9598,8 +9961,8 @@
       "blockers": [
         "condition-or-control",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
+        "save-or-complex-action",
+        "source-save-action-count-mismatch"
       ]
     },
     {
@@ -9669,7 +10032,7 @@
       "monster_name": "Young Gold Dragon",
       "srd_source_page": 291,
       "srd_source_reference": "SRD 5.2.1 p. 291",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-young-gold-dragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -9696,8 +10059,8 @@
       "public_ready_status": "blocked",
       "blockers": [
         "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
+        "save-or-complex-action",
+        "source-save-action-count-mismatch"
       ]
     },
     {
@@ -9765,7 +10128,7 @@
       "monster_name": "Young Silver Dragon",
       "srd_source_page": 324,
       "srd_source_reference": "SRD 5.2.1 p. 324",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-young-silver-dragon",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -9793,8 +10156,8 @@
       "blockers": [
         "condition-or-control",
         "limited-use",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
+        "save-or-complex-action",
+        "source-save-action-count-mismatch"
       ]
     },
     {
