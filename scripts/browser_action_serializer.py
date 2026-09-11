@@ -94,6 +94,8 @@ def save_row(action: Any) -> dict[str, Any]:
             row["forbidTargetAffectedByAction"] = True
         if action.resource_id is not None:
             row["resourceId"], row["resourceCost"] = action.resource_id, action.resource_cost
+        if action.magical_effect:
+            row["magicalEffect"] = True
         if action.target_max_size:
             row["targetMaxSize"] = value(action.target_max_size)
         if action.push_target_away_ft:
@@ -151,32 +153,24 @@ def _spell_modifier_row(effect: Any) -> dict[str, Any]:
 
 def defense_row(action: Any) -> dict[str, Any]:
     row = {
-        "id": action.id, "name": action.name, "level": action.level,
-        "actionCost": action.action_cost, "range": action.range_ft,
-        "durationMinutes": action.duration_minutes, "targetPolicy": action.target_policy,
-        "targetCount": action.target_count,
-        "temporaryHp": action.temporary_hp, "temporaryHpPerSlotAbove": action.temporary_hp_per_slot_above,
-        "damageResistances": list(action.damage_resistances),
-        "modifierEffects": [_spell_modifier_row(effect) for effect in action.modifier_effects],
-        "concentration": action.concentration, "priority": action.priority, "animation": action.animation,
-        "source": action.source,
+        "id": action.id, "name": action.name, "level": action.level, "actionCost": action.action_cost,
+        "durationRounds": action.duration_rounds, "temporaryAcBonus": action.temporary_ac_bonus,
+        "animation": action.animation,
     }
-    if action.target_count_per_slot_above:
-        row["targetCountPerSlotAbove"] = action.target_count_per_slot_above
-    if action.max_hp_increase:
-        row["maxHpIncrease"] = action.max_hp_increase
-    if action.current_hp_increase:
-        row["currentHpIncrease"] = action.current_hp_increase
+    if action.resource_id is not None:
+        row["resourceId"], row["resourceCost"] = action.resource_id, action.resource_cost
     return row
 
 
 def healing_row(action: Any) -> dict[str, Any]:
-    return {
+    row = {
         "id": action.id, "name": action.name, "actionCost": action.action_cost, "range": action.range_ft,
         "targetMode": action.target_mode, "diceCount": action.dice_count, "diceSize": action.dice_size,
-        "healingBonus": action.healing_bonus, "resourceId": action.resource_id,
-        "resourceCost": action.resource_cost, "animation": action.animation,
+        "healingBonus": action.healing_bonus, "animation": action.animation,
     }
+    if action.resource_id is not None:
+        row["resourceId"], row["resourceCost"] = action.resource_id, action.resource_cost
+    return row
 
 
 def removal_row(action: Any) -> dict[str, Any]:
@@ -185,5 +179,6 @@ def removal_row(action: Any) -> dict[str, Any]:
         "targetMode": action.target_mode, "removableConditions": list(action.removable_conditions),
         "maxConditionsPerUse": action.max_conditions_per_use, "resourceCosts": dict(action.resource_costs),
         "resourceCostsPerCondition": dict(action.resource_costs_per_condition),
-        "reactionTrigger": action.reaction_trigger, "animation": action.animation,
+        "reactionTrigger": action.reaction_trigger, "expendsSpellSlot": action.expends_spell_slot,
+        "animation": action.animation,
     }
