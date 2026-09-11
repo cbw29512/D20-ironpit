@@ -148,5 +148,48 @@
     "source_trait_names": ["Aura of Authority"],
     "visual": {"armor": "half-plate", "main_hand": "greatsword", "off_hand": null, "body_style": "goblinoid"},
     "source": "SRD 5.2.1 p. 299"
+  },
+  {
+    "schema_version": 1,
+    "id": "srd-shadow",
+    "name": "Shadow",
+    "archetype": "source-certified ability draining undead",
+    "challenge_rating": "1/2",
+    "kind": "monster",
+    "size": "medium",
+    "armor_class": 12,
+    "max_hp": 27,
+    "speed_ft": 40,
+    "movement_modes": {"walk_ft": 40, "fly_ft": 0, "climb_ft": 0, "swim_ft": 0, "burrow_ft": 0, "hover": false},
+    "initiative_bonus": 2,
+    "attacks": [
+      {
+        "id": "srd-shadow-draining-swipe",
+        "name": "Draining Swipe",
+        "weapon_id": "srd-shadow-draining-swipe-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 4,
+        "damage": {"count": 1, "size": 6, "bonus": 2},
+        "damage_type": "necrotic",
+        "animation": "claw",
+        "reach_ft": 5,
+        "attack_ability": "dexterity",
+        "attack_ability_modifier": 2,
+        "effects": [
+          {"kind": "ability-score-reduction", "ability": "strength", "dice_count": 1, "dice_size": 4, "minimum_score": 0, "dies_at_minimum": true}
+        ]
+      }
+    ],
+    "primary_attack_id": "srd-shadow-draining-swipe",
+    "unarmed_opportunity_attack": {"attack_bonus": 0, "damage": 0},
+    "saving_throw_bonuses": {"strength": -2, "dexterity": 2, "constitution": 1, "intelligence": -2, "wisdom": 0, "charisma": -1},
+    "damage_resistances": ["acid", "cold", "fire", "lightning", "thunder"],
+    "damage_vulnerabilities": ["radiant"],
+    "damage_immunities": ["necrotic", "poison"],
+    "condition_immunities": ["exhaustion", "frightened", "grappled", "paralyzed", "petrified", "poisoned", "prone", "restrained", "unconscious"],
+    "source_trait_names": ["Amorphous", "Sunlight Weakness"],
+    "source_bonus_action_names": ["Shadow Stealth"],
+    "visual": {"armor": "none", "main_hand": "draining-claw", "off_hand": null, "body_style": "shadow"},
+    "source": "SRD 5.2.1 p. 322"
   }
 ]
