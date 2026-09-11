@@ -4,7 +4,7 @@ from __future__ import annotations
 SUPPORTED_HERO_ENGINE_FEATURES = {
     "second-wind", "savage-attacker", "adrenaline-rush", "relentless-endurance",
     "action-surge", "tactical-mind", "extra-attack",
-    "improved-critical", "remarkable-athlete", "tactical-shift", "great-weapon-fighting",
+    "improved-critical", "superior-critical", "remarkable-athlete", "tactical-shift", "great-weapon-fighting",
     "indomitable", "tactical-master", "heroic-warrior", "studied-attacks",
     "rage", "danger-sense", "reckless-attack", "frenzy", "fast-movement", "mindless-rage",
     "feral-instinct",
