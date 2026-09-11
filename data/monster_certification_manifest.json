@@ -5115,7 +5115,7 @@
       "monster_name": "Homunculus",
       "srd_source_page": 299,
       "srd_source_reference": "SRD 5.2.1 p. 299",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-homunculus",
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
@@ -5140,9 +5140,10 @@
       "public_ready_status": "blocked",
       "blockers": [
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "trait"
+        "source-save-action-count-mismatch",
+        "trait",
+        "uncertified-trait:telepathic-bond"
       ]
     },
     {
@@ -6445,7 +6446,7 @@
       "monster_name": "Octopus",
       "srd_source_page": 357,
       "srd_source_reference": "SRD 5.2.1 p. 357",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-octopus",
       "detected_combat_mechanics": [
         "attack-roll",
         "limited-use",
@@ -6466,9 +6467,11 @@
       "public_ready_status": "blocked",
       "blockers": [
         "limited-use",
-        "monster-combat-mechanics-not-certified",
         "reaction",
-        "trait"
+        "trait",
+        "uncertified-limited-use:reactions-ink-cloud-1-day",
+        "uncertified-reaction:ink-cloud-1-day",
+        "uncertified-trait:compression"
       ]
     },
     {
@@ -8157,7 +8160,6 @@
       "blockers": [
         "condition-or-control",
         "save-or-complex-action",
-        "source-attack-count-mismatch",
         "source-save-action-count-mismatch",
         "spell-concentration-source-not-vendored",
         "spellcasting",
