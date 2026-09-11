@@ -35,6 +35,11 @@ class TimedEffect(BaseModel):
     repeat_save_timing: ConditionTiming | None = None
     repeat_save_eligible_round: int | None = Field(default=None, ge=1)
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
+    periodic_damage_timing: Literal["target_turn_start", "target_turn_end"] | None = None
+    periodic_damage_dice_count: int = Field(default=0, ge=0, le=40)
+    periodic_damage_dice_size: int = Field(default=6, ge=2, le=100)
+    periodic_damage_bonus: int = 0
+    periodic_damage_type: DamageType | None = None
     turn_behavior: TimedTurnBehavior = "normal"
     action_or_bonus_only: bool = False
     reactions_disabled: bool = False
@@ -55,6 +60,11 @@ class TimedEffect(BaseModel):
             raise ValueError("Timed effect repeat save requires ability, DC, and timing together.")
         if self.repeat_save_eligible_round is not None and not all(item is not None for item in repeat_fields):
             raise ValueError("Repeat-save eligibility requires a complete repeat-save rule.")
+        periodic = (self.periodic_damage_timing, self.periodic_damage_type)
+        if any(item is not None for item in periodic) and not all(item is not None for item in periodic):
+            raise ValueError("Periodic damage requires timing and damage type together.")
+        if self.periodic_damage_timing is not None and self.periodic_damage_dice_count < 1:
+            raise ValueError("Periodic damage requires at least one damage die.")
         if self.expires_round is not None and self.applied_round is not None and self.expires_round <= self.applied_round:
             raise ValueError("Timed effect expiry round must follow its applied round.")
         if self.automatic_success_round is not None and self.applied_round is not None and self.automatic_success_round <= self.applied_round:
