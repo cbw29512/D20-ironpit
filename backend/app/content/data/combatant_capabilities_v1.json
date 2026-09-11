@@ -8934,6 +8934,7 @@
         "dc": 12,
         "range_ft": 5,
         "target_max_size": "medium",
+        "required_target_grappled_by_self": false,
         "damage": {
           "count": 3,
           "size": 4,
@@ -11178,6 +11179,7 @@
         "dc": 14,
         "range_ft": 10,
         "target_max_size": "large",
+        "required_target_grappled_by_self": false,
         "damage": {
           "count": 2,
           "size": 8,
