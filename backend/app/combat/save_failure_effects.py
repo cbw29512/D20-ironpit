@@ -76,7 +76,8 @@ def apply_save_failure_effects(
                     expiry_timing=effect.expiry_timing, repeat_save_ability=effect.repeat_save_ability,
                     repeat_save_dc=effect.repeat_save_dc, repeat_save_timing=effect.repeat_save_timing,
                     repeat_save_delay_rounds=effect.repeat_save_delay_rounds,
-                    allowed_removal_action_ids=effect.allowed_removal_action_ids, affected_states=affected_states,
+                    allowed_removal_action_ids=effect.allowed_removal_action_ids,
+                    periodic_damage=effect.periodic_damage, affected_states=affected_states,
                 )
                 if condition is not None:
                     applied.append(condition)
