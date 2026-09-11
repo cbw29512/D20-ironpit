@@ -5,6 +5,7 @@ from app.content.figure_profile_schema import FigureProfile, figure_profile as _
 NEW_READY_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Animated Rug of Smothering": _p("weapon", "animated-rug"),
     "Assassin": _p("humanoid", "assassin"),
+    "Basilisk": _p("reptile", "basilisk"),
     "Bone Devil": _p("humanoid", "bone-devil"),
     "Bulette": _p("quadruped", "bulette"),
     "Chimera": _p("quadruped", "chimera"),
@@ -14,8 +15,10 @@ NEW_READY_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Ghast": _p("humanoid", "ghast"),
     "Ghoul": _p("humanoid", "ghoul"),
     "Gold Dragon Wyrmling": _p("reptile", "gold-dragon"),
+    "Gorgon": _p("quadruped", "gorgon"),
     "Horned Devil": _p("humanoid", "horned-devil"),
     "Mammoth": _p("quadruped", "mammoth"),
+    "Medusa": _p("humanoid", "medusa"),
     "Mummy": _p("humanoid", "mummy"),
     "Pirate": _p("humanoid", "pirate"),
     "Pseudodragon": _p("reptile", "pseudodragon"),
