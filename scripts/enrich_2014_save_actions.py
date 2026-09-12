@@ -6,6 +6,7 @@ import logging
 import re
 from pathlib import Path
 
+from import_2014_innate_spellcasting import parse_innate_spellcasting
 from import_2014_recharge import parse_action_recharges
 from import_2014_save_actions import parse_save_actions
 
@@ -41,6 +42,7 @@ def enrich(source_path: Path, catalog_path: Path) -> None:
         actions = source.get("Actions", "")
         recharges = parse_action_recharges(actions)
         row["saving_throw_actions"] = parse_save_actions(actions, recharges)
+        row["innate_spellcasting"] = parse_innate_spellcasting(source.get("Traits"))
         _bind_frightful_multiattack(row, actions)
     catalog_path.write_text(
         json.dumps(catalog_rows, indent=2, ensure_ascii=False) + "\n",
@@ -49,16 +51,16 @@ def enrich(source_path: Path, catalog_path: Path) -> None:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Add typed 2014 save/AoE actions to a normalized catalog.")
+    parser = argparse.ArgumentParser(description="Add typed 2014 save/AoE and innate spell data to a normalized catalog.")
     parser.add_argument("source", type=Path)
     parser.add_argument("--catalog", type=Path, default=Path("data/monsters/2014/catalog.json"))
     args = parser.parse_args()
     try:
         enrich(args.source, args.catalog)
-        print(f"enriched 2014 save actions in {args.catalog}")
+        print(f"enriched 2014 save actions and innate spells in {args.catalog}")
         return 0
     except Exception as exc:
-        logger.exception("2014 save-action enrichment failed: %s", exc)
+        logger.exception("2014 action enrichment failed: %s", exc)
         return 1
 
 
