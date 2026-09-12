@@ -31,12 +31,15 @@ def apply_save_control_outcome(
             grant_source_effect_immunity(target.state, actor.combatant_id, action.id)
         return []
     control = action.failure_control_effect
-    if control is None or control.condition_id is None:
+    if control is None:
+        return []
+    effect_id = control.condition_id or control.effect_id
+    if effect_id is None:
         return []
     expires_round = round_number + control.duration_rounds if control.duration_rounds is not None else None
     applied = apply_timed_condition(
         target.state,
-        control.condition_id,
+        effect_id,
         actor.combatant_id,
         source_effect_id=action.id,
         applied_round=round_number,
@@ -50,5 +53,9 @@ def apply_save_control_outcome(
         affected_states=affected_states,
         ends_on_damage=control.ends_on_damage,
         source_effect_immunity_on_end=control.source_effect_immunity_on_end,
+        speed_multiplier=control.speed_multiplier,
+        blocks_reactions=control.blocks_reactions,
+        action_bonus_exclusive=control.action_bonus_exclusive,
+        max_attacks_per_turn=control.max_attacks_per_turn,
     )
     return [applied] if applied is not None else []
