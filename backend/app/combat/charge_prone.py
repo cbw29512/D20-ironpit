@@ -44,6 +44,7 @@ def resolve_charge_prone(
         profile.prone_save_ability,
         profile.prone_save_dc,
         dice,
+        against_prone=True,
     )
     applied = list(event.applied_condition_ids)
     description = event.description
