@@ -107,6 +107,17 @@ def test_real_srd_information_traits_are_fingerprinted_without_trait_blockers() 
         raise
 
 
+def test_tunneler_is_arena_neutral_but_remains_source_fingerprinted() -> None:
+    try:
+        for monster_name in ("Ankheg", "Purple Worm"):
+            monster = _monster(monster_name)
+            assert "Tunneler" in monster.source_trait_names
+            assert "uncertified-trait:tunneler" not in trait_issues(monster, _row(monster_name))
+    except Exception:
+        logger.exception("Tunneler arena-neutral trait regression failed.")
+        raise
+
+
 def test_sunlight_sensitivity_is_inactive_without_explicit_sunlight() -> None:
     try:
         wolf = _monster("Wolf")
