@@ -84,12 +84,14 @@
 
   function resolveAction(sequence, round, actor, target, action, distance, options = {}) {
     const spendAction = options.spendAction !== false;
+    const checkResource = options.checkResource !== false;
+    const spendResource = options.spendResource !== false;
     if (spendAction && !E().available(actor.state, "action")) throw new Error("Action is unavailable for saving throw action.");
-    if (!resourceAvailable(actor.state, action)) throw new Error(`${action.name} resource is unavailable.`);
+    if (checkResource && !resourceAvailable(actor.state, action)) throw new Error(`${action.name} resource is unavailable.`);
     if (!legalAction(action, target, distance)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
     const save = resolveSavingThrow(target.state, action.saveAbility, action.dc, { magicalEffect: Boolean(action.magicalEffect) });
-    let actionResourceRemaining = null;
-    if (action.resourceId) {
+    let actionResourceRemaining = options.resourceRemaining ?? null;
+    if (action.resourceId && spendResource) {
       const cost = action.resourceCost || 1;
       actor.state.resources[action.resourceId] -= cost;
       actionResourceRemaining = actor.state.resources[action.resourceId];
