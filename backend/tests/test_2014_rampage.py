@@ -42,7 +42,7 @@ def test_rampage_uses_bonus_action_and_shared_bite_resolver() -> None:
             heroes=[fallen, target], monsters=[attacker], hero_total_levels=2, monster_total_cr="1",
         )
         events, sequence = resolve_rampage(
-            2, 1, attacker, setup, FixedDiceProvider([20, 3, 3]), prior, "1:hyena",
+            2, 1, attacker, setup, FixedDiceProvider([20, 3, 3, 3, 3]), prior, "1:hyena",
         )
         assert sequence == 3
         assert attacker.state.bonus_action_available is False
