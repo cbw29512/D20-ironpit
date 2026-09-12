@@ -10,6 +10,7 @@ from app.domain.damage_defense_rules import ConditionalDamageResistance
 from app.domain.movement import MovementModes
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.reactions import ParryReaction, RedirectAttackReaction
+from app.domain.regeneration import RegenerationProfile
 from app.domain.size import CreatureSize
 from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellSaveAction
 from app.domain.traits import CombatTrait
@@ -85,6 +86,7 @@ class CombatantTemplate(BaseModel):
     parry_reaction: ParryReaction | None = None
     redirect_attack_reaction: RedirectAttackReaction | None = None
     zero_hp_prevention: ZeroHpPrevention | None = None
+    regeneration: RegenerationProfile | None = None
     fighting_style: str | None = None
     fighting_styles: list[str] = Field(default_factory=list)
     weapon_masteries: list[str] = Field(default_factory=list)
@@ -109,10 +111,7 @@ class CombatantTemplate(BaseModel):
             normalized["movement_modes"] = {"walk_ft": normalized["speed_ft"]}
         style = normalized.get("fighting_style")
         styles = normalized.get("fighting_styles")
-        if styles is None:
-            styles = []
-        if not styles and style:
-            normalized["fighting_styles"] = [style]
-        elif styles and not style:
-            normalized["fighting_style"] = styles[0]
+        if styles is None: styles = []
+        if not styles and style: normalized["fighting_styles"] = [style]
+        elif styles and not style: normalized["fighting_style"] = styles[0]
         return normalized
