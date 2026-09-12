@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import json
 import logging
+import re
+import unicodedata
 from pathlib import Path
 
 from pydantic import TypeAdapter
@@ -28,6 +30,12 @@ CATALOG_ROOT = Path(__file__).resolve().parents[3] / "data" / "monsters" / "2014
 MVP_CATALOG_PATH = CATALOG_ROOT / "mvp_catalog.json"
 _MONSTERS = TypeAdapter(list[CatalogMonster2014])
 _CHARGE_TRAITS = {"Charge", "Pounce", "Trampling Charge"}
+
+
+def _action_key(value: str) -> str:
+    clean = re.sub(r"\s*\(Recharge\s+[^)]+\)", "", value, flags=re.I).rstrip(".")
+    text = unicodedata.normalize("NFKD", clean).encode("ascii", "ignore").decode().lower()
+    return re.sub(r"[^a-z0-9]+", "-", text).strip("-")
 
 
 def _attack(source: CatalogAttack2014, *, magical: bool = False) -> WeaponAttack:
@@ -60,7 +68,8 @@ def _attack(source: CatalogAttack2014, *, magical: bool = False) -> WeaponAttack
 
 
 def _multiattack(source: CatalogMonster2014, attacks: list[WeaponAttack]) -> AttackActionDefinition | None:
-    if not source.multiattack_slots: return None
+    if not source.multiattack_slots:
+        return None
     known = {attack.id for attack in attacks}; slots: list[AttackActionSlot] = []
     for choices in source.multiattack_slots:
         if not choices or any(attack_id not in known for attack_id in choices):
@@ -71,19 +80,28 @@ def _multiattack(source: CatalogMonster2014, attacks: list[WeaponAttack]) -> Att
 
 def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
     try:
-        attack_names = {attack.name for attack in source.attacks}; supported_actions = set(attack_names)
-        if source.multiattack_slots: supported_actions.add("Multiattack")
+        supported_action_ids = {attack.id for attack in source.attacks}
+        supported_action_ids.update(action.id for action in source.saving_throw_actions)
+        supported_action_ids.update(
+            action.resource_id for action in source.saving_throw_actions if action.resource_id
+        )
+        if source.multiattack_slots:
+            supported_action_ids.add("multiattack")
         supported_reactions = {"Parry"} if source.parry_ac_bonus is not None else set()
         blockers = [f"defense:{text}" for text in unresolved_defenses_2014(source.unsupported_defense_text)]
         blockers.extend(f"attack-detail:{attack.name}" for attack in source.attacks if not attack.source_complete)
-        blockers.extend(f"action:{name}" for name in source.action_names if name not in supported_actions)
+        blockers.extend(
+            f"action:{name}" for name in source.action_names
+            if _action_key(name) not in supported_action_ids
+        )
         blockers.extend(f"trait:{name}" for name in unresolved_traits_2014(source.trait_names))
         charge_traits = _CHARGE_TRAITS.intersection(source.trait_names)
         if charge_traits and not any(attack.charge_profile for attack in source.attacks):
             blockers.extend(f"trait:{name}" for name in sorted(charge_traits))
         blockers.extend(f"reaction:{name}" for name in source.reaction_names if name not in supported_reactions)
         blockers.extend(f"legendary:{name}" for name in source.legendary_action_names)
-        if not source.attacks: blockers.append("attack:no-structured-attack")
+        if not source.attacks:
+            blockers.append("attack:no-structured-attack")
         return blockers
     except Exception as exc:
         logger.exception("Failed to inventory 2014 mechanics for %s.", source.id)
@@ -93,12 +111,14 @@ def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
 def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
     try:
         blockers = unsupported_mechanics_2014(source)
-        if blockers: raise ValueError(f"unsupported 2014 mechanics: {', '.join(blockers)}")
+        if blockers:
+            raise ValueError(f"unsupported 2014 mechanics: {', '.join(blockers)}")
         traits = combat_traits_2014(source.trait_names); magical = CombatTrait.MAGIC_WEAPONS in traits
         attacks = bind_attack_traits_2014(source, [_attack(item, magical=magical) for item in source.attacks])
         movement = MovementModes(
             walk_ft=source.speed.get("walk", 0), fly_ft=source.speed.get("fly", 0),
-            climb_ft=source.speed.get("climb", 0), swim_ft=source.speed.get("swim", 0), burrow_ft=source.speed.get("burrow", 0),
+            climb_ft=source.speed.get("climb", 0), swim_ft=source.speed.get("swim", 0),
+            burrow_ft=source.speed.get("burrow", 0),
         )
         dex = source.abilities["dex"]
         return CombatantTemplate(
@@ -107,8 +127,10 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
             creature_type=source.creature_type, size=source.size,
             ability_scores=ability_scores_2014(source), armor_class=source.armor_class, max_hp=source.max_hp,
             speed_ft=movement.walk_ft, movement_modes=movement, initiative_bonus=(dex - 10) // 2,
-            weapon_attack=attacks[0], alternate_weapon_attacks=attacks[1:], attack_action=_multiattack(source, attacks),
-            saving_throw_bonuses=saving_throw_bonuses_2014(source), skill_bonuses=source.skills, damage_resistances=source.damage_resistances,
+            weapon_attack=attacks[0], alternate_weapon_attacks=attacks[1:],
+            attack_action=_multiattack(source, attacks), saving_throw_actions=source.saving_throw_actions,
+            saving_throw_bonuses=saving_throw_bonuses_2014(source), skill_bonuses=source.skills,
+            damage_resistances=source.damage_resistances,
             conditional_damage_resistances=conditional_resistances_2014(source.unsupported_defense_text),
             damage_immunities=source.damage_immunities, damage_vulnerabilities=source.damage_vulnerabilities,
             condition_immunities=source.condition_immunities, combat_traits=traits, resources=resources_2014(source),
@@ -123,11 +145,14 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
 
 def load_catalog_2014(path: Path = CATALOG_ROOT) -> list[CatalogMonster2014]:
     try:
-        if path.is_file(): payload = json.loads(path.read_text(encoding="utf-8"))
+        if path.is_file():
+            payload = json.loads(path.read_text(encoding="utf-8"))
         else:
-            canonical = path / "catalog.json"; files = [canonical] if canonical.exists() else sorted(path.glob("catalog_*.json"))
+            canonical = path / "catalog.json"
+            files = [canonical] if canonical.exists() else sorted(path.glob("catalog_*.json"))
             files = files or [path / "mvp_catalog.json"]; payload = []
-            for file in files: payload.extend(json.loads(file.read_text(encoding="utf-8")))
+            for file in files:
+                payload.extend(json.loads(file.read_text(encoding="utf-8")))
         return _MONSTERS.validate_python(payload)
     except Exception as exc:
         logger.exception("Failed to load 2014 monster catalog from %s.", path)
