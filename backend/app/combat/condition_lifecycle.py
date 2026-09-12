@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import logging
-
 from app.combat.modifier_stack import expire_target_turn_modifiers
 from app.combat.periodic_damage import periodic_damage_due, resolve_periodic_damage
 from app.combat.repeat_save_transition import resolve_repeat_save_transition
@@ -53,10 +52,7 @@ def resolve_target_condition_timing(
                 continue
             if _repeat_save_due(effect, round_number, timing):
                 roll, succeeded = resolve_saving_throw(
-                    target.state,
-                    effect.repeat_save_ability,
-                    effect.repeat_save_dc,
-                    dice,
+                    target.state, effect.repeat_save_ability, effect.repeat_save_dc, dice,
                 )
                 removed, escalated = resolve_repeat_save_transition(target.state, effect, succeeded, round_number)
                 events.append(BattleEvent(
