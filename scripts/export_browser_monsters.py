@@ -71,8 +71,12 @@ def _attach_monster_actions(row, template) -> None:
     by_id = {action.id: action for action in template.saving_throw_actions}
     for action_row in row.get("saving_throw_actions", []):
         action = by_id.get(action_row["id"])
-        if action is not None and action.area is not None:
+        if action is None:
+            continue
+        if action.area is not None:
             action_row["area"] = _area_row(action.area)
+        if action.failure_push_ft:
+            action_row["failurePushFt"] = action.failure_push_ft
     if "Poor Depth Perception" in template.source_trait_names:
         for attack_row in row.get("attacks", []): attack_row["disadvantageBeyondFt"] = 30
     if template.attack_action and template.attack_action.policy:
