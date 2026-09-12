@@ -25,6 +25,10 @@ def _repeat_save_due(effect, round_number: int, timing: ConditionTiming) -> bool
     return eligible_round is None or round_number >= eligible_round
 
 
+def _expiry_due(effect, round_number: int, timing: ConditionTiming) -> bool:
+    return effect.expiry_timing == timing and (effect.expires_round is None or round_number >= effect.expires_round)
+
+
 def resolve_target_condition_timing(
     sequence: int,
     round_number: int,
@@ -80,7 +84,7 @@ def resolve_target_condition_timing(
                 sequence += 1
                 if succeeded or escalated:
                     continue
-            if effect.expiry_timing == timing:
+            if _expiry_due(effect, round_number, timing):
                 removed = remove_effect_group(target.state, effect)
                 if removed:
                     events.append(BattleEvent(
@@ -120,7 +124,7 @@ def resolve_source_condition_timing(
         for target in [*setup.heroes, *setup.monsters]:
             expiring = [
                 effect for effect in target.state.timed_effects
-                if effect.source_id == source.combatant_id and effect.expiry_timing == timing
+                if effect.source_id == source.combatant_id and _expiry_due(effect, round_number, timing)
             ]
             for effect in expiring:
                 if effect not in target.state.timed_effects:
