@@ -6,6 +6,10 @@ from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
 from app.combat.grapple import apply_grapple
 from app.combat.resources import action_resource_available, spend_action_resource
+from app.combat.save_control_effects import (
+    apply_save_control_outcome,
+    target_is_source_effect_immune,
+)
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.zero_hp import apply_damage
 from app.domain.models import BattleEvent, DamageRollComponent, DamageType, DiceRoll, EncounterCombatant, SavingThrowAction
@@ -43,6 +47,7 @@ def resolve_save_action(
 ) -> BattleEvent:
     if spend_action and not is_available(actor.state, "action"): raise ValueError("Action is not available for a saving throw action.")
     if check_resource and not action_resource_available(actor.state, action): raise ValueError(f"{action.name} resource is unavailable.")
+    if target_is_source_effect_immune(actor, target, action): raise ValueError(f"{target.state.template.name} is immune to {action.name} from this source.")
     if not legal_save_action(action, target, distance_ft): raise ValueError(f"{action.name} has no legal target at {distance_ft} feet.")
     save_roll, succeeded = resolve_saving_throw(
         target.state, action.save_ability, action.dc, dice, magical_effect=action.magical_effect,
@@ -63,9 +68,16 @@ def resolve_save_action(
         applied_types = {part.damage_type for part in damage_components if part.applied_total > 0}
         damage_outcome = apply_damage(target.state, applied_total, damage_types=applied_types, dice=dice, affected_states=affected_states)
         end_rage_if_incapacitated(target.state)
-    applied_conditions: list[str] = []
+    applied_conditions = apply_save_control_outcome(
+        actor, target, action, succeeded=succeeded, round_number=round_number,
+        affected_states=affected_states,
+    )
     if not succeeded and target.state.is_alive and not target.state.is_dead and action.grapple_escape_dc is not None:
-        applied_conditions = apply_grapple(target.state, actor.combatant_id, action.grapple_escape_dc, action.range_ft, restrains=action.restrains_while_grappled)
+        applied_conditions.extend(apply_grapple(
+            target.state, actor.combatant_id, action.grapple_escape_dc,
+            action.range_ft, restrains=action.restrains_while_grappled,
+        ))
+    applied_conditions = list(dict.fromkeys(applied_conditions))
     outcome = "SUCCEEDS" if succeeded else "FAILS"
     description = f"{target.state.template.name} {outcome} a DC {action.dc} {action.save_ability.title()} save against {actor.state.template.name}'s {action.name}."
     if damage_outcome == "undead_fortitude": description += f" {target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP."
