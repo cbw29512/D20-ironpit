@@ -23,7 +23,7 @@ for (const file of [
 ]) load(file);
 
 for (const file of ["browser-monsters-generated.js", "browser-area-shapes.js",
-  "browser-area-targeting.js", "browser-save-targets.js", "browser-offense-value.js"]) load(file);
+  "browser-area-targeting.js", "browser-save-targets.js", "browser-modifiers.js", "browser-offense-value.js"]) load(file);
 
 function fixture(id, x) {
   try {
