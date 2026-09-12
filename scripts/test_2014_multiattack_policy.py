@@ -43,6 +43,16 @@ def main() -> int:
         "id": "multiattack", "name": "Multiattack", "slots": [["bite"], ["tail-stinger"]],
     }
 
+    vampire_spawn = (
+        "<p><strong>Multiattack.</strong> The vampire makes two attacks, only one of which can be a bite attack.</p>"
+    )
+    parsed = parse_multiattack(vampire_spawn, [attack("claws", "Claws"), attack("bite", "Bite")])
+    assert parsed == {
+        "id": "multiattack", "name": "Multiattack",
+        "slots": [["claws", "bite"], ["claws", "bite"]],
+        "policy": {"at_most_once_attack_ids": ["bite"]},
+    }
+
     print("2014 Multiattack policy regressions passed.")
     return 0
 
