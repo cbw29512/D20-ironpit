@@ -25,6 +25,12 @@ SAVE_FAILURE_CONDITION_PATTERN = re.compile(
     rf"until the (?P<edge>start|end) of (?P<owner>its|the [^.]+?[’']s) next turn",
     re.I,
 )
+SEVERE_FAILURE_PATTERN = re.compile(
+    rf"Failure by (?P<margin>\d+) or More:\s*The target has the (?P<condition>{_CONDITIONS}) condition "
+    rf"for (?P<minutes>\d+) minute(?:s)?\.\s*While (?P=condition), the target has the "
+    rf"(?P<linked>{_CONDITIONS}) condition, which ends early if the target takes any damage",
+    re.I,
+)
 STAGED_SAVE_PATTERN = re.compile(
     rf"(?P<ability>Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) Saving Throw:\s*DC\s*(?P<dc>\d+)[^.]*\.\s*"
     rf"First Failure:\s*(?:The\s+)?target has the (?P<condition>{_CONDITIONS}) condition(?P<body>.*?)"
@@ -66,19 +72,31 @@ def _staged_save(text: str, maximum: CreatureSize | None) -> HitSavingThrowEffec
     if "repeats the save" not in body or "end of its next turn" not in body or "success" not in body:
         return None
     failure = ConditionEffectDefinition(
-        condition=match.group("condition").lower(),
-        max_target_size=maximum,
-        repeat_save_ability=match.group("ability").lower(),
-        repeat_save_dc=int(match.group("dc")),
-        repeat_save_timing="target_turn_end",
-        repeat_save_failure_condition=match.group("second").lower(),
+        condition=match.group("condition").lower(), max_target_size=maximum,
+        repeat_save_ability=match.group("ability").lower(), repeat_save_dc=int(match.group("dc")),
+        repeat_save_timing="target_turn_end", repeat_save_failure_condition=match.group("second").lower(),
     )
     return HitSavingThrowEffectDefinition(
-        save_ability=match.group("ability").lower(),
-        dc=int(match.group("dc")),
-        target_filter=target_filter(text),
-        failure_effects=[failure],
+        save_ability=match.group("ability").lower(), dc=int(match.group("dc")),
+        target_filter=target_filter(text), failure_effects=[failure],
     )
+
+
+def _severe_failure(text: str, maximum: CreatureSize | None) -> tuple[int, list[ConditionEffectDefinition]] | None:
+    match = SEVERE_FAILURE_PATTERN.search(text)
+    if match is None:
+        return None
+    duration = int(match.group("minutes")) * 10
+    return int(match.group("margin")), [
+        ConditionEffectDefinition(
+            condition=match.group("condition").lower(), max_target_size=maximum,
+            duration_rounds=duration, expiry_timing="source_turn_end",
+        ),
+        ConditionEffectDefinition(
+            condition=match.group("linked").lower(), max_target_size=maximum,
+            duration_rounds=duration, expiry_timing="source_turn_end", ends_on_damage=True,
+        ),
+    ]
 
 
 def hit_save(text: str, maximum: CreatureSize | None) -> HitSavingThrowEffectDefinition | None:
@@ -89,15 +107,15 @@ def hit_save(text: str, maximum: CreatureSize | None) -> HitSavingThrowEffectDef
     if match is None:
         return None
     failure = ConditionEffectDefinition(
-        condition=match.group("condition").lower(),
-        max_target_size=maximum,
+        condition=match.group("condition").lower(), max_target_size=maximum,
         expiry_timing=_timing(match.group("owner"), match.group("edge")),
     )
+    severe = _severe_failure(text, maximum)
     return HitSavingThrowEffectDefinition(
-        save_ability=match.group("ability").lower(),
-        dc=int(match.group("dc")),
-        target_filter=target_filter(text),
-        failure_effects=[failure],
+        save_ability=match.group("ability").lower(), dc=int(match.group("dc")),
+        target_filter=target_filter(text), failure_effects=[failure],
+        severe_failure_margin=severe[0] if severe else None,
+        severe_failure_effects=severe[1] if severe else [],
     )
 
 
