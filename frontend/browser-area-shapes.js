@@ -13,6 +13,14 @@
     return [dx / magnitude, dy / magnitude];
   }
 
+  function radiusContains(origin, point, radiusFt) {
+    return Math.hypot(point[0] - origin[0], point[1] - origin[1]) <= radiusFt + EPSILON;
+  }
+
+  function emanationContains(origins, point, radiusFt) {
+    return origins.some((origin) => radiusContains(origin, point, radiusFt));
+  }
+
   function projection(origin, direction, point) {
     const vx = point[0] - origin[0], vy = point[1] - origin[1];
     return {
@@ -36,6 +44,8 @@
   window.IRON_PIT_BROWSER_AREA_SHAPES = {
     cellCenterFt,
     normalized,
+    radiusContains,
+    emanationContains,
     lineContains,
     coneContains,
   };
