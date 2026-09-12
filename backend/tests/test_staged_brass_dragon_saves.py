@@ -2,6 +2,7 @@ import pytest
 
 from app.content.basic_condition_actions import WAKE_SLEEPER_ID
 from app.content.monster_catalog import load_monster_rows
+from app.content.monster_save_failure_source_audit import failure_effect_issues
 from app.content.monster_source_save_candidates import source_save_candidates
 from app.domain.save_effects import ConditionEffectDefinition
 
@@ -40,3 +41,4 @@ def test_sleep_breath_compiles_staged_wakeable_unconscious_lifecycle(
     assert effect.repeat_save_failure_duration_rounds == 10
     assert effect.repeat_save_failure_ends_on_damage is True
     assert effect.repeat_save_failure_allowed_removal_action_ids == [WAKE_SLEEPER_ID]
+    assert failure_effect_issues(action, str(row["actions"])) == []
