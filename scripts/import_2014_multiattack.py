@@ -63,20 +63,35 @@ def _listed(text: str, attacks: list[dict]) -> list[list[str]] | None:
     return slots if len(slots) == total else None
 
 
+def _generic_count(text: str, attacks: list[dict]) -> list[list[str]] | None:
+    match = re.search(r"makes (one|two|three|four|five|six) attacks?\.?$", text, re.I)
+    if not match or not attacks:
+        return None
+    count = NUMBER_WORDS[match.group(1).lower()]
+    ids = [attack["id"] for attack in attacks]
+    return [ids[:] for _ in range(count)]
+
+
 def parse_multiattack(source_actions: str | None, attacks: list[dict]) -> dict | None:
     for paragraph in re.findall(r"<p>(.*?)</p>", source_actions or "", re.I | re.S):
         if not re.search(r"<strong>\s*Multiattack", paragraph, re.I):
             continue
         text = re.sub(r"^Multiattack\.\s*", "", _plain(paragraph), flags=re.I)
-        if re.search(r"\b(alternatively|replace|instead|also| if |can use|uses? .+ twice| or )\b", f" {text.lower()} "):
-            return None
+
+        # Parse the actual attack sequence even when the paragraph also grants a separate
+        # ability (for example Frightful Presence). That other ability remains its own
+        # unsupported action until the engine models it; it must not hide the attacks.
         slots = _listed(text, attacks) or _repeated_with(text, attacks) or _repeated_named(text, attacks)
         if slots:
             return {"id": "multiattack", "name": "Multiattack", "slots": slots}
-        generic = re.search(r"makes (one|two|three|four|five|six) attacks?\.?$", text, re.I)
-        if generic and attacks:
-            count = NUMBER_WORDS[generic.group(1).lower()]
-            ids = [attack["id"] for attack in attacks]
-            return {"id": "multiattack", "name": "Multiattack", "slots": [ids[:] for _ in range(count)]}
+
+        # Replacement/alternative wording changes which actions are legal in each slot,
+        # so keep those fail-closed until explicitly modeled.
+        if re.search(r"\b(alternatively|replace|instead| or )\b", f" {text.lower()} "):
+            return None
+
+        slots = _generic_count(text, attacks)
+        if slots:
+            return {"id": "multiattack", "name": "Multiattack", "slots": slots}
         return None
     return None
