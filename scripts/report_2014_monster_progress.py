@@ -6,8 +6,7 @@ from app.content.monster_catalog_2014 import load_catalog_2014, unsupported_mech
 
 
 def _attack_detail_family(text: str | None) -> str:
-    value = (text or "").lower()
-    tags: list[str] = []
+    value = (text or "").lower(); tags: list[str] = []
     if "saving throw" in value or " dc " in f" {value} ": tags.append("save")
     if "grappled" in value or "escape dc" in value: tags.append("grapple")
     if "restrained" in value: tags.append("restrained")
@@ -20,55 +19,39 @@ def _attack_detail_family(text: str | None) -> str:
 
 
 def main() -> int:
-    monsters = load_catalog_2014()
-    family_counts: Counter[str] = Counter()
-    exact_counts: Counter[str] = Counter()
-    exact_monsters: dict[str, set[str]] = defaultdict(set)
-    rider_counts: Counter[str] = Counter()
-    rider_monsters: dict[str, set[str]] = defaultdict(set)
-    runnable: list[str] = []
-
+    monsters = load_catalog_2014(); family_counts: Counter[str] = Counter(); exact_counts: Counter[str] = Counter()
+    exact_monsters: dict[str, set[str]] = defaultdict(set); rider_counts: Counter[str] = Counter()
+    rider_monsters: dict[str, set[str]] = defaultdict(set); rider_examples: dict[str, str] = {}; runnable: list[str] = []
     for monster in monsters:
         blockers = unsupported_mechanics_2014(monster)
-        if not blockers:
-            runnable.append(monster.name)
-            continue
+        if not blockers: runnable.append(monster.name); continue
         for attack in monster.attacks:
             if not attack.source_complete:
-                family = _attack_detail_family(attack.unsupported_text)
-                key = f"{attack.name}:{family}"
-                rider_counts[key] += 1
-                rider_monsters[key].add(monster.name)
+                family = _attack_detail_family(attack.unsupported_text); key = f"{attack.name}:{family}"
+                rider_counts[key] += 1; rider_monsters[key].add(monster.name)
+                rider_examples.setdefault(key, attack.unsupported_text or "")
         for blocker in blockers:
-            family = blocker.split(":", 1)[0]
-            family_counts[family] += 1
-            exact_counts[blocker] += 1
-            exact_monsters[blocker].add(monster.name)
+            family = blocker.split(":", 1)[0]; family_counts[family] += 1; exact_counts[blocker] += 1; exact_monsters[blocker].add(monster.name)
 
     print(f"2014 catalog monsters: {len(monsters)}")
     print(f"Conservatively engine-compatible now: {len(runnable)}")
     print(f"Blocked by unresolved mechanics: {len(monsters) - len(runnable)}")
     print("\nBlocker families:")
-    for family, count in family_counts.most_common():
-        print(f"- {family}: {count} references")
+    for family, count in family_counts.most_common(): print(f"- {family}: {count} references")
 
     print("\nHighest-yield exact blockers:")
-    ranked = sorted(
-        exact_counts,
-        key=lambda blocker: (-len(exact_monsters[blocker]), -exact_counts[blocker], blocker),
-    )
+    ranked = sorted(exact_counts, key=lambda blocker: (-len(exact_monsters[blocker]), -exact_counts[blocker], blocker))
     for blocker in ranked[:30]:
-        names = sorted(exact_monsters[blocker])
-        examples = ", ".join(names[:5])
+        names = sorted(exact_monsters[blocker]); examples = ", ".join(names[:5])
         print(f"- {blocker}: {len(names)} monsters / {exact_counts[blocker]} references ({examples})")
 
     print("\nUnresolved attack rider families:")
     ranked_riders = sorted(rider_counts, key=lambda key: (-len(rider_monsters[key]), -rider_counts[key], key))
     for key in ranked_riders[:30]:
-        names = sorted(rider_monsters[key])
+        names = sorted(rider_monsters[key]); sample = rider_examples[key].replace("\n", " ")[:220]
         print(f"- {key}: {len(names)} monsters / {rider_counts[key]} references ({', '.join(names[:5])})")
+        print(f"  residual: {sample}")
     return 0
 
 
-if __name__ == "__main__":
-    raise SystemExit(main())
+if __name__ == "__main__": raise SystemExit(main())
