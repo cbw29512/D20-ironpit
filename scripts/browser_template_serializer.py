@@ -65,6 +65,14 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             if effect.duration_rounds is not None: row["onHitSaveEffect"]["durationRounds"] = effect.duration_rounds
             if effect.repeat_save_timing is not None: row["onHitSaveEffect"]["repeatSaveTiming"] = effect.repeat_save_timing
             if effect.ends_on_damage: row["onHitSaveEffect"]["endsOnDamage"] = True
+            if effect.damage_dice_count:
+                row["onHitSaveEffect"].update(
+                    damageDiceCount=effect.damage_dice_count,
+                    damageDiceSize=effect.damage_dice_size,
+                    damageBonus=effect.damage_bonus,
+                    damageType=effect.damage_type,
+                    successDamage=effect.success_damage,
+                )
         if attack.conditional_damage:
             if len(attack.conditional_damage) != 1: raise ValueError(f"Browser supports one conditional damage rider on {attack.id}.")
             conditional = attack.conditional_damage[0]
