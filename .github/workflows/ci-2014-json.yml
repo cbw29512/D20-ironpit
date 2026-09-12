@@ -7,14 +7,21 @@ on:
       - 'backend/app/content/monster_catalog_2014_models.py'
       - 'backend/app/content/monster_catalog_2014_traits.py'
       - 'backend/app/content/monster_catalog_2014_defenses.py'
+      - 'backend/app/domain/charge_profiles.py'
+      - 'backend/app/domain/weapons.py'
+      - 'backend/app/combat/charge.py'
+      - 'backend/app/combat/charge_follow_up.py'
+      - 'backend/app/combat/charge_prone.py'
       - 'backend/tests/test_2014_json_catalog.py'
       - 'backend/tests/test_2014_secondary_damage.py'
       - 'backend/tests/test_2014_parry.py'
+      - 'backend/tests/test_2014_charge.py'
       - 'backend/tests/test_magic_resistance.py'
       - 'backend/tests/test_conditional_damage_defenses.py'
       - 'data/monsters/2014/**'
       - 'scripts/import_2014_monster_catalog.py'
       - 'scripts/import_2014_attack_details.py'
+      - 'scripts/import_2014_charge.py'
       - 'scripts/import_2014_multiattack.py'
       - 'scripts/import_2014_reactions.py'
       - 'scripts/sync_2014_monster_catalog.py'
@@ -45,5 +52,6 @@ jobs:
           tests/test_2014_json_catalog.py
           tests/test_2014_secondary_damage.py
           tests/test_2014_parry.py
+          tests/test_2014_charge.py
           tests/test_magic_resistance.py
           tests/test_conditional_damage_defenses.py
