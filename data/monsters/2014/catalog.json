@@ -1299,6 +1299,26 @@
         "animation": "fear"
       },
       {
+        "id": "lightning-breath",
+        "name": "Lightning Breath",
+        "save_ability": "dexterity",
+        "dc": 19,
+        "range_ft": 90,
+        "area": {
+          "shape": "line",
+          "origin": "self",
+          "length_ft": 90,
+          "width_ft": 5
+        },
+        "damage_dice_count": 12,
+        "damage_dice_size": 10,
+        "damage_bonus": 0,
+        "damage_type": "lightning",
+        "success_damage": "half",
+        "resource_id": "breath-weapons",
+        "resource_cost": 1
+      },
+      {
         "id": "repulsion-breath",
         "name": "Repulsion Breath",
         "save_ability": "strength",
@@ -25414,7 +25434,27 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/18/290/315/315/636379804105821214.jpeg",
-    "saving_throw_actions": [],
+    "saving_throw_actions": [
+      {
+        "id": "frost-breath",
+        "name": "Frost Breath",
+        "save_ability": "dexterity",
+        "dc": 10,
+        "range_ft": 15,
+        "area": {
+          "shape": "cone",
+          "origin": "self",
+          "length_ft": 15
+        },
+        "damage_dice_count": 2,
+        "damage_dice_size": 4,
+        "damage_bonus": 0,
+        "damage_type": "cold",
+        "success_damage": "half",
+        "resource_id": "frost-breath",
+        "resource_cost": 1
+      }
+    ],
     "innate_spellcasting": {
       "ability": "charisma",
       "save_dc": null,
@@ -37503,7 +37543,27 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/113/315/315/636252745841820724.jpeg",
-    "saving_throw_actions": [],
+    "saving_throw_actions": [
+      {
+        "id": "steam-breath",
+        "name": "Steam Breath",
+        "save_ability": "dexterity",
+        "dc": 10,
+        "range_ft": 15,
+        "area": {
+          "shape": "cone",
+          "origin": "self",
+          "length_ft": 15
+        },
+        "damage_dice_count": 1,
+        "damage_dice_size": 8,
+        "damage_bonus": 0,
+        "damage_type": "fire",
+        "success_damage": "half",
+        "resource_id": "steam-breath",
+        "resource_cost": 1
+      }
+    ],
     "innate_spellcasting": {
       "ability": "charisma",
       "save_dc": null,
@@ -44200,6 +44260,26 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/64/315/315/636252731269768088.jpeg",
     "saving_throw_actions": [
+      {
+        "id": "lightning-breath",
+        "name": "Lightning Breath",
+        "save_ability": "dexterity",
+        "dc": 15,
+        "range_ft": 60,
+        "area": {
+          "shape": "line",
+          "origin": "self",
+          "length_ft": 60,
+          "width_ft": 5
+        },
+        "damage_dice_count": 10,
+        "damage_dice_size": 10,
+        "damage_bonus": 0,
+        "damage_type": "lightning",
+        "success_damage": "half",
+        "resource_id": "breath-weapons",
+        "resource_cost": 1
+      },
       {
         "id": "repulsion-breath",
         "name": "Repulsion Breath",
