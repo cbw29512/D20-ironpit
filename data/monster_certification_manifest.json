@@ -182,8 +182,8 @@
         "condition-or-control",
         "legendary",
         "limited-use",
+        "save-failure-effect-mismatch:srd-adult-brass-dragon-sleep-breath:0:condition",
         "save-or-complex-action",
-        "source-save-action-count-mismatch",
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
@@ -700,8 +700,8 @@
         "condition-or-control",
         "legendary",
         "limited-use",
+        "save-failure-effect-mismatch:srd-ancient-brass-dragon-sleep-breath:0:condition",
         "save-or-complex-action",
-        "source-save-action-count-mismatch",
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
@@ -1904,8 +1904,8 @@
       "blockers": [
         "condition-or-control",
         "limited-use",
-        "save-or-complex-action",
-        "source-save-action-count-mismatch"
+        "save-failure-effect-mismatch:srd-brass-dragon-wyrmling-sleep-breath:0:condition",
+        "save-or-complex-action"
       ]
     },
     {
@@ -9694,8 +9694,8 @@
       "blockers": [
         "condition-or-control",
         "limited-use",
-        "save-or-complex-action",
-        "source-save-action-count-mismatch"
+        "save-failure-effect-mismatch:srd-young-brass-dragon-sleep-breath:0:condition",
+        "save-or-complex-action"
       ]
     },
     {
