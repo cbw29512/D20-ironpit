@@ -13,4 +13,5 @@ class CombatTrait(StrEnum):
     MAGIC_RESISTANCE = "magic-resistance"
     MAGIC_WEAPONS = "magic-weapons"
     SURE_FOOTED = "sure-footed"
+    RAMPAGE = "rampage"
     LIFE_DOMAIN = "life-domain"
