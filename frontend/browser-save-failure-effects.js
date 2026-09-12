@@ -88,6 +88,13 @@
     return !(filter.excludedTags || []).some((item) => tags.has(String(item).toLowerCase()));
   }
 
+  function severeFailure(rider, result) {
+    return Boolean(
+      !result.succeeded && rider.severeFailureMargin != null && result.roll?.total != null
+      && result.roll.total <= rider.dc - rider.severeFailureMargin
+    );
+  }
+
   function hitSave(attacker, target, attack, round, distance, setup = null) {
     const rider = attack.onHitSavingThrow;
     if (!rider || target.state.is_dead || !target.state.is_alive) return null;
@@ -98,10 +105,13 @@
     const result = saves.resolveSavingThrow(
       target.state, rider.saveAbility, rider.dc, Boolean(rider.magicalEffect), aura.savingThrowAdvantageSources(target, setup),
     );
+    const severe = severeFailure(rider, result);
+    const effects = severe ? (rider.severeFailureEffects || []) : (rider.failureEffects || []);
     const applied = result.succeeded ? [] : apply(
-      target, attacker.combatant_id, attack.id, rider.failureEffects || [], { round, range: attack.reach || distance },
+      target, attacker.combatant_id, attack.id, effects, { round, range: attack.reach || distance },
     );
-    return { eligible: true, roll: result.roll, ability: rider.saveAbility, dc: rider.dc, succeeded: result.succeeded, applied };
+    return { eligible: true, roll: result.roll, ability: rider.saveAbility, dc: rider.dc,
+      succeeded: result.succeeded, severeFailure: severe, applied };
   }
 
   function installHitSaveBridge() {
@@ -118,6 +128,7 @@
       if (!outcome?.eligible) return event;
       event.saving_throw_roll = outcome.roll; event.save_ability = outcome.ability;
       event.save_dc = outcome.dc; event.save_succeeded = outcome.succeeded;
+      event.severe_save_failure = outcome.severeFailure;
       event.applied_condition_ids = [...new Set([...(event.applied_condition_ids || []), ...outcome.applied])];
       event.description += ` ${actual.state.template.name} ${outcome.succeeded ? "succeeds" : "fails"} the DC ${outcome.dc} ${outcome.ability} hit-effect save.`;
       return event;
