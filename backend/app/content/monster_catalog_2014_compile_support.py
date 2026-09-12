@@ -6,7 +6,8 @@ from app.combat.legendary_resistance import LEGENDARY_RESISTANCE_RESOURCE_ID
 from app.content.monster_catalog_2014_models import CatalogMonster2014
 from app.content.monster_catalog_2014_traits import legendary_resistance_uses_2014
 from app.domain.character_builds import AbilityScores
-from app.domain.models import ConditionalAttackAdvantage, RechargeRule, ResourceDefinition, WeaponAttack
+from app.domain.combatants import RechargeRule, ResourceDefinition
+from app.domain.weapons import ConditionalAttackAdvantage, WeaponAttack
 
 logger = logging.getLogger(__name__)
 ABILITY_NAMES = {
