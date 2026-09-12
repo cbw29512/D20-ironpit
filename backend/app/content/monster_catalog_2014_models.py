@@ -43,6 +43,8 @@ class CatalogMonster2014(BaseModel):
     ruleset: Literal["2014"]
     size: CreatureSize
     creature_type: str
+    creature_type_text: str | None = None
+    creature_subtypes: list[str] = Field(default_factory=list)
     alignment: str | None = None
     armor_class: int = Field(ge=1)
     armor_class_text: str | None = None
@@ -53,15 +55,22 @@ class CatalogMonster2014(BaseModel):
     speed_text: str | None = None
     abilities: dict[str, int]
     saving_throws: dict[str, int] = Field(default_factory=dict)
+    saving_throws_text: str | None = None
     skills: dict[str, int] = Field(default_factory=dict)
+    skills_text: str | None = None
     senses: str | None = None
     languages: str | None = None
     damage_resistances: list[DamageType] = Field(default_factory=list)
+    damage_resistances_text: str | None = None
     damage_immunities: list[DamageType] = Field(default_factory=list)
+    damage_immunities_text: str | None = None
     damage_vulnerabilities: list[DamageType] = Field(default_factory=list)
+    damage_vulnerabilities_text: str | None = None
     condition_immunities: list[ConditionName] = Field(default_factory=list)
+    condition_immunities_text: str | None = None
     unsupported_defense_text: list[str] = Field(default_factory=list)
     challenge_rating: str | None = None
+    challenge_text: str | None = None
     attacks: list[CatalogAttack2014] = Field(default_factory=list)
     multiattack_slots: list[list[str]] = Field(default_factory=list)
     action_names: list[str] = Field(default_factory=list)
