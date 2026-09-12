@@ -5,9 +5,15 @@ on:
     paths:
       - 'backend/app/content/monster_catalog_2014.py'
       - 'backend/app/content/monster_catalog_2014_models.py'
+      - 'backend/app/content/monster_catalog_2014_traits.py'
+      - 'backend/app/content/monster_catalog_2014_defenses.py'
       - 'backend/tests/test_2014_json_catalog.py'
+      - 'backend/tests/test_2014_secondary_damage.py'
+      - 'backend/tests/test_magic_resistance.py'
+      - 'backend/tests/test_conditional_damage_defenses.py'
       - 'data/monsters/2014/**'
       - 'scripts/import_2014_monster_catalog.py'
+      - 'scripts/import_2014_attack_details.py'
       - 'scripts/import_2014_multiattack.py'
       - 'scripts/sync_2014_monster_catalog.py'
       - 'scripts/verify_2014_full_catalog.py'
@@ -32,4 +38,9 @@ jobs:
       - name: Report reusable mechanic blockers
         run: python scripts/report_2014_monster_progress.py
       - name: Prove JSON-to-engine MVP
-        run: cd backend && pytest -q tests/test_2014_json_catalog.py
+        run: >-
+          cd backend && pytest -q
+          tests/test_2014_json_catalog.py
+          tests/test_2014_secondary_damage.py
+          tests/test_magic_resistance.py
+          tests/test_conditional_damage_defenses.py
