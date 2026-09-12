@@ -47,7 +47,8 @@ def _attack(source: CatalogAttack2014, *, magical: bool = False) -> WeaponAttack
             id=source.id, weapon=weapon, attack_bonus=source.attack_bonus,
             damage_bonus=source.damage.bonus,
             fixed_damage=source.damage.average if source.damage.dice_count == 0 else None,
-            on_hit_damage=riders, charge_profile=source.charge_profile,
+            on_hit_damage=riders, on_hit_save_effect=source.on_hit_save_effect,
+            charge_profile=source.charge_profile,
         )
     except Exception as exc:
         logger.exception("Failed to compile 2014 catalog attack %s.", source.id)
