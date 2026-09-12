@@ -110,6 +110,14 @@ def test_blood_frenzy_binds_existing_target_wounded_advantage() -> None:
     assert all(attack.conditional_attack_advantage[0].trigger == "target_not_full_hp" for attack in attacks)
 
 
+def test_reckless_trait_reuses_universal_reckless_attack_feature() -> None:
+    catalog = {monster.id: monster for monster in load_catalog_2014(MVP_CATALOG_PATH)}
+    source = catalog["bandit"].model_copy(update={"trait_names": ["Reckless"]})
+    assert unsupported_mechanics_2014(source) == []
+    template = compile_monster_2014(source)
+    assert template.progression_features.reckless_attack is True
+
+
 def test_new_basic_monster_is_data_only(tmp_path) -> None:
     record = {
         "id": "test-brute", "name": "Test Brute", "ruleset": "2014",
