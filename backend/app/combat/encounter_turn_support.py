@@ -7,7 +7,7 @@ from app.combat.condition_removal import choose_condition_removal_action, resolv
 from app.combat.encounter_action_surge import resolve_action_surge_attack
 from app.combat.healing import choose_healing_action, resolve_healing
 from app.combat.pit_policy import save_distance, target_order
-from app.combat.resources import action_resource_available
+from app.combat.resources import action_resource_available, resource_definition
 from app.combat.saving_throws import legal_save_action
 from app.combat.barbarian import finalize_rage_turn
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -57,6 +57,47 @@ def resolve_support_actions(sequence, round_number, member, setup, dice, turn_ke
         return events, sequence
     except Exception:
         logger.exception("Failed support-action stage for %s.", member.combatant_id)
+        raise
+
+
+def _is_recharge_action(attacker: EncounterCombatant, action) -> bool:
+    try:
+        if action.resource_id is None:
+            return False
+        definition = resource_definition(attacker.state, action.resource_id)
+        return definition is not None and definition.recharge is not None
+    except Exception:
+        logger.exception("Failed Recharge-action probe for %s.", attacker.combatant_id)
+        raise
+
+
+def recharge_action_ready(attacker: EncounterCombatant) -> bool:
+    """Return whether any Recharge-backed save action is currently charged."""
+    try:
+        return any(
+            _is_recharge_action(attacker, action) and action_resource_available(attacker.state, action)
+            for action in attacker.state.template.saving_throw_actions
+        )
+    except Exception:
+        logger.exception("Failed Recharge readiness probe for %s.", attacker.combatant_id)
+        raise
+
+
+def recharge_save_choice(attacker: EncounterCombatant, setup: EncounterSetup):
+    """Choose a legal charged Recharge action before ordinary offense."""
+    try:
+        for target in target_order(attacker, setup):
+            for action in attacker.state.template.saving_throw_actions:
+                if not _is_recharge_action(attacker, action):
+                    continue
+                if not action_resource_available(attacker.state, action):
+                    continue
+                distance = save_distance(attacker, target, action.range_ft)
+                if legal_save_action(action, target, distance):
+                    return target, action, distance
+        return None
+    except Exception:
+        logger.exception("Failed Recharge save-action choice for %s.", attacker.combatant_id)
         raise
 
 
