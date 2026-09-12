@@ -70,6 +70,9 @@ def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
         blockers.extend(f"action:{name}" for name in unresolved_actions_2014(source))
         blockers.extend(f"trait:{name}" for name in unresolved_traits_2014(source.trait_names))
         blockers.extend(f"spell:{name}" for name in unresolved_spells_2014(source))
+        relentless = [name for name in source.trait_names if name.startswith("Relentless (Recharges after")]
+        if relentless and source.zero_hp_prevention is None:
+            blockers.extend(f"trait:{name}" for name in relentless)
         charge_traits = _CHARGE_TRAITS.intersection(source.trait_names)
         if charge_traits and not any(attack.charge_profile for attack in source.attacks):
             blockers.extend(f"trait:{name}" for name in sorted(charge_traits))
