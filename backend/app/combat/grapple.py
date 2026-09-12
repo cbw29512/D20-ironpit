@@ -54,7 +54,8 @@ def speed_is_zero(state: CombatantState) -> bool:
 
 
 def grapple_attack_disadvantage(state: CombatantState, target_id: str) -> int:
-    if not state.grapple_sources:
+    """2024 Grappled penalizes attacks against targets other than the grappler; 2014 does not."""
+    if state.template.ruleset == "2014" or not state.grapple_sources:
         return 0
     return 0 if any(source.source_id == target_id for source in state.grapple_sources) else 1
 
