@@ -3,6 +3,7 @@ from __future__ import annotations
 import re
 
 from app.content.monster_source_attack_riders import parse_attack_riders
+from app.content.monster_source_attack_text import attack_rider_text
 from app.content.monster_source_charge_riders import parse_charge_replacement
 from app.domain.capability_attacks import AttackCapabilityDefinition
 from app.domain.weapons import DamageType, WeaponAttackKind
@@ -25,7 +26,7 @@ def source_fixed_attack_candidates(row: dict[str, object], actions: str) -> list
         reach = re.search(r"reach\s+(\d+)", match.group("range"), re.I)
         ranged = re.search(r"range\s+(\d+)(?:/(\d+))?", match.group("range"), re.I)
         attack_id = f"srd-{_slug(str(row['name']))}-{_slug(name)}"
-        rider_text = match.group("tail") or ""
+        rider_text = attack_rider_text(actions, match)
         attacks.append(AttackCapabilityDefinition(
             id=attack_id, name=name, weapon_id=f"{attack_id}-weapon",
             attack_kind=WeaponAttackKind(match.group("kind").lower().replace(" ", "_")),
