@@ -3,12 +3,29 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import re
 from pathlib import Path
 
 from import_2014_recharge import parse_action_recharges
 from import_2014_save_actions import parse_save_actions
 
 logger = logging.getLogger(__name__)
+
+
+def _bind_frightful_multiattack(row: dict, actions: str) -> None:
+    save_ids = {action["id"] for action in row["saving_throw_actions"]}
+    if "frightful-presence" not in save_ids:
+        return
+    multiattack = next((
+        paragraph for paragraph in re.findall(r"<p>(.*?)</p>", actions or "", re.I | re.S)
+        if re.search(r"<strong>\s*Multiattack", paragraph, re.I)
+    ), "")
+    if not re.search(r"can use (?:its )?Frightful Presence", multiattack, re.I):
+        return
+    slots = row.get("multiattack_slots") or []
+    if not slots or any("frightful-presence" in slot for slot in slots):
+        return
+    row["multiattack_slots"] = [["frightful-presence"], *slots]
 
 
 def enrich(source_path: Path, catalog_path: Path) -> None:
@@ -24,6 +41,7 @@ def enrich(source_path: Path, catalog_path: Path) -> None:
         actions = source.get("Actions", "")
         recharges = parse_action_recharges(actions)
         row["saving_throw_actions"] = parse_save_actions(actions, recharges)
+        _bind_frightful_multiattack(row, actions)
     catalog_path.write_text(
         json.dumps(catalog_rows, indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
