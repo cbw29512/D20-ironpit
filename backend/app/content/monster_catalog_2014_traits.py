@@ -7,6 +7,7 @@ MODELED_TRAITS = {
     "Swarm": CombatTrait.SWARM,
     "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
     "Magic Resistance": CombatTrait.MAGIC_RESISTANCE,
+    "Magic Weapons": CombatTrait.MAGIC_WEAPONS,
 }
 
 ARENA_NEUTRAL_TRAITS = frozenset({
