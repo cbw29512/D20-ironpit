@@ -2,6 +2,7 @@
   "use strict";
 
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const AS = () => window.IRON_PIT_BROWSER_AREA_SAVES;
   const C = () => window.IRON_PIT_BROWSER_CHARGE;
   const D = () => window.IRON_PIT_DICE;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
@@ -12,12 +13,15 @@
   const slotData = (slot) => Array.isArray(slot) ? { attackIds: slot, saveActionIds: [] }
     : { attackIds: slot.attackIds || [], saveActionIds: slot.saveActionIds || [] };
 
+  function areaChoice(member, setup, data) {
+    return AS()?.choice(member, setup, false, data.saveActionIds) || null;
+  }
   function saveChoice(member, setup, data) {
     const allowed = new Set(data.saveActionIds);
     for (const target of F().targetOrder(member, setup)) {
       const action = (member.state.template.saving_throw_actions || []).find((item) => {
         const distance = F().saveDistance(member, target, item.range);
-        return allowed.has(item.id) && V().legalAction(item, target, distance);
+        return !item.area && allowed.has(item.id) && V().legalAction(item, target, distance);
       });
       if (action) return { target, save: action, distance: F().saveDistance(member, target, action.range) };
     }
@@ -38,7 +42,7 @@
   function slotHasLegalChoice(member, setup, slot) {
     try {
       const data = slotData(slot);
-      return Boolean(attackChoice(member, setup, data) || saveChoice(member, setup, data));
+      return Boolean(attackChoice(member, setup, data) || areaChoice(member, setup, data) || saveChoice(member, setup, data));
     } catch (error) {
       console.error("Failed to prove browser Attack/Multiattack slot legality", { member: member.combatant_id, error });
       throw error;
@@ -84,6 +88,11 @@
         if (definition.isAttackAction && !lightTrigger && choice.attack.light) lightTrigger = choice.attack;
         openingFeature = null;
         continue;
+      }
+      const area = areaChoice(member, setup, data);
+      if (area) {
+        const resolved = AS().resolve(sequence, round, member, setup, false, { allowedIds: data.saveActionIds, spendAction: false });
+        if (resolved) { events.push(...resolved.events); sequence = resolved.sequence; continue; }
       }
       const saved = saveChoice(member, setup, data);
       if (saved) events.push(V().resolveAction(sequence++, round, member, saved.target, saved.save, saved.distance, { spendAction: false }));
