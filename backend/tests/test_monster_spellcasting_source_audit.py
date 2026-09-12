@@ -64,3 +64,16 @@ def test_direct_cast_outside_structured_spell_list_fails_closed() -> None:
     issues = spellcasting_issues(template, row)
     assert "uncertified-monster-spellcasting" in issues
     assert "spell-concentration-source-not-vendored" in issues
+
+
+def test_can_cast_outside_structured_spell_list_fails_closed() -> None:
+    row = dict(_row("Giant Owl"))
+    row["reactions"] = "Arcane Retort (1/Day). The owl can cast Fireball after taking damage."
+    template = _monster("Giant Owl").model_copy(
+        update={"source_spellcasting_fingerprint": spellcasting_fingerprint(row)}
+    )
+
+    assert not arena_neutral_spellcasting(row)
+    issues = spellcasting_issues(template, row)
+    assert "uncertified-monster-spellcasting" in issues
+    assert "spell-concentration-source-not-vendored" in issues
