@@ -46,6 +46,7 @@ class CatalogMonster2014(BaseModel):
     damage_immunities: list[DamageType] = Field(default_factory=list)
     damage_vulnerabilities: list[DamageType] = Field(default_factory=list)
     condition_immunities: list[ConditionName] = Field(default_factory=list)
+    unsupported_defense_text: list[str] = Field(default_factory=list)
     challenge_rating: str | None = None
     attacks: list[CatalogAttack2014] = Field(default_factory=list)
     action_names: list[str] = Field(default_factory=list)
