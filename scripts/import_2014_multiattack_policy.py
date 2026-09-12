@@ -8,6 +8,22 @@ _SUBJECT = r"(?:the [a-z][a-z -]*? )?"
 
 
 def parse_policy_multiattack(text: str, attacks: list[dict], ids_for_label: AttackIds) -> dict | None:
+    capped = re.fullmatch(
+        _SUBJECT + r"makes (two|three|four) attacks, only one of which can be (?:a|an|its|his|her) ([a-z][a-z -]*?) attack\. ?",
+        text,
+        re.I,
+    )
+    if capped:
+        counts = {"two": 2, "three": 3, "four": 4}
+        capped_ids = ids_for_label(capped.group(2), attacks)
+        all_ids = [attack["id"] for attack in attacks]
+        if len(capped_ids) == 1 and all_ids:
+            return {
+                "id": "multiattack", "name": "Multiattack",
+                "slots": [all_ids[:] for _ in range(counts[capped.group(1).lower()])],
+                "policy": {"at_most_once_attack_ids": capped_ids},
+            }
+
     hit_follow_up = re.fullmatch(
         _SUBJECT + r"makes one attack with (?:its|his|her) ([a-z][a-z -]*?)\. "
         r"if that attack hits, (?:the [a-z -]+|it) can make one ([a-z][a-z -]*?) attack against the same target\. ?",
