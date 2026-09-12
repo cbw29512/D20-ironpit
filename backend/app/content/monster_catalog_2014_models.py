@@ -121,6 +121,7 @@ class CatalogMonster2014(BaseModel):
     regeneration: RegenerationProfile | None = None
     legendary_action_uses: int = Field(default=0, ge=0, le=10)
     legendary_actions: list[LegendaryActionOption] = Field(default_factory=list)
+    unsupported_legendary_action_names: list[str] = Field(default_factory=list)
     action_recharges: dict[str, int] = Field(default_factory=dict)
     rest_recharge_action_ids: list[str] = Field(default_factory=list)
     action_names: list[str] = Field(default_factory=list)
