@@ -101,7 +101,7 @@ class SavingThrowAction(BaseModel):
     name: str
     action_cost: ActionCost = "action"
     save_ability: AbilityName
-    dc: int = Field(ge=0, le=40)
+    dc: int = Field(ge=1, le=40)
     range_ft: int = Field(ge=0)
     target_max_size: CreatureSize | None = None
     required_target_condition: ConditionName | None = None
