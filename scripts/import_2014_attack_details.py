@@ -44,8 +44,8 @@ _GRAPPLE = re.compile(
     re.I,
 )
 _RESTRAINED = re.compile(
-    r"(?:Until (?:this|the) grapple ends,?\s*(?:the target|it) is restrained|"
-    r"(?:the target|it) is restrained until (?:this|the) grapple ends)",
+    r"(?:Until (?:this|the) grapple ends,?\s*(?:the target|the creature|it) is restrained|"
+    r"(?:the target|the creature|it) is restrained until (?:this|the) grapple ends)",
     re.I,
 )
 _NO_REPEAT_TARGET = re.compile(
