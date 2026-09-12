@@ -4,6 +4,7 @@ import html
 import re
 import unicodedata
 
+_TRAIT = re.compile(r"<strong>\s*Spellcasting\.\s*</strong>", re.I)
 _LEVEL = re.compile(r"\b(\d+)(?:st|nd|rd|th)-level spellcaster\b", re.I)
 _ABILITY = re.compile(r"spellcasting ability is (Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma)", re.I)
 _SAVE_DC = re.compile(r"spell save DC\s*(\d+)", re.I)
@@ -36,15 +37,16 @@ def _names(value: str) -> list[str]:
 
 
 def parse_spellcasting(source_traits: str | None) -> dict | None:
-    text = _plain(source_traits or "")
-    if "Spellcasting." not in text:
+    raw = source_traits or ""
+    if not _TRAIT.search(raw):
         return None
+    text = _plain(raw)
     level = _LEVEL.search(text); ability = _ABILITY.search(text)
     save_dc = _SAVE_DC.search(text); attack_bonus = _ATTACK_BONUS.search(text)
     if not level or not ability:
         return {"source_complete": False, "unsupported_text": "missing caster level or casting ability"}
     spells: list[dict] = []; slots: dict[str, int] = {}
-    for row in _spell_rows(source_traits or ""):
+    for row in _spell_rows(raw):
         cantrip = _CANTRIPS.search(row)
         if cantrip:
             spells.extend({"id": _slug(name), "name": name, "level": 0} for name in _names(cantrip.group(1)))
