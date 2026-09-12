@@ -33,6 +33,7 @@
       blocksReactions: Boolean(control.blocksReactions),
       actionBonusExclusive: Boolean(control.actionBonusExclusive),
       maxAttacksPerTurn: control.maxAttacksPerTurn ?? null,
+      disadvantageStrengthD20Tests: Boolean(control.disadvantageStrengthD20Tests),
     });
     return applied ? [applied] : [];
   }
