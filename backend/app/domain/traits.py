@@ -12,4 +12,5 @@ class CombatTrait(StrEnum):
     UNDEAD_FORTITUDE = "undead-fortitude"
     MAGIC_RESISTANCE = "magic-resistance"
     MAGIC_WEAPONS = "magic-weapons"
+    SURE_FOOTED = "sure-footed"
     LIFE_DOMAIN = "life-domain"
