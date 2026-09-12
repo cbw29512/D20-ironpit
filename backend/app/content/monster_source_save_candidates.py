@@ -3,6 +3,7 @@ from __future__ import annotations
 import re
 
 from app.content.monster_source_limited_resources import source_limited_resource
+from app.content.monster_source_repeat_save_candidates import repeat_condition_save_candidates
 from app.content.monster_source_save_heading import promoted_save_heading
 from app.content.monster_source_save_riders import common_failure_riders, slowing_breath_rider
 from app.content.monster_source_staged_save_candidates import staged_condition_save_candidates
@@ -138,6 +139,7 @@ def source_save_candidates(row: dict[str, object]) -> tuple[list[SaveCapabilityD
         staged, staged_resources = staged_condition_save_candidates(monster, text, cost)
         actions.extend(parsed); resources.extend(parsed_resources)
         actions.extend(staged); resources.extend(staged_resources)
+        actions.extend(repeat_condition_save_candidates(monster, text, cost))
     unique_actions = {action.id: action for action in actions}
     unique_resources = {resource.id: resource for resource in resources}
     return list(unique_actions.values()), list(unique_resources.values())
