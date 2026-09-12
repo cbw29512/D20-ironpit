@@ -16,6 +16,8 @@ from app.content.audited_cleric_profile import (
 from app.content.audited_fighter_profile import build_karnok_stoneward_profile
 from app.content.audited_rogue import build_mara_quickstep_level
 from app.content.audited_rogue_profile import build_mara_quickstep_profile
+from app.content.audited_warlock import build_varek_ashenmark_level
+from app.content.audited_warlock_profile import build_varek_ashenmark_profile
 from app.content.barbarian_berserker_progression_profile import build_rokhan_stonefury_level6_profile
 from app.content.barbarian_high_level_profiles import (
     build_rokhan_stonefury_level7_profile,
@@ -130,6 +132,11 @@ CERTIFIED_HERO_PROGRESSIONS: tuple[CertifiedHeroProgression, ...] = (
             build_mara_quickstep_profile,
             build_mara_quickstep_level2_profile,
         ),
+    ),
+    CertifiedHeroProgression(
+        class_id="warlock",
+        template_builder=build_varek_ashenmark_level,
+        profile_builders=(build_varek_ashenmark_profile,),
     ),
 )
 
