@@ -17,6 +17,7 @@ from app.combat.light_attack_resolution import resolve_light_extra_attack
 from app.combat.opening_burst import opening_feature_id
 from app.combat.pit_policy import flexible_slot_has_both
 from app.combat.saving_throws import resolve_save_action
+from app.combat.timed_effect_rules import max_attacks_per_turn
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, WeaponAttack, WeaponAttackKind
 
@@ -46,6 +47,8 @@ def resolve_attack_action(
         turn_key = f"{round_number}:{attacker.combatant_id}"
         previous_event: BattleEvent | None = None
         used_attack_ids: set[str] = set()
+        attack_limit = max_attacks_per_turn(attacker.state)
+        attacks_made = 0
 
         for index, raw_slot in expanded_slots(definition, dice):
             if attacker.state.is_dead or attacker.state.is_unconscious or attacker.state.turn_terminated:
@@ -59,10 +62,12 @@ def resolve_attack_action(
                 and not ranged_split_used
                 and flexible_slot_has_both(attacker, slot.attack_ids)
             )
-            chosen_attack = attack_choice(
-                attacker, setup, slot, ranged_backline=split_this_slot,
-                required_target_id=required_target_id(definition, index, previous_event),
-            )
+            chosen_attack = None
+            if attack_limit is None or attacks_made < attack_limit:
+                chosen_attack = attack_choice(
+                    attacker, setup, slot, ranged_backline=split_this_slot,
+                    required_target_id=required_target_id(definition, index, previous_event),
+                )
             if chosen_attack is not None:
                 target, attack, distance = chosen_attack
                 if split_this_slot and attack.weapon.attack_kind is WeaponAttackKind.RANGED:
@@ -78,13 +83,15 @@ def resolve_attack_action(
                 events.append(event)
                 previous_event = event
                 used_attack_ids.add(attack.id)
+                attacks_made += 1
                 sequence += 1
                 if attacker.state.turn_terminated:
                     break
-                cleave, sequence = resolve_cleave_extra_attack(
-                    sequence, round_number, attacker, event, attack, setup, dice, turn_key,
-                )
-                events.extend(cleave)
+                if attack_limit is None or attacks_made < attack_limit:
+                    cleave, sequence = resolve_cleave_extra_attack(
+                        sequence, round_number, attacker, event, attack, setup, dice, turn_key,
+                    )
+                    events.extend(cleave)
                 if definition.is_attack_action and light_trigger is None and attack.weapon.light:
                     light_trigger = attack
                 opening_feature = None
@@ -112,7 +119,11 @@ def resolve_attack_action(
                 previous_event = event
                 sequence += 1
 
-        if definition.is_attack_action and light_trigger is not None and not attacker.state.turn_terminated:
+        if (
+            definition.is_attack_action and light_trigger is not None
+            and not attacker.state.turn_terminated
+            and (attack_limit is None or attacks_made < attack_limit)
+        ):
             more, sequence = resolve_light_extra_attack(
                 sequence, round_number, attacker, setup, dice, light_trigger, turn_key,
             )
