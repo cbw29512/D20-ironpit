@@ -71,6 +71,7 @@ class BattleEvent(BaseModel):
     feature_id: str | None = None
     concentration_started_effect_id: str | None = None
     concentration_ended_effect_id: str | None = None
+    resource_roll: DiceRoll | None = None
     resource_remaining: int | None = None
     animation: str
     description: str
