@@ -14,6 +14,7 @@ ABILITY_NAMES = {
     "str": "strength", "dex": "dexterity", "con": "constitution",
     "int": "intelligence", "wis": "wisdom", "cha": "charisma",
 }
+LEGENDARY_ACTION_RESOURCE_ID = "legendary-actions"
 
 
 def ability_scores_2014(source: CatalogMonster2014) -> AbilityScores:
@@ -45,6 +46,12 @@ def resources_2014(source: CatalogMonster2014) -> list[ResourceDefinition]:
             id=LEGENDARY_RESISTANCE_RESOURCE_ID,
             name="Legendary Resistance",
             max_uses=uses,
+        ))
+    if source.legendary_action_uses:
+        resources.append(ResourceDefinition(
+            id=LEGENDARY_ACTION_RESOURCE_ID,
+            name="Legendary Actions",
+            max_uses=source.legendary_action_uses,
         ))
     if source.zero_hp_prevention is not None:
         resources.append(ResourceDefinition(
