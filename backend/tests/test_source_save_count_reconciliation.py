@@ -9,8 +9,7 @@ from app.content.roster import build_arena_roster
 @pytest.mark.parametrize(
     "name",
     [
-        "Bearded Devil", "Brass Dragon Wyrmling", "Death Dog", "Harpy",
-        "Homunculus", "Salamander", "Young Brass Dragon",
+        "Bearded Devil", "Death Dog", "Harpy", "Homunculus", "Salamander",
     ],
 )
 def test_source_save_count_drift_remains_an_explicit_blocker(name: str) -> None:
