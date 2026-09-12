@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 197,
-    "blocked": 133
+    "public_ready": 196,
+    "blocked": 134
   },
   "monsters": [
     {
@@ -8378,12 +8378,18 @@
         "damage-or-condition-defense",
         "trait"
       ],
-      "unsupported_mechanics": [],
-      "python_certification_status": "certified",
-      "browser_certification_status": "certified",
-      "generated_static_status": "current",
-      "public_ready_status": "ready",
-      "blockers": []
+      "unsupported_mechanics": [
+        "movement-choice-source-unmodeled",
+        "movement-fly-mismatch"
+      ],
+      "python_certification_status": "blocked",
+      "browser_certification_status": "blocked",
+      "generated_static_status": "catalog-only",
+      "public_ready_status": "blocked",
+      "blockers": [
+        "movement-choice-source-unmodeled",
+        "movement-fly-mismatch"
+      ]
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-swarm-of-piranhas",
@@ -9183,7 +9189,7 @@
       "monster_name": "Werebear",
       "srd_source_page": 337,
       "srd_source_reference": "SRD 5.2.1 p. 337",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-werebear",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -9206,8 +9212,12 @@
       "public_ready_status": "blocked",
       "blockers": [
         "bonus-action",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
+        "movement-form-source-unmodeled",
+        "movement-parenthetical-source-malformed",
+        "save-or-complex-action",
+        "source-attack-count-mismatch",
+        "source-save-action-count-mismatch",
+        "uncertified-bonus-action:shape-shift"
       ]
     },
     {
@@ -9215,7 +9225,7 @@
       "monster_name": "Wereboar",
       "srd_source_page": 338,
       "srd_source_reference": "SRD 5.2.1 p. 338",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-wereboar",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -9241,8 +9251,11 @@
       "blockers": [
         "bonus-action",
         "condition-or-control",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
+        "movement-form-source-unmodeled",
+        "save-or-complex-action",
+        "source-attack-count-mismatch",
+        "source-save-action-count-mismatch",
+        "uncertified-bonus-action:shape-shift"
       ]
     },
     {
@@ -9284,7 +9297,7 @@
       "monster_name": "Weretiger",
       "srd_source_page": 339,
       "srd_source_reference": "SRD 5.2.1 p. 339",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-weretiger",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -9307,8 +9320,12 @@
       "public_ready_status": "blocked",
       "blockers": [
         "bonus-action",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
+        "movement-form-source-unmodeled",
+        "save-or-complex-action",
+        "source-attack-count-mismatch",
+        "source-save-action-count-mismatch",
+        "uncertified-bonus-action:prowl",
+        "uncertified-bonus-action:shape-shift"
       ]
     },
     {
@@ -9316,7 +9333,7 @@
       "monster_name": "Werewolf",
       "srd_source_page": 339,
       "srd_source_reference": "SRD 5.2.1 p. 339",
-      "runtime_template_id": null,
+      "runtime_template_id": "srd-werewolf",
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
@@ -9341,8 +9358,11 @@
       "public_ready_status": "blocked",
       "blockers": [
         "bonus-action",
-        "monster-combat-mechanics-not-certified",
-        "save-or-complex-action"
+        "movement-form-source-unmodeled",
+        "save-or-complex-action",
+        "source-attack-count-mismatch",
+        "source-save-action-count-mismatch",
+        "uncertified-bonus-action:shape-shift"
       ]
     },
     {
