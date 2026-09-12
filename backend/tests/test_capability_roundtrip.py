@@ -1,3 +1,4 @@
+from app.content.basic_condition_actions import wake_sleeper_action
 from app.content.capability_equivalence import semantic_template_dump, templates_semantically_equal
 from app.content.capability_registry import build_monster_templates_from_capabilities
 from app.content.legacy_monster_roster import build_legacy_monster_templates
@@ -31,6 +32,15 @@ def test_registry_preserves_every_legacy_monster_semantics_and_source_audit() ->
             f"{original.id}: differing_fields={_semantic_difference_keys(original, rebuilt)}"
         )
         assert audit_monster_source(rebuilt, source_row) == audit_monster_source(original, source_row), original.id
+
+
+def test_engine_global_wake_action_does_not_change_content_semantic_parity() -> None:
+    original = build_legacy_monster_templates()[0]
+    with_engine_default = original.model_copy(update={
+        "condition_removal_actions": [*original.condition_removal_actions, wake_sleeper_action()],
+    })
+    assert templates_semantically_equal(original, with_engine_default)
+    assert semantic_template_dump(original) == semantic_template_dump(with_engine_default)
 
 
 def test_production_roster_uses_the_compiled_capability_monster_set() -> None:
