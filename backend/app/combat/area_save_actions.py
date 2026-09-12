@@ -3,7 +3,8 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available, spend
-from app.combat.area_targeting import AreaPlacement, legal_area_placements
+from app.combat.area_save_targeting import legal_area_save_placements
+from app.combat.area_targeting import AreaPlacement
 from app.combat.dice import DiceProvider
 from app.combat.save_targets import resolve_save_targets, validate_save_targets
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -22,11 +23,11 @@ def resolve_area_save_action(
     *,
     placement: AreaPlacement | None = None,
 ) -> tuple[list[BattleEvent], int, AreaPlacement]:
-    """Preflight area geometry, spend one action, then resolve every affected enemy."""
+    """Preflight action-aware area geometry, spend one action, then resolve every eligible enemy."""
     try:
         if action.area is None: raise ValueError(f"{action.name} does not define area geometry.")
         if not is_available(actor.state, "action"): raise ValueError("Action is not available for an area saving-throw action.")
-        legal = legal_area_placements(actor, setup, action.area, action.range_ft)
+        legal = legal_area_save_placements(actor, setup, action)
         if not legal: raise ValueError(f"{action.name} has no legal area placement.")
         selected = placement or legal[0]
         if selected not in legal: raise ValueError(f"{action.name} received a stale or illegal area placement.")
