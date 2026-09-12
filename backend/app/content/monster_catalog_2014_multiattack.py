@@ -29,4 +29,5 @@ def compile_multiattack_2014(
         id=f"2014-{source.id}-multiattack",
         name="Multiattack",
         slots=slots,
+        policy=source.multiattack_policy,
     )
