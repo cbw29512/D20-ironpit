@@ -10,7 +10,9 @@ on:
       - 'backend/app/domain/charge_profiles.py'
       - 'backend/app/domain/on_hit_saves.py'
       - 'backend/app/domain/weapons.py'
+      - 'backend/app/domain/combatants.py'
       - 'backend/app/combat/attacks.py'
+      - 'backend/app/combat/grapple.py'
       - 'backend/app/combat/on_hit_saves.py'
       - 'backend/app/combat/charge.py'
       - 'backend/app/combat/charge_follow_up.py'
@@ -18,6 +20,8 @@ on:
       - 'backend/app/combat/legendary_resistance.py'
       - 'backend/app/combat/saving_throw_rolls.py'
       - 'frontend/browser-saves.js'
+      - 'frontend/browser-grapple.js'
+      - 'frontend/browser-2014-grapple.test.cjs'
       - 'backend/tests/test_2014_json_catalog.py'
       - 'backend/tests/test_2014_secondary_damage.py'
       - 'backend/tests/test_2014_parry.py'
@@ -27,6 +31,7 @@ on:
       - 'backend/tests/test_magic_resistance.py'
       - 'backend/tests/test_conditional_damage_defenses.py'
       - 'data/monsters/2014/**'
+      - 'scripts/browser_template_serializer.py'
       - 'scripts/import_2014_monster_catalog.py'
       - 'scripts/import_2014_attack_details.py'
       - 'scripts/import_2014_charge.py'
@@ -70,3 +75,5 @@ jobs:
           tests/test_2014_on_hit_save.py
           tests/test_magic_resistance.py
           tests/test_conditional_damage_defenses.py
+      - name: Prove 2014 browser rules parity
+        run: node frontend/browser-2014-grapple.test.cjs
