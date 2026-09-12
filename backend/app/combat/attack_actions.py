@@ -4,7 +4,10 @@ import logging
 
 from app.combat.action_economy import is_available, spend
 from app.combat.ally_context import pack_tactics_active
-from app.combat.attack_action_choices import attack_choice, save_choice, slot_has_legal_choice, use_ranged_split
+from app.combat.area_save_actions import resolve_area_save_action
+from app.combat.attack_action_choices import (
+    area_save_choice, attack_choice, save_choice, slot_has_legal_choice, use_ranged_split,
+)
 from app.combat.attack_action_rules import validate_attack_action_slots
 from app.combat.cleave import resolve_cleave_extra_attack
 from app.combat.dice import DiceProvider
@@ -74,6 +77,16 @@ def resolve_attack_action(
                 if definition.is_attack_action and light_trigger is None and attack.weapon.light:
                     light_trigger = attack
                 opening_feature = None
+                continue
+
+            chosen_area = area_save_choice(attacker, setup, slot)
+            if chosen_area is not None:
+                save_action, placement = chosen_area
+                area_events, sequence, _ = resolve_area_save_action(
+                    sequence, round_number, attacker, setup, save_action, dice,
+                    placement=placement, spend_action=False,
+                )
+                events.extend(area_events)
                 continue
 
             chosen_save = save_choice(attacker, setup, slot)
