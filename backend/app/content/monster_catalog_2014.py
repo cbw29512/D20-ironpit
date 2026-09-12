@@ -12,7 +12,7 @@ from app.domain.models import CombatantTemplate, VisualLoadout, Weapon, WeaponAt
 from app.domain.movement import MovementModes
 
 logger = logging.getLogger(__name__)
-CATALOG_PATH = Path(__file__).resolve().parents[3] / "data" / "monsters" / "2014" / "mvp_catalog.json"
+CATALOG_ROOT = Path(__file__).resolve().parents[3] / "data" / "monsters" / "2014"
 _MONSTERS = TypeAdapter(list[CatalogMonster2014])
 _ABILITY_NAMES = {
     "str": "strength", "dex": "dexterity", "con": "constitution",
@@ -48,8 +48,27 @@ def _ability_scores(source: CatalogMonster2014) -> AbilityScores:
         raise RuntimeError(f"2014 monster {source.id} has invalid ability scores.") from exc
 
 
+def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
+    try:
+        attack_names = {attack.name for attack in source.attacks}
+        blockers = [f"defense:{text}" for text in source.unsupported_defense_text]
+        blockers.extend(f"action:{name}" for name in source.action_names if name not in attack_names)
+        blockers.extend(f"trait:{name}" for name in source.trait_names)
+        blockers.extend(f"reaction:{name}" for name in source.reaction_names)
+        blockers.extend(f"legendary:{name}" for name in source.legendary_action_names)
+        if not source.attacks:
+            blockers.append("attack:no-structured-attack")
+        return blockers
+    except Exception as exc:
+        logger.exception("Failed to inventory 2014 mechanics for %s.", source.id)
+        raise RuntimeError(f"2014 monster {source.id} mechanics could not be inventoried.") from exc
+
+
 def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
     try:
+        blockers = unsupported_mechanics_2014(source)
+        if blockers:
+            raise ValueError(f"unsupported 2014 mechanics: {', '.join(blockers)}")
         attacks = [_attack(item) for item in source.attacks]
         movement = MovementModes(
             walk_ft=source.speed.get("walk", 0), fly_ft=source.speed.get("fly", 0),
@@ -66,10 +85,7 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
             max_hp=source.max_hp, speed_ft=movement.walk_ft, movement_modes=movement,
             initiative_bonus=(dex - 10) // 2, weapon_attack=attacks[0],
             alternate_weapon_attacks=attacks[1:], saving_throw_bonuses=saves,
-            skill_bonuses=source.skills, source_trait_names=source.trait_names,
-            source_reaction_names=source.reaction_names,
-            source_legendary_action_names=source.legendary_action_names,
-            damage_resistances=source.damage_resistances,
+            skill_bonuses=source.skills, damage_resistances=source.damage_resistances,
             damage_immunities=source.damage_immunities,
             damage_vulnerabilities=source.damage_vulnerabilities,
             condition_immunities=source.condition_immunities,
@@ -78,18 +94,25 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
         )
     except Exception as exc:
         logger.exception("Failed to compile 2014 monster %s.", source.id)
-        raise RuntimeError(f"2014 monster {source.id} could not be compiled.") from exc
+        raise RuntimeError(f"2014 monster {source.id} could not be compiled: {exc}") from exc
 
 
-def load_catalog_2014(path: Path = CATALOG_PATH) -> list[CatalogMonster2014]:
+def load_catalog_2014(path: Path = CATALOG_ROOT) -> list[CatalogMonster2014]:
     try:
-        return _MONSTERS.validate_python(json.loads(path.read_text(encoding="utf-8")))
+        if path.is_file():
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        else:
+            files = sorted(path.glob("catalog_*.json")) or [path / "mvp_catalog.json"]
+            payload = []
+            for file in files:
+                payload.extend(json.loads(file.read_text(encoding="utf-8")))
+        return _MONSTERS.validate_python(payload)
     except Exception as exc:
         logger.exception("Failed to load 2014 monster catalog from %s.", path)
         raise RuntimeError(f"2014 monster catalog could not be loaded from {path}.") from exc
 
 
-def monster_by_id_2014(monster_id: str, path: Path = CATALOG_PATH) -> CombatantTemplate:
+def monster_by_id_2014(monster_id: str, path: Path = CATALOG_ROOT) -> CombatantTemplate:
     try:
         source = next(item for item in load_catalog_2014(path) if item.id == monster_id)
         return compile_monster_2014(source)
