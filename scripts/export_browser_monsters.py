@@ -68,6 +68,7 @@ def _timed_control_row(effect):
     if effect.blocks_reactions: row["blocksReactions"] = True
     if effect.action_bonus_exclusive: row["actionBonusExclusive"] = True
     if effect.max_attacks_per_turn is not None: row["maxAttacksPerTurn"] = effect.max_attacks_per_turn
+    if effect.disadvantage_strength_d20_tests: row["disadvantageStrengthD20Tests"] = True
     return row or None
 
 
@@ -91,6 +92,8 @@ def _attach_monster_actions(row, template) -> None:
     attack_by_id = {attack.id: attack for attack in [template.weapon_attack, *template.alternate_weapon_attacks]}
     for attack_row in row.get("attacks", []):
         attack = attack_by_id.get(attack_row["id"]); effect = attack.on_hit_save_effect if attack else None
+        if attack and attack.attack_ability is not None: attack_row["attackAbility"] = attack.attack_ability
+        if attack and attack.attack_ability_modifier is not None: attack_row["attackAbilityModifier"] = attack.attack_ability_modifier
         if effect and effect.zero_hp_stable:
             rider = attack_row.setdefault("onHitSaveEffect", {}); rider["zeroHpStable"] = True
             rider["zeroHpConditionIds"] = list(effect.zero_hp_condition_ids); rider["zeroHpDurationRounds"] = effect.zero_hp_duration_rounds
