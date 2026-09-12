@@ -13,10 +13,10 @@ def test_blocker_yield_tracks_current_frontier_features() -> None:
     assert "barbarian" in yields["brutal-strike"].frontier_classes
     assert "sear-undead" in yields
     assert "cleric" in yields["sear-undead"].frontier_classes
-    assert "survivor-defy-death" in yields
-    assert "fighter" in yields["survivor-defy-death"].frontier_classes
-    assert "survivor-heroic-rally" in yields
-    assert "fighter" in yields["survivor-heroic-rally"].frontier_classes
+    assert "boon-combat-prowess" in yields
+    assert "fighter" in yields["boon-combat-prowess"].frontier_classes
+    assert "survivor-defy-death" not in yields
+    assert "survivor-heroic-rally" not in yields
 
 
 def test_blocker_yield_is_sorted_for_work_ordering() -> None:
@@ -32,12 +32,12 @@ def test_blocker_yield_is_sorted_for_work_ordering() -> None:
 
 def test_blocker_bundles_keep_multi_feature_frontiers_visible() -> None:
     bundles = build_pregen_blocker_bundle_yields()
-    fighter_survivor = next(
+    cleric_bundle = next(
         item for item in bundles
-        if "survivor-defy-death" in item.feature_ids
-        and "survivor-heroic-rally" in item.feature_ids
-        and "fighter" in item.frontier_classes
+        if "sear-undead" in item.feature_ids
+        and "cleric-combat-spells-3" in item.feature_ids
+        and "cleric" in item.frontier_classes
     )
 
-    assert fighter_survivor.frontier_count >= 1
-    assert fighter_survivor.remaining_snapshots >= 1
+    assert cleric_bundle.frontier_count >= 1
+    assert cleric_bundle.remaining_snapshots >= 1
