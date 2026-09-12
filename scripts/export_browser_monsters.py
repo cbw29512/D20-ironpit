@@ -102,6 +102,8 @@ def _attach_monster_actions(row, template) -> None:
         attack = attack_by_id.get(attack_row["id"]); effect = attack.on_hit_save_effect if attack else None
         if attack and attack.attack_ability is not None: attack_row["attackAbility"] = attack.attack_ability
         if attack and attack.attack_ability_modifier is not None: attack_row["attackAbilityModifier"] = attack.attack_ability_modifier
+        if effect and effect.failure_push_ft:
+            attack_row.setdefault("onHitSaveEffect", {})["failurePushFt"] = effect.failure_push_ft
         if effect and effect.zero_hp_stable:
             rider = attack_row.setdefault("onHitSaveEffect", {}); rider["zeroHpStable"] = True
             rider["zeroHpConditionIds"] = list(effect.zero_hp_condition_ids); rider["zeroHpDurationRounds"] = effect.zero_hp_duration_rounds
