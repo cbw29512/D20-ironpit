@@ -18,7 +18,21 @@ class AttackSaveRiderOutcome:
     save_dc: int | None = None
     save_succeeded: bool | None = None
     target_eligible: bool | None = None
+    severe_failure: bool = False
     applied_effect_ids: list[str] = field(default_factory=list)
+
+
+def _severe_failure(rider, roll: DiceRoll | None, succeeded: bool) -> bool:
+    try:
+        return bool(
+            not succeeded
+            and rider.severe_failure_margin is not None
+            and roll is not None
+            and roll.total <= rider.dc - rider.severe_failure_margin
+        )
+    except Exception:
+        logger.exception("Failed to evaluate severe save failure for DC %s.", rider.dc)
+        raise
 
 
 def resolve_attack_save_rider(
@@ -51,13 +65,15 @@ def resolve_attack_save_rider(
             magical_effect=rider.magical_effect,
             advantage_sources=advantage_sources,
         )
+        severe = _severe_failure(rider, roll, succeeded)
         applied: list[str] = []
         if not succeeded:
+            effects = rider.severe_failure_effects if severe else rider.failure_effects
             applied = apply_save_failure_effects(
                 defender,
                 attacker_event_id,
                 attack.id,
-                rider.failure_effects,
+                effects,
                 round_number=round_number,
                 range_ft=distance_ft,
                 affected_states=affected_states,
@@ -68,6 +84,7 @@ def resolve_attack_save_rider(
             save_dc=rider.dc,
             save_succeeded=succeeded,
             target_eligible=True,
+            severe_failure=severe,
             applied_effect_ids=applied,
         )
     except ValueError:
