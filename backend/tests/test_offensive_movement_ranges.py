@@ -2,7 +2,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from app.combat import offensive_movement_policy, offensive_ranges
+from app.combat import offensive_movement_policy, offensive_ranges, offensive_weapon_ranges
 from app.combat.offensive_range_profile import OffensiveRangeProfile
 from app.domain.weapons import WeaponAttackKind
 
@@ -14,10 +14,11 @@ def _combatants_for_ranged_profile(normal_range: int = 80, long_range: int = 320
         normal_range_ft=normal_range,
         long_range_ft=long_range,
     )
-    attack = SimpleNamespace(weapon=weapon, resource_id=None, resource_cost=1)
+    attack = SimpleNamespace(id="ranged", weapon=weapon, resource_id=None, resource_cost=1)
     template = SimpleNamespace(
         weapon_attack=attack,
         alternate_weapon_attacks=[],
+        attack_action=None,
         spell_attack_actions=[],
         spell_save_actions=[],
         saving_throw_actions=[],
@@ -34,9 +35,9 @@ def _combatants_for_ranged_profile(normal_range: int = 80, long_range: int = 320
 
 def test_ranged_profile_separates_legal_and_preferred_range(monkeypatch) -> None:
     attacker, target = _combatants_for_ranged_profile()
-    monkeypatch.setattr(offensive_ranges, "attack_allowed_against", lambda *_: True)
-    monkeypatch.setattr(offensive_ranges, "resource_available", lambda *_: True)
-    monkeypatch.setattr(offensive_ranges, "is_recharge_resource", lambda *_: False)
+    monkeypatch.setattr(offensive_weapon_ranges, "attack_allowed_against", lambda *_: True)
+    monkeypatch.setattr(offensive_weapon_ranges, "resource_available", lambda *_: True)
+    monkeypatch.setattr(offensive_weapon_ranges, "is_recharge_resource", lambda *_: False)
 
     profiles = offensive_ranges.ranked_offensive_range_profiles_for_target(
         attacker, target, "round-1:attacker"
@@ -48,7 +49,7 @@ def test_ranged_profile_separates_legal_and_preferred_range(monkeypatch) -> None
             family="ranged",
             max_range_ft=320,
             preferred_range_ft=80,
-            execution_rank=2,
+            execution_rank=4,
         )
     ]
 
@@ -103,6 +104,23 @@ def test_long_range_legal_attack_moves_toward_preferred_range(monkeypatch) -> No
     assert intent.target_id == "target"
     assert intent.family == "ranged"
     assert intent.desired_distance_ft == 80
+
+
+def test_partial_advance_that_cannot_reach_preferred_range_is_not_selected(monkeypatch) -> None:
+    profile = OffensiveRangeProfile(1, "melee", 5, 5)
+    plan = SimpleNamespace(
+        goal_reachable=True,
+        path=[SimpleNamespace(x=1, y=0)],
+        final_distance_ft=30,
+        movement_cost_ft=30,
+    )
+    attacker, setup = _movement_context(
+        monkeypatch, distance=60, profile=profile, plan=plan
+    )
+
+    assert offensive_movement_policy.choose_offensive_movement_intent(
+        attacker, setup, "round-1:attacker"
+    ) is None
 
 
 def test_blocked_improvement_preserves_already_legal_attack(monkeypatch) -> None:
