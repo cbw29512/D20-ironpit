@@ -33,10 +33,7 @@ def apply_save_control_outcome(
     control = action.failure_control_effect
     if control is None or control.condition_id is None:
         return []
-    expires_round = (
-        round_number + control.duration_rounds
-        if control.duration_rounds is not None else None
-    )
+    expires_round = round_number + control.duration_rounds if control.duration_rounds is not None else None
     applied = apply_timed_condition(
         target.state,
         control.condition_id,
@@ -51,6 +48,7 @@ def apply_save_control_outcome(
         repeat_save_timing=control.repeat_save_timing,
         allowed_removal_action_ids=control.allowed_removal_action_ids,
         affected_states=affected_states,
+        ends_on_damage=control.ends_on_damage,
         source_effect_immunity_on_end=control.source_effect_immunity_on_end,
     )
     return [applied] if applied is not None else []
