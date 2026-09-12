@@ -7,24 +7,24 @@
 
   function apply(state, effectId, sourceId, options = {}) {
     if (I().immune(state, effectId)) return null;
-    if (effectId === POISONED && state.timed_effects.some((effect) => effect.effect_id === POISONED)) return POISONED;
+    const arenaPoison = effectId === POISONED && state.template.ruleset !== "2014";
+    if (arenaPoison && state.timed_effects.some((effect) => effect.effect_id === POISONED)) return POISONED;
     const sourceEffectId = options.sourceEffectId || null;
     state.timed_effects = state.timed_effects.filter((effect) => !(
       effect.effect_id === effectId && effect.source_id === sourceId && (effect.source_effect_id || null) === sourceEffectId
     ));
-    const poison = effectId === POISONED;
-    const expiryTiming = poison ? null : (options.expiryTiming || (options.expiresAtStartOfSourceTurn ? "source_turn_start" : null));
+    const expiryTiming = arenaPoison ? null : (options.expiryTiming || (options.expiresAtStartOfSourceTurn ? "source_turn_start" : null));
     state.timed_effects.push({
       effect_id: effectId,
       source_id: sourceId,
       source_effect_id: sourceEffectId,
       applied_round: options.appliedRound || null,
       expires_round: options.expiresRound || null,
-      expires_at_start_of_source_turn: poison ? false : expiryTiming === "source_turn_start",
+      expires_at_start_of_source_turn: arenaPoison ? false : expiryTiming === "source_turn_start",
       expiry_timing: expiryTiming,
-      repeat_save_ability: poison ? (options.repeatSaveAbility || "constitution") : (options.repeatSaveAbility || null),
-      repeat_save_dc: poison ? (options.repeatSaveDc || POISON_RECOVERY_DC) : (options.repeatSaveDc || null),
-      repeat_save_timing: poison ? (options.repeatSaveTiming || "target_turn_start") : (options.repeatSaveTiming || null),
+      repeat_save_ability: arenaPoison ? (options.repeatSaveAbility || "constitution") : (options.repeatSaveAbility || null),
+      repeat_save_dc: arenaPoison ? (options.repeatSaveDc || POISON_RECOVERY_DC) : (options.repeatSaveDc || null),
+      repeat_save_timing: arenaPoison ? (options.repeatSaveTiming || "target_turn_start") : (options.repeatSaveTiming || null),
       allowed_removal_action_ids: [...(options.allowedRemovalActionIds || [])],
       turn_behavior: options.turnBehavior || "normal",
       ends_on_damage: Boolean(options.endsOnDamage),
