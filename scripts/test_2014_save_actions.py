@@ -37,6 +37,12 @@ def main() -> int:
     }
     assert parsed[0]["resource_id"] == "lightning-breath"
 
+    spaced_line = line.replace("30-foot line", "60- foot line")
+    parsed = parse_save_actions(spaced_line, {"lightning-breath": 6})
+    assert parsed[0]["area"] == {
+        "shape": "line", "origin": "self", "length_ft": 60, "width_ft": 5,
+    }
+
     shared = (
         "<p><strong>Breath Weapons (Recharge 5–6).</strong> The dragon uses one of the following "
         "breath weapons.</p>"
