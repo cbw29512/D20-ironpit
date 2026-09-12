@@ -14,10 +14,9 @@ from app.content.monster_catalog_2014_compile_support import (
     saving_throw_bonuses_2014,
 )
 from app.content.monster_catalog_2014_defenses import conditional_resistances_2014, unresolved_defenses_2014
-from app.content.monster_catalog_2014_innate import unresolved_innate_spellcasting_2014
 from app.content.monster_catalog_2014_models import CatalogAttack2014, CatalogMonster2014
 from app.content.monster_catalog_2014_multiattack import compile_multiattack_2014
-from app.content.monster_catalog_2014_spellcasting import unresolved_spellcasting_2014
+from app.content.monster_catalog_2014_spells import unresolved_spells_2014
 from app.content.monster_catalog_2014_traits import combat_traits_2014, unresolved_traits_2014
 from app.domain.models import (
     CombatantTemplate, OnHitDamage, VisualLoadout, Weapon, WeaponAttack, WeaponAttackKind,
@@ -70,8 +69,7 @@ def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
         blockers.extend(f"attack-detail:{attack.name}" for attack in source.attacks if not attack.source_complete)
         blockers.extend(f"action:{name}" for name in unresolved_actions_2014(source))
         blockers.extend(f"trait:{name}" for name in unresolved_traits_2014(source.trait_names))
-        blockers.extend(f"spell:{name}" for name in unresolved_spellcasting_2014(source))
-        blockers.extend(f"innate-spell:{name}" for name in unresolved_innate_spellcasting_2014(source))
+        blockers.extend(f"spell:{name}" for name in unresolved_spells_2014(source))
         charge_traits = _CHARGE_TRAITS.intersection(source.trait_names)
         if charge_traits and not any(attack.charge_profile for attack in source.attacks):
             blockers.extend(f"trait:{name}" for name in sorted(charge_traits))
