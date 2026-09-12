@@ -22,15 +22,14 @@ def _priority_for_resource(member: EncounterCombatant, resource_id: str | None) 
         raise
 
 
-def _save_action_range(action) -> int:
+def _effective_action_range(action) -> int:
     try:
         if action.area is None:
             return action.range_ft
-        if action.area.origin == "self":
-            return action.area.length_ft or action.area.radius_ft or action.range_ft
-        return action.range_ft + (action.area.radius_ft or 0)
+        area_reach = action.area.length_ft or action.area.radius_ft or 0
+        return area_reach if action.area.origin == "self" else action.range_ft + area_reach
     except Exception:
-        logger.exception("Failed saving-throw action effective-range probe for %s.", action.id)
+        logger.exception("Failed action effective-range probe for %s.", action.id)
         raise
 
 
@@ -84,7 +83,7 @@ def _save_action_profiles(attacker: EncounterCombatant, target: EncounterCombata
                 continue
             if not resource_available(attacker.state, action.resource_id, action.resource_cost):
                 continue
-            distance = _save_action_range(action)
+            distance = _effective_action_range(action)
             priority = _priority_for_resource(attacker, action.resource_id)
             execution_rank = 0 if priority == 0 else 3
             profiles.append(OffensiveRangeProfile(priority, "ability", distance, distance, execution_rank))
@@ -106,7 +105,7 @@ def _spell_profiles(attacker: EncounterCombatant, turn_key: str) -> list[Offensi
             if action.action_cost == "reaction" or action.concentration or not is_available(attacker.state, action.action_cost):
                 continue
             if _spell_resource_available(attacker, action, turn_key):
-                distance = action.range_ft + (action.area_radius_ft or 0)
+                distance = _effective_action_range(action)
                 profiles.append(OffensiveRangeProfile(1, "spell", distance, distance, 1))
         for action in attacker.state.template.automatic_spell_actions:
             if action.action_cost == "reaction" or not is_available(attacker.state, action.action_cost):
