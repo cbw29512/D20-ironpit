@@ -4,6 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
+from app.domain.attack_action_policy import AttackActionPolicy
 from app.domain.size import CreatureSize
 from app.domain.targeting import AreaTargeting
 
@@ -135,3 +136,4 @@ class AttackActionDefinition(BaseModel):
     name: str
     slots: list[AttackActionSlot] = Field(min_length=1, max_length=8)
     is_attack_action: bool = False
+    policy: AttackActionPolicy | None = None
