@@ -31462,9 +31462,11 @@
     ],
     "multiattack_slots": [
       [
+        "claw-oni-form-only",
         "glaive"
       ],
       [
+        "claw-oni-form-only",
         "glaive"
       ]
     ],
@@ -42500,7 +42502,16 @@
         "attack_ability": "strength"
       }
     ],
-    "multiattack_slots": [],
+    "multiattack_slots": [
+      [
+        "claw-bear-or-hybrid-form-only",
+        "greataxe-humanoid-or-hybrid-form-only"
+      ],
+      [
+        "claw-bear-or-hybrid-form-only",
+        "greataxe-humanoid-or-hybrid-form-only"
+      ]
+    ],
     "action_recharges": {},
     "rest_recharge_action_ids": [],
     "action_names": [
@@ -42525,6 +42536,11 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "multiattack_policy": {
+      "same_attack_as_previous_slots": [
+        1
+      ]
+    },
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
@@ -43141,7 +43157,17 @@
         "attack_ability": "strength"
       }
     ],
-    "multiattack_slots": [],
+    "multiattack_slots": [
+      [
+        "bite-wolf-or-hybrid-form-only"
+      ],
+      [
+        "claws-hybrid-form-only",
+        "spear-humanoid-form-only",
+        "spear-humanoid-form-only-ranged",
+        "spear-humanoid-form-only-two-handed"
+      ]
+    ],
     "action_recharges": {},
     "rest_recharge_action_ids": [],
     "action_names": [
@@ -43166,6 +43192,7 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "multiattack_policy": null,
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
