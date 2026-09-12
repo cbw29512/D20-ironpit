@@ -12,4 +12,6 @@ A combatant may apply one appropriate combat buff immediately before initiative 
 
 Named attacks such as Bite, Claw, Tail, Sting, and weapon names are source data, not separate engine mechanics. The universal attack resolver consumes each attack's hit bonus, damage, damage type, and reusable riders.
 
+Generated browser monster artifacts preserve source-audit fingerprints (traits, reactions, bonus actions, limited-use actions, legendary actions, and spellcasting metadata) so browser certification verifies the same canonical monster data used by the Python engine.
+
 Unsupported outcome-changing mechanics remain fail-closed until represented by a reusable engine capability and proven in both Python and browser runtimes.
