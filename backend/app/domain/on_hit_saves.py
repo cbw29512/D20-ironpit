@@ -16,6 +16,7 @@ class OnHitSaveEffect(BaseModel):
     duration_rounds: int | None = Field(default=None, ge=1)
     repeat_save_timing: ConditionTiming | None = None
     ends_on_damage: bool = False
+    failure_push_ft: int = Field(default=0, ge=0, le=120)
     damage_dice_count: int = Field(default=0, ge=0, le=40)
     damage_dice_size: int = Field(default=6, ge=2, le=100)
     damage_bonus: int = 0
@@ -27,10 +28,12 @@ class OnHitSaveEffect(BaseModel):
 
     @model_validator(mode="after")
     def validate_effect(self) -> "OnHitSaveEffect":
+        if self.failure_push_ft % 5:
+            raise ValueError("On-hit forced movement must use 5-foot increments.")
         if self.damage_dice_count and self.damage_type is None:
             raise ValueError("On-hit save damage requires a damage type.")
-        if self.condition_id is None and self.damage_dice_count == 0:
-            raise ValueError("On-hit save effect requires a condition or damage.")
+        if self.condition_id is None and self.damage_dice_count == 0 and self.failure_push_ft == 0:
+            raise ValueError("On-hit save effect requires a condition, damage, or forced movement.")
         if self.zero_hp_stable:
             if self.damage_dice_count == 0 or not self.zero_hp_condition_ids or self.zero_hp_duration_rounds is None:
                 raise ValueError("Stable zero-HP rider requires save damage, conditions, and duration.")
