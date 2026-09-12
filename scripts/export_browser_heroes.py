@@ -214,6 +214,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "sneak_attack_d6": progression.sneak_attack_d6,
         "critical_move_fraction": progression.critical_move_fraction,
         "tactical_shift_fraction": progression.tactical_shift_fraction,
+        "peerless_aim": progression.peerless_aim,
         "death_save_advantage": progression.death_save_advantage,
         "death_save_recovery_minimum": progression.death_save_recovery_minimum,
         "bloodied_start_turn_healing": _bloodied_progression_healing(template),
