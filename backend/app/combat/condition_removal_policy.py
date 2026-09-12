@@ -56,8 +56,10 @@ def resources_available(member: EncounterCombatant, action: ConditionRemovalActi
 
 def _effect_allows_removal(target: EncounterCombatant, condition_id: str, action_id: str) -> bool:
     effects = [effect for effect in target.state.timed_effects if effect.effect_id == condition_id]
-    return bool(effects) and all(
-        effect.allowed_removal_action_ids and action_id in effect.allowed_removal_action_ids
+    if action_id == WAKE_SLEEPER.id:
+        return bool(effects) and all(action_id in effect.allowed_removal_action_ids for effect in effects)
+    return all(
+        not effect.allowed_removal_action_ids or action_id in effect.allowed_removal_action_ids
         for effect in effects
     )
 
