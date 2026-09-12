@@ -1,6 +1,6 @@
 from types import SimpleNamespace
 
-from app.combat import offensive_ranges
+from app.combat import offensive_save_ranges, offensive_spell_ranges
 from app.combat.spellcasting import spell_action_resource_available
 from app.domain.targeting import AreaTargeting
 
@@ -83,9 +83,9 @@ def test_movement_inventories_automatic_spell_with_custom_resource(monkeypatch) 
             spell_slot_expended_turn_key="1:caster",
         ),
     )
-    monkeypatch.setattr(offensive_ranges, "is_available", lambda *_: True)
+    monkeypatch.setattr(offensive_spell_ranges, "is_available", lambda *_: True)
 
-    profiles = offensive_ranges._spell_profiles(attacker, "1:caster")
+    profiles = offensive_spell_ranges.spell_profiles(attacker, "1:caster")
 
     assert len(profiles) == 1
     assert profiles[0].family == "spell"
@@ -99,7 +99,7 @@ def test_self_origin_cone_reach_uses_area_length() -> None:
         area=AreaTargeting(shape="cone", origin="self", length_ft=30),
     )
 
-    assert offensive_ranges._effective_action_range(action) == 30
+    assert offensive_save_ranges.effective_action_range(action) == 30
 
 
 def test_point_origin_radius_reach_adds_cast_range_and_radius() -> None:
@@ -109,4 +109,4 @@ def test_point_origin_radius_reach_adds_cast_range_and_radius() -> None:
         area=AreaTargeting(shape="radius", origin="point", radius_ft=20),
     )
 
-    assert offensive_ranges._effective_action_range(action) == 80
+    assert offensive_save_ranges.effective_action_range(action) == 80
