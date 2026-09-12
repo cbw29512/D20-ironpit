@@ -72,6 +72,10 @@ def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
         if charge_traits and not any(attack.charge_profile for attack in source.attacks): blockers.extend(f"trait:{name}" for name in sorted(charge_traits))
         blockers.extend(f"reaction:{name}" for name in source.reaction_names if name not in supported_reactions)
         blockers.extend(f"legendary:{name}" for name in source.legendary_action_names)
+        if source.source_legendary_actions and source.legendary_action_uses <= 0:
+            blockers.append("legendary:unparsed-resource-pool")
+        if source.legendary_action_uses and not source.legendary_actions:
+            blockers.append("legendary:no-parsed-options")
         if not source.attacks: blockers.append("attack:no-structured-attack")
         return blockers
     except Exception as exc:
@@ -95,8 +99,10 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
             progression_features=ProgressionCombatFeatures(reckless_attack="Reckless" in source.trait_names),
             weapon_attack=attacks[0], alternate_weapon_attacks=attacks[1:],
             attack_action=compile_multiattack_2014(source, attacks), saving_throw_actions=source.saving_throw_actions,
+            legendary_action_uses=source.legendary_action_uses, legendary_actions=source.legendary_actions,
             saving_throw_bonuses=saving_throw_bonuses_2014(source), skill_bonuses=source.skills,
-            source_trait_names=list(source.trait_names), damage_resistances=source.damage_resistances,
+            source_trait_names=list(source.trait_names), source_legendary_action_names=list(source.legendary_action_names),
+            damage_resistances=source.damage_resistances,
             conditional_damage_resistances=conditional_resistances_2014(source.unsupported_defense_text),
             damage_immunities=source.damage_immunities, damage_vulnerabilities=source.damage_vulnerabilities,
             condition_immunities=source.condition_immunities, combat_traits=traits, resources=resources_2014(source),
