@@ -50,40 +50,24 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   verify-2014-json:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       - name: Install rules reference
         run: pip install -e 'backend[dev]'
-      - name: Generate pinned 327-monster catalog
+      - name: Require tracked canonical catalog
+        run: git ls-files --error-unmatch data/monsters/2014/catalog.json
+      - name: Regenerate pinned 327-monster catalog
         run: python scripts/sync_2014_monster_catalog.py
-      - name: Bootstrap canonical catalog onto branch
-        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
-        env:
-          HEAD_BRANCH: ${{ github.head_ref }}
-        run: |
-          if git ls-files --error-unmatch data/monsters/2014/catalog.json >/dev/null 2>&1; then
-            echo 'canonical catalog is already tracked'
-            exit 0
-          fi
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/monsters/2014/catalog.json
-          git commit -m 'Track canonical 2014 monster catalog'
-          git push origin HEAD:"${HEAD_BRANCH}"
-      - name: Require tracked deterministic canonical catalog
-        run: |
-          git ls-files --error-unmatch data/monsters/2014/catalog.json
-          git diff --exit-code -- data/monsters/2014/catalog.json
+      - name: Enforce deterministic generated catalog
+        run: git diff --exit-code -- data/monsters/2014/catalog.json
       - name: Upload regenerated catalog
         uses: actions/upload-artifact@v4
         with:
