@@ -21,6 +21,17 @@
     else state.reaction_available = false;
   }
 
+  function rechargeAction(state, action) {
+    if (!action.resourceId) return false;
+    const definition = (state.template.resource_definitions || []).find((item) => item.id === action.resourceId);
+    return Boolean(definition?.recharge);
+  }
+
+  function rechargeReady(state) {
+    return (state.template.saving_throw_actions || []).some((action) =>
+      rechargeAction(state, action) && (state.resources?.[action.resourceId] || 0) >= (action.resourceCost || 1));
+  }
+
   function startTurnRecharges(sequence, round, member) {
     const events = [];
     for (const definition of member.state.template.resource_definitions || []) {
@@ -44,6 +55,6 @@
   }
 
   window.IRON_PIT_ACTION_ECONOMY = {
-    available, isIncapacitated: (state) => Q().incapacitated(state), spend, startTurnRecharges,
+    available, isIncapacitated: (state) => Q().incapacitated(state), rechargeAction, rechargeReady, spend, startTurnRecharges,
   };
 })();
