@@ -76,10 +76,12 @@
       throw error;
     }
   }
-  function chooseAttack(member, setup, ids, kind = null, preferBackline = false) {
+  function chooseAttack(member, setup, ids, kind = null, preferBackline = false, requiredTargetId = null) {
     const allowed = new Set(ids);
     const profiles = attacks(member.state.template).filter((attack) => allowed.has(attack.id) && (!kind || attack.kind === kind));
-    for (const target of targetOrder(member, setup, preferBackline)) {
+    let targets = targetOrder(member, setup, preferBackline);
+    if (requiredTargetId) targets = targets.filter((target) => target.combatant_id === requiredTargetId);
+    for (const target of targets) {
       const distance = attackDistance(member, target);
       const attack = profiles.find((profile) => targetAllowed(member, target, profile) && attackInRange(profile, distance));
       if (attack) return { target, attack, distance };
