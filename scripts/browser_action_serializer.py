@@ -49,6 +49,16 @@ def failure_effect_row(effect: Any) -> dict[str, Any]:
                 row["repeatSaveDelayRounds"] = effect.repeat_save_delay_rounds
             if effect.repeat_save_failure_condition:
                 row["repeatSaveFailureCondition"] = effect.repeat_save_failure_condition
+                if not effect.repeat_save_failure_continues:
+                    row["repeatSaveFailureContinues"] = False
+                if effect.repeat_save_failure_duration_rounds is not None:
+                    row["repeatSaveFailureDurationRounds"] = effect.repeat_save_failure_duration_rounds
+                if effect.repeat_save_failure_ends_on_damage:
+                    row["repeatSaveFailureEndsOnDamage"] = True
+                if effect.repeat_save_failure_allowed_removal_action_ids:
+                    row["repeatSaveFailureAllowedRemovalActionIds"] = list(
+                        effect.repeat_save_failure_allowed_removal_action_ids
+                    )
             if effect.automatic_success_after_rounds is not None:
                 row["automaticSuccessAfterRounds"] = effect.automatic_success_after_rounds
             if effect.allowed_removal_action_ids:
