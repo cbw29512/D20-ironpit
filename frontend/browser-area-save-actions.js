@@ -3,12 +3,21 @@
 
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
+  const X = () => window.IRON_PIT_BROWSER_SAVE_CONTROL;
   const T = () => window.IRON_PIT_BROWSER_AREA_TARGETING;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const D = () => window.IRON_PIT_DICE;
 
   function memberById(setup, id) {
     return [...setup.heroes, ...setup.monsters].find((member) => member.combatant_id === id) || null;
+  }
+
+  function eligiblePlacement(member, setup, action, placement) {
+    const targetIds = placement.targetIds.filter((id) => {
+      const target = memberById(setup, id);
+      return target && V().legalAction(action, target, 0) && !X().targetImmune(member, target, action);
+    });
+    return targetIds.length ? { ...placement, targetIds } : null;
   }
 
   function rechargeAction(state, action) {
@@ -24,7 +33,10 @@
       for (const action of member.state.template.saving_throw_actions || []) {
         if (!action.area || !V().resourceAvailable(member.state, action)) continue;
         if (rechargeOnly && !rechargeAction(member.state, action)) continue;
-        const placements = T().legalPlacements(member, setup, action.area);
+        const placements = T().legalPlacements(member, setup, action.area)
+          .map((placement) => eligiblePlacement(member, setup, action, placement))
+          .filter(Boolean)
+          .sort((left, right) => right.targetIds.length - left.targetIds.length);
         if (placements.length) candidates.push({ action, placement: placements[0] });
       }
       candidates.sort((left, right) =>
@@ -42,7 +54,7 @@
       for (const action of member.state.template.saving_throw_actions || []) {
         if (action.area) continue;
         if (rechargeOnly && !rechargeAction(member.state, action)) continue;
-        if (!V().resourceAvailable(member.state, action)) continue;
+        if (!V().resourceAvailable(member.state, action) || X().targetImmune(member, target, action)) continue;
         const distance = F().saveDistance(member, target, action.range);
         if (V().legalAction(action, target, distance)) return { target, action, distance };
       }
