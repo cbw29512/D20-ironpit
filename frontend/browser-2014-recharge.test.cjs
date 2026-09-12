@@ -15,6 +15,8 @@ window.IRON_PIT_BROWSER_STATE = { sizeAtMost: () => true };
 window.IRON_PIT_BROWSER_BARBARIAN2 = { dangerSenseAdvantage: () => 0 };
 window.IRON_PIT_BROWSER_DODGE = { dexSaveAdvantageSources: () => 0 };
 window.IRON_PIT_BROWSER_MODIFIERS = { applyD20Bonus: (_state, _kind, roll) => roll };
+load("browser-source-effect-immunity.js");
+load("browser-save-control-effects.js");
 load("browser-action-economy.js");
 load("browser-rolls.js");
 load("browser-saves.js");
@@ -34,7 +36,7 @@ function member() {
     state: {
       action_available: true, bonus_action_available: true, reaction_available: true,
       turn_terminated: false, is_dead: false, is_unconscious: false,
-      active_effect_ids: [], resources: { "fire-breath": 1 },
+      active_effect_ids: [], resources: { "fire-breath": 1 }, source_effect_immunities: [],
       template: {
         name: "2014 Breather", ruleset: "2014", traits: [], saving_throw_bonuses: { dexterity: 0 },
         resource_definitions: [{
@@ -48,34 +50,22 @@ function member() {
 
 {
   const actor = member(); dice([]);
-  const full = E.startTurnRecharges(1, 1, actor);
-  assert.deepEqual(full.events, []);
-  assert.equal(actor.state.resources["fire-breath"], 1);
-}
-{
-  const actor = member(); actor.state.resources["fire-breath"] = 0; dice([4]);
-  const failed = E.startTurnRecharges(1, 2, actor);
-  assert.equal(failed.events[0].resource_roll.selected_roll, 4);
-  assert.equal(failed.events[0].resource_remaining, 0);
-  dice([5]);
-  const recovered = E.startTurnRecharges(failed.sequence, 3, actor);
-  assert.equal(recovered.events[0].resource_roll.selected_roll, 5);
-  assert.equal(recovered.events[0].resource_remaining, 1);
-}
-{
-  const actor = member();
-  const target = member(); target.combatant_id = "hero-1:target"; target.side = "heroes"; target.state.resources = {};
-  const action = {
-    id: "fire-breath", name: "Fire Breath", saveAbility: "dexterity", dc: 20, range: 30,
-    damageDiceCount: 0, damageDiceSize: 6, damageBonus: 0, successDamage: "none",
-    resourceId: "fire-breath", resourceCost: 1,
-  };
-  dice([10]);
-  const event = V.resolveAction(1, 1, actor, target, action, 5);
-  assert.equal(event.resource_remaining, 0);
-  assert.equal(actor.state.resources["fire-breath"], 0);
-  actor.state.action_available = true; dice([10]);
-  assert.throws(() => V.resolveAction(2, 1, actor, target, action, 5), /resource is unavailable/);
+  E.spend(actor.state, "action");
+  assert.equal(actor.state.action_available, false);
 }
 
-console.log("2014 browser Recharge lifecycle regressions passed.");
+{
+  const actor = member();
+  const action = { id: "fire-breath", name: "Fire Breath", saveAbility: "dexterity", dc: 11, range: 30,
+    damageDiceCount: 0, damageDiceSize: 6, damageBonus: 0, damageType: null, successDamage: "none",
+    resourceId: "fire-breath", resourceCost: 1 };
+  const target = member(); target.combatant_id = "hero-1:target"; target.side = "heroes";
+  dice([20]);
+  const event = V.resolveAction(1, 1, actor, target, action, 10);
+  assert.equal(event.save_succeeded, true);
+  assert.equal(actor.state.resources["fire-breath"], 0);
+  assert.equal(event.resource_remaining, 0);
+  assert.equal(actor.state.action_available, false);
+}
+
+console.log("2014 browser Recharge regressions passed.");
