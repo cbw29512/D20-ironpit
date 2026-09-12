@@ -135,7 +135,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": -1,
       "dexterity": 2,
@@ -280,7 +297,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": -1,
       "dexterity": 2,
@@ -437,7 +471,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 1,
       "dexterity": 1,
@@ -583,7 +634,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": -2,
       "dexterity": 2,
@@ -781,7 +849,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 0,
       "dexterity": 2,
@@ -933,7 +1018,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 0,
       "dexterity": 1,
@@ -1045,7 +1147,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 0,
       "dexterity": 0,
@@ -1189,7 +1308,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 1,
       "dexterity": 1,
@@ -1301,7 +1437,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": -2,
       "dexterity": 5,
@@ -1417,7 +1570,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 0,
       "dexterity": 3,
@@ -1542,7 +1712,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": -2,
       "dexterity": 2,
@@ -1658,7 +1845,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 2,
       "dexterity": 1,
@@ -1770,7 +1974,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 2,
       "dexterity": 3,
@@ -2183,7 +2404,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 2,
       "dexterity": 1,
@@ -2348,7 +2586,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 3,
       "dexterity": 1,
@@ -2460,7 +2715,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": -1,
       "dexterity": 2,
@@ -2576,7 +2848,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 2,
       "dexterity": -1,
@@ -2688,7 +2977,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 0,
       "dexterity": 3,
@@ -2802,7 +3108,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 4,
       "dexterity": 0,
@@ -2914,7 +3237,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 1,
       "dexterity": 0,
@@ -3028,7 +3368,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": -1,
       "dexterity": 2,
@@ -3151,7 +3508,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 1,
       "dexterity": 0,
@@ -3279,7 +3653,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 3,
       "dexterity": 0,
@@ -3404,7 +3795,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 5,
       "dexterity": 0,
@@ -3559,7 +3967,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 4,
       "dexterity": 0,
@@ -3712,7 +4137,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 6,
       "dexterity": -1,
@@ -3831,7 +4273,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 4,
       "dexterity": 1,
@@ -3985,7 +4444,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 4,
       "dexterity": 1,
@@ -4106,7 +4582,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 2,
       "dexterity": 0,
@@ -4291,7 +4784,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 0,
       "dexterity": 1,
@@ -4426,7 +4936,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 3,
       "dexterity": 1,
@@ -4536,7 +5063,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": -4,
       "dexterity": -1,
@@ -4648,7 +5192,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 0,
       "dexterity": 0,
@@ -4758,7 +5319,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": -4,
       "dexterity": 2,
@@ -4866,7 +5444,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": -4,
       "dexterity": 4,
@@ -4976,7 +5571,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": -2,
       "dexterity": 0,
@@ -5086,7 +5698,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": -5,
       "dexterity": 1,
@@ -5197,7 +5826,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": -3,
       "dexterity": 3,
@@ -5305,7 +5951,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": -4,
       "dexterity": 0,
@@ -5415,7 +6078,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": -4,
       "dexterity": 1,
@@ -5525,7 +6205,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": -4,
       "dexterity": 0,
@@ -5635,7 +6332,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": -4,
       "dexterity": 2,
@@ -5745,7 +6459,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": -4,
       "dexterity": 3,
@@ -5857,7 +6588,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": -2,
       "dexterity": 2,
@@ -5969,7 +6717,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 2,
       "dexterity": 3,
@@ -6083,7 +6848,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 4,
       "dexterity": 2,
@@ -6218,7 +7000,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 5,
       "dexterity": 2,
@@ -6332,7 +7131,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 4,
       "dexterity": 0,
@@ -6444,7 +7260,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 1,
       "dexterity": 2,
@@ -6558,7 +7391,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 3,
       "dexterity": 1,
@@ -6675,7 +7525,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 3,
       "dexterity": 3,
@@ -6789,7 +7656,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": -2,
       "dexterity": 0,
@@ -6901,7 +7785,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": -1,
       "dexterity": 0,
@@ -7028,7 +7929,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 5,
       "dexterity": 1,
@@ -7142,7 +8060,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 1,
       "dexterity": 2,
@@ -7260,7 +8195,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 0,
       "dexterity": 1,
@@ -7376,7 +8328,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 2,
       "dexterity": 3,
@@ -7493,7 +8462,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 1,
       "dexterity": 2,
@@ -7605,7 +8591,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 4,
       "dexterity": 0,
@@ -7730,7 +8733,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 5,
       "dexterity": -1,
@@ -7855,7 +8875,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 4,
       "dexterity": 1,
@@ -8025,7 +9062,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 4,
       "dexterity": -1,
@@ -8158,7 +9212,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 5,
       "dexterity": 1,
@@ -8291,7 +9362,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 6,
       "dexterity": 5,
@@ -8459,7 +9547,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 0,
       "dexterity": 2,
@@ -8600,7 +9705,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 1,
       "dexterity": 0,
@@ -8724,7 +9846,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 2,
       "dexterity": 0,
@@ -8849,7 +9988,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 1,
       "dexterity": 1,
@@ -8996,7 +10152,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 2,
       "dexterity": 2,
@@ -9187,7 +10360,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 3,
       "dexterity": 1,
@@ -9358,7 +10548,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 2,
       "dexterity": 2,
@@ -9503,7 +10710,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 4,
       "dexterity": 2,
@@ -9633,7 +10857,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": -3,
       "dexterity": 2,
@@ -9762,7 +11003,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 2,
       "dexterity": 0,
@@ -9956,7 +11214,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 4,
       "dexterity": 0,
@@ -10083,7 +11358,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 0,
       "dexterity": 4,
@@ -10212,7 +11504,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 0,
       "dexterity": 2,
@@ -10342,7 +11651,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 1,
       "dexterity": 3,
@@ -10482,7 +11808,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 4,
       "dexterity": 3,
@@ -10622,7 +11965,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 6,
       "dexterity": 0,
@@ -10768,7 +12128,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 3,
       "dexterity": 3,
@@ -10907,7 +12284,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 6,
       "dexterity": 6,
@@ -11085,7 +12479,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 5,
       "dexterity": -1,
@@ -11447,7 +12858,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 10,
       "dexterity": 0,
@@ -11582,7 +13010,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 2,
       "dexterity": 0,
@@ -11705,7 +13150,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 1,
       "dexterity": 4,
@@ -11828,7 +13290,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 4,
       "dexterity": -2,
@@ -11958,7 +13437,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 0,
       "dexterity": 1,
@@ -12079,7 +13575,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": -3,
       "dexterity": 2,
@@ -12214,7 +13727,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 2,
       "dexterity": 0,
@@ -12347,7 +13877,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 3,
       "dexterity": 1,
@@ -12540,7 +14087,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 4,
       "dexterity": 2,
@@ -12673,7 +14237,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 7,
       "dexterity": -2,
@@ -12787,7 +14368,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 4,
       "dexterity": 2,
@@ -12901,7 +14499,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 0,
       "dexterity": -3,
@@ -13084,7 +14699,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 3,
       "dexterity": 3,
@@ -13196,7 +14828,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 4,
       "dexterity": -2,
@@ -13330,7 +14979,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 4,
       "dexterity": 4,
@@ -13451,7 +15117,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": -4,
       "dexterity": 0,
@@ -13592,7 +15275,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 0,
       "dexterity": 3,
@@ -13720,7 +15420,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": -4,
       "dexterity": 2,
@@ -13864,7 +15581,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 2,
       "dexterity": 1,
@@ -13993,7 +15727,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": -4,
       "dexterity": 2,
@@ -14126,7 +15877,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": -4,
       "dexterity": -5,
@@ -14243,7 +16011,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 1,
       "dexterity": -2,
@@ -14389,7 +16174,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 6,
       "dexterity": 0,
@@ -14507,7 +16309,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 4,
       "dexterity": 2,
@@ -14621,7 +16440,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": -4,
       "dexterity": 3,
@@ -14735,7 +16571,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 2,
       "dexterity": 2,
@@ -14869,7 +16722,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 1,
       "dexterity": 3,
@@ -15007,7 +16877,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 3,
       "dexterity": 1,
@@ -15134,7 +17021,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": -3,
       "dexterity": 2,
@@ -15276,7 +17180,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": -1,
       "dexterity": 2,
@@ -15422,7 +17343,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 2,
       "dexterity": 2,
@@ -15610,7 +17548,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 4,
       "dexterity": 5,
@@ -15806,7 +17761,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 3,
       "dexterity": 0,
@@ -15925,7 +17897,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 0,
       "dexterity": 1,
@@ -16095,7 +18084,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 3,
       "dexterity": 1,
