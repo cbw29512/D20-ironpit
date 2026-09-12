@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.content.canonical_pregen_spell_gaps import first_spell_package_gap_by_class
 from app.content.pregen_blocker_yield import build_pregen_blocker_yields
 from app.content.pregen_certification_queue import build_pregen_certification_frontier
 
@@ -17,6 +18,11 @@ def main() -> None:
             f"(certified through L{candidate.certified_through:>2}) "
             f"{status}: {blockers}"
         )
+
+    print("\nFirst incomplete canonical spell package by caster")
+    for class_id, gap in first_spell_package_gap_by_class().items():
+        status = "complete through L20" if gap is None else f"first gap L{gap.level}: {gap.reason}"
+        print(f"{class_id:10} {status}")
 
     print("\nHighest-yield unsupported hero mechanics")
     for item in build_pregen_blocker_yields()[:20]:
