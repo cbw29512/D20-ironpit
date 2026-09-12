@@ -17,6 +17,12 @@ _GRAPPLE = re.compile(r"(?:If (?:the )?target is (?:a )?(?:(Tiny|Small|Medium|La
 _RESTRAINED = re.compile(r"(?:Until (?:this|the) grapple ends,?\s*(?:the target|the creature|it) is restrained|(?:the target|the creature|it) is restrained until (?:this|the) grapple ends)", re.I)
 _NO_REPEAT_TARGET = re.compile(r"(?:and\s+)?(?:the\s+)?[A-Za-z' -]+ can(?:not|'t) (?:use this attack on|bite|attack|constrict|grapple) another target", re.I)
 _ALREADY_CONTROLLING = re.compile(r"(?:if\s+)?(?:the\s+)?[A-Za-z' -]+ (?:isn't|is not) already (?:constricting|grappling) a creature,?\s*(?:and\s+)?", re.I)
+_UNATTENDED_OBJECT_ONLY = re.compile(r"If the target is a flammable object that isn't being worn or carried, it also catches fire", re.I)
+
+
+def strip_noncombat_attack_residual(remainder: str) -> str:
+    """Remove riders that can only affect unattended objects, which are not Pit combatants."""
+    return _UNATTENDED_OBJECT_ONLY.sub(" ", remainder).strip(" .,;")
 
 
 def _rolled(match: re.Match[str]) -> dict | None:
