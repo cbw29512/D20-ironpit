@@ -40,7 +40,7 @@ def test_repaired_source_save_counts_reconcile_end_to_end(name: str) -> None:
     row, template, source_count, runtime_count = _source_and_runtime_counts(name)
     save_names = [action.name for action in template.saving_throw_actions if action.action_cost == "action"]
     attack_save_names = [
-        attack.name
+        attack.weapon.name
         for attack in [template.weapon_attack, *template.alternate_weapon_attacks]
         if attack.on_hit_saving_throw is not None
     ]
