@@ -20,12 +20,16 @@ DATA_BOUND_TRAITS = frozenset({
     "Blood Frenzy", "Echolocation", "Innate Spellcasting", "Poor Depth Perception", "Reckless", "Regeneration", "Spellcasting",
 })
 
+# These traits remain preserved in source provenance but cannot alter a creature-vs-creature
+# result under the current Iron Pit roster-loading contract. Environment is hospitable;
+# unattended objects/structures are not combatants; darkness/obscurement and forced
+# transformation effects are outside the damage-first milestone.
 ARENA_NEUTRAL_TRAITS = frozenset({
-    "Agile", "Amphibious", "Beast of Burden", "False Appearance", "Flyby",
-    "Hellish Restoration", "Hold Breath", "Ice Walk", "Illumination", "Jumper",
+    "Agile", "Amphibious", "Beast of Burden", "Devil's Sight", "False Appearance", "Flyby",
+    "Hellish Restoration", "Hold Breath", "Ice Walk", "Illumination", "Immutable Form", "Jumper",
     "Keen Hearing", "Keen Hearing and Sight", "Keen Hearing and Smell", "Keen Sight",
     "Keen Sight and Smell", "Keen Smell", "Labyrinthine Recall", "Limited Amphibiousness",
-    "Mimicry", "Rejuvenation", "Running Leap", "Shark Telepathy", "Snow Camouflage",
+    "Mimicry", "Rejuvenation", "Running Leap", "Shark Telepathy", "Siege Monster", "Snow Camouflage",
     "Spider Climb", "Standing Leap", "Stone Camouflage", "Sunlight Sensitivity", "Training",
     "Water Breathing", "Web Sense", "Web Walker",
 })
