@@ -101,7 +101,7 @@
     if (spendAction) E().spend(actor.state, "action");
     const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
     const deathSuccessBefore = target.state.death_save_successes, deathFailureBefore = target.state.death_save_failures;
-    const concentrationBefore = target.state.concentration?.effect_id || null;
+    const concentrationBefore = target.state.concentration?.effect_id || null, positionBefore = target.state.position ? { ...target.state.position } : null;
     let damageRoll = null, damageComponents = [], damageOutcome = null;
     const count = action.damageDiceCount || 0;
     if (count && !(save.succeeded && action.successDamage === "none")) {
@@ -120,11 +120,13 @@
       }
     }
     let appliedConditions = X().applyOutcome(actor, target, action, save.succeeded, round);
+    const pushedFt = !save.succeeded && target.state.is_alive && !target.state.is_dead && action.failurePushFt ? window.IRON_PIT_BROWSER_FORCED_MOVEMENT.pushAway(actor, target, action.failurePushFt, options.setup) : 0;
     if (!save.succeeded && target.state.is_alive && !target.state.is_dead && action.grappleEscapeDc) {
       appliedConditions.push(...G().apply(target.state, actor.combatant_id, action.grappleEscapeDc, action.range, Boolean(action.restrainsWhileGrappled)));
     }
     appliedConditions = [...new Set(appliedConditions)];
     let description = `${target.state.template.name} ${save.succeeded ? "SUCCEEDS" : "FAILS"} a DC ${action.dc} ${action.saveAbility} save against ${actor.state.template.name}'s ${action.name}.`;
+    if (pushedFt) description += ` ${target.state.template.name} is pushed ${pushedFt} feet away.`;
     if (save.legendaryResistanceUsed) description += ` Legendary Resistance converts the failed save to a success; ${save.legendaryResistanceRemaining} use(s) remain.`;
     if (damageOutcome === "undead_fortitude") description += ` ${target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP.`;
     if (appliedConditions.includes("grappled")) description += ` ${target.state.template.name} is Grappled.`;
@@ -137,6 +139,7 @@
       death_save_successes_before: deathSuccessBefore, death_save_failures_before: deathFailureBefore,
       death_save_successes: target.state.death_save_successes, death_save_failures: target.state.death_save_failures,
       is_stable: target.state.is_stable, is_dead: target.state.is_dead, feature_id: action.id,
+      movement_ft: pushedFt || null, grid_position_before: positionBefore, grid_position_after: target.state.position,
       resource_remaining: actionResourceRemaining !== null ? actionResourceRemaining : (save.legendaryResistanceUsed ? save.legendaryResistanceRemaining : null),
       concentration_ended_effect_id: concentrationBefore && !target.state.concentration ? concentrationBefore : null,
       animation: action.animation || "save-effect", description };
