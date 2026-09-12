@@ -10,6 +10,7 @@ MODELED_TRAITS = {
     "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
     "Magic Resistance": CombatTrait.MAGIC_RESISTANCE,
     "Magic Weapons": CombatTrait.MAGIC_WEAPONS,
+    "Sure-Footed": CombatTrait.SURE_FOOTED,
     "Charge": CombatTrait.CHARGE,
     "Pounce": CombatTrait.CHARGE,
     "Trampling Charge": CombatTrait.CHARGE,
