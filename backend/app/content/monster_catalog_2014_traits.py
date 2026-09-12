@@ -17,7 +17,7 @@ MODELED_TRAITS = {
 }
 
 DATA_BOUND_TRAITS = frozenset({
-    "Blood Frenzy", "Echolocation", "Innate Spellcasting", "Spellcasting",
+    "Blood Frenzy", "Echolocation", "Innate Spellcasting", "Reckless", "Spellcasting",
 })
 
 ARENA_NEUTRAL_TRAITS = frozenset({
