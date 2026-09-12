@@ -33,8 +33,14 @@ def _ids_for_name(name: str, attacks: list[dict]) -> list[str]:
     if candidates:
         return candidates
     if wanted.endswith("s"):
-        return [attack["id"] for attack in attacks if _key(attack["name"]) == wanted[:-1]]
-    return []
+        candidates = [attack["id"] for attack in attacks if _key(attack["name"]) == wanted[:-1]]
+        if candidates:
+            return candidates
+    # Some SRD Multiattack prose shortens an action heading (for example,
+    # "stinger" for "Tail Stinger"). Accept only a unique suffix match so
+    # source wording can bind without introducing ambiguous aliases.
+    suffix = [attack["id"] for attack in attacks if _key(attack["name"]).endswith(f"-{wanted}")]
+    return suffix if len(suffix) == 1 else []
 
 
 def _ids_for_label(label: str, attacks: list[dict]) -> list[str]:
