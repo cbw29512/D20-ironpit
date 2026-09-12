@@ -31,11 +31,15 @@ def _multiattack_text(source_actions: str | None) -> str:
 def main() -> int:
     monsters = load_catalog_2014(); family_counts: Counter[str] = Counter(); exact_counts: Counter[str] = Counter()
     exact_monsters: dict[str, set[str]] = defaultdict(set); rider_counts: Counter[str] = Counter()
+    immediate_unlocks: dict[str, set[str]] = defaultdict(set); blocker_count_histogram: Counter[int] = Counter()
     rider_monsters: dict[str, set[str]] = defaultdict(set); rider_examples: dict[str, str] = {}; runnable: list[str] = []
     multiattack_examples: list[tuple[str, str]] = []
     for monster in monsters:
         blockers = unsupported_mechanics_2014(monster)
         if not blockers: runnable.append(monster.name); continue
+        unique_blockers = set(blockers); blocker_count_histogram[len(unique_blockers)] += 1
+        if len(unique_blockers) == 1:
+            immediate_unlocks[next(iter(unique_blockers))].add(monster.name)
         if "action:Multiattack" in blockers:
             multiattack_examples.append((monster.name, _multiattack_text(monster.source_actions)))
         for attack in monster.attacks:
@@ -51,6 +55,17 @@ def main() -> int:
     print(f"Blocked by unresolved mechanics: {len(monsters) - len(runnable)}")
     print("\nBlocker families:")
     for family, count in family_counts.most_common(): print(f"- {family}: {count} references")
+
+    print("\nImmediate certification yield (sole remaining blocker):")
+    ranked_unlocks = sorted(immediate_unlocks, key=lambda blocker: (-len(immediate_unlocks[blocker]), blocker))
+    if not ranked_unlocks:
+        print("- none")
+    for blocker in ranked_unlocks[:30]:
+        names = sorted(immediate_unlocks[blocker])
+        print(f"- {blocker}: +{len(names)} monsters ({', '.join(names[:8])})")
+    print("\nBlocked-monster distance to certification:")
+    for count in sorted(blocker_count_histogram):
+        print(f"- {count} unique blocker(s): {blocker_count_histogram[count]} monsters")
 
     print("\nHighest-yield exact blockers:")
     ranked = sorted(exact_counts, key=lambda blocker: (-len(exact_monsters[blocker]), -exact_counts[blocker], blocker))
