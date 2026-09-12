@@ -92,6 +92,7 @@ class CombatantState(BaseModel):
     feature_last_turn_keys: dict[str, str] = Field(default_factory=dict)
     spell_slot_expended_turn_key: str | None = None
     temporary_damage_resistances: list[DamageType] = Field(default_factory=list)
+    regeneration_suppressed: bool = False
     wielded_attack_id: str | None = None
     rage_expires_round: int | None = Field(default=None, ge=1)
     rage_max_round: int | None = Field(default=None, ge=1)
