@@ -1,8 +1,8 @@
 from app.combat.repeat_save_transition import resolve_repeat_save_transition
 from app.combat.state import build_combatant_state
 from app.combat.timed_conditions import apply_timed_condition
+from app.content.audited_fighter import build_karnok_stoneward
 from app.content.basic_condition_actions import WAKE_SLEEPER_ID
-from app.content.certified_heroes import build_karnok_stoneward
 
 
 def test_failed_repeat_save_escalates_to_wakeable_timed_unconscious() -> None:
