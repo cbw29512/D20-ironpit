@@ -56,6 +56,23 @@ class CatalogInnateSpellcasting2014(BaseModel):
     unsupported_text: str | None = None
 
 
+class CatalogPreparedSpell2014(BaseModel):
+    id: str
+    name: str
+    level: int = Field(ge=0, le=9)
+
+
+class CatalogSpellcasting2014(BaseModel):
+    caster_level: int = Field(ge=1, le=20)
+    ability: AbilityName
+    save_dc: int | None = Field(default=None, ge=1, le=40)
+    attack_bonus: int | None = Field(default=None, ge=-10, le=30)
+    slots: dict[str, int] = Field(default_factory=dict)
+    spells: list[CatalogPreparedSpell2014] = Field(default_factory=list)
+    source_complete: bool = True
+    unsupported_text: str | None = None
+
+
 class CatalogMonster2014(BaseModel):
     id: str
     name: str
@@ -93,6 +110,7 @@ class CatalogMonster2014(BaseModel):
     attacks: list[CatalogAttack2014] = Field(default_factory=list)
     saving_throw_actions: list[SavingThrowAction] = Field(default_factory=list)
     innate_spellcasting: CatalogInnateSpellcasting2014 | None = None
+    spellcasting: CatalogSpellcasting2014 | None = None
     multiattack_slots: list[list[str]] = Field(default_factory=list)
     action_recharges: dict[str, int] = Field(default_factory=dict)
     rest_recharge_action_ids: list[str] = Field(default_factory=list)
