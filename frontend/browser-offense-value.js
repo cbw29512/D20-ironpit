@@ -78,6 +78,27 @@
     return Math.max(0, (probabilities.hit - probabilities.critical) * normal + probabilities.critical * critical);
   }
 
+  function weaponAttack(attacker, target, attack, setup, distance) {
+    const conditions = A().conditionSources(attacker.state, target.state, distance, target.combatant_id, setup);
+    const closeThreat = A().rangedCloseThreat(attacker, target, distance, setup);
+    const mode = R().attackMode(attack, distance,
+      conditions.advantage + M().attacksAgainstAdvantage(target.state), conditions.disadvantage, closeThreat);
+    const probabilities = attackProbabilities(attacker.state, attack.bonus, M().effectiveArmorClass(target.state), mode);
+    if (Q().autoCritical(target.state) && distance <= 5) probabilities.critical = probabilities.hit;
+    const factor = damageFactor(target.state, attack.damageType);
+    const base = attack.fixedDamage != null ? attack.fixedDamage
+      : meanDamage(attack.diceCount || 0, attack.diceSize || 6, attack.damageBonus || 0);
+    const critBase = attack.fixedDamage != null ? base
+      : meanDamage((attack.diceCount || 0) * 2, attack.diceSize || 6, attack.damageBonus || 0);
+    let normal = base * factor, critical = critBase * factor;
+    for (const rider of attack.onHitDamage || []) {
+      const riderFactor = damageFactor(target.state, rider.damageType);
+      normal += meanDamage(rider.diceCount || 0, rider.diceSize || 6, rider.damageBonus || 0) * riderFactor;
+      critical += meanDamage((rider.diceCount || 0) * 2, rider.diceSize || 6, rider.damageBonus || 0) * riderFactor;
+    }
+    return Math.max(0, (probabilities.hit - probabilities.critical) * normal + probabilities.critical * critical);
+  }
+
   function automaticSpell(target, action) {
     const factor = damageFactor(target.state, action.damageType);
     const perApplication = meanDamage(action.damageDiceCount || 0, action.damageDiceSize || 6, action.damageBonus || 0) * factor;
@@ -110,6 +131,6 @@
 
   window.IRON_PIT_BROWSER_OFFENSE_VALUE = {
     attackProbabilities, automaticSpell, damageFactor, meanDamage,
-    saveAction, saveSpell: saveAction, spellAttack,
+    saveAction, saveSpell: saveAction, spellAttack, weaponAttack,
   };
 })();
