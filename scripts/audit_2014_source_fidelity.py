@@ -108,7 +108,7 @@ def main() -> int:
             ("source_traits", "Traits"), ("source_actions", "Actions"),
             ("source_reactions", "Reactions"), ("source_legendary_actions", "Legendary Actions"),
         ):
-            if row.get(target) != raw.get(source_key):
+            if (row.get(target) or "") != (raw.get(source_key) or ""):
                 errors.append(f"{raw['name']} lost raw source field {source_key}")
         printed_type = type_text.strip()
         stored_type = (row.get("creature_type_text") or row.get("creature_type") or "").strip()
