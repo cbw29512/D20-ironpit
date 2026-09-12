@@ -31,12 +31,20 @@ def _priority_for_resource(member: EncounterCombatant, resource_id: str | None) 
         raise
 
 
+def _attack_action_save_ids(attacker: EncounterCombatant) -> set[str]:
+    definition = attacker.state.template.attack_action
+    if definition is None:
+        return set()
+    return {save_id for slot in definition.slots for save_id in slot.save_action_ids}
+
+
 def save_action_profiles(
     attacker: EncounterCombatant,
     target: EncounterCombatant,
 ) -> list[OffensiveRangeProfile]:
     try:
         profiles: list[OffensiveRangeProfile] = []
+        attack_action_save_ids = _attack_action_save_ids(attacker)
         for action in attacker.state.template.saving_throw_actions:
             if action.action_cost != "action" or not is_available(attacker.state, action.action_cost):
                 continue
@@ -46,7 +54,7 @@ def save_action_profiles(
                 continue
             distance = effective_action_range(action)
             priority = _priority_for_resource(attacker, action.resource_id)
-            execution_rank = 0 if priority == 0 else 3
+            execution_rank = 0 if priority == 0 else (2 if action.id in attack_action_save_ids else 3)
             value = save_action_expected_damage(target, action)
             profiles.append(
                 OffensiveRangeProfile(priority, "ability", distance, distance, execution_rank, value)
