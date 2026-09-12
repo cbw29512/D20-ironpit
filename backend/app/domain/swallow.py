@@ -10,14 +10,18 @@ from app.domain.weapons import DamageType
 
 logger = logging.getLogger(__name__)
 SwallowCondition = Literal["blinded", "restrained"]
+SwallowActionCost = Literal["action", "bonus_action"]
 
 
 class SwallowAction(BaseModel):
-    """Immutable source rule for a creature swallowing one grappled target."""
+    """Immutable source rule for a creature swallowing eligible targets."""
 
     id: str
     name: str = "Swallow"
     max_target_size: CreatureSize
+    action_cost: SwallowActionCost = "action"
+    max_swallowed_targets: int = Field(default=1, ge=1, le=20)
+    requires_grappled_target: bool = True
     damage_dice_count: int = Field(ge=0, le=40)
     damage_dice_size: int = Field(default=6, ge=2, le=100)
     damage_bonus: int = 0
