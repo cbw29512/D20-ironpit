@@ -23,16 +23,19 @@ on:
       - 'backend/app/combat/charge_prone.py'
       - 'backend/app/combat/legendary_resistance.py'
       - 'backend/app/combat/saving_throw_rolls.py'
+      - 'backend/app/combat/spell_resolution.py'
       - 'frontend/browser-state.js'
       - 'frontend/browser-attack.js'
       - 'frontend/browser-reactions.js'
       - 'frontend/browser-saves.js'
+      - 'frontend/browser-spell-resolution.js'
       - 'frontend/browser-grapple.js'
       - 'frontend/browser-timed-conditions.js'
       - 'frontend/browser-condition-lifecycle.js'
       - 'frontend/browser-2014-grapple.test.cjs'
       - 'frontend/browser-2014-poison.test.cjs'
       - 'frontend/browser-2014-parry.test.cjs'
+      - 'frontend/browser-2014-magic-resistance.test.cjs'
       - 'backend/tests/test_parry.py'
       - 'backend/tests/test_2014_json_catalog.py'
       - 'backend/tests/test_2014_poison_timing.py'
@@ -106,3 +109,4 @@ jobs:
           node frontend/browser-2014-grapple.test.cjs
           node frontend/browser-2014-poison.test.cjs
           node frontend/browser-2014-parry.test.cjs
+          node frontend/browser-2014-magic-resistance.test.cjs
