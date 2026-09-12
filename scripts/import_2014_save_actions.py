@@ -4,6 +4,8 @@ import html
 import re
 import unicodedata
 
+from import_2014_control_save_actions import parse_control_save_action
+
 DAMAGE_TYPES = {
     "acid", "bludgeoning", "cold", "fire", "force", "lightning", "necrotic",
     "piercing", "poison", "psychic", "radiant", "slashing", "thunder",
@@ -117,7 +119,13 @@ def parse_save_actions(source_actions: str | None, recharges: dict[str, int]) ->
         if own_resource is not None and "following" in text.lower():
             shared_resource = own_resource
             continue
-        area = _area(text); save = _save(text); damage = _damage(text)
+        area = _area(text); save = _save(text)
+        resource_id = own_resource or shared_resource
+        control_action = parse_control_save_action(heading, text, area, save, resource_id)
+        if control_action is not None:
+            results.append(control_action)
+            continue
+        damage = _damage(text)
         if area is None or save is None or damage is None:
             if own_resource is not None:
                 shared_resource = own_resource
@@ -125,7 +133,6 @@ def parse_save_actions(source_actions: str | None, recharges: dict[str, int]) ->
                 shared_resource = None
             continue
         ability, dc = save; count, size, bonus, damage_type = damage
-        resource_id = own_resource or shared_resource
         action_id = _slug(heading.split("(Recharge", 1)[0].strip())
         success_damage = "half" if re.search(r"half as much damage on a successful", text, re.I) else "none"
         results.append({
