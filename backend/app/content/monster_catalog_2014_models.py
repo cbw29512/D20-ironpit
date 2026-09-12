@@ -4,7 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, field_validator
 
-from app.domain.actions import ConditionName, HitControlEffect, SavingThrowAction
+from app.domain.actions import AbilityName, ConditionName, HitControlEffect, SavingThrowAction
 from app.domain.charge_profiles import ChargeProfileDefinition
 from app.domain.on_hit_saves import OnHitSaveEffect
 from app.domain.size import CreatureSize
@@ -33,6 +33,22 @@ class CatalogAttack2014(BaseModel):
     reach_ft: int = Field(default=5, ge=0)
     normal_range_ft: int | None = Field(default=None, ge=1)
     long_range_ft: int | None = Field(default=None, ge=1)
+    source_complete: bool = True
+    unsupported_text: str | None = None
+
+
+class CatalogInnateSpell2014(BaseModel):
+    id: str
+    name: str
+    usage: Literal["at_will", "per_day"]
+    uses_per_day: int | None = Field(default=None, ge=1, le=9)
+
+
+class CatalogInnateSpellcasting2014(BaseModel):
+    ability: AbilityName
+    save_dc: int | None = Field(default=None, ge=1, le=40)
+    attack_bonus: int | None = Field(default=None, ge=-10, le=30)
+    spells: list[CatalogInnateSpell2014] = Field(default_factory=list)
     source_complete: bool = True
     unsupported_text: str | None = None
 
@@ -73,6 +89,7 @@ class CatalogMonster2014(BaseModel):
     challenge_text: str | None = None
     attacks: list[CatalogAttack2014] = Field(default_factory=list)
     saving_throw_actions: list[SavingThrowAction] = Field(default_factory=list)
+    innate_spellcasting: CatalogInnateSpellcasting2014 | None = None
     multiattack_slots: list[list[str]] = Field(default_factory=list)
     action_recharges: dict[str, int] = Field(default_factory=dict)
     rest_recharge_action_ids: list[str] = Field(default_factory=list)
