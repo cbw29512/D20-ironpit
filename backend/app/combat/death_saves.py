@@ -52,7 +52,7 @@ def resolve_death_save(
 
         if natural >= recovery_minimum:
             restore_hit_points(state, 1)
-            result = f"{natural}; regains 1 HP"
+            result = "natural 20; regains 1 HP" if natural == 20 else f"{natural}; regains 1 HP"
         elif natural == 1:
             state.death_save_failures = min(3, state.death_save_failures + 2)
             result = "natural 1; two failures"
