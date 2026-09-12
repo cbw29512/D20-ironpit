@@ -6,6 +6,7 @@ on:
       - 'backend/app/content/monster_catalog_2014.py'
       - 'backend/app/content/monster_catalog_2014_models.py'
       - 'backend/app/content/monster_catalog_2014_traits.py'
+      - 'backend/app/content/monster_catalog_2014_spellcasting.py'
       - 'backend/app/content/monster_catalog_2014_defenses.py'
       - 'backend/app/content/monster_catalog_2014_compile_support.py'
       - 'backend/app/content/monster_catalog_2014_action_support.py'
@@ -86,8 +87,11 @@ on:
       - 'scripts/import_2014_charge.py'
       - 'scripts/import_2014_recharge.py'
       - 'scripts/import_2014_save_actions.py'
+      - 'scripts/import_2014_spellcasting.py'
       - 'scripts/enrich_2014_save_actions.py'
+      - 'scripts/enrich_2014_spellcasting.py'
       - 'scripts/test_2014_save_actions.py'
+      - 'scripts/test_2014_spellcasting.py'
       - 'scripts/import_2014_multiattack.py'
       - 'scripts/import_2014_reactions.py'
       - 'scripts/sync_2014_monster_catalog.py'
@@ -116,6 +120,8 @@ jobs:
         run: git ls-files --error-unmatch data/monsters/2014/catalog.json
       - name: Prove 2014 save/control/AoE source parser
         run: python scripts/test_2014_save_actions.py
+      - name: Prove 2014 regular spellcasting parser
+        run: python scripts/test_2014_spellcasting.py
       - name: Regenerate pinned 327-monster catalog
         run: python scripts/sync_2014_monster_catalog.py
       - name: Sync deterministic generated catalog
