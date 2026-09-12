@@ -19110,9 +19110,9 @@
           "grapple_escape_dc": 11,
           "restrains_while_grappled": false
         },
-        "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "The crab has two claws, each of which can grapple only one target",
+        "forbid_target_grappled_by_self": true,
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5,
         "attack_ability": "strength"
       }
@@ -20087,9 +20087,9 @@
           "grapple_escape_dc": 16,
           "restrains_while_grappled": true
         },
-        "forbid_target_grappled_by_self": false,
+        "forbid_target_grappled_by_self": true,
         "source_complete": false,
-        "unsupported_text": "If the target is a creature,  .  , and the octopus can't use its tentacles on another target",
+        "unsupported_text": "If the target is a creature",
         "reach_ft": 15,
         "attack_ability": "strength"
       }
@@ -20480,9 +20480,9 @@
           "grapple_escape_dc": 12,
           "restrains_while_grappled": false
         },
-        "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "The scorpion has two claws, each of which can grapple only one target",
+        "forbid_target_grappled_by_self": true,
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5,
         "attack_ability": "strength"
       },
@@ -21608,9 +21608,9 @@
           "restrains_while_grappled": false,
           "max_target_size": "medium"
         },
-        "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "The glabrezu has two pincers, each of which can grapple only one target",
+        "forbid_target_grappled_by_self": true,
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 10,
         "attack_ability": "strength"
       },
@@ -30954,9 +30954,9 @@
           "grapple_escape_dc": 10,
           "restrains_while_grappled": false
         },
-        "forbid_target_grappled_by_self": false,
+        "forbid_target_grappled_by_self": true,
         "source_complete": false,
-        "unsupported_text": "Until this grapple ends, the octopus can't use its tentacles on another target",
+        "unsupported_text": "Until this grapple ends",
         "reach_ft": 5
       }
     ],
@@ -34866,9 +34866,9 @@
           "grapple_escape_dc": 19,
           "restrains_while_grappled": true
         },
-        "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "and the roc can't use its talons on another target",
+        "forbid_target_grappled_by_self": true,
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5,
         "attack_ability": "strength"
       }
