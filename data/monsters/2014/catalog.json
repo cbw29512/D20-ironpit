@@ -14850,8 +14850,29 @@
         "on_hit_save_effect": null,
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "or 8 (1d10 + 3) slashing damage if used with two hands",
+        "source_complete": true,
+        "unsupported_text": null,
+        "reach_ft": 5
+      },
+      {
+        "id": "longsword-two-handed",
+        "name": "Longsword",
+        "kind": "melee",
+        "attack_bonus": 6,
+        "damage": {
+          "average": 8,
+          "dice_count": 1,
+          "dice_size": 10,
+          "bonus": 3,
+          "type": "slashing"
+        },
+        "conditional_damage": [],
+        "on_hit_damage": [],
+        "on_hit_save_effect": null,
+        "control_effect": null,
+        "forbid_target_grappled_by_self": false,
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5
       },
       {
@@ -14888,15 +14909,18 @@
     "multiattack_slots": [
       [
         "longsword",
+        "longsword-two-handed",
         "longbow",
         "bite"
       ],
       [
         "longsword",
+        "longsword-two-handed",
         "longbow"
       ],
       [
         "longsword",
+        "longsword-two-handed",
         "longbow"
       ]
     ],
@@ -16442,8 +16466,38 @@
         "on_hit_save_effect": null,
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "or 9 (1d10 + 4) slashing damage if used with two hands",
+        "source_complete": true,
+        "unsupported_text": null,
+        "reach_ft": 5,
+        "attack_ability": "strength"
+      },
+      {
+        "id": "longsword-two-handed",
+        "name": "Longsword",
+        "kind": "melee",
+        "attack_bonus": 8,
+        "damage": {
+          "average": 9,
+          "dice_count": 1,
+          "dice_size": 10,
+          "bonus": 4,
+          "type": "slashing"
+        },
+        "conditional_damage": [],
+        "on_hit_damage": [
+          {
+            "average": 13,
+            "dice_count": 3,
+            "dice_size": 8,
+            "bonus": 0,
+            "type": "poison"
+          }
+        ],
+        "on_hit_save_effect": null,
+        "control_effect": null,
+        "forbid_target_grappled_by_self": false,
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5,
         "attack_ability": "strength"
       },
@@ -16482,14 +16536,17 @@
     "multiattack_slots": [
       [
         "longsword",
+        "longsword-two-handed",
         "longbow"
       ],
       [
         "longsword",
+        "longsword-two-handed",
         "longbow"
       ],
       [
         "longsword",
+        "longsword-two-handed",
         "longbow"
       ]
     ],
@@ -24019,8 +24076,30 @@
         "on_hit_save_effect": null,
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "or 8 (1d10 + 3) slashing damage if used with two hands",
+        "source_complete": true,
+        "unsupported_text": null,
+        "reach_ft": 5,
+        "attack_ability": "strength"
+      },
+      {
+        "id": "longsword-two-handed",
+        "name": "Longsword",
+        "kind": "melee",
+        "attack_bonus": 5,
+        "damage": {
+          "average": 8,
+          "dice_count": 1,
+          "dice_size": 10,
+          "bonus": 3,
+          "type": "slashing"
+        },
+        "conditional_damage": [],
+        "on_hit_damage": [],
+        "on_hit_save_effect": null,
+        "control_effect": null,
+        "forbid_target_grappled_by_self": false,
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5,
         "attack_ability": "strength"
       },
@@ -24925,8 +25004,29 @@
         "on_hit_save_effect": null,
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "or 6 (1d10 + 1) slashing damage if used with two hands",
+        "source_complete": true,
+        "unsupported_text": null,
+        "reach_ft": 5
+      },
+      {
+        "id": "longsword-two-handed",
+        "name": "Longsword",
+        "kind": "melee",
+        "attack_bonus": 3,
+        "damage": {
+          "average": 6,
+          "dice_count": 1,
+          "dice_size": 10,
+          "bonus": 1,
+          "type": "slashing"
+        },
+        "conditional_damage": [],
+        "on_hit_damage": [],
+        "on_hit_save_effect": null,
+        "control_effect": null,
+        "forbid_target_grappled_by_self": false,
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5
       },
       {
@@ -41330,8 +41430,30 @@
         "on_hit_save_effect": null,
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "or 8 (1d10 + 3) slashing damage if used with two hands",
+        "source_complete": true,
+        "unsupported_text": null,
+        "reach_ft": 5,
+        "attack_ability": "strength"
+      },
+      {
+        "id": "longsword-two-handed",
+        "name": "Longsword",
+        "kind": "melee",
+        "attack_bonus": 5,
+        "damage": {
+          "average": 8,
+          "dice_count": 1,
+          "dice_size": 10,
+          "bonus": 3,
+          "type": "slashing"
+        },
+        "conditional_damage": [],
+        "on_hit_damage": [],
+        "on_hit_save_effect": null,
+        "control_effect": null,
+        "forbid_target_grappled_by_self": false,
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5,
         "attack_ability": "strength"
       },
@@ -43184,8 +43306,29 @@
         "on_hit_save_effect": null,
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "or 7 (1d10 + 2) slashing damage if used with two hands",
+        "source_complete": true,
+        "unsupported_text": null,
+        "reach_ft": 5
+      },
+      {
+        "id": "longsword-two-handed",
+        "name": "Longsword",
+        "kind": "melee",
+        "attack_bonus": 4,
+        "damage": {
+          "average": 7,
+          "dice_count": 1,
+          "dice_size": 10,
+          "bonus": 2,
+          "type": "slashing"
+        },
+        "conditional_damage": [],
+        "on_hit_damage": [],
+        "on_hit_save_effect": null,
+        "control_effect": null,
+        "forbid_target_grappled_by_self": false,
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5
       },
       {
