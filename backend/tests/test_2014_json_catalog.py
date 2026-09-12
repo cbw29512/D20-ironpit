@@ -3,8 +3,10 @@ import json
 import pytest
 
 from app.combat.attacks import resolve_attack
+from app.combat.conditions import attack_roll_condition_sources
 from app.combat.damage_defenses import adjusted_damage_amount
 from app.combat.dice import FixedDiceProvider
+from app.combat.grapple import apply_grapple, speed_is_zero
 from app.combat.state import build_combatant_state
 from app.content.monster_catalog_2014 import (
     MVP_CATALOG_PATH,
@@ -25,6 +27,7 @@ def test_mvp_catalog_loads_and_uses_json_stats() -> None:
     catalog = load_catalog_2014(MVP_CATALOG_PATH)
     assert {monster.id for monster in catalog} == {"goblin", "skeleton", "brown-bear", "bandit"}
     bandit = _monster("bandit")
+    assert bandit.ruleset == "2014"
     assert bandit.armor_class == 12
     assert bandit.max_hp == 11
     assert bandit.speed_ft == 30
@@ -58,6 +61,18 @@ def test_runtime_state_is_fresh_for_each_fight() -> None:
     first.current_hp = 1
     assert second.current_hp == 11
     assert template.max_hp == 11
+
+
+def test_2014_grapple_stops_speed_without_2024_attack_penalty() -> None:
+    attacker = build_combatant_state(_monster("bandit"))
+    grappler = build_combatant_state(_monster("skeleton"))
+    other = build_combatant_state(_monster("bandit"))
+    apply_grapple(attacker, "grappler", 12, 5)
+    _, versus_grappler = attack_roll_condition_sources(attacker, grappler, 5, "grappler")
+    _, versus_other = attack_roll_condition_sources(attacker, other, 5, "other")
+    assert speed_is_zero(attacker) is True
+    assert versus_grappler == 0
+    assert versus_other == 0
 
 
 def test_unresolved_monster_mechanics_fail_closed() -> None:
@@ -111,6 +126,7 @@ def test_new_basic_monster_is_data_only(tmp_path) -> None:
     path = tmp_path / "monster.json"
     path.write_text(json.dumps([record]), encoding="utf-8")
     brute = monster_by_id_2014("test-brute", path)
+    assert brute.ruleset == "2014"
     assert brute.armor_class == 14
     assert brute.weapon_attack.attack_bonus == 5
     assert brute.weapon_attack.weapon.damage_type == DamageType.BLUDGEONING
