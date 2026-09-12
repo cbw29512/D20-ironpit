@@ -31,16 +31,19 @@ def swallowed_targets(source_id: str, setup: EncounterSetup) -> list[EncounterCo
 
 def choose_swallow(source: EncounterCombatant, setup: EncounterSetup) -> tuple[EncounterCombatant, SwallowAction] | None:
     try:
-        if not is_available(source.state, "action") or swallowed_targets(source.combatant_id, setup):
-            return None
+        swallowed_count = len(swallowed_targets(source.combatant_id, setup))
         opponents = setup.monsters if source.side == "heroes" else setup.heroes
         for target in opponents:
             if target.state.is_dead or not target.state.is_alive or target.state.swallowed is not None:
                 continue
             held = any(item.source_id == source.combatant_id for item in target.state.grapple_sources)
-            if not held:
-                continue
             for action in source.state.template.swallow_actions:
+                if not is_available(source.state, action.action_cost):
+                    continue
+                if swallowed_count >= action.max_swallowed_targets:
+                    continue
+                if action.requires_grappled_target and not held:
+                    continue
                 if size_at_most(target.state.template.size, action.max_target_size):
                     return target, action
         return None
@@ -56,13 +59,14 @@ def resolve_swallow(
     try:
         choice = choose_swallow(source, setup)
         if choice is None or choice[0].combatant_id != target.combatant_id or choice[1].id != action.id:
-            raise ValueError("Swallow requires one eligible target grappled by the source.")
+            raise ValueError("Swallow requires an eligible target and available action economy.")
         applied = []
         if action.applies_blinded and not condition_is_immune(target.state, "blinded"):
             applied.append("blinded")
         if action.applies_restrained and not condition_is_immune(target.state, "restrained"):
             applied.append("restrained")
-        release_grapple(target.state, source.combatant_id)
+        if any(item.source_id == source.combatant_id for item in target.state.grapple_sources):
+            release_grapple(target.state, source.combatant_id)
         target.state.swallowed = SwallowedState(
             source_id=source.combatant_id, action_id=action.id, applied_round=round_number,
             first_tick_round=round_number + action.first_tick_delay_rounds,
@@ -70,7 +74,7 @@ def resolve_swallow(
         )
         target.position_ft = source.position_ft
         target.state.position = source.state.position
-        spend(source.state, "action")
+        spend(source.state, action.action_cost)
         return BattleEvent(
             sequence=sequence, round_number=round_number, event_type="feature",
             actor_id=source.combatant_id, actor_name=source.state.template.name,
