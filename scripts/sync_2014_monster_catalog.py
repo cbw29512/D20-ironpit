@@ -12,6 +12,11 @@ MANIFEST = Path("data/monsters/2014/source_manifest.json")
 OUTPUT = Path("data/monsters/2014/catalog.json")
 
 
+def _run(command: list[str]) -> int:
+    result = subprocess.run(command, check=False)
+    return result.returncode
+
+
 def main() -> int:
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
     with urllib.request.urlopen(manifest["source_raw_url"], timeout=30) as response:
@@ -26,12 +31,16 @@ def main() -> int:
         handle.write(payload)
         source = Path(handle.name)
     try:
-        result = subprocess.run(
-            [sys.executable, "scripts/import_2014_monster_catalog.py", str(source), "--output", str(OUTPUT)],
-            check=False,
-        )
-        if result.returncode != 0:
-            return result.returncode
+        if _run([
+            sys.executable, "scripts/import_2014_monster_catalog.py", str(source),
+            "--output", str(OUTPUT),
+        ]) != 0:
+            return 1
+        if _run([
+            sys.executable, "scripts/enrich_2014_save_actions.py", str(source),
+            "--catalog", str(OUTPUT),
+        ]) != 0:
+            return 1
         catalog = json.loads(OUTPUT.read_text(encoding="utf-8"))
         if len(catalog) != manifest["monster_count"]:
             raise RuntimeError(
