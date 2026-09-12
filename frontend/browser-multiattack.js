@@ -6,6 +6,7 @@
   const C = () => window.IRON_PIT_BROWSER_CHARGE;
   const D = () => window.IRON_PIT_DICE;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
+  const P = () => window.IRON_PIT_BROWSER_MULTIATTACK_POLICY;
   const R = () => window.IRON_PIT_BROWSER_LIGHT_ATTACK;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const WM = () => window.IRON_PIT_BROWSER_WEAPON_MASTERY || { resolveCleave: (sequence) => ({ events: [], sequence }) };
@@ -27,17 +28,17 @@
     }
     return null;
   }
-  function attackChoice(member, setup, data, rangedBackline = false) {
+  function attackChoice(member, setup, data, rangedBackline = false, requiredTargetId = null) {
     if (rangedBackline) {
-      const ranged = F().chooseAttack(member, setup, data.attackIds, "ranged", true);
+      const ranged = F().chooseAttack(member, setup, data.attackIds, "ranged", true, requiredTargetId);
       if (ranged) return ranged;
     }
     if (F().isBackline(member) && F().alliedFrontlineActive(member, setup)) {
-      const ranged = F().chooseAttack(member, setup, data.attackIds, "ranged");
+      const ranged = F().chooseAttack(member, setup, data.attackIds, "ranged", false, requiredTargetId);
       if (ranged) return ranged;
     }
-    return F().chooseAttack(member, setup, data.attackIds, "melee")
-      || F().chooseAttack(member, setup, data.attackIds, "ranged");
+    return F().chooseAttack(member, setup, data.attackIds, "melee", false, requiredTargetId)
+      || F().chooseAttack(member, setup, data.attackIds, "ranged", false, requiredTargetId);
   }
   function slotHasLegalChoice(member, setup, slot) {
     try {
@@ -64,15 +65,17 @@
     const events = [];
     E().spend(member.state, "action");
     let openingFeature = C()?.openingFeature?.(round, member, setup) || null;
-    let lightTrigger = null, rangedSplitUsed = false;
-    const rangedSplit = useRangedSplit(member, setup, slots);
+    let lightTrigger = null, rangedSplitUsed = false, previousEvent = null;
+    const usedAttackIds = new Set(), rangedSplit = useRangedSplit(member, setup, slots);
     const turnKey = `${round}:${member.combatant_id}`;
 
-    for (let index = 0; index < slots.length; index += 1) {
+    for (const expanded of P().expandedSlots(definition)) {
+      const index = expanded.index;
       if (member.state.is_dead || member.state.is_unconscious || member.state.turn_terminated) break;
-      const data = slotData(slots[index]);
+      if (!P().allowed(definition, index, previousEvent)) continue;
+      const data = P().filteredSlot(definition, slotData(expanded.slot), usedAttackIds);
       const splitThis = index > 0 && rangedSplit && !rangedSplitUsed && F().flexibleSlotHasBoth(member, data.attackIds);
-      const choice = attackChoice(member, setup, data, splitThis);
+      const choice = attackChoice(member, setup, data, splitThis, P().requiredTargetId(definition, index, previousEvent));
       if (choice) {
         if (splitThis && choice.attack.kind === "ranged") rangedSplitUsed = true;
         const pack = window.IRON_PIT_BROWSER_STATE.packTactics(member, choice.target, setup);
@@ -81,7 +84,7 @@
           spendAction: false, advantage: pack ? 1 : 0, setup, featureId, turnKey,
           allowReckless: true, ignoreCloseThreat: true,
         });
-        events.push(event);
+        events.push(event); previousEvent = event; usedAttackIds.add(choice.attack.id);
         if (member.state.turn_terminated) break;
         const cleave = WM().resolveCleave(sequence, round, member, event, choice.attack, setup, turnKey);
         events.push(...cleave.events); sequence = cleave.sequence;
@@ -92,10 +95,13 @@
       const area = areaChoice(member, setup, data);
       if (area) {
         const resolved = AS().resolve(sequence, round, member, setup, false, { allowedIds: data.saveActionIds, spendAction: false });
-        if (resolved) { events.push(...resolved.events); sequence = resolved.sequence; continue; }
+        if (resolved) { events.push(...resolved.events); sequence = resolved.sequence; previousEvent = resolved.events.at(-1) || previousEvent; continue; }
       }
       const saved = saveChoice(member, setup, data);
-      if (saved) events.push(V().resolveAction(sequence++, round, member, saved.target, saved.save, saved.distance, { spendAction: false }));
+      if (saved) {
+        const event = V().resolveAction(sequence++, round, member, saved.target, saved.save, saved.distance, { spendAction: false });
+        events.push(event); previousEvent = event;
+      }
     }
 
     if (definition.isAttackAction && lightTrigger && !member.state.turn_terminated) {
