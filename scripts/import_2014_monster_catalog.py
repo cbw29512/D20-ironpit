@@ -8,6 +8,8 @@ import re
 import unicodedata
 from pathlib import Path
 
+from import_2014_multiattack import parse_multiattack
+
 logger = logging.getLogger(__name__)
 DAMAGE_TYPES = {
     "acid", "bludgeoning", "cold", "fire", "force", "lightning", "necrotic",
@@ -107,7 +109,9 @@ def _record(source: dict) -> dict:
     hp = source.get("Hit Points", "")
     hit_dice = re.search(r"\(([^)]+)\)", hp)
     action_text = source.get("Actions", "")
-    actions = re.findall(r"<p>(.*?)</p>", action_text, re.I | re.S)
+    action_paragraphs = re.findall(r"<p>(.*?)</p>", action_text, re.I | re.S)
+    attacks = [attack for paragraph in action_paragraphs if (attack := _attack(paragraph)) is not None]
+    multiattack = parse_multiattack(action_text, attacks)
     resist, bad_resist = _simple_values(source.get("Damage Resistances"), DAMAGE_TYPES)
     immune, bad_immune = _simple_values(source.get("Damage Immunities"), DAMAGE_TYPES)
     vulnerable, bad_vulnerable = _simple_values(source.get("Damage Vulnerabilities"), DAMAGE_TYPES)
@@ -125,7 +129,7 @@ def _record(source: dict) -> dict:
         "condition_immunities": condition_immune,
         "unsupported_defense_text": bad_resist + bad_immune + bad_vulnerable + bad_condition,
         "challenge_rating": (source.get("Challenge") or "").split(" ", 1)[0] or None,
-        "attacks": [attack for paragraph in actions if (attack := _attack(paragraph)) is not None],
+        "attacks": attacks, "multiattack_slots": multiattack["slots"] if multiattack else [],
         "action_names": _names(action_text), "trait_names": _names(source.get("Traits")),
         "reaction_names": _names(source.get("Reactions")), "legendary_action_names": _names(source.get("Legendary Actions")),
         "source_traits": source.get("Traits"), "source_actions": action_text,
