@@ -10,6 +10,8 @@ on:
       - 'backend/app/content/monster_catalog_2014_defenses.py'
       - 'backend/app/content/monster_catalog_2014_compile_support.py'
       - 'backend/app/content/monster_catalog_2014_action_support.py'
+      - 'backend/app/content/monster_catalog_2014_multiattack.py'
+      - 'backend/app/domain/attack_action_policy.py'
       - 'backend/app/domain/charge_profiles.py'
       - 'backend/app/domain/on_hit_saves.py'
       - 'backend/app/domain/weapons.py'
@@ -29,6 +31,9 @@ on:
       - 'backend/app/combat/area_save_targeting.py'
       - 'backend/app/combat/area_shapes.py'
       - 'backend/app/combat/area_targeting.py'
+      - 'backend/app/combat/attack_action_policy.py'
+      - 'backend/app/combat/attack_action_choices.py'
+      - 'backend/app/combat/attack_actions.py'
       - 'backend/app/combat/encounter_area_actions.py'
       - 'backend/app/combat/encounter_offense_priority.py'
       - 'backend/app/combat/encounter_turn_support.py'
@@ -93,6 +98,8 @@ on:
       - 'scripts/test_2014_save_actions.py'
       - 'scripts/test_2014_spellcasting.py'
       - 'scripts/import_2014_multiattack.py'
+      - 'scripts/import_2014_multiattack_policy.py'
+      - 'scripts/test_2014_multiattack_policy.py'
       - 'scripts/import_2014_reactions.py'
       - 'scripts/sync_2014_monster_catalog.py'
       - 'scripts/audit_2014_source_fidelity.py'
@@ -122,6 +129,8 @@ jobs:
         run: python scripts/test_2014_save_actions.py
       - name: Prove 2014 regular spellcasting parser
         run: python scripts/test_2014_spellcasting.py
+      - name: Prove 2014 Multiattack policy parser
+        run: python scripts/test_2014_multiattack_policy.py
       - name: Regenerate pinned 327-monster catalog
         run: python scripts/sync_2014_monster_catalog.py
       - name: Sync deterministic generated catalog
