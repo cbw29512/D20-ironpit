@@ -6,63 +6,23 @@ DAMAGE_TYPES = {
     "acid", "bludgeoning", "cold", "fire", "force", "lightning", "necrotic",
     "piercing", "poison", "psychic", "radiant", "slashing", "thunder",
 }
-_ROLLED = re.compile(
-    r"(?:,?\s*(?:plus|and)\s+)(\d+)\s*\((\d+)d(\d+)(?:\s*([+-])\s*(\d+))?\)\s*([A-Za-z]+) damage",
-    re.I,
-)
+_ROLLED = re.compile(r"(?:,?\s*(?:plus|and)\s+)(\d+)\s*\((\d+)d(\d+)(?:\s*([+-])\s*(\d+))?\)\s*([A-Za-z]+) damage", re.I)
 _FIXED = re.compile(r"(?:,?\s*(?:plus|and)\s+)(\d+)\s+([A-Za-z]+) damage", re.I)
-_PRONE_SAVE = re.compile(
-    r"(?:If (?:the )?target is (?:(?:(Tiny|Small|Medium|Large|Huge) or smaller)|a creature),?\s*)?"
-    r"(?:the target|it) must succeed on a DC (\d+) (Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) saving throw or be knocked prone\.?'?",
-    re.I,
-)
-_TIMED_REPEAT_CONDITION = re.compile(
-    r"(?:If (?:the )?target is a creature,?\s*)?"
-    r"(?:the target|it) must succeed on a DC (\d+) "
-    r"(Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) saving throw or "
-    r"(?:be|become) (poisoned|paralyzed) for 1 minute\.\s*"
-    r"(?:The (?:target|creature)|It) can repeat the saving throw at the end of each of its turns,? "
-    r"ending the effect on itself on a success\.?'?",
-    re.I,
-)
-_SAVE_DAMAGE_HALF = re.compile(
-    r"(?:the target|it) must make a DC (\d+) "
-    r"(Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) saving throw,? taking "
-    r"\d+ \((\d+)d(\d+)(?:\s*([+\-−])\s*(\d+))?\) ([A-Za-z]+) damage on a failed save,? "
-    r"or half as much damage on a successful one\.?'?",
-    re.I,
-)
-_SAVE_DAMAGE_NONE = re.compile(
-    r"(?:the target|it) must succeed on a DC (\d+) "
-    r"(Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) saving throw or take "
-    r"\d+ \((\d+)d(\d+)(?:\s*([+\-−])\s*(\d+))?\) ([A-Za-z]+) damage\.?'?",
-    re.I,
-)
-_GRAPPLE = re.compile(
-    r"(?:If (?:the )?target is (?:a )?(?:(Tiny|Small|Medium|Large|Huge) or smaller)(?: creature)?,?\s*)?"
-    r"(?:the target|it) is grappled \(escape DC (\d+)\)",
-    re.I,
-)
-_RESTRAINED = re.compile(
-    r"(?:Until (?:this|the) grapple ends,?\s*(?:the target|the creature|it) is restrained|"
-    r"(?:the target|the creature|it) is restrained until (?:this|the) grapple ends)",
-    re.I,
-)
-_NO_REPEAT_TARGET = re.compile(
-    r"(?:and\s+)?(?:the\s+)?[A-Za-z' -]+ can(?:not|'t) (?:use this attack on|bite|attack|constrict|grapple) another target",
-    re.I,
-)
-_ALREADY_CONTROLLING = re.compile(
-    r"(?:if\s+)?(?:the\s+)?[A-Za-z' -]+ (?:isn't|is not) already (?:constricting|grappling) a creature,?\s*(?:and\s+)?",
-    re.I,
-)
+_PRONE_SAVE = re.compile(r"(?:If (?:the )?target is (?:(?:(Tiny|Small|Medium|Large|Huge) or smaller)|a creature),?\s*)?(?:the target|it) must succeed on a DC (\d+) (Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) saving throw or be knocked prone\.?'?", re.I)
+_TIMED_REPEAT_CONDITION = re.compile(r"(?:If (?:the )?target is a creature,?\s*)?(?:the target|it) must succeed on a DC (\d+) (Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) saving throw or (?:be|become) (poisoned|paralyzed) for 1 minute\.\s*(?:The (?:target|creature)|It) can repeat the saving throw at the end of each of its turns,? ending the effect on itself on a success\.?'?", re.I)
+_SAVE_DAMAGE_HALF = re.compile(r"(?:the target|it) must make a DC (\d+) (Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) saving throw,? taking \d+ \((\d+)d(\d+)(?:\s*([+\-−])\s*(\d+))?\) ([A-Za-z]+) damage on a failed save,? or half as much damage on a successful one\.?'?", re.I)
+_SAVE_DAMAGE_NONE = re.compile(r"(?:the target|it) must succeed on a DC (\d+) (Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) saving throw or take \d+ \((\d+)d(\d+)(?:\s*([+\-−])\s*(\d+))?\) ([A-Za-z]+) damage\.?'?", re.I)
+_ZERO_HP_STABLE = re.compile(r"If the ([A-Za-z]+) damage reduces the target to 0 hit points, the target is stable but ([A-Za-z]+) for (\d+) (hour|hours|minute|minutes), even after regaining hit points, and is ([A-Za-z]+) while \2 in this way", re.I)
+_GRAPPLE = re.compile(r"(?:If (?:the )?target is (?:a )?(?:(Tiny|Small|Medium|Large|Huge) or smaller)(?: creature)?,?\s*)?(?:the target|it) is grappled \(escape DC (\d+)\)", re.I)
+_RESTRAINED = re.compile(r"(?:Until (?:this|the) grapple ends,?\s*(?:the target|the creature|it) is restrained|(?:the target|the creature|it) is restrained until (?:this|the) grapple ends)", re.I)
+_NO_REPEAT_TARGET = re.compile(r"(?:and\s+)?(?:the\s+)?[A-Za-z' -]+ can(?:not|'t) (?:use this attack on|bite|attack|constrict|grapple) another target", re.I)
+_ALREADY_CONTROLLING = re.compile(r"(?:if\s+)?(?:the\s+)?[A-Za-z' -]+ (?:isn't|is not) already (?:constricting|grappling) a creature,?\s*(?:and\s+)?", re.I)
 
 
 def _rolled(match: re.Match[str]) -> dict | None:
     average, count, size, sign, bonus, damage_type = match.groups(); damage_type = damage_type.lower()
     if damage_type not in DAMAGE_TYPES: return None
-    return {"average": int(average), "dice_count": int(count), "dice_size": int(size),
-            "bonus": int(bonus or 0) * (-1 if sign == "-" else 1), "type": damage_type}
+    return {"average": int(average), "dice_count": int(count), "dice_size": int(size), "bonus": int(bonus or 0) * (-1 if sign == "-" else 1), "type": damage_type}
 
 
 def _fixed(match: re.Match[str]) -> dict | None:
@@ -75,11 +35,18 @@ def _save_damage_effect(match: re.Match[str], success_damage: str) -> dict | Non
     dc, ability, count, size, sign, bonus, damage_type = match.groups(); dtype = damage_type.lower()
     if dtype not in DAMAGE_TYPES: return None
     modifier = int(bonus or 0) * (-1 if sign in {"-", "−"} else 1)
-    return {
-        "save_ability": ability.lower(), "dc": int(dc),
-        "damage_dice_count": int(count), "damage_dice_size": int(size),
-        "damage_bonus": modifier, "damage_type": dtype, "success_damage": success_damage,
-    }
+    return {"save_ability": ability.lower(), "dc": int(dc), "damage_dice_count": int(count), "damage_dice_size": int(size), "damage_bonus": modifier, "damage_type": dtype, "success_damage": success_damage}
+
+
+def _zero_hp_rider(effect: dict, residual: str) -> tuple[dict, str]:
+    match = _ZERO_HP_STABLE.search(residual)
+    if match is None: return effect, residual
+    damage_type, first, amount, unit, second = match.groups()
+    if damage_type.lower() != effect.get("damage_type"): return effect, residual
+    rounds = int(amount) * (600 if unit.lower().startswith("hour") else 10)
+    effect.update(zero_hp_stable=True, zero_hp_condition_ids=[first.lower(), second.lower()], zero_hp_duration_rounds=rounds)
+    cleaned = (residual[:match.start()] + " " + residual[match.end():]).strip(" .,;")
+    return effect, cleaned
 
 
 def parse_secondary_damage(remainder: str) -> tuple[list[dict], str]:
@@ -101,8 +68,7 @@ def parse_on_hit_save_condition(remainder: str) -> tuple[dict | None, str]:
     timed = _TIMED_REPEAT_CONDITION.search(remainder)
     if timed:
         dc, ability, condition = timed.groups()
-        effect = {"save_ability": ability.lower(), "dc": int(dc), "condition_id": condition.lower(),
-                  "duration_rounds": 10, "repeat_save_timing": "target_turn_end"}
+        effect = {"save_ability": ability.lower(), "dc": int(dc), "condition_id": condition.lower(), "duration_rounds": 10, "repeat_save_timing": "target_turn_end"}
         residual = (remainder[:timed.start()] + " " + remainder[timed.end():]).strip(" .,;")
         return effect, residual
     for pattern, success in ((_SAVE_DAMAGE_HALF, "half"), (_SAVE_DAMAGE_NONE, "none")):
@@ -111,12 +77,11 @@ def parse_on_hit_save_condition(remainder: str) -> tuple[dict | None, str]:
             effect = _save_damage_effect(match, success)
             if effect is not None:
                 residual = (remainder[:match.start()] + " " + remainder[match.end():]).strip(" .,;")
-                return effect, residual
+                return _zero_hp_rider(effect, residual)
     match = _PRONE_SAVE.search(remainder)
     if not match: return None, remainder
     max_size, dc, ability = match.groups()
-    effect = {"save_ability": ability.lower(), "dc": int(dc), "condition_id": "prone",
-              "max_target_size": max_size.lower() if max_size else None}
+    effect = {"save_ability": ability.lower(), "dc": int(dc), "condition_id": "prone", "max_target_size": max_size.lower() if max_size else None}
     residual = (remainder[:match.start()] + " " + remainder[match.end():]).strip(" .,;")
     return effect, residual
 
