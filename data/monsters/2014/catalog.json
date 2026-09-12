@@ -1594,6 +1594,33 @@
         "success_damage": "half",
         "resource_id": "breath-weapons",
         "resource_cost": 1
+      },
+      {
+        "id": "slowing-breath",
+        "name": "Slowing Breath",
+        "save_ability": "constitution",
+        "dc": 18,
+        "range_ft": 60,
+        "area": {
+          "shape": "cone",
+          "origin": "self",
+          "length_ft": 60
+        },
+        "failure_control_effect": {
+          "effect_id": "slowed",
+          "expiry_timing": "target_turn_end",
+          "duration_rounds": 10,
+          "repeat_save_ability": "constitution",
+          "repeat_save_dc": 18,
+          "repeat_save_timing": "target_turn_end",
+          "speed_multiplier": 0.5,
+          "blocks_reactions": true,
+          "action_bonus_exclusive": true,
+          "max_attacks_per_turn": 1
+        },
+        "resource_id": "breath-weapons",
+        "resource_cost": 1,
+        "animation": "slowed"
       }
     ],
     "innate_spellcasting": null,
@@ -4548,6 +4575,33 @@
         "success_damage": "half",
         "resource_id": "breath-weapons",
         "resource_cost": 1
+      },
+      {
+        "id": "slowing-breath",
+        "name": "Slowing Breath",
+        "save_ability": "constitution",
+        "dc": 22,
+        "range_ft": 90,
+        "area": {
+          "shape": "cone",
+          "origin": "self",
+          "length_ft": 90
+        },
+        "failure_control_effect": {
+          "effect_id": "slowed",
+          "expiry_timing": "target_turn_end",
+          "duration_rounds": 10,
+          "repeat_save_ability": "constitution",
+          "repeat_save_dc": 22,
+          "repeat_save_timing": "target_turn_end",
+          "speed_multiplier": 0.5,
+          "blocks_reactions": true,
+          "action_bonus_exclusive": true,
+          "max_attacks_per_turn": 1
+        },
+        "resource_id": "breath-weapons",
+        "resource_cost": 1,
+        "animation": "slowed"
       }
     ],
     "innate_spellcasting": null,
@@ -12189,6 +12243,33 @@
         "success_damage": "half",
         "resource_id": "breath-weapons",
         "resource_cost": 1
+      },
+      {
+        "id": "slowing-breath",
+        "name": "Slowing Breath",
+        "save_ability": "constitution",
+        "dc": 11,
+        "range_ft": 15,
+        "area": {
+          "shape": "cone",
+          "origin": "self",
+          "length_ft": 15
+        },
+        "failure_control_effect": {
+          "effect_id": "slowed",
+          "expiry_timing": "target_turn_end",
+          "duration_rounds": 10,
+          "repeat_save_ability": "constitution",
+          "repeat_save_dc": 11,
+          "repeat_save_timing": "target_turn_end",
+          "speed_multiplier": 0.5,
+          "blocks_reactions": true,
+          "action_bonus_exclusive": true,
+          "max_attacks_per_turn": 1
+        },
+        "resource_id": "breath-weapons",
+        "resource_cost": 1,
+        "animation": "slowed"
       }
     ],
     "innate_spellcasting": null,
@@ -44466,6 +44547,33 @@
         "success_damage": "half",
         "resource_id": "breath-weapons",
         "resource_cost": 1
+      },
+      {
+        "id": "slowing-breath",
+        "name": "Slowing Breath",
+        "save_ability": "constitution",
+        "dc": 14,
+        "range_ft": 30,
+        "area": {
+          "shape": "cone",
+          "origin": "self",
+          "length_ft": 30
+        },
+        "failure_control_effect": {
+          "effect_id": "slowed",
+          "expiry_timing": "target_turn_end",
+          "duration_rounds": 10,
+          "repeat_save_ability": "constitution",
+          "repeat_save_dc": 14,
+          "repeat_save_timing": "target_turn_end",
+          "speed_multiplier": 0.5,
+          "blocks_reactions": true,
+          "action_bonus_exclusive": true,
+          "max_attacks_per_turn": 1
+        },
+        "resource_id": "breath-weapons",
+        "resource_cost": 1,
+        "animation": "slowed"
       }
     ],
     "innate_spellcasting": null,
