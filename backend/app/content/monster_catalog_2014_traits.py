@@ -24,10 +24,10 @@ ARENA_NEUTRAL_TRAITS = frozenset({
     "Agile", "Amphibious", "Beast of Burden", "False Appearance", "Flyby",
     "Hellish Restoration", "Hold Breath", "Ice Walk", "Illumination", "Jumper",
     "Keen Hearing", "Keen Hearing and Sight", "Keen Hearing and Smell", "Keen Sight",
-    "Keen Sight and Smell", "Keen Smell", "Limited Amphibiousness", "Mimicry", "Rejuvenation",
-    "Running Leap", "Shark Telepathy", "Snow Camouflage", "Spider Climb", "Standing Leap",
-    "Stone Camouflage", "Sunlight Sensitivity", "Training", "Water Breathing", "Web Sense",
-    "Web Walker",
+    "Keen Sight and Smell", "Keen Smell", "Labyrinthine Recall", "Limited Amphibiousness",
+    "Mimicry", "Rejuvenation", "Running Leap", "Shark Telepathy", "Snow Camouflage",
+    "Spider Climb", "Standing Leap", "Stone Camouflage", "Sunlight Sensitivity", "Training",
+    "Water Breathing", "Web Sense", "Web Walker",
 })
 
 SUPPORTED_TRAITS = frozenset(MODELED_TRAITS) | DATA_BOUND_TRAITS | ARENA_NEUTRAL_TRAITS
