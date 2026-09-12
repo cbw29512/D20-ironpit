@@ -51,6 +51,7 @@ class HitControlEffect(BaseModel):
     blocks_reactions: bool = False
     action_bonus_exclusive: bool = False
     max_attacks_per_turn: int | None = Field(default=None, ge=1, le=20)
+    disadvantage_strength_d20_tests: bool = False
 
     @model_validator(mode="after")
     def validate_condition_lifecycle(self) -> "HitControlEffect":
@@ -61,7 +62,10 @@ class HitControlEffect(BaseModel):
             raise ValueError("Legacy source-start expiry conflicts with explicit condition timing.")
         if self.duration_rounds is not None and self.expiry_timing is None:
             raise ValueError("Timed control duration requires an explicit expiry timing.")
-        custom_rules = self.speed_multiplier != 1.0 or self.blocks_reactions or self.action_bonus_exclusive or self.max_attacks_per_turn is not None
+        custom_rules = (
+            self.speed_multiplier != 1.0 or self.blocks_reactions or self.action_bonus_exclusive
+            or self.max_attacks_per_turn is not None or self.disadvantage_strength_d20_tests
+        )
         if custom_rules and self.effect_id is None:
             raise ValueError("Custom timed combat rules require an effect_id.")
         if self.condition_id is None and self.effect_id is None and self.grapple_escape_dc is None:
