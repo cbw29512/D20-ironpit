@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.encounter_targeting import combatant_distance
+from app.combat.resources import action_resource_available, spend_action_resource
 from app.combat.saving_throws import legal_save_action, resolve_save_action
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, SavingThrowAction
@@ -46,9 +47,12 @@ def resolve_save_targets(
     *,
     skip_range_check: bool = False,
 ) -> tuple[list[BattleEvent], int]:
-    """Resolve independent saves using one shared area-damage roll."""
+    """Resolve independent saves using one shared damage roll and one resource spend."""
     try:
         targets = validate_save_targets(actor, setup, action, target_ids, skip_range_check)
+        if not action_resource_available(actor.state, action):
+            raise ValueError(f"{action.name} resource is unavailable.")
+        resource_remaining = spend_action_resource(actor.state, action)
         affected_states = [member.state for member in [*setup.heroes, *setup.monsters]]
         shared = [dice.roll(action.damage_dice_size) for _ in range(action.damage_dice_count)] if action.damage_dice_count else None
         events: list[BattleEvent] = []
@@ -56,8 +60,11 @@ def resolve_save_targets(
             event = resolve_save_action(
                 sequence, round_number, actor, target, action,
                 0 if skip_range_check else combatant_distance(actor, target), dice,
-                spend_action=False, shared_damage_rolls=shared, affected_states=affected_states,
+                spend_action=False, spend_resource=False,
+                shared_damage_rolls=shared, affected_states=affected_states,
             )
+            if action.resource_id is not None:
+                event.resource_remaining = resource_remaining
             events.append(event); sequence += 1
         return events, sequence
     except Exception:
