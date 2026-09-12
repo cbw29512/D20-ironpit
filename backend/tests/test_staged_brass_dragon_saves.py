@@ -28,12 +28,8 @@ def test_sleep_breath_compiles_staged_wakeable_unconscious_lifecycle(
     assert action.area.shape == "cone"
     assert action.area.length_ft == cone_ft
     assert len(action.failure_effects) == 1
-
-    assert action.resource_id is not None
-    resource = next(item for item in resources if item.id == action.resource_id)
-    assert resource.max_uses == 1
-    assert resource.recharge is not None
-    assert resource.recharge.minimum_roll == 5
+    assert action.resource_id is None
+    assert all(item.name != "Sleep Breath" for item in resources)
 
     effect = action.failure_effects[0]
     assert isinstance(effect, ConditionEffectDefinition)
