@@ -50,6 +50,23 @@ def _policy_row(policy):
     }
 
 
+def _attach_source_fingerprint(row, template) -> None:
+    """Preserve source-audit metadata required by browser certification."""
+    row["source_trait_names"] = list(template.source_trait_names)
+    row["source_reaction_names"] = list(template.source_reaction_names)
+    row["source_bonus_action_names"] = list(template.source_bonus_action_names)
+    row["source_limited_use_names"] = list(template.source_limited_use_names)
+    row["source_legendary_action_names"] = list(template.source_legendary_action_names)
+    row["source_spellcasting_fingerprint"] = template.source_spellcasting_fingerprint
+    if template.parry_reaction:
+        row["parry_reaction"] = {"ac_bonus": template.parry_reaction.ac_bonus}
+    if template.redirect_attack_reaction:
+        row["redirect_attack_reaction"] = {
+            "ally_range_ft": template.redirect_attack_reaction.ally_range_ft,
+            "ally_max_size": template.redirect_attack_reaction.ally_max_size.value,
+        }
+
+
 def _attach_monster_actions(row, template) -> None:
     by_id = {action.id: action for action in template.saving_throw_actions}
     for action_row in row.get("saving_throw_actions", []):
@@ -72,6 +89,7 @@ def render() -> str:
         for template in _certified_monsters():
             row = template_row(template)
             row["creature_type"] = template.creature_type
+            _attach_source_fingerprint(row, template)
             _attach_monster_actions(row, template)
             rows.append(row)
         ids = {row["id"] for row in rows}
