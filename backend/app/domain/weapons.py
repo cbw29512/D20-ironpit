@@ -71,6 +71,9 @@ class Weapon(BaseModel):
     long_range_ft: int | None = Field(default=None, ge=1)
     projectile: str | None = None
     mastery_property: str | None = None
+    magical: bool = False
+    silvered: bool = False
+    adamantine: bool = False
     light: bool = False
     finesse: bool = False
     heavy: bool = False
