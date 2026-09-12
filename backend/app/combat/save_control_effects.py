@@ -57,5 +57,6 @@ def apply_save_control_outcome(
         blocks_reactions=control.blocks_reactions,
         action_bonus_exclusive=control.action_bonus_exclusive,
         max_attacks_per_turn=control.max_attacks_per_turn,
+        disadvantage_strength_d20_tests=control.disadvantage_strength_d20_tests,
     )
     return [applied] if applied is not None else []
