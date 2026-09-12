@@ -18,13 +18,24 @@ from app.domain.traits import CombatTrait
 logger = logging.getLogger(__name__)
 
 
-def saving_throw_mode(state: CombatantState, ability: str, *, magical_effect: bool = False) -> RollMode:
+def saving_throw_mode(
+    state: CombatantState,
+    ability: str,
+    *,
+    magical_effect: bool = False,
+    against_prone: bool = False,
+) -> RollMode:
     try:
         advantage = (
             int(ability == "strength" and rage_active(state))
             + danger_sense_advantage(state, ability)
             + dodge_dex_save_advantage_sources(state, ability)
             + int(magical_effect and CombatTrait.MAGIC_RESISTANCE in state.template.combat_traits)
+            + int(
+                against_prone
+                and ability in {"strength", "dexterity"}
+                and CombatTrait.SURE_FOOTED in state.template.combat_traits
+            )
         )
         disadvantage = 1 if ability == "dexterity" and RESTRAINED_EFFECT_ID in state.active_effect_ids else 0
         if (advantage > 0) == (disadvantage > 0):
@@ -62,6 +73,7 @@ def resolve_saving_throw(
     dice: DiceProvider,
     *,
     magical_effect: bool = False,
+    against_prone: bool = False,
 ) -> tuple[DiceRoll | None, bool]:
     try:
         if ability in {"strength", "dexterity"} and automatically_fails_strength_dexterity_save(state):
@@ -76,7 +88,12 @@ def resolve_saving_throw(
             roll_d20(
                 dice,
                 state.template.saving_throw_bonuses[ability],
-                saving_throw_mode(state, ability, magical_effect=magical_effect),
+                saving_throw_mode(
+                    state,
+                    ability,
+                    magical_effect=magical_effect,
+                    against_prone=against_prone,
+                ),
             ),
             dice,
         )
