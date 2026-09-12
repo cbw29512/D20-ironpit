@@ -35,7 +35,8 @@ def _slug(value: str) -> str:
 
 def _plain(value: str | None) -> str:
     text = re.sub(r"<[^>]+>", " ", value or "")
-    return re.sub(r"\s+", " ", html.unescape(text).replace("\u00ad", "")).strip()
+    text = re.sub(r"\s+", " ", html.unescape(text).replace("\u00ad", "")).strip()
+    return re.sub(r"\s+:", ":", text)
 
 
 def _integer(value: object) -> int:
