@@ -2,6 +2,7 @@ from types import SimpleNamespace
 
 from app.combat import offensive_ranges
 from app.combat.spellcasting import spell_action_resource_available
+from app.domain.targeting import AreaTargeting
 
 
 def _state(*, resources, spent_turn: str | None = None):
@@ -89,3 +90,23 @@ def test_movement_inventories_automatic_spell_with_custom_resource(monkeypatch) 
     assert len(profiles) == 1
     assert profiles[0].family == "spell"
     assert profiles[0].max_range_ft == 60
+
+
+def test_self_origin_cone_reach_uses_area_length() -> None:
+    action = SimpleNamespace(
+        id="cone",
+        range_ft=0,
+        area=AreaTargeting(shape="cone", origin="self", length_ft=30),
+    )
+
+    assert offensive_ranges._effective_action_range(action) == 30
+
+
+def test_point_origin_radius_reach_adds_cast_range_and_radius() -> None:
+    action = SimpleNamespace(
+        id="blast",
+        range_ft=60,
+        area=AreaTargeting(shape="radius", origin="point", radius_ft=20),
+    )
+
+    assert offensive_ranges._effective_action_range(action) == 80
