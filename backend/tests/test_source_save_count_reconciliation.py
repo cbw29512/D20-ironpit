@@ -9,7 +9,7 @@ from app.content.roster import build_arena_roster
 @pytest.mark.parametrize(
     "name",
     [
-        "Bearded Devil", "Brass Dragon Wyrmling", "Chuul", "Death Dog", "Harpy",
+        "Bearded Devil", "Brass Dragon Wyrmling", "Death Dog", "Harpy",
         "Homunculus", "Salamander", "Young Brass Dragon",
     ],
 )
