@@ -9,21 +9,35 @@ global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 
 const mover = { combatant_id: "mover", state: { position: { x: 0, y: 0 } } };
-window.IRON_PIT_BROWSER_GRID_MOVEMENT_SUPPORT = {
+const helpers = {
   position: (member) => member.state.position,
   occupantsAt: () => [],
   movementStepCostFt: (_map, _mover, destination) => (
     destination.x >= 0 && destination.x < 4 && destination.y >= 0 && destination.y < 4 ? 5 : null
   ),
 };
+window.IRON_PIT_BROWSER_GRID_PATH_SEARCH_SUPPORT = {
+  keyOf: (position) => `${position.x},${position.y}`,
+  reconstruct: (endKey, previous) => {
+    const path = [];
+    let cursor = endKey;
+    while (previous.has(cursor)) {
+      const [x, y] = cursor.split(",").map(Number);
+      path.push({ x, y });
+      cursor = previous.get(cursor);
+    }
+    return path.reverse();
+  },
+};
 
-load("browser-grid-reachable.js");
+load("browser-grid-path-search.js");
 
-const plans = window.IRON_PIT_BROWSER_GRID_REACHABLE.reachableDestinations(
+const plans = window.IRON_PIT_BROWSER_GRID_PATH_SEARCH.reachableDestinations(
   { width_squares: 4, height_squares: 4, cell_size_ft: 5 },
   mover,
   [mover],
   10,
+  helpers,
 );
 const byDestination = new Map(plans.map((plan) => [`${plan.destination.x},${plan.destination.y}`, plan]));
 
