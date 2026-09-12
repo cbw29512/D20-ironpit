@@ -25,6 +25,19 @@ _TIMED_REPEAT_CONDITION = re.compile(
     r"ending the effect on itself on a success\.?'?",
     re.I,
 )
+_SAVE_DAMAGE_HALF = re.compile(
+    r"(?:the target|it) must make a DC (\d+) "
+    r"(Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) saving throw,? taking "
+    r"\d+ \((\d+)d(\d+)(?:\s*([+\-−])\s*(\d+))?\) ([A-Za-z]+) damage on a failed save,? "
+    r"or half as much damage on a successful one\.?'?",
+    re.I,
+)
+_SAVE_DAMAGE_NONE = re.compile(
+    r"(?:the target|it) must succeed on a DC (\d+) "
+    r"(Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) saving throw or take "
+    r"\d+ \((\d+)d(\d+)(?:\s*([+\-−])\s*(\d+))?\) ([A-Za-z]+) damage\.?'?",
+    re.I,
+)
 _GRAPPLE = re.compile(
     r"(?:If (?:the )?target is (?:a )?(?:(Tiny|Small|Medium|Large|Huge) or smaller)(?: creature)?,?\s*)?"
     r"(?:the target|it) is grappled \(escape DC (\d+)\)",
@@ -50,6 +63,17 @@ def _fixed(match: re.Match[str]) -> dict | None:
     return {"average": int(amount), "dice_count": 0, "dice_size": 6, "bonus": int(amount), "type": damage_type}
 
 
+def _save_damage_effect(match: re.Match[str], success_damage: str) -> dict | None:
+    dc, ability, count, size, sign, bonus, damage_type = match.groups(); dtype = damage_type.lower()
+    if dtype not in DAMAGE_TYPES: return None
+    modifier = int(bonus or 0) * (-1 if sign in {"-", "−"} else 1)
+    return {
+        "save_ability": ability.lower(), "dc": int(dc),
+        "damage_dice_count": int(count), "damage_dice_size": int(size),
+        "damage_bonus": modifier, "damage_type": dtype, "success_damage": success_damage,
+    }
+
+
 def parse_secondary_damage(remainder: str) -> tuple[list[dict], str]:
     extras: list[dict] = []
     def replace_rolled(match: re.Match[str]) -> str:
@@ -69,12 +93,17 @@ def parse_on_hit_save_condition(remainder: str) -> tuple[dict | None, str]:
     timed = _TIMED_REPEAT_CONDITION.search(remainder)
     if timed:
         dc, ability, condition = timed.groups()
-        effect = {
-            "save_ability": ability.lower(), "dc": int(dc), "condition_id": condition.lower(),
-            "duration_rounds": 10, "repeat_save_timing": "target_turn_end",
-        }
+        effect = {"save_ability": ability.lower(), "dc": int(dc), "condition_id": condition.lower(),
+                  "duration_rounds": 10, "repeat_save_timing": "target_turn_end"}
         residual = (remainder[:timed.start()] + " " + remainder[timed.end():]).strip(" .,;")
         return effect, residual
+    for pattern, success in ((_SAVE_DAMAGE_HALF, "half"), (_SAVE_DAMAGE_NONE, "none")):
+        match = pattern.search(remainder)
+        if match:
+            effect = _save_damage_effect(match, success)
+            if effect is not None:
+                residual = (remainder[:match.start()] + " " + remainder[match.end():]).strip(" .,;")
+                return effect, residual
     match = _PRONE_SAVE.search(remainder)
     if not match: return None, remainder
     max_size, dc, ability = match.groups()
