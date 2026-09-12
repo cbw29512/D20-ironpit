@@ -61,6 +61,7 @@ def test_recharge_rolls_only_while_resource_is_expended() -> None:
 def test_resource_backed_save_action_spends_on_use_and_cannot_repeat_until_recharged() -> None:
     actor = _recharge_member()
     target_template = build_goblin_warrior().model_copy(deep=True)
+    target_template.saving_throw_bonuses = {"dexterity": 2}
     target = EncounterCombatant(
         combatant_id="hero-1:target", side="heroes", position_ft=0,
         state=build_combatant_state(target_template),
