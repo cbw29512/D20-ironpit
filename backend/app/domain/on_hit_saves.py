@@ -21,6 +21,9 @@ class OnHitSaveEffect(BaseModel):
     damage_bonus: int = 0
     damage_type: str | None = None
     success_damage: Literal["none", "half"] = "none"
+    zero_hp_stable: bool = False
+    zero_hp_condition_ids: list[ConditionName] = Field(default_factory=list)
+    zero_hp_duration_rounds: int | None = Field(default=None, ge=1)
 
     @model_validator(mode="after")
     def validate_effect(self) -> "OnHitSaveEffect":
@@ -28,4 +31,9 @@ class OnHitSaveEffect(BaseModel):
             raise ValueError("On-hit save damage requires a damage type.")
         if self.condition_id is None and self.damage_dice_count == 0:
             raise ValueError("On-hit save effect requires a condition or damage.")
+        if self.zero_hp_stable:
+            if self.damage_dice_count == 0 or not self.zero_hp_condition_ids or self.zero_hp_duration_rounds is None:
+                raise ValueError("Stable zero-HP rider requires save damage, conditions, and duration.")
+        elif self.zero_hp_condition_ids or self.zero_hp_duration_rounds is not None:
+            raise ValueError("Zero-HP rider details require zero_hp_stable.")
         return self
