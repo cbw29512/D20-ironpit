@@ -19,7 +19,7 @@ def choose_offensive_movement_intent(
     setup: EncounterSetup,
     turn_key: str,
 ) -> OffensiveMovementIntent | None:
-    """Move toward the highest-priority, highest-value offense when movement improves its use."""
+    """Move only when this turn can actually reach or improve the preferred offense."""
     try:
         if not is_available(attacker.state, "action") or setup.map_definition is None:
             return None
@@ -33,20 +33,9 @@ def choose_offensive_movement_intent(
             distance = combatant_distance(attacker, target)
             profiles = ranked_offensive_range_profiles_for_target(attacker, target, turn_key, setup)
             for profile in profiles:
-                base = (
-                    profile.priority,
-                    profile.execution_rank,
-                    -profile.expected_value,
-                )
+                base = (profile.priority, profile.execution_rank, -profile.expected_value)
                 if distance <= profile.preferred_range_ft:
-                    candidates.append((
-                        *base,
-                        0,
-                        distance,
-                        target.combatant_id,
-                        profile.family,
-                        profile.preferred_range_ft,
-                    ))
+                    candidates.append((*base, 0, distance, target.combatant_id, profile.family, profile.preferred_range_ft))
                     continue
                 plan = plan_movement_toward(
                     setup.map_definition,
@@ -56,7 +45,7 @@ def choose_offensive_movement_intent(
                     profile.preferred_range_ft,
                     attacker.state.movement_remaining_ft,
                 )
-                if plan.goal_reachable and plan.path and plan.final_distance_ft < distance:
+                if plan.path and plan.final_distance_ft <= profile.preferred_range_ft:
                     candidates.append((
                         *base,
                         plan.movement_cost_ft,
@@ -67,14 +56,7 @@ def choose_offensive_movement_intent(
                     ))
                     continue
                 if distance <= profile.max_range_ft:
-                    candidates.append((
-                        *base,
-                        0,
-                        distance,
-                        target.combatant_id,
-                        profile.family,
-                        profile.preferred_range_ft,
-                    ))
+                    candidates.append((*base, 0, distance, target.combatant_id, profile.family, profile.preferred_range_ft))
         if not candidates:
             return None
         _, _, _, movement_cost, _, target_id, family, desired_distance = min(candidates)
