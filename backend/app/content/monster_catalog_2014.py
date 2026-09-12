@@ -8,6 +8,7 @@ from pydantic import TypeAdapter
 
 from app.content.monster_catalog_2014_compile_support import (
     ability_scores_2014,
+    bind_attack_traits_2014,
     resources_2014,
     saving_throw_bonuses_2014,
 )
@@ -94,7 +95,7 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
         blockers = unsupported_mechanics_2014(source)
         if blockers: raise ValueError(f"unsupported 2014 mechanics: {', '.join(blockers)}")
         traits = combat_traits_2014(source.trait_names); magical = CombatTrait.MAGIC_WEAPONS in traits
-        attacks = [_attack(item, magical=magical) for item in source.attacks]
+        attacks = bind_attack_traits_2014(source, [_attack(item, magical=magical) for item in source.attacks])
         movement = MovementModes(
             walk_ft=source.speed.get("walk", 0), fly_ft=source.speed.get("fly", 0),
             climb_ft=source.speed.get("climb", 0), swim_ft=source.speed.get("swim", 0), burrow_ft=source.speed.get("burrow", 0),
