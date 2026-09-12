@@ -17,9 +17,9 @@ _SPELL_GROUP = re.compile(
 )
 # A direct cast outside the structured "casts one of the following spells" block is a
 # separate combat capability until it is parsed explicitly. This keeps the neutral-spell
-# audit fail-closed for bonus actions, reactions, and named cast actions.
+# audit fail-closed for bonus actions, reactions, named cast actions, and "can cast" rules.
 _DIRECT_CAST = re.compile(
-    r"\bcasts?\s+(?!one of the following spells\b)",
+    r"(?:\bcasts?\s+(?!one of the following spells\b)|\bcan\s+cast\s+)",
     re.IGNORECASE,
 )
 # Explicitly certified as irrelevant to the standard flat/open Iron Pit outcome.
