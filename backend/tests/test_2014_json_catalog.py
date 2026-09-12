@@ -118,6 +118,19 @@ def test_reckless_trait_reuses_universal_reckless_attack_feature() -> None:
     assert template.progression_features.reckless_attack is True
 
 
+def test_poor_depth_perception_adds_disadvantage_beyond_30_feet() -> None:
+    catalog = {monster.id: monster for monster in load_catalog_2014(MVP_CATALOG_PATH)}
+    source = catalog["bandit"].model_copy(update={"trait_names": ["Poor Depth Perception"]})
+    template = compile_monster_2014(source)
+    attacker = build_combatant_state(template)
+    defender = build_combatant_state(_monster("skeleton"))
+    crossbow = attacker.template.alternate_weapon_attacks[0]
+    event = resolve_attack(1, 1, attacker, defender, crossbow, 40, FixedDiceProvider([18, 2]))
+    assert event.attack_roll is not None
+    assert event.attack_roll.mode == "disadvantage"
+    assert event.attack_roll.selected_roll == 2
+
+
 def test_new_basic_monster_is_data_only(tmp_path) -> None:
     record = {
         "id": "test-brute", "name": "Test Brute", "ruleset": "2014",
