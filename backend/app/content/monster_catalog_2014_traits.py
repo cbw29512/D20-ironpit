@@ -17,7 +17,7 @@ MODELED_TRAITS = {
 }
 
 DATA_BOUND_TRAITS = frozenset({
-    "Blood Frenzy", "Echolocation", "Innate Spellcasting", "Poor Depth Perception", "Reckless", "Spellcasting",
+    "Blood Frenzy", "Echolocation", "Innate Spellcasting", "Poor Depth Perception", "Reckless", "Regeneration", "Spellcasting",
 })
 
 ARENA_NEUTRAL_TRAITS = frozenset({
@@ -38,8 +38,7 @@ _RELENTLESS = re.compile(r"^Relentless \(Recharges after a Short or Long Rest\)$
 def legendary_resistance_uses_2014(names: list[str]) -> int:
     matches = [_LEGENDARY_RESISTANCE.match(name) for name in names]
     counts = [int(match.group(1)) for match in matches if match is not None]
-    if len(counts) > 1:
-        raise ValueError("Monster has multiple Legendary Resistance traits.")
+    if len(counts) > 1: raise ValueError("Monster has multiple Legendary Resistance traits.")
     return counts[0] if counts else 0
 
 
@@ -48,9 +47,4 @@ def combat_traits_2014(names: list[str]) -> list[CombatTrait]:
 
 
 def unresolved_traits_2014(names: list[str]) -> list[str]:
-    return [
-        name for name in names
-        if name not in SUPPORTED_TRAITS
-        and _LEGENDARY_RESISTANCE.match(name) is None
-        and _RELENTLESS.match(name) is None
-    ]
+    return [name for name in names if name not in SUPPORTED_TRAITS and _LEGENDARY_RESISTANCE.match(name) is None and _RELENTLESS.match(name) is None]
