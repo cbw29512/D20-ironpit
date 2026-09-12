@@ -87,6 +87,16 @@ class OnHitSavingThrow(BaseModel):
     magical_effect: bool = False
     target_filter: TargetFilter = Field(default_factory=TargetFilter)
     failure_effects: list[SaveFailureEffectDefinition] = Field(default_factory=list)
+    severe_failure_margin: int | None = Field(default=None, ge=1, le=20)
+    severe_failure_effects: list[SaveFailureEffectDefinition] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def validate_severe_failure(self) -> "OnHitSavingThrow":
+        if (self.severe_failure_margin is None) != (not self.severe_failure_effects):
+            raise ValueError("Severe failed-save margin and effects must be configured together.")
+        return self
+
+
 class Weapon(BaseModel):
     id: str
     name: str
