@@ -41,8 +41,8 @@ _STAGED_TIMED_SLEEP = re.compile(
     rf"(?P<name>[A-Z][A-Za-z0-9’' -]*?)(?:\s+\((?P<limit>{_RECHARGE_LIMIT})\))?\.\s+"
     rf"(?P<ability>Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) Saving Throw:\s+"
     rf"DC\s+(?P<dc>\d+),\s+(?P<target>[^.]+)\.\s+"
-    rf"First Failure:\s+The target has the (?P<first>{_CONDITION}) condition until the end of its next turn, "
-    rf"at which point it repeats the save\.\s+Second Failure:\s+The target has the (?P<second>Unconscious) condition "
+    rf"(?:First )?Failure:\s+The target has the (?P<first>{_CONDITION}) condition until the end of its next turn, "
+    rf"(?:at which point|when) it repeats the save\.\s+Second Failure:\s+The target has the (?P<second>Unconscious) condition "
     rf"for (?P<sleep_minutes>\d+) minute(?:s)?\.\s+This effect ends for the target if it takes damage or a creature "
     rf"within 5 feet of it takes an action to wake it\.", re.I,
 )
