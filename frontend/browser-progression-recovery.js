@@ -1,5 +1,6 @@
 (() => {
   "use strict";
+  const PEERLESS_AIM_KEY = "peerless-aim-used";
 
   function deathSaveRoll(state, dice) {
     const advantage = state.template.death_save_advantage === true;
@@ -21,5 +22,13 @@
     return state.current_hp - before;
   }
 
+  function refreshPeerlessAim(state) { delete state.feature_last_turn_keys[PEERLESS_AIM_KEY]; }
+  function resolvePeerlessAim(state, hit) {
+    if (hit || !state.template.peerless_aim || state.feature_last_turn_keys[PEERLESS_AIM_KEY]) return { hit, used: false };
+    state.feature_last_turn_keys[PEERLESS_AIM_KEY] = "used";
+    return { hit: true, used: true };
+  }
+
   window.IRON_PIT_BROWSER_PROGRESSION_RECOVERY = { deathSaveRoll, startTurnHealing };
+  window.IRON_PIT_BROWSER_PEERLESS_AIM = { refresh: refreshPeerlessAim, resolve: resolvePeerlessAim };
 })();
