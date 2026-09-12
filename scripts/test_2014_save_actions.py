@@ -38,7 +38,27 @@ def main() -> int:
     parsed = parse_save_actions(shared, {"breath-weapons": 5})
     assert parsed[0]["resource_id"] == "breath-weapons"
     assert parsed[0]["id"] == "fire-breath"
-    print("2014 save/AoE parser regressions passed.")
+
+    fear = (
+        "<p><strong>Frightful Presence.</strong> Each creature of the dragon's choice that is within "
+        "120 feet of the dragon and aware of it must succeed on a DC 19 Wisdom saving throw or become "
+        "frightened for 1 minute. A creature can repeat the saving throw at the end of each of its turns, "
+        "ending the effect on itself on a success. If a creature's saving throw is successful or the effect "
+        "ends for it, the creature is immune to the dragon's Frightful Presence for the next 24 hours.</p>"
+    )
+    parsed = parse_save_actions(fear, {})
+    assert parsed == [{
+        "id": "frightful-presence", "name": "Frightful Presence",
+        "save_ability": "wisdom", "dc": 19, "range_ft": 120,
+        "area": {"shape": "emanation", "origin": "self", "radius_ft": 120},
+        "failure_control_effect": {
+            "condition_id": "frightened", "expiry_timing": "target_turn_end",
+            "duration_rounds": 10, "repeat_save_ability": "wisdom", "repeat_save_dc": 19,
+            "repeat_save_timing": "target_turn_end", "source_effect_immunity_on_end": True,
+        },
+        "source_effect_immunity_on_success": True, "animation": "fear",
+    }]
+    print("2014 save/control/AoE parser regressions passed.")
     return 0
 
 
