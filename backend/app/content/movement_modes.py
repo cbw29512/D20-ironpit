@@ -18,15 +18,46 @@ _MODE_FIELDS = {
     "swim": "swim_ft",
     "burrow": "burrow_ft",
 }
+_FORM_ONLY = re.compile(r"\([^)]*\bform\s+only\b[^)]*\)", re.I)
+_GM_CHOICE = re.compile(
+    r"\b(?:climb|fly|swim|burrow)\s+or\s+(?:climb|fly|swim|burrow)\b.*\(\s*gm[’']s choice\s*\)",
+    re.I,
+)
+
+
+def _deferred_component_kind(part: str) -> str | None:
+    if _GM_CHOICE.search(part):
+        return "choice"
+    if _FORM_ONLY.search(part):
+        return "form"
+    if "(" in part and ")" not in part:
+        return "malformed-parenthetical"
+    return None
+
+
+def movement_source_issues(source_speed: object) -> list[str]:
+    """Identify printed movement alternatives that the flat runtime profile must not invent."""
+    issues: set[str] = set()
+    for part in (piece.strip().lower() for piece in str(source_speed).split(",")):
+        kind = _deferred_component_kind(part)
+        if kind == "choice":
+            issues.add("movement-choice-source-unmodeled")
+        elif kind == "form":
+            issues.add("movement-form-source-unmodeled")
+        elif kind == "malformed-parenthetical":
+            issues.add("movement-parenthetical-source-malformed")
+    return sorted(issues)
 
 
 def parse_movement_modes(source_speed: object) -> dict[str, int]:
-    """Parse SRD Speed text without collapsing distinct movement modes."""
+    """Parse unconditional SRD Speed text without activating source alternatives."""
     text = str(source_speed).strip().lower()
     if not text:
         raise ValueError("SRD Speed text is empty.")
     modes: dict[str, int] = {}
     for index, part in enumerate(piece.strip() for piece in text.split(",")):
+        if _deferred_component_kind(part) is not None:
+            continue
         match = re.search(r"(\d+)\s*ft", part)
         if not match:
             raise ValueError(f"Could not parse movement speed component: {part!r}")
@@ -44,7 +75,7 @@ def parse_movement_modes(source_speed: object) -> dict[str, int]:
 
 
 def parse_movement_profile(source_speed: object) -> MovementModes:
-    """Convert printed SRD Speed text into the canonical movement fingerprint."""
+    """Convert unconditional printed SRD Speed text into the runtime movement fingerprint."""
     modes = parse_movement_modes(source_speed)
     hover = bool(re.search(r"\bhover\b", str(source_speed), re.IGNORECASE))
     if hover and "fly" not in modes:
@@ -60,7 +91,7 @@ def parse_movement_profile(source_speed: object) -> MovementModes:
 
 
 def standard_arena_closing_speed(source_speed: object) -> int:
-    """Fastest printed mode legal in the open, flat standard Iron Pit."""
+    """Fastest unconditional printed mode legal in the open, flat standard Iron Pit."""
     modes = parse_movement_modes(source_speed)
     legal = [speed for mode, speed in modes.items() if mode in _STANDARD_ARENA_MODES]
     if not legal:
@@ -69,7 +100,7 @@ def standard_arena_closing_speed(source_speed: object) -> int:
 
 
 def movement_mode_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
-    """Return a blocker for every printed Speed fingerprint component that drifts from SRD."""
+    """Return blockers for movement drift and unresolved printed movement alternatives."""
     expected = parse_movement_profile(row["speed"])
     issues = [
         f"movement-{mode}-mismatch"
@@ -78,6 +109,7 @@ def movement_mode_issues(template: CombatantTemplate, row: dict[str, object]) ->
     ]
     if template.movement_modes.hover != expected.hover:
         issues.append("movement-hover-mismatch")
+    issues.extend(movement_source_issues(row["speed"]))
     return issues
 
 
