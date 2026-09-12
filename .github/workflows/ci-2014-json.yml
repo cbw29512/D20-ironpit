@@ -13,6 +13,7 @@ on:
       - 'backend/app/content/monster_catalog_2014_multiattack.py'
       - 'backend/app/domain/attack_action_policy.py'
       - 'backend/app/domain/zero_hp_prevention.py'
+      - 'backend/app/domain/regeneration.py'
       - 'backend/app/domain/charge_profiles.py'
       - 'backend/app/domain/on_hit_saves.py'
       - 'backend/app/domain/weapons.py'
@@ -23,6 +24,7 @@ on:
       - 'backend/app/combat/attacks.py'
       - 'backend/app/combat/zero_hp.py'
       - 'backend/app/combat/zero_hp_prevention.py'
+      - 'backend/app/combat/regeneration.py'
       - 'backend/app/combat/parry.py'
       - 'backend/app/combat/grapple.py'
       - 'backend/app/combat/resources.py'
@@ -54,10 +56,12 @@ on:
       - 'backend/app/combat/legendary_resistance.py'
       - 'backend/app/combat/saving_throw_rolls.py'
       - 'backend/app/combat/spell_resolution.py'
+      - 'index.html'
       - 'frontend/index.html'
       - 'frontend/browser-state.js'
       - 'frontend/browser-attack.js'
       - 'frontend/browser-zero-hp.js'
+      - 'frontend/browser-regeneration.js'
       - 'frontend/browser-reactions.js'
       - 'frontend/browser-saves.js'
       - 'frontend/browser-save-control-effects.js'
@@ -71,6 +75,7 @@ on:
       - 'frontend/browser-area-shapes.js'
       - 'frontend/browser-area-targeting.js'
       - 'frontend/browser-area-save-actions.js'
+      - 'frontend/browser-grid-forced-movement.js'
       - 'frontend/browser-spell-resolution.js'
       - 'frontend/browser-grapple.js'
       - 'frontend/browser-timed-conditions.js'
@@ -85,6 +90,7 @@ on:
       - 'frontend/browser-2014-multiattack-policy.test.cjs'
       - 'frontend/browser-2014-relentless.test.cjs'
       - 'frontend/browser-2014-sleep-breath.test.cjs'
+      - 'frontend/browser-2014-regeneration.test.cjs'
       - 'backend/tests/test_parry.py'
       - 'backend/tests/test_2014_json_catalog.py'
       - 'backend/tests/test_2014_poison_timing.py'
@@ -98,6 +104,7 @@ on:
       - 'backend/tests/test_2014_on_hit_save.py'
       - 'backend/tests/test_2014_relentless.py'
       - 'backend/tests/test_2014_sleep_breath.py'
+      - 'backend/tests/test_2014_regeneration.py'
       - 'backend/tests/test_magic_resistance.py'
       - 'backend/tests/test_conditional_damage_defenses.py'
       - 'data/monsters/2014/**'
@@ -111,6 +118,7 @@ on:
       - 'scripts/import_2014_control_save_actions.py'
       - 'scripts/import_2014_spellcasting.py'
       - 'scripts/import_2014_zero_hp_prevention.py'
+      - 'scripts/import_2014_regeneration.py'
       - 'scripts/enrich_2014_save_actions.py'
       - 'scripts/enrich_2014_spellcasting.py'
       - 'scripts/test_2014_save_actions.py'
@@ -211,6 +219,7 @@ jobs:
           tests/test_2014_on_hit_save.py
           tests/test_2014_relentless.py
           tests/test_2014_sleep_breath.py
+          tests/test_2014_regeneration.py
           tests/test_magic_resistance.py
           tests/test_conditional_damage_defenses.py
       - name: Prove 2014 browser rules parity
@@ -225,3 +234,4 @@ jobs:
           node frontend/browser-2014-multiattack-policy.test.cjs
           node frontend/browser-2014-relentless.test.cjs
           node frontend/browser-2014-sleep-breath.test.cjs
+          node frontend/browser-2014-regeneration.test.cjs
