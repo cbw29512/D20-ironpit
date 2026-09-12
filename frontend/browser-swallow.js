@@ -13,12 +13,18 @@
     return members(setup).filter((member) => member.state.swallowed?.source_id === sourceId);
   }
   function choose(source, setup) {
-    if (!E().available(source.state, "action") || swallowedTargets(source.combatant_id, setup).length) return null;
+    const swallowedCount = swallowedTargets(source.combatant_id, setup).length;
     const opponents = source.side === "heroes" ? setup.monsters : setup.heroes;
     for (const target of opponents) {
       if (!target.state.is_alive || target.state.is_dead || target.state.swallowed) continue;
-      if (!(target.state.grapple_sources || []).some((item) => item.source_id === source.combatant_id)) continue;
+      const held = (target.state.grapple_sources || []).some((item) => item.source_id === source.combatant_id);
       for (const action of source.state.template.swallow_actions || []) {
+        const cost = action.actionCost || "action";
+        const capacity = action.maxSwallowedTargets || 1;
+        const requiresGrapple = action.requiresGrappledTarget !== false;
+        if (!E().available(source.state, cost)) continue;
+        if (swallowedCount >= capacity) continue;
+        if (requiresGrapple && !held) continue;
         if (S().sizeAtMost(target, action.maxTargetSize)) return { target, action };
       }
     }
@@ -31,7 +37,9 @@
     const applied = [];
     if (action.appliesBlinded && !I().immune(target.state, "blinded")) applied.push("blinded");
     if (action.appliesRestrained && !I().immune(target.state, "restrained")) applied.push("restrained");
-    G().release(target.state, source.combatant_id);
+    if ((target.state.grapple_sources || []).some((item) => item.source_id === source.combatant_id)) {
+      G().release(target.state, source.combatant_id);
+    }
     target.state.swallowed = {
       source_id: source.combatant_id,
       action_id: action.id,
@@ -42,7 +50,7 @@
     };
     target.position_ft = source.position_ft;
     target.state.position = source.state.position;
-    E().spend(source.state, "action");
+    E().spend(source.state, action.actionCost || "action");
     return {
       handled: true,
       sequence: sequence + 1,
@@ -56,11 +64,18 @@
     };
   }
   function forbiddenAttacks(source, setup) {
-    const swallowed = swallowedTargets(source.combatant_id, setup)[0]?.state.swallowed;
-    if (!swallowed) return new Set();
-    const action = (source.state.template.swallow_actions || []).find((item) => item.id === swallowed.action_id);
-    if (!action) throw new Error(`Missing active Swallow action ${swallowed.action_id}.`);
-    return new Set(action.forbiddenAttackIdsWhileActive || []);
+    const active = swallowedTargets(source.combatant_id, setup)
+      .map((target) => target.state.swallowed)
+      .filter(Boolean);
+    if (!active.length) return new Set();
+    const actions = new Map((source.state.template.swallow_actions || []).map((item) => [item.id, item]));
+    const forbidden = new Set();
+    for (const swallowed of active) {
+      const action = actions.get(swallowed.action_id);
+      if (!action) throw new Error(`Missing active Swallow action ${swallowed.action_id}.`);
+      for (const attackId of action.forbiddenAttackIdsWhileActive || []) forbidden.add(attackId);
+    }
+    return forbidden;
   }
   function adjusted(state, amount, type) {
     if ((state.template.damage_immunities || []).includes(type)) return 0;
