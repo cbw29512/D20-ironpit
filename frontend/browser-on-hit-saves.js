@@ -23,18 +23,25 @@
     let raw = Math.max(0, rolls.reduce((sum, roll) => sum + roll, 0) + (effect.damageBonus || 0));
     if (succeeded) raw = effect.successDamage === "half" ? Math.floor(raw / 2) : 0;
     const total = adjustedDamage(target.state, raw, effect.damageType);
-    if (total > 0) Z().applyDamage(
-      target.state, total, false, [effect.damageType],
-      setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [],
-    );
-    return {
-      total,
-      component: {
-        source: "on-hit save rider", notation: `${effect.damageDiceCount}d${effect.damageDiceSize}+${effect.damageBonus || 0}`,
-        rolls, modifier: effect.damageBonus || 0, damage_type: effect.damageType,
-        total: raw, applied_total: total,
-      },
-    };
+    if (total > 0) Z().applyDamage(target.state, total, false, [effect.damageType], setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : []);
+    return { total, component: { source: "on-hit save rider", notation: `${effect.damageDiceCount}d${effect.damageDiceSize}+${effect.damageBonus || 0}`, rolls, modifier: effect.damageBonus || 0, damage_type: effect.damageType, total: raw, applied_total: total } };
+  }
+
+  function stableZeroHp(target, attack, effect, sourceId, round, damageTotal) {
+    if (!damageTotal || !effect.zeroHpStable || target.state.current_hp !== 0) return [];
+    if (!sourceId || round === null || !T()) throw new Error("Stable zero-HP rider lacks browser source context.");
+    const state = target.state;
+    state.is_alive = true; state.is_dead = false; state.is_unconscious = true; state.is_stable = true;
+    state.death_save_successes = 0; state.death_save_failures = 0;
+    const applied = [];
+    for (const conditionId of effect.zeroHpConditionIds || []) {
+      const result = T().apply(state, conditionId, sourceId, {
+        sourceEffectId: attack.id, appliedRound: round,
+        expiresRound: round + effect.zeroHpDurationRounds, expiryTiming: "source_turn_start",
+      });
+      if (result) applied.push(result);
+    }
+    return applied;
   }
 
   function resolve(target, attack, sourceId = null, round = null, setup = null) {
@@ -44,6 +51,7 @@
     if (!S()) throw new Error("Browser saving-throw runtime is not loaded.");
     const save = S().resolveSavingThrow(target.state, effect.saveAbility, effect.dc);
     const damage = saveDamage(target, effect, save.succeeded, setup);
+    const appliedConditions = stableZeroHp(target, attack, effect, sourceId, round, damage.total);
     let appliedCondition = null;
     if (effect.conditionId && !save.succeeded && target.state.is_alive && !target.state.is_dead && !I().immune(target.state, effect.conditionId)) {
       const timed = Boolean(effect.durationRounds || effect.repeatSaveTiming || effect.endsOnDamage);
@@ -54,16 +62,16 @@
           expiresRound: effect.durationRounds ? round + effect.durationRounds : null,
           repeatSaveAbility: effect.repeatSaveTiming ? effect.saveAbility : null,
           repeatSaveDc: effect.repeatSaveTiming ? effect.dc : null,
-          repeatSaveTiming: effect.repeatSaveTiming || null,
-          endsOnDamage: Boolean(effect.endsOnDamage),
+          repeatSaveTiming: effect.repeatSaveTiming || null, endsOnDamage: Boolean(effect.endsOnDamage),
         });
       } else {
         if (!target.state.active_effect_ids.includes(effect.conditionId)) target.state.active_effect_ids.push(effect.conditionId);
         appliedCondition = effect.conditionId;
       }
+      if (appliedCondition) appliedConditions.push(appliedCondition);
     }
-    return { saveRoll: save.roll, saveAbility: effect.saveAbility, saveDc: effect.dc,
-      saveSucceeded: save.succeeded, appliedCondition, damageTotal: damage.total, damageComponent: damage.component };
+    return { saveRoll: save.roll, saveAbility: effect.saveAbility, saveDc: effect.dc, saveSucceeded: save.succeeded,
+      appliedCondition, appliedConditions: [...new Set(appliedConditions)], damageTotal: damage.total, damageComponent: damage.component };
   }
 
   function actualTarget(target, setup, targetId) {
@@ -81,18 +89,16 @@
       if (!event.hit || !attack.onHitSaveEffect) return event;
       const result = resolve(target, attack, args[2].combatant_id, args[1], extra.setup);
       if (!result) return event;
-      event.saving_throw_roll = result.saveRoll;
-      event.save_ability = result.saveAbility;
-      event.save_dc = result.saveDc;
-      event.save_succeeded = result.saveSucceeded;
+      event.saving_throw_roll = result.saveRoll; event.save_ability = result.saveAbility;
+      event.save_dc = result.saveDc; event.save_succeeded = result.saveSucceeded;
       if (result.damageComponent) {
         event.damage_components = [...(event.damage_components || []), result.damageComponent];
         if (event.damage_roll) event.damage_roll.total += result.damageTotal;
-        event.hp_after = target.state.current_hp;
+        event.hp_after = target.state.current_hp; event.is_stable = target.state.is_stable; event.is_dead = target.state.is_dead;
       }
-      if (result.appliedCondition) {
-        event.applied_condition_ids = [...new Set([...(event.applied_condition_ids || []), result.appliedCondition])];
-        event.description += ` ${target.state.template.name} is ${result.appliedCondition === "prone" ? "knocked Prone" : result.appliedCondition}.`;
+      if (result.appliedConditions.length) {
+        event.applied_condition_ids = [...new Set([...(event.applied_condition_ids || []), ...result.appliedConditions])];
+        for (const condition of result.appliedConditions) event.description += ` ${target.state.template.name} is ${condition}.`;
       }
       event.description += ` ${result.saveAbility} save DC ${result.saveDc}: ${target.state.template.name} ${result.saveSucceeded ? "succeeds" : "fails"}.`;
       return event;
