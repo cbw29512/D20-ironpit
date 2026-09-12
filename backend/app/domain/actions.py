@@ -37,6 +37,7 @@ class HitControlEffect(BaseModel):
     grapple_escape_dc: int | None = Field(default=None, ge=1, le=40)
     restrains_while_grappled: bool = False
     condition_id: ConditionName | None = None
+    effect_id: str | None = None
     expires_at_start_of_source_turn: bool = False
     expiry_timing: ConditionTiming | None = None
     duration_rounds: int | None = Field(default=None, ge=1, le=1000)
@@ -46,6 +47,10 @@ class HitControlEffect(BaseModel):
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
     ends_on_damage: bool = False
     source_effect_immunity_on_end: bool = False
+    speed_multiplier: float = Field(default=1.0, gt=0, le=1.0)
+    blocks_reactions: bool = False
+    action_bonus_exclusive: bool = False
+    max_attacks_per_turn: int | None = Field(default=None, ge=1, le=20)
 
     @model_validator(mode="after")
     def validate_condition_lifecycle(self) -> "HitControlEffect":
@@ -56,6 +61,11 @@ class HitControlEffect(BaseModel):
             raise ValueError("Legacy source-start expiry conflicts with explicit condition timing.")
         if self.duration_rounds is not None and self.expiry_timing is None:
             raise ValueError("Timed control duration requires an explicit expiry timing.")
+        custom_rules = self.speed_multiplier != 1.0 or self.blocks_reactions or self.action_bonus_exclusive or self.max_attacks_per_turn is not None
+        if custom_rules and self.effect_id is None:
+            raise ValueError("Custom timed combat rules require an effect_id.")
+        if self.condition_id is None and self.effect_id is None and self.grapple_escape_dc is None:
+            raise ValueError("Control effect requires a condition, custom effect, or grapple rule.")
         return self
 
 
