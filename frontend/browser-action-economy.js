@@ -4,13 +4,22 @@
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || {
     incapacitated: (state) => Boolean(state.is_unconscious),
   };
+  const effects = (state) => state.timed_effects || [];
+  const noReaction = (state) => effects(state).some((effect) => effect.blocks_reactions);
+  const chooseActionOrBonus = (state) => effects(state).some((effect) => effect.action_bonus_exclusive);
 
   function available(state, cost) {
     if (state.is_dead || Q().incapacitated(state)) return false;
     if (state.turn_terminated && cost !== "reaction") return false;
-    if (cost === "action") return Boolean(state.action_available);
-    if (cost === "bonus_action") return Boolean(state.bonus_action_available);
-    if (cost === "reaction") return Boolean(state.reaction_available);
+    if (cost === "reaction") return Boolean(state.reaction_available) && !noReaction(state);
+    if (cost === "action") {
+      if (chooseActionOrBonus(state) && !state.bonus_action_available) return false;
+      return Boolean(state.action_available);
+    }
+    if (cost === "bonus_action") {
+      if (chooseActionOrBonus(state) && !state.action_available) return false;
+      return Boolean(state.bonus_action_available);
+    }
     throw new Error(`Unknown action cost: ${cost}`);
   }
 
