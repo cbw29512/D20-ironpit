@@ -1890,7 +1890,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 2,
       "dexterity": 2,
@@ -2012,7 +2029,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 3,
       "dexterity": 2,
@@ -9575,7 +9609,11 @@
             "linked_conditions": [],
             "expires_at_start_of_source_turn": true,
             "expiry_timing": "source_turn_start",
+            "ends_on_damage": false,
             "repeat_save_delay_rounds": 0,
+            "repeat_save_failure_continues": true,
+            "repeat_save_failure_ends_on_damage": false,
+            "repeat_save_failure_allowed_removal_action_ids": [],
             "allowed_removal_action_ids": []
           }
         ],
@@ -9700,7 +9738,11 @@
             "linked_conditions": [],
             "expires_at_start_of_source_turn": false,
             "expiry_timing": "target_turn_end",
+            "ends_on_damage": false,
             "repeat_save_delay_rounds": 0,
+            "repeat_save_failure_continues": true,
+            "repeat_save_failure_ends_on_damage": false,
+            "repeat_save_failure_allowed_removal_action_ids": [],
             "allowed_removal_action_ids": []
           }
         ],
@@ -9869,7 +9911,11 @@
             "linked_conditions": [],
             "expires_at_start_of_source_turn": true,
             "expiry_timing": "source_turn_start",
+            "ends_on_damage": false,
             "repeat_save_delay_rounds": 0,
+            "repeat_save_failure_continues": true,
+            "repeat_save_failure_ends_on_damage": false,
+            "repeat_save_failure_allowed_removal_action_ids": [],
             "allowed_removal_action_ids": []
           }
         ],
@@ -11207,7 +11253,24 @@
     "spell_save_actions": [],
     "defensive_spell_actions": [],
     "healing_actions": [],
-    "condition_removal_actions": [],
+    "condition_removal_actions": [
+      {
+        "id": "wake-sleeper",
+        "name": "Wake Sleeper",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "ally",
+        "removable_conditions": [
+          "unconscious"
+        ],
+        "max_conditions_per_use": 1,
+        "resource_costs": {},
+        "resource_costs_per_condition": {},
+        "expends_spell_slot": false,
+        "requires_source_permission": true,
+        "animation": "condition-removal"
+      }
+    ],
     "saving_throw_bonuses": {
       "strength": 4,
       "dexterity": 2,
