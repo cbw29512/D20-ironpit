@@ -56,30 +56,6 @@
     return { events, sequence: rage?.sequence ?? sequence };
   }
 
-  function saveChoice(member, setup, rechargeOnly = false) {
-    for (const target of F().targetOrder(member, setup)) {
-      for (const action of member.state.template.saving_throw_actions || []) {
-        if (action.area) continue;
-        if (rechargeOnly && !E().rechargeAction?.(member.state, action)) continue;
-        if (!V().resourceAvailable(member.state, action)) continue;
-        const distance = F().saveDistance(member, target, action.range);
-        if (V().legalAction(action, target, distance)) return { target, action, distance };
-      }
-    }
-    return null;
-  }
-
-  function fireRecharge(sequence, round, member, setup) {
-    const area = AS()?.resolve(sequence, round, member, setup, true);
-    if (area) return area;
-    const saved = saveChoice(member, setup, true);
-    if (!saved || !E().available(member.state, "action")) return null;
-    return {
-      events: [V().resolveAction(sequence, round, member, saved.target, saved.action, saved.distance, { setup })],
-      sequence: sequence + 1,
-    };
-  }
-
   function resolveTurn(sequence, round, member, setup) {
     enablePitRangePolicy();
     const events = []; H().cleanup(setup); S().beginTurn(member.state);
@@ -103,7 +79,7 @@
       return finalize(events, sequence, round, member, setup, turnKey);
     }
     const rush = P()?.adrenaline(sequence, round, member); if (rush) { events.push(rush); sequence += 1; }
-    const priority = fireRecharge(sequence, round, member, setup);
+    const priority = AS()?.fireRecharge(sequence, round, member, setup);
     if (priority) { events.push(...priority.events); return finalize(events, priority.sequence, round, member, setup, turnKey); }
     const rechargePending = E().rechargeReady?.(member.state) || false;
     if (!rechargePending) {
@@ -121,7 +97,7 @@
     const movement = OM()?.move(sequence, round, member, setup, turnKey);
     if (movement) { events.push(...movement.events); sequence = movement.sequence; }
     if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
-    const movedPriority = fireRecharge(sequence, round, member, setup);
+    const movedPriority = AS()?.fireRecharge(sequence, round, member, setup);
     if (movedPriority) { events.push(...movedPriority.events); return finalize(events, movedPriority.sequence, round, member, setup, turnKey); }
     const movedSpell = L()?.resolve(sequence, round, member, setup, turnKey);
     if (movedSpell) { events.push(...movedSpell.events); sequence = movedSpell.sequence; }
@@ -136,7 +112,7 @@
       events.push(...area.events);
       return finalize(events, area.sequence, round, member, setup, turnKey);
     }
-    const saved = saveChoice(member, setup);
+    const saved = AS()?.singleChoice(member, setup, false);
     if (saved && E().available(member.state, "action")) {
       events.push(V().resolveAction(sequence++, round, member, saved.target, saved.action, saved.distance, { setup }));
       return finalize(events, sequence, round, member, setup, turnKey);
