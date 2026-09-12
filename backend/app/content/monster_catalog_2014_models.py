@@ -8,7 +8,7 @@ from app.domain.actions import AbilityName, ConditionName, HitControlEffect, Sav
 from app.domain.charge_profiles import ChargeProfileDefinition
 from app.domain.on_hit_saves import OnHitSaveEffect
 from app.domain.size import CreatureSize
-from app.domain.weapons import DamageType
+from app.domain.weapons import ConditionalDamage, DamageType
 
 
 class CatalogDamage2014(BaseModel):
@@ -25,6 +25,7 @@ class CatalogAttack2014(BaseModel):
     kind: Literal["melee", "ranged"]
     attack_bonus: int
     damage: CatalogDamage2014
+    conditional_damage: list[ConditionalDamage] = Field(default_factory=list)
     on_hit_damage: list[CatalogDamage2014] = Field(default_factory=list)
     on_hit_save_effect: OnHitSaveEffect | None = None
     control_effect: HitControlEffect | None = None
