@@ -1,9 +1,18 @@
-from app.content.capability_equivalence import templates_semantically_equal
+from app.content.capability_equivalence import semantic_template_dump, templates_semantically_equal
 from app.content.capability_registry import build_monster_templates_from_capabilities
 from app.content.legacy_monster_roster import build_legacy_monster_templates
 from app.content.monster_catalog import load_monster_rows
 from app.content.monster_source_audit import audit_monster_source
 from app.content.roster import build_arena_roster
+
+
+def _semantic_difference_keys(left: object, right: object) -> list[str]:
+    left_dump = semantic_template_dump(left)
+    right_dump = semantic_template_dump(right)
+    return sorted(
+        key for key in set(left_dump) | set(right_dump)
+        if left_dump.get(key) != right_dump.get(key)
+    )
 
 
 def test_registry_preserves_every_legacy_monster_semantics_and_source_audit() -> None:
@@ -18,7 +27,9 @@ def test_registry_preserves_every_legacy_monster_semantics_and_source_audit() ->
     for original in legacy:
         rebuilt = compiled_by_id[original.id]
         source_row = rows[original.name]
-        assert templates_semantically_equal(original, rebuilt), original.id
+        assert templates_semantically_equal(original, rebuilt), (
+            f"{original.id}: differing_fields={_semantic_difference_keys(original, rebuilt)}"
+        )
         assert audit_monster_source(rebuilt, source_row) == audit_monster_source(original, source_row), original.id
 
 
