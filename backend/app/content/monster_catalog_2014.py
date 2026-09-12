@@ -2,12 +2,11 @@ from __future__ import annotations
 
 import json
 import logging
-import re
-import unicodedata
 from pathlib import Path
 
 from pydantic import TypeAdapter
 
+from app.content.monster_catalog_2014_action_support import unresolved_actions_2014
 from app.content.monster_catalog_2014_compile_support import (
     ability_scores_2014,
     bind_attack_traits_2014,
@@ -30,12 +29,6 @@ CATALOG_ROOT = Path(__file__).resolve().parents[3] / "data" / "monsters" / "2014
 MVP_CATALOG_PATH = CATALOG_ROOT / "mvp_catalog.json"
 _MONSTERS = TypeAdapter(list[CatalogMonster2014])
 _CHARGE_TRAITS = {"Charge", "Pounce", "Trampling Charge"}
-
-
-def _action_key(value: str) -> str:
-    clean = re.sub(r"\s*\(Recharge\s+[^)]+\)", "", value, flags=re.I).rstrip(".")
-    text = unicodedata.normalize("NFKD", clean).encode("ascii", "ignore").decode().lower()
-    return re.sub(r"[^a-z0-9]+", "-", text).strip("-")
 
 
 def _attack(source: CatalogAttack2014, *, magical: bool = False) -> WeaponAttack:
@@ -80,20 +73,10 @@ def _multiattack(source: CatalogMonster2014, attacks: list[WeaponAttack]) -> Att
 
 def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
     try:
-        supported_action_ids = {attack.id for attack in source.attacks}
-        supported_action_ids.update(action.id for action in source.saving_throw_actions)
-        supported_action_ids.update(
-            action.resource_id for action in source.saving_throw_actions if action.resource_id
-        )
-        if source.multiattack_slots:
-            supported_action_ids.add("multiattack")
         supported_reactions = {"Parry"} if source.parry_ac_bonus is not None else set()
         blockers = [f"defense:{text}" for text in unresolved_defenses_2014(source.unsupported_defense_text)]
         blockers.extend(f"attack-detail:{attack.name}" for attack in source.attacks if not attack.source_complete)
-        blockers.extend(
-            f"action:{name}" for name in source.action_names
-            if _action_key(name) not in supported_action_ids
-        )
+        blockers.extend(f"action:{name}" for name in unresolved_actions_2014(source))
         blockers.extend(f"trait:{name}" for name in unresolved_traits_2014(source.trait_names))
         charge_traits = _CHARGE_TRAITS.intersection(source.trait_names)
         if charge_traits and not any(attack.charge_profile for attack in source.attacks):
