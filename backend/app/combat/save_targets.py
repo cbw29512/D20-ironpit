@@ -61,7 +61,7 @@ def resolve_save_targets(
                 sequence, round_number, actor, target, action,
                 0 if skip_range_check else combatant_distance(actor, target), dice,
                 spend_action=False, check_resource=False, spend_resource=False,
-                shared_damage_rolls=shared, affected_states=affected_states,
+                shared_damage_rolls=shared, affected_states=affected_states, setup=setup,
             )
             if action.resource_id is not None:
                 event.resource_remaining = resource_remaining
