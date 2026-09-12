@@ -39,6 +39,7 @@
   function refreshReaction(state) { state.reaction_available = true; }
   function refreshStartOfTurn(state) {
     refreshReaction(state);
+    window.IRON_PIT_BROWSER_PEERLESS_AIM?.refresh(state);
     window.IRON_PIT_BROWSER_HEROIC_INSPIRATION?.grant(state);
   }
 
