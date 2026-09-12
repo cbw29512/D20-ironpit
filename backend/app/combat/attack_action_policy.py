@@ -41,8 +41,14 @@ def filtered_slot(
     used_attack_ids: set[str],
 ) -> AttackActionSlot:
     policy = definition.policy
-    if policy is None or not policy.distinct_attack_ids:
+    if policy is None:
+        return slot
+    blocked = set()
+    if policy.distinct_attack_ids:
+        blocked.update(used_attack_ids)
+    blocked.update(attack_id for attack_id in policy.at_most_once_attack_ids if attack_id in used_attack_ids)
+    if not blocked:
         return slot
     return slot.model_copy(update={
-        "attack_ids": [attack_id for attack_id in slot.attack_ids if attack_id not in used_attack_ids],
+        "attack_ids": [attack_id for attack_id in slot.attack_ids if attack_id not in blocked],
     })
