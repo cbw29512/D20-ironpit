@@ -16,8 +16,9 @@ _CONDITION = (
     r"Blinded|Charmed|Deafened|Frightened|Incapacitated|Paralyzed|Poisoned|"
     r"Prone|Restrained|Stunned|Unconscious|Petrified"
 )
+_RECHARGE_LIMIT = r"Recharge\s+\d(?:\s*[-–]\s*\d)?"
 _STAGED_CONDITION_SAVE = re.compile(
-    rf"(?P<name>[A-Z][A-Za-z0-9’' -]*?)(?:\s+\((?P<limit>Recharge\s+\d(?:-\d)?)\))?\.\s+"
+    rf"(?P<name>[A-Z][A-Za-z0-9’' -]*?)(?:\s+\((?P<limit>{_RECHARGE_LIMIT})\))?\.\s+"
     rf"(?P<ability>Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) Saving Throw:\s+"
     rf"DC\s+(?P<dc>\d+),\s+(?P<target>[^.]+)\.\s+"
     rf"(?:If\s+[^.]+\.\s+)?"
@@ -27,7 +28,7 @@ _STAGED_CONDITION_SAVE = re.compile(
     re.I,
 )
 _ESCALATING_REPEAT_SAVE = re.compile(
-    rf"(?P<name>[A-Z][A-Za-z0-9’' -]*?)(?:\s+\((?P<limit>Recharge\s+\d(?:-\d)?)\))?\.\s+"
+    rf"(?P<name>[A-Z][A-Za-z0-9’' -]*?)(?:\s+\((?P<limit>{_RECHARGE_LIMIT})\))?\.\s+"
     rf"(?P<ability>Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) Saving Throw:\s+"
     rf"DC\s+(?P<dc>\d+),\s+(?P<target>[^.]+)\.\s+"
     rf"First Failure:\s+The target has the (?P<first>{_CONDITION}) condition until the end of its next turn, "
@@ -37,7 +38,7 @@ _ESCALATING_REPEAT_SAVE = re.compile(
     re.I,
 )
 _STAGED_TIMED_SLEEP = re.compile(
-    rf"(?P<name>[A-Z][A-Za-z0-9’' -]*?)\.\s+"
+    rf"(?P<name>[A-Z][A-Za-z0-9’' -]*?)(?:\s+\((?P<limit>{_RECHARGE_LIMIT})\))?\.\s+"
     rf"(?P<ability>Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) Saving Throw:\s+"
     rf"DC\s+(?P<dc>\d+),\s+(?P<target>[^.]+)\.\s+"
     rf"First Failure:\s+The target has the (?P<first>{_CONDITION}) condition until the end of its next turn, "
@@ -65,11 +66,15 @@ def _area(target: str) -> tuple[int, AreaTargeting | None]:
 def _resource(monster: str, name: str, limit: str | None) -> ResourceDefinition | None:
     if not limit:
         return None
-    recharge = re.fullmatch(r"Recharge\s+(\d)(?:-(\d))?", limit, re.I)
+    recharge = re.fullmatch(r"Recharge\s+(\d)(?:\s*[-–]\s*(\d))?", limit, re.I)
     if recharge is None:
         return None
-    return ResourceDefinition(id=f"srd-{_slug(monster)}-{_slug(name)}", name=name, max_uses=1,
-                              recharge=RechargeRule(minimum_roll=int(recharge.group(1))))
+    return ResourceDefinition(
+        id=f"srd-{_slug(monster)}-{_slug(name)}",
+        name=name,
+        max_uses=1,
+        recharge=RechargeRule(minimum_roll=int(recharge.group(1))),
+    )
 
 
 def _candidate(monster: str, match: re.Match[str], action_cost: ActionCost) -> tuple[SaveCapabilityDefinition, ResourceDefinition | None]:
@@ -77,7 +82,8 @@ def _candidate(monster: str, match: re.Match[str], action_cost: ActionCost) -> t
     range_ft, area = _area(match.group("target")); resource = _resource(monster, name, match.groupdict().get("limit"))
     sleeping = "sleep_minutes" in match.re.groupindex
     effect = ConditionEffectDefinition(
-        condition=match.group("first").lower(), repeat_save_ability=ability, repeat_save_dc=dc,
+        condition=match.group("first").lower(), max_target_size=maximum,
+        repeat_save_ability=ability, repeat_save_dc=dc,
         repeat_save_timing="target_turn_end", repeat_save_failure_condition=match.group("second").lower(),
         repeat_save_failure_continues=not sleeping,
         repeat_save_failure_duration_rounds=int(match.group("sleep_minutes")) * 10 if sleeping else None,
