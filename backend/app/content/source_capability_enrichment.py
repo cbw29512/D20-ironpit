@@ -24,9 +24,10 @@ def _merge_attack_effects(existing: list, source: list) -> list:
 
 def _merge_attacks(existing: CombatantDefinition, source: CombatantDefinition):
     source_by_id = {attack.id: attack for attack in source.attacks}
+    source_by_name = {_normalized_name(attack.name): attack for attack in source.attacks}
     merged = []
     for attack in existing.attacks:
-        derived = source_by_id.get(attack.id)
+        derived = source_by_id.get(attack.id) or source_by_name.get(_normalized_name(attack.name))
         if derived is None:
             merged.append(attack)
             continue
