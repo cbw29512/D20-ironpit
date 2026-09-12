@@ -12,6 +12,7 @@ from app.domain.targeting import AreaTargeting
 
 def _member(combatant_id: str, side: str, x: int, y: int) -> EncounterCombatant:
     template = build_goblin_warrior().model_copy(deep=True)
+    template.saving_throw_bonuses = {"dexterity": 2}
     state = build_combatant_state(template)
     state.position = GridPosition(x=x, y=y)
     return EncounterCombatant(
