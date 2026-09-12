@@ -37,7 +37,7 @@
 
   const speedIsZero = (state) => state.grapple_sources.length > 0 || Q().speedZero(state);
   function attackDisadvantage(state, targetId) {
-    if (!state.grapple_sources.length) return 0;
+    if (state.template.ruleset === "2014" || !state.grapple_sources.length) return 0;
     return state.grapple_sources.some((source) => source.source_id === targetId) ? 0 : 1;
   }
 
