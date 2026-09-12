@@ -20,6 +20,7 @@ _NO_REPEAT_TARGET = re.compile(r"(?:and\s+)?(?:the\s+)?[A-Za-z' -]+ can(?:not|'t
 _OWN_ATTACK_TARGET = re.compile(r"(?:and\s+)?(?:the\s+)?[A-Za-z' -]+ can(?:not|'t) use its [A-Za-z' -]+ on another target", re.I)
 _PER_LIMB_GRAPPLE = re.compile(r"The [A-Za-z' -]+ has two [A-Za-z' -]+, each of which can grapple only one target", re.I)
 _ALREADY_CONTROLLING = re.compile(r"(?:if\s+)?(?:the\s+)?[A-Za-z' -]+ (?:isn't|is not) already (?:constricting|grappling) a creature,?\s*(?:and\s+)?", re.I)
+_EMPTY_CREATURE_QUALIFIER = re.compile(r"^If the target is a creature$", re.I)
 _UNATTENDED_OBJECT_ONLY = re.compile(r"If the target is a flammable object that isn't being worn or carried, it also catches fire", re.I)
 _POST_KILL_ONLY = re.compile(r"If the target is killed by this damage, it is absorbed into the mouther", re.I)
 _LYCANTHROPY_ONLY = re.compile(r"If the target is a humanoid, it must succeed on a DC \d+ Constitution saving throw or be cursed with (?:werebear|wererat|weretiger|werewolf) lycanthropy", re.I)
@@ -38,7 +39,8 @@ def strip_noncombat_attack_residual(remainder: str) -> str:
         _REST_CURSE_DURATION_ONLY,
     ):
         cleaned = pattern.sub(" ", cleaned)
-    return cleaned.strip(" .,;")
+    cleaned = cleaned.strip(" .,;")
+    return "" if _EMPTY_CREATURE_QUALIFIER.fullmatch(cleaned) else cleaned
 
 
 def _rolled(match: re.Match[str]) -> dict | None:
