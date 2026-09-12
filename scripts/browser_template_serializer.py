@@ -25,9 +25,11 @@ def _control(effect: Any) -> dict[str, Any] | None:
         row["conditionId"] = effect.condition_id
         if effect.expires_at_start_of_source_turn: row["expiresAtStartOfSourceTurn"] = True
         if effect.expiry_timing: row["expiryTiming"] = effect.expiry_timing
+        if effect.duration_rounds is not None: row["durationRounds"] = effect.duration_rounds
         if effect.repeat_save_ability:
             row["repeatSaveAbility"] = effect.repeat_save_ability; row["repeatSaveDc"] = effect.repeat_save_dc; row["repeatSaveTiming"] = effect.repeat_save_timing
         if effect.allowed_removal_action_ids: row["allowedRemovalActionIds"] = list(effect.allowed_removal_action_ids)
+        if effect.source_effect_immunity_on_end: row["sourceEffectImmunityOnEnd"] = True
     return row or None
 
 
@@ -110,8 +112,12 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
 def _save(action: Any) -> dict[str, Any]:
     row: dict[str, Any] = {"id": action.id, "name": action.name, "saveAbility": action.save_ability, "dc": action.dc, "range": action.range_ft, "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size, "damageBonus": action.damage_bonus, "damageType": action.damage_type, "successDamage": action.success_damage, "animation": action.animation}
     if action.target_max_size: row["targetMaxSize"] = _value(action.target_max_size)
+    if action.area: row["area"] = action.area.model_dump(exclude_none=True)
     if action.grapple_escape_dc is not None: row["grappleEscapeDc"] = action.grapple_escape_dc
     if action.restrains_while_grappled: row["restrainsWhileGrappled"] = True
+    control = _control(action.failure_control_effect)
+    if control: row["failureControlEffect"] = control
+    if action.source_effect_immunity_on_success: row["sourceEffectImmunityOnSuccess"] = True
     if action.magical_effect: row["magicalEffect"] = True
     if action.resource_id: row["resourceId"] = action.resource_id; row["resourceCost"] = action.resource_cost
     return row
