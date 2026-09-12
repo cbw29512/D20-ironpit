@@ -151,19 +151,37 @@ jobs:
         run: python scripts/test_2014_multiattack_policy.py
       - name: Regenerate pinned 327-monster catalog
         run: python scripts/sync_2014_monster_catalog.py
-      - name: Sync deterministic generated catalog
+      - name: Regenerate derived certification artifacts
+        run: |
+          python scripts/export_browser_heroes.py
+          python scripts/export_browser_monsters.py
+          python scripts/verify_certification_manifests.py --write
+      - name: Sync deterministic generated artifacts
         if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
         run: |
-          if git diff --quiet -- data/monsters/2014/catalog.json; then
+          paths=(
+            data/monsters/2014/catalog.json
+            frontend/browser-heroes.js
+            frontend/browser-monsters-generated.js
+            data/hero_certification_manifest.json
+            data/monster_certification_manifest.json
+          )
+          if git diff --quiet -- "${paths[@]}"; then
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/monsters/2014/catalog.json
-          git commit -m "chore: sync generated 2014 catalog"
+          git add "${paths[@]}"
+          git commit -m "chore: sync generated 2014 certification artifacts"
           git push origin "HEAD:${GITHUB_HEAD_REF}"
-      - name: Enforce deterministic generated catalog
-        run: git diff --exit-code -- data/monsters/2014/catalog.json
+      - name: Enforce deterministic generated artifacts
+        run: |
+          git diff --exit-code -- \
+            data/monsters/2014/catalog.json \
+            frontend/browser-heroes.js \
+            frontend/browser-monsters-generated.js \
+            data/hero_certification_manifest.json \
+            data/monster_certification_manifest.json
       - name: Upload regenerated catalog
         if: always()
         uses: actions/upload-artifact@v4
