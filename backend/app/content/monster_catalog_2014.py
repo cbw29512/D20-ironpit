@@ -26,6 +26,7 @@ logger = logging.getLogger(__name__)
 CATALOG_ROOT = Path(__file__).resolve().parents[3] / "data" / "monsters" / "2014"
 MVP_CATALOG_PATH = CATALOG_ROOT / "mvp_catalog.json"
 _MONSTERS = TypeAdapter(list[CatalogMonster2014])
+_CHARGE_TRAITS = {"Charge", "Pounce", "Trampling Charge"}
 
 
 def _attack(source: CatalogAttack2014, *, magical: bool = False) -> WeaponAttack:
@@ -76,7 +77,9 @@ def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
         blockers.extend(f"attack-detail:{attack.name}" for attack in source.attacks if not attack.source_complete)
         blockers.extend(f"action:{name}" for name in source.action_names if name not in supported_actions)
         blockers.extend(f"trait:{name}" for name in unresolved_traits_2014(source.trait_names))
-        if "Charge" in source.trait_names and not any(attack.charge_profile for attack in source.attacks): blockers.append("trait:Charge")
+        charge_traits = _CHARGE_TRAITS.intersection(source.trait_names)
+        if charge_traits and not any(attack.charge_profile for attack in source.attacks):
+            blockers.extend(f"trait:{name}" for name in sorted(charge_traits))
         blockers.extend(f"reaction:{name}" for name in source.reaction_names if name not in supported_reactions)
         blockers.extend(f"legendary:{name}" for name in source.legendary_action_names)
         if not source.attacks: blockers.append("attack:no-structured-attack")
