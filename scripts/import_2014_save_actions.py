@@ -73,8 +73,35 @@ def _recharge_parent(heading: str, recharges: dict[str, int]) -> str | None:
     return None
 
 
+def _frightful_presence(heading: str, text: str) -> dict | None:
+    if heading.lower() != "frightful presence":
+        return None
+    save = _save(text)
+    distance = re.search(r"within\s+(\d+)\s+feet", text, re.I)
+    if save is None or distance is None or not re.search(r"frightened for 1 minute", text, re.I):
+        return None
+    ability, dc = save
+    radius = int(distance.group(1))
+    return {
+        "id": "frightful-presence", "name": "Frightful Presence",
+        "save_ability": ability, "dc": dc, "range_ft": radius,
+        "area": {"shape": "emanation", "origin": "self", "radius_ft": radius},
+        "failure_control_effect": {
+            "condition_id": "frightened",
+            "expiry_timing": "target_turn_end",
+            "duration_rounds": 10,
+            "repeat_save_ability": ability,
+            "repeat_save_dc": dc,
+            "repeat_save_timing": "target_turn_end",
+            "source_effect_immunity_on_end": True,
+        },
+        "source_effect_immunity_on_success": True,
+        "animation": "fear",
+    }
+
+
 def parse_save_actions(source_actions: str | None, recharges: dict[str, int]) -> list[dict]:
-    """Parse exact damage save actions currently representable by the universal save/AoE engine."""
+    """Parse exact save actions currently representable by the universal save/control/AoE engine."""
     results: list[dict] = []
     shared_resource: str | None = None
     for paragraph in re.findall(r"<p>(.*?)</p>", source_actions or "", re.I | re.S):
@@ -82,6 +109,10 @@ def parse_save_actions(source_actions: str | None, recharges: dict[str, int]) ->
         if not heading:
             continue
         text = _plain(paragraph)
+        control_action = _frightful_presence(heading, text)
+        if control_action is not None:
+            results.append(control_action)
+            continue
         own_resource = _recharge_parent(heading, recharges)
         if own_resource is not None and "following" in text.lower():
             shared_resource = own_resource
