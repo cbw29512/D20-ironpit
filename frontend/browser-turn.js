@@ -6,6 +6,7 @@
   const T = () => window.IRON_PIT_BROWSER_TACTICAL_SHIFT, O = () => window.IRON_PIT_BROWSER_ONGOING_SPELL_CONTROL;
   const L = () => window.IRON_PIT_BROWSER_SPELL_OFFENSE, U = () => window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION;
   const F = () => window.IRON_PIT_BROWSER_FORMATION, V = () => window.IRON_PIT_BROWSER_SAVES;
+  const AS = () => window.IRON_PIT_BROWSER_AREA_SAVES;
   const DG = () => window.IRON_PIT_BROWSER_DODGE, OM = () => window.IRON_PIT_BROWSER_OFFENSIVE_MOVEMENT;
   const D = () => window.IRON_PIT_DICE;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (s, c) => c === "action" ? s.action_available : s.bonus_action_available };
@@ -58,6 +59,7 @@
   function saveChoice(member, setup, rechargeOnly = false) {
     for (const target of F().targetOrder(member, setup)) {
       for (const action of member.state.template.saving_throw_actions || []) {
+        if (action.area) continue;
         if (rechargeOnly && !E().rechargeAction?.(member.state, action)) continue;
         if (!V().resourceAvailable(member.state, action)) continue;
         const distance = F().saveDistance(member, target, action.range);
@@ -68,9 +70,14 @@
   }
 
   function fireRecharge(sequence, round, member, setup) {
+    const area = AS()?.resolve(sequence, round, member, setup, true);
+    if (area) return area;
     const saved = saveChoice(member, setup, true);
     if (!saved || !E().available(member.state, "action")) return null;
-    return { event: V().resolveAction(sequence, round, member, saved.target, saved.action, saved.distance, { setup }), sequence: sequence + 1 };
+    return {
+      events: [V().resolveAction(sequence, round, member, saved.target, saved.action, saved.distance, { setup })],
+      sequence: sequence + 1,
+    };
   }
 
   function resolveTurn(sequence, round, member, setup) {
@@ -97,7 +104,7 @@
     }
     const rush = P()?.adrenaline(sequence, round, member); if (rush) { events.push(rush); sequence += 1; }
     const priority = fireRecharge(sequence, round, member, setup);
-    if (priority) { events.push(priority.event); return finalize(events, priority.sequence, round, member, setup, turnKey); }
+    if (priority) { events.push(...priority.events); return finalize(events, priority.sequence, round, member, setup, turnKey); }
     const rechargePending = E().rechargeReady?.(member.state) || false;
     if (!rechargePending) {
       const spell = L()?.resolve(sequence, round, member, setup, turnKey);
@@ -115,7 +122,7 @@
     if (movement) { events.push(...movement.events); sequence = movement.sequence; }
     if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
     const movedPriority = fireRecharge(sequence, round, member, setup);
-    if (movedPriority) { events.push(movedPriority.event); return finalize(events, movedPriority.sequence, round, member, setup, turnKey); }
+    if (movedPriority) { events.push(...movedPriority.events); return finalize(events, movedPriority.sequence, round, member, setup, turnKey); }
     const movedSpell = L()?.resolve(sequence, round, member, setup, turnKey);
     if (movedSpell) { events.push(...movedSpell.events); sequence = movedSpell.sequence; }
     if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
@@ -123,6 +130,11 @@
       const multi = M().resolveAttackAction(sequence, round, member, setup);
       events.push(...multi.events); sequence = multi.sequence;
       if (multi.events.length || !E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
+    }
+    const area = AS()?.resolve(sequence, round, member, setup, false);
+    if (area) {
+      events.push(...area.events);
+      return finalize(events, area.sequence, round, member, setup, turnKey);
     }
     const saved = saveChoice(member, setup);
     if (saved && E().available(member.state, "action")) {
