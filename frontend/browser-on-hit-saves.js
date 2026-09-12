@@ -4,19 +4,51 @@
   const S = () => window.IRON_PIT_BROWSER_SAVES;
   const ST = () => window.IRON_PIT_BROWSER_STATE;
   const T = () => window.IRON_PIT_BROWSER_TIMED;
+  const D = () => window.IRON_PIT_DICE;
+  const Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
 
-  function resolve(target, attack, sourceId = null, round = null) {
+  function adjustedDamage(state, amount, type) {
+    if (!type || state.template.damage_immunities?.includes(type)) return 0;
+    let value = amount;
+    if (state.template.damage_resistances?.includes(type) || state.temporary_damage_resistances?.includes(type)) value = Math.floor(value / 2);
+    if (state.template.damage_vulnerabilities?.includes(type)) value *= 2;
+    return value;
+  }
+
+  function saveDamage(target, effect, succeeded, setup) {
+    if (!effect.damageDiceCount || !effect.damageType) return { total: 0, component: null };
+    if (!D() || !Z()) throw new Error("Browser save-damage dependencies are not loaded.");
+    const rolls = D().rollMany(effect.damageDiceCount, effect.damageDiceSize);
+    let raw = Math.max(0, rolls.reduce((sum, roll) => sum + roll, 0) + (effect.damageBonus || 0));
+    if (succeeded) raw = effect.successDamage === "half" ? Math.floor(raw / 2) : 0;
+    const total = adjustedDamage(target.state, raw, effect.damageType);
+    if (total > 0) Z().applyDamage(
+      target.state, total, false, [effect.damageType],
+      setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [],
+    );
+    return {
+      total,
+      component: {
+        source: "on-hit save rider", notation: `${effect.damageDiceCount}d${effect.damageDiceSize}+${effect.damageBonus || 0}`,
+        rolls, modifier: effect.damageBonus || 0, damage_type: effect.damageType,
+        total: raw, applied_total: total,
+      },
+    };
+  }
+
+  function resolve(target, attack, sourceId = null, round = null, setup = null) {
     const effect = attack.onHitSaveEffect;
     if (!effect || !target.state.is_alive || target.state.is_dead) return null;
     if (effect.maxTargetSize && !ST().sizeAtMost(target, effect.maxTargetSize)) return null;
     if (!S()) throw new Error("Browser saving-throw runtime is not loaded.");
     const save = S().resolveSavingThrow(target.state, effect.saveAbility, effect.dc);
+    const damage = saveDamage(target, effect, save.succeeded, setup);
     let appliedCondition = null;
-    if (!save.succeeded && !I().immune(target.state, effect.conditionId)) {
+    if (effect.conditionId && !save.succeeded && target.state.is_alive && !target.state.is_dead && !I().immune(target.state, effect.conditionId)) {
       const timed = Boolean(effect.durationRounds || effect.repeatSaveTiming || effect.endsOnDamage);
       if (timed) {
-        if (!sourceId || !round || !T()) throw new Error("Timed on-hit save effect lacks browser source context.");
+        if (!sourceId || round === null || !T()) throw new Error("Timed on-hit save effect lacks browser source context.");
         appliedCondition = T().apply(target.state, effect.conditionId, sourceId, {
           sourceEffectId: attack.id, appliedRound: round,
           expiresRound: effect.durationRounds ? round + effect.durationRounds : null,
@@ -31,7 +63,7 @@
       }
     }
     return { saveRoll: save.roll, saveAbility: effect.saveAbility, saveDc: effect.dc,
-      saveSucceeded: save.succeeded, appliedCondition };
+      saveSucceeded: save.succeeded, appliedCondition, damageTotal: damage.total, damageComponent: damage.component };
   }
 
   function actualTarget(target, setup, targetId) {
@@ -47,12 +79,17 @@
       const event = original(...args), attack = args[4], extra = args[6] || {};
       const target = actualTarget(args[3], extra.setup, event.target_id);
       if (!event.hit || !attack.onHitSaveEffect) return event;
-      const result = resolve(target, attack, args[2].combatant_id, args[1]);
+      const result = resolve(target, attack, args[2].combatant_id, args[1], extra.setup);
       if (!result) return event;
       event.saving_throw_roll = result.saveRoll;
       event.save_ability = result.saveAbility;
       event.save_dc = result.saveDc;
       event.save_succeeded = result.saveSucceeded;
+      if (result.damageComponent) {
+        event.damage_components = [...(event.damage_components || []), result.damageComponent];
+        if (event.damage_roll) event.damage_roll.total += result.damageTotal;
+        event.hp_after = target.state.current_hp;
+      }
       if (result.appliedCondition) {
         event.applied_condition_ids = [...new Set([...(event.applied_condition_ids || []), result.appliedCondition])];
         event.description += ` ${target.state.template.name} is ${result.appliedCondition === "prone" ? "knocked Prone" : result.appliedCondition}.`;
