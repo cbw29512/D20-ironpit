@@ -133,6 +133,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -225,6 +226,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": {
       "caster_level": 1,
       "ability": "wisdom",
@@ -486,6 +488,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -705,6 +708,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -944,6 +948,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -1156,6 +1161,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -1370,6 +1376,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -1586,6 +1593,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -1810,6 +1818,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -2028,6 +2037,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -2265,6 +2275,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -2485,6 +2496,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -2602,6 +2614,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -2721,6 +2734,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -2940,6 +2954,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -3159,6 +3174,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -3399,6 +3415,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -3631,6 +3648,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -3846,6 +3864,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -4062,6 +4081,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -4286,6 +4306,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -4504,6 +4525,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -4741,6 +4763,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -4961,6 +4984,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -5085,6 +5109,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": {
       "caster_level": 12,
@@ -5287,6 +5312,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -5390,6 +5416,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -5481,6 +5508,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -5602,6 +5630,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -5723,6 +5752,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": {
       "caster_level": 18,
       "ability": "intelligence",
@@ -6015,6 +6045,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -6108,6 +6139,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -6201,6 +6233,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -6287,6 +6320,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -6421,6 +6455,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -6510,6 +6545,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -6599,6 +6635,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -6753,6 +6790,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -6863,6 +6901,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -7019,6 +7058,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -7135,6 +7175,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -7297,6 +7338,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -7394,6 +7436,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -7484,6 +7527,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -7617,6 +7661,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -7755,6 +7800,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -7844,6 +7890,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -7965,6 +8012,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -8098,6 +8146,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -8211,6 +8260,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -8305,6 +8355,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -8397,6 +8448,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -8527,6 +8579,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -8631,6 +8684,7 @@
       "max_trigger_damage": 7,
       "resulting_hp": 1
     },
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -8784,6 +8838,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -8933,6 +8988,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -9075,6 +9131,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -9196,6 +9253,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -9336,6 +9394,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -9428,6 +9487,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -9514,6 +9574,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -9606,6 +9667,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -9762,6 +9824,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -9879,6 +9942,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -10047,6 +10111,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -10149,6 +10214,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -10265,6 +10331,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -10391,6 +10458,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -10599,6 +10667,7 @@
       "unsupported_text": null
     },
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -10687,6 +10756,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -10773,6 +10843,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -10885,6 +10956,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -11009,6 +11081,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -11248,6 +11321,7 @@
       "unsupported_text": null
     },
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -11339,6 +11413,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -11433,6 +11508,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -11559,6 +11635,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": {
       "caster_level": 4,
@@ -11704,6 +11781,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -11823,6 +11901,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -11917,6 +11996,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -12016,6 +12096,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -12180,6 +12261,7 @@
       "unsupported_text": null
     },
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -12266,6 +12348,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -12421,6 +12504,7 @@
       "unsupported_text": null
     },
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -12519,6 +12603,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -12732,6 +12817,7 @@
       "unsupported_text": null
     },
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -12837,6 +12923,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -12924,6 +13011,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -13097,6 +13185,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -13223,6 +13312,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -13428,6 +13518,7 @@
       "unsupported_text": null
     },
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -13577,6 +13668,7 @@
       "unsupported_text": null
     },
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -13669,6 +13761,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": {
       "caster_level": 4,
       "ability": "wisdom",
@@ -13878,6 +13971,7 @@
       "unsupported_text": null
     },
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -13995,6 +14089,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -14113,6 +14208,7 @@
       "unsupported_text": null
     },
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -14204,6 +14300,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -14314,6 +14411,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -14530,6 +14628,7 @@
       "unsupported_text": null
     },
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -14647,6 +14746,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -14768,6 +14868,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -14927,6 +15028,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -15070,6 +15172,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -15192,6 +15295,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -15305,6 +15409,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -15432,6 +15537,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -15549,6 +15655,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": {
       "caster_level": 5,
@@ -15707,6 +15814,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -15806,6 +15914,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -15909,6 +16018,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -15978,6 +16088,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -16104,6 +16215,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -16232,6 +16344,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -16330,6 +16443,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -16455,6 +16569,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -16571,6 +16686,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -16691,6 +16807,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -16812,6 +16929,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -16932,6 +17050,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -17023,6 +17142,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -17127,6 +17247,7 @@
       "max_trigger_damage": 10,
       "resulting_hp": 1
     },
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -17228,6 +17349,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -17342,6 +17464,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -17436,6 +17559,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -17565,6 +17689,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -17687,6 +17812,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -17811,6 +17937,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -17899,6 +18026,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -17996,6 +18124,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -18096,6 +18225,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -18186,6 +18316,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -18273,6 +18404,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -18371,6 +18503,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -18464,6 +18597,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -18561,6 +18695,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -18650,6 +18785,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -18780,6 +18916,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -18882,6 +19019,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -18974,6 +19112,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -19084,6 +19223,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -19186,6 +19326,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -19308,6 +19449,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -19410,6 +19552,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -19501,6 +19644,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -19609,6 +19753,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -19710,6 +19855,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -19910,6 +20056,7 @@
       "unsupported_text": null
     },
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -20103,6 +20250,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -20285,6 +20433,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -20385,6 +20534,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -20498,6 +20648,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -20623,6 +20774,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -20745,6 +20897,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -20857,6 +21010,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -20990,6 +21144,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -21119,6 +21274,7 @@
       "unsupported_text": null
     },
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -21240,6 +21396,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": {
       "requires_previous_hit_slots": [
         1
@@ -21369,6 +21526,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -21474,6 +21632,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -21610,6 +21769,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -21719,6 +21879,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": {
       "caster_level": 11,
       "ability": "wisdom",
@@ -21926,6 +22087,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": {
       "caster_level": 9,
@@ -22178,6 +22340,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -22296,6 +22459,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -22388,6 +22552,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -22512,6 +22677,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -22648,6 +22814,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -22768,6 +22935,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -22890,6 +23058,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -23002,6 +23171,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -23096,6 +23266,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -23257,6 +23428,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -23350,6 +23522,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -23445,6 +23618,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -23535,6 +23709,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -23719,6 +23894,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -23849,6 +24025,7 @@
       "unsupported_text": null
     },
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -23955,6 +24132,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -24069,6 +24247,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -24229,6 +24408,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -24299,6 +24479,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -24392,6 +24573,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -24517,6 +24699,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -24630,6 +24813,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -24766,6 +24950,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -24924,6 +25109,7 @@
       "unsupported_text": null
     },
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -25022,6 +25208,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -25147,6 +25334,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": {
       "caster_level": 18,
       "ability": "intelligence",
@@ -25419,6 +25607,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -25506,6 +25695,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -25704,6 +25894,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": {
       "distinct_attack_ids": true
     },
@@ -25826,6 +26017,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": {
       "caster_level": 9,
       "ability": "intelligence",
@@ -26069,6 +26261,7 @@
       "unsupported_text": null
     },
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -26162,6 +26355,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -26278,6 +26472,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -26426,6 +26621,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -26584,6 +26780,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -26680,6 +26877,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -26847,6 +27045,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -26987,6 +27186,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -27131,6 +27331,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -27259,6 +27460,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -27382,6 +27584,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -27508,6 +27711,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -27597,6 +27801,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -27712,6 +27917,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -27844,6 +28050,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": {
       "caster_level": 10,
@@ -28078,6 +28285,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -28231,6 +28439,7 @@
       "unsupported_text": null
     },
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -28332,6 +28541,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -28424,6 +28634,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -28527,6 +28738,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -28640,6 +28852,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -28738,6 +28951,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -28871,6 +29085,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -28965,6 +29180,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -29152,6 +29368,12 @@
       "unsupported_text": null
     },
     "zero_hp_prevention": null,
+    "regeneration": {
+      "amount": 10,
+      "requires_positive_hp": true,
+      "suppressed_by_damage_types": [],
+      "survives_zero_until_turn": false
+    },
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -29290,6 +29512,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -29426,6 +29649,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -29520,6 +29744,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -29640,6 +29865,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -29762,6 +29988,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -29855,6 +30082,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -29962,6 +30190,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -30160,6 +30389,7 @@
       "unsupported_text": "Fear Aura. incapacitatedfrightened Magic Resistance. Magic Weapons. Innate Spellcasting. detect magicfireballhold monsterwall of fire"
     },
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -30364,6 +30594,7 @@
       "unsupported_text": null
     },
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -30457,6 +30688,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -30552,6 +30784,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -30673,6 +30906,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -30760,6 +30994,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -30853,6 +31088,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": {
       "caster_level": 5,
       "ability": "wisdom",
@@ -31032,6 +31268,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -31121,6 +31358,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -31244,6 +31482,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -31355,6 +31594,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -31445,6 +31685,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -31660,6 +31901,7 @@
       "unsupported_text": null
     },
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -31749,6 +31991,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -31840,6 +32083,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -31969,6 +32213,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -32061,6 +32306,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -32165,6 +32411,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -32264,6 +32511,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -32350,6 +32598,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -32479,6 +32728,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -32581,6 +32831,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -32661,6 +32912,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -32751,6 +33003,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -32871,6 +33124,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -33067,6 +33321,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -33278,6 +33533,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -33416,6 +33672,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -33510,6 +33767,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -33634,6 +33892,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -33727,6 +33986,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -33792,6 +34052,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -33906,6 +34167,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -34008,6 +34270,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -34116,6 +34379,12 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": {
+      "amount": 10,
+      "requires_positive_hp": true,
+      "suppressed_by_damage_types": [],
+      "survives_zero_until_turn": false
+    },
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -34187,6 +34456,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -34332,6 +34602,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -34448,6 +34719,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -34675,6 +34947,7 @@
       "unsupported_text": null
     },
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -34771,6 +35044,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -34882,6 +35156,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -34983,6 +35258,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -35090,6 +35366,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": {
       "caster_level": 10,
       "ability": "intelligence",
@@ -35286,6 +35563,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -35414,6 +35692,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -35537,6 +35816,7 @@
       "unsupported_text": null
     },
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -35624,6 +35904,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -35749,6 +36030,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -35862,6 +36144,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -36058,6 +36341,7 @@
       "unsupported_text": null
     },
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -36165,6 +36449,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -36278,6 +36563,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -36389,6 +36675,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -36508,6 +36795,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -36621,6 +36909,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -36732,6 +37021,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -36845,6 +37135,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -37071,6 +37362,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -37193,6 +37485,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -37314,6 +37607,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -37440,6 +37734,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -37577,6 +37872,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -37693,6 +37989,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -37817,6 +38114,15 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": {
+      "amount": 10,
+      "requires_positive_hp": false,
+      "suppressed_by_damage_types": [
+        "acid",
+        "fire"
+      ],
+      "survives_zero_until_turn": true
+    },
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -37913,6 +38219,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -38035,6 +38342,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -38236,6 +38544,7 @@
       "unsupported_text": null
     },
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -38378,6 +38687,14 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": {
+      "amount": 20,
+      "requires_positive_hp": true,
+      "suppressed_by_damage_types": [
+        "radiant"
+      ],
+      "survives_zero_until_turn": false
+    },
     "spellcasting": null
   },
   {
@@ -38509,6 +38826,14 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": {
+      "amount": 10,
+      "requires_positive_hp": true,
+      "suppressed_by_damage_types": [
+        "radiant"
+      ],
+      "survives_zero_until_turn": false
+    },
     "spellcasting": null
   },
   {
@@ -38644,6 +38969,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -38741,6 +39067,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": {
       "repeat_slot_index": 0,
       "repeat_dice_count": 1,
@@ -38883,6 +39210,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -38976,6 +39304,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -39069,6 +39398,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -39162,6 +39492,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -39278,6 +39609,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -39370,6 +39702,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -39509,6 +39842,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -39630,6 +39964,7 @@
       "max_trigger_damage": 14,
       "resulting_hp": 1
     },
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -39770,6 +40105,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -39933,6 +40269,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -40120,6 +40457,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -40250,6 +40588,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -40396,6 +40735,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -40508,6 +40848,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -40631,6 +40972,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -40728,6 +41070,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -40823,6 +41166,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -40934,6 +41278,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   },
   {
@@ -41083,6 +41428,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -41216,6 +41562,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -41330,6 +41677,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -41496,6 +41844,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -41660,6 +42009,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -41843,6 +42193,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -42000,6 +42351,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -42159,6 +42511,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -42320,6 +42673,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -42488,6 +42842,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -42651,6 +43006,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -42832,6 +43188,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -42998,6 +43355,7 @@
     ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "multiattack_policy": null,
     "spellcasting": null
   },
@@ -43093,6 +43451,7 @@
     "saving_throw_actions": [],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
+    "regeneration": null,
     "spellcasting": null
   }
 ]
