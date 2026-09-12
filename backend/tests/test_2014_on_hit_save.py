@@ -66,3 +66,33 @@ def test_poison_default_does_not_override_explicit_repeat_timing() -> None:
         repeat_save_timing="target_turn_end",
     )
     assert target.timed_effects[0].repeat_save_timing == "target_turn_end"
+
+
+def test_save_gated_damage_deals_full_damage_on_failure() -> None:
+    target = build_combatant_state(build_demo_fighter())
+    hp_before = target.current_hp
+    attack = _attack(OnHitSaveEffect(
+        save_ability="constitution", dc=14,
+        damage_dice_count=2, damage_dice_size=6, damage_type="poison",
+        success_damage="half",
+    ))
+    result = resolve_on_hit_save(target, attack, FixedDiceProvider([1, 4, 5]))
+    assert result.save_succeeded is False
+    assert result.damage_total == 9
+    assert target.current_hp == hp_before - 9
+    assert len(result.damage_components) == 1
+    assert result.damage_components[0].damage_type.value == "poison"
+
+
+def test_save_gated_damage_halves_on_success() -> None:
+    target = build_combatant_state(build_demo_fighter())
+    hp_before = target.current_hp
+    attack = _attack(OnHitSaveEffect(
+        save_ability="constitution", dc=14,
+        damage_dice_count=2, damage_dice_size=6, damage_type="poison",
+        success_damage="half",
+    ))
+    result = resolve_on_hit_save(target, attack, FixedDiceProvider([20, 4, 5]))
+    assert result.save_succeeded is True
+    assert result.damage_total == 4
+    assert target.current_hp == hp_before - 4
