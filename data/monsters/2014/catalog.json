@@ -20844,7 +20844,14 @@
         "reach_ft": 5
       }
     ],
-    "multiattack_slots": [],
+    "multiattack_slots": [
+      [
+        "tentacles"
+      ],
+      [
+        "beak"
+      ]
+    ],
     "action_recharges": {},
     "rest_recharge_action_ids": [],
     "action_names": [
@@ -20865,6 +20872,14 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/369/1000/1000/636252779341924439.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": {
+      "requires_previous_hit_slots": [
+        1
+      ],
+      "same_target_as_previous_slots": [
+        1
+      ]
+    },
     "spellcasting": null
   },
   {
@@ -25251,7 +25266,20 @@
         "reach_ft": 5
       }
     ],
-    "multiattack_slots": [],
+    "multiattack_slots": [
+      [
+        "bite",
+        "heavy-club",
+        "javelin-melee",
+        "spiked-shield"
+      ],
+      [
+        "bite",
+        "heavy-club",
+        "javelin-melee",
+        "spiked-shield"
+      ]
+    ],
     "action_recharges": {},
     "rest_recharge_action_ids": [],
     "action_names": [
@@ -25274,6 +25302,9 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/233/315/315/636252766314905259.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": {
+      "distinct_attack_ids": true
+    },
     "spellcasting": null
   },
   {
@@ -38174,7 +38205,11 @@
         "reach_ft": 10
       }
     ],
-    "multiattack_slots": [],
+    "multiattack_slots": [
+      [
+        "rotting-touch"
+      ]
+    ],
     "action_recharges": {},
     "rest_recharge_action_ids": [],
     "action_names": [
@@ -38194,6 +38229,11 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/573/315/315/636376357964412799.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": {
+      "repeat_slot_index": 0,
+      "repeat_dice_count": 1,
+      "repeat_dice_size": 4
+    },
     "spellcasting": null
   },
   {
