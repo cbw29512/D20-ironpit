@@ -4,7 +4,7 @@ import re
 
 
 def _duration_rounds(text: str) -> int | None:
-    match = re.search(r"(?:unconscious|paralyzed|effects last) for (\d+) (minute|minutes|round|rounds)", text, re.I)
+    match = re.search(r"(?:unconscious|paralyzed|effects last|disadvantage .*? for) (\d+) (minute|minutes|round|rounds)", text, re.I)
     if match is None:
         return None
     amount, unit = match.groups()
@@ -85,6 +85,34 @@ def _slowing_breath(name: str, text: str, area: dict, save: tuple[str, int], res
     }
 
 
+def _weakening_breath(name: str, text: str, area: dict, save: tuple[str, int], resource_id: str) -> dict | None:
+    if name.lower() != "weakening breath":
+        return None
+    required = (
+        r"disadvantage on Strength-based attack rolls",
+        r"Strength checks",
+        r"Strength saving throws",
+        r"repeat the saving throw at the end of each of its turns",
+    )
+    duration = _duration_rounds(text)
+    if duration is None or not all(re.search(pattern, text, re.I) for pattern in required):
+        return None
+    ability, dc = save
+    return {
+        "id": "weakening-breath", "name": name,
+        "save_ability": ability, "dc": dc, "range_ft": area.get("length_ft", 0),
+        "area": area,
+        "failure_control_effect": {
+            "effect_id": "weakened-strength",
+            "expiry_timing": "target_turn_end", "duration_rounds": duration,
+            "repeat_save_ability": ability, "repeat_save_dc": dc,
+            "repeat_save_timing": "target_turn_end",
+            "disadvantage_strength_d20_tests": True,
+        },
+        "resource_id": resource_id, "resource_cost": 1, "animation": "weakened-strength",
+    }
+
+
 def _repulsion(name: str, text: str, area: dict, save: tuple[str, int], resource_id: str) -> dict | None:
     push = re.search(r"pushed\s+(\d+)\s+feet\s+away", text, re.I)
     if name.lower() != "repulsion breath" or push is None:
@@ -113,5 +141,6 @@ def parse_control_save_action(
         _sleep_breath(name, text, area, save, resource_id)
         or _paralyzing_breath(name, text, area, save, resource_id)
         or _slowing_breath(name, text, area, save, resource_id)
+        or _weakening_breath(name, text, area, save, resource_id)
         or _repulsion(name, text, area, save, resource_id)
     )
