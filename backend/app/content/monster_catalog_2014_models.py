@@ -23,6 +23,7 @@ class CatalogAttack2014(BaseModel):
     kind: Literal["melee", "ranged"]
     attack_bonus: int
     damage: CatalogDamage2014
+    on_hit_damage: list[CatalogDamage2014] = Field(default_factory=list)
     reach_ft: int = Field(default=5, ge=0)
     normal_range_ft: int | None = Field(default=None, ge=1)
     long_range_ft: int | None = Field(default=None, ge=1)
