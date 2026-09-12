@@ -12,6 +12,10 @@
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (s) => s.action_available, spend: (s) => { s.action_available = false; } };
   const slotData = (slot) => Array.isArray(slot) ? { attackIds: slot, saveActionIds: [] }
     : { attackIds: slot.attackIds || [], saveActionIds: slot.saveActionIds || [] };
+  const attackLimit = (state) => {
+    const limits = (state.timed_effects || []).map((effect) => effect.max_attacks_per_turn).filter((value) => value != null);
+    return limits.length ? Math.min(...limits) : null;
+  };
 
   function policySlots(definition) {
     const policy = definition.policy, slots = definition.slots || [];
@@ -75,7 +79,8 @@
     const events = [];
     E().spend(member.state, "action");
     let openingFeature = C()?.openingFeature?.(round, member, setup) || null;
-    let lightTrigger = null, rangedSplitUsed = false, previousEvent = null;
+    let lightTrigger = null, rangedSplitUsed = false, previousEvent = null, attacksMade = 0;
+    const maxAttacks = attackLimit(member.state);
     const usedAttackIds = new Set(), rangedSplit = useRangedSplit(member, setup, slots), turnKey = `${round}:${member.combatant_id}`;
 
     for (const expanded of policySlots(definition)) {
@@ -84,7 +89,8 @@
       if (!policyAllows(definition, index, previousEvent)) continue;
       const data = policySlot(definition, slotData(expanded.slot), usedAttackIds);
       const splitThis = index > 0 && rangedSplit && !rangedSplitUsed && F().flexibleSlotHasBoth(member, data.attackIds);
-      const choice = attackChoice(member, setup, data, splitThis, policyTarget(definition, index, previousEvent));
+      const choice = maxAttacks == null || attacksMade < maxAttacks
+        ? attackChoice(member, setup, data, splitThis, policyTarget(definition, index, previousEvent)) : null;
       if (choice) {
         if (splitThis && choice.attack.kind === "ranged") rangedSplitUsed = true;
         const pack = window.IRON_PIT_BROWSER_STATE.packTactics(member, choice.target, setup);
@@ -92,10 +98,12 @@
         const event = A().resolveAttack(sequence++, round, member, choice.target, choice.attack, choice.distance, {
           spendAction: false, advantage: pack ? 1 : 0, setup, featureId, turnKey, allowReckless: true, ignoreCloseThreat: true,
         });
-        events.push(event); previousEvent = event; usedAttackIds.add(choice.attack.id);
+        events.push(event); previousEvent = event; usedAttackIds.add(choice.attack.id); attacksMade += 1;
         if (member.state.turn_terminated) break;
-        const cleave = WM().resolveCleave(sequence, round, member, event, choice.attack, setup, turnKey);
-        events.push(...cleave.events); sequence = cleave.sequence;
+        if (maxAttacks == null || attacksMade < maxAttacks) {
+          const cleave = WM().resolveCleave(sequence, round, member, event, choice.attack, setup, turnKey);
+          events.push(...cleave.events); sequence = cleave.sequence;
+        }
         if (definition.isAttackAction && !lightTrigger && choice.attack.light) lightTrigger = choice.attack;
         openingFeature = null;
         continue;
@@ -112,7 +120,7 @@
       }
     }
 
-    if (definition.isAttackAction && lightTrigger && !member.state.turn_terminated) {
+    if (definition.isAttackAction && lightTrigger && !member.state.turn_terminated && (maxAttacks == null || attacksMade < maxAttacks)) {
       const extra = R().resolve(sequence, round, member, setup, lightTrigger, turnKey);
       events.push(...extra.events); sequence = extra.sequence;
     }
