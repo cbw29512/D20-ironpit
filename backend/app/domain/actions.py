@@ -38,10 +38,12 @@ class HitControlEffect(BaseModel):
     condition_id: ConditionName | None = None
     expires_at_start_of_source_turn: bool = False
     expiry_timing: ConditionTiming | None = None
+    duration_rounds: int | None = Field(default=None, ge=1, le=1000)
     repeat_save_ability: AbilityName | None = None
     repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
     repeat_save_timing: ConditionTiming | None = None
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
+    source_effect_immunity_on_end: bool = False
 
     @model_validator(mode="after")
     def validate_condition_lifecycle(self) -> "HitControlEffect":
@@ -50,12 +52,12 @@ class HitControlEffect(BaseModel):
             raise ValueError("Repeat-save condition lifecycle requires ability, DC, and timing together.")
         if self.expires_at_start_of_source_turn and self.expiry_timing not in {None, "source_turn_start"}:
             raise ValueError("Legacy source-start expiry conflicts with explicit condition timing.")
+        if self.duration_rounds is not None and self.expiry_timing is None:
+            raise ValueError("Timed control duration requires an explicit expiry timing.")
         return self
 
 
 class HealingAction(BaseModel):
-    """A printed healing option with its actual action cost and target restrictions."""
-
     id: str
     name: str
     action_cost: ActionCost
@@ -70,8 +72,6 @@ class HealingAction(BaseModel):
 
 
 class ConditionRemovalAction(BaseModel):
-    """A 2024 spell/feature that can legally end one or more named conditions."""
-
     id: str
     name: str
     action_cost: ActionCost
@@ -112,6 +112,8 @@ class SavingThrowAction(BaseModel):
     success_damage: Literal["none", "half"] = "none"
     grapple_escape_dc: int | None = Field(default=None, ge=1, le=40)
     restrains_while_grappled: bool = False
+    failure_control_effect: HitControlEffect | None = None
+    source_effect_immunity_on_success: bool = False
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
     magical_effect: bool = False
@@ -119,8 +121,6 @@ class SavingThrowAction(BaseModel):
 
 
 class AttackActionSlot(BaseModel):
-    """One ordered weapon/save step inside an Attack action or Multiattack."""
-
     attack_ids: list[str] = Field(default_factory=list, max_length=16)
     save_action_ids: list[str] = Field(default_factory=list, max_length=16)
 
@@ -131,8 +131,6 @@ class AttackActionSlot(BaseModel):
 
 
 class AttackActionDefinition(BaseModel):
-    """One or more ordered strikes/effects; only real Attack actions can trigger Light/Nick."""
-
     id: str
     name: str
     slots: list[AttackActionSlot] = Field(min_length=1, max_length=8)
