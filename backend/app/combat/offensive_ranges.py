@@ -5,7 +5,7 @@ from app.combat.attack_legality import attack_allowed_against
 from app.combat.offensive_range_profile import OffensiveRangeProfile
 from app.combat.resources import is_recharge_resource, resource_available
 from app.combat.save_action_legality import save_action_target_eligible
-from app.combat.spellcasting import slot_spell_available
+from app.combat.spellcasting import spell_action_resource_available
 from app.domain.encounters import EncounterCombatant
 from app.domain.weapons import WeaponAttackKind
 
@@ -34,15 +34,17 @@ def _save_action_range(action) -> int:
         raise
 
 
-def _spell_level_available(member: EncounterCombatant, level: int, turn_key: str) -> bool:
+def _spell_resource_available(member: EncounterCombatant, action, turn_key: str) -> bool:
     try:
-        if level == 0:
-            return True
-        if not slot_spell_available(member.state, turn_key):
-            return False
-        return resource_available(member.state, f"spell-slot-{level}")
+        return spell_action_resource_available(
+            member.state,
+            level=action.level,
+            resource_id=action.resource_id,
+            resource_cost=action.resource_cost,
+            turn_key=turn_key,
+        )
     except Exception:
-        logger.exception("Failed spell-level availability probe for %s.", member.combatant_id)
+        logger.exception("Failed spell resource probe for %s.", member.combatant_id)
         raise
 
 
@@ -98,14 +100,19 @@ def _spell_profiles(attacker: EncounterCombatant, turn_key: str) -> list[Offensi
         for action in attacker.state.template.spell_attack_actions:
             if action.action_cost == "reaction" or not is_available(attacker.state, action.action_cost):
                 continue
-            if _spell_level_available(attacker, action.level, turn_key):
+            if _spell_resource_available(attacker, action, turn_key):
                 profiles.append(OffensiveRangeProfile(1, "spell", action.range_ft, action.range_ft, 1))
         for action in attacker.state.template.spell_save_actions:
             if action.action_cost == "reaction" or action.concentration or not is_available(attacker.state, action.action_cost):
                 continue
-            if _spell_level_available(attacker, action.level, turn_key):
+            if _spell_resource_available(attacker, action, turn_key):
                 distance = action.range_ft + (action.area_radius_ft or 0)
                 profiles.append(OffensiveRangeProfile(1, "spell", distance, distance, 1))
+        for action in attacker.state.template.automatic_spell_actions:
+            if action.action_cost == "reaction" or not is_available(attacker.state, action.action_cost):
+                continue
+            if _spell_resource_available(attacker, action, turn_key):
+                profiles.append(OffensiveRangeProfile(1, "spell", action.range_ft, action.range_ft, 1))
         return profiles
     except Exception:
         logger.exception("Failed spell offensive-range probe for %s.", attacker.combatant_id)
