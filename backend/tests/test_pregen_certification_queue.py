@@ -41,4 +41,7 @@ def test_known_certified_frontiers_fail_closed_on_real_features() -> None:
     assert "sear-undead" in frontier["cleric"].unsupported_features
 
     assert frontier["fighter"].next_level == 18
-    assert "survivor" in frontier["fighter"].unsupported_features
+    assert set(frontier["fighter"].unsupported_features) == {
+        "survivor-defy-death",
+        "survivor-heroic-rally",
+    }
