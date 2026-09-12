@@ -18,6 +18,7 @@ from app.content.monster_catalog_2014_models import CatalogAttack2014, CatalogMo
 from app.content.monster_catalog_2014_multiattack import compile_multiattack_2014
 from app.content.monster_catalog_2014_spells import unresolved_spells_2014
 from app.content.monster_catalog_2014_traits import combat_traits_2014, unresolved_traits_2014
+from app.content.monster_spell_actions_2014 import damage_spell_actions_2014
 from app.domain.models import CombatantTemplate, OnHitDamage, VisualLoadout, Weapon, WeaponAttack, WeaponAttackKind
 from app.domain.movement import MovementModes
 from app.domain.progression import ProgressionCombatFeatures
@@ -89,6 +90,7 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
         if blockers: raise ValueError(f"unsupported 2014 mechanics: {', '.join(blockers)}")
         traits = combat_traits_2014(source.trait_names); magical = CombatTrait.MAGIC_WEAPONS in traits
         attacks = bind_attack_traits_2014(source, [_attack(item, magical=magical) for item in source.attacks])
+        spell_attacks, spell_saves = damage_spell_actions_2014(source)
         movement = MovementModes(walk_ft=source.speed.get("walk", 0), fly_ft=source.speed.get("fly", 0), climb_ft=source.speed.get("climb", 0), swim_ft=source.speed.get("swim", 0), burrow_ft=source.speed.get("burrow", 0))
         dex = source.abilities["dex"]
         return CombatantTemplate(
@@ -99,6 +101,7 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
             progression_features=ProgressionCombatFeatures(reckless_attack="Reckless" in source.trait_names),
             weapon_attack=attacks[0], alternate_weapon_attacks=attacks[1:],
             attack_action=compile_multiattack_2014(source, attacks), saving_throw_actions=source.saving_throw_actions,
+            spell_attack_actions=spell_attacks, spell_save_actions=spell_saves,
             legendary_action_uses=source.legendary_action_uses, legendary_actions=source.legendary_actions,
             saving_throw_bonuses=saving_throw_bonuses_2014(source), skill_bonuses=source.skills,
             source_trait_names=list(source.trait_names), source_legendary_action_names=list(source.legendary_action_names),
