@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pydantic import BaseModel, Field
 
-from app.domain.combatants import DamageType
+from app.domain.weapons import DamageType
 
 
 class RegenerationProfile(BaseModel):
