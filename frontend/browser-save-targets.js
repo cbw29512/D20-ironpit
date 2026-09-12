@@ -21,7 +21,7 @@
         throw new Error(`Save-action target ${targetId} is not active.`);
       }
       const distance = skipRangeCheck ? 0 : S().distance(actor, target);
-      if (!V().legalAction(action, target, distance)) throw new Error(`${action.name} cannot legally affect ${target.state.template.name}.`);
+      if (!V().legalAction(action, target, distance, actor)) throw new Error(`${action.name} cannot legally affect ${target.state.template.name}.`);
       return target;
     });
   }
