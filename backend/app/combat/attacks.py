@@ -56,7 +56,8 @@ def resolve_attack(
                                + reckless_attack_advantage(attacker, attack)
                                + conditional_attack_advantage_sources(attack, defender)
                                + next_attack_against_advantage_sources(attacker, defender_event_id)),
-            other_disadvantage_sources=other_disadvantage_sources + condition_disadvantage + sap_disadvantage(attacker),
+            other_disadvantage_sources=(other_disadvantage_sources + condition_disadvantage + sap_disadvantage(attacker)
+                                        + int("Poor Depth Perception" in attacker.template.source_trait_names and distance_ft > 30)),
             close_enemy_active=close_enemy_active,
         )
         attacker.wielded_attack_id = attack.id
