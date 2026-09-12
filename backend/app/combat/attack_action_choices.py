@@ -61,23 +61,34 @@ def attack_choice(
     slot: AttackActionSlot,
     *,
     ranged_backline: bool = False,
+    required_target_id: str | None = None,
 ):
     try:
         if ranged_backline:
             choice = choose_attack(
                 attacker, setup, slot.attack_ids,
                 kind=WeaponAttackKind.RANGED, prefer_backline=True,
+                required_target_id=required_target_id,
             )
             if choice is not None:
                 return choice
         if is_backline(attacker) and allied_frontline_active(attacker, setup):
-            ranged = choose_attack(attacker, setup, slot.attack_ids, kind=WeaponAttackKind.RANGED)
+            ranged = choose_attack(
+                attacker, setup, slot.attack_ids, kind=WeaponAttackKind.RANGED,
+                required_target_id=required_target_id,
+            )
             if ranged is not None:
                 return ranged
-        melee = choose_attack(attacker, setup, slot.attack_ids, kind=WeaponAttackKind.MELEE)
+        melee = choose_attack(
+            attacker, setup, slot.attack_ids, kind=WeaponAttackKind.MELEE,
+            required_target_id=required_target_id,
+        )
         if melee is not None:
             return melee
-        return choose_attack(attacker, setup, slot.attack_ids, kind=WeaponAttackKind.RANGED)
+        return choose_attack(
+            attacker, setup, slot.attack_ids, kind=WeaponAttackKind.RANGED,
+            required_target_id=required_target_id,
+        )
     except Exception:
         logger.exception("Failed to choose attack slot for %s.", attacker.combatant_id)
         raise
