@@ -3,6 +3,7 @@ from __future__ import annotations
 import re
 
 from app.content.monster_source_attack_rider_parsing import hit_save, maximum_target_size
+from app.content.monster_source_charge_riders import parse_charge_replacement
 from app.domain.capability_effects import (
     ConditionEffectDefinition,
     DamageEffectDefinition,
@@ -56,7 +57,16 @@ def parse_attack_riders(text: str) -> list[object]:
             damage_type=DamageType(extra.group("type").lower()),
         ))
 
-    if failed_condition != "prone" and re.search(r"\bProne condition\b", text, re.I):
+    # Charge-conditioned Prone belongs exclusively to the charge profile. Emitting a
+    # generic Prone rider as well would make the target fall Prone on every hit and
+    # would double-apply the same source sentence when the charge condition is met.
+    charge_profile = parse_charge_replacement(text)
+    charge_owns_prone = charge_profile is not None and charge_profile.prone_max_target_size is not None
+    if (
+        failed_condition != "prone"
+        and not charge_owns_prone
+        and re.search(r"\bProne condition\b", text, re.I)
+    ):
         effects.append(ProneEffectDefinition(max_target_size=maximum))
 
     grapple = _GRAPPLE.search(text)
