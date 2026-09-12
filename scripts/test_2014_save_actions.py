@@ -66,6 +66,27 @@ def main() -> int:
     assert parsed[0]["failure_control_effect"]["condition_id"] == "paralyzed"
     assert parsed[0]["resource_id"] == "breath-weapons"
 
+    slowing = (
+        "<p><strong>Breath Weapons (Recharge 5–6).</strong> The dragon uses one of the following "
+        "breath weapons.</p>"
+        "<p><strong>Slowing Breath.</strong> The dragon exhales gas in a 30-foot cone. Each creature in "
+        "that area must succeed on a DC 14 Constitution saving throw. On a failed save, the creature "
+        "can't use reactions, its speed is halved, and it can't make more than one attack on its turn. "
+        "In addition, the creature can use either an action or a bonus action on its turn, but not both. "
+        "These effects last for 1 minute. The creature can repeat the saving throw at the end of each of "
+        "its turns, ending the effect on itself with a successful save.</p>"
+    )
+    parsed = parse_save_actions(slowing, {"breath-weapons": 5})
+    slow = parsed[0]
+    assert slow["id"] == "slowing-breath"
+    assert slow["resource_id"] == "breath-weapons"
+    assert slow["failure_control_effect"] == {
+        "effect_id": "slowed", "expiry_timing": "target_turn_end", "duration_rounds": 10,
+        "repeat_save_ability": "constitution", "repeat_save_dc": 14,
+        "repeat_save_timing": "target_turn_end", "speed_multiplier": 0.5,
+        "blocks_reactions": True, "action_bonus_exclusive": True, "max_attacks_per_turn": 1,
+    }
+
     sleep = (
         "<p><strong>Breath Weapons (Recharge 5–6).</strong> The dragon uses one of the following "
         "breath weapons.</p>"
