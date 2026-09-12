@@ -23,12 +23,19 @@ _POST_KILL_ONLY = re.compile(r"If the target is killed by this damage, it is abs
 _LYCANTHROPY_ONLY = re.compile(r"If the target is a humanoid, it must succeed on a DC \d+ Constitution saving throw or be cursed with (?:werebear|wererat|weretiger|werewolf) lycanthropy", re.I)
 _REST_ONLY_CURSE = re.compile(r"the target is cursed if it is a creature\. The magical curse takes effect whenever the target takes a short or long rest, filling the target's thoughts with horrible images and dreams\. The cursed target gains no benefit from finishing a short or long rest", re.I)
 _DISEASE_LONG_TERM = re.compile(r"Every 24 hours that elapse,.*?(?:dies if the disease reduces its hit point maximum to 0\.?|until the disease is cured\.?)", re.I | re.S)
+_DISEASE_DEATH_ONLY = re.compile(r"The creature dies if the disease reduces its hit point maximum to 0", re.I)
+_DISEASE_REDUCTION_DURATION_ONLY = re.compile(r"This reduction to the target's hit point maximum lasts until the disease is cured", re.I)
+_REST_CURSE_DURATION_ONLY = re.compile(r"The curse lasts until it is lifted by a remove curse spell or similar magic", re.I)
 
 
 def strip_noncombat_attack_residual(remainder: str) -> str:
     """Remove source-preserved riders that cannot alter the current Iron Pit fight."""
     cleaned = remainder
-    for pattern in (_UNATTENDED_OBJECT_ONLY, _POST_KILL_ONLY, _LYCANTHROPY_ONLY, _REST_ONLY_CURSE, _DISEASE_LONG_TERM):
+    for pattern in (
+        _UNATTENDED_OBJECT_ONLY, _POST_KILL_ONLY, _LYCANTHROPY_ONLY, _REST_ONLY_CURSE,
+        _DISEASE_LONG_TERM, _DISEASE_DEATH_ONLY, _DISEASE_REDUCTION_DURATION_ONLY,
+        _REST_CURSE_DURATION_ONLY,
+    ):
         cleaned = pattern.sub(" ", cleaned)
     return cleaned.strip(" .,;")
 
