@@ -27,11 +27,13 @@
     return Boolean(definition?.recharge);
   }
 
-  function choice(member, setup, rechargeOnly = false) {
+  function choice(member, setup, rechargeOnly = false, allowedIds = null) {
     try {
+      const allowed = allowedIds ? new Set(allowedIds) : null;
       const candidates = [];
       for (const action of member.state.template.saving_throw_actions || []) {
         if (!action.area || !V().resourceAvailable(member.state, action)) continue;
+        if (allowed && !allowed.has(action.id)) continue;
         if (rechargeOnly && !rechargeAction(member.state, action)) continue;
         const placements = T().legalPlacements(member, setup, action.area)
           .map((placement) => eligiblePlacement(member, setup, action, placement))
@@ -62,10 +64,11 @@
     return null;
   }
 
-  function resolve(sequence, round, member, setup, rechargeOnly = false) {
+  function resolve(sequence, round, member, setup, rechargeOnly = false, options = {}) {
     try {
-      const selected = choice(member, setup, rechargeOnly);
-      if (!selected || !E().available(member.state, "action")) return null;
+      const selected = choice(member, setup, rechargeOnly, options.allowedIds || null);
+      const spendAction = options.spendAction !== false;
+      if (!selected || (spendAction && !E().available(member.state, "action"))) return null;
       const { action, placement } = selected;
       if (!V().resourceAvailable(member.state, action)) throw new Error(`${action.name} resource is unavailable.`);
       let resourceRemaining = null;
@@ -74,7 +77,7 @@
         member.state.resources[action.resourceId] -= cost;
         resourceRemaining = member.state.resources[action.resourceId];
       }
-      E().spend(member.state, "action");
+      if (spendAction) E().spend(member.state, "action");
       const shared = action.damageDiceCount
         ? D().rollMany(action.damageDiceCount, action.damageDiceSize)
         : null;
