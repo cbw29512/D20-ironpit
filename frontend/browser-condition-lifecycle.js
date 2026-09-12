@@ -40,13 +40,21 @@
     if (save.succeeded) return { removed: T().removeGroup(target.state, effect), applied: [] };
     if (!effect.repeat_save_failure_condition) return { removed: [], applied: [] };
     const removed = T().removeGroup(target.state, effect);
+    const continues = effect.repeat_save_failure_continues !== false;
+    const duration = effect.repeat_save_failure_duration_rounds;
     const next = T().apply(target.state, effect.repeat_save_failure_condition, effect.source_id, {
-      sourceEffectId: effect.source_effect_id || null, appliedRound: round,
-      repeatSaveAbility: effect.repeat_save_ability, repeatSaveDc: effect.repeat_save_dc,
-      repeatSaveTiming: effect.repeat_save_timing,
-      automaticSuccessRound: effect.automatic_success_round || null,
-      allowedRemovalActionIds: [...(effect.allowed_removal_action_ids || [])],
-      endsOnDamage: Boolean(effect.ends_on_damage),
+      sourceEffectId: effect.source_effect_id || null,
+      appliedRound: round,
+      expiresRound: duration == null ? null : round + duration,
+      expiryTiming: duration == null ? null : "target_turn_end",
+      repeatSaveAbility: continues ? effect.repeat_save_ability : null,
+      repeatSaveDc: continues ? effect.repeat_save_dc : null,
+      repeatSaveTiming: continues ? effect.repeat_save_timing : null,
+      automaticSuccessRound: continues ? (effect.automatic_success_round || null) : null,
+      allowedRemovalActionIds: effect.repeat_save_failure_allowed_removal_action_ids?.length
+        ? [...effect.repeat_save_failure_allowed_removal_action_ids]
+        : [...(effect.allowed_removal_action_ids || [])],
+      endsOnDamage: Boolean(effect.repeat_save_failure_ends_on_damage || effect.ends_on_damage),
       endsIfSourceIncapacitated: Boolean(effect.ends_if_source_incapacitated),
       endsIfSourceDead: Boolean(effect.ends_if_source_dead),
     });
