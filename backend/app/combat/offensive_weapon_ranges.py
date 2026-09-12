@@ -20,6 +20,13 @@ def _priority_for_resource(member: EncounterCombatant, resource_id: str | None) 
         raise
 
 
+def _attack_action_ids(attacker: EncounterCombatant) -> set[str]:
+    definition = attacker.state.template.attack_action
+    if definition is None:
+        return set()
+    return {attack_id for slot in definition.slots for attack_id in slot.attack_ids}
+
+
 def weapon_profiles(
     attacker: EncounterCombatant,
     target: EncounterCombatant,
@@ -27,6 +34,7 @@ def weapon_profiles(
 ) -> list[OffensiveRangeProfile]:
     try:
         profiles: list[OffensiveRangeProfile] = []
+        attack_action_ids = _attack_action_ids(attacker)
         attacks = [attacker.state.template.weapon_attack, *attacker.state.template.alternate_weapon_attacks]
         for attack in attacks:
             if not attack_allowed_against(attack, attacker.combatant_id, target.state):
@@ -34,7 +42,7 @@ def weapon_profiles(
             if not resource_available(attacker.state, attack.resource_id, attack.resource_cost):
                 continue
             priority = _priority_for_resource(attacker, attack.resource_id)
-            execution_rank = 0 if priority == 0 else 2
+            execution_rank = 0 if priority == 0 else (2 if attack.id in attack_action_ids else 4)
             kind = attack.weapon.attack_kind
             if kind in {WeaponAttackKind.MELEE, WeaponAttackKind.MELEE_OR_RANGED}:
                 reach = attack.weapon.reach_ft
