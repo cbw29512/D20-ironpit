@@ -50,7 +50,11 @@ def _repeat_save_present(action: Any, text: str, effect: Any) -> bool:
         return False
     recurring = rf"repeat(?:s|ing)?\s+(?:the\s+)?(?:saving\s+throw|save).*?{turn_point}\s+of\s+(?:each|its)\s+(?:of\s+its\s+)?turns?"
     next_turn = rf"repeat(?:s|ing)?\s+(?:the\s+)?(?:saving\s+throw|save).*?at\s+the\s+{turn_point}\s+of\s+its\s+next\s+turn"
-    if not re.search(rf"(?:{recurring}|{next_turn})", text, re.IGNORECASE):
+    timing_then_repeat = (
+        rf"(?:at|until)\s+the\s+{turn_point}\s+of\s+its\s+next\s+turn"
+        rf"[^.]*?repeat(?:s|ing)?\s+(?:the\s+)?(?:saving\s+throw|save)"
+    )
+    if not re.search(rf"(?:{recurring}|{next_turn}|{timing_then_repeat})", text, re.IGNORECASE):
         return False
     if effect.repeat_save_ability == action.save_ability and effect.repeat_save_dc == action.dc:
         return True
