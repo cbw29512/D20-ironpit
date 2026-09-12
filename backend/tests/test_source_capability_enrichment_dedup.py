@@ -1,5 +1,6 @@
 from types import SimpleNamespace
 
+from app.content.capability_registry import get_capability_definition
 from app.content.source_capability_enrichment import _merge_attack_effects, _merge_save_actions
 from app.domain.capability_effects import ProneEffectDefinition
 from app.domain.charge import ChargeProfile
@@ -44,3 +45,13 @@ def test_non_charge_prone_still_merges_as_normal_attack_rider() -> None:
     merged = _merge_attack_effects([], [source_effect])
 
     assert merged == [source_effect]
+
+
+def test_actual_boar_source_enrichment_keeps_prone_charge_gated() -> None:
+    definition = get_capability_definition("srd-boar")
+    gore = next(attack for attack in definition.attacks if attack.id == "boar-gore")
+
+    assert gore.charge_profile is not None
+    assert gore.charge_profile.minimum_move_ft == 20
+    assert gore.charge_profile.prone_max_target_size == CreatureSize.MEDIUM
+    assert not any(effect.kind == "prone" for effect in gore.effects)
