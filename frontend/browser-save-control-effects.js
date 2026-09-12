@@ -26,6 +26,7 @@
       repeatSaveDc: control.repeatSaveDc ?? null,
       repeatSaveTiming: control.repeatSaveTiming || null,
       allowedRemovalActionIds: control.allowedRemovalActionIds || [],
+      endsOnDamage: Boolean(control.endsOnDamage),
       sourceEffectImmunityOnEnd: Boolean(control.sourceEffectImmunityOnEnd),
     });
     return applied ? [applied] : [];
