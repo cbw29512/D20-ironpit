@@ -41,16 +41,16 @@ def _bind_legendary_actions(row: dict, source_legendary_actions: str) -> None:
     )
     row["legendary_action_uses"] = uses
     row["legendary_actions"] = options
-    # Keep the source-derived names as the fail-closed audit surface. Parsed
-    # options are removed from that blocker list; anything left must remain
-    # unsupported until the universal engine gains a typed representation.
+    # Preserve legendary_action_names as immutable source provenance. Runtime
+    # certification uses a separate unsupported list so the source-fidelity
+    # audit can still compare every printed heading exactly.
     supported = {option["name"].strip().lower() for option in options}
     source_names = row.get("legendary_action_names") or []
     unresolved = [name for name in source_names if name.strip().lower() not in supported]
     for name in unsupported:
         if name not in unresolved:
             unresolved.append(name)
-    row["legendary_action_names"] = unresolved
+    row["unsupported_legendary_action_names"] = unresolved
 
 
 def enrich(source_path: Path, catalog_path: Path) -> None:
