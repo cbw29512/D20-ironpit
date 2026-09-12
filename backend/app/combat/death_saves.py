@@ -4,7 +4,7 @@ import logging
 
 from app.combat.dice import DiceProvider
 from app.combat.zero_hp import restore_hit_points, reset_death_saves
-from app.domain.models import BattleEvent, CombatantState, DiceRoll
+from app.domain.models import BattleEvent, CombatantState, DiceRoll, RollMode
 
 logger = logging.getLogger(__name__)
 
@@ -16,6 +16,19 @@ def _mark_dead(state: CombatantState) -> None:
     state.is_stable = False
 
 
+def _death_roll(state: CombatantState, dice: DiceProvider) -> tuple[DiceRoll, int]:
+    advantage = state.template.progression_features.death_save_advantage
+    rolls = [dice.roll(20), dice.roll(20)] if advantage else [dice.roll(20)]
+    selected = max(rolls)
+    return DiceRoll(
+        notation="2d20kh1" if advantage else "1d20",
+        rolls=rolls,
+        selected_roll=selected,
+        mode=RollMode.ADVANTAGE if advantage else RollMode.NORMAL,
+        total=selected,
+    ), selected
+
+
 def resolve_death_save(
     sequence: int,
     round_number: int,
@@ -23,23 +36,23 @@ def resolve_death_save(
     state: CombatantState,
     dice: DiceProvider,
 ) -> BattleEvent:
-    """Resolve one SRD 5.2.1 Death Saving Throw at the start of a character turn."""
+    """Resolve one SRD death save plus declarative progression overrides."""
     try:
         if state.template.kind != "character":
             raise ValueError("Only player characters make Death Saving Throws by default.")
         if state.current_hp != 0 or state.is_dead or state.is_stable:
             raise ValueError("This character does not currently make a Death Saving Throw.")
 
-        natural = dice.roll(20)
-        roll = DiceRoll(notation="1d20", rolls=[natural], selected_roll=natural, total=natural)
+        roll, natural = _death_roll(state, dice)
         hp_before = state.current_hp
         successes_before = state.death_save_successes
         failures_before = state.death_save_failures
+        recovery_minimum = state.template.progression_features.death_save_recovery_minimum
         result = "failure"
 
-        if natural == 20:
+        if natural >= recovery_minimum:
             restore_hit_points(state, 1)
-            result = "natural 20; regains 1 HP"
+            result = f"{natural}; regains 1 HP"
         elif natural == 1:
             state.death_save_failures = min(3, state.death_save_failures + 2)
             result = "natural 1; two failures"
