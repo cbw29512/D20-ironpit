@@ -72,6 +72,7 @@ jobs:
         run: |
           python scripts/report_zero_engine_monsters.py
           python scripts/report_capability_yield.py
+          python scripts/report_source_save_mismatches.py
 
       - name: Prepare static browser package
         run: |
