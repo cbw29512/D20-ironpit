@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from app.content.arena_eligibility import filter_standard_arena_eligible
-from app.content.basic_condition_actions import WAKE_SLEEPER_ID, wake_sleeper_action
 from app.content.demo import build_goblin_warrior
 from app.content.legacy_charge_profiles import apply_legacy_charge_profiles
 from app.content.monster_ability_scores import complete_monster_ability_scores
@@ -46,17 +45,6 @@ from app.content.unarmed_opportunity_profiles import complete_unarmed_opportunit
 from app.domain.models import CombatantTemplate
 
 
-def _complete_universal_basic_actions(monsters: list[CombatantTemplate]) -> list[CombatantTemplate]:
-    """Normalize migration templates with universal engine actions before parity comparison."""
-    completed: list[CombatantTemplate] = []
-    for monster in monsters:
-        actions = list(monster.condition_removal_actions)
-        if all(action.id != WAKE_SLEEPER_ID for action in actions):
-            actions.append(wake_sleeper_action())
-        completed.append(monster.model_copy(update={"condition_removal_actions": actions}))
-    return completed
-
-
 def build_legacy_monster_templates() -> list[CombatantTemplate]:
     """Build migration-only pre-capability templates; production never imports this module."""
     monsters = [
@@ -83,5 +71,4 @@ def build_legacy_monster_templates() -> list[CombatantTemplate]:
     monsters = complete_monster_legendary_fingerprints(monsters)
     monsters = complete_monster_spellcasting_fingerprints(monsters)
     monsters = complete_monster_saving_throws(monsters)
-    monsters = _complete_universal_basic_actions(monsters)
     return complete_unarmed_opportunity_profiles(monsters)
