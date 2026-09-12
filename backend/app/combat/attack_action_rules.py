@@ -40,7 +40,7 @@ def attack_action_slot_choice(attacker, target, slot):
     allowed = set(slot.save_action_ids)
     save = None if attack is not None else next((
         action for action in attacker.state.template.saving_throw_actions
-        if action.id in allowed and legal_save_action(action, target, distance)
+        if action.id in allowed and legal_save_action(action, target, distance, attacker)
     ), None)
     return attack, save
 
