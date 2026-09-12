@@ -1,6 +1,6 @@
 from types import SimpleNamespace
 
-from app.combat import offensive_ranges
+from app.combat import offensive_save_ranges
 from app.combat.save_action_legality import save_action_target_eligible
 from app.domain.actions import SavingThrowAction
 
@@ -21,7 +21,7 @@ def _pair(*, grappled_by: str | None = None):
     attacker = SimpleNamespace(
         combatant_id="attacker",
         state=SimpleNamespace(
-            template=SimpleNamespace(saving_throw_actions=[action]),
+            template=SimpleNamespace(saving_throw_actions=[action], attack_action=None),
         ),
     )
     sources = [] if grappled_by is None else [SimpleNamespace(source_id=grappled_by)]
@@ -36,6 +36,13 @@ def _pair(*, grappled_by: str | None = None):
     return attacker, target, action
 
 
+def _patch_profile_dependencies(monkeypatch) -> None:
+    monkeypatch.setattr(offensive_save_ranges, "is_available", lambda *_: True)
+    monkeypatch.setattr(offensive_save_ranges, "resource_available", lambda *_: True)
+    monkeypatch.setattr(offensive_save_ranges, "is_recharge_resource", lambda *_: False)
+    monkeypatch.setattr(offensive_save_ranges, "save_action_expected_damage", lambda *_: 0.0)
+
+
 def test_save_target_eligibility_requires_actor_owned_grapple() -> None:
     attacker, target, action = _pair(grappled_by="other")
 
@@ -44,20 +51,16 @@ def test_save_target_eligibility_requires_actor_owned_grapple() -> None:
 
 def test_movement_does_not_chase_ineligible_save_target(monkeypatch) -> None:
     attacker, target, _ = _pair(grappled_by="other")
-    monkeypatch.setattr(offensive_ranges, "is_available", lambda *_: True)
-    monkeypatch.setattr(offensive_ranges, "resource_available", lambda *_: True)
-    monkeypatch.setattr(offensive_ranges, "is_recharge_resource", lambda *_: False)
+    _patch_profile_dependencies(monkeypatch)
 
-    assert offensive_ranges._save_action_profiles(attacker, target) == []
+    assert offensive_save_ranges.save_action_profiles(attacker, target) == []
 
 
 def test_movement_profiles_eligible_actor_owned_grapple_save(monkeypatch) -> None:
     attacker, target, _ = _pair(grappled_by="attacker")
-    monkeypatch.setattr(offensive_ranges, "is_available", lambda *_: True)
-    monkeypatch.setattr(offensive_ranges, "resource_available", lambda *_: True)
-    monkeypatch.setattr(offensive_ranges, "is_recharge_resource", lambda *_: False)
+    _patch_profile_dependencies(monkeypatch)
 
-    profiles = offensive_ranges._save_action_profiles(attacker, target)
+    profiles = offensive_save_ranges.save_action_profiles(attacker, target)
 
     assert len(profiles) == 1
     assert profiles[0].family == "ability"
@@ -69,7 +72,6 @@ def test_movement_ignores_non_action_save_abilities(monkeypatch) -> None:
     attacker.state.template.saving_throw_actions = [
         action.model_copy(update={"action_cost": "reaction"})
     ]
-    monkeypatch.setattr(offensive_ranges, "is_available", lambda *_: True)
-    monkeypatch.setattr(offensive_ranges, "resource_available", lambda *_: True)
+    _patch_profile_dependencies(monkeypatch)
 
-    assert offensive_ranges._save_action_profiles(attacker, target) == []
+    assert offensive_save_ranges.save_action_profiles(attacker, target) == []
