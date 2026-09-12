@@ -23,12 +23,39 @@ def test_giant_owl_divinations_are_explicitly_arena_neutral() -> None:
     assert spellcasting_issues(template, row) == []
 
 
+def test_explicitly_noncombat_spells_do_not_block_neutral_spellcasting() -> None:
+    row = dict(_row("Giant Owl"))
+    row["actions"] = str(row["actions"]).replace(
+        "1/Day: Clairvoyance",
+        "1/Day Each: Clairvoyance, Minor Illusion, Zone of Truth",
+    )
+    template = _monster("Giant Owl").model_copy(
+        update={"source_spellcasting_fingerprint": spellcasting_fingerprint(row)}
+    )
+
+    assert arena_neutral_spellcasting(row)
+    assert spellcasting_issues(template, row) == []
+
+
 def test_combat_spell_added_to_neutral_caster_fails_closed() -> None:
     row = dict(_row("Giant Owl"))
     row["actions"] = str(row["actions"]).replace(
         "1/Day: Clairvoyance",
         "1/Day: Clairvoyance, Fireball",
     )
+    template = _monster("Giant Owl").model_copy(
+        update={"source_spellcasting_fingerprint": spellcasting_fingerprint(row)}
+    )
+
+    assert not arena_neutral_spellcasting(row)
+    issues = spellcasting_issues(template, row)
+    assert "uncertified-monster-spellcasting" in issues
+    assert "spell-concentration-source-not-vendored" in issues
+
+
+def test_direct_cast_outside_structured_spell_list_fails_closed() -> None:
+    row = dict(_row("Giant Owl"))
+    row["bonusActions"] = "Divine Aid (1/Day). The owl casts Fireball, using Wisdom as the spellcasting ability."
     template = _monster("Giant Owl").model_copy(
         update={"source_spellcasting_fingerprint": spellcasting_fingerprint(row)}
     )
