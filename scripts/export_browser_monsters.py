@@ -33,7 +33,15 @@ def _area_row(area):
 
 def _policy_row(policy):
     if policy is None: return None
-    return {"distinctAttackIds": policy.distinct_attack_ids, "repeatSlotIndex": policy.repeat_slot_index, "repeatDiceCount": policy.repeat_dice_count, "repeatDiceSize": policy.repeat_dice_size, "requiresPreviousHitSlots": list(policy.requires_previous_hit_slots), "sameTargetAsPreviousSlots": list(policy.same_target_as_previous_slots)}
+    return {
+        "distinctAttackIds": policy.distinct_attack_ids,
+        "atMostOnceAttackIds": list(policy.at_most_once_attack_ids),
+        "repeatSlotIndex": policy.repeat_slot_index,
+        "repeatDiceCount": policy.repeat_dice_count,
+        "repeatDiceSize": policy.repeat_dice_size,
+        "requiresPreviousHitSlots": list(policy.requires_previous_hit_slots),
+        "sameTargetAsPreviousSlots": list(policy.same_target_as_previous_slots),
+    }
 
 
 def _automatic_spell_row(action):
