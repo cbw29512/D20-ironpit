@@ -52,7 +52,13 @@ assert.deepEqual(goat.attacks[0].charge, {
 
 const boar = generated["srd-boar"];
 assert.ok(boar);
-assert.deepEqual(boar.attacks.find((item) => item.id === "boar-gore").charge, {
+const boarGore = boar.attacks.find((item) => item.id === "boar-gore");
+assert.ok(boarGore);
+assert.equal(
+  Object.hasOwn(boarGore, "proneMaxSize"), false,
+  "Boar charge Prone must remain movement-gated rather than an unconditional hit rider",
+);
+assert.deepEqual(boarGore.charge, {
   minimumMove: 20,
   diceCount: 1,
   diceSize: 6,
