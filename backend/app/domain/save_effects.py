@@ -39,6 +39,8 @@ class ConditionEffectDefinition(BaseModel):
     linked_conditions: list[ConditionName] = Field(default_factory=list)
     expires_at_start_of_source_turn: bool = False
     expiry_timing: ConditionTiming | None = None
+    duration_rounds: int | None = Field(default=None, ge=1, le=100)
+    ends_on_damage: bool = False
     repeat_save_ability: AbilityName | None = None
     repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
     repeat_save_timing: ConditionTiming | None = None
@@ -73,6 +75,8 @@ class ConditionEffectDefinition(BaseModel):
             raise ValueError("Automatic repeat-save success requires a complete repeat-save rule.")
         if self.condition in self.linked_conditions:
             raise ValueError("A linked condition cannot duplicate its owning condition.")
+        if self.duration_rounds is not None and self.expiry_timing is None:
+            raise ValueError("Fixed-duration conditions require an expiry timing.")
         if self.expires_at_start_of_source_turn and self.expiry_timing not in {None, "source_turn_start"}:
             raise ValueError("Legacy source-start expiry conflicts with explicit condition timing.")
         return self
