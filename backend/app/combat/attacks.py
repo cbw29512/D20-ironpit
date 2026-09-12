@@ -7,6 +7,7 @@ from app.combat.bloodied import bloodied_fury_advantage
 from app.combat.condition_rules import close_hit_is_automatic_critical
 from app.combat.conditions import apply_hit_conditions, attack_roll_condition_sources
 from app.combat.conditional_attack_advantage import conditional_attack_advantage_sources
+from app.combat.d20_effects import strength_d20_disadvantage
 from app.combat.damage import BonusDamageSpec, resolve_weapon_damage
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
@@ -57,7 +58,8 @@ def resolve_attack(
                                + conditional_attack_advantage_sources(attack, defender)
                                + next_attack_against_advantage_sources(attacker, defender_event_id)),
             other_disadvantage_sources=(other_disadvantage_sources + condition_disadvantage + sap_disadvantage(attacker)
-                                        + int("Poor Depth Perception" in attacker.template.source_trait_names and distance_ft > 30)),
+                                        + int("Poor Depth Perception" in attacker.template.source_trait_names and distance_ft > 30)
+                                        + int(attack.attack_ability == "strength") * strength_d20_disadvantage(attacker)),
             close_enemy_active=close_enemy_active,
         )
         attacker.wielded_attack_id = attack.id
