@@ -8,6 +8,7 @@ from app.combat.dice import FixedDiceProvider
 from app.combat.state import build_combatant_state
 from app.content.monster_catalog_2014 import (
     MVP_CATALOG_PATH,
+    compile_monster_2014,
     load_catalog_2014,
     monster_by_id_2014,
     unsupported_mechanics_2014,
@@ -22,7 +23,6 @@ def _monster(monster_id: str):
 def test_mvp_catalog_loads_and_uses_json_stats() -> None:
     catalog = load_catalog_2014(MVP_CATALOG_PATH)
     assert {monster.id for monster in catalog} == {"goblin", "skeleton", "brown-bear", "bandit"}
-
     bandit = _monster("bandit")
     assert bandit.armor_class == 12
     assert bandit.max_hp == 11
@@ -65,6 +65,17 @@ def test_unresolved_monster_mechanics_fail_closed() -> None:
     assert "action:Multiattack" in unsupported_mechanics_2014(catalog["brown-bear"])
     with pytest.raises(RuntimeError, match="could not be compiled"):
         _monster("goblin")
+
+
+def test_declarative_multiattack_reuses_shared_action_slots() -> None:
+    catalog = {monster.id: monster for monster in load_catalog_2014(MVP_CATALOG_PATH)}
+    source = catalog["brown-bear"].model_copy(
+        update={"trait_names": [], "multiattack_slots": [["bite"], ["claws"]]}
+    )
+    assert "action:Multiattack" not in unsupported_mechanics_2014(source)
+    bear = compile_monster_2014(source)
+    assert bear.attack_action is not None
+    assert [slot.attack_ids for slot in bear.attack_action.slots] == [["bite"], ["claws"]]
 
 
 def test_new_basic_monster_is_data_only(tmp_path) -> None:
