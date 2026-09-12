@@ -41215,7 +41215,16 @@
         "reach_ft": 5
       }
     ],
-    "multiattack_slots": [],
+    "multiattack_slots": [
+      [
+        "claws",
+        "bite"
+      ],
+      [
+        "claws",
+        "bite"
+      ]
+    ],
     "action_recharges": {},
     "rest_recharge_action_ids": [],
     "action_names": [
@@ -41246,6 +41255,11 @@
         "radiant"
       ],
       "survives_zero_until_turn": false
+    },
+    "multiattack_policy": {
+      "at_most_once_attack_ids": [
+        "bite"
+      ]
     },
     "legendary_action_uses": 0,
     "legendary_actions": [],
