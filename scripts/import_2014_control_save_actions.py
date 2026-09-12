@@ -3,10 +3,20 @@ from __future__ import annotations
 import re
 
 
+def _duration_rounds(text: str) -> int | None:
+    match = re.search(r"(?:unconscious|paralyzed) for (\d+) (minute|minutes|round|rounds)", text, re.I)
+    if match is None:
+        return None
+    amount, unit = match.groups()
+    count = int(amount)
+    return count * 10 if unit.lower().startswith("minute") else count
+
+
 def _sleep_breath(name: str, text: str, area: dict, save: tuple[str, int], resource_id: str) -> dict | None:
     if name.lower() != "sleep breath":
         return None
-    if not re.search(r"unconscious for 1 minute", text, re.I):
+    duration = _duration_rounds(text)
+    if duration is None or not re.search(r"fall unconscious", text, re.I):
         return None
     if not re.search(r"takes damage", text, re.I) or not re.search(r"uses an action to wake", text, re.I):
         return None
@@ -18,7 +28,7 @@ def _sleep_breath(name: str, text: str, area: dict, save: tuple[str, int], resou
         "failure_control_effect": {
             "condition_id": "unconscious",
             "expiry_timing": "source_turn_start",
-            "duration_rounds": 10,
+            "duration_rounds": duration,
             "allowed_removal_action_ids": ["wake-sleeper"],
             "ends_on_damage": True,
         },
@@ -29,7 +39,8 @@ def _sleep_breath(name: str, text: str, area: dict, save: tuple[str, int], resou
 def _paralyzing_breath(name: str, text: str, area: dict, save: tuple[str, int], resource_id: str) -> dict | None:
     if name.lower() != "paralyzing breath":
         return None
-    if not re.search(r"paralyzed for 1 minute", text, re.I):
+    duration = _duration_rounds(text)
+    if duration is None or not re.search(r"paralyzed", text, re.I):
         return None
     if not re.search(r"repeat the saving throw at the end of each of its turns", text, re.I):
         return None
@@ -40,7 +51,7 @@ def _paralyzing_breath(name: str, text: str, area: dict, save: tuple[str, int], 
         "area": area,
         "failure_control_effect": {
             "condition_id": "paralyzed", "expiry_timing": "target_turn_end",
-            "duration_rounds": 10, "repeat_save_ability": ability,
+            "duration_rounds": duration, "repeat_save_ability": ability,
             "repeat_save_dc": dc, "repeat_save_timing": "target_turn_end",
         },
         "resource_id": resource_id, "resource_cost": 1, "animation": "paralyzed",
