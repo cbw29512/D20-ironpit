@@ -85,3 +85,31 @@ class CombatantTemplate(BaseModel):
     fighting_style: str | None = None
     fighting_styles: list[str] = Field(default_factory=list)
     weapon_masteries: list[str] = Field(default_factory=list)
+    damage_resistances: list[DamageType] = Field(default_factory=list)
+    conditional_damage_resistances: list[ConditionalDamageResistance] = Field(default_factory=list)
+    damage_vulnerabilities: list[DamageType] = Field(default_factory=list)
+    damage_immunities: list[DamageType] = Field(default_factory=list)
+    condition_immunities: list[ConditionName] = Field(default_factory=list)
+    wearing_heavy_armor: bool = False
+    rage_damage_bonus: int = Field(default=0, ge=0, le=10)
+    visual: VisualLoadout
+    resources: list[ResourceDefinition] = Field(default_factory=list)
+    source: str
+
+    @model_validator(mode="before")
+    @classmethod
+    def _normalize_compatibility_fields(cls, values: object) -> object:
+        if not isinstance(values, dict):
+            return values
+        normalized = dict(values)
+        if "movement_modes" not in normalized and "speed_ft" in normalized:
+            normalized["movement_modes"] = {"walk_ft": normalized["speed_ft"]}
+        style = normalized.get("fighting_style")
+        styles = normalized.get("fighting_styles")
+        if styles is None:
+            styles = []
+        if not styles and style:
+            normalized["fighting_styles"] = [style]
+        elif styles and not style:
+            normalized["fighting_style"] = styles[0]
+        return normalized
