@@ -5,7 +5,7 @@ from app.combat.dice import FixedDiceProvider
 from app.combat.grapple import apply_grapple
 from app.combat.pit_policy import choose_standard_attack, target_order
 from app.combat.state import build_combatant_state
-from app.combat.swallow import resolve_swallow, resolve_swallow_turn_end
+from app.combat.swallow import choose_swallow, resolve_swallow, resolve_swallow_turn_end
 from app.content.audited_fighter import build_karnok_stoneward
 from app.content.demo import build_goblin_warrior
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -81,3 +81,32 @@ def test_recurring_swallow_ticks_immediately_and_stays_active() -> None:
     assert target.state.swallowed is not None
     assert has_condition(target.state, "blinded") is True
     assert has_condition(target.state, "restrained") is True
+
+
+def test_swallow_can_use_bonus_action_without_grapple_and_respect_capacity() -> None:
+    action = SwallowAction(
+        id="test-advanced-swallow", max_target_size=CreatureSize.MEDIUM,
+        action_cost="bonus_action", max_swallowed_targets=2,
+        requires_grappled_target=False, damage_dice_count=2, damage_dice_size=6,
+    )
+    setup, source, target = _setup(action)
+    target.state.grapple_sources = []
+    source.state.action_available = False
+
+    choice = choose_swallow(source, setup)
+    assert choice is not None and choice[0].combatant_id == target.combatant_id
+    resolve_swallow(1, 1, source, target, action, setup)
+
+    assert source.state.action_available is False
+    assert source.state.bonus_action_available is False
+    assert target.state.swallowed is not None
+
+    second = EncounterCombatant(
+        combatant_id="hero-2", side="heroes", position_ft=5,
+        state=build_combatant_state(build_karnok_stoneward()),
+    )
+    setup.heroes.append(second)
+    source.state.bonus_action_available = True
+
+    second_choice = choose_swallow(source, setup)
+    assert second_choice is not None and second_choice[0].combatant_id == second.combatant_id
