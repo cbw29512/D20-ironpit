@@ -16,9 +16,7 @@
     const candidates = [];
     for (const action of caster.state.template.automatic_spell_actions || []) {
       if (action.actionCost === "reaction" || !E().available(caster.state, action.actionCost)) continue;
-      const fallbackId = `spell-slot-${action.level}`;
-      if (!C().slotSpellAvailable(caster.state, turnKey)
-          || !RES().actionAvailable(caster.state, action.resourceId, action.resourceCost || 1, fallbackId)) continue;
+      if (!C().actionResourceAvailable(caster.state, action, turnKey)) continue;
       const legal = enemies.filter((target) => target.state.is_alive && !target.state.is_dead
         && target.state.current_hp > 0 && S().distance(caster, target) <= action.range);
       if (!legal.length) continue;
@@ -53,8 +51,10 @@
   function resolveAutomatic(sequence, round, caster, setup, choice, turnKey) {
     const action = choice.action, fallbackId = `spell-slot-${action.level}`;
     if (!E().available(caster.state, action.actionCost)) throw new Error(`${action.name} cannot be cast in this action window.`);
-    if (!C().slotSpellAvailable(caster.state, turnKey)) throw new Error(`A leveled spell was already cast this turn before ${action.name}.`);
-    if (!RES().actionAvailable(caster.state, action.resourceId, action.resourceCost || 1, fallbackId)) throw new Error(`No level ${action.level} spell slot remains for ${action.name}.`);
+    const resourceId = RES().resolvedId(action.resourceId, fallbackId);
+    const usesSpellSlot = Boolean(resourceId && resourceId.startsWith("spell-slot-"));
+    if (usesSpellSlot && !C().slotSpellAvailable(caster.state, turnKey)) throw new Error(`A leveled spell was already cast this turn before ${action.name}.`);
+    if (!RES().actionAvailable(caster.state, action.resourceId, action.resourceCost || 1, fallbackId)) throw new Error(`Resource ${resourceId} is unavailable for ${action.name}.`);
     const members = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));
     if (choice.targetIds.length !== action.applications) throw new Error(`${action.name} requires exactly ${action.applications} automatic applications.`);
     for (const id of choice.targetIds) {
@@ -62,7 +62,8 @@
       if (!target || target.side === caster.side || target.state.is_dead || !target.state.is_alive || S().distance(caster, target) > action.range) throw new Error(`Illegal automatic spell target ${id} for ${action.name}.`);
     }
     const remaining = RES().spendAction(caster.state, action.resourceId, action.resourceCost || 1, fallbackId);
-    C().markSlotSpellCast(caster.state, turnKey); E().spend(caster.state, action.actionCost);
+    if (usesSpellSlot) C().markSlotSpellCast(caster.state, turnKey);
+    E().spend(caster.state, action.actionCost);
     const events = [{ sequence: sequence++, round_number: round, event_type: "feature", actor_id: caster.combatant_id,
       actor_name: caster.state.template.name, feature_id: action.id, resource_remaining: remaining,
       animation: action.animation || "spell-automatic", description: `${caster.state.template.name} casts ${action.name}; ${action.applications} automatic applications resolve.` }];
