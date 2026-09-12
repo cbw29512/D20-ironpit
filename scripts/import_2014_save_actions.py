@@ -38,6 +38,9 @@ def _area(text: str) -> dict | None:
             "shape": "line", "origin": "self",
             "length_ft": int(line.group(1)), "width_ft": int(line.group(2)),
         }
+    radius = re.search(r"within\s+(\d+)\s+feet\s+of\s+(?:it|the [A-Za-z' -]+)", text, re.I)
+    if radius:
+        return {"shape": "emanation", "origin": "self", "radius_ft": int(radius.group(1))}
     return None
 
 
@@ -139,7 +142,7 @@ def parse_save_actions(source_actions: str | None, recharges: dict[str, int]) ->
         success_damage = "half" if re.search(r"half as much damage on a successful", text, re.I) else "none"
         results.append({
             "id": action_id, "name": heading.split("(Recharge", 1)[0].strip(),
-            "save_ability": ability, "dc": dc, "range_ft": area.get("length_ft", 0),
+            "save_ability": ability, "dc": dc, "range_ft": area.get("length_ft", area.get("radius_ft", 0)),
             "area": area, "damage_dice_count": count, "damage_dice_size": size,
             "damage_bonus": bonus, "damage_type": damage_type, "success_damage": success_damage,
             "resource_id": resource_id, "resource_cost": 1,
