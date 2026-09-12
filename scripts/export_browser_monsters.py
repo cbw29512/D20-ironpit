@@ -31,12 +31,9 @@ def _area_row(area):
     if area is None:
         return None
     row = {"shape": area.shape, "origin": area.origin}
-    if area.radius_ft is not None:
-        row["radiusFt"] = area.radius_ft
-    if area.length_ft is not None:
-        row["lengthFt"] = area.length_ft
-    if area.width_ft is not None:
-        row["widthFt"] = area.width_ft
+    if area.radius_ft is not None: row["radiusFt"] = area.radius_ft
+    if area.length_ft is not None: row["lengthFt"] = area.length_ft
+    if area.width_ft is not None: row["widthFt"] = area.width_ft
     return row
 
 
@@ -61,6 +58,12 @@ def _attach_monster_actions(row, template) -> None:
             action_row["area"] = _area_row(action.area)
     if template.attack_action and template.attack_action.policy:
         row.setdefault("attack_action", {})["policy"] = _policy_row(template.attack_action.policy)
+    if template.zero_hp_prevention:
+        row["zeroHpPrevention"] = {
+            "resourceId": template.zero_hp_prevention.resource_id,
+            "maxTriggerDamage": template.zero_hp_prevention.max_trigger_damage,
+            "resultingHp": template.zero_hp_prevention.resulting_hp,
+        }
 
 
 def render() -> str:
@@ -90,8 +93,7 @@ def render() -> str:
 
 def main() -> None:
     try:
-        content = render()
-        DESTINATION.write_text(content, encoding="utf-8")
+        DESTINATION.write_text(render(), encoding="utf-8")
         logger.info("Exported canonical browser monsters to %s.", DESTINATION)
     except Exception:
         logger.exception("Certified browser monster export failed.")
