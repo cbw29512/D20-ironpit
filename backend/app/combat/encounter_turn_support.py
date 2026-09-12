@@ -7,6 +7,7 @@ from app.combat.condition_removal import choose_condition_removal_action, resolv
 from app.combat.encounter_action_surge import resolve_action_surge_attack
 from app.combat.healing import choose_healing_action, resolve_healing
 from app.combat.pit_policy import save_distance, target_order
+from app.combat.rampage import resolve_rampage
 from app.combat.resources import action_resource_available, resource_definition
 from app.combat.saving_throws import legal_save_action, resolve_save_action
 from app.combat.barbarian import finalize_rage_turn
@@ -18,6 +19,10 @@ logger = logging.getLogger(__name__)
 
 def finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key, allow_surge=True):
     try:
+        rampage_events, sequence = resolve_rampage(
+            sequence, round_number, attacker, setup, dice, events, turn_key,
+        )
+        events.extend(rampage_events)
         if allow_surge:
             surge_events, sequence = resolve_action_surge_attack(
                 sequence, round_number, attacker, setup, dice, turn_key,

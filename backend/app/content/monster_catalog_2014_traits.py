@@ -14,6 +14,7 @@ MODELED_TRAITS = {
     "Charge": CombatTrait.CHARGE,
     "Pounce": CombatTrait.CHARGE,
     "Trampling Charge": CombatTrait.CHARGE,
+    "Rampage": CombatTrait.RAMPAGE,
 }
 
 DATA_BOUND_TRAITS = frozenset({
