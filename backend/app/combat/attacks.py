@@ -96,6 +96,7 @@ def resolve_attack(
                 actual_defender, attack, dice, source_id=attacker_event_id,
                 round_number=round_number, affected_states=affected_states,
             )
+            if save_rider.damage_components: damage_components.extend(save_rider.damage_components); damage_roll.total += save_rider.damage_total
             if save_rider.applied_condition and save_rider.applied_condition not in applied_conditions: applied_conditions.append(save_rider.applied_condition)
             topple = resolve_topple_hit(attacker, actual_defender, attack, dice)
             if topple.applied and "prone" not in applied_conditions: applied_conditions.append("prone")
