@@ -12,7 +12,7 @@ _ROLLED = re.compile(
 )
 _FIXED = re.compile(r"(?:,?\s*(?:plus|and)\s+)(\d+)\s+([A-Za-z]+) damage", re.I)
 _PRONE_SAVE = re.compile(
-    r"(?:If the target is (?:(Tiny|Small|Medium|Large|Huge) or smaller),?\s*)?"
+    r"(?:If (?:the )?target is (?:(?:(Tiny|Small|Medium|Large|Huge) or smaller)|a creature),?\s*)?"
     r"(?:the target|it) must succeed on a DC (\d+) (Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) saving throw or be knocked prone\.?'?",
     re.I,
 )
