@@ -88,7 +88,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   verify-2014-json:
@@ -106,6 +106,17 @@ jobs:
         run: python scripts/test_2014_save_actions.py
       - name: Regenerate pinned 327-monster catalog
         run: python scripts/sync_2014_monster_catalog.py
+      - name: Sync deterministic generated catalog
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        run: |
+          if git diff --quiet -- data/monsters/2014/catalog.json; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/monsters/2014/catalog.json
+          git commit -m "chore: sync generated 2014 catalog"
+          git push origin "HEAD:${GITHUB_HEAD_REF}"
       - name: Enforce deterministic generated catalog
         run: git diff --exit-code -- data/monsters/2014/catalog.json
       - name: Upload regenerated catalog
