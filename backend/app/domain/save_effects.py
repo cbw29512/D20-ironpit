@@ -44,6 +44,10 @@ class ConditionEffectDefinition(BaseModel):
     repeat_save_timing: ConditionTiming | None = None
     repeat_save_delay_rounds: int = Field(default=0, ge=0, le=20)
     repeat_save_failure_condition: ConditionName | None = None
+    repeat_save_failure_continues: bool = True
+    repeat_save_failure_duration_rounds: int | None = Field(default=None, ge=1, le=100)
+    repeat_save_failure_ends_on_damage: bool = False
+    repeat_save_failure_allowed_removal_action_ids: list[str] = Field(default_factory=list)
     automatic_success_after_rounds: int | None = Field(default=None, ge=1, le=100)
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
     periodic_damage: PeriodicDamageEffectDefinition | None = None
@@ -57,6 +61,14 @@ class ConditionEffectDefinition(BaseModel):
             raise ValueError("Condition repeat-save delay requires a complete repeat-save rule.")
         if self.repeat_save_failure_condition and not all(item is not None for item in repeat):
             raise ValueError("Repeat-save failure condition requires a complete repeat-save rule.")
+        transition_options = (
+            not self.repeat_save_failure_continues,
+            self.repeat_save_failure_duration_rounds is not None,
+            self.repeat_save_failure_ends_on_damage,
+            bool(self.repeat_save_failure_allowed_removal_action_ids),
+        )
+        if any(transition_options) and self.repeat_save_failure_condition is None:
+            raise ValueError("Second-stage lifecycle options require a repeat-save failure condition.")
         if self.automatic_success_after_rounds and not all(item is not None for item in repeat):
             raise ValueError("Automatic repeat-save success requires a complete repeat-save rule.")
         if self.condition in self.linked_conditions:
