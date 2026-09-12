@@ -20,6 +20,7 @@ on:
       - 'backend/app/domain/targeting.py'
       - 'backend/app/domain/combatants.py'
       - 'backend/app/domain/runtime.py'
+      - 'backend/app/domain/actions.py'
       - 'backend/app/combat/state.py'
       - 'backend/app/combat/attacks.py'
       - 'backend/app/combat/zero_hp.py'
@@ -47,6 +48,7 @@ on:
       - 'backend/app/combat/encounter_turn_support.py'
       - 'backend/app/combat/encounter_combat_turn.py'
       - 'backend/app/combat/timed_conditions.py'
+      - 'backend/app/combat/timed_effect_rules.py'
       - 'backend/app/combat/condition_lifecycle.py'
       - 'backend/app/combat/condition_lifecycle_support.py'
       - 'backend/app/combat/on_hit_saves.py'
@@ -72,6 +74,7 @@ on:
       - 'frontend/browser-turn.js'
       - 'frontend/browser-formation.js'
       - 'frontend/browser-multiattack.js'
+      - 'frontend/browser-modifiers.js'
       - 'frontend/browser-area-shapes.js'
       - 'frontend/browser-area-targeting.js'
       - 'frontend/browser-area-save-actions.js'
@@ -90,6 +93,7 @@ on:
       - 'frontend/browser-2014-multiattack-policy.test.cjs'
       - 'frontend/browser-2014-relentless.test.cjs'
       - 'frontend/browser-2014-sleep-breath.test.cjs'
+      - 'frontend/browser-2014-slowing-breath.test.cjs'
       - 'frontend/browser-2014-regeneration.test.cjs'
       - 'backend/tests/test_parry.py'
       - 'backend/tests/test_2014_json_catalog.py'
@@ -104,6 +108,7 @@ on:
       - 'backend/tests/test_2014_on_hit_save.py'
       - 'backend/tests/test_2014_relentless.py'
       - 'backend/tests/test_2014_sleep_breath.py'
+      - 'backend/tests/test_2014_slowing_breath.py'
       - 'backend/tests/test_2014_regeneration.py'
       - 'backend/tests/test_magic_resistance.py'
       - 'backend/tests/test_conditional_damage_defenses.py'
@@ -219,6 +224,7 @@ jobs:
           tests/test_2014_on_hit_save.py
           tests/test_2014_relentless.py
           tests/test_2014_sleep_breath.py
+          tests/test_2014_slowing_breath.py
           tests/test_2014_regeneration.py
           tests/test_magic_resistance.py
           tests/test_conditional_damage_defenses.py
@@ -234,4 +240,5 @@ jobs:
           node frontend/browser-2014-multiattack-policy.test.cjs
           node frontend/browser-2014-relentless.test.cjs
           node frontend/browser-2014-sleep-breath.test.cjs
+          node frontend/browser-2014-slowing-breath.test.cjs
           node frontend/browser-2014-regeneration.test.cjs
