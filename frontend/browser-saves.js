@@ -47,9 +47,12 @@
     }
     return { roll, succeeded: roll.total >= dc || legendaryOverride(state) };
   }
-  function legalAction(action, target, distance) {
+  function legalAction(action, target, distance, actor = null) {
     if (distance > action.range) return false;
     if (action.requiredTargetCondition && !Q().has(target.state, action.requiredTargetCondition)) return false;
+    if (action.requiredTargetGrappledBySelf) {
+      if (!actor || !(target.state.grapple_sources || []).some((source) => source.source_id === actor.combatant_id)) return false;
+    }
     if (action.forbidTargetAffectedByAction && T()?.affectedByAction(target.state, action.id)) return false;
     return !action.targetMaxSize || S().sizeAtMost(target, action.targetMaxSize);
   }
@@ -78,7 +81,7 @@
       const actionCost = action.actionCost || "action";
       if (resourceBacked && spendResourceCost && !resources) throw new Error("Browser resource API is not loaded.");
       if (spendAction && !E().available(actor.state, actionCost)) throw new Error(`${actionCost.replace("_", " ")} is unavailable for saving throw action.`);
-      if (!legalAction(action, target, distance)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
+      if (!legalAction(action, target, distance, actor)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
       if (resourceBacked && spendResourceCost && !resources.available(actor.state, action.resourceId, action.resourceCost || 1)) throw new Error(`${action.name} lacks its required resource.`);
       const save = resolveSavingThrow(
         target.state, action.saveAbility, action.dc, Boolean(action.magicalEffect), AU().savingThrowAdvantageSources(target, options.setup),
