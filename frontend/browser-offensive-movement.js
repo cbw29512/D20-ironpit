@@ -18,14 +18,17 @@
         if (!target.state.position) throw new Error("Grid offensive movement requires authoritative target positions.");
         const distance = S().distance(member, target);
         for (const option of O().rangesForTarget(member, target, turnKey)) {
+          const maxRange = Number.isFinite(option.maxRange) ? option.maxRange : option.range;
+          const preferredRange = Number.isFinite(option.preferredRange) ? option.preferredRange : maxRange;
           const base = {
             priority: Number.isFinite(option.priority) ? option.priority : 1,
+            executionRank: Number.isFinite(option.executionRank) ? option.executionRank : 99,
             distance,
             targetId: target.combatant_id,
             family: option.family,
-            range: option.range,
+            preferredRange,
           };
-          if (distance <= option.range) {
+          if (distance <= preferredRange) {
             candidates.push({ ...base, cost: 0 });
             continue;
           }
@@ -34,19 +37,23 @@
             member,
             target,
             members,
-            option.range,
+            preferredRange,
             member.state.movement_remaining_ft,
           );
-          if (!plan.goal_reachable || !plan.path.length || plan.final_distance_ft >= distance) continue;
-          candidates.push({ ...base, cost: plan.movement_cost_ft });
+          if (plan.goal_reachable && plan.path.length && plan.final_distance_ft < distance) {
+            candidates.push({ ...base, cost: plan.movement_cost_ft });
+            continue;
+          }
+          if (distance <= maxRange) candidates.push({ ...base, cost: 0 });
         }
       }
       if (!candidates.length) return null;
-      candidates.sort((a, b) => a.priority - b.priority || a.cost - b.cost || a.distance - b.distance
-        || a.targetId.localeCompare(b.targetId) || a.family.localeCompare(b.family) || b.range - a.range);
+      candidates.sort((a, b) => a.priority - b.priority || a.executionRank - b.executionRank
+        || a.cost - b.cost || a.distance - b.distance || a.targetId.localeCompare(b.targetId)
+        || a.family.localeCompare(b.family) || b.preferredRange - a.preferredRange);
       const best = candidates[0];
       if (best.cost === 0) return null;
-      return { targetId: best.targetId, desiredDistanceFt: best.range, family: best.family };
+      return { targetId: best.targetId, desiredDistanceFt: best.preferredRange, family: best.family };
     } catch (error) {
       console.error("Failed browser offensive movement intent", { member: member.combatant_id, error });
       throw error;
