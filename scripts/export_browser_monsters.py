@@ -40,13 +40,27 @@ def _area_row(area):
     return row
 
 
-def _attach_monster_area_actions(row, template) -> None:
+def _policy_row(policy):
+    if policy is None:
+        return None
+    return {
+        "distinctAttackIds": policy.distinct_attack_ids,
+        "repeatSlotIndex": policy.repeat_slot_index,
+        "repeatDiceCount": policy.repeat_dice_count,
+        "repeatDiceSize": policy.repeat_dice_size,
+        "requiresPreviousHitSlots": list(policy.requires_previous_hit_slots),
+        "sameTargetAsPreviousSlots": list(policy.same_target_as_previous_slots),
+    }
+
+
+def _attach_monster_actions(row, template) -> None:
     by_id = {action.id: action for action in template.saving_throw_actions}
     for action_row in row.get("saving_throw_actions", []):
         action = by_id.get(action_row["id"])
-        if action is None or action.area is None:
-            continue
-        action_row["area"] = _area_row(action.area)
+        if action is not None and action.area is not None:
+            action_row["area"] = _area_row(action.area)
+    if template.attack_action and template.attack_action.policy:
+        row.setdefault("attack_action", {})["policy"] = _policy_row(template.attack_action.policy)
 
 
 def render() -> str:
@@ -55,7 +69,7 @@ def render() -> str:
         for template in _certified_monsters():
             row = template_row(template)
             row["creature_type"] = template.creature_type
-            _attach_monster_area_actions(row, template)
+            _attach_monster_actions(row, template)
             rows.append(row)
         ids = {row["id"] for row in rows}
         if len(rows) != len(ids):
