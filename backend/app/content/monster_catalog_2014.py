@@ -6,13 +6,18 @@ from pathlib import Path
 
 from pydantic import TypeAdapter
 
+from app.combat.legendary_resistance import LEGENDARY_RESISTANCE_RESOURCE_ID
 from app.content.monster_catalog_2014_defenses import conditional_resistances_2014, unresolved_defenses_2014
 from app.content.monster_catalog_2014_models import CatalogAttack2014, CatalogMonster2014
-from app.content.monster_catalog_2014_traits import combat_traits_2014, unresolved_traits_2014
+from app.content.monster_catalog_2014_traits import (
+    combat_traits_2014,
+    legendary_resistance_uses_2014,
+    unresolved_traits_2014,
+)
 from app.domain.character_builds import AbilityScores
 from app.domain.models import (
-    AttackActionDefinition, AttackActionSlot, CombatantTemplate, OnHitDamage, VisualLoadout,
-    Weapon, WeaponAttack, WeaponAttackKind,
+    AttackActionDefinition, AttackActionSlot, CombatantTemplate, OnHitDamage, ResourceDefinition,
+    VisualLoadout, Weapon, WeaponAttack, WeaponAttackKind,
 )
 from app.domain.movement import MovementModes
 from app.domain.reactions import ParryReaction
@@ -68,6 +73,13 @@ def _saving_throw_bonuses(source: CatalogMonster2014) -> dict[str, int]:
     return bonuses
 
 
+def _resources(source: CatalogMonster2014) -> list[ResourceDefinition]:
+    uses = legendary_resistance_uses_2014(source.trait_names)
+    if not uses:
+        return []
+    return [ResourceDefinition(id=LEGENDARY_RESISTANCE_RESOURCE_ID, name="Legendary Resistance", max_uses=uses)]
+
+
 def _multiattack(source: CatalogMonster2014, attacks: list[WeaponAttack]) -> AttackActionDefinition | None:
     if not source.multiattack_slots: return None
     known = {attack.id for attack in attacks}; slots: list[AttackActionSlot] = []
@@ -87,8 +99,7 @@ def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
         blockers.extend(f"attack-detail:{attack.name}" for attack in source.attacks if not attack.source_complete)
         blockers.extend(f"action:{name}" for name in source.action_names if name not in supported_actions)
         blockers.extend(f"trait:{name}" for name in unresolved_traits_2014(source.trait_names))
-        if "Charge" in source.trait_names and not any(attack.charge_profile for attack in source.attacks):
-            blockers.append("trait:Charge")
+        if "Charge" in source.trait_names and not any(attack.charge_profile for attack in source.attacks): blockers.append("trait:Charge")
         blockers.extend(f"reaction:{name}" for name in source.reaction_names if name not in supported_reactions)
         blockers.extend(f"legendary:{name}" for name in source.legendary_action_names)
         if not source.attacks: blockers.append("attack:no-structured-attack")
@@ -118,7 +129,7 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
             saving_throw_bonuses=_saving_throw_bonuses(source), skill_bonuses=source.skills, damage_resistances=source.damage_resistances,
             conditional_damage_resistances=conditional_resistances_2014(source.unsupported_defense_text),
             damage_immunities=source.damage_immunities, damage_vulnerabilities=source.damage_vulnerabilities,
-            condition_immunities=source.condition_immunities, combat_traits=traits,
+            condition_immunities=source.condition_immunities, combat_traits=traits, resources=_resources(source),
             parry_reaction=ParryReaction(ac_bonus=source.parry_ac_bonus) if source.parry_ac_bonus is not None else None,
             visual=VisualLoadout(armor="source", main_hand=attacks[0].weapon.id, body_style=source.creature_type),
             source=f"2014 JSON catalog: {source.id}",
