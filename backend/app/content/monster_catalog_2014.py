@@ -77,6 +77,7 @@ def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
         if source.multiattack_slots:
             supported_actions.add("Multiattack")
         blockers = [f"defense:{text}" for text in source.unsupported_defense_text]
+        blockers.extend(f"attack-detail:{attack.name}" for attack in source.attacks if not attack.source_complete)
         blockers.extend(f"action:{name}" for name in source.action_names if name not in supported_actions)
         blockers.extend(f"trait:{name}" for name in unresolved_traits_2014(source.trait_names))
         blockers.extend(f"reaction:{name}" for name in source.reaction_names)
