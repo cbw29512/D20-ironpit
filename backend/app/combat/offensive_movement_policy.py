@@ -12,6 +12,20 @@ from app.domain.grid import OffensiveMovementIntent
 from app.domain.models import BattleEvent
 
 logger = logging.getLogger(__name__)
+Candidate = tuple[int, int, float, int, int, str, str, int]
+
+
+def _candidate(profile, movement_cost: int, distance: int, target_id: str) -> Candidate:
+    return (
+        profile.priority,
+        profile.execution_rank,
+        -profile.expected_value,
+        movement_cost,
+        distance,
+        target_id,
+        profile.family,
+        profile.preferred_range_ft,
+    )
 
 
 def choose_offensive_movement_intent(
@@ -19,23 +33,23 @@ def choose_offensive_movement_intent(
     setup: EncounterSetup,
     turn_key: str,
 ) -> OffensiveMovementIntent | None:
-    """Move only when this turn can actually reach or improve the preferred offense."""
+    """Prefer actionable offense; otherwise make useful progress toward the best offense."""
     try:
         if not is_available(attacker.state, "action") or setup.map_definition is None:
             return None
         if attacker.state.position is None:
             raise ValueError("Grid offensive movement requires an authoritative attacker position.")
         members = [*setup.heroes, *setup.monsters]
-        candidates: list[tuple[int, int, float, int, int, str, str, int]] = []
+        actionable: list[Candidate] = []
+        partial: list[Candidate] = []
         for target in living_opponents(attacker, setup):
             if target.state.position is None:
                 raise ValueError("Grid offensive movement requires authoritative target positions.")
             distance = combatant_distance(attacker, target)
             profiles = ranked_offensive_range_profiles_for_target(attacker, target, turn_key, setup)
             for profile in profiles:
-                base = (profile.priority, profile.execution_rank, -profile.expected_value)
                 if distance <= profile.preferred_range_ft:
-                    candidates.append((*base, 0, distance, target.combatant_id, profile.family, profile.preferred_range_ft))
+                    actionable.append(_candidate(profile, 0, distance, target.combatant_id))
                     continue
                 plan = plan_movement_toward(
                     setup.map_definition,
@@ -46,17 +60,14 @@ def choose_offensive_movement_intent(
                     attacker.state.movement_remaining_ft,
                 )
                 if plan.path and plan.final_distance_ft <= profile.preferred_range_ft:
-                    candidates.append((
-                        *base,
-                        plan.movement_cost_ft,
-                        distance,
-                        target.combatant_id,
-                        profile.family,
-                        profile.preferred_range_ft,
-                    ))
+                    actionable.append(_candidate(profile, plan.movement_cost_ft, distance, target.combatant_id))
                     continue
                 if distance <= profile.max_range_ft:
-                    candidates.append((*base, 0, distance, target.combatant_id, profile.family, profile.preferred_range_ft))
+                    actionable.append(_candidate(profile, 0, distance, target.combatant_id))
+                    continue
+                if plan.goal_reachable and plan.path and plan.final_distance_ft < distance:
+                    partial.append(_candidate(profile, plan.movement_cost_ft, distance, target.combatant_id))
+        candidates = actionable or partial
         if not candidates:
             return None
         _, _, _, movement_cost, _, target_id, family, desired_distance = min(candidates)
@@ -82,7 +93,7 @@ def move_to_enable_offense(
     turn_key: str,
     dice,
 ) -> tuple[list[BattleEvent], int]:
-    """Advance along a legal route that enables or improves the preferred offense."""
+    """Advance along a legal route that enables or approaches the preferred offense."""
     try:
         if setup.map_definition is None:
             return [], sequence
