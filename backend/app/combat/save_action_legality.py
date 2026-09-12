@@ -16,6 +16,40 @@ def _forbidden_effect_families(action: SavingThrowAction) -> set[str]:
     }
 
 
+def save_action_target_eligible(
+    action: SavingThrowAction,
+    target: EncounterCombatant,
+    actor: EncounterCombatant | None = None,
+) -> bool:
+    """Return whether target-state restrictions permit this save action, ignoring range."""
+    try:
+        if action.required_target_condition and not has_condition(target.state, action.required_target_condition):
+            return False
+        if action.required_target_grappled_by_self:
+            if actor is None or not any(
+                source.source_id == actor.combatant_id
+                for source in target.state.grapple_sources
+            ):
+                return False
+        if action.forbid_target_affected_by_action:
+            families = _forbidden_effect_families(action)
+            if families and any(
+                effect.effect_family in families for effect in target.state.timed_effects
+            ):
+                return False
+            if not families and any(
+                effect.source_effect_id == action.id for effect in target.state.timed_effects
+            ):
+                return False
+        return action.target_max_size is None or size_at_most(
+            target.state.template.size,
+            action.target_max_size,
+        )
+    except Exception:
+        logger.exception("Failed save-action target eligibility check for %s.", action.id)
+        raise
+
+
 def legal_save_action(
     action: SavingThrowAction,
     target: EncounterCombatant,
@@ -26,21 +60,10 @@ def legal_save_action(
     try:
         if distance_ft > action.range_ft:
             return False
-        if action.required_target_condition and not has_condition(target.state, action.required_target_condition):
-            return False
-        if action.required_target_grappled_by_self:
-            if actor is None or not any(source.source_id == actor.combatant_id for source in target.state.grapple_sources):
-                return False
-        if action.forbid_target_affected_by_action:
-            families = _forbidden_effect_families(action)
-            if families and any(effect.effect_family in families for effect in target.state.timed_effects):
-                return False
-            if not families and any(effect.source_effect_id == action.id for effect in target.state.timed_effects):
-                return False
-        return action.target_max_size is None or size_at_most(target.state.template.size, action.target_max_size)
+        return save_action_target_eligible(action, target, actor)
     except Exception:
         logger.exception("Failed save-action legality check for %s.", action.id)
         raise
 
 
-__all__ = ["legal_save_action"]
+__all__ = ["legal_save_action", "save_action_target_eligible"]
