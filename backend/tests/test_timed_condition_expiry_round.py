@@ -1,7 +1,7 @@
 from app.combat.condition_lifecycle import resolve_target_condition_timing
 from app.combat.state import build_combatant_state
 from app.combat.timed_conditions import apply_timed_condition
-from app.content.certified_heroes import build_karnok_stoneward
+from app.content.audited_fighter import build_karnok_stoneward
 from app.domain.encounters import EncounterCombatant
 
 
