@@ -44,6 +44,7 @@ class HitControlEffect(BaseModel):
     repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
     repeat_save_timing: ConditionTiming | None = None
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
+    ends_on_damage: bool = False
     source_effect_immunity_on_end: bool = False
 
     @model_validator(mode="after")
