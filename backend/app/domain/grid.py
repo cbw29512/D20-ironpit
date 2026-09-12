@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 
 class GridPosition(BaseModel):
@@ -56,8 +56,19 @@ class GridDestinationPlan(BaseModel):
 
 
 class OffensiveMovementIntent(BaseModel):
-    """Action-neutral reason for approaching an enemy through the shared movement engine."""
+    """Action-neutral target approach or exact tactical path."""
 
-    target_id: str = Field(min_length=1)
-    desired_distance_ft: int = Field(ge=0)
+    mode: Literal["target", "path"] = "target"
     family: Literal["melee", "ranged", "spell", "ability"]
+    target_id: str | None = None
+    desired_distance_ft: int | None = Field(default=None, ge=0)
+    path: list[GridPosition] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def validate_mode(self) -> "OffensiveMovementIntent":
+        if self.mode == "target":
+            if not self.target_id or self.desired_distance_ft is None or self.path:
+                raise ValueError("Target movement requires target/distance and no exact path.")
+        elif self.target_id is not None or self.desired_distance_ft is not None or not self.path:
+            raise ValueError("Path movement requires a non-empty path and no target/distance.")
+        return self
