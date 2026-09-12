@@ -27,7 +27,7 @@
         for (const action of member.state.template.saving_throw_actions || []) {
           if (action.area || !usableRecharge(member, action)) continue;
           const distance = F().saveDistance(member, target, action.range);
-          if (V().legalAction(action, target, distance)) return { target, action, distance };
+          if (V().legalAction(action, target, distance, member)) return { target, action, distance };
         }
       }
       return null;
