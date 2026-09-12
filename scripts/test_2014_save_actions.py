@@ -39,6 +39,27 @@ def main() -> int:
     assert parsed[0]["resource_id"] == "breath-weapons"
     assert parsed[0]["id"] == "fire-breath"
 
+    paralyzing = (
+        "<p><strong>Breath Weapons (Recharge 5–6).</strong> The dragon uses one of the following "
+        "breath weapons.</p>"
+        "<p><strong>Paralyzing Breath.</strong> The dragon exhales paralyzing gas in a 30-foot cone. "
+        "Each creature in that area must succeed on a DC 18 Constitution saving throw or be paralyzed "
+        "for 1 minute. A creature can repeat the saving throw at the end of each of its turns, ending "
+        "the effect on itself on a success.</p>"
+    )
+    parsed = parse_save_actions(paralyzing, {"breath-weapons": 5})
+    assert parsed == [{
+        "id": "paralyzing-breath", "name": "Paralyzing Breath",
+        "save_ability": "constitution", "dc": 18, "range_ft": 30,
+        "area": {"shape": "cone", "origin": "self", "length_ft": 30},
+        "failure_control_effect": {
+            "condition_id": "paralyzed", "expiry_timing": "target_turn_end",
+            "duration_rounds": 10, "repeat_save_ability": "constitution",
+            "repeat_save_dc": 18, "repeat_save_timing": "target_turn_end",
+        },
+        "resource_id": "breath-weapons", "resource_cost": 1, "animation": "paralyzed",
+    }]
+
     fear = (
         "<p><strong>Frightful Presence.</strong> Each creature of the dragon's choice that is within "
         "120 feet of the dragon and aware of it must succeed on a DC 19 Wisdom saving throw or become "
