@@ -49,6 +49,28 @@ def _automatic_spell_row(action):
     }
 
 
+def _timed_control_row(effect):
+    if effect is None: return None
+    row = {}
+    if effect.condition_id: row["conditionId"] = effect.condition_id
+    if effect.effect_id: row["effectId"] = effect.effect_id
+    if effect.expires_at_start_of_source_turn: row["expiresAtStartOfSourceTurn"] = True
+    if effect.expiry_timing: row["expiryTiming"] = effect.expiry_timing
+    if effect.duration_rounds is not None: row["durationRounds"] = effect.duration_rounds
+    if effect.repeat_save_ability:
+        row["repeatSaveAbility"] = effect.repeat_save_ability
+        row["repeatSaveDc"] = effect.repeat_save_dc
+        row["repeatSaveTiming"] = effect.repeat_save_timing
+    if effect.allowed_removal_action_ids: row["allowedRemovalActionIds"] = list(effect.allowed_removal_action_ids)
+    if effect.ends_on_damage: row["endsOnDamage"] = True
+    if effect.source_effect_immunity_on_end: row["sourceEffectImmunityOnEnd"] = True
+    if effect.speed_multiplier != 1.0: row["speedMultiplier"] = effect.speed_multiplier
+    if effect.blocks_reactions: row["blocksReactions"] = True
+    if effect.action_bonus_exclusive: row["actionBonusExclusive"] = True
+    if effect.max_attacks_per_turn is not None: row["maxAttacksPerTurn"] = effect.max_attacks_per_turn
+    return row or None
+
+
 def _attach_source_fingerprint(row, template) -> None:
     row["source_trait_names"] = list(template.source_trait_names); row["source_reaction_names"] = list(template.source_reaction_names)
     row["source_bonus_action_names"] = list(template.source_bonus_action_names); row["source_limited_use_names"] = list(template.source_limited_use_names)
@@ -64,6 +86,8 @@ def _attach_monster_actions(row, template) -> None:
         if action is None: continue
         if action.area is not None: action_row["area"] = _area_row(action.area)
         if action.failure_push_ft: action_row["failurePushFt"] = action.failure_push_ft
+        control = _timed_control_row(action.failure_control_effect)
+        if control: action_row["failureControlEffect"] = control
     attack_by_id = {attack.id: attack for attack in [template.weapon_attack, *template.alternate_weapon_attacks]}
     for attack_row in row.get("attacks", []):
         attack = attack_by_id.get(attack_row["id"]); effect = attack.on_hit_save_effect if attack else None
