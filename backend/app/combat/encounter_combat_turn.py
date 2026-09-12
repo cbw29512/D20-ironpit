@@ -10,6 +10,7 @@ from app.combat.charge import resolve_charge_closing
 from app.combat.condition_rules import is_incapacitated
 from app.combat.dice import DiceProvider
 from app.combat.dodge import resolve_dodge_action
+from app.combat.encounter_area_actions import resolve_ready_area_action
 from app.combat.encounter_turn_support import (
     finish_turn,
     recharge_action_ready,
@@ -35,6 +36,15 @@ from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 
 logger = logging.getLogger(__name__)
+
+
+def _resolve_recharge_priority(sequence, round_number, attacker, setup, dice):
+    area_events, sequence, fired = resolve_ready_area_action(
+        sequence, round_number, attacker, setup, dice, recharge_only=True,
+    )
+    if fired:
+        return area_events, sequence, True
+    return resolve_ready_recharge_action(sequence, round_number, attacker, setup, dice)
 
 
 def resolve_combat_turn(
@@ -82,7 +92,7 @@ def resolve_combat_turn(
                 events.append(adrenaline_event)
                 sequence += 1
 
-        priority_events, sequence, fired = resolve_ready_recharge_action(
+        priority_events, sequence, fired = _resolve_recharge_priority(
             sequence, round_number, attacker, setup, dice,
         )
         events.extend(priority_events)
@@ -113,7 +123,7 @@ def resolve_combat_turn(
         if attacker.state.is_dead or attacker.state.is_unconscious or is_incapacitated(attacker.state):
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
-        priority_events, sequence, fired = resolve_ready_recharge_action(
+        priority_events, sequence, fired = _resolve_recharge_priority(
             sequence, round_number, attacker, setup, dice,
         )
         events.extend(priority_events)
