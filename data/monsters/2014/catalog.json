@@ -132,6 +132,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/11/1000/1000/636238825975375671.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -482,6 +483,7 @@
       }
     ],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -699,6 +701,7 @@
       }
     ],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -912,6 +915,7 @@
       }
     ],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -1106,6 +1110,7 @@
       }
     ],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -1318,6 +1323,7 @@
       }
     ],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -1532,6 +1538,7 @@
       }
     ],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -1754,6 +1761,7 @@
       }
     ],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -1970,6 +1978,7 @@
       }
     ],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -2205,6 +2214,7 @@
       }
     ],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -2423,6 +2433,7 @@
       }
     ],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -2538,6 +2549,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/127/1000/1000/636252755648556800.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -2873,6 +2885,7 @@
       }
     ],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -3070,6 +3083,7 @@
       }
     ],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -3284,6 +3298,7 @@
       }
     ],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -3498,6 +3513,7 @@
       }
     ],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -3711,6 +3727,7 @@
       }
     ],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -3925,6 +3942,7 @@
       }
     ],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -4128,6 +4146,7 @@
       }
     ],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -4344,6 +4363,7 @@
       }
     ],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -4579,6 +4599,7 @@
       }
     ],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -4797,6 +4818,7 @@
       }
     ],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -4919,6 +4941,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/157/1000/1000/636252759145617281.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": {
       "caster_level": 12,
       "ability": "wisdom",
@@ -5119,6 +5142,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/8/429/1000/1000/636306156895834255.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -5430,6 +5454,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -5840,6 +5865,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/9/910/315/315/636334293020978804.png",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -6570,6 +6596,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/175/1000/1000/636252761612038117.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -6833,6 +6860,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/181/1000/1000/636252761965117015.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -7108,6 +7136,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/486/315/315/636376302569423870.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -7424,6 +7453,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/193/1000/1000/636252763397604505.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -7560,6 +7590,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/195/1000/1000/636252763748680024.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -7767,6 +7798,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -8574,6 +8606,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/9/481/1000/1000/636328225187253200.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -8942,6 +8975,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -9502,6 +9536,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/227/1000/1000/636252765573266420.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -9617,6 +9652,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/235/1000/1000/636252766618069332.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -9763,6 +9799,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/237/1000/1000/636252766770156389.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -9978,6 +10015,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/243/315/315/636252767318152303.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -10102,6 +10140,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/245/1000/1000/636252767458838228.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -10308,6 +10347,7 @@
       "source_complete": true,
       "unsupported_text": null
     },
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -11259,6 +11299,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/259/1000/1000/636252768307230924.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": {
       "caster_level": 4,
       "ability": "wisdom",
@@ -11520,6 +11561,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/470/1000/1000/636376290137285130.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -11710,6 +11752,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/265/1000/1000/636252768823194310.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -12111,6 +12154,7 @@
       "source_complete": true,
       "unsupported_text": null
     },
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -12419,6 +12463,7 @@
       "source_complete": true,
       "unsupported_text": null
     },
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -12522,6 +12567,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/289/315/315/636252770983164351.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -12779,6 +12825,7 @@
       }
     ],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -12903,6 +12950,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/293/1000/1000/636252771253285096.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -13106,6 +13154,7 @@
       "source_complete": true,
       "unsupported_text": null
     },
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -13984,6 +14033,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/317/315/315/636252772331779404.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -14198,6 +14248,7 @@
       "source_complete": true,
       "unsupported_text": null
     },
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -14591,6 +14642,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/329/1000/1000/636252776041158657.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -14732,6 +14784,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/339/315/315/636252776771842998.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -14852,6 +14905,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/341/1000/1000/636252776953634777.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -14963,6 +15017,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/343/1000/1000/636252777098624896.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -15088,6 +15143,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/357/1000/1000/636252778143767005.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -15203,6 +15259,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/14/487/315/315/636364325235118776.png",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": {
       "caster_level": 5,
       "ability": "intelligence",
@@ -15359,6 +15416,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/359/315/315/636252778311644574.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -15751,6 +15809,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/405/1000/1000/636252786158646348.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -15877,6 +15936,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/407/315/315/636252786295384889.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -16451,6 +16511,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -16569,6 +16630,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/530/1000/1000/636376327839601860.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -17185,6 +17247,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -17305,6 +17368,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/9/894/315/315/636334286969931904.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -18386,6 +18450,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -18902,6 +18967,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -19486,6 +19552,7 @@
       "source_complete": true,
       "unsupported_text": null
     },
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -19677,6 +19744,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/656/humanoid.jpg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -20917,6 +20985,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/373/315/315/636252779693862725.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -21469,6 +21538,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/383/315/315/636252780786457550.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": {
       "caster_level": 9,
       "ability": "intelligence",
@@ -21836,6 +21906,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/391/315/315/636252781955908234.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -22184,6 +22255,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/321/315/315/636252775562934524.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -22302,6 +22374,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/331/315/315/636252776196140305.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -22422,6 +22495,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/335/315/315/636252776578605778.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -22785,6 +22859,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/347/315/315/636252777255936976.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -23242,6 +23317,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/353/315/315/636252777966974765.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -23588,6 +23664,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/367/315/315/636252779159282339.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -23746,6 +23823,7 @@
       }
     ],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -24030,6 +24108,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/656/humanoid.jpg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -25909,6 +25988,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/187/315/315/636252762623266809.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -26065,6 +26145,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/189/315/315/636252763036079032.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -26325,6 +26406,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/580/1000/1000/636376361850900325.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -26606,6 +26688,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/203/315/315/636252764097970952.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -27181,6 +27264,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/225/1000/1000/636252765553048566.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -27311,6 +27395,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/660/undead.jpg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": {
       "caster_level": 10,
       "ability": "wisdom",
@@ -27543,6 +27628,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/261/1000/1000/636252768396688147.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -27987,6 +28073,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/14/475/1000/1000/636364321398842272.png",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -28606,6 +28693,7 @@
       "source_complete": true,
       "unsupported_text": null
     },
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -28877,6 +28965,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/305/315/315/636252771931366466.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -29088,6 +29177,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/315/315/315/636252772225295187.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -29597,6 +29687,7 @@
       "source_complete": false,
       "unsupported_text": "Fear Aura. incapacitatedfrightened Magic Resistance. Magic Weapons. Innate Spellcasting. detect magicfireballhold monsterwall of fire"
     },
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -29799,6 +29890,7 @@
       "source_complete": true,
       "unsupported_text": null
     },
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -30104,6 +30196,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -31082,6 +31175,7 @@
       "source_complete": true,
       "unsupported_text": null
     },
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -31892,6 +31986,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/229/315/315/636252765590929622.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -31992,6 +32087,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/560/1000/1000/636376344528091115.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -32473,6 +32569,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/177/1000/1000/636252761683746719.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -32682,6 +32779,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/173/1000/1000/636252761197608364.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -33034,6 +33132,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/163/1000/1000/636252759915100020.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -33510,6 +33609,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/145/315/315/636252758362792494.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -34064,6 +34164,7 @@
       "source_complete": true,
       "unsupported_text": null
     },
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -34796,6 +34897,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/656/humanoid.jpg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -35239,6 +35341,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/107/315/315/636252743780112834.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -35433,6 +35536,7 @@
       "source_complete": true,
       "unsupported_text": null
     },
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -36437,6 +36541,7 @@
       }
     ],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -36557,6 +36662,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/99/1000/1000/636252741335519081.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -36801,6 +36907,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/97/315/315/636252740537990664.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -37174,6 +37281,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/95/315/315/636252739682234623.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -37389,6 +37497,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/594/1000/1000/636376369004412963.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -37588,6 +37697,7 @@
       "source_complete": true,
       "unsupported_text": null
     },
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -38220,6 +38330,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/87/315/315/636252737538172594.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -38610,6 +38721,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/84/315/315/636252736680781387.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -40396,6 +40508,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/48/315/315/636252723695596000.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -40527,6 +40640,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/46/1000/1000/636252723241554579.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -40639,6 +40753,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/8/662/1000/1000/636313413410825930.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -40803,6 +40918,7 @@
       }
     ],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -40965,6 +41081,7 @@
       }
     ],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -41122,6 +41239,7 @@
       }
     ],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -41260,6 +41378,7 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/64/315/315/636252731269768088.jpeg",
     "saving_throw_actions": [],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -41417,6 +41536,7 @@
       }
     ],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -41576,6 +41696,7 @@
       }
     ],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -41742,6 +41863,7 @@
       }
     ],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -41903,6 +42025,7 @@
       }
     ],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -42082,6 +42205,7 @@
       }
     ],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
@@ -42246,6 +42370,7 @@
       }
     ],
     "innate_spellcasting": null,
+    "multiattack_policy": null,
     "spellcasting": null
   },
   {
