@@ -9,6 +9,7 @@ from import_2014_multiattack_variants import (
     inline_count_alternative,
     medusa_style,
     replacement,
+    simple_patterns,
 )
 
 NUMBER_WORDS = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7}
@@ -38,7 +39,8 @@ def _ids_for_name(name: str, attacks: list[dict]) -> list[str]:
 def _ids_for_label(label: str, attacks: list[dict]) -> list[str]:
     ids: list[str] = []
     for choice in re.split(r"\s+or\s+", label, flags=re.I):
-        for attack_id in _ids_for_name(choice.strip(), attacks):
+        clean = re.sub(r"^(?:its|his|her)\s+", "", choice.strip(), flags=re.I)
+        for attack_id in _ids_for_name(clean, attacks):
             if attack_id not in ids:
                 ids.append(attack_id)
     return ids
@@ -48,8 +50,7 @@ def _repeated_named(text: str, attacks: list[dict]) -> list[list[str]] | None:
     match = re.search(r"makes (one|two|three|four|five|six|seven) ([a-z][a-z -]*?) attacks?\.?$", text, re.I)
     if not match:
         return None
-    count = NUMBER_WORDS[match.group(1).lower()]
-    label = match.group(2).strip()
+    count = NUMBER_WORDS[match.group(1).lower()]; label = match.group(2).strip()
     ids = [attack["id"] for attack in attacks if attack["kind"] == label.lower()] if label.lower() in {"melee", "ranged"} else _ids_for_label(label, attacks)
     return [ids[:] for _ in range(count)] if ids else None
 
@@ -116,6 +117,7 @@ def parse_multiattack(source_actions: str | None, attacks: list[dict]) -> dict |
             or replacement(text, attacks, _ids_for_label, NUMBER_WORDS)
             or alternatives(text, attacks, _ids_for_label, _sequence, NUMBER_WORDS)
             or inline_count_alternative(text, attacks, _ids_for_label, _sequence, NUMBER_WORDS)
+            or simple_patterns(text, attacks, _ids_for_label, NUMBER_WORDS)
             or _sequence(text, attacks)
         )
         slots = apply_any_replacement(text, slots, attacks, _ids_for_label)
