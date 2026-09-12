@@ -6,17 +6,16 @@ from pathlib import Path
 
 from pydantic import TypeAdapter
 
-from app.combat.legendary_resistance import LEGENDARY_RESISTANCE_RESOURCE_ID
+from app.content.monster_catalog_2014_compile_support import (
+    ability_scores_2014,
+    resources_2014,
+    saving_throw_bonuses_2014,
+)
 from app.content.monster_catalog_2014_defenses import conditional_resistances_2014, unresolved_defenses_2014
 from app.content.monster_catalog_2014_models import CatalogAttack2014, CatalogMonster2014
-from app.content.monster_catalog_2014_traits import (
-    combat_traits_2014,
-    legendary_resistance_uses_2014,
-    unresolved_traits_2014,
-)
-from app.domain.character_builds import AbilityScores
+from app.content.monster_catalog_2014_traits import combat_traits_2014, unresolved_traits_2014
 from app.domain.models import (
-    AttackActionDefinition, AttackActionSlot, CombatantTemplate, OnHitDamage, ResourceDefinition,
+    AttackActionDefinition, AttackActionSlot, CombatantTemplate, OnHitDamage,
     VisualLoadout, Weapon, WeaponAttack, WeaponAttackKind,
 )
 from app.domain.movement import MovementModes
@@ -27,10 +26,6 @@ logger = logging.getLogger(__name__)
 CATALOG_ROOT = Path(__file__).resolve().parents[3] / "data" / "monsters" / "2014"
 MVP_CATALOG_PATH = CATALOG_ROOT / "mvp_catalog.json"
 _MONSTERS = TypeAdapter(list[CatalogMonster2014])
-_ABILITY_NAMES = {
-    "str": "strength", "dex": "dexterity", "con": "constitution",
-    "int": "intelligence", "wis": "wisdom", "cha": "charisma",
-}
 
 
 def _attack(source: CatalogAttack2014, *, magical: bool = False) -> WeaponAttack:
@@ -57,27 +52,6 @@ def _attack(source: CatalogAttack2014, *, magical: bool = False) -> WeaponAttack
     except Exception as exc:
         logger.exception("Failed to compile 2014 catalog attack %s.", source.id)
         raise RuntimeError(f"2014 attack {source.id} could not be compiled.") from exc
-
-
-def _ability_scores(source: CatalogMonster2014) -> AbilityScores:
-    try:
-        return AbilityScores(**{name: source.abilities[key] for key, name in _ABILITY_NAMES.items()})
-    except Exception as exc:
-        logger.exception("Invalid 2014 ability scores for %s.", source.id)
-        raise RuntimeError(f"2014 monster {source.id} has invalid ability scores.") from exc
-
-
-def _saving_throw_bonuses(source: CatalogMonster2014) -> dict[str, int]:
-    bonuses = {full: (source.abilities[short] - 10) // 2 for short, full in _ABILITY_NAMES.items()}
-    for key, value in source.saving_throws.items(): bonuses[_ABILITY_NAMES.get(key, key)] = value
-    return bonuses
-
-
-def _resources(source: CatalogMonster2014) -> list[ResourceDefinition]:
-    uses = legendary_resistance_uses_2014(source.trait_names)
-    if not uses:
-        return []
-    return [ResourceDefinition(id=LEGENDARY_RESISTANCE_RESOURCE_ID, name="Legendary Resistance", max_uses=uses)]
 
 
 def _multiattack(source: CatalogMonster2014, attacks: list[WeaponAttack]) -> AttackActionDefinition | None:
@@ -123,13 +97,13 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
         return CombatantTemplate(
             id=f"2014-{source.id}", name=source.name, archetype=source.name,
             challenge_rating=source.challenge_rating, kind="monster", creature_type=source.creature_type, size=source.size,
-            ability_scores=_ability_scores(source), armor_class=source.armor_class, max_hp=source.max_hp,
+            ability_scores=ability_scores_2014(source), armor_class=source.armor_class, max_hp=source.max_hp,
             speed_ft=movement.walk_ft, movement_modes=movement, initiative_bonus=(dex - 10) // 2,
             weapon_attack=attacks[0], alternate_weapon_attacks=attacks[1:], attack_action=_multiattack(source, attacks),
-            saving_throw_bonuses=_saving_throw_bonuses(source), skill_bonuses=source.skills, damage_resistances=source.damage_resistances,
+            saving_throw_bonuses=saving_throw_bonuses_2014(source), skill_bonuses=source.skills, damage_resistances=source.damage_resistances,
             conditional_damage_resistances=conditional_resistances_2014(source.unsupported_defense_text),
             damage_immunities=source.damage_immunities, damage_vulnerabilities=source.damage_vulnerabilities,
-            condition_immunities=source.condition_immunities, combat_traits=traits, resources=_resources(source),
+            condition_immunities=source.condition_immunities, combat_traits=traits, resources=resources_2014(source),
             parry_reaction=ParryReaction(ac_bonus=source.parry_ac_bonus) if source.parry_ac_bonus is not None else None,
             visual=VisualLoadout(armor="source", main_hand=attacks[0].weapon.id, body_style=source.creature_type),
             source=f"2014 JSON catalog: {source.id}",
