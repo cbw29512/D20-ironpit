@@ -41,6 +41,7 @@ const target = {
 {
   const actor = member({
     attacks: [{ id: "bow", kind: "ranged", normal: 80, long: 320 }],
+    attack_action: { slots: [{ attackIds: ["bow"], saveActionIds: [] }] },
     spell_attack_actions: [], spell_save_actions: [], automatic_spell_actions: [], saving_throw_actions: [],
   });
   const [profile] = ranges.rangesForTarget(actor, target, "1:actor");
