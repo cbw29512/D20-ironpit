@@ -5,6 +5,7 @@ from collections.abc import Callable
 
 AttackIds = Callable[[str, list[dict]], list[str]]
 _SUBJECT = r"(?:the [a-z][a-z -]*? )?"
+_COUNTS = {"two": 2, "three": 3, "four": 4}
 
 
 def parse_policy_multiattack(text: str, attacks: list[dict], ids_for_label: AttackIds) -> dict | None:
@@ -14,14 +15,30 @@ def parse_policy_multiattack(text: str, attacks: list[dict], ids_for_label: Atta
         re.I,
     )
     if capped:
-        counts = {"two": 2, "three": 3, "four": 4}
         capped_ids = ids_for_label(capped.group(2), attacks)
         all_ids = [attack["id"] for attack in attacks]
         if len(capped_ids) == 1 and all_ids:
             return {
                 "id": "multiattack", "name": "Multiattack",
-                "slots": [all_ids[:] for _ in range(counts[capped.group(1).lower()])],
+                "slots": [all_ids[:] for _ in range(_COUNTS[capped.group(1).lower()])],
                 "policy": {"at_most_once_attack_ids": capped_ids},
+            }
+
+    drawn_extra = re.fullmatch(
+        _SUBJECT + r"makes (two|three|four) ([a-z][a-z -]*?) attacks?\. "
+        r"if (?:it|he|she) has (?:a|an|its|his|her) ([a-z][a-z -]*?) drawn, "
+        r"(?:it|he|she) can also make (?:a|an|one) ([a-z][a-z -]*?) attack\. ?",
+        text,
+        re.I,
+    )
+    if drawn_extra:
+        primary = ids_for_label(drawn_extra.group(2), attacks)
+        drawn = ids_for_label(drawn_extra.group(3), attacks)
+        extra = ids_for_label(drawn_extra.group(4), attacks)
+        if primary and extra and set(drawn) == set(extra):
+            return {
+                "id": "multiattack", "name": "Multiattack",
+                "slots": [primary[:] for _ in range(_COUNTS[drawn_extra.group(1).lower()])] + [extra],
             }
 
     hit_follow_up = re.fullmatch(
