@@ -15,14 +15,28 @@ def _normalized_name(value: str) -> str:
     return re.sub(r"\s+", " ", value).strip().lower()
 
 
+def _merge_attack_effects(existing: list, source: list) -> list:
+    """Preserve canonical effects and add only source effect families not already represented."""
+    known_kinds = {effect.kind for effect in existing}
+    additions = [effect for effect in source if effect.kind not in known_kinds]
+    return [*existing, *additions]
+
+
 def _merge_attacks(existing: CombatantDefinition, source: CombatantDefinition):
     source_by_id = {attack.id: attack for attack in source.attacks}
     merged = []
     for attack in existing.attacks:
         derived = source_by_id.get(attack.id)
-        if derived is not None and attack.charge_profile is None and derived.charge_profile is not None:
-            attack = attack.model_copy(update={"charge_profile": derived.charge_profile})
-        merged.append(attack)
+        if derived is None:
+            merged.append(attack)
+            continue
+        updates = {}
+        if attack.charge_profile is None and derived.charge_profile is not None:
+            updates["charge_profile"] = derived.charge_profile
+        effects = _merge_attack_effects(attack.effects, derived.effects)
+        if effects != attack.effects:
+            updates["effects"] = effects
+        merged.append(attack.model_copy(update=updates) if updates else attack)
     return merged
 
 
