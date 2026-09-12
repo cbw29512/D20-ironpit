@@ -110,6 +110,7 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
             weapon_attack=attacks[0], alternate_weapon_attacks=attacks[1:],
             attack_action=compile_multiattack_2014(source, attacks), saving_throw_actions=source.saving_throw_actions,
             saving_throw_bonuses=saving_throw_bonuses_2014(source), skill_bonuses=source.skills,
+            source_trait_names=list(source.trait_names),
             damage_resistances=source.damage_resistances,
             conditional_damage_resistances=conditional_resistances_2014(source.unsupported_defense_text),
             damage_immunities=source.damage_immunities, damage_vulnerabilities=source.damage_vulnerabilities,
