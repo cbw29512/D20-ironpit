@@ -35,6 +35,10 @@ class TimedEffect(BaseModel):
     repeat_save_timing: ConditionTiming | None = None
     repeat_save_eligible_round: int | None = Field(default=None, ge=1)
     repeat_save_failure_condition: ConditionName | None = None
+    repeat_save_failure_continues: bool = True
+    repeat_save_failure_duration_rounds: int | None = Field(default=None, ge=1, le=100)
+    repeat_save_failure_ends_on_damage: bool = False
+    repeat_save_failure_allowed_removal_action_ids: list[str] = Field(default_factory=list)
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
     periodic_damage_timing: Literal["target_turn_start", "target_turn_end"] | None = None
     periodic_damage_dice_count: int = Field(default=0, ge=0, le=40)
@@ -63,6 +67,14 @@ class TimedEffect(BaseModel):
             raise ValueError("Repeat-save eligibility requires a complete repeat-save rule.")
         if self.repeat_save_failure_condition is not None and not all(item is not None for item in repeat_fields):
             raise ValueError("Repeat-save failure condition requires a complete repeat-save rule.")
+        transition_options = (
+            not self.repeat_save_failure_continues,
+            self.repeat_save_failure_duration_rounds is not None,
+            self.repeat_save_failure_ends_on_damage,
+            bool(self.repeat_save_failure_allowed_removal_action_ids),
+        )
+        if any(transition_options) and self.repeat_save_failure_condition is None:
+            raise ValueError("Second-stage runtime policy requires a repeat-save failure condition.")
         periodic = (self.periodic_damage_timing, self.periodic_damage_type)
         if any(item is not None for item in periodic) and not all(item is not None for item in periodic):
             raise ValueError("Periodic damage requires timing and damage type together.")
