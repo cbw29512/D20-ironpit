@@ -27,7 +27,12 @@
   const policyAllows = (definition, index, previous) => !(definition.policy?.requiresPreviousHitSlots || []).includes(index) || previous?.hit === true;
   const policyTarget = (definition, index, previous) => (definition.policy?.sameTargetAsPreviousSlots || []).includes(index) ? previous?.target_id || null : null;
   function policySlot(definition, data, used) {
-    return definition.policy?.distinctAttackIds ? { ...data, attackIds: data.attackIds.filter((id) => !used.has(id)) } : data;
+    const policy = definition.policy;
+    if (!policy) return data;
+    const blocked = new Set();
+    if (policy.distinctAttackIds) for (const id of used) blocked.add(id);
+    for (const id of policy.atMostOnceAttackIds || []) if (used.has(id)) blocked.add(id);
+    return blocked.size ? { ...data, attackIds: data.attackIds.filter((id) => !blocked.has(id)) } : data;
   }
 
   function areaChoice(member, setup, data) {
