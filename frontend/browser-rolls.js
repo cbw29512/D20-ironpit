@@ -23,6 +23,7 @@
       if (distance > attack.normal) disadvantage += 1;
       if (closeCombatThreat) disadvantage += 1;
     }
+    if (attack.disadvantageBeyondFt && distance > attack.disadvantageBeyondFt) disadvantage += 1;
     return modeFromSources(advantage, disadvantage);
   }
 
