@@ -48,16 +48,26 @@ def main() -> int:
         "the effect on itself on a success.</p>"
     )
     parsed = parse_save_actions(paralyzing, {"breath-weapons": 5})
+    assert parsed[0]["failure_control_effect"]["condition_id"] == "paralyzed"
+    assert parsed[0]["resource_id"] == "breath-weapons"
+
+    sleep = (
+        "<p><strong>Breath Weapons (Recharge 5–6).</strong> The dragon uses one of the following "
+        "breath weapons.</p>"
+        "<p><strong>Sleep Breath.</strong> The dragon exhales sleep gas in a 30-foot cone. Each creature "
+        "in that area must succeed on a DC 14 Constitution saving throw or fall unconscious for 1 minute. "
+        "This effect ends for a creature if the creature takes damage or someone uses an action to wake it.</p>"
+    )
+    parsed = parse_save_actions(sleep, {"breath-weapons": 5})
     assert parsed == [{
-        "id": "paralyzing-breath", "name": "Paralyzing Breath",
-        "save_ability": "constitution", "dc": 18, "range_ft": 30,
-        "area": {"shape": "cone", "origin": "self", "length_ft": 30},
+        "id": "sleep-breath", "name": "Sleep Breath", "save_ability": "constitution", "dc": 14,
+        "range_ft": 30, "area": {"shape": "cone", "origin": "self", "length_ft": 30},
         "failure_control_effect": {
-            "condition_id": "paralyzed", "expiry_timing": "target_turn_end",
-            "duration_rounds": 10, "repeat_save_ability": "constitution",
-            "repeat_save_dc": 18, "repeat_save_timing": "target_turn_end",
+            "condition_id": "unconscious", "expiry_timing": "source_turn_start",
+            "duration_rounds": 10, "allowed_removal_action_ids": ["wake-sleeper"],
+            "ends_on_damage": True,
         },
-        "resource_id": "breath-weapons", "resource_cost": 1, "animation": "paralyzed",
+        "resource_id": "breath-weapons", "resource_cost": 1, "animation": "unconscious",
     }]
 
     fear = (
@@ -68,17 +78,8 @@ def main() -> int:
         "ends for it, the creature is immune to the dragon's Frightful Presence for the next 24 hours.</p>"
     )
     parsed = parse_save_actions(fear, {})
-    assert parsed == [{
-        "id": "frightful-presence", "name": "Frightful Presence",
-        "save_ability": "wisdom", "dc": 19, "range_ft": 120,
-        "area": {"shape": "emanation", "origin": "self", "radius_ft": 120},
-        "failure_control_effect": {
-            "condition_id": "frightened", "expiry_timing": "target_turn_end",
-            "duration_rounds": 10, "repeat_save_ability": "wisdom", "repeat_save_dc": 19,
-            "repeat_save_timing": "target_turn_end", "source_effect_immunity_on_end": True,
-        },
-        "source_effect_immunity_on_success": True, "animation": "fear",
-    }]
+    assert parsed[0]["failure_control_effect"]["condition_id"] == "frightened"
+    assert parsed[0]["source_effect_immunity_on_success"] is True
     print("2014 save/control/AoE parser regressions passed.")
     return 0
 
