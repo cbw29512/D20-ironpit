@@ -7,7 +7,6 @@
   const RES = () => window.IRON_PIT_BROWSER_RESOURCES;
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { has: () => false };
   const T = () => window.IRON_PIT_BROWSER_TIMED;
-  const W = () => window.IRON_PIT_BROWSER_WEAPON_OFFENSE_VALUE;
 
   function rechargePriority(member, resourceId) {
     try {
@@ -60,7 +59,7 @@
         const executionRank = priority === 0 ? 0 : 2;
         if (attack.kind === "melee" || attack.kind === "melee_or_ranged") {
           const reach = attack.reach || 5;
-          const expectedValue = setup && W() ? W().expectedDamage(member, target, attack, setup, reach) : 0;
+          const expectedValue = setup && O()?.weaponAttack ? O().weaponAttack(member, target, attack, setup, reach) : 0;
           ranges.push({ family: "melee", range: reach, maxRange: reach, preferredRange: reach,
             priority, executionRank, expectedValue });
         }
@@ -68,7 +67,7 @@
           const maximum = Number.isFinite(attack.long) ? attack.long : attack.normal;
           const preferred = Number.isFinite(attack.normal) ? attack.normal : maximum;
           if (Number.isFinite(maximum) && Number.isFinite(preferred)) {
-            const expectedValue = setup && W() ? W().expectedDamage(member, target, attack, setup, preferred) : 0;
+            const expectedValue = setup && O()?.weaponAttack ? O().weaponAttack(member, target, attack, setup, preferred) : 0;
             ranges.push({ family: "ranged", range: maximum, maxRange: maximum, preferredRange: preferred,
               priority, executionRank, expectedValue });
           }
