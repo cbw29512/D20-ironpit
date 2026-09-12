@@ -17,6 +17,10 @@ def _duration_rounds(text: str) -> int | None:
     return count * 10 if unit.lower().startswith("minute") else count
 
 
+def _range(area: dict) -> int:
+    return int(area.get("length_ft", area.get("radius_ft", 0)))
+
+
 def _sleep_breath(name: str, text: str, area: dict, save: tuple[str, int], resource_id: str) -> dict | None:
     if name.lower() != "sleep breath":
         return None
@@ -28,7 +32,7 @@ def _sleep_breath(name: str, text: str, area: dict, save: tuple[str, int], resou
     ability, dc = save
     return {
         "id": "sleep-breath", "name": name,
-        "save_ability": ability, "dc": dc, "range_ft": area.get("length_ft", 0),
+        "save_ability": ability, "dc": dc, "range_ft": _range(area),
         "area": area,
         "failure_control_effect": {
             "condition_id": "unconscious",
@@ -52,7 +56,7 @@ def _paralyzing_breath(name: str, text: str, area: dict, save: tuple[str, int], 
     ability, dc = save
     return {
         "id": "paralyzing-breath", "name": name,
-        "save_ability": ability, "dc": dc, "range_ft": area.get("length_ft", 0),
+        "save_ability": ability, "dc": dc, "range_ft": _range(area),
         "area": area,
         "failure_control_effect": {
             "condition_id": "paralyzed", "expiry_timing": "target_turn_end",
@@ -63,8 +67,9 @@ def _paralyzing_breath(name: str, text: str, area: dict, save: tuple[str, int], 
     }
 
 
-def _slowing_breath(name: str, text: str, area: dict, save: tuple[str, int], resource_id: str) -> dict | None:
-    if name.lower() != "slowing breath":
+def _slowing_effect(name: str, text: str, area: dict, save: tuple[str, int], resource_id: str) -> dict | None:
+    lower_name = name.lower()
+    if lower_name not in {"slowing breath", "slow"}:
         return None
     required = (
         r"can't use reactions", r"speed is halved", r"can't make more than one attack",
@@ -74,9 +79,10 @@ def _slowing_breath(name: str, text: str, area: dict, save: tuple[str, int], res
     if duration is None or not all(re.search(pattern, text, re.I) for pattern in required):
         return None
     ability, dc = save
+    action_id = "slowing-breath" if lower_name == "slowing breath" else "slow"
     return {
-        "id": "slowing-breath", "name": name,
-        "save_ability": ability, "dc": dc, "range_ft": area.get("length_ft", 0),
+        "id": action_id, "name": name,
+        "save_ability": ability, "dc": dc, "range_ft": _range(area),
         "area": area,
         "failure_control_effect": {
             "effect_id": "slowed",
@@ -105,7 +111,7 @@ def _weakening_breath(name: str, text: str, area: dict, save: tuple[str, int], r
     ability, dc = save
     return {
         "id": "weakening-breath", "name": name,
-        "save_ability": ability, "dc": dc, "range_ft": area.get("length_ft", 0),
+        "save_ability": ability, "dc": dc, "range_ft": _range(area),
         "area": area,
         "failure_control_effect": {
             "effect_id": "weakened-strength",
@@ -125,7 +131,7 @@ def _repulsion(name: str, text: str, area: dict, save: tuple[str, int], resource
     ability, dc = save
     return {
         "id": "repulsion-breath", "name": name,
-        "save_ability": ability, "dc": dc, "range_ft": area.get("length_ft", 0),
+        "save_ability": ability, "dc": dc, "range_ft": _range(area),
         "area": area, "failure_push_ft": int(push.group(1)),
         "resource_id": resource_id, "resource_cost": 1, "animation": "forced-movement",
     }
@@ -145,7 +151,7 @@ def parse_control_save_action(
     return (
         _sleep_breath(name, text, area, save, resource_id)
         or _paralyzing_breath(name, text, area, save, resource_id)
-        or _slowing_breath(name, text, area, save, resource_id)
+        or _slowing_effect(name, text, area, save, resource_id)
         or _weakening_breath(name, text, area, save, resource_id)
         or _repulsion(name, text, area, save, resource_id)
     )
