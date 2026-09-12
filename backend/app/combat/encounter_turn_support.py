@@ -8,7 +8,7 @@ from app.combat.encounter_action_surge import resolve_action_surge_attack
 from app.combat.healing import choose_healing_action, resolve_healing
 from app.combat.pit_policy import save_distance, target_order
 from app.combat.resources import action_resource_available, resource_definition
-from app.combat.saving_throws import legal_save_action
+from app.combat.saving_throws import legal_save_action, resolve_save_action
 from app.combat.barbarian import finalize_rage_turn
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
@@ -98,6 +98,24 @@ def recharge_save_choice(attacker: EncounterCombatant, setup: EncounterSetup):
         return None
     except Exception:
         logger.exception("Failed Recharge save-action choice for %s.", attacker.combatant_id)
+        raise
+
+
+def resolve_ready_recharge_action(sequence, round_number, attacker, setup, dice):
+    """Fire a charged legal Recharge action immediately; otherwise leave the turn untouched."""
+    try:
+        choice = recharge_save_choice(attacker, setup)
+        if choice is None:
+            return [], sequence, False
+        target, action, distance = choice
+        affected = [member.state for member in [*setup.heroes, *setup.monsters]]
+        event = resolve_save_action(
+            sequence, round_number, attacker, target, action, distance, dice,
+            affected_states=affected,
+        )
+        return [event], sequence + 1, True
+    except Exception:
+        logger.exception("Failed Recharge action resolution for %s.", attacker.combatant_id)
         raise
 
 
