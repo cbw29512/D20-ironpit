@@ -13,6 +13,14 @@ SUPPORTED_HERO_ENGINE_FEATURES = {
     "disciple-of-life", "preserve-life",
 }
 
+# Features whose complete certified combat effect is immutable character data
+# consumed by already-supported generic primitives. Keep this intentionally narrow.
+SUPPORTED_HERO_DATA_FEATURES = {
+    "eldritch-invocations",  # Varek L1 resolves to Pact Blade weapon data.
+    "pact-magic",            # Varek L1 slot is tracked; prepared spells are arena-neutral.
+}
+SUPPORTED_HERO_FEATURES = SUPPORTED_HERO_ENGINE_FEATURES | SUPPORTED_HERO_DATA_FEATURES
+
 _STATIC_PROGRESSION_FIELDS: dict[str, dict[str, object]] = {
     "improved-critical": {"critical_hit_minimum": 19},
     "superior-critical": {"critical_hit_minimum": 18},
@@ -36,7 +44,7 @@ _STATIC_PROGRESSION_FIELDS: dict[str, dict[str, object]] = {
 
 
 def unsupported_hero_engine_features(features: tuple[str, ...] | list[str]) -> tuple[str, ...]:
-    return tuple(feature for feature in features if feature not in SUPPORTED_HERO_ENGINE_FEATURES)
+    return tuple(feature for feature in features if feature not in SUPPORTED_HERO_FEATURES)
 
 
 def compile_progression_feature_fields(features: tuple[str, ...] | list[str], level: int) -> dict[str, object]:
