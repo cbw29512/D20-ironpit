@@ -16,6 +16,7 @@ from app.combat.area_shapes import (
 )
 from app.combat.grid_geometry import occupied_cells
 from app.domain.encounters import EncounterCombatant, EncounterSetup
+from app.domain.grid import GridPosition
 from app.domain.targeting import AreaTargeting
 
 logger = logging.getLogger(__name__)
@@ -28,11 +29,14 @@ class AreaPlacement:
     direction: Direction | None = None
 
 
-def _points(member: EncounterCombatant) -> tuple[Point, ...]:
-    position = member.state.position
-    if position is None:
+def _points(member: EncounterCombatant, position: GridPosition | None = None) -> tuple[Point, ...]:
+    authoritative = position or member.state.position
+    if authoritative is None:
         raise ValueError(f"{member.combatant_id} has no authoritative grid position.")
-    return tuple(cell_center_ft(x, y) for x, y in occupied_cells(position, member.state.template.size))
+    return tuple(
+        cell_center_ft(x, y)
+        for x, y in occupied_cells(authoritative, member.state.template.size)
+    )
 
 
 def _living_opponents(actor: EncounterCombatant, setup: EncounterSetup) -> list[EncounterCombatant]:
@@ -61,7 +65,13 @@ def _directions(origins: tuple[Point, ...], enemies: list[EncounterCombatant]) -
     return tuple(sorted(result))
 
 
-def _hits(area: AreaTargeting, origins: tuple[Point, ...], origin: Point, direction: Direction | None, target: EncounterCombatant) -> bool:
+def _hits(
+    area: AreaTargeting,
+    origins: tuple[Point, ...],
+    origin: Point,
+    direction: Direction | None,
+    target: EncounterCombatant,
+) -> bool:
     points = _points(target)
     if area.shape == "radius":
         return any(radius_contains(origin, point, area.radius_ft or 0) for point in points)
@@ -74,10 +84,15 @@ def _hits(area: AreaTargeting, origins: tuple[Point, ...], origin: Point, direct
     return any(line_contains(origin, direction, point, area.length_ft or 0, area.width_ft or 0) for point in points)
 
 
-def _point_origins(actor: EncounterCombatant, setup: EncounterSetup, range_ft: int) -> tuple[Point, ...]:
+def _point_origins(
+    actor: EncounterCombatant,
+    setup: EncounterSetup,
+    range_ft: int,
+    actor_position: GridPosition | None = None,
+) -> tuple[Point, ...]:
     if setup.map_definition is None:
         raise ValueError("Area targeting requires an authoritative battle map.")
-    actor_points = _points(actor)
+    actor_points = _points(actor, actor_position)
     candidates: list[Point] = []
     for x in range(setup.map_definition.width_squares):
         for y in range(setup.map_definition.height_squares):
@@ -87,22 +102,39 @@ def _point_origins(actor: EncounterCombatant, setup: EncounterSetup, range_ft: i
     return tuple(candidates)
 
 
-def legal_area_placements(actor: EncounterCombatant, setup: EncounterSetup, area: AreaTargeting, range_ft: int) -> list[AreaPlacement]:
-    """Return distinct ally-safe placements against living opponents on the canonical grid."""
+def legal_area_placements(
+    actor: EncounterCombatant,
+    setup: EncounterSetup,
+    area: AreaTargeting,
+    range_ft: int,
+    *,
+    actor_position: GridPosition | None = None,
+) -> list[AreaPlacement]:
+    """Return distinct ally-safe placements from the current or hypothetical actor position."""
     try:
         enemies = _living_opponents(actor, setup)
         if not enemies:
             return []
-        actor_points = _points(actor)
-        placements: dict[tuple[str, ...], AreaPlacement] = {}
-        origins = _point_origins(actor, setup, range_ft) if area.origin == "point" else actor_points
+        actor_points = _points(actor, actor_position)
+        origins = (
+            _point_origins(actor, setup, range_ft, actor_position)
+            if area.origin == "point" else actor_points
+        )
         directions = (None,) if area.shape in {"radius", "emanation"} else _directions(actor_points, enemies)
+        placements: dict[tuple[str, ...], AreaPlacement] = {}
         for origin in origins:
             for direction in directions:
-                target_ids = tuple(enemy.combatant_id for enemy in enemies if _hits(area, actor_points, origin, direction, enemy))
+                target_ids = tuple(
+                    enemy.combatant_id
+                    for enemy in enemies
+                    if _hits(area, actor_points, origin, direction, enemy)
+                )
                 if target_ids and target_ids not in placements:
-                    placements[target_ids] = AreaPlacement(target_ids=target_ids, origin=origin, direction=direction)
-        return sorted(placements.values(), key=lambda item: (-len(item.target_ids), item.target_ids, item.origin, item.direction or (0.0, 0.0)))
+                    placements[target_ids] = AreaPlacement(target_ids, origin, direction)
+        return sorted(
+            placements.values(),
+            key=lambda item: (-len(item.target_ids), item.target_ids, item.origin, item.direction or (0.0, 0.0)),
+        )
     except Exception:
         logger.exception("Failed universal area targeting for %s.", actor.combatant_id)
         raise
