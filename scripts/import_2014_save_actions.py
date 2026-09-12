@@ -18,7 +18,9 @@ ABILITY_NAMES = {
 
 def _plain(value: str | None) -> str:
     text = re.sub(r"<[^>]+>", " ", value or "")
-    return re.sub(r"\s+", " ", html.unescape(text).replace("\u00ad", "")).strip()
+    text = html.unescape(text).replace("\u00ad", "")
+    text = re.sub(r"(?<=\d)[‐‑‒–—−-]+(?=foot\b)", "-", text, flags=re.I)
+    return re.sub(r"\s+", " ", text).strip()
 
 
 def _slug(value: str) -> str:
