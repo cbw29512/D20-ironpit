@@ -16,15 +16,21 @@ _PRONE_SAVE = re.compile(
     r"(?:the target|it) must succeed on a DC (\d+) (Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) saving throw or be knocked prone\.?'?",
     re.I,
 )
+_TIMED_REPEAT_CONDITION = re.compile(
+    r"(?:If (?:the )?target is a creature,?\s*)?"
+    r"(?:the target|it) must succeed on a DC (\d+) "
+    r"(Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) saving throw or "
+    r"(?:be|become) (poisoned|paralyzed) for 1 minute\.\s*"
+    r"(?:The (?:target|creature)|It) can repeat the saving throw at the end of each of its turns,? "
+    r"ending the effect on itself on a success\.?'?",
+    re.I,
+)
 _GRAPPLE = re.compile(
     r"(?:If (?:the )?target is (?:a )?(?:(Tiny|Small|Medium|Large|Huge) or smaller)(?: creature)?,?\s*)?"
     r"(?:the target|it) is grappled \(escape DC (\d+)\)",
     re.I,
 )
-_RESTRAINED = re.compile(
-    r"Until (?:this|the) grapple ends,?\s*(?:the target|it) is restrained",
-    re.I,
-)
+_RESTRAINED = re.compile(r"Until (?:this|the) grapple ends,?\s*(?:the target|it) is restrained", re.I)
 _NO_REPEAT_TARGET = re.compile(
     r"(?:and\s+)?(?:the\s+)?[A-Za-z' -]+ can(?:not|'t) (?:use this attack on|bite|attack|constrict|grapple) another target",
     re.I,
@@ -32,8 +38,7 @@ _NO_REPEAT_TARGET = re.compile(
 
 
 def _rolled(match: re.Match[str]) -> dict | None:
-    average, count, size, sign, bonus, damage_type = match.groups()
-    damage_type = damage_type.lower()
+    average, count, size, sign, bonus, damage_type = match.groups(); damage_type = damage_type.lower()
     if damage_type not in DAMAGE_TYPES: return None
     return {"average": int(average), "dice_count": int(count), "dice_size": int(size),
             "bonus": int(bonus or 0) * (-1 if sign == "-" else 1), "type": damage_type}
@@ -61,6 +66,15 @@ def parse_secondary_damage(remainder: str) -> tuple[list[dict], str]:
 
 
 def parse_on_hit_save_condition(remainder: str) -> tuple[dict | None, str]:
+    timed = _TIMED_REPEAT_CONDITION.search(remainder)
+    if timed:
+        dc, ability, condition = timed.groups()
+        effect = {
+            "save_ability": ability.lower(), "dc": int(dc), "condition_id": condition.lower(),
+            "duration_rounds": 10, "repeat_save_timing": "target_turn_end",
+        }
+        residual = (remainder[:timed.start()] + " " + remainder[timed.end():]).strip(" .,;")
+        return effect, residual
     match = _PRONE_SAVE.search(remainder)
     if not match: return None, remainder
     max_size, dc, ability = match.groups()
