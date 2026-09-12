@@ -1,10 +1,16 @@
 from __future__ import annotations
 
+from typing import Literal
+
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName
 from app.domain.size import CreatureSize
-from app.domain.weapons_types import DamageTypeName
+
+DamageTypeName = Literal[
+    "acid", "bludgeoning", "cold", "fire", "force", "lightning", "necrotic",
+    "piercing", "poison", "psychic", "radiant", "slashing", "thunder",
+]
 
 
 class ChargeDamageDefinition(BaseModel):
