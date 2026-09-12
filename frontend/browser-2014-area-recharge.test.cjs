@@ -25,6 +25,8 @@ window.IRON_PIT_BROWSER_MODIFIERS = { applyD20Bonus: (_state, _kind, roll) => ro
 window.IRON_PIT_BROWSER_CONCENTRATION = { endIfIncapacitated: () => {} };
 window.IRON_PIT_BROWSER_STATE = { sizeAtMost: () => true };
 
+load("browser-source-effect-immunity.js");
+load("browser-save-control-effects.js");
 load("browser-action-economy.js");
 load("browser-rolls.js");
 load("browser-saves.js");
@@ -69,6 +71,7 @@ function member(id, side, x, y) {
       active_effect_ids: [],
       grapple_sources: [],
       resources: {},
+      source_effect_immunities: [],
       concentration: null,
       template: {
         name: id,
