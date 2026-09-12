@@ -5,7 +5,7 @@ SUPPORTED_HERO_ENGINE_FEATURES = {
     "second-wind", "savage-attacker", "adrenaline-rush", "relentless-endurance",
     "action-surge", "tactical-mind", "extra-attack",
     "improved-critical", "superior-critical", "remarkable-athlete", "tactical-shift", "great-weapon-fighting",
-    "indomitable", "tactical-master", "heroic-warrior", "studied-attacks",
+    "indomitable", "tactical-master", "heroic-warrior", "studied-attacks", "boon-combat-prowess",
     "survivor-defy-death", "survivor-heroic-rally",
     "rage", "danger-sense", "reckless-attack", "frenzy", "fast-movement", "mindless-rage",
     "feral-instinct", "instinctive-pounce",
@@ -26,6 +26,7 @@ _STATIC_PROGRESSION_FIELDS: dict[str, dict[str, object]] = {
     "great-weapon-fighting": {"great_weapon_fighting": True},
     "heroic-warrior": {"heroic_warrior": True},
     "studied-attacks": {"studied_attacks": True},
+    "boon-combat-prowess": {"peerless_aim": True},
     "survivor-defy-death": {"death_save_advantage": True, "death_save_recovery_minimum": 18},
     "survivor-heroic-rally": {
         "bloodied_start_turn_healing_base": 5,
