@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.content.pregen_blocker_yield import build_pregen_blocker_yields
 from app.content.pregen_certification_queue import build_pregen_certification_frontier
 
 
@@ -15,6 +16,14 @@ def main() -> None:
             f"{candidate.class_id:10} L{candidate.next_level:>2} "
             f"(certified through L{candidate.certified_through:>2}) "
             f"{status}: {blockers}"
+        )
+
+    print("\nHighest-yield unsupported hero mechanics")
+    for item in build_pregen_blocker_yields()[:20]:
+        frontier_classes = ",".join(item.frontier_classes) or "-"
+        print(
+            f"{item.feature_id:36} frontier={item.frontier_count:>2} "
+            f"remaining_snapshots={item.remaining_snapshots:>3} classes={frontier_classes}"
         )
 
 
