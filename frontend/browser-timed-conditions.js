@@ -35,9 +35,14 @@
       blocks_reactions: Boolean(options.blocksReactions),
       action_bonus_exclusive: Boolean(options.actionBonusExclusive),
       max_attacks_per_turn: options.maxAttacksPerTurn ?? null,
+      disadvantage_strength_d20_tests: Boolean(options.disadvantageStrengthD20Tests),
     });
     if (!state.active_effect_ids.includes(effectId)) state.active_effect_ids.push(effectId);
     return effectId;
+  }
+
+  function strengthD20Disadvantage(state) {
+    return (state.timed_effects || []).some((effect) => effect.disadvantage_strength_d20_tests) ? 1 : 0;
   }
 
   function removeEffect(state, effect) {
@@ -80,5 +85,5 @@
     return { events, sequence };
   }
 
-  window.IRON_PIT_BROWSER_TIMED = { apply, expireSourceStart, removeEffect, removeGroup };
+  window.IRON_PIT_BROWSER_TIMED = { apply, expireSourceStart, removeEffect, removeGroup, strengthD20Disadvantage };
 })();
