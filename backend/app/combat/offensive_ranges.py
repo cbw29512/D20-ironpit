@@ -4,10 +4,10 @@ from app.combat.action_economy import is_available
 from app.combat.attack_legality import attack_allowed_against
 from app.combat.offensive_range_profile import OffensiveRangeProfile
 from app.combat.resources import is_recharge_resource, resource_available
+from app.combat.save_action_legality import save_action_target_eligible
 from app.combat.spellcasting import slot_spell_available
 from app.domain.encounters import EncounterCombatant
 from app.domain.weapons import WeaponAttackKind
-from app.domain.size import size_at_most
 
 logger = logging.getLogger(__name__)
 OffensiveRange = tuple[str, int]
@@ -76,7 +76,9 @@ def _save_action_profiles(attacker: EncounterCombatant, target: EncounterCombata
     try:
         profiles: list[OffensiveRangeProfile] = []
         for action in attacker.state.template.saving_throw_actions:
-            if action.target_max_size is not None and not size_at_most(target.state.template.size, action.target_max_size):
+            if action.action_cost != "action" or not is_available(attacker.state, action.action_cost):
+                continue
+            if not save_action_target_eligible(action, target, attacker):
                 continue
             if not resource_available(attacker.state, action.resource_id, action.resource_cost):
                 continue
