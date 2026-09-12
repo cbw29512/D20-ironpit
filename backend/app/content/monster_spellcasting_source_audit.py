@@ -19,7 +19,7 @@ _SPELL_GROUP = re.compile(
 # separate combat capability until it is parsed explicitly. This keeps the neutral-spell
 # audit fail-closed for bonus actions, reactions, and named cast actions.
 _DIRECT_CAST = re.compile(
-    r"\bcasts\s+(?!one of the following spells\b)",
+    r"\bcasts?\s+(?!one of the following spells\b)",
     re.IGNORECASE,
 )
 # Explicitly certified as irrelevant to the standard flat/open Iron Pit outcome.
