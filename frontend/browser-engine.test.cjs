@@ -128,6 +128,12 @@ function fight(heroIds, monsterIds, dice = deterministicDice()) {
 }
 
 {
+  const attack = { name: "Rock", kind: "ranged", normal: 30, long: 120, disadvantageBeyondFt: 30 };
+  assert.equal(window.IRON_PIT_BROWSER_ROLLS.attackMode(attack, 30, 0, 0, false), "normal");
+  assert.equal(window.IRON_PIT_BROWSER_ROLLS.attackMode(attack, 40, 0, 0, false), "disadvantage");
+}
+
+{
   const battle = fight(["rokhan-stonefury-l1"], ["srd-commoner"], queuedDice([20, 1, 15, 6, 6]));
   const rage = battle.events.find((event) => event.actor_id.startsWith("hero-1:") && event.feature_id === "rage");
   const attack = battle.events.find((event) => event.actor_id.startsWith("hero-1:") && event.event_type === "attack");
