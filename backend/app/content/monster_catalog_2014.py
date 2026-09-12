@@ -13,6 +13,7 @@ from app.domain.movement import MovementModes
 
 logger = logging.getLogger(__name__)
 CATALOG_ROOT = Path(__file__).resolve().parents[3] / "data" / "monsters" / "2014"
+MVP_CATALOG_PATH = CATALOG_ROOT / "mvp_catalog.json"
 _MONSTERS = TypeAdapter(list[CatalogMonster2014])
 _ABILITY_NAMES = {
     "str": "strength", "dex": "dexterity", "con": "constitution",
@@ -102,7 +103,9 @@ def load_catalog_2014(path: Path = CATALOG_ROOT) -> list[CatalogMonster2014]:
         if path.is_file():
             payload = json.loads(path.read_text(encoding="utf-8"))
         else:
-            files = sorted(path.glob("catalog_*.json")) or [path / "mvp_catalog.json"]
+            canonical = path / "catalog.json"
+            files = [canonical] if canonical.exists() else sorted(path.glob("catalog_*.json"))
+            files = files or [path / "mvp_catalog.json"]
             payload = []
             for file in files:
                 payload.extend(json.loads(file.read_text(encoding="utf-8")))
