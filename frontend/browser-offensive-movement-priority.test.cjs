@@ -39,7 +39,7 @@ const movement = window.IRON_PIT_BROWSER_OFFENSIVE_MOVEMENT;
     planToward: (_map, _actor, _target, _members, desired) => ({
       goal_reachable: true,
       path: [{ x: 1, y: 0 }],
-      final_distance_ft: 90,
+      final_distance_ft: desired,
       movement_cost_ft: desired === 80 ? 5 : 30,
     }),
   };
