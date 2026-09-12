@@ -8,9 +8,11 @@ on:
       - 'backend/app/content/monster_catalog_2014_traits.py'
       - 'backend/app/content/monster_catalog_2014_defenses.py'
       - 'backend/app/content/monster_catalog_2014_compile_support.py'
+      - 'backend/app/content/monster_catalog_2014_action_support.py'
       - 'backend/app/domain/charge_profiles.py'
       - 'backend/app/domain/on_hit_saves.py'
       - 'backend/app/domain/weapons.py'
+      - 'backend/app/domain/targeting.py'
       - 'backend/app/domain/combatants.py'
       - 'backend/app/domain/runtime.py'
       - 'backend/app/combat/state.py'
@@ -19,6 +21,11 @@ on:
       - 'backend/app/combat/grapple.py'
       - 'backend/app/combat/resources.py'
       - 'backend/app/combat/saving_throws.py'
+      - 'backend/app/combat/save_targets.py'
+      - 'backend/app/combat/area_save_actions.py'
+      - 'backend/app/combat/area_shapes.py'
+      - 'backend/app/combat/area_targeting.py'
+      - 'backend/app/combat/encounter_area_actions.py'
       - 'backend/app/combat/encounter_turn_support.py'
       - 'backend/app/combat/encounter_combat_turn.py'
       - 'backend/app/combat/timed_conditions.py'
@@ -51,6 +58,7 @@ on:
       - 'backend/tests/test_2014_parry.py'
       - 'backend/tests/test_2014_charge.py'
       - 'backend/tests/test_2014_recharge.py'
+      - 'backend/tests/test_2014_area_recharge.py'
       - 'backend/tests/test_2014_legendary_resistance.py'
       - 'backend/tests/test_2014_on_hit_save.py'
       - 'backend/tests/test_magic_resistance.py'
@@ -61,6 +69,9 @@ on:
       - 'scripts/import_2014_attack_details.py'
       - 'scripts/import_2014_charge.py'
       - 'scripts/import_2014_recharge.py'
+      - 'scripts/import_2014_save_actions.py'
+      - 'scripts/enrich_2014_save_actions.py'
+      - 'scripts/test_2014_save_actions.py'
       - 'scripts/import_2014_multiattack.py'
       - 'scripts/import_2014_reactions.py'
       - 'scripts/sync_2014_monster_catalog.py'
@@ -85,6 +96,8 @@ jobs:
         run: pip install -e 'backend[dev]'
       - name: Require tracked canonical catalog
         run: git ls-files --error-unmatch data/monsters/2014/catalog.json
+      - name: Prove 2014 save/AoE source parser
+        run: python scripts/test_2014_save_actions.py
       - name: Regenerate pinned 327-monster catalog
         run: python scripts/sync_2014_monster_catalog.py
       - name: Enforce deterministic generated catalog
@@ -112,6 +125,7 @@ jobs:
           tests/test_2014_parry.py
           tests/test_2014_charge.py
           tests/test_2014_recharge.py
+          tests/test_2014_area_recharge.py
           tests/test_2014_legendary_resistance.py
           tests/test_2014_on_hit_save.py
           tests/test_magic_resistance.py
