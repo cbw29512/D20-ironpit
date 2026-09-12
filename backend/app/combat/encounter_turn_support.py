@@ -84,11 +84,11 @@ def recharge_action_ready(attacker: EncounterCombatant) -> bool:
 
 
 def recharge_save_choice(attacker: EncounterCombatant, setup: EncounterSetup):
-    """Choose a legal charged Recharge action before ordinary offense."""
+    """Choose a legal charged single-target Recharge action before ordinary offense."""
     try:
         for target in target_order(attacker, setup):
             for action in attacker.state.template.saving_throw_actions:
-                if not _is_recharge_action(attacker, action):
+                if action.area is not None or not _is_recharge_action(attacker, action):
                     continue
                 if not action_resource_available(attacker.state, action):
                     continue
@@ -102,7 +102,7 @@ def recharge_save_choice(attacker: EncounterCombatant, setup: EncounterSetup):
 
 
 def resolve_ready_recharge_action(sequence, round_number, attacker, setup, dice):
-    """Fire a charged legal Recharge action immediately; otherwise leave the turn untouched."""
+    """Fire a charged legal single-target Recharge action immediately."""
     try:
         choice = recharge_save_choice(attacker, setup)
         if choice is None:
@@ -123,7 +123,7 @@ def save_choice(attacker: EncounterCombatant, setup: EncounterSetup):
     try:
         for target in target_order(attacker, setup):
             for action in attacker.state.template.saving_throw_actions:
-                if not action_resource_available(attacker.state, action):
+                if action.area is not None or not action_resource_available(attacker.state, action):
                     continue
                 distance = save_distance(attacker, target, action.range_ft)
                 if legal_save_action(action, target, distance):
