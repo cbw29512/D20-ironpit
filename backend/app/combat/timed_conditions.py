@@ -30,6 +30,10 @@ def apply_timed_condition(
     ends_if_source_incapacitated: bool = False,
     ends_if_source_dead: bool = False,
     source_effect_immunity_on_end: bool = False,
+    speed_multiplier: float = 1.0,
+    blocks_reactions: bool = False,
+    action_bonus_exclusive: bool = False,
+    max_attacks_per_turn: int | None = None,
 ) -> str | None:
     if condition_is_immune(state, effect_id):
         return None
@@ -67,6 +71,10 @@ def apply_timed_condition(
         ends_if_source_incapacitated=ends_if_source_incapacitated,
         ends_if_source_dead=ends_if_source_dead,
         source_effect_immunity_on_end=source_effect_immunity_on_end,
+        speed_multiplier=speed_multiplier,
+        blocks_reactions=blocks_reactions,
+        action_bonus_exclusive=action_bonus_exclusive,
+        max_attacks_per_turn=max_attacks_per_turn,
     ))
     if effect_id not in state.active_effect_ids:
         state.active_effect_ids.append(effect_id)
