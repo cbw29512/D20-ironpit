@@ -38,11 +38,15 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             row["maxHpReductionOnHit"] = {"damageType": attack.max_hp_reduction_on_hit.damage_type.value if attack.max_hp_reduction_on_hit.damage_type is not None else None}
         if attack.on_hit_saving_throw is not None:
             rider = attack.on_hit_saving_throw
-            row["onHitSavingThrow"] = {
+            save_row = {
                 "saveAbility": rider.save_ability, "dc": rider.dc, "magicalEffect": rider.magical_effect,
                 "targetFilter": {"excludedCreatureTypes": list(rider.target_filter.excluded_creature_types), "excludedTags": list(rider.target_filter.excluded_tags)},
                 "failureEffects": [failure_effect_row(effect) for effect in rider.failure_effects],
             }
+            if rider.severe_failure_margin is not None:
+                save_row["severeFailureMargin"] = rider.severe_failure_margin
+                save_row["severeFailureEffects"] = [failure_effect_row(effect) for effect in rider.severe_failure_effects]
+            row["onHitSavingThrow"] = save_row
         if attack.attachment_on_hit is not None:
             effect = attack.attachment_on_hit
             row["attachmentOnHit"] = {
