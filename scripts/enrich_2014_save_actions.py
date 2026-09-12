@@ -34,6 +34,12 @@ def _bind_multiattack_policy(row: dict, actions: str) -> None:
     row["multiattack_policy"] = parsed.get("policy")
 
 
+def _legendary_heading_key(name: str) -> str:
+    clean = name.strip().rstrip(".")
+    clean = re.sub(r"\s*\(Costs?\s+\d+\s+Actions?\)\s*", "", clean, flags=re.I)
+    return clean.strip().lower()
+
+
 def _bind_legendary_actions(row: dict, source_legendary_actions: str) -> None:
     uses, options, unsupported = parse_legendary_actions(
         source_legendary_actions,
@@ -42,14 +48,17 @@ def _bind_legendary_actions(row: dict, source_legendary_actions: str) -> None:
     row["legendary_action_uses"] = uses
     row["legendary_actions"] = options
     # Preserve legendary_action_names as immutable source provenance. Runtime
-    # certification uses a separate unsupported list so the source-fidelity
-    # audit can still compare every printed heading exactly.
-    supported = {option["name"].strip().lower() for option in options}
+    # certification uses a separate unsupported list so source fidelity can
+    # compare every printed heading exactly. Cost suffixes are presentation,
+    # while the typed option stores cost separately.
+    supported = {_legendary_heading_key(option["name"]) for option in options}
     source_names = row.get("legendary_action_names") or []
-    unresolved = [name for name in source_names if name.strip().lower() not in supported]
+    unresolved = [name for name in source_names if _legendary_heading_key(name) not in supported]
+    unsupported_keys = {_legendary_heading_key(name) for name in unresolved}
     for name in unsupported:
-        if name not in unresolved:
+        if _legendary_heading_key(name) not in unsupported_keys:
             unresolved.append(name)
+            unsupported_keys.add(_legendary_heading_key(name))
     row["unsupported_legendary_action_names"] = unresolved
 
 
