@@ -68,24 +68,28 @@ def build_varek_ashenmark_profile() -> CharacterBuildProfile:
         feature_audits=[
             _feature(
                 "eldritch-invocations", "Eldritch Invocations", "class",
-                combat_relevant=True, automated=True,
-                notes="The level-1 invocation is Pact of the Blade; its combat output is immutable weapon data.",
+                combat_relevant=True, automated=False,
+                notes="Pact of the Blade is fully represented by immutable weapon data, but the strict hero registry has not yet certified invocation data features.",
             ),
             _feature(
                 "pact-of-the-blade", "Pact of the Blade", "class",
                 combat_relevant=True, automated=True, runtime_attack_weapon_id="longsword",
-                notes="Varek enters with a conjured Longsword; Charisma drives attack and damage rolls.",
+                notes="Prepared runtime data uses a conjured Longsword with Charisma for attack and damage.",
             ),
             _feature(
                 "pact-magic", "Pact Magic", "class",
-                combat_relevant=True, automated=True,
-                notes="The level-1 Pact slot is tracked; prepared Comprehend Languages and Detect Magic are arena-neutral.",
+                combat_relevant=True, automated=False,
+                notes="The Pact slot is modeled, but the current canonical level-1 package is Charm Person plus Hex and is not fully certified.",
+            ),
+            _feature(
+                "charm-person", "Charm Person", "class", combat_relevant=True, automated=False,
+                notes="Blocked on complete Charmed-condition semantics in the universal engine.",
+            ),
+            _feature(
+                "hex", "Hex", "class", combat_relevant=True, automated=False,
+                notes="Blocked until the canonical Hex concentration, target transfer, and bonus-damage lifecycle is permanently certified.",
             ),
             _feature("eldritch-blast", "Eldritch Blast", "class", combat_relevant=True, automated=True),
-            _feature(
-                "prestidigitation", "Prestidigitation", "class",
-                combat_relevant=False, automated=False, notes="Arena utility only.",
-            ),
             _feature("adrenaline-rush", "Adrenaline Rush", "species", combat_relevant=True, automated=True),
             _feature("relentless-endurance", "Relentless Endurance", "species", combat_relevant=True, automated=True),
             _feature(
@@ -95,7 +99,7 @@ def build_varek_ashenmark_profile() -> CharacterBuildProfile:
             _feature(
                 "magic-initiate-cleric", "Magic Initiate (Cleric)", "feat",
                 combat_relevant=False, automated=False,
-                notes="Canonical Light, Thaumaturgy, and Detect Magic choices do not alter arena combat.",
+                notes="Origin-feat utility choices do not alter the certified arena loop.",
             ),
             _feature("leather-armor", "Leather Armor", "equipment", combat_relevant=True, automated=True),
         ],
@@ -106,6 +110,6 @@ def build_varek_ashenmark_profile() -> CharacterBuildProfile:
             "Basic Rules 2024: Character Origins — Acolyte and Orc",
             "Basic Rules 2024: Feats — Magic Initiate",
             "Basic Rules 2024: Equipment — Leather Armor and Longsword",
-            "SRD 5.2.1: Eldritch Blast, Comprehend Languages, Detect Magic",
+            "SRD 5.2.1: Eldritch Blast, Charm Person, Hex",
         ],
     )
