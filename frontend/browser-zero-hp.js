@@ -9,6 +9,16 @@
   const DODGE = "dodge";
   const PRONE = "prone";
 
+  function useLimitedPrevention(state, incoming) {
+    const profile = state.template.zeroHpPrevention;
+    if (!profile || incoming > profile.maxTriggerDamage) return false;
+    if ((state.resources?.[profile.resourceId] || 0) < 1) return false;
+    state.resources[profile.resourceId] -= 1;
+    state.current_hp = profile.resultingHp || 1;
+    state.is_alive = true; state.is_dead = false; state.is_unconscious = false; state.is_stable = false;
+    return true;
+  }
+
   function useRelentless(state, remaining) {
     if (!state.template.traits?.includes("relentless-endurance")) return false;
     if ((state.resources["relentless-endurance"] || 0) < 1 || remaining >= S().effectiveMaxHp(state)) return false;
@@ -74,6 +84,7 @@
     state.current_hp = Math.max(0, before - amount);
     if (state.current_hp > 0) return finish(state, "damaged", incoming, affectedStates);
     if (useUndeadFortitude(state, incoming, damageTypes, critical)) return finish(state, "undead_fortitude", incoming, affectedStates);
+    if (useLimitedPrevention(state, incoming)) return finish(state, "zero_hp_prevention", incoming, affectedStates);
     if (state.template.kind === "monster") { markDead(state); return finish(state, "dead", incoming, affectedStates); }
     const remaining = Math.max(0, amount - before);
     if (remaining >= S().effectiveMaxHp(state)) { markDead(state); return finish(state, "dead", incoming, affectedStates); }
