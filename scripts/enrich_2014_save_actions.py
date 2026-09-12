@@ -17,6 +17,23 @@ from import_2014_zero_hp_prevention import parse_zero_hp_prevention
 logger = logging.getLogger(__name__)
 
 
+def _bind_attack_abilities(row: dict) -> None:
+    """Infer only attacks whose printed damage modifier uniquely identifies STR or DEX."""
+    abilities = row.get("abilities") or {}
+    strength = (int(abilities.get("str", 10)) - 10) // 2
+    dexterity = (int(abilities.get("dex", 10)) - 10) // 2
+    for attack in row.get("attacks") or []:
+        damage = attack.get("damage") or {}
+        if int(damage.get("dice_count") or 0) <= 0:
+            continue
+        bonus = int(damage.get("bonus") or 0)
+        strength_match = bonus == strength
+        dexterity_match = bonus == dexterity
+        if strength_match == dexterity_match:
+            continue
+        attack["attack_ability"] = "strength" if strength_match else "dexterity"
+
+
 def _bind_frightful_multiattack(row: dict, actions: str) -> None:
     save_ids = {action["id"] for action in row["saving_throw_actions"]}
     if "frightful-presence" not in save_ids: return
@@ -47,10 +64,6 @@ def _bind_legendary_actions(row: dict, source_legendary_actions: str) -> None:
     )
     row["legendary_action_uses"] = uses
     row["legendary_actions"] = options
-    # Preserve legendary_action_names as immutable source provenance. Runtime
-    # certification uses a separate unsupported list so source fidelity can
-    # compare every printed heading exactly. Cost suffixes are presentation,
-    # while the typed option stores cost separately.
     supported = {_legendary_heading_key(option["name"]) for option in options}
     source_names = row.get("legendary_action_names") or []
     unresolved = [name for name in source_names if _legendary_heading_key(name) not in supported]
@@ -76,6 +89,7 @@ def enrich(source_path: Path, catalog_path: Path) -> None:
         row["innate_spellcasting"] = parse_innate_spellcasting(traits)
         row["zero_hp_prevention"] = parse_zero_hp_prevention(traits)
         row["regeneration"] = parse_regeneration(traits)
+        _bind_attack_abilities(row)
         _bind_multiattack_policy(row, actions)
         _bind_frightful_multiattack(row, actions)
         _bind_legendary_actions(row, source.get("Legendary Actions", ""))
