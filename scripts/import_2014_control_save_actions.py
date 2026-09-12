@@ -58,6 +58,19 @@ def _paralyzing_breath(name: str, text: str, area: dict, save: tuple[str, int], 
     }
 
 
+def _repulsion(name: str, text: str, area: dict, save: tuple[str, int], resource_id: str) -> dict | None:
+    push = re.search(r"pushed\s+(\d+)\s+feet\s+away", text, re.I)
+    if name.lower() != "repulsion breath" or push is None:
+        return None
+    ability, dc = save
+    return {
+        "id": "repulsion-breath", "name": name,
+        "save_ability": ability, "dc": dc, "range_ft": area.get("length_ft", 0),
+        "area": area, "failure_push_ft": int(push.group(1)),
+        "resource_id": resource_id, "resource_cost": 1, "animation": "forced-movement",
+    }
+
+
 def parse_control_save_action(
     heading: str,
     text: str,
@@ -65,11 +78,12 @@ def parse_control_save_action(
     save: tuple[str, int] | None,
     resource_id: str | None,
 ) -> dict | None:
-    """Normalize control save actions already representable by universal timed conditions."""
+    """Normalize control save actions represented by universal conditions or forced movement."""
     name = heading.split("(Recharge", 1)[0].strip()
     if area is None or save is None or resource_id is None:
         return None
     return (
         _sleep_breath(name, text, area, save, resource_id)
         or _paralyzing_breath(name, text, area, save, resource_id)
+        or _repulsion(name, text, area, save, resource_id)
     )
