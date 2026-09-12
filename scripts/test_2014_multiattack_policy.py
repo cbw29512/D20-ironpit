@@ -53,6 +53,16 @@ def main() -> int:
         "policy": {"at_most_once_attack_ids": ["bite"]},
     }
 
+    veteran = (
+        "<p><strong>Multiattack.</strong> The veteran makes two longsword attacks. "
+        "If it has a shortsword drawn, it can also make a shortsword attack.</p>"
+    )
+    parsed = parse_multiattack(veteran, [attack("longsword", "Longsword"), attack("shortsword", "Shortsword")])
+    assert parsed == {
+        "id": "multiattack", "name": "Multiattack",
+        "slots": [["longsword"], ["longsword"], ["shortsword"]],
+    }
+
     print("2014 Multiattack policy regressions passed.")
     return 0
 
