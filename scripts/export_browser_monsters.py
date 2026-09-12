@@ -73,6 +73,8 @@ def _attach_monster_actions(row, template) -> None:
         action = by_id.get(action_row["id"])
         if action is not None and action.area is not None:
             action_row["area"] = _area_row(action.area)
+    if "Poor Depth Perception" in template.source_trait_names:
+        for attack_row in row.get("attacks", []): attack_row["disadvantageBeyondFt"] = 30
     if template.attack_action and template.attack_action.policy:
         row.setdefault("attack_action", {})["policy"] = _policy_row(template.attack_action.policy)
     if template.zero_hp_prevention:
