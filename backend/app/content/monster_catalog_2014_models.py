@@ -28,6 +28,7 @@ class CatalogAttack2014(BaseModel):
     name: str
     kind: Literal["melee", "ranged"]
     attack_bonus: int
+    attack_ability: AbilityName | None = None
     damage: CatalogDamage2014
     conditional_damage: list[ConditionalDamage] = Field(default_factory=list)
     on_hit_damage: list[CatalogDamage2014] = Field(default_factory=list)
