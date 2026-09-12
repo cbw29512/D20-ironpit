@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.legendary_actions import LEGENDARY_ACTION_RESOURCE_ID
 from app.combat.legendary_resistance import LEGENDARY_RESISTANCE_RESOURCE_ID
 from app.content.monster_catalog_2014_models import CatalogMonster2014
 from app.content.monster_catalog_2014_traits import legendary_resistance_uses_2014
@@ -14,7 +15,6 @@ ABILITY_NAMES = {
     "str": "strength", "dex": "dexterity", "con": "constitution",
     "int": "intelligence", "wis": "wisdom", "cha": "charisma",
 }
-LEGENDARY_ACTION_RESOURCE_ID = "legendary-actions"
 
 
 def ability_scores_2014(source: CatalogMonster2014) -> AbilityScores:
