@@ -1,34 +1,54 @@
 from __future__ import annotations
 
 from app.content.monster_catalog_2014_models import CatalogMonster2014
+from app.content.monster_spell_actions_2014 import SUPPORTED_DAMAGE_SPELLS_2014
 
-# These spells cannot change a standard Iron Pit combat outcome by themselves.
-ARENA_NEUTRAL_SPELLS = frozenset({
-    "commune", "control-weather", "create-food-and-water", "creation",
-    "dancing-lights", "detect-evil-and-good", "detect-magic", "disguise-self",
-    "dream", "druidcraft", "identify", "light", "mage-hand", "nondetection",
-    "prestidigitation", "raise-dead", "resurrection", "scrying", "thaumaturgy",
-    "tongues", "water-breathing",
+# Explicit roster-loading scope: preserve every printed spell in source data, but
+# non-damaging spells do not block the damage-first monster milestone. Unknown
+# spells still fail closed; only names reviewed here are intentionally scoped out.
+SCOPED_OUT_NON_DAMAGE_SPELLS_2014 = frozenset({
+    "animal-messenger", "animate-dead", "banishment", "barkskin", "bestow-curse",
+    "bless", "blur", "calm-emotions", "charm-person", "clairvoyance", "command",
+    "commune", "contagion", "control-weather", "counterspell", "create-food-and-water",
+    "creation", "cure-wounds", "dancing-lights", "darkness", "detect-evil-and-good",
+    "detect-magic", "detect-thoughts", "disguise-self", "dispel-magic", "divination",
+    "dominate-monster", "dominate-person", "dream", "druidcraft", "entangle", "fly",
+    "freedom-of-movement", "geas", "globe-of-invulnerability", "greater-invisibility",
+    "greater-restoration", "heroes-feast", "hold-person", "identify", "invisibility",
+    "legend-lore", "lesser-restoration", "light", "locate-object", "longstrider",
+    "mage-armor", "mage-hand", "mending", "mind-blank", "minor-illusion", "mirror-image",
+    "misty-step", "nondetection", "pass-without-trace", "plane-shift", "power-word-stun",
+    "prestidigitation", "raise-dead", "remove-curse", "resurrection", "sanctuary", "scrying",
+    "shield", "shield-of-faith", "shillelagh", "silence", "sleep", "speak-with-animals",
+    "spare-the-dying", "stoneskin", "suggestion", "thaumaturgy", "time-stop", "tongues",
+    "teleport", "true-seeing", "wall-of-force", "water-breathing", "zone-of-truth",
 })
 
 
-def unresolved_spells_2014(source: CatalogMonster2014) -> list[str]:
-    """Return unsupported combat spells independent of casting origin.
+def _regular_unresolved(source: CatalogMonster2014) -> list[str]:
+    profile = source.spellcasting
+    if profile is None or not profile.source_complete or not profile.spells:
+        return ["unparsed-regular-spellcasting"]
+    return [
+        spell.name for spell in profile.spells
+        if spell.id not in SCOPED_OUT_NON_DAMAGE_SPELLS_2014
+        and spell.id not in SUPPORTED_DAMAGE_SPELLS_2014
+    ]
 
-    Prepared/slot casting and innate casting share the same universal spell resolver.
-    Their source distinction only controls resource semantics: slots vs at-will/X-per-day.
-    """
+
+def _innate_unresolved(source: CatalogMonster2014) -> list[str]:
+    profile = source.innate_spellcasting
+    if profile is None or not profile.source_complete or not profile.spells:
+        return ["unparsed-innate-spellcasting"]
+    # Innate damage resources are a separate binding tranche; do not mark a
+    # damaging spell supported here until its at-will/per-day pool is compiled.
+    return [spell.name for spell in profile.spells if spell.id not in SCOPED_OUT_NON_DAMAGE_SPELLS_2014]
+
+
+def unresolved_spells_2014(source: CatalogMonster2014) -> list[str]:
     unresolved: list[str] = []
     if "Spellcasting" in source.trait_names:
-        profile = source.spellcasting
-        if profile is None or not profile.source_complete or not profile.spells:
-            unresolved.append("unparsed-regular-spellcasting")
-        else:
-            unresolved.extend(spell.name for spell in profile.spells if spell.id not in ARENA_NEUTRAL_SPELLS)
+        unresolved.extend(_regular_unresolved(source))
     if "Innate Spellcasting" in source.trait_names:
-        profile = source.innate_spellcasting
-        if profile is None or not profile.source_complete or not profile.spells:
-            unresolved.append("unparsed-innate-spellcasting")
-        else:
-            unresolved.extend(spell.name for spell in profile.spells if spell.id not in ARENA_NEUTRAL_SPELLS)
+        unresolved.extend(_innate_unresolved(source))
     return list(dict.fromkeys(unresolved))
