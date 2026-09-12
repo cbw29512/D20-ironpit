@@ -16,14 +16,9 @@ DESTINATION = ROOT / "frontend" / "browser-monsters-generated.js"
 
 def _certified_monsters():
     catalog = build_monster_catalog()
-    ready_ids = {
-        card.runnable_template_id
-        for card in catalog
-        if card.coverage_status is CoverageStatus.RAW_READY and card.runnable_template_id is not None
-    }
+    ready_ids = {card.runnable_template_id for card in catalog if card.coverage_status is CoverageStatus.RAW_READY and card.runnable_template_id is not None}
     monsters = [template for template in build_arena_roster().monsters if template.id in ready_ids]
-    if {template.id for template in monsters} != ready_ids:
-        raise RuntimeError("RAW-ready catalog and canonical monster roster disagree.")
+    if {template.id for template in monsters} != ready_ids: raise RuntimeError("RAW-ready catalog and canonical monster roster disagree.")
     return monsters
 
 
@@ -38,24 +33,15 @@ def _area_row(area):
 
 def _policy_row(policy):
     if policy is None: return None
-    return {
-        "distinctAttackIds": policy.distinct_attack_ids, "repeatSlotIndex": policy.repeat_slot_index,
-        "repeatDiceCount": policy.repeat_dice_count, "repeatDiceSize": policy.repeat_dice_size,
-        "requiresPreviousHitSlots": list(policy.requires_previous_hit_slots),
-        "sameTargetAsPreviousSlots": list(policy.same_target_as_previous_slots),
-    }
+    return {"distinctAttackIds": policy.distinct_attack_ids, "repeatSlotIndex": policy.repeat_slot_index, "repeatDiceCount": policy.repeat_dice_count, "repeatDiceSize": policy.repeat_dice_size, "requiresPreviousHitSlots": list(policy.requires_previous_hit_slots), "sameTargetAsPreviousSlots": list(policy.same_target_as_previous_slots)}
 
 
 def _attach_source_fingerprint(row, template) -> None:
-    row["source_trait_names"] = list(template.source_trait_names)
-    row["source_reaction_names"] = list(template.source_reaction_names)
-    row["source_bonus_action_names"] = list(template.source_bonus_action_names)
-    row["source_limited_use_names"] = list(template.source_limited_use_names)
-    row["source_legendary_action_names"] = list(template.source_legendary_action_names)
-    row["source_spellcasting_fingerprint"] = template.source_spellcasting_fingerprint
+    row["source_trait_names"] = list(template.source_trait_names); row["source_reaction_names"] = list(template.source_reaction_names)
+    row["source_bonus_action_names"] = list(template.source_bonus_action_names); row["source_limited_use_names"] = list(template.source_limited_use_names)
+    row["source_legendary_action_names"] = list(template.source_legendary_action_names); row["source_spellcasting_fingerprint"] = template.source_spellcasting_fingerprint
     if template.parry_reaction: row["parry_reaction"] = {"ac_bonus": template.parry_reaction.ac_bonus}
-    if template.redirect_attack_reaction:
-        row["redirect_attack_reaction"] = {"ally_range_ft": template.redirect_attack_reaction.ally_range_ft, "ally_max_size": template.redirect_attack_reaction.ally_max_size.value}
+    if template.redirect_attack_reaction: row["redirect_attack_reaction"] = {"ally_range_ft": template.redirect_attack_reaction.ally_range_ft, "ally_max_size": template.redirect_attack_reaction.ally_max_size.value}
 
 
 def _attach_monster_actions(row, template) -> None:
@@ -69,16 +55,14 @@ def _attach_monster_actions(row, template) -> None:
     for attack_row in row.get("attacks", []):
         attack = attack_by_id.get(attack_row["id"]); effect = attack.on_hit_save_effect if attack else None
         if effect and effect.zero_hp_stable:
-            rider = attack_row.setdefault("onHitSaveEffect", {})
-            rider["zeroHpStable"] = True
-            rider["zeroHpConditionIds"] = list(effect.zero_hp_condition_ids)
-            rider["zeroHpDurationRounds"] = effect.zero_hp_duration_rounds
+            rider = attack_row.setdefault("onHitSaveEffect", {}); rider["zeroHpStable"] = True
+            rider["zeroHpConditionIds"] = list(effect.zero_hp_condition_ids); rider["zeroHpDurationRounds"] = effect.zero_hp_duration_rounds
     if "Poor Depth Perception" in template.source_trait_names:
         for attack_row in row.get("attacks", []): attack_row["disadvantageBeyondFt"] = 30
-    if template.attack_action and template.attack_action.policy:
-        row.setdefault("attack_action", {})["policy"] = _policy_row(template.attack_action.policy)
-    if template.zero_hp_prevention:
-        row["zeroHpPrevention"] = {"resourceId": template.zero_hp_prevention.resource_id, "maxTriggerDamage": template.zero_hp_prevention.max_trigger_damage, "resultingHp": template.zero_hp_prevention.resulting_hp}
+    if template.attack_action and template.attack_action.policy: row.setdefault("attack_action", {})["policy"] = _policy_row(template.attack_action.policy)
+    if template.zero_hp_prevention: row["zeroHpPrevention"] = {"resourceId": template.zero_hp_prevention.resource_id, "maxTriggerDamage": template.zero_hp_prevention.max_trigger_damage, "resultingHp": template.zero_hp_prevention.resulting_hp}
+    if template.regeneration:
+        row["regeneration"] = {"amount": template.regeneration.amount, "requiresPositiveHp": template.regeneration.requires_positive_hp, "suppressedByDamageTypes": [item.value for item in template.regeneration.suppressed_by_damage_types], "survivesZeroUntilTurn": template.regeneration.survives_zero_until_turn}
 
 
 def render() -> str:
