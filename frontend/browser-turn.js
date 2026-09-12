@@ -9,6 +9,7 @@
   const DG = () => window.IRON_PIT_BROWSER_DODGE, OM = () => window.IRON_PIT_BROWSER_OFFENSIVE_MOVEMENT;
   const RES = () => window.IRON_PIT_BROWSER_RESOURCES, RC = () => window.IRON_PIT_BROWSER_RECHARGE, RA = () => window.IRON_PIT_BROWSER_RECHARGE_ACTION;
   const SW = () => window.IRON_PIT_BROWSER_SWALLOW, AU = () => window.IRON_PIT_BROWSER_AURAS, D = () => window.IRON_PIT_DICE;
+  const PR = () => window.IRON_PIT_BROWSER_PROGRESSION_RECOVERY;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (s, c) => c === "action" ? s.action_available : s.bonus_action_available };
   const NO_CONTROL = { cleanup: () => {}, shouldEscape: () => false };
   const H = () => window.IRON_PIT_BROWSER_GRAPPLE || NO_CONTROL;
@@ -20,12 +21,12 @@
     rolls.fixedFormationActive = true;
   }
   function deathSave(sequence, round, member) {
-    const state = member.state, natural = D().roll(20);
+    const state = member.state, rolled = PR().deathSaveRoll(state, D()), natural = rolled.selected;
     const successesBefore = state.death_save_successes, failuresBefore = state.death_save_failures;
     let result = "failure";
-    if (natural === 20) {
+    if (natural >= rolled.recoveryMinimum) {
       state.current_hp = 1; state.is_alive = true; state.is_unconscious = false; state.is_stable = false;
-      state.death_save_successes = 0; state.death_save_failures = 0; result = "natural 20; regains 1 HP";
+      state.death_save_successes = 0; state.death_save_failures = 0; result = `${natural}; regains 1 HP`;
     } else if (natural === 1) {
       state.death_save_failures = Math.min(3, state.death_save_failures + 2); result = "natural 1; two failures";
     } else if (natural >= 10) {
@@ -40,7 +41,7 @@
     }
     return {
       sequence, round_number: round, event_type: "death_save", actor_id: member.combatant_id, actor_name: state.template.name,
-      death_save_roll: { notation: "1d20", rolls: [natural], selected_roll: natural, modifier: 0, mode: "normal", total: natural },
+      death_save_roll: { notation: rolled.mode === "advantage" ? "2d20kh1" : "1d20", rolls: rolled.rolls, selected_roll: natural, modifier: 0, mode: rolled.mode, total: natural },
       hp_after: state.current_hp, death_save_successes_before: successesBefore, death_save_failures_before: failuresBefore,
       death_save_successes: state.death_save_successes, death_save_failures: state.death_save_failures,
       is_stable: state.is_stable, is_dead: state.is_dead, animation: "death-save",
@@ -72,7 +73,7 @@
   }
   function resolveTurn(sequence, round, member, setup) {
     enablePitRangePolicy();
-    const events = []; H().cleanup(setup); S().beginTurn(member.state);
+    const events = []; H().cleanup(setup); S().beginTurn(member.state); PR().startTurnHealing(member.state);
     const recharge = RC()?.resolveStartTurn(sequence, round, member);
     if (recharge) { events.push(...recharge.events); sequence = recharge.sequence; }
     const turnKey = `${round}:${member.combatant_id}`;
