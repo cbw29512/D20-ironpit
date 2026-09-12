@@ -12,8 +12,23 @@ def action_key_2014(value: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", text).strip("-")
 
 
-def supported_action_ids_2014(source: CatalogMonster2014) -> set[str]:
+def _attack_action_ids(source: CatalogMonster2014) -> set[str]:
+    """Expose both compiled split variants and their original printed action id."""
     supported = {attack.id for attack in source.attacks}
+    split_bases: dict[str, set[str]] = {}
+    for attack in source.attacks:
+        for suffix in ("-melee", "-ranged"):
+            if attack.id.endswith(suffix) and attack.source_complete:
+                split_bases.setdefault(attack.id.removesuffix(suffix), set()).add(suffix)
+    supported.update(
+        base for base, variants in split_bases.items()
+        if variants == {"-melee", "-ranged"}
+    )
+    return supported
+
+
+def supported_action_ids_2014(source: CatalogMonster2014) -> set[str]:
+    supported = _attack_action_ids(source)
     supported.update(action.id for action in source.saving_throw_actions)
     supported.update(
         action.resource_id for action in source.saving_throw_actions if action.resource_id
