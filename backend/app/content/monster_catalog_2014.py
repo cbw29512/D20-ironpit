@@ -71,7 +71,7 @@ def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
         charge_traits = _CHARGE_TRAITS.intersection(source.trait_names)
         if charge_traits and not any(attack.charge_profile for attack in source.attacks): blockers.extend(f"trait:{name}" for name in sorted(charge_traits))
         blockers.extend(f"reaction:{name}" for name in source.reaction_names if name not in supported_reactions)
-        blockers.extend(f"legendary:{name}" for name in source.legendary_action_names)
+        blockers.extend(f"legendary:{name}" for name in source.unsupported_legendary_action_names)
         if source.source_legendary_actions and source.legendary_action_uses <= 0:
             blockers.append("legendary:unparsed-resource-pool")
         if source.legendary_action_uses and not source.legendary_actions:
