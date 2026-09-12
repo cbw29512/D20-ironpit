@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.content.basic_condition_actions import WAKE_SLEEPER_ID, wake_sleeper_action
 from app.content.capability_attack_compiler import UnsupportedCapabilityError, compile_attack
 from app.domain.actions import AttackActionDefinition, AttackActionSlot, SavingThrowAction
 from app.domain.capabilities import CombatantDefinition, SaveCapabilityDefinition
@@ -69,6 +70,13 @@ def _compile_attack_action(definition: CombatantDefinition) -> AttackActionDefin
         raise RuntimeError(f"Attack action for {definition.id} could not be compiled.") from exc
 
 
+def _condition_removal_actions(definition: CombatantDefinition) -> list:
+    actions = list(definition.condition_removal_actions)
+    if all(action.id != WAKE_SLEEPER_ID for action in actions):
+        actions.append(wake_sleeper_action())
+    return actions
+
+
 def compile_combatant(definition: CombatantDefinition) -> CombatantTemplate:
     try:
         if definition.unsupported_capabilities:
@@ -82,6 +90,7 @@ def compile_combatant(definition: CombatantDefinition) -> CombatantTemplate:
         kwargs = definition.model_dump(exclude={
             "schema_version", "attacks", "primary_attack_id", "attack_action", "save_actions",
             "unsupported_capabilities", "movement_modes", "forced_movement_actions", "swallow_actions",
+            "condition_removal_actions",
         })
         if definition.movement_modes is not None:
             kwargs["movement_modes"] = definition.movement_modes
@@ -93,6 +102,7 @@ def compile_combatant(definition: CombatantDefinition) -> CombatantTemplate:
             saving_throw_actions=[_compile_save(item) for item in definition.save_actions],
             forced_movement_actions=list(definition.forced_movement_actions),
             swallow_actions=list(definition.swallow_actions),
+            condition_removal_actions=_condition_removal_actions(definition),
         )
     except UnsupportedCapabilityError:
         raise
