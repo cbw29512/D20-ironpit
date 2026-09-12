@@ -6,7 +6,7 @@ from app.combat.legendary_resistance import LEGENDARY_RESISTANCE_RESOURCE_ID
 from app.content.monster_catalog_2014_models import CatalogMonster2014
 from app.content.monster_catalog_2014_traits import legendary_resistance_uses_2014
 from app.domain.character_builds import AbilityScores
-from app.domain.models import ConditionalAttackAdvantage, ResourceDefinition, WeaponAttack
+from app.domain.models import ConditionalAttackAdvantage, RechargeRule, ResourceDefinition, WeaponAttack
 
 logger = logging.getLogger(__name__)
 ABILITY_NAMES = {
@@ -31,16 +31,21 @@ def saving_throw_bonuses_2014(source: CatalogMonster2014) -> dict[str, int]:
 
 
 def resources_2014(source: CatalogMonster2014) -> list[ResourceDefinition]:
-    uses = legendary_resistance_uses_2014(source.trait_names)
-    if not uses:
-        return []
-    return [
+    resources = [
         ResourceDefinition(
+            id=action_id, name=action_id.replace("-", " ").title(), max_uses=1,
+            recharge=RechargeRule(minimum_roll=minimum_roll),
+        )
+        for action_id, minimum_roll in source.action_recharges.items()
+    ]
+    uses = legendary_resistance_uses_2014(source.trait_names)
+    if uses:
+        resources.append(ResourceDefinition(
             id=LEGENDARY_RESISTANCE_RESOURCE_ID,
             name="Legendary Resistance",
             max_uses=uses,
-        )
-    ]
+        ))
+    return resources
 
 
 def bind_attack_traits_2014(source: CatalogMonster2014, attacks: list[WeaponAttack]) -> list[WeaponAttack]:
