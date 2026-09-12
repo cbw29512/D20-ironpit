@@ -4,6 +4,7 @@ import logging
 
 from app.combat.action_economy import is_available
 from app.combat.attack_legality import attack_allowed_against
+from app.combat.resources import resource_definition
 from app.combat.spellcasting import slot_spell_available
 from app.domain.encounters import EncounterCombatant
 from app.domain.weapons import WeaponAttackKind
@@ -57,7 +58,7 @@ def _weapon_ranges(attacker: EncounterCombatant, target: EncounterCombatant) -> 
         raise
 
 
-def _save_action_ranges(attacker: EncounterCombatant, target: EncounterCombatant) -> list[OffensiveRange]:
+def _save_action_ranges(attacker: EncounterCombatant, target: EncounterCombatant, recharge_only: bool = False) -> list[OffensiveRange]:
     try:
         ranges: list[OffensiveRange] = []
         for action in attacker.state.template.saving_throw_actions:
@@ -65,7 +66,10 @@ def _save_action_ranges(attacker: EncounterCombatant, target: EncounterCombatant
                 continue
             if not _resource_available(attacker, action.resource_id, action.resource_cost):
                 continue
-            ranges.append(("ability", action.range_ft))
+            definition = resource_definition(attacker.state, action.resource_id) if action.resource_id else None
+            if recharge_only and (definition is None or definition.recharge is None):
+                continue
+            ranges.append(("recharge" if definition and definition.recharge else "ability", action.range_ft))
         return ranges
     except Exception:
         logger.exception("Failed save-action offensive-range probe for %s.", attacker.combatant_id)
@@ -99,6 +103,9 @@ def offensive_ranges_for_target(
     turn_key: str,
 ) -> list[OffensiveRange]:
     try:
+        recharge_ranges = _save_action_ranges(attacker, target, recharge_only=True)
+        if recharge_ranges:
+            return recharge_ranges
         return [
             *_weapon_ranges(attacker, target),
             *_spell_ranges(attacker, turn_key),
