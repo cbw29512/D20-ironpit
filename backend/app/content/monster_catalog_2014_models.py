@@ -30,6 +30,7 @@ class CatalogAttack2014(BaseModel):
     normal_range_ft: int | None = Field(default=None, ge=1)
     long_range_ft: int | None = Field(default=None, ge=1)
     source_complete: bool = True
+    unsupported_text: str | None = None
 
 
 class CatalogMonster2014(BaseModel):
