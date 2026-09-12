@@ -26,7 +26,8 @@
     let result = "failure";
     if (natural >= rolled.recoveryMinimum) {
       state.current_hp = 1; state.is_alive = true; state.is_unconscious = false; state.is_stable = false;
-      state.death_save_successes = 0; state.death_save_failures = 0; result = `${natural}; regains 1 HP`;
+      state.death_save_successes = 0; state.death_save_failures = 0;
+      result = natural === 20 ? "natural 20; regains 1 HP" : `${natural}; regains 1 HP`;
     } else if (natural === 1) {
       state.death_save_failures = Math.min(3, state.death_save_failures + 2); result = "natural 1; two failures";
     } else if (natural >= 10) {
