@@ -32,6 +32,17 @@ def main() -> int:
         "id": "multiattack", "name": "Multiattack", "slots": [["rotting-touch"]],
         "policy": {"repeat_slot_index": 0, "repeat_dice_count": 1, "repeat_dice_size": 4},
     }
+
+    purple_worm = (
+        "<p><strong>Multiattack.</strong> The worm makes two attacks: one with its bite and one with its stinger.</p>"
+    )
+    parsed = parse_multiattack(purple_worm, [
+        attack("bite", "Bite"), attack("tail-stinger", "Tail Stinger"),
+    ])
+    assert parsed == {
+        "id": "multiattack", "name": "Multiattack", "slots": [["bite"], ["tail-stinger"]],
+    }
+
     print("2014 Multiattack policy regressions passed.")
     return 0
 
