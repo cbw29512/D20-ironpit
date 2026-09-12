@@ -67,7 +67,7 @@ class Weapon(BaseModel):
     attack_kind: WeaponAttackKind
     dice_count: int = Field(ge=0, le=20)
     dice_size: int = Field(ge=2, le=100)
-    damage_type: DamageType
+    damage_type: DamageType | None
     animation: str
     reach_ft: int = Field(default=5, ge=0)
     normal_range_ft: int | None = Field(default=None, ge=1)
@@ -82,6 +82,12 @@ class Weapon(BaseModel):
     heavy: bool = False
     two_handed: bool = False
     versatile: bool = False
+
+    @model_validator(mode="after")
+    def validate_damage_profile(self) -> "Weapon":
+        if self.damage_type is None and self.dice_count:
+            raise ValueError("An attack without a damage type cannot roll weapon damage dice.")
+        return self
 
 
 class WeaponAttack(BaseModel):
