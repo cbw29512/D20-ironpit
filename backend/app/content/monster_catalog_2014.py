@@ -7,6 +7,7 @@ from pathlib import Path
 from pydantic import TypeAdapter
 
 from app.content.monster_catalog_2014_models import CatalogAttack2014, CatalogMonster2014
+from app.content.monster_catalog_2014_traits import combat_traits_2014, unresolved_traits_2014
 from app.domain.character_builds import AbilityScores
 from app.domain.models import (
     AttackActionDefinition,
@@ -77,7 +78,7 @@ def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
             supported_actions.add("Multiattack")
         blockers = [f"defense:{text}" for text in source.unsupported_defense_text]
         blockers.extend(f"action:{name}" for name in source.action_names if name not in supported_actions)
-        blockers.extend(f"trait:{name}" for name in source.trait_names)
+        blockers.extend(f"trait:{name}" for name in unresolved_traits_2014(source.trait_names))
         blockers.extend(f"reaction:{name}" for name in source.reaction_names)
         blockers.extend(f"legendary:{name}" for name in source.legendary_action_names)
         if not source.attacks:
@@ -113,6 +114,7 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
             damage_resistances=source.damage_resistances, damage_immunities=source.damage_immunities,
             damage_vulnerabilities=source.damage_vulnerabilities,
             condition_immunities=source.condition_immunities,
+            combat_traits=combat_traits_2014(source.trait_names),
             visual=VisualLoadout(armor="source", main_hand=attacks[0].weapon.id, body_style=source.creature_type),
             source=f"2014 JSON catalog: {source.id}",
         )
