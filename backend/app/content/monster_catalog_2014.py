@@ -15,10 +15,10 @@ from app.content.monster_catalog_2014_compile_support import (
 )
 from app.content.monster_catalog_2014_defenses import conditional_resistances_2014, unresolved_defenses_2014
 from app.content.monster_catalog_2014_models import CatalogAttack2014, CatalogMonster2014
+from app.content.monster_catalog_2014_multiattack import compile_multiattack_2014
 from app.content.monster_catalog_2014_traits import combat_traits_2014, unresolved_traits_2014
 from app.domain.models import (
-    AttackActionDefinition, AttackActionSlot, CombatantTemplate, OnHitDamage,
-    VisualLoadout, Weapon, WeaponAttack, WeaponAttackKind,
+    CombatantTemplate, OnHitDamage, VisualLoadout, Weapon, WeaponAttack, WeaponAttackKind,
 )
 from app.domain.movement import MovementModes
 from app.domain.reactions import ParryReaction
@@ -58,17 +58,6 @@ def _attack(source: CatalogAttack2014, *, magical: bool = False) -> WeaponAttack
     except Exception as exc:
         logger.exception("Failed to compile 2014 catalog attack %s.", source.id)
         raise RuntimeError(f"2014 attack {source.id} could not be compiled.") from exc
-
-
-def _multiattack(source: CatalogMonster2014, attacks: list[WeaponAttack]) -> AttackActionDefinition | None:
-    if not source.multiattack_slots:
-        return None
-    known = {attack.id for attack in attacks}; slots: list[AttackActionSlot] = []
-    for choices in source.multiattack_slots:
-        if not choices or any(attack_id not in known for attack_id in choices):
-            raise ValueError(f"Invalid Multiattack attack ids for {source.id}: {choices}")
-        slots.append(AttackActionSlot(attack_ids=choices))
-    return AttackActionDefinition(id=f"2014-{source.id}-multiattack", name="Multiattack", slots=slots)
 
 
 def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
@@ -111,7 +100,7 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
             ability_scores=ability_scores_2014(source), armor_class=source.armor_class, max_hp=source.max_hp,
             speed_ft=movement.walk_ft, movement_modes=movement, initiative_bonus=(dex - 10) // 2,
             weapon_attack=attacks[0], alternate_weapon_attacks=attacks[1:],
-            attack_action=_multiattack(source, attacks), saving_throw_actions=source.saving_throw_actions,
+            attack_action=compile_multiattack_2014(source, attacks), saving_throw_actions=source.saving_throw_actions,
             saving_throw_bonuses=saving_throw_bonuses_2014(source), skill_bonuses=source.skills,
             damage_resistances=source.damage_resistances,
             conditional_damage_resistances=conditional_resistances_2014(source.unsupported_defense_text),
