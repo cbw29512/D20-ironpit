@@ -121,7 +121,6 @@
     "reaction_names": [],
     "parry_ac_bonus": null,
     "legendary_action_names": [
-      "Detect",
       "Tail Swipe",
       "Psychic Drain"
     ],
@@ -135,6 +134,17 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 3,
+    "legendary_actions": [
+      {
+        "id": "detect",
+        "name": "Detect",
+        "cost": 1,
+        "kind": "ability_check",
+        "check_ability": "wisdom",
+        "check_skill": "perception"
+      }
+    ],
     "spellcasting": null
   },
   {
@@ -227,6 +237,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": {
       "caster_level": 1,
       "ability": "wisdom",
@@ -432,8 +444,6 @@
     "reaction_names": [],
     "parry_ac_bonus": null,
     "legendary_action_names": [
-      "Detect",
-      "Tail Attack",
       "Wing Attack (Costs 2 Actions)"
     ],
     "source_traits": "<p><em><strong>Amphibious.</strong></em> The dragon can breathe air and water.</p><p><em><strong>Legendary Resistance (3/Day).</strong></em> If the dragon fails a saving throw, it can choose to succeed instead.</p>",
@@ -490,6 +500,51 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 3,
+    "legendary_actions": [
+      {
+        "id": "detect",
+        "name": "Detect",
+        "cost": 1,
+        "kind": "ability_check",
+        "check_ability": "wisdom",
+        "check_skill": "perception"
+      },
+      {
+        "id": "tail-attack",
+        "name": "Tail Attack",
+        "cost": 1,
+        "kind": "attack",
+        "attack_id": "tail"
+      },
+      {
+        "id": "wing-attack",
+        "name": "Wing Attack",
+        "cost": 2,
+        "kind": "save",
+        "save_action": {
+          "id": "legendary-wing-attack",
+          "name": "Wing Attack",
+          "save_ability": "dexterity",
+          "dc": 19,
+          "range_ft": 10,
+          "area": {
+            "shape": "emanation",
+            "origin": "self",
+            "radius_ft": 10
+          },
+          "damage_dice_count": 2,
+          "damage_dice_size": 6,
+          "damage_bonus": 6,
+          "damage_type": "bludgeoning",
+          "success_damage": "none",
+          "failure_control_effect": {
+            "condition_id": "prone"
+          },
+          "animation": "wing-attack"
+        }
+      }
+    ],
     "spellcasting": null
   },
   {
@@ -652,8 +707,6 @@
     "reaction_names": [],
     "parry_ac_bonus": null,
     "legendary_action_names": [
-      "Detect",
-      "Tail Attack",
       "Wing Attack (Costs 2 Actions)"
     ],
     "source_traits": "<p><em><strong>Legendary Resistance (3/Day).</strong></em> If the dragon fails a saving throw, it can choose to succeed instead.</p>",
@@ -710,6 +763,51 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 3,
+    "legendary_actions": [
+      {
+        "id": "detect",
+        "name": "Detect",
+        "cost": 1,
+        "kind": "ability_check",
+        "check_ability": "wisdom",
+        "check_skill": "perception"
+      },
+      {
+        "id": "tail-attack",
+        "name": "Tail Attack",
+        "cost": 1,
+        "kind": "attack",
+        "attack_id": "tail"
+      },
+      {
+        "id": "wing-attack",
+        "name": "Wing Attack",
+        "cost": 2,
+        "kind": "save",
+        "save_action": {
+          "id": "legendary-wing-attack",
+          "name": "Wing Attack",
+          "save_ability": "dexterity",
+          "dc": 20,
+          "range_ft": 10,
+          "area": {
+            "shape": "emanation",
+            "origin": "self",
+            "radius_ft": 10
+          },
+          "damage_dice_count": 2,
+          "damage_dice_size": 6,
+          "damage_bonus": 7,
+          "damage_type": "bludgeoning",
+          "success_damage": "none",
+          "failure_control_effect": {
+            "condition_id": "prone"
+          },
+          "animation": "wing-attack"
+        }
+      }
+    ],
     "spellcasting": null
   },
   {
@@ -868,8 +966,6 @@
     "reaction_names": [],
     "parry_ac_bonus": null,
     "legendary_action_names": [
-      "Detect",
-      "Tail Attack",
       "Wing Attack (Costs 2 Actions)"
     ],
     "source_traits": "<p><em><strong>Legendary Resistance (3/Day).</strong></em> If the dragon fails a saving throw, it can choose to succeed instead.</p>",
@@ -950,6 +1046,51 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 3,
+    "legendary_actions": [
+      {
+        "id": "detect",
+        "name": "Detect",
+        "cost": 1,
+        "kind": "ability_check",
+        "check_ability": "wisdom",
+        "check_skill": "perception"
+      },
+      {
+        "id": "tail-attack",
+        "name": "Tail Attack",
+        "cost": 1,
+        "kind": "attack",
+        "attack_id": "tail"
+      },
+      {
+        "id": "wing-attack",
+        "name": "Wing Attack",
+        "cost": 2,
+        "kind": "save",
+        "save_action": {
+          "id": "legendary-wing-attack",
+          "name": "Wing Attack",
+          "save_ability": "dexterity",
+          "dc": 19,
+          "range_ft": 10,
+          "area": {
+            "shape": "emanation",
+            "origin": "self",
+            "radius_ft": 10
+          },
+          "damage_dice_count": 2,
+          "damage_dice_size": 6,
+          "damage_bonus": 6,
+          "damage_type": "bludgeoning",
+          "success_damage": "none",
+          "failure_control_effect": {
+            "condition_id": "prone"
+          },
+          "animation": "wing-attack"
+        }
+      }
+    ],
     "spellcasting": null
   },
   {
@@ -1109,8 +1250,6 @@
     "reaction_names": [],
     "parry_ac_bonus": null,
     "legendary_action_names": [
-      "Detect",
-      "Tail Attack",
       "Wing Attack (Costs 2 Actions)"
     ],
     "source_traits": "<p><em><strong>Amphibious.</strong></em> The dragon can breathe air and water.</p><p><em><strong>Legendary Resistance (3/Day).</strong></em> If the dragon fails a saving throw, it can choose to succeed instead.</p>",
@@ -1163,6 +1302,51 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 3,
+    "legendary_actions": [
+      {
+        "id": "detect",
+        "name": "Detect",
+        "cost": 1,
+        "kind": "ability_check",
+        "check_ability": "wisdom",
+        "check_skill": "perception"
+      },
+      {
+        "id": "tail-attack",
+        "name": "Tail Attack",
+        "cost": 1,
+        "kind": "attack",
+        "attack_id": "tail"
+      },
+      {
+        "id": "wing-attack",
+        "name": "Wing Attack",
+        "cost": 2,
+        "kind": "save",
+        "save_action": {
+          "id": "legendary-wing-attack",
+          "name": "Wing Attack",
+          "save_ability": "dexterity",
+          "dc": 20,
+          "range_ft": 10,
+          "area": {
+            "shape": "emanation",
+            "origin": "self",
+            "radius_ft": 10
+          },
+          "damage_dice_count": 2,
+          "damage_dice_size": 6,
+          "damage_bonus": 7,
+          "damage_type": "bludgeoning",
+          "success_damage": "none",
+          "failure_control_effect": {
+            "condition_id": "prone"
+          },
+          "animation": "wing-attack"
+        }
+      }
+    ],
     "spellcasting": null
   },
   {
@@ -1320,8 +1504,6 @@
     "reaction_names": [],
     "parry_ac_bonus": null,
     "legendary_action_names": [
-      "Detect",
-      "Tail Attack",
       "Wing Attack (Costs 2 Actions)"
     ],
     "source_traits": "<p><em><strong>Legendary Resistance (3/Day)</strong></em> If the dragon fails a saving throw, it can choose to succeed instead.</p>",
@@ -1378,6 +1560,51 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 3,
+    "legendary_actions": [
+      {
+        "id": "detect",
+        "name": "Detect",
+        "cost": 1,
+        "kind": "ability_check",
+        "check_ability": "wisdom",
+        "check_skill": "perception"
+      },
+      {
+        "id": "tail-attack",
+        "name": "Tail Attack",
+        "cost": 1,
+        "kind": "attack",
+        "attack_id": "tail"
+      },
+      {
+        "id": "wing-attack",
+        "name": "Wing Attack",
+        "cost": 2,
+        "kind": "save",
+        "save_action": {
+          "id": "legendary-wing-attack",
+          "name": "Wing Attack",
+          "save_ability": "dexterity",
+          "dc": 19,
+          "range_ft": 10,
+          "area": {
+            "shape": "emanation",
+            "origin": "self",
+            "radius_ft": 10
+          },
+          "damage_dice_count": 2,
+          "damage_dice_size": 6,
+          "damage_bonus": 6,
+          "damage_type": "bludgeoning",
+          "success_damage": "none",
+          "failure_control_effect": {
+            "condition_id": "prone"
+          },
+          "animation": "wing-attack"
+        }
+      }
+    ],
     "spellcasting": null
   },
   {
@@ -1538,8 +1765,6 @@
     "reaction_names": [],
     "parry_ac_bonus": null,
     "legendary_action_names": [
-      "Detect",
-      "Tail Attack",
       "Wing Attack (Costs 2 Actions)"
     ],
     "source_traits": "<p><em><strong>Amphibious.</strong></em> The dragon can breathe air and water. </p><p><em><strong>Legendary Resistance (3/Day).</strong></em> If the dragon fails a saving throw, it can choose to succeed instead.</p>",
@@ -1595,6 +1820,51 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 3,
+    "legendary_actions": [
+      {
+        "id": "detect",
+        "name": "Detect",
+        "cost": 1,
+        "kind": "ability_check",
+        "check_ability": "wisdom",
+        "check_skill": "perception"
+      },
+      {
+        "id": "tail-attack",
+        "name": "Tail Attack",
+        "cost": 1,
+        "kind": "attack",
+        "attack_id": "tail"
+      },
+      {
+        "id": "wing-attack",
+        "name": "Wing Attack",
+        "cost": 2,
+        "kind": "save",
+        "save_action": {
+          "id": "legendary-wing-attack",
+          "name": "Wing Attack",
+          "save_ability": "dexterity",
+          "dc": 22,
+          "range_ft": 10,
+          "area": {
+            "shape": "emanation",
+            "origin": "self",
+            "radius_ft": 10
+          },
+          "damage_dice_count": 2,
+          "damage_dice_size": 6,
+          "damage_bonus": 8,
+          "damage_type": "bludgeoning",
+          "success_damage": "none",
+          "failure_control_effect": {
+            "condition_id": "prone"
+          },
+          "animation": "wing-attack"
+        }
+      }
+    ],
     "spellcasting": null
   },
   {
@@ -1763,8 +2033,6 @@
     "reaction_names": [],
     "parry_ac_bonus": null,
     "legendary_action_names": [
-      "Detect",
-      "Tail Attack",
       "Wing Attack (Costs 2 Actions)"
     ],
     "source_traits": "<p><em><strong>Amphibious.</strong></em> The dragon can breathe air and water. </p><p><em><strong>Legendary Resistance (3/Day).</strong></em> If the dragon fails a saving throw, it can choose to succeed instead.</p>",
@@ -1820,6 +2088,51 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 3,
+    "legendary_actions": [
+      {
+        "id": "detect",
+        "name": "Detect",
+        "cost": 1,
+        "kind": "ability_check",
+        "check_ability": "wisdom",
+        "check_skill": "perception"
+      },
+      {
+        "id": "tail-attack",
+        "name": "Tail Attack",
+        "cost": 1,
+        "kind": "attack",
+        "attack_id": "tail"
+      },
+      {
+        "id": "wing-attack",
+        "name": "Wing Attack",
+        "cost": 2,
+        "kind": "save",
+        "save_action": {
+          "id": "legendary-wing-attack",
+          "name": "Wing Attack",
+          "save_ability": "dexterity",
+          "dc": 19,
+          "range_ft": 10,
+          "area": {
+            "shape": "emanation",
+            "origin": "self",
+            "radius_ft": 10
+          },
+          "damage_dice_count": 2,
+          "damage_dice_size": 6,
+          "damage_bonus": 6,
+          "damage_type": "bludgeoning",
+          "success_damage": "none",
+          "failure_control_effect": {
+            "condition_id": "prone"
+          },
+          "animation": "wing-attack"
+        }
+      }
+    ],
     "spellcasting": null
   },
   {
@@ -1982,8 +2295,6 @@
     "reaction_names": [],
     "parry_ac_bonus": null,
     "legendary_action_names": [
-      "Detect",
-      "Tail Attack",
       "Wing Attack (Costs 2 Actions)"
     ],
     "source_traits": "<p><em><strong>Legendary Resistance (3/Day).</strong></em> If the dragon fails a saving throw, it can choose to succeed instead.</p>",
@@ -2039,6 +2350,51 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 3,
+    "legendary_actions": [
+      {
+        "id": "detect",
+        "name": "Detect",
+        "cost": 1,
+        "kind": "ability_check",
+        "check_ability": "wisdom",
+        "check_skill": "perception"
+      },
+      {
+        "id": "tail-attack",
+        "name": "Tail Attack",
+        "cost": 1,
+        "kind": "attack",
+        "attack_id": "tail"
+      },
+      {
+        "id": "wing-attack",
+        "name": "Wing Attack",
+        "cost": 2,
+        "kind": "save",
+        "save_action": {
+          "id": "legendary-wing-attack",
+          "name": "Wing Attack",
+          "save_ability": "dexterity",
+          "dc": 22,
+          "range_ft": 10,
+          "area": {
+            "shape": "emanation",
+            "origin": "self",
+            "radius_ft": 10
+          },
+          "damage_dice_count": 2,
+          "damage_dice_size": 6,
+          "damage_bonus": 8,
+          "damage_type": "bludgeoning",
+          "success_damage": "none",
+          "failure_control_effect": {
+            "condition_id": "prone"
+          },
+          "animation": "wing-attack"
+        }
+      }
+    ],
     "spellcasting": null
   },
   {
@@ -2197,8 +2553,6 @@
     "reaction_names": [],
     "parry_ac_bonus": null,
     "legendary_action_names": [
-      "Detect",
-      "Tail Attack",
       "Wing Attack (Costs 2 Actions)"
     ],
     "source_traits": "<p><em><strong>Legendary Resistance (3/Day).</strong></em> If the dragon fails a saving throw, it can choose to succeed instead.</p>",
@@ -2277,6 +2631,51 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 3,
+    "legendary_actions": [
+      {
+        "id": "detect",
+        "name": "Detect",
+        "cost": 1,
+        "kind": "ability_check",
+        "check_ability": "wisdom",
+        "check_skill": "perception"
+      },
+      {
+        "id": "tail-attack",
+        "name": "Tail Attack",
+        "cost": 1,
+        "kind": "attack",
+        "attack_id": "tail"
+      },
+      {
+        "id": "wing-attack",
+        "name": "Wing Attack",
+        "cost": 2,
+        "kind": "save",
+        "save_action": {
+          "id": "legendary-wing-attack",
+          "name": "Wing Attack",
+          "save_ability": "dexterity",
+          "dc": 21,
+          "range_ft": 10,
+          "area": {
+            "shape": "emanation",
+            "origin": "self",
+            "radius_ft": 10
+          },
+          "damage_dice_count": 2,
+          "damage_dice_size": 6,
+          "damage_bonus": 8,
+          "damage_type": "bludgeoning",
+          "success_damage": "none",
+          "failure_control_effect": {
+            "condition_id": "prone"
+          },
+          "animation": "wing-attack"
+        }
+      }
+    ],
     "spellcasting": null
   },
   {
@@ -2441,8 +2840,6 @@
     "reaction_names": [],
     "parry_ac_bonus": null,
     "legendary_action_names": [
-      "Detect",
-      "Tail Attack",
       "Wing Attack (Costs 2 Actions)"
     ],
     "source_traits": "<p><em><strong>Ice Walk.</strong></em> The dragon can move across and climb icy surfaces without needing to make an ability check. Additionally, difficult terrain composed of ice or snow doesn't cost it extra movement. </p><p><em><strong>Legendary Resistance (3/Day).</strong></em> If the dragon fails a saving throw, it can choose to succeed instead.</p>",
@@ -2498,6 +2895,51 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 3,
+    "legendary_actions": [
+      {
+        "id": "detect",
+        "name": "Detect",
+        "cost": 1,
+        "kind": "ability_check",
+        "check_ability": "wisdom",
+        "check_skill": "perception"
+      },
+      {
+        "id": "tail-attack",
+        "name": "Tail Attack",
+        "cost": 1,
+        "kind": "attack",
+        "attack_id": "tail"
+      },
+      {
+        "id": "wing-attack",
+        "name": "Wing Attack",
+        "cost": 2,
+        "kind": "save",
+        "save_action": {
+          "id": "legendary-wing-attack",
+          "name": "Wing Attack",
+          "save_ability": "dexterity",
+          "dc": 19,
+          "range_ft": 10,
+          "area": {
+            "shape": "emanation",
+            "origin": "self",
+            "radius_ft": 10
+          },
+          "damage_dice_count": 2,
+          "damage_dice_size": 6,
+          "damage_bonus": 6,
+          "damage_type": "bludgeoning",
+          "success_damage": "none",
+          "failure_control_effect": {
+            "condition_id": "prone"
+          },
+          "animation": "wing-attack"
+        }
+      }
+    ],
     "spellcasting": null
   },
   {
@@ -2616,6 +3058,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -2735,6 +3179,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -2898,8 +3344,6 @@
     "reaction_names": [],
     "parry_ac_bonus": null,
     "legendary_action_names": [
-      "Detect",
-      "Tail Attack",
       "Wing Attack (Costs 2 Actions)"
     ],
     "source_traits": "<p><em><strong>Amphibious.</strong></em> The dragon can breathe air and water.</p><p><em><strong>Legendary Resistance (3/Day).</strong></em> If the dragon fails a saving throw, it can choose to succeed instead.</p>",
@@ -2956,6 +3400,51 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 3,
+    "legendary_actions": [
+      {
+        "id": "detect",
+        "name": "Detect",
+        "cost": 1,
+        "kind": "ability_check",
+        "check_ability": "wisdom",
+        "check_skill": "perception"
+      },
+      {
+        "id": "tail-attack",
+        "name": "Tail Attack",
+        "cost": 1,
+        "kind": "attack",
+        "attack_id": "tail"
+      },
+      {
+        "id": "wing-attack",
+        "name": "Wing Attack",
+        "cost": 2,
+        "kind": "save",
+        "save_action": {
+          "id": "legendary-wing-attack",
+          "name": "Wing Attack",
+          "save_ability": "dexterity",
+          "dc": 23,
+          "range_ft": 15,
+          "area": {
+            "shape": "emanation",
+            "origin": "self",
+            "radius_ft": 15
+          },
+          "damage_dice_count": 2,
+          "damage_dice_size": 6,
+          "damage_bonus": 8,
+          "damage_type": "bludgeoning",
+          "success_damage": "none",
+          "failure_control_effect": {
+            "condition_id": "prone"
+          },
+          "animation": "wing-attack"
+        }
+      }
+    ],
     "spellcasting": null
   },
   {
@@ -3118,8 +3607,6 @@
     "reaction_names": [],
     "parry_ac_bonus": null,
     "legendary_action_names": [
-      "Detect",
-      "Tail Attack",
       "Wing Attack (Costs 2 Actions)"
     ],
     "source_traits": "<p><em><strong>Legendary Resistance (3/Day).</strong></em> If the dragon fails a saving throw, it can choose to succeed instead.</p>",
@@ -3176,6 +3663,51 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 3,
+    "legendary_actions": [
+      {
+        "id": "detect",
+        "name": "Detect",
+        "cost": 1,
+        "kind": "ability_check",
+        "check_ability": "wisdom",
+        "check_skill": "perception"
+      },
+      {
+        "id": "tail-attack",
+        "name": "Tail Attack",
+        "cost": 1,
+        "kind": "attack",
+        "attack_id": "tail"
+      },
+      {
+        "id": "wing-attack",
+        "name": "Wing Attack",
+        "cost": 2,
+        "kind": "save",
+        "save_action": {
+          "id": "legendary-wing-attack",
+          "name": "Wing Attack",
+          "save_ability": "dexterity",
+          "dc": 24,
+          "range_ft": 15,
+          "area": {
+            "shape": "emanation",
+            "origin": "self",
+            "radius_ft": 15
+          },
+          "damage_dice_count": 2,
+          "damage_dice_size": 6,
+          "damage_bonus": 9,
+          "damage_type": "bludgeoning",
+          "success_damage": "none",
+          "failure_control_effect": {
+            "condition_id": "prone"
+          },
+          "animation": "wing-attack"
+        }
+      }
+    ],
     "spellcasting": null
   },
   {
@@ -3335,8 +3867,6 @@
     "reaction_names": [],
     "parry_ac_bonus": null,
     "legendary_action_names": [
-      "Detect",
-      "Tail Attack",
       "Wing Attack (Costs 2 Actions)"
     ],
     "source_traits": "<p><em><strong>Legendary Resistance (3/Day).</strong></em> If the dragon fails a saving throw, it can choose to succeed instead.</p>",
@@ -3417,6 +3947,51 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 3,
+    "legendary_actions": [
+      {
+        "id": "detect",
+        "name": "Detect",
+        "cost": 1,
+        "kind": "ability_check",
+        "check_ability": "wisdom",
+        "check_skill": "perception"
+      },
+      {
+        "id": "tail-attack",
+        "name": "Tail Attack",
+        "cost": 1,
+        "kind": "attack",
+        "attack_id": "tail"
+      },
+      {
+        "id": "wing-attack",
+        "name": "Wing Attack",
+        "cost": 2,
+        "kind": "save",
+        "save_action": {
+          "id": "legendary-wing-attack",
+          "name": "Wing Attack",
+          "save_ability": "dexterity",
+          "dc": 22,
+          "range_ft": 15,
+          "area": {
+            "shape": "emanation",
+            "origin": "self",
+            "radius_ft": 15
+          },
+          "damage_dice_count": 2,
+          "damage_dice_size": 6,
+          "damage_bonus": 8,
+          "damage_type": "bludgeoning",
+          "success_damage": "none",
+          "failure_control_effect": {
+            "condition_id": "prone"
+          },
+          "animation": "wing-attack"
+        }
+      }
+    ],
     "spellcasting": null
   },
   {
@@ -3576,8 +4151,6 @@
     "reaction_names": [],
     "parry_ac_bonus": null,
     "legendary_action_names": [
-      "Detect",
-      "Tail Attack",
       "Wing Attack (Costs 2 Actions)"
     ],
     "source_traits": "<p><em><strong>Amphibious.</strong></em> The dragon can breathe air and water.</p><p><em><strong>Legendary Resistance (3/Day).</strong></em> If the dragon fails a saving throw, it can choose to succeed instead.</p>",
@@ -3650,6 +4223,51 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 3,
+    "legendary_actions": [
+      {
+        "id": "detect",
+        "name": "Detect",
+        "cost": 1,
+        "kind": "ability_check",
+        "check_ability": "wisdom",
+        "check_skill": "perception"
+      },
+      {
+        "id": "tail-attack",
+        "name": "Tail Attack",
+        "cost": 1,
+        "kind": "attack",
+        "attack_id": "tail"
+      },
+      {
+        "id": "wing-attack",
+        "name": "Wing Attack",
+        "cost": 2,
+        "kind": "save",
+        "save_action": {
+          "id": "legendary-wing-attack",
+          "name": "Wing Attack",
+          "save_ability": "dexterity",
+          "dc": 24,
+          "range_ft": 15,
+          "area": {
+            "shape": "emanation",
+            "origin": "self",
+            "radius_ft": 15
+          },
+          "damage_dice_count": 2,
+          "damage_dice_size": 6,
+          "damage_bonus": 9,
+          "damage_type": "bludgeoning",
+          "success_damage": "none",
+          "failure_control_effect": {
+            "condition_id": "prone"
+          },
+          "animation": "wing-attack"
+        }
+      }
+    ],
     "spellcasting": null
   },
   {
@@ -3808,8 +4426,6 @@
     "reaction_names": [],
     "parry_ac_bonus": null,
     "legendary_action_names": [
-      "Detect",
-      "Tail Attack",
       "Wing Attack (Costs 2 Actions)"
     ],
     "source_traits": "<p><em><strong>Legendary Resistance (3/Day).</strong></em> If the dragon fails a saving throw, it can choose to succeed instead.</p>",
@@ -3866,6 +4482,51 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 3,
+    "legendary_actions": [
+      {
+        "id": "detect",
+        "name": "Detect",
+        "cost": 1,
+        "kind": "ability_check",
+        "check_ability": "wisdom",
+        "check_skill": "perception"
+      },
+      {
+        "id": "tail-attack",
+        "name": "Tail Attack",
+        "cost": 1,
+        "kind": "attack",
+        "attack_id": "tail"
+      },
+      {
+        "id": "wing-attack",
+        "name": "Wing Attack",
+        "cost": 2,
+        "kind": "save",
+        "save_action": {
+          "id": "legendary-wing-attack",
+          "name": "Wing Attack",
+          "save_ability": "dexterity",
+          "dc": 23,
+          "range_ft": 15,
+          "area": {
+            "shape": "emanation",
+            "origin": "self",
+            "radius_ft": 15
+          },
+          "damage_dice_count": 2,
+          "damage_dice_size": 6,
+          "damage_bonus": 8,
+          "damage_type": "bludgeoning",
+          "success_damage": "none",
+          "failure_control_effect": {
+            "condition_id": "prone"
+          },
+          "animation": "wing-attack"
+        }
+      }
+    ],
     "spellcasting": null
   },
   {
@@ -4026,8 +4687,6 @@
     "reaction_names": [],
     "parry_ac_bonus": null,
     "legendary_action_names": [
-      "Detect",
-      "Tail Attack",
       "Wing Attack (Costs 2 Actions)"
     ],
     "source_traits": "<p><em><strong>Amphibious.</strong></em> The dragon can breathe air and water. </p><p><em><strong>Legendary Resistance (3/Day).</strong></em> If the dragon fails a saving throw, it can choose to succeed instead.</p>",
@@ -4083,6 +4742,51 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 3,
+    "legendary_actions": [
+      {
+        "id": "detect",
+        "name": "Detect",
+        "cost": 1,
+        "kind": "ability_check",
+        "check_ability": "wisdom",
+        "check_skill": "perception"
+      },
+      {
+        "id": "tail-attack",
+        "name": "Tail Attack",
+        "cost": 1,
+        "kind": "attack",
+        "attack_id": "tail"
+      },
+      {
+        "id": "wing-attack",
+        "name": "Wing Attack",
+        "cost": 2,
+        "kind": "save",
+        "save_action": {
+          "id": "legendary-wing-attack",
+          "name": "Wing Attack",
+          "save_ability": "dexterity",
+          "dc": 25,
+          "range_ft": 15,
+          "area": {
+            "shape": "emanation",
+            "origin": "self",
+            "radius_ft": 15
+          },
+          "damage_dice_count": 2,
+          "damage_dice_size": 6,
+          "damage_bonus": 10,
+          "damage_type": "bludgeoning",
+          "success_damage": "none",
+          "failure_control_effect": {
+            "condition_id": "prone"
+          },
+          "animation": "wing-attack"
+        }
+      }
+    ],
     "spellcasting": null
   },
   {
@@ -4251,8 +4955,6 @@
     "reaction_names": [],
     "parry_ac_bonus": null,
     "legendary_action_names": [
-      "Detect",
-      "Tail Attack",
       "Wing Attack (Costs 2 Actions)"
     ],
     "source_traits": "<p><em><strong>Amphibious.</strong></em> The dragon can breathe air and water. </p><p><em><strong>Legendary Resistance (3/Day).</strong></em> If the dragon fails a saving throw, it can choose to succeed instead.</p>",
@@ -4308,6 +5010,51 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 3,
+    "legendary_actions": [
+      {
+        "id": "detect",
+        "name": "Detect",
+        "cost": 1,
+        "kind": "ability_check",
+        "check_ability": "wisdom",
+        "check_skill": "perception"
+      },
+      {
+        "id": "tail-attack",
+        "name": "Tail Attack",
+        "cost": 1,
+        "kind": "attack",
+        "attack_id": "tail"
+      },
+      {
+        "id": "wing-attack",
+        "name": "Wing Attack",
+        "cost": 2,
+        "kind": "save",
+        "save_action": {
+          "id": "legendary-wing-attack",
+          "name": "Wing Attack",
+          "save_ability": "dexterity",
+          "dc": 23,
+          "range_ft": 15,
+          "area": {
+            "shape": "emanation",
+            "origin": "self",
+            "radius_ft": 15
+          },
+          "damage_dice_count": 2,
+          "damage_dice_size": 6,
+          "damage_bonus": 8,
+          "damage_type": "bludgeoning",
+          "success_damage": "none",
+          "failure_control_effect": {
+            "condition_id": "prone"
+          },
+          "animation": "wing-attack"
+        }
+      }
+    ],
     "spellcasting": null
   },
   {
@@ -4470,8 +5217,6 @@
     "reaction_names": [],
     "parry_ac_bonus": null,
     "legendary_action_names": [
-      "Detect",
-      "Tail Attack",
       "Wing Attack (Costs 2 Actions)"
     ],
     "source_traits": "<p><em><strong>Legendary Resistance (3/Day).</strong></em> If the dragon fails a saving throw, it can choose to succeed instead.</p>",
@@ -4527,6 +5272,51 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 3,
+    "legendary_actions": [
+      {
+        "id": "detect",
+        "name": "Detect",
+        "cost": 1,
+        "kind": "ability_check",
+        "check_ability": "wisdom",
+        "check_skill": "perception"
+      },
+      {
+        "id": "tail-attack",
+        "name": "Tail Attack",
+        "cost": 1,
+        "kind": "attack",
+        "attack_id": "tail"
+      },
+      {
+        "id": "wing-attack",
+        "name": "Wing Attack",
+        "cost": 2,
+        "kind": "save",
+        "save_action": {
+          "id": "legendary-wing-attack",
+          "name": "Wing Attack",
+          "save_ability": "dexterity",
+          "dc": 25,
+          "range_ft": 15,
+          "area": {
+            "shape": "emanation",
+            "origin": "self",
+            "radius_ft": 15
+          },
+          "damage_dice_count": 2,
+          "damage_dice_size": 6,
+          "damage_bonus": 10,
+          "damage_type": "bludgeoning",
+          "success_damage": "none",
+          "failure_control_effect": {
+            "condition_id": "prone"
+          },
+          "animation": "wing-attack"
+        }
+      }
+    ],
     "spellcasting": null
   },
   {
@@ -4685,8 +5475,6 @@
     "reaction_names": [],
     "parry_ac_bonus": null,
     "legendary_action_names": [
-      "Detect",
-      "Tail Attack",
       "Wing Attack (Costs 2 Actions)"
     ],
     "source_traits": "<p><em><strong>Legendary Resistance (3/Day).</strong></em> If the dragon fails a saving throw, it can choose to succeed instead.</p>",
@@ -4765,6 +5553,51 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 3,
+    "legendary_actions": [
+      {
+        "id": "detect",
+        "name": "Detect",
+        "cost": 1,
+        "kind": "ability_check",
+        "check_ability": "wisdom",
+        "check_skill": "perception"
+      },
+      {
+        "id": "tail-attack",
+        "name": "Tail Attack",
+        "cost": 1,
+        "kind": "attack",
+        "attack_id": "tail"
+      },
+      {
+        "id": "wing-attack",
+        "name": "Wing Attack",
+        "cost": 2,
+        "kind": "save",
+        "save_action": {
+          "id": "legendary-wing-attack",
+          "name": "Wing Attack",
+          "save_ability": "dexterity",
+          "dc": 25,
+          "range_ft": 15,
+          "area": {
+            "shape": "emanation",
+            "origin": "self",
+            "radius_ft": 15
+          },
+          "damage_dice_count": 2,
+          "damage_dice_size": 6,
+          "damage_bonus": 10,
+          "damage_type": "bludgeoning",
+          "success_damage": "none",
+          "failure_control_effect": {
+            "condition_id": "prone"
+          },
+          "animation": "wing-attack"
+        }
+      }
+    ],
     "spellcasting": null
   },
   {
@@ -4929,8 +5762,6 @@
     "reaction_names": [],
     "parry_ac_bonus": null,
     "legendary_action_names": [
-      "Detect",
-      "Tail Attack",
       "Wing Attack (Costs 2 Actions)"
     ],
     "source_traits": "<p><em><strong>Ice Walk.</strong></em> The dragon can move across and climb icy surfaces without needing to make an ability check. Additionally, difficult terrain composed of ice or snow doesn't cost it extra movement. </p><p><em><strong>Legendary Resistance (3/Day).</strong></em> If the dragon fails a saving throw, it can choose to succeed instead.</p>",
@@ -4986,6 +5817,51 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 3,
+    "legendary_actions": [
+      {
+        "id": "detect",
+        "name": "Detect",
+        "cost": 1,
+        "kind": "ability_check",
+        "check_ability": "wisdom",
+        "check_skill": "perception"
+      },
+      {
+        "id": "tail-attack",
+        "name": "Tail Attack",
+        "cost": 1,
+        "kind": "attack",
+        "attack_id": "tail"
+      },
+      {
+        "id": "wing-attack",
+        "name": "Wing Attack",
+        "cost": 2,
+        "kind": "save",
+        "save_action": {
+          "id": "legendary-wing-attack",
+          "name": "Wing Attack",
+          "save_ability": "dexterity",
+          "dc": 22,
+          "range_ft": 15,
+          "area": {
+            "shape": "emanation",
+            "origin": "self",
+            "radius_ft": 15
+          },
+          "damage_dice_count": 2,
+          "damage_dice_size": 6,
+          "damage_bonus": 8,
+          "damage_type": "bludgeoning",
+          "success_damage": "none",
+          "failure_control_effect": {
+            "condition_id": "prone"
+          },
+          "animation": "wing-attack"
+        }
+      }
+    ],
     "spellcasting": null
   },
   {
@@ -5099,7 +5975,9 @@
     "legendary_action_names": [
       "Claw Attack",
       "Teleport (Costs 2 Actions)",
-      "Cast a Spell (Costs 3 Actions)"
+      "Cast a Spell (Costs 3 Actions)",
+      "Teleport",
+      "Cast a Spell"
     ],
     "source_traits": "<p><em><strong>Inscrutable.</strong></em> The sphinx is immune to any effect that would sense its emotions or read its thoughts, as well as any divination spell that it refuses. Wisdom (Insight) checks made to ascertain the sphinx's intentions or sincerity have disadvantage. </p><p><em><strong>Magic Weapons.</strong></em> The sphinx's weapon attacks are magical. </p><p><em><strong>Spellcasting.</strong></em> The sphinx is a 12th-level spellcaster. Its spellcasting ability is Wisdom (spell save DC 18, +10 to hit with spell attacks). It requires no material components to cast its spells. The sphinx has the following cleric spells prepared: </p><p>Cantrips (at will): sacred flame, spare the dying, thaumaturgy </p><p>1st level (4 slots): command, detect evil and good, detect magic </p><p>2nd level (3 slots): lesser restoration, zone of truth </p><p>3rd level (3 slots): dispel magic, tongues </p><p>4th level (3 slots): banishment, freedom of movement </p><p>5th level (2 slots): flame strike, greater restoration </p><p>6th level (1 slot): heroes' feast</p>",
     "source_actions": "<p><em><strong>Multiattack.</strong></em> The sphinx makes two claw attacks. </p><p><em><strong>Claw.</strong></em> <em>Melee Weapon Attack:</em> +12 to hit, reach 5 ft., one target. <em>Hit:</em> 17 (2d10 + 6) slashing damage. </p><p><em><strong>Roar (3/Day).</strong></em> The sphinx emits a magical roar. Each time it roars before finishing a long rest, the roar is louder and the effect is different, as detailed below. Each creature within 500 feet of the sphinx and able to hear the roar must make a saving throw. </p><p><em><strong>First Roar.</strong></em> Each creature that fails a DC 18 Wisdom saving throw is frightened for 1 minute. A frightened creature can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success. </p><p><em><strong>Second Roar.</strong></em> Each creature that fails a DC 18 Wisdom saving throw is deafened and frightened for 1 minute. A frightened creature is paralyzed and can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success. </p><p><em><strong>Third Roar.</strong></em> Each creature makes a DC 18 Constitution saving throw. On a failed save, a creature takes 44 (8d10) thunder damage and is knocked prone. On a successful save, the creature takes half as much damage and isn't knocked prone.</p>",
@@ -5111,6 +5989,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 3,
+    "legendary_actions": [],
     "spellcasting": {
       "caster_level": 12,
       "ability": "wisdom",
@@ -5314,6 +6194,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -5417,6 +6299,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -5509,6 +6393,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -5632,6 +6518,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -5753,6 +6641,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": {
       "caster_level": 18,
       "ability": "intelligence",
@@ -6047,6 +6937,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -6140,6 +7032,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -6234,6 +7128,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -6321,6 +7217,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -6456,6 +7354,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -6546,6 +7446,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -6636,6 +7538,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -6792,6 +7696,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -6902,6 +7808,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -7060,6 +7968,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -7176,6 +8086,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -7340,6 +8252,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -7437,6 +8351,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -7528,6 +8444,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -7663,6 +8581,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -7802,6 +8722,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -7891,6 +8813,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -8014,6 +8938,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -8147,6 +9073,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -8261,6 +9189,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -8356,6 +9286,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -8449,6 +9381,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -8580,6 +9514,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -8685,6 +9621,8 @@
       "resulting_hp": 1
     },
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -8840,6 +9778,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -8989,6 +9929,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -9132,6 +10074,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -9255,6 +10199,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -9395,6 +10341,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -9488,6 +10436,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -9575,6 +10525,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -9668,6 +10620,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -9826,6 +10780,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -9944,6 +10900,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -10113,6 +11071,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -10215,6 +11175,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -10333,6 +11295,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -10460,6 +11424,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -10669,6 +11635,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -10757,6 +11725,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -10844,6 +11814,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -10957,6 +11929,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -11082,6 +12056,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -11322,6 +12298,8 @@
     },
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -11414,6 +12392,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -11509,6 +12489,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -11637,6 +12619,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": {
       "caster_level": 4,
       "ability": "wisdom",
@@ -11782,6 +12766,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -11903,6 +12889,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -11997,6 +12985,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -12098,6 +13088,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -12262,6 +13254,8 @@
     },
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -12349,6 +13343,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -12506,6 +13502,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -12604,6 +13602,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -12819,6 +13819,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -12925,6 +13927,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -13012,6 +14016,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -13187,6 +14193,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -13314,6 +14322,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -13520,6 +14530,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -13669,6 +14681,8 @@
     },
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -13762,6 +14776,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": {
       "caster_level": 4,
       "ability": "wisdom",
@@ -13972,6 +14988,8 @@
     },
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -14090,6 +15108,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -14209,6 +15229,8 @@
     },
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -14301,6 +15323,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -14413,6 +15437,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -14630,6 +15656,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -14747,6 +15775,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -14869,6 +15899,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -15030,6 +16062,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -15174,6 +16208,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -15297,6 +16333,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -15411,6 +16449,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -15539,6 +16579,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -15657,6 +16699,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": {
       "caster_level": 5,
       "ability": "intelligence",
@@ -15816,6 +16860,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -15915,6 +16961,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -16019,6 +17067,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -16089,6 +17139,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -16217,6 +17269,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -16346,6 +17400,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -16444,6 +17500,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -16570,6 +17628,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -16687,6 +17747,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -16808,6 +17870,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -16931,6 +17995,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -17052,6 +18118,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -17143,6 +18211,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -17248,6 +18318,8 @@
       "resulting_hp": 1
     },
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -17350,6 +18422,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -17465,6 +18539,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -17560,6 +18636,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -17691,6 +18769,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -17814,6 +18894,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -17938,6 +19020,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -18027,6 +19111,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -18125,6 +19211,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -18226,6 +19314,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -18317,6 +19407,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -18405,6 +19497,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -18504,6 +19598,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -18598,6 +19694,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -18696,6 +19794,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -18786,6 +19886,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -18918,6 +20020,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -19020,6 +20124,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -19113,6 +20219,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -19224,6 +20332,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -19327,6 +20437,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -19451,6 +20563,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -19553,6 +20667,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -19645,6 +20761,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -19754,6 +20872,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -19856,6 +20976,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -20058,6 +21180,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -20252,6 +21376,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -20434,6 +21560,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -20535,6 +21663,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -20649,6 +21779,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -20775,6 +21907,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -20898,6 +22032,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -21011,6 +22147,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -21145,6 +22283,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -21275,6 +22415,8 @@
     },
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -21405,6 +22547,8 @@
         1
       ]
     },
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -21528,6 +22672,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -21633,6 +22779,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -21770,6 +22918,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -21880,6 +23030,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": {
       "caster_level": 11,
       "ability": "wisdom",
@@ -22077,7 +23229,9 @@
     "legendary_action_names": [
       "Claw Attack",
       "Teleport (Costs 2 Actions)",
-      "Cast a Spell (Costs 3 Actions)"
+      "Cast a Spell (Costs 3 Actions)",
+      "Teleport",
+      "Cast a Spell"
     ],
     "source_traits": "<p><em><strong>Inscrutable.</strong></em> The sphinx is immune to any effect that would sense its emotions or read its thoughts, as well as any divination spell that it refuses. Wisdom (Insight) checks made to ascertain the sphinx's intentions or sincerity have disadvantage. </p><p><em><strong>Magic Weapons.</strong></em> The sphinx's weapon attacks are magical. </p><p><em><strong>Spellcasting.</strong></em> The sphinx is a 9th-level spellcaster. Its spellcasting ability is Intelligence (spell save DC 16, +8 to hit with spell attacks). It requires no material components to cast its spells. The sphinx has the following wizard spells prepared: </p><p>Cantrips (at will): mage hand, minor illusion, prestidigitation </p><p>1st level (4 slots): detect magic, identify, shield </p><p>2nd level (3 slots): darkness, locate object, suggestion </p><p>3rd level (3 slots): dispel magic, remove curse, tongues </p><p>4th level (3 slots): banishment, greater invisibility </p><p>5th level (1 slot): legend lore</p>",
     "source_actions": "<p><em><strong>Multiattack.</strong></em> The sphinx makes two claw attacks. </p><p><em><strong>Claw.</strong></em> <em>Melee Weapon Attack:</em> +8 to hit, reach 5 ft., one target. <em>Hit:</em> 13 (2d8 + 4) slashing damage.</p>",
@@ -22089,6 +23243,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 3,
+    "legendary_actions": [],
     "spellcasting": {
       "caster_level": 9,
       "ability": "intelligence",
@@ -22341,6 +23497,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -22461,6 +23619,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -22553,6 +23713,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -22678,6 +23840,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -22816,6 +23980,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -22937,6 +24103,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -23060,6 +24228,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -23172,6 +24342,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -23267,6 +24439,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -23430,6 +24604,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -23523,6 +24699,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -23619,6 +24797,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -23710,6 +24890,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -23896,6 +25078,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -24026,6 +25210,8 @@
     },
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -24133,6 +25319,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -24249,6 +25437,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -24410,6 +25600,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -24480,6 +25672,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -24574,6 +25768,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -24701,6 +25897,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -24814,6 +26012,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -24940,7 +26140,9 @@
     "legendary_action_names": [
       "Tentacle Attack or Fling",
       "Lightning Storm (Costs 2 Actions)",
-      "Ink Cloud (Costs 3 Actions)"
+      "Ink Cloud (Costs 3 Actions)",
+      "Lightning Storm",
+      "Ink Cloud"
     ],
     "source_traits": "<p><em><strong>Amphibious.</strong></em> The kraken can breathe air and water. </p><p><em><strong>Freedom of Movement.</strong></em> The kraken ignores difficult terrain, and magical effects can't reduce its speed or cause it to be restrained. It can spend 5 feet of movement to escape from nonmagical restraints or being grappled. </p><p><em><strong>Siege Monster.</strong></em> The kraken deals double damage to objects and structures.</p>",
     "source_actions": "<p><em><strong>Multiattack.</strong></em> The kraken makes three tentacle attacks, each of which it can replace with one use of Fling. </p><p><em><strong>Bite.</strong></em> <em>Melee Weapon Attack:</em> +17 to hit, reach 5 ft., one target. <em>Hit:</em> 23 (3d8 + 10) piercing damage. If the target is a Large or smaller creature grappled by the kraken, that creature is swallowed, and the grapple ends. While swallowed, the creature is blinded and restrained, it has total cover against attacks and other effects outside the kraken, and it takes 42 (12d6) acid damage at the start of each of the kraken's turns.</p><p>If the kraken takes 50 damage or more on a single turn from a creature inside it, the kraken must succeed on a DC 25 Constitution saving throw at the end of that turn or regurgitate all swallowed creatures, which fall prone in a space within 10 feet of the kraken. If the kraken dies, a swallowed creature is no longer restrained by it and can escape from the corpse using 15 feet of movement, exiting prone. </p><p><em><strong>Tentacle.</strong></em> <em>Melee Weapon Attack:</em> +17 to hit, reach 30 ft., one target. <em>Hit:</em> 20 (3d6 + 10) bludgeoning damage, and the target is grappled (escape DC 18). Until this grapple ends, the target is restrained. The kraken has ten tentacles, each of which can grapple one target. </p><p><em><strong>Fling.</strong></em> One Large or smaller object held or creature grappled by the kraken is thrown up to 60 feet in a random direction and knocked prone. If a thrown target strikes a solid surface, the target takes 3 (1d6) bludgeoning damage for every 10 feet it was thrown. If the target is thrown at another creature, that creature must succeed on a DC 18 Dexterity saving throw or take the same damage and be knocked prone. </p><p><em><strong>Lightning Storm.</strong></em> The kraken magically creates three bolts of lightning, each of which can strike a target the kraken can see within 120 feet of it. A target must make a DC 23 Dexterity saving throw, taking 22 (4d10) lightning damage on a failed save, or half as much damage on a successful one.</p>",
@@ -24951,6 +26153,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 3,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -25110,6 +26314,8 @@
     },
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -25209,6 +26415,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -25324,7 +26532,10 @@
       "Cantrip",
       "Paralyzing Touch (Costs 2 Actions)",
       "Frightening Gaze (Costs 2 Actions)",
-      "Disrupt Life (Costs 3 Actions)"
+      "Disrupt Life (Costs 3 Actions)",
+      "Paralyzing Touch",
+      "Frightening Gaze",
+      "Disrupt Life"
     ],
     "source_traits": "<p><em><strong>Legendary Resistance (3/Day).</strong></em> If the lich fails a saving throw, it can choose to succeed instead. </p><p><em><strong>Rejuvenation.</strong></em> If it has a phylactery, a destroyed lich gains a new body in 1d10 days, regaining all its hit points and becoming active again. The new body appears within 5 feet of the phylactery. </p><p><em><strong>Spellcasting.</strong></em> The lich is an 18th-level spellcaster. Its spellcasting ability is Intelligence (spell save DC 20, +12 to hit with spell attacks). The lich has the following wizard spells prepared: </p><p>Cantrips (at will): mage hand, prestidigitation, ray of frost </p><p>1st level (4 slots): detect magic, magic missile, shield, thunderwave </p><p>2nd level (3 slots): acid arrow, detect thoughts, invisibility, mirror image </p><p>3rd level (3 slots): animate dead, counterspell, dispel magic, fireball </p><p>4th level (3 slots): blight, dimension door </p><p>5th level (3 slots): cloudkill, scrying </p><p>6th level (1 slot): disintegrate, globe of invulnerability </p><p>7th level (1 slot): finger of death, plane shift </p><p>8th level (1 slot): dominate monster, power word stun </p><p>9th level (1 slot): power word kill </p><p><em><strong>Turn Resistance.</strong></em> The lich has advantage on saving throws against any effect that turns undead.</p>",
     "source_actions": "<p><em><strong>Paralyzing Touch.</strong></em> Melee Spell Attack: +12 to hit, reach 5 ft., one creature. <em>Hit:</em> 10 (3d6) cold damage. The target must succeed on a DC 18 Constitution saving throw or be paralyzed for 1 minute. The target can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success.</p>",
@@ -25335,6 +26546,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 3,
+    "legendary_actions": [],
     "spellcasting": {
       "caster_level": 18,
       "ability": "intelligence",
@@ -25608,6 +26821,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -25696,6 +26911,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -25898,6 +27115,8 @@
     "multiattack_policy": {
       "distinct_attack_ids": true
     },
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -26018,6 +27237,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": {
       "caster_level": 9,
       "ability": "intelligence",
@@ -26262,6 +27483,8 @@
     },
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -26356,6 +27579,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -26473,6 +27698,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -26623,6 +27850,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -26782,6 +28011,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -26878,6 +28109,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -27047,6 +28280,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -27187,6 +28422,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -27333,6 +28570,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -27461,6 +28700,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -27585,6 +28826,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -27712,6 +28955,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -27802,6 +29047,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -27919,6 +29166,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -28040,7 +29289,10 @@
       "Blinding Dust",
       "Blasphemous Word (Costs 2 Actions)",
       "Channel Negative Energy (Costs 2 Actions)",
-      "Whirlwind of Sand (Costs 2 Actions)"
+      "Whirlwind of Sand (Costs 2 Actions)",
+      "Blasphemous Word",
+      "Channel Negative Energy",
+      "Whirlwind of Sand"
     ],
     "source_traits": "<p><em><strong>Magic Resistance.</strong></em> The mummy lord has advantage on saving throws against spells and other magical effects.</p><p><em><strong>Rejuvenation.</strong></em> A destroyed mummy lord gains a new body in 24 hours if its heart is intact, regaining all its hit points and becoming active again. The new body appears within 5 feet of the mummy lord's heart.</p><p><em><strong>Spellcasting.</strong></em> The mummy lord is a 10th-level spellcaster. Its spellcasting ability is Wisdom (spell save DC 17, +9 to hit with spell attacks). The mummy lord has the following cleric spells prepared:</p><p>Cantrips (at will): sacred flame, thaumaturgy</p><p>1st level (4 slots): command, guiding bolt, shield of faith</p><p>2nd level (3 slots): hold person, silence, spiritual weapon</p><p>3rd level (3 slots): animate dead, dispel magic</p><p>4th level (3 slots): divination, guardian of faith</p><p>5th level (2 slots): contagion, insect plague</p><p>6th level (1 slot): harm</p>",
     "source_actions": "<p><em><strong>Multiattack.</strong></em> The mummy can use its Dreadful Glare and makes one attack with its rotting fist.</p><p><em><strong>Rotting Fist.</strong></em> <em>Melee Weapon Attack:</em> +9 to hit, reach 5 ft., one target. <em>Hit:</em> 14 (3d6 + 4) bludgeoning damage plus 21 (6d6) necrotic damage. If the target is a creature, it must succeed on a DC 16 Constitution saving throw or be cursed with mummy rot. The cursed target can't regain hit points, and its hit point maximum decreases by 10 (3d6) for every 24 hours that elapse. If the curse reduces the target's hit point maximum to 0, the target dies, and its body turns to dust. The curse lasts until removed by the remove curse spell or other magic.</p><p><em><strong>Dreadful Glare.</strong></em> The mummy lord targets one creature it can see within 60 feet of it. If the target can see the mummy lord, it must succeed on a DC 16 Wisdom saving throw against this magic or become frightened until the end of the mummy's next turn. If the target fails the saving throw by 5 or more, it is also paralyzed for the same duration. A target that succeeds on the saving throw is immune to the Dreadful Glare of all mummies and mummy lords for the next 24 hours.</p>",
@@ -28052,6 +29304,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 3,
+    "legendary_actions": [],
     "spellcasting": {
       "caster_level": 10,
       "ability": "wisdom",
@@ -28287,6 +29541,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -28440,6 +29696,8 @@
     },
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -28542,6 +29800,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -28635,6 +29895,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -28740,6 +30002,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -28853,6 +30117,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -28952,6 +30218,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -29086,6 +30354,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -29181,6 +30451,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -29375,6 +30647,8 @@
       "survives_zero_until_turn": false
     },
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -29513,6 +30787,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -29651,6 +30927,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -29745,6 +31023,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -29867,6 +31147,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -29989,6 +31271,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -30083,6 +31367,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -30191,6 +31477,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -30391,6 +31679,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -30596,6 +31886,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -30689,6 +31981,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -30785,6 +32079,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -30908,6 +32204,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -30995,6 +32293,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -31089,6 +32389,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": {
       "caster_level": 5,
       "ability": "wisdom",
@@ -31269,6 +32571,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -31359,6 +32663,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -31483,6 +32789,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -31595,6 +32903,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -31686,6 +32996,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -31903,6 +33215,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -31992,6 +33306,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -32084,6 +33400,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -32214,6 +33532,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -32307,6 +33627,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -32412,6 +33734,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -32512,6 +33836,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -32599,6 +33925,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -32730,6 +34058,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -32833,6 +34163,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -32913,6 +34245,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -33004,6 +34338,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -33125,6 +34461,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -33323,6 +34661,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -33535,6 +34875,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -33673,6 +35015,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -33768,6 +35112,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -33894,6 +35240,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -33987,6 +35335,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -34053,6 +35403,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -34168,6 +35520,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -34271,6 +35625,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -34386,6 +35742,8 @@
       "survives_zero_until_turn": false
     },
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -34457,6 +35815,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -34603,6 +35963,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -34720,6 +36082,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -34873,7 +36237,9 @@
     "legendary_action_names": [
       "Teleport",
       "Searing Burst (Costs 2 Actions)",
-      "Blinding Gaze (Costs 3 Actions)"
+      "Blinding Gaze (Costs 3 Actions)",
+      "Searing Burst",
+      "Blinding Gaze"
     ],
     "source_traits": "<p><em><strong>Angelic Weapons.</strong></em> The solar's weapon attacks are magical. When the solar hits with any weapon, the weapon deals an extra 6d8 radiant damage (included in the attack). </p><p><em><strong>Divine Awareness.</strong></em> The solar knows if it hears a lie. </p><p><em><strong>Innate Spellcasting.</strong></em> The solar's spellcasting ability is Charisma (spell save DC 25). It can innately cast the following spells, requiring no material components: </p><p>At will: detect evil and good, invisibility (self only) </p><p>3/day each: blade barrier, dispel evil and good, resurrection </p><p>1/day each: commune, control weather </p><p><em><strong>Magic Resistance.</strong></em> The solar has advantage on saving throws against spells and other magical effects.</p>",
     "source_actions": "<p><em><strong>Multiattack.</strong></em> The solar makes two greatsword attacks. </p><p><em><strong>Greatsword.</strong></em> <em>Melee Weapon Attack:</em> +15 to hit, reach 5 ft., one target. <em>Hit:</em> 22 (4d6 + 8) slashing damage plus 27 (6d8) radiant damage. </p><p><em><strong>Slaying Longbow.</strong></em> <em>Ranged Weapon Attack:</em> +13 to hit, range 150/600 ft., one target. <em>Hit:</em> 15 (2d8 + 6) piercing damage plus 27 (6d8) radiant damage. If the target is a creature that has 100 hit points or fewer, it must succeed on a DC 15 Constitution saving throw or die. </p><p><em><strong>Flying Sword.</strong></em> The solar releases its greatsword to hover magically in an unoccupied space within 5 feet of it. If the solar can see the sword, the solar can mentally command it as a bonus action to fly up to 50 feet and either make one attack against a target or return to the solar's hands. If the hovering sword is targeted by any effect, the solar is considered to be holding it. The hovering sword falls if the solar dies. </p><p><em><strong>Healing Touch (4/Day).</strong></em> The solar touches another creature. The target magically regains 40 (8d8 + 4) hit points and is freed from any curse, disease, poison, blindness, or deafness.</p>",
@@ -34949,6 +36315,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 3,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -35045,6 +36413,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -35157,6 +36527,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -35259,6 +36631,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -35367,6 +36741,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": {
       "caster_level": 10,
       "ability": "intelligence",
@@ -35564,6 +36940,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -35694,6 +37072,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -35817,6 +37197,8 @@
     },
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -35905,6 +37287,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -36031,6 +37415,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -36146,6 +37532,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -36343,6 +37731,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -36450,6 +37840,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -36564,6 +37956,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -36676,6 +38070,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -36796,6 +38192,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -36910,6 +38308,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -37022,6 +38422,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -37136,6 +38538,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -37328,7 +38732,8 @@
     "legendary_action_names": [
       "Attack",
       "Move",
-      "Chomp (Costs 2 Actions)"
+      "Chomp (Costs 2 Actions)",
+      "Chomp"
     ],
     "source_traits": "<p><em><strong>Legendary Resistance (3/Day).</strong></em> If the tarrasque fails a saving throw, it can choose to succeed instead. </p><p><em><strong>Magic Resistance.</strong></em> The tarrasque has advantage on saving throws against spells and other magical effects. </p><p><em><strong>Reflective Carapace.</strong></em> Any time the tarrasque is targeted by a magic missile spell, a line spell, or a spell that requires a ranged attack roll, roll a d6. On a 1 to 5, the tarrasque is unaffected. On a 6, the tarrasque is unaffected, and the effect is reflected back at the caster as though it originated from the tarrasque, turning the caster into the target. </p><p><em><strong>Siege Monster.</strong></em> The tarrasque deals double damage to objects and structures.</p>",
     "source_actions": "<p><em><strong>Multiattack.</strong></em> The tarrasque can use its Frightful Presence. It then makes five attacks: one with its bite, two with its claws, one with its horns, and one with its tail. It can use its Swallow instead of its bite. </p><p><em><strong>Bite.</strong></em> <em>Melee Weapon Attack:</em> +19 to hit, reach 10 ft., one target. <em>Hit:</em> 36 (4d12 + 10) piercing damage. If the target is a creature, it is grappled (escape DC 20). Until this grapple ends, the target is restrained, and the tarrasque can't bite another target. </p><p><em><strong>Claw.</strong></em> <em>Melee Weapon Attack:</em> +19 to hit, reach 15ft., one target. <em>Hit:</em> 28 (4d8 + 10) slashing damage. </p><p><em><strong>Horns.</strong></em> <em>Melee Weapon Attack:</em> +19 to hit, reach 10ft., one target. <em>Hit:</em> 32 (4d10 + 10) piercing damage. </p><p><em><strong>Tail.</strong></em> <em>Melee Weapon Attack:</em> +19 to hit, reach 20ft., one target. <em>Hit:</em> 24 (4d6 + 10) bludgeoning damage. If the target is a creature, it must succeed on a DC 20 Strength saving throw or be knocked prone. </p><p><em><strong>Frightful Presence.</strong></em> Each creature of the tarrasque's choice within 120 feet of it and aware of it must succeed on a DC 17 Wisdom saving throw or become frightened for 1 minute. A creature can repeat the saving throw at the end of each of its turns, with disadvantage if the tarrasque is within line of sight, ending the effect on itself on a success. If a creature's saving throw is successful or the effect ends for it, the creature is immune to the tarrasque's Frightful Presence for the next 24 hours. </p><p><em><strong>Swallow.</strong></em> The tarrasque makes one bite attack against a Large or smaller creature it is grappling. If the attack hits, the target takes the bite's damage, the target is swallowed, and the grapple ends. While swallowed, the creature is blinded and restrained, it has total cover against attacks and other effects outside the tarrasque, and it takes 56 (16d6) acid damage at the start of each of the tarrasque's turns.</p><p>If the tarrasque takes 60 damage or more on a single turn from a creature inside it, the tarrasque must succeed on a DC 20 Constitution saving throw at the end of that turn or regurgitate all swallowed creatures, which fall prone in a space within 10 feet of the tarrasque. If the tarrasque dies, a swallowed creature is no longer restrained by it and can escape from the corpse by using 30 feet of movement, exiting prone.</p>",
@@ -37364,6 +38769,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 3,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -37487,6 +38894,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -37608,6 +39017,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -37736,6 +39147,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -37873,6 +39286,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -37990,6 +39405,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -38124,6 +39541,8 @@
       "survives_zero_until_turn": true
     },
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -38220,6 +39639,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -38344,6 +39765,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -38478,7 +39901,9 @@
     "legendary_action_names": [
       "Hooves",
       "Shimmering Shield (Costs 2 Actions)",
-      "Heal Self (Costs 3 Actions)"
+      "Heal Self (Costs 3 Actions)",
+      "Shimmering Shield",
+      "Heal Self"
     ],
     "source_traits": "<p><em><strong>Charge.</strong></em> If the unicorn moves at least 20 feet straight toward a target and then hits it with a horn attack on the same turn, the target takes an extra 9 (2d8) piercing damage. If the target is a creature, it must succeed on a DC 15 Strength saving throw or be knocked prone. </p><p><em><strong>Innate Spellcasting.</strong></em> The unicorn's innate spellcasting ability is Charisma (spell save DC 14). The unicorn can innately cast the following spells, requiring no components: </p><p>At will: detect evil and good, druidcraft, pass without trace </p><p>1/day each: calm emotions, dispel evil and good, entangle </p><p><em><strong>Magic Resistance.</strong></em> The unicorn has advantage on saving throws against spells and other magical effects. </p><p><em><strong>Magic Weapons.</strong></em> The unicorn's weapon attacks are magical.</p>",
     "source_actions": "<p><em><strong>Multiattack.</strong></em> The unicorn makes two attacks: one with its hooves and one with its horn. </p><p><em><strong>Hooves.</strong></em> <em>Melee Weapon Attack:</em> +7 to hit, reach 5 ft., one target. <em>Hit:</em> 11 (2d6 + 4) bludgeoning damage. </p><p><em><strong>Horn.</strong></em> <em>Melee Weapon Attack:</em> +7 to hit, reach 5 ft., one target. <em>Hit:</em> 8 (1d8 + 4) piercing damage. </p><p><em><strong>Healing Touch (3/Day).</strong></em> The unicorn touches another creature with its horn. The target magically regains 11 (2d8 + 2) hit points. In addition, the touch removes all diseases and neutralizes all poisons afflicting the target. </p><p><em><strong>Teleport (1/Day).</strong></em> The unicorn magically teleports itself and up to three willing creatures it can see within 5 feet of it, along with any equipment they are wearing or carrying, to a location the unicorn is familiar with, up to 1 mile away.</p>",
@@ -38546,6 +39971,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 3,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -38695,6 +40122,8 @@
       ],
       "survives_zero_until_turn": false
     },
+    "legendary_action_uses": 3,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -38834,6 +40263,8 @@
       ],
       "survives_zero_until_turn": false
     },
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -38970,6 +40401,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -39073,6 +40506,8 @@
       "repeat_dice_count": 1,
       "repeat_dice_size": 4
     },
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -39212,6 +40647,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -39305,6 +40742,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -39399,6 +40838,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -39493,6 +40934,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -39611,6 +41054,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -39703,6 +41148,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -39843,6 +41290,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -39965,6 +41414,8 @@
       "resulting_hp": 1
     },
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -40106,6 +41557,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -40270,6 +41723,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -40458,6 +41913,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -40589,6 +42046,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -40736,6 +42195,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -40849,6 +42310,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -40973,6 +42436,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -41071,6 +42536,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -41167,6 +42634,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -41279,6 +42748,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -41430,6 +42901,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -41564,6 +43037,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -41679,6 +43154,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -41846,6 +43323,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -42011,6 +43490,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -42195,6 +43676,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -42353,6 +43836,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -42513,6 +43998,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -42675,6 +44162,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -42844,6 +44333,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -43008,6 +44499,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -43190,6 +44683,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -43357,6 +44852,8 @@
     "zero_hp_prevention": null,
     "regeneration": null,
     "multiattack_policy": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   },
   {
@@ -43452,6 +44949,8 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "legendary_action_uses": 0,
+    "legendary_actions": [],
     "spellcasting": null
   }
 ]
