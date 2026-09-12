@@ -1,10 +1,16 @@
 import json
 
+import pytest
+
 from app.combat.attacks import resolve_attack
 from app.combat.damage_defenses import adjusted_damage_amount
 from app.combat.dice import FixedDiceProvider
 from app.combat.state import build_combatant_state
-from app.content.monster_catalog_2014 import load_catalog_2014, monster_by_id_2014
+from app.content.monster_catalog_2014 import (
+    load_catalog_2014,
+    monster_by_id_2014,
+    unsupported_mechanics_2014,
+)
 from app.domain.models import DamageType
 
 
@@ -12,29 +18,29 @@ def test_mvp_catalog_loads_and_uses_json_stats() -> None:
     catalog = load_catalog_2014()
     assert {monster.id for monster in catalog} == {"goblin", "skeleton", "brown-bear", "bandit"}
 
-    goblin = monster_by_id_2014("goblin")
-    assert goblin.armor_class == 15
-    assert goblin.max_hp == 7
-    assert goblin.speed_ft == 30
-    assert goblin.ability_scores.dexterity == 14
-    assert goblin.weapon_attack.weapon.name == "Scimitar"
-    assert goblin.alternate_weapon_attacks[0].weapon.name == "Shortbow"
-    assert goblin.alternate_weapon_attacks[0].weapon.normal_range_ft == 80
-    assert goblin.alternate_weapon_attacks[0].weapon.long_range_ft == 320
+    bandit = monster_by_id_2014("bandit")
+    assert bandit.armor_class == 12
+    assert bandit.max_hp == 11
+    assert bandit.speed_ft == 30
+    assert bandit.ability_scores.dexterity == 12
+    assert bandit.weapon_attack.weapon.name == "Scimitar"
+    assert bandit.alternate_weapon_attacks[0].weapon.name == "Light Crossbow"
+    assert bandit.alternate_weapon_attacks[0].weapon.normal_range_ft == 80
+    assert bandit.alternate_weapon_attacks[0].weapon.long_range_ft == 320
 
 
 def test_json_ranged_attack_runs_through_universal_resolver() -> None:
-    attacker = build_combatant_state(monster_by_id_2014("goblin"))
+    attacker = build_combatant_state(monster_by_id_2014("bandit"))
     defender = build_combatant_state(monster_by_id_2014("skeleton"))
-    shortbow = attacker.template.alternate_weapon_attacks[0]
+    crossbow = attacker.template.alternate_weapon_attacks[0]
 
     event = resolve_attack(
-        1, 1, attacker, defender, shortbow, 80,
+        1, 1, attacker, defender, crossbow, 80,
         FixedDiceProvider([10, 4]),
     )
 
     assert event.hit is True
-    assert defender.current_hp == 7
+    assert defender.current_hp == 8
 
 
 def test_json_defenses_feed_shared_damage_engine() -> None:
@@ -45,13 +51,21 @@ def test_json_defenses_feed_shared_damage_engine() -> None:
 
 
 def test_runtime_state_is_fresh_for_each_fight() -> None:
-    template = monster_by_id_2014("brown-bear")
+    template = monster_by_id_2014("bandit")
     first = build_combatant_state(template)
     second = build_combatant_state(template)
     first.current_hp = 1
 
-    assert second.current_hp == 34
-    assert template.max_hp == 34
+    assert second.current_hp == 11
+    assert template.max_hp == 11
+
+
+def test_unresolved_monster_mechanics_fail_closed() -> None:
+    catalog = {monster.id: monster for monster in load_catalog_2014()}
+    assert "trait:Nimble Escape" in unsupported_mechanics_2014(catalog["goblin"])
+    assert "action:Multiattack" in unsupported_mechanics_2014(catalog["brown-bear"])
+    with pytest.raises(RuntimeError, match="could not be compiled"):
+        monster_by_id_2014("goblin")
 
 
 def test_new_basic_monster_is_data_only(tmp_path) -> None:
