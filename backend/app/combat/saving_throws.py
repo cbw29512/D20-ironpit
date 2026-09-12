@@ -5,6 +5,7 @@ from app.combat.barbarian import end_rage_if_incapacitated
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
 from app.combat.grapple import apply_grapple
+from app.combat.resources import action_resource_available, spend_action_resource
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.zero_hp import apply_damage
 from app.domain.models import BattleEvent, DamageRollComponent, DamageType, DiceRoll, EncounterCombatant, SavingThrowAction
@@ -39,14 +40,12 @@ def resolve_save_action(
     shared_damage_rolls: list[int] | None = None, affected_states: list[CombatantState] | None = None,
 ) -> BattleEvent:
     if spend_action and not is_available(actor.state, "action"): raise ValueError("Action is not available for a saving throw action.")
+    if not action_resource_available(actor.state, action): raise ValueError(f"{action.name} resource is unavailable.")
     if not legal_save_action(action, target, distance_ft): raise ValueError(f"{action.name} has no legal target at {distance_ft} feet.")
     save_roll, succeeded = resolve_saving_throw(
-        target.state,
-        action.save_ability,
-        action.dc,
-        dice,
-        magical_effect=action.magical_effect,
+        target.state, action.save_ability, action.dc, dice, magical_effect=action.magical_effect,
     )
+    resource_remaining = spend_action_resource(actor.state, action)
     if spend_action: spend(actor.state, "action")
     hp_before = target.state.current_hp; temporary_hp_before = target.state.temporary_hp
     death_success_before = target.state.death_save_successes; death_failure_before = target.state.death_save_failures
@@ -79,6 +78,7 @@ def resolve_save_action(
         death_save_successes_before=death_success_before, death_save_failures_before=death_failure_before,
         death_save_successes=target.state.death_save_successes, death_save_failures=target.state.death_save_failures,
         is_stable=target.state.is_stable, is_dead=target.state.is_dead, feature_id=action.id,
+        resource_remaining=resource_remaining,
         concentration_ended_effect_id=concentration_before if concentration_before and target.state.concentration is None else None,
         animation=action.animation, description=description,
     )
