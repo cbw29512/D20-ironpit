@@ -6,7 +6,7 @@ from app.combat.legendary_resistance import LEGENDARY_RESISTANCE_RESOURCE_ID
 from app.content.monster_catalog_2014_models import CatalogMonster2014
 from app.content.monster_catalog_2014_traits import legendary_resistance_uses_2014
 from app.domain.character_builds import AbilityScores
-from app.domain.models import ResourceDefinition
+from app.domain.models import ConditionalAttackAdvantage, ResourceDefinition, WeaponAttack
 
 logger = logging.getLogger(__name__)
 ABILITY_NAMES = {
@@ -40,4 +40,16 @@ def resources_2014(source: CatalogMonster2014) -> list[ResourceDefinition]:
             name="Legendary Resistance",
             max_uses=uses,
         )
+    ]
+
+
+def bind_attack_traits_2014(source: CatalogMonster2014, attacks: list[WeaponAttack]) -> list[WeaponAttack]:
+    if "Blood Frenzy" not in source.trait_names:
+        return attacks
+    advantage = ConditionalAttackAdvantage(trigger="target_not_full_hp")
+    return [
+        attack.model_copy(update={
+            "conditional_attack_advantage": [*attack.conditional_attack_advantage, advantage],
+        })
+        for attack in attacks
     ]
