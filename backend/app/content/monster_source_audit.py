@@ -131,7 +131,7 @@ def audit_monster_source(template: CombatantTemplate, row: dict[str, object]) ->
         for action in template.forced_movement_actions:
             issues.extend(forced_movement_action_issues(action, actions))
         for action in template.swallow_actions:
-            issues.extend(swallow_action_issues(action, actions))
+            issues.extend(swallow_action_issues(action, save_action_source(row, action.action_cost)))
         if template.attack_action is not None and "multiattack" not in actions:
             issues.append("multiattack-source-missing")
         return issues
