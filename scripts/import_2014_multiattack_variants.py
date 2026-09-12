@@ -61,7 +61,10 @@ def inline_count_alternative(
     if not typed:
         return None
     sequences: list[list[list[str]]] = []
-    for count_word, kind in ((typed.group(1), typed.group(2)), (typed.group(3), typed.group(4)):
+    for count_word, kind in (
+        (typed.group(1), typed.group(2)),
+        (typed.group(3), typed.group(4)),
+    ):
         ids = [attack["id"] for attack in attacks if attack["kind"] == kind.lower()]
         if not ids:
             return None
