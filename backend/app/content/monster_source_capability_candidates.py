@@ -90,13 +90,8 @@ def _attack(row: dict[str, object], actions: str, match: re.Match[str]) -> Attac
         damage=DiceSpec(count=int(match.group("count")), size=int(match.group("size")), bonus=base_bonus),
         damage_type=DamageType(match.group("dtype").lower()), animation="strike", reach_ft=reach,
         normal_range_ft=normal, long_range_ft=long, effects=effects,
-        charge_profile=parse_charge_replacement(
-            rider_text,
-            base_dice_count=int(match.group("count")),
-            base_dice_size=int(match.group("size")),
-            base_damage_bonus=base_bonus,
-            base_damage_type=match.group("dtype"),
-        ),
+        charge_profile=parse_charge_replacement(rider_text, base_dice_count=int(match.group("count")),
+            base_dice_size=int(match.group("size")), base_damage_bonus=base_bonus, base_damage_type=match.group("dtype")),
     )
 
 
