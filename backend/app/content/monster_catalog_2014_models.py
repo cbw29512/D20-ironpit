@@ -8,6 +8,7 @@ from app.domain.actions import AbilityName, ConditionName, HitControlEffect, Sav
 from app.domain.attack_action_policy import AttackActionPolicy
 from app.domain.charge_profiles import ChargeProfileDefinition
 from app.domain.on_hit_saves import OnHitSaveEffect
+from app.domain.regeneration import RegenerationProfile
 from app.domain.size import CreatureSize
 from app.domain.weapons import ConditionalDamage, DamageType
 from app.domain.zero_hp_prevention import ZeroHpPrevention
@@ -116,6 +117,7 @@ class CatalogMonster2014(BaseModel):
     multiattack_slots: list[list[str]] = Field(default_factory=list)
     multiattack_policy: AttackActionPolicy | None = None
     zero_hp_prevention: ZeroHpPrevention | None = None
+    regeneration: RegenerationProfile | None = None
     action_recharges: dict[str, int] = Field(default_factory=dict)
     rest_recharge_action_ids: list[str] = Field(default_factory=list)
     action_names: list[str] = Field(default_factory=list)
