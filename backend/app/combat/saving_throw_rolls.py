@@ -4,6 +4,7 @@ import logging
 
 from app.combat.barbarian import rage_active
 from app.combat.condition_rules import automatically_fails_strength_dexterity_save
+from app.combat.d20_effects import strength_d20_disadvantage
 from app.combat.danger_sense import danger_sense_advantage
 from app.combat.dice import DiceProvider
 from app.combat.dodge import dodge_dex_save_advantage_sources
@@ -37,7 +38,10 @@ def saving_throw_mode(
                 and CombatTrait.SURE_FOOTED in state.template.combat_traits
             )
         )
-        disadvantage = 1 if ability == "dexterity" and RESTRAINED_EFFECT_ID in state.active_effect_ids else 0
+        disadvantage = (
+            int(ability == "dexterity" and RESTRAINED_EFFECT_ID in state.active_effect_ids)
+            + int(ability == "strength") * strength_d20_disadvantage(state)
+        )
         if (advantage > 0) == (disadvantage > 0):
             return RollMode.NORMAL
         return RollMode.ADVANTAGE if advantage else RollMode.DISADVANTAGE
