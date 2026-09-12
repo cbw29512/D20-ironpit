@@ -33,6 +33,12 @@ def main() -> int:
     assert parsed["caster_level"] == 5
     assert parsed["slots"] == {"1": 3, "2": 2, "3": 1}
     assert parsed["spells"][-1]["id"] == "fireball"
+
+    innate = (
+        "<p><em><strong>Innate Spellcasting.</strong></em> The fiend's innate spellcasting ability "
+        "is Charisma (spell save DC 13). At will: detect magic.</p>"
+    )
+    assert parse_spellcasting(innate) is None
     print("2014 regular spellcasting parser regressions passed.")
     return 0
 
