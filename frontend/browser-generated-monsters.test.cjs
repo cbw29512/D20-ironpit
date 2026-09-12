@@ -50,6 +50,16 @@ assert.deepEqual(goat.attacks[0].charge, {
   replacementDamage: { diceCount: 1, diceSize: 4, damageBonus: 0, damageType: "bludgeoning" },
 });
 
+const boar = generated["srd-boar"];
+assert.ok(boar);
+assert.deepEqual(boar.attacks.find((item) => item.id === "boar-gore").charge, {
+  minimumMove: 20,
+  diceCount: 1,
+  diceSize: 6,
+  damageType: "piercing",
+  proneMaxSize: "medium",
+});
+
 const allosaurus = generated["srd-allosaurus"];
 assert.ok(allosaurus);
 assert.deepEqual(allosaurus.attacks.find((item) => item.id === "allosaurus-claws").charge, {
