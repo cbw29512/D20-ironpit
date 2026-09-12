@@ -1136,6 +1136,22 @@
         },
         "source_effect_immunity_on_success": true,
         "animation": "fear"
+      },
+      {
+        "id": "repulsion-breath",
+        "name": "Repulsion Breath",
+        "save_ability": "strength",
+        "dc": 19,
+        "range_ft": 30,
+        "area": {
+          "shape": "cone",
+          "origin": "self",
+          "length_ft": 30
+        },
+        "failure_push_ft": 60,
+        "resource_id": "breath-weapons",
+        "resource_cost": 1,
+        "animation": "forced-movement"
       }
     ],
     "innate_spellcasting": null,
@@ -3595,6 +3611,22 @@
         "success_damage": "half",
         "resource_id": "breath-weapons",
         "resource_cost": 1
+      },
+      {
+        "id": "repulsion-breath",
+        "name": "Repulsion Breath",
+        "save_ability": "strength",
+        "dc": 23,
+        "range_ft": 30,
+        "area": {
+          "shape": "cone",
+          "origin": "self",
+          "length_ft": 30
+        },
+        "failure_push_ft": 60,
+        "resource_id": "breath-weapons",
+        "resource_cost": 1,
+        "animation": "forced-movement"
       }
     ],
     "innate_spellcasting": null,
@@ -9023,6 +9055,22 @@
         "success_damage": "half",
         "resource_id": "breath-weapons",
         "resource_cost": 1
+      },
+      {
+        "id": "repulsion-breath",
+        "name": "Repulsion Breath",
+        "save_ability": "strength",
+        "dc": 12,
+        "range_ft": 30,
+        "area": {
+          "shape": "cone",
+          "origin": "self",
+          "length_ft": 30
+        },
+        "failure_push_ft": 30,
+        "resource_id": "breath-weapons",
+        "resource_cost": 1,
+        "animation": "forced-movement"
       }
     ],
     "innate_spellcasting": null,
@@ -41902,7 +41950,24 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/64/315/315/636252731269768088.jpeg",
-    "saving_throw_actions": [],
+    "saving_throw_actions": [
+      {
+        "id": "repulsion-breath",
+        "name": "Repulsion Breath",
+        "save_ability": "strength",
+        "dc": 15,
+        "range_ft": 30,
+        "area": {
+          "shape": "cone",
+          "origin": "self",
+          "length_ft": 30
+        },
+        "failure_push_ft": 40,
+        "resource_id": "breath-weapons",
+        "resource_cost": 1,
+        "animation": "forced-movement"
+      }
+    ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "multiattack_policy": null,
