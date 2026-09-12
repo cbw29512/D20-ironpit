@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.area_save_actions import resolve_area_save_action
-from app.combat.area_targeting import legal_area_placements
+from app.combat.area_save_targeting import legal_area_save_placements
 from app.combat.resources import action_resource_available, resource_definition
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 
@@ -23,7 +23,7 @@ def area_save_choice(
     *,
     recharge_only: bool = False,
 ):
-    """Choose the legal area placement hitting the most enemies."""
+    """Choose the legal action-aware area placement hitting the most eligible enemies."""
     try:
         choices = []
         for action in attacker.state.template.saving_throw_actions:
@@ -31,7 +31,7 @@ def area_save_choice(
                 continue
             if recharge_only and not _is_recharge_action(attacker, action):
                 continue
-            placements = legal_area_placements(attacker, setup, action.area, action.range_ft)
+            placements = legal_area_save_placements(attacker, setup, action)
             if placements:
                 choices.append((len(placements[0].target_ids), action.id, action, placements[0]))
         if not choices:
