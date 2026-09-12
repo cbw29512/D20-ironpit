@@ -17195,12 +17195,18 @@
           "damage_dice_size": 6,
           "damage_bonus": 0,
           "damage_type": "poison",
-          "success_damage": "none"
+          "success_damage": "none",
+          "zero_hp_stable": true,
+          "zero_hp_condition_ids": [
+            "poisoned",
+            "paralyzed"
+          ],
+          "zero_hp_duration_rounds": 600
         },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "If the poison damage reduces the target to 0 hit points, the target is stable but poisoned for 1 hour, even after regaining hit points, and is paralyzed while poisoned in this way",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5
       }
     ],
@@ -19038,12 +19044,18 @@
           "damage_dice_size": 8,
           "damage_bonus": 0,
           "damage_type": "poison",
-          "success_damage": "half"
+          "success_damage": "half",
+          "zero_hp_stable": true,
+          "zero_hp_condition_ids": [
+            "poisoned",
+            "paralyzed"
+          ],
+          "zero_hp_duration_rounds": 600
         },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "If the poison damage reduces the target to 0 hit points, the target is stable but poisoned for 1 hour, even after regaining hit points, and is paralyzed while poisoned in this way",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5
       }
     ],
@@ -19365,12 +19377,18 @@
           "damage_dice_size": 6,
           "damage_bonus": 0,
           "damage_type": "poison",
-          "success_damage": "half"
+          "success_damage": "half",
+          "zero_hp_stable": true,
+          "zero_hp_condition_ids": [
+            "poisoned",
+            "paralyzed"
+          ],
+          "zero_hp_duration_rounds": 600
         },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "If the poison damage reduces the target to 0 hit points, the target is stable but poisoned for 1 hour, even after regaining hit points, and is paralyzed while poisoned in this way",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5
       }
     ],
@@ -19554,12 +19572,18 @@
           "damage_dice_size": 6,
           "damage_bonus": 0,
           "damage_type": "poison",
-          "success_damage": "half"
+          "success_damage": "half",
+          "zero_hp_stable": true,
+          "zero_hp_condition_ids": [
+            "poisoned",
+            "paralyzed"
+          ],
+          "zero_hp_duration_rounds": 600
         },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "If the poison damage reduces the target to 0 hit points, the target is stable but poisoned for 1 hour, even after regaining hit points, and is paralyzed while poisoned in this way",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5
       }
     ],
@@ -29901,12 +29925,18 @@
           "damage_dice_size": 8,
           "damage_bonus": 0,
           "damage_type": "poison",
-          "success_damage": "half"
+          "success_damage": "half",
+          "zero_hp_stable": true,
+          "zero_hp_condition_ids": [
+            "poisoned",
+            "paralyzed"
+          ],
+          "zero_hp_duration_rounds": 600
         },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "If the poison damage reduces the target to 0 hit points, the target is stable but poisoned for 1 hour, even after regaining hit points, and is paralyzed while poisoned in this way",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5
       }
     ],
