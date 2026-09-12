@@ -8,6 +8,7 @@ from app.combat.danger_sense import danger_sense_advantage
 from app.combat.dice import DiceProvider
 from app.combat.dodge import dodge_dex_save_advantage_sources
 from app.combat.grapple import RESTRAINED_EFFECT_ID
+from app.combat.legendary_resistance import use_legendary_resistance_on_failure
 from app.combat.modifier_stack import apply_d20_bonus_dice
 from app.combat.rolls import roll_d20
 from app.domain.models import CombatantState, DiceRoll, RollMode, RollRevision
@@ -64,6 +65,8 @@ def resolve_saving_throw(
 ) -> tuple[DiceRoll | None, bool]:
     try:
         if ability in {"strength", "dexterity"} and automatically_fails_strength_dexterity_save(state):
+            if use_legendary_resistance_on_failure(state):
+                return None, True
             return None, False
         if ability not in state.template.saving_throw_bonuses:
             raise ValueError(f"{state.template.name} lacks a certified {ability.title()} saving throw bonus.")
@@ -84,7 +87,11 @@ def resolve_saving_throw(
             if reroll is not None:
                 revision = _indomitable_revision(roll, reroll)
                 roll = reroll.model_copy(update={"revisions": [*reroll.revisions, revision]})
-        return roll, roll.total >= dc
+        if roll.total >= dc:
+            return roll, True
+        if use_legendary_resistance_on_failure(state):
+            return roll, True
+        return roll, False
     except ValueError:
         raise
     except Exception as exc:
