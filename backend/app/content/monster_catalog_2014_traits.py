@@ -15,7 +15,11 @@ MODELED_TRAITS = {
     "Trampling Charge": CombatTrait.CHARGE,
 }
 
-DATA_BOUND_TRAITS = frozenset({"Blood Frenzy", "Innate Spellcasting", "Spellcasting"})
+# Source-preserved traits whose mechanics are consumed by another universal layer
+# or cannot change the current standard arena outcome by themselves.
+DATA_BOUND_TRAITS = frozenset({
+    "Blood Frenzy", "Echolocation", "Innate Spellcasting", "Spellcasting",
+})
 
 ARENA_NEUTRAL_TRAITS = frozenset({
     "Agile", "Amphibious", "Beast of Burden", "False Appearance", "Flyby",
