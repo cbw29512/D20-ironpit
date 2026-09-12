@@ -40,6 +40,26 @@ def _hit_modifier(effect: Any) -> dict[str, Any]:
     return row
 
 
+def _charge(profile: Any) -> dict[str, Any]:
+    row: dict[str, Any] = {"minimumMove": profile.minimum_move_ft}
+    prone_max = getattr(profile, "prone_max_target_size", None)
+    target_max = getattr(profile, "max_target_size", None)
+    prone_ability = getattr(profile, "prone_save_ability", None)
+    prone_dc = getattr(profile, "prone_save_dc", None)
+    bonus = getattr(profile, "bonus_damage", None)
+    replacement = getattr(profile, "replacement_damage", None)
+    follow_up = getattr(profile, "follow_up_attack_id", None)
+    if prone_max is not None: row["proneMaxSize"] = _value(prone_max)
+    if target_max is not None and target_max != prone_max: row["targetMaxSize"] = _value(target_max)
+    if prone_ability is not None: row.update(proneSaveAbility=prone_ability, proneSaveDc=prone_dc)
+    if bonus is not None: row.update(diceCount=bonus.dice_count, diceSize=bonus.dice_size, damageType=_value(bonus.damage_type))
+    if replacement is not None:
+        row["replacementDamage"] = {"diceCount": replacement.dice_count, "diceSize": replacement.dice_size,
+                                    "damageBonus": replacement.damage_bonus, "damageType": _value(replacement.damage_type)}
+    if follow_up: row["followUpAttackId"] = follow_up
+    return row
+
+
 def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
     try:
         weapon = attack.weapon
@@ -67,11 +87,8 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             if effect.ends_on_damage: row["onHitSaveEffect"]["endsOnDamage"] = True
             if effect.damage_dice_count:
                 row["onHitSaveEffect"].update(
-                    damageDiceCount=effect.damage_dice_count,
-                    damageDiceSize=effect.damage_dice_size,
-                    damageBonus=effect.damage_bonus,
-                    damageType=effect.damage_type,
-                    successDamage=effect.success_damage,
+                    damageDiceCount=effect.damage_dice_count, damageDiceSize=effect.damage_dice_size,
+                    damageBonus=effect.damage_bonus, damageType=effect.damage_type, successDamage=effect.success_damage,
                 )
         if attack.conditional_damage:
             if len(attack.conditional_damage) != 1: raise ValueError(f"Browser supports one conditional damage rider on {attack.id}.")
@@ -84,16 +101,7 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
         if control: row["controlEffect"] = control
         if CombatTrait.CHARGE.value in traits:
             profile = attack.charge_profile or charge_profile_for_attack_id(attack.id)
-            if profile:
-                charge: dict[str, Any] = {"minimumMove": profile.minimum_move_ft}
-                if profile.prone_max_target_size is not None: charge["proneMaxSize"] = profile.prone_max_target_size.value
-                if profile.max_target_size is not None and profile.max_target_size != profile.prone_max_target_size: charge["targetMaxSize"] = profile.max_target_size.value
-                if profile.prone_save_ability is not None: charge["proneSaveAbility"] = profile.prone_save_ability; charge["proneSaveDc"] = profile.prone_save_dc
-                if profile.bonus_damage is not None: charge.update(diceCount=profile.bonus_damage.dice_count, diceSize=profile.bonus_damage.dice_size, damageType=profile.bonus_damage.damage_type.value)
-                if profile.replacement_damage is not None:
-                    replacement = profile.replacement_damage; charge["replacementDamage"] = {"diceCount": replacement.dice_count, "diceSize": replacement.dice_size, "damageBonus": replacement.damage_bonus, "damageType": replacement.damage_type.value}
-                if profile.follow_up_attack_id: charge["followUpAttackId"] = profile.follow_up_attack_id
-                row["charge"] = charge
+            if profile: row["charge"] = _charge(profile)
         return row
     except Exception:
         logger.exception("Failed to serialize attack %s for browser runtime.", attack.id); raise
