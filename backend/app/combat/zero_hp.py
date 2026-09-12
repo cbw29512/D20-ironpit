@@ -10,12 +10,14 @@ from app.combat.hit_points import effective_max_hp
 from app.combat.orc import use_relentless_endurance
 from app.combat.source_bound_effects import end_damage_sensitive_effects
 from app.combat.undead_fortitude import resolve_undead_fortitude
+from app.combat.zero_hp_prevention import use_zero_hp_prevention
 from app.domain.models import CombatantState, DamageType
 from app.domain.traits import CombatTrait
 
 logger = logging.getLogger(__name__)
 ZeroHpOutcome = Literal[
     "damaged", "unconscious", "dead", "unchanged", "relentless_endurance", "undead_fortitude",
+    "zero_hp_prevention",
 ]
 DODGE_EFFECT_ID = "dodge"
 PRONE_EFFECT_ID = "prone"
@@ -108,7 +110,7 @@ def apply_damage(
     dice: DiceProvider | None = None,
     affected_states: list[CombatantState] | None = None,
 ) -> ZeroHpOutcome:
-    """Apply Temporary HP, Concentration, and SRD 5.2.1 zero-HP lifecycle rules."""
+    """Apply Temporary HP, Concentration, and zero-HP lifecycle rules."""
     try:
         if amount < 0:
             raise ValueError("Damage cannot be negative.")
@@ -127,10 +129,10 @@ def apply_damage(
         state.current_hp = max(0, hp_before - amount)
         if state.current_hp > 0:
             return _finish_damage(state, "damaged", incoming, dice, affected_states)
-        if resolve_undead_fortitude(
-            state, incoming, types, critical=critical, dice=dice,
-        ):
+        if resolve_undead_fortitude(state, incoming, types, critical=critical, dice=dice):
             return _finish_damage(state, "undead_fortitude", incoming, dice, affected_states)
+        if use_zero_hp_prevention(state, incoming):
+            return _finish_damage(state, "zero_hp_prevention", incoming, dice, affected_states)
         if state.template.kind == "monster":
             return _finish_damage(state, _mark_dead(state), incoming, dice, affected_states)
 
