@@ -18,6 +18,7 @@ from app.combat.offensive_movement_policy import move_to_enable_offense
 from app.combat.orc import should_use_adrenaline_rush, use_adrenaline_rush
 from app.combat.pit_policy import choose_standard_attack
 from app.combat.policy import should_use_second_wind
+from app.combat.regeneration import resolve_start_turn as resolve_regeneration
 from app.combat.resources import resolve_start_turn_recharges
 from app.combat.saving_throws import resolve_save_action
 from app.combat.standard_attack_action import resolve_standard_attack_action
@@ -38,6 +39,11 @@ def resolve_combat_turn(
     try:
         events: list[BattleEvent] = []
         cleanup_grapples(setup)
+        regen_event, regen_death = resolve_regeneration(sequence, round_number, attacker.combatant_id, attacker.state)
+        if regen_event is not None:
+            events.append(regen_event); sequence += 1
+        if regen_death:
+            return events, sequence
         begin_turn(attacker.state)
         recharge_events, sequence = resolve_start_turn_recharges(
             sequence, round_number, attacker.combatant_id, attacker.state, dice,
