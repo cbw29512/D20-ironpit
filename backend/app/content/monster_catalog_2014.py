@@ -15,6 +15,7 @@ from app.domain.models import (
     Weapon, WeaponAttack, WeaponAttackKind,
 )
 from app.domain.movement import MovementModes
+from app.domain.reactions import ParryReaction
 from app.domain.traits import CombatTrait
 
 logger = logging.getLogger(__name__)
@@ -38,13 +39,8 @@ def _attack(source: CatalogAttack2014, *, magical: bool = False) -> WeaponAttack
             long_range_ft=source.long_range_ft, magical=magical,
         )
         riders = [
-            OnHitDamage(
-                source=f"{source.name} secondary damage",
-                dice_count=item.dice_count,
-                dice_size=item.dice_size,
-                damage_bonus=item.bonus,
-                damage_type=item.type,
-            )
+            OnHitDamage(source=f"{source.name} secondary damage", dice_count=item.dice_count,
+                        dice_size=item.dice_size, damage_bonus=item.bonus, damage_type=item.type)
             for item in source.on_hit_damage
         ]
         return WeaponAttack(
@@ -67,8 +63,7 @@ def _ability_scores(source: CatalogMonster2014) -> AbilityScores:
 
 
 def _multiattack(source: CatalogMonster2014, attacks: list[WeaponAttack]) -> AttackActionDefinition | None:
-    if not source.multiattack_slots:
-        return None
+    if not source.multiattack_slots: return None
     known = {attack.id for attack in attacks}; slots: list[AttackActionSlot] = []
     for choices in source.multiattack_slots:
         if not choices or any(attack_id not in known for attack_id in choices):
@@ -81,11 +76,12 @@ def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
     try:
         attack_names = {attack.name for attack in source.attacks}; supported_actions = set(attack_names)
         if source.multiattack_slots: supported_actions.add("Multiattack")
+        supported_reactions = {"Parry"} if source.parry_ac_bonus is not None else set()
         blockers = [f"defense:{text}" for text in unresolved_defenses_2014(source.unsupported_defense_text)]
         blockers.extend(f"attack-detail:{attack.name}" for attack in source.attacks if not attack.source_complete)
         blockers.extend(f"action:{name}" for name in source.action_names if name not in supported_actions)
         blockers.extend(f"trait:{name}" for name in unresolved_traits_2014(source.trait_names))
-        blockers.extend(f"reaction:{name}" for name in source.reaction_names)
+        blockers.extend(f"reaction:{name}" for name in source.reaction_names if name not in supported_reactions)
         blockers.extend(f"legendary:{name}" for name in source.legendary_action_names)
         if not source.attacks: blockers.append("attack:no-structured-attack")
         return blockers
@@ -116,6 +112,7 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
             conditional_damage_resistances=conditional_resistances_2014(source.unsupported_defense_text),
             damage_immunities=source.damage_immunities, damage_vulnerabilities=source.damage_vulnerabilities,
             condition_immunities=source.condition_immunities, combat_traits=traits,
+            parry_reaction=ParryReaction(ac_bonus=source.parry_ac_bonus) if source.parry_ac_bonus is not None else None,
             visual=VisualLoadout(armor="source", main_hand=attacks[0].weapon.id, body_style=source.creature_type),
             source=f"2014 JSON catalog: {source.id}",
         )
