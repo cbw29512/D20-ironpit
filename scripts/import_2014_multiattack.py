@@ -3,6 +3,7 @@ from __future__ import annotations
 import html
 import re
 
+from import_2014_multiattack_policy import parse_policy_multiattack
 from import_2014_multiattack_variants import (
     alternatives,
     apply_any_replacement,
@@ -112,6 +113,9 @@ def parse_multiattack(source_actions: str | None, attacks: list[dict]) -> dict |
         if not re.search(r"<strong>\s*Multiattack", paragraph, re.I):
             continue
         text = re.sub(r"^Multiattack\.\s*", "", _plain(paragraph), flags=re.I)
+        policy = parse_policy_multiattack(text, attacks, _ids_for_label)
+        if policy is not None:
+            return policy
         slots = (
             medusa_style(text, attacks, _ids_for_label, _listed, NUMBER_WORDS)
             or replacement(text, attacks, _ids_for_label, NUMBER_WORDS)
