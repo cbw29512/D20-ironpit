@@ -42,6 +42,8 @@ class CatalogInnateSpell2014(BaseModel):
     name: str
     usage: Literal["at_will", "per_day"]
     uses_per_day: int | None = Field(default=None, ge=1, le=9)
+    shared_pool: bool = False
+    qualifier: str | None = None
 
 
 class CatalogInnateSpellcasting2014(BaseModel):
