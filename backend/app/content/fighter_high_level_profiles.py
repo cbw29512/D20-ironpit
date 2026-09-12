@@ -69,13 +69,13 @@ def build_karnok_stoneward_level18_profile() -> CharacterBuildProfile:
     audits = [
         FeatureAudit(
             feature_id="survivor-defy-death", feature_name="Survivor: Defy Death",
-            source_reference=source, category="subclass", combat_relevant=True, automated=False,
-            notes="Requires Advantage on death saves plus Champion recovery on 18-20; remains fail-closed until runtime and browser parity exist.",
+            source_reference=source, category="subclass", combat_relevant=True, automated=True,
+            notes="Generic death-save progression grants Advantage and treats 18-20 as recovery rolls.",
         ),
         FeatureAudit(
             feature_id="survivor-heroic-rally", feature_name="Survivor: Heroic Rally",
-            source_reference=source, category="subclass", combat_relevant=True, automated=False,
-            notes="Requires start-of-turn healing only while Bloodied and above 0 HP; generic unconditional regeneration is not equivalent.",
+            source_reference=source, category="subclass", combat_relevant=True, automated=True,
+            notes="Generic start-turn recovery heals 5 + Constitution modifier while alive and Bloodied.",
         ),
     ]
     return _advance(build_karnok_stoneward_level17_profile, 18, audits, [source])
