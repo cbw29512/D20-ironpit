@@ -13203,8 +13203,8 @@
         },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "The creature dies if the disease reduces its hit point maximum to 0",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5
       }
     ],
@@ -31175,8 +31175,8 @@
         },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "This reduction to the target's hit point maximum lasts until the disease is cured",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5
       },
       {
@@ -33406,8 +33406,8 @@
         "on_hit_save_effect": null,
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "The curse lasts until it is lifted by a remove curse spell or similar magic",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5
       }
     ],
