@@ -23,6 +23,7 @@ from app.domain.weapons import (
     WeaponAttack,
     WeaponAttackKind,
 )
+from app.domain.zero_hp_prevention import ZeroHpPrevention
 
 
 class VisualLoadout(BaseModel):
@@ -83,6 +84,7 @@ class CombatantTemplate(BaseModel):
     source_spellcasting_fingerprint: str | None = None
     parry_reaction: ParryReaction | None = None
     redirect_attack_reaction: RedirectAttackReaction | None = None
+    zero_hp_prevention: ZeroHpPrevention | None = None
     fighting_style: str | None = None
     fighting_styles: list[str] = Field(default_factory=list)
     weapon_masteries: list[str] = Field(default_factory=list)
