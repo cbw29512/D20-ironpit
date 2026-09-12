@@ -13196,11 +13196,15 @@
         },
         "conditional_damage": [],
         "on_hit_damage": [],
-        "on_hit_save_effect": null,
+        "on_hit_save_effect": {
+          "save_ability": "constitution",
+          "dc": 12,
+          "condition_id": "poisoned"
+        },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
-        "unsupported_text": "If the target is a creature, it must succeed on a DC 12 Constitution saving throw against disease or become poisoned until the disease is cured. Every 24 hours that elapse, the creature must repeat the saving throw, reducing its hit point maximum by 5 (1d10) on a failure. This reduction lasts until the disease is cured. The creature dies if the disease reduces its hit point maximum to 0",
+        "unsupported_text": "The creature dies if the disease reduces its hit point maximum to 0",
         "reach_ft": 5
       }
     ],
@@ -21156,8 +21160,8 @@
         },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "If the target is killed by this damage, it is absorbed into the mouther",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5
       }
     ],
@@ -31164,11 +31168,15 @@
         },
         "conditional_damage": [],
         "on_hit_damage": [],
-        "on_hit_save_effect": null,
+        "on_hit_save_effect": {
+          "save_ability": "constitution",
+          "dc": 15,
+          "condition_id": "poisoned"
+        },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
-        "unsupported_text": "If the target is a creature, it must succeed on a DC 15 Constitution saving throw against disease or become poisoned until the disease is cured. Every 24 hours that elapse, the target must repeat the saving throw, reducing its hit point maximum by 5 (1d10) on a failure. The disease is cured on a success. The target dies if the disease reduces its hit point maximum to 0. This reduction to the target's hit point maximum lasts until the disease is cured",
+        "unsupported_text": "This reduction to the target's hit point maximum lasts until the disease is cured",
         "reach_ft": 5
       },
       {
@@ -33399,7 +33407,7 @@
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
-        "unsupported_text": "the target is cursed if it is a creature. The magical curse takes effect whenever the target takes a short or long rest, filling the target's thoughts with horrible images and dreams. The cursed target gains no benefit from finishing a short or long rest. The curse lasts until it is lifted by a remove curse spell or similar magic",
+        "unsupported_text": "The curse lasts until it is lifted by a remove curse spell or similar magic",
         "reach_ft": 5
       }
     ],
@@ -41645,8 +41653,8 @@
         "on_hit_save_effect": null,
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "If the target is a humanoid, it must succeed on a DC 14 Constitution saving throw or be cursed with werebear lycanthropy",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5
       },
       {
@@ -41913,8 +41921,8 @@
         "on_hit_save_effect": null,
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "If the target is a humanoid, it must succeed on a DC 11 Constitution saving throw or be cursed with wererat lycanthropy",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5
       },
       {
@@ -42057,8 +42065,8 @@
         "on_hit_save_effect": null,
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "If the target is a humanoid, it must succeed on a DC 13 Constitution saving throw or be cursed with weretiger lycanthropy",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5
       },
       {
@@ -42224,8 +42232,8 @@
         "on_hit_save_effect": null,
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "If the target is a humanoid, it must succeed on a DC 12 Constitution saving throw or be cursed with werewolf lycanthropy",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5
       },
       {
