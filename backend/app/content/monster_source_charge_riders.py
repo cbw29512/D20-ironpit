@@ -11,7 +11,7 @@ _CHARGE_REPLACEMENT = re.compile(
     re.I,
 )
 _CHARGE_PRONE = re.compile(
-    r"If the target is (?:a |an )?(?P<size>Tiny|Small|Medium|Large|Huge|Gargantuan) or smaller(?: creature)? "
+    r"If the target is (?:a |an )?(?P<size>Tiny|Small|Medium|Large|Huge|Gargantuan) or smaller(?: creature)?,? "
     r"and the [^.]+? moved (?P<distance>\d+)\+ feet straight toward (?:it|the target) immediately before the hit, "
     r"the target has the Prone condition",
     re.I,
