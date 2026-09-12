@@ -15,7 +15,7 @@ MODELED_TRAITS = {
     "Trampling Charge": CombatTrait.CHARGE,
 }
 
-DATA_BOUND_TRAITS = frozenset({"Blood Frenzy", "Innate Spellcasting"})
+DATA_BOUND_TRAITS = frozenset({"Blood Frenzy", "Innate Spellcasting", "Spellcasting"})
 
 ARENA_NEUTRAL_TRAITS = frozenset({
     "Agile", "Amphibious", "Beast of Burden", "False Appearance", "Flyby",
