@@ -22,6 +22,7 @@ from app.domain.models import (
     CombatantTemplate, OnHitDamage, VisualLoadout, Weapon, WeaponAttack, WeaponAttackKind,
 )
 from app.domain.movement import MovementModes
+from app.domain.progression import ProgressionCombatFeatures
 from app.domain.reactions import ParryReaction
 from app.domain.traits import CombatTrait
 
@@ -105,6 +106,7 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
             creature_type=source.creature_type, size=source.size,
             ability_scores=ability_scores_2014(source), armor_class=source.armor_class, max_hp=source.max_hp,
             speed_ft=movement.walk_ft, movement_modes=movement, initiative_bonus=(dex - 10) // 2,
+            progression_features=ProgressionCombatFeatures(reckless_attack="Reckless" in source.trait_names),
             weapon_attack=attacks[0], alternate_weapon_attacks=attacks[1:],
             attack_action=compile_multiattack_2014(source, attacks), saving_throw_actions=source.saving_throw_actions,
             saving_throw_bonuses=saving_throw_bonuses_2014(source), skill_bonuses=source.skills,
