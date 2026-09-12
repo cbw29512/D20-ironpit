@@ -18,6 +18,7 @@ from app.combat.modifier_stack import (
     consume_attacks_against_advantage, consume_next_attack_against_advantage,
     effective_armor_class, next_attack_against_advantage_sources,
 )
+from app.combat.peerless_aim import resolve_peerless_aim_miss
 from app.combat.reckless_attack import attacks_against_reckless_advantage
 from app.combat.resources import action_resource_available, resolved_resource_id, spend_action_resource
 from app.combat.rolls import resolve_roll_mode, roll_d20
@@ -98,6 +99,7 @@ def resolve_spell_attack(
         spend(caster.state, spell.action_cost)
         natural = attack_roll.selected_roll or 0
         hit = natural != 1 and (natural == 20 or attack_roll.total >= target_ac)
+        hit, peerless_aim_used = resolve_peerless_aim_miss(caster.state, hit)
         critical = bool(hit and (natural == 20 or (close_hit_is_automatic_critical(target.state) and distance <= 5)))
         hp_before = target.state.current_hp; temporary_hp_before = target.state.temporary_hp
         death_success_before = target.state.death_save_successes; death_failure_before = target.state.death_save_failures
@@ -118,6 +120,8 @@ def resolve_spell_attack(
         description = f"{caster.state.template.name}: {outcome} with {spell.name}."
         if heroic_reroll:
             description += " Heroic Inspiration rerolls one d20."
+        if peerless_aim_used:
+            description += " Peerless Aim converts the miss into a hit."
         return BattleEvent(
             sequence=sequence, round_number=round_number, event_type="attack", actor_id=caster.combatant_id, actor_name=caster.state.template.name,
             target_id=target.combatant_id, target_name=target.state.template.name, attack_name=spell.name, target_ac=target_ac,
