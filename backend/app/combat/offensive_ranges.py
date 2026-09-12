@@ -2,11 +2,13 @@ from __future__ import annotations
 import logging
 from app.combat.action_economy import is_available
 from app.combat.attack_legality import attack_allowed_against
+from app.combat.offense_value import automatic_spell_expected_damage, save_action_expected_damage, spell_attack_expected_damage
 from app.combat.offensive_range_profile import OffensiveRangeProfile
 from app.combat.resources import is_recharge_resource, resource_available
 from app.combat.save_action_legality import save_action_target_eligible
 from app.combat.spellcasting import spell_action_resource_available
-from app.domain.encounters import EncounterCombatant
+from app.combat.weapon_offense_value import weapon_attack_expected_damage
+from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.weapons import WeaponAttackKind
 
 logger = logging.getLogger(__name__)
@@ -47,7 +49,11 @@ def _spell_resource_available(member: EncounterCombatant, action, turn_key: str)
         raise
 
 
-def _weapon_profiles(attacker: EncounterCombatant, target: EncounterCombatant) -> list[OffensiveRangeProfile]:
+def _weapon_profiles(
+    attacker: EncounterCombatant,
+    target: EncounterCombatant,
+    setup: EncounterSetup | None = None,
+) -> list[OffensiveRangeProfile]:
     try:
         profiles: list[OffensiveRangeProfile] = []
         attacks = [attacker.state.template.weapon_attack, *attacker.state.template.alternate_weapon_attacks]
@@ -61,12 +67,14 @@ def _weapon_profiles(attacker: EncounterCombatant, target: EncounterCombatant) -
             kind = attack.weapon.attack_kind
             if kind in {WeaponAttackKind.MELEE, WeaponAttackKind.MELEE_OR_RANGED}:
                 reach = attack.weapon.reach_ft
-                profiles.append(OffensiveRangeProfile(priority, "melee", reach, reach, execution_rank))
+                value = weapon_attack_expected_damage(attacker, target, attack, setup, reach) if setup else 0.0
+                profiles.append(OffensiveRangeProfile(priority, "melee", reach, reach, execution_rank, value))
             if kind in {WeaponAttackKind.RANGED, WeaponAttackKind.MELEE_OR_RANGED}:
                 normal = attack.weapon.normal_range_ft
                 maximum = attack.weapon.long_range_ft or normal
                 if normal is not None and maximum is not None:
-                    profiles.append(OffensiveRangeProfile(priority, "ranged", maximum, normal, execution_rank))
+                    value = weapon_attack_expected_damage(attacker, target, attack, setup, normal) if setup else 0.0
+                    profiles.append(OffensiveRangeProfile(priority, "ranged", maximum, normal, execution_rank, value))
         return profiles
     except Exception:
         logger.exception("Failed weapon offensive-range probe for %s.", attacker.combatant_id)
@@ -86,41 +94,59 @@ def _save_action_profiles(attacker: EncounterCombatant, target: EncounterCombata
             distance = _effective_action_range(action)
             priority = _priority_for_resource(attacker, action.resource_id)
             execution_rank = 0 if priority == 0 else 3
-            profiles.append(OffensiveRangeProfile(priority, "ability", distance, distance, execution_rank))
+            value = save_action_expected_damage(target, action)
+            profiles.append(OffensiveRangeProfile(priority, "ability", distance, distance, execution_rank, value))
         return profiles
     except Exception:
         logger.exception("Failed save-action offensive-range probe for %s.", attacker.combatant_id)
         raise
 
 
-def _spell_profiles(attacker: EncounterCombatant, turn_key: str) -> list[OffensiveRangeProfile]:
+def _spell_profiles(
+    attacker: EncounterCombatant,
+    turn_key: str,
+    target: EncounterCombatant | None = None,
+    setup: EncounterSetup | None = None,
+) -> list[OffensiveRangeProfile]:
     try:
         profiles: list[OffensiveRangeProfile] = []
         for action in attacker.state.template.spell_attack_actions:
             if action.action_cost == "reaction" or not is_available(attacker.state, action.action_cost):
                 continue
             if _spell_resource_available(attacker, action, turn_key):
-                profiles.append(OffensiveRangeProfile(1, "spell", action.range_ft, action.range_ft, 1))
+                value = spell_attack_expected_damage(attacker, target, action, setup) if target and setup else 0.0
+                profiles.append(OffensiveRangeProfile(1, "spell", action.range_ft, action.range_ft, 1, value))
         for action in attacker.state.template.spell_save_actions:
             if action.action_cost == "reaction" or action.concentration or not is_available(attacker.state, action.action_cost):
                 continue
             if _spell_resource_available(attacker, action, turn_key):
                 distance = _effective_action_range(action)
-                profiles.append(OffensiveRangeProfile(1, "spell", distance, distance, 1))
+                value = save_action_expected_damage(target, action) if target else 0.0
+                profiles.append(OffensiveRangeProfile(1, "spell", distance, distance, 1, value))
         for action in attacker.state.template.automatic_spell_actions:
             if action.action_cost == "reaction" or not is_available(attacker.state, action.action_cost):
                 continue
             if _spell_resource_available(attacker, action, turn_key):
-                profiles.append(OffensiveRangeProfile(1, "spell", action.range_ft, action.range_ft, 1))
+                value = automatic_spell_expected_damage(target, action) if target else 0.0
+                profiles.append(OffensiveRangeProfile(1, "spell", action.range_ft, action.range_ft, 1, value))
         return profiles
     except Exception:
         logger.exception("Failed spell offensive-range probe for %s.", attacker.combatant_id)
         raise
 
 
-def ranked_offensive_range_profiles_for_target(attacker: EncounterCombatant, target: EncounterCombatant, turn_key: str) -> list[OffensiveRangeProfile]:
+def ranked_offensive_range_profiles_for_target(
+    attacker: EncounterCombatant,
+    target: EncounterCombatant,
+    turn_key: str,
+    setup: EncounterSetup | None = None,
+) -> list[OffensiveRangeProfile]:
     try:
-        return [*_weapon_profiles(attacker, target), *_spell_profiles(attacker, turn_key), *_save_action_profiles(attacker, target)]
+        return [
+            *_weapon_profiles(attacker, target, setup),
+            *_spell_profiles(attacker, turn_key, target, setup),
+            *_save_action_profiles(attacker, target),
+        ]
     except Exception:
         logger.exception("Failed offensive-range profile inventory for %s against %s.", attacker.combatant_id, target.combatant_id)
         raise
