@@ -5,7 +5,7 @@
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
   const S = () => window.IRON_PIT_BROWSER_STATE;
-  const X = () => window.IRON_PIT_BROWSER_SAVE_CONTROL;
+  const X = () => window.IRON_PIT_BROWSER_SAVE_CONTROL || { targetImmune: () => false, applyOutcome: () => [] };
   const B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2 || { dangerSenseAdvantage: () => 0 };
   const DG = () => window.IRON_PIT_BROWSER_DODGE || { dexSaveAdvantageSources: () => 0 };
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { applyD20Bonus: (_state, _kind, roll) => roll };
