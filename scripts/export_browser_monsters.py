@@ -36,6 +36,19 @@ def _policy_row(policy):
     return {"distinctAttackIds": policy.distinct_attack_ids, "repeatSlotIndex": policy.repeat_slot_index, "repeatDiceCount": policy.repeat_dice_count, "repeatDiceSize": policy.repeat_dice_size, "requiresPreviousHitSlots": list(policy.requires_previous_hit_slots), "sameTargetAsPreviousSlots": list(policy.same_target_as_previous_slots)}
 
 
+def _automatic_spell_row(action):
+    return {
+        "id": action.id, "name": action.name, "level": action.level,
+        "actionCost": action.action_cost, "range": action.range_ft,
+        "baseProjectiles": action.base_projectiles,
+        "projectilesPerSlotAbove": action.projectiles_per_slot_above,
+        "damageDiceCountPerProjectile": action.damage_dice_count_per_projectile,
+        "damageDiceSize": action.damage_dice_size,
+        "damageBonusPerProjectile": action.damage_bonus_per_projectile,
+        "damageType": action.damage_type, "animation": action.animation,
+    }
+
+
 def _attach_source_fingerprint(row, template) -> None:
     row["source_trait_names"] = list(template.source_trait_names); row["source_reaction_names"] = list(template.source_reaction_names)
     row["source_bonus_action_names"] = list(template.source_bonus_action_names); row["source_limited_use_names"] = list(template.source_limited_use_names)
@@ -57,6 +70,8 @@ def _attach_monster_actions(row, template) -> None:
         if effect and effect.zero_hp_stable:
             rider = attack_row.setdefault("onHitSaveEffect", {}); rider["zeroHpStable"] = True
             rider["zeroHpConditionIds"] = list(effect.zero_hp_condition_ids); rider["zeroHpDurationRounds"] = effect.zero_hp_duration_rounds
+    if template.automatic_damage_spell_actions:
+        row["automatic_damage_spell_actions"] = [_automatic_spell_row(action) for action in template.automatic_damage_spell_actions]
     if "Poor Depth Perception" in template.source_trait_names:
         for attack_row in row.get("attacks", []): attack_row["disadvantageBeyondFt"] = 30
     if template.attack_action and template.attack_action.policy: row.setdefault("attack_action", {})["policy"] = _policy_row(template.attack_action.policy)
