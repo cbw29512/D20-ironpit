@@ -9,6 +9,7 @@ import unicodedata
 from pathlib import Path
 
 from import_2014_attack_details import parse_secondary_damage
+from import_2014_charge import parse_charge_profiles
 from import_2014_multiattack import parse_multiattack
 from import_2014_reactions import parse_parry_ac_bonus
 
@@ -115,6 +116,8 @@ def _record(source: dict) -> dict:
     meta = source.get("meta", ""); size, _, rest = meta.partition(" "); creature_type, _, alignment = rest.partition(",")
     hp = source.get("Hit Points", ""); hit_dice = re.search(r"\(([^)]+)\)", hp); action_text = source.get("Actions", ""); reactions_text = source.get("Reactions", "")
     attacks = [attack for paragraph in re.findall(r"<p>(.*?)</p>", action_text, re.I | re.S) for attack in _attacks(paragraph)]
+    for attack_id, profile in parse_charge_profiles(source.get("Traits"), attacks).items():
+        next(item for item in attacks if item["id"] == attack_id)["charge_profile"] = profile
     multiattack = parse_multiattack(action_text, attacks)
     resist, bad_resist = _simple_values(source.get("Damage Resistances"), DAMAGE_TYPES); immune, bad_immune = _simple_values(source.get("Damage Immunities"), DAMAGE_TYPES)
     vulnerable, bad_vulnerable = _simple_values(source.get("Damage Vulnerabilities"), DAMAGE_TYPES); condition_immune, bad_condition = _simple_values(source.get("Condition Immunities"), CONDITIONS)
