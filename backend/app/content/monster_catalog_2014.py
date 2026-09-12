@@ -11,7 +11,7 @@ from app.content.monster_catalog_2014_models import CatalogAttack2014, CatalogMo
 from app.content.monster_catalog_2014_traits import combat_traits_2014, unresolved_traits_2014
 from app.domain.character_builds import AbilityScores
 from app.domain.models import (
-    AttackActionDefinition, AttackActionSlot, CombatantTemplate, VisualLoadout,
+    AttackActionDefinition, AttackActionSlot, CombatantTemplate, OnHitDamage, VisualLoadout,
     Weapon, WeaponAttack, WeaponAttackKind,
 )
 from app.domain.movement import MovementModes
@@ -37,10 +37,21 @@ def _attack(source: CatalogAttack2014, *, magical: bool = False) -> WeaponAttack
             reach_ft=source.reach_ft, normal_range_ft=source.normal_range_ft,
             long_range_ft=source.long_range_ft, magical=magical,
         )
+        riders = [
+            OnHitDamage(
+                source=f"{source.name} secondary damage",
+                dice_count=item.dice_count,
+                dice_size=item.dice_size,
+                damage_bonus=item.bonus,
+                damage_type=item.type,
+            )
+            for item in source.on_hit_damage
+        ]
         return WeaponAttack(
             id=source.id, weapon=weapon, attack_bonus=source.attack_bonus,
             damage_bonus=source.damage.bonus,
             fixed_damage=source.damage.average if source.damage.dice_count == 0 else None,
+            on_hit_damage=riders,
         )
     except Exception as exc:
         logger.exception("Failed to compile 2014 catalog attack %s.", source.id)
