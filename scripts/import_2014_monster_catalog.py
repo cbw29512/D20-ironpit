@@ -10,6 +10,7 @@ from pathlib import Path
 
 from import_2014_attack_details import parse_secondary_damage
 from import_2014_multiattack import parse_multiattack
+from import_2014_reactions import parse_parry_ac_bonus
 
 logger = logging.getLogger(__name__)
 DAMAGE_TYPES = {
@@ -43,17 +44,11 @@ def _names(value: str | None) -> list[str]:
 
 
 def _speed(value: str | None) -> dict[str, int]:
-    return {
-        mode or "walk": int(amount)
-        for mode, amount in re.findall(r"(?:(walk|fly|swim|climb|burrow)\s+)?(\d+)\s*ft\.", (value or "").lower())
-    }
+    return {mode or "walk": int(amount) for mode, amount in re.findall(r"(?:(walk|fly|swim|climb|burrow)\s+)?(\d+)\s*ft\.", (value or "").lower())}
 
 
 def _bonuses(value: str | None) -> dict[str, int]:
-    return {
-        name.strip().lower().replace(" ", "_"): int(amount)
-        for name, amount in re.findall(r"([A-Za-z ]+?)\s*([+-]\d+)(?:,|$)", value or "")
-    }
+    return {name.strip().lower().replace(" ", "_"): int(amount) for name, amount in re.findall(r"([A-Za-z ]+?)\s*([+-]\d+)(?:,|$)", value or "")}
 
 
 def _simple_values(value: str | None, allowed: set[str]) -> tuple[list[str], list[str]]:
@@ -96,8 +91,7 @@ def _attacks(paragraph: str) -> list[dict]:
     if attack is None: return []
     text = _plain(paragraph)
     if not re.search(r"Melee or Ranged (?:Weapon|Spell) Attack:", text, re.I): return [attack]
-    if not attack["normal_range_ft"] if "normal_range_ft" in attack else True: return [attack]
-    if attack["source_complete"]: return [attack]
+    if "normal_range_ft" not in attack: return [attack]
     damage = re.search(r"Hit:\s*(\d+)\s*\((\d+)d(\d+)(?:\s*([+-])\s*(\d+))?\)\s*([A-Za-z]+) damage", text, re.I)
     remainder = text[damage.end():].strip(" .") if damage else ""
     _, residual = parse_secondary_damage(remainder)
@@ -111,7 +105,7 @@ def _attacks(paragraph: str) -> list[dict]:
 def _record(source: dict) -> dict:
     meta = source.get("meta", ""); size, _, rest = meta.partition(" "); creature_type, _, alignment = rest.partition(",")
     hp = source.get("Hit Points", ""); hit_dice = re.search(r"\(([^)]+)\)", hp); action_text = source.get("Actions", "")
-    action_paragraphs = re.findall(r"<p>(.*?)</p>", action_text, re.I | re.S)
+    reactions_text = source.get("Reactions", ""); action_paragraphs = re.findall(r"<p>(.*?)</p>", action_text, re.I | re.S)
     attacks = [attack for paragraph in action_paragraphs for attack in _attacks(paragraph)]
     multiattack = parse_multiattack(action_text, attacks)
     resist, bad_resist = _simple_values(source.get("Damage Resistances"), DAMAGE_TYPES)
@@ -132,9 +126,10 @@ def _record(source: dict) -> dict:
         "challenge_rating": (source.get("Challenge") or "").split(" ", 1)[0] or None,
         "attacks": attacks, "multiattack_slots": multiattack["slots"] if multiattack else [],
         "action_names": _names(action_text), "trait_names": _names(source.get("Traits")),
-        "reaction_names": _names(source.get("Reactions")), "legendary_action_names": _names(source.get("Legendary Actions")),
+        "reaction_names": _names(reactions_text), "parry_ac_bonus": parse_parry_ac_bonus(reactions_text),
+        "legendary_action_names": _names(source.get("Legendary Actions")),
         "source_traits": source.get("Traits"), "source_actions": action_text,
-        "source_reactions": source.get("Reactions"), "source_legendary_actions": source.get("Legendary Actions"), "image_url": source.get("img_url"),
+        "source_reactions": reactions_text, "source_legendary_actions": source.get("Legendary Actions"), "image_url": source.get("img_url"),
     }
 
 
