@@ -79,6 +79,8 @@ def resolve_weapon_damage(
                 dice, weapon.name, replacement.dice_count, replacement.dice_size,
                 replacement.damage_bonus, replacement.damage_type, critical,
             )]
+        elif weapon.damage_type is None:
+            components = []
         elif attack.fixed_damage is not None:
             components = [fixed_damage_component(weapon.name, attack.fixed_damage, weapon.damage_type)]
         else:
