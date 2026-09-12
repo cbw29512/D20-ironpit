@@ -48,29 +48,32 @@
     return [...rows.values()];
   }
 
-  function hits(area, origin, direction, target) {
-    if (!direction) return false;
+  const dimension = (area, camel, snake) => area[camel] ?? area[snake];
+  function hits(area, origins, origin, direction, target) {
     const targetPoints = points(target);
-    if (area.shape === "cone") {
-      return targetPoints.some((point) => A().coneContains(origin, direction, point, area.lengthFt));
-    }
-    if (area.shape === "line") {
-      return targetPoints.some((point) => A().lineContains(origin, direction, point, area.lengthFt, area.widthFt));
-    }
+    const radius = dimension(area, "radiusFt", "radius_ft");
+    const length = dimension(area, "lengthFt", "length_ft");
+    const width = dimension(area, "widthFt", "width_ft");
+    if (area.shape === "radius") return targetPoints.some((point) => A().radiusContains(origin, point, radius));
+    if (area.shape === "emanation") return targetPoints.some((point) => A().emanationContains(origins, point, radius));
+    if (!direction) return false;
+    if (area.shape === "cone") return targetPoints.some((point) => A().coneContains(origin, direction, point, length));
+    if (area.shape === "line") return targetPoints.some((point) => A().lineContains(origin, direction, point, length, width));
     throw new Error(`Unsupported browser monster area shape: ${area.shape}`);
   }
 
   function legalPlacements(actor, setup, area) {
     try {
-      if (!area || area.origin !== "self") throw new Error("Monster cone/line area must originate from self.");
+      if (!area || area.origin !== "self") throw new Error("Browser monster area must originate from self.");
       if (!setup.map_definition) throw new Error("Area targeting requires an authoritative battle map.");
       const enemies = livingOpponents(actor, setup);
       if (!enemies.length) return [];
       const origins = points(actor), result = new Map();
+      const areaDirections = ["radius", "emanation"].includes(area.shape) ? [null] : directions(origins, enemies);
       for (const origin of origins) {
-        for (const direction of directions(origins, enemies)) {
+        for (const direction of areaDirections) {
           const targetIds = enemies
-            .filter((enemy) => hits(area, origin, direction, enemy))
+            .filter((enemy) => hits(area, origins, origin, direction, enemy))
             .map((enemy) => enemy.combatant_id);
           if (!targetIds.length) continue;
           const key = targetIds.join("|");
