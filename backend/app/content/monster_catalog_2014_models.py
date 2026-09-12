@@ -5,6 +5,7 @@ from typing import Literal
 from pydantic import BaseModel, Field, field_validator
 
 from app.domain.actions import ConditionName
+from app.domain.charge_profiles import ChargeProfileDefinition
 from app.domain.size import CreatureSize
 from app.domain.weapons import DamageType
 
@@ -24,6 +25,7 @@ class CatalogAttack2014(BaseModel):
     attack_bonus: int
     damage: CatalogDamage2014
     on_hit_damage: list[CatalogDamage2014] = Field(default_factory=list)
+    charge_profile: ChargeProfileDefinition | None = None
     reach_ft: int = Field(default=5, ge=0)
     normal_range_ft: int | None = Field(default=None, ge=1)
     long_range_ft: int | None = Field(default=None, ge=1)
