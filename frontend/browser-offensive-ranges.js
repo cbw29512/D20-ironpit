@@ -19,6 +19,17 @@
     }
   }
 
+  function attackActionIds(member) {
+    const slots = member.state.template.attack_action?.slots || [];
+    const attackIds = new Set(), saveIds = new Set();
+    for (const slot of slots) {
+      const data = Array.isArray(slot) ? { attackIds: slot, saveActionIds: [] } : slot;
+      for (const id of data.attackIds || []) attackIds.add(id);
+      for (const id of data.saveActionIds || []) saveIds.add(id);
+    }
+    return { attackIds, saveIds };
+  }
+
   function effectiveActionRange(action) {
     try {
       const area = action.area || (action.areaRadius ? { origin: "point", radiusFt: action.areaRadius } : null);
@@ -51,12 +62,12 @@
 
   function weaponRanges(member, target, setup = null) {
     try {
-      const ranges = [];
+      const ranges = [], { attackIds } = attackActionIds(member);
       for (const attack of member.state.template.attacks || []) {
         if (attack.resourceId && !RES().available(member.state, attack.resourceId, attack.resourceCost || 1)) continue;
         if (attack.forbidSelfGrappledTarget && target.state.grapple_sources.some((source) => source.source_id === member.combatant_id)) continue;
         const priority = rechargePriority(member, attack.resourceId);
-        const executionRank = priority === 0 ? 0 : 2;
+        const executionRank = priority === 0 ? 0 : (attackIds.has(attack.id) ? 2 : 4);
         if (attack.kind === "melee" || attack.kind === "melee_or_ranged") {
           const reach = attack.reach || 5;
           const expectedValue = setup && O()?.weaponAttack ? O().weaponAttack(member, target, attack, setup, reach) : 0;
@@ -82,7 +93,7 @@
 
   function saveActionRanges(member, target) {
     try {
-      const ranges = [];
+      const ranges = [], { saveIds } = attackActionIds(member);
       for (const action of member.state.template.saving_throw_actions || []) {
         const actionCost = action.actionCost || "action";
         if (actionCost !== "action" || !E().available(member.state, actionCost)) continue;
@@ -91,8 +102,9 @@
         const priority = rechargePriority(member, action.resourceId);
         const distance = effectiveActionRange(action);
         const expectedValue = O()?.saveAction?.(target, action) || 0;
+        const executionRank = priority === 0 ? 0 : (saveIds.has(action.id) ? 2 : 3);
         ranges.push({ family: "ability", range: distance, maxRange: distance, preferredRange: distance,
-          priority, executionRank: priority === 0 ? 0 : 3, expectedValue });
+          priority, executionRank, expectedValue });
       }
       return ranges;
     } catch (error) {
