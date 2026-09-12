@@ -1,13 +1,13 @@
 from app.combat.parry import resolve_parry_hit
 from app.combat.state import build_combatant_state
-from app.content.demo import build_demo_fighter, build_goblin_warrior
+from app.content.demo import build_goblin_warrior
 from app.domain.models import WeaponAttackKind
 from app.domain.modifiers import CombatModifier, ModifierKind
 from app.domain.reactions import ParryReaction
 
 
 def _defender():
-    state = build_combatant_state(build_demo_fighter())
+    state = build_combatant_state(build_goblin_warrior())
     state.template.parry_reaction = ParryReaction(ac_bonus=2)
     return state
 
