@@ -83,13 +83,20 @@ def _attack(row: dict[str, object], actions: str, match: re.Match[str]) -> Attac
             count=int(extra.group(1)), size=int(extra.group(2)), bonus=mod,
         ), damage_type=DamageType(extra.group(5).lower())))
     attack_id = f"srd-{_slug(str(row['name']))}-{_slug(name)}"
+    base_bonus = _bonus(match)
     return AttackCapabilityDefinition(
         id=attack_id, name=name, weapon_id=f"{attack_id}-weapon",
         attack_kind=WeaponAttackKind(match.group("kind").lower().replace(" ", "_")), attack_bonus=int(match.group("bonus")),
-        damage=DiceSpec(count=int(match.group("count")), size=int(match.group("size")), bonus=_bonus(match)),
+        damage=DiceSpec(count=int(match.group("count")), size=int(match.group("size")), bonus=base_bonus),
         damage_type=DamageType(match.group("dtype").lower()), animation="strike", reach_ft=reach,
         normal_range_ft=normal, long_range_ft=long, effects=effects,
-        charge_profile=parse_charge_replacement(rider_text),
+        charge_profile=parse_charge_replacement(
+            rider_text,
+            base_dice_count=int(match.group("count")),
+            base_dice_size=int(match.group("size")),
+            base_damage_bonus=base_bonus,
+            base_damage_type=match.group("dtype"),
+        ),
     )
 
 
