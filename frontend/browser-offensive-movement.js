@@ -12,8 +12,7 @@
     try {
       if (!E().available(member.state, "action") || !setup.map_definition) return null;
       if (!member.state.position) throw new Error("Grid offensive movement requires an authoritative attacker position.");
-      const members = [...setup.heroes, ...setup.monsters];
-      const candidates = [];
+      const members = [...setup.heroes, ...setup.monsters], candidates = [];
       for (const target of F().targetOrder(member, setup)) {
         if (!target.state.position) throw new Error("Grid offensive movement requires authoritative target positions.");
         const distance = S().distance(member, target);
@@ -24,24 +23,13 @@
             priority: Number.isFinite(option.priority) ? option.priority : 1,
             executionRank: Number.isFinite(option.executionRank) ? option.executionRank : 99,
             expectedValue: Number.isFinite(option.expectedValue) ? option.expectedValue : 0,
-            distance,
-            targetId: target.combatant_id,
-            family: option.family,
-            preferredRange,
+            distance, targetId: target.combatant_id, family: option.family, preferredRange,
           };
-          if (distance <= preferredRange) {
-            candidates.push({ ...base, cost: 0 });
-            continue;
-          }
+          if (distance <= preferredRange) { candidates.push({ ...base, cost: 0 }); continue; }
           const plan = G().planToward(
-            setup.map_definition,
-            member,
-            target,
-            members,
-            preferredRange,
-            member.state.movement_remaining_ft,
+            setup.map_definition, member, target, members, preferredRange, member.state.movement_remaining_ft,
           );
-          if (plan.goal_reachable && plan.path.length && plan.final_distance_ft < distance) {
+          if (plan.path.length && plan.final_distance_ft <= preferredRange) {
             candidates.push({ ...base, cost: plan.movement_cost_ft });
             continue;
           }
