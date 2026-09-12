@@ -6,11 +6,10 @@ from pydantic import BaseModel, Field, model_validator
 
 from app.domain.ability_reduction import AbilityScoreReductionOnHit
 from app.domain.actions import AbilityName, HitControlEffect
+from app.domain.attack_saves import OnHitSavingThrow
 from app.domain.charge import ChargeProfile
 from app.domain.hit_modifiers import HitModifierEffect
-from app.domain.save_effects import SaveFailureEffectDefinition
 from app.domain.size import CreatureSize
-from app.domain.target_filters import TargetFilter
 
 
 class DamageType(StrEnum):
@@ -79,22 +78,6 @@ class AttachmentOnHit(BaseModel):
     detachable_by_source_movement_ft: int | None = Field(default=None, ge=5, le=120)
     detachable_by_target_action: bool = True
     detachable_by_adjacent_action: bool = True
-
-
-class OnHitSavingThrow(BaseModel):
-    save_ability: AbilityName
-    dc: int = Field(ge=1, le=40)
-    magical_effect: bool = False
-    target_filter: TargetFilter = Field(default_factory=TargetFilter)
-    failure_effects: list[SaveFailureEffectDefinition] = Field(default_factory=list)
-    severe_failure_margin: int | None = Field(default=None, ge=1, le=20)
-    severe_failure_effects: list[SaveFailureEffectDefinition] = Field(default_factory=list)
-
-    @model_validator(mode="after")
-    def validate_severe_failure(self) -> "OnHitSavingThrow":
-        if (self.severe_failure_margin is None) != (not self.severe_failure_effects):
-            raise ValueError("Severe failed-save margin and effects must be configured together.")
-        return self
 
 
 class Weapon(BaseModel):
