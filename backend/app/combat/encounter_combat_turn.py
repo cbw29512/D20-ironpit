@@ -10,7 +10,13 @@ from app.combat.charge import resolve_charge_closing
 from app.combat.condition_rules import is_incapacitated
 from app.combat.dice import DiceProvider
 from app.combat.dodge import resolve_dodge_action
-from app.combat.encounter_turn_support import finish_turn, resolve_support_actions, save_choice
+from app.combat.encounter_turn_support import (
+    finish_turn,
+    recharge_action_ready,
+    resolve_ready_recharge_action,
+    resolve_support_actions,
+    save_choice,
+)
 from app.combat.grapple import cleanup_grapples, resolve_escape_grapple, should_escape_grapple
 from app.combat.ongoing_spell_control import build_forced_retreat_event, forced_retreat_active
 from app.combat.opening_burst import opening_feature_id
@@ -76,10 +82,19 @@ def resolve_combat_turn(
                 events.append(adrenaline_event)
                 sequence += 1
 
-        spell_events, sequence = resolve_best_spell_offense(sequence, round_number, attacker, setup, turn_key, dice)
-        events.extend(spell_events)
-        if not is_available(attacker.state, "action"):
+        priority_events, sequence, fired = resolve_ready_recharge_action(
+            sequence, round_number, attacker, setup, dice,
+        )
+        events.extend(priority_events)
+        if fired:
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
+
+        recharge_pending = recharge_action_ready(attacker)
+        if not recharge_pending:
+            spell_events, sequence = resolve_best_spell_offense(sequence, round_number, attacker, setup, turn_key, dice)
+            events.extend(spell_events)
+            if not is_available(attacker.state, "action"):
+                return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
         targets = target_order(attacker, setup)
         if not targets:
@@ -96,6 +111,13 @@ def resolve_combat_turn(
         )
         events.extend(movement_events)
         if attacker.state.is_dead or attacker.state.is_unconscious or is_incapacitated(attacker.state):
+            return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
+
+        priority_events, sequence, fired = resolve_ready_recharge_action(
+            sequence, round_number, attacker, setup, dice,
+        )
+        events.extend(priority_events)
+        if fired:
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
 
         spell_events, sequence = resolve_best_spell_offense(sequence, round_number, attacker, setup, turn_key, dice)
