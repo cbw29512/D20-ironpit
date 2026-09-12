@@ -4,11 +4,12 @@ import re
 from collections.abc import Callable
 
 AttackIds = Callable[[str, list[dict]], list[str]]
+_SUBJECT = r"(?:the [a-z][a-z -]*? )?"
 
 
 def parse_policy_multiattack(text: str, attacks: list[dict], ids_for_label: AttackIds) -> dict | None:
     hit_follow_up = re.fullmatch(
-        r"makes one attack with (?:its|his|her) ([a-z][a-z -]*?)\. "
+        _SUBJECT + r"makes one attack with (?:its|his|her) ([a-z][a-z -]*?)\. "
         r"if that attack hits, (?:the [a-z -]+|it) can make one ([a-z][a-z -]*?) attack against the same target\. ?",
         text,
         re.I,
@@ -25,7 +26,11 @@ def parse_policy_multiattack(text: str, attacks: list[dict], ids_for_label: Atta
                 },
             }
 
-    distinct = re.fullmatch(r"makes two melee attacks, each one with a different weapon\.?", text, re.I)
+    distinct = re.fullmatch(
+        _SUBJECT + r"makes two melee attacks, each one with a different weapon\.?",
+        text,
+        re.I,
+    )
     if distinct:
         ids = [attack["id"] for attack in attacks if attack["kind"] == "melee"]
         if len(ids) >= 2:
@@ -34,7 +39,11 @@ def parse_policy_multiattack(text: str, attacks: list[dict], ids_for_label: Atta
                 "policy": {"distinct_attack_ids": True},
             }
 
-    repeated = re.fullmatch(r"makes 1d(\d+) ([a-z][a-z -]*?) attacks?\.?", text, re.I)
+    repeated = re.fullmatch(
+        _SUBJECT + r"makes 1d(\d+) ([a-z][a-z -]*?) attacks?\. ?",
+        text,
+        re.I,
+    )
     if repeated:
         ids = ids_for_label(repeated.group(2), attacks)
         if ids:
