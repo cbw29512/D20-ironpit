@@ -8,16 +8,19 @@ from app.domain.save_effects import ConditionEffectDefinition
 
 
 @pytest.mark.parametrize(
-    ("name", "dc", "cone_ft"),
+    ("name", "dc", "cone_ft", "sleep_rounds"),
     [
-        ("Brass Dragon Wyrmling", 11, 15),
-        ("Young Brass Dragon", 14, 30),
+        ("Brass Dragon Wyrmling", 11, 15, 10),
+        ("Young Brass Dragon", 14, 30, 10),
+        ("Adult Brass Dragon", 18, 60, 100),
+        ("Ancient Brass Dragon", 21, 90, 100),
     ],
 )
 def test_sleep_breath_compiles_staged_wakeable_unconscious_lifecycle(
     name: str,
     dc: int,
     cone_ft: int,
+    sleep_rounds: int,
 ) -> None:
     row = next(row for row in load_monster_rows() if row["name"] == name)
     actions, resources = source_save_candidates(row)
@@ -38,7 +41,7 @@ def test_sleep_breath_compiles_staged_wakeable_unconscious_lifecycle(
     assert effect.repeat_save_timing == "target_turn_end"
     assert effect.repeat_save_failure_condition == "unconscious"
     assert effect.repeat_save_failure_continues is False
-    assert effect.repeat_save_failure_duration_rounds == 10
+    assert effect.repeat_save_failure_duration_rounds == sleep_rounds
     assert effect.repeat_save_failure_ends_on_damage is True
     assert effect.repeat_save_failure_allowed_removal_action_ids == [WAKE_SLEEPER_ID]
     assert failure_effect_issues(action, str(row["actions"])) == []
