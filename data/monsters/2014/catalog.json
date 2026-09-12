@@ -19110,9 +19110,9 @@
           "grapple_escape_dc": 11,
           "restrains_while_grappled": false
         },
-        "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "The crab has two claws, each of which can grapple only one target",
+        "forbid_target_grappled_by_self": true,
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5,
         "attack_ability": "strength"
       }
@@ -20480,9 +20480,9 @@
           "grapple_escape_dc": 12,
           "restrains_while_grappled": false
         },
-        "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "The scorpion has two claws, each of which can grapple only one target",
+        "forbid_target_grappled_by_self": true,
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5,
         "attack_ability": "strength"
       },
@@ -21608,9 +21608,9 @@
           "restrains_while_grappled": false,
           "max_target_size": "medium"
         },
-        "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "The glabrezu has two pincers, each of which can grapple only one target",
+        "forbid_target_grappled_by_self": true,
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 10,
         "attack_ability": "strength"
       },
