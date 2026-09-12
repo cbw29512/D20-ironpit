@@ -13,6 +13,7 @@ from import_2014_charge import parse_charge_profiles
 from import_2014_identity import parse_identity
 from import_2014_multiattack import parse_multiattack
 from import_2014_reactions import parse_parry_ac_bonus
+from import_2014_recharge import parse_action_recharges, parse_rest_recharge_actions
 
 logger = logging.getLogger(__name__)
 DAMAGE_TYPES = {
@@ -156,6 +157,7 @@ def _record(source: dict) -> dict:
         "unsupported_defense_text": bad_resist + bad_immune + bad_vulnerable + bad_condition,
         "challenge_rating": (challenge_text or "").split(" ", 1)[0] or None, "challenge_text": challenge_text,
         "attacks": attacks, "multiattack_slots": multiattack["slots"] if multiattack else [],
+        "action_recharges": parse_action_recharges(action_text), "rest_recharge_action_ids": parse_rest_recharge_actions(action_text),
         "action_names": _names(action_text), "trait_names": _names(source.get("Traits")), "reaction_names": _names(reactions_text),
         "parry_ac_bonus": parse_parry_ac_bonus(reactions_text), "legendary_action_names": _names(source.get("Legendary Actions")),
         "source_traits": source.get("Traits"), "source_actions": action_text, "source_reactions": reactions_text,
