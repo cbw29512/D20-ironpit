@@ -3,7 +3,10 @@
 
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
-  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { speedZero: (state) => state.active_effect_ids.includes("restrained") };
+  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || {
+    speedZero: (state) => state.active_effect_ids.includes("restrained"),
+    incapacitated: (state) => state.is_unconscious || state.active_effect_ids.some((id) => ["incapacitated", "paralyzed", "petrified", "stunned"].includes(id)),
+  };
   const G = () => window.IRON_PIT_BROWSER_GRID_GEOMETRY;
   const T = () => window.IRON_PIT_BROWSER_TACTICAL_MIND;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
@@ -46,6 +49,7 @@
     const firstPosition = first.state.position, secondPosition = second.state.position;
     if (firstPosition || secondPosition) {
       if (!firstPosition || !secondPosition) throw new Error("Grapple cleanup cannot mix scalar and grid position authority.");
+      if (!G()) throw new Error("Grid geometry is required for grid-authoritative grapple cleanup.");
       return G().footprintDistanceFt(firstPosition, first.state.template.size, secondPosition, second.state.template.size);
     }
     return Math.abs(first.position_ft - second.position_ft);
