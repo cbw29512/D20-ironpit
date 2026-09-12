@@ -11,6 +11,11 @@ _ROLLED = re.compile(
     re.I,
 )
 _FIXED = re.compile(r"(?:,?\s*(?:plus|and)\s+)(\d+)\s+([A-Za-z]+) damage", re.I)
+_PRONE_SAVE = re.compile(
+    r"(?:If the target is (?:(Tiny|Small|Medium|Large|Huge) or smaller),?\s*)?"
+    r"(?:the target|it) must succeed on a DC (\d+) (Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) saving throw or be knocked prone\.?'?",
+    re.I,
+)
 
 
 def _rolled(match: re.Match[str]) -> dict | None:
@@ -56,3 +61,18 @@ def parse_secondary_damage(remainder: str) -> tuple[list[dict], str]:
     residual = _FIXED.sub(replace_fixed, residual)
     residual = re.sub(r"^[\s,;]*(?:and\s+)?|[\s,;]+$", "", residual, flags=re.I)
     return extras, residual.strip(" .")
+
+
+def parse_on_hit_save_condition(remainder: str) -> tuple[dict | None, str]:
+    match = _PRONE_SAVE.search(remainder)
+    if not match:
+        return None, remainder
+    max_size, dc, ability = match.groups()
+    effect = {
+        "save_ability": ability.lower(),
+        "dc": int(dc),
+        "condition_id": "prone",
+        "max_target_size": max_size.lower() if max_size else None,
+    }
+    residual = (remainder[:match.start()] + " " + remainder[match.end():]).strip(" .,;")
+    return effect, residual
