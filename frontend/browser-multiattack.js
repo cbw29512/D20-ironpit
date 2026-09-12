@@ -6,13 +6,25 @@
   const C = () => window.IRON_PIT_BROWSER_CHARGE;
   const D = () => window.IRON_PIT_DICE;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
-  const P = () => window.IRON_PIT_BROWSER_MULTIATTACK_POLICY;
   const R = () => window.IRON_PIT_BROWSER_LIGHT_ATTACK;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const WM = () => window.IRON_PIT_BROWSER_WEAPON_MASTERY || { resolveCleave: (sequence) => ({ events: [], sequence }) };
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (s) => s.action_available, spend: (s) => { s.action_available = false; } };
   const slotData = (slot) => Array.isArray(slot) ? { attackIds: slot, saveActionIds: [] }
     : { attackIds: slot.attackIds || [], saveActionIds: slot.saveActionIds || [] };
+
+  function policySlots(definition) {
+    const policy = definition.policy, slots = definition.slots || [];
+    if (!policy || policy.repeatSlotIndex == null) return slots.map((slot, index) => ({ index, slot }));
+    let repeats = 0;
+    for (let roll = 0; roll < (policy.repeatDiceCount || 0); roll += 1) repeats += D().roll(policy.repeatDiceSize);
+    return slots.flatMap((slot, index) => Array.from({ length: index === policy.repeatSlotIndex ? repeats : 1 }, () => ({ index, slot })));
+  }
+  const policyAllows = (definition, index, previous) => !(definition.policy?.requiresPreviousHitSlots || []).includes(index) || previous?.hit === true;
+  const policyTarget = (definition, index, previous) => (definition.policy?.sameTargetAsPreviousSlots || []).includes(index) ? previous?.target_id || null : null;
+  function policySlot(definition, data, used) {
+    return definition.policy?.distinctAttackIds ? { ...data, attackIds: data.attackIds.filter((id) => !used.has(id)) } : data;
+  }
 
   function areaChoice(member, setup, data) {
     return AS()?.choice(member, setup, false, data.saveActionIds) || null;
@@ -58,31 +70,27 @@
 
   function resolveAttackAction(sequence, round, member, setup) {
     const definition = member.state.template.attack_action, slots = definition?.slots;
-    if (!slots?.length || !E().available(member.state, "action") || !F().targetOrder(member, setup).length) {
-      return { events: [], sequence };
-    }
+    if (!slots?.length || !E().available(member.state, "action") || !F().targetOrder(member, setup).length) return { events: [], sequence };
     if (!slots.some((slot) => slotHasLegalChoice(member, setup, slot))) return { events: [], sequence };
     const events = [];
     E().spend(member.state, "action");
     let openingFeature = C()?.openingFeature?.(round, member, setup) || null;
     let lightTrigger = null, rangedSplitUsed = false, previousEvent = null;
-    const usedAttackIds = new Set(), rangedSplit = useRangedSplit(member, setup, slots);
-    const turnKey = `${round}:${member.combatant_id}`;
+    const usedAttackIds = new Set(), rangedSplit = useRangedSplit(member, setup, slots), turnKey = `${round}:${member.combatant_id}`;
 
-    for (const expanded of P().expandedSlots(definition)) {
+    for (const expanded of policySlots(definition)) {
       const index = expanded.index;
       if (member.state.is_dead || member.state.is_unconscious || member.state.turn_terminated) break;
-      if (!P().allowed(definition, index, previousEvent)) continue;
-      const data = P().filteredSlot(definition, slotData(expanded.slot), usedAttackIds);
+      if (!policyAllows(definition, index, previousEvent)) continue;
+      const data = policySlot(definition, slotData(expanded.slot), usedAttackIds);
       const splitThis = index > 0 && rangedSplit && !rangedSplitUsed && F().flexibleSlotHasBoth(member, data.attackIds);
-      const choice = attackChoice(member, setup, data, splitThis, P().requiredTargetId(definition, index, previousEvent));
+      const choice = attackChoice(member, setup, data, splitThis, policyTarget(definition, index, previousEvent));
       if (choice) {
         if (splitThis && choice.attack.kind === "ranged") rangedSplitUsed = true;
         const pack = window.IRON_PIT_BROWSER_STATE.packTactics(member, choice.target, setup);
         const featureId = openingFeature || (pack ? "pack-tactics" : definition.id);
         const event = A().resolveAttack(sequence++, round, member, choice.target, choice.attack, choice.distance, {
-          spendAction: false, advantage: pack ? 1 : 0, setup, featureId, turnKey,
-          allowReckless: true, ignoreCloseThreat: true,
+          spendAction: false, advantage: pack ? 1 : 0, setup, featureId, turnKey, allowReckless: true, ignoreCloseThreat: true,
         });
         events.push(event); previousEvent = event; usedAttackIds.add(choice.attack.id);
         if (member.state.turn_terminated) break;
