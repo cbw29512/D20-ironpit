@@ -48,6 +48,8 @@ def _attack(source: CatalogAttack2014, *, magical: bool = False) -> WeaponAttack
         ]
         return WeaponAttack(
             id=source.id, weapon=weapon, attack_bonus=source.attack_bonus, damage_bonus=source.damage.bonus,
+            attack_ability=source.attack_ability,
+            attack_ability_modifier=source.damage.bonus if source.attack_ability is not None else None,
             fixed_damage=source.damage.average if source.damage.dice_count == 0 else None,
             conditional_damage=source.conditional_damage, on_hit_damage=riders,
             on_hit_save_effect=source.on_hit_save_effect, control_effect=source.control_effect,
