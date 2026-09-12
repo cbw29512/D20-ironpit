@@ -1,21 +1,22 @@
 from __future__ import annotations
 
 from app.combat.area_save_actions import resolve_area_save_action
-from app.combat.area_save_targeting import legal_area_save_placements
 from app.combat.attacks import resolve_attack
 from app.combat.condition_rules import is_incapacitated
 from app.combat.dice import DiceProvider
-from app.combat.encounter_targeting import combatant_distance, living_opponents
-from app.combat.range import resolve_attack_roll_mode
+from app.combat.legendary_action_policy import (
+    LEGENDARY_ACTION_RESOURCE_ID,
+    attack_target,
+    option_priority,
+    single_save_target,
+)
 from app.combat.resources import resource_available, resource_state, spend_resource
-from app.combat.saving_throws import legal_save_action, resolve_save_action
+from app.combat.saving_throws import resolve_save_action
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.event_support import DiceRoll, RollMode
 from app.domain.events import BattleEvent
 from app.domain.legendary_actions import LegendaryActionOption
 from app.domain.runtime import CombatantState
-
-LEGENDARY_ACTION_RESOURCE_ID = "legendary-actions"
 
 
 def refresh_legendary_actions(state: CombatantState) -> None:
@@ -23,76 +24,6 @@ def refresh_legendary_actions(state: CombatantState) -> None:
     resource = resource_state(state, LEGENDARY_ACTION_RESOURCE_ID)
     if resource is not None:
         resource.current_uses = resource.max_uses
-
-
-def _attack_by_id(owner: EncounterCombatant, attack_id: str):
-    attacks = [owner.state.template.weapon_attack, *owner.state.template.alternate_weapon_attacks]
-    return next((attack for attack in attacks if attack.id == attack_id), None)
-
-
-def _attack_target(
-    owner: EncounterCombatant,
-    setup: EncounterSetup,
-    option: LegendaryActionOption,
-) -> tuple[EncounterCombatant, object, int] | None:
-    if option.attack_id is None:
-        return None
-    attack = _attack_by_id(owner, option.attack_id)
-    if attack is None:
-        return None
-    candidates: list[tuple[int, str, EncounterCombatant]] = []
-    for target in living_opponents(owner, setup):
-        distance = combatant_distance(owner, target)
-        try:
-            resolve_attack_roll_mode(attack.weapon, distance, close_enemy_active=False)
-        except ValueError:
-            continue
-        candidates.append((distance, target.combatant_id, target))
-    if not candidates:
-        return None
-    distance, _, target = min(candidates, key=lambda item: (item[0], item[1]))
-    return target, attack, distance
-
-
-def _single_save_target(
-    owner: EncounterCombatant,
-    setup: EncounterSetup,
-    option: LegendaryActionOption,
-) -> tuple[EncounterCombatant, int] | None:
-    action = option.save_action
-    if action is None or action.area is not None:
-        return None
-    candidates: list[tuple[int, str, EncounterCombatant]] = []
-    for target in living_opponents(owner, setup):
-        distance = combatant_distance(owner, target)
-        if legal_save_action(action, target, distance):
-            candidates.append((distance, target.combatant_id, target))
-    if not candidates:
-        return None
-    distance, _, target = min(candidates, key=lambda item: (item[0], item[1]))
-    return target, distance
-
-
-def _priority(
-    owner: EncounterCombatant,
-    setup: EncounterSetup,
-    option: LegendaryActionOption,
-) -> tuple[int, int, str] | None:
-    if not resource_available(owner.state, LEGENDARY_ACTION_RESOURCE_ID, option.cost):
-        return None
-    if option.kind == "save" and option.save_action is not None and option.save_action.area is not None:
-        placements = legal_area_save_placements(owner, setup, option.save_action)
-        if not placements:
-            return None
-        target_count = len(placements[0].target_ids)
-        return (0 if target_count > 1 else 2, -target_count, option.id)
-    if option.kind == "attack":
-        return (1, 0, option.id) if _attack_target(owner, setup, option) is not None else None
-    if option.kind == "save":
-        return (2, 0, option.id) if _single_save_target(owner, setup, option) is not None else None
-    if option.kind == "ability_check":
-        return (3, 0, option.id)
-    return None
 
 
 def _resolve_ability_check(
@@ -113,14 +44,9 @@ def _resolve_ability_check(
         modifier=bonus, mode=RollMode.NORMAL, total=rolled + bonus,
     )
     return BattleEvent(
-        sequence=sequence,
-        round_number=round_number,
-        event_type="feature",
-        actor_id=owner.combatant_id,
-        actor_name=owner.state.template.name,
-        ability_check_roll=check,
-        check_ability=ability,
-        feature_id=option.id,
+        sequence=sequence, round_number=round_number, event_type="feature",
+        actor_id=owner.combatant_id, actor_name=owner.state.template.name,
+        ability_check_roll=check, check_ability=ability, feature_id=option.id,
         animation="legendary-action",
         description=f"{owner.state.template.name} uses legendary action {option.name}: {ability.title()} check {check.total}.",
     )
@@ -133,18 +59,17 @@ def resolve_legendary_action(
     setup: EncounterSetup,
     dice: DiceProvider,
 ) -> tuple[list[BattleEvent], int]:
-    """Resolve at most one deterministic legendary option for one owner."""
     choices = [
         (priority, option)
         for option in owner.state.template.legendary_actions
-        if (priority := _priority(owner, setup, option)) is not None
+        if (priority := option_priority(owner, setup, option)) is not None
     ]
     if not choices:
         return [], sequence
     _, option = min(choices, key=lambda item: item[0])
     events: list[BattleEvent]
     if option.kind == "attack":
-        selected = _attack_target(owner, setup, option)
+        selected = attack_target(owner, setup, option)
         if selected is None:
             return [], sequence
         target, attack, distance = selected
@@ -162,7 +87,7 @@ def resolve_legendary_action(
                 sequence, round_number, owner, setup, action, dice, spend_action=False,
             )
         else:
-            selected = _single_save_target(owner, setup, option)
+            selected = single_save_target(owner, setup, option)
             if selected is None:
                 return [], sequence
             target, distance = selected
@@ -190,18 +115,14 @@ def resolve_end_turn_legendary_actions(
     setup: EncounterSetup,
     dice: DiceProvider,
 ) -> tuple[list[BattleEvent], int]:
-    """Each eligible creature may take one legendary option at the end of another creature's turn."""
     events: list[BattleEvent] = []
-    members = [*setup.heroes, *setup.monsters]
-    for owner in members:
+    for owner in [*setup.heroes, *setup.monsters]:
         state = owner.state
         if owner.combatant_id == ended_member.combatant_id:
             continue
         if not state.template.legendary_actions or state.current_hp <= 0 or state.is_dead or not state.is_alive:
             continue
-        if is_incapacitated(state):
-            continue
-        if not resource_available(state, LEGENDARY_ACTION_RESOURCE_ID):
+        if is_incapacitated(state) or not resource_available(state, LEGENDARY_ACTION_RESOURCE_ID):
             continue
         resolved, sequence = resolve_legendary_action(sequence, round_number, owner, setup, dice)
         events.extend(resolved)
