@@ -45,3 +45,24 @@ def build_rokhan_stonefury_level8_profile() -> CharacterBuildProfile:
         source_references=[*data["source_references"], source, "Basic Rules 2024: Feats — Ability Score Improvement (+2 Strength)"],
     )
     return CharacterBuildProfile.model_validate(data)
+
+
+def build_rokhan_stonefury_level9_profile() -> CharacterBuildProfile:
+    previous = build_rokhan_stonefury_level8_profile()
+    data = advance_profile_data(previous, 9)
+    apply_barbarian_level_to_profile_data(data, 9)
+    source = "D&D Beyond Basic Rules 2024: Barbarian Level 9 Brutal Strike"
+    feature = FeatureAudit(
+        feature_id="brutal-strike", feature_name="Brutal Strike",
+        source_reference=source, category="class", combat_relevant=True, automated=False,
+        notes=(
+            "Requires trading Reckless Attack Advantage on one Strength attack for extra damage "
+            "and a selectable Forceful or Hamstring rider. Certification waits for shared "
+            "attack-choice plus forced-movement/speed-control parity."
+        ),
+    )
+    data.update(
+        feature_audits=[*data["feature_audits"], feature.model_dump()],
+        source_references=[*data["source_references"], source],
+    )
+    return CharacterBuildProfile.model_validate(data)

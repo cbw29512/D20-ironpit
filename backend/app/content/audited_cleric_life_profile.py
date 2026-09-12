@@ -87,3 +87,33 @@ def build_seraphine_dawnshield_level4_profile() -> CharacterBuildProfile:
         ],
     )
     return CharacterBuildProfile.model_validate(data)
+
+
+def build_seraphine_dawnshield_level5_profile() -> CharacterBuildProfile:
+    base = build_seraphine_dawnshield_level4_profile()
+    data = advance_profile_data(base, 5)
+    apply_cleric_level_to_profile_data(data, 5)
+    source = "D&D Beyond Basic Rules 2024: Cleric Level 5"
+    additions = [
+        FeatureAudit(
+            feature_id="sear-undead", feature_name="Sear Undead", source_reference=source,
+            category="class", combat_relevant=True, automated=False,
+            notes=(
+                "Requires Turn Undead failed-save radiant damage scaling with Wisdom modifier; "
+                "certification waits for a shared channel-divinity damage rider in Python and browser."
+            ),
+        ),
+        FeatureAudit(
+            feature_id="cleric-combat-spells-3", feature_name="3rd-Level Cleric Combat Spell Package",
+            source_reference=source, category="class", combat_relevant=True, automated=False,
+            notes=(
+                "Requires a complete deterministic level-3 spell package and runtime/browser bindings. "
+                "The level stays fail-closed until that package is source-complete."
+            ),
+        ),
+    ]
+    data.update(
+        feature_audits=[*data["feature_audits"], *(feature.model_dump() for feature in additions)],
+        source_references=[*data["source_references"], source],
+    )
+    return CharacterBuildProfile.model_validate(data)

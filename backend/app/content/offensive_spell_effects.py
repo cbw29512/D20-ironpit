@@ -26,6 +26,24 @@ def build_sacred_flame(save_dc: int, character_level: int) -> SpellSaveAction:
     )
 
 
+def build_eldritch_blast(attack_bonus: int, character_level: int) -> SpellAttackAction:
+    """Build Eldritch Blast on the generic spell-attack runtime."""
+    return SpellAttackAction(
+        id="eldritch-blast",
+        name="Eldritch Blast",
+        level=0,
+        action_cost="action",
+        attack_kind="ranged",
+        range_ft=120,
+        attack_bonus=attack_bonus,
+        damage_dice_count=cantrip_damage_dice(character_level),
+        damage_dice_size=10,
+        damage_type="force",
+        animation="eldritch-blast",
+        source="SRD 5.2.1 Eldritch Blast",
+    )
+
+
 def build_inflict_wounds(save_dc: int) -> SpellSaveAction:
     return SpellSaveAction(
         id="inflict-wounds",
