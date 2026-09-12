@@ -6,7 +6,7 @@ from app.combat.action_economy import is_available, spend
 from app.combat.damage_defenses import adjusted_damage_amount, apply_damage_defenses
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.resources import action_resource_available, resolved_resource_id, spend_action_resource
-from app.combat.spellcasting import mark_slot_spell_cast, slot_spell_available
+from app.combat.spellcasting import mark_slot_spell_cast, slot_spell_available, spell_action_resource_available
 from app.combat.zero_hp import apply_damage
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, DamageRollComponent, DamageType, DiceRoll
@@ -31,9 +31,13 @@ def choose_automatic_spell(caster: EncounterCombatant, setup: EncounterSetup, tu
     for action in caster.state.template.automatic_spell_actions:
         if action.action_cost == "reaction" or not is_available(caster.state, action.action_cost):
             continue
-        resource_id = action.resource_id or f"spell-slot-{action.level}"
-        resource = next((item for item in caster.state.resources if item.id == resource_id), None)
-        if resource is None or resource.current_uses < action.resource_cost or not slot_spell_available(caster.state, turn_key):
+        if not spell_action_resource_available(
+            caster.state,
+            level=action.level,
+            resource_id=action.resource_id,
+            resource_cost=action.resource_cost,
+            turn_key=turn_key,
+        ):
             continue
         legal = [target for target in enemies if target.state.is_alive and not target.state.is_dead
                  and target.state.current_hp > 0 and combatant_distance(caster, target) <= action.range_ft]
@@ -73,7 +77,8 @@ def resolve_automatic_spell(sequence: int, round_number: int, caster: EncounterC
         raise ValueError(f"{action.action_cost} is unavailable for {action.name}.")
     fallback_id = f"spell-slot-{choice.slot_level}"
     resource_id = resolved_resource_id(action.resource_id, fallback_id)
-    if not slot_spell_available(caster.state, turn_key):
+    uses_spell_slot = bool(resource_id and resource_id.startswith("spell-slot-"))
+    if uses_spell_slot and not slot_spell_available(caster.state, turn_key):
         raise ValueError(f"A leveled spell was already cast this turn before {action.name}.")
     if not action_resource_available(caster.state, action.resource_id, action.resource_cost, fallback_resource_id=fallback_id):
         raise ValueError(f"Resource {resource_id!r} is unavailable for {action.name}.")
@@ -93,7 +98,8 @@ def resolve_automatic_spell(sequence: int, round_number: int, caster: EncounterC
             raise ValueError(f"Illegal automatic spell target {target_id!r} for {action.name}.")
 
     remaining = spend_action_resource(caster.state, action.resource_id, action.resource_cost, fallback_resource_id=fallback_id)
-    mark_slot_spell_cast(caster.state, turn_key)
+    if uses_spell_slot:
+        mark_slot_spell_cast(caster.state, turn_key)
     spend(caster.state, action.action_cost)
     events = [BattleEvent(
         sequence=sequence, round_number=round_number, event_type="feature", actor_id=caster.combatant_id,

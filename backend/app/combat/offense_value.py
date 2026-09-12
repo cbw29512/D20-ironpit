@@ -87,6 +87,12 @@ def spell_attack_expected_damage(
     return max(0.0, (hit - critical) * normal + critical * crit)
 
 
+def automatic_spell_expected_damage(target: EncounterCombatant, action) -> float:
+    factor = _damage_factor(target.state, DamageType(action.damage_type) if action.damage_type else None)
+    per_application = _mean_damage(action.damage_dice_count, action.damage_dice_size, action.damage_bonus) * factor
+    return max(0.0, per_application * action.applications)
+
+
 def _save_success_probability(target, action: SpellSaveAction | SavingThrowAction) -> float:
     if action.save_ability in {"strength", "dexterity"} and automatically_fails_strength_dexterity_save(target.state):
         return 0.0

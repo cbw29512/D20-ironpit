@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from app.combat.action_economy import is_available
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.offense_value import spell_attack_expected_damage
-from app.combat.spellcasting import slot_spell_available
+from app.combat.spellcasting import spell_action_resource_available
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.spells import SpellAttackAction
 
@@ -15,17 +15,6 @@ class SpellAttackChoice:
     action: SpellAttackAction
     target: EncounterCombatant
     expected_damage: float
-
-
-def _slot_available(caster: EncounterCombatant, action: SpellAttackAction, turn_key: str) -> bool:
-    if action.level == 0:
-        return True
-    if not slot_spell_available(caster.state, turn_key):
-        return False
-    return any(
-        item.id == f"spell-slot-{action.level}" and item.current_uses > 0
-        for item in caster.state.resources
-    )
 
 
 def choose_spell_attack(
@@ -38,7 +27,13 @@ def choose_spell_attack(
     for index, action in enumerate(caster.state.template.spell_attack_actions):
         if action.action_cost == "reaction" or not is_available(caster.state, action.action_cost):
             continue
-        if not _slot_available(caster, action, turn_key):
+        if not spell_action_resource_available(
+            caster.state,
+            level=action.level,
+            resource_id=action.resource_id,
+            resource_cost=action.resource_cost,
+            turn_key=turn_key,
+        ):
             continue
         for target in enemies:
             if (

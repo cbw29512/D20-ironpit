@@ -8,10 +8,7 @@
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
 
   function slotLevel(caster, action, turnKey) {
-    if (action.level === 0) return 0;
-    if (!C().slotSpellAvailable(caster.state, turnKey)) return null;
-    const resourceId = `spell-slot-${action.level}`;
-    return (caster.state.resources?.[resourceId] || 0) > 0 ? action.level : null;
+    return C().actionResourceAvailable(caster.state, action, turnKey) ? action.level : null;
   }
 
   function legalSingleTargets(caster, setup, action) {

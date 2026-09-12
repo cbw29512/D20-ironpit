@@ -6,7 +6,7 @@ from app.combat.action_economy import is_available
 from app.combat.area_targeting import AreaPlacement, legal_area_placements
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.offense_value import save_spell_expected_damage
-from app.combat.spellcasting import slot_spell_available
+from app.combat.spellcasting import spell_action_resource_available
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.spells import SpellSaveAction
 
@@ -21,13 +21,13 @@ class SpellChoice:
 
 
 def _slot_level(caster: EncounterCombatant, action: SpellSaveAction, turn_key: str) -> int | None:
-    if action.level == 0:
-        return 0
-    if not slot_spell_available(caster.state, turn_key):
-        return None
-    resource_id = f"spell-slot-{action.level}"
-    resource = next((item for item in caster.state.resources if item.id == resource_id), None)
-    return action.level if resource is not None and resource.current_uses > 0 else None
+    return action.level if spell_action_resource_available(
+        caster.state,
+        level=action.level,
+        resource_id=action.resource_id,
+        resource_cost=action.resource_cost,
+        turn_key=turn_key,
+    ) else None
 
 
 def _legal_single_targets(caster: EncounterCombatant, setup: EncounterSetup, action: SpellSaveAction):

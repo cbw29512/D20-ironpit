@@ -49,7 +49,7 @@ def save_choice(
                 if not resource_available(attacker.state, action.resource_id, action.resource_cost):
                     continue
                 distance = save_distance(attacker, target, action.range_ft)
-                if legal_save_action(action, target, distance):
+                if legal_save_action(action, target, distance, attacker):
                     return target, action, distance
         return None
     except Exception:
