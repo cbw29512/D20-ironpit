@@ -383,6 +383,29 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/13/1000/1000/636238871029832086.jpeg",
     "saving_throw_actions": [
       {
+        "id": "frightful-presence",
+        "name": "Frightful Presence",
+        "save_ability": "wisdom",
+        "dc": 16,
+        "range_ft": 120,
+        "area": {
+          "shape": "emanation",
+          "origin": "self",
+          "radius_ft": 120
+        },
+        "failure_control_effect": {
+          "condition_id": "frightened",
+          "expiry_timing": "target_turn_end",
+          "duration_rounds": 10,
+          "repeat_save_ability": "wisdom",
+          "repeat_save_dc": 16,
+          "repeat_save_timing": "target_turn_end",
+          "source_effect_immunity_on_end": true
+        },
+        "source_effect_immunity_on_success": true,
+        "animation": "fear"
+      },
+      {
         "id": "acid-breath",
         "name": "Acid Breath",
         "save_ability": "dexterity",
@@ -569,6 +592,29 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/16/1000/1000/636238882493439723.jpeg",
     "saving_throw_actions": [
       {
+        "id": "frightful-presence",
+        "name": "Frightful Presence",
+        "save_ability": "wisdom",
+        "dc": 17,
+        "range_ft": 120,
+        "area": {
+          "shape": "emanation",
+          "origin": "self",
+          "radius_ft": 120
+        },
+        "failure_control_effect": {
+          "condition_id": "frightened",
+          "expiry_timing": "target_turn_end",
+          "duration_rounds": 10,
+          "repeat_save_ability": "wisdom",
+          "repeat_save_dc": 17,
+          "repeat_save_timing": "target_turn_end",
+          "source_effect_immunity_on_end": true
+        },
+        "source_effect_immunity_on_success": true,
+        "animation": "fear"
+      },
+      {
         "id": "lightning-breath",
         "name": "Lightning Breath",
         "save_ability": "dexterity",
@@ -751,6 +797,29 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/18/1000/1000/636238885681129014.jpeg",
     "saving_throw_actions": [
       {
+        "id": "frightful-presence",
+        "name": "Frightful Presence",
+        "save_ability": "wisdom",
+        "dc": 16,
+        "range_ft": 120,
+        "area": {
+          "shape": "emanation",
+          "origin": "self",
+          "radius_ft": 120
+        },
+        "failure_control_effect": {
+          "condition_id": "frightened",
+          "expiry_timing": "target_turn_end",
+          "duration_rounds": 10,
+          "repeat_save_ability": "wisdom",
+          "repeat_save_dc": 16,
+          "repeat_save_timing": "target_turn_end",
+          "source_effect_immunity_on_end": true
+        },
+        "source_effect_immunity_on_success": true,
+        "animation": "fear"
+      },
+      {
         "id": "fire-breath",
         "name": "Fire Breath",
         "save_ability": "dexterity",
@@ -932,7 +1001,31 @@
     "source_reactions": "",
     "source_legendary_actions": "<p>The dragon can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The dragon regains spent legendary actions at the start of its turn.</p><p><em><strong>Detect.</strong></em> The dragon makes a Wisdom (Perception) check.</p><p><em><strong>Tail Attack.</strong></em> The dragon makes a tail attack.</p><p><em><strong>Wing Attack (Costs 2 Actions).</strong></em> The dragon beats its wings. Each creature within 10 feet of the dragon must succeed on a DC 20 Dexterity saving throw or take 14 (2d6 + 7) bludgeoning damage and be knocked prone. The dragon can then fly up to half its flying speed.</p>",
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/20/1000/1000/636238888310108665.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [
+      {
+        "id": "frightful-presence",
+        "name": "Frightful Presence",
+        "save_ability": "wisdom",
+        "dc": 17,
+        "range_ft": 120,
+        "area": {
+          "shape": "emanation",
+          "origin": "self",
+          "radius_ft": 120
+        },
+        "failure_control_effect": {
+          "condition_id": "frightened",
+          "expiry_timing": "target_turn_end",
+          "duration_rounds": 10,
+          "repeat_save_ability": "wisdom",
+          "repeat_save_dc": 17,
+          "repeat_save_timing": "target_turn_end",
+          "source_effect_immunity_on_end": true
+        },
+        "source_effect_immunity_on_success": true,
+        "animation": "fear"
+      }
+    ]
   },
   {
     "id": "adult-copper-dragon",
@@ -1093,6 +1186,29 @@
     "source_legendary_actions": "<p>The dragon can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The dragon regains spent legendary actions at the start of its turn. </p><p><em><strong>Detect.</strong></em> The dragon makes a Wisdom (Perception) check. </p><p><em><strong>Tail Attack.</strong></em> The dragon makes a tail attack. </p><p><em><strong>Wing Attack (Costs 2 Actions).</strong></em> The dragon beats its wings. Each creature within 10 feet of the dragon must succeed on a DC 19 Dexterity saving throw or take 13 (2d6 + 6) bludgeoning damage and be knocked prone. The dragon can then fly up to half its flying speed.</p>",
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/22/1000/1000/636238956325913912.jpeg",
     "saving_throw_actions": [
+      {
+        "id": "frightful-presence",
+        "name": "Frightful Presence",
+        "save_ability": "wisdom",
+        "dc": 16,
+        "range_ft": 120,
+        "area": {
+          "shape": "emanation",
+          "origin": "self",
+          "radius_ft": 120
+        },
+        "failure_control_effect": {
+          "condition_id": "frightened",
+          "expiry_timing": "target_turn_end",
+          "duration_rounds": 10,
+          "repeat_save_ability": "wisdom",
+          "repeat_save_dc": 16,
+          "repeat_save_timing": "target_turn_end",
+          "source_effect_immunity_on_end": true
+        },
+        "source_effect_immunity_on_success": true,
+        "animation": "fear"
+      },
       {
         "id": "acid-breath",
         "name": "Acid Breath",
@@ -1277,6 +1393,29 @@
     "source_legendary_actions": "<p>The dragon can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The dragon regains spent legendary actions at the start of its turn. </p><p><em><strong>Detect.</strong></em> The dragon makes a Wisdom (Perception) check. </p><p><em><strong>Tail Attack.</strong></em> The dragon makes a tail attack. </p><p><em><strong>Wing Attack (Costs 2 Actions).</strong></em> The dragon beats its wings. Each creature within 10 feet of the dragon must succeed on a DC 22 Dexterity saving throw or take 15 (2d6 + 8) bludgeoning damage and be knocked prone. The dragon can then fly up to half its flying speed.</p>",
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/24/1000/1000/636238958915127190.jpeg",
     "saving_throw_actions": [
+      {
+        "id": "frightful-presence",
+        "name": "Frightful Presence",
+        "save_ability": "wisdom",
+        "dc": 21,
+        "range_ft": 120,
+        "area": {
+          "shape": "emanation",
+          "origin": "self",
+          "radius_ft": 120
+        },
+        "failure_control_effect": {
+          "condition_id": "frightened",
+          "expiry_timing": "target_turn_end",
+          "duration_rounds": 10,
+          "repeat_save_ability": "wisdom",
+          "repeat_save_dc": 21,
+          "repeat_save_timing": "target_turn_end",
+          "source_effect_immunity_on_end": true
+        },
+        "source_effect_immunity_on_success": true,
+        "animation": "fear"
+      },
       {
         "id": "fire-breath",
         "name": "Fire Breath",
@@ -1469,6 +1608,29 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/26/1000/1000/636238962276510242.jpeg",
     "saving_throw_actions": [
       {
+        "id": "frightful-presence",
+        "name": "Frightful Presence",
+        "save_ability": "wisdom",
+        "dc": 16,
+        "range_ft": 120,
+        "area": {
+          "shape": "emanation",
+          "origin": "self",
+          "radius_ft": 120
+        },
+        "failure_control_effect": {
+          "condition_id": "frightened",
+          "expiry_timing": "target_turn_end",
+          "duration_rounds": 10,
+          "repeat_save_ability": "wisdom",
+          "repeat_save_dc": 16,
+          "repeat_save_timing": "target_turn_end",
+          "source_effect_immunity_on_end": true
+        },
+        "source_effect_immunity_on_success": true,
+        "animation": "fear"
+      },
+      {
         "id": "poison-breath",
         "name": "Poison Breath",
         "save_ability": "constitution",
@@ -1654,6 +1816,29 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/28/1000/1000/636238971817119794.jpeg",
     "saving_throw_actions": [
       {
+        "id": "frightful-presence",
+        "name": "Frightful Presence",
+        "save_ability": "wisdom",
+        "dc": 19,
+        "range_ft": 120,
+        "area": {
+          "shape": "emanation",
+          "origin": "self",
+          "radius_ft": 120
+        },
+        "failure_control_effect": {
+          "condition_id": "frightened",
+          "expiry_timing": "target_turn_end",
+          "duration_rounds": 10,
+          "repeat_save_ability": "wisdom",
+          "repeat_save_dc": 19,
+          "repeat_save_timing": "target_turn_end",
+          "source_effect_immunity_on_end": true
+        },
+        "source_effect_immunity_on_success": true,
+        "animation": "fear"
+      },
+      {
         "id": "fire-breath",
         "name": "Fire Breath",
         "save_ability": "dexterity",
@@ -1834,6 +2019,29 @@
     "source_legendary_actions": "<p>The dragon can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The dragon regains spent legendary actions at the start of its turn. </p><p><em><strong>Detect.</strong></em> The dragon makes a Wisdom (Perception) check. </p><p><em><strong>Tail Attack.</strong></em> The dragon makes a tail attack. </p><p><em><strong>Wing Attack (Costs 2 Actions).</strong></em> The dragon beats its wings. Each creature within 10 feet of the dragon must succeed on a DC 21 Dexterity saving throw or take 15 (2d6 + 8) bludgeoning damage and be knocked prone. The dragon can then fly up to half its flying speed.</p>",
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/123/1000/1000/636252753945133025.jpeg",
     "saving_throw_actions": [
+      {
+        "id": "frightful-presence",
+        "name": "Frightful Presence",
+        "save_ability": "wisdom",
+        "dc": 18,
+        "range_ft": 120,
+        "area": {
+          "shape": "emanation",
+          "origin": "self",
+          "radius_ft": 120
+        },
+        "failure_control_effect": {
+          "condition_id": "frightened",
+          "expiry_timing": "target_turn_end",
+          "duration_rounds": 10,
+          "repeat_save_ability": "wisdom",
+          "repeat_save_dc": 18,
+          "repeat_save_timing": "target_turn_end",
+          "source_effect_immunity_on_end": true
+        },
+        "source_effect_immunity_on_success": true,
+        "animation": "fear"
+      },
       {
         "id": "cold-breath",
         "name": "Cold Breath",
@@ -2021,6 +2229,29 @@
     "source_legendary_actions": "<p>The dragon can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The dragon regains spent legendary actions at the start of its turn. </p><p><em><strong>Detect.</strong></em> The dragon makes a Wisdom (Perception) check. </p><p><em><strong>Tail Attack.</strong></em> The dragon makes a tail attack. </p><p><em><strong>Wing Attack (Costs 2 Actions).</strong></em> The dragon beats its wings. Each creature within 10 feet of the dragon must succeed on a DC 19 Dexterity saving throw or take 13 (2d6 + 6) bludgeoning damage and be knocked prone. The dragon can then fly up to half its flying speed.</p>",
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/125/1000/1000/636252755468117001.jpeg",
     "saving_throw_actions": [
+      {
+        "id": "frightful-presence",
+        "name": "Frightful Presence",
+        "save_ability": "wisdom",
+        "dc": 14,
+        "range_ft": 120,
+        "area": {
+          "shape": "emanation",
+          "origin": "self",
+          "radius_ft": 120
+        },
+        "failure_control_effect": {
+          "condition_id": "frightened",
+          "expiry_timing": "target_turn_end",
+          "duration_rounds": 10,
+          "repeat_save_ability": "wisdom",
+          "repeat_save_dc": 14,
+          "repeat_save_timing": "target_turn_end",
+          "source_effect_immunity_on_end": true
+        },
+        "source_effect_immunity_on_success": true,
+        "animation": "fear"
+      },
       {
         "id": "cold-breath",
         "name": "Cold Breath",
@@ -2433,6 +2664,29 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/129/315/315/636252755854649337.jpeg",
     "saving_throw_actions": [
       {
+        "id": "frightful-presence",
+        "name": "Frightful Presence",
+        "save_ability": "wisdom",
+        "dc": 19,
+        "range_ft": 120,
+        "area": {
+          "shape": "emanation",
+          "origin": "self",
+          "radius_ft": 120
+        },
+        "failure_control_effect": {
+          "condition_id": "frightened",
+          "expiry_timing": "target_turn_end",
+          "duration_rounds": 10,
+          "repeat_save_ability": "wisdom",
+          "repeat_save_dc": 19,
+          "repeat_save_timing": "target_turn_end",
+          "source_effect_immunity_on_end": true
+        },
+        "source_effect_immunity_on_success": true,
+        "animation": "fear"
+      },
+      {
         "id": "acid-breath",
         "name": "Acid Breath",
         "save_ability": "dexterity",
@@ -2617,7 +2871,31 @@
     "source_reactions": "",
     "source_legendary_actions": "<p>The dragon can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The dragon regains spent legendary actions at the start of its turn. </p><p><em><strong>Detect.</strong></em> The dragon makes a Wisdom (Perception) check. </p><p><em><strong>Tail Attack.</strong></em> The dragon makes a tail attack. </p><p><em><strong>Wing Attack (Costs 2 Actions).</strong></em> The dragon beats its wings. Each creature within 15 feet of the dragon must succeed on a DC 24 Dexterity saving throw or take 16 (2d6 + 9) bludgeoning damage and be knocked prone. The dragon can then fly up to half its flying speed.</p>",
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/131/1000/1000/636252756020185006.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [
+      {
+        "id": "frightful-presence",
+        "name": "Frightful Presence",
+        "save_ability": "wisdom",
+        "dc": 20,
+        "range_ft": 120,
+        "area": {
+          "shape": "emanation",
+          "origin": "self",
+          "radius_ft": 120
+        },
+        "failure_control_effect": {
+          "condition_id": "frightened",
+          "expiry_timing": "target_turn_end",
+          "duration_rounds": 10,
+          "repeat_save_ability": "wisdom",
+          "repeat_save_dc": 20,
+          "repeat_save_timing": "target_turn_end",
+          "source_effect_immunity_on_end": true
+        },
+        "source_effect_immunity_on_success": true,
+        "animation": "fear"
+      }
+    ]
   },
   {
     "id": "ancient-brass-dragon",
@@ -2780,6 +3058,29 @@
     "source_legendary_actions": "<p>The dragon can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The dragon regains spent legendary actions at the start of its turn. </p><p><em><strong>Detect.</strong></em> The dragon makes a Wisdom (Perception) check. </p><p><em><strong>Tail Attack.</strong></em> The dragon makes a tail attack. </p><p><em><strong>Wing Attack (Costs 2 Actions).</strong></em> The dragon beats its wings. Each creature within 15 feet of the dragon must succeed on a DC 22 Dexterity saving throw or take 15 (2d6 + 8) bludgeoning damage and be knocked prone. The dragon can then fly up to half its flying speed.</p>",
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/133/1000/1000/636252756157427258.jpeg",
     "saving_throw_actions": [
+      {
+        "id": "frightful-presence",
+        "name": "Frightful Presence",
+        "save_ability": "wisdom",
+        "dc": 18,
+        "range_ft": 120,
+        "area": {
+          "shape": "emanation",
+          "origin": "self",
+          "radius_ft": 120
+        },
+        "failure_control_effect": {
+          "condition_id": "frightened",
+          "expiry_timing": "target_turn_end",
+          "duration_rounds": 10,
+          "repeat_save_ability": "wisdom",
+          "repeat_save_dc": 18,
+          "repeat_save_timing": "target_turn_end",
+          "source_effect_immunity_on_end": true
+        },
+        "source_effect_immunity_on_success": true,
+        "animation": "fear"
+      },
       {
         "id": "fire-breath",
         "name": "Fire Breath",
@@ -2964,6 +3265,29 @@
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/135/315/315/636252756372367681.jpeg",
     "saving_throw_actions": [
       {
+        "id": "frightful-presence",
+        "name": "Frightful Presence",
+        "save_ability": "wisdom",
+        "dc": 20,
+        "range_ft": 120,
+        "area": {
+          "shape": "emanation",
+          "origin": "self",
+          "radius_ft": 120
+        },
+        "failure_control_effect": {
+          "condition_id": "frightened",
+          "expiry_timing": "target_turn_end",
+          "duration_rounds": 10,
+          "repeat_save_ability": "wisdom",
+          "repeat_save_dc": 20,
+          "repeat_save_timing": "target_turn_end",
+          "source_effect_immunity_on_end": true
+        },
+        "source_effect_immunity_on_success": true,
+        "animation": "fear"
+      },
+      {
         "id": "lightning-breath",
         "name": "Lightning Breath",
         "save_ability": "dexterity",
@@ -3145,6 +3469,29 @@
     "source_legendary_actions": "<p>The dragon can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The dragon regains spent legendary actions at the start of its turn. </p><p><em><strong>Detect.</strong></em> The dragon makes a Wisdom (Perception) check. </p><p><em><strong>Tail Attack.</strong></em> The dragon makes a tail attack. </p><p><em><strong>Wing Attack (Costs 2 Actions).</strong></em> The dragon beats its wings. Each creature within 15 feet of the dragon must succeed on a DC 23 Dexterity saving throw or take 15 (2d6 + 8) bludgeoning damage and be knocked prone. The dragon can then fly up to half its flying speed.</p>",
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/137/1000/1000/636252756714896878.jpeg",
     "saving_throw_actions": [
+      {
+        "id": "frightful-presence",
+        "name": "Frightful Presence",
+        "save_ability": "wisdom",
+        "dc": 19,
+        "range_ft": 120,
+        "area": {
+          "shape": "emanation",
+          "origin": "self",
+          "radius_ft": 120
+        },
+        "failure_control_effect": {
+          "condition_id": "frightened",
+          "expiry_timing": "target_turn_end",
+          "duration_rounds": 10,
+          "repeat_save_ability": "wisdom",
+          "repeat_save_dc": 19,
+          "repeat_save_timing": "target_turn_end",
+          "source_effect_immunity_on_end": true
+        },
+        "source_effect_immunity_on_success": true,
+        "animation": "fear"
+      },
       {
         "id": "acid-breath",
         "name": "Acid Breath",
@@ -3329,6 +3676,29 @@
     "source_legendary_actions": "<p>The dragon can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The dragon regains spent legendary actions at the start of its turn. </p><p><em><strong>Detect.</strong></em> The dragon makes a Wisdom (Perception) check. </p><p><em><strong>Tail Attack.</strong></em> The dragon makes a tail attack. </p><p><em><strong>Wing Attack (Costs 2 Actions).</strong></em> The dragon beats its wings. Each creature within 15 feet of the dragon must succeed on a DC 25 Dexterity saving throw or take 17 (2d6 + 10) bludgeoning damage and be knocked prone. The dragon can then fly up to half its flying speed.</p>",
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/139/315/315/636252756930565101.jpeg",
     "saving_throw_actions": [
+      {
+        "id": "frightful-presence",
+        "name": "Frightful Presence",
+        "save_ability": "wisdom",
+        "dc": 24,
+        "range_ft": 120,
+        "area": {
+          "shape": "emanation",
+          "origin": "self",
+          "radius_ft": 120
+        },
+        "failure_control_effect": {
+          "condition_id": "frightened",
+          "expiry_timing": "target_turn_end",
+          "duration_rounds": 10,
+          "repeat_save_ability": "wisdom",
+          "repeat_save_dc": 24,
+          "repeat_save_timing": "target_turn_end",
+          "source_effect_immunity_on_end": true
+        },
+        "source_effect_immunity_on_success": true,
+        "animation": "fear"
+      },
       {
         "id": "fire-breath",
         "name": "Fire Breath",
@@ -3519,7 +3889,31 @@
     "source_reactions": "",
     "source_legendary_actions": "<p>The dragon can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The dragon regains spent legendary actions at the start of its turn. </p><p><em><strong>Detect.</strong></em> The dragon makes a Wisdom (Perception) check. </p><p><em><strong>Tail Attack.</strong></em> The dragon makes a tail attack. </p><p><em><strong>Wing Attack (Costs 2 Actions).</strong></em> The dragon beats its wings. Each creature within 15 feet of the dragon must succeed on a DC 23 Dexterity saving throw or take 15 (2d6 + 8) bludgeoning damage and be knocked prone. The dragon can then fly up to half its flying speed.</p>",
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/141/1000/1000/636252757319464533.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [
+      {
+        "id": "frightful-presence",
+        "name": "Frightful Presence",
+        "save_ability": "wisdom",
+        "dc": 19,
+        "range_ft": 120,
+        "area": {
+          "shape": "emanation",
+          "origin": "self",
+          "radius_ft": 120
+        },
+        "failure_control_effect": {
+          "condition_id": "frightened",
+          "expiry_timing": "target_turn_end",
+          "duration_rounds": 10,
+          "repeat_save_ability": "wisdom",
+          "repeat_save_dc": 19,
+          "repeat_save_timing": "target_turn_end",
+          "source_effect_immunity_on_end": true
+        },
+        "source_effect_immunity_on_success": true,
+        "animation": "fear"
+      }
+    ]
   },
   {
     "id": "ancient-red-dragon",
@@ -3685,6 +4079,29 @@
     "source_legendary_actions": "<p>The dragon can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The dragon regains spent legendary actions at the start of its turn. </p><p><em><strong>Detect.</strong></em> The dragon makes a Wisdom (Perception) check. </p><p><em><strong>Tail Attack.</strong></em> The dragon makes a tail attack. </p><p><em><strong>Wing Attack (Costs 2 Actions).</strong></em> The dragon beats its wings. Each creature within 15 feet of the dragon must succeed on a DC 25 Dexterity saving throw or take 17 (2d6 + 10) bludgeoning damage and be knocked prone. The dragon can then fly up to half its flying speed.</p>",
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/147/1000/1000/636252758629652181.jpeg",
     "saving_throw_actions": [
+      {
+        "id": "frightful-presence",
+        "name": "Frightful Presence",
+        "save_ability": "wisdom",
+        "dc": 21,
+        "range_ft": 120,
+        "area": {
+          "shape": "emanation",
+          "origin": "self",
+          "radius_ft": 120
+        },
+        "failure_control_effect": {
+          "condition_id": "frightened",
+          "expiry_timing": "target_turn_end",
+          "duration_rounds": 10,
+          "repeat_save_ability": "wisdom",
+          "repeat_save_dc": 21,
+          "repeat_save_timing": "target_turn_end",
+          "source_effect_immunity_on_end": true
+        },
+        "source_effect_immunity_on_success": true,
+        "animation": "fear"
+      },
       {
         "id": "fire-breath",
         "name": "Fire Breath",
@@ -3866,6 +4283,29 @@
     "source_legendary_actions": "<p>The dragon can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The dragon regains spent legendary actions at the start of its turn. </p><p><em><strong>Detect.</strong></em> The dragon makes a Wisdom (Perception) check. </p><p><em><strong>Tail Attack.</strong></em> The dragon makes a tail attack. </p><p><em><strong>Wing Attack (Costs 2 Actions).</strong></em> The dragon beats its wings. Each creature within 15 feet of the dragon must succeed on a DC 25 Dexterity saving throw or take 17 (2d6 + 10) bludgeoning damage and be knocked prone. The dragon can then fly up to half its flying speed.</p>",
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/151/1000/1000/636252758799225927.jpeg",
     "saving_throw_actions": [
+      {
+        "id": "frightful-presence",
+        "name": "Frightful Presence",
+        "save_ability": "wisdom",
+        "dc": 21,
+        "range_ft": 120,
+        "area": {
+          "shape": "emanation",
+          "origin": "self",
+          "radius_ft": 120
+        },
+        "failure_control_effect": {
+          "condition_id": "frightened",
+          "expiry_timing": "target_turn_end",
+          "duration_rounds": 10,
+          "repeat_save_ability": "wisdom",
+          "repeat_save_dc": 21,
+          "repeat_save_timing": "target_turn_end",
+          "source_effect_immunity_on_end": true
+        },
+        "source_effect_immunity_on_success": true,
+        "animation": "fear"
+      },
       {
         "id": "cold-breath",
         "name": "Cold Breath",
@@ -4053,6 +4493,29 @@
     "source_legendary_actions": "<p>The dragon can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The dragon regains spent legendary actions at the start of its turn. </p><p><em><strong>Detect.</strong></em> The dragon makes a Wisdom (Perception) check. </p><p><em><strong>Tail Attack.</strong></em> The dragon makes a tail attack. </p><p><em><strong>Wing Attack (Costs 2 Actions).</strong></em> The dragon beats its wings. Each creature within 15 feet of the dragon must succeed on a DC 22 Dexterity saving throw or take 15 (2d6 + 8) bludgeoning damage and be knocked prone. The dragon can then fly up to half its flying speed.</p>",
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/153/1000/1000/636252758955886210.jpeg",
     "saving_throw_actions": [
+      {
+        "id": "frightful-presence",
+        "name": "Frightful Presence",
+        "save_ability": "wisdom",
+        "dc": 16,
+        "range_ft": 120,
+        "area": {
+          "shape": "emanation",
+          "origin": "self",
+          "radius_ft": 120
+        },
+        "failure_control_effect": {
+          "condition_id": "frightened",
+          "expiry_timing": "target_turn_end",
+          "duration_rounds": 10,
+          "repeat_save_ability": "wisdom",
+          "repeat_save_dc": 16,
+          "repeat_save_timing": "target_turn_end",
+          "source_effect_immunity_on_end": true
+        },
+        "source_effect_immunity_on_success": true,
+        "animation": "fear"
+      },
       {
         "id": "cold-breath",
         "name": "Cold Breath",
@@ -32438,7 +32901,31 @@
     "source_reactions": "",
     "source_legendary_actions": "<p>The tarrasque can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The tarrasque regains spent legendary actions at the start of its turn.</p><p><em><strong>Attack.</strong></em> The tarrasque makes one claw attack or tail attack. </p><p><em><strong>Move.</strong></em> The tarrasque moves up to half its speed. </p><p><em><strong>Chomp (Costs 2 Actions).</strong></em> The tarrasque makes one bite attack or uses its Swallow.</p>",
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/101/1000/1000/636252741877524077.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [
+      {
+        "id": "frightful-presence",
+        "name": "Frightful Presence",
+        "save_ability": "wisdom",
+        "dc": 17,
+        "range_ft": 120,
+        "area": {
+          "shape": "emanation",
+          "origin": "self",
+          "radius_ft": 120
+        },
+        "failure_control_effect": {
+          "condition_id": "frightened",
+          "expiry_timing": "target_turn_end",
+          "duration_rounds": 10,
+          "repeat_save_ability": "wisdom",
+          "repeat_save_dc": 17,
+          "repeat_save_timing": "target_turn_end",
+          "source_effect_immunity_on_end": true
+        },
+        "source_effect_immunity_on_success": true,
+        "animation": "fear"
+      }
+    ]
   },
   {
     "id": "thug",
