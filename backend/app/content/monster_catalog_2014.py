@@ -47,7 +47,7 @@ def _attack(source: CatalogAttack2014, *, magical: bool = False) -> WeaponAttack
             id=source.id, weapon=weapon, attack_bonus=source.attack_bonus,
             damage_bonus=source.damage.bonus,
             fixed_damage=source.damage.average if source.damage.dice_count == 0 else None,
-            on_hit_damage=riders,
+            on_hit_damage=riders, charge_profile=source.charge_profile,
         )
     except Exception as exc:
         logger.exception("Failed to compile 2014 catalog attack %s.", source.id)
@@ -63,12 +63,8 @@ def _ability_scores(source: CatalogMonster2014) -> AbilityScores:
 
 
 def _saving_throw_bonuses(source: CatalogMonster2014) -> dict[str, int]:
-    bonuses = {
-        full: (source.abilities[short] - 10) // 2
-        for short, full in _ABILITY_NAMES.items()
-    }
-    for key, value in source.saving_throws.items():
-        bonuses[_ABILITY_NAMES.get(key, key)] = value
+    bonuses = {full: (source.abilities[short] - 10) // 2 for short, full in _ABILITY_NAMES.items()}
+    for key, value in source.saving_throws.items(): bonuses[_ABILITY_NAMES.get(key, key)] = value
     return bonuses
 
 
@@ -91,6 +87,8 @@ def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
         blockers.extend(f"attack-detail:{attack.name}" for attack in source.attacks if not attack.source_complete)
         blockers.extend(f"action:{name}" for name in source.action_names if name not in supported_actions)
         blockers.extend(f"trait:{name}" for name in unresolved_traits_2014(source.trait_names))
+        if "Charge" in source.trait_names and not any(attack.charge_profile for attack in source.attacks):
+            blockers.append("trait:Charge")
         blockers.extend(f"reaction:{name}" for name in source.reaction_names if name not in supported_reactions)
         blockers.extend(f"legendary:{name}" for name in source.legendary_action_names)
         if not source.attacks: blockers.append("attack:no-structured-attack")
@@ -108,8 +106,7 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
         attacks = [_attack(item, magical=magical) for item in source.attacks]
         movement = MovementModes(
             walk_ft=source.speed.get("walk", 0), fly_ft=source.speed.get("fly", 0),
-            climb_ft=source.speed.get("climb", 0), swim_ft=source.speed.get("swim", 0),
-            burrow_ft=source.speed.get("burrow", 0),
+            climb_ft=source.speed.get("climb", 0), swim_ft=source.speed.get("swim", 0), burrow_ft=source.speed.get("burrow", 0),
         )
         dex = source.abilities["dex"]
         return CombatantTemplate(
