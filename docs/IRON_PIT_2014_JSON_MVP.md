@@ -75,6 +75,28 @@ Examples:
 
 Never add monster-name-specific resolver branches when a reusable mechanic can represent the behavior.
 
+## Shared Mechanic Rule for Future Pregens
+
+Pregens will use the same architecture after monster coverage is complete:
+
+```text
+pregen/class/race/feat/spell data
+        ↓
+normalized ability references
+        ↓
+same universal combat engine
+```
+
+There is **one rules engine**, not a monster engine and a separate player engine.
+
+If a mechanic already exists, pregens reference it instead of reimplementing it. Examples:
+- `prone` is the same `prone` condition regardless of whether it came from a monster attack, Fighter maneuver, spell, feat, shove, or item.
+- `poisoned`, `restrained`, `grappled`, `frightened`, `stunned`, `advantage`, `disadvantage`, damage types, resistance, saving throws, movement, targeting, concentration, reactions, and resource spending must likewise be shared mechanics where the rules are the same.
+
+If a pregen ability introduces a genuinely new combat mechanic, add that mechanic to the universal engine once. Monsters, pregens, spells, feats, items, and future content can then reference it.
+
+Source identity may still be carried for logs, permissions, durations, scaling, resource ownership, and exact rules text, but the underlying mechanic must not be duplicated just because the source is different.
+
 ## MVP Goal
 
 Prove that monsters can be added by data instead of custom code.
@@ -183,6 +205,7 @@ Keep the useful lessons:
 8. AoE targeting should maximize useful enemy targets when that mechanic is added.
 9. Do not let one unusual monster block progress on compatible monsters.
 10. Pregens are downstream consumers of the engine and come only after engine + monster work.
+11. Mechanics are source-agnostic: the same condition, damage rule, targeting rule, save rule, or resource rule is implemented once and referenced by every content type that uses it.
 
 Do not keep the expensive lessons:
 
