@@ -9,6 +9,7 @@ NEW_READY_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Bone Devil": _p("humanoid", "bone-devil"),
     "Bulette": _p("quadruped", "bulette"),
     "Chimera": _p("quadruped", "chimera"),
+    "Chuul": _p("crab", "chuul"),
     "Cockatrice": _p("bird", "cockatrice"),
     "Copper Dragon Wyrmling": _p("reptile", "copper-dragon"),
     "Elephant": _p("quadruped", "elephant"),
