@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 from app.content.monster_catalog_2014_models import CatalogMonster2014
+from app.domain.automatic_damage_spells import AutomaticDamageSpellAction
 from app.domain.spells import SpellAttackAction, SpellSaveAction
 
 SUPPORTED_DAMAGE_SPELLS_2014 = frozenset({
-    "disintegrate", "fire-bolt", "fireball", "guiding-bolt",
+    "disintegrate", "fire-bolt", "fireball", "guiding-bolt", "magic-missile",
     "inflict-wounds", "produce-flame", "sacred-flame", "shocking-grasp",
 })
 
@@ -53,21 +54,36 @@ def _save_spell(spell_id: str, level: int, save_dc: int, caster_level: int) -> S
     )
 
 
-def damage_spell_actions_2014(
-    source: CatalogMonster2014,
-) -> tuple[list[SpellAttackAction], list[SpellSaveAction]]:
+def _automatic_spell(spell_id: str, level: int) -> AutomaticDamageSpellAction:
+    if spell_id != "magic-missile":
+        raise ValueError(f"Unsupported automatic-damage spell: {spell_id}")
+    return AutomaticDamageSpellAction(
+        id="magic-missile", name="Magic Missile", level=level, range_ft=120,
+        base_projectiles=3, projectiles_per_slot_above=1,
+        damage_dice_count_per_projectile=1, damage_dice_size=4,
+        damage_bonus_per_projectile=1, damage_type="force",
+        animation="magic-missile", source="SRD 5.1 / 2014 monster spell",
+    )
+
+
+def damage_spell_actions_2014(source: CatalogMonster2014) -> tuple[
+    list[SpellAttackAction], list[SpellSaveAction], list[AutomaticDamageSpellAction],
+]:
     profile = source.spellcasting
     if profile is None:
-        return [], []
+        return [], [], []
     attack_actions: list[SpellAttackAction] = []
     save_actions: list[SpellSaveAction] = []
+    automatic_actions: list[AutomaticDamageSpellAction] = []
     for spell in profile.spells:
         if spell.id not in SUPPORTED_DAMAGE_SPELLS_2014:
             continue
+        if spell.id == "magic-missile":
+            automatic_actions.append(_automatic_spell(spell.id, spell.level)); continue
         if spell.id in {"sacred-flame", "fireball", "disintegrate"}:
             if profile.save_dc is not None:
                 save_actions.append(_save_spell(spell.id, spell.level, profile.save_dc, profile.caster_level))
             continue
         if profile.attack_bonus is not None:
             attack_actions.append(_attack_spell(spell.id, spell.level, profile.attack_bonus, profile.caster_level))
-    return attack_actions, save_actions
+    return attack_actions, save_actions, automatic_actions
