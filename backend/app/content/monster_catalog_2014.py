@@ -8,7 +8,15 @@ from pydantic import TypeAdapter
 
 from app.content.monster_catalog_2014_models import CatalogAttack2014, CatalogMonster2014
 from app.domain.character_builds import AbilityScores
-from app.domain.models import CombatantTemplate, VisualLoadout, Weapon, WeaponAttack, WeaponAttackKind
+from app.domain.models import (
+    AttackActionDefinition,
+    AttackActionSlot,
+    CombatantTemplate,
+    VisualLoadout,
+    Weapon,
+    WeaponAttack,
+    WeaponAttackKind,
+)
 from app.domain.movement import MovementModes
 
 logger = logging.getLogger(__name__)
@@ -49,11 +57,26 @@ def _ability_scores(source: CatalogMonster2014) -> AbilityScores:
         raise RuntimeError(f"2014 monster {source.id} has invalid ability scores.") from exc
 
 
+def _multiattack(source: CatalogMonster2014, attacks: list[WeaponAttack]) -> AttackActionDefinition | None:
+    if not source.multiattack_slots:
+        return None
+    known = {attack.id for attack in attacks}
+    slots: list[AttackActionSlot] = []
+    for choices in source.multiattack_slots:
+        if not choices or any(attack_id not in known for attack_id in choices):
+            raise ValueError(f"Invalid Multiattack attack ids for {source.id}: {choices}")
+        slots.append(AttackActionSlot(attack_ids=choices))
+    return AttackActionDefinition(id=f"2014-{source.id}-multiattack", name="Multiattack", slots=slots)
+
+
 def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
     try:
         attack_names = {attack.name for attack in source.attacks}
+        supported_actions = set(attack_names)
+        if source.multiattack_slots:
+            supported_actions.add("Multiattack")
         blockers = [f"defense:{text}" for text in source.unsupported_defense_text]
-        blockers.extend(f"action:{name}" for name in source.action_names if name not in attack_names)
+        blockers.extend(f"action:{name}" for name in source.action_names if name not in supported_actions)
         blockers.extend(f"trait:{name}" for name in source.trait_names)
         blockers.extend(f"reaction:{name}" for name in source.reaction_names)
         blockers.extend(f"legendary:{name}" for name in source.legendary_action_names)
@@ -85,9 +108,9 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
             ability_scores=_ability_scores(source), armor_class=source.armor_class,
             max_hp=source.max_hp, speed_ft=movement.walk_ft, movement_modes=movement,
             initiative_bonus=(dex - 10) // 2, weapon_attack=attacks[0],
-            alternate_weapon_attacks=attacks[1:], saving_throw_bonuses=saves,
-            skill_bonuses=source.skills, damage_resistances=source.damage_resistances,
-            damage_immunities=source.damage_immunities,
+            alternate_weapon_attacks=attacks[1:], attack_action=_multiattack(source, attacks),
+            saving_throw_bonuses=saves, skill_bonuses=source.skills,
+            damage_resistances=source.damage_resistances, damage_immunities=source.damage_immunities,
             damage_vulnerabilities=source.damage_vulnerabilities,
             condition_immunities=source.condition_immunities,
             visual=VisualLoadout(armor="source", main_hand=attacks[0].weapon.id, body_style=source.creature_type),
