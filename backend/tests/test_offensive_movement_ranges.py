@@ -21,6 +21,7 @@ def _combatants_for_ranged_profile(normal_range: int = 80, long_range: int = 320
         attack_action=None,
         spell_attack_actions=[],
         spell_save_actions=[],
+        automatic_spell_actions=[],
         saving_throw_actions=[],
     )
     attacker = SimpleNamespace(
@@ -54,7 +55,7 @@ def test_ranged_profile_separates_legal_and_preferred_range(monkeypatch) -> None
     ]
 
 
-def _movement_context(monkeypatch, *, distance: int, profile: OffensiveRangeProfile, plan):
+def _movement_context(monkeypatch, *, distance: int, profiles, plan):
     attacker = SimpleNamespace(
         combatant_id="attacker",
         state=SimpleNamespace(
@@ -67,57 +68,73 @@ def _movement_context(monkeypatch, *, distance: int, profile: OffensiveRangeProf
     )
     setup = SimpleNamespace(map_definition=object(), heroes=[attacker], monsters=[target])
     monkeypatch.setattr(offensive_movement_policy, "is_available", lambda *_: True)
-    monkeypatch.setattr(
-        offensive_movement_policy, "living_opponents", lambda *_: [target]
-    )
-    monkeypatch.setattr(
-        offensive_movement_policy, "combatant_distance", lambda *_: distance
-    )
+    monkeypatch.setattr(offensive_movement_policy, "living_opponents", lambda *_: [target])
+    monkeypatch.setattr(offensive_movement_policy, "combatant_distance", lambda *_: distance)
     monkeypatch.setattr(
         offensive_movement_policy,
         "ranked_offensive_range_profiles_for_target",
-        lambda *_: [profile],
+        lambda *_: profiles,
     )
-    monkeypatch.setattr(
-        offensive_movement_policy, "plan_movement_toward", lambda *_: plan
-    )
+    monkeypatch.setattr(offensive_movement_policy, "plan_movement_toward", plan)
     return attacker, setup
 
 
 def test_long_range_legal_attack_moves_toward_preferred_range(monkeypatch) -> None:
     profile = OffensiveRangeProfile(1, "ranged", 320, 80)
-    plan = SimpleNamespace(
-        goal_reachable=True,
-        path=[SimpleNamespace(x=1, y=0)],
-        final_distance_ft=70,
-        movement_cost_ft=30,
+    fixed_plan = SimpleNamespace(
+        goal_reachable=True, path=[SimpleNamespace(x=1, y=0)],
+        final_distance_ft=70, movement_cost_ft=30,
     )
     attacker, setup = _movement_context(
-        monkeypatch, distance=100, profile=profile, plan=plan
+        monkeypatch, distance=100, profiles=[profile], plan=lambda *_: fixed_plan
     )
-
     intent = offensive_movement_policy.choose_offensive_movement_intent(
         attacker, setup, "round-1:attacker"
     )
-
     assert intent is not None
     assert intent.target_id == "target"
     assert intent.family == "ranged"
     assert intent.desired_distance_ft == 80
 
 
-def test_partial_advance_that_cannot_reach_preferred_range_is_not_selected(monkeypatch) -> None:
+def test_melee_only_partial_advance_is_selected_when_nothing_is_actionable(monkeypatch) -> None:
     profile = OffensiveRangeProfile(1, "melee", 5, 5)
-    plan = SimpleNamespace(
-        goal_reachable=True,
-        path=[SimpleNamespace(x=1, y=0)],
-        final_distance_ft=30,
-        movement_cost_ft=30,
+    fixed_plan = SimpleNamespace(
+        goal_reachable=True, path=[SimpleNamespace(x=1, y=0)],
+        final_distance_ft=30, movement_cost_ft=30,
     )
     attacker, setup = _movement_context(
-        monkeypatch, distance=60, profile=profile, plan=plan
+        monkeypatch, distance=60, profiles=[profile], plan=lambda *_: fixed_plan
     )
+    intent = offensive_movement_policy.choose_offensive_movement_intent(
+        attacker, setup, "round-1:attacker"
+    )
+    assert intent is not None
+    assert intent.family == "melee"
+    assert intent.desired_distance_ft == 5
 
+
+def test_partial_melee_does_not_override_already_legal_ranged_offense(monkeypatch) -> None:
+    profiles = [
+        OffensiveRangeProfile(1, "melee", 5, 5, execution_rank=2, expected_value=20),
+        OffensiveRangeProfile(1, "ranged", 120, 60, execution_rank=4, expected_value=5),
+    ]
+
+    def _plan(*args):
+        desired = args[4]
+        if desired == 5:
+            return SimpleNamespace(
+                goal_reachable=True, path=[SimpleNamespace(x=1, y=0)],
+                final_distance_ft=30, movement_cost_ft=30,
+            )
+        return SimpleNamespace(
+            goal_reachable=True, path=[SimpleNamespace(x=1, y=0)],
+            final_distance_ft=80, movement_cost_ft=30,
+        )
+
+    attacker, setup = _movement_context(
+        monkeypatch, distance=100, profiles=profiles, plan=_plan
+    )
     assert offensive_movement_policy.choose_offensive_movement_intent(
         attacker, setup, "round-1:attacker"
     ) is None
@@ -125,21 +142,15 @@ def test_partial_advance_that_cannot_reach_preferred_range_is_not_selected(monke
 
 def test_blocked_improvement_preserves_already_legal_attack(monkeypatch) -> None:
     profile = OffensiveRangeProfile(1, "ranged", 320, 80)
-    plan = SimpleNamespace(
-        goal_reachable=False,
-        path=[],
-        final_distance_ft=100,
-        movement_cost_ft=0,
+    fixed_plan = SimpleNamespace(
+        goal_reachable=False, path=[], final_distance_ft=100, movement_cost_ft=0,
     )
     attacker, setup = _movement_context(
-        monkeypatch, distance=100, profile=profile, plan=plan
+        monkeypatch, distance=100, profiles=[profile], plan=lambda *_: fixed_plan
     )
-
-    intent = offensive_movement_policy.choose_offensive_movement_intent(
+    assert offensive_movement_policy.choose_offensive_movement_intent(
         attacker, setup, "round-1:attacker"
-    )
-
-    assert intent is None
+    ) is None
 
 
 def test_range_profile_rejects_preferred_distance_beyond_legal_maximum() -> None:
