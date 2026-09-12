@@ -17,6 +17,7 @@ _ZERO_HP_STABLE = re.compile(r"If the ([A-Za-z]+) damage reduces the target to 0
 _GRAPPLE = re.compile(r"(?:If (?:the )?target is (?:a )?(?:(Tiny|Small|Medium|Large|Huge) or smaller)(?: creature)?,?\s*)?(?:the target|it) is grappled \(escape DC (\d+)\)", re.I)
 _RESTRAINED = re.compile(r"(?:Until (?:this|the) grapple ends,?\s*(?:the target|the creature|it) is restrained|(?:the target|the creature|it) is restrained until (?:this|the) grapple ends)", re.I)
 _NO_REPEAT_TARGET = re.compile(r"(?:and\s+)?(?:the\s+)?[A-Za-z' -]+ can(?:not|'t) (?:use this attack on|bite|attack|constrict|grapple) another target", re.I)
+_PER_LIMB_GRAPPLE = re.compile(r"The [A-Za-z' -]+ has two [A-Za-z' -]+, each of which can grapple only one target", re.I)
 _ALREADY_CONTROLLING = re.compile(r"(?:if\s+)?(?:the\s+)?[A-Za-z' -]+ (?:isn't|is not) already (?:constricting|grappling) a creature,?\s*(?:and\s+)?", re.I)
 _UNATTENDED_OBJECT_ONLY = re.compile(r"If the target is a flammable object that isn't being worn or carried, it also catches fire", re.I)
 _POST_KILL_ONLY = re.compile(r"If the target is killed by this damage, it is absorbed into the mouther", re.I)
@@ -29,7 +30,6 @@ _REST_CURSE_DURATION_ONLY = re.compile(r"The curse lasts until it is lifted by a
 
 
 def strip_noncombat_attack_residual(remainder: str) -> str:
-    """Remove source-preserved riders that cannot alter the current Iron Pit fight."""
     cleaned = remainder
     for pattern in (
         _UNATTENDED_OBJECT_ONLY, _POST_KILL_ONLY, _LYCANTHROPY_ONLY, _REST_ONLY_CURSE,
@@ -117,8 +117,8 @@ def parse_on_hit_control(remainder: str) -> tuple[dict | None, bool, str]:
     if not match: return None, False, remainder
     max_size, dc = match.groups(); before = remainder[:match.start()]; after = remainder[match.end():]
     restrains = bool(_RESTRAINED.search(after)); after = _RESTRAINED.sub(" ", after, count=1)
-    forbid = bool(_NO_REPEAT_TARGET.search(after) or _ALREADY_CONTROLLING.search(after))
-    after = _NO_REPEAT_TARGET.sub(" ", after, count=1); after = _ALREADY_CONTROLLING.sub(" ", after, count=1)
+    forbid = bool(_NO_REPEAT_TARGET.search(after) or _PER_LIMB_GRAPPLE.search(after) or _ALREADY_CONTROLLING.search(after))
+    after = _NO_REPEAT_TARGET.sub(" ", after, count=1); after = _PER_LIMB_GRAPPLE.sub(" ", after, count=1); after = _ALREADY_CONTROLLING.sub(" ", after, count=1)
     control = {"grapple_escape_dc": int(dc), "restrains_while_grappled": restrains}
     if max_size: control["max_target_size"] = max_size.lower()
     residual = re.sub(r"^[\s,;]*(?:and\s+)?|[\s,;]+$", "", f"{before} {after}", flags=re.I).strip(" .")
