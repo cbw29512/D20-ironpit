@@ -61,6 +61,12 @@ jobs:
         run: pip install -e 'backend[dev]'
       - name: Generate pinned 327-monster catalog
         run: python scripts/sync_2014_monster_catalog.py
+      - name: Upload regenerated catalog
+        uses: actions/upload-artifact@v4
+        with:
+          name: regenerated-2014-catalog
+          path: data/monsters/2014/catalog.json
+          retention-days: 1
       - name: Enforce deterministic generated catalog
         run: git diff --exit-code -- data/monsters/2014/catalog.json
       - name: Audit pinned source fidelity
