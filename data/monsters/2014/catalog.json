@@ -24149,7 +24149,19 @@
         "attack_ability": "dexterity"
       }
     ],
-    "multiattack_slots": [],
+    "multiattack_slots": [
+      [
+        "longsword",
+        "longsword-two-handed"
+      ],
+      [
+        "longsword",
+        "longsword-two-handed"
+      ],
+      [
+        "shortsword"
+      ]
+    ],
     "action_recharges": {
       "fire-breath": 5
     },
@@ -24194,6 +24206,7 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "multiattack_policy": null,
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
@@ -41571,7 +41584,19 @@
         "attack_ability": "dexterity"
       }
     ],
-    "multiattack_slots": [],
+    "multiattack_slots": [
+      [
+        "longsword",
+        "longsword-two-handed"
+      ],
+      [
+        "longsword",
+        "longsword-two-handed"
+      ],
+      [
+        "shortsword"
+      ]
+    ],
     "action_recharges": {},
     "rest_recharge_action_ids": [],
     "action_names": [
@@ -41593,6 +41618,7 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "multiattack_policy": null,
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
