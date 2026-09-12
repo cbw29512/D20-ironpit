@@ -8318,8 +8318,8 @@
         "on_hit_save_effect": null,
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "If the target is a flammable object that isn't being worn or carried, it also catches fire"
+        "source_complete": true,
+        "unsupported_text": null
       }
     ],
     "multiattack_slots": [
@@ -24800,8 +24800,8 @@
         "on_hit_save_effect": null,
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "If the target is a flammable object that isn't being worn or carried, it also catches fire"
+        "source_complete": true,
+        "unsupported_text": null
       }
     ],
     "multiattack_slots": [
@@ -28244,7 +28244,7 @@
         },
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
-        "unsupported_text": ", the marilith can automatically hit the target with its tail, and the marilith can't make tail attacks against other targets",
+        "unsupported_text": "the marilith can automatically hit the target with its tail, and the marilith can't make tail attacks against other targets",
         "reach_ft": 10
       }
     ],
@@ -34044,7 +34044,7 @@
         },
         "forbid_target_grappled_by_self": true,
         "source_complete": false,
-        "unsupported_text": "If the target is a creature,",
+        "unsupported_text": "If the target is a creature",
         "reach_ft": 10
       }
     ],
@@ -34362,7 +34362,7 @@
         },
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
-        "unsupported_text": ", and the roc can't use its talons on another target",
+        "unsupported_text": "and the roc can't use its talons on another target",
         "reach_ft": 5
       }
     ],
@@ -35182,7 +35182,7 @@
         },
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
-        "unsupported_text": ", the salamander can automatically hit the target with its tail, and the salamander can't make tail attacks against other targets",
+        "unsupported_text": "the salamander can automatically hit the target with its tail, and the salamander can't make tail attacks against other targets",
         "reach_ft": 10
       }
     ],
@@ -39019,7 +39019,7 @@
         },
         "forbid_target_grappled_by_self": true,
         "source_complete": false,
-        "unsupported_text": "If the target is a creature,",
+        "unsupported_text": "If the target is a creature",
         "reach_ft": 10
       },
       {
