@@ -34,6 +34,7 @@ def apply_timed_condition(
     blocks_reactions: bool = False,
     action_bonus_exclusive: bool = False,
     max_attacks_per_turn: int | None = None,
+    disadvantage_strength_d20_tests: bool = False,
 ) -> str | None:
     if condition_is_immune(state, effect_id):
         return None
@@ -75,6 +76,7 @@ def apply_timed_condition(
         blocks_reactions=blocks_reactions,
         action_bonus_exclusive=action_bonus_exclusive,
         max_attacks_per_turn=max_attacks_per_turn,
+        disadvantage_strength_d20_tests=disadvantage_strength_d20_tests,
     ))
     if effect_id not in state.active_effect_ids:
         state.active_effect_ids.append(effect_id)
