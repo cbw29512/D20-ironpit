@@ -10,6 +10,7 @@
   const RES = () => window.IRON_PIT_BROWSER_RESOURCES;
   const SM = () => window.IRON_PIT_BROWSER_SPELL_MODIFIERS;
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES;
+  const PA = () => window.IRON_PIT_BROWSER_PEERLESS_AIM || { resolve: (_state, hit) => ({ hit, used: false }) };
   const SAP = () => window.IRON_PIT_BROWSER_SAP || { consume: () => 0, disadvantage: () => 0 };
   const HI = () => window.IRON_PIT_BROWSER_HEROIC_INSPIRATION || { rerollFailedAttack: (_state, roll) => ({ roll, used: false }) };
 
@@ -40,7 +41,7 @@
     if (usesSlot) C().markSlotSpellCast(caster.state, turnKey);
     E().spend(caster.state, spell.actionCost);
     const natural = attackRoll.selected_roll;
-    const hit = natural !== 1 && (natural === 20 || attackRoll.total >= targetAc);
+    const aimed = PA().resolve(caster.state, natural !== 1 && (natural === 20 || attackRoll.total >= targetAc)), hit = aimed.hit;
     const critical = Boolean(hit && (natural === 20 || (Q().autoCritical(target.state) && distance <= 5)));
     const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
     const deathSuccessBefore = target.state.death_save_successes, deathFailureBefore = target.state.death_save_failures;
@@ -59,6 +60,7 @@
     const outcome = critical ? "CRITICAL HIT" : hit ? "HIT" : "MISS";
     let description = `${caster.state.template.name}: ${outcome} with ${spell.name}.`;
     if (heroic.used) description += " Heroic Inspiration rerolls one d20.";
+    if (aimed.used) description += " Peerless Aim converts the miss into a hit.";
     return { sequence, round_number: round, event_type: "attack", actor_id: caster.combatant_id, actor_name: caster.state.template.name,
       target_id: target.combatant_id, target_name: target.state.template.name, attack_name: spell.name, target_ac: targetAc,
       attack_roll: attackRoll, damage_roll: damageRoll, damage_components: damageComponents, applied_condition_ids: [], hit, critical,
