@@ -91,7 +91,8 @@ def _attack(paragraph: str) -> dict | None:
     else: return None
     name = _plain(name_match.group(1)).rstrip("."); extras, residual = parse_secondary_damage(text[damage_match.end():].strip(" ."))
     result = {"id": _slug(name), "name": name, "kind": kind, "attack_bonus": int(hit.group(1)), "damage": damage,
-              "on_hit_damage": extras, "source_complete": not dual_mode and not residual}
+              "on_hit_damage": extras, "source_complete": not dual_mode and not residual,
+              "unsupported_text": residual or ("dual-mode attack requires split" if dual_mode else None)}
     reach = re.search(r"reach (\d+) ft", text, re.I); ranges = re.search(r"range (\d+)(?:\s*ft\.)?\s*/\s*(\d+) ft", text, re.I)
     if reach: result["reach_ft"] = int(reach.group(1))
     if ranges: result["normal_range_ft"], result["long_range_ft"] = map(int, ranges.groups())
@@ -108,8 +109,8 @@ def _attacks(paragraph: str) -> list[dict]:
     damage_match, _ = primary; _, residual = parse_secondary_damage(text[damage_match.end():].strip(" ."))
     if residual: return [attack]
     base_id = attack["id"]
-    return [{**attack, "id": f"{base_id}-melee", "kind": "melee", "source_complete": True},
-            {**attack, "id": f"{base_id}-ranged", "kind": "ranged", "source_complete": True}]
+    return [{**attack, "id": f"{base_id}-melee", "kind": "melee", "source_complete": True, "unsupported_text": None},
+            {**attack, "id": f"{base_id}-ranged", "kind": "ranged", "source_complete": True, "unsupported_text": None}]
 
 
 def _record(source: dict) -> dict:
