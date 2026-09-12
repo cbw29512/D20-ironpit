@@ -82,7 +82,7 @@ def _candidate(monster: str, match: re.Match[str], action_cost: ActionCost) -> t
     range_ft, area = _area(match.group("target")); resource = _resource(monster, name, match.groupdict().get("limit"))
     sleeping = "sleep_minutes" in match.re.groupindex
     effect = ConditionEffectDefinition(
-        condition=match.group("first").lower(), max_target_size=maximum,
+        condition=match.group("first").lower(),
         repeat_save_ability=ability, repeat_save_dc=dc,
         repeat_save_timing="target_turn_end", repeat_save_failure_condition=match.group("second").lower(),
         repeat_save_failure_continues=not sleeping,
