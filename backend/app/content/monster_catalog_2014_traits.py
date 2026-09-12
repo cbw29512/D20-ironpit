@@ -11,6 +11,8 @@ MODELED_TRAITS = {
     "Magic Resistance": CombatTrait.MAGIC_RESISTANCE,
     "Magic Weapons": CombatTrait.MAGIC_WEAPONS,
     "Charge": CombatTrait.CHARGE,
+    "Pounce": CombatTrait.CHARGE,
+    "Trampling Charge": CombatTrait.CHARGE,
 }
 
 ARENA_NEUTRAL_TRAITS = frozenset({
@@ -34,11 +36,8 @@ def legendary_resistance_uses_2014(names: list[str]) -> int:
 
 
 def combat_traits_2014(names: list[str]) -> list[CombatTrait]:
-    return [MODELED_TRAITS[name] for name in names if name in MODELED_TRAITS]
+    return list(dict.fromkeys(MODELED_TRAITS[name] for name in names if name in MODELED_TRAITS))
 
 
 def unresolved_traits_2014(names: list[str]) -> list[str]:
-    return [
-        name for name in names
-        if name not in SUPPORTED_TRAITS and _LEGENDARY_RESISTANCE.match(name) is None
-    ]
+    return [name for name in names if name not in SUPPORTED_TRAITS and _LEGENDARY_RESISTANCE.match(name) is None]
