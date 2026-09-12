@@ -8,6 +8,7 @@ from pydantic import BaseModel, Field, model_validator
 from app.domain.actions import AbilityName, HitControlEffect
 from app.domain.charge_profiles import ChargeProfileDefinition
 from app.domain.hit_modifiers import HitModifierEffect
+from app.domain.on_hit_saves import OnHitSaveEffect
 from app.domain.size import CreatureSize
 
 
@@ -95,6 +96,7 @@ class WeaponAttack(BaseModel):
     conditional_attack_advantage: list[ConditionalAttackAdvantage] = Field(default_factory=list)
     on_hit_damage: list[OnHitDamage] = Field(default_factory=list)
     on_hit_modifier_effects: list[HitModifierEffect] = Field(default_factory=list)
+    on_hit_save_effect: OnHitSaveEffect | None = None
     charge_profile: ChargeProfileDefinition | None = None
     rage_eligible: bool = False
     sneak_attack_eligible: bool = False
