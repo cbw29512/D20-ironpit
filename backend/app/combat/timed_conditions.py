@@ -32,7 +32,8 @@ def apply_timed_condition(
 ) -> str | None:
     if condition_is_immune(state, effect_id):
         return None
-    if effect_id == POISONED_EFFECT_ID:
+    arena_poison = effect_id == POISONED_EFFECT_ID and state.template.ruleset != "2014"
+    if arena_poison:
         if any(effect.effect_id == POISONED_EFFECT_ID for effect in state.timed_effects):
             return POISONED_EFFECT_ID
         expires_at_start_of_source_turn = False
