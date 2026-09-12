@@ -6,6 +6,16 @@ Build the 2014 monster version of Iron Pit around one canonical JSON monster cat
 
 This document is the scope lock for the 2014 workstream. If a task does not directly advance this MVP, defer it.
 
+## Priority Lock
+
+Work must stay in this order:
+
+1. **Universal combat engine**
+2. **2014 monster catalog and monster combat coverage**
+3. **Pregens last**
+
+Do not spend development time on pregens until the engine and monster work is complete enough to support the intended monster roster. The only exception is when a universal mechanic implemented for monsters automatically benefits pregens without adding pregen-specific work.
+
 ## Core Architecture
 
 ```text
@@ -172,6 +182,7 @@ Keep the useful lessons:
 7. Movement should be action-driven: choose desired legal action, use it if already in range, otherwise move only enough to enable or improve it.
 8. AoE targeting should maximize useful enemy targets when that mechanic is added.
 9. Do not let one unusual monster block progress on compatible monsters.
+10. Pregens are downstream consumers of the engine and come only after engine + monster work.
 
 Do not keep the expensive lessons:
 
@@ -195,6 +206,8 @@ Work in this order unless this document is intentionally changed:
 10. Inventory unsupported mechanics across the whole catalog
 11. Group unsupported abilities into reusable mechanic families
 12. Expand engine by highest-yield mechanic family
+13. Reach intended 2014 monster coverage
+14. **Only then begin pregens**
 
 ## Progress Rule
 
@@ -205,6 +218,8 @@ If a monster is blocked by a missing reusable mechanic:
 - record all monsters that need it
 - continue with monsters already supported
 - implement the mechanic when it is the highest-value next family
+
+Pregens do not count as progress on this workstream until the engine and monster phases are complete.
 
 ## 2014 / 2024 Separation
 
@@ -226,4 +241,4 @@ The ruleset should select data, not select a separate combat engine.
 
 Before adding a major feature not listed in the MVP, update this document first and explain why it is required for the MVP.
 
-When in doubt: finish the smallest working JSON-driven fight first.
+When in doubt: finish the engine and monsters first. Pregens are last.
