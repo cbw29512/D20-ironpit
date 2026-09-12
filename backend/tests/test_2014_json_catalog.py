@@ -14,6 +14,7 @@ from app.content.monster_catalog_2014 import (
     unsupported_mechanics_2014,
 )
 from app.domain.models import DamageType
+from app.domain.traits import CombatTrait
 
 
 def _monster(monster_id: str):
@@ -69,13 +70,19 @@ def test_unresolved_monster_mechanics_fail_closed() -> None:
 
 def test_declarative_multiattack_reuses_shared_action_slots() -> None:
     catalog = {monster.id: monster for monster in load_catalog_2014(MVP_CATALOG_PATH)}
-    source = catalog["brown-bear"].model_copy(
-        update={"trait_names": [], "multiattack_slots": [["bite"], ["claws"]]}
-    )
+    source = catalog["brown-bear"].model_copy(update={"multiattack_slots": [["bite"], ["claws"]]})
     assert "action:Multiattack" not in unsupported_mechanics_2014(source)
     bear = compile_monster_2014(source)
     assert bear.attack_action is not None
     assert [slot.attack_ids for slot in bear.attack_action.slots] == [["bite"], ["claws"]]
+
+
+def test_shared_traits_are_data_driven_and_neutral_traits_do_not_block() -> None:
+    catalog = {monster.id: monster for monster in load_catalog_2014(MVP_CATALOG_PATH)}
+    source = catalog["bandit"].model_copy(update={"trait_names": ["Pack Tactics", "Keen Smell"]})
+    assert unsupported_mechanics_2014(source) == []
+    template = compile_monster_2014(source)
+    assert template.combat_traits == [CombatTrait.PACK_TACTICS]
 
 
 def test_new_basic_monster_is_data_only(tmp_path) -> None:
