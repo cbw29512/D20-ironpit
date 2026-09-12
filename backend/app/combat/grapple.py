@@ -4,6 +4,7 @@ from app.combat.action_economy import is_available, spend
 from app.combat.barbarian import rage_active
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.condition_rules import condition_speed_is_zero, has_condition, is_incapacitated
+from app.combat.d20_effects import strength_d20_disadvantage
 from app.combat.dice import DiceProvider
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.rolls import roll_d20
@@ -84,7 +85,11 @@ def _check_mode(state: CombatantState, strength_check: bool) -> RollMode:
     advantage = strength_check and (
         rage_active(state) or state.template.progression_features.athletics_advantage
     )
-    disadvantage = has_condition(state, POISONED_EFFECT_ID) or has_condition(state, FRIGHTENED_EFFECT_ID)
+    disadvantage = (
+        has_condition(state, POISONED_EFFECT_ID)
+        or has_condition(state, FRIGHTENED_EFFECT_ID)
+        or (strength_check and bool(strength_d20_disadvantage(state)))
+    )
     if advantage == disadvantage:
         return RollMode.NORMAL
     return RollMode.ADVANTAGE if advantage else RollMode.DISADVANTAGE
