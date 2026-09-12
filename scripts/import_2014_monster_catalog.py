@@ -8,7 +8,7 @@ import re
 import unicodedata
 from pathlib import Path
 
-from import_2014_attack_details import parse_on_hit_save_condition, parse_secondary_damage
+from import_2014_attack_details import parse_on_hit_control, parse_on_hit_save_condition, parse_secondary_damage
 from import_2014_charge import parse_charge_profiles
 from import_2014_multiattack import parse_multiattack
 from import_2014_reactions import parse_parry_ac_bonus
@@ -92,9 +92,10 @@ def _attack(paragraph: str) -> dict | None:
     name = _plain(name_match.group(1)).rstrip(".")
     extras, residual = parse_secondary_damage(text[damage_match.end():].strip(" ."))
     save_effect, residual = parse_on_hit_save_condition(residual)
+    control, forbid_grappled, residual = parse_on_hit_control(residual)
     result = {"id": _slug(name), "name": name, "kind": kind, "attack_bonus": int(hit.group(1)), "damage": damage,
-              "on_hit_damage": extras, "on_hit_save_effect": save_effect,
-              "source_complete": not dual_mode and not residual,
+              "on_hit_damage": extras, "on_hit_save_effect": save_effect, "control_effect": control,
+              "forbid_target_grappled_by_self": forbid_grappled, "source_complete": not dual_mode and not residual,
               "unsupported_text": residual or ("dual-mode attack requires split" if dual_mode else None)}
     reach = re.search(r"reach (\d+) ft", text, re.I); ranges = re.search(r"range (\d+)(?:\s*ft\.)?\s*/\s*(\d+) ft", text, re.I)
     if reach: result["reach_ft"] = int(reach.group(1))
@@ -110,9 +111,11 @@ def _attacks(paragraph: str) -> list[dict]:
     primary = _primary_damage(text)
     if primary is None: return [attack]
     damage_match, _ = primary; extras, residual = parse_secondary_damage(text[damage_match.end():].strip(" .")); save_effect, residual = parse_on_hit_save_condition(residual)
+    control, forbid_grappled, residual = parse_on_hit_control(residual)
     if residual: return [attack]
     base_id = attack["id"]
-    shared = {**attack, "on_hit_damage": extras, "on_hit_save_effect": save_effect, "source_complete": True, "unsupported_text": None}
+    shared = {**attack, "on_hit_damage": extras, "on_hit_save_effect": save_effect, "control_effect": control,
+              "forbid_target_grappled_by_self": forbid_grappled, "source_complete": True, "unsupported_text": None}
     return [{**shared, "id": f"{base_id}-melee", "kind": "melee"}, {**shared, "id": f"{base_id}-ranged", "kind": "ranged"}]
 
 
