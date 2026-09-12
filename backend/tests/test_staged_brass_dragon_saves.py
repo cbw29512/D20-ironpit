@@ -19,7 +19,7 @@ def test_sleep_breath_compiles_staged_wakeable_unconscious_lifecycle(
     cone_ft: int,
 ) -> None:
     row = next(row for row in load_monster_rows() if row["name"] == name)
-    actions, _ = source_save_candidates(row)
+    actions, resources = source_save_candidates(row)
     action = next(item for item in actions if item.name == "Sleep Breath")
 
     assert action.save_ability == "constitution"
@@ -28,6 +28,12 @@ def test_sleep_breath_compiles_staged_wakeable_unconscious_lifecycle(
     assert action.area.shape == "cone"
     assert action.area.length_ft == cone_ft
     assert len(action.failure_effects) == 1
+
+    assert action.resource_id is not None
+    resource = next(item for item in resources if item.id == action.resource_id)
+    assert resource.max_uses == 1
+    assert resource.recharge is not None
+    assert resource.recharge.minimum_roll == 5
 
     effect = action.failure_effects[0]
     assert isinstance(effect, ConditionEffectDefinition)
