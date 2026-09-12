@@ -68,10 +68,16 @@ def main() -> int:
         "In humanoid form, it makes two greataxe attacks. "
         "In hybrid form, it can attack like a bear or a humanoid.</p>"
     )
-    parsed = parse_multiattack(werebear, [attack("claw", "Claw"), attack("greataxe", "Greataxe")])
+    parsed = parse_multiattack(werebear, [
+        attack("claw-bear-or-hybrid-form-only", "Claw (Bear or Hybrid Form Only)"),
+        attack("greataxe-humanoid-or-hybrid-form-only", "Greataxe (Humanoid or Hybrid Form Only)"),
+    ])
     assert parsed == {
         "id": "multiattack", "name": "Multiattack",
-        "slots": [["claw", "greataxe"], ["claw", "greataxe"]],
+        "slots": [
+            ["claw-bear-or-hybrid-form-only", "greataxe-humanoid-or-hybrid-form-only"],
+            ["claw-bear-or-hybrid-form-only", "greataxe-humanoid-or-hybrid-form-only"],
+        ],
         "policy": {"same_attack_as_previous_slots": [1]},
     }
 
