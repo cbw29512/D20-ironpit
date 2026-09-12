@@ -4,6 +4,8 @@
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const RES = () => window.IRON_PIT_BROWSER_RESOURCES;
+  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { has: () => false };
+  const T = () => window.IRON_PIT_BROWSER_TIMED;
 
   function rechargePriority(member, resourceId) {
     try {
@@ -15,26 +17,37 @@
       throw error;
     }
   }
-  function saveActionRange(action) {
+
+  function effectiveActionRange(action) {
     try {
-      if (!action.area) return action.range || 0;
-      if (action.area.origin === "self") return action.area.lengthFt || action.area.radiusFt || action.range || 0;
-      return (action.range || 0) + (action.area.radiusFt || 0);
+      const area = action.area || (action.areaRadius ? { origin: "point", radiusFt: action.areaRadius } : null);
+      if (!area) return action.range || 0;
+      const areaReach = area.lengthFt || area.radiusFt || 0;
+      return area.origin === "self" ? areaReach : (action.range || 0) + areaReach;
     } catch (error) {
-      console.error("Failed browser save-action effective range probe", { action: action.id, error });
+      console.error("Failed browser action effective range probe", { action: action.id, error });
       throw error;
     }
   }
-  function spellLevelAvailable(member, level, turnKey) {
+
+  function spellResourceAvailable(member, action, turnKey) {
     try {
-      if (level === 0) return true;
-      if (!C().slotSpellAvailable(member.state, turnKey)) return false;
-      return RES().available(member.state, `spell-slot-${level}`);
+      return C().actionResourceAvailable(member.state, action, turnKey);
     } catch (error) {
-      console.error("Failed browser offensive spell-level probe", { member: member.combatant_id, error });
+      console.error("Failed browser offensive spell resource probe", { member: member.combatant_id, action: action.id, error });
       throw error;
     }
   }
+
+  function saveTargetEligible(member, action, target) {
+    if (action.targetMaxSize && !S().sizeAtMost(target, action.targetMaxSize)) return false;
+    if (action.requiredTargetCondition && !Q().has(target.state, action.requiredTargetCondition)) return false;
+    if (action.requiredTargetGrappledBySelf
+        && !(target.state.grapple_sources || []).some((source) => source.source_id === member.combatant_id)) return false;
+    if (action.forbidTargetAffectedByAction && T()?.affectedByAction(target.state, action.id)) return false;
+    return true;
+  }
+
   function weaponRanges(member, target) {
     try {
       const ranges = [];
@@ -42,8 +55,18 @@
         if (attack.resourceId && !RES().available(member.state, attack.resourceId, attack.resourceCost || 1)) continue;
         if (attack.forbidSelfGrappledTarget && target.state.grapple_sources.some((source) => source.source_id === member.combatant_id)) continue;
         const priority = rechargePriority(member, attack.resourceId);
-        if (attack.kind === "melee" || attack.kind === "melee_or_ranged") ranges.push({ family: "melee", range: attack.reach || 5, priority });
-        if ((attack.kind === "ranged" || attack.kind === "melee_or_ranged") && Number.isFinite(attack.long)) ranges.push({ family: "ranged", range: attack.long, priority });
+        const executionRank = priority === 0 ? 0 : 2;
+        if (attack.kind === "melee" || attack.kind === "melee_or_ranged") {
+          const reach = attack.reach || 5;
+          ranges.push({ family: "melee", range: reach, maxRange: reach, preferredRange: reach, priority, executionRank });
+        }
+        if (attack.kind === "ranged" || attack.kind === "melee_or_ranged") {
+          const maximum = Number.isFinite(attack.long) ? attack.long : attack.normal;
+          const preferred = Number.isFinite(attack.normal) ? attack.normal : maximum;
+          if (Number.isFinite(maximum) && Number.isFinite(preferred)) {
+            ranges.push({ family: "ranged", range: maximum, maxRange: maximum, preferredRange: preferred, priority, executionRank });
+          }
+        }
       }
       return ranges;
     } catch (error) {
@@ -51,13 +74,19 @@
       throw error;
     }
   }
+
   function saveActionRanges(member, target) {
     try {
       const ranges = [];
       for (const action of member.state.template.saving_throw_actions || []) {
-        if (action.targetMaxSize && !S().sizeAtMost(target, action.targetMaxSize)) continue;
+        const actionCost = action.actionCost || "action";
+        if (actionCost !== "action" || !E().available(member.state, actionCost)) continue;
+        if (!saveTargetEligible(member, action, target)) continue;
         if (!RES().available(member.state, action.resourceId, action.resourceCost || 1)) continue;
-        ranges.push({ family: "ability", range: saveActionRange(action), priority: rechargePriority(member, action.resourceId) });
+        const priority = rechargePriority(member, action.resourceId);
+        const distance = effectiveActionRange(action);
+        ranges.push({ family: "ability", range: distance, maxRange: distance, preferredRange: distance,
+          priority, executionRank: priority === 0 ? 0 : 3 });
       }
       return ranges;
     } catch (error) {
@@ -65,17 +94,23 @@
       throw error;
     }
   }
+
   function spellRanges(member, turnKey) {
     try {
       const ranges = [];
+      const add = (action, distance) => ranges.push({ family: "spell", range: distance, maxRange: distance,
+        preferredRange: distance, priority: 1, executionRank: 1 });
       for (const action of member.state.template.spell_attack_actions || []) {
         if (action.actionCost === "reaction" || !E().available(member.state, action.actionCost)) continue;
-        if (spellLevelAvailable(member, action.level, turnKey)) ranges.push({ family: "spell", range: action.range || 0, priority: 1 });
+        if (spellResourceAvailable(member, action, turnKey)) add(action, action.range || 0);
       }
       for (const action of member.state.template.spell_save_actions || []) {
         if (action.actionCost === "reaction" || action.concentration || !E().available(member.state, action.actionCost)) continue;
-        if (!spellLevelAvailable(member, action.level, turnKey)) continue;
-        ranges.push({ family: "spell", range: (action.range || 0) + (action.areaRadius || 0), priority: 1 });
+        if (spellResourceAvailable(member, action, turnKey)) add(action, effectiveActionRange(action));
+      }
+      for (const action of member.state.template.automatic_spell_actions || []) {
+        if (action.actionCost === "reaction" || !E().available(member.state, action.actionCost)) continue;
+        if (spellResourceAvailable(member, action, turnKey)) add(action, action.range || 0);
       }
       return ranges;
     } catch (error) {
@@ -83,6 +118,7 @@
       throw error;
     }
   }
+
   function rangesForTarget(member, target, turnKey) {
     try {
       return [...weaponRanges(member, target), ...spellRanges(member, turnKey), ...saveActionRanges(member, target)];
@@ -91,5 +127,5 @@
       throw error;
     }
   }
-  window.IRON_PIT_BROWSER_OFFENSIVE_RANGES = { rangesForTarget };
+  window.IRON_PIT_BROWSER_OFFENSIVE_RANGES = { effectiveActionRange, rangesForTarget };
 })();
