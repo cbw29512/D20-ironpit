@@ -63,6 +63,7 @@
           "bonus": 5,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -83,6 +84,7 @@
           "bonus": 5,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -190,6 +192,7 @@
           "bonus": 0,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -287,6 +290,7 @@
           "bonus": 6,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 4,
@@ -315,6 +319,7 @@
           "bonus": 6,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -335,6 +340,7 @@
           "bonus": 6,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -501,6 +507,7 @@
           "bonus": 7,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 5,
@@ -529,6 +536,7 @@
           "bonus": 7,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -549,6 +557,7 @@
           "bonus": 7,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -716,6 +725,7 @@
           "bonus": 6,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -736,6 +746,7 @@
           "bonus": 6,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -756,6 +767,7 @@
           "bonus": 6,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -924,6 +936,7 @@
           "bonus": 7,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -944,6 +957,7 @@
           "bonus": 7,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -964,6 +978,7 @@
           "bonus": 7,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -1114,6 +1129,7 @@
           "bonus": 6,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -1134,6 +1150,7 @@
           "bonus": 6,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -1154,6 +1171,7 @@
           "bonus": 6,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -1323,6 +1341,7 @@
           "bonus": 8,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -1343,6 +1362,7 @@
           "bonus": 8,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -1363,6 +1383,7 @@
           "bonus": 8,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -1536,6 +1557,7 @@
           "bonus": 6,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 7,
@@ -1564,6 +1586,7 @@
           "bonus": 6,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -1584,6 +1607,7 @@
           "bonus": 6,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -1749,6 +1773,7 @@
           "bonus": 8,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 7,
@@ -1777,6 +1802,7 @@
           "bonus": 8,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -1797,6 +1823,7 @@
           "bonus": 8,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -1962,6 +1989,7 @@
           "bonus": 8,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -1982,6 +2010,7 @@
           "bonus": 8,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -2002,6 +2031,7 @@
           "bonus": 8,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -2193,6 +2223,7 @@
           "bonus": 6,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 4,
@@ -2221,6 +2252,7 @@
           "bonus": 6,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -2241,6 +2273,7 @@
           "bonus": 6,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -2411,6 +2444,7 @@
           "bonus": 5,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -2509,6 +2543,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -2529,6 +2564,7 @@
           "bonus": 4,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -2633,6 +2669,7 @@
           "bonus": 8,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 9,
@@ -2661,6 +2698,7 @@
           "bonus": 8,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -2681,6 +2719,7 @@
           "bonus": 8,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -2847,6 +2886,7 @@
           "bonus": 9,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 11,
@@ -2875,6 +2915,7 @@
           "bonus": 9,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -2895,6 +2936,7 @@
           "bonus": 9,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -3042,6 +3084,7 @@
           "bonus": 8,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -3062,6 +3105,7 @@
           "bonus": 8,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -3082,6 +3126,7 @@
           "bonus": 8,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -3251,6 +3296,7 @@
           "bonus": 9,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -3271,6 +3317,7 @@
           "bonus": 9,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -3291,6 +3338,7 @@
           "bonus": 9,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -3461,6 +3509,7 @@
           "bonus": 8,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -3481,6 +3530,7 @@
           "bonus": 8,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -3501,6 +3551,7 @@
           "bonus": 8,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -3671,6 +3722,7 @@
           "bonus": 10,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -3691,6 +3743,7 @@
           "bonus": 10,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -3711,6 +3764,7 @@
           "bonus": 10,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -3884,6 +3938,7 @@
           "bonus": 8,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 10,
@@ -3912,6 +3967,7 @@
           "bonus": 8,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -3932,6 +3988,7 @@
           "bonus": 8,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -4078,6 +4135,7 @@
           "bonus": 10,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 14,
@@ -4106,6 +4164,7 @@
           "bonus": 10,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -4126,6 +4185,7 @@
           "bonus": 10,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -4291,6 +4351,7 @@
           "bonus": 10,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -4311,6 +4372,7 @@
           "bonus": 10,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -4331,6 +4393,7 @@
           "bonus": 10,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -4522,6 +4585,7 @@
           "bonus": 8,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 9,
@@ -4550,6 +4614,7 @@
           "bonus": 8,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -4570,6 +4635,7 @@
           "bonus": 8,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -4740,6 +4806,7 @@
           "bonus": 6,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -4855,6 +4922,7 @@
           "bonus": 2,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -4950,6 +5018,7 @@
           "bonus": 3,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 3,
@@ -5048,6 +5117,7 @@
           "bonus": 4,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": {
           "save_ability": "strength",
@@ -5140,6 +5210,7 @@
           "bonus": 3,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -5160,6 +5231,7 @@
           "bonus": 3,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -5259,6 +5331,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -5281,6 +5354,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -5379,6 +5453,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": {
           "save_ability": "constitution",
@@ -5407,6 +5482,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": {
           "save_ability": "constitution",
@@ -5516,6 +5592,7 @@
           "bonus": -1,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -5606,6 +5683,7 @@
           "bonus": 4,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -5691,6 +5769,7 @@
           "bonus": 2,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -5781,6 +5860,7 @@
           "bonus": 3,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 3,
@@ -5809,6 +5889,7 @@
           "bonus": 3,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 3,
@@ -5905,6 +5986,7 @@
           "bonus": -1,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -5991,6 +6073,7 @@
           "bonus": 0,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -6092,6 +6175,7 @@
           "bonus": 8,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 13,
@@ -6120,6 +6204,7 @@
           "bonus": 8,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 10,
@@ -6226,6 +6311,7 @@
           "bonus": 1,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -6246,6 +6332,7 @@
           "bonus": 1,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -6338,6 +6425,7 @@
           "bonus": 3,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -6358,6 +6446,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -6380,6 +6469,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -6506,6 +6596,7 @@
           "bonus": 2,
           "type": "necrotic"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -6612,6 +6703,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -6632,6 +6724,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -6652,6 +6745,7 @@
           "bonus": 0,
           "type": "fire"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -6751,6 +6845,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 7,
@@ -6845,6 +6940,7 @@
           "bonus": 0,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -6944,6 +7040,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -6964,6 +7061,7 @@
           "bonus": 3,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -7066,6 +7164,7 @@
           "bonus": 6,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -7086,6 +7185,7 @@
           "bonus": 6,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 17,
@@ -7193,6 +7293,7 @@
           "bonus": 3,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -7281,6 +7382,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -7301,6 +7403,7 @@
           "bonus": 2,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -7407,6 +7510,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 2,
@@ -7537,6 +7641,7 @@
           "bonus": 3,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 18,
@@ -7637,6 +7742,7 @@
           "bonus": 1,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -7728,6 +7834,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -7826,6 +7933,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 3,
@@ -7941,6 +8049,7 @@
           "bonus": 1,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -8055,6 +8164,7 @@
           "bonus": 4,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -8075,6 +8185,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 17,
@@ -8199,6 +8310,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -8320,6 +8432,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -8434,6 +8547,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -8454,6 +8568,7 @@
           "bonus": 4,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -8551,6 +8666,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -8571,6 +8687,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -8593,6 +8710,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -8685,6 +8803,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -8771,6 +8890,7 @@
           "bonus": 0,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -8858,6 +8978,7 @@
           "bonus": 0,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -8947,6 +9068,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -8976,6 +9098,7 @@
           "bonus": 4,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -8996,6 +9119,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -9107,6 +9231,7 @@
           "bonus": 4,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": {
@@ -9210,6 +9335,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -9230,6 +9356,7 @@
           "bonus": 4,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -9250,6 +9377,7 @@
           "bonus": 4,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -9356,6 +9484,7 @@
           "bonus": 4,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": {
@@ -9460,6 +9589,7 @@
           "bonus": 5,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -9563,6 +9693,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -9583,6 +9714,7 @@
           "bonus": 3,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -9688,6 +9820,7 @@
           "bonus": 8,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -9708,6 +9841,7 @@
           "bonus": 8,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -9885,6 +10019,7 @@
           "bonus": 1,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -9968,6 +10103,7 @@
           "bonus": 0,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -10052,6 +10188,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -10072,6 +10209,7 @@
           "bonus": 2,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": {
@@ -10171,6 +10309,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -10291,6 +10430,7 @@
           "bonus": 5,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -10311,6 +10451,7 @@
           "bonus": 3,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": {
@@ -10518,6 +10659,7 @@
           "bonus": 0,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -10606,6 +10748,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": {
@@ -10698,6 +10841,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -10720,6 +10864,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -10819,6 +10964,7 @@
           "bonus": 1,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -10904,6 +11050,7 @@
           "bonus": 6,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -10924,6 +11071,7 @@
           "bonus": 6,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -11022,6 +11170,7 @@
           "bonus": 3,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -11112,6 +11261,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -11209,6 +11359,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -11229,6 +11380,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": {
           "save_ability": "constitution",
@@ -11364,6 +11516,7 @@
           "bonus": 0,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -11462,6 +11615,7 @@
           "bonus": 4,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 18,
@@ -11602,6 +11756,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": {
           "save_ability": "strength",
@@ -11701,6 +11856,7 @@
           "bonus": 5,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -11908,6 +12064,7 @@
           "bonus": 4,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -12004,6 +12161,7 @@
           "bonus": 4,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -12094,6 +12252,7 @@
           "bonus": 7,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -12114,6 +12273,7 @@
           "bonus": 7,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -12134,6 +12294,7 @@
           "bonus": 7,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -12263,6 +12424,7 @@
           "bonus": 0,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -12283,6 +12445,7 @@
           "bonus": 0,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -12380,6 +12543,7 @@
           "bonus": 0,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 9,
@@ -12408,6 +12572,7 @@
           "bonus": 3,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -12428,6 +12593,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 4,
@@ -12578,6 +12744,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -12598,6 +12765,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -12723,6 +12891,7 @@
           "bonus": 0,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -12811,6 +12980,7 @@
           "bonus": 0,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -12958,6 +13128,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -12978,6 +13149,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -13079,6 +13251,7 @@
           "bonus": 2,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -13187,6 +13360,7 @@
           "bonus": 2,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -13285,6 +13459,7 @@
           "bonus": 5,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -13386,6 +13561,7 @@
           "bonus": 6,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 7,
@@ -13414,6 +13590,7 @@
           "bonus": 0,
           "type": "fire"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -13590,6 +13767,7 @@
           "bonus": 6,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -13616,6 +13794,7 @@
           "bonus": 6,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -13702,6 +13881,7 @@
           "bonus": 3,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -13733,6 +13913,7 @@
           "bonus": 3,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -13834,6 +14015,7 @@
           "bonus": 4,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 13,
@@ -13862,6 +14044,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 13,
@@ -13979,6 +14162,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 4,
@@ -14013,6 +14197,7 @@
           "bonus": 2,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -14114,6 +14299,7 @@
           "bonus": 5,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -14134,6 +14320,7 @@
           "bonus": 5,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -14243,6 +14430,7 @@
           "bonus": 3,
           "type": "fire"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -14347,6 +14535,7 @@
           "bonus": 7,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -14367,6 +14556,7 @@
           "bonus": 7,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -14478,6 +14668,7 @@
           "bonus": 0,
           "type": "fire"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -14585,6 +14776,7 @@
           "bonus": 4,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -14685,6 +14877,7 @@
           "bonus": 0,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 7,
@@ -14792,6 +14985,7 @@
           "bonus": 1,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -14954,6 +15148,7 @@
           "bonus": 6,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -14974,6 +15169,7 @@
           "bonus": 6,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -15076,6 +15272,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -15096,6 +15293,7 @@
           "bonus": 2,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -15197,6 +15395,7 @@
           "bonus": 0,
           "type": "acid"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -15292,6 +15491,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -15312,6 +15512,7 @@
           "bonus": 3,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": {
           "save_ability": "constitution",
@@ -15427,6 +15628,7 @@
           "bonus": 3,
           "type": "necrotic"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -15524,6 +15726,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -15544,6 +15747,7 @@
           "bonus": 2,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": {
           "save_ability": "constitution",
@@ -15638,6 +15842,7 @@
           "bonus": 6,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -15658,6 +15863,7 @@
           "bonus": 6,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -15752,6 +15958,7 @@
           "bonus": 1,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -15772,6 +15979,7 @@
           "bonus": 1,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -15867,6 +16075,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -15953,6 +16162,7 @@
           "bonus": 3,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -16051,6 +16261,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": {
           "save_ability": "constitution",
@@ -16145,6 +16356,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -16165,6 +16377,7 @@
           "bonus": 4,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": {
@@ -16255,6 +16468,7 @@
           "bonus": 1,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": {
@@ -16346,6 +16560,7 @@
           "bonus": 5,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": {
@@ -16369,6 +16584,7 @@
           "bonus": 5,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": {
           "save_ability": "strength",
@@ -16471,6 +16687,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -16491,6 +16708,7 @@
           "bonus": 3,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -16587,6 +16805,7 @@
           "bonus": 4,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -16618,6 +16837,7 @@
           "bonus": 4,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -16704,6 +16924,7 @@
           "bonus": -1,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -16793,6 +17014,7 @@
           "bonus": 1,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": {
@@ -16883,6 +17105,7 @@
           "bonus": 3,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -16982,6 +17205,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -17068,6 +17292,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -17155,6 +17380,7 @@
           "bonus": 3,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": {
@@ -17250,6 +17476,7 @@
           "bonus": 1,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -17339,6 +17566,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": {
           "save_ability": "constitution",
@@ -17430,6 +17658,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -17516,6 +17745,7 @@
           "bonus": 2,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": {
@@ -17539,6 +17769,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": {
           "save_ability": "constitution",
@@ -17643,6 +17874,7 @@
           "bonus": 1,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -17743,6 +17975,7 @@
           "bonus": 6,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -17832,6 +18065,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": {
           "save_ability": "constitution",
@@ -17931,6 +18165,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 5,
@@ -18032,6 +18267,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -18052,6 +18288,7 @@
           "bonus": 2,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -18148,6 +18385,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": {
           "save_ability": "constitution",
@@ -18242,6 +18480,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -18331,6 +18570,7 @@
           "bonus": 1,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": {
           "save_ability": "constitution",
@@ -18429,6 +18669,7 @@
           "bonus": 0,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": {
           "save_ability": "strength",
@@ -18539,6 +18780,7 @@
           "bonus": 5,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": {
@@ -18563,6 +18805,7 @@
           "bonus": 2,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -18727,6 +18970,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -18749,6 +18993,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -18771,6 +19016,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -18793,6 +19039,7 @@
           "bonus": 4,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": {
           "save_ability": "strength",
@@ -18906,6 +19153,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -18926,6 +19174,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -18948,6 +19197,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -18970,6 +19220,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -18992,6 +19243,7 @@
           "bonus": 1,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -19080,6 +19332,7 @@
           "bonus": 1,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -19179,6 +19432,7 @@
           "bonus": 2,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -19199,6 +19453,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -19298,6 +19553,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -19412,6 +19668,7 @@
           "bonus": 5,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -19437,6 +19694,7 @@
           "bonus": 5,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -19540,6 +19798,7 @@
           "bonus": 1,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 7,
@@ -19649,6 +19908,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 3,
@@ -19770,6 +20030,7 @@
           "bonus": 4,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -19894,6 +20155,7 @@
           "bonus": 2,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -19914,6 +20176,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -20004,6 +20267,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -20024,6 +20288,7 @@
           "bonus": 4,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -20124,6 +20389,7 @@
           "bonus": 3,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 2,
@@ -20221,6 +20487,7 @@
           "bonus": 1,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -20243,6 +20510,7 @@
           "bonus": 1,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -20265,6 +20533,7 @@
           "bonus": 1,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -20361,6 +20630,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": {
           "save_ability": "constitution",
@@ -20469,6 +20739,7 @@
           "bonus": 4,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -20573,6 +20844,7 @@
           "bonus": 3,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -20593,6 +20865,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -20613,6 +20886,7 @@
           "bonus": 1,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -20724,6 +20998,7 @@
           "bonus": 1,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -20744,6 +21019,7 @@
           "bonus": 1,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -20840,6 +21116,7 @@
           "bonus": 0,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -20929,6 +21206,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 7,
@@ -21060,6 +21338,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -21080,6 +21359,7 @@
           "bonus": 4,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -21180,6 +21460,7 @@
           "bonus": 5,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -21200,6 +21481,7 @@
           "bonus": 5,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -21296,6 +21578,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -21316,6 +21599,7 @@
           "bonus": 3,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -21410,6 +21694,7 @@
           "bonus": 1,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -21430,6 +21715,7 @@
           "bonus": 1,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -21523,6 +21809,7 @@
           "bonus": 0,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -21623,6 +21910,7 @@
           "bonus": 6,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -21643,6 +21931,7 @@
           "bonus": 6,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -21663,6 +21952,7 @@
           "bonus": 0,
           "type": "fire"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -21767,6 +22057,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -21856,6 +22147,7 @@
           "bonus": 5,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -21947,6 +22239,7 @@
           "bonus": 0,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -22045,6 +22338,7 @@
           "bonus": 5,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 10,
@@ -22073,6 +22367,7 @@
           "bonus": 5,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 10,
@@ -22101,6 +22396,7 @@
           "bonus": 5,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 10,
@@ -22223,6 +22519,7 @@
           "bonus": 1,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 2,
@@ -22352,6 +22649,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -22457,6 +22755,7 @@
           "bonus": 3,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -22564,6 +22863,7 @@
           "bonus": 7,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -22584,6 +22884,7 @@
           "bonus": 7,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -22776,6 +23077,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -22866,6 +23168,7 @@
           "bonus": 3,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -22886,6 +23189,7 @@
           "bonus": 0,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -22984,6 +23288,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -23004,6 +23309,7 @@
           "bonus": 2,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -23106,6 +23412,7 @@
           "bonus": 10,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -23126,6 +23433,7 @@
           "bonus": 10,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": {
@@ -23228,6 +23536,7 @@
           "bonus": 3,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -23388,6 +23697,7 @@
           "bonus": 0,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -23497,6 +23807,7 @@
           "bonus": 0,
           "type": "cold"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": {
           "save_ability": "constitution",
@@ -23599,6 +23910,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -23619,6 +23931,7 @@
           "bonus": 3,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -23715,6 +24028,7 @@
           "bonus": 0,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -23803,6 +24117,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -23823,6 +24138,7 @@
           "bonus": 2,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -23843,6 +24159,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -23865,6 +24182,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -23887,6 +24205,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -23982,6 +24301,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -24004,6 +24324,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -24101,6 +24422,7 @@
           "bonus": 1,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 2,
@@ -24239,6 +24561,7 @@
           "bonus": 0,
           "type": "fire"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -24325,6 +24648,7 @@
           "bonus": 7,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -24351,6 +24675,7 @@
           "bonus": 7,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -24438,6 +24763,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -24458,6 +24784,7 @@
           "bonus": 3,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -24478,6 +24805,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -24595,6 +24923,7 @@
           "bonus": 4,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -24615,6 +24944,7 @@
           "bonus": 4,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": {
@@ -24735,6 +25065,7 @@
           "bonus": 1,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": {
           "save_ability": "strength",
@@ -24830,6 +25161,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 14,
@@ -24858,6 +25190,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -24878,6 +25211,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 7,
@@ -24990,6 +25324,7 @@
           "bonus": 0,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -25012,6 +25347,7 @@
           "bonus": 0,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -25034,6 +25370,7 @@
           "bonus": 0,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -25122,6 +25459,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -25142,6 +25480,7 @@
           "bonus": 4,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -25162,6 +25501,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -25266,6 +25606,7 @@
           "bonus": 3,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -25286,6 +25627,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 4,
@@ -25385,6 +25727,7 @@
           "bonus": 4,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -25405,6 +25748,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -25509,6 +25853,7 @@
           "bonus": 4,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -25529,6 +25874,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -25624,6 +25970,7 @@
           "bonus": 2,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -25725,6 +26072,7 @@
           "bonus": 3,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 10,
@@ -25843,6 +26191,7 @@
           "bonus": 4,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 21,
@@ -25966,6 +26315,7 @@
           "bonus": 5,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -25986,6 +26336,7 @@
           "bonus": 5,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -26099,6 +26450,7 @@
           "bonus": 4,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -26239,6 +26591,7 @@
           "bonus": 4,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 7,
@@ -26338,6 +26691,7 @@
           "bonus": 1,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -26428,6 +26782,7 @@
           "bonus": 3,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -26536,6 +26891,7 @@
           "bonus": 2,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 3,
@@ -26636,6 +26992,7 @@
           "bonus": 0,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": {
@@ -26727,6 +27084,7 @@
           "bonus": 4,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -26747,6 +27105,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -26769,6 +27128,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -26861,6 +27221,7 @@
           "bonus": 4,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -26956,6 +27317,7 @@
           "bonus": 4,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -26976,6 +27338,7 @@
           "bonus": 4,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -27131,6 +27494,7 @@
           "bonus": 3,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -27151,6 +27515,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -27173,6 +27538,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -27263,6 +27629,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -27283,6 +27650,7 @@
           "bonus": 3,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 4,
@@ -27397,6 +27765,7 @@
           "bonus": 0,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -27485,6 +27854,7 @@
           "bonus": 5,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -27505,6 +27875,7 @@
           "bonus": 5,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -27603,6 +27974,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -27623,6 +27995,7 @@
           "bonus": 2,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -27723,6 +28096,7 @@
           "bonus": 4,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -27809,6 +28183,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": {
           "save_ability": "constitution",
@@ -27918,6 +28293,7 @@
           "bonus": 8,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -27938,6 +28314,7 @@
           "bonus": 8,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -27958,6 +28335,7 @@
           "bonus": 8,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 21,
@@ -27986,6 +28364,7 @@
           "bonus": 8,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -28111,6 +28490,7 @@
           "bonus": 7,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 22,
@@ -28300,6 +28680,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -28386,6 +28767,7 @@
           "bonus": 0,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": {
           "save_ability": "constitution",
@@ -28480,6 +28862,7 @@
           "bonus": 5,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -28500,6 +28883,7 @@
           "bonus": 5,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -28594,6 +28978,7 @@
           "bonus": 2,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -28681,6 +29066,7 @@
           "bonus": 0,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -28771,6 +29157,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -28791,6 +29178,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -28879,6 +29267,7 @@
           "bonus": 1,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -28968,6 +29357,7 @@
           "bonus": 9,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -28988,6 +29378,7 @@
           "bonus": 9,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": {
           "save_ability": "constitution",
@@ -29095,6 +29486,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": {
           "save_ability": "constitution",
@@ -29192,6 +29584,7 @@
           "bonus": 0,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -29284,6 +29677,7 @@
           "bonus": 2,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -29490,6 +29884,7 @@
           "bonus": 0,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -29578,6 +29973,7 @@
           "bonus": 0,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -29675,6 +30071,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 3,
@@ -29792,6 +30189,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -29882,6 +30280,7 @@
           "bonus": 7,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 10,
@@ -29979,6 +30378,7 @@
           "bonus": 5,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -30075,6 +30475,7 @@
           "bonus": 3,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -30166,6 +30567,7 @@
           "bonus": 9,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -30186,6 +30588,7 @@
           "bonus": 9,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": {
@@ -30287,6 +30690,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -30458,6 +30862,7 @@
           "bonus": 1,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -30548,6 +30953,7 @@
           "bonus": 5,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -30568,6 +30974,7 @@
           "bonus": 5,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -30664,6 +31071,7 @@
           "bonus": 1,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -30684,6 +31092,7 @@
           "bonus": 1,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -30704,6 +31113,7 @@
           "bonus": 1,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -30726,6 +31136,7 @@
           "bonus": 1,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -30748,6 +31159,7 @@
           "bonus": 1,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -30856,6 +31268,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 3,
@@ -30886,6 +31299,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 3,
@@ -30916,6 +31330,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 3,
@@ -30946,6 +31361,7 @@
           "bonus": 4,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 7,
@@ -31058,6 +31474,7 @@
           "bonus": 1,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -31078,6 +31495,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -31098,6 +31516,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -31186,6 +31605,7 @@
           "bonus": 0,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": {
           "save_ability": "constitution",
@@ -31282,6 +31702,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -31302,6 +31723,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -31398,6 +31820,7 @@
           "bonus": 3,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -31573,6 +31996,7 @@
           "bonus": 2,
           "type": "necrotic"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -31672,6 +32096,7 @@
           "bonus": 4,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -31767,6 +32192,7 @@
           "bonus": 4,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -31943,6 +32369,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -32081,6 +32508,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -32101,6 +32529,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -32205,6 +32634,7 @@
           "bonus": 8,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 27,
@@ -32233,6 +32663,7 @@
           "bonus": 6,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 27,
@@ -32414,6 +32845,7 @@
           "bonus": -1,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -32523,6 +32955,7 @@
           "bonus": 0,
           "type": "necrotic"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -32612,6 +33045,7 @@
           "bonus": 0,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": {
           "save_ability": "constitution",
@@ -32717,6 +33151,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": {
           "save_ability": "constitution",
@@ -32815,6 +33250,7 @@
           "bonus": 0,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -32835,6 +33271,7 @@
           "bonus": 0,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -32930,6 +33367,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -32950,6 +33388,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -33052,6 +33491,7 @@
           "bonus": 0,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 2,
@@ -33166,6 +33606,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -33256,6 +33697,7 @@
           "bonus": 6,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -33276,6 +33718,7 @@
           "bonus": 6,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": {
           "save_ability": "strength",
@@ -33382,6 +33825,7 @@
           "bonus": 6,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -33496,6 +33940,7 @@
           "bonus": 9,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -33516,6 +33961,7 @@
           "bonus": 9,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -33685,6 +34131,7 @@
           "bonus": 3,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -33788,12 +34235,22 @@
           "bonus": 0,
           "type": "piercing"
         },
+        "conditional_damage": [
+          {
+            "trigger": "attacker_bloodied",
+            "mode": "replace_weapon",
+            "dice_count": 1,
+            "dice_size": 4,
+            "damage_bonus": 0,
+            "damage_type": "piercing"
+          }
+        ],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "or 2 (1d4) piercing damage if the swarm has half of its hit points or fewer",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 0
       }
     ],
@@ -33889,12 +34346,22 @@
           "bonus": 0,
           "type": "piercing"
         },
+        "conditional_damage": [
+          {
+            "trigger": "attacker_bloodied",
+            "mode": "replace_weapon",
+            "dice_count": 2,
+            "dice_size": 4,
+            "damage_bonus": 0,
+            "damage_type": "piercing"
+          }
+        ],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "or 5 (2d4) piercing damage if the swarm has half of its hit points or fewer",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 0
       }
     ],
@@ -33988,6 +34455,16 @@
           "bonus": 0,
           "type": "piercing"
         },
+        "conditional_damage": [
+          {
+            "trigger": "attacker_bloodied",
+            "mode": "replace_weapon",
+            "dice_count": 1,
+            "dice_size": 6,
+            "damage_bonus": 0,
+            "damage_type": "piercing"
+          }
+        ],
         "on_hit_damage": [],
         "on_hit_save_effect": {
           "save_ability": "constitution",
@@ -34000,8 +34477,8 @@
         },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "or 3 (1d6) piercing damage if the swarm has half of its hit points or fewer",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 0
       }
     ],
@@ -34095,12 +34572,22 @@
           "bonus": 0,
           "type": "piercing"
         },
+        "conditional_damage": [
+          {
+            "trigger": "attacker_bloodied",
+            "mode": "replace_weapon",
+            "dice_count": 2,
+            "dice_size": 6,
+            "damage_bonus": 0,
+            "damage_type": "piercing"
+          }
+        ],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "or 7 (2d6) piercing damage if the swarm has half of its hit points or fewer",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 0
       }
     ],
@@ -34195,12 +34682,22 @@
           "bonus": 0,
           "type": "piercing"
         },
+        "conditional_damage": [
+          {
+            "trigger": "attacker_bloodied",
+            "mode": "replace_weapon",
+            "dice_count": 1,
+            "dice_size": 6,
+            "damage_bonus": 0,
+            "damage_type": "piercing"
+          }
+        ],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "or 3 (1d6) piercing damage if the swarm has half of its hit points or fewer",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 0
       }
     ],
@@ -34297,12 +34794,22 @@
           "bonus": 0,
           "type": "piercing"
         },
+        "conditional_damage": [
+          {
+            "trigger": "attacker_bloodied",
+            "mode": "replace_weapon",
+            "dice_count": 1,
+            "dice_size": 6,
+            "damage_bonus": 0,
+            "damage_type": "piercing"
+          }
+        ],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "or 3 (1d6) piercing damage if the swarm has half of its hit points or fewer",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5
       }
     ],
@@ -34396,6 +34903,7 @@
           "bonus": 10,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": {
@@ -34419,6 +34927,7 @@
           "bonus": 10,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -34438,6 +34947,7 @@
           "bonus": 10,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -34457,6 +34967,7 @@
           "bonus": 10,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": {
           "save_ability": "strength",
@@ -34604,6 +35115,7 @@
           "bonus": 2,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -34624,6 +35136,7 @@
           "bonus": 0,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -34722,6 +35235,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -34742,6 +35256,7 @@
           "bonus": 3,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -34840,6 +35355,7 @@
           "bonus": 6,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -34860,6 +35376,7 @@
           "bonus": 6,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -34957,6 +35474,7 @@
           "bonus": 1,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -34979,6 +35497,7 @@
           "bonus": 1,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -35001,6 +35520,7 @@
           "bonus": 1,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -35088,6 +35608,7 @@
           "bonus": 6,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -35114,6 +35635,7 @@
           "bonus": 6,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -35202,6 +35724,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -35222,6 +35745,7 @@
           "bonus": 4,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -35327,6 +35851,7 @@
           "bonus": 1,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -35414,6 +35939,7 @@
           "bonus": 7,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": {
@@ -35438,6 +35964,7 @@
           "bonus": 7,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -35536,6 +36063,7 @@
           "bonus": 4,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -35556,6 +36084,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -35737,6 +36266,7 @@
           "bonus": 4,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -35757,6 +36287,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 10,
@@ -35873,6 +36404,7 @@
           "bonus": 3,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -35893,6 +36425,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 7,
@@ -35993,6 +36526,7 @@
           "bonus": 3,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -36013,6 +36547,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -36033,6 +36568,7 @@
           "bonus": 1,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -36124,6 +36660,7 @@
           "bonus": 0,
           "type": "necrotic"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -36225,6 +36762,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -36245,6 +36783,7 @@
           "bonus": 3,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -36346,6 +36885,7 @@
           "bonus": 0,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -36432,6 +36972,7 @@
           "bonus": 4,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -36529,6 +37070,7 @@
           "bonus": 4,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -36628,6 +37170,7 @@
           "bonus": 4,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -36728,6 +37271,7 @@
           "bonus": 0,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -36818,6 +37362,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -36838,6 +37383,7 @@
           "bonus": 4,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -36858,6 +37404,7 @@
           "bonus": 4,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -36951,6 +37498,7 @@
           "bonus": 3,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -36971,6 +37519,7 @@
           "bonus": 3,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -37065,6 +37614,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -37085,6 +37635,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -37105,6 +37656,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -37200,6 +37752,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -37220,6 +37773,7 @@
           "bonus": 3,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -37240,6 +37794,7 @@
           "bonus": 3,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -37260,6 +37815,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -37357,6 +37913,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -37377,6 +37934,7 @@
           "bonus": 2,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -37397,6 +37955,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -37419,6 +37978,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -37441,6 +38001,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -37545,6 +38106,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 2,
@@ -37671,6 +38233,7 @@
           "bonus": 2,
           "type": "necrotic"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -37691,6 +38254,7 @@
           "bonus": 2,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -37711,6 +38275,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -37820,6 +38385,7 @@
           "bonus": 0,
           "type": "lightning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -37914,6 +38480,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": {
           "save_ability": "strength",
@@ -38032,6 +38599,7 @@
           "bonus": 2,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": {
           "save_ability": "strength",
@@ -38125,6 +38693,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": {
           "save_ability": "strength",
@@ -38236,6 +38805,7 @@
           "bonus": 3,
           "type": "necrotic"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -38326,6 +38896,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -38346,6 +38917,7 @@
           "bonus": 4,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -38366,6 +38938,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": {
           "save_ability": "constitution",
@@ -38473,6 +39046,7 @@
           "bonus": 3,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -38493,6 +39067,7 @@
           "bonus": 3,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -38601,6 +39176,7 @@
           "bonus": 4,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 3,
@@ -38717,6 +39293,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 4,
@@ -38745,6 +39322,7 @@
           "bonus": 4,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -38878,6 +39456,7 @@
           "bonus": 5,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 5,
@@ -38906,6 +39485,7 @@
           "bonus": 5,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -39038,6 +39618,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -39058,6 +39639,7 @@
           "bonus": 4,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -39192,6 +39774,7 @@
           "bonus": 5,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -39212,6 +39795,7 @@
           "bonus": 5,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -39327,6 +39911,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -39347,6 +39932,7 @@
           "bonus": 4,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -39482,6 +40068,7 @@
           "bonus": 6,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -39502,6 +40089,7 @@
           "bonus": 6,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -39639,6 +40227,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 7,
@@ -39667,6 +40256,7 @@
           "bonus": 4,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -39799,6 +40389,7 @@
           "bonus": 6,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 3,
@@ -39827,6 +40418,7 @@
           "bonus": 6,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -39958,6 +40550,7 @@
           "bonus": 6,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -39978,6 +40571,7 @@
           "bonus": 6,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -40134,6 +40728,7 @@
           "bonus": 4,
           "type": "piercing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [
           {
             "average": 4,
@@ -40162,6 +40757,7 @@
           "bonus": 4,
           "type": "slashing"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
@@ -40288,6 +40884,7 @@
           "bonus": 1,
           "type": "bludgeoning"
         },
+        "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
         "control_effect": null,
