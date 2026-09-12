@@ -50,22 +50,34 @@ function member() {
 
 {
   const actor = member(); dice([]);
-  E.spend(actor.state, "action");
-  assert.equal(actor.state.action_available, false);
+  const full = E.startTurnRecharges(1, 1, actor);
+  assert.deepEqual(full.events, []);
+  assert.equal(actor.state.resources["fire-breath"], 1);
 }
-
+{
+  const actor = member(); actor.state.resources["fire-breath"] = 0; dice([4]);
+  const failed = E.startTurnRecharges(1, 2, actor);
+  assert.equal(failed.events[0].resource_roll.selected_roll, 4);
+  assert.equal(failed.events[0].resource_remaining, 0);
+  dice([5]);
+  const recovered = E.startTurnRecharges(failed.sequence, 3, actor);
+  assert.equal(recovered.events[0].resource_roll.selected_roll, 5);
+  assert.equal(recovered.events[0].resource_remaining, 1);
+}
 {
   const actor = member();
-  const action = { id: "fire-breath", name: "Fire Breath", saveAbility: "dexterity", dc: 11, range: 30,
-    damageDiceCount: 0, damageDiceSize: 6, damageBonus: 0, damageType: null, successDamage: "none",
-    resourceId: "fire-breath", resourceCost: 1 };
-  const target = member(); target.combatant_id = "hero-1:target"; target.side = "heroes";
-  dice([20]);
-  const event = V.resolveAction(1, 1, actor, target, action, 10);
-  assert.equal(event.save_succeeded, true);
-  assert.equal(actor.state.resources["fire-breath"], 0);
+  const target = member(); target.combatant_id = "hero-1:target"; target.side = "heroes"; target.state.resources = {};
+  const action = {
+    id: "fire-breath", name: "Fire Breath", saveAbility: "dexterity", dc: 20, range: 30,
+    damageDiceCount: 0, damageDiceSize: 6, damageBonus: 0, successDamage: "none",
+    resourceId: "fire-breath", resourceCost: 1,
+  };
+  dice([10]);
+  const event = V.resolveAction(1, 1, actor, target, action, 5);
   assert.equal(event.resource_remaining, 0);
-  assert.equal(actor.state.action_available, false);
+  assert.equal(actor.state.resources["fire-breath"], 0);
+  actor.state.action_available = true; dice([10]);
+  assert.throws(() => V.resolveAction(2, 1, actor, target, action, 5), /resource is unavailable/);
 }
 
-console.log("2014 browser Recharge regressions passed.");
+console.log("2014 browser Recharge lifecycle regressions passed.");
