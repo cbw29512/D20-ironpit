@@ -6,7 +6,7 @@ WAKE_SLEEPER_ID = "wake-sleeper"
 
 
 def wake_sleeper_action() -> ConditionRemovalAction:
-    """Universal basic Action for source effects that explicitly allow an adjacent creature to wake a target."""
+    """Universal basic Action only for effects that explicitly permit an adjacent creature to wake a target."""
     return ConditionRemovalAction(
         id=WAKE_SLEEPER_ID,
         name="Wake Sleeper",
@@ -15,6 +15,7 @@ def wake_sleeper_action() -> ConditionRemovalAction:
         target_mode="ally",
         removable_conditions=["unconscious"],
         max_conditions_per_use=1,
+        requires_source_permission=True,
         animation="condition-removal",
     )
 
