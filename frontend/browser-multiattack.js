@@ -45,7 +45,7 @@
         const action = (member.state.template.saving_throw_actions || []).find((item) => {
           if (!RES().available(member.state, item.resourceId, item.resourceCost || 1)) return false;
           const distance = F().saveDistance(member, target, item.range);
-          return allowed.has(item.id) && V().legalAction(item, target, distance);
+          return allowed.has(item.id) && V().legalAction(item, target, distance, member);
         });
         if (action) return { target, save: action, distance: F().saveDistance(member, target, action.range) };
       }
