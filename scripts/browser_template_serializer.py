@@ -62,6 +62,9 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             effect = attack.on_hit_save_effect
             row["onHitSaveEffect"] = {"saveAbility": effect.save_ability, "dc": effect.dc, "conditionId": effect.condition_id}
             if effect.max_target_size is not None: row["onHitSaveEffect"]["maxTargetSize"] = effect.max_target_size.value
+            if effect.duration_rounds is not None: row["onHitSaveEffect"]["durationRounds"] = effect.duration_rounds
+            if effect.repeat_save_timing is not None: row["onHitSaveEffect"]["repeatSaveTiming"] = effect.repeat_save_timing
+            if effect.ends_on_damage: row["onHitSaveEffect"]["endsOnDamage"] = True
         if attack.conditional_damage:
             if len(attack.conditional_damage) != 1: raise ValueError(f"Browser supports one conditional damage rider on {attack.id}.")
             conditional = attack.conditional_damage[0]
