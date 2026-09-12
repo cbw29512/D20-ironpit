@@ -46,6 +46,12 @@ def resources_2014(source: CatalogMonster2014) -> list[ResourceDefinition]:
             name="Legendary Resistance",
             max_uses=uses,
         ))
+    if source.zero_hp_prevention is not None:
+        resources.append(ResourceDefinition(
+            id=source.zero_hp_prevention.resource_id,
+            name="Relentless",
+            max_uses=1,
+        ))
     return resources
 
 
