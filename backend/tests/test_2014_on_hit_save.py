@@ -42,9 +42,7 @@ def test_timed_poison_preserves_printed_end_of_turn_repeat_save() -> None:
         save_ability="constitution", dc=14, condition_id="poisoned",
         duration_rounds=10, repeat_save_timing="target_turn_end",
     ))
-    result = resolve_on_hit_save(
-        target, attack, FixedDiceProvider([1]), source_id="venomous-monster", round_number=3,
-    )
+    result = resolve_on_hit_save(target, attack, FixedDiceProvider([1]), source_id="venomous-monster", round_number=3)
     assert result.save_succeeded is False
     assert result.applied_condition == "poisoned"
     assert len(target.timed_effects) == 1
@@ -60,22 +58,13 @@ def test_timed_poison_preserves_printed_end_of_turn_repeat_save() -> None:
 
 def test_poison_default_does_not_override_explicit_repeat_timing() -> None:
     target = build_combatant_state(build_demo_fighter())
-    apply_timed_condition(
-        target, "poisoned", "source", applied_round=1, expires_round=11,
-        repeat_save_ability="constitution", repeat_save_dc=12,
-        repeat_save_timing="target_turn_end",
-    )
+    apply_timed_condition(target, "poisoned", "source", applied_round=1, expires_round=11, repeat_save_ability="constitution", repeat_save_dc=12, repeat_save_timing="target_turn_end")
     assert target.timed_effects[0].repeat_save_timing == "target_turn_end"
 
 
 def test_save_gated_damage_deals_full_damage_on_failure() -> None:
-    target = build_combatant_state(build_demo_fighter())
-    hp_before = target.current_hp
-    attack = _attack(OnHitSaveEffect(
-        save_ability="constitution", dc=14,
-        damage_dice_count=2, damage_dice_size=6, damage_type="poison",
-        success_damage="half",
-    ))
+    target = build_combatant_state(build_demo_fighter()); hp_before = target.current_hp
+    attack = _attack(OnHitSaveEffect(save_ability="constitution", dc=14, damage_dice_count=2, damage_dice_size=6, damage_type="poison", success_damage="half"))
     result = resolve_on_hit_save(target, attack, FixedDiceProvider([1, 4, 5]))
     assert result.save_succeeded is False
     assert result.damage_total == 9
@@ -85,14 +74,25 @@ def test_save_gated_damage_deals_full_damage_on_failure() -> None:
 
 
 def test_save_gated_damage_halves_on_success() -> None:
-    target = build_combatant_state(build_demo_fighter())
-    hp_before = target.current_hp
-    attack = _attack(OnHitSaveEffect(
-        save_ability="constitution", dc=14,
-        damage_dice_count=2, damage_dice_size=6, damage_type="poison",
-        success_damage="half",
-    ))
+    target = build_combatant_state(build_demo_fighter()); hp_before = target.current_hp
+    attack = _attack(OnHitSaveEffect(save_ability="constitution", dc=14, damage_dice_count=2, damage_dice_size=6, damage_type="poison", success_damage="half"))
     result = resolve_on_hit_save(target, attack, FixedDiceProvider([20, 4, 5]))
     assert result.save_succeeded is True
     assert result.damage_total == 4
     assert target.current_hp == hp_before - 4
+
+
+def test_poison_rider_can_stabilize_at_zero_and_apply_linked_conditions() -> None:
+    target = build_combatant_state(build_demo_fighter()); target.current_hp = 5
+    attack = _attack(OnHitSaveEffect(
+        save_ability="constitution", dc=14, damage_dice_count=2, damage_dice_size=6,
+        damage_type="poison", success_damage="none", zero_hp_stable=True,
+        zero_hp_condition_ids=["poisoned", "paralyzed"], zero_hp_duration_rounds=600,
+    ))
+    result = resolve_on_hit_save(target, attack, FixedDiceProvider([1, 3, 3]), source_id="spider", round_number=2)
+    assert result.damage_total == 6
+    assert target.current_hp == 0 and target.is_alive and target.is_stable and not target.is_dead
+    assert target.is_unconscious
+    assert {"poisoned", "paralyzed"}.issubset(target.active_effect_ids)
+    assert set(result.applied_conditions) == {"poisoned", "paralyzed"}
+    assert {effect.expires_round for effect in target.timed_effects} == {602}
