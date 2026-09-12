@@ -62,3 +62,20 @@ def build_karnok_stoneward_level17_profile() -> CharacterBuildProfile:
         build_karnok_stoneward_level16_profile, 17, [],
         [source, "Basic Rules 2024: Fighter — Level 17 Action Surge and Indomitable use increases"],
     )
+
+
+def build_karnok_stoneward_level18_profile() -> CharacterBuildProfile:
+    source = "D&D Beyond Basic Rules 2024: Champion Level 18 Survivor"
+    audits = [
+        FeatureAudit(
+            feature_id="survivor-defy-death", feature_name="Survivor: Defy Death",
+            source_reference=source, category="subclass", combat_relevant=True, automated=False,
+            notes="Requires Advantage on death saves plus Champion recovery on 18-20; remains fail-closed until runtime and browser parity exist.",
+        ),
+        FeatureAudit(
+            feature_id="survivor-heroic-rally", feature_name="Survivor: Heroic Rally",
+            source_reference=source, category="subclass", combat_relevant=True, automated=False,
+            notes="Requires start-of-turn healing only while Bloodied and above 0 HP; generic unconditional regeneration is not equivalent.",
+        ),
+    ]
+    return _advance(build_karnok_stoneward_level17_profile, 18, audits, [source])
