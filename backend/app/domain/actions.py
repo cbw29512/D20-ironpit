@@ -5,6 +5,7 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.size import CreatureSize
+from app.domain.targeting import AreaTargeting
 
 AbilityName = Literal["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
 ActionCost = Literal["action", "bonus_action", "reaction"]
@@ -87,16 +88,12 @@ class ConditionRemovalAction(BaseModel):
     @model_validator(mode="after")
     def validate_costs_and_timing(self) -> "ConditionRemovalAction":
         costs = [*self.resource_costs.values(), *self.resource_costs_per_condition.values()]
-        if any(cost <= 0 for cost in costs):
-            raise ValueError("Condition-removal resource costs must be positive.")
-        if self.action_cost == "reaction" and self.reaction_trigger is None:
-            raise ValueError("Reaction condition removal requires an explicit RAW trigger.")
-        if self.action_cost != "reaction" and self.reaction_trigger is not None:
-            raise ValueError("Only Reaction condition removal can define a reaction trigger.")
+        if any(cost <= 0 for cost in costs): raise ValueError("Condition-removal resource costs must be positive.")
+        if self.action_cost == "reaction" and self.reaction_trigger is None: raise ValueError("Reaction condition removal requires an explicit RAW trigger.")
+        if self.action_cost != "reaction" and self.reaction_trigger is not None: raise ValueError("Only Reaction condition removal can define a reaction trigger.")
         resource_ids = {*self.resource_costs, *self.resource_costs_per_condition}
         has_spell_slot_resource = any(resource_id.startswith("spell-slot-") for resource_id in resource_ids)
-        if has_spell_slot_resource != self.expends_spell_slot:
-            raise ValueError("Spell-slot resources and expends_spell_slot must agree.")
+        if has_spell_slot_resource != self.expends_spell_slot: raise ValueError("Spell-slot resources and expends_spell_slot must agree.")
         return self
 
 
@@ -107,6 +104,7 @@ class SavingThrowAction(BaseModel):
     dc: int = Field(ge=1, le=40)
     range_ft: int = Field(ge=0)
     target_max_size: CreatureSize | None = None
+    area: AreaTargeting | None = None
     damage_dice_count: int = Field(default=0, ge=0, le=40)
     damage_dice_size: int = Field(default=6, ge=2, le=100)
     damage_bonus: int = 0
@@ -128,8 +126,7 @@ class AttackActionSlot(BaseModel):
 
     @model_validator(mode="after")
     def require_choice(self) -> "AttackActionSlot":
-        if not self.attack_ids and not self.save_action_ids:
-            raise ValueError("Attack-action slot must contain a weapon attack or saving-throw action.")
+        if not self.attack_ids and not self.save_action_ids: raise ValueError("Attack-action slot must contain a weapon attack or saving-throw action.")
         return self
 
 
