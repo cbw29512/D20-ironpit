@@ -70,7 +70,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "If the target is a creature, it must succeed on a DC 14 Constitution saving throw or become diseased. The disease has no effect for 1 minute and can be removed by any magic that cures disease. After 1 minute, the diseased creature's skin becomes translucent and slimy, the creature can't regain hit points unless it is underwater, and the disease can be removed only by heal or another disease-curing spell of 6th level or higher. When the creature is outside a body of water, it takes 6 (1d12) acid damage every 10 minutes unless moisture is applied to the skin before 10 minutes have passed",
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "tail",
@@ -91,7 +92,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -372,7 +374,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -393,7 +396,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "tail",
@@ -414,7 +418,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 15
+        "reach_ft": 15,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -639,7 +644,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -660,7 +666,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "tail",
@@ -681,7 +688,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 15
+        "reach_ft": 15,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -899,7 +907,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -920,7 +929,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "tail",
@@ -941,7 +951,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 15
+        "reach_ft": 15,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -1184,7 +1195,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -1205,7 +1217,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "tail",
@@ -1226,7 +1239,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 15
+        "reach_ft": 15,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -1463,7 +1477,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -1484,7 +1499,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "tail",
@@ -1505,7 +1521,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 15
+        "reach_ft": 15,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -1752,7 +1769,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -1773,7 +1791,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "tail",
@@ -1794,7 +1813,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 15
+        "reach_ft": 15,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -1884,6 +1904,30 @@
         "success_damage": "half",
         "resource_id": "breath-weapons",
         "resource_cost": 1
+      },
+      {
+        "id": "weakening-breath",
+        "name": "Weakening Breath",
+        "save_ability": "strength",
+        "dc": 21,
+        "range_ft": 60,
+        "area": {
+          "shape": "cone",
+          "origin": "self",
+          "length_ft": 60
+        },
+        "failure_control_effect": {
+          "effect_id": "weakened-strength",
+          "expiry_timing": "target_turn_end",
+          "duration_rounds": 10,
+          "repeat_save_ability": "strength",
+          "repeat_save_dc": 21,
+          "repeat_save_timing": "target_turn_end",
+          "disadvantage_strength_d20_tests": true
+        },
+        "resource_id": "breath-weapons",
+        "resource_cost": 1,
+        "animation": "weakened-strength"
       }
     ],
     "innate_spellcasting": null,
@@ -2026,7 +2070,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -2047,7 +2092,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "tail",
@@ -2068,7 +2114,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 15
+        "reach_ft": 15,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -2292,7 +2339,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -2313,7 +2361,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "tail",
@@ -2334,7 +2383,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 15
+        "reach_ft": 15,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -2550,7 +2600,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -2571,7 +2622,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "tail",
@@ -2592,7 +2644,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 15
+        "reach_ft": 15,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -2842,7 +2895,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -2863,7 +2917,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "tail",
@@ -2884,7 +2939,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 15
+        "reach_ft": 15,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -3105,7 +3161,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [
@@ -3211,7 +3268,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -3238,7 +3296,8 @@
           "prone_save_ability": "strength",
           "prone_save_dc": 13,
           "follow_up_attack_id": "bite"
-        }
+        },
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -3351,7 +3410,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 15
+        "reach_ft": 15,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -3372,7 +3432,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "tail",
@@ -3393,7 +3454,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 20
+        "reach_ft": 20,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -3618,7 +3680,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 15
+        "reach_ft": 15,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -3639,7 +3702,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "tail",
@@ -3660,7 +3724,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 20
+        "reach_ft": 20,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -3878,7 +3943,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 15
+        "reach_ft": 15,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -3899,7 +3965,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "tail",
@@ -3920,7 +3987,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 20
+        "reach_ft": 20,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -4164,7 +4232,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 15
+        "reach_ft": 15,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -4185,7 +4254,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "tail",
@@ -4206,7 +4276,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 20
+        "reach_ft": 20,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -4443,7 +4514,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 15
+        "reach_ft": 15,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -4464,7 +4536,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "tail",
@@ -4485,7 +4558,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 20
+        "reach_ft": 20,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -4733,7 +4807,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 15
+        "reach_ft": 15,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -4754,7 +4829,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "tail",
@@ -4775,7 +4851,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 20
+        "reach_ft": 20,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -4865,6 +4942,30 @@
         "success_damage": "half",
         "resource_id": "breath-weapons",
         "resource_cost": 1
+      },
+      {
+        "id": "weakening-breath",
+        "name": "Weakening Breath",
+        "save_ability": "strength",
+        "dc": 24,
+        "range_ft": 90,
+        "area": {
+          "shape": "cone",
+          "origin": "self",
+          "length_ft": 90
+        },
+        "failure_control_effect": {
+          "effect_id": "weakened-strength",
+          "expiry_timing": "target_turn_end",
+          "duration_rounds": 10,
+          "repeat_save_ability": "strength",
+          "repeat_save_dc": 24,
+          "repeat_save_timing": "target_turn_end",
+          "disadvantage_strength_d20_tests": true
+        },
+        "resource_id": "breath-weapons",
+        "resource_cost": 1,
+        "animation": "weakened-strength"
       }
     ],
     "innate_spellcasting": null,
@@ -5007,7 +5108,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 15
+        "reach_ft": 15,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -5028,7 +5130,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "tail",
@@ -5049,7 +5152,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 20
+        "reach_ft": 20,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -5273,7 +5377,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 15
+        "reach_ft": 15,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -5294,7 +5399,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "tail",
@@ -5315,7 +5421,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 20
+        "reach_ft": 20,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -5531,7 +5638,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 15
+        "reach_ft": 15,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -5552,7 +5660,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "tail",
@@ -5573,7 +5682,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 20
+        "reach_ft": 20,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -5823,7 +5933,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 15
+        "reach_ft": 15,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -5844,7 +5955,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "tail",
@@ -5865,7 +5977,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 20
+        "reach_ft": 20,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -6086,7 +6199,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -6305,7 +6419,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -6420,7 +6535,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "Until this grapple ends, the ankheg can bite only the grappled creature and has advantage on attack rolls to do so",
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -6518,7 +6634,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -6612,7 +6729,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "rock",
@@ -6634,7 +6752,8 @@
         "source_complete": true,
         "unsupported_text": null,
         "normal_range_ft": 25,
-        "long_range_ft": 50
+        "long_range_ft": 50,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -6742,7 +6861,8 @@
         "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 20,
-        "long_range_ft": 60
+        "long_range_ft": 60,
+        "attack_ability": "dexterity"
       },
       {
         "id": "dagger-ranged",
@@ -6765,7 +6885,8 @@
         "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 20,
-        "long_range_ft": 60
+        "long_range_ft": 60,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -7021,7 +7142,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       },
       {
         "id": "light-crossbow",
@@ -7051,7 +7173,8 @@
         "source_complete": true,
         "unsupported_text": null,
         "normal_range_ft": 80,
-        "long_range_ft": 320
+        "long_range_ft": 320,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [
@@ -7159,7 +7282,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -7256,7 +7380,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -7348,7 +7473,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -7453,7 +7579,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "warhammer-two-handed",
@@ -7482,7 +7609,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -7577,7 +7705,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -7786,7 +7915,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "If the balor scores a critical hit, it rolls damage dice three times, instead of twice",
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "whip",
@@ -7815,7 +7945,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "the target must succeed on a DC 20 Strength saving throw or be pulled up to 25 feet toward the balor",
-        "reach_ft": 30
+        "reach_ft": 30,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -7921,7 +8052,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       },
       {
         "id": "light-crossbow",
@@ -7943,7 +8075,8 @@
         "source_complete": true,
         "unsupported_text": null,
         "normal_range_ft": 80,
-        "long_range_ft": 320
+        "long_range_ft": 320,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -8041,7 +8174,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       },
       {
         "id": "dagger-melee",
@@ -8064,7 +8198,8 @@
         "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 20,
-        "long_range_ft": 60
+        "long_range_ft": 60,
+        "attack_ability": "dexterity"
       },
       {
         "id": "dagger-ranged",
@@ -8087,7 +8222,8 @@
         "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 20,
-        "long_range_ft": 60
+        "long_range_ft": 60,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [
@@ -8219,7 +8355,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -8489,7 +8626,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -8688,7 +8826,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "the target must succeed on a DC 12 Constitution saving throw or be poisoned for 1 minute. While poisoned in this way, the target can't regain hit points. The target can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success",
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       },
       {
         "id": "glaive",
@@ -8709,7 +8848,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "If the target is a creature other than an undead or a construct, it must succeed on a DC 12 Constitution saving throw or lose 5 (1d10) hit points at the start of each of its turns due to an infernal wound. Each time the devil hits the wounded target with this attack, the damage dealt by the wound increases by 5 (1d10). Any creature can take an action to stanch the wound with a successful DC 12 Wisdom (Medicine) check. The wound also closes if the target receives magical healing",
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -8819,7 +8959,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "constrict",
@@ -8851,7 +8992,8 @@
         "forbid_target_grappled_by_self": true,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -8955,7 +9097,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -9050,7 +9193,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "claws",
@@ -9071,7 +9215,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -9330,7 +9475,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "In addition, nonmagical armor worn by the target is partly dissolved and takes a permanent and cumulative −1 penalty to the AC it offers. The armor is destroyed if the penalty reduces its AC to 10",
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -9429,7 +9575,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -9527,7 +9674,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -9640,7 +9788,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -9765,7 +9914,8 @@
           },
           "prone_save_ability": "strength",
           "prone_save_dc": 11
-        }
+        },
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -9879,7 +10029,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "sting",
@@ -9914,7 +10065,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -10032,7 +10184,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -10184,7 +10337,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -10321,7 +10475,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "claws",
@@ -10342,7 +10497,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -10590,7 +10746,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -10882,7 +11039,8 @@
             "damage_type": "piercing",
             "damage_bonus": 0
           }
-        }
+        },
+        "attack_ability": "strength"
       },
       {
         "id": "hooves",
@@ -10903,7 +11061,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "longbow",
@@ -10925,7 +11084,8 @@
         "source_complete": true,
         "unsupported_text": null,
         "normal_range_ft": 150,
-        "long_range_ft": 600
+        "long_range_ft": 600,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [
@@ -11046,7 +11206,8 @@
         "forbid_target_grappled_by_self": true,
         "source_complete": false,
         "unsupported_text": "and takes 7 (2d6) piercing damage at the start of each of its turns",
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -11154,7 +11315,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "horns",
@@ -11175,7 +11337,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "claws",
@@ -11196,7 +11359,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -11333,7 +11497,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "if it is a Large or smaller creature and the chuul doesn't have two other creatures grappled",
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -11441,7 +11606,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "If the target is a creature, it must succeed on a DC 15 Constitution saving throw or have its hit point maximum reduced by an amount equal to the damage taken. The target dies if this attack reduces its hit point maximum to 0. The reduction lasts until removed by the greater restoration spell or other magic",
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -11552,7 +11718,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "if the target is Large or smaller, the cloaker attaches to it. If the cloaker has advantage against the target, the cloaker attaches to the target's head, and the target is blinded and unable to breathe while the cloaker is attached. While attached, the cloaker can make this attack only against the target and has advantage on the attack roll. The cloaker can detach itself by spending 5 feet of its movement. A creature, including the target, can take its action to detach the cloaker by succeeding on a DC 16 Strength check",
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "tail",
@@ -11573,7 +11740,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -11686,7 +11854,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "rock",
@@ -11708,7 +11877,8 @@
         "source_complete": true,
         "unsupported_text": null,
         "normal_range_ft": 60,
-        "long_range_ft": 240
+        "long_range_ft": 240,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -11892,7 +12062,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "the target must succeed on a DC 11 Constitution saving throw against being magically petrified. On a failed save, the creature begins to turn to stone and is restrained. It must repeat the saving throw at the end of its next turn. On a success, the effect ends. On a failure, the creature is petrified for 24 hours",
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -12200,7 +12371,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -12354,7 +12526,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "the target must succeed on a DC 13 Constitution saving throw or be poisoned for 24 hours. Until this poison ends, the target is unconscious. Another creature can use an action to shake the target awake",
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       },
       {
         "id": "constrict",
@@ -12378,7 +12551,8 @@
         "forbid_target_grappled_by_self": true,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -12687,7 +12861,8 @@
         "forbid_target_grappled_by_self": true,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -12785,7 +12960,8 @@
         "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 20,
-        "long_range_ft": 60
+        "long_range_ft": 60,
+        "attack_ability": "dexterity"
       },
       {
         "id": "dagger-ranged",
@@ -12808,7 +12984,8 @@
         "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 20,
-        "long_range_ft": 60
+        "long_range_ft": 60,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [
@@ -12966,7 +13143,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -13058,7 +13236,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "rock",
@@ -13080,7 +13259,8 @@
         "source_complete": true,
         "unsupported_text": null,
         "normal_range_ft": 30,
-        "long_range_ft": 120
+        "long_range_ft": 120,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -13185,7 +13365,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "the darkmantle attaches to the target. If the target is Medium or smaller and the darkmantle has advantage on the attack roll, it attaches by engulfing the target's head, and the target is also blinded and unable to breathe while the darkmantle is attached in this way",
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -13554,7 +13735,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -13812,7 +13994,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -13913,7 +14096,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "plus 3 (1d6) lightning or thunder damage (djinni's choice)",
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -14128,7 +14312,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [
@@ -14232,7 +14417,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -14329,7 +14515,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 15
+        "reach_ft": 15,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -14350,7 +14537,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "tail",
@@ -14371,7 +14559,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "If the target is a creature, it must succeed on a DC 20 Strength saving throw or be pushed up to 10 feet away from the dragon turtle and knocked prone",
-        "reach_ft": 15
+        "reach_ft": 15,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -14842,7 +15031,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       },
       {
         "id": "hand-crossbow",
@@ -14864,7 +15054,8 @@
         "source_complete": false,
         "unsupported_text": "the target must succeed on a DC 13 Constitution saving throw or be poisoned for 1 hour. If the saving throw fails by 5 or more, the target is also unconscious while poisoned in this way. The target wakes up if it takes damage or if another creature takes an action to shake it awake",
         "normal_range_ft": 30,
-        "long_range_ft": 120
+        "long_range_ft": 120,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -14995,7 +15186,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "4 (1d8) bludgeoning damage if wielded with two hands, or 6 (1d8 + 2) bludgeoning damage with shillelagh",
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -15148,7 +15340,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "or 8 (1d8 + 4) bludgeoning damage with shillelagh",
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -15302,7 +15495,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "or 11 (2d8 + 2) piercing damage while enlarged",
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "javelin",
@@ -15325,7 +15519,8 @@
         "unsupported_text": "or 9 (2d6 + 2) piercing damage while enlarged",
         "reach_ft": 5,
         "normal_range_ft": 30,
-        "long_range_ft": 120
+        "long_range_ft": 120,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -15431,7 +15626,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -15546,7 +15742,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -15651,7 +15848,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -15768,7 +15966,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "hurl-flame",
@@ -15979,7 +16178,8 @@
           "prone_save_ability": "strength",
           "prone_save_dc": 12,
           "follow_up_attack_id": "stomp"
-        }
+        },
+        "attack_ability": "strength"
       },
       {
         "id": "stomp",
@@ -16000,7 +16200,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -16104,7 +16305,8 @@
           },
           "prone_save_ability": "strength",
           "prone_save_dc": 13
-        }
+        },
+        "attack_ability": "strength"
       },
       {
         "id": "hooves",
@@ -16125,7 +16327,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -16241,7 +16444,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "or 9 (1d10 + 4) slashing damage if used with two hands",
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "longbow",
@@ -16271,7 +16475,8 @@
         "source_complete": false,
         "unsupported_text": "the target must succeed on a DC 14 Constitution saving throw or be poisoned. The poison lasts until it is removed by the lesser restoration spell or similar magic",
         "normal_range_ft": 150,
-        "long_range_ft": 600
+        "long_range_ft": 600,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [
@@ -16531,7 +16736,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "morningstar",
@@ -16552,7 +16758,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -16669,7 +16876,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "If the target is a creature or a flammable object, it ignites. Until a creature takes an action to douse the fire, the target takes 5 (1d10) fire damage at the start of each of its turns",
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [
@@ -16781,7 +16989,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "rock",
@@ -16803,7 +17012,8 @@
         "source_complete": true,
         "unsupported_text": null,
         "normal_range_ft": 60,
-        "long_range_ft": 240
+        "long_range_ft": 240,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -17080,7 +17290,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -17302,7 +17513,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -17477,7 +17689,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "rock",
@@ -17499,7 +17712,8 @@
         "source_complete": true,
         "unsupported_text": null,
         "normal_range_ft": 60,
-        "long_range_ft": 240
+        "long_range_ft": 240,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -17608,7 +17822,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "claws",
@@ -17629,7 +17844,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -18087,7 +18303,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       },
       {
         "id": "claws",
@@ -18114,7 +18331,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "If the target is a creature other than an elf or undead",
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -18209,7 +18427,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "rock",
@@ -18231,7 +18450,8 @@
         "source_complete": true,
         "unsupported_text": null,
         "normal_range_ft": 50,
-        "long_range_ft": 100
+        "long_range_ft": 100,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -18332,7 +18552,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "claws",
@@ -18353,7 +18574,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -18456,7 +18678,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -18560,7 +18783,8 @@
           },
           "prone_save_ability": "strength",
           "prone_save_dc": 13
-        }
+        },
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -18672,7 +18896,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -18765,7 +18990,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "constrict",
@@ -18789,7 +19015,8 @@
         "forbid_target_grappled_by_self": true,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -18886,7 +19113,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "The crab has two claws, each of which can grapple only one target",
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -18984,7 +19212,8 @@
         "forbid_target_grappled_by_self": true,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "tail",
@@ -19010,7 +19239,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -19251,7 +19481,8 @@
           },
           "prone_save_ability": "strength",
           "prone_save_dc": 14
-        }
+        },
+        "attack_ability": "strength"
       },
       {
         "id": "hooves",
@@ -19272,7 +19503,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -19365,7 +19597,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -19569,7 +19802,8 @@
           },
           "prone_save_ability": "strength",
           "prone_save_dc": 13
-        }
+        },
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -19664,7 +19898,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -19757,7 +19992,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -19854,7 +20090,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "If the target is a creature,  .  , and the octopus can't use its tentacles on another target",
-        "reach_ft": 15
+        "reach_ft": 15,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -19953,7 +20190,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -20057,7 +20295,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -20147,7 +20386,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -20243,7 +20483,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "The scorpion has two claws, each of which can grapple only one target",
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "sting",
@@ -20272,7 +20513,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -20387,7 +20629,8 @@
           },
           "prone_save_ability": "strength",
           "prone_save_dc": 11
-        }
+        },
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -20483,7 +20726,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -20593,7 +20837,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -20702,7 +20947,8 @@
         "forbid_target_grappled_by_self": true,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -20799,7 +21045,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "talons",
@@ -20820,7 +21067,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -20938,7 +21186,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -21031,7 +21280,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -21141,7 +21391,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -21243,7 +21494,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -21359,7 +21611,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "The glabrezu has two pincers, each of which can grapple only one target",
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "fist",
@@ -21380,7 +21633,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [
@@ -21554,7 +21808,8 @@
         "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 20,
-        "long_range_ft": 60
+        "long_range_ft": 60,
+        "attack_ability": "strength"
       },
       {
         "id": "spear-ranged",
@@ -21577,7 +21832,8 @@
         "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 20,
-        "long_range_ft": 60
+        "long_range_ft": 60,
+        "attack_ability": "strength"
       },
       {
         "id": "spear-two-handed",
@@ -21600,7 +21856,8 @@
         "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 20,
-        "long_range_ft": 60
+        "long_range_ft": 60,
+        "attack_ability": "strength"
       },
       {
         "id": "shield-bash",
@@ -21626,7 +21883,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "If the target is a Medium or smaller creature",
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -21742,7 +22000,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "spear",
@@ -21765,7 +22024,8 @@
         "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 20,
-        "long_range_ft": 60
+        "long_range_ft": 60,
+        "attack_ability": "strength"
       },
       {
         "id": "spear-ranged",
@@ -21788,7 +22048,8 @@
         "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 20,
-        "long_range_ft": 60
+        "long_range_ft": 60,
+        "attack_ability": "strength"
       },
       {
         "id": "spear-two-handed",
@@ -21811,7 +22072,8 @@
         "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 20,
-        "long_range_ft": 60
+        "long_range_ft": 60,
+        "attack_ability": "strength"
       },
       {
         "id": "longbow",
@@ -21833,7 +22095,8 @@
         "source_complete": true,
         "unsupported_text": null,
         "normal_range_ft": 150,
-        "long_range_ft": 600
+        "long_range_ft": 600,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -21938,7 +22201,8 @@
           },
           "prone_save_ability": "strength",
           "prone_save_dc": 10
-        }
+        },
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -22033,7 +22297,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       },
       {
         "id": "shortbow",
@@ -22055,7 +22320,8 @@
         "source_complete": true,
         "unsupported_text": null,
         "normal_range_ft": 80,
-        "long_range_ft": 320
+        "long_range_ft": 320,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -22160,7 +22426,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -22204,6 +22471,30 @@
         "success_damage": "half",
         "resource_id": "breath-weapons",
         "resource_cost": 1
+      },
+      {
+        "id": "weakening-breath",
+        "name": "Weakening Breath",
+        "save_ability": "strength",
+        "dc": 13,
+        "range_ft": 15,
+        "area": {
+          "shape": "cone",
+          "origin": "self",
+          "length_ft": 15
+        },
+        "failure_control_effect": {
+          "effect_id": "weakened-strength",
+          "expiry_timing": "target_turn_end",
+          "duration_rounds": 10,
+          "repeat_save_ability": "strength",
+          "repeat_save_dc": 13,
+          "repeat_save_timing": "target_turn_end",
+          "disadvantage_strength_d20_tests": true
+        },
+        "resource_id": "breath-weapons",
+        "resource_cost": 1,
+        "animation": "weakened-strength"
       }
     ],
     "innate_spellcasting": null,
@@ -22286,7 +22577,8 @@
           "minimum_move_ft": 20,
           "prone_save_ability": "strength",
           "prone_save_dc": 16
-        }
+        },
+        "attack_ability": "strength"
       },
       {
         "id": "hooves",
@@ -22307,7 +22599,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -22425,7 +22718,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "if the target is wearing nonmagical metal armor, its armor is partly corroded and takes a permanent and cumulative −1 penalty to the AC it offers. The armor is destroyed if the penalty reduces its AC to 10",
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -22541,7 +22835,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -22661,7 +22956,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -22925,7 +23221,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "claws",
@@ -22946,7 +23243,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -23062,7 +23360,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -23514,7 +23813,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -23721,7 +24021,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "or 8 (1d10 + 3) slashing damage if used with two hands",
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "shortsword",
@@ -23742,7 +24043,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "heavy-crossbow",
@@ -23764,7 +24066,8 @@
         "source_complete": true,
         "unsupported_text": null,
         "normal_range_ft": 100,
-        "long_range_ft": 400
+        "long_range_ft": 400,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -24110,7 +24413,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -24240,7 +24544,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -24261,7 +24566,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -24369,7 +24675,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "rock",
@@ -24391,7 +24698,8 @@
         "source_complete": true,
         "unsupported_text": null,
         "normal_range_ft": 60,
-        "long_range_ft": 240
+        "long_range_ft": 240,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -24494,7 +24802,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "claws",
@@ -24515,7 +24824,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -24845,7 +25155,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "tail",
@@ -24866,7 +25177,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "If the target is a creature other than an undead or a construct, it must succeed on a DC 17 Constitution saving throw or lose 10 (3d6) hit points at the start of each of its turns due to an infernal wound. Each time the devil hits the wounded target with this attack, the damage dealt by the wound increases by 10 (3d6). Any creature can take an action to stanch the wound with a successful DC 12 Wisdom (Medicine) check. The wound also closes if the target receives magical healing",
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "hurl-flame",
@@ -24999,7 +25311,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -25095,7 +25408,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -25193,7 +25507,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -25306,7 +25621,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "claws",
@@ -25335,7 +25651,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "tail",
@@ -25364,7 +25681,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -25494,7 +25812,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -25642,7 +25961,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "the target must make on a DC 11 Constitution saving throw, taking 10 (3d6) poison damage on a failed save, or half as much damage on a successful one",
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -25754,7 +26074,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -25869,7 +26190,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "sword",
@@ -25890,7 +26212,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -26096,7 +26419,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -26193,7 +26517,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "heavy-crossbow",
@@ -26215,7 +26540,8 @@
         "source_complete": true,
         "unsupported_text": null,
         "normal_range_ft": 100,
-        "long_range_ft": 400
+        "long_range_ft": 400,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [
@@ -26320,7 +26646,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       },
       {
         "id": "sling",
@@ -26342,7 +26669,8 @@
         "source_complete": true,
         "unsupported_text": null,
         "normal_range_ft": 30,
-        "long_range_ft": 120
+        "long_range_ft": 120,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -26450,7 +26778,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "If the target is a Large or smaller creature grappled by the kraken, that creature is swallowed, and the grapple ends. While swallowed, the creature is blinded and restrained, it has total cover against attacks and other effects outside the kraken, and it takes 42 (12d6) acid damage at the start of each of the kraken's turns",
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "tentacle",
@@ -26474,7 +26803,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "The kraken has ten tentacles, each of which can grapple one target",
-        "reach_ft": 30
+        "reach_ft": 30,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -26584,7 +26914,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "Dagger. Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 5 (1d4 + 3) piercing damage",
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -26751,7 +27082,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -26873,7 +27205,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -27131,7 +27464,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -27158,7 +27492,8 @@
           "prone_save_ability": "strength",
           "prone_save_dc": 13,
           "follow_up_attack_id": "bite"
-        }
+        },
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -27350,7 +27685,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "heavy-club",
@@ -27371,7 +27707,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "javelin-melee",
@@ -27394,7 +27731,8 @@
         "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 30,
-        "long_range_ft": 120
+        "long_range_ft": 120,
+        "attack_ability": "strength"
       },
       {
         "id": "javelin-ranged",
@@ -27417,7 +27755,8 @@
         "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 30,
-        "long_range_ft": 120
+        "long_range_ft": 120,
+        "attack_ability": "strength"
       },
       {
         "id": "spiked-shield",
@@ -27438,7 +27777,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -27558,7 +27898,8 @@
         "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 20,
-        "long_range_ft": 60
+        "long_range_ft": 60,
+        "attack_ability": "dexterity"
       },
       {
         "id": "dagger-ranged",
@@ -27581,7 +27922,8 @@
         "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 20,
-        "long_range_ft": 60
+        "long_range_ft": 60,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -27787,7 +28129,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -28023,7 +28366,8 @@
           "prone_save_ability": "strength",
           "prone_save_dc": 18,
           "follow_up_attack_id": "stomp"
-        }
+        },
+        "attack_ability": "strength"
       },
       {
         "id": "stomp",
@@ -28044,7 +28388,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -28305,7 +28650,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "tail",
@@ -28330,7 +28676,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "the marilith can automatically hit the target with its tail, and the marilith can't make tail attacks against other targets",
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -28459,7 +28806,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -28564,7 +28912,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       },
       {
         "id": "shortsword",
@@ -28585,7 +28934,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       },
       {
         "id": "longbow",
@@ -28615,7 +28965,8 @@
         "source_complete": true,
         "unsupported_text": null,
         "normal_range_ft": 150,
-        "long_range_ft": 600
+        "long_range_ft": 600,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [
@@ -28728,7 +29079,8 @@
         "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 20,
-        "long_range_ft": 60
+        "long_range_ft": 60,
+        "attack_ability": "strength"
       },
       {
         "id": "spear-ranged",
@@ -28751,7 +29103,8 @@
         "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 20,
-        "long_range_ft": 60
+        "long_range_ft": 60,
+        "attack_ability": "strength"
       },
       {
         "id": "spear-two-handed",
@@ -28774,7 +29127,8 @@
         "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 20,
-        "long_range_ft": 60
+        "long_range_ft": 60,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -28867,7 +29221,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "claws",
@@ -28888,7 +29243,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "harpoon",
@@ -28911,7 +29267,8 @@
         "unsupported_text": "If the target is a Huge or smaller creature, it must succeed on a Strength contest against the merrow or be pulled up to 20 feet toward the merrow",
         "reach_ft": 5,
         "normal_range_ft": 20,
-        "long_range_ft": 60
+        "long_range_ft": 60,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -29021,7 +29378,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "If the mimic is in object form, the target is subjected to its Adhesive trait",
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "bite",
@@ -29050,7 +29408,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -29148,7 +29507,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "gore",
@@ -29178,7 +29538,8 @@
             "damage_type": "piercing",
             "damage_bonus": 0
           }
-        }
+        },
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -29280,7 +29641,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "gore",
@@ -29310,7 +29672,8 @@
             "damage_type": "piercing",
             "damage_bonus": 0
           }
-        }
+        },
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -29403,7 +29766,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -29519,7 +29883,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "If the target is a creature, it must succeed on a DC 12 Constitution saving throw or be cursed with mummy rot. The cursed target can't regain hit points, and its hit point maximum decreases by 10 (3d6) for every 24 hours that elapse. If the curse reduces the target's hit point maximum to 0, the target dies, and its body turns to dust. The curse lasts until removed by the remove curse spell or other magic",
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -29645,7 +30010,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "If the target is a creature, it must succeed on a DC 16 Constitution saving throw or be cursed with mummy rot. The cursed target can't regain hit points, and its hit point maximum decreases by 10 (3d6) for every 24 hours that elapse. If the curse reduces the target's hit point maximum to 0, the target dies, and its body turns to dust. The curse lasts until removed by the remove curse spell or other magic",
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -29866,7 +30232,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -29887,7 +30254,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -30008,7 +30376,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -30163,7 +30532,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -30261,7 +30631,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -30358,7 +30729,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [
@@ -30482,7 +30854,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -30679,7 +31052,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "javelin-melee",
@@ -30702,7 +31076,8 @@
         "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 30,
-        "long_range_ft": 120
+        "long_range_ft": 120,
+        "attack_ability": "strength"
       },
       {
         "id": "javelin-ranged",
@@ -30725,7 +31100,8 @@
         "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 30,
-        "long_range_ft": 120
+        "long_range_ft": 120,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -30822,7 +31198,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -30924,7 +31301,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "glaive",
@@ -30945,7 +31323,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "or 9 (1d10 + 4) slashing damage in Small or Medium form",
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -31113,7 +31492,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "javelin-melee",
@@ -31136,7 +31516,8 @@
         "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 30,
-        "long_range_ft": 120
+        "long_range_ft": 120,
+        "attack_ability": "strength"
       },
       {
         "id": "javelin-ranged",
@@ -31159,7 +31540,8 @@
         "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 30,
-        "long_range_ft": 120
+        "long_range_ft": 120,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -31258,7 +31640,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "tentacle",
@@ -31291,7 +31674,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "restrained until the grapple ends. The otyugh has two tentacles, each of which can grapple one target",
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -31496,7 +31880,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "claws",
@@ -31517,7 +31902,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -31751,7 +32137,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -31966,7 +32353,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "The target must succeed on a DC 21 Constitution saving throw or become poisoned. While poisoned in this way, the target can't regain hit points, and it takes 21 (6d6) poison damage at the start of each of its turns. The poisoned target can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success",
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -31987,7 +32375,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "mace",
@@ -32016,7 +32405,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "tail",
@@ -32037,7 +32427,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -32178,7 +32569,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -32367,7 +32759,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -32561,7 +32954,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "claws",
@@ -32582,7 +32976,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -32684,7 +33079,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -32939,7 +33335,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       },
       {
         "id": "sting",
@@ -32960,7 +33357,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "the target must succeed on a DC 11 Constitution saving throw or become poisoned for 1 hour. If the saving throw fails by 5 or more, the target falls unconscious for the same duration, or until it takes damage or another creature uses an action to shake it awake",
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -33055,7 +33453,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -33151,7 +33550,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "If the target is a Large or smaller creature, it must succeed on a DC 19 Dexterity saving throw or be swallowed by the worm. A swallowed creature is blinded and restrained, it has total cover against attacks and other effects outside the worm, and it takes 21 (6d6) acid damage at the start of each of the worm's turns",
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "tail-stinger",
@@ -33180,7 +33580,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -33294,7 +33695,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "and become poisoned for 1 minute. The target can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success",
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -33489,7 +33891,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -33910,7 +34313,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -34026,7 +34430,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -34134,7 +34539,8 @@
         "forbid_target_grappled_by_self": true,
         "source_complete": false,
         "unsupported_text": "If the target is a creature",
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -34238,7 +34644,8 @@
           },
           "prone_save_ability": "strength",
           "prone_save_dc": 15
-        }
+        },
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -34330,7 +34737,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -34428,7 +34836,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "talons",
@@ -34452,7 +34861,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "and the roc can't use its talons on another target",
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -34558,7 +34968,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -34964,7 +35375,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "claws",
@@ -34985,7 +35397,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "spear",
@@ -35008,7 +35421,8 @@
         "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 20,
-        "long_range_ft": 60
+        "long_range_ft": 60,
+        "attack_ability": "strength"
       },
       {
         "id": "spear-ranged",
@@ -35031,7 +35445,8 @@
         "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 20,
-        "long_range_ft": 60
+        "long_range_ft": 60,
+        "attack_ability": "strength"
       },
       {
         "id": "spear-two-handed",
@@ -35054,7 +35469,8 @@
         "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 20,
-        "long_range_ft": 60
+        "long_range_ft": 60,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -35178,7 +35594,8 @@
         "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 20,
-        "long_range_ft": 60
+        "long_range_ft": 60,
+        "attack_ability": "strength"
       },
       {
         "id": "spear-ranged",
@@ -35209,7 +35626,8 @@
         "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 20,
-        "long_range_ft": 60
+        "long_range_ft": 60,
+        "attack_ability": "strength"
       },
       {
         "id": "spear-two-handed",
@@ -35240,7 +35658,8 @@
         "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 20,
-        "long_range_ft": 60
+        "long_range_ft": 60,
+        "attack_ability": "strength"
       },
       {
         "id": "tail",
@@ -35272,7 +35691,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "the salamander can automatically hit the target with its tail, and the salamander can't make tail attacks against other targets",
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -35381,7 +35801,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "shortsword",
@@ -35402,7 +35823,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       },
       {
         "id": "shortbow",
@@ -35424,7 +35846,8 @@
         "source_complete": true,
         "unsupported_text": null,
         "normal_range_ft": 80,
-        "long_range_ft": 320
+        "long_range_ft": 320,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -35621,7 +36044,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       },
       {
         "id": "longbow",
@@ -35641,7 +36065,8 @@
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
-        "unsupported_text": null
+        "unsupported_text": null,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [
@@ -35746,7 +36171,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -35934,7 +36360,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "the target's Strength score is reduced by 1d4. The target dies if this reduces its Strength to 0. Otherwise, the reduction lasts until the target finishes a short or long rest",
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -36040,7 +36467,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -36142,7 +36570,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -36337,7 +36766,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -36482,7 +36912,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       },
       {
         "id": "shortbow",
@@ -36504,7 +36935,8 @@
         "source_complete": true,
         "unsupported_text": null,
         "normal_range_ft": 80,
-        "long_range_ft": 320
+        "long_range_ft": 320,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -36622,7 +37054,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "slaying-longbow",
@@ -36652,7 +37085,8 @@
         "source_complete": false,
         "unsupported_text": "If the target is a creature that has 100 hit points or fewer, it must succeed on a DC 15 Constitution saving throw or die",
         "normal_range_ft": 150,
-        "long_range_ft": 600
+        "long_range_ft": 600,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [
@@ -36836,7 +37270,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -37168,7 +37603,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -37469,7 +37905,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       },
       {
         "id": "hand-crossbow",
@@ -37491,7 +37928,8 @@
         "source_complete": true,
         "unsupported_text": null,
         "normal_range_ft": 30,
-        "long_range_ft": 120
+        "long_range_ft": 120,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [
@@ -37608,7 +38046,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -37741,7 +38180,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "the stirge attaches to the target. While attached, the stirge doesn't attack. Instead, at the start of each of the stirge's turns, the target loses 5 (1d4 + 3) hit points due to blood loss",
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -37838,7 +38278,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 15
+        "reach_ft": 15,
+        "attack_ability": "strength"
       },
       {
         "id": "rock",
@@ -37865,7 +38306,8 @@
         "source_complete": true,
         "unsupported_text": null,
         "normal_range_ft": 60,
-        "long_range_ft": 240
+        "long_range_ft": 240,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -37972,7 +38414,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -38094,7 +38537,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "rock",
@@ -38116,7 +38560,8 @@
         "source_complete": true,
         "unsupported_text": null,
         "normal_range_ft": 60,
-        "long_range_ft": 240
+        "long_range_ft": 240,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -38292,7 +38737,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -38882,7 +39328,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 0
+        "reach_ft": 0,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -39109,7 +39556,8 @@
         "forbid_target_grappled_by_self": true,
         "source_complete": false,
         "unsupported_text": "If the target is a creature",
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -39129,7 +39577,8 @@
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
-        "unsupported_text": null
+        "unsupported_text": null,
+        "attack_ability": "strength"
       },
       {
         "id": "horns",
@@ -39149,7 +39598,8 @@
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
-        "unsupported_text": null
+        "unsupported_text": null,
+        "attack_ability": "strength"
       },
       {
         "id": "tail",
@@ -39174,7 +39624,8 @@
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
-        "unsupported_text": null
+        "unsupported_text": null,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -39329,7 +39780,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "heavy-crossbow",
@@ -39351,7 +39803,8 @@
         "source_complete": true,
         "unsupported_text": null,
         "normal_range_ft": 100,
-        "long_range_ft": 400
+        "long_range_ft": 400,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [
@@ -39456,7 +39909,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -39483,7 +39937,8 @@
           "prone_save_ability": "strength",
           "prone_save_dc": 13,
           "follow_up_attack_id": "bite"
-        }
+        },
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -39582,7 +40037,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "rock",
@@ -39604,7 +40060,8 @@
         "source_complete": true,
         "unsupported_text": null,
         "normal_range_ft": 60,
-        "long_range_ft": 180
+        "long_range_ft": 180,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -39710,7 +40167,8 @@
         "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 20,
-        "long_range_ft": 60
+        "long_range_ft": 60,
+        "attack_ability": "strength"
       },
       {
         "id": "spear-ranged",
@@ -39733,7 +40191,8 @@
         "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 20,
-        "long_range_ft": 60
+        "long_range_ft": 60,
+        "attack_ability": "strength"
       },
       {
         "id": "spear-two-handed",
@@ -39756,7 +40215,8 @@
         "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 20,
-        "long_range_ft": 60
+        "long_range_ft": 60,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -39854,7 +40314,8 @@
           "prone_save_ability": "strength",
           "prone_save_dc": 13,
           "follow_up_attack_id": "stomp"
-        }
+        },
+        "attack_ability": "strength"
       },
       {
         "id": "stomp",
@@ -39875,7 +40336,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -39970,7 +40432,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -39991,7 +40454,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -40112,7 +40576,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -40210,7 +40675,8 @@
         "forbid_target_grappled_by_self": true,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "tail",
@@ -40231,7 +40697,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -40337,7 +40804,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "horn",
@@ -40369,7 +40837,8 @@
           },
           "prone_save_ability": "strength",
           "prone_save_dc": 15
-        }
+        },
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -40841,7 +41310,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "or 8 (1d10 + 3) slashing damage if used with two hands",
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "shortsword",
@@ -40862,7 +41332,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "heavy-crossbow",
@@ -40884,7 +41355,8 @@
         "source_complete": true,
         "unsupported_text": null,
         "normal_range_ft": 100,
-        "long_range_ft": 400
+        "long_range_ft": 400,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -41098,7 +41570,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "talons",
@@ -41119,7 +41592,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -41228,7 +41702,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -41326,7 +41801,8 @@
           "minimum_move_ft": 20,
           "prone_save_ability": "strength",
           "prone_save_dc": 14
-        }
+        },
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -41425,7 +41901,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -41531,7 +42008,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -41736,7 +42214,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "claw-bear-or-hybrid-form-only",
@@ -41757,7 +42236,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "greataxe-humanoid-or-hybrid-form-only",
@@ -41778,7 +42258,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -41878,7 +42359,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "tusks-boar-or-hybrid-form-only",
@@ -41899,7 +42381,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "If the target is a humanoid, it must succeed on a DC 12 Constitution saving throw or be cursed with wereboar lycanthropy",
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -42004,7 +42487,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       },
       {
         "id": "shortsword-humanoid-or-hybrid-form-only",
@@ -42025,7 +42509,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       },
       {
         "id": "hand-crossbow-humanoid-or-hybrid-form-only",
@@ -42047,7 +42532,8 @@
         "source_complete": true,
         "unsupported_text": null,
         "normal_range_ft": 30,
-        "long_range_ft": 120
+        "long_range_ft": 120,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -42148,7 +42634,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "claw-tiger-or-hybrid-form-only",
@@ -42169,7 +42656,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "scimitar-humanoid-or-hybrid-form-only",
@@ -42190,7 +42678,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "longbow-humanoid-or-hybrid-form-only",
@@ -42212,7 +42701,8 @@
         "source_complete": true,
         "unsupported_text": null,
         "normal_range_ft": 150,
-        "long_range_ft": 600
+        "long_range_ft": 600,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -42315,7 +42805,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "claws-hybrid-form-only",
@@ -42336,7 +42827,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "spear-humanoid-form-only",
@@ -42359,7 +42851,8 @@
         "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 20,
-        "long_range_ft": 60
+        "long_range_ft": 60,
+        "attack_ability": "strength"
       },
       {
         "id": "spear-humanoid-form-only-ranged",
@@ -42382,7 +42875,8 @@
         "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 20,
-        "long_range_ft": 60
+        "long_range_ft": 60,
+        "attack_ability": "strength"
       },
       {
         "id": "spear-humanoid-form-only-two-handed",
@@ -42405,7 +42899,8 @@
         "unsupported_text": null,
         "reach_ft": 5,
         "normal_range_ft": 20,
-        "long_range_ft": 60
+        "long_range_ft": 60,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -42522,7 +43017,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -42911,7 +43407,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -43036,7 +43533,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -43136,7 +43634,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
@@ -43249,7 +43748,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
         "unsupported_text": "The target must succeed on a DC 14 Constitution saving throw or its hit point maximum is reduced by an amount equal to the damage taken. This reduction lasts until the target finishes a long rest. The target dies if this effect reduces its hit point maximum to 0",
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "dexterity"
       }
     ],
     "multiattack_slots": [],
@@ -43346,7 +43846,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "claws",
@@ -43367,7 +43868,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "stinger",
@@ -43396,7 +43898,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -43503,7 +44006,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       },
       {
         "id": "bite",
@@ -43524,7 +44028,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -43648,7 +44153,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -43772,7 +44278,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -43793,7 +44300,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -43942,7 +44450,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -43963,7 +44472,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -44103,7 +44613,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -44124,7 +44635,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -44290,7 +44802,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -44311,7 +44824,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -44471,7 +44985,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -44492,7 +45007,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -44662,7 +45178,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -44683,7 +45200,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -44739,6 +45257,30 @@
         "success_damage": "half",
         "resource_id": "breath-weapons",
         "resource_cost": 1
+      },
+      {
+        "id": "weakening-breath",
+        "name": "Weakening Breath",
+        "save_ability": "strength",
+        "dc": 17,
+        "range_ft": 30,
+        "area": {
+          "shape": "cone",
+          "origin": "self",
+          "length_ft": 30
+        },
+        "failure_control_effect": {
+          "effect_id": "weakened-strength",
+          "expiry_timing": "target_turn_end",
+          "duration_rounds": 10,
+          "repeat_save_ability": "strength",
+          "repeat_save_dc": 17,
+          "repeat_save_timing": "target_turn_end",
+          "disadvantage_strength_d20_tests": true
+        },
+        "resource_id": "breath-weapons",
+        "resource_cost": 1,
+        "animation": "weakened-strength"
       }
     ],
     "innate_spellcasting": null,
@@ -44836,7 +45378,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -44857,7 +45400,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -45005,7 +45549,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -45026,7 +45571,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -45165,7 +45711,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -45186,7 +45733,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -45358,7 +45906,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 10
+        "reach_ft": 10,
+        "attack_ability": "strength"
       },
       {
         "id": "claw",
@@ -45379,7 +45928,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [
@@ -45513,7 +46063,8 @@
         "forbid_target_grappled_by_self": false,
         "source_complete": true,
         "unsupported_text": null,
-        "reach_ft": 5
+        "reach_ft": 5,
+        "attack_ability": "strength"
       }
     ],
     "multiattack_slots": [],
