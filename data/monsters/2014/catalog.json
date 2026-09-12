@@ -10308,10 +10308,7 @@
       "source_complete": true,
       "unsupported_text": null
     },
-    "spellcasting": {
-      "source_complete": false,
-      "unsupported_text": "missing caster level or casting ability"
-    }
+    "spellcasting": null
   },
   {
     "id": "cockatrice",
@@ -10954,10 +10951,7 @@
       "source_complete": true,
       "unsupported_text": null
     },
-    "spellcasting": {
-      "source_complete": false,
-      "unsupported_text": "missing caster level or casting ability"
-    }
+    "spellcasting": null
   },
   {
     "id": "crab",
@@ -11878,10 +11872,7 @@
       "source_complete": true,
       "unsupported_text": null
     },
-    "spellcasting": {
-      "source_complete": false,
-      "unsupported_text": "missing caster level or casting ability"
-    }
+    "spellcasting": null
   },
   {
     "id": "deer",
@@ -12120,10 +12111,7 @@
       "source_complete": true,
       "unsupported_text": null
     },
-    "spellcasting": {
-      "source_complete": false,
-      "unsupported_text": "missing caster level or casting ability"
-    }
+    "spellcasting": null
   },
   {
     "id": "dire-wolf",
@@ -12431,10 +12419,7 @@
       "source_complete": true,
       "unsupported_text": null
     },
-    "spellcasting": {
-      "source_complete": false,
-      "unsupported_text": "missing caster level or casting ability"
-    }
+    "spellcasting": null
   },
   {
     "id": "doppelganger",
@@ -13121,10 +13106,7 @@
       "source_complete": true,
       "unsupported_text": null
     },
-    "spellcasting": {
-      "source_complete": false,
-      "unsupported_text": "missing caster level or casting ability"
-    }
+    "spellcasting": null
   },
   {
     "id": "drow",
@@ -13271,10 +13253,7 @@
       "source_complete": true,
       "unsupported_text": null
     },
-    "spellcasting": {
-      "source_complete": false,
-      "unsupported_text": "missing caster level or casting ability"
-    }
+    "spellcasting": null
   },
   {
     "id": "druid",
@@ -13573,10 +13552,7 @@
       "source_complete": true,
       "unsupported_text": null
     },
-    "spellcasting": {
-      "source_complete": false,
-      "unsupported_text": "missing caster level or casting ability"
-    }
+    "spellcasting": null
   },
   {
     "id": "duergar",
@@ -13809,10 +13785,7 @@
       "source_complete": true,
       "unsupported_text": null
     },
-    "spellcasting": {
-      "source_complete": false,
-      "unsupported_text": "missing caster level or casting ability"
-    }
+    "spellcasting": null
   },
   {
     "id": "eagle",
@@ -14225,10 +14198,7 @@
       "source_complete": true,
       "unsupported_text": null
     },
-    "spellcasting": {
-      "source_complete": false,
-      "unsupported_text": "missing caster level or casting ability"
-    }
+    "spellcasting": null
   },
   {
     "id": "elephant",
@@ -19516,10 +19486,7 @@
       "source_complete": true,
       "unsupported_text": null
     },
-    "spellcasting": {
-      "source_complete": false,
-      "unsupported_text": "missing caster level or casting ability"
-    }
+    "spellcasting": null
   },
   {
     "id": "gladiator",
@@ -20717,10 +20684,7 @@
       "source_complete": true,
       "unsupported_text": null
     },
-    "spellcasting": {
-      "source_complete": false,
-      "unsupported_text": "missing caster level or casting ability"
-    }
+    "spellcasting": null
   },
   {
     "id": "grick",
@@ -23406,10 +23370,7 @@
       "source_complete": true,
       "unsupported_text": null
     },
-    "spellcasting": {
-      "source_complete": false,
-      "unsupported_text": "missing caster level or casting ability"
-    }
+    "spellcasting": null
   },
   {
     "id": "imp",
@@ -24472,10 +24433,7 @@
       "source_complete": true,
       "unsupported_text": null
     },
-    "spellcasting": {
-      "source_complete": false,
-      "unsupported_text": "missing caster level or casting ability"
-    }
+    "spellcasting": null
   },
   {
     "id": "lemure",
@@ -25597,10 +25555,7 @@
       "source_complete": true,
       "unsupported_text": null
     },
-    "spellcasting": {
-      "source_complete": false,
-      "unsupported_text": "missing caster level or casting ability"
-    }
+    "spellcasting": null
   },
   {
     "id": "magmin",
@@ -27739,10 +27694,7 @@
       "source_complete": true,
       "unsupported_text": null
     },
-    "spellcasting": {
-      "source_complete": false,
-      "unsupported_text": "missing caster level or casting ability"
-    }
+    "spellcasting": null
   },
   {
     "id": "nightmare",
@@ -28654,10 +28606,7 @@
       "source_complete": true,
       "unsupported_text": null
     },
-    "spellcasting": {
-      "source_complete": false,
-      "unsupported_text": "missing caster level or casting ability"
-    }
+    "spellcasting": null
   },
   {
     "id": "orc",
@@ -29648,10 +29597,7 @@
       "source_complete": false,
       "unsupported_text": "Fear Aura. incapacitatedfrightened Magic Resistance. Magic Weapons. Innate Spellcasting. detect magicfireballhold monsterwall of fire"
     },
-    "spellcasting": {
-      "source_complete": false,
-      "unsupported_text": "missing caster level or casting ability"
-    }
+    "spellcasting": null
   },
   {
     "id": "planetar",
@@ -29853,10 +29799,7 @@
       "source_complete": true,
       "unsupported_text": null
     },
-    "spellcasting": {
-      "source_complete": false,
-      "unsupported_text": "missing caster level or casting ability"
-    }
+    "spellcasting": null
   },
   {
     "id": "plesiosaurus",
@@ -31139,10 +31082,7 @@
       "source_complete": true,
       "unsupported_text": null
     },
-    "spellcasting": {
-      "source_complete": false,
-      "unsupported_text": "missing caster level or casting ability"
-    }
+    "spellcasting": null
   },
   {
     "id": "rat",
@@ -34124,10 +34064,7 @@
       "source_complete": true,
       "unsupported_text": null
     },
-    "spellcasting": {
-      "source_complete": false,
-      "unsupported_text": "missing caster level or casting ability"
-    }
+    "spellcasting": null
   },
   {
     "id": "spectator",
@@ -34980,10 +34917,7 @@
       "source_complete": true,
       "unsupported_text": null
     },
-    "spellcasting": {
-      "source_complete": false,
-      "unsupported_text": "missing caster level or casting ability"
-    }
+    "spellcasting": null
   },
   {
     "id": "stirge",
@@ -35499,10 +35433,7 @@
       "source_complete": true,
       "unsupported_text": null
     },
-    "spellcasting": {
-      "source_complete": false,
-      "unsupported_text": "missing caster level or casting ability"
-    }
+    "spellcasting": null
   },
   {
     "id": "succubus-incubus",
@@ -37657,10 +37588,7 @@
       "source_complete": true,
       "unsupported_text": null
     },
-    "spellcasting": {
-      "source_complete": false,
-      "unsupported_text": "missing caster level or casting ability"
-    }
+    "spellcasting": null
   },
   {
     "id": "vampire",
