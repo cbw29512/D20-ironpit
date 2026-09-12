@@ -12,10 +12,14 @@ on:
       - 'backend/app/combat/charge.py'
       - 'backend/app/combat/charge_follow_up.py'
       - 'backend/app/combat/charge_prone.py'
+      - 'backend/app/combat/legendary_resistance.py'
+      - 'backend/app/combat/saving_throw_rolls.py'
+      - 'frontend/browser-saves.js'
       - 'backend/tests/test_2014_json_catalog.py'
       - 'backend/tests/test_2014_secondary_damage.py'
       - 'backend/tests/test_2014_parry.py'
       - 'backend/tests/test_2014_charge.py'
+      - 'backend/tests/test_2014_legendary_resistance.py'
       - 'backend/tests/test_magic_resistance.py'
       - 'backend/tests/test_conditional_damage_defenses.py'
       - 'data/monsters/2014/**'
@@ -53,5 +57,6 @@ jobs:
           tests/test_2014_secondary_damage.py
           tests/test_2014_parry.py
           tests/test_2014_charge.py
+          tests/test_2014_legendary_resistance.py
           tests/test_magic_resistance.py
           tests/test_conditional_damage_defenses.py
