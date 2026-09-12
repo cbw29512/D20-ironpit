@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from app.domain.ability_reduction import AbilityScoreReductionEffectDefinition
 from app.domain.actions import AbilityName
@@ -49,6 +49,14 @@ class HitSavingThrowEffectDefinition(BaseModel):
     magical_effect: bool = False
     target_filter: TargetFilter = Field(default_factory=TargetFilter)
     failure_effects: list[SaveFailureEffectDefinition] = Field(default_factory=list)
+    severe_failure_margin: int | None = Field(default=None, ge=1, le=20)
+    severe_failure_effects: list[SaveFailureEffectDefinition] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def validate_severe_failure(self) -> "HitSavingThrowEffectDefinition":
+        if (self.severe_failure_margin is None) != (not self.severe_failure_effects):
+            raise ValueError("Severe failed-save margin and effects must be configured together.")
+        return self
 
 
 AttackEffectDefinition = Annotated[
