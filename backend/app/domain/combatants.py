@@ -52,6 +52,7 @@ class CombatantTemplate(BaseModel):
     level: int | None = Field(default=None, ge=1, le=20)
     challenge_rating: str | None = None
     kind: Literal["character", "monster"]
+    ruleset: Literal["2014", "2024"] = "2024"
     creature_type: str | None = None
     size: CreatureSize = CreatureSize.MEDIUM
     ability_scores: AbilityScores | None = None
