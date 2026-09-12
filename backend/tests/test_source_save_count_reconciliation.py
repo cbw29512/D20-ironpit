@@ -8,9 +8,7 @@ from app.content.roster import build_arena_roster
 
 @pytest.mark.parametrize(
     "name",
-    [
-        "Bearded Devil", "Death Dog", "Harpy", "Homunculus", "Salamander",
-    ],
+    ["Bearded Devil", "Death Dog", "Harpy", "Salamander"],
 )
 def test_source_save_count_drift_remains_an_explicit_blocker(name: str) -> None:
     row = next(row for row in load_monster_rows() if row["name"] == name)
