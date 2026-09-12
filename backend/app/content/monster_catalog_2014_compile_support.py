@@ -40,6 +40,13 @@ def resources_2014(source: CatalogMonster2014) -> list[ResourceDefinition]:
         )
         for action_id, minimum_roll in source.action_recharges.items()
     ]
+    if source.spellcasting is not None:
+        resources.extend(
+            ResourceDefinition(
+                id=f"spell-slot-{level}", name=f"Level {level} Spell Slots", max_uses=count,
+            )
+            for level, count in sorted(source.spellcasting.slots.items(), key=lambda item: int(item[0]))
+        )
     uses = legendary_resistance_uses_2014(source.trait_names)
     if uses:
         resources.append(ResourceDefinition(
