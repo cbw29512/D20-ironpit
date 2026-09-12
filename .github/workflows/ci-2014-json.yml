@@ -26,6 +26,7 @@ on:
       - 'backend/app/combat/area_shapes.py'
       - 'backend/app/combat/area_targeting.py'
       - 'backend/app/combat/encounter_area_actions.py'
+      - 'backend/app/combat/encounter_offense_priority.py'
       - 'backend/app/combat/encounter_turn_support.py'
       - 'backend/app/combat/encounter_combat_turn.py'
       - 'backend/app/combat/timed_conditions.py'
@@ -95,6 +96,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
