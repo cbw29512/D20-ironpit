@@ -10,7 +10,7 @@ def main() -> None:
     print(f"Pregen certification frontier: {len(frontier)} classes, {ready} ready without new engine work")
     print()
     for candidate in frontier:
-        blockers = ", ".join(candidate.unsupported_features) or "none"
+        blockers = ", ".join(candidate.blockers) or "none"
         status = "READY" if candidate.ready else f"BLOCKED x{candidate.blocker_count}"
         print(
             f"{candidate.class_id:10} L{candidate.next_level:>2} "
