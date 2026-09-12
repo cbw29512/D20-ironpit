@@ -53,6 +53,7 @@ def _attack(source: CatalogAttack2014, *, magical: bool = False) -> WeaponAttack
             fixed_damage=source.damage.average if source.damage.dice_count == 0 else None,
             conditional_damage=source.conditional_damage, on_hit_damage=riders,
             on_hit_save_effect=source.on_hit_save_effect, control_effect=source.control_effect,
+            resource_id=source.resource_id, resource_cost=source.resource_cost, breakable_restraint=source.breakable_restraint,
             forbid_target_grappled_by_self=source.forbid_target_grappled_by_self, charge_profile=source.charge_profile,
         )
     except Exception as exc:
