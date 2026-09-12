@@ -83,14 +83,17 @@ def main() -> int:
         meta = raw.get("meta", "")
         size_name, _, rest = meta.partition(" ")
         type_text, _, alignment = rest.partition(",")
+        printed_type = type_text.strip()
         checks = {
             "size": size_name.title(),
+            "creature_type_text": printed_type,
             "alignment": alignment.strip() or None,
             "armor_class": integer(raw.get("Armor Class")),
             "max_hp": integer(raw.get("Hit Points")),
             "speed": speed(raw.get("Speed")),
             "saving_throws": bonuses(raw.get("Saving Throws")),
             "skills": bonuses(raw.get("Skills")),
+            "challenge_text": raw.get("Challenge"),
             "action_names": names(raw.get("Actions")),
             "trait_names": names(raw.get("Traits")),
             "reaction_names": names(raw.get("Reactions")),
@@ -103,17 +106,24 @@ def main() -> int:
         if row.get("abilities") != expected_abilities:
             errors.append(f"{raw['name']} ability scores differ from source")
         for target, source_key in (
-            ("armor_class_text", "Armor Class"), ("hit_points_text", "Hit Points"),
-            ("speed_text", "Speed"), ("senses", "Senses"), ("languages", "Languages"),
-            ("source_traits", "Traits"), ("source_actions", "Actions"),
-            ("source_reactions", "Reactions"), ("source_legendary_actions", "Legendary Actions"),
+            ("armor_class_text", "Armor Class"),
+            ("hit_points_text", "Hit Points"),
+            ("speed_text", "Speed"),
+            ("saving_throws_text", "Saving Throws"),
+            ("skills_text", "Skills"),
+            ("senses", "Senses"),
+            ("languages", "Languages"),
+            ("damage_resistances_text", "Damage Resistances"),
+            ("damage_immunities_text", "Damage Immunities"),
+            ("damage_vulnerabilities_text", "Damage Vulnerabilities"),
+            ("condition_immunities_text", "Condition Immunities"),
+            ("source_traits", "Traits"),
+            ("source_actions", "Actions"),
+            ("source_reactions", "Reactions"),
+            ("source_legendary_actions", "Legendary Actions"),
         ):
             if (row.get(target) or "") != (raw.get(source_key) or ""):
                 errors.append(f"{raw['name']} lost raw source field {source_key}")
-        printed_type = type_text.strip()
-        stored_type = (row.get("creature_type_text") or row.get("creature_type") or "").strip()
-        if printed_type.lower() not in stored_type.lower() and stored_type.lower() not in printed_type.lower():
-            errors.append(f"{raw['name']} creature type lost: {printed_type!r} -> {stored_type!r}")
         errors.extend(check_damage(row))
 
     if errors:
