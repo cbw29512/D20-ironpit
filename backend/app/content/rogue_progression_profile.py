@@ -12,6 +12,7 @@ def _audit(
     *,
     relevant: bool,
     notes: str,
+    automated: bool = True,
 ) -> FeatureAudit:
     """Build one explicit Rogue progression audit record."""
     return FeatureAudit(
@@ -20,7 +21,7 @@ def _audit(
         source_reference="D&D Beyond Basic Rules 2024: Rogue",
         category=category,
         combat_relevant=relevant,
-        automated=True,
+        automated=automated,
         notes=notes,
     )
 
@@ -45,5 +46,27 @@ def build_mara_quickstep_level2_profile() -> CharacterBuildProfile:
             *data["source_references"],
             "Basic Rules 2024: Rogue 2 — Cunning Action",
         ],
+    )
+    return CharacterBuildProfile.model_validate(data)
+
+
+def build_mara_quickstep_level3_profile() -> CharacterBuildProfile:
+    """Prepare Rogue 3 audit data while Steady Aim remains fail-closed."""
+    data = advance_profile_data(build_mara_quickstep_level2_profile(), 3)
+    steady_aim = _audit(
+        "steady-aim",
+        "Steady Aim",
+        "class",
+        relevant=True,
+        automated=False,
+        notes=(
+            "Requires a bonus-action choice before movement, Advantage on the next attack, "
+            "and Speed 0 for the rest of the turn. Certification waits for shared turn-state "
+            "and movement parity in Python and browser runtimes."
+        ),
+    )
+    data.update(
+        feature_audits=[*data["feature_audits"], steady_aim.model_dump()],
+        source_references=[*data["source_references"], "Basic Rules 2024: Rogue 3 — Steady Aim"],
     )
     return CharacterBuildProfile.model_validate(data)
