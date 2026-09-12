@@ -4,7 +4,7 @@ import re
 
 
 def _duration_rounds(text: str) -> int | None:
-    match = re.search(r"(?:unconscious|paralyzed) for (\d+) (minute|minutes|round|rounds)", text, re.I)
+    match = re.search(r"(?:unconscious|paralyzed|effects last) for (\d+) (minute|minutes|round|rounds)", text, re.I)
     if match is None:
         return None
     amount, unit = match.groups()
@@ -58,6 +58,33 @@ def _paralyzing_breath(name: str, text: str, area: dict, save: tuple[str, int], 
     }
 
 
+def _slowing_breath(name: str, text: str, area: dict, save: tuple[str, int], resource_id: str) -> dict | None:
+    if name.lower() != "slowing breath":
+        return None
+    required = (
+        r"can't use reactions", r"speed is halved", r"can't make more than one attack",
+        r"either an action or a bonus action", r"repeat the saving throw at the end of each of its turns",
+    )
+    duration = _duration_rounds(text)
+    if duration is None or not all(re.search(pattern, text, re.I) for pattern in required):
+        return None
+    ability, dc = save
+    return {
+        "id": "slowing-breath", "name": name,
+        "save_ability": ability, "dc": dc, "range_ft": area.get("length_ft", 0),
+        "area": area,
+        "failure_control_effect": {
+            "effect_id": "slowed",
+            "expiry_timing": "target_turn_end", "duration_rounds": duration,
+            "repeat_save_ability": ability, "repeat_save_dc": dc,
+            "repeat_save_timing": "target_turn_end",
+            "speed_multiplier": 0.5, "blocks_reactions": True,
+            "action_bonus_exclusive": True, "max_attacks_per_turn": 1,
+        },
+        "resource_id": resource_id, "resource_cost": 1, "animation": "slowed",
+    }
+
+
 def _repulsion(name: str, text: str, area: dict, save: tuple[str, int], resource_id: str) -> dict | None:
     push = re.search(r"pushed\s+(\d+)\s+feet\s+away", text, re.I)
     if name.lower() != "repulsion breath" or push is None:
@@ -78,12 +105,13 @@ def parse_control_save_action(
     save: tuple[str, int] | None,
     resource_id: str | None,
 ) -> dict | None:
-    """Normalize control save actions represented by universal conditions or forced movement."""
+    """Normalize control save actions represented by universal timed effects or forced movement."""
     name = heading.split("(Recharge", 1)[0].strip()
     if area is None or save is None or resource_id is None:
         return None
     return (
         _sleep_breath(name, text, area, save, resource_id)
         or _paralyzing_breath(name, text, area, save, resource_id)
+        or _slowing_breath(name, text, area, save, resource_id)
         or _repulsion(name, text, area, save, resource_id)
     )
