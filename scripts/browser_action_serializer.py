@@ -33,6 +33,8 @@ def failure_effect_row(effect: Any) -> dict[str, Any]:
             if effect.linked_conditions: row["linkedConditions"] = list(effect.linked_conditions)
             if effect.expires_at_start_of_source_turn: row["expiresAtStartOfSourceTurn"] = True
             if effect.expiry_timing: row["expiryTiming"] = effect.expiry_timing
+            if effect.duration_rounds is not None: row["durationRounds"] = effect.duration_rounds
+            if effect.ends_on_damage: row["endsOnDamage"] = True
             if effect.repeat_save_ability:
                 row.update(repeatSaveAbility=effect.repeat_save_ability, repeatSaveDc=effect.repeat_save_dc,
                            repeatSaveTiming=effect.repeat_save_timing)
