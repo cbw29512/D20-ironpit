@@ -36,6 +36,10 @@ class TimedEffect(BaseModel):
     ends_if_source_incapacitated: bool = False
     ends_if_source_dead: bool = False
     source_effect_immunity_on_end: bool = False
+    speed_multiplier: float = Field(default=1.0, gt=0, le=1.0)
+    blocks_reactions: bool = False
+    action_bonus_exclusive: bool = False
+    max_attacks_per_turn: int | None = Field(default=None, ge=1, le=20)
 
     @model_validator(mode="after")
     def validate_lifecycle(self) -> "TimedEffect":
