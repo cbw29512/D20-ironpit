@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 195,
-    "blocked": 135
+    "public_ready": 197,
+    "blocked": 133
   },
   "monsters": [
     {
@@ -182,7 +182,6 @@
         "condition-or-control",
         "legendary",
         "limited-use",
-        "save-failure-effect-mismatch:srd-adult-brass-dragon-sleep-breath:0:condition",
         "save-or-complex-action",
         "spell-concentration-source-not-vendored",
         "spellcasting",
@@ -700,7 +699,6 @@
         "condition-or-control",
         "legendary",
         "limited-use",
-        "save-failure-effect-mismatch:srd-ancient-brass-dragon-sleep-breath:0:condition",
         "save-or-complex-action",
         "spell-concentration-source-not-vendored",
         "spellcasting",
@@ -1889,24 +1887,18 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "damage-or-condition-defense",
+        "limited-use",
+        "save-or-complex-action",
         "saving-throw-action"
       ],
-      "unsupported_mechanics": [
-        "condition-or-control",
-        "limited-use",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "condition-or-control",
-        "limited-use",
-        "save-failure-effect-mismatch:srd-brass-dragon-wyrmling-sleep-breath:0:condition",
-        "save-or-complex-action"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-bronze-dragon-wyrmling",
@@ -9678,25 +9670,19 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "damage-or-condition-defense",
+        "limited-use",
         "multiattack",
+        "save-or-complex-action",
         "saving-throw-action"
       ],
-      "unsupported_mechanics": [
-        "condition-or-control",
-        "limited-use",
-        "save-or-complex-action"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "condition-or-control",
-        "limited-use",
-        "save-failure-effect-mismatch:srd-young-brass-dragon-sleep-breath:0:condition",
-        "save-or-complex-action"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-young-bronze-dragon",
