@@ -8,6 +8,7 @@ on:
       - 'backend/tests/test_2014_json_catalog.py'
       - 'data/monsters/2014/**'
       - 'scripts/import_2014_monster_catalog.py'
+      - 'scripts/import_2014_multiattack.py'
       - 'scripts/sync_2014_monster_catalog.py'
       - 'scripts/verify_2014_full_catalog.py'
       - 'scripts/report_2014_monster_progress.py'
