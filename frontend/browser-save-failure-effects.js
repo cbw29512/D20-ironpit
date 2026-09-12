@@ -13,6 +13,7 @@
   function applyCondition(target, sourceId, sourceEffectId, effect, options) {
     const condition = T().apply(target.state, effect.condition, sourceId, {
       sourceEffectId, appliedRound: options.round,
+      expiresRound: effect.durationRounds == null ? null : options.round + effect.durationRounds,
       expiresAtStartOfSourceTurn: Boolean(effect.expiresAtStartOfSourceTurn),
       expiryTiming: effect.expiryTiming || null,
       repeatSaveAbility: effect.repeatSaveAbility || null,
@@ -27,6 +28,7 @@
       automaticSuccessAfterRounds: effect.automaticSuccessAfterRounds ?? null,
       allowedRemovalActionIds: effect.allowedRemovalActionIds || [],
       periodicDamage: effect.periodicDamage || null,
+      endsOnDamage: Boolean(effect.endsOnDamage),
     });
     if (!condition) return [];
     const applied = [condition];
