@@ -2060,6 +2060,29 @@
         "success_damage": "half",
         "resource_id": "breath-weapons",
         "resource_cost": 1
+      },
+      {
+        "id": "paralyzing-breath",
+        "name": "Paralyzing Breath",
+        "save_ability": "constitution",
+        "dc": 20,
+        "range_ft": 60,
+        "area": {
+          "shape": "cone",
+          "origin": "self",
+          "length_ft": 60
+        },
+        "failure_control_effect": {
+          "condition_id": "paralyzed",
+          "expiry_timing": "target_turn_end",
+          "duration_rounds": 10,
+          "repeat_save_ability": "constitution",
+          "repeat_save_dc": 20,
+          "repeat_save_timing": "target_turn_end"
+        },
+        "resource_id": "breath-weapons",
+        "resource_cost": 1,
+        "animation": "paralyzed"
       }
     ]
   },
@@ -4324,6 +4347,29 @@
         "success_damage": "half",
         "resource_id": "breath-weapons",
         "resource_cost": 1
+      },
+      {
+        "id": "paralyzing-breath",
+        "name": "Paralyzing Breath",
+        "save_ability": "constitution",
+        "dc": 24,
+        "range_ft": 90,
+        "area": {
+          "shape": "cone",
+          "origin": "self",
+          "length_ft": 90
+        },
+        "failure_control_effect": {
+          "condition_id": "paralyzed",
+          "expiry_timing": "target_turn_end",
+          "duration_rounds": 10,
+          "repeat_save_ability": "constitution",
+          "repeat_save_dc": 24,
+          "repeat_save_timing": "target_turn_end"
+        },
+        "resource_id": "breath-weapons",
+        "resource_cost": 1,
+        "animation": "paralyzed"
       }
     ]
   },
@@ -30556,6 +30602,29 @@
         "success_damage": "half",
         "resource_id": "breath-weapons",
         "resource_cost": 1
+      },
+      {
+        "id": "paralyzing-breath",
+        "name": "Paralyzing Breath",
+        "save_ability": "constitution",
+        "dc": 13,
+        "range_ft": 15,
+        "area": {
+          "shape": "cone",
+          "origin": "self",
+          "length_ft": 15
+        },
+        "failure_control_effect": {
+          "condition_id": "paralyzed",
+          "expiry_timing": "target_turn_end",
+          "duration_rounds": 10,
+          "repeat_save_ability": "constitution",
+          "repeat_save_dc": 13,
+          "repeat_save_timing": "target_turn_end"
+        },
+        "resource_id": "breath-weapons",
+        "resource_cost": 1,
+        "animation": "paralyzed"
       }
     ]
   },
@@ -38321,6 +38390,29 @@
         "success_damage": "half",
         "resource_id": "breath-weapons",
         "resource_cost": 1
+      },
+      {
+        "id": "paralyzing-breath",
+        "name": "Paralyzing Breath",
+        "save_ability": "constitution",
+        "dc": 17,
+        "range_ft": 30,
+        "area": {
+          "shape": "cone",
+          "origin": "self",
+          "length_ft": 30
+        },
+        "failure_control_effect": {
+          "condition_id": "paralyzed",
+          "expiry_timing": "target_turn_end",
+          "duration_rounds": 10,
+          "repeat_save_ability": "constitution",
+          "repeat_save_dc": 17,
+          "repeat_save_timing": "target_turn_end"
+        },
+        "resource_id": "breath-weapons",
+        "resource_cost": 1,
+        "animation": "paralyzed"
       }
     ]
   },
