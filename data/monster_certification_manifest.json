@@ -6771,6 +6771,7 @@
         "multiattack",
         "save-or-complex-action",
         "saving-throw-action",
+        "spellcasting",
         "trait"
       ],
       "supported_mechanics": [
@@ -6783,6 +6784,7 @@
         "bonus-action",
         "limited-use",
         "save-or-complex-action",
+        "spellcasting",
         "trait"
       ],
       "python_certification_status": "blocked",
@@ -6794,9 +6796,12 @@
         "limited-use",
         "save-area-mismatch:srd-planetar-holy-burst",
         "save-or-complex-action",
+        "spell-concentration-source-not-vendored",
+        "spellcasting",
         "trait",
         "uncertified-bonus-action:divine-aid",
-        "uncertified-limited-use:bonusactions-divine-aid-2-day"
+        "uncertified-limited-use:bonusactions-divine-aid-2-day",
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -7785,6 +7790,7 @@
         "multiattack",
         "save-or-complex-action",
         "saving-throw-action",
+        "spellcasting",
         "trait"
       ],
       "supported_mechanics": [
@@ -7798,6 +7804,7 @@
         "legendary",
         "limited-use",
         "save-or-complex-action",
+        "spellcasting",
         "trait"
       ],
       "python_certification_status": "blocked",
@@ -7810,10 +7817,13 @@
         "limited-use",
         "save-or-complex-action",
         "source-save-action-count-mismatch",
+        "spell-concentration-source-not-vendored",
+        "spellcasting",
         "trait",
         "uncertified-bonus-action:divine-aid",
         "uncertified-legendary-action-economy",
-        "uncertified-limited-use:bonusactions-divine-aid-3-day"
+        "uncertified-limited-use:bonusactions-divine-aid-3-day",
+        "uncertified-monster-spellcasting"
       ]
     },
     {
