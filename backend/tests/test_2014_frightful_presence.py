@@ -5,9 +5,12 @@ from app.combat.dice import FixedDiceProvider
 from app.combat.source_effect_immunity import source_effect_is_immune
 from app.combat.state import build_combatant_state
 from app.content.demo import build_goblin_warrior
+from app.content.monster_catalog_2014_models import CatalogMonster2014
+from app.content.monster_catalog_2014_multiattack import compile_multiattack_2014
 from app.domain.actions import HitControlEffect, SavingThrowAction
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.grid import BattleMapDefinition, GridPosition
+from app.domain.models import WeaponAttack
 from app.domain.targeting import AreaTargeting
 
 
@@ -76,3 +79,18 @@ def test_frightful_presence_initial_success_grants_source_immunity() -> None:
     assert events[0].save_succeeded is True
     assert "frightened" not in target.state.active_effect_ids
     assert source_effect_is_immune(target.state, actor.combatant_id, action.id)
+
+
+def test_frightful_presence_compiles_as_ordered_multiattack_save_slot() -> None:
+    source = CatalogMonster2014.model_construct(
+        id="adult-test-dragon",
+        multiattack_slots=[["frightful-presence"], ["bite"]],
+        saving_throw_actions=[_action()],
+    )
+    bite = WeaponAttack.model_construct(id="bite")
+    definition = compile_multiattack_2014(source, [bite])
+    assert definition is not None
+    assert definition.slots[0].save_action_ids == ["frightful-presence"]
+    assert definition.slots[0].attack_ids == []
+    assert definition.slots[1].attack_ids == ["bite"]
+    assert definition.slots[1].save_action_ids == []
