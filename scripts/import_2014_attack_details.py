@@ -48,6 +48,10 @@ _NO_REPEAT_TARGET = re.compile(
     r"(?:and\s+)?(?:the\s+)?[A-Za-z' -]+ can(?:not|'t) (?:use this attack on|bite|attack|constrict|grapple) another target",
     re.I,
 )
+_ALREADY_CONTROLLING = re.compile(
+    r"(?:if\s+)?(?:the\s+)?[A-Za-z' -]+ (?:isn't|is not) already (?:constricting|grappling) a creature,?\s*(?:and\s+)?",
+    re.I,
+)
 
 
 def _rolled(match: re.Match[str]) -> dict | None:
@@ -118,7 +122,8 @@ def parse_on_hit_control(remainder: str) -> tuple[dict | None, bool, str]:
     if not match: return None, False, remainder
     max_size, dc = match.groups(); before = remainder[:match.start()]; after = remainder[match.end():]
     restrains = bool(_RESTRAINED.search(after)); after = _RESTRAINED.sub(" ", after, count=1)
-    forbid = bool(_NO_REPEAT_TARGET.search(after)); after = _NO_REPEAT_TARGET.sub(" ", after, count=1)
+    forbid = bool(_NO_REPEAT_TARGET.search(after) or _ALREADY_CONTROLLING.search(after))
+    after = _NO_REPEAT_TARGET.sub(" ", after, count=1); after = _ALREADY_CONTROLLING.sub(" ", after, count=1)
     control = {"grapple_escape_dc": int(dc), "restrains_while_grappled": restrains}
     if max_size: control["max_target_size"] = max_size.lower()
     residual = re.sub(r"^[\s,;]*(?:and\s+)?|[\s,;]+$", "", f"{before} {after}", flags=re.I).strip(" .")
