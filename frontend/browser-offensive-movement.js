@@ -17,12 +17,13 @@
       for (const target of F().targetOrder(member, setup)) {
         if (!target.state.position) throw new Error("Grid offensive movement requires authoritative target positions.");
         const distance = S().distance(member, target);
-        for (const option of O().rangesForTarget(member, target, turnKey)) {
+        for (const option of O().rangesForTarget(member, target, turnKey, setup)) {
           const maxRange = Number.isFinite(option.maxRange) ? option.maxRange : option.range;
           const preferredRange = Number.isFinite(option.preferredRange) ? option.preferredRange : maxRange;
           const base = {
             priority: Number.isFinite(option.priority) ? option.priority : 1,
             executionRank: Number.isFinite(option.executionRank) ? option.executionRank : 99,
+            expectedValue: Number.isFinite(option.expectedValue) ? option.expectedValue : 0,
             distance,
             targetId: target.combatant_id,
             family: option.family,
@@ -49,8 +50,9 @@
       }
       if (!candidates.length) return null;
       candidates.sort((a, b) => a.priority - b.priority || a.executionRank - b.executionRank
-        || a.cost - b.cost || a.distance - b.distance || a.targetId.localeCompare(b.targetId)
-        || a.family.localeCompare(b.family) || b.preferredRange - a.preferredRange);
+        || b.expectedValue - a.expectedValue || a.cost - b.cost || a.distance - b.distance
+        || a.targetId.localeCompare(b.targetId) || a.family.localeCompare(b.family)
+        || b.preferredRange - a.preferredRange);
       const best = candidates[0];
       if (best.cost === 0) return null;
       return { targetId: best.targetId, desiredDistanceFt: best.preferredRange, family: best.family };
