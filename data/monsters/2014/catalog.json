@@ -128,7 +128,8 @@
     "source_reactions": "",
     "source_legendary_actions": "<p>The aboleth can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The aboleth regains spent legendary actions at the start of its turn. </p><p><em><strong>Detect.</strong></em> The aboleth makes a Wisdom (Perception) check. </p><p><em><strong>Tail Swipe.</strong></em> The aboleth makes one tail attack. </p><p><em><strong>Psychic Drain</strong></em> (Costs 2 Actions). One creature charmed by the aboleth takes 10 (3d6) psychic damage, and the aboleth regains hit points equal to the damage the creature takes.</p>",
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/11/1000/1000/636238825975375671.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "acolyte",
@@ -215,7 +216,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/656/humanoid.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "adult-black-dragon",
@@ -428,7 +430,8 @@
         "resource_id": "acid-breath",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "adult-blue-dragon",
@@ -640,7 +643,8 @@
         "resource_id": "lightning-breath",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "adult-brass-dragon",
@@ -848,7 +852,8 @@
         "resource_id": "breath-weapons",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "adult-bronze-dragon",
@@ -1037,7 +1042,8 @@
         "source_effect_immunity_on_success": true,
         "animation": "fear"
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "adult-copper-dragon",
@@ -1244,7 +1250,8 @@
         "resource_id": "breath-weapons",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "adult-gold-dragon",
@@ -1453,7 +1460,8 @@
         "resource_id": "breath-weapons",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "adult-green-dragon",
@@ -1670,7 +1678,8 @@
         "resource_id": "poison-breath",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "adult-red-dragon",
@@ -1881,7 +1890,8 @@
         "resource_id": "fire-breath",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "adult-silver-dragon",
@@ -2111,7 +2121,8 @@
         "resource_cost": 1,
         "animation": "paralyzed"
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "adult-white-dragon",
@@ -2324,7 +2335,8 @@
         "resource_id": "cold-breath",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "air-elemental",
@@ -2436,7 +2448,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/127/1000/1000/636252755648556800.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "allosaurus",
@@ -2549,7 +2562,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "ancient-black-dragon",
@@ -2762,7 +2776,8 @@
         "resource_id": "acid-breath",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "ancient-blue-dragon",
@@ -2954,7 +2969,8 @@
         "source_effect_immunity_on_success": true,
         "animation": "fear"
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "ancient-brass-dragon",
@@ -3163,7 +3179,8 @@
         "resource_id": "breath-weapons",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "ancient-bronze-dragon",
@@ -3372,7 +3389,8 @@
         "resource_id": "breath-weapons",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "ancient-copper-dragon",
@@ -3580,7 +3598,8 @@
         "resource_id": "breath-weapons",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "ancient-gold-dragon",
@@ -3789,7 +3808,8 @@
         "resource_id": "breath-weapons",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "ancient-green-dragon",
@@ -3987,7 +4007,8 @@
         "source_effect_immunity_on_success": true,
         "animation": "fear"
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "ancient-red-dragon",
@@ -4198,7 +4219,8 @@
         "resource_id": "fire-breath",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "ancient-silver-dragon",
@@ -4428,7 +4450,8 @@
         "resource_cost": 1,
         "animation": "paralyzed"
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "ancient-white-dragon",
@@ -4641,7 +4664,8 @@
         "resource_id": "cold-breath",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "androsphinx",
@@ -4760,7 +4784,8 @@
     "source_reactions": "",
     "source_legendary_actions": "<p>The sphinx can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The sphinx regains spent legendary actions at the start of its turn. </p><p><em><strong>Claw Attack.</strong></em> The sphinx makes one claw attack. </p><p><em><strong>Teleport (Costs 2 Actions).</strong></em> The sphinx magically teleports, along with any equipment it is wearing or carrying, up to 120 feet to an unoccupied space it can see. </p><p><em><strong>Cast a Spell (Costs 3 Actions).</strong></em> The sphinx casts a spell from its list of prepared spells, using a spell slot as normal.</p>",
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/157/1000/1000/636252759145617281.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "animated-armor",
@@ -4865,7 +4890,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/8/429/1000/1000/636306156895834255.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "ankheg",
@@ -4963,7 +4989,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/161/315/315/636252759871983921.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "ankylosaurus",
@@ -5050,7 +5077,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "ape",
@@ -5166,7 +5194,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "archmage",
@@ -5281,7 +5310,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/167/1000/1000/636252760213195530.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "assassin",
@@ -5423,7 +5453,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/9/910/315/315/636334293020978804.png",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "awakened-shrub",
@@ -5511,7 +5542,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/659/plant.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "awakened-tree",
@@ -5600,7 +5632,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/659/plant.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "axe-beak",
@@ -5682,7 +5715,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "azer",
@@ -5811,7 +5845,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/171/1000/1000/636252761112348397.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "baboon",
@@ -5896,7 +5931,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "badger",
@@ -5981,7 +6017,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/528/1000/1000/636376327632236333.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "balor",
@@ -6130,7 +6167,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/175/1000/1000/636252761612038117.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "bandit",
@@ -6234,7 +6272,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/656/humanoid.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "bandit-captain",
@@ -6384,7 +6423,8 @@
     "source_reactions": "<p><em><strong>Parry.</strong></em> The captain adds 2 to its AC against one melee attack that would hit it. To do so, the captain must see the attacker and be wielding a melee weapon.</p>",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/181/1000/1000/636252761965117015.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "banshee",
@@ -6495,7 +6535,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/8/446/315/315/636306384206418474.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "barbed-devil",
@@ -6651,7 +6692,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/486/315/315/636376302569423870.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "basilisk",
@@ -6743,7 +6785,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/185/1000/1000/636252762168821795.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "bat",
@@ -6829,7 +6872,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/18/305/1000/1000/636379812593010967.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "bearded-devil",
@@ -6957,7 +7001,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/193/1000/1000/636252763397604505.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "behir",
@@ -7089,7 +7134,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/195/1000/1000/636252763748680024.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "berserker",
@@ -7173,7 +7219,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/656/humanoid.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "black-bear",
@@ -7289,7 +7336,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "black-dragon-wyrmling",
@@ -7417,7 +7465,8 @@
         "resource_id": "acid-breath",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "black-pudding",
@@ -7526,7 +7575,8 @@
     "source_reactions": "<p><em><strong>Split.</strong></em> When a pudding that is Medium or larger is subjected to lightning or slashing damage, it splits into two new puddings if it has at least 10 hit points. Each new pudding has hit points equal to half the original pudding's, rounded down. New puddings are one size smaller than the original pudding.</p>",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/201/315/315/636252764027417823.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "blink-dog",
@@ -7616,7 +7666,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/205/315/315/636252764168652859.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "blood-hawk",
@@ -7704,7 +7755,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "blue-dragon-wyrmling",
@@ -7830,7 +7882,8 @@
         "resource_id": "lightning-breath",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "boar",
@@ -7926,7 +7979,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "bone-devil",
@@ -8074,7 +8128,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/9/481/1000/1000/636328225187253200.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "brass-dragon-wyrmling",
@@ -8194,7 +8249,8 @@
         "resource_id": "breath-weapons",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "bronze-dragon-wyrmling",
@@ -8316,7 +8372,8 @@
         "resource_id": "breath-weapons",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "brown-bear",
@@ -8432,7 +8489,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "bugbear",
@@ -8565,7 +8623,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/221/1000/1000/636252765234633232.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "bulette",
@@ -8653,7 +8712,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/223/315/315/636252765369632881.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "camel",
@@ -8735,7 +8795,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "cat",
@@ -8823,7 +8884,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "centaur",
@@ -8973,7 +9035,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/227/1000/1000/636252765573266420.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "chain-devil",
@@ -9085,7 +9148,8 @@
     "source_reactions": "<p><em><strong>Unnerving Mask.</strong></em> When a creature the devil can see starts its turn within 30 feet of the devil, the devil can create the illusion that it looks like one of the creature's departed loved ones or bitter enemies. If the creature can see the devil, it must succeed on a DC 14 Wisdom saving throw or be frightened until the end of its turn.</p>",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/235/1000/1000/636252766618069332.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "chimera",
@@ -9226,7 +9290,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/237/1000/1000/636252766770156389.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "chuul",
@@ -9323,7 +9388,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/241/1000/1000/636252767122656355.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "clay-golem",
@@ -9435,7 +9501,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/243/315/315/636252767318152303.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "cloaker",
@@ -9555,7 +9622,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/245/1000/1000/636252767458838228.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "cloud-giant",
@@ -9677,7 +9745,88 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/249/1000/1000/636252767619414260.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": {
+      "ability": "charisma",
+      "save_dc": null,
+      "attack_bonus": null,
+      "spells": [
+        {
+          "id": "detect-magic",
+          "name": "detect magic",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "fog-cloud",
+          "name": "fog cloud",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "light",
+          "name": "light",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "feather-fall",
+          "name": "feather fall",
+          "usage": "per_day",
+          "uses_per_day": 3,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "fly",
+          "name": "fly",
+          "usage": "per_day",
+          "uses_per_day": 3,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "misty-step",
+          "name": "misty step",
+          "usage": "per_day",
+          "uses_per_day": 3,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "telekinesis",
+          "name": "telekinesis",
+          "usage": "per_day",
+          "uses_per_day": 3,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "control-weather",
+          "name": "control weather",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "gaseous-form",
+          "name": "gaseous form",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        }
+      ],
+      "source_complete": true,
+      "unsupported_text": null
+    }
   },
   {
     "id": "cockatrice",
@@ -9760,7 +9909,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/251/315/315/636252767744669874.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "commoner",
@@ -9842,7 +9992,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/656/humanoid.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "constrictor-snake",
@@ -9949,7 +10100,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "copper-dragon-wyrmling",
@@ -10069,7 +10221,8 @@
         "resource_id": "breath-weapons",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "couatl",
@@ -10191,7 +10344,120 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/257/1000/1000/636252768143323827.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": {
+      "ability": "charisma",
+      "save_dc": 14,
+      "attack_bonus": null,
+      "spells": [
+        {
+          "id": "detect-evil-and-good",
+          "name": "detect evil and good",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "detect-magic",
+          "name": "detect magic",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "detect-thoughts",
+          "name": "detect thoughts",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "bless",
+          "name": "bless",
+          "usage": "per_day",
+          "uses_per_day": 3,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "create-food-and-water",
+          "name": "create food and water",
+          "usage": "per_day",
+          "uses_per_day": 3,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "cure-wounds",
+          "name": "cure wounds",
+          "usage": "per_day",
+          "uses_per_day": 3,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "lesser-restoration",
+          "name": "lesser restoration",
+          "usage": "per_day",
+          "uses_per_day": 3,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "protection-from-poison",
+          "name": "protection from poison",
+          "usage": "per_day",
+          "uses_per_day": 3,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "sanctuary",
+          "name": "sanctuary",
+          "usage": "per_day",
+          "uses_per_day": 3,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "shield",
+          "name": "shield",
+          "usage": "per_day",
+          "uses_per_day": 3,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "dream",
+          "name": "dream",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "greater-restoration",
+          "name": "greater restoration",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "scrying",
+          "name": "scrying",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        }
+      ],
+      "source_complete": true,
+      "unsupported_text": null
+    }
   },
   {
     "id": "crab",
@@ -10278,7 +10544,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "crocodile",
@@ -10368,7 +10635,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "cult-fanatic",
@@ -10489,7 +10757,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/259/1000/1000/636252768307230924.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "cultist",
@@ -10576,7 +10845,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/14/481/1000/1000/636364323106021375.png",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "cyclops",
@@ -10690,7 +10960,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/470/1000/1000/636376290137285130.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "darkmantle",
@@ -10779,7 +11050,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/263/315/315/636252768676699519.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "death-dog",
@@ -10874,7 +11146,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/265/1000/1000/636252768823194310.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "deep-gnome-svirfneblin",
@@ -10992,7 +11265,48 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/9/112/1000/1000/636323610009818415.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": {
+      "ability": "intelligence",
+      "save_dc": 11,
+      "attack_bonus": null,
+      "spells": [
+        {
+          "id": "nondetection",
+          "name": "nondetection",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": "self only"
+        },
+        {
+          "id": "blindness-deafness",
+          "name": "blindness/deafness",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "blur",
+          "name": "blur",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "disguise-self",
+          "name": "disguise self",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        }
+      ],
+      "source_complete": true,
+      "unsupported_text": null
+    }
   },
   {
     "id": "deer",
@@ -11074,7 +11388,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "deva",
@@ -11193,7 +11508,40 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/267/1000/1000/636252768980059444.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": {
+      "ability": "charisma",
+      "save_dc": 17,
+      "attack_bonus": null,
+      "spells": [
+        {
+          "id": "detect-evil-and-good",
+          "name": "detect evil and good",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "commune",
+          "name": "commune",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "raise-dead",
+          "name": "raise dead",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        }
+      ],
+      "source_complete": true,
+      "unsupported_text": null
+    }
   },
   {
     "id": "dire-wolf",
@@ -11286,7 +11634,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/484/315/315/636376300478361995.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "djinni",
@@ -11391,7 +11740,112 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/281/315/315/636252770322204007.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": {
+      "ability": "charisma",
+      "save_dc": 17,
+      "attack_bonus": 9,
+      "spells": [
+        {
+          "id": "detect-evil-and-good",
+          "name": "detect evil and good",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "detect-magic",
+          "name": "detect magic",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "thunderwave",
+          "name": "thunderwave",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "create-food-and-water",
+          "name": "create food and water",
+          "usage": "per_day",
+          "uses_per_day": 3,
+          "shared_pool": false,
+          "qualifier": "can create wine instead of water"
+        },
+        {
+          "id": "tongues",
+          "name": "tongues",
+          "usage": "per_day",
+          "uses_per_day": 3,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "wind-walk",
+          "name": "wind walk",
+          "usage": "per_day",
+          "uses_per_day": 3,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "conjure-elemental",
+          "name": "conjure elemental",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": "air elemental only"
+        },
+        {
+          "id": "creation",
+          "name": "creation",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "gaseous-form",
+          "name": "gaseous form",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "invisibility",
+          "name": "invisibility",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "major-image",
+          "name": "major image",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "plane-shift",
+          "name": "plane shift",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        }
+      ],
+      "source_complete": true,
+      "unsupported_text": null
+    }
   },
   {
     "id": "doppelganger",
@@ -11491,7 +11945,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/289/315/315/636252770983164351.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "draft-horse",
@@ -11573,7 +12028,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "dragon-turtle",
@@ -11740,7 +12196,8 @@
         "resource_id": "steam-breath",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "dretch",
@@ -11860,7 +12317,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/293/1000/1000/636252771253285096.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "drider",
@@ -12026,7 +12484,40 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/295/1000/1000/636252771409285458.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": {
+      "ability": "wisdom",
+      "save_dc": 13,
+      "attack_bonus": null,
+      "spells": [
+        {
+          "id": "dancing-lights",
+          "name": "dancing lights",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "darkness",
+          "name": "darkness",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "faerie-fire",
+          "name": "faerie fire",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        }
+      ],
+      "source_complete": true,
+      "unsupported_text": null
+    }
   },
   {
     "id": "drow",
@@ -12137,7 +12628,40 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/501/1000/1000/636376310726273495.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": {
+      "ability": "charisma",
+      "save_dc": 11,
+      "attack_bonus": null,
+      "spells": [
+        {
+          "id": "dancing-lights",
+          "name": "dancing lights",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "darkness",
+          "name": "darkness",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "faerie-fire",
+          "name": "faerie fire",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        }
+      ],
+      "source_complete": true,
+      "unsupported_text": null
+    }
   },
   {
     "id": "druid",
@@ -12225,7 +12749,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/299/1000/1000/636252771583275655.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "dryad",
@@ -12316,7 +12841,64 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/307/1000/1000/636252771953950206.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": {
+      "ability": "charisma",
+      "save_dc": 14,
+      "attack_bonus": null,
+      "spells": [
+        {
+          "id": "druidcraft",
+          "name": "druidcraft",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "entangle",
+          "name": "entangle",
+          "usage": "per_day",
+          "uses_per_day": 3,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "goodberry",
+          "name": "goodberry",
+          "usage": "per_day",
+          "uses_per_day": 3,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "barkskin",
+          "name": "barkskin",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "pass-without-trace",
+          "name": "pass without trace",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "shillelagh",
+          "name": "shillelagh",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        }
+      ],
+      "source_complete": true,
+      "unsupported_text": null
+    }
   },
   {
     "id": "duergar",
@@ -12428,7 +13010,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/309/1000/1000/636252772101183765.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "dust-mephit",
@@ -12526,7 +13109,24 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/313/1000/1000/636252772213922157.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": {
+      "ability": "charisma",
+      "save_dc": null,
+      "attack_bonus": null,
+      "spells": [
+        {
+          "id": "sleep",
+          "name": "sleep",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        }
+      ],
+      "source_complete": true,
+      "unsupported_text": null
+    }
   },
   {
     "id": "eagle",
@@ -12613,7 +13213,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/515/1000/1000/636376317171111968.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "earth-elemental",
@@ -12719,7 +13320,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/317/315/315/636252772331779404.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "efreeti",
@@ -12849,7 +13451,88 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/325/1000/1000/636252775714332067.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": {
+      "ability": "charisma",
+      "save_dc": 15,
+      "attack_bonus": 7,
+      "spells": [
+        {
+          "id": "detect-magic",
+          "name": "detect magic",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "enlarge-reduce",
+          "name": "enlarge/reduce",
+          "usage": "per_day",
+          "uses_per_day": 3,
+          "shared_pool": true,
+          "qualifier": null
+        },
+        {
+          "id": "tongues",
+          "name": "tongues",
+          "usage": "per_day",
+          "uses_per_day": 3,
+          "shared_pool": true,
+          "qualifier": null
+        },
+        {
+          "id": "conjure-elemental",
+          "name": "conjure elemental",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": "fire elemental only"
+        },
+        {
+          "id": "gaseous-form",
+          "name": "gaseous form",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "invisibility",
+          "name": "invisibility",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "major-image",
+          "name": "major image",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "plane-shift",
+          "name": "plane shift",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "wall-of-fire",
+          "name": "wall of fire",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        }
+      ],
+      "source_complete": true,
+      "unsupported_text": null
+    }
   },
   {
     "id": "elephant",
@@ -12960,7 +13643,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "elk",
@@ -13076,7 +13760,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "erinyes",
@@ -13230,7 +13915,8 @@
     "source_reactions": "<p><em><strong>Parry.</strong></em> The erinyes adds 4 to its AC against one melee attack that would hit it. To do so, the erinyes must see the attacker and be wielding a melee weapon.</p>",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/329/1000/1000/636252776041158657.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "ettercap",
@@ -13367,7 +14053,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/339/315/315/636252776771842998.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "ettin",
@@ -13483,7 +14170,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/341/1000/1000/636252776953634777.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "fire-elemental",
@@ -13591,7 +14279,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/343/1000/1000/636252777098624896.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "fire-giant",
@@ -13712,7 +14401,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/357/1000/1000/636252778143767005.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "flameskull",
@@ -13824,7 +14514,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/14/487/315/315/636364325235118776.png",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "flesh-golem",
@@ -13933,7 +14624,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/359/315/315/636252778311644574.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "flying-snake",
@@ -14027,7 +14719,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/517/1000/1000/636376319640572721.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "flying-sword",
@@ -14126,7 +14819,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/77/599/1000/1000/636473151106171093.png",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "frog",
@@ -14192,7 +14886,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/523/315/315/636376321230650501.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "frost-giant",
@@ -14313,7 +15008,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/405/1000/1000/636252786158646348.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "gargoyle",
@@ -14435,7 +15131,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/407/315/315/636252786295384889.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "gelatinous-cube",
@@ -14528,7 +15225,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/409/1000/1000/636252786406028958.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "ghast",
@@ -14648,7 +15346,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/411/315/315/636252786516023032.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "ghost",
@@ -14760,7 +15459,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/413/1000/1000/636252786639798307.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "ghoul",
@@ -14875,7 +15575,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/14/483/315/315/636364323937041514.png",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "giant-ape",
@@ -14991,7 +15692,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "giant-badger",
@@ -15105,7 +15807,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/530/1000/1000/636376327839601860.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "giant-bat",
@@ -15191,7 +15894,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "giant-boar",
@@ -15287,7 +15991,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "giant-centipede",
@@ -15378,7 +16083,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "giant-constrictor-snake",
@@ -15487,7 +16193,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "giant-crab",
@@ -15577,7 +16284,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "giant-crocodile",
@@ -15701,7 +16409,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "giant-eagle",
@@ -15817,7 +16526,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/9/894/315/315/636334286969931904.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "giant-elk",
@@ -15935,7 +16645,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "giant-fire-beetle",
@@ -16019,7 +16730,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/9/896/1000/1000/636334287498492864.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "giant-frog",
@@ -16112,7 +16824,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/521/1000/1000/636376321052503535.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "giant-goat",
@@ -16208,7 +16921,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "giant-hyena",
@@ -16294,7 +17008,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "giant-lizard",
@@ -16377,7 +17092,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "giant-octopus",
@@ -16471,7 +17187,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/9/898/315/315/636334288003435302.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "giant-owl",
@@ -16560,7 +17277,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/535/1000/1000/636376331788287090.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "giant-poisonous-snake",
@@ -16653,7 +17371,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "giant-rat",
@@ -16738,7 +17457,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/538/1000/1000/636376332197953299.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "giant-scorpion",
@@ -16863,7 +17583,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "giant-sea-horse",
@@ -16960,7 +17681,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "giant-shark",
@@ -17048,7 +17770,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "giant-spider",
@@ -17148,7 +17871,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/323/1000/1000/636252775648743317.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "giant-toad",
@@ -17246,7 +17970,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "giant-vulture",
@@ -17363,7 +18088,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "giant-wasp",
@@ -17454,7 +18180,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "giant-weasel",
@@ -17541,7 +18268,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "giant-wolf-spider",
@@ -17639,7 +18367,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "gibbering-mouther",
@@ -17736,7 +18465,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/333/315/315/636252776252001529.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "glabrezu",
@@ -17875,7 +18605,64 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/337/315/315/636252776677682465.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": {
+      "ability": "intelligence",
+      "save_dc": 16,
+      "attack_bonus": null,
+      "spells": [
+        {
+          "id": "darkness",
+          "name": "darkness",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "detect-magic",
+          "name": "detect magic",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "dispel-magic",
+          "name": "dispel magic",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "confusion",
+          "name": "confusion",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "fly",
+          "name": "fly",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "power-word-stun",
+          "name": "power word stun",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        }
+      ],
+      "source_complete": true,
+      "unsupported_text": null
+    }
   },
   {
     "id": "gladiator",
@@ -18060,7 +18847,8 @@
     "source_reactions": "<p><em><strong>Parry.</strong></em> The gladiator adds 3 to its AC against one melee attack that would hit it. To do so, the gladiator must see the attacker and be wielding a melee weapon.</p>",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/656/humanoid.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "gnoll",
@@ -18233,7 +19021,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/345/1000/1000/636252777224997611.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "goat",
@@ -18329,7 +19118,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "goblin",
@@ -18437,7 +19227,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/351/315/315/636252777818652432.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "gold-dragon-wyrmling",
@@ -18558,7 +19349,8 @@
         "resource_id": "breath-weapons",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "gorgon",
@@ -18675,7 +19467,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/355/315/315/636252778125099430.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "gray-ooze",
@@ -18783,7 +19576,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/658/ooze.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "green-dragon-wyrmling",
@@ -18912,7 +19706,8 @@
         "resource_id": "poison-breath",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "green-hag",
@@ -19005,7 +19800,40 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/365/315/315/636252778948574879.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": {
+      "ability": "charisma",
+      "save_dc": 12,
+      "attack_bonus": null,
+      "spells": [
+        {
+          "id": "dancing-lights",
+          "name": "dancing lights",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "minor-illusion",
+          "name": "minor illusion",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "vicious-mockery",
+          "name": "vicious mockery",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        }
+      ],
+      "source_complete": true,
+      "unsupported_text": null
+    }
   },
   {
     "id": "grick",
@@ -19114,7 +19942,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/369/1000/1000/636252779341924439.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "griffon",
@@ -19230,7 +20059,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/373/315/315/636252779693862725.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "grimlock",
@@ -19330,7 +20160,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/375/315/315/636252780049813181.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "guard",
@@ -19460,7 +20291,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/656/humanoid.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "guardian-naga",
@@ -19565,7 +20397,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/377/315/315/636252780447421771.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "gynosphinx",
@@ -19676,7 +20509,8 @@
     "source_reactions": "",
     "source_legendary_actions": "<p>The sphinx can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The sphinx regains spent legendary actions at the start of its turn. </p><p><em><strong>Claw Attack.</strong></em> The sphinx makes one claw attack. </p><p><em><strong>Teleport (Costs 2 Actions).</strong></em> The sphinx magically teleports, along with any equipment it is wearing or carrying, up to 120 feet to an unoccupied space it can see. </p><p><em><strong>Cast a Spell (Costs 3 Actions).</strong></em> The sphinx casts a spell from its list of prepared spells, using a spell slot as normal.</p>",
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/383/315/315/636252780786457550.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "half-red-dragon-veteran",
@@ -19830,7 +20664,8 @@
         "resource_id": "fire-breath",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "harpy",
@@ -19943,7 +20778,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/391/315/315/636252781955908234.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "hawk",
@@ -20030,7 +20866,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/9/900/1000/1000/636334288270143064.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "hell-hound",
@@ -20150,7 +20987,8 @@
         "resource_id": "fire-breath",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "hezrou",
@@ -20281,7 +21119,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/321/315/315/636252775562934524.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "hill-giant",
@@ -20395,7 +21234,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/331/315/315/636252776196140305.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "hippogriff",
@@ -20511,7 +21351,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/335/315/315/636252776578605778.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "hobgoblin",
@@ -20617,7 +21458,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/389/315/315/636252781431932597.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "homunculus",
@@ -20707,7 +21549,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/18/287/315/315/636379803928245506.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "horned-devil",
@@ -20862,7 +21705,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/347/315/315/636252777255936976.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "hunter-shark",
@@ -20950,7 +21794,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "hydra",
@@ -21041,7 +21886,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/349/315/315/636252777669218389.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "hyena",
@@ -21127,7 +21973,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/9/902/1000/1000/636334288674955736.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "ice-devil",
@@ -21305,7 +22152,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/353/315/315/636252777966974765.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "ice-mephit",
@@ -21414,7 +22262,24 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/18/290/315/315/636379804105821214.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": {
+      "ability": "charisma",
+      "save_dc": null,
+      "attack_bonus": null,
+      "spells": [
+        {
+          "id": "fog-cloud",
+          "name": "fog cloud",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        }
+      ],
+      "source_complete": true,
+      "unsupported_text": null
+    }
   },
   {
     "id": "imp",
@@ -21516,7 +22381,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/361/315/315/636252778560366227.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "invisible-stalker",
@@ -21626,7 +22492,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/367/315/315/636252779159282339.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "iron-golem",
@@ -21780,7 +22647,8 @@
         "resource_id": "poison-breath",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "jackal",
@@ -21846,7 +22714,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "killer-whale",
@@ -21935,7 +22804,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "knight",
@@ -22055,7 +22925,8 @@
     "source_reactions": "<p><em><strong>Parry.</strong></em> The knight adds 2 to its AC against one melee attack that would hit it. To do so, the knight must see the attacker and be wielding a melee weapon.</p>",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/656/humanoid.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "kobold",
@@ -22162,7 +23033,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/379/1000/1000/636252780450300625.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "kraken",
@@ -22293,7 +23165,8 @@
     "source_reactions": "",
     "source_legendary_actions": "<p>The kraken can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The kraken regains spent legendary actions at the start of its turn. </p><p><em><strong>Tentacle Attack or Fling.</strong></em> The kraken makes one tentacle attack or uses its Fling. </p><p><em><strong>Lightning Storm (Costs 2 Actions).</strong></em> The kraken uses Lightning Storm. </p><p><em><strong>Ink Cloud (Costs 3 Actions).</strong></em> While underwater, the kraken expels an ink cloud in a 60-foot radius. The cloud spreads around corners, and that area is heavily obscured to creatures other than the kraken. Each creature other than the kraken that ends its turn there must succeed on a DC 23 Constitution saving throw, taking 16 (3d10) poison damage on a failed save, or half as much damage on a successful one. A strong current disperses the cloud, which otherwise disappears at the end of the kraken's next turn.</p>",
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/381/1000/1000/636252780680163799.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "lamia",
@@ -22383,7 +23256,72 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/385/315/315/636252780906064244.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": {
+      "ability": "charisma",
+      "save_dc": 13,
+      "attack_bonus": null,
+      "spells": [
+        {
+          "id": "disguise-self",
+          "name": "disguise self",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": "any humanoid form"
+        },
+        {
+          "id": "major-image",
+          "name": "major image",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "charm-person",
+          "name": "charm person",
+          "usage": "per_day",
+          "uses_per_day": 3,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "mirror-image",
+          "name": "mirror image",
+          "usage": "per_day",
+          "uses_per_day": 3,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "scrying",
+          "name": "scrying",
+          "usage": "per_day",
+          "uses_per_day": 3,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "suggestion",
+          "name": "suggestion",
+          "usage": "per_day",
+          "uses_per_day": 3,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "geas",
+          "name": "geas",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        }
+      ],
+      "source_complete": true,
+      "unsupported_text": null
+    }
   },
   {
     "id": "lemure",
@@ -22477,7 +23415,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/149/1000/1000/636252758704142054.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "lich",
@@ -22598,7 +23537,8 @@
     "source_reactions": "",
     "source_legendary_actions": "<p>The lich can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The lich regains spent legendary actions at the start of its turn. </p><p><em><strong>Cantrip.</strong></em> The lich casts a cantrip. </p><p><em><strong>Paralyzing Touch (Costs 2 Actions).</strong></em> The lich uses its Paralyzing Touch. </p><p><em><strong>Frightening Gaze (Costs 2 Actions).</strong></em> The lich fixes its gaze on one creature it can see within 10 feet of it. The target must succeed on a DC 18 Wisdom saving throw against this magic or become frightened for 1 minute. The frightened target can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success. If a target's saving throw is successful or the effect ends for it, the target is immune to the lich's gaze for the next 24 hours. </p><p><em><strong>Disrupt Life (Costs 3 Actions).</strong></em> Each living creature within 20 feet of the lich must make a DC 18 Constitution saving throw against this magic, taking 21 (6d6) necrotic damage on a failed save, or half as much damage on a successful one.</p>",
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/165/1000/1000/636252760084366499.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "lion",
@@ -22715,7 +23655,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "lizard",
@@ -22798,7 +23739,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "lizardfolk",
@@ -22975,7 +23917,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/233/315/315/636252766314905259.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "mage",
@@ -23089,7 +24032,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/656/humanoid.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "magma-mephit",
@@ -23216,7 +24160,24 @@
         "resource_id": "fire-breath",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": {
+      "ability": "charisma",
+      "save_dc": 10,
+      "attack_bonus": null,
+      "spells": [
+        {
+          "id": "heat-metal",
+          "name": "heat metal",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": "spell save DC 10"
+        }
+      ],
+      "source_complete": true,
+      "unsupported_text": null
+    }
   },
   {
     "id": "magmin",
@@ -23305,7 +24266,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/183/315/315/636252762034276620.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "mammoth",
@@ -23416,7 +24378,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "manticore",
@@ -23558,7 +24521,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/187/315/315/636252762623266809.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "marilith",
@@ -23710,7 +24674,8 @@
     "source_reactions": "<p><em><strong>Parry.</strong></em> The marilith adds 5 to its AC against one melee attack that would hit it. To do so, the marilith must see the attacker and be wielding a melee weapon.</p>",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/189/315/315/636252763036079032.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "mastiff",
@@ -23801,7 +24766,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/191/1000/1000/636252763295291063.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "medusa",
@@ -23962,7 +24928,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/580/1000/1000/636376361850900325.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "merfolk",
@@ -24095,7 +25062,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/197/1000/1000/636252763841141413.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "merrow",
@@ -24233,7 +25201,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/203/315/315/636252764097970952.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "mimic",
@@ -24355,7 +25324,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/211/315/315/636252764731637373.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "minotaur",
@@ -24473,7 +25443,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/217/1000/1000/636252765009181721.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "minotaur-skeleton",
@@ -24594,7 +25565,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/480/1000/1000/636376298435934058.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "mule",
@@ -24679,7 +25651,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "mummy",
@@ -24790,7 +25763,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/225/1000/1000/636252765553048566.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "mummy-lord",
@@ -24917,7 +25891,8 @@
     "source_reactions": "",
     "source_legendary_actions": "<p>The mummy lord can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The mummy lord regains spent legendary actions at the start of its turn.</p><p><em><strong>Attack.</strong></em> The mummy lord makes one attack with its rotting fist or uses its Dreadful Glare.</p><p><em><strong>Blinding Dust.</strong></em> Blinding dust and sand swirls magically around the mummy lord. Each creature within 5 feet of the mummy lord must succeed on a DC 16 Constitution saving throw or be blinded until the end of the creature's next turn.</p><p><em><strong>Blasphemous Word (Costs 2 Actions).</strong></em> The mummy lord utters a blasphemous word. Each non-undead creature within 10 feet of the mummy lord that can hear the magical utterance must succeed on a DC 16 Constitution saving throw or be stunned until the end of the mummy lord's next turn.</p><p><em><strong>Channel Negative Energy (Costs 2 Actions).</strong></em> The mummy lord magically unleashes negative energy. Creatures within 60 feet of the mummy lord, including ones behind barriers and around corners, can't regain hit points until the end of the mummy lord's next turn.</p><p><em><strong>Whirlwind of Sand (Costs 2 Actions).</strong></em> The mummy lord magically transforms into a whirlwind of sand, moves up to 60 feet, and reverts to its normal form. While in whirlwind form, the mummy lord is immune to all damage, and it can't be grappled, petrified, knocked prone, restrained, or stunned. Equipment worn or carried by the mummy lord remain in its possession.</p>",
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/660/undead.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "nalfeshnee",
@@ -25053,7 +26028,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/261/1000/1000/636252768396688147.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "night-hag",
@@ -25153,7 +26129,56 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/269/1000/1000/636252769277562895.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": {
+      "ability": "charisma",
+      "save_dc": 14,
+      "attack_bonus": 6,
+      "spells": [
+        {
+          "id": "detect-magic",
+          "name": "detect magic",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "magic-missile",
+          "name": "magic missile",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "plane-shift",
+          "name": "plane shift",
+          "usage": "per_day",
+          "uses_per_day": 2,
+          "shared_pool": false,
+          "qualifier": "self only"
+        },
+        {
+          "id": "ray-of-enfeeblement",
+          "name": "ray of enfeeblement",
+          "usage": "per_day",
+          "uses_per_day": 2,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "sleep",
+          "name": "sleep",
+          "usage": "per_day",
+          "uses_per_day": 2,
+          "shared_pool": false,
+          "qualifier": null
+        }
+      ],
+      "source_complete": true,
+      "unsupported_text": null
+    }
   },
   {
     "id": "nightmare",
@@ -25250,7 +26275,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/273/315/315/636252769493472144.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "noble",
@@ -25338,7 +26364,8 @@
     "source_reactions": "<p><em><strong>Parry.</strong></em> The noble adds 2 to its AC against one melee attack that would hit it. To do so, the noble must see the attacker and be wielding a melee weapon.</p>",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/277/1000/1000/636252769861281900.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "nothic",
@@ -25437,7 +26464,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/14/475/1000/1000/636364321398842272.png",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "ochre-jelly",
@@ -25545,7 +26573,8 @@
     "source_reactions": "<p><em><strong>Split.</strong></em> When a jelly that is Medium or larger is subjected to lightning or slashing damage, it splits into two new jellies if it has at least 10 hit points. Each new jelly has hit points equal to half the original jelly's, rounded down. New jellies are one size smaller than the original jelly.</p>",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/279/1000/1000/636252770058723674.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "octopus",
@@ -25639,7 +26668,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/9/921/315/315/636334602449110996.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "ogre",
@@ -25766,7 +26796,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/285/315/315/636252770535203221.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "ogre-zombie",
@@ -25856,7 +26887,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/287/315/315/636252770700032248.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "oni",
@@ -25982,7 +27014,64 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/297/1000/1000/636252771507213738.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": {
+      "ability": "charisma",
+      "save_dc": 13,
+      "attack_bonus": null,
+      "spells": [
+        {
+          "id": "darkness",
+          "name": "darkness",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "invisibility",
+          "name": "invisibility",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "charm-person",
+          "name": "charm person",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "cone-of-cold",
+          "name": "cone of cold",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "gaseous-form",
+          "name": "gaseous form",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "sleep",
+          "name": "sleep",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        }
+      ],
+      "source_complete": true,
+      "unsupported_text": null
+    }
   },
   {
     "id": "orc",
@@ -26113,7 +27202,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/301/1000/1000/636252771691385727.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "otyugh",
@@ -26244,7 +27334,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/305/315/315/636252771931366466.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "owl",
@@ -26333,7 +27424,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/533/1000/1000/636376331660233857.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "owlbear",
@@ -26448,7 +27540,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/315/315/315/636252772225295187.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "panther",
@@ -26564,7 +27657,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "pegasus",
@@ -26653,7 +27747,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/18/303/1000/1000/636379808797059368.png",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "phase-spider",
@@ -26750,7 +27845,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/319/315/315/636252772538300448.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "pit-fiend",
@@ -26936,7 +28032,13 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/311/315/315/636252772132434763.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": {
+      "ability": "charisma",
+      "spells": [],
+      "source_complete": false,
+      "unsupported_text": "Fear Aura. incapacitatedfrightened Magic Resistance. Magic Weapons. Innate Spellcasting. detect magicfireballhold monsterwall of fire"
+    }
   },
   {
     "id": "planetar",
@@ -27055,7 +28157,88 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/303/315/315/636252771762002496.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": {
+      "ability": "charisma",
+      "save_dc": 20,
+      "attack_bonus": null,
+      "spells": [
+        {
+          "id": "detect-evil-and-good",
+          "name": "detect evil and good",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "invisibility",
+          "name": "invisibility",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": "self only"
+        },
+        {
+          "id": "blade-barrier",
+          "name": "blade barrier",
+          "usage": "per_day",
+          "uses_per_day": 3,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "dispel-evil-and-good",
+          "name": "dispel evil and good",
+          "usage": "per_day",
+          "uses_per_day": 3,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "flame-strike",
+          "name": "flame strike",
+          "usage": "per_day",
+          "uses_per_day": 3,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "raise-dead",
+          "name": "raise dead",
+          "usage": "per_day",
+          "uses_per_day": 3,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "commune",
+          "name": "commune",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "control-weather",
+          "name": "control weather",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "insect-plague",
+          "name": "insect plague",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        }
+      ],
+      "source_complete": true,
+      "unsupported_text": null
+    }
   },
   {
     "id": "plesiosaurus",
@@ -27143,7 +28326,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/488/315/315/636376304583147024.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "poisonous-snake",
@@ -27234,7 +28418,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "polar-bear",
@@ -27350,7 +28535,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "pony",
@@ -27432,7 +28618,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "priest",
@@ -27521,7 +28708,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/656/humanoid.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "pseudodragon",
@@ -27631,7 +28819,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/283/1000/1000/636252770521719244.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "pteranodon",
@@ -27716,7 +28905,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "purple-worm",
@@ -27834,7 +29024,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/275/315/315/636252769846436684.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "quasit",
@@ -27941,7 +29132,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/271/315/315/636252769318699115.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "quipper",
@@ -28027,7 +29219,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/253/1000/1000/636252767919065233.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "rakshasa",
@@ -28126,7 +29319,120 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/247/315/315/636252767480157951.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": {
+      "ability": "charisma",
+      "save_dc": 18,
+      "attack_bonus": 10,
+      "spells": [
+        {
+          "id": "detect-thoughts",
+          "name": "detect thoughts",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "disguise-self",
+          "name": "disguise self",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "mage-hand",
+          "name": "mage hand",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "minor-illusion",
+          "name": "minor illusion",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "charm-person",
+          "name": "charm person",
+          "usage": "per_day",
+          "uses_per_day": 3,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "detect-magic",
+          "name": "detect magic",
+          "usage": "per_day",
+          "uses_per_day": 3,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "invisibility",
+          "name": "invisibility",
+          "usage": "per_day",
+          "uses_per_day": 3,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "major-image",
+          "name": "major image",
+          "usage": "per_day",
+          "uses_per_day": 3,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "suggestion",
+          "name": "suggestion",
+          "usage": "per_day",
+          "uses_per_day": 3,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "dominate-person",
+          "name": "dominate person",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "fly",
+          "name": "fly",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "plane-shift",
+          "name": "plane shift",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "true-seeing",
+          "name": "true seeing",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        }
+      ],
+      "source_complete": true,
+      "unsupported_text": null
+    }
   },
   {
     "id": "rat",
@@ -28210,7 +29516,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/541/315/315/636376335435407571.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "raven",
@@ -28297,7 +29604,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/553/1000/1000/636376341568391037.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "red-dragon-wyrmling",
@@ -28422,7 +29730,8 @@
         "resource_id": "fire-breath",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "reef-shark",
@@ -28510,7 +29819,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "remorhaz",
@@ -28610,7 +29920,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/231/315/315/636252766143328421.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "rhinoceros",
@@ -28705,7 +30016,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "riding-horse",
@@ -28787,7 +30099,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/9/904/315/315/636334288913250513.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "roc",
@@ -28911,7 +30224,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/229/315/315/636252765590929622.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "roper",
@@ -29008,7 +30322,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/560/1000/1000/636376344528091115.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "rug-of-smothering",
@@ -29084,7 +30399,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/213/1000/1000/636252764761726261.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "rust-monster",
@@ -29170,7 +30486,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/207/1000/1000/636252764265020108.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "saber-toothed-tiger",
@@ -29285,7 +30602,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "sahuagin",
@@ -29473,7 +30791,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/177/1000/1000/636252761683746719.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "salamander",
@@ -29676,7 +30995,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/173/1000/1000/636252761197608364.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "satyr",
@@ -29807,7 +31127,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/169/1000/1000/636252760706340605.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "scorpion",
@@ -29897,7 +31218,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "scout",
@@ -30016,7 +31338,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/163/1000/1000/636252759915100020.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "sea-hag",
@@ -30104,7 +31427,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/159/1000/1000/636252759356069260.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "sea-horse",
@@ -30166,7 +31490,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "shadow",
@@ -30276,7 +31601,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/155/315/315/636252758977032019.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "shambling-mound",
@@ -30374,7 +31700,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/563/315/315/636376346968079714.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "shield-guardian",
@@ -30478,7 +31805,8 @@
     "source_reactions": "<p><em><strong>Shield.</strong></em> When a creature makes an attack against the wearer of the guardian's amulet, the guardian grants a +2 bonus to the wearer's AC if the guardian is within 5 feet of the wearer.</p>",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/145/315/315/636252758362792494.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "shrieker",
@@ -30545,7 +31873,8 @@
     "source_reactions": "<p><em><strong>Shriek.</strong></em> When bright light or a creature is within 30 feet of the shrieker, it emits a shriek audible within 300 feet of it. The shrieker continues to shriek until the disturbance moves out of range and for 1d4 of the shrieker's turns afterward.</p>",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/571/1000/1000/636376357634308010.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "silver-dragon-wyrmling",
@@ -30686,7 +32015,8 @@
         "resource_cost": 1,
         "animation": "paralyzed"
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "skeleton",
@@ -30797,7 +32127,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/472/315/315/636376294573239565.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "solar",
@@ -30955,7 +32286,72 @@
     "source_reactions": "",
     "source_legendary_actions": "<p>The solar can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The solar regains spent legendary actions at the start of its turn. </p><p><em><strong>Teleport.</strong></em> The solar magically teleports, along with any equipment it is wearing or carrying, up to 120 feet to an unoccupied space it can see. </p><p><em><strong>Searing Burst (Costs 2 Actions).</strong></em> The solar emits magical, divine energy. Each creature of its choice in a 10-foot radius must make a DC 23 Dexterity saving throw, taking 14 (4d6) fire damage plus 14 (4d6) radiant damage on a failed save, or half as much damage on a successful one. </p><p><em><strong>Blinding Gaze (Costs 3 Actions).</strong></em> The solar targets one creature it can see within 30 feet of it. If the target can see it, the target must succeed on a DC 15 Constitution saving throw or be blinded until magic such as the lesser restoration spell removes the blindness.</p>",
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/121/315/315/636252748079664097.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": {
+      "ability": "charisma",
+      "save_dc": 25,
+      "attack_bonus": null,
+      "spells": [
+        {
+          "id": "detect-evil-and-good",
+          "name": "detect evil and good",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "invisibility",
+          "name": "invisibility",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": "self only"
+        },
+        {
+          "id": "blade-barrier",
+          "name": "blade barrier",
+          "usage": "per_day",
+          "uses_per_day": 3,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "dispel-evil-and-good",
+          "name": "dispel evil and good",
+          "usage": "per_day",
+          "uses_per_day": 3,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "resurrection",
+          "name": "resurrection",
+          "usage": "per_day",
+          "uses_per_day": 3,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "commune",
+          "name": "commune",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "control-weather",
+          "name": "control weather",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        }
+      ],
+      "source_complete": true,
+      "unsupported_text": null
+    }
   },
   {
     "id": "spectator",
@@ -31046,7 +32442,8 @@
     "source_reactions": "<p><em><strong>Spell Reflection.</strong></em> If the spectator makes a successful saving throw against a spell, or a spell attack misses it, the spectator can choose another creature (including the spellcaster) it can see within 30 feet of it. The spell targets the chosen creature instead of the spectator. If the spell forced a saving throw, the chosen creature makes its own save. If the spell was an attack, the attack roll is rerolled against the chosen creature.</p>",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/14/485/315/315/636364324602733616.png",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "specter",
@@ -31153,7 +32550,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/119/1000/1000/636252747399435720.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "spider",
@@ -31250,7 +32648,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/575/315/315/636376359864842950.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "spirit-naga",
@@ -31353,7 +32752,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/117/315/315/636252746851035686.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "sprite",
@@ -31463,7 +32863,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/115/315/315/636252746444973630.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "spy",
@@ -31586,7 +32987,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/656/humanoid.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "steam-mephit",
@@ -31688,7 +33090,24 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/113/315/315/636252745841820724.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": {
+      "ability": "charisma",
+      "save_dc": null,
+      "attack_bonus": null,
+      "spells": [
+        {
+          "id": "blur",
+          "name": "blur",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        }
+      ],
+      "source_complete": true,
+      "unsupported_text": null
+    }
   },
   {
     "id": "stirge",
@@ -31771,7 +33190,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/111/1000/1000/636252745395103202.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "stone-giant",
@@ -31891,7 +33311,8 @@
     "source_reactions": "<p><em><strong>Rock Catching.</strong></em> If a rock or similar object is hurled at the giant, the giant can, with a successful DC 10 Dexterity saving throw, catch the missile and take no bludgeoning damage from it.</p>",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/109/315/315/636252744518731463.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "stone-golem",
@@ -32000,7 +33421,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/107/315/315/636252743780112834.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "storm-giant",
@@ -32134,7 +33556,64 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/105/315/315/636252743254029469.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": {
+      "ability": "charisma",
+      "save_dc": 17,
+      "attack_bonus": null,
+      "spells": [
+        {
+          "id": "detect-magic",
+          "name": "detect magic",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "feather-fall",
+          "name": "feather fall",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "levitate",
+          "name": "levitate",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "light",
+          "name": "light",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "control-weather",
+          "name": "control weather",
+          "usage": "per_day",
+          "uses_per_day": 3,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "water-breathing",
+          "name": "water breathing",
+          "usage": "per_day",
+          "uses_per_day": 3,
+          "shared_pool": false,
+          "qualifier": null
+        }
+      ],
+      "source_complete": true,
+      "unsupported_text": null
+    }
   },
   {
     "id": "succubus-incubus",
@@ -32236,7 +33715,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/103/315/315/636252742573312994.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "swarm-of-bats",
@@ -32336,7 +33816,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/9/906/315/315/636334289313689439.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "swarm-of-insects",
@@ -32434,7 +33915,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "swarm-of-poisonous-snakes",
@@ -32540,7 +34022,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "swarm-of-quippers",
@@ -32640,7 +34123,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/18/276/315/315/636379781035768521.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "swarm-of-rats",
@@ -32738,7 +34222,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/9/908/315/315/636334289541603972.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "swarm-of-ravens",
@@ -32838,7 +34323,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/555/315/315/636376341743427326.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "tarrasque",
@@ -33057,7 +34543,8 @@
         "source_effect_immunity_on_success": true,
         "animation": "fear"
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "thug",
@@ -33173,7 +34660,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/99/1000/1000/636252741335519081.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "tiger",
@@ -33288,7 +34776,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "treant",
@@ -33409,7 +34898,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/97/315/315/636252740537990664.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "tribal-warrior",
@@ -33539,7 +35029,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/656/humanoid.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "triceratops",
@@ -33650,7 +35141,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "troll",
@@ -33769,7 +35261,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/95/315/315/636252739682234623.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "twig-blight",
@@ -33860,7 +35353,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/464/1000/1000/636376286997771487.png",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "tyrannosaurus-rex",
@@ -33977,7 +35471,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/594/1000/1000/636376369004412963.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "unicorn",
@@ -34116,7 +35611,64 @@
     "source_reactions": "",
     "source_legendary_actions": "<p>The unicorn can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The unicorn regains spent legendary actions at the start of its turn. </p><p><em><strong>Hooves.</strong></em> The unicorn makes one attack with its hooves. </p><p><em><strong>Shimmering Shield (Costs 2 Actions).</strong></em> The unicorn creates a shimmering, magical field around itself or another creature it can see within 60 feet of it. The target gains a +2 bonus to AC until the end of the unicorn's next turn. </p><p><em><strong>Heal Self (Costs 3 Actions).</strong></em> The unicorn magically regains 11 (2d8 + 2) hit points.</p>",
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/93/1000/1000/636252739248798123.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": {
+      "ability": "charisma",
+      "save_dc": 14,
+      "attack_bonus": null,
+      "spells": [
+        {
+          "id": "detect-evil-and-good",
+          "name": "detect evil and good",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "druidcraft",
+          "name": "druidcraft",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "pass-without-trace",
+          "name": "pass without trace",
+          "usage": "at_will",
+          "uses_per_day": null,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "calm-emotions",
+          "name": "calm emotions",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "dispel-evil-and-good",
+          "name": "dispel evil and good",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        },
+        {
+          "id": "entangle",
+          "name": "entangle",
+          "usage": "per_day",
+          "uses_per_day": 1,
+          "shared_pool": false,
+          "qualifier": null
+        }
+      ],
+      "source_complete": true,
+      "unsupported_text": null
+    }
   },
   {
     "id": "vampire",
@@ -34252,7 +35804,8 @@
     "source_reactions": "",
     "source_legendary_actions": "<p>The vampire can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The vampire regains spent legendary actions at the start of its turn. </p><p><em><strong>Move.</strong></em> The vampire moves up to its speed without provoking opportunity attacks. </p><p><em><strong>Unarmed Strike.</strong></em> The vampire makes one unarmed strike. </p><p><em><strong>Bite.</strong></em>(Costs 2 Actions). The vampire makes one bite attack.</p>",
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/91/1000/1000/636252738665379794.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "vampire-spawn",
@@ -34378,7 +35931,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/89/1000/1000/636252738148839638.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "veteran",
@@ -34507,7 +36061,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/656/humanoid.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "violet-fungus",
@@ -34596,7 +36151,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/573/315/315/636376357964412799.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "vrock",
@@ -34728,7 +36284,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/87/315/315/636252737538172594.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "vulture",
@@ -34816,7 +36373,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "warhorse",
@@ -34905,7 +36463,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "warhorse-skeleton",
@@ -34994,7 +36553,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/660/undead.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "water-elemental",
@@ -35106,7 +36666,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/84/315/315/636252736680781387.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "weasel",
@@ -35193,7 +36754,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "werebear",
@@ -35326,7 +36888,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/82/1000/1000/636252736005297867.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "wereboar",
@@ -35438,7 +37001,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/80/315/315/636252735506840152.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "wererat",
@@ -35572,7 +37136,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/78/1000/1000/636252735121410517.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "weretiger",
@@ -35728,7 +37293,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/76/1000/1000/636252734783831163.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "werewolf",
@@ -35907,7 +37473,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/74/1000/1000/636252734224239957.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "white-dragon-wyrmling",
@@ -36033,7 +37600,8 @@
         "resource_id": "cold-breath",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "wight",
@@ -36173,7 +37741,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/56/315/315/636252726349692861.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "will-o-wisp",
@@ -36281,7 +37850,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/585/315/315/636376363763232290.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "winter-wolf",
@@ -36400,7 +37970,8 @@
         "resource_id": "cold-breath",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "wolf",
@@ -36493,7 +38064,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/482/1000/1000/636376300223855327.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "worg",
@@ -36584,7 +38156,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/52/1000/1000/636252724662073178.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "wraith",
@@ -36691,7 +38264,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/50/1000/1000/636252724191790008.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "wyvern",
@@ -36834,7 +38408,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/48/315/315/636252723695596000.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "xorn",
@@ -36961,7 +38536,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/46/1000/1000/636252723241554579.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "yeti",
@@ -37070,7 +38646,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/8/662/1000/1000/636313413410825930.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "young-black-dragon",
@@ -37230,7 +38807,8 @@
         "resource_id": "acid-breath",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "young-blue-dragon",
@@ -37388,7 +38966,8 @@
         "resource_id": "lightning-breath",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "young-brass-dragon",
@@ -37541,7 +39120,8 @@
         "resource_id": "breath-weapons",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "young-bronze-dragon",
@@ -37675,7 +39255,8 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/64/315/315/636252731269768088.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   },
   {
     "id": "young-copper-dragon",
@@ -37828,7 +39409,8 @@
         "resource_id": "breath-weapons",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "young-gold-dragon",
@@ -37983,7 +39565,8 @@
         "resource_id": "breath-weapons",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "young-green-dragon",
@@ -38145,7 +39728,8 @@
         "resource_id": "poison-breath",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "young-red-dragon",
@@ -38302,7 +39886,8 @@
         "resource_id": "fire-breath",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "young-silver-dragon",
@@ -38477,7 +40062,8 @@
         "resource_cost": 1,
         "animation": "paralyzed"
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "young-white-dragon",
@@ -38637,7 +40223,8 @@
         "resource_id": "cold-breath",
         "resource_cost": 1
       }
-    ]
+    ],
+    "innate_spellcasting": null
   },
   {
     "id": "zombie",
@@ -38727,6 +40314,7 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/71/1000/1000/636252733510786769.jpeg",
-    "saving_throw_actions": []
+    "saving_throw_actions": [],
+    "innate_spellcasting": null
   }
 ]
