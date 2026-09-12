@@ -47,6 +47,14 @@ class GridMovementPlan(BaseModel):
     goal_reachable: bool
 
 
+class GridDestinationPlan(BaseModel):
+    """One legal destination reachable within a movement budget."""
+
+    destination: GridPosition
+    path: list[GridPosition] = Field(default_factory=list)
+    movement_cost_ft: int = Field(default=0, ge=0)
+
+
 class OffensiveMovementIntent(BaseModel):
     """Action-neutral reason for approaching an enemy through the shared movement engine."""
 
