@@ -15,6 +15,8 @@ MODELED_TRAITS = {
     "Trampling Charge": CombatTrait.CHARGE,
 }
 
+DATA_BOUND_TRAITS = frozenset({"Blood Frenzy"})
+
 ARENA_NEUTRAL_TRAITS = frozenset({
     "Agile", "Amphibious", "Beast of Burden", "False Appearance", "Flyby",
     "Hellish Restoration", "Hold Breath", "Ice Walk", "Illumination", "Jumper",
@@ -24,7 +26,7 @@ ARENA_NEUTRAL_TRAITS = frozenset({
     "Water Breathing", "Web Walker",
 })
 
-SUPPORTED_TRAITS = frozenset(MODELED_TRAITS) | ARENA_NEUTRAL_TRAITS
+SUPPORTED_TRAITS = frozenset(MODELED_TRAITS) | DATA_BOUND_TRAITS | ARENA_NEUTRAL_TRAITS
 _LEGENDARY_RESISTANCE = re.compile(r"^Legendary Resistance \((\d+)/Day\)$", re.I)
 
 
