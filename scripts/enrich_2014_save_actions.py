@@ -7,6 +7,7 @@ import re
 from pathlib import Path
 
 from import_2014_innate_spellcasting import parse_innate_spellcasting
+from import_2014_legendary_actions import parse_legendary_actions
 from import_2014_multiattack import parse_multiattack
 from import_2014_recharge import parse_action_recharges
 from import_2014_regeneration import parse_regeneration
@@ -33,6 +34,25 @@ def _bind_multiattack_policy(row: dict, actions: str) -> None:
     row["multiattack_policy"] = parsed.get("policy")
 
 
+def _bind_legendary_actions(row: dict, source_legendary_actions: str) -> None:
+    uses, options, unsupported = parse_legendary_actions(
+        source_legendary_actions,
+        row.get("attacks") or [],
+    )
+    row["legendary_action_uses"] = uses
+    row["legendary_actions"] = options
+    # Keep the source-derived names as the fail-closed audit surface. Parsed
+    # options are removed from that blocker list; anything left must remain
+    # unsupported until the universal engine gains a typed representation.
+    supported = {option["name"].strip().lower() for option in options}
+    source_names = row.get("legendary_action_names") or []
+    unresolved = [name for name in source_names if name.strip().lower() not in supported]
+    for name in unsupported:
+        if name not in unresolved:
+            unresolved.append(name)
+    row["legendary_action_names"] = unresolved
+
+
 def enrich(source_path: Path, catalog_path: Path) -> None:
     source_rows = json.loads(source_path.read_text(encoding="utf-8"))
     catalog_rows = json.loads(catalog_path.read_text(encoding="utf-8"))
@@ -49,6 +69,7 @@ def enrich(source_path: Path, catalog_path: Path) -> None:
         row["regeneration"] = parse_regeneration(traits)
         _bind_multiattack_policy(row, actions)
         _bind_frightful_multiattack(row, actions)
+        _bind_legendary_actions(row, source.get("Legendary Actions", ""))
     catalog_path.write_text(json.dumps(catalog_rows, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
