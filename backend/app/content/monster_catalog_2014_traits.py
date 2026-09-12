@@ -16,8 +16,6 @@ MODELED_TRAITS = {
     "Trampling Charge": CombatTrait.CHARGE,
 }
 
-# Source-preserved traits whose mechanics are consumed by another universal layer
-# or cannot change the current standard arena outcome by themselves.
 DATA_BOUND_TRAITS = frozenset({
     "Blood Frenzy", "Echolocation", "Innate Spellcasting", "Spellcasting",
 })
@@ -33,6 +31,7 @@ ARENA_NEUTRAL_TRAITS = frozenset({
 
 SUPPORTED_TRAITS = frozenset(MODELED_TRAITS) | DATA_BOUND_TRAITS | ARENA_NEUTRAL_TRAITS
 _LEGENDARY_RESISTANCE = re.compile(r"^Legendary Resistance \((\d+)/Day\)$", re.I)
+_RELENTLESS = re.compile(r"^Relentless \(Recharges after a Short or Long Rest\)$", re.I)
 
 
 def legendary_resistance_uses_2014(names: list[str]) -> int:
@@ -48,4 +47,9 @@ def combat_traits_2014(names: list[str]) -> list[CombatTrait]:
 
 
 def unresolved_traits_2014(names: list[str]) -> list[str]:
-    return [name for name in names if name not in SUPPORTED_TRAITS and _LEGENDARY_RESISTANCE.match(name) is None]
+    return [
+        name for name in names
+        if name not in SUPPORTED_TRAITS
+        and _LEGENDARY_RESISTANCE.match(name) is None
+        and _RELENTLESS.match(name) is None
+    ]
