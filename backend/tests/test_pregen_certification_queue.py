@@ -39,9 +39,25 @@ def test_known_certified_frontiers_fail_closed_on_real_features() -> None:
 
     assert frontier["cleric"].next_level == 5
     assert "sear-undead" in frontier["cleric"].unsupported_features
+    assert "canonical-spell-package-incomplete" in frontier["cleric"].content_blockers
 
     assert frontier["fighter"].next_level == 18
     assert set(frontier["fighter"].unsupported_features) == {
         "survivor-defy-death",
         "survivor-heroic-rally",
     }
+
+
+def test_combined_blockers_include_content_and_engine_work() -> None:
+    cleric = next(
+        item for item in build_pregen_certification_frontier()
+        if item.class_id == "cleric"
+    )
+
+    assert set(cleric.blockers) == {
+        "sear-undead",
+        "cleric-combat-spells-3",
+        "canonical-spell-package-incomplete",
+    }
+    assert cleric.blocker_count == len(cleric.blockers)
+    assert not cleric.ready
