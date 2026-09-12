@@ -89,6 +89,16 @@ setup.monsters = [actor];
 result = window.IRON_PIT_BROWSER_MULTIATTACK.resolveAttackAction(1, 1, actor, setup);
 assert.deepEqual(result.events.map((event) => event.attack_name), ["Bite", "Club"]);
 
+const claws = { id: "claws", name: "Claws", kind: "melee" };
+setupRuntime([], [true, true]);
+actor = member({
+  id: "vampire-spawn", slots: [{ attackIds: ["bite", "claws"] }, { attackIds: ["bite", "claws"] }],
+  policy: { atMostOnceAttackIds: ["bite"] },
+}, [bite, claws]);
+setup.monsters = [actor];
+result = window.IRON_PIT_BROWSER_MULTIATTACK.resolveAttackAction(1, 1, actor, setup);
+assert.deepEqual(result.events.map((event) => event.attack_name), ["Bite", "Claws"]);
+
 const touch = { id: "rotting-touch", name: "Rotting Touch", kind: "melee" };
 setupRuntime([4], [true, true, true, true]);
 actor = member({
