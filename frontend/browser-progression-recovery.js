@@ -14,9 +14,10 @@
 
   function startTurnHealing(state) {
     const amount = state.template.bloodied_start_turn_healing || 0;
-    if (!amount || state.is_dead || state.current_hp <= 0 || state.current_hp * 2 > state.template.max_hp) return 0;
+    const maximum = state.template.max_hp + (state.max_hp_bonus || 0);
+    if (!amount || state.is_dead || state.current_hp <= 0 || state.current_hp * 2 > maximum) return 0;
     const before = state.current_hp;
-    state.current_hp = Math.min(state.template.max_hp, state.current_hp + amount);
+    state.current_hp = Math.min(maximum, state.current_hp + amount);
     return state.current_hp - before;
   }
 
