@@ -18,9 +18,7 @@ from app.content.monster_catalog_2014_models import CatalogAttack2014, CatalogMo
 from app.content.monster_catalog_2014_multiattack import compile_multiattack_2014
 from app.content.monster_catalog_2014_spells import unresolved_spells_2014
 from app.content.monster_catalog_2014_traits import combat_traits_2014, unresolved_traits_2014
-from app.domain.models import (
-    CombatantTemplate, OnHitDamage, VisualLoadout, Weapon, WeaponAttack, WeaponAttackKind,
-)
+from app.domain.models import CombatantTemplate, OnHitDamage, VisualLoadout, Weapon, WeaponAttack, WeaponAttackKind
 from app.domain.movement import MovementModes
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.reactions import ParryReaction
@@ -37,26 +35,22 @@ def _attack(source: CatalogAttack2014, *, magical: bool = False) -> WeaponAttack
     try:
         kind = WeaponAttackKind.MELEE if source.kind == "melee" else WeaponAttackKind.RANGED
         weapon = Weapon(
-            id=source.id, name=source.name, attack_kind=kind,
-            dice_count=source.damage.dice_count, dice_size=source.damage.dice_size,
-            damage_type=source.damage.type, animation="projectile" if source.kind == "ranged" else "melee",
-            reach_ft=source.reach_ft, normal_range_ft=source.normal_range_ft,
-            long_range_ft=source.long_range_ft, magical=magical,
+            id=source.id, name=source.name, attack_kind=kind, dice_count=source.damage.dice_count,
+            dice_size=source.damage.dice_size, damage_type=source.damage.type,
+            animation="projectile" if source.kind == "ranged" else "melee", reach_ft=source.reach_ft,
+            normal_range_ft=source.normal_range_ft, long_range_ft=source.long_range_ft, magical=magical,
         )
         riders = [
-            OnHitDamage(source=f"{source.name} secondary damage", dice_count=item.dice_count,
-                        dice_size=item.dice_size, damage_bonus=item.bonus, damage_type=item.type)
+            OnHitDamage(source=f"{source.name} secondary damage", dice_count=item.dice_count, dice_size=item.dice_size,
+                        damage_bonus=item.bonus, damage_type=item.type)
             for item in source.on_hit_damage
         ]
         return WeaponAttack(
-            id=source.id, weapon=weapon, attack_bonus=source.attack_bonus,
-            damage_bonus=source.damage.bonus,
+            id=source.id, weapon=weapon, attack_bonus=source.attack_bonus, damage_bonus=source.damage.bonus,
             fixed_damage=source.damage.average if source.damage.dice_count == 0 else None,
-            conditional_damage=source.conditional_damage,
-            on_hit_damage=riders, on_hit_save_effect=source.on_hit_save_effect,
-            control_effect=source.control_effect,
-            forbid_target_grappled_by_self=source.forbid_target_grappled_by_self,
-            charge_profile=source.charge_profile,
+            conditional_damage=source.conditional_damage, on_hit_damage=riders,
+            on_hit_save_effect=source.on_hit_save_effect, control_effect=source.control_effect,
+            forbid_target_grappled_by_self=source.forbid_target_grappled_by_self, charge_profile=source.charge_profile,
         )
     except Exception as exc:
         logger.exception("Failed to compile 2014 catalog attack %s.", source.id)
@@ -72,15 +66,13 @@ def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
         blockers.extend(f"trait:{name}" for name in unresolved_traits_2014(source.trait_names))
         blockers.extend(f"spell:{name}" for name in unresolved_spells_2014(source))
         relentless = [name for name in source.trait_names if name.startswith("Relentless (Recharges after")]
-        if relentless and source.zero_hp_prevention is None:
-            blockers.extend(f"trait:{name}" for name in relentless)
+        if relentless and source.zero_hp_prevention is None: blockers.extend(f"trait:{name}" for name in relentless)
+        if "Regeneration" in source.trait_names and source.regeneration is None: blockers.append("trait:Regeneration")
         charge_traits = _CHARGE_TRAITS.intersection(source.trait_names)
-        if charge_traits and not any(attack.charge_profile for attack in source.attacks):
-            blockers.extend(f"trait:{name}" for name in sorted(charge_traits))
+        if charge_traits and not any(attack.charge_profile for attack in source.attacks): blockers.extend(f"trait:{name}" for name in sorted(charge_traits))
         blockers.extend(f"reaction:{name}" for name in source.reaction_names if name not in supported_reactions)
         blockers.extend(f"legendary:{name}" for name in source.legendary_action_names)
-        if not source.attacks:
-            blockers.append("attack:no-structured-attack")
+        if not source.attacks: blockers.append("attack:no-structured-attack")
         return blockers
     except Exception as exc:
         logger.exception("Failed to inventory 2014 mechanics for %s.", source.id)
@@ -90,33 +82,26 @@ def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
 def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
     try:
         blockers = unsupported_mechanics_2014(source)
-        if blockers:
-            raise ValueError(f"unsupported 2014 mechanics: {', '.join(blockers)}")
+        if blockers: raise ValueError(f"unsupported 2014 mechanics: {', '.join(blockers)}")
         traits = combat_traits_2014(source.trait_names); magical = CombatTrait.MAGIC_WEAPONS in traits
         attacks = bind_attack_traits_2014(source, [_attack(item, magical=magical) for item in source.attacks])
-        movement = MovementModes(
-            walk_ft=source.speed.get("walk", 0), fly_ft=source.speed.get("fly", 0),
-            climb_ft=source.speed.get("climb", 0), swim_ft=source.speed.get("swim", 0),
-            burrow_ft=source.speed.get("burrow", 0),
-        )
+        movement = MovementModes(walk_ft=source.speed.get("walk", 0), fly_ft=source.speed.get("fly", 0), climb_ft=source.speed.get("climb", 0), swim_ft=source.speed.get("swim", 0), burrow_ft=source.speed.get("burrow", 0))
         dex = source.abilities["dex"]
         return CombatantTemplate(
-            id=f"2014-{source.id}", name=source.name, archetype=source.name,
-            challenge_rating=source.challenge_rating, kind="monster", ruleset="2014",
-            creature_type=source.creature_type, size=source.size,
+            id=f"2014-{source.id}", name=source.name, archetype=source.name, challenge_rating=source.challenge_rating,
+            kind="monster", ruleset="2014", creature_type=source.creature_type, size=source.size,
             ability_scores=ability_scores_2014(source), armor_class=source.armor_class, max_hp=source.max_hp,
             speed_ft=movement.walk_ft, movement_modes=movement, initiative_bonus=(dex - 10) // 2,
             progression_features=ProgressionCombatFeatures(reckless_attack="Reckless" in source.trait_names),
             weapon_attack=attacks[0], alternate_weapon_attacks=attacks[1:],
             attack_action=compile_multiattack_2014(source, attacks), saving_throw_actions=source.saving_throw_actions,
             saving_throw_bonuses=saving_throw_bonuses_2014(source), skill_bonuses=source.skills,
-            source_trait_names=list(source.trait_names),
-            damage_resistances=source.damage_resistances,
+            source_trait_names=list(source.trait_names), damage_resistances=source.damage_resistances,
             conditional_damage_resistances=conditional_resistances_2014(source.unsupported_defense_text),
             damage_immunities=source.damage_immunities, damage_vulnerabilities=source.damage_vulnerabilities,
             condition_immunities=source.condition_immunities, combat_traits=traits, resources=resources_2014(source),
             parry_reaction=ParryReaction(ac_bonus=source.parry_ac_bonus) if source.parry_ac_bonus is not None else None,
-            zero_hp_prevention=source.zero_hp_prevention,
+            zero_hp_prevention=source.zero_hp_prevention, regeneration=source.regeneration,
             visual=VisualLoadout(armor="source", main_hand=attacks[0].weapon.id, body_style=source.creature_type),
             source=f"2014 JSON catalog: {source.id}",
         )
@@ -127,14 +112,12 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
 
 def load_catalog_2014(path: Path = CATALOG_ROOT) -> list[CatalogMonster2014]:
     try:
-        if path.is_file():
-            payload = json.loads(path.read_text(encoding="utf-8"))
+        if path.is_file(): payload = json.loads(path.read_text(encoding="utf-8"))
         else:
             canonical = path / "catalog.json"
             files = [canonical] if canonical.exists() else sorted(path.glob("catalog_*.json"))
             files = files or [path / "mvp_catalog.json"]; payload = []
-            for file in files:
-                payload.extend(json.loads(file.read_text(encoding="utf-8")))
+            for file in files: payload.extend(json.loads(file.read_text(encoding="utf-8")))
         return _MONSTERS.validate_python(payload)
     except Exception as exc:
         logger.exception("Failed to load 2014 monster catalog from %s.", path)
