@@ -48,6 +48,8 @@ def _attack(source: CatalogAttack2014, *, magical: bool = False) -> WeaponAttack
             damage_bonus=source.damage.bonus,
             fixed_damage=source.damage.average if source.damage.dice_count == 0 else None,
             on_hit_damage=riders, on_hit_save_effect=source.on_hit_save_effect,
+            control_effect=source.control_effect,
+            forbid_target_grappled_by_self=source.forbid_target_grappled_by_self,
             charge_profile=source.charge_profile,
         )
     except Exception as exc:
