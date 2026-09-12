@@ -13,6 +13,7 @@ on:
       - 'backend/app/domain/combatants.py'
       - 'backend/app/combat/attacks.py'
       - 'backend/app/combat/grapple.py'
+      - 'backend/app/combat/timed_conditions.py'
       - 'backend/app/combat/on_hit_saves.py'
       - 'backend/app/combat/charge.py'
       - 'backend/app/combat/charge_follow_up.py'
@@ -21,8 +22,12 @@ on:
       - 'backend/app/combat/saving_throw_rolls.py'
       - 'frontend/browser-saves.js'
       - 'frontend/browser-grapple.js'
+      - 'frontend/browser-timed-conditions.js'
+      - 'frontend/browser-condition-lifecycle.js'
       - 'frontend/browser-2014-grapple.test.cjs'
+      - 'frontend/browser-2014-poison.test.cjs'
       - 'backend/tests/test_2014_json_catalog.py'
+      - 'backend/tests/test_2014_poison_timing.py'
       - 'backend/tests/test_2014_secondary_damage.py'
       - 'backend/tests/test_2014_parry.py'
       - 'backend/tests/test_2014_charge.py'
@@ -68,6 +73,7 @@ jobs:
         run: >-
           cd backend && pytest -q
           tests/test_2014_json_catalog.py
+          tests/test_2014_poison_timing.py
           tests/test_2014_secondary_damage.py
           tests/test_2014_parry.py
           tests/test_2014_charge.py
@@ -76,4 +82,6 @@ jobs:
           tests/test_magic_resistance.py
           tests/test_conditional_damage_defenses.py
       - name: Prove 2014 browser rules parity
-        run: node frontend/browser-2014-grapple.test.cjs
+        run: |
+          node frontend/browser-2014-grapple.test.cjs
+          node frontend/browser-2014-poison.test.cjs
