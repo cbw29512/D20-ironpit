@@ -8,6 +8,7 @@ from app.combat.condition_immunity import condition_is_immune
 from app.combat.dice import DiceProvider
 from app.combat.hit_points import effective_max_hp
 from app.combat.orc import use_relentless_endurance
+from app.combat.regeneration import holds_at_zero, note_suppression
 from app.combat.source_bound_effects import end_damage_sensitive_effects
 from app.combat.undead_fortitude import resolve_undead_fortitude
 from app.combat.zero_hp_prevention import use_zero_hp_prevention
@@ -17,7 +18,7 @@ from app.domain.traits import CombatTrait
 logger = logging.getLogger(__name__)
 ZeroHpOutcome = Literal[
     "damaged", "unconscious", "dead", "unchanged", "relentless_endurance", "undead_fortitude",
-    "zero_hp_prevention",
+    "zero_hp_prevention", "regeneration_hold",
 ]
 DODGE_EFFECT_ID = "dodge"
 PRONE_EFFECT_ID = "prone"
@@ -29,118 +30,83 @@ def reset_death_saves(state: CombatantState) -> None:
 
 
 def _mark_dead(state: CombatantState) -> ZeroHpOutcome:
-    state.current_hp = 0
-    state.is_alive = False
-    state.is_dead = True
-    state.is_unconscious = False
-    state.is_stable = False
+    state.current_hp = 0; state.is_alive = False; state.is_dead = True
+    state.is_unconscious = False; state.is_stable = False
     state.active_effect_ids = [effect for effect in state.active_effect_ids if effect != DODGE_EFFECT_ID]
     return "dead"
 
 
 def _mark_unconscious(state: CombatantState) -> ZeroHpOutcome:
-    state.is_alive = True
-    state.is_unconscious = True
-    state.is_stable = False
+    state.is_alive = True; state.is_unconscious = True; state.is_stable = False
     state.active_effect_ids = [effect for effect in state.active_effect_ids if effect != DODGE_EFFECT_ID]
     if not condition_is_immune(state, PRONE_EFFECT_ID) and PRONE_EFFECT_ID not in state.active_effect_ids:
         state.active_effect_ids.append(PRONE_EFFECT_ID)
     return "unconscious"
 
 
+def _hold_for_regeneration(state: CombatantState) -> ZeroHpOutcome:
+    state.current_hp = 0; state.is_alive = True; state.is_dead = False
+    state.is_unconscious = True; state.is_stable = True
+    state.active_effect_ids = [effect for effect in state.active_effect_ids if effect != DODGE_EFFECT_ID]
+    return "regeneration_hold"
+
+
 def _after_temporary_hp(state: CombatantState, amount: int) -> int:
-    absorbed = min(state.temporary_hp, amount)
-    state.temporary_hp -= absorbed
+    absorbed = min(state.temporary_hp, amount); state.temporary_hp -= absorbed
     return amount - absorbed
 
 
-def _finish_damage(
-    state: CombatantState,
-    outcome: ZeroHpOutcome,
-    damage_taken: int,
-    dice: DiceProvider | None,
-    affected_states: list[CombatantState] | None,
-) -> ZeroHpOutcome:
+def _finish_damage(state, outcome, damage_taken, dice, affected_states):
     end_damage_sensitive_effects(state)
-    if state.concentration is None:
-        return outcome
+    if state.concentration is None: return outcome
     if dice is None:
         if state.is_dead or state.is_unconscious:
             from app.combat.concentration import end_concentration_if_incapacitated
-            end_concentration_if_incapacitated(state, affected_states)
-            return outcome
+            end_concentration_if_incapacitated(state, affected_states); return outcome
         raise ValueError("A dice provider is required to resolve Concentration damage.")
     resolve_concentration_damage(state, damage_taken, dice, affected_states)
     return outcome
 
 
 def restore_hit_points(state: CombatantState, amount: int) -> int:
-    """Restore true HP; ordinary healing cannot restore a dead creature or a Swarm."""
-    if amount < 0:
-        raise ValueError("Healing cannot be negative.")
-    if state.is_dead or amount == 0 or CombatTrait.SWARM in state.template.combat_traits:
-        return 0
-    before = state.current_hp
-    state.current_hp = min(effective_max_hp(state), before + amount)
-    healed = state.current_hp - before
+    if amount < 0: raise ValueError("Healing cannot be negative.")
+    if state.is_dead or amount == 0 or CombatTrait.SWARM in state.template.combat_traits: return 0
+    before = state.current_hp; state.current_hp = min(effective_max_hp(state), before + amount); healed = state.current_hp - before
     if healed > 0:
-        state.is_alive = True
-        state.is_unconscious = False
-        state.is_stable = False
-        reset_death_saves(state)
+        state.is_alive = True; state.is_unconscious = False; state.is_stable = False; reset_death_saves(state)
     return healed
 
 
 def _damage_at_zero(state: CombatantState, incoming: int, *, critical: bool) -> ZeroHpOutcome:
-    if state.template.kind == "monster" or incoming >= effective_max_hp(state):
-        return _mark_dead(state)
-    state.is_stable = False
-    state.death_save_failures = min(3, state.death_save_failures + (2 if critical else 1))
-    if state.death_save_failures >= 3:
-        return _mark_dead(state)
+    if holds_at_zero(state): return _hold_for_regeneration(state)
+    if state.template.kind == "monster" or incoming >= effective_max_hp(state): return _mark_dead(state)
+    state.is_stable = False; state.death_save_failures = min(3, state.death_save_failures + (2 if critical else 1))
+    if state.death_save_failures >= 3: return _mark_dead(state)
     return _mark_unconscious(state)
 
 
 def apply_damage(
-    state: CombatantState,
-    amount: int,
-    *,
-    critical: bool = False,
-    damage_types: set[DamageType] | None = None,
-    dice: DiceProvider | None = None,
+    state: CombatantState, amount: int, *, critical: bool = False,
+    damage_types: set[DamageType] | None = None, dice: DiceProvider | None = None,
     affected_states: list[CombatantState] | None = None,
 ) -> ZeroHpOutcome:
-    """Apply Temporary HP, Concentration, and zero-HP lifecycle rules."""
     try:
-        if amount < 0:
-            raise ValueError("Damage cannot be negative.")
-        if amount == 0 or state.is_dead:
-            return "unchanged"
-
-        incoming = amount
-        types = damage_types or set()
-        amount = _after_temporary_hp(state, amount)
+        if amount < 0: raise ValueError("Damage cannot be negative.")
+        if amount == 0 or state.is_dead: return "unchanged"
+        incoming = amount; types = damage_types or set(); amount = _after_temporary_hp(state, amount)
+        if amount > 0: note_suppression(state, types)
         if state.current_hp == 0:
             return _finish_damage(state, _damage_at_zero(state, incoming, critical=critical), incoming, dice, affected_states)
-        if amount == 0:
-            return _finish_damage(state, "damaged", incoming, dice, affected_states)
-
-        hp_before = state.current_hp
-        state.current_hp = max(0, hp_before - amount)
-        if state.current_hp > 0:
-            return _finish_damage(state, "damaged", incoming, dice, affected_states)
-        if resolve_undead_fortitude(state, incoming, types, critical=critical, dice=dice):
-            return _finish_damage(state, "undead_fortitude", incoming, dice, affected_states)
-        if use_zero_hp_prevention(state, incoming):
-            return _finish_damage(state, "zero_hp_prevention", incoming, dice, affected_states)
-        if state.template.kind == "monster":
-            return _finish_damage(state, _mark_dead(state), incoming, dice, affected_states)
-
+        if amount == 0: return _finish_damage(state, "damaged", incoming, dice, affected_states)
+        hp_before = state.current_hp; state.current_hp = max(0, hp_before - amount)
+        if state.current_hp > 0: return _finish_damage(state, "damaged", incoming, dice, affected_states)
+        if resolve_undead_fortitude(state, incoming, types, critical=critical, dice=dice): return _finish_damage(state, "undead_fortitude", incoming, dice, affected_states)
+        if use_zero_hp_prevention(state, incoming): return _finish_damage(state, "zero_hp_prevention", incoming, dice, affected_states)
+        if holds_at_zero(state): return _finish_damage(state, _hold_for_regeneration(state), incoming, dice, affected_states)
+        if state.template.kind == "monster": return _finish_damage(state, _mark_dead(state), incoming, dice, affected_states)
         remaining_damage = max(0, amount - hp_before)
-        if remaining_damage >= effective_max_hp(state):
-            return _finish_damage(state, _mark_dead(state), incoming, dice, affected_states)
-        if use_relentless_endurance(state, remaining_damage):
-            return _finish_damage(state, "relentless_endurance", incoming, dice, affected_states)
+        if remaining_damage >= effective_max_hp(state): return _finish_damage(state, _mark_dead(state), incoming, dice, affected_states)
+        if use_relentless_endurance(state, remaining_damage): return _finish_damage(state, "relentless_endurance", incoming, dice, affected_states)
         return _finish_damage(state, _mark_unconscious(state), incoming, dice, affected_states)
     except ValueError:
         raise
