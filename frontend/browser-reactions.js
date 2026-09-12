@@ -27,7 +27,15 @@
     return unarmed && before <= 5 && after > 5 ? unarmed : null;
   }
 
-  function parryHit(defender, attacker, attack, attackRoll, hit, effectiveAc = defender.template.armor_class) {
+  function parryHit(defender, attackerOrAttack, attackOrRoll, rollOrHit, hitOrAc, maybeAc) {
+    let attacker, attack, attackRoll, hit, effectiveAc;
+    if (arguments.length >= 6) {
+      attacker = attackerOrAttack; attack = attackOrRoll; attackRoll = rollOrHit; hit = hitOrAc; effectiveAc = maybeAc;
+    } else {
+      attacker = { active_effect_ids: [], template: {} };
+      attack = attackerOrAttack; attackRoll = attackOrRoll; hit = rollOrHit;
+      effectiveAc = typeof hitOrAc === "number" ? hitOrAc : defender.template.armor_class;
+    }
     const parry = defender.template.parry_reaction;
     if (!hit || !parry || attack.kind !== "melee" || attackRoll.selected_roll === 20) return { hit, used: false };
     if (Q()?.has(defender, "blinded") || Q()?.has(attacker, "invisible")) return { hit, used: false };
