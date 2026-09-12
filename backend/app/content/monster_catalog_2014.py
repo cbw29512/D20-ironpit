@@ -6,19 +6,16 @@ from pathlib import Path
 
 from pydantic import TypeAdapter
 
+from app.content.monster_catalog_2014_defenses import conditional_resistances_2014, unresolved_defenses_2014
 from app.content.monster_catalog_2014_models import CatalogAttack2014, CatalogMonster2014
 from app.content.monster_catalog_2014_traits import combat_traits_2014, unresolved_traits_2014
 from app.domain.character_builds import AbilityScores
 from app.domain.models import (
-    AttackActionDefinition,
-    AttackActionSlot,
-    CombatantTemplate,
-    VisualLoadout,
-    Weapon,
-    WeaponAttack,
-    WeaponAttackKind,
+    AttackActionDefinition, AttackActionSlot, CombatantTemplate, VisualLoadout,
+    Weapon, WeaponAttack, WeaponAttackKind,
 )
 from app.domain.movement import MovementModes
+from app.domain.traits import CombatTrait
 
 logger = logging.getLogger(__name__)
 CATALOG_ROOT = Path(__file__).resolve().parents[3] / "data" / "monsters" / "2014"
@@ -30,7 +27,7 @@ _ABILITY_NAMES = {
 }
 
 
-def _attack(source: CatalogAttack2014) -> WeaponAttack:
+def _attack(source: CatalogAttack2014, *, magical: bool = False) -> WeaponAttack:
     try:
         kind = WeaponAttackKind.MELEE if source.kind == "melee" else WeaponAttackKind.RANGED
         weapon = Weapon(
@@ -38,7 +35,7 @@ def _attack(source: CatalogAttack2014) -> WeaponAttack:
             dice_count=source.damage.dice_count, dice_size=source.damage.dice_size,
             damage_type=source.damage.type, animation="projectile" if source.kind == "ranged" else "melee",
             reach_ft=source.reach_ft, normal_range_ft=source.normal_range_ft,
-            long_range_ft=source.long_range_ft,
+            long_range_ft=source.long_range_ft, magical=magical,
         )
         return WeaponAttack(
             id=source.id, weapon=weapon, attack_bonus=source.attack_bonus,
@@ -61,8 +58,7 @@ def _ability_scores(source: CatalogMonster2014) -> AbilityScores:
 def _multiattack(source: CatalogMonster2014, attacks: list[WeaponAttack]) -> AttackActionDefinition | None:
     if not source.multiattack_slots:
         return None
-    known = {attack.id for attack in attacks}
-    slots: list[AttackActionSlot] = []
+    known = {attack.id for attack in attacks}; slots: list[AttackActionSlot] = []
     for choices in source.multiattack_slots:
         if not choices or any(attack_id not in known for attack_id in choices):
             raise ValueError(f"Invalid Multiattack attack ids for {source.id}: {choices}")
@@ -72,18 +68,15 @@ def _multiattack(source: CatalogMonster2014, attacks: list[WeaponAttack]) -> Att
 
 def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
     try:
-        attack_names = {attack.name for attack in source.attacks}
-        supported_actions = set(attack_names)
-        if source.multiattack_slots:
-            supported_actions.add("Multiattack")
-        blockers = [f"defense:{text}" for text in source.unsupported_defense_text]
+        attack_names = {attack.name for attack in source.attacks}; supported_actions = set(attack_names)
+        if source.multiattack_slots: supported_actions.add("Multiattack")
+        blockers = [f"defense:{text}" for text in unresolved_defenses_2014(source.unsupported_defense_text)]
         blockers.extend(f"attack-detail:{attack.name}" for attack in source.attacks if not attack.source_complete)
         blockers.extend(f"action:{name}" for name in source.action_names if name not in supported_actions)
         blockers.extend(f"trait:{name}" for name in unresolved_traits_2014(source.trait_names))
         blockers.extend(f"reaction:{name}" for name in source.reaction_names)
         blockers.extend(f"legendary:{name}" for name in source.legendary_action_names)
-        if not source.attacks:
-            blockers.append("attack:no-structured-attack")
+        if not source.attacks: blockers.append("attack:no-structured-attack")
         return blockers
     except Exception as exc:
         logger.exception("Failed to inventory 2014 mechanics for %s.", source.id)
@@ -93,29 +86,25 @@ def unsupported_mechanics_2014(source: CatalogMonster2014) -> list[str]:
 def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
     try:
         blockers = unsupported_mechanics_2014(source)
-        if blockers:
-            raise ValueError(f"unsupported 2014 mechanics: {', '.join(blockers)}")
-        attacks = [_attack(item) for item in source.attacks]
+        if blockers: raise ValueError(f"unsupported 2014 mechanics: {', '.join(blockers)}")
+        traits = combat_traits_2014(source.trait_names); magical = CombatTrait.MAGIC_WEAPONS in traits
+        attacks = [_attack(item, magical=magical) for item in source.attacks]
         movement = MovementModes(
             walk_ft=source.speed.get("walk", 0), fly_ft=source.speed.get("fly", 0),
             climb_ft=source.speed.get("climb", 0), swim_ft=source.speed.get("swim", 0),
             burrow_ft=source.speed.get("burrow", 0),
         )
-        saves = {_ABILITY_NAMES.get(key, key): value for key, value in source.saving_throws.items()}
-        dex = source.abilities["dex"]
+        saves = {_ABILITY_NAMES.get(key, key): value for key, value in source.saving_throws.items()}; dex = source.abilities["dex"]
         return CombatantTemplate(
             id=f"2014-{source.id}", name=source.name, archetype=source.name,
-            challenge_rating=source.challenge_rating, kind="monster",
-            creature_type=source.creature_type, size=source.size,
-            ability_scores=_ability_scores(source), armor_class=source.armor_class,
-            max_hp=source.max_hp, speed_ft=movement.walk_ft, movement_modes=movement,
-            initiative_bonus=(dex - 10) // 2, weapon_attack=attacks[0],
-            alternate_weapon_attacks=attacks[1:], attack_action=_multiattack(source, attacks),
-            saving_throw_bonuses=saves, skill_bonuses=source.skills,
-            damage_resistances=source.damage_resistances, damage_immunities=source.damage_immunities,
-            damage_vulnerabilities=source.damage_vulnerabilities,
-            condition_immunities=source.condition_immunities,
-            combat_traits=combat_traits_2014(source.trait_names),
+            challenge_rating=source.challenge_rating, kind="monster", creature_type=source.creature_type, size=source.size,
+            ability_scores=_ability_scores(source), armor_class=source.armor_class, max_hp=source.max_hp,
+            speed_ft=movement.walk_ft, movement_modes=movement, initiative_bonus=(dex - 10) // 2,
+            weapon_attack=attacks[0], alternate_weapon_attacks=attacks[1:], attack_action=_multiattack(source, attacks),
+            saving_throw_bonuses=saves, skill_bonuses=source.skills, damage_resistances=source.damage_resistances,
+            conditional_damage_resistances=conditional_resistances_2014(source.unsupported_defense_text),
+            damage_immunities=source.damage_immunities, damage_vulnerabilities=source.damage_vulnerabilities,
+            condition_immunities=source.condition_immunities, combat_traits=traits,
             visual=VisualLoadout(armor="source", main_hand=attacks[0].weapon.id, body_style=source.creature_type),
             source=f"2014 JSON catalog: {source.id}",
         )
@@ -126,15 +115,11 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
 
 def load_catalog_2014(path: Path = CATALOG_ROOT) -> list[CatalogMonster2014]:
     try:
-        if path.is_file():
-            payload = json.loads(path.read_text(encoding="utf-8"))
+        if path.is_file(): payload = json.loads(path.read_text(encoding="utf-8"))
         else:
-            canonical = path / "catalog.json"
-            files = [canonical] if canonical.exists() else sorted(path.glob("catalog_*.json"))
-            files = files or [path / "mvp_catalog.json"]
-            payload = []
-            for file in files:
-                payload.extend(json.loads(file.read_text(encoding="utf-8")))
+            canonical = path / "catalog.json"; files = [canonical] if canonical.exists() else sorted(path.glob("catalog_*.json"))
+            files = files or [path / "mvp_catalog.json"]; payload = []
+            for file in files: payload.extend(json.loads(file.read_text(encoding="utf-8")))
         return _MONSTERS.validate_python(payload)
     except Exception as exc:
         logger.exception("Failed to load 2014 monster catalog from %s.", path)
