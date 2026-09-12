@@ -19,7 +19,7 @@ ABILITY_NAMES = {
 def _plain(value: str | None) -> str:
     text = re.sub(r"<[^>]+>", " ", value or "")
     text = html.unescape(text).replace("\u00ad", "")
-    text = re.sub(r"(?<=\d)[‐‑‒–—−-]+(?=foot\b)", "-", text, flags=re.I)
+    text = re.sub(r"(?<=\d)\s*[‐‑‒–—−-]+\s*(?=foot\b)", "-", text, flags=re.I)
     return re.sub(r"\s+", " ", text).strip()
 
 
