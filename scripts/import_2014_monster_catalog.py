@@ -8,6 +8,7 @@ import re
 import unicodedata
 from pathlib import Path
 
+from import_2014_attack_details import parse_secondary_damage
 from import_2014_multiattack import parse_multiattack
 
 logger = logging.getLogger(__name__)
@@ -90,11 +91,13 @@ def _attack(paragraph: str) -> dict | None:
         return None
     name = _plain(name_match.group(1)).rstrip(".")
     remainder = text[damage.end():].strip(" .")
+    extras, residual = parse_secondary_damage(remainder)
     result = {
         "id": _slug(name), "name": name, "kind": kind, "attack_bonus": int(hit.group(1)),
         "damage": {"average": int(average), "dice_count": int(count), "dice_size": int(size),
                    "bonus": int(bonus or 0) * (-1 if sign == "-" else 1), "type": damage_type},
-        "source_complete": not dual_mode and not remainder,
+        "on_hit_damage": extras,
+        "source_complete": not dual_mode and not residual,
     }
     reach = re.search(r"reach (\d+) ft", text, re.I)
     ranges = re.search(r"range (\d+)(?:\s*ft\.)?\s*/\s*(\d+) ft", text, re.I)
