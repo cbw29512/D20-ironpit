@@ -33,6 +33,7 @@ on:
       - 'scripts/import_2014_multiattack.py'
       - 'scripts/import_2014_reactions.py'
       - 'scripts/sync_2014_monster_catalog.py'
+      - 'scripts/audit_2014_source_fidelity.py'
       - 'scripts/verify_2014_full_catalog.py'
       - 'scripts/report_2014_monster_progress.py'
       - '.github/workflows/ci-2014-json.yml'
@@ -50,6 +51,10 @@ jobs:
         run: pip install -e 'backend[dev]'
       - name: Generate pinned 327-monster catalog
         run: python scripts/sync_2014_monster_catalog.py
+      - name: Enforce deterministic generated catalog
+        run: git diff --exit-code -- data/monsters/2014/catalog.json
+      - name: Audit pinned source fidelity
+        run: python scripts/audit_2014_source_fidelity.py
       - name: Verify all 327 normalized records
         run: python scripts/verify_2014_full_catalog.py
       - name: Report reusable mechanic blockers
