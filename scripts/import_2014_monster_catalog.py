@@ -77,7 +77,8 @@ def _attack(paragraph: str) -> dict | None:
     damage = re.search(r"Hit:\s*(\d+)\s*\((\d+)d(\d+)(?:\s*([+-])\s*(\d+))?\)\s*([A-Za-z]+) damage", text, re.I)
     if not name_match or not hit or not damage:
         return None
-    if re.search(r"Ranged (?:Weapon|Spell) Attack:", text, re.I):
+    dual_mode = bool(re.search(r"Melee or Ranged (?:Weapon|Spell) Attack:", text, re.I))
+    if re.search(r"Ranged (?:Weapon|Spell) Attack:", text, re.I) and not dual_mode:
         kind = "ranged"
     elif re.search(r"Melee(?: or Ranged)? (?:Weapon|Spell) Attack:", text, re.I):
         kind = "melee"
@@ -88,10 +89,12 @@ def _attack(paragraph: str) -> dict | None:
     if damage_type not in DAMAGE_TYPES:
         return None
     name = _plain(name_match.group(1)).rstrip(".")
+    remainder = text[damage.end():].strip(" .")
     result = {
         "id": _slug(name), "name": name, "kind": kind, "attack_bonus": int(hit.group(1)),
         "damage": {"average": int(average), "dice_count": int(count), "dice_size": int(size),
                    "bonus": int(bonus or 0) * (-1 if sign == "-" else 1), "type": damage_type},
+        "source_complete": not dual_mode and not remainder,
     }
     reach = re.search(r"reach (\d+) ft", text, re.I)
     ranges = re.search(r"range (\d+)(?:\s*ft\.)?\s*/\s*(\d+) ft", text, re.I)
