@@ -87,6 +87,24 @@ def main() -> int:
         "blocks_reactions": True, "action_bonus_exclusive": True, "max_attacks_per_turn": 1,
     }
 
+    weakening = (
+        "<p><strong>Breath Weapons (Recharge 5–6).</strong> The dragon uses one of the following "
+        "breath weapons.</p>"
+        "<p><strong>Weakening Breath.</strong> The dragon exhales gas in a 30-foot cone. Each creature in "
+        "that area must succeed on a DC 14 Strength saving throw or have disadvantage on Strength-based "
+        "attack rolls, Strength checks, and Strength saving throws for 1 minute. A creature can repeat the "
+        "saving throw at the end of each of its turns, ending the effect on itself on a success.</p>"
+    )
+    parsed = parse_save_actions(weakening, {"breath-weapons": 5})
+    weak = parsed[0]
+    assert weak["id"] == "weakening-breath"
+    assert weak["resource_id"] == "breath-weapons"
+    assert weak["failure_control_effect"] == {
+        "effect_id": "weakened-strength", "expiry_timing": "target_turn_end", "duration_rounds": 10,
+        "repeat_save_ability": "strength", "repeat_save_dc": 14,
+        "repeat_save_timing": "target_turn_end", "disadvantage_strength_d20_tests": True,
+    }
+
     sleep = (
         "<p><strong>Breath Weapons (Recharge 5–6).</strong> The dragon uses one of the following "
         "breath weapons.</p>"
