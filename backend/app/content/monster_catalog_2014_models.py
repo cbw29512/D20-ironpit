@@ -26,6 +26,7 @@ class CatalogAttack2014(BaseModel):
     reach_ft: int = Field(default=5, ge=0)
     normal_range_ft: int | None = Field(default=None, ge=1)
     long_range_ft: int | None = Field(default=None, ge=1)
+    source_complete: bool = True
 
 
 class CatalogMonster2014(BaseModel):
