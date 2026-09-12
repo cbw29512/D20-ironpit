@@ -35,8 +35,23 @@
     };
   }
 
+  function useLegendaryResistance(state) {
+    const uses = state.resources?.["legendary-resistance"] || 0;
+    if (uses <= 0) return false;
+    state.resources["legendary-resistance"] = uses - 1;
+    return true;
+  }
+
+  function failedSaveResult(state, roll) {
+    if (!useLegendaryResistance(state)) return { roll, succeeded: false, legendaryResistanceUsed: false };
+    return {
+      roll, succeeded: true, legendaryResistanceUsed: true,
+      legendaryResistanceRemaining: state.resources["legendary-resistance"],
+    };
+  }
+
   function resolveSavingThrow(state, ability, dc) {
-    if ((ability === "strength" || ability === "dexterity") && Q().autoFailStrDex(state)) return { roll: null, succeeded: false };
+    if ((ability === "strength" || ability === "dexterity") && Q().autoFailStrDex(state)) return failedSaveResult(state, null);
     const bonus = state.template.saving_throw_bonuses?.[ability];
     if (bonus == null) throw new Error(`${state.template.name} lacks a certified ${ability} saving throw bonus.`);
     let roll = M().applyD20Bonus(state, "saving-throw-bonus-die", R().d20(bonus, saveMode(state, ability)));
@@ -44,7 +59,8 @@
       const reroll = window.IRON_PIT_BROWSER_INDOMITABLE?.use(state, ability);
       if (reroll) roll = { ...reroll, revisions: [...(reroll.revisions || []), indomitableRevision(roll, reroll)] };
     }
-    return { roll, succeeded: roll.total >= dc };
+    if (roll.total >= dc) return { roll, succeeded: true, legendaryResistanceUsed: false };
+    return failedSaveResult(state, roll);
   }
 
   function legalAction(action, target, distance) {
@@ -90,6 +106,7 @@
       appliedConditions = G().apply(target.state, actor.combatant_id, action.grappleEscapeDc, action.range, Boolean(action.restrainsWhileGrappled));
     }
     let description = `${target.state.template.name} ${save.succeeded ? "SUCCEEDS" : "FAILS"} a DC ${action.dc} ${action.saveAbility} save against ${actor.state.template.name}'s ${action.name}.`;
+    if (save.legendaryResistanceUsed) description += ` Legendary Resistance converts the failed save to a success; ${save.legendaryResistanceRemaining} use(s) remain.`;
     if (damageOutcome === "undead_fortitude") description += ` ${target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP.`;
     if (appliedConditions.includes("grappled")) description += ` ${target.state.template.name} is Grappled.`;
     if (appliedConditions.includes("restrained")) description += ` ${target.state.template.name} is Restrained while Grappled.`;
@@ -101,6 +118,7 @@
       death_save_successes_before: deathSuccessBefore, death_save_failures_before: deathFailureBefore,
       death_save_successes: target.state.death_save_successes, death_save_failures: target.state.death_save_failures,
       is_stable: target.state.is_stable, is_dead: target.state.is_dead, feature_id: action.id,
+      resource_remaining: save.legendaryResistanceUsed ? save.legendaryResistanceRemaining : null,
       concentration_ended_effect_id: concentrationBefore && !target.state.concentration ? concentrationBefore : null,
       animation: action.animation || "save-effect", description };
   }
