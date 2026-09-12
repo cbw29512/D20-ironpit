@@ -553,9 +553,7 @@
         }
       }
     ],
-    "unsupported_legendary_action_names": [
-      "Wing Attack (Costs 2 Actions)"
-    ],
+    "unsupported_legendary_action_names": [],
     "spellcasting": null
   },
   {
@@ -821,9 +819,7 @@
         }
       }
     ],
-    "unsupported_legendary_action_names": [
-      "Wing Attack (Costs 2 Actions)"
-    ],
+    "unsupported_legendary_action_names": [],
     "spellcasting": null
   },
   {
@@ -1109,9 +1105,7 @@
         }
       }
     ],
-    "unsupported_legendary_action_names": [
-      "Wing Attack (Costs 2 Actions)"
-    ],
+    "unsupported_legendary_action_names": [],
     "spellcasting": null
   },
   {
@@ -1370,9 +1364,7 @@
         }
       }
     ],
-    "unsupported_legendary_action_names": [
-      "Wing Attack (Costs 2 Actions)"
-    ],
+    "unsupported_legendary_action_names": [],
     "spellcasting": null
   },
   {
@@ -1633,9 +1625,7 @@
         }
       }
     ],
-    "unsupported_legendary_action_names": [
-      "Wing Attack (Costs 2 Actions)"
-    ],
+    "unsupported_legendary_action_names": [],
     "spellcasting": null
   },
   {
@@ -1898,9 +1888,7 @@
         }
       }
     ],
-    "unsupported_legendary_action_names": [
-      "Wing Attack (Costs 2 Actions)"
-    ],
+    "unsupported_legendary_action_names": [],
     "spellcasting": null
   },
   {
@@ -2171,9 +2159,7 @@
         }
       }
     ],
-    "unsupported_legendary_action_names": [
-      "Wing Attack (Costs 2 Actions)"
-    ],
+    "unsupported_legendary_action_names": [],
     "spellcasting": null
   },
   {
@@ -2438,9 +2424,7 @@
         }
       }
     ],
-    "unsupported_legendary_action_names": [
-      "Wing Attack (Costs 2 Actions)"
-    ],
+    "unsupported_legendary_action_names": [],
     "spellcasting": null
   },
   {
@@ -2724,9 +2708,7 @@
         }
       }
     ],
-    "unsupported_legendary_action_names": [
-      "Wing Attack (Costs 2 Actions)"
-    ],
+    "unsupported_legendary_action_names": [],
     "spellcasting": null
   },
   {
@@ -2993,9 +2975,7 @@
         }
       }
     ],
-    "unsupported_legendary_action_names": [
-      "Wing Attack (Costs 2 Actions)"
-    ],
+    "unsupported_legendary_action_names": [],
     "spellcasting": null
   },
   {
@@ -3505,9 +3485,7 @@
         }
       }
     ],
-    "unsupported_legendary_action_names": [
-      "Wing Attack (Costs 2 Actions)"
-    ],
+    "unsupported_legendary_action_names": [],
     "spellcasting": null
   },
   {
@@ -3773,9 +3751,7 @@
         }
       }
     ],
-    "unsupported_legendary_action_names": [
-      "Wing Attack (Costs 2 Actions)"
-    ],
+    "unsupported_legendary_action_names": [],
     "spellcasting": null
   },
   {
@@ -4062,9 +4038,7 @@
         }
       }
     ],
-    "unsupported_legendary_action_names": [
-      "Wing Attack (Costs 2 Actions)"
-    ],
+    "unsupported_legendary_action_names": [],
     "spellcasting": null
   },
   {
@@ -4343,9 +4317,7 @@
         }
       }
     ],
-    "unsupported_legendary_action_names": [
-      "Wing Attack (Costs 2 Actions)"
-    ],
+    "unsupported_legendary_action_names": [],
     "spellcasting": null
   },
   {
@@ -4607,9 +4579,7 @@
         }
       }
     ],
-    "unsupported_legendary_action_names": [
-      "Wing Attack (Costs 2 Actions)"
-    ],
+    "unsupported_legendary_action_names": [],
     "spellcasting": null
   },
   {
@@ -4872,9 +4842,7 @@
         }
       }
     ],
-    "unsupported_legendary_action_names": [
-      "Wing Attack (Costs 2 Actions)"
-    ],
+    "unsupported_legendary_action_names": [],
     "spellcasting": null
   },
   {
@@ -5145,9 +5113,7 @@
         }
       }
     ],
-    "unsupported_legendary_action_names": [
-      "Wing Attack (Costs 2 Actions)"
-    ],
+    "unsupported_legendary_action_names": [],
     "spellcasting": null
   },
   {
@@ -5412,9 +5378,7 @@
         }
       }
     ],
-    "unsupported_legendary_action_names": [
-      "Wing Attack (Costs 2 Actions)"
-    ],
+    "unsupported_legendary_action_names": [],
     "spellcasting": null
   },
   {
@@ -5698,9 +5662,7 @@
         }
       }
     ],
-    "unsupported_legendary_action_names": [
-      "Wing Attack (Costs 2 Actions)"
-    ],
+    "unsupported_legendary_action_names": [],
     "spellcasting": null
   },
   {
@@ -5967,9 +5929,7 @@
         }
       }
     ],
-    "unsupported_legendary_action_names": [
-      "Wing Attack (Costs 2 Actions)"
-    ],
+    "unsupported_legendary_action_names": [],
     "spellcasting": null
   },
   {
@@ -6100,9 +6060,7 @@
     "unsupported_legendary_action_names": [
       "Claw Attack",
       "Teleport (Costs 2 Actions)",
-      "Cast a Spell (Costs 3 Actions)",
-      "Teleport",
-      "Cast a Spell"
+      "Cast a Spell (Costs 3 Actions)"
     ],
     "spellcasting": {
       "caster_level": 12,
@@ -23495,9 +23453,7 @@
     "unsupported_legendary_action_names": [
       "Claw Attack",
       "Teleport (Costs 2 Actions)",
-      "Cast a Spell (Costs 3 Actions)",
-      "Teleport",
-      "Cast a Spell"
+      "Cast a Spell (Costs 3 Actions)"
     ],
     "spellcasting": {
       "caster_level": 9,
@@ -26432,9 +26388,7 @@
     "unsupported_legendary_action_names": [
       "Tentacle Attack or Fling",
       "Lightning Storm (Costs 2 Actions)",
-      "Ink Cloud (Costs 3 Actions)",
-      "Lightning Storm",
-      "Ink Cloud"
+      "Ink Cloud (Costs 3 Actions)"
     ],
     "spellcasting": null
   },
@@ -26832,10 +26786,7 @@
       "Cantrip",
       "Paralyzing Touch (Costs 2 Actions)",
       "Frightening Gaze (Costs 2 Actions)",
-      "Disrupt Life (Costs 3 Actions)",
-      "Paralyzing Touch",
-      "Frightening Gaze",
-      "Disrupt Life"
+      "Disrupt Life (Costs 3 Actions)"
     ],
     "spellcasting": {
       "caster_level": 18,
@@ -29615,10 +29566,7 @@
       "Blinding Dust",
       "Blasphemous Word (Costs 2 Actions)",
       "Channel Negative Energy (Costs 2 Actions)",
-      "Whirlwind of Sand (Costs 2 Actions)",
-      "Blasphemous Word",
-      "Channel Negative Energy",
-      "Whirlwind of Sand"
+      "Whirlwind of Sand (Costs 2 Actions)"
     ],
     "spellcasting": {
       "caster_level": 10,
@@ -36687,9 +36635,7 @@
     "unsupported_legendary_action_names": [
       "Teleport",
       "Searing Burst (Costs 2 Actions)",
-      "Blinding Gaze (Costs 3 Actions)",
-      "Searing Burst",
-      "Blinding Gaze"
+      "Blinding Gaze (Costs 3 Actions)"
     ],
     "spellcasting": null
   },
@@ -39165,8 +39111,7 @@
     "unsupported_legendary_action_names": [
       "Attack",
       "Move",
-      "Chomp (Costs 2 Actions)",
-      "Chomp"
+      "Chomp (Costs 2 Actions)"
     ],
     "spellcasting": null
   },
@@ -40379,9 +40324,7 @@
     "unsupported_legendary_action_names": [
       "Hooves",
       "Shimmering Shield (Costs 2 Actions)",
-      "Heal Self (Costs 3 Actions)",
-      "Shimmering Shield",
-      "Heal Self"
+      "Heal Self (Costs 3 Actions)"
     ],
     "spellcasting": null
   },
