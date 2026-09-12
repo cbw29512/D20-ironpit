@@ -55,7 +55,9 @@ def _apply_condition(
 ) -> list[str]:
     condition = apply_timed_condition(
         target, effect.condition, source_id, source_effect_id=source_effect_id,
-        applied_round=round_number, expires_at_start_of_source_turn=effect.expires_at_start_of_source_turn,
+        applied_round=round_number,
+        expires_round=round_number + effect.duration_rounds if effect.duration_rounds is not None else None,
+        expires_at_start_of_source_turn=effect.expires_at_start_of_source_turn,
         expiry_timing=effect.expiry_timing, repeat_save_ability=effect.repeat_save_ability,
         repeat_save_dc=effect.repeat_save_dc, repeat_save_timing=effect.repeat_save_timing,
         repeat_save_delay_rounds=effect.repeat_save_delay_rounds,
@@ -67,6 +69,7 @@ def _apply_condition(
         automatic_success_after_rounds=effect.automatic_success_after_rounds,
         allowed_removal_action_ids=effect.allowed_removal_action_ids,
         periodic_damage=effect.periodic_damage, affected_states=affected_states,
+        ends_on_damage=effect.ends_on_damage,
     )
     if condition is None:
         return []
