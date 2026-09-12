@@ -11,6 +11,7 @@ class AttackActionPolicy(BaseModel):
     repeat_dice_size: int = Field(default=0, ge=0, le=20)
     requires_previous_hit_slots: list[int] = Field(default_factory=list)
     same_target_as_previous_slots: list[int] = Field(default_factory=list)
+    same_attack_as_previous_slots: list[int] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def validate_repeat(self) -> "AttackActionPolicy":
