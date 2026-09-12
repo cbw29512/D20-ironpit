@@ -26934,7 +26934,27 @@
     "source_reactions": "",
     "source_legendary_actions": "<p>The kraken can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The kraken regains spent legendary actions at the start of its turn. </p><p><em><strong>Tentacle Attack or Fling.</strong></em> The kraken makes one tentacle attack or uses its Fling. </p><p><em><strong>Lightning Storm (Costs 2 Actions).</strong></em> The kraken uses Lightning Storm. </p><p><em><strong>Ink Cloud (Costs 3 Actions).</strong></em> While underwater, the kraken expels an ink cloud in a 60-foot radius. The cloud spreads around corners, and that area is heavily obscured to creatures other than the kraken. Each creature other than the kraken that ends its turn there must succeed on a DC 23 Constitution saving throw, taking 16 (3d10) poison damage on a failed save, or half as much damage on a successful one. A strong current disperses the cloud, which otherwise disappears at the end of the kraken's next turn.</p>",
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/381/1000/1000/636252780680163799.jpeg",
-    "saving_throw_actions": [],
+    "saving_throw_actions": [
+      {
+        "id": "lightning-storm",
+        "name": "Lightning Storm",
+        "save_ability": "dexterity",
+        "dc": 23,
+        "range_ft": 120,
+        "area": {
+          "shape": "emanation",
+          "origin": "self",
+          "radius_ft": 120
+        },
+        "damage_dice_count": 4,
+        "damage_dice_size": 10,
+        "damage_bonus": 0,
+        "damage_type": "lightning",
+        "success_damage": "half",
+        "resource_id": null,
+        "resource_cost": 1
+      }
+    ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
@@ -38556,7 +38576,35 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/107/315/315/636252743780112834.jpeg",
-    "saving_throw_actions": [],
+    "saving_throw_actions": [
+      {
+        "id": "slow",
+        "name": "Slow",
+        "save_ability": "wisdom",
+        "dc": 17,
+        "range_ft": 10,
+        "area": {
+          "shape": "emanation",
+          "origin": "self",
+          "radius_ft": 10
+        },
+        "failure_control_effect": {
+          "effect_id": "slowed",
+          "expiry_timing": "target_turn_end",
+          "duration_rounds": 10,
+          "repeat_save_ability": "wisdom",
+          "repeat_save_dc": 17,
+          "repeat_save_timing": "target_turn_end",
+          "speed_multiplier": 0.5,
+          "blocks_reactions": true,
+          "action_bonus_exclusive": true,
+          "max_attacks_per_turn": 1
+        },
+        "resource_id": "slow",
+        "resource_cost": 1,
+        "animation": "slowed"
+      }
+    ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
@@ -38702,7 +38750,27 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/105/315/315/636252743254029469.jpeg",
-    "saving_throw_actions": [],
+    "saving_throw_actions": [
+      {
+        "id": "lightning-strike",
+        "name": "Lightning Strike",
+        "save_ability": "dexterity",
+        "dc": 17,
+        "range_ft": 500,
+        "area": {
+          "shape": "emanation",
+          "origin": "self",
+          "radius_ft": 500
+        },
+        "damage_dice_count": 12,
+        "damage_dice_size": 8,
+        "damage_bonus": 0,
+        "damage_type": "lightning",
+        "success_damage": "half",
+        "resource_id": "lightning-strike",
+        "resource_cost": 1
+      }
+    ],
     "innate_spellcasting": {
       "ability": "charisma",
       "save_dc": 17,
