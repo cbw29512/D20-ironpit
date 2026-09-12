@@ -3,8 +3,9 @@ from __future__ import annotations
 from app.combat.action_economy import is_available, spend
 from app.combat.barbarian import rage_active
 from app.combat.condition_immunity import condition_is_immune
-from app.combat.condition_rules import condition_speed_is_zero, has_condition
+from app.combat.condition_rules import condition_speed_is_zero, has_condition, is_incapacitated
 from app.combat.dice import DiceProvider
+from app.combat.encounter_targeting import combatant_distance
 from app.combat.rolls import roll_d20
 from app.combat.tactical_mind import apply_tactical_mind
 from app.domain.models import BattleEvent, CombatantState, EncounterSetup, GrappleSource, RollMode
@@ -66,9 +67,9 @@ def cleanup_grapples(setup: EncounterSetup) -> None:
         retained: list[GrappleSource] = []
         for source in target.state.grapple_sources:
             grappler = members.get(source.source_id)
-            if grappler is None or grappler.state.is_dead or grappler.state.is_unconscious:
+            if grappler is None or grappler.state.is_dead or is_incapacitated(grappler.state):
                 continue
-            if abs(grappler.position_ft - target.position_ft) > source.range_ft:
+            if combatant_distance(grappler, target) > source.range_ft:
                 continue
             retained.append(source)
         target.state.grapple_sources = retained
