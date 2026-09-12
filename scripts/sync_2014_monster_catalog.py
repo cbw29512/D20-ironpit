@@ -31,15 +31,12 @@ def main() -> int:
         handle.write(payload)
         source = Path(handle.name)
     try:
-        if _run([
-            sys.executable, "scripts/import_2014_monster_catalog.py", str(source),
-            "--output", str(OUTPUT),
-        ]) != 0:
-            return 1
-        if _run([
-            sys.executable, "scripts/enrich_2014_save_actions.py", str(source),
-            "--catalog", str(OUTPUT),
-        ]) != 0:
+        commands = [
+            [sys.executable, "scripts/import_2014_monster_catalog.py", str(source), "--output", str(OUTPUT)],
+            [sys.executable, "scripts/enrich_2014_save_actions.py", str(source), "--catalog", str(OUTPUT)],
+            [sys.executable, "scripts/enrich_2014_spellcasting.py", str(source), "--catalog", str(OUTPUT)],
+        ]
+        if any(_run(command) != 0 for command in commands):
             return 1
         catalog = json.loads(OUTPUT.read_text(encoding="utf-8"))
         if len(catalog) != manifest["monster_count"]:
