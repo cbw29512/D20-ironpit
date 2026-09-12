@@ -5,6 +5,10 @@ import unicodedata
 
 from app.content.monster_catalog_2014_models import CatalogMonster2014
 
+# Optional non-offensive actions that the automated Iron Pit policy does not need to
+# select in order to resolve a creature-vs-creature fight. Source text remains intact.
+NONBLOCKING_OPTIONAL_ACTIONS_2014 = frozenset({"change-shape"})
+
 
 def action_key_2014(value: str) -> str:
     clean = re.sub(r"\s*\(Recharge\s+[^)]+\)", "", value, flags=re.I).rstrip(".")
@@ -33,6 +37,7 @@ def supported_action_ids_2014(source: CatalogMonster2014) -> set[str]:
     supported.update(
         action.resource_id for action in source.saving_throw_actions if action.resource_id
     )
+    supported.update(NONBLOCKING_OPTIONAL_ACTIONS_2014)
     if source.multiattack_slots:
         supported.add("multiattack")
     return supported
