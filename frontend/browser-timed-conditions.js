@@ -24,7 +24,7 @@
       expiry_timing: expiryTiming,
       repeat_save_ability: poison ? (options.repeatSaveAbility || "constitution") : (options.repeatSaveAbility || null),
       repeat_save_dc: poison ? (options.repeatSaveDc || POISON_RECOVERY_DC) : (options.repeatSaveDc || null),
-      repeat_save_timing: poison ? "target_turn_start" : (options.repeatSaveTiming || null),
+      repeat_save_timing: poison ? (options.repeatSaveTiming || "target_turn_start") : (options.repeatSaveTiming || null),
       allowed_removal_action_ids: [...(options.allowedRemovalActionIds || [])],
       turn_behavior: options.turnBehavior || "normal",
       ends_on_damage: Boolean(options.endsOnDamage),
