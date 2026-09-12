@@ -34,7 +34,7 @@ CONDITIONS = {
 _ROLLED_DAMAGE = re.compile(r"Hit:\s*(\d+)\s*\((\d+)d(\d+)(?:\s*([+\-−])\s*(\d+))?\)\s*([A-Za-z]+) damage", re.I)
 _FIXED_DAMAGE = re.compile(r"Hit:\s*(\d+)\s+([A-Za-z]+) damage", re.I)
 _ALT_DAMAGE = r"(\d+)\s*\((\d+)d(\d+)(?:\s*([+\-−])\s*(\d+))?\)\s*([A-Za-z]+) damage"
-_TWO_HANDED = re.compile(r"or\s+" + _ALT_DAMAGE + r"\s+if used with two hands to make a melee attack", re.I)
+_TWO_HANDED = re.compile(r"or\s+" + _ALT_DAMAGE + r"\s+if used with two hands(?: to make a melee attack)?", re.I)
 _MELEE_RANGE = re.compile(r"in melee or\s+" + _ALT_DAMAGE + r"\s+at range", re.I)
 
 
