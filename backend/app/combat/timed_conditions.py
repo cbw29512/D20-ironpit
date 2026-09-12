@@ -39,7 +39,7 @@ def apply_timed_condition(
         expiry_timing = None
         repeat_save_ability = repeat_save_ability or "constitution"
         repeat_save_dc = repeat_save_dc or ARENA_POISON_RECOVERY_DC
-        repeat_save_timing = "target_turn_start"
+        repeat_save_timing = repeat_save_timing or "target_turn_start"
     state.timed_effects = [
         effect for effect in state.timed_effects
         if not (
