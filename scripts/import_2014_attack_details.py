@@ -18,11 +18,17 @@ _RESTRAINED = re.compile(r"(?:Until (?:this|the) grapple ends,?\s*(?:the target|
 _NO_REPEAT_TARGET = re.compile(r"(?:and\s+)?(?:the\s+)?[A-Za-z' -]+ can(?:not|'t) (?:use this attack on|bite|attack|constrict|grapple) another target", re.I)
 _ALREADY_CONTROLLING = re.compile(r"(?:if\s+)?(?:the\s+)?[A-Za-z' -]+ (?:isn't|is not) already (?:constricting|grappling) a creature,?\s*(?:and\s+)?", re.I)
 _UNATTENDED_OBJECT_ONLY = re.compile(r"If the target is a flammable object that isn't being worn or carried, it also catches fire", re.I)
+_POST_KILL_ONLY = re.compile(r"If the target is killed by this damage, it is absorbed into the mouther", re.I)
+_LYCANTHROPY_ONLY = re.compile(r"If the target is a humanoid, it must succeed on a DC \d+ Constitution saving throw or be cursed with (?:werebear|wererat|weretiger|werewolf) lycanthropy", re.I)
+_REST_ONLY_CURSE = re.compile(r"the target is cursed if it is a creature\. The magical curse takes effect whenever the target takes a short or long rest, filling the target's thoughts with horrible images and dreams\. The cursed target gains no benefit from finishing a short or long rest", re.I)
 
 
 def strip_noncombat_attack_residual(remainder: str) -> str:
-    """Remove riders that can only affect unattended objects, which are not Pit combatants."""
-    return _UNATTENDED_OBJECT_ONLY.sub(" ", remainder).strip(" .,;")
+    """Remove source-preserved riders that cannot alter the current Iron Pit fight."""
+    cleaned = remainder
+    for pattern in (_UNATTENDED_OBJECT_ONLY, _POST_KILL_ONLY, _LYCANTHROPY_ONLY, _REST_ONLY_CURSE):
+        cleaned = pattern.sub(" ", cleaned)
+    return cleaned.strip(" .,;")
 
 
 def _rolled(match: re.Match[str]) -> dict | None:
