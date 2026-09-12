@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 from app.domain.actions import ConditionName
 from app.domain.size import CreatureSize
@@ -47,8 +47,13 @@ class CatalogMonster2014(BaseModel):
     damage_vulnerabilities: list[DamageType] = Field(default_factory=list)
     condition_immunities: list[ConditionName] = Field(default_factory=list)
     challenge_rating: str | None = None
-    attacks: list[CatalogAttack2014] = Field(min_length=1)
+    attacks: list[CatalogAttack2014] = Field(default_factory=list)
     action_names: list[str] = Field(default_factory=list)
     trait_names: list[str] = Field(default_factory=list)
     reaction_names: list[str] = Field(default_factory=list)
     legendary_action_names: list[str] = Field(default_factory=list)
+
+    @field_validator("size", mode="before")
+    @classmethod
+    def normalize_size(cls, value: object) -> object:
+        return value.lower() if isinstance(value, str) else value
