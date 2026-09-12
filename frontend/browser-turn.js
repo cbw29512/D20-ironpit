@@ -6,7 +6,7 @@
   const T = () => window.IRON_PIT_BROWSER_TACTICAL_SHIFT, O = () => window.IRON_PIT_BROWSER_ONGOING_SPELL_CONTROL;
   const L = () => window.IRON_PIT_BROWSER_SPELL_OFFENSE, U = () => window.IRON_PIT_BROWSER_STANDARD_ATTACK_ACTION;
   const F = () => window.IRON_PIT_BROWSER_FORMATION, V = () => window.IRON_PIT_BROWSER_SAVES;
-  const AS = () => window.IRON_PIT_BROWSER_AREA_SAVES;
+  const AS = () => window.IRON_PIT_BROWSER_AREA_SAVES, R = () => window.IRON_PIT_BROWSER_REGENERATION;
   const DG = () => window.IRON_PIT_BROWSER_DODGE, OM = () => window.IRON_PIT_BROWSER_OFFENSIVE_MOVEMENT;
   const D = () => window.IRON_PIT_DICE;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (s, c) => c === "action" ? s.action_available : s.bonus_action_available };
@@ -58,7 +58,11 @@
 
   function resolveTurn(sequence, round, member, setup) {
     enablePitRangePolicy();
-    const events = []; H().cleanup(setup); S().beginTurn(member.state);
+    const events = []; H().cleanup(setup);
+    const regen = R()?.startTurn(sequence, round, member);
+    if (regen?.event) { events.push(regen.event); sequence += 1; }
+    if (regen?.died) return { events, sequence };
+    S().beginTurn(member.state);
     const recharge = E().startTurnRecharges?.(sequence, round, member);
     if (recharge) { events.push(...recharge.events); sequence = recharge.sequence; }
     const turnKey = `${round}:${member.combatant_id}`;
