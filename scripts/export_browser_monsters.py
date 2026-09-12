@@ -27,12 +27,35 @@ def _certified_monsters():
     return monsters
 
 
+def _area_row(area):
+    if area is None:
+        return None
+    row = {"shape": area.shape, "origin": area.origin}
+    if area.radius_ft is not None:
+        row["radiusFt"] = area.radius_ft
+    if area.length_ft is not None:
+        row["lengthFt"] = area.length_ft
+    if area.width_ft is not None:
+        row["widthFt"] = area.width_ft
+    return row
+
+
+def _attach_monster_area_actions(row, template) -> None:
+    by_id = {action.id: action for action in template.saving_throw_actions}
+    for action_row in row.get("saving_throw_actions", []):
+        action = by_id.get(action_row["id"])
+        if action is None or action.area is None:
+            continue
+        action_row["area"] = _area_row(action.area)
+
+
 def render() -> str:
     try:
         rows = []
         for template in _certified_monsters():
             row = template_row(template)
             row["creature_type"] = template.creature_type
+            _attach_monster_area_actions(row, template)
             rows.append(row)
         ids = {row["id"] for row in rows}
         if len(rows) != len(ids):
