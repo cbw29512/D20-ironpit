@@ -36,12 +36,17 @@ class CatalogMonster2014(BaseModel):
     creature_type: str
     alignment: str | None = None
     armor_class: int = Field(ge=1)
+    armor_class_text: str | None = None
     max_hp: int = Field(ge=1)
+    hit_points_text: str | None = None
     hit_dice: str | None = None
     speed: dict[str, int]
+    speed_text: str | None = None
     abilities: dict[str, int]
     saving_throws: dict[str, int] = Field(default_factory=dict)
     skills: dict[str, int] = Field(default_factory=dict)
+    senses: str | None = None
+    languages: str | None = None
     damage_resistances: list[DamageType] = Field(default_factory=list)
     damage_immunities: list[DamageType] = Field(default_factory=list)
     damage_vulnerabilities: list[DamageType] = Field(default_factory=list)
@@ -53,6 +58,11 @@ class CatalogMonster2014(BaseModel):
     trait_names: list[str] = Field(default_factory=list)
     reaction_names: list[str] = Field(default_factory=list)
     legendary_action_names: list[str] = Field(default_factory=list)
+    source_traits: str | None = None
+    source_actions: str | None = None
+    source_reactions: str | None = None
+    source_legendary_actions: str | None = None
+    image_url: str | None = None
 
     @field_validator("size", mode="before")
     @classmethod
