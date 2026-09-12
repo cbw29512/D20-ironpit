@@ -8,6 +8,7 @@ from app.combat.dice import DiceProvider
 from app.combat.frenzy import mark_reckless_use_while_raging
 from app.combat.reckless_attack import activate_reckless_attack
 from app.combat.redirect_attack import select_redirect_ally, swap_redirect_positions
+from app.combat.resources import action_resource_available, spend_action_resource
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, WeaponAttack
 
@@ -32,6 +33,8 @@ def resolve_encounter_attack(
     allow_reckless: bool = False,
     off_turn: bool = False,
 ) -> BattleEvent:
+    if not action_resource_available(attacker.state, attack):
+        raise ValueError(f"Attack resource {attack.resource_id!r} is unavailable.")
     reckless_started = allow_reckless and activate_reckless_attack(
         attacker.state, attack, attacker.combatant_id, round_number,
     )
@@ -54,6 +57,8 @@ def resolve_encounter_attack(
         affected_states=affected_states, sneak_attack_ally_available=sneak_ally,
         off_turn=off_turn,
     )
+    remaining = spend_action_resource(attacker.state, attack)
+    if remaining is not None: event.resource_remaining = remaining
     if reckless_started:
         event.description += f" {attacker.state.template.name} uses Reckless Attack."
         if event.feature_id is None:
