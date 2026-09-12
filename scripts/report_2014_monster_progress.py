@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import html
+import re
 from collections import Counter, defaultdict
 
 from app.content.monster_catalog_2014 import load_catalog_2014, unsupported_mechanics_2014
@@ -18,13 +20,24 @@ def _attack_detail_family(text: str | None) -> str:
     return "+".join(dict.fromkeys(tags)) if tags else "other"
 
 
+def _multiattack_text(source_actions: str | None) -> str:
+    for paragraph in re.findall(r"<p>(.*?)</p>", source_actions or "", re.I | re.S):
+        if re.search(r"<strong>\s*Multiattack", paragraph, re.I):
+            text = re.sub(r"<[^>]+>", " ", paragraph)
+            return re.sub(r"\s+", " ", html.unescape(text)).strip()
+    return ""
+
+
 def main() -> int:
     monsters = load_catalog_2014(); family_counts: Counter[str] = Counter(); exact_counts: Counter[str] = Counter()
     exact_monsters: dict[str, set[str]] = defaultdict(set); rider_counts: Counter[str] = Counter()
     rider_monsters: dict[str, set[str]] = defaultdict(set); rider_examples: dict[str, str] = {}; runnable: list[str] = []
+    multiattack_examples: list[tuple[str, str]] = []
     for monster in monsters:
         blockers = unsupported_mechanics_2014(monster)
         if not blockers: runnable.append(monster.name); continue
+        if "action:Multiattack" in blockers:
+            multiattack_examples.append((monster.name, _multiattack_text(monster.source_actions)))
         for attack in monster.attacks:
             if not attack.source_complete:
                 family = _attack_detail_family(attack.unsupported_text); key = f"{attack.name}:{family}"
@@ -44,6 +57,10 @@ def main() -> int:
     for blocker in ranked[:30]:
         names = sorted(exact_monsters[blocker]); examples = ", ".join(names[:5])
         print(f"- {blocker}: {len(names)} monsters / {exact_counts[blocker]} references ({examples})")
+
+    if multiattack_examples:
+        print("\nUnresolved Multiattack source shapes:")
+        for name, text in multiattack_examples[:20]: print(f"- {name}: {text[:260]}")
 
     print("\nUnresolved attack rider families:")
     ranked_riders = sorted(rider_counts, key=lambda key: (-len(rider_monsters[key]), -rider_counts[key], key))
