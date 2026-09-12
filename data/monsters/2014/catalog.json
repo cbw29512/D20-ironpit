@@ -33584,7 +33584,14 @@
         "attack_ability": "strength"
       }
     ],
-    "multiattack_slots": [],
+    "multiattack_slots": [
+      [
+        "bite"
+      ],
+      [
+        "tail-stinger"
+      ]
+    ],
     "action_recharges": {},
     "rest_recharge_action_ids": [],
     "action_names": [
@@ -33607,6 +33614,7 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
+    "multiattack_policy": null,
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
