@@ -131,7 +131,8 @@
     "source_legendary_actions": "<p>The aboleth can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The aboleth regains spent legendary actions at the start of its turn. </p><p><em><strong>Detect.</strong></em> The aboleth makes a Wisdom (Perception) check. </p><p><em><strong>Tail Swipe.</strong></em> The aboleth makes one tail attack. </p><p><em><strong>Psychic Drain</strong></em> (Costs 2 Actions). One creature charmed by the aboleth takes 10 (3d6) psychic damage, and the aboleth regains hit points equal to the damage the creature takes.</p>",
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/11/1000/1000/636238825975375671.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "acolyte",
@@ -220,7 +221,50 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/656/humanoid.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": {
+      "caster_level": 1,
+      "ability": "wisdom",
+      "save_dc": 12,
+      "attack_bonus": 4,
+      "slots": {
+        "1": 3
+      },
+      "spells": [
+        {
+          "id": "light",
+          "name": "light",
+          "level": 0
+        },
+        {
+          "id": "sacred-flame",
+          "name": "sacred flame",
+          "level": 0
+        },
+        {
+          "id": "thaumaturgy",
+          "name": "thaumaturgy",
+          "level": 0
+        },
+        {
+          "id": "bless",
+          "name": "bless",
+          "level": 1
+        },
+        {
+          "id": "cure-wounds",
+          "name": "cure wounds",
+          "level": 1
+        },
+        {
+          "id": "sanctuary",
+          "name": "sanctuary",
+          "level": 1
+        }
+      ],
+      "source_complete": true,
+      "unsupported_text": null
+    }
   },
   {
     "id": "adult-black-dragon",
@@ -437,7 +481,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "adult-blue-dragon",
@@ -653,7 +698,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "adult-brass-dragon",
@@ -865,7 +911,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "adult-bronze-dragon",
@@ -1058,7 +1105,8 @@
         "animation": "fear"
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "adult-copper-dragon",
@@ -1269,7 +1317,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "adult-gold-dragon",
@@ -1482,7 +1531,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "adult-green-dragon",
@@ -1703,7 +1753,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "adult-red-dragon",
@@ -1918,7 +1969,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "adult-silver-dragon",
@@ -2152,7 +2204,8 @@
         "animation": "paralyzed"
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "adult-white-dragon",
@@ -2369,7 +2422,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "air-elemental",
@@ -2483,7 +2537,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/127/1000/1000/636252755648556800.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "allosaurus",
@@ -2599,7 +2654,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "ancient-black-dragon",
@@ -2816,7 +2872,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "ancient-blue-dragon",
@@ -3012,7 +3069,8 @@
         "animation": "fear"
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "ancient-brass-dragon",
@@ -3225,7 +3283,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "ancient-bronze-dragon",
@@ -3438,7 +3497,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "ancient-copper-dragon",
@@ -3650,7 +3710,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "ancient-gold-dragon",
@@ -3863,7 +3924,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "ancient-green-dragon",
@@ -4065,7 +4127,8 @@
         "animation": "fear"
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "ancient-red-dragon",
@@ -4280,7 +4343,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "ancient-silver-dragon",
@@ -4514,7 +4578,8 @@
         "animation": "paralyzed"
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "ancient-white-dragon",
@@ -4731,7 +4796,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "androsphinx",
@@ -4852,7 +4918,100 @@
     "source_legendary_actions": "<p>The sphinx can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The sphinx regains spent legendary actions at the start of its turn. </p><p><em><strong>Claw Attack.</strong></em> The sphinx makes one claw attack. </p><p><em><strong>Teleport (Costs 2 Actions).</strong></em> The sphinx magically teleports, along with any equipment it is wearing or carrying, up to 120 feet to an unoccupied space it can see. </p><p><em><strong>Cast a Spell (Costs 3 Actions).</strong></em> The sphinx casts a spell from its list of prepared spells, using a spell slot as normal.</p>",
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/157/1000/1000/636252759145617281.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": {
+      "caster_level": 12,
+      "ability": "wisdom",
+      "save_dc": 18,
+      "attack_bonus": 10,
+      "slots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1
+      },
+      "spells": [
+        {
+          "id": "sacred-flame",
+          "name": "sacred flame",
+          "level": 0
+        },
+        {
+          "id": "spare-the-dying",
+          "name": "spare the dying",
+          "level": 0
+        },
+        {
+          "id": "thaumaturgy",
+          "name": "thaumaturgy",
+          "level": 0
+        },
+        {
+          "id": "command",
+          "name": "command",
+          "level": 1
+        },
+        {
+          "id": "detect-evil-and-good",
+          "name": "detect evil and good",
+          "level": 1
+        },
+        {
+          "id": "detect-magic",
+          "name": "detect magic",
+          "level": 1
+        },
+        {
+          "id": "lesser-restoration",
+          "name": "lesser restoration",
+          "level": 2
+        },
+        {
+          "id": "zone-of-truth",
+          "name": "zone of truth",
+          "level": 2
+        },
+        {
+          "id": "dispel-magic",
+          "name": "dispel magic",
+          "level": 3
+        },
+        {
+          "id": "tongues",
+          "name": "tongues",
+          "level": 3
+        },
+        {
+          "id": "banishment",
+          "name": "banishment",
+          "level": 4
+        },
+        {
+          "id": "freedom-of-movement",
+          "name": "freedom of movement",
+          "level": 4
+        },
+        {
+          "id": "flame-strike",
+          "name": "flame strike",
+          "level": 5
+        },
+        {
+          "id": "greater-restoration",
+          "name": "greater restoration",
+          "level": 5
+        },
+        {
+          "id": "heroes-feast",
+          "name": "heroes' feast",
+          "level": 6
+        }
+      ],
+      "source_complete": true,
+      "unsupported_text": null
+    }
   },
   {
     "id": "animated-armor",
@@ -4959,7 +5118,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/8/429/1000/1000/636306156895834255.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "ankheg",
@@ -5059,7 +5219,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/161/315/315/636252759871983921.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "ankylosaurus",
@@ -5148,7 +5309,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "ape",
@@ -5267,7 +5429,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "archmage",
@@ -5385,7 +5548,153 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/167/1000/1000/636252760213195530.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": {
+      "caster_level": 18,
+      "ability": "intelligence",
+      "save_dc": 17,
+      "attack_bonus": 9,
+      "slots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 3,
+        "6": 1,
+        "7": 1,
+        "8": 1,
+        "9": 1
+      },
+      "spells": [
+        {
+          "id": "fire-bolt",
+          "name": "fire bolt",
+          "level": 0
+        },
+        {
+          "id": "light",
+          "name": "light",
+          "level": 0
+        },
+        {
+          "id": "mage-hand",
+          "name": "mage hand",
+          "level": 0
+        },
+        {
+          "id": "prestidigitation",
+          "name": "prestidigitation",
+          "level": 0
+        },
+        {
+          "id": "shocking-grasp",
+          "name": "shocking grasp",
+          "level": 0
+        },
+        {
+          "id": "detect-magic",
+          "name": "detect magic",
+          "level": 1
+        },
+        {
+          "id": "identify",
+          "name": "identify",
+          "level": 1
+        },
+        {
+          "id": "mage-armor",
+          "name": "mage armor",
+          "level": 1
+        },
+        {
+          "id": "magic-missile",
+          "name": "magic missile",
+          "level": 1
+        },
+        {
+          "id": "detect-thoughts",
+          "name": "detect thoughts",
+          "level": 2
+        },
+        {
+          "id": "mirror-image",
+          "name": "mirror image",
+          "level": 2
+        },
+        {
+          "id": "misty-step",
+          "name": "misty step",
+          "level": 2
+        },
+        {
+          "id": "counterspell",
+          "name": "counterspell",
+          "level": 3
+        },
+        {
+          "id": "fly",
+          "name": "fly",
+          "level": 3
+        },
+        {
+          "id": "lightning-bolt",
+          "name": "lightning bolt",
+          "level": 3
+        },
+        {
+          "id": "banishment",
+          "name": "banishment",
+          "level": 4
+        },
+        {
+          "id": "fire-shield",
+          "name": "fire shield",
+          "level": 4
+        },
+        {
+          "id": "stoneskin",
+          "name": "stoneskin",
+          "level": 4
+        },
+        {
+          "id": "cone-of-cold",
+          "name": "cone of cold",
+          "level": 5
+        },
+        {
+          "id": "scrying",
+          "name": "scrying",
+          "level": 5
+        },
+        {
+          "id": "wall-of-force",
+          "name": "wall of force",
+          "level": 5
+        },
+        {
+          "id": "globe-of-invulnerability",
+          "name": "globe of invulnerability",
+          "level": 6
+        },
+        {
+          "id": "teleport",
+          "name": "teleport",
+          "level": 7
+        },
+        {
+          "id": "mind-blank",
+          "name": "mind blank",
+          "level": 8
+        },
+        {
+          "id": "time-stop",
+          "name": "time stop",
+          "level": 9
+        }
+      ],
+      "source_complete": true,
+      "unsupported_text": null
+    }
   },
   {
     "id": "assassin",
@@ -5530,7 +5839,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/9/910/315/315/636334293020978804.png",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "awakened-shrub",
@@ -5620,7 +5930,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/659/plant.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "awakened-tree",
@@ -5711,7 +6022,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/659/plant.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "axe-beak",
@@ -5795,7 +6107,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "azer",
@@ -5927,7 +6240,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/171/1000/1000/636252761112348397.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "baboon",
@@ -6014,7 +6328,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "badger",
@@ -6101,7 +6416,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/528/1000/1000/636376327632236333.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "balor",
@@ -6253,7 +6569,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/175/1000/1000/636252761612038117.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "bandit",
@@ -6360,7 +6677,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/656/humanoid.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "bandit-captain",
@@ -6514,7 +6832,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/181/1000/1000/636252761965117015.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "banshee",
@@ -6627,7 +6946,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/8/446/315/315/636306384206418474.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "barbed-devil",
@@ -6787,7 +7107,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/486/315/315/636376302569423870.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "basilisk",
@@ -6881,7 +7202,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/185/1000/1000/636252762168821795.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "bat",
@@ -6969,7 +7291,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/18/305/1000/1000/636379812593010967.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "bearded-devil",
@@ -7100,7 +7423,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/193/1000/1000/636252763397604505.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "behir",
@@ -7235,7 +7559,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/195/1000/1000/636252763748680024.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "berserker",
@@ -7321,7 +7646,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/656/humanoid.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "black-bear",
@@ -7440,7 +7766,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "black-dragon-wyrmling",
@@ -7570,7 +7897,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "black-pudding",
@@ -7681,7 +8009,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/201/315/315/636252764027417823.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "blink-dog",
@@ -7773,7 +8102,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/205/315/315/636252764168652859.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "blood-hawk",
@@ -7863,7 +8193,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "blue-dragon-wyrmling",
@@ -7991,7 +8322,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "boar",
@@ -8089,7 +8421,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "bone-devil",
@@ -8240,7 +8573,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/9/481/1000/1000/636328225187253200.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "brass-dragon-wyrmling",
@@ -8362,7 +8696,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "bronze-dragon-wyrmling",
@@ -8486,7 +8821,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "brown-bear",
@@ -8605,7 +8941,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "bugbear",
@@ -8742,7 +9079,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/221/1000/1000/636252765234633232.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "bulette",
@@ -8832,7 +9170,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/223/315/315/636252765369632881.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "camel",
@@ -8916,7 +9255,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "cat",
@@ -9006,7 +9346,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "centaur",
@@ -9160,7 +9501,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/227/1000/1000/636252765573266420.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "chain-devil",
@@ -9274,7 +9616,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/235/1000/1000/636252766618069332.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "chimera",
@@ -9419,7 +9762,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/237/1000/1000/636252766770156389.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "chuul",
@@ -9518,7 +9862,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/241/1000/1000/636252767122656355.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "clay-golem",
@@ -9632,7 +9977,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/243/315/315/636252767318152303.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "cloaker",
@@ -9755,7 +10101,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/245/1000/1000/636252767458838228.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "cloud-giant",
@@ -9960,6 +10307,10 @@
       ],
       "source_complete": true,
       "unsupported_text": null
+    },
+    "spellcasting": {
+      "source_complete": false,
+      "unsupported_text": "missing caster level or casting ability"
     }
   },
   {
@@ -10045,7 +10396,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/251/315/315/636252767744669874.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "commoner",
@@ -10129,7 +10481,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/656/humanoid.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "constrictor-snake",
@@ -10239,7 +10592,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "copper-dragon-wyrmling",
@@ -10361,7 +10715,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "couatl",
@@ -10598,6 +10953,10 @@
       ],
       "source_complete": true,
       "unsupported_text": null
+    },
+    "spellcasting": {
+      "source_complete": false,
+      "unsupported_text": "missing caster level or casting ability"
     }
   },
   {
@@ -10687,7 +11046,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "crocodile",
@@ -10779,7 +11139,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "cult-fanatic",
@@ -10903,7 +11264,61 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/259/1000/1000/636252768307230924.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": {
+      "caster_level": 4,
+      "ability": "wisdom",
+      "save_dc": 11,
+      "attack_bonus": 3,
+      "slots": {
+        "1": 4,
+        "2": 3
+      },
+      "spells": [
+        {
+          "id": "light",
+          "name": "light",
+          "level": 0
+        },
+        {
+          "id": "sacred-flame",
+          "name": "sacred flame",
+          "level": 0
+        },
+        {
+          "id": "thaumaturgy",
+          "name": "thaumaturgy",
+          "level": 0
+        },
+        {
+          "id": "command",
+          "name": "command",
+          "level": 1
+        },
+        {
+          "id": "inflict-wounds",
+          "name": "inflict wounds",
+          "level": 1
+        },
+        {
+          "id": "shield-of-faith",
+          "name": "shield of faith",
+          "level": 1
+        },
+        {
+          "id": "hold-person",
+          "name": "hold person",
+          "level": 2
+        },
+        {
+          "id": "spiritual-weapon",
+          "name": "spiritual weapon",
+          "level": 2
+        }
+      ],
+      "source_complete": true,
+      "unsupported_text": null
+    }
   },
   {
     "id": "cultist",
@@ -10992,7 +11407,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/14/481/1000/1000/636364323106021375.png",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "cyclops",
@@ -11109,7 +11525,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/470/1000/1000/636376290137285130.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "darkmantle",
@@ -11200,7 +11617,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/263/315/315/636252768676699519.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "death-dog",
@@ -11297,7 +11715,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/265/1000/1000/636252768823194310.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "deep-gnome-svirfneblin",
@@ -11458,6 +11877,10 @@
       ],
       "source_complete": true,
       "unsupported_text": null
+    },
+    "spellcasting": {
+      "source_complete": false,
+      "unsupported_text": "missing caster level or casting ability"
     }
   },
   {
@@ -11542,7 +11965,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "deva",
@@ -11695,6 +12119,10 @@
       ],
       "source_complete": true,
       "unsupported_text": null
+    },
+    "spellcasting": {
+      "source_complete": false,
+      "unsupported_text": "missing caster level or casting ability"
     }
   },
   {
@@ -11790,7 +12218,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/484/315/315/636376300478361995.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "djinni",
@@ -12001,6 +12430,10 @@
       ],
       "source_complete": true,
       "unsupported_text": null
+    },
+    "spellcasting": {
+      "source_complete": false,
+      "unsupported_text": "missing caster level or casting ability"
     }
   },
   {
@@ -12103,7 +12536,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/289/315/315/636252770983164351.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "draft-horse",
@@ -12187,7 +12621,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "dragon-turtle",
@@ -12358,7 +12793,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "dretch",
@@ -12481,7 +12917,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/293/1000/1000/636252771253285096.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "drider",
@@ -12683,6 +13120,10 @@
       ],
       "source_complete": true,
       "unsupported_text": null
+    },
+    "spellcasting": {
+      "source_complete": false,
+      "unsupported_text": "missing caster level or casting ability"
     }
   },
   {
@@ -12829,6 +13270,10 @@
       ],
       "source_complete": true,
       "unsupported_text": null
+    },
+    "spellcasting": {
+      "source_complete": false,
+      "unsupported_text": "missing caster level or casting ability"
     }
   },
   {
@@ -12919,7 +13364,66 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/299/1000/1000/636252771583275655.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": {
+      "caster_level": 4,
+      "ability": "wisdom",
+      "save_dc": 12,
+      "attack_bonus": 4,
+      "slots": {
+        "1": 4,
+        "2": 3
+      },
+      "spells": [
+        {
+          "id": "druidcraft",
+          "name": "druidcraft",
+          "level": 0
+        },
+        {
+          "id": "produce-flame",
+          "name": "produce flame",
+          "level": 0
+        },
+        {
+          "id": "shillelagh",
+          "name": "shillelagh",
+          "level": 0
+        },
+        {
+          "id": "entangle",
+          "name": "entangle",
+          "level": 1
+        },
+        {
+          "id": "longstrider",
+          "name": "longstrider",
+          "level": 1
+        },
+        {
+          "id": "speak-with-animals",
+          "name": "speak with animals",
+          "level": 1
+        },
+        {
+          "id": "thunderwave",
+          "name": "thunderwave",
+          "level": 1
+        },
+        {
+          "id": "animal-messenger",
+          "name": "animal messenger",
+          "level": 2
+        },
+        {
+          "id": "barkskin",
+          "name": "barkskin",
+          "level": 2
+        }
+      ],
+      "source_complete": true,
+      "unsupported_text": null
+    }
   },
   {
     "id": "dryad",
@@ -13068,6 +13572,10 @@
       ],
       "source_complete": true,
       "unsupported_text": null
+    },
+    "spellcasting": {
+      "source_complete": false,
+      "unsupported_text": "missing caster level or casting ability"
     }
   },
   {
@@ -13183,7 +13691,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/309/1000/1000/636252772101183765.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "dust-mephit",
@@ -13299,6 +13808,10 @@
       ],
       "source_complete": true,
       "unsupported_text": null
+    },
+    "spellcasting": {
+      "source_complete": false,
+      "unsupported_text": "missing caster level or casting ability"
     }
   },
   {
@@ -13388,7 +13901,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/515/1000/1000/636376317171111968.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "earth-elemental",
@@ -13496,7 +14010,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/317/315/315/636252772331779404.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "efreeti",
@@ -13709,6 +14224,10 @@
       ],
       "source_complete": true,
       "unsupported_text": null
+    },
+    "spellcasting": {
+      "source_complete": false,
+      "unsupported_text": "missing caster level or casting ability"
     }
   },
   {
@@ -13823,7 +14342,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "elk",
@@ -13942,7 +14462,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "erinyes",
@@ -14099,7 +14620,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/329/1000/1000/636252776041158657.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "ettercap",
@@ -14239,7 +14761,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/339/315/315/636252776771842998.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "ettin",
@@ -14358,7 +14881,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/341/1000/1000/636252776953634777.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "fire-elemental",
@@ -14468,7 +14992,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/343/1000/1000/636252777098624896.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "fire-giant",
@@ -14592,7 +15117,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/357/1000/1000/636252778143767005.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "flameskull",
@@ -14706,7 +15232,52 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/14/487/315/315/636364325235118776.png",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": {
+      "caster_level": 5,
+      "ability": "intelligence",
+      "save_dc": 13,
+      "attack_bonus": 5,
+      "slots": {
+        "1": 3,
+        "2": 2,
+        "3": 1
+      },
+      "spells": [
+        {
+          "id": "mage-hand",
+          "name": "mage hand",
+          "level": 0
+        },
+        {
+          "id": "magic-missile",
+          "name": "magic missile",
+          "level": 1
+        },
+        {
+          "id": "shield",
+          "name": "shield",
+          "level": 1
+        },
+        {
+          "id": "blur",
+          "name": "blur",
+          "level": 2
+        },
+        {
+          "id": "flaming-sphere",
+          "name": "flaming sphere",
+          "level": 2
+        },
+        {
+          "id": "fireball",
+          "name": "fireball",
+          "level": 3
+        }
+      ],
+      "source_complete": true,
+      "unsupported_text": null
+    }
   },
   {
     "id": "flesh-golem",
@@ -14817,7 +15388,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/359/315/315/636252778311644574.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "flying-snake",
@@ -14913,7 +15485,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/517/1000/1000/636376319640572721.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "flying-sword",
@@ -15014,7 +15587,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/77/599/1000/1000/636473151106171093.png",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "frog",
@@ -15081,7 +15655,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/523/315/315/636376321230650501.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "frost-giant",
@@ -15205,7 +15780,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/405/1000/1000/636252786158646348.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "gargoyle",
@@ -15330,7 +15906,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/407/315/315/636252786295384889.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "gelatinous-cube",
@@ -15425,7 +16002,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/409/1000/1000/636252786406028958.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "ghast",
@@ -15548,7 +16126,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/411/315/315/636252786516023032.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "ghost",
@@ -15662,7 +16241,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/413/1000/1000/636252786639798307.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "ghoul",
@@ -15780,7 +16360,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/14/483/315/315/636364323937041514.png",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "giant-ape",
@@ -15899,7 +16480,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "giant-badger",
@@ -16016,7 +16598,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/530/1000/1000/636376327839601860.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "giant-bat",
@@ -16104,7 +16687,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "giant-boar",
@@ -16202,7 +16786,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "giant-centipede",
@@ -16295,7 +16880,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "giant-constrictor-snake",
@@ -16407,7 +16993,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "giant-crab",
@@ -16499,7 +17086,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "giant-crocodile",
@@ -16626,7 +17214,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "giant-eagle",
@@ -16745,7 +17334,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/9/894/315/315/636334286969931904.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "giant-elk",
@@ -16866,7 +17456,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "giant-fire-beetle",
@@ -16952,7 +17543,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/9/896/1000/1000/636334287498492864.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "giant-frog",
@@ -17047,7 +17639,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/521/1000/1000/636376321052503535.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "giant-goat",
@@ -17145,7 +17738,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "giant-hyena",
@@ -17233,7 +17827,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "giant-lizard",
@@ -17318,7 +17913,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "giant-octopus",
@@ -17414,7 +18010,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/9/898/315/315/636334288003435302.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "giant-owl",
@@ -17505,7 +18102,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/535/1000/1000/636376331788287090.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "giant-poisonous-snake",
@@ -17600,7 +18198,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "giant-rat",
@@ -17687,7 +18286,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/538/1000/1000/636376332197953299.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "giant-scorpion",
@@ -17815,7 +18415,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "giant-sea-horse",
@@ -17914,7 +18515,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "giant-shark",
@@ -18004,7 +18606,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "giant-spider",
@@ -18106,7 +18709,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/323/1000/1000/636252775648743317.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "giant-toad",
@@ -18206,7 +18810,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "giant-vulture",
@@ -18326,7 +18931,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "giant-wasp",
@@ -18419,7 +19025,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "giant-weasel",
@@ -18508,7 +19115,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "giant-wolf-spider",
@@ -18608,7 +19216,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "gibbering-mouther",
@@ -18707,7 +19316,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/333/315/315/636252776252001529.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "glabrezu",
@@ -18905,6 +19515,10 @@
       ],
       "source_complete": true,
       "unsupported_text": null
+    },
+    "spellcasting": {
+      "source_complete": false,
+      "unsupported_text": "missing caster level or casting ability"
     }
   },
   {
@@ -19095,7 +19709,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/656/humanoid.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "gnoll",
@@ -19274,7 +19889,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/345/1000/1000/636252777224997611.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "goat",
@@ -19372,7 +19988,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "goblin",
@@ -19483,7 +20100,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/351/315/315/636252777818652432.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "gold-dragon-wyrmling",
@@ -19606,7 +20224,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "gorgon",
@@ -19726,7 +20345,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/355/315/315/636252778125099430.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "gray-ooze",
@@ -19836,7 +20456,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/658/ooze.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "green-dragon-wyrmling",
@@ -19967,7 +20588,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "green-hag",
@@ -20094,6 +20716,10 @@
       ],
       "source_complete": true,
       "unsupported_text": null
+    },
+    "spellcasting": {
+      "source_complete": false,
+      "unsupported_text": "missing caster level or casting ability"
     }
   },
   {
@@ -20206,7 +20832,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/369/1000/1000/636252779341924439.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "griffon",
@@ -20325,7 +20952,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/373/315/315/636252779693862725.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "grimlock",
@@ -20427,7 +21055,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/375/315/315/636252780049813181.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "guard",
@@ -20561,7 +21190,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/656/humanoid.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "guardian-naga",
@@ -20668,7 +21298,100 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/377/315/315/636252780447421771.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": {
+      "caster_level": 11,
+      "ability": "wisdom",
+      "save_dc": 16,
+      "attack_bonus": 8,
+      "slots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1
+      },
+      "spells": [
+        {
+          "id": "mending",
+          "name": "mending",
+          "level": 0
+        },
+        {
+          "id": "sacred-flame",
+          "name": "sacred flame",
+          "level": 0
+        },
+        {
+          "id": "thaumaturgy",
+          "name": "thaumaturgy",
+          "level": 0
+        },
+        {
+          "id": "command",
+          "name": "command",
+          "level": 1
+        },
+        {
+          "id": "cure-wounds",
+          "name": "cure wounds",
+          "level": 1
+        },
+        {
+          "id": "shield-of-faith",
+          "name": "shield of faith",
+          "level": 1
+        },
+        {
+          "id": "calm-emotions",
+          "name": "calm emotions",
+          "level": 2
+        },
+        {
+          "id": "hold-person",
+          "name": "hold person",
+          "level": 2
+        },
+        {
+          "id": "bestow-curse",
+          "name": "bestow curse",
+          "level": 3
+        },
+        {
+          "id": "clairvoyance",
+          "name": "clairvoyance",
+          "level": 3
+        },
+        {
+          "id": "banishment",
+          "name": "banishment",
+          "level": 4
+        },
+        {
+          "id": "freedom-of-movement",
+          "name": "freedom of movement",
+          "level": 4
+        },
+        {
+          "id": "flame-strike",
+          "name": "flame strike",
+          "level": 5
+        },
+        {
+          "id": "geas",
+          "name": "geas",
+          "level": 5
+        },
+        {
+          "id": "true-seeing",
+          "name": "true seeing",
+          "level": 6
+        }
+      ],
+      "source_complete": true,
+      "unsupported_text": null
+    }
   },
   {
     "id": "gynosphinx",
@@ -20781,7 +21504,99 @@
     "source_legendary_actions": "<p>The sphinx can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The sphinx regains spent legendary actions at the start of its turn. </p><p><em><strong>Claw Attack.</strong></em> The sphinx makes one claw attack. </p><p><em><strong>Teleport (Costs 2 Actions).</strong></em> The sphinx magically teleports, along with any equipment it is wearing or carrying, up to 120 feet to an unoccupied space it can see. </p><p><em><strong>Cast a Spell (Costs 3 Actions).</strong></em> The sphinx casts a spell from its list of prepared spells, using a spell slot as normal.</p>",
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/383/315/315/636252780786457550.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": {
+      "caster_level": 9,
+      "ability": "intelligence",
+      "save_dc": 16,
+      "attack_bonus": 8,
+      "slots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 1
+      },
+      "spells": [
+        {
+          "id": "mage-hand",
+          "name": "mage hand",
+          "level": 0
+        },
+        {
+          "id": "minor-illusion",
+          "name": "minor illusion",
+          "level": 0
+        },
+        {
+          "id": "prestidigitation",
+          "name": "prestidigitation",
+          "level": 0
+        },
+        {
+          "id": "detect-magic",
+          "name": "detect magic",
+          "level": 1
+        },
+        {
+          "id": "identify",
+          "name": "identify",
+          "level": 1
+        },
+        {
+          "id": "shield",
+          "name": "shield",
+          "level": 1
+        },
+        {
+          "id": "darkness",
+          "name": "darkness",
+          "level": 2
+        },
+        {
+          "id": "locate-object",
+          "name": "locate object",
+          "level": 2
+        },
+        {
+          "id": "suggestion",
+          "name": "suggestion",
+          "level": 2
+        },
+        {
+          "id": "dispel-magic",
+          "name": "dispel magic",
+          "level": 3
+        },
+        {
+          "id": "remove-curse",
+          "name": "remove curse",
+          "level": 3
+        },
+        {
+          "id": "tongues",
+          "name": "tongues",
+          "level": 3
+        },
+        {
+          "id": "banishment",
+          "name": "banishment",
+          "level": 4
+        },
+        {
+          "id": "greater-invisibility",
+          "name": "greater invisibility",
+          "level": 4
+        },
+        {
+          "id": "legend-lore",
+          "name": "legend lore",
+          "level": 5
+        }
+      ],
+      "source_complete": true,
+      "unsupported_text": null
+    }
   },
   {
     "id": "half-red-dragon-veteran",
@@ -20939,7 +21754,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "harpy",
@@ -21055,7 +21871,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/391/315/315/636252781955908234.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "hawk",
@@ -21144,7 +21961,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/9/900/1000/1000/636334288270143064.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "hell-hound",
@@ -21266,7 +22084,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "hezrou",
@@ -21400,7 +22219,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/321/315/315/636252775562934524.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "hill-giant",
@@ -21517,7 +22337,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/331/315/315/636252776196140305.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "hippogriff",
@@ -21636,7 +22457,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/335/315/315/636252776578605778.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "hobgoblin",
@@ -21745,7 +22567,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/389/315/315/636252781431932597.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "homunculus",
@@ -21837,7 +22660,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/18/287/315/315/636379803928245506.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "horned-devil",
@@ -21996,7 +22820,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/347/315/315/636252777255936976.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "hunter-shark",
@@ -22086,7 +22911,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "hydra",
@@ -22179,7 +23005,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/349/315/315/636252777669218389.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "hyena",
@@ -22267,7 +23094,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/9/902/1000/1000/636334288674955736.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "ice-devil",
@@ -22449,7 +23277,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/353/315/315/636252777966974765.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "ice-mephit",
@@ -22576,6 +23405,10 @@
       ],
       "source_complete": true,
       "unsupported_text": null
+    },
+    "spellcasting": {
+      "source_complete": false,
+      "unsupported_text": "missing caster level or casting ability"
     }
   },
   {
@@ -22680,7 +23513,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/361/315/315/636252778560366227.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "invisible-stalker",
@@ -22792,7 +23626,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/367/315/315/636252779159282339.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "iron-golem",
@@ -22949,7 +23784,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "jackal",
@@ -23016,7 +23852,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "killer-whale",
@@ -23107,7 +23944,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "knight",
@@ -23230,7 +24068,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/656/humanoid.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "kobold",
@@ -23340,7 +24179,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/379/1000/1000/636252780450300625.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "kraken",
@@ -23474,7 +24314,8 @@
     "source_legendary_actions": "<p>The kraken can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The kraken regains spent legendary actions at the start of its turn. </p><p><em><strong>Tentacle Attack or Fling.</strong></em> The kraken makes one tentacle attack or uses its Fling. </p><p><em><strong>Lightning Storm (Costs 2 Actions).</strong></em> The kraken uses Lightning Storm. </p><p><em><strong>Ink Cloud (Costs 3 Actions).</strong></em> While underwater, the kraken expels an ink cloud in a 60-foot radius. The cloud spreads around corners, and that area is heavily obscured to creatures other than the kraken. Each creature other than the kraken that ends its turn there must succeed on a DC 23 Constitution saving throw, taking 16 (3d10) poison damage on a failed save, or half as much damage on a successful one. A strong current disperses the cloud, which otherwise disappears at the end of the kraken's next turn.</p>",
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/381/1000/1000/636252780680163799.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "lamia",
@@ -23630,6 +24471,10 @@
       ],
       "source_complete": true,
       "unsupported_text": null
+    },
+    "spellcasting": {
+      "source_complete": false,
+      "unsupported_text": "missing caster level or casting ability"
     }
   },
   {
@@ -23726,7 +24571,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/149/1000/1000/636252758704142054.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "lich",
@@ -23849,7 +24695,158 @@
     "source_legendary_actions": "<p>The lich can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The lich regains spent legendary actions at the start of its turn. </p><p><em><strong>Cantrip.</strong></em> The lich casts a cantrip. </p><p><em><strong>Paralyzing Touch (Costs 2 Actions).</strong></em> The lich uses its Paralyzing Touch. </p><p><em><strong>Frightening Gaze (Costs 2 Actions).</strong></em> The lich fixes its gaze on one creature it can see within 10 feet of it. The target must succeed on a DC 18 Wisdom saving throw against this magic or become frightened for 1 minute. The frightened target can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success. If a target's saving throw is successful or the effect ends for it, the target is immune to the lich's gaze for the next 24 hours. </p><p><em><strong>Disrupt Life (Costs 3 Actions).</strong></em> Each living creature within 20 feet of the lich must make a DC 18 Constitution saving throw against this magic, taking 21 (6d6) necrotic damage on a failed save, or half as much damage on a successful one.</p>",
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/165/1000/1000/636252760084366499.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": {
+      "caster_level": 18,
+      "ability": "intelligence",
+      "save_dc": 20,
+      "attack_bonus": 12,
+      "slots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 3,
+        "6": 1,
+        "7": 1,
+        "8": 1,
+        "9": 1
+      },
+      "spells": [
+        {
+          "id": "mage-hand",
+          "name": "mage hand",
+          "level": 0
+        },
+        {
+          "id": "prestidigitation",
+          "name": "prestidigitation",
+          "level": 0
+        },
+        {
+          "id": "ray-of-frost",
+          "name": "ray of frost",
+          "level": 0
+        },
+        {
+          "id": "detect-magic",
+          "name": "detect magic",
+          "level": 1
+        },
+        {
+          "id": "magic-missile",
+          "name": "magic missile",
+          "level": 1
+        },
+        {
+          "id": "shield",
+          "name": "shield",
+          "level": 1
+        },
+        {
+          "id": "thunderwave",
+          "name": "thunderwave",
+          "level": 1
+        },
+        {
+          "id": "acid-arrow",
+          "name": "acid arrow",
+          "level": 2
+        },
+        {
+          "id": "detect-thoughts",
+          "name": "detect thoughts",
+          "level": 2
+        },
+        {
+          "id": "invisibility",
+          "name": "invisibility",
+          "level": 2
+        },
+        {
+          "id": "mirror-image",
+          "name": "mirror image",
+          "level": 2
+        },
+        {
+          "id": "animate-dead",
+          "name": "animate dead",
+          "level": 3
+        },
+        {
+          "id": "counterspell",
+          "name": "counterspell",
+          "level": 3
+        },
+        {
+          "id": "dispel-magic",
+          "name": "dispel magic",
+          "level": 3
+        },
+        {
+          "id": "fireball",
+          "name": "fireball",
+          "level": 3
+        },
+        {
+          "id": "blight",
+          "name": "blight",
+          "level": 4
+        },
+        {
+          "id": "dimension-door",
+          "name": "dimension door",
+          "level": 4
+        },
+        {
+          "id": "cloudkill",
+          "name": "cloudkill",
+          "level": 5
+        },
+        {
+          "id": "scrying",
+          "name": "scrying",
+          "level": 5
+        },
+        {
+          "id": "disintegrate",
+          "name": "disintegrate",
+          "level": 6
+        },
+        {
+          "id": "globe-of-invulnerability",
+          "name": "globe of invulnerability",
+          "level": 6
+        },
+        {
+          "id": "finger-of-death",
+          "name": "finger of death",
+          "level": 7
+        },
+        {
+          "id": "plane-shift",
+          "name": "plane shift",
+          "level": 7
+        },
+        {
+          "id": "dominate-monster",
+          "name": "dominate monster",
+          "level": 8
+        },
+        {
+          "id": "power-word-stun",
+          "name": "power word stun",
+          "level": 8
+        },
+        {
+          "id": "power-word-kill",
+          "name": "power word kill",
+          "level": 9
+        }
+      ],
+      "source_complete": true,
+      "unsupported_text": null
+    }
   },
   {
     "id": "lion",
@@ -23969,7 +24966,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "lizard",
@@ -24054,7 +25052,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "lizardfolk",
@@ -24237,7 +25236,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/233/315/315/636252766314905259.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "mage",
@@ -24354,7 +25354,104 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/656/humanoid.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": {
+      "caster_level": 9,
+      "ability": "intelligence",
+      "save_dc": 14,
+      "attack_bonus": 6,
+      "slots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 1
+      },
+      "spells": [
+        {
+          "id": "fire-bolt",
+          "name": "fire bolt",
+          "level": 0
+        },
+        {
+          "id": "light",
+          "name": "light",
+          "level": 0
+        },
+        {
+          "id": "mage-hand",
+          "name": "mage hand",
+          "level": 0
+        },
+        {
+          "id": "prestidigitation",
+          "name": "prestidigitation",
+          "level": 0
+        },
+        {
+          "id": "detect-magic",
+          "name": "detect magic",
+          "level": 1
+        },
+        {
+          "id": "mage-armor",
+          "name": "mage armor",
+          "level": 1
+        },
+        {
+          "id": "magic-missile",
+          "name": "magic missile",
+          "level": 1
+        },
+        {
+          "id": "shield",
+          "name": "shield",
+          "level": 1
+        },
+        {
+          "id": "misty-step",
+          "name": "misty step",
+          "level": 2
+        },
+        {
+          "id": "suggestion",
+          "name": "suggestion",
+          "level": 2
+        },
+        {
+          "id": "counterspell",
+          "name": "counterspell",
+          "level": 3
+        },
+        {
+          "id": "fireball",
+          "name": "fireball",
+          "level": 3
+        },
+        {
+          "id": "fly",
+          "name": "fly",
+          "level": 3
+        },
+        {
+          "id": "greater-invisibility",
+          "name": "greater invisibility",
+          "level": 4
+        },
+        {
+          "id": "ice-storm",
+          "name": "ice storm",
+          "level": 4
+        },
+        {
+          "id": "cone-of-cold",
+          "name": "cone of cold",
+          "level": 5
+        }
+      ],
+      "source_complete": true,
+      "unsupported_text": null
+    }
   },
   {
     "id": "magma-mephit",
@@ -24499,6 +25596,10 @@
       ],
       "source_complete": true,
       "unsupported_text": null
+    },
+    "spellcasting": {
+      "source_complete": false,
+      "unsupported_text": "missing caster level or casting ability"
     }
   },
   {
@@ -24590,7 +25691,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/183/315/315/636252762034276620.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "mammoth",
@@ -24704,7 +25806,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "manticore",
@@ -24850,7 +25953,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/187/315/315/636252762623266809.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "marilith",
@@ -25005,7 +26109,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/189/315/315/636252763036079032.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "mastiff",
@@ -25098,7 +26203,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/191/1000/1000/636252763295291063.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "medusa",
@@ -25263,7 +26369,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/580/1000/1000/636376361850900325.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "merfolk",
@@ -25400,7 +26507,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/197/1000/1000/636252763841141413.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "merrow",
@@ -25542,7 +26650,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/203/315/315/636252764097970952.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "mimic",
@@ -25667,7 +26776,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/211/315/315/636252764731637373.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "minotaur",
@@ -25788,7 +26898,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/217/1000/1000/636252765009181721.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "minotaur-skeleton",
@@ -25912,7 +27023,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/480/1000/1000/636376298435934058.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "mule",
@@ -25999,7 +27111,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "mummy",
@@ -26112,7 +27225,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/225/1000/1000/636252765553048566.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "mummy-lord",
@@ -26241,7 +27355,100 @@
     "source_legendary_actions": "<p>The mummy lord can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The mummy lord regains spent legendary actions at the start of its turn.</p><p><em><strong>Attack.</strong></em> The mummy lord makes one attack with its rotting fist or uses its Dreadful Glare.</p><p><em><strong>Blinding Dust.</strong></em> Blinding dust and sand swirls magically around the mummy lord. Each creature within 5 feet of the mummy lord must succeed on a DC 16 Constitution saving throw or be blinded until the end of the creature's next turn.</p><p><em><strong>Blasphemous Word (Costs 2 Actions).</strong></em> The mummy lord utters a blasphemous word. Each non-undead creature within 10 feet of the mummy lord that can hear the magical utterance must succeed on a DC 16 Constitution saving throw or be stunned until the end of the mummy lord's next turn.</p><p><em><strong>Channel Negative Energy (Costs 2 Actions).</strong></em> The mummy lord magically unleashes negative energy. Creatures within 60 feet of the mummy lord, including ones behind barriers and around corners, can't regain hit points until the end of the mummy lord's next turn.</p><p><em><strong>Whirlwind of Sand (Costs 2 Actions).</strong></em> The mummy lord magically transforms into a whirlwind of sand, moves up to 60 feet, and reverts to its normal form. While in whirlwind form, the mummy lord is immune to all damage, and it can't be grappled, petrified, knocked prone, restrained, or stunned. Equipment worn or carried by the mummy lord remain in its possession.</p>",
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/660/undead.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": {
+      "caster_level": 10,
+      "ability": "wisdom",
+      "save_dc": 17,
+      "attack_bonus": 9,
+      "slots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1
+      },
+      "spells": [
+        {
+          "id": "sacred-flame",
+          "name": "sacred flame",
+          "level": 0
+        },
+        {
+          "id": "thaumaturgy",
+          "name": "thaumaturgy",
+          "level": 0
+        },
+        {
+          "id": "command",
+          "name": "command",
+          "level": 1
+        },
+        {
+          "id": "guiding-bolt",
+          "name": "guiding bolt",
+          "level": 1
+        },
+        {
+          "id": "shield-of-faith",
+          "name": "shield of faith",
+          "level": 1
+        },
+        {
+          "id": "hold-person",
+          "name": "hold person",
+          "level": 2
+        },
+        {
+          "id": "silence",
+          "name": "silence",
+          "level": 2
+        },
+        {
+          "id": "spiritual-weapon",
+          "name": "spiritual weapon",
+          "level": 2
+        },
+        {
+          "id": "animate-dead",
+          "name": "animate dead",
+          "level": 3
+        },
+        {
+          "id": "dispel-magic",
+          "name": "dispel magic",
+          "level": 3
+        },
+        {
+          "id": "divination",
+          "name": "divination",
+          "level": 4
+        },
+        {
+          "id": "guardian-of-faith",
+          "name": "guardian of faith",
+          "level": 4
+        },
+        {
+          "id": "contagion",
+          "name": "contagion",
+          "level": 5
+        },
+        {
+          "id": "insect-plague",
+          "name": "insect plague",
+          "level": 5
+        },
+        {
+          "id": "harm",
+          "name": "harm",
+          "level": 6
+        }
+      ],
+      "source_complete": true,
+      "unsupported_text": null
+    }
   },
   {
     "id": "nalfeshnee",
@@ -26380,7 +27587,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/261/1000/1000/636252768396688147.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "night-hag",
@@ -26530,6 +27738,10 @@
       ],
       "source_complete": true,
       "unsupported_text": null
+    },
+    "spellcasting": {
+      "source_complete": false,
+      "unsupported_text": "missing caster level or casting ability"
     }
   },
   {
@@ -26629,7 +27841,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/273/315/315/636252769493472144.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "noble",
@@ -26719,7 +27932,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/277/1000/1000/636252769861281900.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "nothic",
@@ -26820,7 +28034,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/14/475/1000/1000/636364321398842272.png",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "ochre-jelly",
@@ -26930,7 +28145,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/279/1000/1000/636252770058723674.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "octopus",
@@ -27026,7 +28242,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/9/921/315/315/636334602449110996.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "ogre",
@@ -27157,7 +28374,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/285/315/315/636252770535203221.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "ogre-zombie",
@@ -27249,7 +28467,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/287/315/315/636252770700032248.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "oni",
@@ -27434,6 +28653,10 @@
       ],
       "source_complete": true,
       "unsupported_text": null
+    },
+    "spellcasting": {
+      "source_complete": false,
+      "unsupported_text": "missing caster level or casting ability"
     }
   },
   {
@@ -27569,7 +28792,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/301/1000/1000/636252771691385727.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "otyugh",
@@ -27703,7 +28927,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/305/315/315/636252771931366466.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "owl",
@@ -27794,7 +29019,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/533/1000/1000/636376331660233857.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "owlbear",
@@ -27912,7 +29138,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/315/315/315/636252772225295187.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "panther",
@@ -28031,7 +29258,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "pegasus",
@@ -28122,7 +29350,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/18/303/1000/1000/636379808797059368.png",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "phase-spider",
@@ -28221,7 +29450,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/319/315/315/636252772538300448.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "pit-fiend",
@@ -28417,6 +29647,10 @@
       "spells": [],
       "source_complete": false,
       "unsupported_text": "Fear Aura. incapacitatedfrightened Magic Resistance. Magic Weapons. Innate Spellcasting. detect magicfireballhold monsterwall of fire"
+    },
+    "spellcasting": {
+      "source_complete": false,
+      "unsupported_text": "missing caster level or casting ability"
     }
   },
   {
@@ -28618,6 +29852,10 @@
       ],
       "source_complete": true,
       "unsupported_text": null
+    },
+    "spellcasting": {
+      "source_complete": false,
+      "unsupported_text": "missing caster level or casting ability"
     }
   },
   {
@@ -28708,7 +29946,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/488/315/315/636376304583147024.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "poisonous-snake",
@@ -28801,7 +30040,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "polar-bear",
@@ -28920,7 +30160,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "pony",
@@ -29004,7 +30245,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "priest",
@@ -29095,7 +30337,72 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/656/humanoid.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": {
+      "caster_level": 5,
+      "ability": "wisdom",
+      "save_dc": 13,
+      "attack_bonus": 5,
+      "slots": {
+        "1": 4,
+        "2": 3,
+        "3": 2
+      },
+      "spells": [
+        {
+          "id": "light",
+          "name": "light",
+          "level": 0
+        },
+        {
+          "id": "sacred-flame",
+          "name": "sacred flame",
+          "level": 0
+        },
+        {
+          "id": "thaumaturgy",
+          "name": "thaumaturgy",
+          "level": 0
+        },
+        {
+          "id": "cure-wounds",
+          "name": "cure wounds",
+          "level": 1
+        },
+        {
+          "id": "guiding-bolt",
+          "name": "guiding bolt",
+          "level": 1
+        },
+        {
+          "id": "sanctuary",
+          "name": "sanctuary",
+          "level": 1
+        },
+        {
+          "id": "lesser-restoration",
+          "name": "lesser restoration",
+          "level": 2
+        },
+        {
+          "id": "spiritual-weapon",
+          "name": "spiritual weapon",
+          "level": 2
+        },
+        {
+          "id": "dispel-magic",
+          "name": "dispel magic",
+          "level": 3
+        },
+        {
+          "id": "spirit-guardians",
+          "name": "spirit guardians",
+          "level": 3
+        }
+      ],
+      "source_complete": true,
+      "unsupported_text": null
+    }
   },
   {
     "id": "pseudodragon",
@@ -29208,7 +30515,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/283/1000/1000/636252770521719244.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "pteranodon",
@@ -29295,7 +30603,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "purple-worm",
@@ -29416,7 +30725,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/275/315/315/636252769846436684.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "quasit",
@@ -29525,7 +30835,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/271/315/315/636252769318699115.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "quipper",
@@ -29613,7 +30924,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/253/1000/1000/636252767919065233.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "rakshasa",
@@ -29826,6 +31138,10 @@
       ],
       "source_complete": true,
       "unsupported_text": null
+    },
+    "spellcasting": {
+      "source_complete": false,
+      "unsupported_text": "missing caster level or casting ability"
     }
   },
   {
@@ -29912,7 +31228,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/541/315/315/636376335435407571.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "raven",
@@ -30001,7 +31318,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/553/1000/1000/636376341568391037.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "red-dragon-wyrmling",
@@ -30128,7 +31446,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "reef-shark",
@@ -30218,7 +31537,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "remorhaz",
@@ -30320,7 +31640,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/231/315/315/636252766143328421.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "rhinoceros",
@@ -30417,7 +31738,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "riding-horse",
@@ -30501,7 +31823,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/9/904/315/315/636334288913250513.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "roc",
@@ -30628,7 +31951,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/229/315/315/636252765590929622.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "roper",
@@ -30727,7 +32051,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/560/1000/1000/636376344528091115.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "rug-of-smothering",
@@ -30804,7 +32129,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/213/1000/1000/636252764761726261.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "rust-monster",
@@ -30892,7 +32218,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/207/1000/1000/636252764265020108.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "saber-toothed-tiger",
@@ -31010,7 +32337,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "sahuagin",
@@ -31204,7 +32532,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/177/1000/1000/636252761683746719.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "salamander",
@@ -31412,7 +32741,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/173/1000/1000/636252761197608364.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "satyr",
@@ -31547,7 +32877,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/169/1000/1000/636252760706340605.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "scorpion",
@@ -31639,7 +32970,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "scout",
@@ -31761,7 +33093,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/163/1000/1000/636252759915100020.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "sea-hag",
@@ -31851,7 +33184,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/159/1000/1000/636252759356069260.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "sea-horse",
@@ -31914,7 +33248,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "shadow",
@@ -32026,7 +33361,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/155/315/315/636252758977032019.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "shambling-mound",
@@ -32126,7 +33462,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/563/315/315/636376346968079714.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "shield-guardian",
@@ -32232,7 +33569,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/145/315/315/636252758362792494.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "shrieker",
@@ -32300,7 +33638,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/571/1000/1000/636376357634308010.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "silver-dragon-wyrmling",
@@ -32443,7 +33782,8 @@
         "animation": "paralyzed"
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "skeleton",
@@ -32557,7 +33897,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/472/315/315/636376294573239565.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "solar",
@@ -32782,6 +34123,10 @@
       ],
       "source_complete": true,
       "unsupported_text": null
+    },
+    "spellcasting": {
+      "source_complete": false,
+      "unsupported_text": "missing caster level or casting ability"
     }
   },
   {
@@ -32875,7 +34220,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/14/485/315/315/636364324602733616.png",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "specter",
@@ -32984,7 +34330,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/119/1000/1000/636252747399435720.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "spider",
@@ -33083,7 +34430,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/575/315/315/636376359864842950.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "spirit-naga",
@@ -33188,7 +34536,89 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/117/315/315/636252746851035686.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": {
+      "caster_level": 10,
+      "ability": "intelligence",
+      "save_dc": 14,
+      "attack_bonus": 6,
+      "slots": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2
+      },
+      "spells": [
+        {
+          "id": "mage-hand",
+          "name": "mage hand",
+          "level": 0
+        },
+        {
+          "id": "minor-illusion",
+          "name": "minor illusion",
+          "level": 0
+        },
+        {
+          "id": "ray-of-frost",
+          "name": "ray of frost",
+          "level": 0
+        },
+        {
+          "id": "charm-person",
+          "name": "charm person",
+          "level": 1
+        },
+        {
+          "id": "detect-magic",
+          "name": "detect magic",
+          "level": 1
+        },
+        {
+          "id": "sleep",
+          "name": "sleep",
+          "level": 1
+        },
+        {
+          "id": "detect-thoughts",
+          "name": "detect thoughts",
+          "level": 2
+        },
+        {
+          "id": "hold-person",
+          "name": "hold person",
+          "level": 2
+        },
+        {
+          "id": "lightning-bolt",
+          "name": "lightning bolt",
+          "level": 3
+        },
+        {
+          "id": "water-breathing",
+          "name": "water breathing",
+          "level": 3
+        },
+        {
+          "id": "blight",
+          "name": "blight",
+          "level": 4
+        },
+        {
+          "id": "dimension-door",
+          "name": "dimension door",
+          "level": 4
+        },
+        {
+          "id": "dominate-person",
+          "name": "dominate person",
+          "level": 5
+        }
+      ],
+      "source_complete": true,
+      "unsupported_text": null
+    }
   },
   {
     "id": "sprite",
@@ -33301,7 +34731,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/115/315/315/636252746444973630.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "spy",
@@ -33427,7 +34858,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/656/humanoid.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "steam-mephit",
@@ -33547,6 +34979,10 @@
       ],
       "source_complete": true,
       "unsupported_text": null
+    },
+    "spellcasting": {
+      "source_complete": false,
+      "unsupported_text": "missing caster level or casting ability"
     }
   },
   {
@@ -33632,7 +35068,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/111/1000/1000/636252745395103202.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "stone-giant",
@@ -33755,7 +35192,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/109/315/315/636252744518731463.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "stone-golem",
@@ -33866,7 +35304,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/107/315/315/636252743780112834.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "storm-giant",
@@ -34059,6 +35498,10 @@
       ],
       "source_complete": true,
       "unsupported_text": null
+    },
+    "spellcasting": {
+      "source_complete": false,
+      "unsupported_text": "missing caster level or casting ability"
     }
   },
   {
@@ -34163,7 +35606,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/103/315/315/636252742573312994.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "swarm-of-bats",
@@ -34274,7 +35718,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/9/906/315/315/636334289313689439.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "swarm-of-insects",
@@ -34383,7 +35828,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "swarm-of-poisonous-snakes",
@@ -34500,7 +35946,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "swarm-of-quippers",
@@ -34611,7 +36058,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/18/276/315/315/636379781035768521.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "swarm-of-rats",
@@ -34720,7 +36168,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/9/908/315/315/636334289541603972.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "swarm-of-ravens",
@@ -34831,7 +36280,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/555/315/315/636376341743427326.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "tarrasque",
@@ -35055,7 +36505,8 @@
         "animation": "fear"
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "thug",
@@ -35174,7 +36625,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/99/1000/1000/636252741335519081.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "tiger",
@@ -35292,7 +36744,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "treant",
@@ -35416,7 +36869,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/97/315/315/636252740537990664.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "tribal-warrior",
@@ -35550,7 +37004,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/656/humanoid.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "triceratops",
@@ -35664,7 +37119,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "troll",
@@ -35786,7 +37242,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/95/315/315/636252739682234623.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "twig-blight",
@@ -35879,7 +37336,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/464/1000/1000/636376286997771487.png",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "tyrannosaurus-rex",
@@ -35999,7 +37457,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/594/1000/1000/636376369004412963.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "unicorn",
@@ -36197,6 +37656,10 @@
       ],
       "source_complete": true,
       "unsupported_text": null
+    },
+    "spellcasting": {
+      "source_complete": false,
+      "unsupported_text": "missing caster level or casting ability"
     }
   },
   {
@@ -36336,7 +37799,8 @@
     "source_legendary_actions": "<p>The vampire can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The vampire regains spent legendary actions at the start of its turn. </p><p><em><strong>Move.</strong></em> The vampire moves up to its speed without provoking opportunity attacks. </p><p><em><strong>Unarmed Strike.</strong></em> The vampire makes one unarmed strike. </p><p><em><strong>Bite.</strong></em>(Costs 2 Actions). The vampire makes one bite attack.</p>",
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/91/1000/1000/636252738665379794.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "vampire-spawn",
@@ -36465,7 +37929,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/89/1000/1000/636252738148839638.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "veteran",
@@ -36598,7 +38063,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/656/humanoid.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "violet-fungus",
@@ -36689,7 +38155,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/573/315/315/636376357964412799.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "vrock",
@@ -36824,7 +38291,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/87/315/315/636252737538172594.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "vulture",
@@ -36914,7 +38382,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "warhorse",
@@ -37005,7 +38474,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "warhorse-skeleton",
@@ -37096,7 +38566,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/660/undead.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "water-elemental",
@@ -37210,7 +38681,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/84/315/315/636252736680781387.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "weasel",
@@ -37299,7 +38771,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/attachments/2/648/beast.jpg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "werebear",
@@ -37436,7 +38909,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/82/1000/1000/636252736005297867.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "wereboar",
@@ -37551,7 +39025,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/80/315/315/636252735506840152.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "wererat",
@@ -37689,7 +39164,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/78/1000/1000/636252735121410517.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "weretiger",
@@ -37850,7 +39326,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/76/1000/1000/636252734783831163.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "werewolf",
@@ -38035,7 +39512,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/74/1000/1000/636252734224239957.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "white-dragon-wyrmling",
@@ -38163,7 +39641,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "wight",
@@ -38307,7 +39786,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/56/315/315/636252726349692861.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "will-o-wisp",
@@ -38417,7 +39897,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/585/315/315/636376363763232290.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "winter-wolf",
@@ -38538,7 +40019,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "wolf",
@@ -38633,7 +40115,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/482/1000/1000/636376300223855327.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "worg",
@@ -38726,7 +40209,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/52/1000/1000/636252724662073178.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "wraith",
@@ -38835,7 +40319,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/50/1000/1000/636252724191790008.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "wyvern",
@@ -38982,7 +40467,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/48/315/315/636252723695596000.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "xorn",
@@ -39112,7 +40598,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/46/1000/1000/636252723241554579.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "yeti",
@@ -39223,7 +40710,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/8/662/1000/1000/636313413410825930.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "young-black-dragon",
@@ -39386,7 +40874,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "young-blue-dragon",
@@ -39547,7 +41036,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "young-brass-dragon",
@@ -39703,7 +41193,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "young-bronze-dragon",
@@ -39840,7 +41331,8 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/64/315/315/636252731269768088.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "young-copper-dragon",
@@ -39996,7 +41488,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "young-gold-dragon",
@@ -40154,7 +41647,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "young-green-dragon",
@@ -40319,7 +41813,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "young-red-dragon",
@@ -40479,7 +41974,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "young-silver-dragon",
@@ -40657,7 +42153,8 @@
         "animation": "paralyzed"
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "young-white-dragon",
@@ -40820,7 +42317,8 @@
         "resource_cost": 1
       }
     ],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   },
   {
     "id": "zombie",
@@ -40912,6 +42410,7 @@
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/71/1000/1000/636252733510786769.jpeg",
     "saving_throw_actions": [],
-    "innate_spellcasting": null
+    "innate_spellcasting": null,
+    "spellcasting": null
   }
 ]
