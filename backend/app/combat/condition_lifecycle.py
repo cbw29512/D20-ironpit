@@ -4,6 +4,7 @@ import logging
 
 from app.combat.modifier_stack import expire_target_turn_modifiers
 from app.combat.saving_throw_rolls import resolve_saving_throw
+from app.combat.source_effect_immunity import grant_source_effect_immunity
 from app.combat.timed_conditions import remove_effect_group
 from app.domain.actions import ConditionTiming
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -24,6 +25,24 @@ def _repeat_save_due(effect, round_number: int, timing: ConditionTiming) -> bool
         and effect.applied_round is not None
         and round_number <= effect.applied_round
     )
+
+
+def _expiry_due(effect, round_number: int, timing: ConditionTiming) -> bool:
+    if effect.expiry_timing != timing:
+        return False
+    return effect.expires_round is None or round_number >= effect.expires_round
+
+
+def _grant_end_immunity(target, effect) -> None:
+    if (
+        effect.source_effect_immunity_on_end
+        and effect.source_effect_id is not None
+    ):
+        grant_source_effect_immunity(
+            target.state,
+            effect.source_id,
+            effect.source_effect_id,
+        )
 
 
 def resolve_target_condition_timing(
@@ -47,6 +66,8 @@ def resolve_target_condition_timing(
                     dice,
                 )
                 removed = remove_effect_group(target.state, effect) if succeeded else []
+                if succeeded:
+                    _grant_end_immunity(target, effect)
                 events.append(BattleEvent(
                     sequence=sequence,
                     round_number=round_number,
@@ -71,9 +92,10 @@ def resolve_target_condition_timing(
                 sequence += 1
                 if succeeded:
                     continue
-            if effect.expiry_timing == timing:
+            if _expiry_due(effect, round_number, timing):
                 removed = remove_effect_group(target.state, effect)
                 if removed:
+                    _grant_end_immunity(target, effect)
                     events.append(BattleEvent(
                         sequence=sequence,
                         round_number=round_number,
@@ -111,7 +133,8 @@ def resolve_source_condition_timing(
         for target in [*setup.heroes, *setup.monsters]:
             expiring = [
                 effect for effect in target.state.timed_effects
-                if effect.source_id == source.combatant_id and effect.expiry_timing == timing
+                if effect.source_id == source.combatant_id
+                and _expiry_due(effect, round_number, timing)
             ]
             for effect in expiring:
                 if effect not in target.state.timed_effects:
@@ -119,6 +142,7 @@ def resolve_source_condition_timing(
                 removed = remove_effect_group(target.state, effect)
                 if not removed:
                     continue
+                _grant_end_immunity(target, effect)
                 events.append(BattleEvent(
                     sequence=sequence,
                     round_number=round_number,
