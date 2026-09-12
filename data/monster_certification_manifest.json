@@ -1109,13 +1109,13 @@
       ],
       "supported_mechanics": [
         "attack-roll",
-        "saving-throw-action"
+        "saving-throw-action",
+        "trait"
       ],
       "unsupported_mechanics": [
         "condition-or-control",
         "limited-use",
-        "save-or-complex-action",
-        "trait"
+        "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -1125,9 +1125,7 @@
         "condition-or-control",
         "limited-use",
         "save-or-complex-action",
-        "source-attack-count-mismatch",
-        "trait",
-        "uncertified-trait:tunneler"
+        "source-attack-count-mismatch"
       ]
     },
     {
@@ -6999,12 +6997,12 @@
       ],
       "supported_mechanics": [
         "attack-roll",
-        "multiattack"
+        "multiattack",
+        "trait"
       ],
       "unsupported_mechanics": [
         "bonus-action",
-        "condition-or-control",
-        "trait"
+        "condition-or-control"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -7013,9 +7011,7 @@
       "blockers": [
         "bonus-action",
         "condition-or-control",
-        "trait",
-        "uncertified-bonus-action:swallow",
-        "uncertified-trait:tunneler"
+        "uncertified-bonus-action:swallow"
       ]
     },
     {
