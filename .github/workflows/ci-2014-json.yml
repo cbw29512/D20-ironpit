@@ -1,0 +1,34 @@
+name: 2014 JSON Monster MVP
+
+on:
+  pull_request:
+    paths:
+      - 'backend/app/content/monster_catalog_2014.py'
+      - 'backend/app/content/monster_catalog_2014_models.py'
+      - 'backend/tests/test_2014_json_catalog.py'
+      - 'data/monsters/2014/**'
+      - 'scripts/import_2014_monster_catalog.py'
+      - 'scripts/sync_2014_monster_catalog.py'
+      - 'scripts/verify_2014_full_catalog.py'
+      - 'scripts/report_2014_monster_progress.py'
+      - '.github/workflows/ci-2014-json.yml'
+  workflow_dispatch:
+
+jobs:
+  verify-2014-json:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install rules reference
+        run: pip install -e 'backend[dev]'
+      - name: Generate pinned 327-monster catalog
+        run: python scripts/sync_2014_monster_catalog.py
+      - name: Verify all 327 normalized records
+        run: python scripts/verify_2014_full_catalog.py
+      - name: Report reusable mechanic blockers
+        run: python scripts/report_2014_monster_progress.py
+      - name: Prove JSON-to-engine MVP
+        run: cd backend && pytest -q tests/test_2014_json_catalog.py
