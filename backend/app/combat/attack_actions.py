@@ -8,6 +8,7 @@ from app.combat.area_save_actions import resolve_area_save_action
 from app.combat.attack_action_choices import (
     area_save_choice, attack_choice, save_choice, slot_has_legal_choice, use_ranged_split,
 )
+from app.combat.attack_action_policy import expanded_slots, filtered_slot, required_target_id, slot_allowed
 from app.combat.attack_action_rules import validate_attack_action_slots
 from app.combat.cleave import resolve_cleave_extra_attack
 from app.combat.dice import DiceProvider
@@ -43,17 +44,25 @@ def resolve_attack_action(
         ranged_split = use_ranged_split(attacker, setup, definition.slots, dice)
         ranged_split_used = False
         turn_key = f"{round_number}:{attacker.combatant_id}"
+        previous_event: BattleEvent | None = None
+        used_attack_ids: set[str] = set()
 
-        for index, slot in enumerate(definition.slots):
+        for index, raw_slot in expanded_slots(definition, dice):
             if attacker.state.is_dead or attacker.state.is_unconscious or attacker.state.turn_terminated:
                 break
+            if not slot_allowed(definition, index, previous_event):
+                continue
+            slot = filtered_slot(definition, raw_slot, used_attack_ids)
             split_this_slot = (
                 index > 0
                 and ranged_split
                 and not ranged_split_used
                 and flexible_slot_has_both(attacker, slot.attack_ids)
             )
-            chosen_attack = attack_choice(attacker, setup, slot, ranged_backline=split_this_slot)
+            chosen_attack = attack_choice(
+                attacker, setup, slot, ranged_backline=split_this_slot,
+                required_target_id=required_target_id(definition, index, previous_event),
+            )
             if chosen_attack is not None:
                 target, attack, distance = chosen_attack
                 if split_this_slot and attack.weapon.attack_kind is WeaponAttackKind.RANGED:
@@ -67,6 +76,8 @@ def resolve_attack_action(
                     close_enemy_active=False,
                 )
                 events.append(event)
+                previous_event = event
+                used_attack_ids.add(attack.id)
                 sequence += 1
                 if attacker.state.turn_terminated:
                     break
@@ -87,15 +98,18 @@ def resolve_attack_action(
                     placement=placement, spend_action=False,
                 )
                 events.extend(area_events)
+                previous_event = area_events[-1] if area_events else previous_event
                 continue
 
             chosen_save = save_choice(attacker, setup, slot)
             if chosen_save is not None:
                 target, save_action, distance = chosen_save
-                events.append(resolve_save_action(
+                event = resolve_save_action(
                     sequence, round_number, attacker, target, save_action,
                     distance, dice, spend_action=False, affected_states=affected_states,
-                ))
+                )
+                events.append(event)
+                previous_event = event
                 sequence += 1
 
         if definition.is_attack_action and light_trigger is not None and not attacker.state.turn_terminated:
