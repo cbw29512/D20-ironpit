@@ -1,8 +1,8 @@
 from app.combat.condition_removal_policy import removable
 from app.combat.state import build_combatant_state
 from app.combat.timed_conditions import apply_timed_condition
+from app.content.audited_fighter import build_karnok_stoneward
 from app.content.basic_condition_actions import WAKE_SLEEPER_ID, wake_sleeper_action
-from app.content.certified_heroes import build_karnok_stoneward
 from app.domain.encounters import EncounterCombatant
 
 
