@@ -1,6 +1,5 @@
 (() => {
   "use strict";
-
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
