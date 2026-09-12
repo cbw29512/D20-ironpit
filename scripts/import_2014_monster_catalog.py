@@ -10,6 +10,7 @@ from pathlib import Path
 
 from import_2014_attack_details import parse_on_hit_control, parse_on_hit_save_condition, parse_secondary_damage
 from import_2014_charge import parse_charge_profiles
+from import_2014_identity import parse_identity
 from import_2014_multiattack import parse_multiattack
 from import_2014_reactions import parse_parry_ac_bonus
 
@@ -135,11 +136,31 @@ def _attacks(paragraph: str) -> list[dict]:
 
 
 def _record(source: dict) -> dict:
-    meta = source.get("meta", ""); size, _, rest = meta.partition(" "); creature_type, _, alignment = rest.partition(","); hp = source.get("Hit Points", ""); hit_dice = re.search(r"\(([^)]+)\)", hp); action_text = source.get("Actions", ""); reactions_text = source.get("Reactions", "")
+    meta = source.get("meta", ""); size, _, _ = meta.partition(" "); creature_type, creature_type_text, creature_subtypes, alignment = parse_identity(meta); hp = source.get("Hit Points", ""); hit_dice = re.search(r"\(([^)]+)\)", hp); action_text = source.get("Actions", ""); reactions_text = source.get("Reactions", ""); challenge_text = source.get("Challenge")
     attacks = [attack for paragraph in re.findall(r"<p>(.*?)</p>", action_text, re.I | re.S) for attack in _attacks(paragraph)]
     for attack_id, profile in parse_charge_profiles(source.get("Traits"), attacks).items(): next(item for item in attacks if item["id"] == attack_id)["charge_profile"] = profile
     multiattack = parse_multiattack(action_text, attacks); resist, bad_resist = _simple_values(source.get("Damage Resistances"), DAMAGE_TYPES); immune, bad_immune = _simple_values(source.get("Damage Immunities"), DAMAGE_TYPES); vulnerable, bad_vulnerable = _simple_values(source.get("Damage Vulnerabilities"), DAMAGE_TYPES); condition_immune, bad_condition = _simple_values(source.get("Condition Immunities"), CONDITIONS)
-    return {"id": _slug(source["name"]), "name": source["name"], "ruleset": "2014", "size": size.title(), "creature_type": creature_type.strip().split(" ")[0], "alignment": alignment.strip() or None, "armor_class": _integer(source.get("Armor Class")), "armor_class_text": source.get("Armor Class"), "max_hp": _integer(hp), "hit_points_text": hp, "hit_dice": hit_dice.group(1) if hit_dice else None, "speed": _speed(source.get("Speed")), "speed_text": source.get("Speed"), "abilities": {key.lower(): _integer(source.get(key)) for key in ("STR", "DEX", "CON", "INT", "WIS", "CHA")}, "saving_throws": _bonuses(source.get("Saving Throws")), "skills": _bonuses(source.get("Skills")), "senses": source.get("Senses"), "languages": source.get("Languages"), "damage_resistances": resist, "damage_immunities": immune, "damage_vulnerabilities": vulnerable, "condition_immunities": condition_immune, "unsupported_defense_text": bad_resist + bad_immune + bad_vulnerable + bad_condition, "challenge_rating": (source.get("Challenge") or "").split(" ", 1)[0] or None, "attacks": attacks, "multiattack_slots": multiattack["slots"] if multiattack else [], "action_names": _names(action_text), "trait_names": _names(source.get("Traits")), "reaction_names": _names(reactions_text), "parry_ac_bonus": parse_parry_ac_bonus(reactions_text), "legendary_action_names": _names(source.get("Legendary Actions")), "source_traits": source.get("Traits"), "source_actions": action_text, "source_reactions": reactions_text, "source_legendary_actions": source.get("Legendary Actions"), "image_url": source.get("img_url")}
+    return {
+        "id": _slug(source["name"]), "name": source["name"], "ruleset": "2014", "size": size.title(),
+        "creature_type": creature_type, "creature_type_text": creature_type_text, "creature_subtypes": creature_subtypes,
+        "alignment": alignment, "armor_class": _integer(source.get("Armor Class")), "armor_class_text": source.get("Armor Class"),
+        "max_hp": _integer(hp), "hit_points_text": hp, "hit_dice": hit_dice.group(1) if hit_dice else None,
+        "speed": _speed(source.get("Speed")), "speed_text": source.get("Speed"),
+        "abilities": {key.lower(): _integer(source.get(key)) for key in ("STR", "DEX", "CON", "INT", "WIS", "CHA")},
+        "saving_throws": _bonuses(source.get("Saving Throws")), "saving_throws_text": source.get("Saving Throws"),
+        "skills": _bonuses(source.get("Skills")), "skills_text": source.get("Skills"), "senses": source.get("Senses"), "languages": source.get("Languages"),
+        "damage_resistances": resist, "damage_resistances_text": source.get("Damage Resistances"),
+        "damage_immunities": immune, "damage_immunities_text": source.get("Damage Immunities"),
+        "damage_vulnerabilities": vulnerable, "damage_vulnerabilities_text": source.get("Damage Vulnerabilities"),
+        "condition_immunities": condition_immune, "condition_immunities_text": source.get("Condition Immunities"),
+        "unsupported_defense_text": bad_resist + bad_immune + bad_vulnerable + bad_condition,
+        "challenge_rating": (challenge_text or "").split(" ", 1)[0] or None, "challenge_text": challenge_text,
+        "attacks": attacks, "multiattack_slots": multiattack["slots"] if multiattack else [],
+        "action_names": _names(action_text), "trait_names": _names(source.get("Traits")), "reaction_names": _names(reactions_text),
+        "parry_ac_bonus": parse_parry_ac_bonus(reactions_text), "legendary_action_names": _names(source.get("Legendary Actions")),
+        "source_traits": source.get("Traits"), "source_actions": action_text, "source_reactions": reactions_text,
+        "source_legendary_actions": source.get("Legendary Actions"), "image_url": source.get("img_url"),
+    }
 
 
 def main() -> int:
