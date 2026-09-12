@@ -112,6 +112,7 @@ def _save(action: Any) -> dict[str, Any]:
     if action.target_max_size: row["targetMaxSize"] = _value(action.target_max_size)
     if action.grapple_escape_dc is not None: row["grappleEscapeDc"] = action.grapple_escape_dc
     if action.restrains_while_grappled: row["restrainsWhileGrappled"] = True
+    if action.magical_effect: row["magicalEffect"] = True
     return row
 
 
