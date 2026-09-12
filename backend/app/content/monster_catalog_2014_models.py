@@ -21,7 +21,7 @@ class CatalogDamage2014(BaseModel):
     dice_count: int = Field(ge=0, le=40)
     dice_size: int = Field(ge=2, le=100)
     bonus: int = 0
-    type: DamageType
+    type: DamageType | None
 
 
 class CatalogAttack2014(BaseModel):
