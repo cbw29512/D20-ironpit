@@ -40,6 +40,7 @@ class TimedEffect(BaseModel):
     blocks_reactions: bool = False
     action_bonus_exclusive: bool = False
     max_attacks_per_turn: int | None = Field(default=None, ge=1, le=20)
+    disadvantage_strength_d20_tests: bool = False
 
     @model_validator(mode="after")
     def validate_lifecycle(self) -> "TimedEffect":
