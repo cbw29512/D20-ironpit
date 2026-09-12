@@ -62,6 +62,16 @@ def _ability_scores(source: CatalogMonster2014) -> AbilityScores:
         raise RuntimeError(f"2014 monster {source.id} has invalid ability scores.") from exc
 
 
+def _saving_throw_bonuses(source: CatalogMonster2014) -> dict[str, int]:
+    bonuses = {
+        full: (source.abilities[short] - 10) // 2
+        for short, full in _ABILITY_NAMES.items()
+    }
+    for key, value in source.saving_throws.items():
+        bonuses[_ABILITY_NAMES.get(key, key)] = value
+    return bonuses
+
+
 def _multiattack(source: CatalogMonster2014, attacks: list[WeaponAttack]) -> AttackActionDefinition | None:
     if not source.multiattack_slots: return None
     known = {attack.id for attack in attacks}; slots: list[AttackActionSlot] = []
@@ -101,14 +111,14 @@ def compile_monster_2014(source: CatalogMonster2014) -> CombatantTemplate:
             climb_ft=source.speed.get("climb", 0), swim_ft=source.speed.get("swim", 0),
             burrow_ft=source.speed.get("burrow", 0),
         )
-        saves = {_ABILITY_NAMES.get(key, key): value for key, value in source.saving_throws.items()}; dex = source.abilities["dex"]
+        dex = source.abilities["dex"]
         return CombatantTemplate(
             id=f"2014-{source.id}", name=source.name, archetype=source.name,
             challenge_rating=source.challenge_rating, kind="monster", creature_type=source.creature_type, size=source.size,
             ability_scores=_ability_scores(source), armor_class=source.armor_class, max_hp=source.max_hp,
             speed_ft=movement.walk_ft, movement_modes=movement, initiative_bonus=(dex - 10) // 2,
             weapon_attack=attacks[0], alternate_weapon_attacks=attacks[1:], attack_action=_multiattack(source, attacks),
-            saving_throw_bonuses=saves, skill_bonuses=source.skills, damage_resistances=source.damage_resistances,
+            saving_throw_bonuses=_saving_throw_bonuses(source), skill_bonuses=source.skills, damage_resistances=source.damage_resistances,
             conditional_damage_resistances=conditional_resistances_2014(source.unsupported_defense_text),
             damage_immunities=source.damage_immunities, damage_vulnerabilities=source.damage_vulnerabilities,
             condition_immunities=source.condition_immunities, combat_traits=traits,
