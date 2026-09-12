@@ -112,6 +112,7 @@ def test_tunneler_is_arena_neutral_but_remains_source_fingerprinted() -> None:
         for monster_name in ("Ankheg", "Purple Worm"):
             monster = _monster(monster_name)
             assert "Tunneler" in monster.source_trait_names
+            assert monster.movement_modes.burrow_ft > 0
             assert "uncertified-trait:tunneler" not in trait_issues(monster, _row(monster_name))
     except Exception:
         logger.exception("Tunneler arena-neutral trait regression failed.")
