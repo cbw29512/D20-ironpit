@@ -16,6 +16,15 @@ def main() -> int:
         "resource_cost": 1,
     }]
 
+    malformed_cone = (
+        "<p><strong>Fire Breath (Recharge 5–6).</strong> The dragon head exhales fire in a 15-\u00ad-foot cone. "
+        "Each creature in that area must make a DC 15 Dexterity saving throw, taking 31 (7d8) "
+        "fire damage on a failed save, or half as much damage on a successful one.</p>"
+    )
+    parsed = parse_save_actions(malformed_cone, {"fire-breath": 5})
+    assert parsed[0]["area"] == {"shape": "cone", "origin": "self", "length_ft": 15}
+    assert parsed[0]["damage_dice_count"] == 7
+
     line = (
         "<p><strong>Lightning Breath (Recharge 6).</strong> The dragon exhales lightning in a "
         "30-foot line that is 5 feet wide. Each creature in that line must make a DC 12 Dexterity "
@@ -69,6 +78,10 @@ def main() -> int:
         },
         "resource_id": "breath-weapons", "resource_cost": 1, "animation": "unconscious",
     }]
+
+    five_minute_sleep = sleep.replace("for 1 minute", "for 5 minutes")
+    parsed = parse_save_actions(five_minute_sleep, {"breath-weapons": 5})
+    assert parsed[0]["failure_control_effect"]["duration_rounds"] == 50
 
     fear = (
         "<p><strong>Frightful Presence.</strong> Each creature of the dragon's choice that is within "
