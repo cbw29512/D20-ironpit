@@ -31,6 +31,10 @@
       ends_if_source_incapacitated: Boolean(options.endsIfSourceIncapacitated),
       ends_if_source_dead: Boolean(options.endsIfSourceDead),
       source_effect_immunity_on_end: Boolean(options.sourceEffectImmunityOnEnd),
+      speed_multiplier: options.speedMultiplier ?? 1,
+      blocks_reactions: Boolean(options.blocksReactions),
+      action_bonus_exclusive: Boolean(options.actionBonusExclusive),
+      max_attacks_per_turn: options.maxAttacksPerTurn ?? null,
     });
     if (!state.active_effect_ids.includes(effectId)) state.active_effect_ids.push(effectId);
     return effectId;
