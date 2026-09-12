@@ -1,4 +1,3 @@
-from app.combat.dice import FixedDiceProvider
 from app.combat.regeneration import resolve_start_turn
 from app.combat.state import build_combatant_state
 from app.combat.zero_hp import apply_damage
@@ -22,7 +21,7 @@ def test_positive_hp_regeneration_heals_at_start_of_turn() -> None:
 
 def test_suppressing_damage_skips_one_regeneration_check() -> None:
     state = _state(RegenerationProfile(amount=10, requires_positive_hp=True, suppressed_by_damage_types=["fire"]), 20)
-    apply_damage(state, 3, damage_types={"fire"}, dice=FixedDiceProvider([]))
+    apply_damage(state, 3, damage_types={"fire"})
     event, died = resolve_start_turn(1, 2, "monster-1", state)
     assert event is None and died is False
     assert state.current_hp == 17 and state.regeneration_suppressed is False
@@ -32,7 +31,7 @@ def test_suppressing_damage_skips_one_regeneration_check() -> None:
 
 def test_troll_style_regenerator_holds_at_zero_then_recovers() -> None:
     state = _state(RegenerationProfile(amount=10, suppressed_by_damage_types=["acid", "fire"], survives_zero_until_turn=True), 5)
-    outcome = apply_damage(state, 8, damage_types={"slashing"}, dice=FixedDiceProvider([]))
+    outcome = apply_damage(state, 8, damage_types={"slashing"})
     assert outcome == "regeneration_hold"
     assert state.current_hp == 0 and state.is_alive and not state.is_dead
     event, died = resolve_start_turn(1, 2, "troll", state)
@@ -42,7 +41,7 @@ def test_troll_style_regenerator_holds_at_zero_then_recovers() -> None:
 
 def test_troll_style_regenerator_dies_at_zero_when_suppressed() -> None:
     state = _state(RegenerationProfile(amount=10, suppressed_by_damage_types=["acid", "fire"], survives_zero_until_turn=True), 5)
-    outcome = apply_damage(state, 8, damage_types={"fire"}, dice=FixedDiceProvider([]))
+    outcome = apply_damage(state, 8, damage_types={"fire"})
     assert outcome == "regeneration_hold" and state.regeneration_suppressed
     event, died = resolve_start_turn(1, 2, "troll", state)
     assert died is True and event is not None
