@@ -6,7 +6,6 @@ from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName, ConditionName, ConditionTiming
 from app.domain.size import CreatureSize
-from app.domain.weapons import DamageType
 
 
 class OnHitSaveEffect(BaseModel):
@@ -20,7 +19,7 @@ class OnHitSaveEffect(BaseModel):
     damage_dice_count: int = Field(default=0, ge=0, le=40)
     damage_dice_size: int = Field(default=6, ge=2, le=100)
     damage_bonus: int = 0
-    damage_type: DamageType | None = None
+    damage_type: str | None = None
     success_damage: Literal["none", "half"] = "none"
 
     @model_validator(mode="after")
