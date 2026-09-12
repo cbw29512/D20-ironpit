@@ -1,5 +1,4 @@
 from __future__ import annotations
-
 from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 from app.domain.rule_types import AbilityName, ConditionName, ConditionTiming
@@ -66,7 +65,7 @@ class HealingAction(BaseModel):
 
 
 class ConditionRemovalAction(BaseModel):
-    """A 2024 spell/feature that can legally end one or more named conditions."""
+    """A 2024 spell/feature or source-permitted basic action that ends conditions."""
     id: str
     name: str
     action_cost: ActionCost
@@ -78,6 +77,7 @@ class ConditionRemovalAction(BaseModel):
     resource_costs_per_condition: dict[str, int] = Field(default_factory=dict)
     reaction_trigger: ConditionReactionTrigger | None = None
     expends_spell_slot: bool = False
+    requires_source_permission: bool = False
     animation: str = "condition-removal"
 
     @model_validator(mode="after")
@@ -101,7 +101,7 @@ class SavingThrowAction(BaseModel):
     name: str
     action_cost: ActionCost = "action"
     save_ability: AbilityName
-    dc: int = Field(ge=1, le=40)
+    dc: int = Field(ge=0, le=40)
     range_ft: int = Field(ge=0)
     target_max_size: CreatureSize | None = None
     required_target_condition: ConditionName | None = None
