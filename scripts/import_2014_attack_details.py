@@ -43,7 +43,11 @@ _GRAPPLE = re.compile(
     r"(?:the target|it) is grappled \(escape DC (\d+)\)",
     re.I,
 )
-_RESTRAINED = re.compile(r"Until (?:this|the) grapple ends,?\s*(?:the target|it) is restrained", re.I)
+_RESTRAINED = re.compile(
+    r"(?:Until (?:this|the) grapple ends,?\s*(?:the target|it) is restrained|"
+    r"(?:the target|it) is restrained until (?:this|the) grapple ends)",
+    re.I,
+)
 _NO_REPEAT_TARGET = re.compile(
     r"(?:and\s+)?(?:the\s+)?[A-Za-z' -]+ can(?:not|'t) (?:use this attack on|bite|attack|constrict|grapple) another target",
     re.I,
