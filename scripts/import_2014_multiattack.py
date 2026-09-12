@@ -27,19 +27,20 @@ def _key(value: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", text).strip("-")
 
 
+def _attack_name_key(value: str) -> str:
+    return _key(re.sub(r"\s*\([^)]*form only\)\s*$", "", value, flags=re.I))
+
+
 def _ids_for_name(name: str, attacks: list[dict]) -> list[str]:
     wanted = _key(name)
-    candidates = [attack["id"] for attack in attacks if _key(attack["name"]) == wanted]
+    candidates = [attack["id"] for attack in attacks if _attack_name_key(attack["name"]) == wanted]
     if candidates:
         return candidates
     if wanted.endswith("s"):
-        candidates = [attack["id"] for attack in attacks if _key(attack["name"]) == wanted[:-1]]
+        candidates = [attack["id"] for attack in attacks if _attack_name_key(attack["name"]) == wanted[:-1]]
         if candidates:
             return candidates
-    # Some SRD Multiattack prose shortens an action heading (for example,
-    # "stinger" for "Tail Stinger"). Accept only a unique suffix match so
-    # source wording can bind without introducing ambiguous aliases.
-    suffix = [attack["id"] for attack in attacks if _key(attack["name"]).endswith(f"-{wanted}")]
+    suffix = [attack["id"] for attack in attacks if _attack_name_key(attack["name"]).endswith(f"-{wanted}")]
     return suffix if len(suffix) == 1 else []
 
 
