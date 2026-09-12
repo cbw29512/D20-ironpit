@@ -10,23 +10,21 @@ logger = logging.getLogger(__name__)
 def forbidden_attacks_while_swallowing(attacker: EncounterCombatant, setup: EncounterSetup) -> set[str]:
     try:
         members = [*setup.heroes, *setup.monsters]
-        swallowed = next(
-            (
-                member.state.swallowed
-                for member in members
-                if member.state.swallowed and member.state.swallowed.source_id == attacker.combatant_id
-            ),
-            None,
-        )
-        if swallowed is None:
+        swallowed_states = [
+            member.state.swallowed
+            for member in members
+            if member.state.swallowed and member.state.swallowed.source_id == attacker.combatant_id
+        ]
+        if not swallowed_states:
             return set()
-        action = next(
-            (item for item in attacker.state.template.swallow_actions if item.id == swallowed.action_id),
-            None,
-        )
-        if action is None:
-            raise ValueError(f"Missing active Swallow action {swallowed.action_id!r}.")
-        return set(action.forbidden_attack_ids_while_active)
+        actions = {item.id: item for item in attacker.state.template.swallow_actions}
+        forbidden: set[str] = set()
+        for swallowed in swallowed_states:
+            action = actions.get(swallowed.action_id)
+            if action is None:
+                raise ValueError(f"Missing active Swallow action {swallowed.action_id!r}.")
+            forbidden.update(action.forbidden_attack_ids_while_active)
+        return forbidden
     except ValueError:
         raise
     except Exception as exc:
