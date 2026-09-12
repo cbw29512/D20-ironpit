@@ -55,11 +55,16 @@ def _bonuses(value: str | None) -> dict[str, int]:
 
 def _simple_values(value: str | None, allowed: set[str]) -> tuple[list[str], list[str]]:
     text = _plain(value).lower()
-    if not text:
-        return [], []
-    parts = [part.strip().rstrip(".") for part in re.split(r"[,;]", text) if part.strip()]
-    simple = [part for part in parts if part in allowed]
-    unsupported = [part for part in parts if part not in allowed]
+    simple: list[str] = []
+    unsupported: list[str] = []
+    for clause in [item.strip().rstrip(".") for item in text.split(";") if item.strip()]:
+        parts = [part.strip() for part in clause.split(",") if part.strip()]
+        if parts and all(part in allowed for part in parts):
+            simple.extend(parts)
+        elif clause in allowed:
+            simple.append(clause)
+        else:
+            unsupported.append(clause)
     return simple, unsupported
 
 
@@ -101,7 +106,8 @@ def _record(source: dict) -> dict:
     creature_type, _, alignment = rest.partition(",")
     hp = source.get("Hit Points", "")
     hit_dice = re.search(r"\(([^)]+)\)", hp)
-    actions = re.findall(r"<p>(.*?)</p>", source.get("Actions", ""), re.I | re.S)
+    action_text = source.get("Actions", "")
+    actions = re.findall(r"<p>(.*?)</p>", action_text, re.I | re.S)
     resist, bad_resist = _simple_values(source.get("Damage Resistances"), DAMAGE_TYPES)
     immune, bad_immune = _simple_values(source.get("Damage Immunities"), DAMAGE_TYPES)
     vulnerable, bad_vulnerable = _simple_values(source.get("Damage Vulnerabilities"), DAMAGE_TYPES)
@@ -109,17 +115,22 @@ def _record(source: dict) -> dict:
     return {
         "id": _slug(source["name"]), "name": source["name"], "ruleset": "2014", "size": size.title(),
         "creature_type": creature_type.strip().split(" ")[0], "alignment": alignment.strip() or None,
-        "armor_class": _integer(source.get("Armor Class")), "max_hp": _integer(hp),
-        "hit_dice": hit_dice.group(1) if hit_dice else None, "speed": _speed(source.get("Speed")),
+        "armor_class": _integer(source.get("Armor Class")), "armor_class_text": source.get("Armor Class"),
+        "max_hp": _integer(hp), "hit_points_text": hp, "hit_dice": hit_dice.group(1) if hit_dice else None,
+        "speed": _speed(source.get("Speed")), "speed_text": source.get("Speed"),
         "abilities": {key.lower(): _integer(source.get(key)) for key in ("STR", "DEX", "CON", "INT", "WIS", "CHA")},
         "saving_throws": _bonuses(source.get("Saving Throws")), "skills": _bonuses(source.get("Skills")),
+        "senses": source.get("Senses"), "languages": source.get("Languages"),
         "damage_resistances": resist, "damage_immunities": immune, "damage_vulnerabilities": vulnerable,
         "condition_immunities": condition_immune,
         "unsupported_defense_text": bad_resist + bad_immune + bad_vulnerable + bad_condition,
         "challenge_rating": (source.get("Challenge") or "").split(" ", 1)[0] or None,
         "attacks": [attack for paragraph in actions if (attack := _attack(paragraph)) is not None],
-        "action_names": _names(source.get("Actions")), "trait_names": _names(source.get("Traits")),
+        "action_names": _names(action_text), "trait_names": _names(source.get("Traits")),
         "reaction_names": _names(source.get("Reactions")), "legendary_action_names": _names(source.get("Legendary Actions")),
+        "source_traits": source.get("Traits"), "source_actions": action_text,
+        "source_reactions": source.get("Reactions"), "source_legendary_actions": source.get("Legendary Actions"),
+        "image_url": source.get("img_url"),
     }
 
 
