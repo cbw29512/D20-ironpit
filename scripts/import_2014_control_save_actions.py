@@ -4,7 +4,12 @@ import re
 
 
 def _duration_rounds(text: str) -> int | None:
-    match = re.search(r"(?:unconscious|paralyzed|effects last|disadvantage .*? for) (\d+) (minute|minutes|round|rounds)", text, re.I)
+    patterns = (
+        r"(?:unconscious|paralyzed)\s+for\s+(\d+)\s+(minute|minutes|round|rounds)",
+        r"effects last for\s+(\d+)\s+(minute|minutes|round|rounds)",
+        r"disadvantage .*? for\s+(\d+)\s+(minute|minutes|round|rounds)",
+    )
+    match = next((found for pattern in patterns if (found := re.search(pattern, text, re.I))), None)
     if match is None:
         return None
     amount, unit = match.groups()
