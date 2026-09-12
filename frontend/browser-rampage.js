@@ -25,6 +25,7 @@
         const targets = F().targetOrder(member, setup);
         if (!targets.length) return { events, sequence };
         const target = targets.reduce((best, item) => S().distance(member, item) < S().distance(member, best) ? item : best);
+        E().spend(member.state, "bonus_action");
         const originalMovement = member.state.movement_remaining_ft;
         member.state.movement_remaining_ft = Math.floor(member.state.template.speed_ft / 2);
         const moved = R().moveToward(sequence, round, member, target, setup, bite.reach || 5, "speed", { turnKey });
@@ -32,9 +33,8 @@
         member.state.movement_remaining_ft = originalMovement;
         if (member.state.is_dead || member.state.is_unconscious) return { events, sequence };
         choice = F().chooseAttack(member, setup, [bite.id], "melee");
-      }
-      if (!choice) return { events, sequence };
-      E().spend(member.state, "bonus_action");
+        if (!choice) return { events, sequence };
+      } else E().spend(member.state, "bonus_action");
       events.push(A().resolveAttack(sequence, round, member, choice.target, choice.attack, choice.distance, {
         spendAction: false, setup, turnKey, featureId: "rampage",
       }));
