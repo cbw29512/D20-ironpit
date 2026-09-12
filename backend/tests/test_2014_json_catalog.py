@@ -85,6 +85,16 @@ def test_shared_traits_are_data_driven_and_neutral_traits_do_not_block() -> None
     assert template.combat_traits == [CombatTrait.PACK_TACTICS]
 
 
+def test_blood_frenzy_binds_existing_target_wounded_advantage() -> None:
+    catalog = {monster.id: monster for monster in load_catalog_2014(MVP_CATALOG_PATH)}
+    source = catalog["bandit"].model_copy(update={"trait_names": ["Blood Frenzy"]})
+    assert unsupported_mechanics_2014(source) == []
+    template = compile_monster_2014(source)
+    attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
+    assert all(attack.conditional_attack_advantage for attack in attacks)
+    assert all(attack.conditional_attack_advantage[0].trigger == "target_not_full_hp" for attack in attacks)
+
+
 def test_new_basic_monster_is_data_only(tmp_path) -> None:
     record = {
         "id": "test-brute", "name": "Test Brute", "ruleset": "2014",
