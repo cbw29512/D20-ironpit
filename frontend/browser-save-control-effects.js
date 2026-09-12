@@ -14,9 +14,10 @@
       return [];
     }
     const control = action.failureControlEffect;
-    if (!control?.conditionId || !target.state.is_alive || target.state.is_dead) return [];
+    const effectId = control?.conditionId || control?.effectId;
+    if (!effectId || !target.state.is_alive || target.state.is_dead) return [];
     const expiresRound = control.durationRounds != null ? round + control.durationRounds : null;
-    const applied = T().apply(target.state, control.conditionId, actor.combatant_id, {
+    const applied = T().apply(target.state, effectId, actor.combatant_id, {
       sourceEffectId: action.id,
       appliedRound: round,
       expiresRound,
@@ -28,6 +29,10 @@
       allowedRemovalActionIds: control.allowedRemovalActionIds || [],
       endsOnDamage: Boolean(control.endsOnDamage),
       sourceEffectImmunityOnEnd: Boolean(control.sourceEffectImmunityOnEnd),
+      speedMultiplier: control.speedMultiplier ?? 1,
+      blocksReactions: Boolean(control.blocksReactions),
+      actionBonusExclusive: Boolean(control.actionBonusExclusive),
+      maxAttacksPerTurn: control.maxAttacksPerTurn ?? null,
     });
     return applied ? [applied] : [];
   }
