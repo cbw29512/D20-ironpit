@@ -29,7 +29,7 @@ _ARENA_NEUTRAL_TRAITS = frozenset({
     "Keen Hearing and Sight", "Keen Hearing and Smell", "Keen Sight", "Keen Smell", "Limited Amphibiousness",
     "Mimicry", "Probing Telepathy", "Running Leap", "Sense Magic", "Shark Telepathy", "Siege Monster", "Spider Climb",
     "Standing Leap", "Sunlight Sensitivity", "Sunlight Weakness", "Telepathic Bond", "Training", "Treasure Sense", "Troll Spawn",
-    "Water Breathing", "Web Walker",
+    "Tunneler", "Water Breathing", "Web Walker",
 })
 
 
