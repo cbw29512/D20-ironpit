@@ -54,6 +54,7 @@ class CatalogMonster2014(BaseModel):
     unsupported_defense_text: list[str] = Field(default_factory=list)
     challenge_rating: str | None = None
     attacks: list[CatalogAttack2014] = Field(default_factory=list)
+    multiattack_slots: list[list[str]] = Field(default_factory=list)
     action_names: list[str] = Field(default_factory=list)
     trait_names: list[str] = Field(default_factory=list)
     reaction_names: list[str] = Field(default_factory=list)
