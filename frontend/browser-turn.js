@@ -54,7 +54,7 @@
         if ((action.actionCost || "action") !== actionCost) continue;
         if (!RES().available(member.state, action.resourceId, action.resourceCost || 1)) continue;
         const distance = F().saveDistance(member, target, action.range);
-        if (V().legalAction(action, target, distance)) return { target, action, distance };
+        if (V().legalAction(action, target, distance, member)) return { target, action, distance };
       }
     }
     return null;
