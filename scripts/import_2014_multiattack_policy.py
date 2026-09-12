@@ -41,6 +41,27 @@ def parse_policy_multiattack(text: str, attacks: list[dict], ids_for_label: Atta
                 "slots": [primary[:] for _ in range(_COUNTS[drawn_extra.group(1).lower()])] + [extra],
             }
 
+    form_choice = re.fullmatch(
+        r"in ([a-z][a-z -]*?) form, " + _SUBJECT + r"makes (two|three|four) ([a-z][a-z -]*?) attacks?\. "
+        r"in ([a-z][a-z -]*?) form, (?:it|he|she) makes (two|three|four) ([a-z][a-z -]*?) attacks?\. "
+        r"in ([a-z][a-z -]*?) form, (?:it|he|she) can attack like (?:a|an) ([a-z][a-z -]*?) or (?:a|an) ([a-z][a-z -]*?)\. ?",
+        text,
+        re.I,
+    )
+    if form_choice:
+        first_form, first_count, first_label, second_form, second_count, second_label, _, like_first, like_second = form_choice.groups()
+        first = ids_for_label(first_label, attacks); second = ids_for_label(second_label, attacks)
+        same_count = _COUNTS[first_count.lower()] == _COUNTS[second_count.lower()]
+        referenced_forms = {like_first.lower(), like_second.lower()} == {first_form.lower(), second_form.lower()}
+        if first and second and same_count and referenced_forms:
+            choices = list(dict.fromkeys([*first, *second]))
+            count = _COUNTS[first_count.lower()]
+            return {
+                "id": "multiattack", "name": "Multiattack",
+                "slots": [choices[:] for _ in range(count)],
+                "policy": {"same_attack_as_previous_slots": list(range(1, count))},
+            }
+
     hit_follow_up = re.fullmatch(
         _SUBJECT + r"makes one attack with (?:its|his|her) ([a-z][a-z -]*?)\. "
         r"if that attack hits, (?:the [a-z -]+|it) can make one ([a-z][a-z -]*?) attack against the same target\. ?",

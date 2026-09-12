@@ -8,7 +8,9 @@ from app.combat.area_save_actions import resolve_area_save_action
 from app.combat.attack_action_choices import (
     area_save_choice, attack_choice, save_choice, slot_has_legal_choice, use_ranged_split,
 )
-from app.combat.attack_action_policy import expanded_slots, filtered_slot, required_target_id, slot_allowed
+from app.combat.attack_action_policy import (
+    expanded_slots, filtered_slot, required_attack_id, required_target_id, slot_allowed,
+)
 from app.combat.attack_action_rules import validate_attack_action_slots
 from app.combat.cleave import resolve_cleave_extra_attack
 from app.combat.dice import DiceProvider
@@ -46,6 +48,7 @@ def resolve_attack_action(
         ranged_split_used = False
         turn_key = f"{round_number}:{attacker.combatant_id}"
         previous_event: BattleEvent | None = None
+        previous_attack_id: str | None = None
         used_attack_ids: set[str] = set()
         attack_limit = max_attacks_per_turn(attacker.state)
         attacks_made = 0
@@ -55,7 +58,10 @@ def resolve_attack_action(
                 break
             if not slot_allowed(definition, index, previous_event):
                 continue
-            slot = filtered_slot(definition, raw_slot, used_attack_ids)
+            slot = filtered_slot(
+                definition, raw_slot, used_attack_ids,
+                required_attack_id(definition, index, previous_attack_id),
+            )
             split_this_slot = (
                 index > 0
                 and ranged_split
@@ -82,6 +88,7 @@ def resolve_attack_action(
                 )
                 events.append(event)
                 previous_event = event
+                previous_attack_id = attack.id
                 used_attack_ids.add(attack.id)
                 attacks_made += 1
                 sequence += 1

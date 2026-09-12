@@ -63,6 +63,18 @@ def main() -> int:
         "slots": [["longsword"], ["longsword"], ["shortsword"]],
     }
 
+    werebear = (
+        "<p><strong>Multiattack.</strong> In bear form, the werebear makes two claw attacks. "
+        "In humanoid form, it makes two greataxe attacks. "
+        "In hybrid form, it can attack like a bear or a humanoid.</p>"
+    )
+    parsed = parse_multiattack(werebear, [attack("claw", "Claw"), attack("greataxe", "Greataxe")])
+    assert parsed == {
+        "id": "multiattack", "name": "Multiattack",
+        "slots": [["claw", "greataxe"], ["claw", "greataxe"]],
+        "policy": {"same_attack_as_previous_slots": [1]},
+    }
+
     print("2014 Multiattack policy regressions passed.")
     return 0
 

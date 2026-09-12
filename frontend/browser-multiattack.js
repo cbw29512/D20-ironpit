@@ -26,8 +26,10 @@
   }
   const policyAllows = (definition, index, previous) => !(definition.policy?.requiresPreviousHitSlots || []).includes(index) || previous?.hit === true;
   const policyTarget = (definition, index, previous) => (definition.policy?.sameTargetAsPreviousSlots || []).includes(index) ? previous?.target_id || null : null;
-  function policySlot(definition, data, used) {
+  const policyAttack = (definition, index, previousAttackId) => (definition.policy?.sameAttackAsPreviousSlots || []).includes(index) ? previousAttackId : null;
+  function policySlot(definition, data, used, requiredAttackId = null) {
     const policy = definition.policy;
+    if (requiredAttackId) return { ...data, attackIds: data.attackIds.filter((id) => id === requiredAttackId) };
     if (!policy) return data;
     const blocked = new Set();
     if (policy.distinctAttackIds) for (const id of used) blocked.add(id);
@@ -84,7 +86,7 @@
     const events = [];
     E().spend(member.state, "action");
     let openingFeature = C()?.openingFeature?.(round, member, setup) || null;
-    let lightTrigger = null, rangedSplitUsed = false, previousEvent = null, attacksMade = 0;
+    let lightTrigger = null, rangedSplitUsed = false, previousEvent = null, previousAttackId = null, attacksMade = 0;
     const maxAttacks = attackLimit(member.state);
     const usedAttackIds = new Set(), rangedSplit = useRangedSplit(member, setup, slots), turnKey = `${round}:${member.combatant_id}`;
 
@@ -92,7 +94,8 @@
       const index = expanded.index;
       if (member.state.is_dead || member.state.is_unconscious || member.state.turn_terminated) break;
       if (!policyAllows(definition, index, previousEvent)) continue;
-      const data = policySlot(definition, slotData(expanded.slot), usedAttackIds);
+      const requiredAttackId = policyAttack(definition, index, previousAttackId);
+      const data = policySlot(definition, slotData(expanded.slot), usedAttackIds, requiredAttackId);
       const splitThis = index > 0 && rangedSplit && !rangedSplitUsed && F().flexibleSlotHasBoth(member, data.attackIds);
       const choice = maxAttacks == null || attacksMade < maxAttacks
         ? attackChoice(member, setup, data, splitThis, policyTarget(definition, index, previousEvent)) : null;
@@ -103,7 +106,7 @@
         const event = A().resolveAttack(sequence++, round, member, choice.target, choice.attack, choice.distance, {
           spendAction: false, advantage: pack ? 1 : 0, setup, featureId, turnKey, allowReckless: true, ignoreCloseThreat: true,
         });
-        events.push(event); previousEvent = event; usedAttackIds.add(choice.attack.id); attacksMade += 1;
+        events.push(event); previousEvent = event; previousAttackId = choice.attack.id; usedAttackIds.add(choice.attack.id); attacksMade += 1;
         if (member.state.turn_terminated) break;
         if (maxAttacks == null || attacksMade < maxAttacks) {
           const cleave = WM().resolveCleave(sequence, round, member, event, choice.attack, setup, turnKey);

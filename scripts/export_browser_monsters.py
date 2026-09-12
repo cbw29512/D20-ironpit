@@ -41,6 +41,7 @@ def _policy_row(policy):
         "repeatDiceSize": policy.repeat_dice_size,
         "requiresPreviousHitSlots": list(policy.requires_previous_hit_slots),
         "sameTargetAsPreviousSlots": list(policy.same_target_as_previous_slots),
+        "sameAttackAsPreviousSlots": list(policy.same_attack_as_previous_slots),
     }
 
 

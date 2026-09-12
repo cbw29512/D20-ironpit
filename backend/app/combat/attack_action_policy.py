@@ -35,12 +35,28 @@ def required_target_id(
     return previous_event.target_id
 
 
+def required_attack_id(
+    definition: AttackActionDefinition,
+    slot_index: int,
+    previous_attack_id: str | None,
+) -> str | None:
+    policy = definition.policy
+    if policy is None or slot_index not in policy.same_attack_as_previous_slots:
+        return None
+    return previous_attack_id
+
+
 def filtered_slot(
     definition: AttackActionDefinition,
     slot: AttackActionSlot,
     used_attack_ids: set[str],
+    required_attack: str | None = None,
 ) -> AttackActionSlot:
     policy = definition.policy
+    if required_attack is not None:
+        return slot.model_copy(update={
+            "attack_ids": [attack_id for attack_id in slot.attack_ids if attack_id == required_attack],
+        })
     if policy is None:
         return slot
     blocked = set()
