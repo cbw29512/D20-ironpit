@@ -4,6 +4,7 @@ from app.combat.action_economy import is_available
 from app.combat.charge_follow_up import resolve_charge_follow_up
 from app.combat.charge_profiles import ChargeProfile, charge_profile_for_attack_id
 from app.combat.charge_prone import resolve_charge_prone
+from app.combat.death_triggers import append_pending_death_triggers
 from app.combat.dice import DiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.opening_burst import opening_burst_available
@@ -29,9 +30,7 @@ def _target_size_allowed(defender: CombatantState, profile: ChargeProfileLike) -
     return profile.max_target_size is None or size_at_most(defender.template.size, profile.max_target_size)
 
 
-def charge_profile(
-    attacker: CombatantState, defender: CombatantState, attack: WeaponAttack, movement_ft: int,
-) -> ChargeProfileLike | None:
+def charge_profile(attacker: CombatantState, defender: CombatantState, attack: WeaponAttack, movement_ft: int) -> ChargeProfileLike | None:
     if CombatTrait.CHARGE not in attacker.template.combat_traits:
         return None
     profile = _profile_for_attack(attack)
@@ -40,10 +39,7 @@ def charge_profile(
     return profile
 
 
-def charge_can_close(
-    attacker: CombatantState, defender: CombatantState, attack: WeaponAttack, distance_ft: int,
-    *, assume_precontact_runup: bool = False,
-) -> bool:
+def charge_can_close(attacker: CombatantState, defender: CombatantState, attack: WeaponAttack, distance_ft: int, *, assume_precontact_runup: bool = False) -> bool:
     profile = _profile_for_attack(attack)
     if not is_available(attacker, "action") or CombatTrait.CHARGE not in attacker.template.combat_traits or profile is None:
         return False
@@ -65,46 +61,40 @@ def _charged_attack(attack: WeaponAttack, profile: ChargeProfileLike) -> WeaponA
     replacement = profile.replacement_damage
     if replacement is not None:
         updates["weapon"] = attack.weapon.model_copy(update={
-            "dice_count": replacement.dice_count,
-            "dice_size": replacement.dice_size,
+            "dice_count": replacement.dice_count, "dice_size": replacement.dice_size,
             "damage_type": DamageType(replacement.damage_type),
         })
-        updates["damage_bonus"] = replacement.damage_bonus
-        updates["fixed_damage"] = None
+        updates["damage_bonus"] = replacement.damage_bonus; updates["fixed_damage"] = None
     return attack.model_copy(update=updates)
 
 
 def resolve_charge_closing(
-    sequence: int,
-    round_number: int,
-    attacker: EncounterCombatant,
-    target: EncounterCombatant,
-    dice: DiceProvider,
-    setup: EncounterSetup | None = None,
+    sequence: int, round_number: int, attacker: EncounterCombatant,
+    target: EncounterCombatant, dice: DiceProvider, setup: EncounterSetup | None = None,
 ) -> tuple[list[BattleEvent], int, bool]:
     """Resolve an eligible round-1 Charge using abstracted pre-contact run-up; cards never move."""
     attack = _charge_attack(attacker.state)
     if attack is None or not opening_burst_available(round_number, attacker, setup):
         return [], sequence, False
     profile = _profile_for_attack(attack)
-    if profile is None or not charge_can_close(
-        attacker.state, target.state, attack, profile.minimum_move_ft,
-        assume_precontact_runup=True,
-    ):
+    if profile is None or not charge_can_close(attacker.state, target.state, attack, profile.minimum_move_ft, assume_precontact_runup=True):
         return [], sequence, False
     profile = charge_profile(attacker.state, target.state, attack, profile.minimum_move_ft)
     if profile is None:
         return [], sequence, False
-
     event = resolve_encounter_attack(
         sequence, round_number, attacker, target, _charged_attack(attack, profile),
-        attack.weapon.reach_ft, dice, setup,
-        feature_id="charge", bonus_damage=_bonus_damage(profile),
+        attack.weapon.reach_ft, dice, setup, feature_id="charge", bonus_damage=_bonus_damage(profile),
     )
     if isinstance(profile, ChargeProfileDefinition):
         event = resolve_charge_prone(event, target, profile, dice, setup)
-    sequence += 1
-    follow_events, sequence = resolve_charge_follow_up(
-        sequence, round_number, attacker, target, profile, event, dice, setup,
-    )
-    return [event, *follow_events], sequence, True
+    events = [event]; sequence += 1
+    if setup is not None:
+        sequence = append_pending_death_triggers(events, sequence, round_number, setup, dice)
+    if attacker.state.is_dead or attacker.state.turn_terminated:
+        return events, sequence, True
+    follow_events, sequence = resolve_charge_follow_up(sequence, round_number, attacker, target, profile, event, dice, setup)
+    events.extend(follow_events)
+    if setup is not None:
+        sequence = append_pending_death_triggers(events, sequence, round_number, setup, dice)
+    return events, sequence, True

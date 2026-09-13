@@ -80,6 +80,19 @@ def _timed_control_row(effect):
     return row or None
 
 
+def _death_trigger_row(action):
+    row = {
+        "id": action.id, "name": action.name, "saveAbility": action.save_ability,
+        "dc": action.dc, "range": action.range_ft,
+        "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
+        "damageBonus": action.damage_bonus, "damageType": action.damage_type,
+        "successDamage": action.success_damage, "animation": action.animation,
+    }
+    control = _timed_control_row(action.failure_control_effect)
+    if control: row["failureControlEffect"] = control
+    return row
+
+
 def _serializable_template(template):
     copy = template.model_copy(deep=True)
     for attack in [copy.weapon_attack, *copy.alternate_weapon_attacks]:
@@ -147,6 +160,7 @@ def _attach_monster_actions(row, template) -> None:
             if action.removable_conditions: action_row["removableConditions"] = list(action.removable_conditions)
         row["healingActions"] = healing_rows
     if template.automatic_damage_spell_actions: row["automatic_damage_spell_actions"] = [_automatic_spell_row(action) for action in template.automatic_damage_spell_actions]
+    if template.death_trigger_actions: row["death_trigger_actions"] = [_death_trigger_row(action) for action in template.death_trigger_actions]
     if "Poor Depth Perception" in template.source_trait_names:
         for attack_row in row.get("attacks", []): attack_row["disadvantageBeyondFt"] = 30
     if template.attack_action and template.attack_action.policy: row.setdefault("attack_action", {})["policy"] = _policy_row(template.attack_action.policy)

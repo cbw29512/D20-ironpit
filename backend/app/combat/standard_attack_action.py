@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.cleave import resolve_cleave_extra_attack
+from app.combat.death_triggers import append_pending_death_triggers
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.light_attack_resolution import resolve_light_extra_attack
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -29,37 +30,29 @@ def resolve_standard_attack_action(
     """Resolve one character Attack action plus its optional mastery/Light extra attack."""
     try:
         event = resolve_encounter_attack(
-            sequence,
-            round_number,
-            attacker,
-            target,
-            attack,
-            distance_ft,
-            dice,
-            setup,
-            advantage_sources=advantage_sources,
-            feature_id=feature_id,
-            turn_key=turn_key,
-            allow_reckless=allow_reckless,
+            sequence, round_number, attacker, target, attack, distance_ft, dice, setup,
+            advantage_sources=advantage_sources, feature_id=feature_id,
+            turn_key=turn_key, allow_reckless=allow_reckless,
         )
         events = [event]
         sequence += 1
+        sequence = append_pending_death_triggers(events, sequence, round_number, setup, dice)
+        if attacker.state.is_dead or attacker.state.turn_terminated:
+            return events, sequence
         cleave, sequence = resolve_cleave_extra_attack(
             sequence, round_number, attacker, event, attack, setup, dice, turn_key,
         )
         events.extend(cleave)
+        sequence = append_pending_death_triggers(events, sequence, round_number, setup, dice)
+        if attacker.state.is_dead or attacker.state.turn_terminated:
+            return events, sequence
         if attacker.state.template.kind != "character" or not attack.weapon.light:
             return events, sequence
         more, sequence = resolve_light_extra_attack(
-            sequence,
-            round_number,
-            attacker,
-            setup,
-            dice,
-            attack,
-            turn_key,
+            sequence, round_number, attacker, setup, dice, attack, turn_key,
         )
         events.extend(more)
+        sequence = append_pending_death_triggers(events, sequence, round_number, setup, dice)
         return events, sequence
     except ValueError:
         raise

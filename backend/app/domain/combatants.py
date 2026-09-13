@@ -66,6 +66,7 @@ class CombatantTemplate(BaseModel):
     attack_action: AttackActionDefinition | None = None
     swallow_actions: list[SwallowAction] = Field(default_factory=list)
     saving_throw_actions: list[SavingThrowAction] = Field(default_factory=list)
+    death_trigger_actions: list[SavingThrowAction] = Field(default_factory=list)
     spell_save_actions: list[SpellSaveAction] = Field(default_factory=list)
     spell_attack_actions: list[SpellAttackAction] = Field(default_factory=list)
     automatic_damage_spell_actions: list[AutomaticDamageSpellAction] = Field(default_factory=list)

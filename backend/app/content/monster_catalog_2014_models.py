@@ -24,7 +24,6 @@ class CatalogDamage2014(BaseModel):
     bonus: int = 0
     type: DamageType | None
 
-
 class CatalogAttack2014(BaseModel):
     id: str
     name: str
@@ -46,7 +45,6 @@ class CatalogAttack2014(BaseModel):
     long_range_ft: int | None = Field(default=None, ge=1)
     source_complete: bool = True
     unsupported_text: str | None = None
-
 
 class CatalogInnateSpell2014(BaseModel):
     id: str
@@ -120,6 +118,7 @@ class CatalogMonster2014(BaseModel):
     attacks: list[CatalogAttack2014] = Field(default_factory=list)
     swallow_actions: list[SwallowAction] = Field(default_factory=list)
     saving_throw_actions: list[SavingThrowAction] = Field(default_factory=list)
+    death_trigger_actions: list[SavingThrowAction] = Field(default_factory=list)
     healing_actions: list[HealingAction] = Field(default_factory=list)
     limited_action_uses: dict[str, int] = Field(default_factory=dict)
     innate_spellcasting: CatalogInnateSpellcasting2014 | None = None

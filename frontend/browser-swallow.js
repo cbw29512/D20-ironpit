@@ -2,6 +2,7 @@
   "use strict";
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const DT = () => window.IRON_PIT_BROWSER_DEATH_TRIGGERS || { resolvePending: (sequence) => ({ events: [], sequence }) };
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
   const D = () => window.IRON_PIT_DICE;
 
@@ -9,6 +10,9 @@
   const opponents = (member, setup) => member.side === "heroes" ? setup.monsters : setup.heroes;
   const swallowedBy = (member, setup) => members(setup).filter((item) => item.state.swallowed?.source_id === member.combatant_id);
   const attackById = (member, id) => member.state.template.attacks.find((attack) => attack.id === id);
+  function flush(events, sequence, round, setup) {
+    const result = DT().resolvePending(sequence, round, setup); events.push(...result.events); return result.sequence;
+  }
 
   function target(member, setup) {
     const action = member.state.template.swallowAction;
@@ -24,7 +28,10 @@
     if (!action || !victim) return null;
     const attack = attackById(member, action.attackId);
     if (!attack) throw new Error(`${member.state.template.name} Swallow references missing attack ${action.attackId}.`);
-    const event = A().resolveAttack(sequence, round, member, victim, attack, 5, { setup });
+    const event = A().resolveAttack(sequence++, round, member, victim, attack, 5, { setup });
+    const events = [event];
+    sequence = flush(events, sequence, round, setup);
+    if (member.state.is_dead || member.state.turn_terminated) return { events, sequence };
     if (event.hit && victim.state.current_hp > 0 && !victim.state.is_dead) {
       G().release(victim.state, member.combatant_id);
       victim.state.swallowed = {
@@ -37,7 +44,7 @@
       event.feature_id = action.id;
       event.description += ` ${victim.state.template.name} is swallowed.`;
     }
-    return { events: [event], sequence: sequence + 1 };
+    return { events, sequence };
   }
 
   function cleanup(setup) {
@@ -71,6 +78,8 @@
         }, hp_before: hpBefore, hp_after: victim.state.current_hp, animation: "damage",
         description: `${victim.state.template.name} takes ${applied} ${swallowed.damageType} damage while swallowed.`,
       });
+      sequence = flush(events, sequence, round, setup);
+      if (member.state.is_dead) break;
     }
     return { events, sequence };
   }

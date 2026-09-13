@@ -1,6 +1,7 @@
 (() => {
   "use strict";
 
+  const DT = () => window.IRON_PIT_BROWSER_DEATH_TRIGGERS || { resolvePending: (sequence) => ({ events: [], sequence }) };
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const X = () => window.IRON_PIT_BROWSER_SAVE_CONTROL;
@@ -10,6 +11,10 @@
 
   function memberById(setup, id) {
     return [...setup.heroes, ...setup.monsters].find((member) => member.combatant_id === id) || null;
+  }
+
+  function flush(events, sequence, round, setup) {
+    const result = DT().resolvePending(sequence, round, setup); events.push(...result.events); return result.sequence;
   }
 
   function eligiblePlacement(member, setup, action, placement) {
@@ -78,22 +83,17 @@
         resourceRemaining = member.state.resources[action.resourceId];
       }
       if (spendAction) E().spend(member.state, "action");
-      const shared = action.damageDiceCount
-        ? D().rollMany(action.damageDiceCount, action.damageDiceSize)
-        : null;
+      const shared = action.damageDiceCount ? D().rollMany(action.damageDiceCount, action.damageDiceSize) : null;
       const events = [];
       for (const targetId of placement.targetIds) {
         const target = memberById(setup, targetId);
         if (!target) throw new Error(`Unknown area target ${targetId}.`);
         events.push(V().resolveAction(sequence++, round, member, target, action, 0, {
-          spendAction: false,
-          checkResource: false,
-          spendResource: false,
-          resourceRemaining,
-          sharedDamageRolls: shared,
-          setup,
+          spendAction: false, checkResource: false, spendResource: false,
+          resourceRemaining, sharedDamageRolls: shared, setup,
         }));
       }
+      sequence = flush(events, sequence, round, setup);
       return { events, sequence, placement };
     } catch (error) {
       console.error("Failed browser area save resolution", { member: member.combatant_id, error });
@@ -106,19 +106,10 @@
     if (area) return area;
     const saved = singleChoice(member, setup, true);
     if (!saved || !E().available(member.state, "action")) return null;
-    return {
-      events: [V().resolveAction(
-        sequence, round, member, saved.target, saved.action, saved.distance, { setup },
-      )],
-      sequence: sequence + 1,
-    };
+    const events = [V().resolveAction(sequence++, round, member, saved.target, saved.action, saved.distance, { setup })];
+    sequence = flush(events, sequence, round, setup);
+    return { events, sequence };
   }
 
-  window.IRON_PIT_BROWSER_AREA_SAVES = {
-    choice,
-    fireRecharge,
-    rechargeAction,
-    resolve,
-    singleChoice,
-  };
+  window.IRON_PIT_BROWSER_AREA_SAVES = { choice, fireRecharge, rechargeAction, resolve, singleChoice };
 })();

@@ -26141,6 +26141,29 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "death_trigger_actions": [
+      {
+        "id": "death-burst",
+        "name": "Death Burst",
+        "save_ability": "dexterity",
+        "dc": 10,
+        "range_ft": 5,
+        "area": {
+          "shape": "emanation",
+          "origin": "self",
+          "radius_ft": 5
+        },
+        "animation": "death-burst",
+        "damage_dice_count": 1,
+        "damage_dice_size": 8,
+        "damage_bonus": 0,
+        "damage_type": "slashing",
+        "success_damage": "half"
+      }
+    ],
+    "data_bound_trait_names": [
+      "Death Burst"
+    ],
     "spellcasting": null
   },
   {
@@ -28478,6 +28501,29 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "death_trigger_actions": [
+      {
+        "id": "death-burst",
+        "name": "Death Burst",
+        "save_ability": "dexterity",
+        "dc": 11,
+        "range_ft": 5,
+        "area": {
+          "shape": "emanation",
+          "origin": "self",
+          "radius_ft": 5
+        },
+        "animation": "death-burst",
+        "damage_dice_count": 2,
+        "damage_dice_size": 6,
+        "damage_bonus": 0,
+        "damage_type": "fire",
+        "success_damage": "half"
+      }
+    ],
+    "data_bound_trait_names": [
+      "Death Burst"
+    ],
     "spellcasting": null
   },
   {
@@ -28575,6 +28621,29 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "death_trigger_actions": [
+      {
+        "id": "death-burst",
+        "name": "Death Burst",
+        "save_ability": "dexterity",
+        "dc": 11,
+        "range_ft": 10,
+        "area": {
+          "shape": "emanation",
+          "origin": "self",
+          "radius_ft": 10
+        },
+        "animation": "death-burst",
+        "damage_dice_count": 2,
+        "damage_dice_size": 6,
+        "damage_bonus": 0,
+        "damage_type": "fire",
+        "success_damage": "half"
+      }
+    ],
+    "data_bound_trait_names": [
+      "Death Burst"
+    ],
     "spellcasting": null
   },
   {
@@ -31046,7 +31115,27 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/14/475/1000/1000/636364321398842272.png",
-    "saving_throw_actions": [],
+    "saving_throw_actions": [
+      {
+        "id": "rotting-gaze",
+        "name": "Rotting Gaze",
+        "save_ability": "constitution",
+        "dc": 12,
+        "range_ft": 30,
+        "area": {
+          "shape": "emanation",
+          "origin": "self",
+          "radius_ft": 30
+        },
+        "damage_dice_count": 3,
+        "damage_dice_size": 6,
+        "damage_bonus": 0,
+        "damage_type": "necrotic",
+        "success_damage": "none",
+        "resource_id": null,
+        "resource_cost": 1
+      }
+    ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
@@ -38433,6 +38522,29 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "death_trigger_actions": [
+      {
+        "id": "death-burst",
+        "name": "Death Burst",
+        "save_ability": "dexterity",
+        "dc": 10,
+        "range_ft": 5,
+        "area": {
+          "shape": "emanation",
+          "origin": "self",
+          "radius_ft": 5
+        },
+        "animation": "death-burst",
+        "damage_dice_count": 1,
+        "damage_dice_size": 8,
+        "damage_bonus": 0,
+        "damage_type": "fire",
+        "success_damage": "none"
+      }
+    ],
+    "data_bound_trait_names": [
+      "Death Burst"
+    ],
     "spellcasting": null
   },
   {
@@ -44698,7 +44810,27 @@
     "source_reactions": "",
     "source_legendary_actions": null,
     "image_url": "https://media-waterdeep.cursecdn.com/avatars/thumbnails/8/662/1000/1000/636313413410825930.jpeg",
-    "saving_throw_actions": [],
+    "saving_throw_actions": [
+      {
+        "id": "chilling-gaze",
+        "name": "Chilling Gaze",
+        "save_ability": "constitution",
+        "dc": 13,
+        "range_ft": 30,
+        "area": {
+          "shape": "emanation",
+          "origin": "self",
+          "radius_ft": 30
+        },
+        "damage_dice_count": 3,
+        "damage_dice_size": 6,
+        "damage_bonus": 0,
+        "damage_type": "cold",
+        "success_damage": "none",
+        "resource_id": null,
+        "resource_cost": 1
+      }
+    ],
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
