@@ -13921,6 +13921,29 @@
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
+    "healing_actions": [
+      {
+        "id": "healing-touch",
+        "name": "Healing Touch",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "other",
+        "dice_count": 4,
+        "dice_size": 8,
+        "healing_bonus": 2,
+        "removable_conditions": [
+          "poisoned",
+          "blinded",
+          "deafened"
+        ],
+        "resource_id": "healing-touch",
+        "resource_cost": 1,
+        "animation": "healing"
+      }
+    ],
+    "limited_action_uses": {
+      "healing-touch": 3
+    },
     "spellcasting": null
   },
   {
@@ -18179,12 +18202,16 @@
           "dc": 10,
           "condition_id": "paralyzed",
           "duration_rounds": 10,
-          "repeat_save_timing": "target_turn_end"
+          "repeat_save_timing": "target_turn_end",
+          "excluded_creature_types": [
+            "undead"
+          ],
+          "excluded_creature_subtypes": []
         },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "If the target is a creature other than an undead",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5
       }
     ],
@@ -18427,12 +18454,18 @@
           "dc": 10,
           "condition_id": "paralyzed",
           "duration_rounds": 10,
-          "repeat_save_timing": "target_turn_end"
+          "repeat_save_timing": "target_turn_end",
+          "excluded_creature_types": [
+            "undead"
+          ],
+          "excluded_creature_subtypes": [
+            "elf"
+          ]
         },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
-        "unsupported_text": "If the target is a creature other than an elf or undead",
+        "source_complete": true,
+        "unsupported_text": null,
         "reach_ft": 5,
         "attack_ability": "dexterity"
       }
@@ -37427,6 +37460,29 @@
       "Searing Burst (Costs 2 Actions)",
       "Blinding Gaze (Costs 3 Actions)"
     ],
+    "healing_actions": [
+      {
+        "id": "healing-touch",
+        "name": "Healing Touch",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "other",
+        "dice_count": 8,
+        "dice_size": 8,
+        "healing_bonus": 4,
+        "removable_conditions": [
+          "poisoned",
+          "blinded",
+          "deafened"
+        ],
+        "resource_id": "healing-touch",
+        "resource_cost": 1,
+        "animation": "healing"
+      }
+    ],
+    "limited_action_uses": {
+      "healing-touch": 4
+    },
     "spellcasting": null
   },
   {
@@ -41219,6 +41275,27 @@
       "Shimmering Shield (Costs 2 Actions)",
       "Heal Self (Costs 3 Actions)"
     ],
+    "healing_actions": [
+      {
+        "id": "healing-touch",
+        "name": "Healing Touch",
+        "action_cost": "action",
+        "range_ft": 5,
+        "target_mode": "other",
+        "dice_count": 2,
+        "dice_size": 8,
+        "healing_bonus": 2,
+        "removable_conditions": [
+          "poisoned"
+        ],
+        "resource_id": "healing-touch",
+        "resource_cost": 1,
+        "animation": "healing"
+      }
+    ],
+    "limited_action_uses": {
+      "healing-touch": 3
+    },
     "spellcasting": null
   },
   {
