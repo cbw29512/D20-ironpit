@@ -51,5 +51,9 @@ def combat_traits_2014(names: list[str]) -> list[CombatTrait]:
     return list(dict.fromkeys(MODELED_TRAITS[name] for name in names if name in MODELED_TRAITS))
 
 
-def unresolved_traits_2014(names: list[str]) -> list[str]:
-    return [name for name in names if name not in SUPPORTED_TRAITS and _LEGENDARY_RESISTANCE.match(name) is None and _RELENTLESS.match(name) is None]
+def unresolved_traits_2014(names: list[str], data_bound: list[str] | None = None) -> list[str]:
+    supported = SUPPORTED_TRAITS | frozenset(data_bound or [])
+    return [
+        name for name in names
+        if name not in supported and _LEGENDARY_RESISTANCE.match(name) is None and _RELENTLESS.match(name) is None
+    ]
