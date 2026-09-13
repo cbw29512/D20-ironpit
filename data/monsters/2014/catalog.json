@@ -43876,20 +43876,7 @@
         "long_range_ft": 600
       }
     ],
-    "multiattack_slots": [
-      [
-        "longsword",
-        "longsword-two-handed",
-        "longbow",
-        "life-drain"
-      ],
-      [
-        "longsword",
-        "longsword-two-handed",
-        "longbow",
-        "life-drain"
-      ]
-    ],
+    "multiattack_slots": [],
     "action_recharges": {},
     "rest_recharge_action_ids": [],
     "action_names": [
@@ -43913,21 +43900,6 @@
     "innate_spellcasting": null,
     "zero_hp_prevention": null,
     "regeneration": null,
-    "multiattack_policy": {
-      "at_most_once_attack_ids": [
-        "life-drain"
-      ],
-      "exclusive_attack_groups": [
-        [
-          "longsword",
-          "longsword-two-handed",
-          "life-drain"
-        ],
-        [
-          "longbow"
-        ]
-      ]
-    },
     "legendary_action_uses": 0,
     "legendary_actions": [],
     "unsupported_legendary_action_names": [],
