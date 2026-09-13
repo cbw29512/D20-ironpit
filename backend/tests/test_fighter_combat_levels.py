@@ -1,5 +1,3 @@
-import pytest
-
 from app.content.fighter_combat_levels import (
     FIGHTER_COMBAT_LEVELS,
     fighter_arena_ignored,
@@ -58,7 +56,7 @@ def test_fighter_features_accumulate_and_replacements_are_explicit() -> None:
 
 
 def test_existing_fighter_runtime_levels_are_compiled_from_the_table() -> None:
-    for level in range(1, 18):
+    for level in range(1, 19):
         row = FIGHTER_COMBAT_LEVELS[level]
         template = build_karnok_stoneward_level(level)
         strength_mod = _modifier(row.strength)
@@ -82,12 +80,17 @@ def test_existing_fighter_runtime_levels_are_compiled_from_the_table() -> None:
         assert (len(template.attack_action.slots) if template.attack_action else 1) == row.attack_count
 
 
-def test_complete_table_can_outrun_engine_without_silently_running_unsupported_rules() -> None:
+def test_survivor_engine_support_is_available_at_fighter_level_eighteen() -> None:
     assert unsupported_fighter_engine_features(15) == ()
     assert unsupported_fighter_engine_features(17) == ()
-    assert unsupported_fighter_engine_features(18) == (
-        "survivor-defy-death", "survivor-heroic-rally",
-    )
+    assert unsupported_fighter_engine_features(18) == ()
+
+    template = build_karnok_stoneward_level(18)
+    features = template.progression_features
+
     assert FIGHTER_COMBAT_LEVELS[17].max_hp == 191
-    with pytest.raises(ValueError, match="survivor-defy-death, survivor-heroic-rally"):
-        build_karnok_stoneward_level(18)
+    assert template.level == 18
+    assert features.death_save_advantage is True
+    assert features.death_save_recovery_minimum == 18
+    assert features.bloodied_start_turn_healing_base == 5
+    assert features.bloodied_start_turn_healing_add_constitution is True
