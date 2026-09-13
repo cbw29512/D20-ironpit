@@ -132,6 +132,14 @@ def _aura_row(aura):
     }
 
 
+def _relationship_damage_row(profile):
+    return {
+        "id": profile.id, "name": profile.name, "targetRelationship": profile.target_relationship,
+        "diceCount": profile.dice_count, "diceSize": profile.dice_size,
+        "damageBonus": profile.damage_bonus, "damageType": profile.damage_type.value,
+    }
+
+
 def _attach_source_fingerprint(row, template) -> None:
     row["source_trait_names"] = list(template.source_trait_names); row["source_reaction_names"] = list(template.source_reaction_names)
     row["source_bonus_action_names"] = list(template.source_bonus_action_names); row["source_limited_use_names"] = list(template.source_limited_use_names)
@@ -145,6 +153,8 @@ def _attach_monster_actions(row, template) -> None:
     gaze = _gaze_row(template.start_turn_gaze)
     if gaze: row["startTurnGaze"] = gaze
     if template.start_turn_auras: row["startTurnAuras"] = [_aura_row(aura) for aura in template.start_turn_auras]
+    if template.start_turn_relationship_damage:
+        row["startTurnRelationshipDamage"] = [_relationship_damage_row(profile) for profile in template.start_turn_relationship_damage]
     if template.ability_scores is not None:
         row["ability_modifiers"] = {ability: template.ability_scores.modifier(ability) for ability in ("strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma")}
     for definition in row.get("resource_definitions", []):

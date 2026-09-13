@@ -116,7 +116,8 @@
     });
   }
   function resolveGazeStart(sequence, round, target, setup) {
-    const aura = resolveAuraStart(sequence, round, target, setup), events = aura.events; sequence = aura.sequence;
+    const rel = window.IRON_PIT_BROWSER_START_TURN_DAMAGE?.startTurn(sequence, round, target, setup) || { events: [], sequence };
+    const aura = resolveAuraStart(rel.sequence, round, target, setup), events = [...rel.events, ...aura.events]; sequence = aura.sequence;
     for (const source of gazeOpponents(target, setup)) {
       const gaze = source.state.template.startTurnGaze;
       if (!gaze || Q().incapacitated(source.state) || Q().incapacitated(target.state)) continue;
