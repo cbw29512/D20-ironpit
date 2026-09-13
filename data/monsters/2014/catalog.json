@@ -26608,7 +26608,30 @@
     "unsupported_defense_text": [],
     "challenge_rating": "0",
     "challenge_text": "0 (10 XP)",
-    "attacks": [],
+    "attacks": [
+      {
+        "id": "bite",
+        "name": "Bite",
+        "kind": "melee",
+        "attack_bonus": 1,
+        "damage": {
+          "average": 1,
+          "dice_count": 1,
+          "dice_size": 4,
+          "bonus": -1,
+          "type": "piercing"
+        },
+        "conditional_damage": [],
+        "on_hit_damage": [],
+        "on_hit_save_effect": null,
+        "control_effect": null,
+        "forbid_target_grappled_by_self": false,
+        "source_complete": true,
+        "unsupported_text": null,
+        "reach_ft": 5,
+        "attack_ability": "strength"
+      }
+    ],
     "multiattack_slots": [],
     "action_recharges": {},
     "rest_recharge_action_ids": [],
