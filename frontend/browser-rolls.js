@@ -91,11 +91,10 @@
     const replacement = conditional?.mode === "replace_weapon" && conditionalActive(conditional, attacker, target, mode)
       ? conditional : null;
     let rolled;
-    if (replacement) {
-      rolled = candidate(replacement, critical);
-    } else if (attack.fixedDamage != null) {
-      rolled = fixedCandidate(attack);
-    } else {
+    if (replacement) rolled = candidate(replacement, critical);
+    else if (!attack.damageType && attack.diceCount === 0 && (attack.fixedDamage == null || attack.fixedDamage === 0)) rolled = null;
+    else if (attack.fixedDamage != null) rolled = fixedCandidate(attack);
+    else {
       const rageBonus = window.IRON_PIT_BROWSER_RAGE?.damageBonus(attacker, attack) || 0;
       const effective = { ...attack, damageBonus: attack.damageBonus + rageBonus };
       rolled = candidate(effective, critical);
@@ -106,16 +105,14 @@
         attacker.feature_last_turn_keys["savage-attacker"] = turnKey;
       }
     }
-    const components = [{ source: attack.name, damage_type: replacement?.damageType || attack.damageType, ...rolled }];
+    const components = rolled ? [{ source: attack.name, damage_type: replacement?.damageType || attack.damageType, ...rolled }] : [];
     for (const extra of attack.onHitDamage || []) components.push(damageComponent(extra, critical));
     if (mode === "advantage" && attack.conditionalAdvantage) {
       const [baseCount, sides] = attack.conditionalAdvantage;
       const count = baseCount * (critical ? 2 : 1);
       const rolls = dice().rollMany(count, sides);
-      components.push({
-        source: "Advantage bonus damage", damage_type: attack.damageType,
-        notation: `${count}d${sides}+0`, rolls, modifier: 0, total: rolls.reduce((a, b) => a + b, 0),
-      });
+      components.push({ source: "Advantage bonus damage", damage_type: attack.damageType,
+        notation: `${count}d${sides}+0`, rolls, modifier: 0, total: rolls.reduce((a, b) => a + b, 0) });
     }
     if (conditional?.mode === "add" && conditionalActive(conditional, attacker, target, mode)) {
       components.push(damageComponent({ ...conditional, source: "Conditional bonus damage" }, critical));
@@ -126,15 +123,8 @@
     if (frenzy) components.push(bonusComponent(frenzy, critical));
     if (bonusDamage) components.push(bonusComponent(bonusDamage, critical));
     const total = components.reduce((sum, item) => sum + item.total, 0);
-    return {
-      roll: {
-        notation: components.map((item) => item.notation).join(" + "),
-        rolls: components.flatMap((item) => item.rolls),
-        modifier: components.reduce((sum, item) => sum + item.modifier, 0),
-        total,
-      },
-      components,
-    };
+    return { roll: { notation: components.map((item) => item.notation).join(" + ") || "0", rolls: components.flatMap((item) => item.rolls),
+      modifier: components.reduce((sum, item) => sum + item.modifier, 0), total }, components };
   }
 
   window.IRON_PIT_BROWSER_ROLLS = { attackMode, d20, modeFromSources, weaponDamage };

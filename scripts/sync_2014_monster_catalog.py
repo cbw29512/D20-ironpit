@@ -34,6 +34,7 @@ def main() -> int:
         commands = [
             [sys.executable, "scripts/import_2014_monster_catalog.py", str(source), "--output", str(OUTPUT)],
             [sys.executable, "scripts/enrich_2014_save_actions.py", str(source), "--catalog", str(OUTPUT)],
+            [sys.executable, "scripts/enrich_2014_breakable_restraints.py", str(source), "--catalog", str(OUTPUT)],
             [sys.executable, "scripts/enrich_2014_spellcasting.py", str(source), "--catalog", str(OUTPUT)],
         ]
         if any(_run(command) != 0 for command in commands):
