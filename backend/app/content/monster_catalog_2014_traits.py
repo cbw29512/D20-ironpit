@@ -14,6 +14,7 @@ MODELED_TRAITS = {
     "Dark Devotion": CombatTrait.DARK_DEVOTION,
     "Two-Headed": CombatTrait.TWO_HEADED,
     "Aggressive": CombatTrait.AGGRESSIVE,
+    "Martial Advantage": CombatTrait.MARTIAL_ADVANTAGE,
     "Charge": CombatTrait.CHARGE,
     "Pounce": CombatTrait.CHARGE,
     "Trampling Charge": CombatTrait.CHARGE,

@@ -119,6 +119,8 @@
     }
     const sneak = window.IRON_PIT_BROWSER_SNEAK_ATTACK?.bonusDamage(attacker, attack, mode, turnKey, sneakAllyAvailable);
     if (sneak) components.push(bonusComponent(sneak, critical));
+    const martial = window.IRON_PIT_BROWSER_SNEAK_ATTACK?.martialAdvantage?.(attacker, attack, turnKey, sneakAllyAvailable);
+    if (martial) components.push(bonusComponent(martial, critical));
     const frenzy = window.IRON_PIT_BROWSER_BARBARIAN3?.bonusDamage(attacker, attack, turnKey);
     if (frenzy) components.push(bonusComponent(frenzy, critical));
     if (bonusDamage) components.push(bonusComponent(bonusDamage, critical));
