@@ -16,8 +16,8 @@ for (const file of [
   "browser-spellcasting.js", "browser-condition-removal.js", "browser-support.js", "browser-dodge.js", "browser-formation.js",
   "browser-arena-map.js", "browser-grid-geometry.js", "browser-grid-movement-support.js", "browser-grid-path-search-support.js",
   "browser-grid-path-search.js", "browser-grid-movement.js", "browser-grid-reaction-support.js", "browser-reaction-movement.js",
-  "browser-offensive-ranges.js", "browser-offensive-movement.js", "browser-grid-placement.js", "browser-turn.js",
-  "browser-initiative.js", "browser-engine.js",
+  "browser-offensive-ranges.js", "browser-offensive-movement.js", "browser-grid-placement.js", "browser-progression-recovery.js",
+  "browser-turn.js", "browser-initiative.js", "browser-engine.js",
 ]) load(file);
 
 const queuedDice = (values, fallback = 10) => {
