@@ -26,11 +26,11 @@ DATA_BOUND_TRAITS = frozenset({
 # supplies no combat circumstance in which the trait can change the arena outcome.
 ARENA_NEUTRAL_TRAITS = frozenset({
     "Agile", "Amorphous", "Amphibious", "Antimagic Susceptibility", "Beast of Burden",
-    "Devil's Sight", "False Appearance", "Flyby", "Hellish Restoration", "Hold Breath",
-    "Ice Walk", "Illumination", "Immutable Form", "Jumper", "Keen Hearing",
-    "Keen Hearing and Sight", "Keen Hearing and Smell", "Keen Sight", "Keen Sight and Smell",
-    "Keen Smell", "Labyrinthine Recall", "Limited Amphibiousness", "Mimicry", "Rejuvenation",
-    "Running Leap", "Shark Telepathy", "Shapechanger", "Siege Monster", "Snow Camouflage",
+    "Devil's Sight", "Earth Glide", "False Appearance", "Flyby", "Hellish Rejuvenation",
+    "Hellish Restoration", "Hold Breath", "Ice Walk", "Illumination", "Immutable Form", "Jumper",
+    "Keen Hearing", "Keen Hearing and Sight", "Keen Hearing and Smell", "Keen Sight",
+    "Keen Sight and Smell", "Keen Smell", "Labyrinthine Recall", "Limited Amphibiousness", "Mimicry",
+    "Rejuvenation", "Running Leap", "Shark Telepathy", "Shapechanger", "Siege Monster", "Snow Camouflage",
     "Spider Climb", "Standing Leap", "Stone Camouflage", "Sunlight Sensitivity", "Training",
     "Water Breathing", "Web Sense", "Web Walker",
 })
