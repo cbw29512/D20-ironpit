@@ -10,6 +10,7 @@ from app.domain.automatic_damage_spells import AutomaticDamageSpellAction
 from app.domain.character_builds import AbilityScores
 from app.domain.damage_defense_rules import ConditionalDamageResistance, DamageAbsorption
 from app.domain.gaze import StartTurnGaze
+from app.domain.invisibility import InvisibilityAction
 from app.domain.legendary_actions import LegendaryActionOption
 from app.domain.movement import MovementModes
 from app.domain.progression import ProgressionCombatFeatures
@@ -77,6 +78,8 @@ class CombatantTemplate(BaseModel):
     defensive_spell_actions: list[DefensiveSpellAction] = Field(default_factory=list)
     healing_actions: list[HealingAction] = Field(default_factory=list)
     condition_removal_actions: list[ConditionRemovalAction] = Field(default_factory=list)
+    starts_invisible: bool = False
+    invisibility_action: InvisibilityAction | None = None
     legendary_action_uses: int = Field(default=0, ge=0, le=10)
     legendary_actions: list[LegendaryActionOption] = Field(default_factory=list)
     saving_throw_bonuses: dict[str, int] = Field(default_factory=dict)
