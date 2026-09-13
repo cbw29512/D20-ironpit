@@ -6,10 +6,11 @@
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { effectiveSpeed: (state) => state.template.speed_ft };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { incapacitated: (state) => state.is_unconscious };
   const GEOM = () => window.IRON_PIT_BROWSER_GRID_GEOMETRY;
+  const LEGENDARY = () => window.IRON_PIT_BROWSER_LEGENDARY_ACTIONS;
   const effectiveMaxHp = (state) => state.template.max_hp + (state.max_hp_bonus || 0);
 
   function buildState(template) {
-    return {
+    const state = {
       template, current_hp: template.max_hp, max_hp_bonus: 0, temporary_hp: 0, position: null,
       initiative_roll: null, initiative_total: null, is_alive: true,
       is_unconscious: false, is_stable: false, is_dead: false,
@@ -17,11 +18,14 @@
       action_available: true, bonus_action_available: true, reaction_available: true,
       turn_terminated: false, turn_termination_reason: null,
       movement_remaining_ft: 0, resources: { ...(template.resources || {}) }, heroic_inspiration: false,
+      legendary_action_uses_remaining: 0, legendary_action_locked_option_ids: [],
       active_effect_ids: [], active_buff_effect_ids: [], source_effect_immunities: [], opening_buff_spell_id: null,
       grapple_sources: [], swallowed: null, attachment: null, timed_effects: [], active_modifiers: [], concentration: null,
       feature_last_turn_keys: {}, spell_slot_expended_turn_key: null,
       temporary_damage_resistances: [], damage_types_since_last_turn: [], rage_expires_round: null, rage_max_round: null,
     };
+    LEGENDARY()?.initialize(state);
+    return state;
   }
 
   function grantTemporaryHp(state, amount) {
@@ -39,6 +43,7 @@
   function refreshReaction(state) { state.reaction_available = true; }
   function refreshStartOfTurn(state) {
     refreshReaction(state);
+    LEGENDARY()?.refresh(state);
     window.IRON_PIT_BROWSER_PEERLESS_AIM?.refresh(state);
     window.IRON_PIT_BROWSER_HEROIC_INSPIRATION?.grant(state);
   }
