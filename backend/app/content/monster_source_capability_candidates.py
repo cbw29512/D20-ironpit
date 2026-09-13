@@ -6,6 +6,7 @@ import re
 from app.content.monster_catalog import load_monster_rows
 from app.content.monster_defense_source_audit import parse_defense_profile
 from app.content.monster_general_action_fallback import general_unarmed_attack
+from app.content.monster_source_attack_advantage import parse_attack_header_advantage
 from app.content.monster_source_attack_riders import parse_attack_riders
 from app.content.monster_source_charge_riders import parse_charge_replacement
 from app.content.monster_source_fixed_attack_candidates import source_fixed_attack_candidates
@@ -24,7 +25,8 @@ logger = logging.getLogger(__name__)
 
 _ATTACK = re.compile(
     r"(?P<name>[A-Z][A-Za-z0-9’' -]*?)\.\s+(?P<kind>Melee|Ranged|Melee or Ranged) Attack Roll:\s*"
-    r"(?P<bonus>[+-]?\d+),\s*(?P<range>reach\s+\d+\s*ft\.|range\s+\d+(?:/\d+)?\s*ft\."
+    r"(?P<bonus>[+-]?\d+)(?P<header_advantage>\s*\(\s*with\s+Advantage\s+if\s+the\s+target\s+is\s+Grappled\s+by\s+the\s+[^)]+\))?,\s*"
+    r"(?P<range>reach\s+\d+\s*ft\.|range\s+\d+(?:/\d+)?\s*ft\."
     r"|reach\s+\d+\s*ft\.\s+or\s+range\s+\d+(?:/\d+)?\s*ft\.)\s*Hit:\s*"
     r"(?P<average>\d+)\s*\((?P<count>\d+)d(?P<size>\d+)(?:\s*(?P<sign>[+-])\s*(?P<mod>\d+))?\)\s*"
     r"(?P<dtype>[A-Za-z]+) damage(?P<extra>\s+plus\s+\d+\s*\(\d+d\d+(?:\s*[+-]\s*\d+)?\)\s+[A-Za-z]+\s+damage)?"
@@ -89,7 +91,9 @@ def _attack(row: dict[str, object], actions: str, match: re.Match[str]) -> Attac
         attack_kind=WeaponAttackKind(match.group("kind").lower().replace(" ", "_")), attack_bonus=int(match.group("bonus")),
         damage=DiceSpec(count=int(match.group("count")), size=int(match.group("size")), bonus=base_bonus),
         damage_type=DamageType(match.group("dtype").lower()), animation="strike", reach_ft=reach,
-        normal_range_ft=normal, long_range_ft=long, effects=effects,
+        normal_range_ft=normal, long_range_ft=long,
+        conditional_attack_advantage=parse_attack_header_advantage(match.group("header_advantage")),
+        effects=effects,
         charge_profile=parse_charge_replacement(rider_text, base_dice_count=int(match.group("count")),
             base_dice_size=int(match.group("size")), base_damage_bonus=base_bonus, base_damage_type=match.group("dtype")),
     )
