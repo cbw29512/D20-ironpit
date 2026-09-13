@@ -58,6 +58,7 @@ class CombatantTemplate(BaseModel):
     kind: Literal["character", "monster"]
     ruleset: Literal["2014", "2024"] = "2024"
     creature_type: str | None = None
+    creature_subtypes: list[str] = Field(default_factory=list)
     size: CreatureSize = CreatureSize.MEDIUM
     ability_scores: AbilityScores | None = None
     armor_class: int = Field(ge=1)
